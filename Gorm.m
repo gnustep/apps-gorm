@@ -683,18 +683,24 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
 	  archiver = [[NSArchiver alloc] init];
 	  [activDoc beginArchiving];
-	  [archiver encodeClassName: @"GormNSWindow" 
-		    intoClassName: @"NSWindow"];
-	  [archiver encodeClassName: @"GormNSPanel" 
-		    intoClassName: @"NSPanel"]; 
-	  [archiver encodeClassName: @"GormNSMenu" 
+	  [archiver encodeClassName: @"GormCustomView" 
+		    intoClassName: @"GormTestCustomView"];
+	  [archiver encodeClassName: @"GormNSMenu"
 		    intoClassName: @"NSMenu"];
+	  [archiver encodeClassName: @"GormNSWindow"
+		    intoClassName: @"NSWindow"];
+	  [archiver encodeClassName: @"GormNSPanel"
+		    intoClassName: @"NSPanel"];
 	  [archiver encodeClassName: @"GormNSPopUpButton" 
 		    intoClassName: @"NSPopUpButton"];
 	  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
 		    intoClassName: @"NSPopUpButtonCell"];
-	  [archiver encodeClassName: @"GormCustomView" 
-		    intoClassName: @"GormTestCustomView"];
+	  [archiver encodeClassName: @"GormNSBrowser" 
+		    intoClassName: @"NSBrowser"];
+	  [archiver encodeClassName: @"GormNSTableView" 
+		    intoClassName: @"NSTableView"];
+	  [archiver encodeClassName: @"GormNSOutlineView" 
+		    intoClassName: @"NSOutlineView"];
 	  [archiver encodeRootObject: activDoc];
 	  data = RETAIN([archiver archiverData]);
 	  [activDoc endArchiving];

@@ -1,3 +1,9 @@
+2003-12-24 23:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added a NS_DURING block around the main portions of the
+	testInterface method and also added some of the classes to the list
+	of classes which need to be translated from their "GormNS*" equivalents.
+
 2003-12-23 23:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Update the minor release number.  Add call to 
