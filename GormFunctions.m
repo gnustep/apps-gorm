@@ -23,6 +23,7 @@
  */
 
 #include "GormFunctions.h"
+#include "GormViewEditor.h"
 #include <AppKit/AppKit.h>
 
 // find all subitems for the given items...
@@ -66,6 +67,35 @@ NSArray* findAll(NSMenu *menu)
 {
   NSArray *items = [menu itemArray];
   return findAllSubmenus(items);
+}
+
+void subviewsForView(NSView *view, NSMutableArray *array)
+{
+  if(view != nil)
+    {
+      NSArray *subviews = [view subviews];
+      NSEnumerator *en = [subviews objectEnumerator];
+      NSView *aView = nil;
+
+      // if it's not me and it's not and editor, include it in the list of
+      // things to be deleted from the document.
+      if(![view isKindOfClass: [GormViewEditor class]]) 
+	{
+	  [array addObject: view];
+	}
+
+      while((aView = [en nextObject]) != nil)
+	{
+	  subviewsForView( aView, array );
+	}
+    }
+}
+
+NSArray *allSubviews(NSView *view)
+{
+  NSMutableArray *views = [NSMutableArray array];
+  subviewsForView( view, views );
+  return views;
 }
 
 // cut the text...  code taken from GWorkspace, by Enrico Sersale

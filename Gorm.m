@@ -1403,10 +1403,12 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 		{
 		  return NO;
 		}
+	      /*
 	      else if([name isEqualToString: @"NSFontManager"])
 		{
 		  return NO;
 		}
+	      */
 	      else if([name isEqualToString: @"NSHelpManager"])
 		{
 		  return NO;

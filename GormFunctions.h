@@ -36,6 +36,12 @@ NSArray* findAllSubmenus(NSArray *array);
 // find all items in the menu...
 NSArray* findAll(NSMenu *menu);
 
+// all subviews for the view provided
+void subviewsForView(NSView *view, NSMutableArray *array);
+
+// all subviews
+NSArray *allSubviews(NSView *view);
+
 // cut the file label to the appropriate length...
 NSString *cutFileLabelText(NSString *filename, id label, int length);
 

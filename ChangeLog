@@ -1,3 +1,19 @@
+2004-03-20 12:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Removed some methods which should
+	not have been in FirstResponder.
+	* Gorm.m: Added back in the ability to instantiate a NSFontManager.
+	Currently, IB adds a font manager for you when you add a NSMenu which
+	has connections to the font manager.   Gorm, for the time being,
+	will simply allow the user to instantiate it directly.
+	* GormViewEditor.m: Removed _allsubviews: and associated fuctions.
+	* GormFunctions.m: Added allSubviews and associated functions here
+	so that they can be used application wide.
+	* GormObjectEditor.m: [GormObjectEditor deleteSelection]: Added 
+	code to query the user before deletion of the main menu, so that
+	this doesn't happen by accident.  Added code to delete the subviews
+	of a window from the document.
+
 2004-03-13 07:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument loadDocument:] added call to 

@@ -439,7 +439,7 @@
 
 - (void) close
 {
-  NSAssert(isClosed == NO, NSInternalInconsistencyException);
+  // NSAssert(isClosed == NO, NSInternalInconsistencyException);
   isClosed = YES;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
@@ -518,18 +518,18 @@
 {
   if ([selection count] > 0)
     {
-      NSArray		*s = [NSArray arrayWithArray: selection];
+      NSArray	*s = [NSArray arrayWithArray: selection];
       NSEnumerator	*e = [s objectEnumerator];
       NSMenuItem	*i;
-      NSArray           *d = nil;
-
+      NSArray       *d = nil;
+      
       [self makeSelectionVisible: NO];
       [self selectObjects: [NSArray array]];
-
+      
       // find all relavent objects.  Remove them from the nameTable.
       d = findAllSubmenus( s );
       [document detachObjects: d];
-
+	  
       // remove the items from the menu...
       while ((i = [e nextObject]) != nil && [edited numberOfItems] > 1)
 	{

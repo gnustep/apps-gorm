@@ -25,10 +25,10 @@
 #include <AppKit/AppKit.h>
 
 #include "GormPrivate.h"
-
 #include "GormViewEditor.h"
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
+#include "GormFunctions.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -203,39 +203,9 @@ static BOOL currently_displaying = NO;
   return parent;
 }
 
-- (void) _subviewsForView: (NSView *)view withArray: (NSMutableArray *)array
-{
-  if(view != nil)
-    {
-      NSArray *subviews = [view subviews];
-      NSEnumerator *en = [subviews objectEnumerator];
-      NSView *aView = nil;
-
-      // if it's not me and it's not and editor, include it in the list of
-      // things to be deleted from the document.
-      if(view != self && ![view isKindOfClass: [GormViewEditor class]] && view != _editedObject) 
-	{
-	  [array addObject: view];
-	}
-
-      while((aView = [en nextObject]) != nil)
-	{
-	  [self _subviewsForView: aView withArray: array];
-	}
-    }
-}
-
-- (NSArray *) _allsubviews
-{
-  NSMutableArray *views = [NSMutableArray array];
-  [self _subviewsForView: self withArray: views];
-  return views;
-}
-
-
 - (void) detachSubviews
 {
-  NSArray *subviews = [self _allsubviews];
+  NSArray *subviews = allSubviews([self editedObject]);
   [document detachObjects: subviews];
 }
 

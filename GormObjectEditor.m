@@ -135,9 +135,23 @@ static NSMapTable	*docMap = 0;
 
       nc = [NSNotificationCenter defaultCenter];
 
+      if ([selected isKindOfClass: [NSMenu class]] &&
+	  [[document nameForObject: selected] isEqual: @"NSMenu"] == YES)
+	{
+	  NSString *title = _(@"Removing Main Menu");
+	  NSString *msg = _(@"Are you sure you want to do this?");
+	  int retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+	  
+	  // if the user *really* wants to delete the menu, do it.
+	  if(retval != NSAlertDefaultReturn)
+	    return;
+	}
+
       [document detachObject: selected];
       if ([selected isKindOfClass: [NSWindow class]] == YES)
 	{
+	  NSArray *subviews = allSubviews([selected contentView]);
+	  [document detachObjects: subviews];
 	  [selected close];
 	}
       
@@ -146,7 +160,7 @@ static NSMapTable	*docMap = 0;
 	  NSArray *items = findAll( selected );
 	  NSEnumerator *en = [items objectEnumerator];
 	  id obj = nil;
-
+	  
 	  while((obj = [en nextObject]) != nil)
 	    {
 	      [document detachObject: obj];
