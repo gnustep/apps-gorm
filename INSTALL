@@ -1,0 +1,26 @@
+Required software
+-----------------
+
+You need to have the GNUstep core libraries installed in order to
+compile and use Gorm. The core packages are, at a minimum:
+
+   * gnustep-make
+
+   * gnustep-base
+
+   * gnustep-gui
+
+   * gnustep-xgps or gnustep-xdps
+
+   See <http://www.gnustep.org/> for further information.
+
+Build and Install
+-----------------
+
+   To build Gorm, simply type 'make'
+
+Trouble
+-------
+
+   Try to fix the problem.  Send patches to <richard@brainstorm.co.uk>.
+

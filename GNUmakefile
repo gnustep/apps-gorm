@@ -24,6 +24,9 @@
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+PACKAGE_NAME=Gorm
+include ./Version
+
 #
 # Each palette is a subproject
 #

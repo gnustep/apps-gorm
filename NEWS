@@ -1,0 +1,134 @@
+Noteworthy changes in version `0.0.2'
+=====================================
+
+   * Add popup and pulldown menu controls
+
+   * Menu support
+
+   * More inspectors
+
+   * Some support for connections
+
+   * Much more fleshed out - too numerous to mention.
+
+Noteworthy changes in version `0.0.1'
+=====================================
+
+   * 8th December 1999
+
+        * Save/Load 'nib' documents (binary archived data)
+
+          This works so far as it can be tested - but that's just
+          archives containing windows or panels so far.
+
+        * Load palettes
+
+          Loading of palettes works.  You can load palettes from the
+          'Tools' menu.  Gorm automatically loads all the palettes from
+          its Resources directory.
+
+        * Basic framework
+
+          So far, the app provides a basic framework that needs
+          fleshing out.
+             * It has a palettes manager object that allows you to
+               select a palette and drag items from the palette into
+               your document.
+
+             * It has a special per-document editor object, which keeps
+               track of a matrix of icons representing the top-level
+               objects in the document.
+
+             * It has an inspector manager class, which updates the
+               inspector panel when the selected object is changed by
+               an editor.
+
+             * It has special inspectors for handling an empty
+               selection or a multiple selection.
+
+        * Palettes
+
+          Four palettes (three of which are empty at present) are built
+          and installed in the apps Resources directory.
+
+          The Window palette is more fully fleshed out than the other
+          palettes.  It permits windows and panels to be created in
+          Gorm.  If provides the start of a window attributes inspector.
+
+
+   * 18 December 1999
+
+        * You can drag views from a palette into a window or panel.
+
+        * You can select views in a window by clicking on them,
+          shift-clicking (for multiple selection), or click-drag on the
+          window background to select views in a box.
+
+        * You can delete/cut/copy/paste views betwen windows.
+
+        * You can move views in a window by clicking on them and
+          dragging.
+
+        * You can resize views by clicking on their knobs and dragging.
+
+        * You can control-drag to mark source and destination views for
+          a connection.
+
+        * Next task - inspectors.
+
+          The connection inspector needs to be implemented to complete
+          the process of establishing connections.  The size inspector
+          needs to be implemented to set autosizing parameters for a
+          view.
+
+          Once these are done, the object editor needs to be made to
+          support connections so that we can connect between objects
+          other than views, then we need to write a menu editor.
+
+
+   * 22 December 1999
+
+        * Connections inspector is now working - but it needs some
+          effort to tidy it up.
+
+        * Class info (outlets and actions) is specified in
+          'ClassInformation.plist' and needs to be present so that the
+          app knows what outlets/actions an object has (and therefore
+          what connections can be made).
+
+        * The view size inspector is working - allowing you to set the
+          size of the subviews within a window.
+
+        * The attributes inspector for 'FilesOwner' is working, so you
+          can define the class of the files owner (it defaults to
+          NSApplication).
+
+        * There is a crude panel for setting the name of the selected
+          object.
+
+        * I've created a couple of new images and got rid of the two
+          NeXT images that were lurking in there.
+
+        * There is a Testing directory, with a GormTest application
+          that lets you load a nib for testing - it assumes that the
+          nib will set its FilesOwners delegate to point to a window,
+          and makes that window the key window ...
+
+   * 23 December 1999
+
+     Last work before christmas ...
+
+     Various bits of tidying up plus -
+
+     Added an evil hack of a generic attributes inspector ...  This
+     looks through all the methods of the selected object to find those
+     taking a single argument and beginning with 'set'.  It makes all
+     these setting methods (whose argument is a simple scalar type or
+     an object) available for you to invoke from the inspector panel.
+
+     This makes it possible to set pretty much any attribute of any
+     object, but you do need to have the GNUstep header files to hand,
+     so you can tell what numeric values to enter to achieve a desired
+     result.
+
+

@@ -4,7 +4,17 @@
 @include version.texi
 @end ifset
 
-Version 0.0.1
+@section Noteworthy changes in version @samp{0.0.2}
+
+@itemize @bullet
+@item Add popup and pulldown menu controls
+@item Menu support
+@item More inspectors
+@item Some support for connections
+@item Much more fleshed out - too numerous to mention.
+@end itemize
+
+@section Noteworthy changes in version @samp{0.0.1}
 
 @itemize @bullet
 

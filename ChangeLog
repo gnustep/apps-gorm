@@ -1,3 +1,11 @@
+2001-04-24  Adam Fedor  <fedor@gnu.org>
+
+	* Version: 0.0.2 snapshot
+	* GNUmakefile: Add rpm package info
+	* Gorm.spec.in: New file.
+	* Documentation/{readme,news,install}.texi: Update
+	* README, INSTALL, NEWS: Regenerate
+
 2001-02-07  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormInspectorsManager.m: Resize a few buttons to fit text neatly.

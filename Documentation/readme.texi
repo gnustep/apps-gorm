@@ -4,19 +4,10 @@
 @include version.texi
 @end ifset
 
+@section Introduction
+
 Read the NEWS file for the latest user visible changes. Read the INSTALL
 file for installation instructions.
-
-Acknowledgements -
-
-Icons - Mostly by Andrew Lindsay.
-Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
-
-
-Please note - to build this code you will need the latest library source
-from the CVS repository, and it may be that you also need to be using the
-xgps backend rather than xdps (I don't have xdps running to test it on).
-
 
 Gorm is an acronym for Graphic Object Relationship modeler (or perhaps
 GNUstep Object Relationship Modeler).
@@ -30,4 +21,45 @@ Gorm is part of the GNUstep project, and is copyrighted by the Free Software
 Foundation.
 
 Gorm is released under the GPL - see the file `COPYING' for details.
+
+
+@section Status
+
+25 Feb 2000
+
+At this point, Gorm is usable only for very simple stuff as it only supports
+the most commonly used gui elements.  However, the binary format in which
+documents are archived is stable, so documents created using Gorm now should
+remain useful.
+Interface test mode qorks quite nicely - you really can see things working.
+
+Known problems (things to do) -
+
+@enumerate
+@item Documentation - only a tiny start has been made on this!
+
+@item Support for custom objects needs to be added.
+
+@item Editors and inspectors need writing for most gui elements -
+  popup menus
+  boxes
+  browsers
+  scrollviews
+  splitviews
+  etc etc
+
+@item Support for color and images on buttons etc.
+  This requires improved image and color support in the gui library
+
+@item Support for fonts etc
+  This requires improved font management support in the gui library
+@end enumerate
+
+@section Acknowledgements
+
+Icons - Mostly by Andrew Lindsay.
+
+Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
+
+
 

@@ -57,3 +57,7 @@ version.texi: ../Version
 	echo '@set GORM-VERSION $(VERSION)' \
 		>> version.texi
 
+regenerate:
+	mv README INSTALL NEWS ..
+
+
