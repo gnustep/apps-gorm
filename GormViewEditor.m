@@ -1334,7 +1334,7 @@ static BOOL currently_displaying = NO;
       NSString *name = [dragPb stringForType: GormImagePboardType];
       NSImage *image = [NSImage imageNamed: name];
       [image setArchiveByName: NO];
-      [(id)_editedObject setImage: image];
+      [(id)_editedObject setImage: AUTORELEASE([image copy])];
       return YES;
     }
   else   if ([types containsObject: GormSoundPboardType] == YES)
@@ -1343,7 +1343,8 @@ static BOOL currently_displaying = NO;
       name = [dragPb stringForType: GormSoundPboardType];
       if([(id)_editedObject respondsToSelector: @selector(setSound:)])
 	{
-	  [(id)_editedObject setSound: [NSSound soundNamed: name]];
+	  NSSound *sound = [NSSound soundNamed: name];
+	  [(id)_editedObject setSound: AUTORELEASE([sound copy])];
 	}
       return YES;
     }

@@ -1,3 +1,9 @@
+2004-12-23 13:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: In -performDragOperation: copy the image/sound
+	before setting it into the control to make certain any changes 
+	made to the original image don't reflect in the system wide image.
+
 2004-12-23 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormClassPanel.gorm: Set nextKeyView for all views
