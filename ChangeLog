@@ -1,4 +1,16 @@
-2004-08-02 23 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-08-04 00:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument setupDefaults:] changed
+	size of the window for a new palette.  If it's too big it 
+	causes problems with event handling in the palettes.
+	* Palettes/2Controls/GNUmakefile: Added ControlsPalette.gorm
+	* Palettes/2Controls/main.m: Removed much of the code
+	from the ControlsPalette class.  It's not needed now
+	that the palette uses a .gorm file.
+	* Palettes/2Controls/ControlsPalette.gorm: New gui for the
+	palette.
+	
+2004-08-02 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: Added stub for initWithCoder just for
 	completeness.

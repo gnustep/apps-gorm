@@ -2513,7 +2513,6 @@ static NSImage  *fileImage = nil;
       // the first menu attached becomes the main menu.
       [self attachObject: aMenu toParent: nil]; 
       [[aMenu window] setFrameTopLeftPoint: origin];
-      // RETAIN(aMenu);
     }
   else if ([type isEqual: @"Inspector"] == YES)
     {
@@ -2543,7 +2542,6 @@ static NSImage  *fileImage = nil;
       [aWindow setTitle: _(@"Inspector Window")];
       [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
-      // RELEASE(aWindow);
     }
   else if ([type isEqual: @"Palette"] == YES)
     {
@@ -2554,7 +2552,7 @@ static NSImage  *fileImage = nil;
       if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
 	{
 	  aWindow = [[NSWindow allocSubstitute] 
-		      initWithContentRect: NSMakeRect(0,0,272,192)
+		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
 		      defer: NO];
@@ -2562,7 +2560,7 @@ static NSImage  *fileImage = nil;
       else
 	{
 	  aWindow = [[NSWindow alloc] 
-		      initWithContentRect: NSMakeRect(0,0,272,192)
+		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
 		      defer: NO];
@@ -2573,7 +2571,6 @@ static NSImage  *fileImage = nil;
       [aWindow setTitle: _(@"Palette Window")];
       [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
-      // RELEASE(aWindow);
     }
 }
 
@@ -2583,7 +2580,6 @@ static NSImage  *fileImage = nil;
   NSString	      *oldName;
   NSMutableDictionary *cc = [classManager customClassMap];
   NSString            *className;
-  // NSString            *nameCopy;
 
   if (object == nil)
     {
