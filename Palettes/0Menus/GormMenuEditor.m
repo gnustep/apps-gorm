@@ -853,6 +853,12 @@ void _attachAll(NSMenu *menu, id document)
 	      NSDebugLog(@"owned by popup");
 	      [item setOnStateImage: nil];
 	      [item setMixedStateImage: nil];
+
+	      // if the item has a submenu, reject the drag.
+	      if([item hasSubmenu])
+		{
+		  return NO;
+		}
 	    }
 	  else
 	    NSDebugLog(@"not owned by popup");

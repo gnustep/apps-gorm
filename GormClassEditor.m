@@ -269,7 +269,6 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	    {
 	      int row = 0;
 
-	      // RETAIN(item); // retain the new name
 	      [classManager renameClassNamed: item newName: anObject];
 	      [gov reloadData];
 	      row = [gov rowForItem: anObject];

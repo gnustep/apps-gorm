@@ -1,3 +1,14 @@
+2004-08-18 00:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Cleaned up some code.
+	* GormClassInspector.m: Added code in the data source for
+	both the GormActionDataSource and GormOutletDataSource 
+	classes in the class inspector to call the method in 
+	GormDocument which removes connections when a connections'
+	name changes.  Corrects Bug #100026.
+	* GormMenuEditor.m: If a menu item being added to a popup
+	has a submenu, reject it.
+	
 2004-08-13 18:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Disabled class parser menu item in [Gorm

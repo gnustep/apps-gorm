@@ -104,21 +104,32 @@ objectValueForTableColumn: (NSTableColumn *)tc
     forTableColumn: (NSTableColumn *)tc
 	       row: (int)rowIndex
 {
-  NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
+  id classManager = [(Gorm *)NSApp classManager];
+  NSString *currentClass = [inspector _currentClass];
+  NSArray *list = [classManager allOutletsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
-  id classManager = [(Gorm *)NSApp classManager];
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-
-  [classManager replaceOutlet: name
-		withOutlet: formattedOutlet
-		forClassNamed: [inspector _currentClass]];
-
-  // collapse the class in question if it's being edited and make
-  // certain that names in the list are kept in sync.
-  [document collapseClass: [inspector _currentClass]];
-  [document reloadClasses];
-  [document selectClass: [inspector _currentClass]];
+  
+  if(![name isEqual: anObject])
+    {
+      BOOL removed = [document 
+		       removeConnectionsWithLabel: name 
+		       forClassNamed: currentClass
+		       isAction: NO];
+      if(removed)
+	{
+	  [classManager replaceOutlet: name
+			withOutlet: formattedOutlet
+			forClassNamed: currentClass];
+	  
+	  // collapse the class in question if it's being edited and make
+	  // certain that names in the list are kept in sync.
+	  [document collapseClass: currentClass];
+	  [document reloadClasses];
+	  [document selectClass: currentClass];
+	}
+    }
 }
 
 // set methods
@@ -148,21 +159,32 @@ objectValueForTableColumn: (NSTableColumn *)tc
     forTableColumn: (NSTableColumn *)tc
 	       row: (int)rowIndex
 {
-  NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
+  id classManager = [(Gorm *)NSApp classManager];
+  NSString *currentClass = [inspector _currentClass];
+  NSArray *list = [classManager allOutletsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedAction = [GormDocument formatAction: anObject];
-  id classManager = [(Gorm *)NSApp classManager];
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
-  [classManager replaceAction: name
-				withAction: formattedAction
-				forClassNamed: [inspector _currentClass]];
-
-  // collapse the class in question if it's being edited and make
-  // certain that names in the list are kept in sync.
-  [document collapseClass: [inspector _currentClass]];
-  [document reloadClasses];
-  [document selectClass: [inspector _currentClass]];
+  if(![name isEqual: anObject])
+    {
+      BOOL removed = [document 
+		       removeConnectionsWithLabel: name 
+		       forClassNamed: currentClass
+		       isAction: YES];
+      if(removed)
+	{
+	  [classManager replaceAction: name
+			withAction: formattedAction
+			forClassNamed: currentClass];
+	  
+	  // collapse the class in question if it's being edited and make
+	  // certain that names in the list are kept in sync.
+	  [document collapseClass: currentClass];
+	  [document reloadClasses];
+	  [document selectClass: currentClass];
+	}
+    }
 }
 
 // set method
