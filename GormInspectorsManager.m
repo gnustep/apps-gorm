@@ -199,123 +199,127 @@
 
 - (id) init
 {
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSBox		*bar;
-  NSMenuItem	*item;
-  NSRect	contentRect = {{0, 0}, {IVW, 420}};
-  NSRect	popupRect = {{60, 5}, {152, 20}};
-  NSRect	selectionRect = {{0, 390}, {IVW, 30}};
-  NSRect	inspectorRect = {{0, 0}, {IVW, IVH}};
-  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
+  if((self = [super init]) != nil)
+    {
+      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+      NSBox                *bar;
+      NSMenuItem           *item;
+      NSRect	           contentRect = {{0, 0}, {IVW, 420}};
+      NSRect               popupRect = {{60, 5}, {152, 20}};
+      NSRect	           selectionRect = {{0, 390}, {IVW, 30}};
+      NSRect	           inspectorRect = {{0, 0}, {IVW, IVH}};
+      unsigned int	   style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
+      
+      cache = [NSMutableDictionary new];
+      panel = [[NSPanel alloc] initWithContentRect: contentRect
+			       styleMask: style
+			       backing: NSBackingStoreRetained
+			       defer: NO];
+      [panel setTitle: _(@"Inspector")];
+      [panel setMinSize: [panel frame].size];
+      
+      /*
+       * The selection view sits at the top of the panel and is always the
+       * same height.
+       */
+      selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
+      [selectionView setAutoresizingMask:
+		       NSViewMinYMargin | NSViewWidthSizable];
+      [[panel contentView] addSubview: selectionView];
+      RELEASE(selectionView);
+      
+      /*
+       * The selection view contains a popup menu identifying the type of
+       * inspector being used.
+       */
+      popup = [[NSPopUpButton alloc] initWithFrame: popupRect pullsDown: NO];
+      [popup setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
+      [selectionView addSubview: popup];
+      RELEASE(popup);
+      
+      [popup addItemWithTitle: _(@"Attributes")];
+      item = (NSMenuItem *)[popup itemAtIndex: 0];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: @"1"];
+      [item setTag: 0];
+      
+      [popup addItemWithTitle: _(@"Connections")];
+      item = (NSMenuItem *)[popup itemAtIndex: 1];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: @"2"];
+      [item setTag: 1];
+      
+      [popup addItemWithTitle: _(@"Size")];
+      item = (NSMenuItem *)[popup itemAtIndex: 2];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: @"3"];
+      [item setTag: 2];
+      
+      [popup addItemWithTitle: _(@"Help")];
+      item = (NSMenuItem *)[popup itemAtIndex: 3];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: @"4"];
+      [item setTag: 3];
+      
+      [popup addItemWithTitle: _(@"Custom Class")];
+      item = (NSMenuItem *)[popup itemAtIndex: 4];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: @"5"];
+      [item setTag: 4];
+      [item setEnabled: NO];
+      
+      bar = [[NSBox alloc] initWithFrame: NSMakeRect (0, 0, IVW, 2)];
+      [bar setBorderType: NSGrooveBorder];
+      [bar setTitlePosition: NSNoTitle];
+      [bar setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
+      [selectionView addSubview: bar];
+      RELEASE(bar);
+      
+      /*
+       * The inspector view fills the area below the selection view.
+       */
+      inspectorView = [[NSView alloc] initWithFrame: inspectorRect];
+      [inspectorView setAutoresizingMask:
+		       NSViewHeightSizable | NSViewWidthSizable];
+      [[panel contentView] addSubview: inspectorView];
+      RELEASE(inspectorView);
+      
+      [panel setFrameUsingName: @"Inspector"];
+      [panel setFrameAutosaveName: @"Inspector"];
+      
+      current = -1;
+      
+      inspector = [GormEmptyInspector new];
+      [cache setObject: inspector forKey: @"GormEmptyInspector"];
+      RELEASE(inspector);
+      inspector = [GormMultipleInspector new];
+      [cache setObject: inspector forKey: @"GormMultipleInspector"];
+      DESTROY(inspector);
+      
+      [self setCurrentInspector: 0];
+      
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillBeginTestingInterfaceNotification
+	  object: nil];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillEndTestingInterfaceNotification
+	  object: nil];
+      [nc addObserver: self
+	  selector: @selector(updateInspectorPopUp:)
+	  name: NSPopUpButtonWillPopUpNotification
+	  object: popup];
+      
+      [popup setTarget: self];
+      [popup setAction: @selector(updateInspectorPopUp:)];
+    }
 
-  cache = [NSMutableDictionary new];
-  panel = [[NSPanel alloc] initWithContentRect: contentRect
-				     styleMask: style
-				       backing: NSBackingStoreRetained
-					 defer: NO];
-  [panel setTitle: _(@"Inspector")];
-  [panel setMinSize: [panel frame].size];
-
-  /*
-   * The selection view sits at the top of the panel and is always the
-   * same height.
-   */
-  selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
-  [selectionView setAutoresizingMask:
-    NSViewMinYMargin | NSViewWidthSizable];
-  [[panel contentView] addSubview: selectionView];
-  RELEASE(selectionView);
-
-  /*
-   * The selection view contains a popup menu identifying the type of
-   * inspector being used.
-   */
-  popup = [[NSPopUpButton alloc] initWithFrame: popupRect pullsDown: NO];
-  [popup setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
-  [selectionView addSubview: popup];
-  RELEASE(popup);
-
-  [popup addItemWithTitle: _(@"Attributes")];
-  item = (NSMenuItem *)[popup itemAtIndex: 0];
-  [item setTarget: self];
-  [item setAction: @selector(setCurrentInspector:)];
-  [item setKeyEquivalent: @"1"];
-  [item setTag: 0];
-
-  [popup addItemWithTitle: _(@"Connections")];
-  item = (NSMenuItem *)[popup itemAtIndex: 1];
-  [item setTarget: self];
-  [item setAction: @selector(setCurrentInspector:)];
-  [item setKeyEquivalent: @"2"];
-  [item setTag: 1];
-
-  [popup addItemWithTitle: _(@"Size")];
-  item = (NSMenuItem *)[popup itemAtIndex: 2];
-  [item setTarget: self];
-  [item setAction: @selector(setCurrentInspector:)];
-  [item setKeyEquivalent: @"3"];
-  [item setTag: 2];
-
-  [popup addItemWithTitle: _(@"Help")];
-  item = (NSMenuItem *)[popup itemAtIndex: 3];
-  [item setTarget: self];
-  [item setAction: @selector(setCurrentInspector:)];
-  [item setKeyEquivalent: @"4"];
-  [item setTag: 3];
-
-  [popup addItemWithTitle: _(@"Custom Class")];
-  item = (NSMenuItem *)[popup itemAtIndex: 4];
-  [item setTarget: self];
-  [item setAction: @selector(setCurrentInspector:)];
-  [item setKeyEquivalent: @"5"];
-  [item setTag: 4];
-  [item setEnabled: NO];
-
-  bar = [[NSBox alloc] initWithFrame: NSMakeRect (0, 0, IVW, 2)];
-  [bar setBorderType: NSGrooveBorder];
-  [bar setTitlePosition: NSNoTitle];
-  [bar setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
-  [selectionView addSubview: bar];
-  RELEASE(bar);
-
-  /*
-   * The inspector view fills the area below the selection view.
-   */
-  inspectorView = [[NSView alloc] initWithFrame: inspectorRect];
-  [inspectorView setAutoresizingMask:
-    NSViewHeightSizable | NSViewWidthSizable];
-  [[panel contentView] addSubview: inspectorView];
-  RELEASE(inspectorView);
-
-  [panel setFrameUsingName: @"Inspector"];
-  [panel setFrameAutosaveName: @"Inspector"];
-
-  current = -1;
-
-  inspector = [GormEmptyInspector new];
-  [cache setObject: inspector forKey: @"GormEmptyInspector"];
-  RELEASE(inspector);
-  inspector = [GormMultipleInspector new];
-  [cache setObject: inspector forKey: @"GormMultipleInspector"];
-  DESTROY(inspector);
-
-  [self setCurrentInspector: 0];
-
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillBeginTestingInterfaceNotification
-      object: nil];
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillEndTestingInterfaceNotification
-      object: nil];
-  [nc addObserver: self
-      selector: @selector(updateInspectorPopUp:)
-      name: NSPopUpButtonWillPopUpNotification
-      object: popup];
-
-  [popup setTarget: self];
-  [popup setAction: @selector(updateInspectorPopUp:)];
   return self;
 }
 

@@ -55,11 +55,12 @@ NSString *IBWillInspectWithModeNotification =
 
 - (id) init
 {
-  if(_sharedInspectorManager != nil)
+  if(_sharedInspectorManager == nil)
     {
       if((self = [super init]) != nil)
 	{
-	  // do whatever needs to be done.
+	  // set the shared instance...
+	  _sharedInspectorManager = self;
 	}
     }
   else

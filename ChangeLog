@@ -1,3 +1,9 @@
+2004-12-19 09:05 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: Added [super init] call to
+	init.
+	* GormLib/IBInspectorManager.m: Corrected init.
+
 2004-12-19 08:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.h: Changed parent class.
