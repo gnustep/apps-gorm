@@ -475,13 +475,15 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
+  NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
 
   if ([extraOutlets containsObject: anOutlet] == YES)
     {
-      NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
-
-      [allOutlets removeObject: anOutlet];
       [extraOutlets removeObject: anOutlet];
+    }
+  if ([allOutlets containsObject: anOutlet] == YES)
+    {
+      [allOutlets removeObject: anOutlet];
     }
 }
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name
@@ -926,16 +928,50 @@ selectCellWithString: (NSString*)title
 
 - (void) ok: (id)sender
 {
+  GormClassManager	*cm = [(id)[(id)NSApp activeDocument] classManager];
+
   if (editClass == NO)
     {
+      int i;
+      NSString	*name;
+      NSArray   *connections;
+      NSString	*cn = [object className];
+      NSString  *oldName = [[browser selectedCell] stringValue];
+
+      name = [editNameTF stringValue];
+
       switch (editActions)
 	{ // Rename
 	  case 0: // outlets
-	    NSLog(@"rename outlet");
+
+	    if (name != nil && ![name isEqualToString: @""])
+	      {
+		NSLog(@"rename old outlet %@ to %@", oldName, name);
+		[cm removeOutlet: oldName forObject: object];
+		[cm addOutlet: name forObject: object];
+		ASSIGN(outlets, [cm allOutletsForClassNamed: cn]);
+		[browser reloadColumn: 0];
+		
+		/* Now check if this is connected to anything and make sure
+		   the connection changes */
+		connections = [[(id<IB>)NSApp activeDocument] allConnectors];
+		for (i = 0; i < [connections count]; i++)
+		  {
+		    id<IBConnectors>	con = [connections objectAtIndex: i];
+		    
+		    if ([con class] == [NSNibOutletConnector class]
+			&& [[con label] isEqual: oldName])
+		      {
+			[con setLabel: name];
+			break;
+		      }
+		  }
+	      }
 	    break;
 
 	  default: // actions
-	    NSLog(@"rename action");
+	    NSLog(@"rename old outlet %@ to %@ (not implemented)", 
+		  oldName, name);
 	    break;
 	}
     }

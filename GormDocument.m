@@ -255,6 +255,10 @@ static NSImage	*classesImage = nil;
       NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable removeObjectForKey: @"NSFont"];
     }
+
+  /* Add information about the NSOwner to the archive */
+  NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
+  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];  
 }
 
 - (void) changeCurrentClass: (id)sender
@@ -432,7 +436,7 @@ static NSImage	*classesImage = nil;
       [classesView selectRow: i byExtendingSelection: NO];
       [self editClass: self];
     }
-  
+  return self;
 }
 
 - (void) pasteboardChangedOwner: (NSPasteboard*)sender
@@ -1071,6 +1075,7 @@ static NSImage	*classesImage = nil;
   NSEnumerator		*enumerator;
   id <IBConnectors>	con;
   NSString		*name;
+  NSString              *ownerClass;
 
   data = [NSData dataWithContentsOfFile: aFile];
   if (data == nil)
@@ -1111,6 +1116,9 @@ static NSImage	*classesImage = nil;
    * to hold the objects rather than their names (using our own dummy
    * object as the 'NSOwner'.
    */
+  ownerClass = [[c nameTable] objectForKey: @"NSOwner"];
+  if (ownerClass)
+    [filesOwner setClassName: ownerClass];
   [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
   [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
 

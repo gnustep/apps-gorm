@@ -1,3 +1,13 @@
+2001-06-20  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m (-beginArchiving): Add filesOwner class name to
+	archive.
+	(-loadDocument:): Retreive and set filesOwner class.
+
+	* GormClassManager.m (-removeOutlet:forObject:): Remove from
+	allOutlets even if not in extraOutlets.
+	(-ok:): Implement renaming outlets.
+	
 2001-06-18  Adam Fedor  <fedor@gnu.org>
 
 	* GormWindowEditor.m
