@@ -749,8 +749,9 @@ static NSImage	*classesImage = nil;
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
   NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
+  NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
-  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
+  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)",nil];
 
   while(![headerScanner isAtEnd])
     {
@@ -803,19 +804,25 @@ static NSImage	*classesImage = nil;
 	  // ivar an outlet.
 	  while((outletToken = [outletEnum nextObject]) != nil)
 	    {
+	      NSString *delimiter = nil;
 	      NSDebugLog(@"outlet Token = %@",outletToken);
 	      // Scan the variables of the class...
 	      ivarScanner = [NSScanner scannerWithString: ivarString];
 	      while(![ivarScanner isAtEnd])
 		{
 		  NSString *outlet = nil;
-		  
-		  [ivarScanner scanUpToString: outletToken
-			       intoString: NULL];
-		  [ivarScanner scanString: outletToken
-			       intoString: NULL];
-		  [ivarScanner scanUpToString: @";"
+
+		  if(delimiter == nil || [delimiter isEqualToString: @";"])
+		    {
+		      [ivarScanner scanUpToString: outletToken
+				   intoString: NULL];
+		      [ivarScanner scanString: outletToken
+				   intoString: NULL];
+		    }
+		  [ivarScanner scanUpToCharactersFromSet: outletStopSet
 			       intoString: &outlet];
+		  [ivarScanner scanCharactersFromSet: outletStopSet
+			       intoString: &delimiter];
 		  if([ivarScanner isAtEnd] == NO
 		     && [outlets indexOfObject: outlet] == NSNotFound)
 		    {

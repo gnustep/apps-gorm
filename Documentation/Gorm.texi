@@ -117,7 +117,13 @@ See the file @samp{COPYING}.
 @item
 Richard Frith-Macdonald <richard@@brainstorm.co.uk> wrote
 Gorm as part of the GNUstep project.
-
+@item
+Gregory John Casamento <greg_casamento@@yahoo.com> Is the
+current maintaner of Gorm.   Has implemented lots of new
+features and rewritten large portions of the existing code.
+@item
+Pierre-Yves Rivaille <gnustep@@rivaille.net> Is also a 
+major contributor to the Gorm application.
 @end itemize
 
 @node Installation, News, Contributors, Top
@@ -134,10 +140,7 @@ Gorm as part of the GNUstep project.
 
 @itemize @bullet
 
-@item Add more inspectors
-@item Add more editors
-@item Add support for matrix
-@item Add support for grouping in box/scrollview
+@item Debug and stabilize existing code.
 
 @end itemize
 
