@@ -97,7 +97,6 @@ static id _sharedDelegate = nil;
 
 - (void)encodeWithCoder: (NSCoder*) aCoder
 {
-  id oldDelegate;
   _browserDelegate = _gormDelegate;
   [super encodeWithCoder: aCoder];
   _browserDelegate = _sharedDelegate;

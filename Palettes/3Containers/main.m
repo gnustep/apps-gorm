@@ -64,7 +64,7 @@
 
   // NSBrowser
   // 124 is the minimum width. Below that the browser doesn't display !!
-  v = [[GormNSBrowser alloc] initWithFrame: NSMakeRect(10, 38, 124, 116)];
+  v = [[GormNSBrowser alloc] initWithFrame: NSMakeRect(10, 98, 124, 78)];
 
   //  [v setDelegate:nil];
   [v setHasHorizontalScroller: YES];
@@ -81,6 +81,32 @@
   //  [v setMaxVisibleColumns: 3];
   //[v setAllowsMultipleSelection:NO];
 //  [v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+  
+  // NSTabView
+  v = [[NSTabView alloc] initWithFrame: NSMakeRect(10, 10, 124, 78)];
+  [contents addSubview: v];
+  {
+    NSView *vv;
+    NSTabViewItem *tvi;
+    tvi = [[NSTabViewItem alloc] initWithIdentifier: @"item 1"];
+    [tvi setLabel: @"Item 1"];
+    vv = [[NSView alloc] init];
+    [vv setAutoresizingMask: 
+	 NSViewWidthSizable | NSViewHeightSizable];
+    [tvi setView: vv];
+    [v addTabViewItem: tvi];
+    RELEASE(tvi);
+    tvi = [[NSTabViewItem alloc] initWithIdentifier: @"item 2"];
+    [tvi setLabel: @"Item 2"];
+    vv = [[NSView alloc] init];
+    [vv setAutoresizingMask: 
+	 NSViewWidthSizable | NSViewHeightSizable];
+    [tvi setView: vv];
+    [v addTabViewItem: tvi];
+    RELEASE(tvi);
+  }
+  RELEASE(v);
+  
 
 /********************/
 /* Second Column... */
@@ -97,7 +123,7 @@
   contentSize = [v contentSize];
 
   tv = [[GormNSTableView alloc] initWithFrame:
-             NSZeroRect];
+				  NSZeroRect];
   //  [tv setDataSource: [[NSTableViewDataSource alloc] init]];
   //  [tv setAutoresizesAllColumnsToFit: YES];
   [v setDocumentView: tv];
@@ -120,7 +146,6 @@
   [tc setEditable: YES];
   [tv addTableColumn: tc];
   RELEASE(tc);
-  [tv setFrame: NSMakeRect(0,0,contentSize.width, contentSize.height)];
   
   //  [v setDocumentView: tv];
   [contents addSubview: v];
@@ -137,7 +162,7 @@
   contentSize = [v contentSize];
 
   ov = [[GormNSOutlineView alloc] initWithFrame:
-             NSMakeRect(0,0,contentSize.width, contentSize.height)];
+				    NSZeroRect];
   //  [tv setAutoresizesAllColumnsToFit: YES];
   [v setDocumentView: ov];
   RELEASE(tv);
@@ -160,7 +185,6 @@
   [tc setEditable: YES];
   [ov addTableColumn: tc];
   RELEASE(tc);
-  [ov setFrame: NSMakeRect(0,0,contentSize.width, contentSize.height)];
   [ov setDrawsGrid: NO];
   [ov setIndentationPerLevel: 10.];
   [ov setIndentationMarkerFollowsCell: YES];

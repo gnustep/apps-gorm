@@ -1,3 +1,13 @@
+2002-08-14  Pierre-Yves Rivaille
+
+	* Major changes in editing widgets.
+	* Basic support for NSSplitView and NSTabView.
+	* Intelligent placement and resizing of widget.
+	* Dropping widget into not yet opened box/tabview.
+	* grouping into splitviews/boxes and ungrouping.
+	* direct editing of NSButton's and NSBox's title.
+	* Many small fixes.
+
 2002-07-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormCustomClassInspector.[gorm,classes]: Added.

@@ -19,8 +19,8 @@
   self = [super init];
   if (self != nil)
     {
-      NSDictionary  *table = nil;
-      NSBundle	*bundle = nil;
+//        NSDictionary  *table = nil;
+//        NSBundle	*bundle = nil;
       _classManager = nil;
       _currentSelection = nil;
       _currentSelectionClassName = nil;

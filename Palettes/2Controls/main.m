@@ -50,21 +50,21 @@
 /*******************/
 
   // Editable text field
-  v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 127, 56, 21)];
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 147, 56, 21)];
   [v setEditable: YES];
   [v setStringValue: @"Text"];
   [contents addSubview: v];
   RELEASE(v);
 
   // Push button
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 90, 56, 24)];
-  [v setButtonType: NSToggleButton];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 110, 56, 24)];
+  [v setButtonType: NSMomentaryPushButton];
   [v setTitle: @"Button"];
   [contents addSubview: v];
   RELEASE(v);
 
   // Checkbox
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 60, 56, 16)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 80, 56, 16)];
   [v setButtonType: NSSwitchButton];
   [v setImagePosition: NSImageRight];
   [v setTitle: @"Switch"];
@@ -73,7 +73,7 @@
   RELEASE(v);
 
   // Radio button: default on
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 35, 56, 15)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 55, 56, 16)];
   [v setButtonType: NSRadioButton];
   [v setImagePosition: NSImageLeft];
   [v setTitle: @"Radio"];
@@ -83,7 +83,7 @@
   RELEASE(v);
 
   // Radio button: default off
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 17, 56, 15)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 37, 56, 16)];
   [v setButtonType: NSRadioButton];
   [v setImagePosition: NSImageLeft];
   [v setTitle: @"Radio"];
@@ -98,7 +98,7 @@
 /********************/
 
   // Non editable text field (label)
-  v = [[NSTextField alloc] initWithFrame: NSMakeRect(78, 132, 83, 14)];
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(78, 152, 83, 18)];
   [v setEditable: NO];
   [v setSelectable: NO];
   [v setBezeled: NO];
@@ -110,25 +110,34 @@
   RELEASE(v);
 
   // Group box
-  v = [[NSBox alloc] initWithFrame: NSMakeRect(78, 78, 53, 44)];
+  v = [[NSBox alloc] initWithFrame: NSMakeRect(78, 98, 53, 44)];
   [v setTitle: @"Box"];
   [contents addSubview: v];
   RELEASE(v);
 
   // Color well
-  v = [[NSColorWell alloc] initWithFrame: NSMakeRect(78, 42, 53, 30)];
+  v = [[NSColorWell alloc] initWithFrame: NSMakeRect(78, 62, 53, 30)];
   [contents addSubview: v];
   RELEASE(v);
 
   // Horizontal Slider
-  v = [[NSSlider alloc] initWithFrame: NSMakeRect(78, 19, 83, 16)];
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(78, 39, 83, 16)];
+  [v setDoubleValue: 0];
   [v setContinuous: YES];
   [contents addSubview: v];
   RELEASE(v);
 
   // Vertical Slider
-  v = [[NSSlider alloc] initWithFrame: NSMakeRect(145, 42, 16, 76)];
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(145, 62, 16, 76)];
+  [v setDoubleValue: 0];
   [v setContinuous: YES];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  // Progress Indicator
+  v = [[NSProgressIndicator alloc] initWithFrame: NSMakeRect(78, 15, 83, 18)];
+  [v setIndeterminate: NO];
+  [v setDoubleValue: 50.];
   [contents addSubview: v];
   RELEASE(v);
 
@@ -138,7 +147,7 @@
 /*******************/
 
   // Popup button
-  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(172, 127, 89, 20)];
+  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(172, 147, 89, 20)];
   [v addItemWithTitle: @"Item 1"];
   [v addItemWithTitle: @"Item 2"];
   [v addItemWithTitle: @"Item 3"];
@@ -146,7 +155,7 @@
   RELEASE(v);
 
   // Form
-  v = [[NSForm alloc] initWithFrame: NSMakeRect(172, 81, 87, 45)];
+  v = [[NSForm alloc] initWithFrame: NSMakeRect(172, 101, 87, 45)];
   [v addEntry: @"Field 1"];
   [v addEntry: @"Field 2"];
   [v setEntryWidth: 87];
@@ -156,12 +165,12 @@
   RELEASE(v);
 
   // Stepper
-  v = [[NSStepper alloc] initWithFrame: NSMakeRect(172, 56, 16, 23)];
+  v = [[NSStepper alloc] initWithFrame: NSMakeRect(172, 76, 16, 23)];
   [contents addSubview: v];
   RELEASE(v);
 
   // CustomView
-  v = [[GormCustomView alloc] initWithFrame: NSMakeRect(172, 9, 89, 40)];
+  v = [[GormCustomView alloc] initWithFrame: NSMakeRect(172, 19, 89, 40)];
   [contents addSubview: v];
   RELEASE(v);
 }

@@ -50,7 +50,7 @@
 
 
 
-@interface	GormMenuEditor : NSMenuView <IBEditors>
+@interface	GormMenuEditor : NSMenuView <IBEditors, IBSelectionOwners>
 {
   id<IBDocuments>	document;
   NSMenu		*edited;
@@ -310,7 +310,7 @@
        * handle it - but make sure the menu is selected in the editor first.
        */
       [[document parentEditorForEditor: self] selectObjects:
-	[NSArray arrayWithObject: edited]];
+						[NSArray arrayWithObject: edited]];
       [hit mouseDown: theEvent];
     }
 }
@@ -782,12 +782,6 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
 - (void) resetObject: (id)anObject
 {
   [[self window] makeKeyAndOrderFront: self];
-}
-
-- (id) selectAll: (id)sender
-{
-  [self selectObjects: [edited itemArray]];
-  return self;
 }
 
 - (void) selectObjects: (NSArray*)anArray

@@ -39,6 +39,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 @class	InfoPanel;
 
+// we had this include for grouping/ungrouping selectors
+#import "GormViewWithContentViewEditor.h"
+
 @implementation NSCell (GormAdditions)
 /*
  *  this methods is directly coming from NSCell.m
@@ -291,6 +294,32 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     return nil;
   [selectionOwner copySelection];
   [selectionOwner deleteSelection];
+  return self;
+}
+
+- (id) groupSelectionInSplitView: (id)sender
+{
+  if ([[selectionOwner selection] count] < 2
+      || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
+    return nil;
+  [(id)selectionOwner groupSelectionInSplitView];
+  return self;
+}
+
+- (id) groupSelectionInBox: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
+    return nil;
+  [(id)selectionOwner groupSelectionInBox];
+  return self;
+}
+
+- (id) ungroup: (id)sender
+{
+  NSLog(@"ungroup: selectionOwner %@", selectionOwner);
+  if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
+    return nil;
+  [(id)selectionOwner ungroup];
   return self;
 }
 
@@ -578,6 +607,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   [aMenu addItemWithTitle: @"Close"
 		   action: @selector(close:) 
 	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Debug"
+		   action: @selector(debug:) 
+	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
 				 action: NULL 
 			  keyEquivalent: @""];
@@ -609,6 +641,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    keyEquivalent: @"a"];
   [aMenu addItemWithTitle: @"Set Name..." 
 		   action: @selector(setName:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Group in splitview" 
+		   action: @selector(groupSelectionInSplitView:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Group in box" 
+		   action: @selector(groupSelectionInBox:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Ungroup" 
+		   action: @selector(ungroup:) 
 	    keyEquivalent: @""];
   [[aMenu addItemWithTitle: @"Font Panel" 
 	  action: @selector(orderFrontFontPanel:) 
@@ -843,6 +884,11 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 - (id) loadPalette: (id) sender
 {
   return [[self palettesManager] openPalette: sender];
+}
+
+- (void) debug: (id) sender
+{
+  [[self activeDocument] performSelector: @selector(printAllEditors)];
 }
 
 - (id) miniaturize: (id)sender
@@ -1252,6 +1298,8 @@ main(int argc, const char **argv)
 
   NSImageDoesCaching = YES;
   //[NSObject enableDoubleReleaseCheck: YES];
+  
+  //  [GormPosingView poseAsClass: [NSView class]];
 
   startDate = [[NSDate alloc] init];
   NSApplicationMain(argc, argv);

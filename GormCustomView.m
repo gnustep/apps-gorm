@@ -86,7 +86,6 @@
   if (version == 1)
     {
       NSString *string;
-      unsigned int mask;
       // do not decode super. We need to maintain mapping to NibItems
       string = [aCoder decodeObject];
       _frame = [aCoder decodeRect];

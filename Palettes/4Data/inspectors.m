@@ -254,11 +254,41 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
  * NSTextView (possibly embedded in a Scroll view)
  */
 
+@interface GormViewSizeInspector : IBInspector
+{
+  NSButton	*top;
+  NSButton	*bottom;
+  NSButton	*left;
+  NSButton	*right;
+  NSButton	*width;
+  NSButton	*height;
+  NSForm        *sizeForm;
+}
+@end
+
+@interface GormTextViewSizeInspector : GormViewSizeInspector
+@end
+@implementation GormTextViewSizeInspector
+- (void) setObject: (id)anObject
+{
+  id scrollView;
+  scrollView = [anObject enclosingScrollView];
+
+  [super setObject: scrollView];
+}
+@end
+
+
 @implementation	NSTextView (IBInspectorClassNames)
 
 - (NSString*) inspectorClassName
 {
   return @"GormTextViewAttributesInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormTextViewSizeInspector";
 }
 
 @end
@@ -294,6 +324,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   else if ( (control == borderMatrix) && isScrollView)
     {
       [scrollView setBorderType: [[control selectedCell] tag]];
+      [scrollView setNeedsDisplay: YES];
     }
   else if (control == optionMatrix)
     {

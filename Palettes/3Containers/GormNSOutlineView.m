@@ -285,7 +285,7 @@ static id _sharedDataSource = nil;
   return _gormDelegate;
 }
 
-- (id)setGormDelegate: (id)anObject
+- (void)setGormDelegate: (id)anObject
 {
   [super setDelegate: anObject];
 }

@@ -140,9 +140,26 @@ extern NSString *IBClassNameChangedNotification;
  * must implement.
  */
 @protocol IBSelectionOwners <NSObject>
-- (unsigned) selectionCount;
+//  - (unsigned) selectionCount;
 - (NSArray*) selection;
-- (void) drawSelection;
+//  - (void) drawSelection;
+
+/*
+ * This method is used to draw or remove markup that identifies selected
+ * objects within the object being edited.
+ */
+- (void) makeSelectionVisible: (BOOL)flag;
+
+/*
+ * This method changes the current selection to those objects in the array.
+ */
+- (void) selectObjects: (NSArray*)objects;
+
+//  /*
+//   * This method places the current selection from the editor on the pasteboard.
+//   */
+//  - (void) copySelection;
+
 @end
 
 /*
@@ -150,7 +167,7 @@ extern NSString *IBClassNameChangedNotification;
  * area in which Gorm differs most from InterfaceBuilder, as I have no clear
  * idea of how InterfaceBuilder editors are meant to operate.
  */
-@protocol IBEditors <IBSelectionOwners>
+@protocol IBEditors
 /*
  * Decide whether an editor can accept data from the pasteboard.
  */
@@ -173,15 +190,6 @@ extern NSString *IBClassNameChangedNotification;
  */
 - (void) close;
 
-/*
- * Close subeditors of this editor.
- */
-- (void) closeSubeditors;
-
-/*
- * This method places the current selection from the editor on the pasteboard.
- */
-- (void) copySelection;
 
 /*
  * Deactivate an editor - removes it from the view hierarchy so that objects
@@ -191,10 +199,10 @@ extern NSString *IBClassNameChangedNotification;
  */
 - (void) deactivate;
 
-/*
- * This method deletes all the objects in the current selection in the editor.
- */
-- (void) deleteSelection;
+//  /*
+//   * This method deletes all the objects in the current selection in the editor.
+//   */
+//  - (void) deleteSelection;
 
 /*
  * This method returns the document that owns the object that the editor edits.
@@ -206,17 +214,6 @@ extern NSString *IBClassNameChangedNotification;
  */
 - (id) editedObject;
 
-/*
- * This method is used to draw or remove markup that identifies selected
- * objects within the object being edited.
- */
-- (void) makeSelectionVisible: (BOOL)flag;
-
-/*
- * This method is used to open an editor for an object within the object
- * currently being edited.
- */
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
 
 /*
  * This method is used to ensure that the editor is visible on screen.
@@ -227,22 +224,14 @@ extern NSString *IBClassNameChangedNotification;
  * This method is used to add the contents of the pasteboard to the current
  * selection of objects within the editor.
  */
-- (void) pasteInSelection;
+//  - (void) pasteInSelection;
 
 /*
  * FIXME - I don't think we use this.
  */
 - (void) resetObject: (id)anObject;
 
-/*
- * This method changes the current selection to those objects in the array.
- */
-- (void) selectObjects: (NSArray*)objects;
 
-/*
- * FIXME - I don't think we use this.
- */
-- (void) validateEditing;
 
 /*
  * When an editor resigns the selection ownership, all editors are asked if
@@ -289,7 +278,7 @@ extern NSString *IBClassNameChangedNotification;
 - (id) objectForName: (NSString*)aName;
 - (NSArray*) objects;
 - (id<IBEditors>) openEditorForObject: (id)anObject;
-- (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor;
+- (id<IBEditors, IBSelectionOwners>) parentEditorForEditor: (id<IBEditors>)anEditor;
 - (id) parentOfObject: (id)anObject;
 - (NSArray*) pasteType: (NSString*)aType
 	fromPasteboard: (NSPasteboard*)aPasteboard

@@ -147,6 +147,7 @@ static NSImage	*classesImage = nil;
   return [NSArray arrayWithArray: connections];
 }
 
+
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
   NSArray	*old;
@@ -574,7 +575,7 @@ static NSImage	*classesImage = nil;
       NSString *actionToken = nil;
 
       classfound = [headerScanner scanUpToString: @"@interface"
-			     intoString: nil];
+			     intoString: NULL];
 
       [headerScanner scanUpToString: @"@end"
 		     intoString: &classString];
@@ -596,15 +597,15 @@ static NSImage	*classesImage = nil;
 	    *outlets = [NSMutableArray array];
 
 	  [classScanner scanString: @"@interface"
-			intoString: nil];
+			intoString: NULL];
 	  [classScanner scanUpToCharactersFromSet: stopSet
 			intoString: &className];
 	  [classScanner scanString: @":"
-			intoString: nil];
+			intoString: NULL];
 	  [classScanner scanUpToString: @"\n"
 			intoString: &superClassName];
 	  [classScanner scanUpToString: @"{"
-			intoString: nil];
+			intoString: NULL];
 	  [classScanner scanUpToString: @"}"
 			intoString: &ivarString];
 	  [classScanner scanUpToString: @"@end"
@@ -624,9 +625,9 @@ static NSImage	*classesImage = nil;
 		  NSString *outlet = nil;
 		  
 		  [ivarScanner scanUpToString: outletToken
-			       intoString: nil];
+			       intoString: NULL];
 		  [ivarScanner scanString: outletToken
-			       intoString: nil];
+			       intoString: NULL];
 		  [ivarScanner scanUpToString: @";"
 			       intoString: &outlet];
 		  if(![ivarScanner isAtEnd])
@@ -649,15 +650,15 @@ static NSImage	*classesImage = nil;
 		  
 		  // Scan the method name
 		  [methodScanner scanUpToString: actionToken
-				 intoString: nil];
+				 intoString: NULL];
 		  [methodScanner scanString: actionToken
-				 intoString: nil];
+				 intoString: NULL];
 		  [methodScanner scanUpToCharactersFromSet: stopSet
 				 intoString: &action];
 		  
 		  // This will return true if the method has args.
 		  hasArguments = [methodScanner scanString: @":"
-						intoString: nil];
+						intoString: NULL];
 		  
 		  if(hasArguments)
 		    {
@@ -875,7 +876,10 @@ static NSImage	*classesImage = nil;
   links = [self connectorsForSource: anObject
 			    ofClass: [GormObjectToEditor class]];
   NSAssert([links count] < 2, NSInternalInconsistencyException);
-  [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+  if ([links count] == 1)
+    {
+      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+    }
 
   /*
    * Make sure that this editor is not the selection owner.
@@ -937,11 +941,21 @@ static NSImage	*classesImage = nil;
 	  [connections addObject: link];
 	  RELEASE(link);
 	}
+      else
+	{
+	  NSLog(@"WARNING anEditor = editor");
+	}
+      [editor activate];
       RELEASE(editor);
       return editor;
     }
+  else if ([links count] == 0)
+    {
+      return nil;
+    }
   else
     {
+      [[[links lastObject] destination] activate];
       return [[links lastObject] destination];
     }
 }
@@ -1591,7 +1605,7 @@ static NSImage	*classesImage = nil;
 - (id<IBEditors>) openEditorForObject: (id)anObject
 {
   id<IBEditors>	e = [self editorForObject: anObject create: YES];
-  id<IBEditors>	p = [self parentEditorForEditor: e];
+  id<IBEditors, IBSelectionOwners> p = [self parentEditorForEditor: e];
   
   if (p != nil && p != objectsView)
     {
@@ -1602,13 +1616,13 @@ static NSImage	*classesImage = nil;
   return e;
 }
 
-- (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor
+- (id<IBEditors, IBSelectionOwners>) parentEditorForEditor: (id<IBEditors>)anEditor
 {
   NSArray		*links;
   GormObjectToEditor	*con;
 
   links = [self connectorsForSource: anEditor
-			    ofClass: [GormObjectToEditor class]];
+			    ofClass: [GormEditorToParent class]];
   con = [links lastObject];
   return [con destination];
 }
@@ -2100,7 +2114,8 @@ static NSImage	*classesImage = nil;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSLog(@"setSelectionFromEditor %@", anEditor);
+  NSDebugLog(@"setSelectionFromEditor %@", anEditor);
+  [[anEditor window] makeFirstResponder: anEditor];
   [nc postNotificationName: IBSelectionChangedNotification
 		    object: anEditor];
 }
@@ -2144,10 +2159,27 @@ static NSImage	*classesImage = nil;
   else if ([object isKindOfClass: [NSView class]] == YES)
     {
       /*
-       * Nowmal view objects just get link markup drawn on them.
+       * Normal view objects just get link markup drawn on them.
        */
-      *r = [object convertRect: [object bounds] toView: nil];
-      return [object window];
+      id temp = object;
+      id editor = [self editorForObject: temp create: NO];
+      
+      while((temp != nil) && (editor == nil))
+	{
+	  temp = [temp superview];
+	  editor = [self editorForObject: temp create: NO];
+	}
+
+      if (temp == nil)
+	{
+	  *r = [object convertRect: [object bounds] toView: nil];
+	}
+      else if ([editor respondsToSelector: 
+			 @selector(windowAndRect:forObject:)])
+	{
+	  NSLog(@"temp != nil");
+	  return [editor windowAndRect: r forObject: object];
+	}
     }
   else if ([object isKindOfClass: [NSTableColumn class]] == YES)
     {
@@ -2183,6 +2215,9 @@ static NSImage	*classesImage = nil;
       *r = NSZeroRect;
       return nil;
     }
+
+  // never reached, keeps gcc happy
+  return nil;
 }
 
 - (NSWindow*) window
@@ -2486,6 +2521,24 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
     }
 
   return result;
+}
+
+// for debuging purpose
+- (void) printAllEditors
+{
+  NSMutableSet	        *set = [NSMutableSet setWithCapacity: 16];
+  NSEnumerator		*enumerator = [connections objectEnumerator];
+  id<IBConnectors>	c;
+
+  while ((c = [enumerator nextObject]) != nil)
+    {
+      if ([GormObjectToEditor class] == [c class])
+	{
+	  [set addObject: [c destination]];
+	}
+    }
+
+  NSLog(@"all editors %@", set);
 }
 
 @end

@@ -285,8 +285,8 @@ static NSMapTable	*docMap = 0;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-  id		object = [aNotification object];
-  NSString	*name = [aNotification name];
+//    id		object = [aNotification object];
+//    NSString	*name = [aNotification name];
 
 }
 
@@ -656,9 +656,6 @@ static NSMapTable	*docMap = 0;
   return (selected == nil) ? 0 : 1;
 }
 
-- (void) validateEditing
-{
-}
 
 - (BOOL) wantsSelection
 {

@@ -65,6 +65,10 @@
 {
 
 }
+
+- (void) selectObjects: (NSArray*)objects
+{
+}
 @end
 
 

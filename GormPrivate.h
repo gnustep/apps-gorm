@@ -119,7 +119,7 @@ extern NSString *GormLinkPboardType;
 - (void) setSelectedClassName: (NSString*)cn;
 @end
 
-@interface	GormObjectEditor : NSMatrix <IBEditors>
+@interface	GormObjectEditor : NSMatrix <IBEditors, IBSelectionOwners>
 {
   NSMutableArray	*objects;
   id<IBDocuments>	document;
@@ -150,28 +150,10 @@ extern NSString *GormLinkPboardType;
 - (NSRect) rectForObject: (id)anObject;
 - (void) resetObject: (id)anObject;
 - (void) selectObjects: (NSArray*)objects;
-- (void) validateEditing;
 - (BOOL) wantsSelection;
 - (NSWindow*) window;
 @end
 
-@interface	GormMatrixEditor : NSObject <IBEditors>
-{
-  id<IBDocuments>	document;
-  id			selected;
-  NSMatrix             *matrix;
-}
-
-- (void) changeObject: anObject;
-@end
-
-@interface GormTableViewEditor : NSObject <IBEditors>
-{
-  id<IBDocuments>	document;
-  id			selected;
-  NSTableView           *tableView;
-}
-@end
 
 @interface GormFilesOwnerInspector : IBInspector
 {

@@ -34,7 +34,6 @@
 @implementation	GormWindowMaker
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  [super encodeWithCoder: aCoder];
 }
 - (id) initWithCoder: (NSCoder*)aCoder
 {

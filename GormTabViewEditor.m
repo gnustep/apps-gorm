@@ -1,0 +1,192 @@
+/* GormTabViewEditor.m
+ *
+ * Copyright (C) 2002 Free Software Foundation, Inc.
+ *
+ * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+ * Date:	2002
+ * 
+ * This file is part of GNUstep.
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#import <AppKit/AppKit.h>
+
+#include "GormPrivate.h"
+
+#import "GormTabViewEditor.h"
+
+
+#define _EO ((NSTabView *)_editedObject)
+
+@implementation NSTabView (GormObjectAdditions)
+- (NSString*) editorClassName
+{
+  return @"GormTabViewEditor";
+}
+@end
+
+
+@implementation GormTabViewEditor
+
+- (void) setOpened: (BOOL) flag
+{
+  [super setOpened: flag];
+  if (flag == YES && currentView)
+    {  
+      [document setSelectionFromEditor: currentView];
+    }
+}
+
+- (NSArray *) selection
+{
+  return [NSArray arrayWithObject: _EO];
+}
+
+- (BOOL) activate
+{
+  if ([super activate])
+    {
+      currentView = nil;
+      [_EO setDelegate: self];
+      [self 
+	tabView: _EO
+	didSelectTabViewItem: [_EO selectedTabViewItem]];
+      return YES;
+    }
+
+  return NO;
+}
+
+- (void) deactivate
+{
+  if (activated == YES)
+    {
+      [self deactivateSubeditors];
+      [_EO setDelegate: nil];
+      [super deactivate];
+    }
+}
+
+
+
+- (void) mouseDown: (NSEvent *) theEvent
+{
+  BOOL onKnob = NO;
+
+  {
+    if ([parent respondsToSelector: @selector(selection)] &&
+	[[parent selection] containsObject: _EO])
+      {
+	IBKnobPosition	knob = IBNoneKnobPosition;
+	NSPoint mouseDownPoint = 
+	  [self convertPoint: [theEvent locationInWindow]
+		fromView: nil];
+	knob = GormKnobHitInRect([self bounds], 
+				 mouseDownPoint);
+	if (knob != IBNoneKnobPosition)
+	  onKnob = YES;
+      }
+    if (onKnob == YES)
+      {
+	if (parent)
+	  return [parent mouseDown: theEvent];
+	else
+	  return [self noResponderFor: @selector(mouseDown:)];
+      }
+  }
+
+  if (opened == NO)
+    {
+      [super mouseDown: theEvent];
+      return;
+    }
+
+  if ([[_EO hitTest: [theEvent locationInWindow]]
+	isDescendantOf: currentView])
+    {
+      NSLog(@"md %@ descendant of", self);
+      if ([currentView isOpened] == NO)
+	[currentView setOpened: YES];
+      [currentView mouseDown: theEvent];
+    }
+  else
+    {      
+      NSLog(@"md %@ not descendant of", self);
+      if ([currentView isOpened] == YES)
+	[currentView setOpened: NO];
+      [_EO mouseDown: theEvent];
+    }
+}
+
+
+@end
+
+
+@implementation GormTabViewEditor (TabViewDelegate)
+
+- (void)       tabView: (NSTabView *)tabView 
+  didSelectTabViewItem: (NSTabViewItem *)tabViewItem
+{
+  if ([tabViewItem view])
+    {
+      if ([[tabViewItem view] isKindOfClass: [GormViewEditor class]] == NO)
+	{
+	  currentView = [document editorForObject: [tabViewItem view]
+				  inEditor: self 
+				  create: YES];
+	  NSLog(@"dSTVI %@ %@ %@", self, currentView, [tabViewItem view]);
+	  NSLog(@"dsTVI %@ %@", self, [document parentEditorForEditor: currentView]);
+	}
+      else
+	{
+	  NSLog(@"dsTVI %@ already there", self);
+	}
+    }
+
+  /*
+  subs = [[tabViewItem view] subviews];
+
+  if ([[tabViewItem view] isKindOfClass: [GormViewEditor class]] == NO)
+    [document editorForObject: [tabViewItem view]
+	      inEditor: self 
+	      create: YES];
+  */
+}
+
+
+
+- (BOOL)          tabView: (NSTabView *)tabView 
+  shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
+{
+  NSLog(@"shouldSelectTabViewItem called");
+
+  if ([[[tabView selectedTabViewItem] view] 
+	isKindOfClass: 
+	  [GormInternalViewEditor class]])
+    {
+      
+      NSLog(@"closing tabviewitem");
+      [(GormInternalViewEditor *)[[tabView selectedTabViewItem] view] 
+				 deactivate];
+      currentView = nil;
+      openedSubeditor = nil;
+    }
+
+  return YES;
+}
+
+
+@end

@@ -26,6 +26,8 @@
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
 
+#import "GormNSTableView.h"
+
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
@@ -183,6 +185,8 @@
   id resizableSwitch;
   id editableSwitch;
 }
+- (void) _getValuesFromObject: (id)anObject;
+- (void) _setValuesFromControl: (id)anObject;
 @end
 
 @implementation GormTableColumnAttributesInspector
@@ -316,6 +320,8 @@
 {
   id widthForm;
 }
+- (void) _getValuesFromObject: (id)anObject;
+- (void) _setValuesFromControl: (id)anObject;
 @end
 
 @implementation GormTableColumnSizeInspector
@@ -397,7 +403,9 @@
 }
 
 - (void) _getValuesFromObject: (id)anObject;
+- (void) _setValuesFromControl: (id)anObject;
 @end
+
 
 @implementation GormTableViewAttributesInspector
 

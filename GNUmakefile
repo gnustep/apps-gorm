@@ -115,7 +115,23 @@ Gorm_HEADERS = \
 	GormPrivate.h \
 	GormCustomView.h \
 	GormOutlineView.h \
-	GormCustomClassInspector.h
+	GormCustomClassInspector.h \
+	GormMatrixEditor.h \
+	GormPalettesManager.h \
+	GormViewEditor.h \
+	GormViewWithSubviewsEditor.h \
+	GormViewWithContentViewEditor.h \
+	GormBoxEditor.h \
+	GormClassManager.h \
+	GormControlEditor.h \
+	GormDocument.h \
+	GormFilesOwner.h \
+	GormInspectorsManager.h \
+	GormInternalViewEditor.h \
+	GormButtonEditor.h \
+	GormTabViewEditor.h \
+	GormSplitViewEditor.h \
+	GormPlacementInfo.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -127,12 +143,20 @@ Gorm_OBJC_FILES = \
 	GormFilesOwner.m \
 	GormClassEditor.m \
 	GormMatrixEditor.m \
-	GormTableViewEditor.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
 	GormWindowEditor.m \
 	GormClassManager.m \
 	GormInspectorsManager.m \
+	GormViewEditor.m \
+	GormViewWithSubviewsEditor.m \
+	GormViewWithContentViewEditor.m \
+	GormBoxEditor.m \
+	GormControlEditor.m \
+	GormButtonEditor.m \
+	GormSplitViewEditor.m \
+	GormTabViewEditor.m \
+	GormInternalViewEditor.m \
 	GormPalettesManager.m \
 	GormOutlineView.m \
 	GormCustomClassInspector.m

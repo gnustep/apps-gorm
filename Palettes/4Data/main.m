@@ -214,7 +214,7 @@ int defaultDateFormatIndex = 3;
   v = [[NSScrollView alloc] initWithFrame: NSMakeRect(20, 22, 113,148)];
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
-  [v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+//    [v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   contentSize = [v contentSize];
 
   tv = [[NSTextView alloc] initWithFrame:

@@ -2,8 +2,10 @@
  *
  * Copyright (C) 2001 Free Software Foundation, Inc.
  *
- * Author:	Adam Fedor <fedor@gnu.org>
+ * Authors:	Adam Fedor <fedor@gnu.org>
+ *              Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
  * Date:	Sep 2001
+ *              Aug 2002
  * 
  * This file is part of GNUstep.
  * 
@@ -23,6 +25,20 @@
  */
 
 #include "GormPrivate.h"
+
+#import "GormViewEditor.h"
+
+#import "GormMatrixEditor.h"
+#import "GormViewWithSubviewsEditor.h"
+#import "GormPlacementInfo.h"
+
+#define _EO ((NSMatrix*)_editedObject)
+
+
+@interface GormViewEditor (Private)
+- (void) _displayFrame: (NSRect) frame
+     withPlacementInfo: (GormPlacementInfo*)gpi;
+@end
 
 @implementation NSMatrix (GormObjectAdditions)
 - (NSString*) editorClassName
@@ -57,21 +73,6 @@
 
 @implementation	GormMatrixEditor
 
-static NSMapTable	*docMap = 0;
-
-+ (void) initialize
-{
-  if (self == [GormMatrixEditor class])
-    {
-      docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
-	NSObjectMapValueCallBacks, 2);
-    }
-}
-
-- (id) changeSelection: (id)sender
-{
-  return nil;
-}
 
 - (void) copySelection
 {
@@ -83,11 +84,6 @@ static NSMapTable	*docMap = 0;
     }
 }
 
-- (void) dealloc
-{
-  RELEASE(matrix);
-  [super dealloc];
-}
 
 - (void) deleteSelection
 {
@@ -107,33 +103,19 @@ static BOOL done_editing;
     NSLog(@"GormMatrixEditor got unhandled notification %@", name);
 }
 
-- (id) editedObject
-{
-  return matrix;
-}
 
 /*
  *	Initialisation
  */
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
-  id	old = NSMapGet(docMap, (void*)aDocument);
-
-  if (old != nil)
-    {
-      RELEASE(self);
-      self = RETAIN(old);
-      [self changeObject: anObject];
-      return self;
-    }
-
-  self = [super init];
-  if (self != nil)
-    {
-      document = aDocument;
-      NSMapInsert(docMap, (void*)aDocument, (void*)self);
-      [self changeObject: anObject];
-    }
+  opened = NO;
+  selected = nil;
+  selectedCol = -1;
+  selectedRow = -1;
+  _displaySelection = YES;
+  self = [super initWithObject: anObject 
+		inDocument: aDocument];
   return self;
 }
 
@@ -152,27 +134,27 @@ static BOOL done_editing;
   NSDate		*future = [NSDate distantFuture];
   NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
 
-  isForm = [matrix isKindOfClass: [NSForm class]];
+  isForm = [_EO isKindOfClass: [NSForm class]];
   if (isForm == NO && [selected type] != NSTextCellType)
     return;
 
   /* FIXME: Seems wierd to do this. */
-  edit_view = [matrix superview];
+  edit_view = [_EO superview];
 
-  [matrix getRow: &row column: &col ofCell: selected];
-  frame = [matrix cellFrameAtRow: row column: col];
-  frame.origin.x += NSMinX([matrix frame]);
+  [_EO getRow: &row column: &col ofCell: selected];
+  frame = [_EO cellFrameAtRow: row column: col];
+  frame.origin.x += NSMinX([_EO frame]);
   if (isForm)
-    frame.size.width = [(NSForm *)matrix titleWidth];
+    frame.size.width = [(NSForm *)_EO titleWidth];
   else
     frame = [selected titleRectForBounds: frame];
-  if ([matrix isFlipped])
+  if ([_EO isFlipped])
     {
-      frame.origin.y = NSMaxY([matrix frame]) - NSMaxY(frame);
+      frame.origin.y = NSMaxY([_EO frame]) - NSMaxY(frame);
     }
   else
     {
-      frame.origin.y = NSMinY([matrix frame]) + NSMinY(frame);
+      frame.origin.y = NSMinY([_EO frame]) + NSMinY(frame);
     }
 
   /* Now create an edit field and allow the user to edit the text */
@@ -252,15 +234,15 @@ static BOOL done_editing;
       /* Set the new title and resize the form to match the titles */
       float oldTitleWidth, titleWidth;
       NSRect oldFrame;
-      oldTitleWidth = [(NSForm *)matrix titleWidth];
+      oldTitleWidth = [(NSForm *)_EO titleWidth];
       [(NSFormCell *)selected setTitle: [editField stringValue]];
-      [(NSForm *)matrix calcSize];
-      titleWidth = [(NSForm *)matrix titleWidth];
-      oldFrame = frame = [matrix frame];
+      [(NSForm *)_EO calcSize];
+      titleWidth = [(NSForm *)_EO titleWidth];
+      oldFrame = frame = [_EO frame];
       frame.origin.x -= (titleWidth - oldTitleWidth);
       frame.size.width += (titleWidth - oldTitleWidth);
-      [(NSForm *)matrix setEntryWidth: NSWidth(frame)];
-      [(NSForm *)matrix setFrame: frame];
+      [(NSForm *)_EO setEntryWidth: NSWidth(frame)];
+      [(NSForm *)_EO setFrame: frame];
       frame = NSUnionRect(frame, oldFrame);
     }
   else
@@ -273,22 +255,106 @@ static BOOL done_editing;
   RELEASE(editField);
 }
 
+- (BOOL) canBeOpened
+{
+  return YES;
+}
+
+- (void) setOpened: (BOOL) value
+{
+  if (value)
+    {
+      opened = YES;
+    }
+  else
+    {
+      opened = NO;
+      selected = nil;
+      selectedCol = -1;
+      selectedRow = -1;
+    }
+}
+
+- (void) mouseDown: (NSEvent *)theEvent
+{
+  BOOL onKnob = NO;
+
+  {
+    if ([[parent selection] containsObject: _EO])
+      {
+	IBKnobPosition	knob = IBNoneKnobPosition;
+	NSPoint mouseDownPoint = 
+	  [self convertPoint: [theEvent locationInWindow]
+		fromView: nil];
+	knob = GormKnobHitInRect([self bounds], 
+				 mouseDownPoint);
+	if (knob != IBNoneKnobPosition)
+	  onKnob = YES;
+      }
+    if (onKnob == YES)
+      {
+	if (_next_responder)
+	  return [_next_responder mouseDown: theEvent];
+	else
+	  return [self noResponderFor: @selector(mouseDown:)];
+      }
+  }
+  
+  if (opened == NO)
+    {
+      [super mouseDown: theEvent];
+      return;
+    }
+  
+
+  {
+    int row, col;
+    NSPoint mouseDownPoint = 
+      [_EO 
+	convertPoint: [theEvent locationInWindow]
+	fromView: nil];
+
+    if ([_EO 
+	  getRow: &row 
+	  column: &col 
+	  forPoint: mouseDownPoint] == YES)
+      {
+	selectedRow = row;
+	selectedCol = col;
+	selected = [_EO cellAtRow: row
+				  column: col];
+	
+	[document setSelectionFromEditor: self];
+	
+	[self setNeedsDisplay: YES];
+      }
+    else
+      {
+	selected = nil;
+	selectedRow = -1;
+	selectedCol = -1;
+	[document setSelectionFromEditor: self];
+      }
+  }
+}
+
+/*
 - (void) mouseDown: (NSEvent*)theEvent
 {
   int	row, col;
   id	obj;
   NSPoint loc = [theEvent locationInWindow];
 
-  /*
-   * Double-click on a cell allows one to edit the cell title
-   */
+  //
+  // Double-click on a cell allows one to edit the cell title
+  //
   if (selected != nil && ([theEvent clickCount] == 2) )
     {
       [self editTitleWithEvent: theEvent];
       return;
     }
 
-  /* Find which cell the mouse is in */
+  // Find which cell the mouse is in
   loc = [matrix convertPoint: loc fromView: nil];
   if ([matrix getRow: &row column: &col forPoint: loc] == NO)
     return;
@@ -299,36 +365,32 @@ static BOOL done_editing;
       [self selectObjects: [NSArray arrayWithObject: obj]];
     }
 }
+*/
 
 - (void) makeSelectionVisible: (BOOL)flag
 {
   if (selected != nil)
     {
       int row, col;
-      if ([matrix getRow: &row column: &col ofCell: selected])
+      if ([_EO getRow: &row column: &col ofCell: selected])
 	{
-	  NSRect frame = [matrix cellFrameAtRow: row column: col];
+	  NSRect frame = [_EO cellFrameAtRow: row column: col];
 	  if (flag == YES)
-	    [matrix selectCellAtRow: row column: col];
-	  [matrix lockFocus];
+	    [_EO selectCellAtRow: row column: col];
+	  [_EO lockFocus];
 	  [[NSColor controlShadowColor] set];
 	  NSHighlightRect(frame);
-	  [matrix unlockFocus];
+	  [_EO unlockFocus];
 	}
     }
   else
     {
-      [matrix deselectAllCells];
+      [_EO deselectAllCells];
     }
-  [matrix display];
-  [[matrix window] flushWindow];
+  [_EO display];
+  [[_EO window] flushWindow];
 }
 
-- (void) changeObject: anObject
-{
-  ASSIGN(matrix, anObject);
-  selected = nil;
-}
 
 - (void) selectObjects: (NSArray*)anArray
 {
@@ -342,20 +404,20 @@ static BOOL done_editing;
 - (NSArray*) selection
 {
   if (selected == nil)
-    return [NSArray array];
+    return [NSArray arrayWithObject: _EO];
   else
     return [NSArray arrayWithObject: selected];
 }
 
-- (unsigned) selectionCount
-{
-  return (selected == nil) ? 0 : 1;
-}
+//  - (unsigned) selectionCount
+//  {
+//    return (selected == nil) ? 0 : 1;
+//  }
 
-- (id<IBEditors>) openSubeditorForObject: (id)anObject
-{
-  return nil;
-}
+//  - (id<IBEditors>) openSubeditorForObject: (id)anObject
+//  {
+//    return nil;
+//  }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
@@ -364,11 +426,7 @@ static BOOL done_editing;
   return NO;
 }
 
-- (BOOL) activate
-{
-  return YES;
-}
-
+/*
 - (void) close
 {
   [self deactivate];
@@ -378,51 +436,260 @@ static BOOL done_editing;
 - (void) closeSubeditors
 {
 }
+*/
 
-- (void) deactivate
+
+- (void) postDraw: (NSRect) rect
 {
-  selected = nil;
+  if (_displaySelection)
+    {
+      if ((selectedRow != -1) && (selectedCol != -1))
+	{
+	  NSLog(@"highlighting %@",
+		NSStringFromRect([_EO 
+				       cellFrameAtRow: selectedRow
+				       column: selectedCol]));
+	  [[NSColor blackColor] set];
+	  NSHighlightRect([_EO 
+			    convertRect:
+			      [_EO 
+					   cellFrameAtRow: selectedRow
+					   column: selectedCol]
+			    toView: self]);
+					 
+	}
+    }
 }
 
-- (void) drawSelection
+
+
+
+- (NSRect) _constrainedFrame: (NSRect) frame
+		   withEvent: (NSEvent *)theEvent
+		     andKnob: (IBKnobPosition) knob
 {
+  int width;
+  int height;
+      
+  if ([theEvent modifierFlags] & NSAlternateKeyMask)
+    {
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize interSize = [_EO intercellSpacing];
+      
+      int colWidth = ([_EO frame].size.width - 
+		      (cols - 1) * interSize.width) / cols;
+      int rowHeight = ([_EO frame].size.height - 
+		       (rows - 1) * interSize.height) / rows;
+	
+      int widthIncrement = colWidth + interSize.width;
+      int heightIncrement = rowHeight + interSize.height;
+      
+      if (frame.size.width < colWidth)
+	{
+	  width = colWidth;
+	  rows = 1;
+	}
+      else
+	{
+	  width = frame.size.width - [_EO frame].size.width;
+	  rows = width / widthIncrement;
+	  width = rows * widthIncrement + [_EO frame].size.width;
+	}
+
+      if (frame.size.height < rowHeight)
+	{
+	  height = rowHeight;
+	  cols = 1;
+	}
+      else
+	{
+	  height = frame.size.height - [_EO frame].size.height;
+	  cols = height / heightIncrement;
+	  height = cols * heightIncrement + [_EO frame].size.height;
+	}
+    }
+  else if ([theEvent modifierFlags] & NSControlKeyMask)
+    {
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize cellSize = [_EO cellSize];
+      
+      
+      width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
+      height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
+      
+      width *= (cols - 1);
+      width += cellSize.width * cols;
+      height *= (rows - 1);
+      height += cellSize.height * rows;
+
+    }
+  else
+    {
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize interSize = [_EO intercellSpacing];
+      
+      width = ( frame.size.width - interSize.width * (cols - 1) ) /  cols;
+      width *= cols;
+      width += (interSize.width * (cols - 1));
+      
+      height = ( frame.size.height - interSize.height * (rows - 1) ) /  rows;
+      height *= rows;
+      height += (interSize.height * (rows - 1));
+    }
+  
+  switch (knob)
+    {
+    case IBBottomLeftKnobPosition:
+    case IBMiddleLeftKnobPosition:
+    case IBTopLeftKnobPosition:
+      frame.origin.x = NSMaxX(frame) - width;
+      frame.size.width = width;
+      break;
+    case IBTopRightKnobPosition:
+    case IBMiddleRightKnobPosition:
+    case IBBottomRightKnobPosition:
+      frame.size.width = width;
+      break;
+    case IBTopMiddleKnobPosition:
+    case IBBottomMiddleKnobPosition:
+    case IBNoneKnobPosition:
+      break;
+    }
+  
+  
+  switch (knob)
+    {
+    case IBBottomLeftKnobPosition:
+    case IBBottomRightKnobPosition:
+    case IBBottomMiddleKnobPosition:
+      frame.origin.y = NSMaxY(frame) - height;
+      frame.size.height = height;
+      break;
+    case IBTopMiddleKnobPosition:
+    case IBTopRightKnobPosition:
+    case IBTopLeftKnobPosition:
+      frame.size.height = height;
+      break;
+    case IBMiddleLeftKnobPosition:
+    case IBMiddleRightKnobPosition:
+    case IBNoneKnobPosition:
+      break;
+    }
+  
+  return frame;
 }
 
-- (id<IBDocuments>) document
+
+- (void) updateResizingWithFrame: (NSRect) frame
+			andEvent: (NSEvent *)theEvent
+		andPlacementInfo: (GormPlacementInfo*) gpi
 {
-  return document;
+  gpi->lastFrame = [self _constrainedFrame: frame
+		    withEvent: theEvent
+		    andKnob: gpi->knob];
+
+  [self _displayFrame: gpi->lastFrame
+	withPlacementInfo: gpi];
 }
 
-- (void) orderFront
-{
-  NSLog(@"Ack - GormMatrixEditor - orderFront");
-}
 
-- (void) pasteInSelection
-{
-}
 
-- (void) resetObject: (id)anObject
+- (void) validateFrame: (NSRect) frame
+	     withEvent: (NSEvent *) theEvent
+      andPlacementInfo: (GormPlacementInfo*)gpi
 {
-  [self changeObject: anObject];
-  selected = nil;
-}
+  frame = gpi->lastFrame;
 
-- (void) validateEditing
-{
-}
+  if ([theEvent modifierFlags] & NSAlternateKeyMask)
+    {
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize interSize = [_EO intercellSpacing];
+      
+      int colWidth = ([_EO frame].size.width - 
+		      (cols - 1) * interSize.width) / cols;
+      int rowHeight = ([_EO frame].size.height - 
+		       (rows - 1) * interSize.height) / rows;
+	
+      int widthIncrement = colWidth + interSize.width;
+      int heightIncrement = rowHeight + interSize.height;
 
-- (BOOL) wantsSelection
-{
-  return NO;
-}
+      int newCols = (frame.size.width - [_EO frame].size.width) /
+	widthIncrement;
+      int newRows = (frame.size.height - [_EO frame].size.height) /
+	heightIncrement;
+      
+      int i;
 
-- (NSWindow*) window
-{
-  NSLog(@"Ack - GormMatrix - window");
-  return nil;
-}
+      if (newCols > 0)
+	{
+	  for ( i = 0; i < newCols; i++)
+	    {
+	      [_EO addColumn];
+	    }
+	}
+      else if (newCols < 0)
+	{
+	  for ( i = 0; i < -newCols; i++)
+	    {
+	      [_EO removeColumn: cols - i - 1];
+	    }
+	}
 
+      if (newRows > 0)
+	{
+	  for ( i = 0; i < newRows; i++)
+	    {
+	      [_EO addRow];
+	    }
+	}
+      else if (newRows < 0)
+	{
+	  for ( i = 0; i < -newRows; i++)
+	    {
+	      [_EO removeRow: rows - i - 1];
+	    }
+	}
+      [_EO setFrame: frame];
+    }
+  else if ([theEvent modifierFlags] & NSControlKeyMask)
+    {
+      int width;
+      int height;
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize cellSize = [_EO cellSize];
+      
+      
+      [self setFrame: frame];
+      
+      
+      width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
+      height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
+      
+      [_EO setIntercellSpacing: NSMakeSize(width, height)];
+    }
+  else
+    {
+      int width;
+      int height;
+      int rows = [_EO numberOfRows];
+      int cols = [_EO numberOfColumns];
+      NSSize interSize = [_EO intercellSpacing];
+      
+      
+      [self setFrame: frame];
+      
+      
+      width = ( frame.size.width - interSize.width * (cols - 1) ) /  cols;
+      height = ( frame.size.height - interSize.height * (rows - 1) ) /  rows;
+      
+      [_EO setCellSize: NSMakeSize(width, height)];
+    }
+}
 
 @end
 

@@ -34,4 +34,16 @@
   BOOL _gormAllowsMultipleSelection;
   BOOL _gormAllowsEmptySelection;
 }
+
+- (void) setGormDelegate: (id)anObject;
+- (void) setGormAllowsColumnReordering: (BOOL)flag;
+- (BOOL) gormAllowsColumnReordering;
+- (void) setGormAllowsColumnResizing: (BOOL)flag;
+- (BOOL) gormAllowsColumnResizing;
+- (void) setGormAllowsMultipleSelection: (BOOL)flag;
+- (BOOL) gormAllowsMultipleSelection;
+- (void) setGormAllowsEmptySelection: (BOOL)flag;
+- (BOOL) gormAllowsEmptySelection;
+- (void) setGormAllowsColumnSelection: (BOOL)flag;
+- (BOOL) gormAllowsColumnSelection;
 @end

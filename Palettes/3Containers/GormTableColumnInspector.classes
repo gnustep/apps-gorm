@@ -139,11 +139,11 @@
 	Actions = (
 	);
 	Outlets = (
-	    titleAlignmentMatrix,
 	    contentsAlignmentMatrix,
-	    resizableSwitch,
 	    editableSwitch,
-	    identifierTextField
+	    identifierTextField,
+	    resizableSwitch,
+	    titleAlignmentMatrix
 	);
 	Super = IBInspector;
     };

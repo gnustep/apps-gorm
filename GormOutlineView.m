@@ -554,7 +554,7 @@ static NSColor *darkGreyBlueColor = nil;
     }
   else if(isActionOrOutlet)
     {
-      NSString *name = [_clickedItem getName];
+//        NSString *name = [_clickedItem getName];
     }
 
   [super mouseDown: theEvent];

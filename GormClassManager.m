@@ -145,7 +145,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     || [classInformation objectForKey: superClassName] != nil)
     {
       NSMutableDictionary	*classInfo;
-      NSString			*newClassName;
+//        NSString			*newClassName;
 
       if(![classInformation objectForKey: className])
 	{
