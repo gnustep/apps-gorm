@@ -1,3 +1,8 @@
+2004-08-02 08:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: Clarified error message when
+	unable to load palettes.
+	
 2004-08-02 00:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPrefController.m: Center the window the prefs appear

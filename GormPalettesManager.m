@@ -399,7 +399,7 @@ static NSImage	*dragImage = nil;
   paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
   if (paletteInfo == nil)
     {
-      NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table', you may need to update GNUstep-make."),
+      NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table', you may need to update GNUstep-make and do a clean build of Gorm and it's palettes."),
 		      _(@"OK"), NULL, NULL);
       return;
     }
