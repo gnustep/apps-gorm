@@ -1,3 +1,10 @@
+2004-01-04 20:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: Added back some code to make the display
+	of the title of the inspector more informative when editing a class.
+	The title now reads: "Class Edit Inspector: {className}".  This code
+	had been commented out a while back.
+
 2004-01-03 02:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Minor correction to -removeAction: and
