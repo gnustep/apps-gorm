@@ -65,14 +65,36 @@
   isOutlet = flag;
 }
 
+- (void) _strip
+{
+  NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
+  NSString *resultString = [NSString stringWithString: @""];
+  NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+
+  while(![stripScanner isAtEnd])
+    {
+      NSString *string = nil;
+      [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
+      resultString = [resultString stringByAppendingString: string];
+      if(![stripScanner isAtEnd])
+	{
+	  resultString = [resultString stringByAppendingString: @" "];
+	}
+    }
+
+  ASSIGN(ivarString, resultString);
+}
+
 - (void) parse
 {
   NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  NSScanner *scanner = [NSScanner scannerWithString: [ivarString stringByTrimmingCharactersInSet: wsnl]];
+  NSScanner *scanner = nil; // [NSScanner scannerWithString: ivarString];
   NSRange range;
   NSString *tempName = nil;
 
+  [self _strip];
+  scanner = [NSScanner scannerWithString: ivarString];
   if(NSEqualRanges((range = [ivarString rangeOfString: @"IBOutlet"]),notFound) == NO &&
      range.location == 0)
     {

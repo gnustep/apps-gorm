@@ -86,10 +86,12 @@
       NSString *string = nil;
       [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
       resultString = [resultString stringByAppendingString: string];
-      resultString = [resultString stringByAppendingString: @" "];
+      if(![stripScanner isAtEnd])
+	{
+	  resultString = [resultString stringByAppendingString: @" "];
+	}
     }
 
-  [resultString stringByAppendingString: @"\n"];
   ASSIGN(methodString, resultString);
 }
 
@@ -97,7 +99,7 @@
 {
   NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  NSScanner *scanner = [NSScanner scannerWithString: [methodString stringByTrimmingCharactersInSet: wsnl]];
+  NSScanner *scanner = nil;
   NSString *tempSelector = nil;
   NSString *selectorPart = nil;
   NSString *returnPart = nil;
@@ -105,6 +107,7 @@
   NSRange range;
 
   [self _strip];
+  scanner = [NSScanner scannerWithString: methodString]; // stringByTrimmingCharactersInSet: wsnl]];
   isClassMethod = ([methodString compare: @"+" options: NSLiteralSearch range: NSMakeRange(0,1)] == NSOrderedSame);
   if(isClassMethod)
     {

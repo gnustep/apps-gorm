@@ -112,14 +112,27 @@
 
 - (void) _strip
 {
-  NSString *resultString = nil;
-  // strip whitespace...
+  NSScanner *stripScanner = [NSScanner scannerWithString: classString];
+  NSString *resultString = [NSString stringWithString: @""];
+  NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+
+  while(![stripScanner isAtEnd])
+    {
+      NSString *string = nil;
+      [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
+      resultString = [resultString stringByAppendingString: string];
+      if(![stripScanner isAtEnd])
+	{
+	  resultString = [resultString stringByAppendingString: @" "];
+	}
+    }
+  
   ASSIGN(classString, resultString);
 }
 
 - (void) parse
 {
-  NSScanner *scanner = [NSScanner scannerWithString: classString];
+  NSScanner *scanner = nil; 
   NSScanner *iscan = nil;
   NSString *interfaceLine = nil;
   NSString *methodsString = nil;
@@ -128,8 +141,11 @@
   NSRange range;
   NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  
+  NSCharacterSet *pmcs = [NSCharacterSet characterSetWithCharactersInString: @"+-"];
+
   // get the interface line... look ahead...  
+  [self _strip];
+  scanner = [NSScanner scannerWithString: classString];
   if(NSEqualRanges(range = [classString rangeOfString: @"{"], notFound) == NO)
     {
       [scanner scanUpToString: @"@interface" intoString: NULL]; 
@@ -139,7 +155,7 @@
   else // if there is no "{", then there are no ivars...
     {
       [scanner scanUpToString: @"@interface" intoString: NULL]; 
-      [scanner scanUpToString: @"\n" intoString: &interfaceLine];
+      [scanner scanUpToCharactersFromSet: pmcs intoString: &interfaceLine];
       iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
     }
 
@@ -162,7 +178,7 @@
       NSString *cn = nil;
 
       [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
-      [iscan scanUpToString: @" " intoString: &cn];
+      [iscan scanUpToCharactersFromSet: wsnl intoString: &cn];
       className = [cn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(className);
       isCategory = YES;
