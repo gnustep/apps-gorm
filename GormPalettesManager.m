@@ -397,13 +397,37 @@ static NSImage	*dragImage = nil;
       return NO;
     }
 
-  paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
-  if (paletteInfo == nil)
+  // attempt to load the palette table in either the strings or plist format.
+  NS_DURING
     {
-      NSRunAlertPanel(nil, _(@"Failed to load 'palette.table', you may need to update GNUstep-make and do a clean build of Gorm and it's palettes."),
-		      _(@"OK"), nil, nil);
+      paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
+      if (paletteInfo == nil)
+	{
+	  paletteInfo = [[NSString stringWithContentsOfFile: path] propertyListFromStringsFileFormat];
+	  if(paletteInfo == nil)
+	    {
+	      NSRunAlertPanel(_(@"Problem Loading Palette"), 
+			      _(@"Failed to load 'palette.table' using strings or property list format."),
+			      _(@"OK"), 
+			      nil, 
+			      nil);
+	      return NO;
+	    }
+	}
+    }
+  NS_HANDLER
+    {
+      NSString *message = [NSString stringWithFormat: 
+				      _(@"Encountered exception %@ attempting to load 'palette.table'."),
+				    [localException reason]];
+      NSRunAlertPanel(_(@"Problem Loading Palette"), 
+		      message,
+		      _(@"OK"), 
+		      nil, 
+		      nil);
       return NO;
     }
+  NS_ENDHANDLER
 
   className = [paletteInfo objectForKey: @"Class"];
   if (className == nil)
