@@ -168,4 +168,34 @@
   return self;
 }
 
+- (NSArray *)destroyAndListSubviews
+{
+  id internalView = [[[_EO documentView] subviews] objectAtIndex: 0];
+  NSEnumerator *enumerator = [[internalView subviews] objectEnumerator];
+  GormViewEditor *subview;
+  NSMutableArray *newSelection = [NSMutableArray array];
+  
+  [parent makeSubeditorResign];
+  // NSLog(@"documentview = %@",[_EO documentView]);
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      id v;
+      NSRect frame;
+      v = [subview editedObject];
+      frame = [v frame];
+      frame = [parent convertRect: frame fromView: _EO];
+      [subview deactivate];      
+      [v setFrame: frame];
+      [newSelection addObject: v];
+    }
+  
+  {
+    id thisView = [self editedObject];
+    [self close];
+    [thisView removeFromSuperview];
+  }
+
+  return newSelection;
+}
+
 @end

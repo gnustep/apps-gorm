@@ -1,3 +1,25 @@
+2003-06-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormScrollViewEditor.m: Added -[destroyAndListSubviews]
+	method to allow views within a NSScrollView to be ungrouped.
+	* GormViewWithContentViewEditor.m: Added GormScrollViewEditor
+	to list of classes to test for so that the ungroup method will
+	proceed.
+	Addresses bug #3536.
+	
+2003-06-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPrivate.h: Added declaration for GormDidModifyClassNotification
+	* Gorm.m: Added definition for GormDidModifyClassNotification.  Also
+	corrected an issue which was causing Gorm to crash when testing
+	an interface.
+	* GormClassManager.m: Added code to post the notification when
+	an outlet or an action is added.
+	* GormClassInspector.m: Added code to handleNotification
+	GormDidModifyClassNotification so that the views in the 
+	inspector can be properly updated when the class is edited in the
+	class editor.
+
 2003-06-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Added post of notification in 

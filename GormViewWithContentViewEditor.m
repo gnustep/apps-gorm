@@ -23,13 +23,9 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
-
 #include "GormViewWithContentViewEditor.h"
-
 #include "GormPlacementInfo.h"
-
 #include "GormSplitViewEditor.h"
 
 
@@ -1013,9 +1009,9 @@
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
 
-
 @class GormBoxEditor;
 @class GormSplitViewEditor;
+@class GormScrollViewEditor;
 
 - (void) ungroup
 {
@@ -1028,9 +1024,12 @@
 
   toUngroup = [selection objectAtIndex: 0];
 
+  NSLog(@"toUngroup = %@",[toUngroup description]);
 
   if ([toUngroup isKindOfClass: [GormBoxEditor class]]
-      || [toUngroup isKindOfClass: [GormSplitViewEditor class]])
+      || [toUngroup isKindOfClass: [GormSplitViewEditor class]]
+      || [toUngroup isKindOfClass: [GormScrollViewEditor class]]
+      )
     {
       id contentView = toUngroup;
 
