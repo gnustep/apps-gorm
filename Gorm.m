@@ -544,9 +544,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.7.5 (Beta)" 
+  [dict setObject: @"Gorm 0.7.6 (Alpha)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.7.5 Mar 21 2004" 
+  [dict setObject: @"0.7.6 Apr 14 2004" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
