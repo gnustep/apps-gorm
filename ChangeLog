@@ -1,3 +1,16 @@
+2005-03-11 21:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormTest: Removed the "GormTest" application.  Since most
+	.gorm files use classes which will never be linked into that
+	application and since the "test interface" functionality in
+	Gorm itself provides the same functionality, this app is being
+	removed.
+
+2005-03-09 23:58 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/GNUmakefile: Install docs into correct
+	location under ${GNUSTEP_SYSTEM_ROOT}/Library/Documentation.
+
 2005-03-08 00:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added new files.
