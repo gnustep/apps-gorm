@@ -131,18 +131,22 @@
 {
   Class cls = [NSView class];
   GormClassManager *classManager = [(Gorm *)NSApp classManager];
-  NSString *superClass = [classManager nonCustomSuperClassOf: theClass];
 
-  // get the superclass if one exists...
-  if(superClass != nil)
+  if([classManager isSuperclass: @"NSView" linkedToClass: theClass])
     {
-      cls = NSClassFromString(superClass);
-      if(cls == nil)
+      NSString *superClass = [classManager nonCustomSuperClassOf: theClass];
+
+      // get the superclass if one exists...
+      if(superClass != nil)
 	{
-	  cls = [NSView class];
+	  cls = NSClassFromString(superClass);
+	  if(cls == nil)
+	    {
+	      cls = [NSView class];
+	    }
 	}
     }
-  
+
   return cls;
 }
 

@@ -1,3 +1,9 @@
+2004-08-28 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomView.m: Modified _bestPossibleSuperClass to 
+	return NSView if the class isn't defined or is not an
+	NSView subclass.
+	
 2004-08-28 11:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added calls to [GSClassSwapper 
