@@ -1,3 +1,9 @@
+2004-05-22 12:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm validateMenuItem:] removed code which greys
+	out the add/remove for first responder.  This was preventing
+	people from adding in the classes view.
+	
 2004-05-21 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Removed the infoPanel method.

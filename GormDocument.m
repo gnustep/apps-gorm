@@ -3715,3 +3715,12 @@ willBeInsertedIntoToolbar: (BOOL)flag
 		  @"ClassesItem", nil];
 }
 @end
+
+/*
+@implementation NSColor (Extensions)
++ (NSColor *) toolbarBackgroundColor
+{
+  return RETAIN([NSColor colorWithCalibratedRed: 0.8 green: 0.8 blue: 0.8 alpha: 1.0]);
+}
+@end
+*/

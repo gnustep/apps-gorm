@@ -1355,8 +1355,8 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	      return NO;
 	    }
 
-	  if([name isEqual: @"FirstResponder"])
-	    return NO;
+	  // if([name isEqual: @"FirstResponder"])
+	  //   return NO;
 	}
 
       if(sel_eq(action, @selector(instantiateClass:)))

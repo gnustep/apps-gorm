@@ -115,7 +115,6 @@ extern NSString *GormResizeCellNotification;
 - (GormPalettesManager*) palettesManager;
 - (void) stopConnecting;
 
-- (void) infoPanel: (id) sender;
 - (void) preferencesPanel: (id) sender;
 
 - (void) copy: (id)sender;
