@@ -34,3 +34,5 @@ one.
 
 2) Make GormClassEditor return a dictionary instead of a proxy object as it's
 selection.
+
+3) Better gmodel import.
