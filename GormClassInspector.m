@@ -541,7 +541,6 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
       NSTabViewItem *tvi = [tabView selectedTabViewItem];
       BOOL isAction = [[tvi identifier] isEqualToString: @"Actions"];
       NSString *className = [self _currentClass];
-      // id classManager = [(Gorm *)NSApp classManager];
       
       if(isAction)
 	{
