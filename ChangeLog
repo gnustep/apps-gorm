@@ -1,3 +1,8 @@
+2005-02-26 22:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Gorm.texi: Updating documentation to contain
+	information answering recent questions about encoding.
+
 2005-02-20 12:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: Mapped NSCStringText to NSText.
