@@ -38,6 +38,38 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 @class	InfoPanel;
 
+@implementation NSCell (GormAdditions)
+/*
+ *  this methods is directly coming from NSCell.m
+ *  The only additions is [textObject setUsesFontPanel: NO]
+ *  We do this because we want to have control over the font panel changes
+ */
+- (NSText *)setUpFieldEditorAttributes:(NSText *)textObject
+{
+  [textObject setUsesFontPanel: NO];
+  [textObject setTextColor: [self textColor]];
+  if (_cell.contents_is_attributed_string == NO)
+    {
+      /* TODO: Manage scrollable attribute */
+      [textObject setFont: _font];
+      [textObject setAlignment: _cell.text_align];
+    }
+  else
+    {
+      /* FIXME/TODO.  What do we do if we are an attributed string.  
+         Think about what happens when the user ends editing. 
+         Allows editing text attributes... Formatter... TODO. */
+    }
+  [textObject setEditable: _cell.is_editable];
+  [textObject setSelectable: _cell.is_selectable || _cell.is_editable];
+  [textObject setRichText: _cell.is_rich_text];
+  [textObject setImportsGraphics: _cell.imports_graphics];
+  [textObject setSelectedRange: NSMakeRange(0, 0)];
+
+  return textObject;
+}
+@end
+
 @implementation GSNibItem (GormAdditions)
 - initWithClassName: (NSString*)className frame: (NSRect)frame
 {
@@ -501,6 +533,10 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   [mainMenu setSubmenu: aMenu forItem: menuItem];
   RELEASE(aMenu);
 
+
+
+
+
   /*
    * Set up edit menu.
    */
@@ -523,11 +559,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   [aMenu addItemWithTitle: @"Set Name..." 
 		   action: @selector(setName:) 
 	    keyEquivalent: @""];
+  [[aMenu addItemWithTitle: @"Font Panel" 
+	  action: @selector(orderFrontFontPanel:) 
+	  keyEquivalent: @"f"] setTarget: [NSFontManager sharedFontManager]];
   menuItem = [mainMenu addItemWithTitle: @"Edit" 
 				 action: NULL 
 			  keyEquivalent: @""];
   [mainMenu setSubmenu: aMenu forItem: menuItem];
   RELEASE(aMenu);
+
 
   /*
    * Set up classes menu.
@@ -565,7 +605,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    keyEquivalent: @"i"];
   [aMenu addItemWithTitle: @"Palettes..." 
 		   action: @selector(palettes:) 
-	    keyEquivalent: @""];
+	    keyEquivalent: @"p"];
   [aMenu addItemWithTitle: @"Load Palette..." 
 		   action: @selector(loadPalette:) 
 	    keyEquivalent: @""];
