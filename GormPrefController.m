@@ -52,4 +52,12 @@
   }
 }
 
+- (void) dealloc
+{
+  RELEASE(_generalView);
+  RELEASE(_headersView);
+  RELEASE(_shelfView);
+  RELEASE(_colorsView);
+  [super dealloc];
+}
 @end

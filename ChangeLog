@@ -1,4 +1,9 @@
-2004-04-17 11:55 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-04-18 08:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPrefsController.m: Added dealloc to prevent any memory
+	leaks.
+	
+2004-04-17 23:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormPrefColors.gorm: New gorm file for color 
 	preferences.
