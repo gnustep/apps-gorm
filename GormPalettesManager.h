@@ -1,5 +1,35 @@
+/* GormPalettesManager.h
+ *
+ * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
+ *
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
+ * Date:	1999, 2003
+ * 
+ * This file is part of GNUstep.
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #ifndef INCLUDED_GormPalettesManager_h
 #define INCLUDED_GormPalettesManager_h
+
+#include <Foundation/NSObject.h>
+
+@class NSMutableArray, NSMutableDictionary, NSDictionary, NSArray, NSBundle;
+@class NSPanel, NSMatrix, NSView;
 
 @interface GormPalettesManager : NSObject
 {
@@ -11,13 +41,23 @@
   int			current;
   BOOL			hiddenDuringTest;
   NSMutableDictionary   *importedClasses;
+  NSMutableArray        *importedImages;
+  NSMutableArray        *importedSounds;
 }
+
+// methods for loading and display the palette panels
 - (void) loadPalette: (NSString*)path;
 - (id) openPalette: (id) sender;
 - (NSPanel*) panel;
 - (void) setCurrentPalette: (id)anObject;
-- (NSDictionary *) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict;
+
+// methods for importing stuff from palettes
+- (void) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict;
 - (NSDictionary *) importedClasses;
+- (void) importImages: (NSArray *)images withBundle: (NSBundle *) bundle;
+- (NSArray *) importedImages;
+- (void) importSounds: (NSArray *)sounds withBundle: (NSBundle *) bundle;
+- (NSArray *) importedSounds;
 @end
 
 #endif

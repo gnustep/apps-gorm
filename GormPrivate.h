@@ -231,7 +231,6 @@ extern NSString *GormResizeCellNotification;
 @interface	GormSoundEditor : GormGenericEditor 
 {
 }
-// don't redeclare methods already declared in protocols.
 + (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
@@ -240,7 +239,6 @@ extern NSString *GormResizeCellNotification;
 @interface	GormImageEditor : GormGenericEditor 
 {
 }
-// don't redeclare methods already declared in protocols.
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;

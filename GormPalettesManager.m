@@ -24,6 +24,8 @@
 
 #include "GormPrivate.h"
 #include <Foundation/NSArray.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/NSSound.h>
 
 #define BUILTIN_PALETTES @"BuiltinPalettes"
 #define USER_PALETTES    @"UserPalettes"
@@ -278,6 +280,8 @@ static NSImage	*dragImage = nil;
   bundles = [NSMutableArray new];
   palettes = [NSMutableArray new];
   importedClasses = [NSMutableDictionary new];
+  importedImages = [NSMutableArray new];
+  importedSounds = [NSMutableArray new];
 
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasHorizontalScroller: YES];
@@ -320,18 +324,18 @@ static NSImage	*dragImage = nil;
 	{
 	  [self loadPalette: [array objectAtIndex: index]];
 	}
-
-      // if we have any user palettes load them as well.
-      if(userPalettes != nil)
-	{
-	  NSEnumerator *en = [userPalettes objectEnumerator];
-	  id paletteName = nil;
-	  while((paletteName = [en nextObject]) != nil)
-	    {
-	      [self loadPalette: paletteName];
-	    }
-	}
     }
+
+   // if we have any user palettes load them as well.
+   if(userPalettes != nil)
+     {
+       NSEnumerator *en = [userPalettes objectEnumerator];
+       id paletteName = nil;
+       while((paletteName = [en nextObject]) != nil)
+	 {
+	   [self loadPalette: paletteName];
+	 }
+     }
 
   /*
    * Select initial palette - this should be the standard controls palette.
@@ -395,7 +399,7 @@ static NSImage	*dragImage = nil;
   paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
   if (paletteInfo == nil)
     {
-      NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table'"),
+      NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table', you may need to update GNUstep-make."),
 		      _(@"OK"), NULL, NULL);
       return;
     }
@@ -428,22 +432,19 @@ static NSImage	*dragImage = nil;
   exportClasses = [paletteInfo objectForKey: @"ExportClasses"];
   if(exportClasses != nil)
     {
-      NSDictionary *classes = [self importClasses: exportClasses withDictionary: nil];
-      [importedClasses addEntriesFromDictionary: classes];
+      [self importClasses: exportClasses withDictionary: nil];
     }
 
   exportImages = [paletteInfo objectForKey: @"ExportImages"];
   if(exportImages != nil)
     {
-      // id classManager = [(Gorm *)NSApp classManager]; 
-      // [classManager importClasses: exportClasses fromPalette: palette];
+      [self importImages: exportImages withBundle: bundle];
     }
 
   exportSounds = [paletteInfo objectForKey: @"ExportSounds"];
   if(exportSounds != nil)
     {
-      // id classManager = [(Gorm *)NSApp classManager]; 
-      // [classManager importClasses: exportClasses fromPalette: palette];
+      [self importSounds: exportSounds withBundle: bundle];
     }
 
   [palette finishInstantiate];
@@ -556,7 +557,7 @@ static NSImage	*dragImage = nil;
   [dragView setNeedsDisplay: YES];
 }
 
-- (NSDictionary *) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict
+- (void) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict
 {
   NSEnumerator *en = [classes objectEnumerator];
   id className = nil;
@@ -580,11 +581,52 @@ static NSImage	*dragImage = nil;
       [masterDict addEntriesFromDictionary: dict];
     }
   
-  return masterDict;
+  // add the classes to the dictionary...
+  [importedClasses addEntriesFromDictionary: masterDict];
 }
 
-- (NSDictionary *)importedClasses
+- (NSDictionary *) importedClasses
 {
   return importedClasses;
+}
+
+- (void) importImages: (NSArray *)images withBundle: (NSBundle *) bundle
+{
+  NSEnumerator *en = [images objectEnumerator];
+  id name = nil;
+  NSMutableArray *paths = [NSMutableArray array];
+
+  while((name = [en nextObject]) != nil)
+    {
+      NSString *path = [bundle pathForImageResource: name];
+      [paths addObject: path];
+    }
+
+  [importedImages addObjectsFromArray: paths];
+}
+
+- (NSArray *) importedImages
+{
+  return importedImages;
+}
+
+- (void) importSounds: (NSArray *)sounds withBundle: (NSBundle *) bundle
+{
+  NSEnumerator *en = [sounds objectEnumerator];
+  id name = nil;
+  NSMutableArray *paths = [NSMutableArray array];
+
+  while((name = [en nextObject]) != nil)
+    {
+      NSString *path = [bundle pathForSoundResource: name];
+      [paths addObject: path];
+    }
+
+  [importedSounds addObjectsFromArray: paths];
+}
+
+- (NSArray *) importedSounds
+{
+  return importedSounds;
 }
 @end

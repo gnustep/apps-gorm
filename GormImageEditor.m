@@ -24,6 +24,8 @@
 
 #include "GormPrivate.h"
 #include "GormFunctions.h"
+#include "GormPalettesManager.h"
+#include <AppKit/NSImage.h>
 
 /*
  * Method to return the image that should be used to display objects within
@@ -195,9 +197,10 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   if (self != nil)
     {
       NSButtonCell	*proto;
-      NSArray           *list;
+      NSMutableArray    *list = [NSMutableArray array];
       NSEnumerator      *en;
       id                obj;
+      GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	NSFilenamesPboardType, nil]];
@@ -232,7 +235,8 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	}
 
       // add all of the system objects...
-      list = systemImagesList();
+      [list addObjectsFromArray: systemImagesList()];
+      [list addObjectsFromArray: [palettesManager importedImages]];
       en = [list objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{

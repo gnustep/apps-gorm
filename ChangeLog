@@ -1,3 +1,22 @@
+2004-07-12 23:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageEditor.m: [GormImageEditor initWithObject:inDocument:]
+	added call to [GormPalettesManager importedImages] to return
+	the images imported by any custom palettes.
+	* GormSoundEditor.m: [GormSoundEditor initWithObject:inDocument:]
+	added call to [GormPalettesManager importedSounds] to return
+	the sounds imported by any custom palettes.
+	* GormPalettesManager.m: Changed the return of 
+	[GormPalettesManager importClasses:withDictionary:], added
+	[GormPalettesManager importImages:withBundle:],
+	[GormPalettesManager importSounds:withBundle:],
+	[GormPalettesManager importedImages], and
+	[GormPalettesManager importedImages].  These methods are
+	used to get the images and sounds from a palette so that
+	they can be used from Gorm by the user.
+	* GormPalettesManager.h: Added banner.
+	
+	
 2004-07-11 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: saveGormDocument.m: Changes to prevent a
@@ -12,7 +31,8 @@
 	on the button.
 	Added code to the toolbar delegate to add the "File" button to the 
 	document toolbar.
-	Added code to loadDocument to load the data.info file if it's present, if not
+	Added code to loadDocument to load the data.info file if it's 
+	present, if not
 	we simply use the defaults.
 	* GormDocument.h: Added new ivars for isOlderArchive, filePrefsView,
 	and filePrefsManager.
@@ -43,8 +63,8 @@
 	non-ui objects in a Gorm file.  It will be useful for adding DB objects
 	or other things which a .gorm file might need.
 	* GormPalettesManager.[hm]: Added [GormPalettesManager importedClasses]
-	and [GormPalettesManager importClasses:withDictionary:] adds the classes
-	from the list in the palette.table.
+	and [GormPalettesManager importClasses:withDictionary:] adds the 
+	classes from the list in the palette.table.
 	* GormLib/IBPalette.h: Changed name of ivar.  This ivar wasn't properly
 	named.  It should have been originalWindow.  This issue was causing the
 	.gorm load to not make a needed connection.
@@ -52,16 +72,17 @@
 	instead of strings file format.  This was needed to facilitate the
 	reading of all of the classes, sounds and images a palette might
 	import.  Also modified to correctly load the nib file.
-	* Palettes/0Menus/main.m: Corrected window to originalWindow as detailed
-	above.  It was referred to in a few places by the old name.
+	* Palettes/0Menus/main.m: Corrected window to originalWindow as 
+	detailed above.  It was referred to in a few places by the old name.
 	* Palettes/1Windows/main.m: same.
 	* Palettes/2Controls/main.m: same.
 	* Palettes/3Containers/main.m: same.
 	* Palettes/4Data/main.m: same.
-	* Palettes/2Controls/inspectors.m: Change to clarify the autoenable switch
-	on pulldown buttons.
-	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm: Corresponding .gorm file
-	change for the above.  Added new outlet and made new connection.
+	* Palettes/2Controls/inspectors.m: Change to clarify the autoenable 
+	switch on pulldown buttons.
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm: Corresponding 
+	.gorm file change for the above.  Added new outlet and made new 
+	connection.
 	
 2004-07-09 16:24 Gregory John Casamento <greg_casamento@yahoo.com>
 

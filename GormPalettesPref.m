@@ -27,7 +27,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray *list = [defaults objectForKey: @"UserPalettes"];
-  id value = nil; // NSFontAttributeName
+  id value = nil;
   if([list count] > 0)
     {
       value = [[list objectAtIndex: rowIndex] lastPathComponent];
@@ -68,7 +68,6 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addAction: (id)sender
 {
-  NSLog(@"Here...");
   [[(Gorm *)NSApp palettesManager] openPalette: self];
   [table reloadData];
 }

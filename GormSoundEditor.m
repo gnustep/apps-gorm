@@ -24,6 +24,7 @@
 
 #include "GormPrivate.h"
 #include "GormFunctions.h"
+#include "GormPalettesManager.h"
 #include <AppKit/NSSound.h>
 
 /*
@@ -198,9 +199,10 @@ static NSMapTable	*docMap = 0;
   if (self != nil)
     {
       NSButtonCell	*proto;
-      NSArray           *list;
+      NSMutableArray    *list = [NSMutableArray array];
       NSEnumerator      *en;
       id                obj;
+      GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	IBObjectPboardType, GormLinkPboardType, nil]];
@@ -235,7 +237,8 @@ static NSMapTable	*docMap = 0;
 	}
 
       // add all of the system objects...
-      list = systemSoundsList();
+      [list addObjectsFromArray: systemSoundsList()];
+      [list addObjectsFromArray: [palettesManager importedSounds]];
       en = [list objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
