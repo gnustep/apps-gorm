@@ -300,10 +300,16 @@ NSLog(@"Mouse down on item %d", pos);
 {
   if ([selection count] > 0)
     {
-      NSArray	*s = [NSArray arrayWithArray: selection];
+      NSArray		*s = [NSArray arrayWithArray: selection];
+      NSEnumerator	*e = [s objectEnumerator];
+      NSMenuItem	*i;
 
       [self makeSelectionVisible: NO];
       [self selectObjects: [NSArray array]];
+      while ((i = [e nextObject]) != nil)
+	{
+	  [edited removeItem: i];
+	}
       [document detachObjects: s];
     }
 }
@@ -474,6 +480,8 @@ NSLog(@"Mouse down on item %d", pos);
 {
   NSPasteboard	*pb = [NSPasteboard generalPasteboard];
   NSArray	*items;
+  NSEnumerator	*enumerator;
+  NSMenuItem	*item;
 
   /*
    * Ask the document to get the copied items from the pasteboard and add
@@ -482,6 +490,23 @@ NSLog(@"Mouse down on item %d", pos);
   items = [document pasteType: IBMenuPboardType
 	       fromPasteboard: pb
 		       parent: edited];
+  
+  enumerator = [items objectEnumerator];
+  while ((item = [enumerator nextObject]) != nil)
+    {
+      NSString	*title = [item title];
+
+      if ([edited indexOfItemWithTitle: title] > 0)
+	{
+	  [document detachObject: item];	/* Already exists */
+	}
+      else
+	{
+	  [edited addItem: item];
+	}
+    }
+  [edited sizeToFit];
+  [edited display];
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
@@ -580,7 +605,7 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
 }
 
 /*
- * Return the rectangle in which an objects image will be displayed.
+ * Return the rectangle in which an objects link status will be displayed.
  */
 - (NSRect) rectForObject: (id)anObject
 {
