@@ -40,12 +40,20 @@
   id		w;
   unsigned	style = NSTitledWindowMask | NSClosableWindowMask
 			| NSResizableWindowMask | NSMiniaturizableWindowMask;
+  NSRect        screenRect = [[NSScreen mainScreen] frame];
+  float
+    x = (screenRect.size.width - 500)/2, 
+    y = (screenRect.size.height - 300)/2;
+  NSRect        windowRect = NSMakeRect(x,y,500,300);
 
-  w = [[GormNSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
+  // NSLog(@"Making window %@ on screen: %@",NSStringFromRect(windowRect),NSStringFromRect(screenRect));
+  w = [[GormNSWindow alloc] initWithContentRect: windowRect 
 			    styleMask: style 
 			    backing: NSBackingStoreRetained
 			    defer: NO];
+  [w setFrame: windowRect display: YES];
   [w setTitle: @"Window"];
+  [w orderFront: self];
   RELEASE(self);
   return w;
 }
@@ -66,12 +74,20 @@
   id		w;
   unsigned	style = NSTitledWindowMask | NSClosableWindowMask
 			| NSResizableWindowMask | NSMiniaturizableWindowMask;
-
-  w = [[NSPanel alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
+  NSRect        screenRect = [[NSScreen mainScreen] frame];
+  float         
+    x = (screenRect.size.width - 500)/2, 
+    y = (screenRect.size.height - 300)/2;
+  NSRect        windowRect = NSMakeRect(x,y,500,300);
+  
+  // NSLog(@"Making panel %@",NSStringFromRect(windowRect));
+  w = [[NSPanel alloc] initWithContentRect: windowRect 
 				 styleMask: style 
 				   backing: NSBackingStoreRetained
 				     defer: NO];
+  [w setFrame: windowRect display: YES];
   [w setTitle: @"Panel"];
+  [w orderFront: self];
   RELEASE(self);
   return w;
 }

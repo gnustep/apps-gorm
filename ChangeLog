@@ -1,5 +1,12 @@
 2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* Palettes/1Windows/main.m: Added code to 
+	-[GormPanelMaker initWithCoder:] and -[GormWindowMaker initWithCoder:]
+	to order the window/panel to the front when added.   Previously, it
+	was difficult to find the window/panel after adding it.
+	
+2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Modified removeConnectionsWithLabel:.. to return
 	a boolean to indicate if action/outlet was removed.  Also modified
 	the code so that the alert only appears if a connection actually
