@@ -1,3 +1,8 @@
+2002-12-06  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added code to scroll to the class name
+	when the subclassing or changing the class name.
+	
 2002-12-05  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.[mh]: Added method named

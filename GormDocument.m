@@ -594,6 +594,7 @@ static NSImage	*classesImage = nil;
       [classesView expandItem: itemSelected];
       i = [classesView rowForItem: newClassName]; 
       [classesView selectRow: i byExtendingSelection: NO];
+      [classesView scrollRowToVisible: i];
       [self editClass: self];
     }
 
@@ -2984,12 +2985,15 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  BOOL rename = [self renameConnectionsForClassNamed: item toName: anObject];
 	  if(rename)
 	    {
+	      int row = 0;
 	      [classManager renameClassNamed: item newName: anObject];
-	      [self detachObject: [self objectForName: item]];
 	      [gov reloadData];
+	      row = [gov rowForItem: anObject];
+	      [gov scrollRowToVisible: row];
 	    }
 	}
     }
+
   [gov setNeedsDisplay: YES];
 }
 
