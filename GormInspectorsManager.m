@@ -1051,7 +1051,13 @@ selectCellWithString: (NSString*)title
 
 - (void) ok: (id)sender
 {
-  if ([connectors containsObject: currentConnector] == YES)
+  if([currentConnector destination] == nil)
+    {
+      NSRunAlertPanel(_(@"Problem making connection"),
+		      _(@"You must select a valid destination"), 
+		      _(@"OK"), nil, nil, nil);
+    }
+  else if ([connectors containsObject: currentConnector] == YES)
     {
       [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
       if ([currentConnector isKindOfClass: [NSNibOutletConnector class]])
