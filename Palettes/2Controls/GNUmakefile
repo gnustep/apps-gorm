@@ -33,15 +33,15 @@ PALETTE_NAME = 2Controls
 2Controls_PRINCIPAL_CLASS = ControlsPalette
 
 2Controls_RESOURCE_FILES = ControlsPalette.tiff \
-	GormBoxInspector.gorm \
-	GormButtonInspector.gorm \
-	GormCellInspector.gorm \
-	GormFormInspector.gorm \
-	GormMatrixInspector.gorm \
-	GormPopUpButtonInspector.gorm \
-	GormSliderInspector.gorm \
-	GormStepperInspector.gorm \
-	GormTextFieldInspector.gorm
+	GormNSBoxInspector.gorm \
+	GormNSButtonInspector.gorm \
+	GormNSCellInspector.gorm \
+	GormNSFormInspector.gorm \
+	GormNSMatrixInspector.gorm \
+	GormNSPopUpButtonInspector.gorm \
+	GormNSSliderInspector.gorm \
+	GormNSStepperInspector.gorm \
+	GormNSTextFieldInspector.gorm
 
 -include GNUmakefile.preamble
 

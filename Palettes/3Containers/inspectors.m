@@ -115,7 +115,7 @@
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormBrowserInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSBrowserInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormBrowserInspector");
       return nil;
@@ -197,7 +197,7 @@
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormTableColumnInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSTableColumnInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormTableColumnInspector");
       return nil;
@@ -332,7 +332,7 @@
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormTableColumnSizeInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSTableColumnSizeInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormTableColumnSizeInspector");
       return nil;
@@ -531,7 +531,7 @@
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormTableViewInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSTableViewInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormTableViewInspector");
       return nil;

@@ -29,8 +29,8 @@ PALETTE_NAME = 1Windows
 1Windows_HEADER_FILES = GormNSWindow.h
 1Windows_PRINCIPAL_CLASS = WindowsPalette
 1Windows_RESOURCE_FILES = WindowsPalette.tiff WindowDrag.tiff \
-	GormWindowSizeInspector.gorm \
-	GormWindowInspector.gorm
+	GormNSWindowSizeInspector.gorm \
+	GormNSWindowInspector.gorm
 
 -include GNUmakefile.preamble
 

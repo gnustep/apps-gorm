@@ -303,7 +303,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormImageViewInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSImageViewInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormImageViewInspector");
       return nil;
@@ -553,7 +553,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormTextViewInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSTextViewInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormTextViewInspector");
       return nil;
@@ -697,7 +697,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormDateFormatterInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSDateFormatterInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormDateFormatterInspector");
       return nil;
@@ -1005,7 +1005,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormNumberFormatterInspector"
+  if ([NSBundle loadNibNamed: @"GormNSNumberFormatterInspector"
 		       owner: self] == NO)
     {
       NSLog(@"Could not gorm GormNumberFormatterInspector");

@@ -311,9 +311,9 @@ NSwindow inspector
   if ([super init] == nil)
     return nil;
 
-  if ([NSBundle loadNibNamed: @"GormWindowInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSWindowInspector" owner: self] == NO)
     {
-      NSLog(@"Could not gorm GormWindowInspector");
+      NSLog(@"Could not gorm GormNSWindowInspector");
       return nil;
     }
   return self;
@@ -394,9 +394,9 @@ NSwindow inspector
   if ([super init] == nil)
     return nil;
 
-  if ([NSBundle loadNibNamed: @"GormWindowSizeInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSWindowSizeInspector" owner: self] == NO)
     {
-      NSLog(@"Could not gorm GormWindowSizeInspector");
+      NSLog(@"Could not gorm GormNSWindowSizeInspector");
       return nil;
     }
   [[NSNotificationCenter defaultCenter] 

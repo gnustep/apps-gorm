@@ -98,7 +98,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormBoxInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSBoxInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormBoxInspector");
       return nil;
@@ -332,7 +332,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormButtonInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSButtonInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormButtonInspector");
       return nil;
@@ -447,7 +447,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormCellInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSCellInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormCellInspector");
       return nil;
@@ -610,7 +610,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormFormInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSFormInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormFormInspector");
       return nil;
@@ -769,7 +769,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormMatrixInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSMatrixInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormMatrixInspector");
       return nil;
@@ -850,7 +850,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormPopUpButtonInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSPopUpButtonInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormPopUpButtonInspector");
       return nil;
@@ -966,7 +966,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormSliderInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSSliderInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormSliderInspector");
       return nil;
@@ -1086,7 +1086,7 @@
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormStepperInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSStepperInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormStepperAttributesInspector");
       return nil;
@@ -1261,7 +1261,7 @@
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormTextFieldInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSTextFieldInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormTextFieldInspector");
       return nil;

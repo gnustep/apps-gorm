@@ -28,11 +28,11 @@ PALETTE_NAME = 4Data
 4Data_OBJC_FILES = main.m inspectors.m
 4Data_PRINCIPAL_CLASS = DataPalette
 4Data_RESOURCE_FILES = DataPalette.tiff \
-	GormImageViewInspector.gorm \
-	GormTextViewInspector.gorm  \
+	GormNSImageViewInspector.gorm \
+	GormNSTextViewInspector.gorm  \
 	GormNSComboBoxInspector.gorm  \
-	GormDateFormatterInspector.gorm \
-	GormNumberFormatterInspector.gorm
+	GormNSDateFormatterInspector.gorm \
+	GormNSNumberFormatterInspector.gorm
 
 -include GNUmakefile.preamble
 
