@@ -537,7 +537,7 @@ static NSButtonType _buttonTypeForObject( id button )
 	{
 	  id	doc = [documents objectAtIndex: i];
 
-	  if ([doc isActive] == YES)
+ 	  if ([doc isActive] == YES)
 	    {
 	      return doc;
 	    }
@@ -545,6 +545,66 @@ static NSButtonType _buttonTypeForObject( id button )
     }
   return nil;
 }
+
+/* 
+   NSApp
+*/
+- (id) init 
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSBundle			*bundle = [NSBundle mainBundle];
+      NSString			*path;
+
+      path = [bundle pathForImageResource: @"GormLinkImage"];
+      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormSourceTag"];
+      sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormTargetTag"];
+      targetImage = [[NSImage alloc] initWithContentsOfFile: path];
+
+      documents = [NSMutableArray new];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBSelectionChangedNotification
+	  object: nil];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillCloseDocumentNotification
+	  object: nil];
+
+      /*
+       * Make sure the palettes manager exists, so that the editors and
+       * inspectors provided in the standard palettes are available.
+       */
+      [self palettesManager];
+
+      // load the interface...
+      if(![NSBundle loadNibNamed: @"Gorm" owner: self])
+	{
+	  NSLog(@"Failed to load interface");
+	  exit(-1);
+	}
+    }
+  return self;
+}
+
+
+- (void) dealloc
+{
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+  [nc removeObserver: self];
+  RELEASE(infoPanel);
+  RELEASE(inspectorsManager);
+  RELEASE(palettesManager);
+  RELEASE(documents);
+  RELEASE(classManager);
+  //  [super dealloc];
+}
+
 
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
@@ -630,23 +690,10 @@ static NSButtonType _buttonTypeForObject( id button )
   
 }
 
-- (id) close: (id)sender
-{
-  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
 
-  [window setReleasedWhenClosed: YES];
-  [window performClose: self];
-  return nil;
-}
-
-- (id) copy: (id)sender
-{
-  if ([[selectionOwner selection] count] == 0
-    || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner copySelection];
-  return self;
-}
+/***********************************************************************/
+/***********************   Info Menu Actions****************************/
+/***********************************************************************/
 
 - (id) connectDestination
 {
@@ -658,55 +705,463 @@ static NSButtonType _buttonTypeForObject( id button )
   return connectSource;
 }
 
-- (id) createSubclass: (id)sender
+
+- (void) displayConnectionBetween: (id)source
+			      and: (id)destination
 {
-  return [(GormDocument *)[self activeDocument] createSubclass: sender];
+  NSWindow	*window;
+  NSRect	rect;
+  
+
+  if (source != connectSource)
+    {
+      if (connectSource != nil)
+	{
+	  window = [[self activeDocument] windowAndRect: &rect
+					 forObject: connectSource];
+	  if (window != nil)
+	    {
+	      NSView	*view = [[window contentView] superview];
+ 
+	      rect.origin.x --;
+	      rect.size.width ++;
+	      
+	      rect.size.height ++;
+
+	      [window disableFlushWindow];
+	      [view displayRect: rect];
+	      
+	      [window enableFlushWindow];
+	      [window flushWindow];
+	    }
+	}
+      connectSource = source;
+    }
+  if (destination != connectDestination)
+    {
+      if (connectDestination != nil)
+	{
+	  window = [[self activeDocument] windowAndRect: &rect
+					  forObject: connectDestination];
+	  if (window != nil)
+	    {
+	      NSView	*view = [[window contentView] superview];
+
+	      /*
+	       * Erase image from old location.
+	       */
+	      rect.origin.x --;
+	      rect.size.width ++;
+	      rect.size.height ++;
+
+	      [view lockFocus];
+	      [view displayRect: rect];
+	      [view unlockFocus];
+	      [window flushWindow];
+	    }
+	}
+      connectDestination = destination;
+    }
+  if (connectSource != nil)
+    {
+      window = [[self activeDocument] windowAndRect: &rect forObject: connectSource];
+      if (window != nil)
+	{
+	  NSView	*view = [[window contentView] superview];
+	  
+	  rect.origin.x++;
+	  rect.size.width--;
+	  rect.size.height--;
+	  [view lockFocus];
+	  [[NSColor greenColor] set];
+	  NSFrameRectWithWidth(rect, 2);
+	  
+	  [sourceImage compositeToPoint: rect.origin
+			      operation: NSCompositeSourceOver];
+	  [view unlockFocus];
+	  [window flushWindow];
+	}
+    }
+  if (connectDestination != nil && connectDestination == connectSource)
+    {
+      window = [[self activeDocument] windowAndRect: &rect
+				     forObject: connectDestination];
+      if (window != nil)
+	{
+	  NSView	*view = [[window contentView] superview];
+
+	  rect.origin.x += 3;
+	  rect.origin.y += 2;
+	  rect.size.width -= 5;
+	  rect.size.height -= 5;
+	  [view lockFocus];
+	  [[NSColor purpleColor] set];
+	  NSFrameRectWithWidth(rect, 2);
+	  
+	  rect.origin.x += [targetImage size].width;
+	  [targetImage compositeToPoint: rect.origin
+			      operation: NSCompositeSourceOver];
+	  [view unlockFocus];
+	  [window flushWindow];
+	}
+    }
+  else if (connectDestination != nil)
+    {
+      window = [[self activeDocument] windowAndRect: &rect
+				      forObject: connectDestination];
+      if (window != nil)
+	{
+	  NSView	*view = [[window contentView] superview];
+
+	  rect.origin.x++;
+	  rect.size.width--;
+	  rect.size.height--;
+	  [view lockFocus];
+	  [[NSColor purpleColor] set];
+	  NSFrameRectWithWidth(rect, 2);
+	  
+	  [targetImage compositeToPoint: rect.origin
+			      operation: NSCompositeSourceOver];
+	  [view unlockFocus];
+	  [window flushWindow];
+	}
+    }
 }
 
-- (id) cut: (id)sender
+
+
+/***********************************************************************/
+/***********************   Info Menu Actions****************************/
+/***********************************************************************/
+
+- (void) infoPanel: (id) sender
+{
+  NSMutableDictionary *dict;
+  
+  dict = [NSMutableDictionary dictionaryWithCapacity: 8];
+  [dict setObject: @"Gorm" 
+     forKey: @"ApplicationName"];
+  [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
+     forKey: @"ApplicationDescription"];
+  [dict setObject: @"Gorm 0.3.0" 
+     forKey: @"ApplicationRelease"];
+  [dict setObject: @"0.3.0 Jul 2003" 
+     forKey: @"FullVersionID"];
+  [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
+			 @"Richard Frith-Macdonald <rfm@gnu.org>",
+			 @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
+			 nil]
+     forKey: @"Authors"];
+  [dict setObject: @"Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc."
+     forKey: @"Copyright"];
+  [dict setObject: @"Released under the GNU General Public License 2.0"
+     forKey: @"CopyrightDescription"];
+  
+  [self orderFrontStandardInfoPanelWithOptions: dict];
+}
+
+
+- (void) preferencesPanel: (id) sender
+{
+  if(! preferencesController)
+    {
+      preferencesController =  [[GormPrefController alloc] initWithWindowNibName:@"GormPreferences"];
+    }
+
+  [[preferencesController window] makeKeyAndOrderFront:nil];
+}
+
+
+/***********************************************************************/
+/***********************  Document Menu Actions*************************/
+/***********************************************************************/
+- (void) open: (id) sender
+{
+  GormDocument	*doc = [GormDocument new];
+
+  [documents addObject: doc];
+  RELEASE(doc);
+  if ([doc openDocument: sender] == nil)
+    {
+      [documents removeObjectIdenticalTo: doc];
+      doc = nil;
+    }
+  else
+    {
+      [[doc window] makeKeyAndOrderFront: self];
+    }
+}
+
+
+//include Modules Menu
+- (void) newGormDocument : (id) sender 
+{
+  id doc = [GormDocument new];
+  [documents addObject: doc];
+  RELEASE(doc);
+  switch ([sender tag]) 
+    {
+    case 0:
+      [doc setupDefaults: @"Application"];
+      break;
+    case 1:
+      [doc setupDefaults: @"Empty"];
+      break;
+    case 2:
+      [doc setupDefaults: @"Inspector"];
+      break;
+    case 3:
+      [doc setupDefaults: @"Palette"];
+      break;
+
+    default: 
+      printf("unknow newGormDocument tag");
+    }
+  if (NSEqualPoints(cascadePoint, NSZeroPoint))
+    {	
+      NSRect frame = [[doc window] frame];
+      cascadePoint = NSMakePoint(frame.origin.x, NSMaxY(frame));
+    }
+  cascadePoint = [[doc window] cascadeTopLeftFromPoint:cascadePoint];
+  [[doc window] makeKeyAndOrderFront: self];
+}
+
+- (void) save: (id)sender
+{
+  [(GormDocument *)[self activeDocument] saveGormDocument: sender];
+}
+
+- (void) saveAs: (id)sender
+{
+  [(GormDocument *)[self activeDocument] saveAsDocument: sender];
+}
+
+
+- (void) saveAll: (id)sender
+{
+  NSEnumerator	*enumerator = [documents objectEnumerator];
+  id		doc;
+
+  while ((doc = [enumerator nextObject]) != nil)
+    {
+      if ([[doc window] isDocumentEdited] == YES)
+	{
+	  if (! [doc saveGormDocument: sender] )
+	    NSLog(@"can not save %@",doc);
+	}
+    }
+}
+
+
+- (void) revertToSaved: (id)sender
+{
+  id	doc = [(GormDocument *)[self activeDocument] revertDocument: sender];
+
+  if (doc != nil)
+    {
+      [documents addObject: doc];
+      [[doc window] makeKeyAndOrderFront: self];
+    }
+}
+
+- (void) close: (id)sender
+{
+  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
+
+  [window setReleasedWhenClosed: YES];
+  [window performClose: self];
+}
+
+- (void) debug: (id) sender
+{
+  [[self activeDocument] performSelector: @selector(printAllEditors)];
+}
+
+- (void) loadSound: (id) sender
+{
+  [(GormDocument *)[self activeDocument] openSound: sender];
+}
+
+- (void) loadImage: (id) sender
+{
+  [(GormDocument *)[self activeDocument] openImage: sender];
+}
+
+- (void) testInterface: (id)sender
+{
+  if (isTesting == YES)
+    {
+      return;
+    }
+  else
+    {
+      NSUserDefaults		*defaults;
+      NSNotificationCenter	*notifCenter = [NSNotificationCenter defaultCenter];
+      GormDocument		*activDoc = (GormDocument*)[self activeDocument];
+      NSData			*data;
+      NSArchiver                *archiver;
+
+
+      isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
+      archiver = [[NSArchiver alloc] init];
+      [activDoc beginArchiving];
+      [archiver encodeClassName: @"GormNSWindow" 
+		intoClassName: @"NSWindow"];
+      [archiver encodeClassName: @"GormNSPanel" 
+		intoClassName: @"NSPanel"]; 
+      [archiver encodeClassName: @"GormNSMenu" 
+		intoClassName: @"NSMenu"];
+      [archiver encodeClassName: @"GormNSPopUpButton" 
+		intoClassName: @"NSPopUpButton"];
+      [archiver encodeClassName: @"GormNSPopUpButtonCell" 
+		intoClassName: @"NSPopUpButtonCell"];
+      [archiver encodeClassName: @"GormCustomView" 
+		intoClassName: @"GormTestCustomView"];
+      [archiver encodeRootObject: activDoc];
+      data = RETAIN([archiver archiverData]);
+      [activDoc endArchiving];
+      RELEASE(archiver);
+      
+      [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
+		   object: self];
+
+      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+	{
+	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
+	}
+
+      defaults = [NSUserDefaults standardUserDefaults];
+      menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
+      [defaults removeObjectForKey: @"NSMenuLocations"];
+
+      testContainer = [NSUnarchiver unarchiveObjectWithData: data];
+      if (testContainer != nil)
+	{
+	  [testContainer awakeWithContext: nil];
+	  RETAIN(testContainer);
+	}
+
+      /*
+       * If the NIB didn't have a main menu, create one,
+       * otherwise, ensure that 'quit' ends testing mode.
+       */
+      if ([self mainMenu] == mainMenu)
+	{
+          NSMenu	*testMenu;
+
+	  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
+	  [testMenu addItemWithTitle: _(@"Quit") 
+			      action: @selector(deferredEndTesting:)
+		       keyEquivalent: @"q"];	
+	  [self setMainMenu: testMenu];
+	  RELEASE(testMenu);
+	}
+      else
+	{
+          NSMenu	*testMenu = [self mainMenu];
+	  id		item;
+
+	  item = [testMenu itemWithTitle: _(@"Quit")];
+	  if (item != nil)
+	    {
+	      [item setAction: @selector(deferredEndTesting:)];
+	    }
+	  else
+	    {
+	      [testMenu addItemWithTitle: _(@"Quit") 
+			action: @selector(deferredEndTesting:)
+			keyEquivalent: @"q"];	
+	    }
+	}
+
+      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
+		   object: self];
+      
+      RELEASE(data);
+    }
+}
+
+
+
+
+/***********************************************************************/
+/***********************   Edit Menu Actions*****************************/
+/***********************************************************************/
+
+- (void) copy: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
-    || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
-    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
-    return nil;
+      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
+    return;
+  
+  [(GormGenericEditor *)selectionOwner copySelection];
+}
+
+
+- (void) cut: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
+      || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
   [(GormGenericEditor *)selectionOwner copySelection];
   [(GormGenericEditor *)selectionOwner deleteSelection];
-  return self;
 }
 
-- (id) groupSelectionInSplitView: (id)sender
+- (void) paste: (id)sender
 {
-  if ([[selectionOwner selection] count] < 2
-      || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
-  return self;
+  if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
+    return;
+
+  [(GormGenericEditor *)selectionOwner pasteInSelection];
 }
 
-- (id) groupSelectionInBox: (id)sender
+
+- (void) delete: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner groupSelectionInBox];
-  return self;
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner deleteSelection];
 }
 
-- (id) groupSelectionInScrollView: (id)sender
+- (void) selectAllItems: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
-  return self;
+  /* FIXME */
+  return;
 }
 
-- (id) ungroup: (id)sender
+- (void) setName: (id)sender
 {
-  NSLog(@"ungroup: selectionOwner %@", selectionOwner);
-  if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner ungroup];
-  return self;
+  NSPanel	*panel;
+  int		returnPanel;
+  NSTextField	*textField;
+  NSArray	*selectionArray = [selectionOwner selection];
+  id		obj = [selectionArray objectAtIndex: 0];
+  NSString	*name;
+
+  panel = NSGetAlertPanel(_(@"Set Name"), _(@"Name: "), _(@"OK"), _(@"Cancel"), nil);
+  textField = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
+  [[panel contentView] addSubview: textField];
+  [panel makeFirstResponder: textField];
+  [panel makeKeyAndOrderFront: self];
+  [textField performClick: self];
+
+  returnPanel = [(id) panel runModal];
+
+  if (returnPanel == NSAlertDefaultReturn)
+    {
+      name = [[textField stringValue] stringByTrimmingSpaces];
+      if (name != nil && [name isEqual: @""] == NO)
+	{
+	  [[self activeDocument] setName: name forObject: obj];
+	}
+    }
+  [textField removeFromSuperview];
+  RELEASE(textField);
+  NSReleaseAlertPanel(panel);
 }
+
 
 - (void) guideline: (id) sender
 {
@@ -722,169 +1177,89 @@ static NSButtonType _buttonTypeForObject( id button )
       [guideLineMenuItem setTitle:_(@"Disable GuideLine")];
       [guideLineMenuItem setTag:0];
     }
-  
 }
 
 
-
-- (void) dealloc
+- (void) orderFrontFontPanel: (id) sender
 {
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
-  [nc removeObserver: self];
-  RELEASE(infoPanel);
-  RELEASE(inspectorsManager);
-  RELEASE(palettesManager);
-  RELEASE(documents);
-  RELEASE(classManager);
-  //  [super dealloc];
+  NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
+  GormFontViewController *gfvc = [[GormFontViewController alloc] init];
+  [fontPanel setAccessoryView: [gfvc view]];
+  [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
 }
 
-- (id) delete: (id)sender
+/***********************************************************************/
+/***********************   Group Action  *******************************/
+/***********************************************************************/
+
+- (void) groupSelectionInSplitView: (id)sender
 {
-  if ([[selectionOwner selection] count] == 0
-    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner deleteSelection];
-  return self;
+  if ([[selectionOwner selection] count] < 2
+      || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
+    return;
+
+  [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
 }
 
-- (void) displayConnectionBetween: (id)source and: (id)destination
+- (void) groupSelectionInBox: (id)sender
 {
-  NSWindow	*w;
-  NSRect	r;
-  
-
-  if (source != connectSource)
-    {
-      if (connectSource != nil)
-	{
-	  w = [[self activeDocument] windowAndRect: &r
-					 forObject: connectSource];
-	  if (w != nil)
-	    {
-	      NSView	*wv = [[w contentView] superview];
- 
-	      r.origin.x --;
-	      r.size.width ++;
-	      
-	      r.size.height ++;
-
-	      [w disableFlushWindow];
-	      [wv displayRect: r];
-	      
-	      [w enableFlushWindow];
-	      [w flushWindow];
-	    }
-	}
-      connectSource = source;
-    }
-  if (destination != connectDestination)
-    {
-      if (connectDestination != nil)
-	{
-	  w = [[self activeDocument] windowAndRect: &r
-					 forObject: connectDestination];
-	  if (w != nil)
-	    {
-	      NSView	*wv = [[w contentView] superview];
-
-	      /*
-	       * Erase image from old location.
-	       */
-	      r.origin.x --;
-	      r.size.width ++;
-	      r.size.height ++;
-
-	      [wv lockFocus];
-	      [wv displayRect: r];
-	      [wv unlockFocus];
-	      [w flushWindow];
-	    }
-	}
-      connectDestination = destination;
-    }
-  if (connectSource != nil)
-    {
-      w = [[self activeDocument] windowAndRect: &r forObject: connectSource];
-      if (w != nil)
-	{
-	  NSView	*wv = [[w contentView] superview];
-	  
-	  r.origin.x++;
-	  r.size.width--;
-	  r.size.height--;
-	  [wv lockFocus];
-	  [[NSColor greenColor] set];
-	  NSFrameRectWithWidth(r, 2);
-	  
-	  [sourceImage compositeToPoint: r.origin
-			      operation: NSCompositeSourceOver];
-	  [wv unlockFocus];
-	  [w flushWindow];
-	}
-    }
-  if (connectDestination != nil && connectDestination == connectSource)
-    {
-      w = [[self activeDocument] windowAndRect: &r
-				     forObject: connectDestination];
-      if (w != nil)
-	{
-	  NSView	*wv = [[w contentView] superview];
-
-	  r.origin.x += 3;
-	  r.origin.y += 2;
-	  r.size.width -= 5;
-	  r.size.height -= 5;
-	  [wv lockFocus];
-	  [[NSColor purpleColor] set];
-	  NSFrameRectWithWidth(r, 2);
-	  
-	  r.origin.x += [targetImage size].width;
-	  [targetImage compositeToPoint: r.origin
-			      operation: NSCompositeSourceOver];
-	  [wv unlockFocus];
-	  [w flushWindow];
-	}
-    }
-  else if (connectDestination != nil)
-    {
-      w = [[self activeDocument] windowAndRect: &r
-				     forObject: connectDestination];
-      if (w != nil)
-	{
-	  NSView	*wv = [[w contentView] superview];
-
-	  r.origin.x++;
-	  r.size.width--;
-	  r.size.height--;
-	  [wv lockFocus];
-	  [[NSColor purpleColor] set];
-	  NSFrameRectWithWidth(r, 2);
-	  
-	  [targetImage compositeToPoint: r.origin
-			      operation: NSCompositeSourceOver];
-	  [wv unlockFocus];
-	  [w flushWindow];
-	}
-    }
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInBox];
 }
 
-- (id) loadClass: (id)sender
+- (void) groupSelectionInScrollView: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
+}
+
+- (void) ungroup: (id)sender
+{
+  NSLog(@"ungroup: selectionOwner %@", selectionOwner);
+  if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner ungroup];
+}
+
+
+
+/***********************************************************************/
+/***********************   Classes Action  *******************************/
+/***********************************************************************/
+
+- (void) createSubclass: (id)sender
+{
+  [(GormDocument *)[self activeDocument] createSubclass: sender];
+}
+
+
+- (void) loadClass: (id)sender
 {
   // Call the current document and create the class 
   // descibed by the header
-  return [(GormDocument *)[self activeDocument] loadClass: sender];
+  [(GormDocument *)[self activeDocument] loadClass: sender];
 }
 
-- (id) addAttributeToClass: (id)sender
-{  
-  return [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
+- (void) createClassFiles: (id)sender
+{
+  [(GormDocument *)[self activeDocument] createClassFiles: sender];
 }
 
-- (id) remove: (id)sender
+- (void) instantiateClass: (id)sender
+{
+   [(GormDocument *)[self activeDocument] instantiateClass: sender];
+}
+
+- (void) addAttributeToClass: (id)sender
 {  
-  return [(GormDocument *)[self activeDocument] remove: sender];
+  [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
+}
+
+- (void) remove: (id)sender
+{  
+  [(GormDocument *)[self activeDocument] remove: sender];
 }
 
 /*
@@ -895,9 +1270,24 @@ static NSButtonType _buttonTypeForObject( id button )
 }
 */
 
-- (id) createClassFiles: (id)sender
+
+/***********************************************************************/
+/***********************   Classes Action  *******************************/
+/***********************************************************************/
+
+- (void) inspector: (id) sender
 {
-  return [(GormDocument *)[self activeDocument] createClassFiles: sender];
+  [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
+}
+
+- (void) palettes: (id) sender
+{
+  [[[self palettesManager] panel] makeKeyAndOrderFront: self];
+}
+
+- (void) loadPalette: (id) sender
+{
+  [[self palettesManager] openPalette: sender];
 }
 
 
@@ -923,7 +1313,7 @@ static NSButtonType _buttonTypeForObject( id button )
   else
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSUserDefaults		*defs;
+      NSUserDefaults		*defaults;
       NSEnumerator		*e;
       id			val;
       CREATE_AUTORELEASE_POOL(pool);
@@ -946,8 +1336,8 @@ static NSButtonType _buttonTypeForObject( id button )
       // prevent saving of this, if the menuLocations have not previously been set.
       if(menuLocations != nil)
 	{
-	  defs = [NSUserDefaults standardUserDefaults];
-	  [defs setObject: menuLocations forKey: @"NSMenuLocations"];
+	  defaults = [NSUserDefaults standardUserDefaults];
+	  [defaults setObject: menuLocations forKey: @"NSMenuLocations"];
 	  DESTROY(menuLocations);
 	}
 
@@ -983,9 +1373,9 @@ static NSButtonType _buttonTypeForObject( id button )
       dict = [NSDictionary dictionaryWithContentsOfFile: path];
       if (dict != nil)
 	{
-	  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+	  NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
 
-	  [defs registerDefaults: dict];
+	  [defaults registerDefaults: dict];
 	}
     }
 
@@ -1021,92 +1411,7 @@ static NSButtonType _buttonTypeForObject( id button )
     }
 }
 
-- (id) infoPanel: (id) sender
-{
-  NSMutableDictionary *d;
-  
-  d = [NSMutableDictionary dictionaryWithCapacity: 8];
-  [d setObject: @"Gorm" 
-     forKey: @"ApplicationName"];
-  [d setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
-     forKey: @"ApplicationDescription"];
-  [d setObject: @"Gorm 0.3.0" 
-     forKey: @"ApplicationRelease"];
-  [d setObject: @"0.3.0 Jul 2003" 
-     forKey: @"FullVersionID"];
-  [d setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
-			 @"Richard Frith-Macdonald <rfm@gnu.org>",
-			 @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
-			 nil]
-     forKey: @"Authors"];
-  [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc."
-     forKey: @"Copyright"];
-  [d setObject: @"Released under the GNU General Public License 2.0"
-     forKey: @"CopyrightDescription"];
-  
-  [self orderFrontStandardInfoPanelWithOptions: d];
-  return self;
-}
 
-- (void) preferencesPanel: (id) sender
-{
-  if(! preferencesController)
-    {
-      preferencesController =  [[GormPrefController alloc] initWithWindowNibName:@"GormPreferences"];
-    }
-
-  [[preferencesController window] makeKeyAndOrderFront:nil];
-}
-
-- (void) orderFrontFontPanel: (id) sender
-{
-  NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
-  GormFontViewController *gfvc = [[GormFontViewController alloc] init];
-  [fontPanel setAccessoryView: [gfvc view]];
-  [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
-}
-
-- (id) init 
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-       NSBundle			*bundle = [NSBundle mainBundle];
-      NSString			*path;
-
-      path = [bundle pathForImageResource: @"GormLinkImage"];
-      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormSourceTag"];
-      sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormTargetTag"];
-      targetImage = [[NSImage alloc] initWithContentsOfFile: path];
-
-      documents = [NSMutableArray new];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBSelectionChangedNotification
-	       object: nil];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBWillCloseDocumentNotification
-	       object: nil];
-
-      /*
-       * Make sure the palettes manager exists, so that the editors and
-       * inspectors provided in the standard palettes are available.
-       */
-      [self palettesManager];
-
-      // load the interface...
-      if(![NSBundle loadNibNamed: @"Gorm" owner: self])
-	{
-	  NSLog(@"Failed to load interface");
-	  exit(-1);
-	}
-    }
-  return self;
-}
 
 - (void) awakeFromNib
 {
@@ -1116,11 +1421,6 @@ static NSButtonType _buttonTypeForObject( id button )
   cascadePoint = NSZeroPoint;
 }
 
-- (id) inspector: (id) sender
-{
-  [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
-  return self;
-}
 
 - (GormInspectorsManager*) inspectorsManager
 {
@@ -1131,10 +1431,6 @@ static NSButtonType _buttonTypeForObject( id button )
   return inspectorsManager;
 }
 
-- (id) instantiateClass: (id)sender
-{
-  return [(GormDocument *)[self activeDocument] instantiateClass: sender];
-}
 
 - (BOOL) isConnecting
 {
@@ -1151,25 +1447,6 @@ static NSButtonType _buttonTypeForObject( id button )
   return linkImage;
 }
 
-- (id) loadPalette: (id) sender
-{
-  return [[self palettesManager] openPalette: sender];
-}
-
-- (void) debug: (id) sender
-{
-  [[self activeDocument] performSelector: @selector(printAllEditors)];
-}
-
-- (void) loadSound: (id) sender
-{
-  [(GormDocument *)[self activeDocument] openSound: sender];
-}
-
-- (void) loadImage: (id) sender
-{
-  [(GormDocument *)[self activeDocument] openImage: sender];
-}
 
 - (id) miniaturize: (id)sender
 {
@@ -1179,55 +1456,7 @@ static NSButtonType _buttonTypeForObject( id button )
   return nil;
 }
 
-- (void) newGormDocument : (id) sender 
-{
-  id doc = [GormDocument new];
-  [documents addObject: doc];
-  RELEASE(doc);
-  switch ([sender tag]) 
-    {
-    case 0:
-      [doc setupDefaults: @"Application"];
-      break;
-    case 1:
-      [doc setupDefaults: @"Empty"];
-      break;
-    case 2:
-      [doc setupDefaults: @"Inspector"];
-      break;
-    case 3:
-      [doc setupDefaults: @"Palette"];
-      break;
 
-    default: 
-      printf("unknow newGormDocument tag");
-    }
-  if (NSEqualPoints(cascadePoint, NSZeroPoint))
-    {	
-      NSRect frame = [[doc window] frame];
-      cascadePoint = NSMakePoint(frame.origin.x, NSMaxY(frame));
-    }
-  cascadePoint = [[doc window] cascadeTopLeftFromPoint:cascadePoint];
-  [[doc window] makeKeyAndOrderFront: self];
-}
-
-- (id) open: (id) sender
-{
-  GormDocument	*doc = [GormDocument new];
-
-  [documents addObject: doc];
-  RELEASE(doc);
-  if ([doc openDocument: sender] == nil)
-    {
-      [documents removeObjectIdenticalTo: doc];
-      doc = nil;
-    }
-  else
-    {
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-  return doc;
-}
 
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
@@ -1257,65 +1486,7 @@ static NSButtonType _buttonTypeForObject( id button )
   return palettesManager;
 }
 
-- (id) palettes: (id) sender
-{
-  [[[self palettesManager] panel] makeKeyAndOrderFront: self];
-  return self;
-}
 
-- (id) paste: (id)sender
-{
-  if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
-    return nil;
-  [(GormGenericEditor *)selectionOwner pasteInSelection];
-  return self;
-}
-
-- (id) revertToSaved: (id)sender
-{
-  id	doc = [(GormDocument *)[self activeDocument] revertDocument: sender];
-
-  if (doc != nil)
-    {
-      [documents addObject: doc];
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-  return nil;
-}
-
-- (id) save: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveGormDocument: sender];
-  return self;
-}
-
-- (id) saveAll: (id)sender
-{
-  NSEnumerator	*e = [documents objectEnumerator];
-  id		doc;
-
-  while ((doc = [e nextObject]) != nil)
-    {
-      if ([[doc window] isDocumentEdited] == YES)
-	{
-	  if (! [doc saveGormDocument: sender] )
-	    NSLog(@"can not save %@",doc);
-	}
-    }
-  return self;
-}
-
-- (id) saveAs: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveAsDocument: sender];
-  return self;
-}
-
-- (id) selectAllItems: (id)sender
-{
-  /* FIXME */
-  return nil;
-}
 
 - (id<IBSelectionOwners>) selectionOwner
 {
@@ -1327,35 +1498,6 @@ static NSButtonType _buttonTypeForObject( id button )
   return [[selectionOwner selection] lastObject];
 } 
 
-- (id) setName: (id)sender
-{
-  NSPanel	*p;
-  int		r;
-  NSTextField	*t;
-  NSArray	*s = [selectionOwner selection];
-  id		o = [s objectAtIndex: 0];
-  NSString	*n;
-
-  p = NSGetAlertPanel(_(@"Set Name"), _(@"Name: "), _(@"OK"), _(@"Cancel"), nil);
-  t = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
-  [[p contentView] addSubview: t];
-  [p makeFirstResponder: t];
-  [p makeKeyAndOrderFront: self];
-  [t performClick: self];
-  r = [(id)p runModal];
-  if (r == NSAlertDefaultReturn)
-    {
-      n = [[t stringValue] stringByTrimmingSpaces];
-      if (n != nil && [n isEqual: @""] == NO)
-	{
-	  [[self activeDocument] setName: n forObject: o];
-	}
-    }
-  [t removeFromSuperview];
-  RELEASE(t);
-  NSReleaseAlertPanel(p);
-  return self;
-}
 
 - (void) startConnecting
 {
@@ -1387,100 +1529,6 @@ static NSButtonType _buttonTypeForObject( id button )
   isConnecting = NO;
 }
 
-- (id) testInterface: (id)sender
-{
-  if (isTesting == YES)
-    {
-      return nil;
-    }
-  else
-    {
-      NSUserDefaults		*defs;
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      GormDocument		*a = (GormDocument*)[self activeDocument];
-      NSData			*d;
-      NSArchiver                *archiver;
-
-
-      isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
-      archiver = [[NSArchiver alloc] init];
-      [a beginArchiving];
-      [archiver encodeClassName: @"GormNSWindow" 
-		intoClassName: @"NSWindow"];
-      [archiver encodeClassName: @"GormNSPanel" 
-		intoClassName: @"NSPanel"]; 
-      [archiver encodeClassName: @"GormNSMenu" 
-		intoClassName: @"NSMenu"];
-      [archiver encodeClassName: @"GormNSPopUpButton" 
-		intoClassName: @"NSPopUpButton"];
-      [archiver encodeClassName: @"GormNSPopUpButtonCell" 
-		intoClassName: @"NSPopUpButtonCell"];
-      [archiver encodeClassName: @"GormCustomView" 
-		intoClassName: @"GormTestCustomView"];
-      [archiver encodeRootObject: a];
-      d = RETAIN([archiver archiverData]);
-      [a endArchiving];
-      RELEASE(archiver);
-      
-      [nc postNotificationName: IBWillBeginTestingInterfaceNotification
-			object: self];
-
-      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
-	{
-	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
-	}
-
-      defs = [NSUserDefaults standardUserDefaults];
-      menuLocations = [[defs objectForKey: @"NSMenuLocations"] copy];
-      [defs removeObjectForKey: @"NSMenuLocations"];
-
-      testContainer = [NSUnarchiver unarchiveObjectWithData: d];
-      if (testContainer != nil)
-	{
-	  [testContainer awakeWithContext: nil];
-	  RETAIN(testContainer);
-	}
-
-      /*
-       * If the NIB didn't have a main menu, create one,
-       * otherwise, ensure that 'quit' ends testing mode.
-       */
-      if ([self mainMenu] == mainMenu)
-	{
-          NSMenu	*testMenu;
-
-	  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
-	  [testMenu addItemWithTitle: _(@"Quit") 
-			      action: @selector(deferredEndTesting:)
-		       keyEquivalent: @"q"];	
-	  [self setMainMenu: testMenu];
-	  RELEASE(testMenu);
-	}
-      else
-	{
-          NSMenu	*testMenu = [self mainMenu];
-	  id		item;
-
-	  item = [testMenu itemWithTitle: _(@"Quit")];
-	  if (item != nil)
-	    {
-	      [item setAction: @selector(deferredEndTesting:)];
-	    }
-	  else
-	    {
-	      [testMenu addItemWithTitle: _(@"Quit") 
-				  action: @selector(deferredEndTesting:)
-			   keyEquivalent: @"q"];	
-	    }
-	}
-
-      [nc postNotificationName: IBDidBeginTestingInterfaceNotification
-			object: self];
- 
-      RELEASE(d);
-      return self;
-    }
-}
 
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
