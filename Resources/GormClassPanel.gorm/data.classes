@@ -2,9 +2,7 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "indent:",
 	    "orderFront:",
-	    "selectAll:",
 	    "underline:",
 	    "okButton:",
 	    "browserAction:"
