@@ -200,6 +200,7 @@ NSLog(@"Mouse down on item %d", pos);
       NSWindow		*w;
       NSEnumerator	*enumerator;
       NSView		*sub;
+      NSMenuItem	*item;
 
       /*
        * Swap ourselves in as a replacement for the original window
@@ -214,6 +215,24 @@ NSLog(@"Mouse down on item %d", pos);
 	  [self addSubview: sub];
 	}
       [w setContentView: self];
+
+      /*
+       * Line up submenu with parent menu.
+       */
+      item = [document parentOfObject: edited];
+      if (item != nil)
+	{
+	  NSMenu	*parent = [document parentOfObject: item];
+	  NSRect	frame = [[[parent menuRepresentation] window] frame];
+	  NSPoint	tl;
+
+	  tl = frame.origin;
+	  tl.x += frame.size.width;
+	  tl.y += frame.size.height;
+	  [edited sizeToFit];
+	  [[[edited menuRepresentation] window] setFrameTopLeftPoint: tl];
+	}
+
       [edited display];
       return NO;
     }
@@ -534,6 +553,7 @@ NSLog(@"Mouse down on item %d", pos);
       loc.y += 10;
       pos = [rep indexOfItemAtPoint: loc] + 1;
 
+NSLog(@"Drop at index: %d (%@)", pos, NSStringFromPoint(loc));
       /*
        * Ask the document to get the dragged views from the pasteboard and add
        * them to it's collection of known objects.
@@ -639,7 +659,8 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
 {
   if ([anArray isEqual: selection] == NO)
     {
-      unsigned	count;
+      unsigned		count;
+      NSMenuItem	*item;
 
       [selection removeAllObjects];
       [selection addObjectsFromArray: anArray];
@@ -657,6 +678,35 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
 	    {
 	      [selection removeObjectAtIndex: count];
 	    }
+	}
+      item = [selection lastObject];
+      if ([selection count] != 1 || [item hasSubmenu] == NO)
+	{
+	  [self closeSubeditors];
+	}
+      else
+	{
+	  NSMenu	*menu;
+	  id		editor;
+
+	  /*
+	   * A single item with a submenu is selected -
+	   * Make sure the submenu is registered in the document and
+	   * open an editor for it  Close any existing subeditor.
+	   */
+	  menu = [item submenu];
+	  if ([document containsObject: menu] == NO)
+	    {
+	      [document attachObject: menu toParent: item];
+	    }
+	  editor = [document editorForObject: menu create: YES];
+	  if (subeditor != nil && subeditor != editor)
+	    {
+	      [self closeSubeditors];
+	    }
+	  [editor orderFront];
+	  [editor activate];
+	  ASSIGN(subeditor, editor);
 	}
     }
   /*
