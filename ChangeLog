@@ -1,3 +1,9 @@
+2005-02-27 00:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Makefile.postamble: Now generates autogsdoc
+	documentation for GormLib and places it in the "InterfaceBuilder"
+	directory under Documentation.
+
 2005-02-27 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Documentation/Gorm.texi: Palette documentation.

@@ -11,7 +11,11 @@
 include ../Version
 
 # Things to do before compiling
-before-all:: version.texi
+before-all:: version.texi 
+	autogsdoc -MakeFrames YES \
+		  -DocumentationDirectory InterfaceBuilder \
+		  -Declared InterfaceBuilder \
+		  ../GormLib/*.h
 
 # Things to do after compiling
 # after-all::
@@ -35,6 +39,7 @@ before-all:: version.texi
 after-clean::
 	rm -f *.bak *.cl *.fns *.pr *.log
 	rm -f version.texi
+	rm -rf InterfaceBuilder
 
 # Things to do before distcleaning
 # before-distclean::
