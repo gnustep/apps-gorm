@@ -65,4 +65,13 @@
 - (NSImage *)normalImage;
 @end
 
+/**
+ * A category which will allow us to set whether or not 
+ * an image is archived by reference, or directly.
+ */
+@interface NSImage (GormNSImageAddition)
+- (void) setArchiveByName: (BOOL) archiveByName;
+- (BOOL) archiveByName;
+@end
+
 #endif

@@ -1,3 +1,9 @@
+2005-01-08 18:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImage.h: Moved the declaration for setArchiveByName: here.
+	* GormImage.m: Moved the code for the category here.
+	* GormMatrixEditor.m: Included GormImage.h.
+
 2005-01-08 18:06 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Corrected bug#11534.

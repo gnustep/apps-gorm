@@ -26,6 +26,7 @@
 
 #include <AppKit/AppKit.h>
 #include "GormPrivate.h"
+#include "GormImage.h"
 #include "GormViewEditor.h"
 #include "GormMatrixEditor.h"
 #include "GormViewWithSubviewsEditor.h"

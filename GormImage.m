@@ -25,15 +25,7 @@
 #include <AppKit/NSImage.h>
 #include "GormImage.h"
 
-//
-// To allow us to load the image by name, but save it 
-// within the archive.  This is a bit of a cheat.
-//
-@interface NSImage (GormNSImageAddition)
-- (void) setArchiveByName: (BOOL) archiveByName;
-- (BOOL) archiveByName;
-@end
-
+// implementation of category on NSImage.
 @implementation NSImage (GormNSImageAddition)
 - (void) setArchiveByName: (BOOL) archiveByName
 {
