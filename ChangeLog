@@ -1,3 +1,13 @@
+2004-12-05 18:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Added new methods moved from GormDocument.
+	* GormDocument.m: Moved remove: to deleteSelection on 
+	GormClassEditor, also moved createSubclass to GormClassEditor.
+	* GormPrivate.h: Added methods moved from GormDocument to 
+	GormClassEditor.
+	* GormLib/IBEditors.h: Added deleteSelection back into the 
+	protocol.
+
 2004-12-05 15:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added new classes to the makefile.

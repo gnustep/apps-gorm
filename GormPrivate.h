@@ -178,7 +178,9 @@ extern NSString *GormResizeCellNotification;
 - (void) selectClassWithObject: (id)obj;
 - (void) selectClass: (NSString *)className;
 - (BOOL) currentSelectionIsClass;
-- (void) editClass: (id)sender;
+- (void) editClass;
+- (void) createSubclass;
+- (void) deleteSelection;
 @end
 
 @interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>

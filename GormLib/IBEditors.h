@@ -108,7 +108,7 @@ extern NSString *IBClassNameChangedNotification;
 //  /*
 //   * This method deletes all the objects in the current selection in the editor.
 //   */
-//  - (void) deleteSelection;
+- (void) deleteSelection;
 
 /**
  * This method returns the document that owns the object that the editor edits.

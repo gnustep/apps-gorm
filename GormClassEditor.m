@@ -114,42 +114,6 @@
   return className;
 }
 
-//--- IBSelectionOwners protocol ---
-- (unsigned) selectionCount
-{
-  return ([self selectedRow] == -1)?0:1;
-}
-
-- (NSArray*) selection
-{
-  NSString *selectedClassName = [self selectedClassName];
-
-  // when asked for a selection, it returns a class proxy
-  if (selectedClassName != nil) 
-    {
-      NSArray		*array;
-      GormClassProxy	*classProxy;
-
-      classProxy = [[GormClassProxy alloc] initWithClassName:
-	selectedClassName];
-      array = [NSArray arrayWithObject: classProxy];
-      RELEASE(classProxy);
-      return array;
-    } 
-  else
-    {
-      return [NSArray array];
-    }
-}
-
-- (void) drawSelection
-{
-}
-
-- (void) makeSelectionVisible: (BOOL)flag
-{
-}
-
 // class selection...
 - (void) selectClass: (NSString *)className
 {
@@ -207,12 +171,6 @@
     }
 }
 
-- (void) selectObjects: (NSArray*)objects
-{
-  id obj = [objects objectAtIndex: 0];
-  [self selectClassWithObject: obj];
-}
-
 - (BOOL) currentSelectionIsClass
 {  
   int i = [self selectedRow];
@@ -229,13 +187,177 @@
   return result;
 }
 
-- (void) editClass: (id)sender
+- (void) editClass
 {
   int	row = [self selectedRow];
   if (row >= 0)
     {
       [document setSelectionFromEditor: (id)self];
     }
+}
+
+- (void) createSubclass
+{
+  if (![self isEditing])
+    {
+      NSString *newClassName;
+      NSString *itemSelected = [self selectedClassName];
+      
+      if(![itemSelected isEqualToString: @"FirstResponder"])
+	{
+	  int i = 0;
+
+	  newClassName = [classManager addClassWithSuperClassName:
+					 itemSelected];
+	  [self reloadData];
+	  [self expandItem: itemSelected];
+	  i = [self rowForItem: newClassName]; 
+	  [self selectRow: i byExtendingSelection: NO];
+	  [self scrollRowToVisible: i];
+	}
+      else
+	{
+	  // beep to inform the user of this error.
+	  NSBeep();
+	}
+    }
+}
+
+//--- IBSelectionOwners protocol ---
+- (unsigned) selectionCount
+{
+  return ([self selectedRow] == -1)?0:1;
+}
+
+- (NSArray*) selection
+{
+  NSString *selectedClassName = [self selectedClassName];
+
+  // when asked for a selection, it returns a class proxy
+  if (selectedClassName != nil) 
+    {
+      NSArray		*array;
+      GormClassProxy	*classProxy;
+
+      classProxy = [[GormClassProxy alloc] initWithClassName:
+	selectedClassName];
+      array = [NSArray arrayWithObject: classProxy];
+      RELEASE(classProxy);
+      return array;
+    } 
+  else
+    {
+      return [NSArray array];
+    }
+}
+
+- (void) drawSelection
+{
+}
+
+- (void) makeSelectionVisible: (BOOL)flag
+{
+}
+
+- (void) selectObjects: (NSArray*)objects
+{
+  id obj = [objects objectAtIndex: 0];
+  [self selectClassWithObject: obj];
+}
+
+- (void) deleteSelection
+{
+  id anitem;
+  int i = [self selectedRow];
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  
+  // if no selection, then return.
+  if (i == -1)
+    {
+      return;
+    }
+
+  anitem = [self itemAtRow: i];
+  if ([anitem isKindOfClass: [GormOutletActionHolder class]])
+    {
+      id itemBeingEdited = [self itemBeingEdited];
+      NSString *name = [anitem getName];
+
+      // if the class being edited is a custom class or a category, 
+      // then allow the deletion...
+      if ([classManager isCustomClass: itemBeingEdited] ||
+	  [classManager isAction: name onCategoryForClassNamed: itemBeingEdited])
+	{
+	  if ([self editType] == Actions)
+	    {
+	      // if this action is an action on the class, not it's superclass
+	      // allow the deletion...
+	      if ([classManager isAction: name
+			       ofClass: itemBeingEdited])
+		{
+		  BOOL removed = [document removeConnectionsWithLabel: name 
+					   forClassNamed: itemBeingEdited
+					   isAction: YES];
+		  if (removed)
+		    {
+		      [classManager removeAction: name
+				    fromClassNamed: itemBeingEdited];
+		      [self removeItemAtRow: i];
+		      [nc postNotificationName: GormDidModifyClassNotification
+			  object: classManager];
+		    }
+		}
+	    }
+	  else if ([self editType] == Outlets)
+	    {
+	      // if this outlet is an outlet on the class, not it's superclass
+	      // allow the deletion...
+	      if ([classManager isOutlet: name
+			       ofClass: itemBeingEdited])
+		{
+		  BOOL removed = [document removeConnectionsWithLabel: name 
+					   forClassNamed: itemBeingEdited
+					   isAction: NO];
+		  if (removed)
+		    {
+		      [classManager removeOutlet: name
+				    fromClassNamed: itemBeingEdited];
+		      [self removeItemAtRow: i];
+		      [nc postNotificationName: GormDidModifyClassNotification
+			  object: classManager];
+		    }
+		}
+	    }
+	}
+    }
+  else
+    {
+      NSArray *subclasses = [classManager subClassesOf: anitem];
+      // if the class has no subclasses, then delete.
+      if ([subclasses count] == 0)
+	{
+	  // if the class being edited is a custom class, then allow the deletion...
+	  if ([classManager isCustomClass: anitem])
+	    {
+	      BOOL removed = [document removeConnectionsForClassNamed: anitem];
+	      if (removed)
+		{
+		  [classManager removeClassNamed: anitem];
+		  [self reloadData];
+		  [nc postNotificationName: GormDidModifyClassNotification
+		      object: classManager];
+		}
+	    }
+	}
+      else
+	{
+	  NSString *message = [NSString stringWithFormat: 
+	    _(@"The class %@ has subclasses which must be removed"), anitem];
+	  NSRunAlertPanel(_(@"Problem removing class"), 
+			  message,
+			  nil, nil, nil);
+	}
+    }    
 }
 @end
 
@@ -478,7 +600,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
       if (![item isKindOfClass: [GormOutletActionHolder class]])
 	{
 	  result = [classManager isCustomClass: item];
-	  [self editClass: item];
+	  [self editClass];
 	}
       else
 	{
@@ -520,7 +642,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
       id item = [object itemAtRow: [object selectedRow]];
       if (![item isKindOfClass: [GormOutletActionHolder class]])
 	{
-	  [self editClass: item];
+	  [self editClass];
 	}
     }
 }

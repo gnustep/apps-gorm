@@ -878,34 +878,7 @@ static NSImage  *fileImage = nil;
 
 - (id) createSubclass: (id)sender
 {
-  int		i = [classesView selectedRow];
-
-  if (i >= 0 && ![classesView isEditing])
-    {
-      NSString	   *newClassName;
-      id            itemSelected = [classesView itemAtRow: i];
-      
-      if([itemSelected isKindOfClass: [NSString class]])
-	{
-	  if(![itemSelected isEqualToString: @"FirstResponder"])
-	    {
-	      newClassName = [classManager addClassWithSuperClassName:
-					     itemSelected];
-	      [classesView reloadData];
-	      [classesView expandItem: itemSelected];
-	      i = [classesView rowForItem: newClassName]; 
-	      [classesView selectRow: i byExtendingSelection: NO];
-	      [classesView scrollRowToVisible: i];
-	      // [self editClass: self];
-	    }
-	  else
-	    {
-	      // beep to inform the user of this error.
-	      NSBeep();
-	    }
-	}
-    }
-
+  [classesView createSubclass];
   return self;
 }
 
@@ -1074,97 +1047,7 @@ static NSImage  *fileImage = nil;
 
 - (id) remove: (id)sender
 {
-  id anitem;
-  int i = [classesView selectedRow];
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  
-  // if no selection, then return.
-  if (i == -1)
-    {
-      return self;
-    }
-
-  anitem = [classesView itemAtRow: i];
-  if ([anitem isKindOfClass: [GormOutletActionHolder class]])
-    {
-      id itemBeingEdited = [classesView itemBeingEdited];
-      NSString *name = [anitem getName];
-
-      // if the class being edited is a custom class or a category, 
-      // then allow the deletion...
-      if ([classManager isCustomClass: itemBeingEdited] ||
-	  [classManager isAction: name onCategoryForClassNamed: itemBeingEdited])
-	{
-	  if ([classesView editType] == Actions)
-	    {
-	      // if this action is an action on the class, not it's superclass
-	      // allow the deletion...
-	      if ([classManager isAction: name
-			       ofClass: itemBeingEdited])
-		{
-		  BOOL removed = [self removeConnectionsWithLabel: name 
-				       forClassNamed: itemBeingEdited
-				       isAction: YES];
-		  if (removed)
-		    {
-		      [classManager removeAction: name
-				    fromClassNamed: itemBeingEdited];
-		      [classesView removeItemAtRow: i];
-		      [nc postNotificationName: GormDidModifyClassNotification
-			  object: classManager];
-		    }
-		}
-	    }
-	  else if ([classesView editType] == Outlets)
-	    {
-	      // if this outlet is an outlet on the class, not it's superclass
-	      // allow the deletion...
-	      if ([classManager isOutlet: name
-			       ofClass: itemBeingEdited])
-		{
-		  BOOL removed = [self removeConnectionsWithLabel: name 
-				       forClassNamed: itemBeingEdited
-				       isAction: NO];
-		  if (removed)
-		    {
-		      [classManager removeOutlet: name
-				    fromClassNamed: itemBeingEdited];
-		      [classesView removeItemAtRow: i];
-		      [nc postNotificationName: GormDidModifyClassNotification
-			  object: classManager];
-		    }
-		}
-	    }
-	}
-    }
-  else
-    {
-      NSArray *subclasses = [classManager subClassesOf: anitem];
-      // if the class has no subclasses, then delete.
-      if ([subclasses count] == 0)
-	{
-	  // if the class being edited is a custom class, then allow the deletion...
-	  if ([classManager isCustomClass: anitem])
-	    {
-	      BOOL removed = [self removeConnectionsForClassNamed: anitem];
-	      if (removed)
-		{
-		  [classManager removeClassNamed: anitem];
-		  [classesView reloadData];
-		  [nc postNotificationName: GormDidModifyClassNotification
-		      object: classManager];
-		}
-	    }
-	}
-      else
-	{
-	  NSString *message = [NSString stringWithFormat: 
-	    _(@"The class %@ has subclasses which must be removed"), anitem];
-	  NSRunAlertPanel(_(@"Problem removing class"), 
-			  message,
-			  nil, nil, nil);
-	}
-    }    
+  [classesView deleteSelection];
   return self;
 }
 
@@ -1216,14 +1099,8 @@ static NSImage  *fileImage = nil;
 - (id) createClassFiles: (id)sender
 {
   NSSavePanel		*sp;
-  int                   row = [classesView selectedRow];
-  id                    className = [classesView itemAtRow: row];
+  NSString              *className = [classesView selectedClassName];
   int			result;
-
-  if ([className isKindOfClass: [GormOutletActionHolder class]])
-    {
-      className = [classesView itemBeingEdited];
-    }
   
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
@@ -1620,82 +1497,74 @@ static NSImage  *fileImage = nil;
 
 - (id) instantiateClass: (id)sender
 {
-  int i = [classesView selectedRow];
+  NSString *object = [classesView selectedClassName];
+  GSNibItem *item = nil;
   
-  if (i >= 0)
+  if([object isEqualToString: @"FirstResponder"])
+    return nil;
+  
+  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
+     [object isEqual: @"NSView"])
     {
-      id object = [classesView itemAtRow: i];
-      GSNibItem *item = nil;
+      Class cls;
+      NSString *className = object;
+      BOOL isCustom = [classManager isCustomClass: object];
+      id instance;
       
-      if([object isKindOfClass: [NSString class]])
+      if(isCustom)
 	{
-	  if([object isEqualToString: @"FirstResponder"])
-	    return nil;
-
-	  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
-	     [object isEqual: @"NSView"])
-	    {
-	      Class cls;
-	      NSString *className = object;
-	      BOOL isCustom = [classManager isCustomClass: object];
-	      id instance;
-
-	      if(isCustom)
-		{
-		  className = [classManager nonCustomSuperClassOf: object];
-		}
-
-	      // instantiate the object or it's substitute...
-	      cls = NSClassFromString(className);
-	      if([cls respondsToSelector: @selector(allocSubstitute)])
-		{
-		  instance = [cls allocSubstitute];
-		}
-	      else
-		{
-		  instance = [cls alloc];
-		}
-
-	      // give it some initial dimensions...
-	      if([instance respondsToSelector: @selector(initWithFrame:)])
-		{
-		  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
-		}
-	      else
-		{
-		  instance = [instance init];
-		}
-
-	      // add it to the top level objects...
-	      [self setName: nil forObject: instance];
-	      [self attachObject: instance toParent: nil];
-	      [topLevelObjects addObject: instance];
-	      [objectsView addObject: instance];
-
-	      // we want to record if it's custom or not and act appropriately...
-	      if(isCustom)
-		{
-		  NSString *name = [self nameForObject: instance];
-		  [classManager setCustomClass: object
-				forName: name];
-		}
-
-	      [selectionBox setContentView: scrollView];
-	      NSLog(@"Instantiate NSView subclass %@",object);	      
-	    }
-	  else
-	    {
-	      item = [[GormObjectProxy alloc] initWithClassName: object
-					      frame: NSMakeRect(0,0,0,0)];
-	      
-	      [self setName: nil forObject: item];
-	      [self attachObject: item toParent: nil];
-	      
-	      [selectionBox setContentView: scrollView];
-	    }
+	  className = [classManager nonCustomSuperClassOf: object];
 	}
+      
+      // instantiate the object or it's substitute...
+      cls = NSClassFromString(className);
+      if([cls respondsToSelector: @selector(allocSubstitute)])
+	{
+	  instance = [cls allocSubstitute];
+	}
+      else
+	{
+	  instance = [cls alloc];
+	}
+      
+      // give it some initial dimensions...
+      if([instance respondsToSelector: @selector(initWithFrame:)])
+	{
+	  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
+	}
+      else
+	{
+	  instance = [instance init];
+	}
+      
+      // add it to the top level objects...
+      [self setName: nil forObject: instance];
+      [self attachObject: instance toParent: nil];
+      [topLevelObjects addObject: instance];
+      [objectsView addObject: instance];
+      
+      // we want to record if it's custom or not and act appropriately...
+      if(isCustom)
+	{
+	  NSString *name = [self nameForObject: instance];
+	  [classManager setCustomClass: object
+			forName: name];
+	}
+      
+      [selectionBox setContentView: scrollView];
+      NSLog(@"Instantiate NSView subclass %@",object);	      
     }
-
+  else
+    {
+      item = [[GormObjectProxy alloc] initWithClassName: object
+				      frame: NSMakeRect(0,0,0,0)];
+      
+      [self setName: nil forObject: item];
+      [self attachObject: item toParent: nil];
+      
+      [selectionBox setContentView: scrollView];
+    }
+  
   return self;
 }
 
