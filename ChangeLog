@@ -1,3 +1,9 @@
+2004-12-01 02:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: [GormClassManager parseHeader:] altered
+	method to throw NSInvalidArgumentException instead of a custom
+	exception.  
+	
 2004-11-29 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.[hm]: [GormPalettesManager loadPalette:] now

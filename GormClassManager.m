@@ -1625,7 +1625,7 @@
 	      else
 		{
 		  result = NO;
-		  [NSException raise: @"UnknownParentClass"
+		  [NSException raise: NSInvalidArgumentException
 			       format: @"The superclass %@ of class %@ is not known, please parse it.",
 			       superClass, className];
 		}
