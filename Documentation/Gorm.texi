@@ -492,12 +492,67 @@ Adding outlets is very intuitive in the inspector.  Simply select the ``Outlets'
 
 Very much like above only with the ``Actions'' tab, add an action called button pressed.
 
+@section Instantiating The Class
+@cindex Instantiating
+
+In the Classes outline view select the new class you've created, now called MyController and then go to the Gorm menu and select Classes, and then Instantiate.  The document window should shift from the classes view to the objects view.   Amoung the set of objects should be a new object called MyController.
+
+@section Adding Controls from the Palette
+
+Go to the Gorm menu and select Tools, then Palettes.  This will bring the palette window to the front.  The second palette from the left is the ``ControlsPalette''.  Select that one and find the button object (it should have the word ``Button'' in it).  Drag that to the window and drop it anywhere you like.
+
+Repeat this operation with the text field.  It's the control with ``Text'' in it.   We are now ready to start making connections between different objects in the document.
+
+@subsection Making Connections
+@cindex Connections
+
+The type of application we are creating is known as a ``NSApplication delegate'' this means that the MyController object will be set as the delegate of NSApplication.
+
+To make this connection click on NSOwner and hold down the Control button, keep it pressed as you drag from the NSOwner object to the MyController object.  The inspectors window should change to the Connections inspector and should show two outlets ``delegate'' and ``menu''.   Select the ``delegate'', at this point you should see a green S and a purple T on the NSOwner and MyController objects respectively, and press the ``Connect'' button in the inspector.   In the ``Connections'' section of the inspector you should see an entry which looks similar to ``delegate (MyController)'' this indicates that the connection has been made.
+
+Now we need to make connections from the controller to the textfield and from the controller to the button.  Select the MyController object and Control-Drag (as before) from the object to the text field, this will make an outlet connection.   You should see the connections inspector again, this time select the ``value'' outlet and hit Connect. 
+
+Next, control-drag from the button to the controller, this will make an action connection.  The connections inspector should again appear.  This time you need to select the ``target'' outlet, to get the list of actions.  The list should have only one entry, which is ``buttonPressed:'' since this is the one we added earlier.  Press Connect.  You should see an entry like ``buttonPressed: (MyController'' in the Connections section of the inspector.
+
 @section Saving the gorm file
 @cindex Saving
 
 At this point you must save the .gorm file.  Go to the Gorm menu and click Documents and then select ``Save''.  If the document was opened from a pre-existing .gorm, it will save to that same file name.   If it is an UNTITLED .gorm file a file dialog will appear and you will need to select the directory where you want to store the .gorm file and type the name of the .gorm file.  
 
- 
+@section Generating .h and .m files from the class.
+
+This is different than saving, some people have gotten this confused with the idea of Gorm generating the code for the gui.  Gorm does nothing of the sort (grin).  
+
+Go to the Classes section in the Document window and select the MyController class yet again.  Now go to the Gorm menu and select Classes and the select ``Create Class Files''.  This will bring up a file panel and it allow you to select the directory in which to put the files.   It will first create the MyController.m file and then the MyController.h file.  Simply select the directory in which your app will reside and hit okay for both.  You can change the names, but the default ones, which are based on the class name, should be sufficient.  When you look at the .m for this class, you should see the @samp{buttonPressed:} method with the commecnt @samp{/* insert your code here */} in it.  Delete this comment and add @samp{[value setStringValue: @@``Hello''];}.   The class should look like this after you're done:
+
+
+
+/* All Rights reserved */
+
+#include <AppKit/AppKit.h>
+#include "MyController.h"
+
+@@implementation MyController
+
+
+- (void) buttonPressed: (id)sender
+
+@{
+
+    [value setStringValue: @@''Hello''];
+
+@}
+
+@@end
+
+If you recall, we connected the textfield to the ``value'' variable.  The call above causes the method setStringValue to be invoked on the textfield you added to the window.  
+
+Also, note that the name of the method is ``buttonPressed:''.  This is the action which is bound to the button.  When it is pressed the text in the textfield should change to ``Hello''.
+
+You now need to build the application either by copying in a GNUmakefile and making the appropriate changes or by using ProjectCenter's build capability, depending on if you use it or not.
+
+This app is available as ``SimpleApp'' in the Examples directory under the Documentation directory distributed with Gorm.   Hopefully this has helped to demonstrate, albeit on a small scale, the capabilities of Gorm.  In later chapters we will cover more advanced application architectures and topics.
+
 @chapter Advanced Topics
 
 This section will cover some topics which won't be of general interest to most users.   The details in this section pertain to the internal workings of Gorm.
@@ -512,7 +567,7 @@ Each object in the .gorm file has a name assigned to it by the application.  Thi
 
 @subsection The Custom Class Table
 
-This is only used when the user has associated a custom class with an existing instance in the gorm file.  If the user has, for instance, added an NSWindow to the gorm, he/she can use the custom class inspector to select a subclass of NSWindow to change to.   Upon saving the Gorm
+This is only used when the user has associated a custom class with an existing instance in the gorm file.  If the user has, for instance, added an NSWindow to the gorm, he/she can use the custom class inspector to select a subclass of NSWindow to change to. 
 
 @subsection Connections Array
 
