@@ -1,3 +1,8 @@
+2001-07-08  Mirko Viviani  <mirko.viviani@rccr.cremona.it>
+
+	* GormWindowEditor.m ([GormWindowEditor -_editTextView:withEvent:]): 
+	return if mouse not on cell.
+
 2001-07-07  Richard Frith-Macdonald <rfm@gnu.org>
 
 	Gomr.m: Fixed typo in info panel and updated a little.

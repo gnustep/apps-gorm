@@ -225,11 +225,8 @@ static BOOL done_editing;
 				fromView: nil];
   point = [view convertPoint: point fromView: edit_view];
   if ([(NSForm *)view getRow: &row column: &col forPoint: point] == NO)
-    {
-      NSLog(@"Internal Error: Could not get field entry to edit");
-      row = 0;
-      col = 0;
-    }
+    return;
+
   editCell = [(NSForm *)view cellAtRow: row column: col];
   frame = [(NSForm *)view cellFrameAtRow: row column: col];
   frame.origin.x += NSMinX([view frame]);
