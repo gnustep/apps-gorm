@@ -348,6 +348,13 @@
       current = [anObj tag];
     }
 
+  // Operate on the document view if the selected object is a NSScrollView
+  if ([obj isKindOfClass: [NSScrollView class]] && 
+      ([(NSScrollView *)obj documentView] != nil) )
+    {
+      obj = [(NSScrollView *)obj documentView];
+    }
+
   /*
    * Set panel title for the type of object being inspected.
    */
