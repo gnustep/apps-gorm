@@ -1,11 +1,41 @@
+2001-10-27  Laurent Julliard  <laurent@julliard-online.org>
+
+	* ClassInformation.plist: IBInspector actions/outlets closer to OS 4.2
+	* Palettes/1Windows/GormMatrixInspector.gorm: new layout and new fields
+	* Palettes/1Windows/GormWindowInspector.gorm: new layout and new fields
+	* Palettes/1Windows/main.m: code for new Window inspector
+	* Palettes/2Controls/GormSliderInspector.gorm: new layout and new fields
+	* Palettes/2Controls/GormTextFieldInspector.gorm: uses icons, new layout, ok button removed
+	* Palettes/2Controls/GormButtonInspector.gorm: uses icons, ok button removed
+	* Palettes/2Controls/GormBoxInspector.gorm: uses icons and sliders
+	* Palettes/2Controls/GormFormInspector.gorm: ok button removed, uses icons.
+	* Palettes/2Controls/GormPopUpButtonInspector.gorm: ok button removed
+	* Palettes/2Controls/GormCellInspector.gorm: ok button removed
+	* Palettes/2Controls/GormBoxInspector.gorm: ok button removed, sliders added
+	* Palettes/2Controls/inspectors.m: code for new/updated inspectors
+	* Images/centeralign_nib.tiff: new inspector icon
+	* Images/justifyalign_nib.tiff: new inspector icon
+	* Images/leftalign_nib.tiff: new inspector icon
+	* Images/naturalalign_nib.tiff: new inspector icon
+	* Images/rightalign_nib.tiff: new inspector icon
+	* Images/iconLeft_nib.tiff: new inspector icon
+	* Images/iconOnly_nib.tiff: new inspector icon
+	* Images/iconRight_nib.tiff: new inspector icon
+	* Images/iconAbove_nib.tiff: new inspector icon
+	* Images/iconBelow_nib.tiff: new inspector icon
+	* Images/titleOnly_nib.tiff: new inspector icon
+	* Images/line_nib.tiff: new inspector icon
+	* Images/bezel_nib.tiff: new inspector icon
+	* Images/noBorder_nib.tiff: new inspector icon
+	* Images/ridge_nib.tiff: new inspector icon
+	
 2001-10-23  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormObjectEditor.m: Updated [GormObjectEditor refreshCells] so that 
 	setTitle is not called with nil anymore (but with @"").
 	See change <Tue Oct 23 10:32:18 2001> in gnustep/core/gui/Changelog
 	
-
-2001-10-17  Laurent Julliard  <laurent@julliard-online.org>>
+2001-10-17  Laurent Julliard  <laurent@julliard-online.org>
 
 	* Palettes/2Controls/GormFormInspector.gorm: New Form inspector.
 	* Palettes/2Controls/GormFormInspector.classes: likewise.
