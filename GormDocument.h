@@ -151,6 +151,7 @@
 - (BOOL) removeConnectionsForClassNamed: (NSString *)name;
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
+- (BOOL) isTopLevelObject: (id)obj;
 - (void) closeAllEditors;
 
 // class loading
