@@ -37,12 +37,24 @@
   BOOL _gormAllowsColumnSelection;
   BOOL _gormAllowsMultipleSelection;
   BOOL _gormAllowsEmptySelection;
-  NSColor *_savedColor;
+  // NSColor *_savedColor;
 }
 
+- (void) setGormDelegate: (id)anObject;
+- (void) setGormAllowsColumnReordering: (BOOL)flag;
+- (BOOL) gormAllowsColumnReordering;
+- (void) setGormAllowsColumnResizing: (BOOL)flag;
+- (BOOL) gormAllowsColumnResizing;
+- (void) setGormAllowsMultipleSelection: (BOOL)flag;
+- (BOOL) gormAllowsMultipleSelection;
+- (void) setGormAllowsEmptySelection: (BOOL)flag;
+- (BOOL) gormAllowsEmptySelection;
+- (void) setGormAllowsColumnSelection: (BOOL)flag;
+- (BOOL) gormAllowsColumnSelection;
+
 // preserve the color during selection...
-- (void) select;
-- (void) unselect;
+//- (void) select;
+//- (void) unselect;
 @end
 
 #endif

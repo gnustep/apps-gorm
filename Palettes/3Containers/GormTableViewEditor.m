@@ -48,6 +48,7 @@ static NSText *_textObject;
   return NO;
 }
 
+/*
 - (void) setOpened: (BOOL) flag
 {
   if (flag)
@@ -58,9 +59,10 @@ static NSText *_textObject;
     {
       [tableView unselect];
     }
-  
+
   [super setOpened: flag];
 }
+*/
 
 /**
  * Activate an editor - inserts it into the view hierarchy or whatever is
@@ -102,7 +104,7 @@ static NSText *_textObject;
 {
   if (activated == YES)
     {
-      [tableView unselect]; 
+      // [tableView unselect]; 
       if ([tableView selectedColumn] != -1)
 	{
 	  [tableView deselectColumn: [tableView selectedColumn]];
@@ -341,9 +343,9 @@ static NSText *_textObject;
   _currentHeaderCell = [tc headerCell];
   [_editedCell setStringValue: [[tc headerCell] stringValue]];
   [_editedCell setEditable: YES];
-  //  [_editedCell setAlignment: NSLeftTextAlignment];
-  [(NSTableHeaderCell *)_editedCell setTextColor: [NSColor blackColor]];
-  [(NSTableHeaderCell *)_editedCell setBackgroundColor: [NSColor whiteColor]];
+  // [_editedCell setAlignment: NSLeftTextAlignment];
+  // [(NSTableHeaderCell *)_editedCell setTextColor: [NSColor blackColor]];
+  // [(NSTableHeaderCell *)_editedCell setBackgroundColor: [NSColor whiteColor]];
   _textObject = [_editedCell setUpFieldEditorAttributes: t];
 
   drawingRect = [th headerRectOfColumn: columnIndex];
@@ -363,16 +365,17 @@ static NSText *_textObject;
   RELEASE(_editedCell);
 }
 
-
-//  - (NSArray*) selection
-//  {
-//    if (tableView == nil)
-//      return [NSArray array];
-//    else if (selected == nil)
-//      return [NSArray arrayWithObject: tableView];
-//    else
-//      return [NSArray arrayWithObject: selected];
-//  }
+/*
+- (NSArray*) selection
+{
+  if (tableView == nil)
+    return [NSArray array];
+  else if (selected == nil)
+    return [NSArray arrayWithObject: tableView];
+  else
+    return [NSArray arrayWithObject: selected];
+}
+*/
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {

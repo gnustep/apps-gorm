@@ -1,3 +1,15 @@
+2004-11-24 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormNSOutlineView.h: Removed savedColor and
+	added "Gorm" methods to the header.
+	* Palettes/3Containers/GormNSOutlineView.m: Removed all references
+	to savedColor and commented out select and unselect methods.
+	* Palettes/3Containers/GormNSTableView.h: Removed saved color and
+	commented out select and unselect.
+	* Palettes/3Containers/GormNSTableView.m: Removed all references to
+	savedColor and commented out select and unselect methods.
+	Corrects bug #10118.
+	
 2004-11-20 13:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources: Updated all gorms to latest format.

@@ -104,7 +104,7 @@ static id _sharedDataSource = nil;
   self = [super initWithFrame: aRect];
   [super setDataSource: [GormNSTableView sharedDataSource]];
   _gormDataSource = nil;
-  ASSIGN(_savedColor, [NSColor controlBackgroundColor]);
+  // ASSIGN(_savedColor, [NSColor controlBackgroundColor]);
   return self;
 }
 
@@ -170,14 +170,14 @@ static id _sharedDataSource = nil;
   _gormAllowsEmptySelection = _allowsEmptySelection;
   _gormDelegate = _delegate;
   _delegate = nil;
-  ASSIGN(_savedColor, [self backgroundColor]);
+  // ASSIGN(_savedColor, [self backgroundColor]);
   
   return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(_savedColor);
+  // RELEASE(_savedColor);
   [super dealloc];
 }
 
@@ -236,6 +236,7 @@ static id _sharedDataSource = nil;
   return @"NSTableView";
 }
 
+/*
 - (void) setBackgroundColor: (NSColor *)color
 {
   [super setBackgroundColor: color];
@@ -252,4 +253,5 @@ static id _sharedDataSource = nil;
   [super setBackgroundColor: _savedColor]; 
   [self deselectAll: self];
 }
+*/
 @end
