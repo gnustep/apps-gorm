@@ -65,22 +65,11 @@
   // NSBrowser
   // 124 is the minimum width. Below that the browser doesn't display !!
   v = [[GormNSBrowser alloc] initWithFrame: NSMakeRect(10, 98, 124, 78)];
-
-  //  [v setDelegate:nil];
   [v setHasHorizontalScroller: YES];
   [v setTitled: YES];
   [v loadColumnZero];
-
-  //[v setTitle: @"Browser" ofColumn:0];
-  //[v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   [contents addSubview: v];
   RELEASE(v);
-
-  //  browserDelegate = [[NSBrowserDelegate alloc] init];
-  //[v setDelegate:browserDelegate];
-  //  [v setMaxVisibleColumns: 3];
-  //[v setAllowsMultipleSelection:NO];
-//  [v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   
   // NSTabView
   v = [[NSTabView alloc] initWithFrame: NSMakeRect(10, 10, 124, 78)];
@@ -116,18 +105,15 @@
   // NSTableView
   v = [[NSScrollView alloc] initWithFrame: 
 			      NSMakeRect(136, 10, 124, 78)];
-  
+  [contents addSubview: v];  
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
-  //[v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   contentSize = [v contentSize];
 
   tv = [[GormNSTableView alloc] initWithFrame:
 				  NSZeroRect];
-  //  [tv setDataSource: [[NSTableViewDataSource alloc] init]];
-  //  [tv setAutoresizesAllColumnsToFit: YES];
-  [v setDocumentView: tv];
-  RELEASE(tv);
+  //[v setDocumentView: tv];
+  //RELEASE(tv);
 
   tc = [[NSTableColumn alloc] initWithIdentifier: @"column1"];
   [[tc headerCell] setStringValue: @" "];
@@ -147,7 +133,7 @@
   [tv addTableColumn: tc];
   RELEASE(tc);
   
-  //  [v setDocumentView: tv];
+  [v setDocumentView: tv];
   [contents addSubview: v];
   RELEASE(tv);
   RELEASE(v);
@@ -155,17 +141,15 @@
   // NSOutlineView
   v = [[NSScrollView alloc] initWithFrame: 
 			      NSMakeRect(136, 98, 124, 78)];
-  
+  [contents addSubview: v];
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
-  //[v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   contentSize = [v contentSize];
 
   ov = [[GormNSOutlineView alloc] initWithFrame:
 				    NSZeroRect];
-  //  [tv setAutoresizesAllColumnsToFit: YES];
-  [v setDocumentView: ov];
-  RELEASE(tv);
+  //[v setDocumentView: ov];
+  //RELEASE(ov);
 
   tc = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
   [[tc headerCell] setStringValue: @" "];
@@ -188,8 +172,8 @@
   [ov setDrawsGrid: NO];
   [ov setIndentationPerLevel: 10.];
   [ov setIndentationMarkerFollowsCell: YES];
-  
-  [contents addSubview: v];
+  [v setDocumentView: ov];
+
   RELEASE(ov);
   RELEASE(v);
   

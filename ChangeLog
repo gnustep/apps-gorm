@@ -1,3 +1,10 @@
+2002-08-17  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/main.m: The scroll view for the table view and
+	outline view were not being added to the window prior to the 
+	setDocumentView call.   This was causing an assertion in NSView to 
+	fail.
+
 2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormSplitViewEditor.m: removed an extra ; that was breaking gcc 2.*.
