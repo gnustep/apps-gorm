@@ -605,8 +605,8 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 	      // remove columns...
 	      for(i = 0; i < colsToDelete; i++)
 		{
-	      NSTableColumn *tc = [columns objectAtIndex: (i + newNumCols)];
-	      [object removeTableColumn: tc];
+		  NSTableColumn *tc = [columns objectAtIndex: (i + newNumCols)];
+		  [object removeTableColumn: tc];
 		}
 	    }
 	}

@@ -34,29 +34,17 @@ static NSCell *_editedCell;
 static NSCell *_currentHeaderCell;
 static NSText *_textObject;
 
-//  @implementation NSScrollView (GormObjectAdditions)
-//  - (NSString*) editorClassName
-//  {
-//    if ([self documentView]
-//        && [[self documentView] isKindOfClass: [NSTableView class]])
-//      return @"GormTableViewEditor";
-//    else
-//      return [super editorClassName];
-//  }
-//  @end
-
 @interface GormTableViewEditor (Private)
 - (void) editHeader: (NSTableHeaderView*) th
 	  withEvent: (NSEvent *) theEvent;
 @end
 
 @implementation GormTableViewEditor
-/*
+/**
  * Decide whether an editor can accept data from the pasteboard.
  */
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  // FIXME
   return NO;
 }
 
@@ -74,7 +62,7 @@ static NSText *_textObject;
   [super setOpened: flag];
 }
 
-/*
+/**
  * Activate an editor - inserts it into the view hierarchy or whatever is
  * needed for the editor to be able to provide its functionality.
  * This method should be called by the document when an editor is created
@@ -88,6 +76,8 @@ static NSText *_textObject;
 	tableView = [(NSScrollView *)_editedObject documentView];
       else
 	tableView = (GormNSTableView *)_editedObject;
+
+      RETAIN(tableView); // FIXME: Temporary fix.
       [tableView setAllowsColumnResizing: YES];
       [tableView setAllowsColumnSelection: YES];
       [tableView setAllowsMultipleSelection: NO];
@@ -102,7 +92,7 @@ static NSText *_textObject;
 }
 
 
-/*
+/**
  * Deactivate an editor - removes it from the view hierarchy so that objects
  * can be archived without including the editor.
  * This method should be called automatically by the 'close' method.
@@ -112,7 +102,7 @@ static NSText *_textObject;
 {
   if (activated == YES)
     {
-      [tableView unselect]; // [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
+      [tableView unselect]; 
       if ([tableView selectedColumn] != -1)
 	{
 	  [tableView deselectColumn: [tableView selectedColumn]];
@@ -279,25 +269,6 @@ static NSText *_textObject;
 	}
     }
 }
-
-//  - (void) changeObject: (id)anObject
-//  {
-//    if (tableView != nil)
-//      {
-//        if ([tableView selectedColumn] != -1)
-//  	{
-//  	  [tableView deselectColumn: [tableView selectedColumn]];
-//  	}
-//        [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
-//      }
-//    ASSIGN(tableView, anObject);
-
-//    [tableView setBackgroundColor: [NSColor whiteColor]];
-//    [tableView setNeedsDisplay: YES];
-//    [self selectObjects: [NSArray arrayWithObject: tableView]];
-//    [self activate];
-//  }
-
 
 - (void) tableViewSelectionDidChange: (id) tv
 {

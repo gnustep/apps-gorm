@@ -34,7 +34,6 @@
 #include <AppKit/NSControl.h>
 #include <AppKit/NSButton.h>
 
-NSDate	*startDate;
 NSString *GormLinkPboardType = @"GormLinkPboardType";
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
@@ -1092,7 +1091,6 @@ static BOOL _isInInterfaceBuilder = NO;
 
   [self setDelegate: self];
   [super finishLaunching];
-  NSDebugLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 }
 
 - (void) handleNotification: (NSNotification*)notification
@@ -1597,7 +1595,6 @@ static BOOL _isInInterfaceBuilder = NO;
 int 
 main(int argc, const char **argv)
 { 
-  startDate = [[NSDate alloc] init];
   return NSApplicationMain(argc, argv);
 }
 

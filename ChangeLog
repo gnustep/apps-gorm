@@ -1,3 +1,16 @@
+2004-09-07 21:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed some old code which measured the startup
+	time for the application.
+	* GormDocument.m: Removed previous temporary fix.
+	* Palettes/3Containers/GormTableViewEditor.m: Correction for
+	recently discovered crash.   The problem is located here.   
+	I have added a retain which seems to stop the crash, but 
+	I need to find a better solution.   Also removed some old 
+	commented out code.
+	* Palettes/3Containers/inspectors.m: Properly indented some
+	code.
+	
 2004-09-06 17:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m:

@@ -328,15 +328,9 @@ static NSImage  *fileImage = nil;
 	  filesOwner = [GormFilesOwner new];
 	  [self setName: @"NSOwner" forObject: filesOwner];
 	  [objectsView addObject: filesOwner];
-	  // RELEASE(filesOwner);
 	  firstResponder = [GormFirstResponder new];
 	  [self setName: @"NSFirst" forObject: firstResponder];
 	  [objectsView addObject: firstResponder];
-	  // RELEASE(firstResponder);
-
-	  // FIXME: Temporary fix...
-	  RETAIN(filesOwner);
-	  RETAIN(firstResponder);
 	  
 	  /*
 	   * Set image for this miniwindow.
@@ -1016,9 +1010,6 @@ static NSImage  *fileImage = nil;
   // Get rid of the selection box.
   [selectionBox removeFromSuperviewWithoutNeedingDisplay];
 
-  // remove objects from the topLevelObjects set...
-  // [topLevelObjects removeAllObjects];
-
   // release the managers...
   RELEASE(classManager);
   RELEASE(filePrefsManager);
@@ -1564,8 +1555,9 @@ static NSImage  *fileImage = nil;
 	  */
 	  if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
-	      [obj setReleasedWhenClosed: YES];
+	      // [obj setReleasedWhenClosed: YES];
 	      [obj close];
+	      RELEASE(obj);
 	    }
 	}
 
@@ -2603,7 +2595,6 @@ static NSImage  *fileImage = nil;
 	    {
 	      return;	/* Already have this name ... nothing to do */
 	    }
-	  // RETAIN(object); // the next operation will attempt to release the object, we need to retain it.
 	  [nameTable removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
@@ -2733,8 +2724,8 @@ static NSImage  *fileImage = nil;
     {
       NSRect	frame = [window frame];
 
-      [window setReleasedWhenClosed: YES];
       [window close];
+      RELEASE(window);
       [[reverted window] setFrame: frame display: YES];
       return reverted;
     }
