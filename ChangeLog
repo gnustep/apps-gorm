@@ -1,3 +1,10 @@
+2004-06-07 23:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: [GormConnectionInspector setObject:]
+	corrected code to call "isConnecting" before blindly causing the
+	inspector to show the connection on the selected object.  This
+	was interfering with the user making connections in some cases.
+	
 2004-06-06 21:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormNSOutlineView.h: added ivar

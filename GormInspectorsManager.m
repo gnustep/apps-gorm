@@ -869,6 +869,10 @@
 	    }
 	}
     }
+
+  // if it's a control connection select target, if not, don't
+  // if([currentConnector isKindOfClass: [NSNib
+
   [self updateButtons];
 }
 
@@ -1188,8 +1192,10 @@ selectCellWithString: (NSString*)title
 	      [newBrowser sendAction];
 	    }
 	}
-      if ([currentConnector isKindOfClass:
-	[NSNibControlConnector class]] == YES)
+
+
+      if ([currentConnector isKindOfClass: [NSNibControlConnector class]] == YES && 
+	  [NSApp isConnecting] == NO)
 	{
 	  [newBrowser setPath: @"/target"];
 	  [newBrowser sendAction];
