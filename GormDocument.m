@@ -1184,6 +1184,7 @@ static NSImage	*classesImage = nil;
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"My Window"];
+      [self setName: @"My Window" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       [self setObject: aWindow isVisibleAtLaunch: YES];
       RELEASE(aWindow);
@@ -1214,6 +1215,7 @@ static NSImage	*classesImage = nil;
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"Inspector Window"];
+      [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       RELEASE(aWindow);
     }
@@ -1230,6 +1232,7 @@ static NSImage	*classesImage = nil;
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"Palette Window"];
+      [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       RELEASE(aWindow);
     }
