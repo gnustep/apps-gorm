@@ -1,3 +1,16 @@
+2004-05-14 02:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Moved the call to _touch to the bottom of
+	all of the methods.   This should be called only after all changes
+	have been made to the class.
+	* GormImageInspector.m: setObject: wasn't calling [super setObject:]
+	* GormInspectorsManager.m: [GormNotApplicableInspector setObject:]
+	added code to prevent crash.
+	* GormObjectEditor.m: Removed some commented-out code.
+	* GormSoundInspector.m: Added code to set the _currentSound to nil if
+	the selection sent is empty.
+	* GormPreferences.gorm: Added line.
+	
 2004-05-13 18:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Removed some commented out code.  Removed commented out
