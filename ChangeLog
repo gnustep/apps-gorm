@@ -1,4 +1,11 @@
-2002-11-22  Gregory John Casamento  <greg_casamento@yahoo.com>
+2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Modified removeConnectionsWithLabel:.. to return
+	a boolean to indicate if action/outlet was removed.  Also modified
+	the code so that the alert only appears if a connection actually
+	exists.
+	
+2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument createClassFiles:] fixed problem
 	which was getting the classname from the currently selected row in
