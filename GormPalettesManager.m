@@ -3,7 +3,8 @@
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	1999, 2004
  * 
  * This file is part of GNUstep.
  * 
@@ -59,6 +60,7 @@ static NSImage	*dragImage = nil;
 {
   if (self == [GormPaletteView class])
     {
+      // nothing to do...
     }
 }
 
