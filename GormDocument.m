@@ -3037,7 +3037,7 @@ static NSImage	*classesImage = nil;
 }
 
 // convenience methods for formatting outlets/actions
-- (NSString*) _identifierString: (NSString*)str
++ (NSString*) identifierString: (NSString*)str
 {
   NSCharacterSet	*illegal = [[NSCharacterSet characterSetWithCharactersInString:
 						      @"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
@@ -3071,17 +3071,17 @@ static NSImage	*classesImage = nil;
   return str;
 }
 
-- (NSString *)_formatAction: (NSString *)action
++ (NSString *)formatAction: (NSString *)action
 {
   NSString *identifier;
 
-  identifier = [[self _identifierString: action] stringByAppendingString: @":"];
+  identifier = [[self identifierString: action] stringByAppendingString: @":"];
   return identifier;
 }
 
-- (NSString *)_formatOutlet: (NSString *)outlet
++ (NSString *)formatOutlet: (NSString *)outlet
 {
-  NSString *identifier = [self _identifierString: outlet];
+  NSString *identifier = [self identifierString: outlet];
   return identifier;
 }
 
@@ -3278,7 +3278,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  RETAIN(name);
 	  if ([gov editType] == Actions)
 	    {
-	      NSString *formattedAction = [self _formatAction: anObject];
+	      NSString *formattedAction = [GormDocument formatAction: anObject];
 	      if (![classManager isAction: formattedAction 
 				ofClass: [gov itemBeingEdited]])
 		{
@@ -3309,7 +3309,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	    }
 	  else if ([gov editType] == Outlets)
 	    {
-	      NSString *formattedOutlet = [self _formatOutlet: anObject];
+	      NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
 	      
 	      if (![classManager isOutlet: formattedOutlet 
 				  ofClass: [gov itemBeingEdited]])

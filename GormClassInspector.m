@@ -77,10 +77,11 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
   NSString *name = [list objectAtIndex: rowIndex];
+  NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
 
-  RETAIN(anObject);
+  // RETAIN(anObject);
   [[(Gorm *)NSApp classManager] replaceOutlet: name
-				withOutlet: anObject
+				withOutlet: formattedOutlet
 				forClassNamed: [inspector _currentClass]];
 }
 
@@ -113,10 +114,11 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
   NSString *name = [list objectAtIndex: rowIndex];
+  NSString *formattedAction = [GormDocument formatAction: anObject];
 
-  RETAIN(anObject);
+  // RETAIN(anObject);
   [[(Gorm *)NSApp classManager] replaceAction: name
-				withAction: anObject
+				withAction: formattedAction
 				forClassNamed: [inspector _currentClass]];
 }
 

@@ -1,3 +1,16 @@
+2004-01-04 22:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Made -[GormDocument _identifierString:],
+	-[GormDocument _formatAction:], and 
+	-[GormDocument _formatAction:] into
+	+[GormDocument identifierString:],
+	+[GormDocument formatAction:], and 
+	+[GormDocument formatAction:] so that they can be used
+	in other classes which need to format actions/outlets.
+	* GormDocument.h: Added declarations for the new class methods.
+	* GormInspectorsManager.m: Use the new methods to prevent
+	user from entering a bad name for an outlet or action.
+	
 2004-01-04 20:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: Added back some code to make the display

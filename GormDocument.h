@@ -166,6 +166,11 @@
 - (NSMenu *) servicesMenu;
 - (void) setWindowsMenu: (NSMenu *)menu;
 - (NSMenu *) windowsMenu;
+
+// utility methods...
++ (NSString*) identifierString: (NSString*)str;
++ (NSString *)formatAction: (NSString *)action;
++ (NSString *)formatOutlet: (NSString *)outlet;
 @end
 
 @interface GormDocument (MenuValidation)
