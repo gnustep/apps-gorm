@@ -500,7 +500,11 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (NSString*) inspectorClassName
 {
-  // return [self classInspectorClassName];
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) classInspectorClassName
+{
   return @"GormNotApplicableInspector";
 }
 
