@@ -269,6 +269,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       NSUserDefaults		*defs;
       NSEnumerator		*e;
       id			val;
+      CREATE_AUTORELEASE_POOL(pool);
 
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
 			object: self];
@@ -281,20 +282,16 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	{
 	  if ([val isKindOfClass: [NSWindow class]] == YES)
 	    {
-	      [val setReleasedWhenClosed: YES];
 	      [val close];
 	    }
 	}
-      DESTROY(testContainer);
 
-{
-NSAutoreleasePool *p = [NSAutoreleasePool new];
       defs = [NSUserDefaults standardUserDefaults];
       [defs setObject: menuLocations forKey: @"NSMenuLocations"];
       DESTROY(menuLocations);
-[p release];
-}
       [self setMainMenu: mainMenu];
+
+      DESTROY(testContainer);
 
       isTesting = NO;
 
@@ -304,6 +301,7 @@ NSAutoreleasePool *p = [NSAutoreleasePool new];
 	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
+      RELEASE(pool);
       return self;
     }
 }

@@ -1,3 +1,8 @@
+Fri Feb 25 16:31:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Gorm.m: Fix a few window deallocation problems.
+	* GormDocument.m: Fix error in renaming objects.
+
 2000-02-21  Adam Fedor  <fedor@gnu.org>
 
 	* GNUmakefile: Don't make Documentation by default for those who

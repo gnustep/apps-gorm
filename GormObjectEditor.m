@@ -198,7 +198,6 @@ static NSMapTable	*docMap = 0;
 	  [nc removeObserver: self
 			name: NSWindowDidBecomeKeyNotification
 		      object: selected];
-	  [selected setReleasedWhenClosed: YES];
 	  [selected close];
 	}
       [objects removeObjectIdenticalTo: selected];

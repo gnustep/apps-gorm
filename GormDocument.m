@@ -185,6 +185,10 @@ static NSImage	*classesImage = nil;
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
+      if ([anObject isKindOfClass: [NSWindow class]] == YES)
+	{
+	  [anObject setReleasedWhenClosed: NO];
+	}
     }
 }
 
@@ -597,7 +601,6 @@ static NSImage	*classesImage = nil;
 	{
 	  if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
-	      [obj setReleasedWhenClosed: YES];
 	      [obj close];
 	    }
 	}
@@ -1254,8 +1257,11 @@ static NSImage	*classesImage = nil;
 	{
 	  if ([oldName isEqual: aName] == YES)
 	    {
-	      return;	/* Already have this namre ... nothing to do */
+	      return;	/* Already have this name ... nothing to do */
 	    }
+	  RETAIN(object);
+          AUTORELEASE(object);
+	  [nameTable removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
