@@ -59,8 +59,8 @@
 @implementation	GormPanelMaker
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  [super encodeWithCoder: aCoder];
 }
+
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   id		w;
@@ -132,6 +132,10 @@
 - (NSString*) inspectorClassName
 {
   return @"GormWindowAttributesInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormWindowSizeInspector";
 }
 @end
 
@@ -247,3 +251,114 @@
 
 @end
 
+
+
+@interface GormWindowSizeInspector : IBInspector
+{
+  NSForm *sizeForm;
+  NSForm *minForm;
+}
+@end
+
+@implementation GormWindowSizeInspector
+
+- (void) _setValuesFromControl: control
+{
+  if (control == sizeForm)
+    {
+      NSRect rect;
+      rect = NSMakeRect([[control cellAtIndex: 0] floatValue],
+			[[control cellAtIndex: 1] floatValue],
+			[[control cellAtIndex: 2] floatValue],
+			[[control cellAtIndex: 3] floatValue]);
+      [object setFrame: rect display: YES];
+    }
+  else if (control == minForm)
+    {
+      NSSize size;
+      size = NSMakeSize([[minForm cellAtIndex: 0] floatValue],
+			[[minForm cellAtIndex: 1] floatValue]);
+      [object setMinSize: size];
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  NSRect frame;
+  NSSize size;
+
+  if (anObject != object)
+    return;
+
+  frame = [anObject frame];
+  [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
+  [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
+  [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
+  [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
+
+  size = [anObject minSize];
+  [[minForm cellAtIndex: 0] setFloatValue: size.width];
+  [[minForm cellAtIndex: 1] setFloatValue: size.height];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) windowChangeNotification: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  
+  [self _getValuesFromObject: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormWindowSizeInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormWindowSizeInspector");
+      return nil;
+    }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(windowChangeNotification:)
+             name: NSWindowDidMoveNotification
+           object: object];
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(windowChangeNotification:)
+             name: NSWindowDidResizeNotification
+           object: object];
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: sizeForm];
+  [self _setValuesFromControl: minForm];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
+@end

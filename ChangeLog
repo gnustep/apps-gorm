@@ -1,3 +1,13 @@
+2001-06-18  Adam Fedor  <fedor@gnu.org>
+
+	* GormWindowEditor.m
+	(-_validateFrame:forViewPtr:withEvent:update:update): Allow the frame
+	to increase even if it's already too small.
+
+	* Palettes/1Windows/main.m: Implement GormWindowSizeInspector.
+	* Palettes/1Windows/GormWindowSizeInspector.gorm: New file.
+	* Palettes/1Windows/GormWindowSizeInspector.class: Likewise.
+
 2001-06-15  Adam Fedor  <fedor@gnu.org>
 
 	* GormWindowEditor.m (-_editTextView:withEvent:): 

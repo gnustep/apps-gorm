@@ -478,16 +478,22 @@ static BOOL done_editing;
     }
   else
     {
+      NSRect oldFrame = [view frame];
       /* Increase the cell size */
       cellSize = NSMakeSize((NSWidth(frame)+intercellSpace.width)/cols 
                               - intercellSpace.width, 
 			    (NSHeight(frame)+intercellSpace.height)/rows 
                               - intercellSpace.height);
-      /* Reasonable minimum size? - NSMatrix should do this? */
-      if (cellSize.width < minSize.width)
-	return NO;
-      if (cellSize.height < minSize.height)
-	return NO;
+      /* Check if it is already too small and we're just making it bigger */
+      if (NSWidth(frame) < NSWidth(oldFrame) 
+	  && NSHeight(frame) < NSHeight(oldFrame))
+	{
+	  /* Reasonable minimum size? - NSMatrix should do this? */
+	  if (cellSize.width < minSize.width)
+	    return NO;
+	  if (cellSize.height < minSize.height)
+	    return NO;
+	}
       if (update)
 	[view setCellSize: cellSize];
     }
