@@ -1232,48 +1232,41 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
       if (active == nil)
 	return NO;
     }
-
-  if (sel_eq(action, @selector(revertToSaved:)))
+  else if (sel_eq(action, @selector(revertToSaved:)))
     {
       if (active == nil || [active documentPath] == nil
 	|| [[active window] isDocumentEdited] == NO)
 	return NO;
     }
-
-  if (sel_eq(action, @selector(testInterface:)))
+  else if (sel_eq(action, @selector(testInterface:)))
     {
       if (active == nil)
 	return NO;
     }
-
-  if (sel_eq(action, @selector(copy:)))
+  else if (sel_eq(action, @selector(copy:)))
     {
       if ([[selectionOwner selection] count] == 0)
 	return NO;
       return [selectionOwner respondsToSelector: @selector(copySelection)];
     }
-
-  if (sel_eq(action, @selector(cut:)))
+  else if (sel_eq(action, @selector(cut:)))
     {
       if ([[selectionOwner selection] count] == 0)
 	return NO;
       return ([selectionOwner respondsToSelector: @selector(copySelection)]
 	&& [selectionOwner respondsToSelector: @selector(deleteSelection)]);
     }
-
-  if (sel_eq(action, @selector(delete:)))
+  else if (sel_eq(action, @selector(delete:)))
     {
       if ([[selectionOwner selection] count] == 0)
 	return NO;
       return [selectionOwner respondsToSelector: @selector(deleteSelection)];
     }
-
-  if (sel_eq(action, @selector(paste:)))
+  else if (sel_eq(action, @selector(paste:)))
     {
       return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
     }
-
-  if (sel_eq(action, @selector(setName:)))
+  else if (sel_eq(action, @selector(setName:)))
     {
       NSArray	*s = [selectionOwner selection];
       NSString	*n;
@@ -1300,13 +1293,12 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	  return NO;
 	}
     }
-
-  if(sel_eq(action, @selector(createSubclass:)) ||
-     sel_eq(action, @selector(loadClass:)) ||
-     sel_eq(action, @selector(createClassFiles:)) ||
-     sel_eq(action, @selector(instantiateClass:)) ||
-     sel_eq(action, @selector(addAttributeToClass:)) ||
-     sel_eq(action, @selector(remove:)))
+  else if(sel_eq(action, @selector(createSubclass:)) ||
+	  sel_eq(action, @selector(loadClass:)) ||
+	  sel_eq(action, @selector(createClassFiles:)) ||
+	  sel_eq(action, @selector(instantiateClass:)) ||
+	  sel_eq(action, @selector(addAttributeToClass:)) ||
+	  sel_eq(action, @selector(remove:)))
     {
       id document = [(id<IB>)NSApp activeDocument];
       if(document == nil)
@@ -1319,10 +1311,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	  return NO;
 	}
     }
-
-  if(sel_eq(action, @selector(loadSound:)) ||
-     sel_eq(action, @selector(loadImage:)) ||
-     sel_eq(action, @selector(debug:)))
+  else if(sel_eq(action, @selector(loadSound:)) ||
+	  sel_eq(action, @selector(loadImage:)) ||
+	  sel_eq(action, @selector(debug:)))
     {
       id document = [(id<IB>)NSApp activeDocument];
       if(document == nil)
