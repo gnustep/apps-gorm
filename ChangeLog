@@ -1,5 +1,11 @@
 2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: Made a minor correction to the 
+	removeAction:forClassNamed: to allow actions to be deleted
+	from custom classes.
+	
+2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Gorm.m: Updated version information to 0.2.5 due to all
 	of the recent bug fixes and enhancements.
 	* GormInfo.plist: Same as above.

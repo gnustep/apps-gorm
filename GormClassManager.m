@@ -739,8 +739,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
+  NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
 
-  if ([extraActions containsObject: anAction] == YES)
+  if ([extraActions containsObject: anAction] == YES ||
+      [allActions containsObject: anAction] == YES)
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
@@ -769,8 +771,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
+  NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
 
-  if ([extraActions containsObject: anAction] == YES)
+  if ([extraActions containsObject: anAction] == YES || 
+      [allActions containsObject: anAction] == YES)
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
