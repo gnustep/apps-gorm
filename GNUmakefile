@@ -77,6 +77,7 @@ Gorm_OBJC_FILES = \
 	GormViewKnobs.m \
 	GormFilesOwner.m \
 	GormObjectEditor.m \
+	GormObjectInspector.m \
 	GormWindowEditor.m \
 	GormClassManager.m \
 	GormInspectorsManager.m \

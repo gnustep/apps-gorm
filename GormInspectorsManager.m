@@ -66,48 +66,6 @@
 
 
 /*
- *	The GormObjectInspector is a placeholder for any object without a
- *	suitable inspector.
- */
-@interface GormObjectInspector : IBInspector
-@end
-
-@implementation GormObjectInspector
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView	*contents;
-      NSButton	*button;
-
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-      button = [[NSButton alloc] initWithFrame: [contents bounds]];
-      [button setAutoresizingMask:
-	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: @"Unknown object"];
-      [button setBordered: NO];
-      [button setEnabled: NO];
-      [contents addSubview: button];
-      RELEASE(button);
-    }
-  return self;
-}
-@end
-
-
-
-/*
  *	The GormMultipleInspector is a placeholder for a multiple selection.
  */
 @interface GormMultipleInspector : IBInspector

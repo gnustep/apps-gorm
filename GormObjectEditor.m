@@ -721,7 +721,7 @@ NSImage	*mVLine = nil;
       [button setEnabled: NO];
       [box addSubview: button];
 
-      rect = NSMakeRect(90,150,20,50);
+      rect = NSMakeRect(91,151,20,50);
       top = [[NSButton alloc] initWithFrame: rect];
       [top setImagePosition: NSImageOnly];
       [top setImage: eVLine];
@@ -734,7 +734,7 @@ NSImage	*mVLine = nil;
       [box addSubview: top];
       RELEASE(top);
 
-      rect = NSMakeRect(90,0,20,50);
+      rect = NSMakeRect(91,0,20,50);
       bottom = [[NSButton alloc] initWithFrame: rect];
       [bottom setImagePosition: NSImageOnly];
       [bottom setImage: eVLine];
@@ -747,7 +747,7 @@ NSImage	*mVLine = nil;
       [box addSubview: bottom];
       RELEASE(bottom);
 
-      rect = NSMakeRect(0,90,50,20);
+      rect = NSMakeRect(0,91,50,20);
       left = [[NSButton alloc] initWithFrame: rect];
       [left setImagePosition: NSImageOnly];
       [left setImage: eHLine];
@@ -760,7 +760,7 @@ NSImage	*mVLine = nil;
       [box addSubview: left];
       RELEASE(left);
 
-      rect = NSMakeRect(150,90,50,20);
+      rect = NSMakeRect(151,91,50,20);
       right = [[NSButton alloc] initWithFrame: rect];
       [right setImagePosition: NSImageOnly];
       [right setImage: eHLine];
@@ -773,7 +773,7 @@ NSImage	*mVLine = nil;
       [box addSubview: right];
       RELEASE(right);
 
-      rect = NSMakeRect(51,90,97,20);
+      rect = NSMakeRect(51,92,97,19);
       width = [[NSButton alloc] initWithFrame: rect];
       [width setImagePosition: NSImageOnly];
       [width setImage: mHLine];
@@ -786,7 +786,7 @@ NSImage	*mVLine = nil;
       [box addSubview: width];
       RELEASE(width);
 
-      rect = NSMakeRect(90,51,20,97);
+      rect = NSMakeRect(91,52,19,96);
       height = [[NSButton alloc] initWithFrame: rect];
       [height setImagePosition: NSImageOnly];
       [height setImage: mVLine];
