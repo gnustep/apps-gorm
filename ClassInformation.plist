@@ -393,6 +393,10 @@
     Super = NSFormatter;
   };
 
+  NSOpenGLView = {
+    Super = NSView;
+  };
+
   NSPanel = {
     Super = NSWindow;
   };
