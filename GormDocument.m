@@ -453,8 +453,11 @@ static NSImage	*classesImage = nil;
 	  
 	  // select the item...
 	  row = [classesView rowForItem: className];
-	  [classesView selectRow: row byExtendingSelection: NO];
-	  [classesView scrollRowToVisible: row];
+	  if(row != NSNotFound)
+	    {
+	      [classesView selectRow: row byExtendingSelection: NO];
+	      [classesView scrollRowToVisible: row];
+	    }
 	}
     }
 }
