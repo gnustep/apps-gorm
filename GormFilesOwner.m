@@ -59,7 +59,6 @@
 
 - (NSString*) inspectorClassName
 {
-  // return @"GormNotApplicableInspector";
   return @"GormFilesOwnerInspector";
 }
 

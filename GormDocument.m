@@ -2796,6 +2796,7 @@ static NSImage	*classesImage = nil;
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
 
   /* Special gorm classes to their archive equivalents. */
+  // see implementation of classForCoder for GSNibContainer.
   [archiver encodeClassName: @"GormObjectProxy" 
 	    intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView"

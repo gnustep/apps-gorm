@@ -1,4 +1,11 @@
-2004-03-04 10:54 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-03-05 00:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomClassInspector.m: Added an "if" in setObject: to
+	prevent any problems if the object passed in is nil.
+	* GormDocument.m: minor cleanup.
+	* GormFilesOwner.m: minor cleanup.
+	
+2004-03-04 22:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFilesOwner.m: -[GormFilesOwner init] changed the dimensions
 	of browser.   Also made it so that the inspector shows up in 

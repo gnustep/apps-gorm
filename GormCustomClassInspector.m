@@ -80,32 +80,34 @@
 
 - (void) setObject: (id)anObject
 {
-  NSMutableArray *classes = nil; 
-
-  [super setObject: anObject];
-  _document = [(Gorm *)NSApp activeDocument];
-  _classManager = [(Gorm *)NSApp classManager];
-
-  // get the information...
-  NSDebugLog(@"Current selection %@", [self object]);
-  [self _setCurrentSelectionClassName: [self object]];
-
-  // load the array...
-  [browser loadColumnZero];  
-
-  // get a list of all of the classes allowed and the class to be shown
-  // and select the appropriate row in the inspector...
-  classes = [NSMutableArray arrayWithObject: _parentClassName];
-  [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
-
-  _rowToSelect = [classes indexOfObject: _currentSelectionClassName];
-  _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
-
-  if(_rowToSelect != NSNotFound)
+  if(anObject != nil)
     {
-      [browser selectRow: _rowToSelect inColumn: 0];
+      NSMutableArray *classes = nil; 
+      
+      [super setObject: anObject];
+      _document = [(Gorm *)NSApp activeDocument];
+      _classManager = [(Gorm *)NSApp classManager];
+      
+      // get the information...
+      NSDebugLog(@"Current selection %@", [self object]);
+      [self _setCurrentSelectionClassName: [self object]];
+      
+      // load the array...
+      [browser loadColumnZero];  
+      
+      // get a list of all of the classes allowed and the class to be shown
+      // and select the appropriate row in the inspector...
+      classes = [NSMutableArray arrayWithObject: _parentClassName];
+      [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
+      
+      _rowToSelect = [classes indexOfObject: _currentSelectionClassName];
+      _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
+      
+      if(_rowToSelect != NSNotFound)
+	{
+	  [browser selectRow: _rowToSelect inColumn: 0];
+	}
     }
-  [browser setNeedsDisplay: YES];
 }
 
 - (void) awakeFromNib
