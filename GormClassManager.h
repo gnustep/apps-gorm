@@ -1,6 +1,11 @@
 #ifndef GORMCLASSMANAGER_H
 #define GORMCLASSMANAGER_H
 
+// the custom classes array will hold only those things which will be persisted
+// to the .classes file.   Since the overall list of classes will not change
+// it seems that the only thing that we should save is the "delta" that being
+// the custom classes.   Once loaded they can be "merged" in with the list of
+// base classes, in gui, to form the full list of classes.
 @interface GormClassManager : NSObject
 {
   NSMutableDictionary	*classInformation;
@@ -20,6 +25,8 @@
 - (void) removeOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className;
 - (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className;
+- (NSString *) addNewActionToClassNamed: (NSString *)name;
+- (NSString *) addNewOutletToClassNamed: (NSString *)name;
 - (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className;
 - (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: className;
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name;
@@ -40,6 +47,10 @@
 
 - (BOOL) saveToFile: (NSString*)path;
 - (BOOL) loadFromFile: (NSString*)path;
+- (BOOL) loadCustomClasses: (NSString*)path;
+- (BOOL) isCustomClass: (NSString *)className;
+- (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
+- (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
 @end
 
 #endif

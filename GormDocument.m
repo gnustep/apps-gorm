@@ -464,7 +464,7 @@ static NSImage	*classesImage = nil;
 {
   int		i = [classesView selectedRow];
 
-  if(i >= 0)
+  if(i >= 0 && ![classesView isEditing])
     {
       NSString	   *newClassName;
       id            itemSelected = [classesView itemAtRow: i];
@@ -1219,6 +1219,7 @@ static NSImage	*classesImage = nil;
       classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
       [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
       [classesView setDataSource: self];
+      [classesView setDelegate: self];
       [classesView setAutoresizesAllColumnsToFit: YES];
       [classesView setAllowsColumnResizing: NO];
       [classesView setDrawsGrid: NO];
@@ -1244,6 +1245,7 @@ static NSImage	*classesImage = nil;
       [[tableColumn headerCell] setStringValue: @"O"];
       [tableColumn setWidth: 45];
       [tableColumn setResizable: NO];
+      [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
       [classesView setOutletColumn: tableColumn];
       RELEASE(tableColumn);
@@ -1252,6 +1254,7 @@ static NSImage	*classesImage = nil;
       [[tableColumn headerCell] setStringValue: @"A"];
       [tableColumn setWidth: 45];
       [tableColumn setResizable: NO];
+      [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
       [classesView setActionColumn: tableColumn];
       RELEASE(tableColumn);
@@ -1398,8 +1401,8 @@ static NSImage	*classesImage = nil;
 		       @"OK", NULL, NULL);
       return nil;
     }
-  if (![classManager loadFromFile: [[aFile stringByDeletingPathExtension] 
-				   stringByAppendingPathExtension: @"classes"]])
+  if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
+					  stringByAppendingPathExtension: @"classes"]])
     {
       NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
 	@"You won't be able to edit connections on custom classes", 
@@ -2188,21 +2191,57 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
   return @"";
 }
 
-- (void) outlineView: (NSOutlineView *)anOutlineView 
-      setObjectValue: (id)anObject 
-      forTableColumn: (NSTableColumn *)aTableColumn
-		 row: (int)rowIndex
+- (NSString*) _identifierString: (NSString*)str
 {
+  static NSCharacterSet	*illegal = nil;
+  static NSCharacterSet	*numeric = nil;
+  NSRange		r;
+  NSMutableString	*m;
+
+  if (illegal == nil)
+    {
+      illegal = [[NSCharacterSet characterSetWithCharactersInString:
+	@"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
+	invertedSet];
+      numeric = [NSCharacterSet characterSetWithCharactersInString:
+	@"0123456789"];
+      RETAIN(illegal); 
+      RETAIN(numeric); 
+    }
+  if (str == nil)
+    {
+      return nil;
+    }
+  m = [str mutableCopy];
+  r = [str rangeOfCharacterFromSet: illegal];
+  while (r.length > 0)
+    {
+      [m deleteCharactersInRange: r];
+      r = [m rangeOfCharacterFromSet: illegal];
+    }
+  r = [str rangeOfCharacterFromSet: numeric];
+  while (r.length > 0 && r.location == 0)
+    {
+      [m deleteCharactersInRange: r];
+      r = [m rangeOfCharacterFromSet: numeric];
+    }
+  str = [m copy];
+  RELEASE(m);
+  AUTORELEASE(str);
+
+  return str;
 }
 
 - (NSString *)_formatAction: (NSString *)action
 {
-  return action;
+  NSString *identifier = [[self _identifierString: action] stringByAppendingString: @":"];
+  return identifier;
 }
 
 - (NSString *)_formatOutlet: (NSString *)outlet
 {
-  return outlet;
+  NSString *identifier = [self _identifierString: outlet];
+  return identifier;
 }
 
 - (void) outlineView: (NSOutlineView *)anOutlineView 
@@ -2219,13 +2258,14 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	    {
 	      NSString *formattedAction = [self _formatAction: anObject];
 	      [classManager replaceAction: name withAction: formattedAction forClassNamed: [anOutlineView itemBeingEdited]];
+	      [item setName: formattedAction];
 	    }
 	  else if([anOutlineView editType] == Outlets)
 	    {
 	      NSString *formattedOutlet = [self _formatOutlet: anObject];
 	      [classManager replaceOutlet: name withOutlet: formattedOutlet forClassNamed: [anOutlineView itemBeingEdited]];
+	      [item setName: formattedOutlet];
 	    }
-	  [item setName: anObject];
 	}
     }
   else
@@ -2236,6 +2276,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  [anOutlineView reloadData];
 	}
     }
+  [anOutlineView setNeedsDisplay: YES];
 }
 
 - (int) outlineView: (NSOutlineView *)anOutlineView 
@@ -2299,18 +2340,62 @@ numberOfChildrenOfItem: (id)item
   return outlets;
 }
 
-- (void)outlineView: (NSOutlineView *)anOutlineView
-	  addAction: (NSString *)action
-	   forClass: (id)item
+- (NSString *)outlineView: (NSOutlineView *)anOutlineView
+     addNewActionForClass: (id)item
 {
-  [classManager addAction: action forClassNamed: item];
+  if(![classManager isCustomClass: [anOutlineView itemBeingEdited]])
+    {
+      return nil;
+    }
+  return [classManager addNewActionToClassNamed: item];
 }
 
-- (void)outlineView: (NSOutlineView *)anOutlineView
-	  addOutlet: (NSString *)outlet
-	   forClass: (id)item
+- (NSString *)outlineView: (NSOutlineView *)anOutlineView
+     addNewOutletForClass: (id)item		 
 {
-  [classManager addOutlet: outlet forClassNamed: item];
+  if(![classManager isCustomClass: [anOutlineView itemBeingEdited]])
+    {
+      return nil;
+    }
+  return [classManager addNewOutletToClassNamed: item];
 }
+
+// Delegate methods
+- (BOOL)  outlineView: (NSOutlineView *)outlineView
+shouldEditTableColumn: (NSTableColumn *)tableColumn
+		 item: (id)item
+{
+  BOOL result = NO;
+
+  NSLog(@"in the delegate %@", [tableColumn identifier]);
+  if(tableColumn == [outlineView outlineTableColumn])
+    {
+      NSLog(@"outline table col");
+      if(![item isKindOfClass: [GormOutletActionHolder class]])
+	{
+	  result = [classManager isCustomClass: item];
+	}
+      else
+	{
+	  id itemBeingEdited = [outlineView itemBeingEdited];
+	  if([classManager isCustomClass: itemBeingEdited])
+	    {
+	      if([outlineView editType] == Actions)
+		{
+		  result = [classManager isAction: [item getName]
+					 ofClass: itemBeingEdited];
+		}
+	      else if([outlineView editType] == Outlets)
+		{
+		  result = [classManager isOutlet: [item getName]
+					 ofClass: itemBeingEdited];
+		}	       
+	    }
+	}
+    }
+
+  return result;
+}
+
 @end
 

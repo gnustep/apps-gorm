@@ -79,6 +79,10 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
 - (void)outlineView: (NSOutlineView *)anOutlineView
 	  addOutlet: (NSString *)outlet
            forClass: (id)item;
+- (NSString *)outlineView: (NSOutlineView *)anOutlineView
+     addNewActionForClass: (id)item;
+- (NSString *)outlineView: (NSOutlineView *)anOutlineView
+     addNewOutletForClass: (id)item;
 @end
 
 // a class to hold the outlet/actions so that the

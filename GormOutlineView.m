@@ -178,17 +178,22 @@ static NSColor *darkGreyBlueColor = nil;
   return NO;
 }
 
-- (void)_addAction: (NSString *)actionname
-	  toObject: (id)item
+- (void)_addNewActionToObject: (id)item
 {
   int insertionPoint = 0;
-  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: actionname];
+  NSString *name = nil;
+
+  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
   _numberOfRows += 1;
-  insertionPoint = [_items indexOfObject: item];
-  [_items insertObject: holder atIndex: insertionPoint + 1];
-  [_dataSource outlineView: self addAction: actionname forClass: _itemBeingEdited];
-  [self setNeedsDisplay: YES];
-  [self noteNumberOfRowsChanged];
+  name = [_dataSource outlineView: self addNewActionForClass: _itemBeingEdited];
+  if(name != nil)
+    {
+      [holder setName: name];
+      insertionPoint = [_items indexOfObject: item];
+      [_items insertObject: holder atIndex: insertionPoint + 1];
+      [self setNeedsDisplay: YES];
+      [self noteNumberOfRowsChanged];
+    }
 }
 
 - (void)_openActions: (id)item
@@ -231,17 +236,22 @@ static NSColor *darkGreyBlueColor = nil;
   [self noteNumberOfRowsChanged];
 }
 
-- (void)_addOutlet: (NSString *)outletname
-	  toObject: (id)item
+- (void)_addNewOutletToObject: (id)item
 {
   int insertionPoint = 0;
-  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: outletname];
+  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
+  NSString *name = nil;
+
   _numberOfRows += 1;
-  insertionPoint = [_items indexOfObject: item];
-  [_items insertObject: holder atIndex: insertionPoint + 1];
-  [_dataSource outlineView: self addOutlet: outletname forClass: _itemBeingEdited];
-  [self setNeedsDisplay: YES];
-  [self noteNumberOfRowsChanged];
+  name = [_dataSource outlineView: self addNewOutletForClass: _itemBeingEdited];
+  if(name != nil)
+    {
+      [holder setName: name];
+      insertionPoint = [_items indexOfObject: item];
+      [_items insertObject: holder atIndex: insertionPoint + 1];
+      [self setNeedsDisplay: YES];
+      [self noteNumberOfRowsChanged];
+    }
 }
 
 - (void)_openOutlets: (id)item
@@ -614,13 +624,11 @@ static NSColor *darkGreyBlueColor = nil;
     {
       if(_edittype == Actions)
 	{
-	  [self _addAction: @"newAction:"
-		toObject: _itemBeingEdited];
+	  [self _addNewActionToObject: _itemBeingEdited];
 	}
       if(_edittype == Outlets)
 	{
-	  [self _addOutlet: @"newOutlet"
-		toObject: _itemBeingEdited];
+	  [self _addNewOutletToObject: _itemBeingEdited];
 	}
     }
 }
