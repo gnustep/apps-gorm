@@ -427,10 +427,6 @@
       obj = [(NSScrollView *)obj documentView];
     }
 
-  // select the current class in the document...
-  // [(GormDocument *)[(id <IB>)NSApp activeDocument] selectClassWithObject: obj];
-
-
   /*
    * Set panel title for the type of object being inspected.
    */

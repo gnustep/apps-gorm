@@ -1,5 +1,11 @@
 2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Corrected selection problem.  Moved code to
+	select item in classes view from GormInspectorManager.
+	* GormInspectorManager.m: Removed the code from here.
+
+2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Palettes/Containers/main.m: added height resize flag
 	to TextView prototype to correct bug #3270
 

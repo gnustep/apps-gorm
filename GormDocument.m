@@ -447,14 +447,14 @@ static NSImage	*classesImage = nil;
 	break;
       case 3: // classes
 	{
-	  NSArray *selection = [objectsView selection];
+	  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
 	  [selectionBox setContentView: classesScrollView];
 	  
 	  // if something is selected, in the object view.
 	  // show the equivalent class in the classes view.
 	  if ([selection count] > 0)
 	    {
-	      id obj = [[objectsView selection] objectAtIndex: 0];
+	      id obj = [selection objectAtIndex: 0];
 	      [self selectClassWithObject: obj];
 	    }
 	}
