@@ -42,9 +42,45 @@
 					   defer: NO];
   contents = [window contentView];
 
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 20)];
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 160, 80, 20)];
+  [v setStringValue: @"Text"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 125, 80, 20)];
   [v setButtonType: NSToggleButton];
   [v setTitle: @"Button"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+#if 0
+  // Need image encoding/decoding
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 90, 80, 20)];
+  [v setButtonType: NSSwitchButton];
+  [v setImagePosition: NSImageRight];
+  [v setTitle: @"Switch"];
+  [contents addSubview: v];
+  RELEASE(v);
+#endif
+
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(100, 160, 80, 20)];
+  [v setEditable: NO];
+  [v setSelectable: NO];
+  [v setBezeled: NO];
+  [v setAlignment: NSCenterTextAlignment];
+  [v setFont: [NSFont systemFontOfSize: 14.0]];
+  [v setDrawsBackground: NO];
+  [v setStringValue: @"Title"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(100, 60, 14, 90)];
+  [v setContinuous: YES];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(100, 20, 90, 14)];
+  [v setContinuous: YES];
   [contents addSubview: v];
   RELEASE(v);
 }

@@ -833,12 +833,24 @@ selectCellWithString: (NSString*)title
   if ([connectors containsObject: currentConnector] == YES)
     {
       [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
+      if ([currentConnector isKindOfClass: [NSNibOutletConnector class]])
+	{
+	  [currentConnector setDestination: nil];
+	  [currentConnector establishConnection];
+	}
+      if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
+	{
+	  [currentConnector setDestination: nil];
+	  [currentConnector setLabel: nil];
+	  [currentConnector establishConnection];
+	}
       [connectors removeObject: currentConnector];
     }
   else
     {
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
+      [currentConnector establishConnection];
     }
   [[(id<IB>)NSApp activeDocument] touch];	/* mark as edited.	*/
   [oldBrowser loadColumnZero];

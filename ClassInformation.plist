@@ -6,16 +6,29 @@
     );
   };
   NSButton = {
-    Actions = (
-      "takeStringValueFrom:"
-    );
     Super = NSControl;
   };
   NSControl = {
+    Actions = (
+      "takeDoubleValueFrom:",
+      "takeFloatValueFrom:",
+      "takeIntValueFrom:",
+      "takeObjectValueFrom:",
+      "takeStringValueFrom:"
+    );
     Outlets = (
       target
     );
     Super = NSView;
+  };
+  NSSlider = {
+    Super = NSControl;
+  };
+  NSTextField = {
+    Outlets = (
+      delegate
+    );
+    Super = NSControl;
   };
   NSResponder = {
     Super = NSObject;
