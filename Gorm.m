@@ -516,9 +516,9 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.3.1 (Alpha)" 
+  [dict setObject: @"Gorm 0.3.2 (Alpha)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.3.1 Aug 2003" 
+  [dict setObject: @"0.3.2 Sep 2003" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",

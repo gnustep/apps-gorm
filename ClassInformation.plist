@@ -454,6 +454,16 @@
     Super = NSView;
   };
 
+  NSStepper = 
+  {
+    Super = NSControl;
+  };
+
+  NSStepperCell = 
+  {
+    Super = NSActionCell;
+  };
+
   NSTabView = {
     Actions = (
       selectFirstTabViewItem:,
