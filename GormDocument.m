@@ -453,15 +453,12 @@ static NSImage	*classesImage = nil;
   RELEASE(classManager);
   RELEASE(classEditor);
   RELEASE(hidden);
-  RELEASE(window);
   RELEASE(filesOwner);
   RELEASE(firstResponder);
   RELEASE(fontManager);
   NSFreeMapTable(objToName);
   RELEASE(documentPath);
   RELEASE(savedEditors);
-
-  RELEASE(selectionBox);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
   [super dealloc];
@@ -729,45 +726,33 @@ static NSImage	*classesImage = nil;
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSEnumerator	*enumerator;
-      id<IBConnectors>	con;
       id		obj;
 
       [nc postNotificationName: IBWillCloseDocumentNotification
 			object: self];
 
-      [self setDocumentActive: NO];
-
-      /*
-       * Destroy all windows in this document before we go away.
-       */
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  if ([obj isKindOfClass: [NSWindow class]] == YES)
+	  if ([obj isKindOfClass: [NSMenu class]] == YES)
 	    {
-	      [obj close];
+	      if ([[obj window] isVisible] == YES)
+		{
+		  [hidden addObject: obj];
+		  [obj close];
+		}
+	    }
+	  else if ([obj isKindOfClass: [NSWindow class]] == YES)
+	    {
+	      if ([obj isVisible] == YES)
+		{
+		  [hidden addObject: obj];
+		  [obj orderOut: self];
+		}
 	    }
 	}
 
-      /*
-       * Close all editors.
-       */
-      enumerator = [[NSArray arrayWithArray: connections] objectEnumerator];
-      while ((con = [enumerator nextObject]) != nil)
-	{
-	  if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	    {
-	      [[con destination] close];
-	    }
-	}
-
-      /*
-       * Remove objects from document.
-       */
-      [connections removeAllObjects];
-      [nameTable removeAllObjects];
-      NSResetMapTable(objToName);
-      DESTROY(documentPath);
+      [self setDocumentActive: NO];
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
     {
@@ -859,7 +844,6 @@ static NSImage	*classesImage = nil;
       NSButtonCell		*cell;
       NSTableColumn             *tableColumn;
       unsigned			style;
-
 
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
@@ -975,8 +959,6 @@ static NSImage	*classesImage = nil;
       [scrollView setHasVerticalScroller: YES];
       [scrollView setHasHorizontalScroller: NO];
       [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      //[[window contentView] addSubview: scrollView];
-      //RELEASE(scrollView);
 
       mainRect.origin = NSMakePoint(0,0);
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
@@ -991,16 +973,11 @@ static NSImage	*classesImage = nil;
       [classesScrollView setHasHorizontalScroller: NO];
       [classesScrollView setAutoresizingMask:
 	NSViewHeightSizable|NSViewWidthSizable];
-      //[[window contentView] addSubview: scrollView];
-      //RELEASE(scrollView);
 
       mainRect.origin = NSMakePoint(0,0);
       classesView = [[NSTableView alloc] initWithFrame: mainRect];
       [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
       [classesView setDataSource: self];
-      //[classesView setAction: @selector(changeCurrentClass:)];
-      //[classesView setTarget: self];
-      //[classesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [classesView setAutoresizesAllColumnsToFit: YES];
       [classesView setAllowsColumnResizing: NO];
       [classesScrollView setDocumentView: classesView];
