@@ -1,3 +1,14 @@
+2004-06-03 00:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed code in the testInterface: method to allow
+	NSBrowser, NSTableView, and NSOutlineView display correctly in 
+	testing mode.
+	* GormDocument.m: Moved the code in loadDocument: into a NS_DURING
+	block to catch any exceptions thrown during loading of a .gorm file.
+	This will facilitate recovery of the application when a problem is 
+	encountered while loading the file and will allow the user to continue 
+	using the application despite the issue.
+	
 2004-05-30 22:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormFirstResponder connectInspectorClassName] 

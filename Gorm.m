@@ -693,12 +693,14 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 		    intoClassName: @"NSPopUpButton"];
 	  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
 		    intoClassName: @"NSPopUpButtonCell"];
+	  /*
 	  [archiver encodeClassName: @"GormNSBrowser" 
 		    intoClassName: @"NSBrowser"];
 	  [archiver encodeClassName: @"GormNSTableView" 
 		    intoClassName: @"NSTableView"];
 	  [archiver encodeClassName: @"GormNSOutlineView" 
 		    intoClassName: @"NSOutlineView"];
+	  */
 	  [archiver encodeRootObject: activDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activDoc endArchiving];
@@ -1188,8 +1190,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   return palettesManager;
 }
 
-
-
 - (id<IBSelectionOwners>) selectionOwner
 {
   return (id<IBSelectionOwners>)selectionOwner;
@@ -1230,7 +1230,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   [self displayConnectionBetween: nil and: nil];
   isConnecting = NO;
 }
-
 
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {

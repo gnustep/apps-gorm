@@ -1766,263 +1766,273 @@ static NSImage	*classesImage = nil;
  */
 - (id) loadDocument: (NSString*)aFile
 {
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSMutableDictionary	*nt;
-  NSMutableDictionary	*cc;
-  NSData		*data;
-  NSUnarchiver		*u;
-  GSNibContainer	*c;
-  NSEnumerator		*enumerator;
-  id <IBConnectors>	con;
-  NSString              *ownerClass, *key;
-  NSFileManager	        *mgr = [NSFileManager defaultManager];
-  BOOL                  isDir = NO;
-  NSDirectoryEnumerator *dirEnumerator;
-  BOOL                  repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
-
-  if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
+  NS_DURING
     {
-      // if the data is in a directory, then load from objects.gorm 
-      if (isDir == NO)
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSMutableDictionary	*nt;
+      NSMutableDictionary	*cc;
+      NSData		*data;
+      NSUnarchiver		*u;
+      GSNibContainer	*c;
+      NSEnumerator		*enumerator;
+      id <IBConnectors>	con;
+      NSString              *ownerClass, *key;
+      NSFileManager	        *mgr = [NSFileManager defaultManager];
+      BOOL                  isDir = NO;
+      NSDirectoryEnumerator *dirEnumerator;
+      BOOL                  repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
+      
+      if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
 	{
-	  NSString *lastComponent = [aFile lastPathComponent];
-	  NSString *parent = [aFile stringByDeletingLastPathComponent];
-	  NSString *parentExt = [parent pathExtension];
-
-	  // test if we're doing it wrong...
-	  if([lastComponent isEqual: @"objects.gorm"] && 
-	     [parentExt isEqual: @"gorm"])
+	  // if the data is in a directory, then load from objects.gorm 
+	  if (isDir == NO)
 	    {
-	      NSRunAlertPanel(NULL,
-			      _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
-			      @"OK", NULL, NULL);
-	      return nil;
+	      NSString *lastComponent = [aFile lastPathComponent];
+	      NSString *parent = [aFile stringByDeletingLastPathComponent];
+	      NSString *parentExt = [parent pathExtension];
+	      
+	      // test if we're doing it wrong...
+	      if([lastComponent isEqual: @"objects.gorm"] && 
+		 [parentExt isEqual: @"gorm"])
+		{
+		  NSRunAlertPanel(NULL,
+				  _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
+				  @"OK", NULL, NULL);
+		  return nil;
+		}
+	      
+	      data = [NSData dataWithContentsOfFile: aFile];
+	      NSDebugLog(@"Loaded data from file...");
 	    }
-
-	  data = [NSData dataWithContentsOfFile: aFile];
-	  NSDebugLog(@"Loaded data from file...");
+	  else
+	    {
+	      NSString *newFileName;
+	      
+	      newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
+	      data = [NSData dataWithContentsOfFile: newFileName];
+	      NSDebugLog(@"Loaded data from %@...", newFileName);
+	    }
 	}
       else
 	{
-	  NSString *newFileName;
-
-	  newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
-	  data = [NSData dataWithContentsOfFile: newFileName];
-	  NSDebugLog(@"Loaded data from %@...", newFileName);
+	  // no file exists...
+	  data = nil;
 	}
-    }
-  else
-    {
-      // no file exists...
-      data = nil;
-    }
-  
-  // check the data...
-  if (data == nil)
-    {
-      NSRunAlertPanel(NULL,
-	[NSString stringWithFormat: @"Could not read '%@' data", aFile],
-	 @"OK", NULL, NULL);
-      return nil;
-    }
-
-  /*
-   * Create an unarchiver, and use it to unarchive the nib file while
-   * handling class replacement so that standard objects understood
-   * by the gui library are converted to their Gorm internal equivalents.
-   */
-  u = [[NSUnarchiver alloc] initForReadingWithData: data];
-
-  // classes
-  [u decodeClassName: @"GSNibContainer" 
-     asClassName: @"GormDocument"];
-  [u decodeClassName: @"GSNibItem" 
-     asClassName: @"GormObjectProxy"];
-  [u decodeClassName: @"GSCustomView" 
-     asClassName: @"GormCustomView"];
-  [u decodeClassName: @"NSMenu" 
-     asClassName: @"GormNSMenu"];
-  [u decodeClassName: @"NSWindow" 
-     asClassName: @"GormNSWindow"];
-  [u decodeClassName: @"NSPanel" 
-     asClassName: @"GormNSPanel"];
-  [u decodeClassName: @"NSPopUpButton" 
-     asClassName: @"GormNSPopUpButton"];
-  [u decodeClassName: @"NSPopUpButtonCell"
-     asClassName: @"GormNSPopUpButtonCell"];
-  [u decodeClassName: @"NSBrowser" 
-     asClassName: @"GormNSBrowser"];
-  [u decodeClassName: @"NSTableView" 
-     asClassName: @"GormNSTableView"];
-  [u decodeClassName: @"NSOutlineView" 
-     asClassName: @"GormNSOutlineView"];
-
-  c = [u decodeObject];
-  if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
-    {
-      NSRunAlertPanel(NULL, _(@"Could not unarchive document data"), 
-		       _(@"OK"), NULL, NULL);
-      return nil;
-    }
-
-  // retrieve the custom class data...
-  cc = [[c nameTable] objectForKey: GSCustomClassMap];
-  if (cc == nil)
-    {
-      cc = [NSMutableDictionary dictionary]; // create an empty one.
-      [[c nameTable] setObject: cc forKey: GSCustomClassMap];
-    }
-  [classManager setCustomClassMap: cc];
-  NSDebugLog(@"cc = %@", cc);
-  NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
-
-  // convert from old file format...
-  if (isDir == NO)
-    {
-      NSString	*s;
-
-      s = [aFile stringByDeletingPathExtension];
-      s = [s stringByAppendingPathExtension: @"classes"];
-      if (![classManager loadCustomClasses: s])
+      
+      // check the data...
+      if (data == nil)
 	{
-	  NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
-	    @"You won't be able to edit connections on custom classes"), 
-	    _(@"OK"), NULL, NULL);
+	  NSRunAlertPanel(NULL,
+			  [NSString stringWithFormat: @"Could not read '%@' data", aFile],
+			  @"OK", NULL, NULL);
+	  return nil;
 	}
-    }
-  else
-    {
-      NSString	*s;
-
-      s = [aFile stringByAppendingPathComponent: @"data.classes"];
-      if (![classManager loadCustomClasses: s]) 
+      
+      /*
+       * Create an unarchiver, and use it to unarchive the nib file while
+       * handling class replacement so that standard objects understood
+       * by the gui library are converted to their Gorm internal equivalents.
+       */
+      u = [[NSUnarchiver alloc] initForReadingWithData: data];
+      
+      // classes
+      [u decodeClassName: @"GSNibContainer" 
+	 asClassName: @"GormDocument"];
+      [u decodeClassName: @"GSNibItem" 
+	 asClassName: @"GormObjectProxy"];
+      [u decodeClassName: @"GSCustomView" 
+	 asClassName: @"GormCustomView"];
+      [u decodeClassName: @"NSMenu" 
+	 asClassName: @"GormNSMenu"];
+      [u decodeClassName: @"NSWindow" 
+	 asClassName: @"GormNSWindow"];
+      [u decodeClassName: @"NSPanel" 
+	 asClassName: @"GormNSPanel"];
+      [u decodeClassName: @"NSPopUpButton" 
+	 asClassName: @"GormNSPopUpButton"];
+      [u decodeClassName: @"NSPopUpButtonCell"
+	 asClassName: @"GormNSPopUpButtonCell"];
+      [u decodeClassName: @"NSBrowser" 
+	 asClassName: @"GormNSBrowser"];
+      [u decodeClassName: @"NSTableView" 
+	 asClassName: @"GormNSTableView"];
+      [u decodeClassName: @"NSOutlineView" 
+	 asClassName: @"GormNSOutlineView"];
+      
+      c = [u decodeObject];
+      if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
 	{
-	  NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
-	    @"You won't be able to edit connections on custom classes"), 
+	  NSRunAlertPanel(NULL, _(@"Could not unarchive document data"), 
 			  _(@"OK"), NULL, NULL);
+	  return nil;
 	}
-    }
-
-  [classesView reloadData];
-
-  /*
-   * In the newly loaded nib container, we change all the connectors
-   * to hold the objects rather than their names (using our own dummy
-   * object as the 'NSOwner'.
-   */
-  ownerClass = [[c nameTable] objectForKey: @"NSOwner"];
-  if (ownerClass)
-    [filesOwner setClassName: ownerClass];
-  [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
-  [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
-
-  /* Iterate over the contents of nameTable and create the connections */
-  nt = [c nameTable];
-  enumerator = [[c connections] objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSString  *name;
-      id        obj;
-
-      name = (NSString*)[con source];
-      obj = [nt objectForKey: name];
-      [con setSource: obj];
-      name = (NSString*)[con destination];
-      obj = [nt objectForKey: name];
-      [con setDestination: obj];
-    }
-
-  /*
-   * Now we merge the objects from the nib container into our own data
-   * structures, taking care not to overwrite our NSOwner and NSFirst.
-   */
-  [nt removeObjectForKey: @"NSOwner"];
-  [nt removeObjectForKey: @"NSFirst"];
-  [connections addObjectsFromArray: [c connections]];
-  [nameTable addEntriesFromDictionary: nt];
-  [self rebuildObjToNameMapping];
-
-  // repair the .gorm file, if needed.
-  if(repairFile == YES)
-    {
-      [self _repairFile];
-    }
-
-  /*
-   * set our new file name
-   */
-  ASSIGN(documentPath, aFile);
-  [window setTitleWithRepresentedFilename: documentPath];
-
-  /*
-   * read in all of the sounds in the .gorm wrapper and
-   * load them into the editor.
-   */
-  dirEnumerator = [mgr enumeratorAtPath: documentPath];
-  if (dirEnumerator)
-    {
-      NSString *file = nil;
-      NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
-      while ((file = [dirEnumerator nextObject]))
+      
+      // retrieve the custom class data...
+      cc = [[c nameTable] objectForKey: GSCustomClassMap];
+      if (cc == nil)
 	{
-	  if ([fileTypes containsObject: [file pathExtension]])
+	  cc = [NSMutableDictionary dictionary]; // create an empty one.
+	  [[c nameTable] setObject: cc forKey: GSCustomClassMap];
+	}
+      [classManager setCustomClassMap: cc];
+      NSDebugLog(@"cc = %@", cc);
+      NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
+      
+      // convert from old file format...
+      if (isDir == NO)
+	{
+	  NSString	*s;
+	  
+	  s = [aFile stringByDeletingPathExtension];
+	  s = [s stringByAppendingPathExtension: @"classes"];
+	  if (![classManager loadCustomClasses: s])
 	    {
-	      NSString *soundPath;
-
-	      NSDebugLog(@"Add the sound %@", file);
-	      soundPath = [documentPath stringByAppendingPathComponent: file];
-	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
+	      NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+				      @"You won't be able to edit connections on custom classes"), 
+			      _(@"OK"), NULL, NULL);
 	    }
 	}
-    }
-
-  /*
-   * read in all of the images in the .gorm wrapper and
-   * load them into the editor.
-   */
-  dirEnumerator = [mgr enumeratorAtPath: documentPath];
-  if (dirEnumerator)
-    {
-      NSString *file = nil;
-      NSArray  *fileTypes = [NSImage imageFileTypes];
-      while ((file = [dirEnumerator nextObject]))
+      else
 	{
-	  if ([fileTypes containsObject: [file pathExtension]])
+	  NSString	*s;
+	  
+	  s = [aFile stringByAppendingPathComponent: @"data.classes"];
+	  if (![classManager loadCustomClasses: s]) 
 	    {
-	      NSString	*imagePath;
-	      id	placeHolder;
-
-	      imagePath = [documentPath stringByAppendingPathComponent: file];
-	      placeHolder = [self _createImagePlaceHolder: imagePath];
-	      if (placeHolder)
+	      NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+				      @"You won't be able to edit connections on custom classes"), 
+			      _(@"OK"), NULL, NULL);
+	    }
+	}
+      
+      [classesView reloadData];
+      
+      /*
+       * In the newly loaded nib container, we change all the connectors
+       * to hold the objects rather than their names (using our own dummy
+       * object as the 'NSOwner'.
+       */
+      ownerClass = [[c nameTable] objectForKey: @"NSOwner"];
+      if (ownerClass)
+	[filesOwner setClassName: ownerClass];
+      [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
+      [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
+      
+      /* Iterate over the contents of nameTable and create the connections */
+      nt = [c nameTable];
+      enumerator = [[c connections] objectEnumerator];
+      while ((con = [enumerator nextObject]) != nil)
+	{
+	  NSString  *name;
+	  id        obj;
+	  
+	  name = (NSString*)[con source];
+	  obj = [nt objectForKey: name];
+	  [con setSource: obj];
+	  name = (NSString*)[con destination];
+	  obj = [nt objectForKey: name];
+	  [con setDestination: obj];
+	}
+      
+      /*
+       * Now we merge the objects from the nib container into our own data
+       * structures, taking care not to overwrite our NSOwner and NSFirst.
+       */
+      [nt removeObjectForKey: @"NSOwner"];
+      [nt removeObjectForKey: @"NSFirst"];
+      [connections addObjectsFromArray: [c connections]];
+      [nameTable addEntriesFromDictionary: nt];
+      [self rebuildObjToNameMapping];
+      
+      // repair the .gorm file, if needed.
+      if(repairFile == YES)
+	{
+	  [self _repairFile];
+	}
+      
+      /*
+       * set our new file name
+       */
+      ASSIGN(documentPath, aFile);
+      [window setTitleWithRepresentedFilename: documentPath];
+      
+      /*
+       * read in all of the sounds in the .gorm wrapper and
+       * load them into the editor.
+       */
+      dirEnumerator = [mgr enumeratorAtPath: documentPath];
+      if (dirEnumerator)
+	{
+	  NSString *file = nil;
+	  NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
+	  while ((file = [dirEnumerator nextObject]))
+	    {
+	      if ([fileTypes containsObject: [file pathExtension]])
 		{
-		  NSDebugLog(@"Add the image %@", file);
-		  [imagesView addObject: placeHolder];
+		  NSString *soundPath;
+		  
+		  NSDebugLog(@"Add the sound %@", file);
+		  soundPath = [documentPath stringByAppendingPathComponent: file];
+		  [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
 		}
 	    }
 	}
-    }
-
-  NSDebugLog(@"nameTable = %@",[c nameTable]);
-
-  // awaken all elements after the load is completed.
-  enumerator = [[c nameTable] keyEnumerator];
-  while ((key = [enumerator nextObject]) != nil)
-    {
-      id o = [[c nameTable] objectForKey: key];
-      if ([o respondsToSelector: @selector(awakeFromDocument:)])
+      
+      /*
+       * read in all of the images in the .gorm wrapper and
+       * load them into the editor.
+       */
+      dirEnumerator = [mgr enumeratorAtPath: documentPath];
+      if (dirEnumerator)
 	{
-  	  [o awakeFromDocument: self];
-  	}
+	  NSString *file = nil;
+	  NSArray  *fileTypes = [NSImage imageFileTypes];
+	  while ((file = [dirEnumerator nextObject]))
+	    {
+	      if ([fileTypes containsObject: [file pathExtension]])
+		{
+		  NSString	*imagePath;
+		  id	placeHolder;
+		  
+		  imagePath = [documentPath stringByAppendingPathComponent: file];
+		  placeHolder = [self _createImagePlaceHolder: imagePath];
+		  if (placeHolder)
+		    {
+		      NSDebugLog(@"Add the image %@", file);
+		      [imagesView addObject: placeHolder];
+		    }
+		}
+	    }
+	}
+      
+      NSDebugLog(@"nameTable = %@",[c nameTable]);
+      
+      // awaken all elements after the load is completed.
+      enumerator = [[c nameTable] keyEnumerator];
+      while ((key = [enumerator nextObject]) != nil)
+	{
+	  id o = [[c nameTable] objectForKey: key];
+	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
+	    {
+	      [o awakeFromDocument: self];
+	    }
+	}
+      
+      // this is the last thing we should do...
+      [nc postNotificationName: IBDidOpenDocumentNotification
+	  object: self];
+      
+      // release the unarchiver.. now that we're all done...
+      RELEASE(u);
     }
+  NS_HANDLER
+    {
+      NSRunAlertPanel(NULL, [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
+		      _(@"OK"), NULL, NULL);
+      return nil; // This will cause the calling method to release the document.
+    }
+  NS_ENDHANDLER
 
-  // this is the last thing we should do...
-  [nc postNotificationName: IBDidOpenDocumentNotification
-		    object: self];
-
-  // release the unarchiver.. now that we're all done...
-  RELEASE(u);
-  
   return self;
 }
 
