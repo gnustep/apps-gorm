@@ -428,40 +428,40 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (void) _selectClass
+// class selection...
+- (void) _selectClass: (NSString *)className
 {
-  NSArray *selection = [objectsView selection];
-
-  if([selection count] > 0)
+  NSString *newClassName = [GormClassManager correctClassName: className], *currentClass = nil;
+  NSArray *classes = [[self classManager] allSuperClassesOf: newClassName];
+  NSEnumerator *en = [classes objectEnumerator];
+  int row = 0;
+  
+  // open the items...
+  while((currentClass = [en nextObject]) != nil)
     {
-      id obj = nil;
-      GormClassManager *cm = [self classManager];
-
-      obj = [[objectsView selection] objectAtIndex: 0];
-      if([obj respondsToSelector: @selector(className)])
-	{
-	  NSString *className = [GormClassManager correctClassName: [obj className]], *currentClass = nil;
-	  NSArray *classes = [[self classManager] allSuperClassesOf: className];
-	  NSEnumerator *en = [classes objectEnumerator];
-	  int row = 0;
-
-	  // open the items...
-	  while((currentClass = [en nextObject]) != nil)
-	    {
-	      [classesView expandItem: currentClass];
-	    }
-	  
-	  // select the item...
-	  row = [classesView rowForItem: className];
-	  if(row != NSNotFound)
-	    {
-	      [classesView selectRow: row byExtendingSelection: NO];
-	      [classesView scrollRowToVisible: row];
-	    }
-	}
+      [classesView expandItem: currentClass];
+    }
+  
+  // select the item...
+  row = [classesView rowForItem: newClassName];
+  if(row != NSNotFound)
+    {
+      [classesView selectRow: row byExtendingSelection: NO];
+      [classesView scrollRowToVisible: row];
     }
 }
 
+- (void) _selectClassWithObject: (id)obj 
+{
+  GormClassManager *cm = [self classManager];
+  
+  if([obj respondsToSelector: @selector(className)])
+    {
+      [self _selectClass: [obj className]];
+    }
+}
+
+// change the views...
 - (void) changeView: (id)sender
 {
   int tag = [[sender selectedCell] tag];
@@ -485,8 +485,16 @@ static NSImage	*classesImage = nil;
       break;
     case 3: // classes
       {
+	NSArray *selection = [objectsView selection];
 	[selectionBox setContentView: classesScrollView];
-	[self _selectClass];
+	
+	// if something is selected, in the object view.
+	// show the equivalent class in the classes view.
+	if([selection count] > 0)
+	  {
+	    id obj = [[objectsView selection] objectAtIndex: 0];
+	    [self _selectClassWithObject: obj];
+	  }
       }
       break;
     }
@@ -721,8 +729,9 @@ static NSImage	*classesImage = nil;
   NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
   NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
   GormClassManager *cm = [self classManager];
-  NSCharacterSet *terminatorSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
-  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
+  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
   NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
 
@@ -758,11 +767,11 @@ static NSImage	*classesImage = nil;
 
 	  [classScanner scanString: @"@interface"
 			intoString: NULL];
-	  [classScanner scanUpToCharactersFromSet: stopSet
+	  [classScanner scanUpToCharactersFromSet: classStopSet
 			intoString: &className];
 	  [classScanner scanString: @":"
 			intoString: NULL];
-	  [classScanner scanUpToCharactersFromSet: terminatorSet
+	  [classScanner scanUpToCharactersFromSet: superClassStopSet
 			intoString: &superClassName];
 	  [classScanner scanUpToString: @"{"
 			intoString: NULL];
@@ -807,14 +816,13 @@ static NSImage	*classesImage = nil;
 		{
 		  NSString *action = nil;
 		  BOOL hasArguments = NO;
-		  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
 		  
 		  // Scan the method name
 		  [methodScanner scanUpToString: actionToken
 				 intoString: NULL];
 		  [methodScanner scanString: actionToken
 				 intoString: NULL];
-		  [methodScanner scanUpToCharactersFromSet: stopSet
+		  [methodScanner scanUpToCharactersFromSet: actionStopSet
 				 intoString: &action];
 		  
 		  // This will return true if the method has args.
@@ -855,20 +863,53 @@ static NSImage	*classesImage = nil;
 		       withOutlets: outlets];
 	  if(result)
 	    {
-	      NSLog(@"Class %@ added", className);
+	      NSDebugLog(@"Class %@ added", className);
 	      [classesView reloadData]; 
 	    }
 	  else
 	    {
 	      NSString *message = [NSString stringWithFormat: 
-					      @"The class %@ could not be added", 
-					    className];
-	      NSRunAlertPanel(@"Problem adding class from header", 
-			      message,
-			      nil, 
-			      nil, 
-			      nil);
-	      NSDebugLog(@"Class %@ failed to add", className);
+					      @"The class %@ already exists. Replace it?", 
+					    className];	      
+	      int alert = NSRunAlertPanel(@"Problem adding class from header", 
+					  message,
+					  @"Yes", 
+					  @"No", 
+					  nil);
+
+	      if (alert == NSAlertDefaultReturn)
+		{
+		  [cm removeClassNamed: className];
+		  result = [cm addClassNamed: className
+			       withSuperClassNamed: superClassName
+			       withActions: actions
+			       withOutlets: outlets];
+		  if(!result)
+		    {
+		      NSString *message = [NSString stringWithFormat: 
+						      @"Could not replace class %@.", 
+						    className];	      
+		      NSRunAlertPanel(@"Problem adding class from header", 
+				      message,
+				      nil, 
+				      nil, 
+				      nil);
+		      NSDebugLog(@"Class %@ failed to add", className);
+		    }
+		  else
+		    {
+		      NSDebugLog(@"Class %@ replaced.", className);
+		      [classesView reloadData]; 
+		    }
+		}
+
+	    }
+
+	  if(result)
+	    {
+	      // go to the class which was just loaded in the classes view...
+	      [selectionBox setContentView: classesScrollView];
+	      [self _selectClass: className];
 	    }
 	} // if we found a class
     }

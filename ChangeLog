@@ -1,5 +1,13 @@
 2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: -[GormDocument parseHeader:] added code to select
+	the class when it is loaded in the classes view.  Also modified the
+	-[GormDocument _selectClass:] method and added a new private method
+	-[GormDocument _selectClassWithObject:] which will select using an
+	object which is passed in.
+	
+2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: -[GormDocument parseHeader:] corrected problem
 	pointed out be Enrico Sersale.   Applied patch.  Thanks!
 	

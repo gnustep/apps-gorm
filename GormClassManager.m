@@ -160,7 +160,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	}
       else
 	{
-	  NSLog(@"Class already exists");
+	  NSDebugLog(@"Class already exists");
 	  result = NO;
 	}
     }
