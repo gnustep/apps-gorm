@@ -1,5 +1,10 @@
 2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormObjectEditor.m: +[GormObjectEditor initialize]: Corrected how the map table
+	is created to prevent a crash. 
+
+2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: -[GormDocument createClassesFiles:] added if the simply return
 	when no row is selected.  This was causing an exception.
 

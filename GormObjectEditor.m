@@ -78,8 +78,12 @@ static NSMapTable	*docMap = 0;
 {
   if (self == [GormObjectEditor class])
     {
-      docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
-	NSObjectMapValueCallBacks, 2);
+      docMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
+				NSObjectMapValueCallBacks, 
+				2);
+
+      // docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
+      //	NSObjectMapValueCallBacks, 2);
     }
 }
 
