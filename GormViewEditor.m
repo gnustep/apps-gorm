@@ -560,6 +560,7 @@ static BOOL currently_displaying = NO;
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  int halfSpacing = guideSpacing / 2;
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
@@ -624,7 +625,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomLeftKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->leftHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -663,7 +664,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomRightKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->rightHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -702,7 +703,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBTopMiddleKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->topHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -740,7 +741,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomMiddleKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->bottomHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -868,6 +869,7 @@ static BOOL currently_displaying = NO;
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  int halfSpacing = guideSpacing / 2;
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
@@ -923,7 +925,7 @@ static BOOL currently_displaying = NO;
     float bestPosition = 0;
     NSMutableArray *leftBests;
     NSMutableArray *rightBests;
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->leftHints count];
 
     leftBests = [NSMutableArray arrayWithCapacity: 4];
@@ -1010,7 +1012,7 @@ static BOOL currently_displaying = NO;
     float bestPosition = 0;
     NSMutableArray *bottomBests;
     NSMutableArray *topBests;
-    minimum = 6;
+    minimum = (halfSpacing + 1);
     count = [gpi->bottomHints count];
 
     bottomBests = [NSMutableArray arrayWithCapacity: 4];

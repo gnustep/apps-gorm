@@ -1,3 +1,11 @@
+2005-03-19 05:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: Corrected problem with control snapping to
+	edge when the threshold for the guideline was set lower than 5.
+	* Resources/GormPrefGuideline.gorm: Set minimum of slider to 1.
+	* Resources/GormPrefHeaders.gorm: Adjusted sizing of table.
+	* Resources/GormPrefPalettes.gorm: Corrected background color
+
 2005-03-19 04:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Defaults.plist: Added default of 10 for "GuideSpacing".
