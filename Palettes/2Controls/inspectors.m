@@ -3,6 +3,7 @@
    Copyright (C) 2001 Free Software Foundation, Inc.
 
    Author:  Adam Fedor <fedor@gnu.org>
+              Laurent Julliard <laurent@julliard-online.org>
    Date: Aug 2001
    
    This file is part of GNUstep.
@@ -40,8 +41,9 @@
 {
   id positionMatrix;
   id borderMatrix;
-  id tagField;
   id titleField;
+  id horizontalSlider;
+  id verticalSlider;
 }
 @end
 
@@ -61,7 +63,14 @@
     {
       [object setTitle: [[control cellAtIndex: 0] stringValue] ];
     }
-}
+  else if (control == horizontalSlider)
+    {
+      [object setContentViewMargins: NSMakeSize([control floatValue], [verticalSlider floatValue]) ];
+    }
+  else if (control == verticalSlider)
+    {
+      [object setContentViewMargins: NSMakeSize([horizontalSlider floatValue], [control floatValue]) ];
+    }}
 
 - (void) _getValuesFromObject: anObject
 {
@@ -71,6 +80,9 @@
   [positionMatrix selectCellWithTag: [anObject titlePosition] ];
   [borderMatrix selectCellWithTag: [anObject borderType] ];
   [[titleField cellAtIndex: 0] setStringValue: [anObject title] ];
+  [horizontalSlider setFloatValue: [anObject contentViewMargins].width];
+  [verticalSlider setFloatValue: [anObject contentViewMargins].height];
+  
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
@@ -83,7 +95,6 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
-  RELEASE(okButton);
   [super dealloc];
 }
 
@@ -106,30 +117,10 @@
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: titleField];
-  [self _setValuesFromControl: positionMatrix];
-  [self _setValuesFromControl: borderMatrix];
+  NSDebugLog(@"ok: sender : %@", sender);
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -179,6 +170,8 @@
 
   highlight = [cell highlightsBy];
   stateby = [cell showsStateBy];
+  NSDebugLog(@"highlight = %d, stateby = %d",[cell highlightsBy],[cell showsStateBy]);
+  
   type = NSMomentaryPushButton;
   if (highlight == NSChangeBackgroundCellMask)
     {
@@ -214,11 +207,6 @@
 - (void) setButtonType: (NSButtonType)type forObject: button
 {
   [object setButtonType: type ];
-}
-
-- (void) setButtonTypeFrom: sender
-{
-  [self setButtonType: [sender tag] forObject: object];
 }
 
 - (void) _setValuesFromControl: control
@@ -262,8 +250,8 @@
       [object setAlternateTitle: [[control cellAtIndex: 1] stringValue] ];
       string = [[control cellAtIndex: 2] stringValue];
       if ([string length] > 0)
-	{
-	  image = [NSImage imageNamed: string ];
+	{   
+          image = [NSImage imageNamed: string ];
 	  [object setImage: image ];
 	}
       string = [[control cellAtIndex: 3] stringValue];
@@ -273,9 +261,13 @@
 	  [object setAlternateImage: image ];
 	}
     }
-  else if (control == typeButton)
+  else if ([control isKindOfClass: [NSMenuItem class]])
     {
-      [self setButtonType: [[control selectedItem] tag] forObject: object];
+      // We do receive the selected menu item here. Not the PopUpbutton 'typeButton'
+      // FIXME: Ideally we should test if the menu item belongs to the 'type button'
+      // control. How to do that?
+      NSDebugLog(@"button type from OK= %d",[control tag]);
+      [self setButtonType: [control tag] forObject: object];
     }
 }
 
@@ -367,40 +359,16 @@
   [typeButton addItemWithTitle: @"Momentary Light"];
   [[typeButton lastItem] setTag: 7];
   /* Doesn't work yet? */
-  [typeButton setAction: @selector(setButtonTypeFrom:)];
-  [typeButton setTarget: self];
+  //  [typeButton setAction: @selector(setButtonTypeFrom:)];
+  //  [typeButton setTarget: self];
 
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: alignMatrix];
-  [self _setValuesFromControl: iconMatrix];
-  [self _setValuesFromControl: keyField];
-  [self _setValuesFromControl: tagField];
-  [self _setValuesFromControl: titleForm];
-  [self _setValuesFromControl: optionMatrix];
-  [self _setValuesFromControl: typeButton];
+  NSDebugLog(@"ok: sender = %@",sender);
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -456,7 +424,7 @@
     }
  else if (control == tagForm)
     {
-      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue] ];
     }
 }
 
@@ -479,9 +447,9 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
-  RELEASE(okButton);
   [super dealloc];
 }
+
 - (id) init
 {
   if ([super init] == nil)
@@ -501,29 +469,9 @@
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: disabledSwitch];
-  [self _setValuesFromControl: tagForm];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -602,19 +550,16 @@
     }
   else if (control == textMatrix)
     {
-      NSLog(@"Tag of selected cell in Text matrix: %d",[[control selectedCell] tag]);
       [object setTextAlignment: (NSTextAlignment)[[control selectedCell] tag]];
     }
   else if (control == titleMatrix)
     {
-      NSLog(@"Tag of selected cell in Title matrix: %d",[[control selectedCell] tag]);
-
       [object setTitleAlignment: (NSTextAlignment)[[control selectedCell] tag]];
       
     }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue] ];
     }
 }
 
@@ -639,13 +584,18 @@
 
   // Cells tags = position is not directly stored in the Form so guess it.
   {
-    int rows,cols;
-    [anObject getNumberOfRows: &rows columns: &cols];
+    int rows,cols,i;
+    BOOL flag;
     
-    if ( (rows > 1) && ([[anObject cellAtIndex: rows-1] tag] == rows-1) )
-      {
+    [anObject getNumberOfRows: &rows columns: &cols];
+
+    i = 0;    
+    do {
+        flag = ([[anObject cellAtIndex: i] tag] == i);
+    } while ( flag && (++i < rows)); 
+
+    if (flag)
         [optionMatrix selectCellAtRow: 0 column: 0];
-      }
   }
   
 
@@ -662,7 +612,6 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
-  RELEASE(okButton);
   [super dealloc];
 }
 
@@ -685,33 +634,10 @@
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,30)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: optionMatrix];
-  [self _setValuesFromControl: backgroundColorWell];
-  [self _setValuesFromControl: drawsBackgroundSwitch];
-  [self _setValuesFromControl: textMatrix];
-  [self _setValuesFromControl: titleMatrix];
-  [self _setValuesFromControl: tagForm];
+  NSDebugLog(@"ok: sender is %@", sender);
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -734,10 +660,15 @@
 
 @interface GormMatrixAttributesInspector : IBInspector
 {
-  id backgroundColor;
-  id drawsBackground;
+  id autosizeSwitch;
+  id autotagSwitch;
+  id backgroundColorWell;
+  id drawsBackgroundSwitch;
   id modeMatrix;
-  id tagField;
+  id propagateSwitch;
+  id prototypeMatrix;
+  id selRectSwitch;
+  id tagForm;
 }
 
 @end
@@ -746,22 +677,60 @@
 
 - (void) _setValuesFromControl: control
 {
-  if (control == backgroundColor)
+  
+  if (control == autosizeSwitch)
+    {
+      [object setAutosizesCells: ([control state] == NSOnState)];
+    }
+  else if (control == autotagSwitch)
+    {
+      int rows,cols,i;
+      [object getNumberOfRows: &rows columns: &cols];
+
+      if ((rows == 1) && (cols > 1))
+        {
+          for (i=0; i<cols; i++)
+            [[object cellAtRow:0 column:i] setTag: i];
+        }
+      else if ( (rows > 1) && (cols ==1))
+        {
+          for (i=0; i<rows; i++)
+            [[object cellAtRow:i column:0] setTag: i];
+        }
+    }
+  else if (control == backgroundColorWell)
     {
       [object setBackgroundColor: [control color]];
     }
-  else if (control == drawsBackground)
+  else if (control == drawsBackgroundSwitch)
     {
       [object setDrawsBackground: ([control state] == NSOnState)];
     }
-  if (control == modeMatrix)
+  else if (control == modeMatrix)
     {
       [(NSMatrix *)object setMode: [[control selectedCell] tag] ];
     }
-  else if (control == tagField)
+  else if (control == propagateSwitch)
+    {
+      //Nothing for the moment - must implement Prototype
+      // item in the pull down menu
+    }
+  else if (control == selRectSwitch)
+    {
+      [object setSelectionByRect: ([control state] == NSOnState)];
+    }
+  else if (control == tagForm)
     {
       [object setTag: [[control cellAtIndex: 0] intValue] ];
     }
+
+  // prototypeMatrix
+  // If prototype cell is set show it else show a matrix cell
+  if ([object prototype] == nil)
+    [prototypeMatrix putCell: [object cellAtRow:0 column:0] atRow:0 column:0];
+   else
+     [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
+  
 }
 
 - (void) _getValuesFromObject: anObject
@@ -769,12 +738,28 @@
   if (anObject != object)
     return;
   
-  [backgroundColor setColor: [anObject backgroundColor] ];
-  [drawsBackground setState: 
+  [autosizeSwitch setState: 
+    ([anObject autosizesCells]) ? NSOnState : NSOffState];
+
+  {
+    int rows,cols;
+    [anObject getNumberOfRows: &rows columns: &cols];
+ 
+    if ( (rows == 1 && cols>1) || (cols == 1 && rows>1))
+      [autotagSwitch setEnabled: YES];
+    else
+      [autotagSwitch setEnabled: NO];
+  }
+
+  [backgroundColorWell setColor: [anObject backgroundColor] ];
+  [drawsBackgroundSwitch setState: 
 		     ([anObject drawsBackground]) ? NSOnState : NSOffState];
 
   [modeMatrix selectCellWithTag: [(NSMatrix *)anObject mode] ];
-  [[tagField cellAtIndex: 0] setIntValue: [anObject tag] ];
+  
+  [selRectSwitch setState: 
+    ([anObject isSelectionByRect]) ? NSOnState : NSOffState];
+  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag] ];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
@@ -810,31 +795,9 @@
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,30)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: modeMatrix];
-  [self _setValuesFromControl: backgroundColor];
-  [self _setValuesFromControl: drawsBackground];
-  [self _setValuesFromControl: tagField];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -877,7 +840,7 @@
     }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue] ];
     }
 }
 
@@ -901,7 +864,6 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
-  RELEASE(okButton);
   [super dealloc];
 }
 - (id) init
@@ -924,31 +886,9 @@
 }
 
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: typeMatrix];
-  [self _setValuesFromControl: disabledSwitch];
-  [self _setValuesFromControl: tagForm];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -973,11 +913,17 @@
 
 @interface GormSliderAttributesInspector : IBInspector
 {
-  id unitForm;
   id altForm;
+  id knobField;
   id numberOfTicks;
-  id tickPosition;
   id snapToTicks;
+  id tickPosition;
+  id unitForm;
+  id valueForm;
+  id altIncrementForm;
+  id optionMatrix;
+  id knobThicknessForm;
+  id tagForm;
 }
 @end
 
@@ -985,17 +931,36 @@
 
 - (void) _setValuesFromControl: control
 {
-  if (control == unitForm)
+  if (control == valueForm)
     {
       [object setMinValue: [[control cellAtIndex: 0] doubleValue]];
       [object setDoubleValue: [[control cellAtIndex: 1] doubleValue]];
       [object setMaxValue: [[control cellAtIndex: 2] doubleValue]];
     }
-  else if (control == altForm)
+
+  else if (control == optionMatrix)
+    {
+       BOOL flag;
+      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
+      [object setContinuous: flag];
+      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      [object setEnabled: flag];
+    }
+  else if (control == altIncrementForm)
     {
       [[object cell] setAltIncrementValue: 
 		       [[control cellAtIndex: 0] doubleValue]];
     }
+  else if (control == knobThicknessForm)
+    {
+      [[object cell] setKnobThickness: 
+		       [[control cellAtIndex: 0] floatValue]];
+    }
+  else if (control == tagForm)
+    {
+    [[object cell] setTag: [[control cellAtIndex: 0] intValue]];
+    }
+
 }
 
 - (void) _getValuesFromObject: anObject
@@ -1003,12 +968,22 @@
   if (anObject != object)
     return;
 
-  [[unitForm cellAtIndex: 0] setDoubleValue: [anObject minValue]];
-  [[unitForm cellAtIndex: 1] setDoubleValue: [anObject doubleValue]];
-  [[unitForm cellAtIndex: 2] setDoubleValue: [anObject maxValue]];
+  [[valueForm cellAtIndex: 0] setDoubleValue: [anObject minValue]];
+  [[valueForm cellAtIndex: 1] setDoubleValue: [anObject doubleValue]];
+  [[valueForm cellAtIndex: 2] setDoubleValue: [anObject maxValue]];
 
-  [[altForm cellAtIndex: 2] setDoubleValue: 
-			       [[anObject cell] altIncrementValue]];
+  [optionMatrix deselectAllCells];
+  if ([anObject isContinuous])
+    [optionMatrix selectCellAtRow: 0 column: 0];
+  if ([anObject isEnabled])
+    [optionMatrix selectCellAtRow: 1 column: 0];
+
+
+  [[altIncrementForm cellAtIndex: 0] setDoubleValue: 
+			       [[anObject cell] altIncrementValue] ];
+  [[knobThicknessForm cellAtIndex: 0] setFloatValue: 
+			       [[anObject cell] knobThickness] ];
+  [[tagForm cellAtIndex: 0] setIntValue: [[anObject cell] tag] ];
   
 }
 
@@ -1045,8 +1020,7 @@
 
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: unitForm];
-  [self _setValuesFromControl: altForm];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -1202,6 +1176,25 @@
 @end
 
 /*----------------------------------------------------------------------------
+  NSStepperCell
+*/
+@implementation	NSStepperCell (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormStepperCellAttributesInspector";
+}
+
+@end
+
+@interface GormStepperCellAttributesInspector : GormStepperAttributesInspector
+{
+}
+@end
+
+@implementation GormStepperCellAttributesInspector
+@end
+
+/*----------------------------------------------------------------------------
   NSTextField
 */
 @implementation	NSTextField (IBInspectorClassNames)
@@ -1219,7 +1212,8 @@
   id drawsBackground;
   id textColor;
   id optionMatrix;
-  id tagField;
+  id borderMatrix;
+  id tagForm;
 }
 
 @end
@@ -1253,12 +1247,26 @@
       [object setSelectable: flag];
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES :NO;
       [[object cell] setScrollable: flag];
-      flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES :NO;
-      [object setBezeled: flag];
-      flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES :NO;
-      [object setBordered: flag];
     }
-  else if (control == tagField)
+
+  else if (control == borderMatrix)
+    {
+      BOOL bordered, bezeled;
+
+      if ([[control cellAtRow: 0 column: 0] state] == NSOnState)
+        bordered = bezeled = NO;
+      else if ([[control cellAtRow: 0 column: 1] state] == NSOnState)
+        {
+          bordered = YES;
+          bezeled = NO;
+        } 
+      else if ([[control cellAtRow: 0 column: 2] state] == NSOnState)
+        bordered = NO; bezeled = YES;
+
+      [object setBordered: bordered];
+      [object setBezeled: bezeled];
+   }
+  else if (control == tagForm)
     {
       [object setTag: [[control cellAtIndex: 0] intValue] ];
     }
@@ -1282,12 +1290,23 @@
     [optionMatrix selectCellAtRow: 1 column: 0];
   if ([[anObject cell] isScrollable])
     [optionMatrix selectCellAtRow: 2 column: 0];
-  if ([anObject isBezeled])
-    [optionMatrix selectCellAtRow: 3 column: 0];
-  if ([anObject isBordered])
-    [optionMatrix selectCellAtRow: 4 column: 0];
 
-  [[tagField cellAtIndex: 0] setIntValue: [anObject tag] ];
+  NSDebugLog(@"isBordered: %d",[anObject isBordered]);
+  NSDebugLog(@"isBezeled: %d",[anObject isBezeled]);
+  
+  if ([anObject isBordered] == YES)
+    [borderMatrix selectCellAtRow: 0 column: 1];
+  else
+    {
+      if ([anObject isBezeled] == YES)
+        [borderMatrix selectCellAtRow: 0 column: 2];
+      else
+        [borderMatrix selectCellAtRow: 0 column: 0];
+    }
+
+ 
+
+  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag] ];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
@@ -1323,33 +1342,9 @@
   return self;
 }
 
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-
-- (NSButton*) okButton
-{
-  if (okButton == nil)
-    {
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,30)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
-      [okButton setEnabled: YES];
-    }
-  return okButton;
-}
-
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: alignMatrix];
-  [self _setValuesFromControl: backgroundColor];
-  [self _setValuesFromControl: textColor];
-  [self _setValuesFromControl: drawsBackground];
-  [self _setValuesFromControl: optionMatrix];
-  [self _setValuesFromControl: tagField];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
