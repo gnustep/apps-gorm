@@ -1,3 +1,27 @@
+2003-12-23 23:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Update the minor release number.  Add call to 
+	method which checks if an object is a "top level object" 
+	before allowing the user to rename it.
+	* GormClassInspector.m: There was a bug which was preventing users 
+	from removing outlets/actions.  Also added a call to the method which 
+	removes connections when an outlet or action is deleted from the document.
+	* GormClassManager.m: Added code to correct problem removing actions/outlets.
+	The outlets were not being properly deleted from the dictionary. 
+	* GormCustomClassInspector.m: The special case for NSSecureTextField, which
+	allows it to replace NSTextField, was not properly replacing the cell with
+	a secure one for archiving.   A new method called _replaceCellClassForObject:
+	className: was added to allow the cell to be replace as appropriate for the
+	assigned class.
+	* GormDocument.[hm]: Added code to properly notify the class inspector when
+	something is deleted from the class it's editing.  Added implementation
+	for isTopLevelObject.
+	* GormSetNameController.m: Removed RELEASE for outlets.  RELEASE 
+	and deallocation of the toplevel panel object should release the outlets 
+	pointed to by the gorm file.
+	* Testing/GormTest.gorm: Added.
+	* Testing/GormTest.m: Modified to use the .gorm file.
+	
 2003-12-23  Adam Fedor  <fedor@gnu.org>
 
 	* GormLib/GNUmakefile (libGorm_LIBRARIES_DEPEND_UPON): Add 

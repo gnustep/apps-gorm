@@ -231,23 +231,42 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) removeAction: (id)sender
 {
   int i = [actionTable selectedRow];
-  NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [self _currentClass]];
+  NSString *className = [self _currentClass];
+  NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: className];
   NSString *name = [list objectAtIndex: i];
-  [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: [self _currentClass]];
-  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		    object: classManager];
-  [actionTable reloadData];
+  BOOL removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
+		   removeConnectionsWithLabel: name 
+		   forClassNamed: currentClass
+		   isAction: YES];
+
+  if(removed)
+    {
+      [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: className];
+      
+      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	  object: classManager];
+      [actionTable reloadData];
+    }
 }
 
 - (void) removeOutlet: (id)sender
 {
   int i = [outletTable selectedRow];
-  NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [self _currentClass]];
+  NSString *className = [self _currentClass];
+  NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: className];
   NSString *name = [list objectAtIndex: i];
-  [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: [self _currentClass]];
-  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		    object: classManager];
-  [outletTable reloadData];
+  BOOL removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
+		   removeConnectionsWithLabel: name 
+		   forClassNamed: currentClass
+		   isAction: NO];
+
+  if(removed)
+    {
+      [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: className];
+      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	  object: classManager];
+      [outletTable reloadData];
+    }
 }
 
 - (void) select: (id)sender

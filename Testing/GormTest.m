@@ -14,7 +14,7 @@
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
@@ -35,11 +35,11 @@
 
 - (id) open: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"gorm", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   id		oldDelegate = [NSApp delegate];
   int		result;
-
+  
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
@@ -49,67 +49,33 @@
   if (result == NSOKButton)
     {
       [NSBundle loadNibFile: [oPanel filename]
-	  externalNameTable:
-	[NSDictionary dictionaryWithObject: NSApp forKey: @"NSOwner"]
-		   withZone: NSDefaultMallocZone()];
+		externalNameTable:
+		  [NSDictionary dictionaryWithObject: NSApp forKey: @"NSOwner"]
+		withZone: NSDefaultMallocZone()];
       if ([NSApp delegate] == oldDelegate)
 	{
 	  NSRunAlertPanel(NULL,
-	    [NSString stringWithFormat: @"Nib did not set app delegate"],
-	     @"OK", NULL, NULL);
+			  [NSString stringWithFormat: @"Nib did not set app delegate"],
+			  @"OK", NULL, NULL);
 	  return nil;
 	}
       if ([[NSApp delegate] isKindOfClass: [NSWindow class]] == NO)
 	{
 	  NSRunAlertPanel(NULL,
-	    [NSString stringWithFormat:
-	      @"Nib set app delegate to something other than a window"],
-	      @"OK", NULL, NULL);
+			  [NSString stringWithFormat:
+				      @"Nib set app delegate to something other than a window"],
+			  @"OK", NULL, NULL);
 	  return nil;
 	}
       [[NSApp delegate] makeKeyAndOrderFront: self];
       return self;
     }
-  return nil;		/* Failed	*/
+  return nil;  /* Failed */
 }
 @end
 
 int 
-main (void)
+main(int argc, const char **argv)
 { 
-   NSAutoreleasePool	*pool;
-   NSApplication	*app;
-   NSMenu		*mainMenu;
-   NSMenu		*windowsMenu;
-   NSMenuItem		*menuItem;
-   Controller		*appController;
-
-   pool = [NSAutoreleasePool new];
-   app = [NSApplication sharedApplication];
-
-   mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm Test"];
-
-   [mainMenu addItemWithTitle: @"Open" 
-		       action: @selector(open:)
-		keyEquivalent: @"o"];	
-
-   menuItem = [mainMenu addItemWithTitle: @"Windows" 
-				  action: NULL 
-			   keyEquivalent: @""];
-   windowsMenu = [NSMenu new];
-   [mainMenu setSubmenu: windowsMenu forItem: menuItem];
-
-   [mainMenu addItemWithTitle: @"Quit" 
-		       action: @selector(terminate:)
-		keyEquivalent: @"q"];	
-
-   [app setMainMenu: mainMenu];
-   [app setWindowsMenu: windowsMenu];
-   [mainMenu display];
-   appController = [Controller new];
-   [app setDelegate: appController];
-   [app run];
-   [pool release];
-   return 0;
+  return NSApplicationMain(argc, argv);
 }
-

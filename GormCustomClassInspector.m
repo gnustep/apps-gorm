@@ -104,6 +104,43 @@
   [browser setAction: @selector(select:)];
 }
 
+- (void) _replaceCellClassForObject: (id)obj
+			  className: (NSString *)name
+{
+  if([name isEqualToString: @"NSSecureTextField"] || 
+     [name isEqualToString: @"NSTextField"])
+    {
+      NSCell *cell = [obj cell];
+      NSCell *newCell = nil;
+
+      // instantiate the cell...
+      if([name isEqualToString: @"NSSecureTextField"])
+	{
+	  newCell = [[NSSecureTextFieldCell alloc] init];
+	}
+      else if([name isEqualToString: @"NSTextField"])
+	{
+	  newCell = [[NSTextFieldCell alloc] init];
+	}
+
+      // copy everything from the old cell...
+      [newCell setFont: [cell font]];
+      [newCell setEnabled: [cell isEnabled]];
+      [newCell setEditable: [cell isEditable]];
+      // [newCell setRichText: [cell isRichText]];
+      [newCell setImportsGraphics: [cell importsGraphics]];
+      [newCell setShowsFirstResponder: [cell showsFirstResponder]];
+      [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
+      [newCell setBordered: [cell isBordered]];
+      [newCell setBezeled: [cell isBezeled]];
+      [newCell setScrollable: [cell isScrollable]];
+      [newCell setSelectable: [cell isSelectable]];
+      [newCell setState: [cell state]];
+
+      [object setCell: newCell];
+    }
+}
+
 - (void) select: (id)sender
 {
   NSCell *cell = [browser selectedCellInColumn: 0];
@@ -125,6 +162,10 @@
 	{
 	  [_classManager removeCustomClassForObject: nameForObject];
 	}
+
+      [self _replaceCellClassForObject: [self object]
+	    className: stringValue];
+
     }
   else
     NSLog(@"name for object %@ returned as nil",_currentSelection);

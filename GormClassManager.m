@@ -870,8 +870,9 @@
 	  if ([superActions containsObject: anAction] == NO)
 	    {
 	      NSMutableArray	*array = [info objectForKey: @"AllActions"];
-
+	      NSMutableArray    *actions = [info objectForKey: @"Actions"];
 	      [array removeObject: anAction];
+	      [actions removeObject: anAction];
 	    }
 	}
       [extraActions removeObject: anAction];
@@ -888,15 +889,27 @@
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
 
-  if ([extraOutlets containsObject: anOutlet] == YES)
+  if ([extraOutlets containsObject: anOutlet] == YES
+    || [allOutlets containsObject: anOutlet] == YES)
     {
+      NSString	*superName = [info objectForKey: @"Super"];
+
       [self _touch];
+      if (superName != nil)
+	{
+	  NSArray	*superOutlets;
+
+	  // remove the outlet from the other arrays...
+	  superOutlets = [self allOutletsForClassNamed: superName];
+	  if ([superOutlets containsObject: anOutlet] == NO)
+	    {
+	      NSMutableArray	*array = [info objectForKey: @"AllOutlets"];
+	      NSMutableArray    *actions = [info objectForKey: @"Outlets"];
+	      [array removeObject: anOutlet];
+	      [actions removeObject: anOutlet];
+	    }
+	}
       [extraOutlets removeObject: anOutlet];
-    }
-  if ([allOutlets containsObject: anOutlet] == YES)
-    {
-      [self _touch];
-      [allOutlets removeObject: anOutlet];
     }
 }
 
@@ -906,15 +919,27 @@
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
 
-  if ([extraOutlets containsObject: anOutlet] == YES)
+  if ([extraOutlets containsObject: anOutlet] == YES
+    || [allOutlets containsObject: anOutlet] == YES)
     {
+      NSString	*superName = [info objectForKey: @"Super"];
+
       [self _touch];
+      if (superName != nil)
+	{
+	  NSArray	*superOutlets;
+
+	  // remove the outlet from the other arrays...
+	  superOutlets = [self allOutletsForClassNamed: superName];
+	  if ([superOutlets containsObject: anOutlet] == NO)
+	    {
+	      NSMutableArray	*array = [info objectForKey: @"AllOutlets"];
+	      NSMutableArray    *actions = [info objectForKey: @"Outlets"];
+	      [array removeObject: anOutlet];
+	      [actions removeObject: anOutlet];
+	    }
+	}
       [extraOutlets removeObject: anOutlet];
-    }
-  if ([allOutlets containsObject: anOutlet] == YES)
-    {
-      [self _touch];
-      [allOutlets removeObject: anOutlet];
     }
 }
 

@@ -519,9 +519,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.5.1 (Beta)" 
+  [dict setObject: @"Gorm 0.5.2 (Beta)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.5.1 Nov 29 2003" 
+  [dict setObject: @"0.5.2 Dec 13 2003" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
@@ -671,93 +671,102 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
     }
   else
     {
-      NSUserDefaults		*defaults;
-      NSNotificationCenter	*notifCenter = [NSNotificationCenter defaultCenter];
-      GormDocument		*activDoc = (GormDocument*)[self activeDocument];
-      NSData			*data;
-      NSArchiver                *archiver;
-
-
-      isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
-      archiver = [[NSArchiver alloc] init];
-      [activDoc beginArchiving];
-      [archiver encodeClassName: @"GormNSWindow" 
-		intoClassName: @"NSWindow"];
-      [archiver encodeClassName: @"GormNSPanel" 
-		intoClassName: @"NSPanel"]; 
-      [archiver encodeClassName: @"GormNSMenu" 
-		intoClassName: @"NSMenu"];
-      [archiver encodeClassName: @"GormNSPopUpButton" 
-		intoClassName: @"NSPopUpButton"];
-      [archiver encodeClassName: @"GormNSPopUpButtonCell" 
-		intoClassName: @"NSPopUpButtonCell"];
-      [archiver encodeClassName: @"GormCustomView" 
-		intoClassName: @"GormTestCustomView"];
-      [archiver encodeRootObject: activDoc];
-      data = RETAIN([archiver archiverData]);
-      [activDoc endArchiving];
-      RELEASE(archiver);
-      
-      [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
-		   object: self];
-
-      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+      NS_DURING
 	{
-	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
-	}
-
-      defaults = [NSUserDefaults standardUserDefaults];
-      menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
-      [defaults removeObjectForKey: @"NSMenuLocations"];
-
-      testContainer = [NSUnarchiver unarchiveObjectWithData: data];
-      if (testContainer != nil)
-	{
-	  [testContainer awakeWithContext: nil];
-	  RETAIN(testContainer);
-	}
-
-      /*
-       * If the NIB didn't have a main menu, create one,
-       * otherwise, ensure that 'quit' ends testing mode.
-       */
-      if ([self mainMenu] == mainMenu)
-	{
-          NSMenu	*testMenu;
-
-	  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
-	  [testMenu addItemWithTitle: _(@"Quit") 
-			      action: @selector(deferredEndTesting:)
-		       keyEquivalent: @"q"];	
-	  [self setMainMenu: testMenu];
-	  RELEASE(testMenu);
-	}
-      else
-	{
-          NSMenu	*testMenu = [self mainMenu];
-	  id		item;
-
-	  item = [testMenu itemWithTitle: _(@"Quit")];
-	  if (item != nil)
+	  NSUserDefaults		*defaults;
+	  NSNotificationCenter	*notifCenter = [NSNotificationCenter defaultCenter];
+	  GormDocument		*activDoc = (GormDocument*)[self activeDocument];
+	  NSData			*data;
+	  NSArchiver                *archiver;
+	  
+	  
+	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
+	  archiver = [[NSArchiver alloc] init];
+	  [activDoc beginArchiving];
+	  [archiver encodeClassName: @"GormNSWindow" 
+		    intoClassName: @"NSWindow"];
+	  [archiver encodeClassName: @"GormNSPanel" 
+		    intoClassName: @"NSPanel"]; 
+	  [archiver encodeClassName: @"GormNSMenu" 
+		    intoClassName: @"NSMenu"];
+	  [archiver encodeClassName: @"GormNSPopUpButton" 
+		    intoClassName: @"NSPopUpButton"];
+	  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
+		    intoClassName: @"NSPopUpButtonCell"];
+	  [archiver encodeClassName: @"GormCustomView" 
+		    intoClassName: @"GormTestCustomView"];
+	  [archiver encodeRootObject: activDoc];
+	  data = RETAIN([archiver archiverData]);
+	  [activDoc endArchiving];
+	  RELEASE(archiver);
+	  
+	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
+		       object: self];
+	  
+	  if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	    {
-	      [item setAction: @selector(deferredEndTesting:)];
+	      [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
 	    }
-	  else
+	  
+	  defaults = [NSUserDefaults standardUserDefaults];
+	  menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
+	  [defaults removeObjectForKey: @"NSMenuLocations"];
+	  
+	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
+	  if (testContainer != nil)
 	    {
+	      [testContainer awakeWithContext: nil];
+	      RETAIN(testContainer);
+	    }
+	  
+	  /*
+	   * If the NIB didn't have a main menu, create one,
+	   * otherwise, ensure that 'quit' ends testing mode.
+	   */
+	  if ([self mainMenu] == mainMenu)
+	    {
+	      NSMenu	*testMenu;
+	      
+	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
 	      [testMenu addItemWithTitle: _(@"Quit") 
 			action: @selector(deferredEndTesting:)
 			keyEquivalent: @"q"];	
+	      [self setMainMenu: testMenu];
+	      RELEASE(testMenu);
 	    }
+	  else
+	    {
+	      NSMenu	*testMenu = [self mainMenu];
+	      id		item;
+	      
+	      item = [testMenu itemWithTitle: _(@"Quit")];
+	      if (item != nil)
+		{
+		  [item setAction: @selector(deferredEndTesting:)];
+		}
+	      else
+		{
+		  [testMenu addItemWithTitle: _(@"Quit") 
+			    action: @selector(deferredEndTesting:)
+			    keyEquivalent: @"q"];	
+		}
+	    }
+	  
+	  [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
+		       object: self];
+	  
+	  RELEASE(data);
 	}
-
-      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
-		   object: self];
-      
-      RELEASE(data);
+      NS_HANDLER
+	{
+	  // reset the application after the error.
+	  NSLog(@"Error while testing interface: %@", 
+		[localException reason]);
+	  [self endTesting: self];
+	}
+      NS_ENDHANDLER;
     }
 }
-
-
 
 
 /***********************************************************************/
@@ -816,19 +825,22 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
   id		obj = [selectionArray objectAtIndex: 0];
   NSString	*name;
 
-  panel = [GormSetNameController new];
-  returnPanel = [panel runAsModal];
-  textField = [panel textField];
-
-  if (returnPanel == NSAlertDefaultReturn)
+  if([(GormDocument *)[self activeDocument] isTopLevelObject: obj])
     {
-      name = [[textField stringValue] stringByTrimmingSpaces];
-      if (name != nil && [name isEqual: @""] == NO)
+      panel = [GormSetNameController new];
+      returnPanel = [panel runAsModal];
+      textField = [panel textField];
+      
+      if (returnPanel == NSAlertDefaultReturn)
 	{
-	  [[self activeDocument] setName: name forObject: obj];
+	  name = [[textField stringValue] stringByTrimmingSpaces];
+	  if (name != nil && [name isEqual: @""] == NO)
+	    {
+	      [[self activeDocument] setName: name forObject: obj];
+	    }
 	}
+      RELEASE(panel);
     }
-  RELEASE(panel);
 }
 
 - (void) guideline: (id) sender
@@ -1413,8 +1425,6 @@ main(int argc, const char **argv)
 { 
   startDate = [[NSDate alloc] init];
   // [NSObject enableDoubleReleaseCheck: YES];
-  NSApplicationMain(argc, argv);
-
-  return 0;
+  return NSApplicationMain(argc, argv);
 }
 

@@ -178,6 +178,8 @@ static NSImage	*classesImage = nil;
 - (void) awakeWithContext: (NSDictionary *)context
 {
   // do nothing..  This is defined to override the one in GSNibContainer.
+  RETAIN(self);
+  NSLog(@"In awakeWithContext");
 }
 
 - (void) addConnector: (id<IBConnectors>)aConnector
@@ -1032,7 +1034,8 @@ static NSImage	*classesImage = nil;
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
-     
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
       // if the class being edited is a custom class, then allow the deletion...
       if ([classManager isCustomClass: itemBeingEdited])
 	{
@@ -1053,6 +1056,8 @@ static NSImage	*classesImage = nil;
 		      [classManager removeAction: name
 				    fromClassNamed: itemBeingEdited];
 		      [classesView removeItemAtRow: i];
+		      [nc postNotificationName: GormDidModifyClassNotification
+			  object: classManager];
 		    }
 		}
 	    }
@@ -1071,6 +1076,8 @@ static NSImage	*classesImage = nil;
 		      [classManager removeOutlet: name
 				    fromClassNamed: itemBeingEdited];
 		      [classesView removeItemAtRow: i];
+		      [nc postNotificationName: GormDidModifyClassNotification
+			  object: classManager];
 		    }
 		}
 	    }
@@ -3592,6 +3599,30 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
 		   nameTable];
+}
+
+- (BOOL) isTopLevelObject: (id)obj
+{
+  BOOL result = NO;
+
+  if ([obj isKindOfClass: [NSMenu class]] == YES)
+    {
+      if ([self objectForName: @"NSMenu"] == obj)
+	{
+	  result = YES;
+	}
+    }
+  else if ([obj isKindOfClass: [NSWindow class]] == YES)
+    {
+      result = YES;
+    }
+  else if ([obj isKindOfClass: [GSNibItem class]] == YES &&
+	   [obj isKindOfClass: [GormCustomView class]] == NO)
+    {
+      result = YES;
+    }
+
+  return result;
 }
 @end
 

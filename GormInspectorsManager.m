@@ -1067,7 +1067,7 @@ selectCellWithString: (NSString*)title
 	  {
 	    // prevent invalid connections from being made...
 	    NS_DURING
-	      [currentConnector establishConnection];
+	      // [currentConnector establishConnection];
 	    NS_HANDLER
 	      NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
 					[localException reason]];
@@ -1109,7 +1109,7 @@ selectCellWithString: (NSString*)title
 		  [[(id<IB>)NSApp activeDocument] removeConnector: con];
 		  [con setDestination: nil];
 		  [con setLabel: nil];
-		  [con establishConnection];
+		  // [con establishConnection];
 		  [connectors removeObjectIdenticalTo: con];
 		  break;
 		}
@@ -1128,7 +1128,7 @@ selectCellWithString: (NSString*)title
 	isKindOfClass: [GormObjectProxy class]] == NO)
 	{
 	  NS_DURING
-	    [currentConnector establishConnection];
+	    // [currentConnector establishConnection];
 	  NS_HANDLER
 	    NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
 				      [localException reason]];

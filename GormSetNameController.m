@@ -11,15 +11,6 @@
 #include <AppKit/NSPanel.h>
 
 @implementation GormSetNameController : NSObject
-- (void)dealloc
-{
-  RELEASE(window);
-  RELEASE(textField);
-  RELEASE(okButton);
-  RELEASE(cancelButton);
-
-  [super dealloc];
-}
 - (int)runAsModal
 {
   int result;

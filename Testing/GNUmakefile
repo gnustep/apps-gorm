@@ -28,9 +28,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # MAIN APP
 #
 APP_NAME = GormTest
-GormTest_RESOURCE_FILES = \
-
-
+GormTest_MAIN_MODEL_FILE = GormTest.gorm
+GormTest_RESOURCE_FILES = GormTest.gorm
 GormTest_OBJC_FILES = \
         GormTest.m
 
@@ -41,4 +40,3 @@ GormTest_OBJC_FILES = \
 include $(GNUSTEP_MAKEFILES)/application.make
 
 -include GNUmakefile.postamble
-
