@@ -31,8 +31,7 @@
 	}
 
       [color setColor: aColor];
-    
-    _view =  [[window contentView] retain];
+      _view =  [[window contentView] retain];
     }
   return self;
 }
@@ -52,6 +51,9 @@
 - (void) ok: (id)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject: colorToDict([color color]) forKey: @"GuideColor"];
+  if(sender == color)
+    {
+      [defaults setObject: colorToDict([color color]) forKey: @"GuideColor"];
+    }
 }
 @end

@@ -1,3 +1,13 @@
+2004-11-17 12:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: initWithObject:withDocument: added code
+	to instantiated GormViewWindow if the view being added has no
+	window attached to it.  This is to handle standalone views.
+	Correction for Report #10849.
+	* GormViewWindow.m: [GormViewWindow initWithView:] call to
+	setReleasedWhenClosed so that the window isn't released when
+	the view window is closed.  This was causing a crash.
+
 2004-11-16 19:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassPanelController.[hm]: Added method browserAction:.  Changed

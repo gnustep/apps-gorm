@@ -32,16 +32,16 @@
 
 @interface GormViewWindowDelegate : NSObject
 {
-  id _view;
+  NSView *_view;
 }
 
-- (id) initWithView: (id)view;
+- (id) initWithView: (NSView *)view;
 - (void) resize;
 @end
 
 @implementation GormViewWindowDelegate
 
-- (id) initWithView: (id)view;
+- (id) initWithView: (NSView *)view;
 {
   if((self = [super init]) != nil)
     {
@@ -87,6 +87,7 @@
       [self setTitle: title];
       [self setFrame: NSMakeRect(0,0,400,300) display: YES];
       // [self setBackgroundColor: [NSColor redColor]];
+      [self setReleasedWhenClosed: NO];
       [self setView: view];
     }
   return self;

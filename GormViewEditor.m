@@ -158,17 +158,10 @@ static BOOL currently_displaying = NO;
     {
       NSView *superview;
 
-      // put the view into a "view window" if it's a standalone view...
-      if([_editedObject window] == nil)
+      // if the view window is not nil, it's a standalone view...
+      if(viewWindow != nil)
 	{
-	  if(viewWindow == nil)
-	    {
-	      viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
-	    }
-	  else
-	    {
-	      [viewWindow setView: _editedObject];
-	    }
+	  [viewWindow setView: _editedObject];
 	}
 
       superview = [_editedObject superview];
@@ -317,6 +310,14 @@ static BOOL currently_displaying = NO;
       
       activated = NO;
       closed = NO;
+      
+      // if this window is nil when the editor is created, we know it's a
+      // standalone view.
+      if([anObject window] == nil)
+	{
+	  NSLog(@"#### Stand alone view: %@",_editedObject);
+	  viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
+	}
     }
 
   return self;
