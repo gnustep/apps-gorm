@@ -1,3 +1,14 @@
+2003-10-08 01:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added include for GSNibTemplates.h removed some
+	comments and cleaned up the code.  In _replaceObjectsWithTemplates:
+	removed <GSTemplate> which was causing some compiler warnings.
+	Added code to set the defer flag on the template for any template
+	which responds to setDeferFlag:.
+	* Palettes/1Windows/main.m: Added braces.  Minor code cleanup.
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Enabled defer 
+	flag.
+
 2003-10-08 00:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.4.0

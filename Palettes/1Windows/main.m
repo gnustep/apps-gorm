@@ -316,14 +316,18 @@ NSwindow inspector
   {
     GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
     if ([doc objectIsVisibleAtLaunch: anObject])
-      [optionMatrix selectCellAtRow: 2 column: 0];
+      {
+	[optionMatrix selectCellAtRow: 2 column: 0];
+      }
   }
   
   // defer comes here.
   {
     GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
     if ([doc objectIsDeferred: anObject])
-      [optionMatrix selectCellAtRow: 3 column: 0];
+      {
+	[optionMatrix selectCellAtRow: 3 column: 0];
+      }
   }
 
   if ([anObject isOneShot])

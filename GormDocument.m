@@ -32,9 +32,11 @@
 #include <AppKit/NSSound.h>
 #include <Foundation/NSUserDefaults.h>
 #include <AppKit/NSNibConnector.h>
+#include <GNUstepGUI/GSNibTemplates.h>
 
 @interface	GormDisplayCell : NSButtonCell
 @end
+
 @implementation	GormDisplayCell
 - (void) setShowsFirstResponder: (BOOL)flag
 {
@@ -2620,17 +2622,24 @@ static NSImage	*classesImage = nil;
   GormClassManager *cm = [self classManager];
   NSEnumerator *en = [[cm customClassMap] keyEnumerator];
   id key = nil;
-  NSDebugLog(@"Called ");
+
+  // loop through all objects.
   while((key = [en nextObject]) != nil)
     {
       id customClass = [cm customClassForName: key];
-      id object = [self objectForName: key];       // put code here to repair old .gorm files if necessary.
+      id object = [self objectForName: key];
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
-      id <GSTemplate> template = [GSTemplateFactory templateForObject: RETAIN(object)
-						    withClassName: RETAIN([customClass copy])
-						    withSuperClassName: superClass];
-      NSDebugLog(@"customClass = %@",customClass);
-      NSDebugLog(@"object = %@, key = %@, className = %@", object, key, customClass);
+      id template = [GSTemplateFactory templateForObject: RETAIN(object)
+				       withClassName: RETAIN([customClass copy])
+				       withSuperClassName: superClass];
+      
+      // if the object is deferrable, then set the flag appropriately.
+      if([template respondsToSelector: @selector(setDeferFlag:)])
+	{
+	  [template setDeferFlag: [self objectIsDeferred: object]];
+	}
+
+      // replace the object with the template.
       [archiver replaceObject: object withObject: template];
     }
 }
