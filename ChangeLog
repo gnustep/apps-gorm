@@ -1,3 +1,8 @@
+2005-01-01 10:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBObjectAdditions.m: Implementation for nibLabel.
+	* GormLib/IBObjectProtocol.h: Better document for nibLabel.
+
 2005-01-01 09:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBApplicationAdditions.h

@@ -35,7 +35,7 @@
  */
 + (BOOL)canSubstituteForClass: (Class)origClass
 {
-  return NO;
+  return YES;
 }
 
 /**
@@ -61,7 +61,10 @@
  */
 - (NSString *)nibLabel: (NSString *)objectName
 {
-  return nil;
+  NSString *label = [NSString stringWithFormat: @"%@(%@)",
+			      [self className],
+			      objectName];
+  return label;
 }
 
 /**

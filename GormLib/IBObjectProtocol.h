@@ -48,7 +48,7 @@
 - (NSImage *)imageForViewer;
 
 /**
- * Name in nameTable for object.
+ * Label for the receiver in the model.
  */
 - (NSString *)nibLabel: (NSString *)objectName;
 
