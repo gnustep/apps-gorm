@@ -1,3 +1,10 @@
+2004-05-02 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm unhide:] improvement over previous fix to bring
+	all things to front.   The code now toggles the active status of
+	the document to cause all of the windows of the document to come
+	to the front when the icon is clicked.
+	
 2004-05-02 18:35 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageEditor.m: Added code to allow it to resize the cells

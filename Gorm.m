@@ -1495,6 +1495,8 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   id window = [document window];
 
   [super unhide: sender];
+  [(GormDocument *)document setDocumentActive: NO];
+  [(GormDocument *)document setDocumentActive: YES];
   [window orderFront: sender];
 }
 @end
