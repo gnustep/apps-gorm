@@ -532,7 +532,7 @@
       NSEnumerator	*e = [s objectEnumerator];
       NSMenuItem	*i;
       NSArray       *d = nil;
-      
+     
       [self makeSelectionVisible: NO];
       [self selectObjects: [NSArray array]];
       
@@ -780,11 +780,7 @@ void _attachAll(NSMenu *menu, id document)
     {
       NSString	*title = [item title];
 
-      if ([edited indexOfItemWithTitle: title] > 0)
-	{
-	  [document detachObject: item];	/* Already exists */
-	}
-      else
+      if ([edited indexOfItemWithTitle: title] == -1)
 	{
 	  if ([[self _menu] _ownedByPopUp])
 	    {
@@ -792,7 +788,11 @@ void _attachAll(NSMenu *menu, id document)
 	      [item setMixedStateImage: nil];
 	    }
 	  [edited addItem: item];
-	  
+	  [document attachObject: item toParent: [self _menu]];
+	}
+      else
+	{
+	  NSBeep(); // warn the user about pasting duplicates.
 	}
     }
   [edited sizeToFit];

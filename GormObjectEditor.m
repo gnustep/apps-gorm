@@ -30,7 +30,7 @@
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSObject (IBObjectAdditions)
+@implementation NSObject (GormAdditions)
 + (BOOL)canSubstituteForClass: (Class)origClass
 {
   return NO;

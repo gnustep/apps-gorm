@@ -351,8 +351,29 @@ static NSImage  *fileImage = nil;
 	      
 	      while ((obj = [en nextObject]) != nil)
 		{
-		  NSDebugLog(@"Preloading %@", obj);
-		  [classManager parseHeader: (NSString *)obj];
+		  NSString *header = (NSString *)obj;
+
+		  NSDebugLog(@"Preloading %@", header);
+		  NS_DURING
+		    {
+		      if(![classManager parseHeader: header])
+			{
+			  NSString *file = [header lastPathComponent];
+			  NSString *message = [NSString stringWithFormat: 
+							  _(@"Unable to parse class in %@"),file];
+			  NSRunAlertPanel(_(@"Problem parsing class"), 
+					  message,
+					  nil, nil, nil);
+			}
+		    }
+		  NS_HANDLER
+		    {
+		      NSString *message = [localException reason];
+		      NSRunAlertPanel(_(@"Problem parsing class"), 
+				      message,
+				      nil, nil, nil);
+		    }
+		  NS_ENDHANDLER;
 		}
 	    }
 

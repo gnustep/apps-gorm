@@ -1,3 +1,13 @@
+2004-12-27 21:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: 
+	* GormDocument.m: Change to properly handle exception when
+	a class fails to parse.
+	* Gorm.m: Correction for Bug#11415 and also made a changed to
+	discontinue connection when a cut/paste/copy operation is done.
+	* GormObjectEditor.m: Correction for Bug#11415.
+	* Palettes/0Menus/GormMenuEditor.m: Correction for Bug#11412. 
+	
 2004-12-23 14:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFilesOwner.h: Added inspector declaration.

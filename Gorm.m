@@ -34,7 +34,6 @@
 #include <AppKit/NSControl.h>
 #include <AppKit/NSButton.h>
 
-NSString *GormLinkPboardType = @"GormLinkPboardType";
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
 NSString *GormDidAddClassNotification = @"GormDidAddClassNotification";
@@ -408,11 +407,6 @@ static NSImage *testingImage = nil;
   
 }
 
-
-/***********************************************************************/
-/***********************   Info Menu Actions****************************/
-/***********************************************************************/
-
 - (id) connectDestination
 {
   return connectDestination;
@@ -422,7 +416,6 @@ static NSImage *testingImage = nil;
 {
   return connectSource;
 }
-
 
 - (void) displayConnectionBetween: (id)source
 			      and: (id)destination
@@ -546,11 +539,7 @@ static NSImage *testingImage = nil;
     }
 }
 
-
-
-/***********************************************************************/
-/*********************** Info Menu Actions  ****************************/
-/***********************************************************************/
+/** Info Menu Actions */
 
 - (void) preferencesPanel: (id) sender
 {
@@ -562,10 +551,8 @@ static NSImage *testingImage = nil;
   [[preferencesController window] makeKeyAndOrderFront:nil];
 }
 
+/** Document Menu Actions */
 
-/***********************************************************************/
-/***********************  Document Menu Actions*************************/
-/***********************************************************************/
 - (void) open: (id) sender
 {
   GormDocument	*doc = AUTORELEASE([GormDocument new]);
@@ -583,8 +570,6 @@ static NSImage *testingImage = nil;
     }
 }
 
-
-//include Modules Menu
 - (void) newGormDocument : (id) sender 
 {
   id doc = AUTORELEASE([GormDocument new]);
@@ -813,9 +798,7 @@ static NSImage *testingImage = nil;
 }
 
 
-/***********************************************************************/
-/***********************   Edit Menu Actions*****************************/
-/***********************************************************************/
+/** Edit Menu Actions */
 
 - (void) copy: (id)sender
 {
@@ -823,6 +806,11 @@ static NSImage *testingImage = nil;
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
     return;
   
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
   [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
 }
 
@@ -833,6 +821,12 @@ static NSImage *testingImage = nil;
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
       || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
   [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
   [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
@@ -841,6 +835,11 @@ static NSImage *testingImage = nil;
 {
   if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
     return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
 
   [(id<IBSelectionOwners,IBEditors>)selectionOwner pasteInSelection];
 }
@@ -851,6 +850,12 @@ static NSImage *testingImage = nil;
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
   [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
@@ -913,9 +918,7 @@ static NSImage *testingImage = nil;
   [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
 }
 
-/***********************************************************************/
-/***********************   Group Action  *******************************/
-/***********************************************************************/
+/** Grouping */
 
 - (void) groupSelectionInSplitView: (id)sender
 {
@@ -948,7 +951,7 @@ static NSImage *testingImage = nil;
   [(GormGenericEditor *)selectionOwner ungroup];
 }
 
-/// Classes actions...
+/** Classes actions */
 
 - (void) createSubclass: (id)sender
 {
@@ -982,7 +985,7 @@ static NSImage *testingImage = nil;
   [(GormDocument *)[self activeDocument] remove: sender];
 }
 
-/// Palettes Actions...
+/** Palettes Actions... */
 
 - (void) inspector: (id) sender
 {
@@ -999,7 +1002,7 @@ static NSImage *testingImage = nil;
   [[self palettesManager] openPalette: sender];
 }
 
-/// Testing methods...
+/** Testing methods... */
 
 - (void) deferredEndTesting: (id) sender
 {
