@@ -1,3 +1,10 @@
+2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
+
+	* Gorm.m : refactored newApplication, newEmpty, newPalettes,newInspector.
+	new method : newGormDocument
+	Add inteligent window placement (cascade)
+	* Gorm.gorm : add tags for newApplication, newEmpty, newPalettes,newInspector
+	
 2003-05-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Made the IB*RemoveConnectorNotification being
