@@ -1,3 +1,9 @@
+2001-10-30  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormWindowEditor.m: Fixed various drawing glitches when managing
+	resizes (of matrix views in particular).  By no means perfect, but
+	a big improvement in appearance.
+
 2001-10-29  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormDocument.m ([GormDocument -init]): set the NSTableView's

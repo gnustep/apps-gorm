@@ -295,14 +295,15 @@ static BOOL done_editing;
 - (BOOL) _validateFrame: (NSRect)frame 
 	     forViewPtr: (id *)view_ptr 
 	      withEvent: (NSEvent *)theEvent
-		 update: (BOOL) update
+		 update: (BOOL)update
 {
-  int rows, cols;
+  int	rows, cols;
   NSSize cellSize, intercellSpace, minSize;
-  id view = *view_ptr;
-  BOOL isMatrix = [view isKindOfClass: [NSMatrix class]];
-  BOOL isControl = [view isKindOfClass: [NSControl class]];
-  BOOL isBox = [view isKindOfClass: [NSBox class]];
+  id	view = *view_ptr;
+  NSRect oldFrame = [view frame];
+  BOOL	isMatrix = [view isKindOfClass: [NSMatrix class]];
+  BOOL	isControl = [view isKindOfClass: [NSControl class]];
+  BOOL	isBox = [view isKindOfClass: [NSBox class]];
 
   /* What's the minimum size of a cell? */
   minSize = NSZeroSize;
@@ -332,8 +333,6 @@ static BOOL done_editing;
   
   if (!isMatrix)
     {
-      NSRect oldFrame = [view frame];
-
       /* Check if it is too small*/
       if (NSWidth(frame) < minSize.width
 	|| NSHeight(frame) < minSize.height)
@@ -400,8 +399,9 @@ static BOOL done_editing;
   else if (([theEvent modifierFlags] & NSAlternateKeyMask) 
     == NSAlternateKeyMask)
     {
-      BOOL redisplay;
-      int new_rows, new_cols;
+      BOOL	redisplay;
+      int	new_rows;
+      int	new_cols;
 
       /* If possible convert the object to a matrix with the cell given by the
 	 current object. If already a matrix, set the number of rows/cols
@@ -411,7 +411,7 @@ static BOOL done_editing;
 	{
 	  /* Convert to a matrix object */
 	  NSMutableArray *array;
-	  NSMatrix *matrix = [[NSMatrix alloc] initWithFrame: frame
+	  NSMatrix *matrix = [[NSMatrix alloc] initWithFrame: oldFrame
 					                mode: NSRadioModeMatrix
 					           prototype: [view cell]
 					        numberOfRows: 1
@@ -465,11 +465,16 @@ static BOOL done_editing;
 	  if (num <= 0)
 	    return NO;
 
-	  [view removeColumn: num];
+	  if (frame.origin.y > oldFrame.origin.y)
+	    [view removeColumn: 0];
+	  else
+	    [view removeColumn: num];
+	  redisplay = YES;
 	}
       if (new_rows > rows)
 	{
 	  int i;
+
 	  redisplay = YES;
 	  for (i = 0; i < new_rows-rows; i++)
 	    {
@@ -491,18 +496,21 @@ static BOOL done_editing;
 	  if (num <= 0)
 	    return NO;
 
-	  [view removeRow: num];
+	  if (frame.origin.x > oldFrame.origin.x)
+	    [view removeRow: 0];
+	  else
+	    [view removeRow: num];
+	  redisplay = YES;
 	}
       if (redisplay)
 	{
 	  /* Redisplay regardless of 'update, since number of cells changed */
 	  [view setFrame: frame];
-	  [edit_view displayRect: [view frame]];
+	  [edit_view displayRect: NSUnionRect(frame, oldFrame)];
 	}
     }
   else
     {
-      NSRect oldFrame = [view frame];
       /* Increase the cell size */
       cellSize = NSMakeSize((NSWidth(frame)+intercellSpace.width)/cols 
                               - intercellSpace.width, 
@@ -764,6 +772,7 @@ static BOOL done_editing;
       NSRect		r;
       NSPoint		maxMouse;
       NSPoint		minMouse;
+      NSRect		firstRect = [view frame];
       NSRect		lastRect = [view frame];
       NSPoint		lastPoint = mouseDownPoint;
       NSPoint		point = mouseDownPoint;
@@ -1128,7 +1137,13 @@ static BOOL done_editing;
 	      r.origin.y--;
 	      r.size.width += 2;
 	      r.size.height += 2;
+	      /*
+	       * If this was a simple resize, we must redraw the union of
+	       * the original frame, and the final frame, and the area
+	       * where we were drawing the wireframe and handles.
+	       */
 	      redrawRect = NSUnionRect(r, redrawRect);
+	      redrawRect = NSUnionRect(firstRect, redrawRect);
 	      [edit_view displayRect: redrawRect];
 	      [self makeSelectionVisible: YES];
 	    }
