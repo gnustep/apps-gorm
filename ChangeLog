@@ -1,3 +1,19 @@
+2004-08-01 23:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBEditors.m: Removed some old comments which are
+	no longer pertinent.   Added documentation for all methods.
+	* GormLib/IBObjectAdditions.m: Added documentation for all
+	methods.
+	* GormLib/IBPalette.h: Clarified documentation of one of
+	the methods.
+	* Palettes/0Menus/GormNSMenu.m: Removed some old commented
+	out code.  Changed superclass of GormNSMenuWindow to NSPanel.
+	* Palettes/2Controls/inspectors.m: Made the first two lines
+	conditional for NSForm and subclasses.  These were causing
+	a bug which was making it difficult to edit button matrices
+	since the title would revert when clicking on on the next
+	button.  This corrects issue #9830.
+
 2004-07-27 02:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBInspector.m: Change the name of the method called

@@ -23,30 +23,23 @@
 */
 
 #include "GormNSMenu.h"
+#include <AppKit/NSPopUpButton.h>
+#include <AppKit/NSPopUpButtonCell.h>
 
-// this must be done here, since Gorm must access this variable..
-/*
-@interface NSResponder (GormNSMenuPrivate)
-- (NSMenu *) _menu;
-- (void) _setMenu: (NSMenu *)m;
+@interface NSMenu (GormNSMenuPrivate)
+- (NSPopUpButtonCell *)popUpButtonCell;
 @end
 
-@implementation	NSResponder (GormNSMenuPrivate)
-- (NSMenu *) _menu
+@implementation NSMenu (GormNSMenuPrivate)
+- (NSPopUpButtonCell *)popUpButtonCell
 {
-  return _menu;
-}
-
-- (void) _setMenu: (NSMenu *)m
-{
-  _menu = m;
+  return _popUpButtonCell;
 }
 @end
-*/
 
-@interface GormNSMenuWindow : NSWindow
+@interface GormNSMenuWindow : NSPanel
 {
-  GormDocument *_document;
+  BOOL opened;
 }
 @end
 
@@ -58,18 +51,6 @@
 - (BOOL)canBecomeKeyWindow
 {
   return YES;
-}
-
-/*
-- (void)setMenu: (NSMenu*)menu;
-{
-  [self _setMenu: menu];
-}
-*/
-
-- (void)setDocument: (GormDocument *)document
-{
-  _document = document;
 }
 
 - (void)resignMainWindow
@@ -86,15 +67,26 @@
 			NSModalPanelRunLoopMode,
 			NSEventTrackingRunLoopMode, 
 			nil]];
+      opened = NO;
     }
 }
 
 - (void)becomeMainWindow
 {
   [super becomeMainWindow];
-  if ([[self menu] _ownedByPopUp] )
+  if ( [[self menu] _ownedByPopUp] )
     {
-      // do nothing...
+      /*
+      if(opened == YES)
+	{
+	  [[self menu] close];
+	  opened = NO;
+	}
+      else 
+	{
+	  opened = YES;
+	}
+      */
     }
 }
 

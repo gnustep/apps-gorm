@@ -28,67 +28,101 @@
 
 // object additions -- object adopts protocol
 @implementation NSObject (IBObjectAdditions)
-// custom class support
+/**
+   Returns YES if the reciever can take the
+   place of the class indicated by origClass,
+   NO otherwise.
+ */
 + (BOOL)canSubstituteForClass: (Class)origClass
 {
   return YES;
 }
 
+/**
+   This method is called on all objects after
+   they are loaded into the IBDocuments object.
+ */
 - (void)awakeFromDocument: (id <IBDocuments>)doc
 {
   // does nothing...
 }
 
-// editor
+/**
+   Used to provide an image which represents the
+   reciever.
+ */
 - (NSImage *)imageForViewer
 {
   return nil;
 }
 
-// object labels
+/**
+   Name for the reciever in the name table.
+ */
 - (NSString *)nibLabel: (NSString *)objectName
 {
   return nil;
 }
 
-// title to display in the inspector
+/**
+   Title to display in the inspector.
+ */
 - (NSString *)objectNameForInspectorTitle
 {
   return NSStringFromClass([self class]);
 }
 
-// names of inspectors for any given class...
+/**
+   Class name of the attributes inspector for the reciever.
+ */
 - (NSString*) inspectorClassName
 {
   return nil;
 }
 
+/**
+   Class name of the connection inspector for the reciever.
+ */
 - (NSString*) connectInspectorClassName
 {
   return nil;
 }
 
+/**
+   Class name of the size inspector for the reciever.
+ */
 - (NSString*) sizeInspectorClassName
 {
   return nil;
 }
 
+/**
+   Class name of the help inspector for the receiver.
+ */
 - (NSString*) helpInspectorClassName
 {
   return nil;
 }
 
+/**
+   Class name of the class inspector for the receiver.
+ */
 - (NSString*) classInspectorClassName
 {
   return nil;
 }
 
-// name of the editor for the current class.
+/**
+   Class name of the editor
+ */
 - (NSString*) editorClassName
 {
   return nil;
 }
-// list of properties not compatible with IB.
+
+/**
+   Lists all properties if this object not compatible with IB.
+ */
 - (NSArray*) ibIncompatibleProperties
 {
   return nil;

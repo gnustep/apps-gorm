@@ -225,8 +225,7 @@
       BOOL flag;
 
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      [object setBordered: flag];
-      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      [object setBordered: flag];      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
       [object setContinuous: flag];
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
       [object setEnabled: flag];
@@ -243,9 +242,12 @@
     {
       NSString *string;
       NSImage *image;
-
-      [object setTitle: [[control cellAtIndex: 0] stringValue]];
-      [object setAlternateTitle: [[control cellAtIndex: 1] stringValue]];
+      
+      if([object isKindOfClass: [NSForm class]])
+	{
+	  [object setTitle: [[control cellAtIndex: 0] stringValue]];
+	  [object setAlternateTitle: [[control cellAtIndex: 1] stringValue]];
+	}
       string = [[control cellAtIndex: 2] stringValue];
       if ([string length] > 0)
 	{   

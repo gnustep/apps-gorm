@@ -88,8 +88,9 @@ extern NSString *GormLinkPboardType;
 - (void) dealloc;
 
 /**
- * Method called by Gorm when a new palette has been created and its nib
- * (if any) has been loaded.  Any palette initialisation should be done here.
+ * Method called by GUI builder application when a new palette has been created 
+ * and its model (nib/gorm) has been loaded.  Any palette initialization should 
+ * be done here.
  */
 - (void) finishInstantiate;
 

@@ -41,7 +41,7 @@ extern NSString *IBInspectorDidModifyObjectNotification;
 extern NSString *IBSelectionChangedNotification;
 extern NSString *IBClassNameChangedNotification;
 
-/*
+/**
  * The IBSelectionOwners protocol defines the methods that a selection owner
  * must implement.
  */
@@ -68,18 +68,16 @@ extern NSString *IBClassNameChangedNotification;
 
 @end
 
-/*
- * The IBEditors protocol defines API for object editors.  This is probably the
- * area in which Gorm differs most from InterfaceBuilder, as I have no clear
- * idea of how InterfaceBuilder editors are meant to operate.
+/**
+ * The IBEditors protocol defines the methods an editor must implement. 
  */
 @protocol IBEditors
-/*
+/**
  * Decide whether an editor can accept data from the pasteboard.
  */
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 
-/*
+/**
  * Activate an editor - inserts it into the view hierarchy or whatever is
  * needed for the editor to be able to provide its functionality.
  * This method should be called by the document when an editor is created
@@ -87,17 +85,19 @@ extern NSString *IBClassNameChangedNotification;
  */
 - (BOOL) activate;
 
+/**
+ * Initializes the editor with object for the specified document.
+ */
 - (id) initWithObject: (id)anObject inDocument: (id/*<IBDocuments>*/)aDocument;
 
-/*
+/**
  * Close an editor - this destroys the editor.  In this method the editor
  * should tell its document that it has been closed, so that the document
  * can remove all its references to the editor.
  */
 - (void) close;
 
-
-/*
+/**
  * Deactivate an editor - removes it from the view hierarchy so that objects
  * can be archived without including the editor.
  * This method should be called automatically by the 'close' method.
@@ -110,23 +110,22 @@ extern NSString *IBClassNameChangedNotification;
 //   */
 //  - (void) deleteSelection;
 
-/*
+/**
  * This method returns the document that owns the object that the editor edits.
  */
 - (id /*<IBDocuments>*/) document;
 
-/*
+/**
  * This method returns the object that the editor is editing.
  */
 - (id) editedObject;
 
-
-/*
+/**
  * This method is used to ensure that the editor is visible on screen.
  */
 - (void) orderFront;
 
-/*
+/**
  * This method is used to add the contents of the pasteboard to the current
  * selection of objects within the editor.
  */
