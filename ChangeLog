@@ -1,3 +1,10 @@
+2003-08-10  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocuments.m: -[GormDocument
+	pasteType:fromPasteBoard:parent:] Added check to determine if
+	frame is responded to by the object being copied.  This was
+	failing on NSMenuItem.
+
 2003-08-09  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomView.m: Corrected obsolete header reference.

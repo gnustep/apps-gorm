@@ -2345,13 +2345,17 @@ static NSImage	*classesImage = nil;
       id	obj;
       NSRect frame;
       while ((obj = [enumerator nextObject]) != nil)
-	{
-	  frame = [obj frame];
-	  frame.origin.x -= 6;
-	  frame.origin.y -= 6;
-	  [obj setFrame: frame];
-	}
-      
+      {
+	  // check to see if the object has a frame.  If so, then
+	  // modify it.  If not, simply iterate to the next object
+	  if([obj respondsToSelector: @selector(frame)])
+	  {
+	      frame = [obj frame];
+	      frame.origin.x -= 6;
+	      frame.origin.y -= 6;
+	      [obj setFrame: frame];
+	  }
+      } 
     }
 
   [self attachObjects: objects toParent: parent];
