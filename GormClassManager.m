@@ -88,6 +88,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	}
       [classInformation setObject: classInfo forKey: newClassName];
       RELEASE(classInfo);
+
       return newClassName;
     }
   return @"";
@@ -715,7 +716,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
 
   dict = [NSDictionary dictionaryWithContentsOfFile: path];
-
+  customClasses = [NSMutableArray arrayWithCapacity: 1];
   if (dict == nil)
     {
       NSLog(@"Could not load classes dictionary");

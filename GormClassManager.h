@@ -4,6 +4,7 @@
 @interface GormClassManager : NSObject
 {
   NSMutableDictionary	*classInformation;
+  NSMutableArray        *customClasses;
 }
 - (void) addAction: (NSString*)anAction forObject: (NSObject*)anObject;
 - (void) addOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;

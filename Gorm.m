@@ -420,7 +420,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) removeAttributeFromClass: (id)sender
 {  
-  return [(id)[self activeDocument] revoveAttributeFromClass: sender];
+  return [(id)[self activeDocument] removeAttributeFromClass: sender];
 }
 
 - (id) editClass: (id)sender

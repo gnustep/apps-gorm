@@ -2195,6 +2195,16 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 {
 }
 
+- (NSString *)_formatAction: (NSString *)action
+{
+  return action;
+}
+
+- (NSString *)_formatOutlet: (NSString *)outlet
+{
+  return outlet;
+}
+
 - (void) outlineView: (NSOutlineView *)anOutlineView 
       setObjectValue: (id)anObject 
       forTableColumn: (NSTableColumn *)aTableColumn
@@ -2202,20 +2212,29 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 {
   if([item isKindOfClass: [GormOutletActionHolder class]])
     {
-      if([anOutlineView editType] == Actions)
+      if(![anObject isEqualToString: @""])
 	{
-	  [classManager replaceAction: [item getName] withAction: anObject forClassNamed: [anOutlineView itemBeingEdited]];
+	  NSString *name = [item getName];
+	  if([anOutlineView editType] == Actions)
+	    {
+	      NSString *formattedAction = [self _formatAction: anObject];
+	      [classManager replaceAction: name withAction: formattedAction forClassNamed: [anOutlineView itemBeingEdited]];
+	    }
+	  else if([anOutlineView editType] == Outlets)
+	    {
+	      NSString *formattedOutlet = [self _formatOutlet: anObject];
+	      [classManager replaceOutlet: name withOutlet: formattedOutlet forClassNamed: [anOutlineView itemBeingEdited]];
+	    }
+	  [item setName: anObject];
 	}
-      else if([anOutlineView editType] == Outlets)
-	{
-	  [classManager replaceOutlet: [item getName] withOutlet: anObject forClassNamed: [anOutlineView itemBeingEdited]];
-	}
-      [item setName: anObject];
     }
   else
     {
-      [classManager renameClassNamed: item newName: anObject];
-      [anOutlineView reloadData];
+      if(![anObject isEqualToString: @""])
+	{
+	  [classManager renameClassNamed: item newName: anObject];
+	  [anOutlineView reloadData];
+	}
     }
 }
 

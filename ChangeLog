@@ -1,3 +1,9 @@
+2002-07-13  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Corrected typo in method name.   Added check to prevent
+	addition of blank action, outlet or class name.
+	* GormClassManager.m: started on modifications for custom classes.
+	
 2002-07-12  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [-removeAttributeFromClass] added method to be
