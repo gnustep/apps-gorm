@@ -466,7 +466,8 @@ static NSImage	*dragImage = nil;
        * Resize our drag view to the right size fitrst.
        */
       wv = [[[palettes objectAtIndex: current] originalWindow] contentView];
-      [dragView setFrameSize: [wv frame].size];
+      if (wv)
+        [dragView setFrameSize: [wv frame].size];
       enumerator = [[wv subviews] objectEnumerator];
       while ((sv = [enumerator nextObject]) != nil)
 	{

@@ -1,3 +1,8 @@
+2001-10-16  Adam Fedor  <fedor@gnu.org>
+
+	* GormPalettesManager.m ([GormPalettesManager -setCurrentPalette:]): 
+	Check for wv before getting frame (Solaris fix).
+
 2001-10-14  Adam Fedor  <fedor@gnu.org>
 
 	* ClassInformation.plist: Add IBInspector
