@@ -1,5 +1,11 @@
 2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* Palettes/0Menus/main.m: removed -[NSWindow setLevel:]
+	which sets the menu window being dragged to NSSubmenuLevel.
+	This makes it easier to place the menu item. 
+
+2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* Palettes/1Windows/main.m: Added code to 
 	-[GormPanelMaker initWithCoder:] and -[GormWindowMaker initWithCoder:]
 	to order the window/panel to the front when added.   Previously, it

@@ -112,7 +112,7 @@
 		   backing: NSBackingStoreBuffered
 		   defer: YES];
   [win setMenu: self];
-  [win setLevel: NSSubmenuWindowLevel];
+  // [win setLevel: NSSubmenuWindowLevel];
 
   //  [win setWorksWhenModal: YES];
   //  [win setBecomesKeyOnlyIfNeeded: YES];
