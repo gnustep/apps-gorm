@@ -1,0 +1,76 @@
+{
+    GormCellInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    disabledSwitch,
+	    tagForm
+	);
+	Super = IBInspector;
+    };
+    IBInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    okButton,
+	    revertButton,
+	    window
+	);
+	Super = NSObject;
+    };
+    NSApplication = {
+	Outlets = (
+	    delegate
+	);
+	Super = NSResponder;
+    };
+    NSButton = {
+	Super = NSControl;
+    };
+    NSControl = {
+	Actions = (
+	    takeDoubleValueFrom:,
+	    takeFloatValueFrom:,
+	    takeIntValueFrom:,
+	    takeObjectValueFrom:,
+	    takeStringValueFrom:
+	);
+	Outlets = (
+	    target
+	);
+	Super = NSView;
+    };
+    NSMenu = {
+	Super = NSObject;
+    };
+    NSMenuItem = {
+	Outlets = (
+	    target
+	);
+	Super = NSObject;
+    };
+    NSPanel = {
+	Super = NSWindow;
+    };
+    NSResponder = {
+	Super = NSObject;
+    };
+    NSSlider = {
+	Super = NSControl;
+    };
+    NSTextField = {
+	Outlets = (
+	    delegate
+	);
+	Super = NSControl;
+    };
+    NSView = {
+	Super = NSResponder;
+    };
+    NSWindow = {
+	Outlets = (
+	    delegate
+	);
+	Super = NSResponder;
+    };
+}
