@@ -1,3 +1,9 @@
+2002-11-19  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormObjectEditor.m ([GormObjectEditor +setEditor:forDocument:]): 
+	replaced self with editor. There was an exception when instancing
+	any class.
+
 2002-11-19  Gregory John Casamento  <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added key equivalents for operations in the Classes

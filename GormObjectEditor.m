@@ -99,7 +99,7 @@ static NSMapTable	*docMap = 0;
 + (void) setEditor: (id)editor
        forDocument: (id<IBDocuments>)aDocument
 {
-  NSMapInsert(docMap, (void*)aDocument, (void*)self);
+  NSMapInsert(docMap, (void*)aDocument, (void*)editor);
 }
 
 
