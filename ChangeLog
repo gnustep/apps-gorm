@@ -1,5 +1,10 @@
 2004-05-28 21:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Palettes/4Data/GormNSComboBoxInspector.gorm: Improved the layout
+	a little.
+	
+2004-05-28 21:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormClassManager.m: Corrected a problem the the renameClassNamed:
 	newName: method.   It was releasing the classInformation and causing 
 	a crash.
