@@ -106,6 +106,9 @@
 
 // sound support
 - (id) openSound: (id)sender;
+
+// import gmodel
+- (id) openGModel: (id)sender;
 @end
 
 #endif

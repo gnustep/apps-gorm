@@ -78,16 +78,30 @@
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-  id sndobject = [[[aNotification object] selection] objectAtIndex: 0];
+  id selection = [[aNotification object] selection];
+  id sndobject = nil;
 
-  if([sndobject isKindOfClass: [GormSound class]])
+  // get the sound object...
+  if(selection != nil)
     {
-      NSLog(@"Sound inspector notified: %@",sndobject);
-      RELEASE(_currentSound);
-      _currentSound = [[NSSound alloc] initWithContentsOfFile: [sndobject soundPath]
-				       byReference: YES];
-      RETAIN(_currentSound);
-      NSLog(@"Loaded sound");
+      if([selection count] > 0)
+	{
+	  sndobject = [selection objectAtIndex: 0];
+	}
+    }
+
+  // if its not nil, load it...
+  if(sndobject != nil)
+    {
+      if([sndobject isKindOfClass: [GormSound class]])
+	{
+	  NSLog(@"Sound inspector notified: %@",sndobject);
+	  RELEASE(_currentSound);
+	  _currentSound = [[NSSound alloc] initWithContentsOfFile: [sndobject soundPath]
+					   byReference: YES];
+	  RETAIN(_currentSound);
+	  NSLog(@"Loaded sound");
+	}
     }
 }
 

@@ -28,10 +28,38 @@
 #include "GormOutlineView.h"
 #include <AppKit/NSSound.h>
 
+// gmodel compatibility headers...
+#include <AppKit/GMArchiver.h>
+#include <AppKit/IMLoading.h>
+#include <AppKit/IMCustomObject.h>
+
+// forward declaration...
+static Class gmodel_class(NSString *className);
+
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
+
+// category to allow extraction of information from a gmodel file..
+/*
+@interface GMModel (GormAdditions)
+- (NSArray *) objects;
+- (NSArray *) connections;
+@end
+
+@implementation GMModel (GormAdditions)
+- (NSArray *) objects
+{
+  return objects;
+}
+
+- (NSArray *) connections
+{
+  return connections;
+}
+@end
+*/
 
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
@@ -1818,11 +1846,11 @@ static NSImage	*classesImage = nil;
 
   if ([[NSUserDefaults standardUserDefaults] boolForKey: @"OpenNibs"] == YES)
     {
-      fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
+      fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", @"nib", nil];
     }
   else
     {
-      fileTypes = [NSArray arrayWithObjects: @"gorm", nil];
+      fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
     }
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
@@ -1832,9 +1860,19 @@ static NSImage	*classesImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
+      NSString *filename = [oPanel filename];
+      NSString *ext      = [filename pathExtension];
+
       [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
 					     forKey:@"OpenDir"];
-      return [self loadDocument: [oPanel filename]];
+      if([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
+	{
+	  return [self loadDocument: filename];
+	}
+      else if([ext isEqualToString:@"gmodel"])
+	{
+	  return [self openGModel: filename];
+	}
     }
   return nil;		/* Failed	*/
 }
@@ -2912,5 +2950,64 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 
   return nil;
 }
+
+// importing of legacy gmodel files.
+- (id) openGModel: (NSString *)path
+{
+  id       unarchiver = nil;
+  id       decoded = nil;
+  Class    unarchiverClass = gmodel_class(@"GMUnarchiver");
+  
+  NSLog (@"loading gmodel file %@...", path);
+  unarchiver = [unarchiverClass unarchiverWithContentsOfFile: path];
+  [unarchiver decodeClassName: @"IMCustomView" asClassName: @"GormCustomView"];
+  [unarchiver decodeClassName: @"IMCustomObject" asClassName: @"GormProxyObject"];
+
+  if (!unarchiver)
+    {
+      NSLog(@"Failed to load gmodel file %@!!",path);
+      return nil;
+    }
+  
+  decoded = [unarchiver decodeObjectWithName:@"RootObject"];
+  [decoded _makeConnections];
+  
+  NSLog(@"testing...");
+  // NSLog(@"objects = %@, connections = %@",[decoded objects], [decoded connections]);
+  
+  return self;
+}
 @end
+
+static 
+Class gmodel_class(NSString *className)
+{
+  static Class gmclass = Nil;
+
+  if (gmclass == Nil)
+    {
+      NSBundle	*theBundle;
+      NSEnumerator *benum;
+      NSString	*path;
+
+      /* Find the bundle */
+      benum = [NSStandardLibraryPaths() objectEnumerator];
+      while ((path = [benum nextObject]))
+	{
+	  path = [path stringByAppendingPathComponent: @"Bundles"];
+	  path = [path stringByAppendingPathComponent: @"libgmodel.bundle"];
+	  if ([[NSFileManager defaultManager] fileExistsAtPath: path])
+	    break;
+	  path = nil;
+	}
+      NSCAssert(path != nil, @"Unable to load gmodel bundle");
+      NSDebugLog(@"Loading gmodel from %@", path);
+
+      theBundle = [NSBundle bundleWithPath: path];
+      NSCAssert(theBundle != nil, @"Can't init gmodel bundle");
+      gmclass = [theBundle classNamed: className];
+      NSCAssert(gmclass, @"Can't load gmodel bundle");
+    }
+  return gmclass;
+}
 
