@@ -364,18 +364,22 @@ static NSMapTable	*docMap = 0;
 	  int pos;
 	  pos = row * [self numberOfColumns] + column;
 
-  	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-  	  [pb declareTypes: [NSArray arrayWithObject: GormSoundPboardType]
-  		     owner: self];
-  	  [pb setString: [[objects objectAtIndex: pos] soundName] 
-	      forType: GormSoundPboardType];
-  	  [self dragImage: [[objects objectAtIndex: pos] soundImageForViewer]
-  		       at: lastLocation
-  		   offset: NSZeroSize
+	  // don't allow the user to drag empty resources.
+	  if(pos < [objects count])
+	    {
+	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	      [pb declareTypes: [NSArray arrayWithObject: GormSoundPboardType]
+		  owner: self];
+	      [pb setString: [[objects objectAtIndex: pos] soundName] 
+		  forType: GormSoundPboardType];
+	      [self dragImage: [[objects objectAtIndex: pos] soundImageForViewer]
+		    at: lastLocation
+		    offset: NSZeroSize
   		    event: theEvent
-  	       pasteboard: pb
-  		   source: self
-  		slideBack: YES];
+		    pasteboard: pb
+		    source: self
+		    slideBack: YES];
+	    }
 
 	  return;
 	}

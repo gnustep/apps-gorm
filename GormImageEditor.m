@@ -373,18 +373,22 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	  int pos;
 	  pos = row * [self numberOfColumns] + column;
 
-  	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-  	  [pb declareTypes: [NSArray arrayWithObject: GormImagePboardType]
-  		     owner: self];
-  	  [pb setString: [[objects objectAtIndex: pos] imageName] 
-	      forType: GormImagePboardType];
-  	  [self dragImage: [[objects objectAtIndex: pos] image]
-  		       at: lastLocation
-  		   offset: NSZeroSize
+	  // don't allow the user to drag empty resources.
+	  if(pos < [objects count])
+	    {
+	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	      [pb declareTypes: [NSArray arrayWithObject: GormImagePboardType]
+		  owner: self];
+	      [pb setString: [[objects objectAtIndex: pos] imageName] 
+		  forType: GormImagePboardType];
+	      [self dragImage: [[objects objectAtIndex: pos] image]
+		    at: lastLocation
+		    offset: NSZeroSize
   		    event: theEvent
-  	       pasteboard: pb
-  		   source: self
-  		slideBack: YES];
+		    pasteboard: pb
+		    source: self
+		    slideBack: YES];
+	    }
 
 	  return;
 	}

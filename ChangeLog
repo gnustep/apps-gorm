@@ -1,3 +1,9 @@
+2005-01-02 15:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageEditor.m
+	* GormSoundEditor.m: Fix to correct exception when dragging
+	from a cell which doesn't contain a resource.
+
 2005-01-01 10:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBObjectAdditions.m: Implementation for nibLabel.
