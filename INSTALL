@@ -21,6 +21,8 @@ Build and Install
 
    * make && make install
 
+   Please note that GormLib must be installed for Gorm.app to run.
+
 Trouble
 -------
 
