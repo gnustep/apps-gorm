@@ -1638,9 +1638,6 @@
 	      NSMutableArray *outlets = [NSMutableArray array];
 	      
 	      // skip it, if it's category...  for now.  TODO: make categories work...
-	      if([cls isCategory])
-		continue;
-
 	      while((method = (OCMethod *)[men nextObject]) != nil)
 		{
 		  if([method isAction])
@@ -1657,7 +1654,9 @@
 		    }
 		}
 	      
-	      if([self isKnownClass: superClass])
+	      if([self isKnownClass: superClass] && 
+		 [cls isCategory] == NO &&
+		 superClass != nil)
 		{
 		  if([self isKnownClass: className])
 		    {
@@ -1681,7 +1680,11 @@
 			    withOutlets: outlets];	 
 		    }
 		}
-	      else
+	      else if([cls isCategory] && [self isKnownClass: className])
+		{
+		  [self addActions: actions forClassNamed: className];
+		}
+	      else if(superClass != nil)
 		{
 		  result = NO;
 		  [NSException raise: NSGenericException

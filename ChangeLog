@@ -1,3 +1,8 @@
+2005-02-14 23:35 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: changed [GormClassManager parseHeader:]
+	to be able to properly handle categories on existing classes.
+
 2005-02-14 01:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/OCIVarDecl.m: Corrected problem with
