@@ -1,3 +1,16 @@
+Noteworthy changes in version `0.7.6'
+=====================================
+
+This release is mainly a bugfix release for 0.7.5.
+
+   * Improved .gmodel support
+
+   * Corrections to previous repair feature.
+
+   * Important bugfixes for Menu editing.
+
+   * Important bugfixes for class inspector.
+
 Noteworthy changes in version `0.7.5'
 =====================================
 

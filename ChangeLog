@@ -1,4 +1,8 @@
-2004-05-09 10:16 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-05-10 09:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 0.7.6
+	
+2004-05-10 09:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Corrected an issue when creating an
 	"Inspector" or "Palette" in [GormDocument setupDefaults:].

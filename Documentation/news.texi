@@ -3,7 +3,21 @@
 @ifset TEXT-ONLY
 @include version.texi
 @end ifset
+@section Noteworthy changes in version @samp{0.7.6}
+
+This release is mainly a bugfix release for 0.7.5.
+
+@itemize @bullet
+@item Improved .gmodel support
+@item Corrections to previous repair feature.
+@item Important bugfixes for Menu editing.
+@item Important bugfixes for class inspector.
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.7.5}
+
 @itemize @bullet
 @item The 'reparent' feature in the class inspector.  This allows the user to change the class hierarchy from within Gorm.
 @item Some important bugfixes
@@ -12,9 +26,6 @@
 @item Support for NSFontManager
 @item A way to restore a complete NSMenu if it's deleted (a new palette entry for NSMenu, not just an item)
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.6.0}
 
 @itemize @bullet
