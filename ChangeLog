@@ -1,3 +1,20 @@
+2001-12-04  Laurent Julliard  <laurent@moldus.org>
+
+	* Palettes/4Data/main.m: Date and Number Formatters added
+	* Palettes/4Data/inspectors.m: Date and Number Formatters added
+	* Palettes/4Data/GNUmakefile: Date and Number Formatters added
+	* GormWindowEditor.m: drag and drop logic for formatters
+	* IBPAlette.m: drag and drop logic for formatters
+	* GormPrivate.h: NSDateFormatter and NSNumberFormatter additions
+	* GormPalettesManager.m:  drag and drop logic for formatters
+	* GormInspectorsManager.m:  new (optional) popup button item for
+	formatters
+	* Gorm.h: new drag and drop type for formatters
+	* Palettes/4Data/GormDateFormatterInspector.gorm: New Date
+	  Formatter Inspector
+	* Palettes/4Data/GormDateFormatterInspector.gorm: New Number
+	  Formatter Inspector
+
 2001-11-20  Laurent Julliard <laurent@julliard-online.org>
 
 	* GNUMakefile: data palette and new icons added

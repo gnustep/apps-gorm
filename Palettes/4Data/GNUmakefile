@@ -30,7 +30,9 @@ PALETTE_NAME = 4Data
 4Data_RESOURCE_FILES = DataPalette.tiff \
 	GormImageViewInspector.gorm \
 	GormTextViewInspector.gorm  \
-	GormComboBoxInspector.gorm
+	GormComboBoxInspector.gorm  \
+	GormDateFormatterInspector.gorm \
+	GormNumberFormatterInspector.gorm
 
 -include GNUmakefile.preamble
 
