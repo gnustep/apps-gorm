@@ -210,10 +210,14 @@ static NSButtonType _buttonTypeForObject( id button )
 }
 
 @implementation NSWindowTemplate (GormCustomClassAdditions)
+- (void) _setStyleMask: (unsigned int)mask
+{
+  _styleMask = mask;
+}
+
 - (id) initWithObject: (id)object
 	    className: (NSString *)name
 {
-  NSLog(@"Creating the new object...");
   [super init];
   [self setBackgroundColor: [object backgroundColor]];
   [self setContentView: [object contentView]];
@@ -225,15 +229,15 @@ static NSButtonType _buttonTypeForObject( id button )
   [self _setVisible: [object isVisible]];
   [self setTitle: [object title]];
   [self setFrame: [object frame] display: NO];
+  [self _setStyleMask: [object styleMask]];
   [self setClassName: name];
   [object setContentView: nil];
   [self update];
   [object update];
-  // [self setDeferFlag: [[(Gorm)NSApp activeDocument] isWindowDeferred: object]];
 
   _parentClassName = NSStringFromClass([object class]);
   return self;
-}
+} 
 @end
 
 @implementation NSViewTemplate (GormCustomClassAdditions)

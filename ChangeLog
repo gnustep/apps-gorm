@@ -1,3 +1,16 @@
+2003-01-15  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [NSWindowTemplate initWithObject:]: corrected
+	a problem which was preventing the stylemask from being
+	saved.
+	* GormDocument.[hm]: Added code to support the deferred
+	flag for windows.  setObject:isDeferred: and 
+	objectIsDeferred: were added.
+	* Palettes/main.m: Added support for deferred flag.
+	I didn't enable the flag in the gui, since
+	NSBundleAdditions.m needs to be changed to allow this
+	flag to be used.  Once that's done, it will be enabled.
+	
 2003-01-14  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: replaceTemplatesWithObjects: when

@@ -48,7 +48,6 @@
   NSMenuItem		*quitItem;		/* Replaced during test */
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
-  NSMutableArray	*deferredWindows;
   NSMutableSet          *sounds;
   NSMutableSet          *images;
   // NSFileWrapper         *wrapper;
@@ -82,6 +81,7 @@
 - (NSString*) nameForObject: (id)anObject;
 - (id) objectForName: (NSString*)aString;
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject;
+- (BOOL) objectIsDeferred: (id)anObject;
 - (NSArray*) objects;
 - (id) loadDocument: (NSString*)path;
 - (id) openDocument: (id)sender;
@@ -97,6 +97,7 @@
 - (void) setDocumentActive: (BOOL)flag;
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag;
+- (void) setObject: (id)anObject isDeferred: (BOOL)flag;
 - (void) touch;		/* Mark document as having been changed.	*/
 - (NSWindow*) window;
 - (BOOL) windowShouldClose: (id)sender;

@@ -1480,9 +1480,6 @@ static NSImage	*classesImage = nil;
       // for saving the editors when the gorm file is persisted.
       savedEditors = [NSMutableArray new];
 
-      // defferred windows for this document...
-      deferredWindows = [NSMutableArray new];
-
       // sounds & images
       sounds = [NSMutableSet new];
       images = [NSMutableSet new];
@@ -2414,24 +2411,33 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (void) setWindow: (id)anObject isDeffered: (BOOL)flag
+- (void) setObject: (id)anObject isDeferred: (BOOL)flag
 {
+  NSMutableArray	*a = [nameTable objectForKey: @"NSDeferred"];
+
   if (flag == YES)
     {
-      if ([deferredWindows containsObject: anObject] == NO)
+      if (a == nil)
 	{
-	  [deferredWindows addObject: anObject];
+	  a = [NSMutableArray new];
+	  [nameTable setObject: a forKey: @"NSDeferred"];
+	  RELEASE(a);
+	}
+      if ([a containsObject: anObject] == NO)
+	{
+	  [a addObject: anObject];
 	}
     }
   else
     {
-      [deferredWindows removeObject: anObject];
+      [a removeObject: anObject];
     }
 }
 
-- (BOOL) isWindowDeferred: (id)aWindow
+- (BOOL) objectIsDeferred: (id)anObject
 {
-  return [deferredWindows containsObject: aWindow];
+  // NSLog(@"%@, %@", nameTable, anObject);
+  return [[nameTable objectForKey: @"NSDeferred"] containsObject: anObject];
 }
 
 /*

@@ -36,6 +36,7 @@
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
 }
+
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   id		w;
@@ -241,11 +242,11 @@ NSwindow inspector
       }
 
       // Deferred
-      // FIXME: This flag is not a Window property. Like Visible at launch time
-      // it should be stored in the Nib File and used at the Window creation time
-      // but I do not know how to do that
       flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
-
+      {
+        GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+        [doc setObject: object isDeferred: flag];
+      }
 
       // One shot
       flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
@@ -286,13 +287,20 @@ NSwindow inspector
     [optionMatrix selectCellAtRow: 0 column: 0];
   if ([anObject hidesOnDeactivate])
     [optionMatrix selectCellAtRow: 1 column: 0];
+  
+  // visible at launch time.
   {
-    GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+    GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
     if ([doc objectIsVisibleAtLaunch: anObject])
       [optionMatrix selectCellAtRow: 2 column: 0];
   }
   
-  // FIXME: defer comes here.
+  // defer comes here.
+  {
+    GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+    if ([doc objectIsDeferred: anObject])
+      [optionMatrix selectCellAtRow: 3 column: 0];
+  }
 
   if ([anObject isOneShot])
     [optionMatrix selectCellAtRow: 4 column: 0];
