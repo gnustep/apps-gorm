@@ -693,24 +693,55 @@ This is only used when the user has associated a custom class with an existing i
 This array is used to form the connections after the .gorm file is loaded.  The method @samp{[... establishConnection]} is never called on either NSNibControlConnector or NSNibOutletConnector objects while in Gorm.   This prevents the connections from having any effect while they are being edited in Gorm itself.   Once they are loaded, the establishConnection method is called and the connections are made.
 
 @section Custom Class Encoding
+@cindex Custom Class Encoding
 
 Custom objects are an interesting challenge in Gorm.  By definition, custom classes are not known to Gorm, unless they are in a palette (covered elsewhere).   For classes which are not in a palette instances of these classes in Gorm are encoding in one of three ways:
 
 @itemize @bullet
 @item A Proxy - This is a standin object which takes the place of the custom object.   This is usually used when the superclass of the object is a non-graphical object, such as a controller.  The init message is called on this object when it's unarchived.
 @item A Custom View - This is a standin view object similar to the one descrribed above, but it is a subclass of NSView.  When this is used the initWithFrame: message is called on the view instance which is created (based on what view subclass the user selects)
-@item A Template Class - Probably the most interesting of the three.  This is a standin class which uses an existing instance created in Gorm to build a custom subclass from.   For instance when a window subclass is created, call it MyWindow, a template class called GSWindowTemplate is used to hold the NSWindow created in Gorm as well as the name of the subclass to be created when the class is unarchived outside of Gorm as well as some additional information.   When the classes are unarchived in the running app, the designated initializer for that class will be invoked, except in the case of NSControl subclasses.  See the Apple documentation for more information.
+@item A Template - Probably the most interesting of the three.  This is a standin class which uses an existing instance created in Gorm to build a custom subclass from.   For instance when a window subclass is created, call it MyWindow, a template class called GSWindowTemplate is used to hold the NSWindow created in Gorm as well as the name of the subclass to be created when the class is unarchived outside of Gorm as well as some additional information.   When the classes are unarchived in the running app, the designated initializer for that class will be invoked, except in the case of NSControl subclasses.  See the Apple documentation for more information.
 @end itemize
 
-All custom instances have awakeFromNib invoked on them when they are unarchived from the .gorm file.   This allows the user to do whatever additional setup that needs to be done, such as setting attribute.
+All custom instances have awakeFromNib invoked on them when they are unarchived from the .gorm file.   This allows the user to do whatever additional setup that needs to be done, such as setting attribute.   Classes which are ``known'' are, of course, directly encoded into the .gorm file.
 
 @subsection Restrictions On Your Custom Subclasses
 
 The restrictions here are the same as those in Apple's InterfaceBuilder.   In general, you cannot have additional information which is expected to be decoded in an initWithCoder: method from a custom class which uses one of the methods in the previous section.   This is because, by definition, Gorm doesn't know anything about these classes and allowing you to use them in Gorm in this way is a convenience to make it simpler for the developer.  Gorm therefore, must use one of the proxies to encode the class since it cannot encode the class directly.
 
-How can you get your classes into Gorm, you say?   I'm pleased that you asked me that question.  The best way to make your class known to Gorm so that you don't need to worry about the above restriction is to add a palette which contains your class.  In this way, because you're literally linking the class into Gorm, you're making the class and it's structure known to Gorm so that it can encode the class directly.   With the new palette loaded you can load and save classes containing real instances, not proxies, of your class encoded directly in the .gorm file.
+How can you get your classes into Gorm, you say?   I'm pleased that you asked me that question.  The best way to make your class known to Gorm so that you don't need to worry about the above restriction is to add a palette which contains your class.  In this way, because you're literally linking the class into Gorm, you're making the class and it's structure known to Gorm so that it can encode the class directly.   With the new palette loaded you can load and save classes containing real instances, not proxies, of your class encoded directly in the .gorm file.   How to create a palette is discussed at length in the following section.
+
+@section Palettes
+@cindex Palettes
+@cindex Inspectors
+@cindex Editors
+
+@subsection Graphical Objects In A Palette
+You are, by now, familiar with the built in palettes which are provided with Gorm.  Palettes are a powerful feature which allows the developer to add his/her own objects to Gorm.  It is possible for a developer to write custom inspectors, editors and palettes for use with Gorm.   A good example of a custom palette is palettetest in the dev-apps/test in the GNUstep distribution.  Assuming you don't have that, however, I will explain precisely what you need to do in order to create a simple palette.   The entire process is very short and suprisingly simple.   First open Gorm and selection Gorm->Document->New Module->New Palette.   This will create a palette sized window.   Once that's done go to the classes view in the main document window and find ``IBPalette'' in the class list.  Create a subclass of that, the name can be whatever you want.  For the purposes of our example we'll call it MyPalette.  Drag a custom view to the window and choose the class you would like to add to the palette from one of your custom classes.
+
+Once you've done this, generate the code for the classes (discussed in previous chapters).   In the code, you'll add a method called ``-(void) finishInstantiate'' leave it empty for now.   In the makefile for the palette make sure that the library or framework the view comes from is linked with the palette.   Now build the palette.
+
+After the palette is built you're ready to load it into Gorm.  Go to the preferences panel and go to ``Palettes''.  This should bring up a table view.  Click on add.   You should see a open dialog open.  Select the palette bundle with this.   If the palette is successfully loaded, you should see the name appear in the list.   One thing to note here.   Once a palette is loaded, it can't be unloaded until you close and restart Gorm.   This is because by loading the palette bundle, the code in the bundle is being linked into Gorm.   This can't be undone, once it's done.
+
+Now, you should see the palette in the set of palettes in the palette window.  Simply scroll over to it and select it's icon.   When you do this, you should see the view that you set up using the custom view displayed as an actual instance.  Note that we used one of the techniques listed above, it is possible to use any of the three for any object you add to your palette.     You can now drag the view from the palette to a new window. 
+
+@subsection Non Graphical Objects In A Palette
+You may recall the creation of a method called ``-(void) finishInstantiate'' in the previous section.  This section will make full use of that method.  Re-open the palette you created before, but this time add an image view to the window.   Then add to the image view, the icon you want to represent the non-graphical object.   Here you'll need to add an ivar to the MyPalette class in both Gorm and in your source code called, imageView.  Once you've done this make the connection between the image view and it's ivar.
+
+Assuming that the class is called ``NonUIObject'', in finish instantiate, you'll need to add the following line of code:
+
+  id obj = [NonUIObject new];
+
+  [self associateObject: obj
+	type: IBObjectPboardType
+	with: imageView];
+
+This code has the effect of associating the non-ui object with the ui object you just added to represent it.  When you drag and drop the element which prepresents the object to something, it will copy the object, not the ui element, to the destination.
+
+Congratulations, you now know how Palettes work. 
 
 @chapter Frequently Asked Questions
+@cindex FAQ
 
 @subsection Should I modify the data.classes of file in the .gorm package?
 
