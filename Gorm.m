@@ -93,6 +93,10 @@ NSString *IBDidEndTestingInterfaceNotification
       [nc postNotificationName: IBWillBeginTestingInterfaceNotification
 			object: self];
       isTesting = YES;
+      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+	{
+	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
+	}
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
 			object: self];
       return self;
@@ -125,6 +129,10 @@ NSString *IBDidEndTestingInterfaceNotification
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
 			object: self];
       isTesting = NO;
+      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+	{
+	  [(id<IBEditors>)selectionOwner makeSelectionVisible: YES];
+	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
       return self;

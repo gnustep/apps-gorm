@@ -152,36 +152,177 @@
     {
       return [super hitTest: loc];
     }
-
-  /*
-   * Stop the subviews receiving events - we grab them all.
-   */
-  if ([super hitTest: loc] != nil)
-    return self;
-  return nil;
+  else
+    {
+      /*
+       * Stop the subviews receiving events - we grab them all.
+       */
+      if ([super hitTest: loc] != nil)
+	{
+	  return self;
+	}
+      return nil;
+    }
 }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  NSView	*view;
-
   if ([(id<IB>)NSApp isTestingInterface] == YES)
     {
       [super mouseDown: theEvent];
       return;
     }
-
-  mouseDownPoint = [theEvent locationInWindow];
-  view = [super hitTest: mouseDownPoint];
-  if (view == self)
-    {
-      shouldBeginDrag = NO;
-    }
   else
     {
-      shouldBeginDrag = YES;
+      NSEnumerator	*enumerator;
+      NSView		*view = nil;
+      IBKnobPosition	knob = IBNoneKnobPosition;
+
+      mouseDownPoint = [theEvent locationInWindow];
+
+      /*
+       * If our selection is not our window, it must be one or more
+       * subviews, so we need to check to see if the knob of any subview
+       * has been hit, or if a subview itsself has been hit.
+       */
+      if ([selection lastObject] != edited)
+	{
+	  enumerator = [selection objectEnumerator];
+	  while ((view = [enumerator nextObject]) != nil)
+	    {
+	      knob = GormKnobHitInRect([view frame], mouseDownPoint);
+	      if (knob != IBNoneKnobPosition)
+		{
+		  /*
+		   * Clicked on the knob of a selected subview.
+		   * If it's not the only selected view - make it so.
+		   * We now expect to drag from this.
+		   */
+		  if ([selection count] != 1)
+		    {
+		      [self selectObjects: [NSArray arrayWithObject: view]];
+		      [self makeSelectionVisible: NO];
+		    }
+		  break;
+		}
+	    }
+	  if (view == nil)
+	    {
+	      enumerator = [selection objectEnumerator];
+	      while ((view = [enumerator nextObject]) != nil)
+		{
+		  if (NSMouseInRect(mouseDownPoint, [view frame], NO) == YES)
+		    {
+		      /*
+		       * Clicked inside a selected subview.
+		       */
+		      if ([theEvent modifierFlags] & NSShiftKeyMask)
+			{
+			  NSMutableArray	*array;
+
+			  /*
+			   * remove this view from the selection.
+			   */
+			  [self makeSelectionVisible: NO];
+			  array = [NSMutableArray arrayWithArray: selection];
+			  [array removeObjectIdenticalTo: view];
+			  [self selectObjects: array];
+			}
+		      else
+			{
+			  [self makeSelectionVisible: YES];
+			}
+		      break;
+		    }
+		}
+	    }
+	}
+
+      /*
+       * If we haven't clicked in a selected subview - find out where we
+       * actually did click.
+       */
+      if (view == nil)
+	{
+	  view = [super hitTest: mouseDownPoint];
+	  if (view != nil && view != self)
+	    {
+	      /*
+	       * Clicked on an unselected subview.
+	       */
+	      if ([theEvent modifierFlags] & NSShiftKeyMask)
+		{
+		  if ([selection lastObject] == edited
+		    || ([theEvent modifierFlags] & NSControlKeyMask))
+		    {
+		      /*
+		       * Can't extend the selection - change it to the subview.
+		       */
+		      [self makeSelectionVisible: NO];
+		      [self selectObjects: [NSArray arrayWithObject: view]];
+		    }
+		  else
+		    {
+		      NSMutableArray	*array;
+
+		      /*
+		       * extend the selection to include this subview.
+		       */
+		      array = [NSMutableArray arrayWithArray: selection];
+		      [array addObject: view];
+		      [self selectObjects: array];
+		    }
+		}
+	      else
+		{
+		  /*
+		   * Select the new view (clear the old selection markings)
+		   */
+		  [self makeSelectionVisible: NO];
+		  [self selectObjects: [NSArray arrayWithObject: view]];
+		}
+	    }
+	}
+      else if ([selection indexOfObjectIdenticalTo: view] == NSNotFound)
+	{
+	  /*
+	   * This view has just been deselected.
+	   */
+	  view = nil;
+	}
+
+      if (view == self)
+	{
+	  /*
+	   * Clicked on an window background - make window the selection.
+	   */
+	  [self makeSelectionVisible: NO];
+	  [self selectObjects: [NSArray arrayWithObject: edited]];
+	  shouldBeginDrag = NO;
+	}
+      else if (view != nil)
+	{
+	  if (knob == IBNoneKnobPosition)
+	    {
+	      if ([theEvent modifierFlags] & NSControlKeyMask)
+		{
+		  NSLog(@"Control key not yet supported");
+		  /* FIXME */
+		}
+	      else
+		{
+		  [self makeSelectionVisible: YES];
+		}
+	    }
+	  else
+	    {
+	      /*
+	       * Expecting to drag a handle.
+	       */
+	    }
+	}
+      [self makeSelectionVisible: YES];
     }
-  [super mouseDown: theEvent];
 }
 
 - (void) mouseDragged: (NSEvent*)theEvent
@@ -373,6 +514,19 @@
 
 - (void) drawSelection
 {
+  if ([selection count] > 0 && [selection lastObject] != edited)
+    {
+      NSEnumerator	*enumerator = [selection objectEnumerator];
+      NSView		*view;
+
+      [self lockFocus];
+      while ((view = [enumerator nextObject]) != nil)
+	{
+	  GormDrawKnobsForRect([view frame]);
+	}
+      GormShowFastKnobFills();
+      [self unlockFocus];
+    }
 }
 
 - (id<IBDocuments>) document
@@ -423,6 +577,28 @@
 
 - (void) makeSelectionVisible: (BOOL)flag
 {
+  if (flag == NO)
+    {
+      if ([selection count] > 0 && [selection lastObject] != edited)
+	{
+	  NSEnumerator	*enumerator = [selection objectEnumerator];
+	  NSView		*view;
+
+	  [[self window] disableFlushWindow];
+	  while ((view = [enumerator nextObject]) != nil)
+	    {
+	      NSRect	rect = GormExtBoundsForRect([view frame]);
+
+	      [self displayRect: rect];
+	    }
+	  [[self window] enableFlushWindow];
+	}
+    }
+  else
+    {
+      [self drawSelection];
+      [[self window] flushWindow];
+    }
 }
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject
@@ -493,6 +669,7 @@
 
 - (void) resetObject: (id)anObject
 {
+  [self display];
 }
 
 - (void) selectObjects: (NSArray*)anArray
