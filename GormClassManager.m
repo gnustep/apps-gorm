@@ -30,6 +30,7 @@
 #include "GormPalettesManager.h"
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBPalette.h>
+// #include <GNUstepBase/GSCategories.h>
 
 /** Private methods not accesible from outside */
 @interface GormClassManager (Private)
@@ -1289,7 +1290,7 @@
 
   // Iterate over the set of classes, if it's in the classInformation 
   // list, it's a category, if it's not it's a custom class.
-    en = [dict keyEnumerator];
+  en = [dict keyEnumerator];
   while((key = [en nextObject]) != nil)
     {
       id class_dict = [dict objectForKey: key];
