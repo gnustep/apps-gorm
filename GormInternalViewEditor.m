@@ -27,7 +27,6 @@
 #include "GormInternalViewEditor.h"
 
 @class GormEditorToParent;
-@class GSWindowView;
 
 static NSImage *verticalImage;
 static NSImage *horizontalImage;
@@ -50,7 +49,7 @@ static NSImage *horizontalImage;
        ||
        [[self superview] isKindOfClass: [NSTabView class]]
        || 
-       [[self superview] isKindOfClass: [GSWindowView class]]
+       [[[self superview] window] contentView] == self 
        ||
        [[self superview] isKindOfClass: [NSClipView class]]
        ))
@@ -108,7 +107,7 @@ static NSImage *horizontalImage;
 	  [self setAutoresizingMask: 
 		  NSViewWidthSizable | NSViewHeightSizable];
 	}
-      else if ([superview isKindOfClass: [GSWindowView class]])
+      else if ([[superview window] contentView] == _editedObject) 
 	{
 	  [[superview window] setContentView: self];
 	}
@@ -187,7 +186,7 @@ static NSImage *horizontalImage;
 	  [[[tabSuperview selectedTabViewItem] view] 
 	    setFrame: [tabSuperview contentRect]];
 	}
-      else if ([superview isKindOfClass: [GSWindowView class]])
+      else if ([[superview window] contentView] == self)
 	{
 	  [self removeSubview: _editedObject];
 	  [[superview window] setContentView: _editedObject];
