@@ -1,4 +1,14 @@
-2004-06-30 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-06-30 20:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added "Compatibility Warning" alert panel
+	to [GormDocument saveGormDocument:].  If the user loads a
+	version 0 file and saves it will give a warning telling the
+	user that the new version isn't compatible with older
+	releases of GNUstep.
+	* GormDocument.h: Added ivar to keep track of whether we
+	are going to upgrade the version of the .gorm file or not.
+	
+2004-06-30 01:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument loadDocument:] the application
 	was not picking up subclasses of GSNibItem (GormObjectProxy) 

@@ -396,6 +396,9 @@ static NSImage	*classesImage = nil;
 		  [classManager parseHeader: (NSString *)obj];
 		}
 	    }
+
+	  // are we upgrading an archive?
+	  willUpgradeArchive = NO;
 	}
       else
 	{
@@ -1983,6 +1986,8 @@ static NSImage	*classesImage = nil;
 		  [topLevelObjects addObject: obj];
 		}
 	    }
+
+	  willUpgradeArchive = YES;
 	}
 
       [nt removeObjectForKey: @"NSOwner"];
@@ -2749,11 +2754,30 @@ static NSImage	*classesImage = nil;
   NSFileManager         *mgr = [NSFileManager defaultManager];
   BOOL                  isDir;
   BOOL                  fileExists;
+  int                   retval;
 
   if (documentPath == nil)
     {
       if (! [self saveAsDocument: sender] ) 
 	  return NO;
+    }
+
+  // Warn the user about possible incompatibility.
+  if(willUpgradeArchive)
+    {
+      retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
+			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.3 Release or CVS prior to Jun 29 2004."),
+			       _(@"Save"),
+			       _(@"Don't Save"), nil, nil);
+      if (retval != NSAlertDefaultReturn)
+	{
+	  return NO;
+	}
+      else
+	{
+	  // we're saving anyway... set to new value.
+	  willUpgradeArchive = NO;
+	}
     }
 
   [nc postNotificationName: IBWillSaveDocumentNotification

@@ -70,6 +70,7 @@
   NSMutableArray        *openEditors;
   NSToolbar             *toolbar;
   id                    lastEditor;
+  BOOL                  willUpgradeArchive;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
