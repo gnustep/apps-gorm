@@ -141,6 +141,7 @@ static NSText *_textObject;
     {
       NSLog(@"no column to delete");
     }
+  else
   if ([tableView numberOfColumns] <= 1)
     {
       NSLog(@"can't delete last column");
