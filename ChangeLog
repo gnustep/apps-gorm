@@ -1,3 +1,9 @@
+2003-05-19  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Moved declaration of GSNibItem in instantiateClass:
+	to the top of the method so that it will compile on gcc < 3.0.   
+	Problem found and patch submitted by Andreas Heppel.  Thanks!
+
 2003-06-09  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added mention of GormFontViewController.[hm]

@@ -1816,13 +1816,13 @@ static NSImage	*classesImage = nil;
       if (i >= 0)
 	{
 	  id className = [classesView itemAtRow: i];
+	  GSNibItem *item = nil;
 
 	  if([className isEqualToString: @"FirstResponder"])
 	    return nil;
 
-	  GSNibItem *item = 
-	    [[GormObjectProxy alloc] initWithClassName: className
-						 frame: NSMakeRect(0,0,0,0)];
+	  item = [[GormObjectProxy alloc] initWithClassName: className
+					  frame: NSMakeRect(0,0,0,0)];
 
 	  [self setName: nil forObject: item];
 	  [self attachObject: item toParent: nil];
