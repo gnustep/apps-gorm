@@ -1,3 +1,14 @@
+2001-06-06  Adam Fedor  <fedor@gnu.org>
+
+	* Changes to allow an NSBox to be 'edited' and add subviews, move
+	them around inside the box, etc.
+	* GormPalettesManager.m (-mouseDown): Make sure the drag view is
+	the proper one, not a subview of the indented item.
+	* GormViewKnobs.m (GormDrawOpenKnobsForRect): New function.
+	* GormWindowEditor: Add edit_view ivar to show which view accepts
+	DnD, selections, etc. Changes to allow double-click to 'edit' an
+	NSBox.
+
 2001-05-09  Adam Fedor  <fedor@gnu.org>
 
 	* GormWindowEditor.m (-_validateFrame:forViewPtr:withEvent:update:): 

@@ -52,6 +52,16 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   return r;
 }
 
+static NSPoint
+_constrainPointToBounds(NSPoint point, NSRect bounds)
+{
+  point.x = MAX(point.x, NSMinX(bounds));
+  point.x = MIN(point.x, NSMaxX(bounds));
+  point.y = MAX(point.y, NSMinY(bounds));
+  point.y = MIN(point.y, NSMaxY(bounds));
+  return point;
+}
+
 @implementation NSWindow (GormObjectAdditions)
 - (NSString*) editorClassName
 {
@@ -125,6 +135,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   id<IBDocuments>	document;
   NSWindow		*edited;
   NSView		*original;
+  NSView                *edit_view;
   NSMutableArray	*selection;
   NSMutableArray	*subeditors;
   BOOL			isLinkSource;
@@ -195,6 +206,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   id view = *view_ptr;
   BOOL isMatrix = [view isKindOfClass: [NSMatrix class]];
   BOOL isControl = [view isKindOfClass: [NSControl class]];
+  BOOL isBox = [view isKindOfClass: [NSBox class]];
 
   /* What's the minimum size of a cell? */
   minSize = NSZeroSize;
@@ -202,6 +214,12 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     minSize = [[view prototype] cellSize];
   else if (isControl)
     minSize = [[view cell] cellSize];
+  else if (isBox)
+    {
+      /* This is wrong. It depends on how we resize the subviews. Maybe we
+       need to just set the frame, then determine the minimum size? */
+      minSize = [(NSBox *)view minimumSize];
+    }
   /* Sliders are a special case, I guess... */
   if ([view isKindOfClass: [NSSlider class]])
     {
@@ -220,7 +238,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  != NSAlternateKeyMask || isControl == NO)
 	return YES;
     }
-
+  if (isBox)
+    return YES;
+  
   /* After here, everything is a matrix or will be converted to one */
   if (isMatrix)
     {
@@ -263,13 +283,13 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 					        numberOfRows: 1
 					     numberOfColumns: 1];
 	  /* Remove this view and add the new matrix */
-	  [self addSubview: AUTORELEASE(matrix)];
+	  [edit_view addSubview: AUTORELEASE(matrix)];
 	  //[self makeSelectionVisible: NO];
 	  array = [NSMutableArray arrayWithArray: [self selection]];
 	  [array removeObjectIdenticalTo: view];
 	  [array addObject: matrix];
 	  [self selectObjects: array];
-	  [self removeSubview: view];
+	  [edit_view removeSubview: view];
 	  *view_ptr = view = matrix;
 	  cols = rows = 1;
 	}
@@ -320,7 +340,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	{
 	  /* Redisplay regardless of 'update, since number of cells changed */
 	  [view setFrame: frame];
-	  [self displayRect: [view frame]];
+	  [edit_view displayRect: [view frame]];
 	}
     }
   else
@@ -349,11 +369,12 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   NSPoint		mouseDownPoint;
   NSMutableArray	*array;
 
-  mouseDownPoint = [theEvent locationInWindow];
+  mouseDownPoint = [edit_view convertPoint: [theEvent locationInWindow]
+				fromView: nil];
 
   /*
    * If we have any subviews selected, we need to check to see if the knob
-   * of any subview has been hit, or if a subview itsself has been hit.
+   * of any subview has been hit, or if a subview itself has been hit.
    */
   if ([selection count] != 0)
     {
@@ -373,9 +394,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		  [self selectObjects: [NSArray arrayWithObject: view]];
 		}
 	      [self makeSelectionVisible: NO];
-	      [self lockFocus];
+	      [edit_view lockFocus];
 	      GormShowFrameWithKnob([view frame], knob);
-	      [self unlockFocus];
+	      [edit_view unlockFocus];
 	      [[self window] flushWindow];
 	      break;
 	    }
@@ -416,7 +437,30 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
    */
   if (view == nil)
     {
-      view = [super hitTest: mouseDownPoint];
+      view = [super hitTest: [theEvent locationInWindow]];
+      /* Make sure we're selecting the proper view - must be a direct
+	 decendant of the edit_view */
+      while (view != nil && view != self 
+	     && view != edit_view && [view superview] != edit_view)
+	view = [view superview];
+      if (view == self && edit_view != self)
+	{
+	  /* Clicked outside the edit view - just close the edit view(s) */
+	  view = edit_view;
+	  while (view != self)
+	    {
+	      NSRect r;
+	      view = [view superview];
+	      r = GormExtBoundsForRect([view frame]);
+	      r.origin.x--;
+	      r.origin.y--;
+	      r.size.width += 2;
+	      r.size.height += 2;
+	      view = [view superview];
+	      [view displayRect: r];
+	    }
+	  edit_view = self;
+	}
       if (view == self)
 	{
 	  /*
@@ -497,6 +541,24 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       [self makeSelectionVisible: YES];
       return;
     }
+  /*
+   * Double-click on a subview opens the view for editing (if possible).
+   */
+  if (view != nil && view != self
+    && ([theEvent clickCount] == 2))
+    {
+      BOOL isBox = [view isKindOfClass: [NSBox class]];
+      if (isBox == YES)
+	{
+	  edit_view = [(NSBox *)view contentView];
+	  [self makeSelectionVisible: NO];
+	  [[view superview] lockFocus];
+	  GormDrawOpenKnobsForRect([view frame]);
+	  GormShowFastKnobFills();
+	  [[view superview] unlockFocus];
+	  [self selectObjects: [NSArray array]];
+	}
+      }
 
   /*
    * Having determined the current selection, we now handle events.
@@ -525,19 +587,19 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
        * Save window state info.
        */
       acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
-      [self lockFocus];
+      [edit_view lockFocus];
 
       /*
        * Get size limits for resizing or moving and calculate maximum
        * and minimum mouse positions that won't cause us to exceed
        * those limits.
        */
-      if (view != self)
+      if (view != edit_view)
 	{
 	  if (knob == IBNoneKnobPosition)
 	    {
 	      NSRect	vf = [view frame];
-	      NSRect	sf = [self frame];
+	      NSRect	sf = [edit_view frame];
 	      NSPoint	tr = NSMakePoint(NSMaxX(vf), NSMaxY(vf));
 	      NSPoint	bl = NSMakePoint(NSMinX(vf), NSMinY(vf));
 
@@ -573,7 +635,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	      NSSize	max = [view maximumSizeFromKnobPosition: knob];
 	      NSSize	min = [view minimumSizeFromKnobPosition: knob];
 
-	      r = [self bounds];
+	      if (edit_view == self)
+		r = [self bounds];
+	      else
+		r = [edit_view frame];
 	      minMouse = NSMakePoint(NSMinX(r), NSMinY(r));
 	      maxMouse = NSMakePoint(NSMaxX(r), NSMaxY(r));
 	      r = [view frame];
@@ -649,14 +714,16 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	{
 	  if (eType != NSPeriodic)
 	    {
-	      point = [self convertPoint: [e locationInWindow]
+	      point = [edit_view convertPoint: [e locationInWindow]
 				fromView: nil];
+	      if (edit_view != self)
+		point = _constrainPointToBounds(point, [edit_view bounds]);
 	    }
 	  else if (NSEqualPoints(point, lastPoint) == NO)
 	    {
 	      [[self window] disableFlushWindow];
 
-	      if (view == self)
+	      if (view == edit_view)
 		{
 		  /*
 		   * Handle wire-frame for selecting contents of window.
@@ -673,7 +740,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		  r.origin.y--;
 		  r.size.width += 2;
 		  r.size.height += 2;
-		  [self displayRect: r];
+		  [edit_view displayRect: r];
 		  r = NSRectFromPoints(point, mouseDownPoint);
 		  GormShowFrameWithKnob(r, IBNoneKnobPosition);
 		}
@@ -714,7 +781,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 			  r.origin.x += xDiff;
 			  r.origin.y += yDiff;
 			  [subview setFrame: r];
-			  [self displayRect: oldFrame];
+			  [edit_view displayRect: oldFrame];
 			  [subview display];
 			}
 		    }
@@ -725,7 +792,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		      r.origin.y--;
 		      r.size.width += 2;
 		      r.size.height += 2;
-		      [self displayRect: r];
+		      [edit_view displayRect: r];
 		      r = lastRect;
 		      switch (knob)
 			{
@@ -800,7 +867,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       /*
        * Perform any necessary cleanup.
        */
-      if (view == self)
+      if (view == edit_view)
 	{
 	  /*
 	   * restore the display
@@ -810,17 +877,17 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  r.origin.y--;
 	  r.size.width += 2;
 	  r.size.height += 2;
-	  [self displayRect: r];
+	  [edit_view displayRect: r];
 
 	  /*
 	   * Now finally check the selected rectangle to find the views in
 	   * it and make them (if any) into our current selection.
 	   */
-	  point = [self convertPoint: [e locationInWindow]
+	  point = [edit_view convertPoint: [e locationInWindow]
 			    fromView: nil];
 	  r = NSRectFromPoints(point, mouseDownPoint);
 	  array = [NSMutableArray arrayWithCapacity: 8];
-	  enumerator = [[self subviews] objectEnumerator];
+	  enumerator = [[edit_view subviews] objectEnumerator];
 	  while ((subview = [enumerator nextObject]) != nil)
 	    {
 	      if (NSIntersectsRect(r, [subview frame]) == YES)
@@ -860,7 +927,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	      r.size.width += 2;
 	      r.size.height += 2;
 	      redrawRect = NSUnionRect(r, redrawRect);
-	      [self displayRect: redrawRect];
+	      [edit_view displayRect: redrawRect];
 	      [self makeSelectionVisible: YES];
 	    }
 	  if (NSEqualPoints(point, mouseDownPoint) == NO)
@@ -872,7 +939,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	      [document touch];
 	    }
 	}
-      [self unlockFocus];
+      [edit_view unlockFocus];
       /*
        * Restore state to what it was on entry.
        */
@@ -1082,13 +1149,13 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSEnumerator	*enumerator = [selection objectEnumerator];
       NSView		*view;
 
-      [self lockFocus];
+      [edit_view lockFocus];
       while ((view = [enumerator nextObject]) != nil)
 	{
 	  GormDrawKnobsForRect([view frame]);
 	}
       GormShowFastKnobFills();
-      [self unlockFocus];
+      [edit_view unlockFocus];
     }
 }
 
@@ -1127,6 +1194,8 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   ASSIGN(edited, anObject);
   selection = [NSMutableArray new];
   subeditors = [NSMutableArray new];
+  /* The view that DnD and other mouseDown events go to (usually self) */
+  edit_view = self;
 
   /*
    * Permit views and connections to be dragged in to the window.
@@ -1151,7 +1220,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	    {
 	      NSRect	rect = GormExtBoundsForRect([view frame]);
 
-	      [self displayRect: rect];
+	      [edit_view displayRect: rect];
 	    }
 	  [[self window] enableFlushWindow];
 	  [[self window] flushWindowIfNeeded];
@@ -1208,7 +1277,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     {
       if ([sub isKindOfClass: [NSView class]] == YES)
 	{
-	  [self addSubview: sub];
+	  [edit_view addSubview: sub];
 	  [array addObject: sub];
 	}
     }
@@ -1239,7 +1308,14 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
        * be the point at which they were dropped (converted from window
        * coordinates to our own coordinates).
        */
-      loc = [self convertPoint: loc fromView: nil];
+      loc = [edit_view convertPoint: loc fromView: nil];
+      if (NSMouseInRect(loc, [edit_view bounds], NO) == NO)
+	{
+	  /* Dropped outside our view frame */
+	  NSLog(@"Dropped outside current edit view");
+	  dragType = nil;
+	  return NO;
+	}
       enumerator = [views objectEnumerator];
       while ((sub = [enumerator nextObject]) != nil)
 	{
@@ -1247,7 +1323,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 	  rect.origin = loc;
 	  [sub setFrame: rect];
-	  [self addSubview: sub];
+	  [edit_view addSubview: sub];
 	}
       [self selectObjects: views];
       [self displayIfNeeded];
@@ -1328,7 +1404,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	{
 	  id	o = [selection objectAtIndex: count];
 
-	  if ([[self subviews] indexOfObjectIdenticalTo: o] == NSNotFound)
+	  if ([[edit_view subviews] indexOfObjectIdenticalTo: o] == NSNotFound)
 	    {
 	      [selection removeObjectAtIndex: count];
 	    }

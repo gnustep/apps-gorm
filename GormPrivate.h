@@ -159,6 +159,7 @@ extern NSString *GormLinkPboardType;
  * Functions for drawing knobs etc.
  */
 void GormDrawKnobsForRect(NSRect aFrame);
+void GormDrawOpenKnobsForRect(NSRect aFrame);
 NSRect GormExtBoundsForRect(NSRect aFrame);
 IBKnobPosition GormKnobHitInRect(NSRect aFrame, NSPoint p);
 void GormShowFastKnobFills(void);

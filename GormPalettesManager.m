@@ -152,7 +152,7 @@ static NSImage	*dragImage = nil;
   NSPoint	dragPoint = [theEvent locationInWindow];
   NSView	*view = [super hitTest: dragPoint];
   GormDocument	*active = [(id<IB>)NSApp activeDocument];
-  NSRect	rect = [view frame];
+  NSRect	rect;
   NSString	*type;
   id		obj;
   NSPasteboard	*pb;
@@ -162,6 +162,12 @@ static NSImage	*dragImage = nil;
     {
       return;		// No subview to drag.
     }
+  /* Make sure we're dragging the proper control and not a subview of a 
+     control (like the contentView of an NSBox) */
+  while (view != nil && [view superview] != self)
+    view = [view superview];
+  rect = [view frame];
+
   if (active == nil)
     {
       NSRunAlertPanel (NULL, @"No document is currently active", 
