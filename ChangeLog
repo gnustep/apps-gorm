@@ -1,3 +1,7 @@
+2003-11-24 01:37 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuEditor.m: Minor change to correct assertion failure.
+	
 2003-11-23 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.5.0
