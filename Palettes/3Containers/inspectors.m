@@ -465,7 +465,7 @@
 	      // Add columns from the last to the target number...
 	      for(i = 0; i < colsToAdd; i++)
 		{
-		  NSString *identifier = [NSString stringWithFormat: @"TableColumn%d",(numCols + i + 1)];
+		  NSString *identifier = [NSString stringWithFormat: @"column%d",(numCols + i + 1)];
 		  NSTableColumn *tc = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: identifier]);
 		  [tc setWidth: 50];
 		  [tc setMinWidth: 20];
