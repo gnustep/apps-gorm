@@ -184,10 +184,8 @@
     {
       if (stateby == NSNoCellMask)
 	type = NSMomentaryLight;
-      else if (stateby == NSChangeBackgroundCellMask)
-	type = NSOnOffButton;
       else 
-	type = NSToggleButton;
+	type = NSOnOffButton;
     }
   else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask) )
     {
@@ -196,34 +194,31 @@
       else
 	type = NSPushOnPushOffButton;
     }
+  else if (highlight == (NSPushInCellMask | NSContentsCellMask) )
+    {
+      type = NSToggleButton;
+    }
   else if (highlight == NSContentsCellMask)
     {
       if (stateby == NSNoCellMask)
 	type = NSMomentaryChangeButton;
       else
-	type = NSToggleButton;
+	type = NSToggleButton; /* Really switch or radio. What should it be? */
     }
   else
     NSDebugLog(@"Ack! no button type");
-
   return type;
 }
 
 /* We may need to reset some parameters based on the previous type */
 - (void) setButtonType: (NSButtonType)type forObject: button
 {
-  NSButtonType oldType = [self buttonTypeForObject: object];
-
-  if (type == oldType)
-    return;
-
   [object setButtonType: type ];
-  [self _getValuesFromObject: object];
 }
 
 - (void) setButtonTypeFrom: sender
 {
-  [self setButtonType: [[sender selectedItem] tag] forObject: object];
+  [self setButtonType: [sender tag] forObject: object];
 }
 
 - (void) _setValuesFromControl: control

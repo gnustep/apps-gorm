@@ -1,3 +1,10 @@
+2001-10-02  Adam Fedor  <fedor@gnu.org>
+
+	* Palettes/2Controls/inspectors.m: Fix NSButton and popup button
+	logic.
+	* Palettes/2Controls/GormButtonInspector.gorm: Update for new popup
+	coding in gui library.
+
 2001-09-27  Adam Fedor  <fedor@gnu.org>
 
 	* GormInspectorsManager.m (-setCurrentInspector:): Gracefully handle
