@@ -111,6 +111,8 @@ Gorm_RESOURCE_FILES = \
 	Images/GormActionSelected.tiff \
 	Images/GormOutletSelected.tiff \
 	Images/FileIcon_gmodel.tiff \
+	Images/tabtop_nib.tiff \
+	Images/tabbot_nib.tiff \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \

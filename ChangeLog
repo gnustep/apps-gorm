@@ -1,3 +1,11 @@
+2003-06-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormTabViewInspector.gorm: Added new images to complete the
+	tab style matrix buttons.
+	* Images/tabtop_nib.tiff: New image
+	* Images/tabbot_nib.tiff: New image
+	* GNUmakefile: added images to resources
+
 2003-05-31  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormScrollViewAttributesInspector.m: Added code to make changes
