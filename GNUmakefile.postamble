@@ -23,8 +23,8 @@
 #  59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 before-all::
-	rm -f InterfaceBuilder
+	rm -rf InterfaceBuilder
 	$(LN_S) GormLib InterfaceBuilder
 
 after-clean::
-	rm -f InterfaceBuilder
+	rm -rf InterfaceBuilder
