@@ -1,3 +1,7 @@
+2001-02-07  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormInspectorsManager.m: Resize a few buttons to fit text neatly.
+
 2001-02-06  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Palettes/2Control/main.m: Added patch to tidy up and add more

@@ -829,7 +829,7 @@ selectCellWithString: (NSString*)title
       [contents addSubview: split];
       RELEASE(split);
 
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,70,20)];
       [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
       [okButton setAction: @selector(ok:)];
       [okButton setTarget: self];

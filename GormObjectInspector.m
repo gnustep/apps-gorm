@@ -131,10 +131,10 @@ selectCellWithString: (NSString*)title
       RELEASE(browser);
 
       rect = windowRect;
-      rect.size.width -= 120;
+      rect.size.width -= 40;
       rect.size.height = 22;
       rect.origin.y = 30;
-      rect.origin.x = 60;
+      rect.origin.x = 20;
       label = [[NSButton alloc] initWithFrame: rect];
       [label setBordered: NO];
       [label setTitle: @"No Type"];

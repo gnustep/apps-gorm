@@ -2,7 +2,7 @@
 
 @c %**start of header
 @settitle Guide to the Gorm application
-@setfilename gstep_guile.info
+@setfilename Gorm.info
 @c %**end of header
 @defcodeindex cl
 @defcodeindex pr
@@ -59,7 +59,7 @@ Free Software Foundation instead of in the original English.
 @title Guide to the
 @title Gorm application
 @sp 3
-@c @subtitle last updated January, 2000
+@c @subtitle last updated February, 2001
 @subtitle Version @value{GORM-VERSION}
 @subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION})
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
@@ -134,7 +134,6 @@ Gorm as part of the GNUstep project.
 
 @itemize @bullet
 
-@item Add support for menus
 @item Add more inspectors
 @item Add more editors
 @item Add support for matrix
