@@ -1,3 +1,14 @@
+2001-08-20  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* Palettes/2Controls/main.m: Add stepper control to the controls' 
+	palette
+	
+	* Add stepper inspector.
+	* Palettes/2Controls/inspectors.m: added GormSliderAttributsInspector
+	class
+	* Palettes/2Controls/GormSliderInspector.gorm: New file.
+	* Palettes/2Controls/GNUmakefile: Update
+
 2001-08-18  Adam Fedor  <fedor@gnu.org>
 
 	* GormWindowEditor.m (-_editTextView:withEvent:): Size the NSForm
