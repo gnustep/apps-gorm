@@ -25,3 +25,15 @@ table which seem intersting:
 * Add Feature to automatically add actions to FirstResponder.
 --
 Gregory John Casamento
+
+* Have a correct behavor (placement/enter==OK..) for setName: panel
+* We should able to edit Window name directly
+* better behavor when Pasting
+* Add Feature to allow to create its own Palettes (Template)
+* Add Feature for creating more inteligent [mh] file  (for ex. delegate/dataSource method if needs ...)
+* Move some code of *Editor* in Palettes
+* Implement Grid ? 
+* Implement Make Column/row .... ? 
+-- 
+Fabien VALLON
+
