@@ -28,7 +28,11 @@
 @end
 
 @implementation	GormPalettePanel
-- (BOOL) canBecomeKey
+- (BOOL) canBecomeKeyWindow
+{
+  return NO;
+}
+- (BOOL) canBecomeMainWindow
 {
   return NO;
 }
@@ -53,6 +57,11 @@ static NSImage	*dragImage = nil;
   if (self == [GormPaletteView class])
     {
     }
+}
+
+- (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
+{
+  return YES;	/* Ensure we get initial mouse down event.	*/
 }
 
 /*
@@ -173,15 +182,24 @@ static NSImage	*dragImage = nil;
       NSImageRep	*rep;
       NSSize		offset;
 
-      offset.width = rect.origin.x - dragPoint.x;
-      offset.height = rect.origin.y - dragPoint.y;
+      if (active == nil)
+	{
+	  NSRunAlertPanel (NULL, @"No document is currently active", 
+	    @"OK", NULL, NULL);
+	  return;
+	}
 
+      offset.width = dragPoint.x - mouseDownPoint.x;
+      offset.height = dragPoint.x - mouseDownPoint.y;
+
+NSLog(@"Drag start with offset %@", NSStringFromSize(offset));
       RELEASE(dragImage);
       dragImage = [NSImage new];
       rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
 						rect: rect];
       [dragImage setSize: rect.size];
       [dragImage addRepresentation: rep];
+      RELEASE(rep);
 
       type = [IBPalette typeForView: view];
       obj = [IBPalette objectForView: view];
@@ -245,7 +263,7 @@ static NSImage	*dragImage = nil;
   NSRect	dragRect = {{0, 0}, {272, 192}};
   unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
 
-  panel = [[NSPanel alloc] initWithContentRect: contentRect
+  panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained
 					 defer: NO];

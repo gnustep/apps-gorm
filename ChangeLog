@@ -1,3 +1,8 @@
+2001-01-27  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormPalettesManager.m: Ensure that palette manager window can never
+	become key or main.  Accept first mouse events so drag start works.
+
 2000-11-06  Adam Fedor  <fedor@gnu.org>
 
 	* Documenation: Remove use of tmpl texi files
