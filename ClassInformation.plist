@@ -1,4 +1,10 @@
 {
+  NSApplication = {
+    Super = NSResponder;
+    Outlets = (
+      delegate
+    );
+  };
   NSButton = {
     Actions = (
       "takeStringValueFrom:"
