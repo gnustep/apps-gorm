@@ -1,3 +1,12 @@
+2004-12-12 16:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/GNUmakefile: Added new header files.
+	* GormLib/IBViewAdditions.h: Creates a category/informal protocol.
+	* GormLib/IBViewProtocol.h: New file defines IBViewProtocol
+	* GormLib/IBCellAdditions.h: New file for IBCellAdditions, adopts
+	protocol and creates a category/informal protocol.
+	* GormLib/IBCellProtocol.h: New file defines IBCellProtocol
+
 2004-12-12 15:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Corrected problem in -outlineView:

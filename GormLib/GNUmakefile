@@ -42,6 +42,8 @@ libGorm_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 
 libGorm_HEADER_FILES= \
 IBApplicationAdditions.h \
+IBCellAdditions.h \
+IBCellProtocol.h \
 IBConnectors.h \
 IBDefines.h \
 IBDocuments.h \
@@ -51,6 +53,7 @@ IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
 IBViewAdditions.h \
+IBViewProtocol.h \
 InterfaceBuilder.h
 
 #

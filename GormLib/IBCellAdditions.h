@@ -22,13 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef INCLUDED_IBVIEWADDITIONS_H
-#define INCLUDED_IBVIEWADDITIONS_H
+#ifndef INCLUDED_IBCELLADDITIONS_H
+#define INCLUDED_IBCELLADDITIONS_H
 
-#include <InterfaceBuilder/IBViewProtocol.h>
-#include <AppKit/NSView.h>
+#include <InterfaceBuilder/IBCellProtocol.h>
 
-@interface NSView (IBViewAdditions) <IBViewProtocol>
+@interface NSCell (IBCellAdditions) <IBCellProtocol>
 @end
 
 #endif

@@ -1,4 +1,4 @@
-/* IBViewAdditions.h
+/* IBViewProtocol.h
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
@@ -22,13 +22,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef INCLUDED_IBVIEWADDITIONS_H
-#define INCLUDED_IBVIEWADDITIONS_H
+#ifndef INCLUDED_IBCELLPROTOCOL_H
+#define INCLUDED_IBCELLPROTOCOL_H
 
-#include <InterfaceBuilder/IBViewProtocol.h>
-#include <AppKit/NSView.h>
+#include <Foundation/NSGeometry.h>
+#include <InterfaceBuilder/IBDefines.h>
 
-@interface NSView (IBViewAdditions) <IBViewProtocol>
+@protocol IBCellProtocol
+- (void) cellWillAltDragWithSize: (NSSize)size;
+- (NSSize) maximumSizeForCellSize: (NSSize)size 
+                     knobPosition: (IBKnobPosition)position;
+- (NSSize) minimumSizeForCellSize: (NSSize)size 
+                     knobPosition: (IBKnobPosition)position;
 @end
 
 #endif

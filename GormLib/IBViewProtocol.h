@@ -1,4 +1,4 @@
-/* IBViewAdditions.h
+/* IBViewProtocol.h
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
@@ -22,13 +22,22 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef INCLUDED_IBVIEWADDITIONS_H
-#define INCLUDED_IBVIEWADDITIONS_H
+#ifndef INCLUDED_IBVIEWPROTOCOL_H
+#define INCLUDED_IBVIEWPROTOCOL_H
 
-#include <InterfaceBuilder/IBViewProtocol.h>
-#include <AppKit/NSView.h>
+#include <InterfaceBuilder/IBDefines.h>
+#include <Foundation/NSGeometry.h>
 
-@interface NSView (IBViewAdditions) <IBViewProtocol>
+// forward references
+@class NSColor;
+
+@protocol IBViewProtocol
+- (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point;
+- (BOOL) allowsAltDragging;
+- (void) depositColor: (NSColor*)color atPoint: (NSPoint)point;
+- (NSSize) maximumSizeFromKnobPosition: (IBKnobPosition)knobPosition;
+- (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position;
+- (void) placeView: (NSRect)newFrame;
 @end
 
 #endif
