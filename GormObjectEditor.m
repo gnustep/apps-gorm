@@ -365,7 +365,7 @@ static NSMapTable	*docMap = 0;
 	  [self makeSelectionVisible: YES];
 	}
       name = [document nameForObject: obj];
-      if ([name isEqualToString: @"NSFirst"] == NO)
+      if ([name isEqualToString: @"NSFirst"] == NO && name != nil)
 	{
 	  NSPasteboard	*pb;
 
