@@ -34,6 +34,7 @@
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSTextFieldCell.h>
 #include <AppKit/NSWindow.h>
+#include <AppKit/NSImage.h>
 
 static NSNotificationCenter *nc = nil;
 static const int current_version = 1;

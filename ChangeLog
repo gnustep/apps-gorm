@@ -1,3 +1,8 @@
+2002-09-11  Gregory John Casamento
+
+	* GormOutlineView.m: Corrected minor compilation problem due to
+	header correction done in gui lib.   NSImage is now directly included.
+	
 2002-09-09  Adam Fedor  <fedor@gnu.org>
 
 	* GormClassManager.m (-allActionsForObject:): Print class in error message.
