@@ -1955,7 +1955,7 @@ static NSImage  *fileImage = nil;
 		  
 		  NSDebugLog(@"Add the sound %@", file);
 		  soundPath = [documentPath stringByAppendingPathComponent: file];
-		  [soundsView addObject: [[GormSound alloc] initWithPath: soundPath]];
+		  [soundsView addObject: [GormSound soundForPath: soundPath inWrapper: YES]];
 		}
 	    }
 	}
@@ -1977,7 +1977,7 @@ static NSImage  *fileImage = nil;
 		  
 		  NSDebugLog(@"Add the image %@", file);
 		  imagePath = [documentPath stringByAppendingPathComponent: file];
-		  [imagesView addObject: [GormImage imageForPath: imagePath]];
+		  [imagesView addObject: [GormImage imageForPath: imagePath inWrapper: YES]];
 		}
 	    }
 	}
@@ -2791,7 +2791,13 @@ static NSImage  *fileImage = nil;
 	      archiveResult = [filePrefsManager saveToFile: infoPath];
 	    }
 
-	  // copy sounds into the new folder...
+	  //
+	  // Copy resources into the new folder...
+	  // Gorm doesn't copy these into the folder right away since the folder may
+	  // not yet exist.   This allows the user to add/delete resources as they see fit
+	  // but only those which they end up with will actually be put into the wrapper
+	  // when the model/document is saved.
+	  //
 	  if (archiveResult)
 	    {
 	      NSArray *sounds = [soundsView objects];
@@ -2813,11 +2819,17 @@ static NSImage  *fileImage = nil;
 			  copied = [mgr copyPath: path
 					toPath: soundPath
 					handler: nil];
+			  if(copied)
+			    {
+			      [object setInWrapper: YES];
+			      [object setSoundPath: soundPath];
+			    }
 			}
 		      else
 			{
 			  // mark as copied if paths are equal...
 			  copied = YES;
+			  [object setInWrapper: YES];
 			}
 		      
 		      if (!copied)
@@ -2844,11 +2856,17 @@ static NSImage  *fileImage = nil;
 			  copied = [mgr copyPath: path
 					toPath: imagePath
 					handler: nil];
+			  if(copied)
+			    {
+			      [object setInWrapper: YES];
+			      [object setImagePath: imagePath];
+			    }
 			}
 		      else
 			{
 			  // mark it as copied if paths are equal.
 			  copied = YES;
+			  [object setInWrapper: YES];
 			}
 		      
 		      if (!copied)

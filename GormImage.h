@@ -43,9 +43,15 @@
 }
 
 + (GormImage *) imageForPath: (NSString *)path;
++ (GormImage *) imageForPath: (NSString *)path inWrapper: (BOOL)flag;
 - (id) initWithPath: (NSString *)aPath;
+- (id) initWithPath: (NSString *)aPath
+          inWrapper: (BOOL)flag;
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath;
+- (id) initWithName: (NSString *)aName
+               path: (NSString *)aPath
+          inWrapper: (BOOL)flag;
 - (void) setImageName: (NSString *)aName;
 - (NSString *) imageName;
 - (void) setImagePath: (NSString *)aPath;

@@ -411,6 +411,26 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 {
 }
 
+- (void) deleteSelection
+{
+  if(![selected isSystemImage])
+    {
+      if([selected isInWrapper])
+	{
+	  NSFileManager *mgr = [NSFileManager defaultManager];
+	  NSString *path = [selected imagePath];
+	  BOOL removed = [mgr removeFileAtPath: path
+			      handler: nil];
+	  if(!removed)
+	    {
+	      NSString *msg = [NSString stringWithFormat: @"Could not delete file %@", path];
+	      NSLog(msg);
+	    }
+	}
+      [super deleteSelection];
+    }
+}
+
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   return NSDragOperationCopy;

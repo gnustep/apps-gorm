@@ -402,6 +402,26 @@ static NSMapTable	*docMap = 0;
 {
 }
 
+- (void) deleteSelection
+{
+  if(![selected isSystemSound])
+    {
+      if([selected isInWrapper])
+	{
+	  NSFileManager *mgr = [NSFileManager defaultManager];
+	  NSString *path = [selected soundPath];
+	  BOOL removed = [mgr removeFileAtPath: path
+			      handler: nil];
+	  if(!removed)
+	    {
+	      NSString *msg = [NSString stringWithFormat: @"Could not delete file %@", path];
+	      NSLog(msg);
+	    }
+	}
+      [super deleteSelection];
+    }
+}
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   if (dragType == IBObjectPboardType)
