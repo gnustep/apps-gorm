@@ -25,6 +25,7 @@
 
 #include "GormPrivate.h"
 #include "GormCustomView.h"
+#include "GormDocument.h"
 #include <InterfaceBuilder/IBEditors.h>
 
 @interface	GormClassManager (Private)
@@ -34,12 +35,19 @@
 
 @implementation GormClassManager
 
+- (void) _touch
+{
+  id<IBDocuments>        doc = [(id<IB>)NSApp activeDocument];
+  [doc touch];
+}
+
 - (void) addAction: (NSString*)anAction forObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray	*allActions = [self allActionsForObject: anObject];
 
+  [self _touch];
   if ([extraActions containsObject: anAction] == YES)
     {
       return;	/* Can't add action twice. */
@@ -68,6 +76,7 @@
       NSString			*newClassName;
       int			i;
 
+      [self _touch];
       classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
       outlets = [[NSMutableArray alloc] initWithCapacity: 0];
       actions = [[NSMutableArray alloc] initWithCapacity: 0];
@@ -103,6 +112,7 @@
   NSMutableArray *combined = [NSMutableArray arrayWithArray: array];
   NSString *new = @"newAction", *search = [new stringByAppendingString: @":"];
   int i = 1;
+
   [combined addObjectsFromArray: extra];
   while ([combined containsObject: search])
     {
@@ -147,6 +157,7 @@
 
       if (![classInformation objectForKey: className])
 	{
+	  [self _touch];
 	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
 	  
 	  [classInfo setObject: outlets forKey: @"Outlets"];
@@ -177,6 +188,7 @@
     {
       return;	/* Can't add outlet with same name. */
     }
+  [self _touch];
   if (extraOutlets == nil)
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -197,6 +209,7 @@
     {
       return;
     }
+  [self _touch];
   if (extraActions == nil)
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -222,6 +235,8 @@
     {
       return;
     }
+
+  [self _touch];
   if (extraOutlets == nil)
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -253,6 +268,7 @@
       int all_index = [allActions indexOfObject: oldAction];
       int extra_index = [extraActions indexOfObject: oldAction];
 
+      [self _touch];
       [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
@@ -261,6 +277,7 @@
       int all_index = [allActions indexOfObject: oldAction];
       int actions_index = [actions indexOfObject: oldAction];
 
+      [self _touch];
       [actions replaceObjectAtIndex: actions_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
@@ -290,6 +307,7 @@
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int extra_index = [extraOutlets indexOfObject: oldOutlet];
 
+      [self _touch];
       [extraOutlets replaceObjectAtIndex: extra_index withObject: newOutlet];
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
@@ -298,6 +316,7 @@
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int outlets_index = [outlets indexOfObject: oldOutlet];
 
+      [self _touch];
       [outlets replaceObjectAtIndex: outlets_index withObject: newOutlet];
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
@@ -768,6 +787,7 @@
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
+      [self _touch];
       if (superName != nil)
 	{
 	  NSArray	*superActions;
@@ -801,6 +821,7 @@
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
+      [self _touch];
       if (superName != nil)
 	{
 	  NSArray	*superActions;
@@ -834,10 +855,12 @@
 
   if ([extraOutlets containsObject: anOutlet] == YES)
     {
+      [self _touch];
       [extraOutlets removeObject: anOutlet];
     }
   if ([allOutlets containsObject: anOutlet] == YES)
     {
+      [self _touch];
       [allOutlets removeObject: anOutlet];
     }
 }
@@ -850,10 +873,12 @@
 
   if ([extraOutlets containsObject: anOutlet] == YES)
     {
+      [self _touch];
       [extraOutlets removeObject: anOutlet];
     }
   if ([allOutlets containsObject: anOutlet] == YES)
     {
+      [self _touch];
       [allOutlets removeObject: anOutlet];
     }
 }
@@ -862,6 +887,7 @@
 {
   if ([customClasses containsObject: className])
     {
+      [self _touch];
       [customClasses removeObject: className];
     }
 
@@ -876,6 +902,7 @@
     {
       int index = 0;
 
+      [self _touch];
       RETAIN(classInfo);
 
       [classInformation removeObjectForKey: oldName];

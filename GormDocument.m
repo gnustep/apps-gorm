@@ -2278,9 +2278,13 @@ static NSImage	*classesImage = nil;
 
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
+  // issue pre notification..
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
       object: self];
+  // mark the document as changed.
+  [self touch];
+  // issue port notification..
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
       object: self];
@@ -3405,6 +3409,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
       if (![item isKindOfClass: [GormOutletActionHolder class]])
 	{
 	  result = [classManager isCustomClass: item];
+	  [self editClass: item];
 	}
       else
 	{
@@ -3426,6 +3431,16 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
     }
 
   return result;
+}
+
+- (void) outlineViewSelectionDidChange: (NSNotification *)notification
+{
+  id object = [notification object];
+  id item = [object itemAtRow: [object selectedRow]];
+  if (![item isKindOfClass: [GormOutletActionHolder class]])
+    {
+      [self editClass: item];
+    }
 }
 
 // for debuging purpose

@@ -121,6 +121,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
 	Resources/GormScrollViewAttributesInspector.gorm \
+	Resources/GormClassInspector.gorm \
 	Resources/Gorm.gorm
 
 Gorm_HEADERS = \
@@ -149,6 +150,7 @@ Gorm_HEADERS = \
 	GormPlacementInfo.h \
 	GormPrefController.h\
 	GormHeadersPref.h \
+	GormClassInspector.h \
 	GormGeneralPref.h 
 
 
@@ -187,6 +189,7 @@ Gorm_OBJC_FILES = \
 	GormSoundEditor.m \
 	GormPrefController.m \
 	GormHeadersPref.m\
+	GormClassInspector.m\
 	GormGeneralPref.m
 
 

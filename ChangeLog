@@ -1,3 +1,13 @@
+2003-06-06  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormClassInspector.gorm: New inspector
+	* GormClassInspector.[hm]: New inspector classes
+	* GormDocument.m: added delegate method to select class 
+	in GormClassEditor when selected in the outline/classes view.
+	* GormClassManager.m: Added "touch" to appropriate methods
+	to fix bug which caused document to not refect that it has
+	been edited when a outlet/action is added.
+
 2003-06-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormNSButtonInspector.gorm: Added 
