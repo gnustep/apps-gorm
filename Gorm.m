@@ -1024,9 +1024,9 @@ static NSButtonType _buttonTypeForObject( id button )
      forKey: @"ApplicationName"];
   [d setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [d setObject: @"Gorm 0.2.5" 
+  [d setObject: @"Gorm 0.3.0" 
      forKey: @"ApplicationRelease"];
-  [d setObject: @"0.2.7 Dec 2002" 
+  [d setObject: @"0.2.5 Dec 2002" 
      forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
