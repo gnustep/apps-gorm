@@ -128,14 +128,11 @@
 // classes support..
 - (id) createSubclass: (id)sender;
 - (id) instantiateClass: (id)sender;
-- (id) editClass: (id)sender;
 - (id) createClassFiles: (id)sender;
-- (void) changeCurrentClass: (id)sender;
 - (id) addAttributeToClass: (id)sender;
 - (id) remove: (id)sender;
 - (id) createClassFiles: (id)sender;
 - (id) instantiateClass: (id)sender;
-- (void) selectClassWithObject: (id)obj;
 - (void) selectClass: (NSString *)className;
 - (BOOL) classIsSelected;
 

@@ -3,6 +3,7 @@
 #include <AppKit/AppKit.h>
 #include "GormImageInspector.h"
 #include "GormPrivate.h"
+#include "GormImage.h"
 
 @implementation GormImageInspector
 + (void) initialize

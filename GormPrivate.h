@@ -169,11 +169,16 @@ extern NSString *GormResizeCellNotification;
 @interface GormClassEditor : GormOutlineView <IBSelectionOwners>
 {
   GormDocument          *document;
-  NSString              *selectedClassName;
+  GormClassManager      *classManager;
 }
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
 - (void) setSelectedClassName: (NSString*)cn;
+- (NSString *) selectedClassName;
+- (void) selectClassWithObject: (id)obj;
+- (void) selectClass: (NSString *)className;
+- (BOOL) currentSelectionIsClass;
+- (void) editClass: (id)sender;
 @end
 
 @interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
@@ -300,58 +305,6 @@ extern NSString *GormResizeCellNotification;
 @interface NSObject (GormAdditions)
 - (id) allocSubstitute;
 - (NSImage *) imageForViewer;
-@end
-
-// we don't use the actual sound since we don't want to read the entire sound into
-// memory.
-@interface GormSound : NSObject
-{
-  NSString *name;
-  NSString *path;
-  BOOL     isSystemSound;
-  BOOL     isInWrapper; 
-}
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath;
-- (void) setSoundName: (NSString *)aName;
-- (NSString *) soundName;
-- (void) setSoundPath: (NSString *)aPath;
-- (NSString *) soundPath;
-- (void) setSystemSound: (BOOL)flag;
-- (BOOL) isSystemSound;
-- (void) setInWrapper: (BOOL)flag;
-- (BOOL) isInWrapper;
-- (NSString *)inspectorClassName;
-@end
-
-@interface GormImage : NSObject
-{
-  NSString *name;
-  NSString *path;
-  NSImage  *image;
-  NSImage  *smallImage;
-  BOOL     isSystemImage;
-  BOOL     isInWrapper; 
-}
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath;
-- (void) setImageName: (NSString *)aName;
-- (NSString *) imageName;
-- (void) setImagePath: (NSString *)aPath;
-- (NSString *) imagePath;
-- (void) setSystemImage: (BOOL)flag;
-- (BOOL) isSystemImage;
-- (void) setInWrapper: (BOOL)flag;
-- (BOOL) isInWrapper;
-- (NSString *)inspectorClassName;
-- (NSImage *)image;
-- (NSImage *)normalImage;
-@end
-
-@interface GormDocument (PrivateMethodsForImagesAndSounds)
-- (GormImage *)_createImagePlaceHolder: (NSString *)path;
-- (GormSound *)_createSoundPlaceHolder: (NSString *)path;
-- (void) addImage: (NSString*) path;
 @end
 
 // to allow us to load the image by name, but save it within the archive.

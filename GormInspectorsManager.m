@@ -25,7 +25,10 @@
 #include <AppKit/NSNibConnector.h>
 #include <Foundation/NSException.h>
 #include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include "GormPrivate.h"
+#include "GormImage.h"
+#include "GormSound.h"
 
 #define HASFORMATTER(obj) \
       [obj respondsToSelector: @selector(cell)] && \
@@ -425,7 +428,7 @@
     }
   else
     {
-      NSString *newTitle = [obj className]; 
+      NSString *newTitle = [obj objectNameForInspectorTitle]; 
       [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
     }
 

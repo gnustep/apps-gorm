@@ -26,6 +26,7 @@
 #include "GormFunctions.h"
 #include "GormPalettesManager.h"
 #include <AppKit/NSSound.h>
+#include "GormSound.h"
 
 /*
  * Method to return the image that should be used to display objects within
@@ -242,8 +243,7 @@ static NSMapTable	*docMap = 0;
       en = [list objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
-	  NSString *name = [[obj lastPathComponent] stringByDeletingPathExtension];
-	  GormSound *sound = [[GormSound alloc] initWithName: name path: obj];
+	  GormSound *sound = [GormSound soundForPath: obj];
 	  [sound setSystemSound: YES];
 	  [self addObject: sound];
 	}
@@ -567,81 +567,3 @@ static NSMapTable	*docMap = 0;
 
 @end
 
-// sound proxy object...
-@implementation GormSound
-- (id) initWithName: (NSString *)aName
-	       path: (NSString *)aPath
-{
-  NSSound *sound = [[NSSound alloc] initWithContentsOfFile: aPath
-		   byReference: YES];
-  [super init];
-  ASSIGN(name, aName);
-  ASSIGN(path, aPath);
-
-  //#warning "we want to store the sound somewhere"
-  [(NSSound *)sound setName: aName];
-  isSystemSound = NO;
-  isInWrapper = NO;
-  return self;
-}
-
-- (void) setSoundName: (NSString *)aName
-{
-  ASSIGN(name, aName);
-}
-
-- (NSString *) soundName
-{
-  return name;
-}
-
-- (void) setSoundPath: (NSString *)aPath
-{
-  ASSIGN(path, aPath);
-}
-
-- (NSString *) soundPath
-{
-  return path;
-}
-
-- (void) setSystemSound: (BOOL)flag
-{
-  isSystemSound = flag;
-}
-
-- (BOOL) isSystemSound
-{
-  return isSystemSound;
-}
-
-- (void) setInWrapper: (BOOL)flag
-{
-  isInWrapper = flag;
-}
-
-- (BOOL) isInWrapper
-{
-  return isInWrapper;
-}
-
-- (NSString *)inspectorClassName
-{
-  return @"GormSoundInspector";
-}
-
-- (NSString*) classInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-
-- (NSString*) connectInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-@end

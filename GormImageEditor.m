@@ -26,6 +26,7 @@
 #include "GormFunctions.h"
 #include "GormPalettesManager.h"
 #include <AppKit/NSImage.h>
+#include "GormImage.h"
 
 /*
  * Method to return the image that should be used to display objects within
@@ -138,7 +139,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
  	  id placeHolder =  nil;
 
 	  NSLog(@"====> %@",[data objectAtIndex:i]);
-	  placeHolder = [(GormDocument *)document _createImagePlaceHolder: [data objectAtIndex: i]];
+	  placeHolder = [GormImage imageForPath: [data objectAtIndex: i]];
  	  NSLog(@"here1 %@", [data objectAtIndex: i]);
 
 	  if (placeHolder)
@@ -240,11 +241,9 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       en = [list objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
-	  NSString *name = [[obj lastPathComponent] stringByDeletingPathExtension];
-	  GormImage *image = [[GormImage alloc] initWithName: name path: obj];
+	  GormImage *image = [GormImage imageForPath: obj];
 	  [image setSystemImage: YES];
 	  [self addObject: image];
-	  RELEASE(image);
 	}
 
       // set up the notification...
@@ -479,126 +478,4 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 */
 @end
 
-// image proxy object...
-@implementation GormImage
-- (id) initWithName: (NSString *)aName
-	       path: (NSString *)aPath
-{
-  NSSize originalSize;
-  float ratioH;
-  float ratioW;
-  [super init];
-  ASSIGN(name, aName);
-  ASSIGN(path, aPath);
-  image = [[NSImage alloc] initByReferencingFile: aPath];
-  smallImage = [[NSImage alloc] initWithContentsOfFile: aPath];
-  [image setName: aName];
 
-  if (smallImage == nil)
-    {
-      RELEASE(name);
-      RELEASE(path);
-      return nil;
-    }
-
-  originalSize = [smallImage size];
-  ratioW = originalSize.width / 70;
-  ratioH = originalSize.height / 55;
-  
-  if (ratioH > 1 || ratioW > 1)
-    {
-      [smallImage setScalesWhenResized: YES];
-      if (ratioH > ratioW)
-	{
-	  [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
-	}
-      else 
-	{
-	  [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
-	}
-    }
-
-  isSystemImage = NO;
-  isInWrapper = NO;
-  return self;
-}
-
-- (void) dealloc
-{
-  RELEASE(name);
-  RELEASE(path);
-  RELEASE(image);
-  RELEASE(smallImage);
-  [super dealloc];
-}
-
-- (void) setImageName: (NSString *)aName
-{
-  ASSIGN(name, aName);
-}
-
-- (NSString *) imageName
-{
-  return name;
-}
-
-- (void) setImagePath: (NSString *)aPath
-{
-  ASSIGN(path, aPath);
-}
-
-- (NSString *) imagePath
-{
-  return path;
-}
-
-- (NSImage *) normalImage
-{
-  return image;
-}
-
-- (NSImage *) image
-{
-  return smallImage;
-}
-
-- (void) setSystemImage: (BOOL)flag
-{
-  isSystemImage = flag;
-}
-
-- (BOOL) isSystemImage
-{
-  return isSystemImage;
-}
-
-- (void) setInWrapper: (BOOL)flag
-{
-  isInWrapper = flag;
-}
-
-- (BOOL) isInWrapper
-{
-  return isInWrapper;
-}
-
-- (NSString *)inspectorClassName
-{
-  return @"GormImageInspector"; 
-}
-
-- (NSString*) classInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-
-- (NSString*) connectInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-@end

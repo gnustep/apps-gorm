@@ -42,8 +42,9 @@
       NSTableColumn  *tableColumn;
 
       document = doc; // loose connection
-      [self setDataSource: document];
-      [self setDelegate: document];  
+      classManager = [doc classManager];
+      [self setDataSource: self];
+      [self setDelegate: self];  
       [self setAutoresizesAllColumnsToFit: YES];
       [self setAllowsColumnResizing: NO];
       [self setDrawsGrid: NO];
@@ -90,13 +91,6 @@
   return self;
 }
 
-- (void) dealloc 
-{
-  RELEASE(selectedClassName);
-
-  [super dealloc];
-}
-
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc
 {
   return AUTORELEASE([(GormClassEditor *)[self alloc] initWithDocument: doc]);
@@ -104,17 +98,32 @@
 
 - (void) setSelectedClassName: (NSString*)cn
 {
-  ASSIGN(selectedClassName, cn);
+  [self selectClass: cn];
+}
+
+- (NSString *)selectedClassName
+{
+  int row = [self selectedRow];
+  id  className = [self itemAtRow: row];
+
+  if ([className isKindOfClass: [GormOutletActionHolder class]])
+    {
+      className = [self itemBeingEdited];
+    }
+
+  return className;
 }
 
 //--- IBSelectionOwners protocol ---
 - (unsigned) selectionCount
 {
-  return (selectedClassName == nil)?0: 1;
+  return ([self selectedRow] == -1)?0:1;
 }
 
 - (NSArray*) selection
 {
+  NSString *selectedClassName = [self selectedClassName];
+
   // when asked for a selection, it returns a class proxy
   if (selectedClassName != nil) 
     {
@@ -135,20 +144,102 @@
 
 - (void) drawSelection
 {
-
 }
 
 - (void) makeSelectionVisible: (BOOL)flag
 {
+}
 
+// class selection...
+- (void) selectClass: (NSString *)className
+{
+  NSString	*currentClass = nil;
+  NSArray	*classes;
+  NSEnumerator	*en;
+  int		row = 0;
+  
+  if(className != nil)
+    {
+      if([className isEqual: @"CustomView"] || 
+	 [className isEqual: @"GormSound"] || 
+	 [className isEqual: @"GormImage"])
+	{
+	  return; // return only if it is a special class name...
+	}
+    }
+  else
+    {
+      return; // return if it is nil
+    }
+  
+  classes = [classManager allSuperClassesOf: className]; 
+  en = [classes objectEnumerator];
+
+  // open the items...
+  while ((currentClass = [en nextObject]) != nil)
+    {
+      [self expandItem: currentClass];
+    }
+  
+  // select the item...
+  row = [self rowForItem: className];
+  if (row != NSNotFound)
+    {
+      [self selectRow: row byExtendingSelection: NO];
+      [self scrollRowToVisible: row];
+    }
+
+  // set the editor...
+  [document setSelectionFromEditor: (id)self];
+}
+
+- (void) selectClassWithObject: (id)obj 
+{
+  NSString *customClass = [classManager customClassForObject: obj];
+
+  if(customClass != nil)
+    {
+      [self selectClass: customClass];
+    }
+  else if ([obj respondsToSelector: @selector(className)])
+    { 
+      [self selectClass: [obj className]];
+    }
 }
 
 - (void) selectObjects: (NSArray*)objects
 {
+  id obj = [objects objectAtIndex: 0];
+  [self selectClassWithObject: obj];
+}
+
+- (BOOL) currentSelectionIsClass
+{  
+  int i = [self selectedRow];
+  BOOL result = NO;
+  
+  if (i >= 0 && i <= ([self numberOfRows] - 1))
+    {
+      id object = [self itemAtRow: i];
+      if([object isKindOfClass: [NSString class]])
+	{
+	  result = YES;
+	}
+    }
+  return result;
+}
+
+- (void) editClass: (id)sender
+{
+  int	row = [self selectedRow];
+  if (row >= 0)
+    {
+      [document setSelectionFromEditor: (id)self];
+    }
 }
 @end
 
-@implementation GormDocument (NSOutlineViewDataSource)
+@implementation GormClassEditor (NSOutlineViewDataSource)
 
 // --- NSOutlineView dataSource ---
 - (id)        outlineView: (NSOutlineView *)anOutlineView 
@@ -202,7 +293,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		{
 		  BOOL removed;
 
-		  removed = [self removeConnectionsWithLabel: name
+		  removed = [document removeConnectionsWithLabel: name
 		    forClassNamed: [gov itemBeingEdited] isAction: YES];
 		  if (removed)
 		    {
@@ -234,8 +325,9 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		{
 		  BOOL removed;
 
-		  removed = [self removeConnectionsWithLabel: name
-		    forClassNamed: [gov itemBeingEdited] isAction: NO];
+		  removed = [document removeConnectionsWithLabel: name
+				      forClassNamed: [gov itemBeingEdited] 
+				      isAction: NO];
 		  if (removed)
 		    {
 		      [classManager replaceOutlet: name 
@@ -264,7 +356,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	{
 	  BOOL rename;
 
-	  rename = [self renameConnectionsForClassNamed: item toName: anObject];
+	  rename = [document renameConnectionsForClassNamed: item toName: anObject];
 	  if (rename)
 	    {
 	      int row = 0;
@@ -279,7 +371,6 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	      
 	      // scroll to the item..
 	      [gov scrollRowToVisible: row];
-	      // [gov selectRow: row byExtendingSelection: NO];
 	    }
 	}
     }

@@ -33,6 +33,7 @@
 #include "GormDocument.h"
 #include "GormPrivate.h"
 #include "GormSoundView.h"
+#include "GormSound.h"
 
 @implementation GormSoundInspector
 + (void) initialize

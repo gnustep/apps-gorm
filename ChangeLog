@@ -1,3 +1,25 @@
+2004-12-05 15:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added new classes to the makefile.
+	* GormClassEditor.m: Moved some methods from GormDocument to here.
+	* GormDocument.[hm]: Changes for new GormSound/GormImage methods.
+	Also modifications for changes in GormClassEditor.
+	* GormImage.[hm]: New files.
+	* GormImageEditor.m: Added imageForPath: call.
+	* GormImageInspector.m: Added imageForPath: call.
+	* GormInspectorsManager.m: Added GormImage/GormSound include
+	* GormPrivate.h: Added incudes
+	* GormSound.[hm]: New files.
+	* GormSoundEditor.m: Added includes and soundForPath call.
+	* GormSoundInspector.m: Added includes and soundForPath call.
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm: Made correction
+	to allow "Title" field to resize properly.
+	* Palettes/3Containers/GormNSTableViewInspector.gorm: Corrected
+	a slight problem with one of the boxes cutting off text on the
+	bottom.
+	* Resources/GormClassInspector.gorm: Made outlets table resize 
+	properly
+	
 2004-12-05 07:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomClassInspector.m: Set the max visible columns to 1 in 

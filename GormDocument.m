@@ -39,6 +39,8 @@
 #include <AppKit/NSNibLoading.h>
 #include <GNUstepGUI/GSNibTemplates.h>
 #include "NSView+GormExtensions.h"
+#include "GormSound.h"
+#include "GormImage.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -627,20 +629,6 @@ static NSImage  *fileImage = nil;
     }
 }
 
-// sound support
-- (GormSound *)_createSoundPlaceHolder: (NSString *)path
-{
-  NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  return [[GormSound alloc] initWithName: name path: path];
-}
-
-// image support
-- (GormImage *)_createImagePlaceHolder: (NSString *)path
-{
-  NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  return [[GormImage alloc] initWithName: name path: path];
-}
-
 - (void) beginArchiving
 {
   NSEnumerator		*enumerator;
@@ -699,70 +687,6 @@ static NSImage  *fileImage = nil;
   [filePrefsManager setClassVersions];
 }
 
-- (void) changeCurrentClass: (id)sender
-{
-  int	row = [classesView selectedRow];
-  if (row >= 0)
-    {
-      [classesView setSelectedClassName: [classesView itemAtRow: row]];
-      [self setSelectionFromEditor: (id)classesView];
-    } 
-}
-
-// class selection...
-- (void) selectClass: (NSString *)className
-{
-  NSString	*currentClass = nil;
-  NSArray	*classes;
-  NSEnumerator	*en;
-  int		row = 0;
-  
-  if(className != nil)
-    {
-      if([className isEqual: @"CustomView"] || 
-	 [className isEqual: @"GormSound"] || 
-	 [className isEqual: @"GormImage"])
-	{
-	  return; // return only if it is a special class name...
-	}
-    }
-  else
-    {
-      return; // return if it is nil
-    }
-  
-  classes = [[self classManager] allSuperClassesOf: className]; 
-  en = [classes objectEnumerator];
-
-  // open the items...
-  while ((currentClass = [en nextObject]) != nil)
-    {
-      [classesView expandItem: currentClass];
-    }
-  
-  // select the item...
-  row = [classesView rowForItem: className];
-  if (row != NSNotFound)
-    {
-      [classesView selectRow: row byExtendingSelection: NO];
-      [classesView scrollRowToVisible: row];
-    }
-}
-
-- (void) selectClassWithObject: (id)obj 
-{
-  NSString *customClass = [classManager customClassForObject: obj];
-
-  if(customClass != nil)
-    {
-      [self selectClass: customClass];
-    }
-  else if ([obj respondsToSelector: @selector(className)])
-    { 
-      [self selectClass: [obj className]];
-    }
-}
-
 // change the views...
 - (void) changeView: (id)sender
 {
@@ -805,7 +729,7 @@ static NSImage  *fileImage = nil;
 		    obj = newobj;
 		  }
 	      }
-	    [self selectClassWithObject: obj];
+	    [classesView selectClassWithObject: obj];
 	  }
       }
       break;
@@ -972,7 +896,7 @@ static NSImage  *fileImage = nil;
 	      i = [classesView rowForItem: newClassName]; 
 	      [classesView selectRow: i byExtendingSelection: NO];
 	      [classesView scrollRowToVisible: i];
-	      [self editClass: self];
+	      // [self editClass: self];
 	    }
 	  else
 	    {
@@ -1287,13 +1211,6 @@ static NSImage  *fileImage = nil;
     }
 
   return nil;
-}
-
-- (id) editClass: (id)sender
-{
-  [self changeCurrentClass: sender];
-
-  return self;
 }
 
 - (id) createClassFiles: (id)sender
@@ -1696,7 +1613,7 @@ static NSImage  *fileImage = nil;
 
       if(newClass != nil)
 	{
-	  [self selectClass: newClass];
+	  [classesView selectClass: newClass];
 	}
     }
 }
@@ -1809,19 +1726,12 @@ static NSImage  *fileImage = nil;
 
 - (BOOL) classIsSelected
 {
-  int i = [classesView selectedRow];
-  BOOL result = NO;
+  return [classesView currentSelectionIsClass];
+}
 
-  if (i >= 0 && i <= ([classesView numberOfRows] - 1))
-    {
-      id object = [classesView itemAtRow: i];
-      if([object isKindOfClass: [NSString class]])
-	{
-	  result = YES;
-	}
-    }
-
-  return result;
+- (void) selectClass: (NSString *)className
+{
+  [classesView selectClass: className];
 }
 
 // The sole purpose of this method is to clean up .gorm files from older
@@ -2156,7 +2066,7 @@ static NSImage  *fileImage = nil;
 		  
 		  NSDebugLog(@"Add the sound %@", file);
 		  soundPath = [documentPath stringByAppendingPathComponent: file];
-		  [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
+		  [soundsView addObject: [GormSound soundForPath: soundPath]];
 		}
 	    }
 	}
@@ -2178,7 +2088,7 @@ static NSImage  *fileImage = nil;
 		  id	placeHolder;
 		  
 		  imagePath = [documentPath stringByAppendingPathComponent: file];
-		  placeHolder = [self _createImagePlaceHolder: imagePath];
+		  placeHolder = [GormImage imageForPath: imagePath];
 		  if (placeHolder)
 		    {
 		      NSDebugLog(@"Add the image %@", file);
@@ -3544,7 +3454,7 @@ static NSImage  *fileImage = nil;
       {
         filename = [filenames objectAtIndex:i];
         NSDebugLog(@"Loading sound file: %@",filenames);
-        [soundsView addObject: [self _createSoundPlaceHolder: filename]];
+        [soundsView addObject: [GormSound soundForPath: filename]];
       }
       return self;
     }
@@ -3575,7 +3485,7 @@ static NSImage  *fileImage = nil;
       {
         filename = [filenames objectAtIndex:i];
         NSDebugLog(@"Loading image file: %@",filename);
-        [imagesView addObject: [self _createImagePlaceHolder: filename]];
+        [imagesView addObject: [GormImage imageForPath: filename]];
       }
       return self;
     }
