@@ -1,5 +1,11 @@
 2004-09-06 08:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Temporary fix for crash.   Corrects a 
+	problem with document deallocation, until I can find a more
+	permanent solution.
+
+2004-09-06 08:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* ClassInformation.plist: Added missing NSImageCell class
 	description.
 	* Palettes/3Containers/inspectors.m: Corrected issue with

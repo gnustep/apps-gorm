@@ -328,9 +328,15 @@ static NSImage  *fileImage = nil;
 	  filesOwner = [GormFilesOwner new];
 	  [self setName: @"NSOwner" forObject: filesOwner];
 	  [objectsView addObject: filesOwner];
+	  // RELEASE(filesOwner);
 	  firstResponder = [GormFirstResponder new];
 	  [self setName: @"NSFirst" forObject: firstResponder];
 	  [objectsView addObject: firstResponder];
+	  // RELEASE(firstResponder);
+
+	  // FIXME: Temporary fix...
+	  RETAIN(filesOwner);
+	  RETAIN(firstResponder);
 	  
 	  /*
 	   * Set image for this miniwindow.
