@@ -83,9 +83,14 @@ NSString *formatVersion(int version)
   [super dealloc];
 }
 
++ (int) currentVersion
+{
+  return appVersion(0,8,1); 
+}
+
 - (void) awakeFromNib
 {
-  version = appVersion(0,8,1); 
+  version = [GormFilePrefsManager currentVersion];
   [gormAppVersion setStringValue: formatVersion(version)];
   ASSIGN(targetVersionName, [[targetVersion selectedItem] title]);
   ASSIGN(archiveTypeName, [[archiveType selectedItem] title]);

@@ -37,4 +37,6 @@
 // set class versions
 - (void) setClassVersions;
 - (void) restoreClassVersions;
+
++ (int) currentVersion;
 @end

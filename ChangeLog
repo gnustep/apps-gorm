@@ -1,3 +1,13 @@
+2004-11-03 21:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added alert panel to loadDocument: so that
+	if the build version loaded from the .gorm file is greater
+	than the one of the running Gorm application, the user is
+	warned that this .gorm file was created with a newer version
+	of the application.
+	* GormFilePrefsManager.[hm]: Added +currentVersion to give
+	the current build number.
+	
 2004-10-26 21:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormControlEditor.m: Added code to call the superclass in

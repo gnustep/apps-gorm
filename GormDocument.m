@@ -1990,6 +1990,25 @@ static NSImage  *fileImage = nil;
 	    {
 	      NSLog(@"Loading gorm without data.info file.  Default settings will be assumed.");
 	    }
+	  else
+	    {
+	      int version = [filePrefsManager version];
+	      int currentVersion = [GormFilePrefsManager currentVersion];
+
+	      if(version > currentVersion)
+		{
+		  int retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
+					       _(@"The file being loaded was created with a newer build, continue?"), 
+					       _(@"OK"), 
+					       _(@"Cancel"), 
+					       NULL,
+					       NULL);
+		  if(retval != NSAlertDefaultReturn)
+		    {
+		      return nil;
+		    }
+		}
+	    }
 	}
       
       [classesView reloadData];
