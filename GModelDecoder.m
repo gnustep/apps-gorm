@@ -280,6 +280,7 @@ static BOOL gormFileOwnerDecoded;
   /* Gorm classes */
   [u decodeClassName: @"NSMenu"          asClassName: @"GormNSMenu"];
   [u decodeClassName: @"NSWindow"        asClassName: @"GormNSWindow"];
+  [u decodeClassName: @"NSPanel"         asClassName: @"GormNSPanel"];
   [u decodeClassName: @"NSBrowser"       asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView"     asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];

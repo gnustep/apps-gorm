@@ -1152,6 +1152,7 @@ static NSImage	*classesImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
+  // if ([(id)NSApp selectionOwner] == anEditor)
   if ([(id<IBSelectionOwners>)NSApp selectionOwner] == anEditor)
     {
       [self resignSelectionForEditor: anEditor];
@@ -1214,7 +1215,7 @@ static NSImage	*classesImage = nil;
 	  NSDebugLog(@"WARNING anEditor = editor");
 	}
       [editor activate];
-      RELEASE(editor);
+      RELEASE((id)editor);
       return editor;
     }
   else if ([links count] == 0)
@@ -1241,7 +1242,7 @@ static NSImage	*classesImage = nil;
       if([template isKindOfClass: [GormNSWindowTemplate class]])
 	{
 	  BOOL isVisible = [self objectIsVisibleAtLaunch: template];
-	  [obj setContentView: [template contentView]];
+	  [(NSWindow *)obj setContentView: [template contentView]];
 	  [self setObject: template isVisibleAtLaunch: NO];
 	  [self setObject: obj isVisibleAtLaunch: isVisible];
 	}

@@ -231,7 +231,7 @@ static NSButtonType _buttonTypeForObject( id button )
   [self setFrame: [object frame] display: NO];
   [self _setStyleMask: [object styleMask]];
   [self setClassName: name];
-  [object setContentView: nil];
+  [(NSWindow *)object setContentView: nil];
   [self update];
   [object update];
 
@@ -985,7 +985,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
   [self setDelegate: self];
   [super finishLaunching];
-  NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
+  NSDebugLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 }
 
 - (void) handleNotification: (NSNotification*)notification
@@ -1020,18 +1020,20 @@ static NSButtonType _buttonTypeForObject( id button )
   NSMutableDictionary *d;
   
   d = [NSMutableDictionary dictionaryWithCapacity: 8];
-  [d setObject: @"Gorm" forKey: @"ApplicationName"];
+  [d setObject: @"Gorm" 
+     forKey: @"ApplicationName"];
   [d setObject: @"GNUstep Graphical Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [d setObject: @"Gorm 0.2.5" forKey: @"ApplicationRelease"];
-  [d setObject: @"0.2.5 Dec 2002" forKey: @"FullVersionID"];
+  [d setObject: @"Gorm 0.2.5" 
+     forKey: @"ApplicationRelease"];
+  [d setObject: @"0.2.5 Dec 2002" 
+     forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObjects: @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
 			 @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
 			 nil]
      forKey: @"Authors"];
-  //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
-  [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc."
+  [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc."
      forKey: @"Copyright"];
   [d setObject: @"Released under the GNU General Public License 2.0"
      forKey: @"CopyrightDescription"];
