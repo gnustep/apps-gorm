@@ -6,7 +6,7 @@ Source: ftp://ftp.gnustep.org/pub/gnustep/dev-apps/%{gs_name}-%{gs_version}.tar.
 Requires: gnustep-gui
 
 %description 
-Gorm is an acronym for GNUstep/Graphic Object Relationship modeler.  
+Gorm is an acronym for GNUstep/Graphical Object Relationship Modeler.  
 It is a clone of the NeXTstep `Interface Builder' application for GNUstep.
 With Gorm, a developer can build an interface very quickly and easily with
 no code. 

@@ -1,3 +1,10 @@
+2004-12-23 06:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Fix for issue when loading from gmodel.
+	Corrected _refreshView: and searchForClass: so that if list is nil,
+	the selection isn't set.
+	* Gorm.spec.in: Minor correction.
+
 2004-12-19 09:05 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: Added [super init] call to

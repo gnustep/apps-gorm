@@ -334,7 +334,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [classField setBackgroundColor: ((isEditable && !isFirstResponder)?[NSColor whiteColor]:[NSColor lightGrayColor])];
 
   // select the parent class
-  if(index != NSNotFound)
+  if(index != NSNotFound && list != nil)
     {
       [parentClass selectRow: index byExtendingSelection: NO];
       [parentClass scrollRowToVisible: index];
@@ -460,7 +460,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   int index = [list indexOfObject: stringValue];
 
   NSLog(@"Search... %@",[searchText stringValue]);
-  if(index != NSNotFound && [stringValue isEqualToString: @"FirstResponder"] == NO)
+  if(index != NSNotFound && list != nil && 
+     [stringValue isEqualToString: @"FirstResponder"] == NO)
     {
       // select the parent class
       [parentClass selectRow: index byExtendingSelection: NO];
