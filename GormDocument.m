@@ -774,7 +774,8 @@ static NSImage	*classesImage = nil;
   GormClassManager *cm = [self classManager];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
   NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
-  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :("];
+  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *categoryStopSet = [NSCharacterSet characterSetWithCharactersInString: @" ("];
   NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
@@ -827,12 +828,34 @@ static NSImage	*classesImage = nil;
 			intoString: NULL];
 	  [classScanner scanUpToString: @"}"
 			intoString: &ivarString];
-	  [classScanner scanUpToString: @"@end"
-			intoString: &methodString];
-	  NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
-		     superClassName);
 
 	  category = (ivarString == nil);
+	  if(!category)
+	    {
+	      [classScanner scanUpToString: @"@end"
+			    intoString: &methodString];
+	      NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
+			 superClassName);
+	    }
+	  else
+	    {
+	      NSDebugLog(@"A CATEGORY");
+	      classScanner = [NSScanner scannerWithString: classString];
+	      [classScanner scanString: @"@interface"
+			    intoString: NULL];
+	      [classScanner scanUpToCharactersFromSet: categoryStopSet
+			    intoString: &className];
+	      [classScanner scanString: @"("
+			    intoString: NULL];
+	      [classScanner scanUpToCharactersFromSet: superClassStopSet
+			    intoString: &superClassName];
+	      [classScanner scanString: @")"
+			    intoString: NULL];
+	      [classScanner scanUpToString: @"@end"
+			    intoString: &methodString];
+	      NSDebugLog(@"method String %@",methodString);
+	    }
+
 
 	  // if its' not a category and it's known, ask before proceeding...
 	  if([cm isKnownClass: className] && !category)
@@ -960,7 +983,7 @@ static NSImage	*classesImage = nil;
 	     [cm isCustomClass: className] && category) 
 	    {
 	      [cm addActions: actions forClassNamed: className];
-	      [cm addOutlets: actions forClassNamed: className];
+	      [cm addOutlets: outlets forClassNamed: className];
 	      result = YES;
 	    }
 	  else 
