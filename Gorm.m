@@ -529,9 +529,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.5.2 (Beta)" 
+  [dict setObject: @"Gorm 0.5.4 (Beta)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.5.2 Dec 13 2003" 
+  [dict setObject: @"0.5.4 Jan 06 2004" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
@@ -574,7 +574,22 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
     }
   else
     {
+      NSDictionary *nameTable = [(id<IBDocuments>)doc nameTable];
+      NSEnumerator *enumerator = [nameTable keyEnumerator];
+      NSString *key = nil;
+
+      // order everything front.
       [[doc window] makeKeyAndOrderFront: self];
+
+      // the load is completed, awaken all of the elements.
+      while ((key = [enumerator nextObject]) != nil)
+	{
+	  id o = [nameTable objectForKey: key];
+	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
+	    {
+	      [o awakeFromDocument: doc];
+	    }
+	}
     }
 }
 

@@ -44,18 +44,6 @@
 }
 @end
 
-/*
-@implementation NSMenuItem (IBObjectAdditions)
-- (void)awakeFromDocument: (id <IBDocuments>)doc
-{
-  NSLog(@"In here");
-  // [self setState: NSOnState];
-  // [self setState: NSOffState];
-  
-}
-@end
-*/
-
 @interface NSNibControlConnector (GormExtension)
 - (BOOL) isEqual: (id)object;
 @end
@@ -2131,6 +2119,7 @@ static NSImage	*classesImage = nil;
 
   NSDebugLog(@"nameTable = %@",[c nameTable]);
 
+  /*
   enumerator = [[c nameTable] keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -2140,6 +2129,7 @@ static NSImage	*classesImage = nil;
 	  [o awakeFromDocument: self];
 	}
     }
+  */
 
   // this is the last thing we should do...
   [nc postNotificationName: IBDidOpenDocumentNotification

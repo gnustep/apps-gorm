@@ -133,6 +133,21 @@
 {
   return @"GormMenuItemAttributesInspector";
 }
+
+- (void)awakeFromDocument: (id <IBDocuments>)doc
+{
+  NSMenu *menu = [self menu];
+  if(menu != nil)
+    {
+      if([menu supermenu] != nil)
+	{
+	  // NSLog(@"Menu = %@",menu);
+	  // [menu display];
+	  [menu close];
+	  [menu closeTransient];
+	}
+    }
+}
 @end
 
 @interface GormMenuItemAttributesInspector : IBInspector

@@ -423,7 +423,12 @@
 	  [[[edited menuRepresentation] window] setFrameTopLeftPoint: tl];
 	}
 
-      [edited display];
+      // display the main menu only.
+      if([edited supermenu] == nil)
+	{
+	  [edited display];
+	}
+
       return NO;
     }
   return YES;

@@ -1,3 +1,13 @@
+2004-01-11 13:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Removed awakeFromDocument code and moved it to
+	Gorm.m so that awakeFromDocument is called after all initialization is
+	done.
+	* Gorm.m: Added loop in open: to awake all objects in the nametable
+	after loading.
+	* Palettes/0Menus/GSMenuInspectors.m: Added code to close all of
+	the uneeded menus upon loading.  This corrects Report #6467.
+	
 2004-01-06 01:12 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument attachObject:] added logic
