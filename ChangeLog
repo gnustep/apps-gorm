@@ -1,3 +1,9 @@
+2004-12-12 15:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Corrected problem in -outlineView:
+	shouldEditTableColumn:item: to prevent editing of FirstResponder
+	name in the class editor.
+
 2004-12-12 14:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Implemented new methods.

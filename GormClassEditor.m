@@ -226,8 +226,10 @@
 	}
       else
 	{
-	  // beep to inform the user of this error.
-	  NSBeep();
+	  // inform the user of this error.
+	  NSRunAlertPanel(_(@"Cannot instantiate"), 
+			  _(@"FirstResponder cannot be instantiated."),
+			  nil, nil, nil);
 	}
     }
 }
@@ -612,7 +614,8 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   if (tableColumn == [gov outlineTableColumn])
     {
       NSDebugLog(@"outline table col");
-      if (![item isKindOfClass: [GormOutletActionHolder class]])
+      if (![item isKindOfClass: [GormOutletActionHolder class]] &&
+	  ![item isEqualToString: @"FirstResponder"])
 	{
 	  result = [classManager isCustomClass: item];
 	  [self editClass];
