@@ -1,3 +1,8 @@
+2004-05-10 11:58 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Update version to 0.7.7 (Alpha) to avoid confusion between
+	users using the release and users using CVS.
+	
 2004-05-10 09:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.7.6

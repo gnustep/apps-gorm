@@ -244,7 +244,8 @@ static BOOL gormFileOwnerDecoded;
       NSString *superClass = nil;
       BOOL added = NO;
 
-      if([object isKindOfClass: [GormCustomView class]])
+      if(superClass == nil && 
+	 [object isKindOfClass: [GormCustomView class]])
 	{
 	  superClass = @"NSView";
 	}
@@ -369,7 +370,7 @@ static BOOL gormFileOwnerDecoded;
 
       source = [self connectionObjectForObject: [con source]];
       dest   = [self connectionObjectForObject: [con destination]];
-      NSLog(@"connector = %@",con);
+      NSDebugLog(@"connector = %@",con);
       if ([[con className] isEqual: @"IMOutletConnector"]) // We don't link the gmodel library at compile time...
 	{
 	  newcon = AUTORELEASE([[NSNibOutletConnector alloc] init]);
@@ -391,8 +392,8 @@ static BOOL gormFileOwnerDecoded;
 	    }	  
 	}
       
-      NSLog(@"conn = %@  source = %@ dest = %@ label = %@, src name = %@ dest name = %@", newcon, source, dest, 
-	    [con label], [source className], [dest className]);
+      NSDebugLog(@"conn = %@  source = %@ dest = %@ label = %@, src name = %@ dest name = %@", newcon, source, dest, 
+		 [con label], [source className], [dest className]);
       [newcon setSource: source];
       [newcon setDestination: dest];
       [newcon setLabel: [con label]];
