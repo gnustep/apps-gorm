@@ -48,9 +48,6 @@
   self = [super init];
   if (self != nil)
     {
-      // initialize all member variables...
-      // none...
-
       // load the gui...
       if (![NSBundle loadNibNamed: @"GormSoundInspector"
 		     owner: self])
@@ -58,54 +55,29 @@
 	  NSLog(@"Could not open gorm GormSoundInspector");
 	  return nil;
 	}
-      else
-	{
-	  [[NSNotificationCenter defaultCenter] 
-	    addObserver: self
-	    selector: @selector(handleNotification:)
-	    name: IBSelectionChangedNotification
-	    object: nil];
-	}
     }
   return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(_currentSound);
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   [super dealloc];
 }
 
-- (void) handleNotification: (NSNotification*)aNotification
+- (void) setObject: (id)anObject
 {
-  id selection = [[aNotification object] selection];
-  id sndobject = nil;
-
-  // get the sound object...
-  if(selection != nil)
-    {
-      if([selection count] > 0)
-	{
-	  sndobject = [selection objectAtIndex: 0];
-	}
-    }
-  else
-    {
-      _currentSound = nil;
-    }
-
   // if its not nil, load it...
-  if(sndobject != nil)
+  if(anObject != nil)
     {
-      if([sndobject isKindOfClass: [GormSound class]])
+      if([anObject isKindOfClass: [GormSound class]])
 	{
-	  NSDebugLog(@"Sound inspector notified: %@",sndobject);
-	  RELEASE(_currentSound);
-	  _currentSound = [[NSSound alloc] initWithContentsOfFile: [sndobject soundPath]
-					   byReference: YES];
-	  [soundView setSound: _currentSound];
-	  RETAIN(_currentSound);
+	  id snd;
+	  NSDebugLog(@"Sound inspector notified: %@",anObject);
+	  snd = AUTORELEASE([[NSSound alloc] initWithContentsOfFile: [anObject soundPath]
+					     byReference: YES]);
+	  [super setObject: snd];
+	  [soundView setSound: snd];
 	  NSDebugLog(@"Loaded sound");
 	}
     }
@@ -114,24 +86,24 @@
 - (void) stop: (id)sender
 {
   NSDebugLog(@"Stop");
-  [_currentSound stop];
+  [object stop];
 }
 
 - (void) play: (id)sender
 {
   NSDebugLog(@"Play");
-  [_currentSound play];
+  [object play];
 }
 
 - (void) pause: (id)sender
 {
   NSDebugLog(@"Pause");
-  [_currentSound pause];
+  [object pause];
 }
 
 - (void) record: (id)sender
 {
   NSDebugLog(@"Record");
-  // [_currentSound record];
+  // [object record];
 }
 @end

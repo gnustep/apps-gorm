@@ -1481,11 +1481,16 @@ static NSImage	*classesImage = nil;
   [connections removeObjectsInArray: editors];
   [editors removeAllObjects];
 
-  // close all of the editors & get all of the objects out.
-  [openEditors makeObjectsPerformSelector: @selector(close)]; 
+  // Close all of the editors & get all of the objects out.
+  // copy the array, since the close method calls editor:didCloseForObject:
+  // and would effect the array during the execution of 
+  // makeObjectsPerformSelector:.
+  [editors addObjectsFromArray: openEditors];
+  [editors makeObjectsPerformSelector: @selector(close)]; 
   [openEditors removeAllObjects];
+  [editors removeAllObjects];
 
-  // close the editors in the document window...
+  // Close the editors in the document window...
   // don't worry about the "classEditor" since it's not really an
   // editor.
   [objectsView close];

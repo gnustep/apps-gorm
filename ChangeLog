@@ -1,3 +1,16 @@
+2004-05-14 22:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument _closeAllEditors] 
+	mocified to use secondary array.  The close method 
+	causes the editor to call editor:didCloseForObject: which
+	modifies the openEditors array while the "close" message
+	is being sent to all of the objects.  To avoid any issues
+	with the array potentially being changed while this is happening
+	I add all of the objects to another array execute the method
+	on all objects of that and empty both the original and the copy.
+	* GormSoundInspector.m: Corrected an issue where the sound
+	wasn't immediately being set into the inspector.
+	
 2004-05-14 17:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormButtonEditor.[hm]: Moved to the Controls palette, removed from
