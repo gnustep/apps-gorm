@@ -1,3 +1,31 @@
+2002-10-13  Adam Fedor  <fedor@gnu.org>
+
+	* ClassInformation.plist: Added NSDocumentController and
+	NSDocument methods to FirstResponder (openDocument,
+	revertDocumentToSaved:, saveAllDocuments:, saveDocument:,
+	saveDocumentAs:, saveDocumentTo:).
+
+	* GormInspectorsManager.m (-setCurrentInspector:): Show empty
+	inspector only when count = 0. If no inspector name is
+	returned by object, show GormNotApplicableInspector.
+
+	* GormMatrixEditor.m (-mouseDown:): Edit titles of forms, etc
+	on double-click.
+
+	* Palettes/0Menus/GormMenuEditor.m (-mouseDown:): Move variables
+	to beginning of block for gcc 2.X
+
+	* Palettes/0Menus/main.m (-finishInstantiate): Change actions
+	to appropriate NSDocument methods.
+
+	* Palettes/2Controls/inspectors.m ([NSStepper
+	-sizeInspectorClassName]): Remove so normal size inspector is
+	used.
+
+	* Palettes/4Data/inspectors.m ([GormImageViewAttributesInspector
+	-_setValuesFromControl:]): Show error panel if entered image file
+	is not found (Needs proper image handling).
+
 2002-10-13  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Implemented methods necessary to read the

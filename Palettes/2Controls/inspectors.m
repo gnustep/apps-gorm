@@ -997,11 +997,6 @@
   return @"GormStepperAttributesInspector";
 }
 
-- (NSString*) sizeInspectorClassName
-{
-  return nil;
-}
-
 @end
 
 @interface GormStepperAttributesInspector : IBInspector

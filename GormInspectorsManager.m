@@ -391,7 +391,7 @@
 	NSStringFromClass([obj class])]];
     }
 
-  if (count == 0 || count > 1)
+  if (count == 0)
     {
       newInspector = @"GormEmptyInspector";
     }
@@ -425,6 +425,9 @@
 	  default: newInspector = [obj classInspectorClassName]; break;
 	}
     }
+
+  if (newInspector == nil)
+    newInspector = @"GormNotApplicableInspector";
 
   if ([oldInspector isEqual: newInspector] == NO)
     {

@@ -137,25 +137,25 @@
    */
   m = [GormNSMenu new];
   [m addItemWithTitle: @"Open..." 
-	       action: @selector(open:)
+	       action: @selector(openDocument:)
 	keyEquivalent: @"o"];
   [m addItemWithTitle: @"New" 
-	       action: @selector(new:)
+	       action: @selector(newDocument:)
 	keyEquivalent: @"n"];
   [m addItemWithTitle: @"Save..." 
-	       action: @selector(save:)
+	       action: @selector(saveDocument:)
 	keyEquivalent: @"s"];
   [m addItemWithTitle: @"Save As..." 
-	       action: @selector(saveAs:)
+	       action: @selector(saveDocumentAs:)
 	keyEquivalent: @"S"];
   [m addItemWithTitle: @"Save To..." 
-	       action: @selector(saveTo:)
+	       action: @selector(saveDocumentTo:)
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Save All" 
-	       action: @selector(saveAll:)
+	       action: @selector(saveAllDocuments:)
 	keyEquivalent: @""];
   [m addItemWithTitle: @"revert To Saved" 
-	       action: @selector(revertToSaved:)
+	       action: @selector(revertDocumentToSaved:)
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Close" 
 	       action: @selector(close:) 

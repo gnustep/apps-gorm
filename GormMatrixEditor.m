@@ -325,6 +325,11 @@ static BOOL done_editing;
 				  column: col];
 	
 	[document setSelectionFromEditor: self];
+	if (selected != nil && ([theEvent clickCount] == 2) )
+	  {
+	    [self editTitleWithEvent: theEvent];
+	    return;
+	  }
 	
 	[self setNeedsDisplay: YES];
       }
@@ -337,35 +342,6 @@ static BOOL done_editing;
       }
   }
 }
-
-/*
-- (void) mouseDown: (NSEvent*)theEvent
-{
-  int	row, col;
-  id	obj;
-  NSPoint loc = [theEvent locationInWindow];
-
-  //
-  // Double-click on a cell allows one to edit the cell title
-  //
-  if (selected != nil && ([theEvent clickCount] == 2) )
-    {
-      [self editTitleWithEvent: theEvent];
-      return;
-    }
-
-  // Find which cell the mouse is in
-  loc = [matrix convertPoint: loc fromView: nil];
-  if ([matrix getRow: &row column: &col forPoint: loc] == NO)
-    return;
-
-  obj = [matrix cellAtRow: row column: col];
-  if (obj != nil && obj != selected)
-    {
-      [self selectObjects: [NSArray arrayWithObject: obj]];
-    }
-}
-*/
 
 - (void) makeSelectionVisible: (BOOL)flag
 {

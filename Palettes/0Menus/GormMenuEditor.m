@@ -142,12 +142,14 @@
 
 	  if ([theEvent clickCount] == 2)
 	    {
+	      id cell;
+	      NSTextField *tf;
+	      NSRect frame;
 	      [self makeSelectionVisible: NO];
 	      [self selectObjects: [NSArray array]];
-	      id cell = [rep menuItemCellForItemAtIndex: pos];
-	      NSTextField *tf = 
-		[[NSTextField alloc] initWithFrame: [self bounds]];
-	      NSRect frame = (NSRect)[cell titleRectForBounds:
+	      cell = [rep menuItemCellForItemAtIndex: pos];
+	      tf = [[NSTextField alloc] initWithFrame: [self bounds]];
+	      frame = (NSRect)[cell titleRectForBounds:
 					     [rep rectOfItemAtIndex: pos]];
 	      NSLog(@"cell %@ (%@)", cell, [cell stringValue]);
 	      frame.origin.y += 3;

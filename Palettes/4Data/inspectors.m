@@ -183,7 +183,27 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 {
   if (control == iconField)
     {
-      [object setImage: [NSImage imageNamed: VSTR([control stringValue])] ];
+      NSString *name = [control stringValue];
+      NSImage *image;
+      if (name == nil || [name isEqual: @""])
+	{
+	  [object setImage: nil];
+	  return;
+	}
+      image = [NSImage imageNamed: name];
+      if (image == nil)
+	{
+	  image = [[NSImage alloc] initByReferencingFile: name];
+	  if (image)
+	    [image setName: name];
+	}
+      if (image == nil)
+	{
+	  NSRunAlertPanel(@"Gorm ImageView", @"Cannot find image", 
+			  @"OK", NULL, NULL);
+	  return;
+	}	
+      [object setImage: image ];
     }
   else  if (control == borderMatrix)
     {
