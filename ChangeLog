@@ -1,3 +1,27 @@
+2004-06-28 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: -[Gorm testInterface:] changed awakeWithContext: call
+	to use new signature.
+	* GormDocument.m: [GormDocument rebuildObjToNameMapping] 
+	added logic to add all of the objects in the topLevelObjects
+	set to the objects view.  Modified 
+	[GormDocument attachObject:toParent:] so that any top level
+	object which is attached, such as a window, the main, menu,
+	or a controller is automatically added to the topLevelObjects
+	set.  Modified [GormDocument loadDocument:] so that the
+	topLevelObjects set is properly merged into the current 
+	document's data structures.  [GormDocument setupDefaults:]
+	removed explicit call to [GormDocument setName:forObject:]
+	since the attachObject:toParent: method automatically makes
+	the new menu in a .gorm which doesn't have any menus the
+	main menu and adds it to the topLevelItems array.
+	* GormPalettesManager.m: Removed some of the palette prefs
+	code for now so I could concentrate on the version update.
+	* GormSoundView.m: Commented out currently unused function.
+	* Resources/Gorm.gorm: Updated to a version 1 gorm file.
+	This prevent someone from running the new Gorm with the old
+	gnustep which doesn't contain the recent changes.  
+	
 2004-06-27 08:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: -[Gorm testInterface:] removed NSWindowsMenu and

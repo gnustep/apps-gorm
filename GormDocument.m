@@ -491,10 +491,11 @@ static NSImage	*classesImage = nil;
   /*
    * Add top-level objects to objectsView and open their editors.
    */
-  if ([anObject isKindOfClass: [NSWindow class]] == YES ||
-      [anObject isKindOfClass: [GSNibItem class]] == YES)
+  if ([anObject isKindOfClass: [NSWindow class]] ||
+      [anObject isKindOfClass: [GSNibItem class]])
     {
       [objectsView addObject: anObject];
+      [topLevelObjects addObject: anObject];
       [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
@@ -515,6 +516,7 @@ static NSImage	*classesImage = nil;
 	{
 	  [self setName: @"NSMenu" forObject: anObject];
 	  [objectsView addObject: anObject];
+	  [topLevelObjects addObject: anObject];
 	  isMainMenu = YES;
 	}
       else
@@ -1076,6 +1078,12 @@ static NSImage	*classesImage = nil;
     || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
       [objectsView removeObject: anObject];
+    }
+
+  // if it's in the top level items array, remove it.
+  if([topLevelObjects containsObject: anObject])
+    {
+      [topLevelObjects removeObject: anObject];
     }
 
   // eliminate it from being the windows/services menu, if it's being detached.
@@ -1961,10 +1969,11 @@ static NSImage	*classesImage = nil;
        */
       [nt removeObjectForKey: @"NSOwner"];
       [nt removeObjectForKey: @"NSFirst"];
+      [topLevelObjects addObjectsFromArray: [[c topLevelObjects] allObjects]];
       [connections addObjectsFromArray: [c connections]];
       [nameTable addEntriesFromDictionary: nt];
       [self rebuildObjToNameMapping];
-      
+
       // repair the .gorm file, if needed.
       if(repairFile == YES)
 	{
@@ -2079,6 +2088,7 @@ static NSImage	*classesImage = nil;
 {
   NSEnumerator  *enumerator;
   NSString	*name;
+  id            o;
 
   NSDebugLog(@"------ Rebuilding object to name mapping...");
   NSResetMapTable(objToName);
@@ -2087,32 +2097,23 @@ static NSImage	*classesImage = nil;
   enumerator = [[nameTable allKeys] objectEnumerator];
   while ((name = [enumerator nextObject]) != nil)
     {
-      id	obj = [nameTable objectForKey: name];
+      id obj = [nameTable objectForKey: name];
       
       NSDebugLog(@"%@ --> %@",name, obj);
-      NSMapInsert(objToName, (void*)obj, (void*)name);
-      if ([obj isKindOfClass: [NSMenu class]] == YES)
-	{
-	  if ([name isEqual: @"NSMenu"] == YES)
-	    {
-	      NSRect	frame = [[NSScreen mainScreen] frame];
 
-	      [[obj window] setFrameTopLeftPoint:
-		NSMakePoint(1, frame.size.height-200)];
-	      [[self openEditorForObject: obj] activate];
-	      [objectsView addObject: obj];
-	    }
-	}
-      else if ([obj isKindOfClass: [NSWindow class]] == YES)
+      NSMapInsert(objToName, (void*)obj, (void*)name);
+      if (([obj isKindOfClass: [NSMenu class]] && [name isEqual: @"NSMenu"]) || [obj isKindOfClass: [NSWindow class]])
 	{
-	  [objectsView addObject: obj];
 	  [[self openEditorForObject: obj] activate];
 	}
-      else if ([obj isKindOfClass: [GSNibItem class]] == YES
-	&& [obj isKindOfClass: [GormCustomView class]] == NO)
-	{
-	  [objectsView addObject: obj];
-	}
+    }
+
+  // All of the entries in the items array are "top level items" 
+  // which should be visible in the object's view. 
+  enumerator = [topLevelObjects objectEnumerator];
+  while((o = [enumerator nextObject]) != nil)
+    {
+      [objectsView addObject: o];
     }
 }
 
@@ -2125,8 +2126,8 @@ static NSImage	*classesImage = nil;
   NSArray	*fileTypes;
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
-  NSString *pth = [[NSUserDefaults standardUserDefaults] 
-		    objectForKey:@"OpenDir"];
+  NSString      *pth = [[NSUserDefaults standardUserDefaults] 
+			 objectForKey:@"OpenDir"];
   
   fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
   [oPanel setAllowsMultipleSelection: NO];
@@ -2137,9 +2138,9 @@ static NSImage	*classesImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSString *filename = [oPanel filename];
-      NSString *ext      = [filename pathExtension];
-      BOOL uniqueName = [(Gorm *)NSApp documentNameIsUnique: filename];
+      NSString *filename  = [oPanel filename];
+      NSString *ext       = [filename pathExtension];
+      BOOL     uniqueName = [(Gorm *)NSApp documentNameIsUnique: filename];
 
       if(uniqueName)
 	{
@@ -2380,8 +2381,9 @@ static NSImage	*classesImage = nil;
       [aMenu addItemWithTitle: _(@"Quit") 
 		       action: @selector(terminate:)
 		keyEquivalent: @"q"];
-      [self setName: @"NSMenu" forObject: aMenu];
-      [self attachObject: aMenu toParent: nil];
+
+      // the first menu attached becomes the main menu.
+      [self attachObject: aMenu toParent: nil]; 
       [objectsView addObject: aMenu];
       [[aMenu window] setFrameTopLeftPoint: origin];
       RELEASE(aMenu);

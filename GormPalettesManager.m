@@ -264,22 +264,10 @@ static NSImage	*dragImage = nil;
   NSRect	 scrollRect = {{0, 192}, {272, 74}};
   NSRect	 dragRect = {{0, 0}, {272, 192}};
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSArray        *builtinPalettes = [defaults arrayForKey: BUILTIN_PALETTES];
-  NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
+  // NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  // NSArray        *builtinPalettes = [defaults arrayForKey: BUILTIN_PALETTES];
+  // NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
 
-  // set the default, if not already set...
-  if(builtinPalettes == nil)
-    {
-      builtinPalettes = [NSArray arrayWithObjects: @"0Menus.palette",
-				 @"1Windows.palette",
-				 @"2Controls.palette",
-				 @"3Containers.palette",
-				 @"4Data.palette", nil];
-      [defaults setObject: builtinPalettes forKey: BUILTIN_PALETTES];
-    }
-
-  NSLog(@"builtin = %@",builtinPalettes);
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained
@@ -321,16 +309,25 @@ static NSImage	*dragImage = nil;
 
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"palette"
 					     inDirectory: nil];
-  if ([array count] > 0)
+   if ([array count] > 0)
     {
       unsigned	index;
 
       array = [array sortedArrayUsingSelector: @selector(compare:)];
+
+      /*
+      if(userPalettes != nil)
+	{
+	  [array addObjectFromArray: userPalettes];
+	}
+      */
+
       for (index = 0; index < [array count]; index++)
 	{
 	  [self loadPalette: [array objectAtIndex: index]];
 	}
     }
+
   /*
    * Select initial palette - this should be the standard controls palette.
    */

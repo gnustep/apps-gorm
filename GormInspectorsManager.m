@@ -1006,7 +1006,6 @@ selectCellWithString: (NSString*)title
   self = [super init];
   if (self != nil)
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSView		*contents;
       NSSplitView	*split;
       NSRect		rect;

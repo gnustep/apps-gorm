@@ -42,6 +42,7 @@
 }
 @end
 
+/*
 static float findMax(NSData *data)
 {
   float max = 0.0;
@@ -61,6 +62,7 @@ static float findMax(NSData *data)
 
   return max;
 }
+*/
 
 @implementation GormSoundView
 - (void) setSound: (NSSound *)sound
