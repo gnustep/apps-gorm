@@ -1,5 +1,14 @@
 2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
 
+	* Gorm.m : Add Localization
+	* GormDocument.m : Ditto
+	* GormFilesOwner.m : Ditto
+	* GormInspectorsManager.m : Ditto
+	* GormObjectInspector.m : Ditto
+	* GormPalettesManager.m : Ditto
+
+2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
+
 	* Gorm.m : refactored newApplication, newEmpty, newPalettes,newInspector.
 	new method : newGormDocument
 	Add inteligent window placement (cascade)

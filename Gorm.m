@@ -588,8 +588,8 @@ static NSButtonType _buttonTypeForObject( id button )
    if (edited == YES)
      {
        int	result;
-       result = NSRunAlertPanel(NULL, @"There are edited windows",
- 	@"Review Unsaved", @"Quit Anyway", @"Cancel");
+       result = NSRunAlertPanel(NULL, _(@"There are edited windows"),
+				_(@"Review Unsaved"),_( @"Quit Anyway"), _(@"Cancel"));
       if (result == NSAlertDefaultReturn) 
 	{ 	  
 	  enumerator = [ documents objectEnumerator];
@@ -707,12 +707,12 @@ static NSButtonType _buttonTypeForObject( id button )
  					object:nil];
   if ( [guideLineMenuItem tag] == 0 ) 
     {
-      [guideLineMenuItem setTitle:@"Enable GuideLine"];
+      [guideLineMenuItem setTitle:_(@"Enable GuideLine")];
       [guideLineMenuItem setTag:1];
     }
   else if ( [guideLineMenuItem tag] == 1)
     {
-      [guideLineMenuItem setTitle:@"Disable GuideLine"];
+      [guideLineMenuItem setTitle:_(@"Disable GuideLine")];
       [guideLineMenuItem setTag:0];
     }
   
@@ -1328,7 +1328,7 @@ static NSButtonType _buttonTypeForObject( id button )
   id		o = [s objectAtIndex: 0];
   NSString	*n;
 
-  p = NSGetAlertPanel(@"Set Name", @"Name: ", @"OK", @"Cancel", nil);
+  p = NSGetAlertPanel(_(@"Set Name"), _(@"Name: "), _(@"OK"), _(@"Cancel"), nil);
   t = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
   [[p contentView] addSubview: t];
   [p makeFirstResponder: t];
@@ -1441,8 +1441,8 @@ static NSButtonType _buttonTypeForObject( id button )
 	{
           NSMenu	*testMenu;
 
-	  testMenu = [[NSMenu alloc] initWithTitle: @"Test"];
-	  [testMenu addItemWithTitle: @"Quit" 
+	  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
+	  [testMenu addItemWithTitle: _(@"Quit") 
 			      action: @selector(deferredEndTesting:)
 		       keyEquivalent: @"q"];	
 	  [self setMainMenu: testMenu];
@@ -1453,14 +1453,14 @@ static NSButtonType _buttonTypeForObject( id button )
           NSMenu	*testMenu = [self mainMenu];
 	  id		item;
 
-	  item = [testMenu itemWithTitle: @"Quit"];
+	  item = [testMenu itemWithTitle: _(@"Quit")];
 	  if (item != nil)
 	    {
 	      [item setAction: @selector(deferredEndTesting:)];
 	    }
 	  else
 	    {
-	      [testMenu addItemWithTitle: @"Quit" 
+	      [testMenu addItemWithTitle: _(@"Quit") 
 				  action: @selector(deferredEndTesting:)
 			   keyEquivalent: @"q"];	
 	    }

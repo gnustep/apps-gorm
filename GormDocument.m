@@ -911,11 +911,11 @@ static NSImage	*classesImage = nil;
 	  else
 	    {
 	      NSString *message = [NSString stringWithFormat: 
-		@"The class %@ already exists. Replace it?", className];	      
-	      int alert = NSRunAlertPanel(@"Problem adding class from header", 
+		_(@"The class %@ already exists. Replace it?"), className];	      
+	      int alert = NSRunAlertPanel(_(@"Problem adding class from header"), 
 					  message,
-					  @"Yes", 
-					  @"No", 
+					  _(@"Yes"), 
+					  _(@"No"), 
 					  nil);
 
 	      if (alert == NSAlertDefaultReturn)
@@ -928,8 +928,8 @@ static NSImage	*classesImage = nil;
 		  if (!result)
 		    {
 		      NSString *message = [NSString stringWithFormat: 
-			@"Could not replace class %@.", className];	      
-		      NSRunAlertPanel(@"Problem adding class from header", 
+			_(@"Could not replace class %@."), className];	      
+		      NSRunAlertPanel(_(@"Problem adding class from header"), 
 				      message,
 				      nil, 
 				      nil, 
@@ -1041,8 +1041,8 @@ static NSImage	*classesImage = nil;
       else
 	{
 	  NSString *message = [NSString stringWithFormat: 
-	    @"The class %@ has subclasses which must be removed", anitem];
-	  NSRunAlertPanel(@"Problem removing class", 
+	    _(@"The class %@ has subclasses which must be removed"), anitem];
+	  NSRunAlertPanel(_(@"Problem removing class"), 
 			  message,
 			  nil, nil, nil);
 	}
@@ -1091,7 +1091,7 @@ static NSImage	*classesImage = nil;
   
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
-  [sp setTitle: @"Save source file as..."];
+  [sp setTitle: _(@"Save source file as...")];
   if (documentPath == nil)
     {
       result = [sp runModalForDirectory: NSHomeDirectory() 
@@ -1110,7 +1110,7 @@ static NSImage	*classesImage = nil;
       NSString *headerName;
 
       [sp setRequiredFileType: @"h"];
-      [sp setTitle: @"Save header file as..."];
+      [sp setTitle: _(@"Save header file as...")];
       result = [sp runModalForDirectory: 
 		     [sourceName stringByDeletingLastPathComponent]
 		   file: 
@@ -1125,8 +1125,8 @@ static NSImage	*classesImage = nil;
 			     withName: sourceName
 			     and: headerName])
 	    {
-	      NSRunAlertPanel(@"Alert", 
-			      @"Could not create the class's file",
+	      NSRunAlertPanel(_(@"Alert"), 
+			      _(@"Could not create the class's file"),
 			      nil, nil, nil);
 	    }
 	  
@@ -1512,7 +1512,7 @@ static NSImage	*classesImage = nil;
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       [window setMinSize: [window frame].size];
-      [window setTitle: @"UNTITLED"];
+      [window setTitle: _(@"UNTITLED")];
 
       [window setDelegate: self];
 
@@ -1554,7 +1554,7 @@ static NSImage	*classesImage = nil;
 	  cell = [selectionView cellAtRow: 0 column: 0];
 	  [cell setTag: 0];
 	  [cell setImage: image];
-	  [cell setTitle: @"Objects"];
+	  [cell setTitle: _(@"Objects")];
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
@@ -1566,7 +1566,7 @@ static NSImage	*classesImage = nil;
 	  cell = [selectionView cellAtRow: 0 column: 1];
 	  [cell setTag: 1];
 	  [cell setImage: image];
-	  [cell setTitle: @"Images"];
+	  [cell setTitle: _(@"Images")];
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
@@ -1578,7 +1578,7 @@ static NSImage	*classesImage = nil;
 	  cell = [selectionView cellAtRow: 0 column: 2];
 	  [cell setTag: 2];
 	  [cell setImage: image];
-	  [cell setTitle: @"Sounds"];
+	  [cell setTitle: _(@"Sounds")];
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
@@ -1590,7 +1590,7 @@ static NSImage	*classesImage = nil;
 	  cell = [selectionView cellAtRow: 0 column: 3];
 	  [cell setTag: 3];
 	  [cell setImage: image];
-	  [cell setTitle: @"Classes"];
+	  [cell setTitle: _(@"Classes")];
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
@@ -1686,7 +1686,7 @@ static NSImage	*classesImage = nil;
       RELEASE(classesView);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
-      [[tableColumn headerCell] setStringValue: @"Classes"];
+      [[tableColumn headerCell] setStringValue: _(@"Classes")];
       [tableColumn setMinWidth: 190];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
@@ -1695,7 +1695,7 @@ static NSImage	*classesImage = nil;
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-      [[tableColumn headerCell] setStringValue: @"Outlet"];
+      [[tableColumn headerCell] setStringValue: _(@"Outlet")];
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
@@ -1704,7 +1704,7 @@ static NSImage	*classesImage = nil;
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
-      [[tableColumn headerCell] setStringValue: @"Action"];
+      [[tableColumn headerCell] setStringValue: _(@"Action")];
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
@@ -1924,8 +1924,8 @@ static NSImage	*classesImage = nil;
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
     {
-      NSRunAlertPanel(NULL, @"Could not unarchive document data", 
-		       @"OK", NULL, NULL);
+      NSRunAlertPanel(NULL, _(@"Could not unarchive document data"), 
+		       _(@"OK"), NULL, NULL);
       return nil;
     }
 
@@ -1947,9 +1947,9 @@ static NSImage	*classesImage = nil;
       s = [s stringByAppendingPathExtension: @"classes"];
       if (![classManager loadCustomClasses: s])
 	{
-	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
-	    @"You won't be able to edit connections on custom classes", 
-	    @"OK", NULL, NULL);
+	  NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+	    @"You won't be able to edit connections on custom classes"), 
+	    _(@"OK"), NULL, NULL);
 	}
     }
   else
@@ -1959,9 +1959,9 @@ static NSImage	*classesImage = nil;
       s = [aFile stringByAppendingPathComponent: @"data.classes"];
       if (![classManager loadCustomClasses: s]) 
 	{
-	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
-	    @"You won't be able to edit connections on custom classes", 
-	    @"OK", NULL, NULL);
+	  NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+	    @"You won't be able to edit connections on custom classes"), 
+			  _(@"OK"), NULL, NULL);
 	}
     }
 
@@ -2332,17 +2332,17 @@ static NSImage	*classesImage = nil;
 	}
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: @"My Window"]; 
+      [aWindow setTitle: _(@"My Window")]; 
       [self setName: @"My Window" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       [self setObject: aWindow isVisibleAtLaunch: YES];
       RELEASE(aWindow);
 
-      [aMenu setTitle: @"Main Menu"];
-      [aMenu addItemWithTitle: @"Hide" 
+      [aMenu setTitle: _(@"Main Menu")];
+      [aMenu addItemWithTitle: _(@"Hide") 
 		       action: @selector(hide:)
 		keyEquivalent: @"h"];	
-      [aMenu addItemWithTitle: @"Quit" 
+      [aMenu addItemWithTitle: _(@"Quit") 
 		       action: @selector(terminate:)
 		keyEquivalent: @"q"];
       [self setName: @"NSMenu" forObject: aMenu];
@@ -2366,7 +2366,7 @@ static NSImage	*classesImage = nil;
 					        defer: NO];
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: @"Inspector Window"];
+      [aWindow setTitle: _(@"Inspector Window")];
       [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       RELEASE(aWindow);
@@ -2383,7 +2383,7 @@ static NSImage	*classesImage = nil;
 					        defer: NO];
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: @"Palette Window"];
+      [aWindow setTitle: _(@"Palette Window")];
       [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       RELEASE(aWindow);
@@ -2742,8 +2742,8 @@ static NSImage	*classesImage = nil;
 
   if (archiveResult == NO)
     {
-      NSRunAlertPanel(NULL, @"Could not save document", 
-		       @"OK", NULL, NULL);
+      NSRunAlertPanel(NULL,_( @"Could not save document"), 
+		      _(@"OK"), NULL, NULL);
     }
   else
     {
@@ -2920,14 +2920,14 @@ static NSImage	*classesImage = nil;
 
       if (documentPath == nil)
 	{
-	  msg = @"Document 'UNTITLED' has been modified";
+	  msg = _(@"Document 'UNTITLED' has been modified");
 	}
       else
 	{
-	  msg = [NSString stringWithFormat: @"Document '%@' has been modified",
+	  msg = [NSString stringWithFormat: _(@"Document '%@' has been modified"),
 	    [documentPath lastPathComponent]];
 	}
-      result = NSRunAlertPanel(NULL, msg, @"Save", @"Don't Save", @"Cancel");
+      result = NSRunAlertPanel(NULL, msg, _(@"Save"), _(@"Don't Save"), _(@"Cancel"));
 
       if (result == NSAlertDefaultReturn) 
 	{ 	  
@@ -3042,8 +3042,8 @@ static NSImage	*classesImage = nil;
 	  title = [NSString stringWithFormat:
 	    @"Modifying %@",(action==YES?@"Action":@"Outlet")];
 	  msg = [NSString stringWithFormat:
-	    @"This will break all connections to '%@'.  Continue?", name];
-	  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+			    _(@"This will break all connections to '%@'.  Continue?"), name];
+	  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
 
 	  if (retval == NSAlertDefaultReturn)
 	    {
@@ -3068,14 +3068,14 @@ static NSImage	*classesImage = nil;
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   int retval = -1;
-  NSString *title = [NSString stringWithFormat: @"Modifying Class"];
+  NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
   NSString *msg;
 
-  msg = [NSString stringWithFormat: @"This will break all connections to "
-    @"actions/outlets to instances of class '%@'.  Continue?", className];
+  msg = [NSString stringWithFormat: _(@"This will break all connections to "
+    @"actions/outlets to instances of class '%@'.  Continue?"), className];
 
   // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
   if (retval == NSAlertDefaultReturn)
     {
       removed = YES;
@@ -3109,13 +3109,13 @@ static NSImage	*classesImage = nil;
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   int retval = -1;
-  NSString *title = [NSString stringWithFormat: @"Modifying Class"];
+  NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
   NSString *msg = [NSString stringWithFormat: 
-			      @"Change class name '%@' to '%@'.  Continue?",
+			      _(@"Change class name '%@' to '%@'.  Continue?"),
 			    className, newName];
 
   // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
   if (retval == NSAlertDefaultReturn)
     {
       removed = YES;
@@ -3216,10 +3216,10 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		  NSString *message;
 
 		  message = [NSString stringWithFormat: 
-		    @"The class %@ already has an action named %@",
+		    _(@"The class %@ already has an action named %@"),
 		    [gov itemBeingEdited], formattedAction];
 
-		  NSRunAlertPanel(@"Problem Adding Action",
+		  NSRunAlertPanel(_(@"Problem Adding Action"),
 				  message, nil, nil, nil);
 				  
 		}
@@ -3248,9 +3248,9 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		  NSString *message;
 
 		  message = [NSString stringWithFormat: 
-		    @"The class %@ already has an outlet named %@",
+		    _(@"The class %@ already has an outlet named %@"),
 		    [gov itemBeingEdited], formattedOutlet];
-		  NSRunAlertPanel(@"Problem Adding Outlet",
+		  NSRunAlertPanel(_(@"Problem Adding Outlet"),
 				  message, nil, nil, nil);
 				  
 		}

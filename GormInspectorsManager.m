@@ -58,7 +58,7 @@
       button = [[NSButton alloc] initWithFrame: [contents bounds]];
       [button setAutoresizingMask:
 	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: @"Empty Selection"];
+      [button setStringValue: _(@"Empty Selection")];
       [button setBordered: NO];
       [button setEnabled: NO];
       [contents addSubview: button];
@@ -98,7 +98,7 @@
       button = [[NSButton alloc] initWithFrame: [contents bounds]];
       [button setAutoresizingMask:
 	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: @"Multiple Selection"];
+      [button setStringValue: _(@"Multiple Selection")];
       [button setBordered: NO];
       [button setEnabled: NO];
       [contents addSubview: button];
@@ -136,7 +136,7 @@
       button = [[NSButton alloc] initWithFrame: [contents bounds]];
       [button setAutoresizingMask:
 	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: @"Not Applicable"];
+      [button setStringValue: _(@"Not Applicable")];
       [button setBordered: NO];
       [button setEnabled: NO];
       [contents addSubview: button];
@@ -215,7 +215,7 @@
 				     styleMask: style
 				       backing: NSBackingStoreRetained
 					 defer: NO];
-  [panel setTitle: @"Inspector"];
+  [panel setTitle: _(@"Inspector")];
   [panel setMinSize: [panel frame].size];
 
   /*
@@ -237,35 +237,35 @@
   [selectionView addSubview: popup];
   RELEASE(popup);
 
-  [popup addItemWithTitle: @"Attributes"];
+  [popup addItemWithTitle: _(@"Attributes")];
   item = [popup itemAtIndex: 0];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"1"];
   [item setTag: 0];
 
-  [popup addItemWithTitle: @"Connections"];
+  [popup addItemWithTitle: _(@"Connections")];
   item = [popup itemAtIndex: 1];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"2"];
   [item setTag: 1];
 
-  [popup addItemWithTitle: @"Size"];
+  [popup addItemWithTitle: _(@"Size")];
   item = [popup itemAtIndex: 2];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"3"];
   [item setTag: 2];
 
-  [popup addItemWithTitle: @"Help"];
+  [popup addItemWithTitle: _(@"Help")];
   item = [popup itemAtIndex: 3];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
-  [popup addItemWithTitle: @"Custom Class"];
+  [popup addItemWithTitle: _(@"Custom Class")];
   item = [popup itemAtIndex: 4];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
@@ -378,7 +378,7 @@
    */
   if (obj == nil)
     {
-      [panel setTitle: @"Inspector"];
+      [panel setTitle: _(@"Inspector")];
     }
   /*
   else if ([obj isKindOfClass: [GormClassProxy class]])
@@ -390,7 +390,7 @@
   else
     {
       NSString *newTitle = [GormClassManager correctClassName: NSStringFromClass([obj class])];
-      [panel setTitle: [NSString stringWithFormat: @"%@ Inspector", newTitle]];
+      [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
     }
 
   if (count == 0)
@@ -547,7 +547,7 @@
       if ([popup numberOfItems] < 6)
         {
           NSMenuItem *item;
-          [popup addItemWithTitle: @"Formatter"];
+          [popup addItemWithTitle: _(@"Formatter")];
           item = [popup itemAtIndex: 5];
           [item setTarget: self];
           [item setAction: @selector(setCurrentInspector:)];
@@ -966,14 +966,14 @@ selectCellWithString: (NSString*)title
       [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
       [okButton setAction: @selector(ok:)];
       [okButton setTarget: self];
-      [okButton setTitle: @"Connect"];
+      [okButton setTitle: _(@"Connect")];
       [okButton setEnabled: NO];
 
       revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
       [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
       [revertButton setAction: @selector(revert:)];
       [revertButton setTarget: self];
-      [revertButton setTitle: @"Revert"];
+      [revertButton setTitle: _(@"Revert")];
       [revertButton setEnabled: NO];
     }
   return self;
@@ -1143,11 +1143,11 @@ selectCellWithString: (NSString*)title
       [okButton setEnabled: YES];
       if ([connectors containsObject: currentConnector] == YES)
 	{
-	  [okButton setTitle: @"Disconnect"];
+	  [okButton setTitle: _(@"Disconnect")];
 	}
        else
 	{
-	  [okButton setTitle: @"Connect"];
+	  [okButton setTitle: _(@"Connect")];
 	}
     }
 }

@@ -136,7 +136,7 @@ selectCellWithString: (NSString*)title
       rect.origin.x = 20;
       label = [[NSButton alloc] initWithFrame: rect];
       [label setBordered: NO];
-      [label setTitle: @"No Type"];
+      [label setTitle: _(@"No Type")];
       [contents addSubview: label];
       RELEASE(label);
 
@@ -151,7 +151,7 @@ selectCellWithString: (NSString*)title
       [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
       [okButton setAction: @selector(ok:)];
       [okButton setTarget: self];
-      [okButton setTitle: @"OK"];
+      [okButton setTitle: _(@"OK")];
       [okButton setEnabled: NO];
 
       revertButton = nil;
@@ -166,7 +166,7 @@ selectCellWithString: (NSString*)title
 
   if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)
     {
-      [label setTitle: @"No Type"];
+      [label setTitle: _(@"No Type")];
       [value setStringValue: @""];
       [okButton setEnabled: NO];
     }
@@ -237,9 +237,9 @@ selectCellWithString: (NSString*)title
 	      int	result;
 
 	      v = [v stringByTrimmingSpaces];
-	      result = NSRunAlertPanel(@"Settings",
-		[NSString stringWithFormat: @"Set object using '%@' as", v],
-		@"Object name", @"String", @"Class name");
+	      result = NSRunAlertPanel(_(@"Settings"),
+		[NSString stringWithFormat: _(@"Set object using '%@' as"), v],
+				       _(@"Object name"),_( @"String"), _(@"Class name"));
 	      if (result == NSAlertAlternateReturn)
 		{
 		  (*imp)(object, set, v);
@@ -399,7 +399,7 @@ selectCellWithString: (NSString*)title
   isString = NO;
   if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)
     {
-      [label setTitle: @"No Type"];
+      [label setTitle: _(@"No Type")];
       [value setStringValue: @""];
       [okButton setEnabled: NO];
     }
@@ -479,7 +479,7 @@ selectCellWithString: (NSString*)title
     }
   else
     {
-      [label setTitle: [NSString stringWithFormat: @"%@ - value unknown",
+      [label setTitle: [NSString stringWithFormat: _(@"%@ - value unknown"),
 	[types objectForKey: name]]];
       [value setStringValue: @""];
       [okButton setEnabled: YES];
