@@ -1430,3 +1430,85 @@
   [object setMaxValue: [maxValue doubleValue]];
 }
 @end
+
+@implementation NSColorWell (IBObjectAdditions)
+- (NSString *) inspectorClassName
+{
+  return @"GormColorWellInspector";
+}
+@end
+
+@interface GormColorWellInspector : IBInspector
+{
+  id initialColor;
+  id disabled;
+  id bordered;
+  id tagValue;
+}
+- (void) initialColorSelected: (id)sender;
+- (void) disabledSelected: (id)sender;
+- (void) borderedSelected: (id)sender;
+- (void) tagSelected: (id)sender;
+@end
+
+@implementation GormColorWellInspector
+- init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      if ([NSBundle loadNibNamed: @"GormNSColorWellInspector" 
+		    owner: self] == NO)
+	{
+	  
+	  NSDictionary	*table;
+	  NSBundle	*bundle;
+	  table = [NSDictionary dictionaryWithObject: self forKey: @"NSOwner"];
+	  bundle = [NSBundle mainBundle];
+	  if ([bundle loadNibFile: @"GormNSColorWellInspector"
+		      externalNameTable: table
+		      withZone: [self zone]] == NO)
+	    {
+	      NSLog(@"Could not open gorm GormNSColorWellInspector");
+	      NSLog(@"self %@", self);
+	      return nil;
+	    }
+	}
+    }
+  return self;
+}
+
+- (void) _getValuesFromObject
+{
+  [disabled setState: (![object isEnabled])?NSOnState:NSOffState];
+  [bordered setState: [object isBordered]?NSOnState:NSOffState];
+  [initialColor setColor: [object color]];
+  [tagValue setIntValue: [object tag]];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject];
+}
+
+- (void) initialColorSelected: (id) sender
+{
+  [object setColor: [initialColor color]];
+}
+
+- (void) disabledSelected: (id)sender;
+{
+  [object setEnabled: ([disabled state] != NSOnState)];
+}
+
+- (void) borderedSelected: (id)sender;
+{
+  [object setBordered: ([bordered state] == NSOnState)];
+}
+
+- (void) tagSelected: (id)sender;
+{
+  [object setTag: [tagValue intValue]];
+}
+@end

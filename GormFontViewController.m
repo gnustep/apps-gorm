@@ -100,4 +100,14 @@
 }
 */
 
+- (void) mouseDragged: (NSEvent *)event
+{
+  // here to make certain we don't crash..
+}
+
+- (void) flagsChanged: (NSEvent *)event
+{
+  // here to make certain we don't crash..
+}
+
 @end

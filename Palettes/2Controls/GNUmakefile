@@ -42,6 +42,7 @@ PALETTE_NAME = 2Controls
 	GormNSSliderInspector.gorm \
 	GormNSStepperInspector.gorm \
 	GormNSTextFieldInspector.gorm \
+	GormNSColorWellInspector.gorm \
 	GormNSProgressIndicatorInspector.gorm
 
 2Controls_STANDARD_INSTALL = no

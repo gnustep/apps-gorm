@@ -1,3 +1,12 @@
+2003-06-26  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormNSColorWellInspector.gorm: Redid the
+	inspector for this..
+	* Palettes/2Controls/inspectors.m: Implemented GormColorWellInspector
+	to allow the modification of color wells in Gorm.
+	* GormFontViewController.m: Added stubbed versions of the methods
+	mouseDragged and flagsChanged.
+
 2003-06-25  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm: Added

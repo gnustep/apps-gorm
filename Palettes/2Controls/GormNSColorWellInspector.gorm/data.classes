@@ -67,6 +67,7 @@
 	    "orderFront:",
 	    "orderFrontColorPanel:",
 	    "orderFrontDataLinkPanel:",
+	    "orderFrontFontPanel:",
 	    "orderFrontHelpPanel:",
 	    "orderFrontStandardAboutPanel:",
 	    "orderFrontStandardInfoPanel:",
@@ -137,79 +138,27 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "tagSelected:",
+	    "borderedSelected:",
+	    "disabledSelected:",
+	    "initialColorSelected:"
 	);
 	Super = NSObject;
     };
     GormColorWellInspector = {
 	Actions = (
+	    "tagSelected:",
+	    "borderedSelected:",
+	    "disabledSelected:",
+	    "initialColorSelected:"
 	);
 	Outlets = (
+	    bordered,
+	    disabled,
 	    initialColor,
-	    optionMatrix
+	    tagValue
 	);
 	Super = IBInspector;
-    };
-    IBInspector = {
-	Actions = (
-	);
-	Outlets = (
-	    okButton,
-	    revertButton,
-	    window
-	);
-	Super = NSObject;
-    };
-    NSApplication = {
-	Outlets = (
-	    delegate
-	);
-	Super = NSResponder;
-    };
-    NSButton = {
-	Super = NSControl;
-    };
-    NSControl = {
-	Actions = (
-	    "takeDoubleValueFrom:",
-	    "takeFloatValueFrom:",
-	    "takeIntValueFrom:",
-	    "takeObjectValueFrom:",
-	    "takeStringValueFrom:"
-	);
-	Outlets = (
-	    target
-	);
-	Super = NSView;
-    };
-    NSMenu = {
-	Super = NSObject;
-    };
-    NSMenuItem = {
-	Outlets = (
-	    target
-	);
-	Super = NSObject;
-    };
-    NSResponder = {
-	Super = NSObject;
-    };
-    NSSlider = {
-	Super = NSControl;
-    };
-    NSTextField = {
-	Outlets = (
-	    delegate
-	);
-	Super = NSControl;
-    };
-    NSView = {
-	Super = NSResponder;
-    };
-    NSWindow = {
-	Outlets = (
-	    delegate
-	);
-	Super = NSResponder;
     };
 }
