@@ -7,6 +7,7 @@
 
 #include "Gorm.h"
 
+#include "GormFilesOwner.h"
 #include "GormDocument.h"
 #include "GormInspectorsManager.h"
 #include "GormClassManager.h"

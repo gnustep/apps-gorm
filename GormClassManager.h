@@ -7,6 +7,7 @@
 }
 - (NSArray*) allActionsForClassNamed: (NSString*)className;
 - (NSArray*) allActionsForObject: (NSObject*)anObject;
+- (NSArray*) allClassNames;
 - (NSArray*) allOutletsForClassNamed: (NSString*)className;
 - (NSArray*) allOutletsForObject: (NSObject*)anObject;
 @end

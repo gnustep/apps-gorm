@@ -261,6 +261,11 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (NSString*) editorClassName;
 @end
 
+
+#define	IVH	388	/* Standard height of inspector view.	*/
+#define	IVW	272	/* Standard width of inspector view.	*/
+#define	IVB	40	/* Standard height of buttons area.	*/
+
 @interface IBInspector : NSObject
 {
   id		object;
@@ -268,13 +273,54 @@ extern NSString *IBDidEndTestingInterfaceNotification;
   NSButton	*okButton;
   NSButton	*revertButton;
 }
+/*
+ * The object being inspected.
+ */
 - (id) object;
+
+/*
+ * Action to take when user clicks the OK button
+ */
 - (void) ok: (id)sender;
+
+/*
+ * Inspector supplied button - the inspectors manager will position this
+ * button for you.
+ */
 - (NSButton*) okButton;
+
+/*
+ * Action to take when user clicks the revert button
+ */
 - (void) revert: (id)sender;
+
+/*
+ * Inspector supplied button - the inspectors manager will position this
+ * button for you.
+ */
 - (NSButton*) revertButton;
+
+/*
+ * Extension - not in NeXTstep - this message is sent to your inspector to
+ * tell it to set its edited object and make any changes to its UI needed.
+ */
+- (void) setObject: (id)anObject;
+
+/*
+ * Method to mark the inspector as needing saving (ok or revert).
+ */
 - (void) touch: (id)sender;
+
+/*
+ * If this method returns YES, the manager will partition off a section of
+ * the inspector panel for display of 'ok' and 'revert' buttons, which
+ * your inspector must supply.
+ */
 - (BOOL) wantsButtons;
+
+/*
+ * The window that the UI of the inspector exists in.
+ */
 - (NSWindow*) window;
 @end
 

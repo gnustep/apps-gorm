@@ -1,3 +1,8 @@
+Tue Dec 21  8:10:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Added inspector for files owner so we can create connections from
+	objects inside the nib to the files owner.
+
 Mon Dec 20 14:16:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Added connections inspector so connecting objects should work.

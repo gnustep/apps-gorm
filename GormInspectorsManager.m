@@ -24,9 +24,6 @@
 
 #include "GormPrivate.h"
 
-#define	IVW	272
-#define	IVH	388
-
 /*
  *	The GormEmptyInspector is a placeholder for an empty selection.
  */
@@ -404,9 +401,9 @@
 	  NSButton	*revert;
 
 	  buttonsRect = rect;
-	  buttonsRect.size.height = 40;
-	  rect.origin.y += 40;
-	  rect.size.height -= 40;
+	  buttonsRect.size.height = IVB;
+	  rect.origin.y += IVB;
+	  rect.size.height -= IVB;
 
 	  buttonView = [[NSView alloc] initWithFrame: buttonsRect];
 	  [buttonView setAutoresizingMask:
@@ -415,36 +412,24 @@
 	  RELEASE(buttonView);
 
 	  ok = [inspector okButton];
-	  if (ok == nil)
+	  if (ok != nil)
 	    {
-	      ok = AUTORELEASE([[NSButton alloc] initWithFrame: bRect]);
-	      [ok setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-	      [ok setTitle: @"Ok"];
-	      [ok setAction: @selector(ok:)];
-	      [ok setTarget: inspector];
+	      bRect = [ok frame];
+	      bRect.origin.y = 10;
+	      bRect.origin.x = buttonsRect.size.width - 10 - bRect.size.width;
+	      [ok setFrame: bRect];
+	      [buttonView addSubview: ok];
 	    }
+
 	  revert = [inspector revertButton];
-	  if (revert == nil)
+	  if (revert != nil)
 	    {
-	      revert = AUTORELEASE([[NSButton alloc] initWithFrame: bRect]);
-	      [revert setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-	      [revert setTitle: @"Revert"];
-	      [revert setAction: @selector(revert:)];
-	      [revert setTarget: inspector];
+	      bRect = [revert frame];
+	      bRect.origin.y = 10;
+	      bRect.origin.x = 10;
+	      [revert setFrame: bRect];
+	      [buttonView addSubview: revert];
 	    }
-
-	  bRect = [ok frame];
-	  bRect.origin.y = 10;
-	  bRect.origin.x = buttonsRect.size.width - 10 - bRect.size.width;
-	  [ok setFrame: bRect];
-
-	  bRect = [revert frame];
-	  bRect.origin.y = 10;
-	  bRect.origin.x = 10;
-	  [revert setFrame: bRect];
-
-	  [buttonView addSubview: ok];
-	  [buttonView addSubview: revert];
 	}
       else
 	{
@@ -460,10 +445,12 @@
       [newView setFrame: rect];
       [inspectorView addSubview: newView];
     }
+  [inspector setObject: obj];
 }
 
 @end
 
+
 
 @interface GormConnectionInspector : IBInspector
 {
@@ -765,24 +752,7 @@ selectCellWithString: (NSString*)title
     {
       NSView		*contents;
       NSSplitView	*split;
-      NSArray		*array;
       NSRect		rect;
-      id		obj;
-
-      obj = [[[(Gorm*)NSApp selectionOwner] selection] lastObject];
-
-      /*
-       * Create list of existing connections for selected object.
-       */
-      connectors = [NSMutableArray new];
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: obj
-	ofClass: [NSNibControlConnector class]];
-      [connectors addObjectsFromArray: array];
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: obj
-	ofClass: [NSNibOutletConnector class]];
-      [connectors addObjectsFromArray: array];
-
-      outlets = RETAIN([[NSApp classManager] allOutletsForObject: obj]);
 
       rect = NSMakeRect(0, 0, IVW, IVH);
       window = [[NSWindow alloc] initWithContentRect: rect
@@ -817,6 +787,64 @@ selectCellWithString: (NSString*)title
       [contents addSubview: split];
       RELEASE(split);
 
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"Connect"];
+      [okButton setEnabled: NO];
+
+      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [revertButton setAction: @selector(revert:)];
+      [revertButton setTarget: self];
+      [revertButton setTitle: @"Revert"];
+      [revertButton setEnabled: NO];
+    }
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  if ([connectors containsObject: currentConnector] == YES)
+    {
+      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
+      [connectors removeObject: currentConnector];
+    }
+  else
+    {
+      [connectors addObject: currentConnector];
+      [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
+    }
+  [oldBrowser loadColumnZero];
+  [self updateButtons];
+}
+
+- (void) setObject: (id)anObject
+{
+  if (anObject != nil && anObject != object)
+    {
+      NSArray		*array;
+
+      ASSIGN(object, anObject);
+      DESTROY(currentConnector);
+      RELEASE(connectors);
+      /*
+       * Create list of existing connections for selected object.
+       */
+      connectors = [NSMutableArray new];
+      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
+	ofClass: [NSNibControlConnector class]];
+      [connectors addObjectsFromArray: array];
+      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
+	ofClass: [NSNibOutletConnector class]];
+      [connectors addObjectsFromArray: array];
+
+      RELEASE(outlets);
+      outlets = RETAIN([[NSApp classManager] allOutletsForObject: object]);
+      DESTROY(actions);
+
+      [oldBrowser loadColumnZero];
       /*
        * See if we can do initial selection based on pre-existing connections.
        */
@@ -838,20 +866,7 @@ selectCellWithString: (NSString*)title
 	    }
 	}
 
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"Connect"];
-      [okButton setEnabled: NO];
-
-      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
-      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [revertButton setAction: @selector(revert:)];
-      [revertButton setTarget: self];
-      [revertButton setTitle: @"Revert"];
-      [revertButton setEnabled: NO];
-
+      [newBrowser loadColumnZero];
       if (currentConnector == nil)
 	{
 	  if ([outlets count] == 1)
@@ -861,22 +876,6 @@ selectCellWithString: (NSString*)title
 	}
       [self updateButtons];
     }
-  return self;
-}
-
-- (void) ok: (id)sender
-{
-  if ([connectors containsObject: currentConnector] == YES)
-    {
-      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
-      [connectors removeObject: currentConnector];
-    }
-  else
-    {
-      [connectors addObject: currentConnector];
-      [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
-    }
-  [self updateButtons];
 }
 
 - (void) updateButtons

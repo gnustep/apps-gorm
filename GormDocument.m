@@ -29,45 +29,6 @@ NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
-@implementation	GormFilesOwner
-- (NSString*) className
-{
-  return className;
-}
-
-- (void) dealloc
-{
-  RELEASE(className);
-}
-
-- (NSImage*) imageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormFilesOwner"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-
-- (id) init
-{
-  self = [super init];
-  [self setClassName: @"NSApplication"];
-  return self;
-}
-
-- (void) setClassName: (NSString*)aName
-{
-  ASSIGN(className, aName);
-}
-
-@end
-
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
 {

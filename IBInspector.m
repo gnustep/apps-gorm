@@ -38,19 +38,6 @@ NSString *IBSelectionChangedNotification
   [super dealloc];
 }
 
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      /*
-       * Ask our manager for the selection for which we have been created.
-       */
-      object = RETAIN([(id<IB>)NSApp selectedObject]);
-    }
-  return self;
-}
-
 - (id) object
 {
   return object;
@@ -72,6 +59,11 @@ NSString *IBSelectionChangedNotification
 - (NSButton*) revertButton
 {
   return revertButton;
+}
+
+- (void) setObject: (id)anObject
+{
+  ASSIGN(object, anObject);
 }
 
 - (void) touch: (id)sender

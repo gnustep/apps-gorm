@@ -121,6 +121,12 @@
   return nil;
 }
 
+- (NSArray*) allClassNames
+{
+  return [[classInformation allKeys] sortedArrayUsingSelector:
+    @selector(compare:)];
+}
+
 - (NSArray*) allOutletsForObject: (NSObject*)obj
 {
   NSString	*className;
@@ -287,4 +293,5 @@
 }
 
 @end
+
 

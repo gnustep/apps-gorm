@@ -66,6 +66,7 @@ Gorm_OBJC_FILES = \
 	IBPalette.m \
 	InfoPanel.m \
 	GormViewKnobs.m \
+	GormFilesOwner.m \
 	GormObjectEditor.m \
 	GormWindowEditor.m \
 	GormClassManager.m \
