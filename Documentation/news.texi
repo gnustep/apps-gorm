@@ -3,6 +3,21 @@
 @ifset TEXT-ONLY
 @include version.texi
 @end ifset
+@section Noteworthy changes in version @samp{0.7.7}
+
+@itemize @bullet
+@item Important bugfixes in editor classes.
+@item Rearranged some of the editor classes to be in the palettes which contain the classes they are responsible for editing (GormButtonEditor & GormTabViewEditor). 
+@item Image and Sound editors will now display system default images or sounds if they are available.
+@item Document window now uses an NSToolbar (experimental).
+@item Improved the layout of some of the inspectors.
+@item Corrected some minor issues in the inspectors
+@item Added code to allow NSTableView and NSOutlineView to show some data during testing
+@item Gorm will now show an alert panel when a model fails to load or test properly.
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.7.6}
 
 This release is mainly a bugfix release for 0.7.5.
@@ -13,9 +28,6 @@ This release is mainly a bugfix release for 0.7.5.
 @item Important bugfixes for Menu editing.
 @item Important bugfixes for class inspector.
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.7.5}
 
 @itemize @bullet

@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.7.6 of Gorm.
+This is version 0.7.7 of Gorm.
 
 What is Gorm?
 =============
@@ -12,18 +12,29 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.7.6'
+Noteworthy changes in version `0.7.7'
 =====================================
 
-   This release is mainly a bugfix release for 0.7.5.
+   * Important bugfixes in editor classes.
 
-   * Improved .gmodel support
+   * Rearranged some of the editor classes to be in the palettes which
+     contain the classes they are responsible for editing
+     (GormButtonEditor & GormTabViewEditor).
 
-   * Corrections to previous repair feature.
+   * Image and Sound editors will now display system default images or
+     sounds if they are available.
 
-   * Important bugfixes for Menu editing.
+   * Document window now uses an NSToolbar (experimental).
 
-   * Important bugfixes for class inspector.
+   * Improved the layout of some of the inspectors.
+
+   * Corrected some minor issues in the inspectors
+
+   * Added code to allow NSTableView and NSOutlineView to show some
+     data during testing
+
+   * Gorm will now show an alert panel when a model fails to load or
+     test properly.
 
 How can I get support for this software?
 ========================================
