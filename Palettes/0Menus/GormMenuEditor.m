@@ -631,6 +631,32 @@
   return edited;
 }
 
+// find all subitems for the given items...
+void _attachAllSubmenus(id menu, NSArray *items, id document)
+{
+  NSEnumerator *e = [items objectEnumerator];
+  id i = nil;
+  
+  while((i = [e nextObject]) != nil)
+    {
+      [document attachObject: i toParent: menu];
+      if([i hasSubmenu])
+	{
+	  id submenu = [i submenu];
+	  NSArray *submenuItems = [submenu itemArray];
+	  
+	  [document attachObject: submenu toParent: i];
+	  _attachAllSubmenus(submenu, submenuItems, document);
+	}
+    }
+}
+
+void _attachAll(NSMenu *menu, id document)
+{
+  NSArray *items = [menu itemArray];
+  _attachAllSubmenus(menu, items, document);
+}
+
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
   self = [super init];
@@ -647,7 +673,8 @@
   /*
    * Make sure that all our menu items are attached in the document.
    */
-  [document attachObjects: [edited itemArray] toParent: edited];
+  _attachAll(edited, document);
+  // [document attachObjects: [edited itemArray] toParent: edited];
 
   return self;
 }
@@ -926,6 +953,7 @@
 	  ASSIGN(subeditor, editor);
 	}
     }
+
   /*
    * Now we must let the document (and hence the rest of the app) know
    * about our new selection.  If there is nothing in it, make sure

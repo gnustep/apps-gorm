@@ -1,3 +1,12 @@
+2004-03-23 22:01 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuEditor.m: Added code to recursivly
+	add all of the items and submenus to the document.
+	* Palettes/0Menus/main.m: Added code to allow user to drag a new
+	menu to the document.
+	* Palettes/0Menus/GormMenuDrag.tiff: Image for menu to drag
+	* Images/GormMenu.tiff: New image.
+	
 2004-03-21 23:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.[hm]: added [GormDocument _instantiateFontManager] 

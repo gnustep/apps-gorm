@@ -26,6 +26,34 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSMenu.h"
 
+@interface GormMenuMaker : NSObject <NSCoding>
+{
+}
+@end
+
+@implementation GormMenuMaker
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  NSMenu *m = [[GormNSMenu alloc] init]; 
+
+  // build the menu..
+  [m setTitle: _(@"Main Menu")];
+  [m addItemWithTitle: _(@"Hide") 
+	 action: @selector(hide:)
+	 keyEquivalent: @"h"];	
+  [m addItemWithTitle: _(@"Quit") 
+	 action: @selector(terminate:)
+	 keyEquivalent: @"q"];
+  RELEASE(self);
+
+  return m;
+}
+@end
+
 @interface MenusPalette: IBPalette
 {
 }
@@ -40,6 +68,11 @@
   NSMenu	*m;
   NSMenu	*s;
   NSButton	*b;
+  id            menu;
+  id            v;
+  NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
+  NSString	*path = [bundle pathForImageResource: @"GormMenuDrag"];
+  NSImage	*dragImage = [[NSImage alloc] initWithContentsOfFile: path];
 
   window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
 				       styleMask: NSBorderlessWindowMask 
@@ -67,7 +100,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 140, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 160, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -118,7 +151,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 140, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 160, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -166,7 +199,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 120, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 140, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -208,7 +241,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 120, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 140, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -244,7 +277,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 100, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 120, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -283,7 +316,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 100, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 120, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -375,7 +408,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 80, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 100, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -396,7 +429,7 @@
 				 action: @selector(orderFrontColorPanel:)
 			  keyEquivalent: @""];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 80, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 100, 100, 20)];
   [b setAlignment: NSLeftTextAlignment];
   [b setTitle: @" Colors..."];
   [contents addSubview: b];
@@ -426,7 +459,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 60, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 80, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -447,7 +480,7 @@
 				 action: NULL
 			  keyEquivalent: @""];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 60, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 80, 100, 20)];
   [b setAlignment: NSLeftTextAlignment];
   [b setTitle: @" Item"];
   [contents addSubview: b];
@@ -468,7 +501,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 40, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 60, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -495,7 +528,7 @@
 			  keyEquivalent: @""];
   [i setSubmenu: m];
 
-  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 40, 100, 20)];
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(145, 60, 100, 20)];
   [b setImage: [NSImage imageNamed: @"common_3DArrowRight"]];
   [b setAlignment: NSLeftTextAlignment];
   [b setImagePosition: NSImageRight];
@@ -508,6 +541,21 @@
   RELEASE(i);
   RELEASE(m);
 
+  /*
+   * A whole new menu...
+   */
+  menu = [GormMenuMaker new];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(148,6,48,48)];
+  [v setBordered: NO];
+  [v setImage: dragImage];
+  [v setImagePosition: NSImageOverlaps];
+  [v setTitle: nil];
+  [contents addSubview: v];
+  [self associateObject: menu
+	type: IBMenuPboardType
+	with: v];
+  RELEASE(v);
+  RELEASE(menu);
 }
 @end
 

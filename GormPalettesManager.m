@@ -197,7 +197,8 @@ static NSImage	*dragImage = nil;
 	    event: theEvent
        pasteboard: pb
 	   source: self
-	slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
+	slideBack: ([type isEqual: IBWindowPboardType] || 
+		    [type isEqual: IBMenuPboardType]) ? NO : YES];
 }
 @end
 

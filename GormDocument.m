@@ -309,9 +309,20 @@ static NSImage	*classesImage = nil;
 	}
     }
 
+  /*
+   * Add the current menu and any submenus.
+   */
   if ([anObject isKindOfClass: [NSMenu class]] == YES)
     {
+      // NSArray *menus = findAllMenus(anObject);
+      // NSEnumerator *en = [menus objectEnumerator];
+      // id obj = nil;
+
       [[self openEditorForObject: anObject] activate];
+      // while((obj = [en nextObject]) != nil)
+      //  {
+      //    [[self openEditorForObject: obj] activate];
+      //  }
     }
 
   /*
@@ -708,8 +719,7 @@ static NSImage	*classesImage = nil;
   enumerator = [anArray objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {
-      id	editor = [self editorForObject: obj create: NO];
-
+      id editor = [self editorForObject: obj create: NO];
       if (editor != nil)
 	{
 	  [editors addObject: editor];
