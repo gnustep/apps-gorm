@@ -181,6 +181,7 @@ static NSImage	*classesImage = nil;
     {
       [self setName: nil forObject: anObject];
     }
+  NSLog(@"%@", anObject);
   /*
    * Add top-level objects to objectsView and open their editors.
    */
@@ -194,6 +195,28 @@ static NSImage	*classesImage = nil;
 	{
 	  [anObject setReleasedWhenClosed: NO];
 	}
+    }
+
+  /*
+   * if this a scrollview, it is interesting to add its contentview
+   * if it is a tableview or a textview
+   */
+  if (([anObject isKindOfClass: [NSScrollView class]] == YES)
+      && ([(NSScrollView *)anObject documentView] != nil))
+    {
+      if ([[anObject documentView] isKindOfClass: 
+				    [NSTableView class]] == YES)
+	{
+	  [self attachObject: [anObject documentView]
+		toParent: aParent];
+	}
+      else if ([[anObject documentView] isKindOfClass: 
+					  [NSTextView class]] == YES)
+	{
+	  [self attachObject: [anObject documentView]
+		toParent: aParent];
+	}
+
     }
 }
 
@@ -1299,6 +1322,8 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"GSNibContainer" asClassName: @"GormDocument"];
   [u decodeClassName: @"GSNibItem" asClassName: @"GormObjectProxy"];
   [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
+  [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
+  [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -1564,10 +1589,11 @@ static NSImage	*classesImage = nil;
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask
                         | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
-      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,600, 400)
-					    styleMask: style
-					      backing: NSBackingStoreRetained
-						defer: NO];
+      aWindow = [[NSWindow allocSubstitute]
+		  initWithContentRect: NSMakeRect(0,0,600, 400)
+		  styleMask: style
+		  backing: NSBackingStoreRetained
+		  defer: NO];
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"My Window"];
@@ -1835,6 +1861,10 @@ static NSImage	*classesImage = nil;
   [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView" 
 	      intoClassName: @"GSCustomView"];
+  [archiver encodeClassName: @"GormNSWindow" 
+	      intoClassName: @"NSWindow"];
+  [archiver encodeClassName: @"GormNSBrowser" 
+	      intoClassName: @"NSBrowser"];
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];

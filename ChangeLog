@@ -1,3 +1,42 @@
+2002-02-18  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* Palettes/3Containers/GNUmakefile
+	* Palettes/3Containers/main.m
+	* Palettes/3Containers/GormNSBrowser.m
+	* Palettes/3Containers/GormNSBrowser.h
+	* Gorm.m
+	* GormDocument.m
+	Subclass of NSBrowser and NSTableView to be able to set the
+	delegate for runtime only (there is a dummy delegate for edit-time
+	and test-time). Those classes are encoded as NSBrowser/NSTableView
+	and NSTableView/NSBrowser are decoded as GormNSBrowser/GormNSTableView
+
+	* Palettes/1Windows/GNUmakefile
+	* Palettes/1Windows/GormNSWindow.h
+	* Palettes/1Windows/GormNSWindow.m
+	* Palettes/1Windows/main.m
+	* GormDocument.m
+	* Gorm.m
+	Subclass of NSWindow to be able to choose the stylemask
+	and to still be able to resize/close/minimize the window in the editor
+	regardless of the stylemask. This class is encoded as NSWindow and
+	NSWindow is decoded as GormNSWindow.
+	
+	* GormDocument.m ([-attachObect:toParent]):
+	NSTableView & NSTextView objects contained in NSScrollView are now
+	added. Connections to and from those objects are now available.
+	
+	* GormWindowEditor.m: new bestKnownSuperview function
+	(original patch from Stefan Urbanek <stefanurbanek@yahoo.fr>
+	modified to let the user select the NSScrollView or the NSTextView/
+	NSTableView contained within the NSScrollView).
+	
+	* Palettes/3Containers/inspectors.m
+	* Palettes/3Containers/GormBrowserInspector.gorm
+	* Palettes/3Containers/GormTableViewInspector.gorm
+	NSTableView and NSBrowser inspectors updated (new tag field)
+	(patch from Stefan Urbanek <stefanurbanek@yahoo.fr>)
+
 2002-01-30  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.1.0

@@ -24,6 +24,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
+#include "GormNSWindow.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {
@@ -41,10 +42,10 @@
   unsigned	style = NSTitledWindowMask | NSClosableWindowMask
 			| NSResizableWindowMask | NSMiniaturizableWindowMask;
 
-  w = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
-				  styleMask: style 
-				    backing: NSBackingStoreRetained
-				      defer: NO];
+  w = [[GormNSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
+			    styleMask: style 
+			    backing: NSBackingStoreRetained
+			    defer: NO];
   [w setTitle: @"Window"];
   RELEASE(self);
   return w;
@@ -131,11 +132,19 @@
 /* ---------------------------------------------------------
 NSwindow inspector
 ---------------------------------------------------------*/
+@implementation NSWindow (GormPrivate)
++ (id) allocSubstitute
+{
+  return [GormNSWindow alloc];
+}
+@end
+/*
 @interface NSWindow (GormPrivate)
 - (void) _setStyleMask: (unsigned int)mask;
 @end
-
-@implementation NSWindow (GormPrivate)
+*/
+/*
+@implementation GormWindow (GormPrivate)
 // private method to change the Window style mask on the fly
 - (void) _setStyleMask: (unsigned int)mask
 {
@@ -143,8 +152,8 @@ NSwindow inspector
    DPSstylewindow(GSCurrentContext(), mask, [self windowNumber]);
 }
 @end
-
-@implementation	NSWindow (IBInspectorClassNames)
+*/
+@implementation	GormNSWindow (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
   return @"GormWindowAttributesInspector";
@@ -194,7 +203,7 @@ NSwindow inspector
           newStyleMask &= ~[[control cellAtRow: i column: 0] tag];
       }
  
-      [object _setStyleMask: newStyleMask];
+      [object setStyleMask: newStyleMask];
       // FIXME: This doesn't refresh the window decoration. How to do that?
       // (currently needs manual hide/unhide to update decorations)
       [object display];

@@ -44,6 +44,7 @@
 @interface GormBrowserAttributesInspector : IBInspector
 {
   id optionMatrix;
+  id tagField;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -74,6 +75,10 @@
       flag = ([[control cellAtRow: 5 column: 0] state] == NSOnState) ? YES : NO;
       [object setHasHorizontalScroller: flag];
     }
+  else if( control == tagField )
+    {
+      [object setTag:[[tagField cellAtIndex:0] intValue]];
+    }
 }
 
 - (void) _getValuesFromObject: anObject
@@ -97,6 +102,8 @@
     [optionMatrix selectCellAtRow: 4 column: 0];
   if ([anObject hasHorizontalScroller])
     [optionMatrix selectCellAtRow: 5 column: 0];
+  
+  [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
 }
 
 - (void) dealloc
@@ -155,6 +162,7 @@
   id borderMatrix;
   id rowsHeightForm;
   id optionMatrix;
+  id tagField;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -213,6 +221,10 @@
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
       [object setAllowsColumnReordering: flag];
     }
+  else if( control == tagField )
+    {
+      [object setTag:[[tagField cellAtIndex:0] intValue]];
+    }
 }
 
 - (void) _getValuesFromObject: anObject
@@ -265,6 +277,7 @@
     [optionMatrix selectCellAtRow: 1 column: 0];
   if ([anObject allowsColumnReordering])
     [optionMatrix selectCellAtRow: 2 column: 0];
+  [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
 }
 
 - (void) dealloc

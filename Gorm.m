@@ -300,8 +300,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	      /*
 	       * Erase image from old location.
 	       */
-	      r.origin.x -= 1.0;
-	      r.origin.y += 1.0;
+	      r.origin.y -= 1.0;
+	      r.origin.x += 1.0;
 	      r.size = [sourceImage size];
 	      r.size.width += 2.0;
 	      r.size.height += 2.0;
@@ -1029,11 +1029,17 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       GormDocument		*a = (GormDocument*)[self activeDocument];
       NSData			*d;
+      NSArchiver                *archiver;
 
+      archiver = [[NSArchiver alloc] init];
       [a beginArchiving];
-      d = [NSArchiver archivedDataWithRootObject: a];
+      [archiver encodeClassName: @"GormNSWindow" 
+		intoClassName: @"NSWindow"];
+      [archiver encodeRootObject: a];
+      d = RETAIN([archiver archiverData]);
       [a endArchiving];
-
+      RELEASE(archiver);
+      
       [nc postNotificationName: IBWillBeginTestingInterfaceNotification
 			object: self];
 
@@ -1091,6 +1097,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
 			object: self];
 
+      RELEASE(d);
       return self;
     }
 }

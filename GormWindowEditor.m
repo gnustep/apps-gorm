@@ -62,6 +62,72 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   return point;
 }
 
+@class GSTableCornerView;
+
+static NSView *bestKnownSuperview(NSView *aView)
+{
+  NSView *best = aView;
+  NSView *view = aView;
+  NSLog(@"Convert %@", aView);
+  
+  if ([view isKindOfClass:[NSTableHeaderView class]])
+    {
+      return [view tableView];
+    }
+  else if ([view isKindOfClass:[GSTableCornerView class]])
+    {
+      if ([view enclosingScrollView] != nil)
+	return [view enclosingScrollView];
+    }
+  else if ([view isKindOfClass:[NSScroller class]])
+    {
+      if ([view enclosingScrollView] != nil)
+	{
+	  if ([[view enclosingScrollView] documentView]
+	      && ([[[view enclosingScrollView] documentView]
+		    isKindOfClass: [NSTableView class]]
+		  || [[[view enclosingScrollView] documentView]
+		       isKindOfClass: [NSTextView class]])
+	      )
+	    return [view enclosingScrollView];
+	}
+    }
+  
+  while( view )
+    {
+      if([view isKindOfClass:[NSBrowser class]] 
+	 || [view isKindOfClass:[NSTextView class]]
+	 || [view isKindOfClass:[NSTableView class]])
+        {
+	  best = view;
+	  break;
+        }
+      else if([view isKindOfClass:[NSScrollView class]])
+        {
+	  best = view;
+        }
+      
+      view = [view superview];
+    }
+  
+  if([best isKindOfClass:[NSScrollView class]])
+    {
+      view = [best contentView];
+      if([view isKindOfClass:[NSClipView class]])
+	{
+	  view = [view documentView];
+	  
+	  if([view isKindOfClass:[NSTextView class]] 
+	     || [view isKindOfClass:[NSTableView class]])
+	    {
+	      return view;
+	    }
+	}
+    }
+  
+  return best;
+}
+
 @implementation NSWindow (GormObjectAdditions)
 - (NSString*) editorClassName
 {
@@ -1388,6 +1454,8 @@ static BOOL done_editing;
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
 
+      sub = bestKnownSuperview(sub);
+
       if (sub == self)
 	{
 	  sub = nil;
@@ -1396,6 +1464,7 @@ static BOOL done_editing;
 	{
 	  sub = nil;
 	}
+      //        NSLog(@"DST %@",sub);
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       return NSDragOperationLink;
     }
@@ -1604,6 +1673,10 @@ static BOOL done_editing;
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
 
+      sub = bestKnownSuperview(sub);
+
+      //      NSLog(@"DST %@",sub);
+      
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       [NSApp startConnecting];
     }

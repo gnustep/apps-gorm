@@ -24,52 +24,9 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "../../Gorm.h"
+#include "GormNSBrowser.h"
 
 
-@class NSBrowserDelegate;
-
-NSBrowserDelegate * browserDelegate;
-
-/* --------------------------------------------------------------- 
- * NSBrowser Delegate
-*/
-@interface NSBrowserDelegate: NSObject
-{
-}
-
-- (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column;
-- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (int)column;
-- (void) browser: (NSBrowser *)sender willDisplayCell: (id)cell
-           atRow: (int)row column: (int)column;
-
-@end
-
-
-@implementation NSBrowserDelegate
-
-- (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column
-{
-  return 0;
-}
-
-- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (int)column
-{
-  return (column==0) ? @"Browser" : @"";
-}
-
-- (void) browser: (NSBrowser *)sender
- willDisplayCell: (id)cell
-           atRow: (int)row
-          column: (int)column
-{
-  NSDebugLog(@"<%@ %x>: browser %x will display %@ %x at %d,%d",[self class],self,sender,[cell class],cell,row,column);
-  // This code should never be called because there is no row
-  // in our browser. But just in case...
-  [cell setLeaf:YES];
-  [cell setStringValue: @""];
-}
-
-@end
 
 /* --------------------------------------------------------------- 
  * NSTableView data source
@@ -105,7 +62,7 @@ NSBrowserDelegate * browserDelegate;
 
 - (void) dealloc
 {
-  RELEASE(browserDelegate);
+  //  RELEASE(browserDelegate);
   [super dealloc];
 }
 
@@ -131,11 +88,9 @@ NSBrowserDelegate * browserDelegate;
 
   // NSBrowser
   // 124 is the minimum width. Below that the browser doesn't display !!
-  v = [[NSBrowser alloc] initWithFrame: NSMakeRect(10, 38, 124, 116)];
+  v = [[GormNSBrowser alloc] initWithFrame: NSMakeRect(10, 38, 124, 116)];
 
-  browserDelegate = [[NSBrowserDelegate alloc] init];
-  [v setDelegate:browserDelegate];
-
+  //  [v setDelegate:nil];
   [v setHasHorizontalScroller: YES];
   [v setTitled: YES];
   [v loadColumnZero];
