@@ -1,3 +1,24 @@
+2004-04-03 13:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Corrected a problem with renaming a class
+	in [GormClassManager renameClassName:toClassName:].  The
+	direct subclasses of the class whose name is being changed must
+	be modified to have their superclass name set to the new name.
+	* GormCustomView.m: Set the custom view to use the bold font to
+	display the view name at the default size set by the user.
+	* GormDocument.m: Corrected an issue with redisplay of the changed
+	class name.   Also made some changes to correct some compiler
+	warnings.
+	* GormFontViewController.m: The default action of the font controller
+	is now to set the "encodes default" to off, since this is what
+	the user most often means when selecting a preset font.
+	* GormInternalViewEditor.[hm]: 
+	[GormInternalViewEditor changeFont:].  This allows the font to be
+	modified on NSForms.
+	* GormMatrixEditor.[hm]: same as above, except we're changing
+	forms in a matrix.   These two classes don't derive from one
+	another so the method had to, unfortunately, be duplicated.
+	
 2004-03-30 15:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.m: [GormPaletteView draggedImage:endedAt:

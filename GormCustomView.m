@@ -42,7 +42,7 @@
   [self setTextColor: [NSColor whiteColor]];
   [self setDrawsBackground: YES];
   [self setAlignment: NSCenterTextAlignment];
-  [self setFont: [NSFont boldSystemFontOfSize: 12]];
+  [self setFont: [NSFont boldSystemFontOfSize: 0]];
   [self setEditable: NO];
   [self setClassName: @"CustomView"];
   return self;

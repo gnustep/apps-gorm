@@ -30,6 +30,7 @@
 {
 }
 - (NSArray*) destroyAndListSubviews;
+- (void) changeFont: (id)sender;
 @end
 
 #endif

@@ -985,6 +985,7 @@
   if (classInfo != nil && [classInformation objectForKey: name] == nil)
     {
       int index = 0;
+      NSArray *subclasses = [self subClassesOf: oldName];
 
       [self _touch];
       RETAIN(classInfo);
@@ -995,6 +996,8 @@
       if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
 	{
 	  NSEnumerator *en = [customClassMap keyEnumerator];
+	  NSEnumerator *cen = [subclasses objectEnumerator];
+	  id sc = nil;
 	  id object = nil;
 
 	  NSDebugLog(@"replacing object with %@, %@",name, customClasses);
@@ -1016,6 +1019,14 @@
 		}
 	    }
 	  NSDebugLog(@"New customClassMap = %@",customClassMap); // and after
+
+	  // Iterate over the list of subclasses and replace their referece with the new
+	  // name.
+	  while((sc = [cen nextObject]) != nil)
+	    {
+	      [self setSuperClassNamed: name
+		    forClassNamed: sc];
+	    }
 	}
       else
 	NSLog(@"customClass not found %@",oldName);
@@ -1024,7 +1035,6 @@
       return YES;
     }
   else return NO;
-
 }
 
 - (NSString *)parentOfClass: (NSString *)aClass

@@ -3094,7 +3094,7 @@ static NSImage	*classesImage = nil;
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
-      [[anEditor window] makeFirstResponder: anEditor];
+      [[anEditor window] makeFirstResponder: (id)anEditor];
     }
   [nc postNotificationName: IBSelectionChangedNotification
 		    object: anEditor];
@@ -3558,7 +3558,14 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	      [classManager renameClassNamed: item newName: anObject];
 	      [gov reloadData];
 	      row = [gov rowForItem: anObject];
+
+	      // make sure that item is collapsed...
+	      [gov expandItem: anObject];
+	      [gov collapseItem: anObject];
+	      
+	      // scroll to the item..
 	      [gov scrollRowToVisible: row];
+	      // [gov selectRow: row byExtendingSelection: NO];
 	    }
 	}
     }

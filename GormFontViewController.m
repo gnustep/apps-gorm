@@ -103,8 +103,8 @@ static GormFontViewController *gorm_font_cont = nil;
   else
     {
       [encodeButton setEnabled: YES];
-      [encodeButton setState: NSOnState];
-    }	  
+      [encodeButton setState: NSOffState];
+    }
 }
 
 - (id) view

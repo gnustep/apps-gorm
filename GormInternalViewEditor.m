@@ -25,6 +25,7 @@
 #include <AppKit/AppKit.h>
 #include "GormPrivate.h"
 #include "GormInternalViewEditor.h"
+#include "GormFontViewController.h"
 
 @class GormEditorToParent;
 
@@ -932,5 +933,36 @@ static NSImage *horizontalImage;
 - (void) deleteSelection: (id) sender
 {
   [self deleteSelection];
+}
+
+- (void) changeFont: (id)sender
+{
+  NSEnumerator *enumerator = [[self selection] objectEnumerator];
+  id anObject;
+  NSFont *newFont;
+
+  NSDebugLog(@"In %@ changing font for %@",[self className],[self selection]);
+  while ((anObject = [enumerator nextObject]))
+    {
+      if([anObject respondsToSelector: @selector(setTitleFont:)] &&
+	 [anObject respondsToSelector: @selector(setTextFont:)])
+	{
+	  newFont = [sender convertFont: [anObject font]];
+	  newFont = [[GormFontViewController sharedGormFontViewController] 
+		      convertFont: newFont];
+	  [anObject setTitleFont: newFont];
+	  [anObject setTextFont: newFont];
+	}
+      else if ([anObject respondsToSelector: @selector(font)] &&
+	       [anObject respondsToSelector: @selector(setFont:)])
+	{
+	  newFont = [sender convertFont: [anObject font]];
+	  newFont = [[GormFontViewController sharedGormFontViewController] 
+		      convertFont: newFont];
+	  [anObject setFont: newFont];
+	}
+    }
+
+  return;
 }
 @end

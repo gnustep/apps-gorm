@@ -67,9 +67,10 @@
       NSView *documentView = [_EO documentView];
       
       NSDebugLog(@"documentView %@", documentView);
-      documentViewEditor = [document editorForObject: documentView
-				     inEditor: self 
-				     create: YES];
+      documentViewEditor = (GormInternalViewEditor *)[document 
+						       editorForObject: documentView
+						       inEditor: self 
+						       create: YES];
       return YES;
     }
 

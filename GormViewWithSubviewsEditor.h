@@ -47,6 +47,7 @@
  */
 - (void) closeSubeditors;
 - (void) deactivateSubeditors;
+- (void) changeFont: (id)sender;
 @end
 
 #endif
