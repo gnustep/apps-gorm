@@ -1357,11 +1357,19 @@ static BOOL currently_displaying = NO;
 
 - (void) resetObject: (id)anObject
 {
-  /// NSLog(@"resetObject should not be called on GormViewEditor !");
-  if(viewWindow != nil)
+  NS_DURING
     {
-      [viewWindow orderFront: self];
+      // display the view, if it's standalone.
+      if(viewWindow != nil)
+	{
+	  [viewWindow orderFront: self];
+	}
     }
+  NS_HANDLER
+    {
+      NSLog(@"Exception while trying to display standalone view: %@",[localException reason]);
+    }
+  NS_ENDHANDLER
 }
 
 - (void) orderFront

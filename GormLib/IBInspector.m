@@ -45,7 +45,7 @@ static NSNotificationCenter *nc = nil;
   if((self = [super init]) != nil)
     {
       [nc addObserver: self
-	  selector: @selector(handleNotification:)
+	  selector: @selector(_releaseObject:)
 	  name: IBWillCloseDocumentNotification
 	  object: nil];
     }
@@ -60,7 +60,7 @@ static NSNotificationCenter *nc = nil;
   [super dealloc];
 }
 
-- (void) handleNotification: (NSNotification *)notification
+- (void) _releaseObject: (NSNotification *)notification
 {
   id<IBDocuments> doc = [notification object];
   if([doc nameForObject: object] != nil)

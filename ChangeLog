@@ -1,5 +1,16 @@
 2004-07-27 02:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormLib/IBInspector.m: Change the name of the method called
+	when receiving IBDocumentWillCloseNotification to _releaseObject:
+	instead of handleNotification:.  This prevents confusion as some
+	of the subclasses define handleNotification for other
+	purposes.
+	* GormDocument.m: Modified the code in instantiateObject so that
+	NSView itself can be instantiated.
+
+
+2004-07-27 02:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Gorm.m: Cleaned up some commented out code.
 	* GormDocument.m: Added code in [GormDocument instantiateClass] 
 	to add the appropriate information to the document when an

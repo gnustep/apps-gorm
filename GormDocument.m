@@ -1448,7 +1448,7 @@ static NSImage  *fileImage = nil;
       [link setDestination: editor];
       [connections addObject: link];
       
-      if(![openEditors containsObject: editor])
+      if(![openEditors containsObject: editor] && editor != nil)
 	{
 	  [openEditors addObject: editor];
 	}
@@ -1727,7 +1727,8 @@ static NSImage  *fileImage = nil;
 	  if([object isEqualToString: @"FirstResponder"])
 	    return nil;
 
-	  if([classManager isSuperclass: @"NSView" linkedToClass: object])
+	  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
+	     [object isEqual: @"NSView"])
 	    {
 	      Class cls;
 	      NSString *className = object;
