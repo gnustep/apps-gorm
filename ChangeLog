@@ -1,3 +1,9 @@
+Thu Dec 16 21:35:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Change directory structure - add palettes directory, move palettes
+	into it, rename them, change automatic loading of palettes to do
+	it in palette name order.
+
 Thu Dec 16 15:45:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* GormWindowEditor.m: Implemented support for moving and resizing

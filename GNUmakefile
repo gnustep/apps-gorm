@@ -28,10 +28,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Each palette is a subproject
 #
 SUBPROJECTS = \
-	Menu \
-	Text \
-	View \
-	Window 
+	Palettes
 
 #
 # MAIN APP
@@ -39,10 +36,10 @@ SUBPROJECTS = \
 APP_NAME = Gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
-	Menu/Menu.palette \
-	Text/Text.palette \
-	View/View.palette \
-	Window/Window.palette \
+	Palettes/0Menus/0Menus.palette \
+	Palettes/1Windows/1Windows.palette \
+	Palettes/2Controls/2Controls.palette \
+	Palettes/3Containers/3Containers.palette \
 	Images/GormClass.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \
@@ -77,7 +74,6 @@ Gorm_OBJC_FILES = \
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/application.make
-include $(GNUSTEP_MAKEFILES)/bundle.make
 
 -include GNUmakefile.postamble
 

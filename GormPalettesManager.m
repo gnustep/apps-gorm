@@ -283,6 +283,7 @@ static NSImage	*dragImage = nil;
     {
       unsigned	index;
 
+      array = [array sortedArrayUsingSelector: @selector(compare:)];
       for (index = 0; index < [array count]; index++)
 	{
 	  [self loadPalette: [array objectAtIndex: index]];
