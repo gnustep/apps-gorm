@@ -143,7 +143,7 @@
   if(closed == NO)
     [self close];
 
-  // RELEASE(objects); // FIXME: This will leak... 
+  RELEASE(objects); //
   [super dealloc];
 }
 

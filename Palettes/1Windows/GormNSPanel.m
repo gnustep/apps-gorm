@@ -31,10 +31,16 @@
 - (void)encodeWithCoder: (NSCoder*) aCoder
 {
   unsigned oldStyleMask;
+
+  // save the old values...
   oldStyleMask = _styleMask;
+
+  // set the values we wish to save.. after save restore.
   _styleMask = _gormStyleMask;
+  [self setReleasedWhenClosed: _gormReleasedWhenClosed];
   [super encodeWithCoder: aCoder];
   _styleMask = oldStyleMask;
+  [self setReleasedWhenClosed: NO];
 }
 
 - (id) initWithContentRect: (NSRect)contentRect
@@ -64,5 +70,15 @@
 - (NSString *) className
 {
   return @"NSPanel";
+}
+
+- (void) _setReleasedWhenClosed: (BOOL) flag
+{
+  _gormReleasedWhenClosed = flag;
+}
+
+- (BOOL) _isReleasedWhenClosed
+{
+  return _gormReleasedWhenClosed;
 }
 @end

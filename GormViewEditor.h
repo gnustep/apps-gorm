@@ -32,10 +32,10 @@
 
 @interface GormViewEditor : NSView <IBEditors>
 {
-  id<IBDocuments>	document;
-  NSView		*_editedObject;
-  BOOL                  activated;
-  BOOL                  closed;
+  id<IBDocuments>	            document;
+  id		                    _editedObject;
+  BOOL                              activated;
+  BOOL                              closed;
   GormViewWithSubviewsEditor        *parent;
 }
 - (BOOL) activate;

@@ -46,12 +46,27 @@
     {
       NSBundle	*bundle = [NSBundle mainBundle];
       NSString	*path = [bundle pathForImageResource: @"GormWindow"];
-
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
   return image;
 }
+@end
 
+@interface NSWindow (GormWindowEditorAdditions)
+- (void) unsetInitialFirstResponder;
+@end
+
+@implementation NSWindow (GormWindowEditorAdditions)
+/*
+ * The setFirstResponder method is used in this editor to allow it to
+ * respond to messages forwarded to the window appropriately.
+ * Unfortunately, once it's set to something, it cannot be set to nil.
+ * This method allows us to set it to nil, thus preventing a memory leak.
+ */
+- (void) unsetInitialFirstResponder
+{
+  ASSIGN(_initialFirstResponder, nil);
+}
 @end
 
 /*
@@ -99,7 +114,6 @@
 
 @interface GormWindowEditor : GormViewWithContentViewEditor
 {
-  NSWindow		*edited;
   NSView                *edit_view;
   NSMutableArray	*subeditors;
   BOOL			isLinkSource;
@@ -112,7 +126,6 @@
 - (void) changeFont: (id) sender;
 - (void) close;
 - (void) closeSubeditors;
-//  - (void) copySelection;
 - (void) deactivate;
 - (void) deleteSelection;
 - (id<IBDocuments>) document;
@@ -123,10 +136,6 @@
 - (void) orderFront;
 - (void) pasteInSelection;
 - (void) resetObject: (id)anObject;
-//  - (void) selectObjects: (NSArray*)objects;
-//  - (void) validateEditing;
-//  - (BOOL) wantsSelection;
-//  - (NSWindow*) window;
 @end
 
 @implementation	GormWindowEditor
@@ -165,7 +174,7 @@
       contentViewEditor = (GormInternalViewEditor *)[document editorForObject: contentView
 							      inEditor: self 
 							      create: YES];
-      [(NSWindow *)_editedObject setInitialFirstResponder: self];
+      [_EO setInitialFirstResponder: self];
       [self setOpened: YES];
       activated = YES;
       return YES;
@@ -192,10 +201,8 @@
     }
 
   [self closeSubeditors];
-
   [self deactivate];
-
-  [document editor: self didCloseForObject: edited];
+  [document editor: self didCloseForObject: _EO];
 }
 
 - (void) closeSubeditors
@@ -219,6 +226,7 @@
   if (activated == YES)
     {
       [contentViewEditor deactivate];
+      [_EO unsetInitialFirstResponder];
       activated = NO;
     }
   return;
@@ -229,16 +237,29 @@
   if (closed == NO)
       [self close];
 
-  // RELEASE(edited);
   RELEASE(selection);
   RELEASE(subeditors);
-  // RELEASE(document);
+
   [super dealloc];
 }
 
 - (void) deleteSelection
 {
 }
+
+/*
+- (id) retain
+{
+  NSLog(@"Being retained... %d: %@", [self retainCount], self);
+  return [super retain];
+}
+
+- (oneway void) release
+{
+  NSLog(@"Being released... %d: %@", [self retainCount], self);
+  [super release];
+}
+*/
 
 /*
  *	Dragging source protocol implementation
@@ -292,9 +313,8 @@
       object: aDocument];
       
   _displaySelection = YES;
-  _editedObject = (NSView*)anObject;
-  ASSIGN(edited, anObject);
-  RETAIN(edited);
+  ASSIGN(_editedObject, anObject);
+
   // we don't retain the document...
   document = aDocument;
 
@@ -304,8 +324,6 @@
   selection = [NSMutableArray new];
   subeditors = [NSMutableArray new];
 
-  [(NSWindow *)_editedObject setInitialFirstResponder: self];
-  
   activated = NO;
   closed = NO;
 
@@ -349,7 +367,7 @@
 
 - (void) orderFront
 {
-  [edited orderFront: self];
+  [_EO orderFront: self];
 }
 
 - (void) pasteInSelection

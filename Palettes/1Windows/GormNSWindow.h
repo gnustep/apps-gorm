@@ -29,9 +29,12 @@
 @interface GormNSWindow : NSWindow
 {
   unsigned _gormStyleMask;
+  BOOL     _gormReleasedWhenClosed;
 }
 - (void) setStyleMask: (unsigned)newStyleMask;
 - (unsigned) styleMask;
+- (void) _setReleasedWhenClosed: (BOOL) flag;
+- (BOOL) _isReleasedWhenClosed;
 @end
 
 #endif

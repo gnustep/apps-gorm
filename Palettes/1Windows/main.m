@@ -252,7 +252,7 @@ NSwindow inspector
 
       // Release When Closed
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      [object setReleasedWhenClosed: flag];
+      [object _setReleasedWhenClosed: flag];
 
       // Hide on deactivate
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
@@ -307,7 +307,7 @@ NSwindow inspector
     [controlMatrix selectCellAtRow: 2 column: 0];
 
   [optionMatrix deselectAllCells];
-  if ([anObject isReleasedWhenClosed])
+  if ([anObject _isReleasedWhenClosed])
     [optionMatrix selectCellAtRow: 0 column: 0];
   if ([anObject hidesOnDeactivate])
     [optionMatrix selectCellAtRow: 1 column: 0];

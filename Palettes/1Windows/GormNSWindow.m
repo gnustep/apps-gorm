@@ -28,10 +28,16 @@
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;
+
+  // save the old values...
   oldStyleMask = _styleMask;
+
+  // set the values we wish to save.. after save restore.
   _styleMask = _gormStyleMask;
+  [self setReleasedWhenClosed: _gormReleasedWhenClosed];
   [super encodeWithCoder: aCoder];
   _styleMask = oldStyleMask;
+  [self setReleasedWhenClosed: NO];
 }
 
 - (id) initWithContentRect: (NSRect)contentRect
@@ -68,4 +74,35 @@
 {
   return @"NSWindow";
 }
+
+- (void) _setReleasedWhenClosed: (BOOL) flag
+{
+  _gormReleasedWhenClosed = flag;
+}
+
+- (BOOL) _isReleasedWhenClosed
+{
+  return _gormReleasedWhenClosed;
+}
+
+// for testing...
+/*
+- (id) retain
+{
+  NSLog(@"Being retained... %d: %@", [self retainCount], self);
+  return [super retain];
+}
+
+- (oneway void) release
+{
+  NSLog(@"Being released... %d: %@", [self retainCount], self);
+  [super release];
+}
+
+- (void) dealloc
+{
+  NSLog(@"Deallocing %@",self);
+  [super dealloc];
+}
+*/
 @end

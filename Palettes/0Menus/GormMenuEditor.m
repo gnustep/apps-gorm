@@ -513,6 +513,7 @@
       [self close];
     }
 
+  RELEASE(edited);
   RELEASE(selection);
   RELEASE(subeditor);
   [super dealloc];
@@ -678,7 +679,6 @@ void _attachAll(NSMenu *menu, id document)
     {
       document = aDocument;
       ASSIGN(edited, anObject);
-      RETAIN(edited);
       selection = [NSMutableArray new];
       rep = [edited menuRepresentation];
       
@@ -1075,8 +1075,6 @@ static BOOL done_editing;
   [editField setEditable: YES];
   didDrawBackground = [editField drawsBackground];
   [editField setDrawsBackground: YES];
-
-//    [editField display];
 
   [nc addObserver: self
          selector: @selector(handleNotification:)

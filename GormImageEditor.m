@@ -244,6 +244,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	  GormImage *image = [[GormImage alloc] initWithName: name path: obj];
 	  [image setSystemImage: YES];
 	  [self addObject: image];
+	  RELEASE(image);
 	}
 
       // set up the notification...
@@ -469,9 +470,16 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   [self setNeedsDisplay: YES];
 }
 
+/*
+- (void) dealloc
+{
+  NSLog(@"deallocing..");
+  [super dealloc];
+}
+*/
 @end
 
-// sound proxy object...
+// image proxy object...
 @implementation GormImage
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
@@ -520,6 +528,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   RELEASE(name);
   RELEASE(path);
   RELEASE(image);
+  RELEASE(smallImage);
   [super dealloc];
 }
 

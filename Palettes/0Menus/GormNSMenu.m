@@ -107,6 +107,13 @@
 
   [super sendEvent: theEvent];
 }
+
+
+- (void) dealloc
+{
+  // FIXME: This prevents a leak and a crash.
+  [self _setMenu: nil];
+}
 @end
 
 @implementation GormNSMenu
@@ -136,12 +143,32 @@
 }
 
 #ifdef DEBUG
-// This method is purely for debugging purposes...
+// These methods are purely for debugging purposes...
+/*
 - (void) display
 {
   NSDebugLog(@"In GormNSMenu display...");
   [super display];
 }
+
+- (id) retain
+{
+  NSLog(@"Being retained... %d: %@", [self retainCount], self);
+  return [super retain];
+}
+
+- (oneway void) release
+{
+  NSLog(@"Being released... %d: %@", [self retainCount], self);
+  [super release];
+}
+
+- (void) dealloc
+{
+  NSLog(@"Deallocing %@",self);
+  [super dealloc];
+}
+*/
 #endif
 @end
 

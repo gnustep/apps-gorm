@@ -1,4 +1,23 @@
 2004-07-17 17:54 Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* GormDocument.m: Leak fixes and general clean up.
+	* GormGenericEditor.m: Same.
+	* GormImageEditor.m: Same.
+	* GormViewEditor.h: Same.
+	* GormWindowEditor.m: Same.
+	* Palettes/0Menus/GormMenuEditor.m: Same.
+	* Palettes/0Menus/GormNSMenu.m: Same.
+	* Palettes/1Windows/GormNSPanel.h: Added new method so that the
+	window setting "is released when closed" is saved, but doesn't
+	effect the window displayed in Gorm.  This presents some tricky
+	memory management problems.
+	* Palettes/1Windows/GormNSPanel.m: Same.
+	* Palettes/1Windows/GormNSWindow.h: Same.
+	* Palettes/1Windows/GormNSWindow.m: Same.
+	* Palettes/1Windows/main.m: Added code necessary in the 
+	inspector to use the new method.
+
+2004-07-17 17:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFilePrefsManager.m: Removed reference to math.h and values.h
 	in includes.   They were there temporarily for something which I

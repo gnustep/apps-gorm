@@ -425,7 +425,8 @@ static NSImage  *fileImage = nil;
   toolbar = [[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
   [toolbar setAllowsUserCustomization: NO];
   [toolbar setDelegate: self];
-  [window setToolbar: toolbar];  
+  [window setToolbar: toolbar];
+  RELEASE(toolbar);
   [toolbar setUsesStandardBackgroundColor: YES];
 }
 
@@ -1052,25 +1053,42 @@ static NSImage  *fileImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  
+  // close the window...
   [window close];
-  // [toolbar setDelegate: nil];
+
+  // Get rid of the selection box.
+  [selectionBox removeFromSuperviewWithoutNeedingDisplay];
+
+  // release the managers...
   RELEASE(classManager);
+  RELEASE(filePrefsManager);
+
+  // release editors...
   RELEASE(classEditor);
+  RELEASE(savedEditors);
+  RELEASE(openEditors);
+
+  // hidden objects...
   RELEASE(hidden);
-  RELEASE(filesOwner);
-  RELEASE(firstResponder);
-  RELEASE(fontManager);
+
+  // release special objects...
+  // RELEASE(filesOwner);
+  // RELEASE(firstResponder);
+  // RELEASE(fontManager);
+
   if (objToName != 0)
     {
       NSFreeMapTable(objToName);
     }
+
   RELEASE(documentPath);
-  RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
-  RELEASE(toolbar);
-  RELEASE(filePrefsManager);
-  RELEASE(openEditors);
+  RELEASE(soundsScrollView);
+  RELEASE(imagesScrollView);
+
+  // NSLog(@"window = %@",window);
   RELEASE(window);
   [super dealloc];
 }
@@ -1553,6 +1571,7 @@ static NSImage  *fileImage = nil;
   [editors addObjectsFromArray: openEditors];
   [editors makeObjectsPerformSelector: @selector(close)]; 
   [openEditors removeAllObjects];
+  // [editors makeObjectsPerformSelector: @selector(release)];
   [editors removeAllObjects];
 
   // Close the editors in the document window...
@@ -1577,35 +1596,29 @@ static NSImage  *fileImage = nil;
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
+	  /*
 	  if ([obj isKindOfClass: [NSMenu class]] == YES)
 	    {
 	      if ([[obj window] isVisible] == YES)
 		{
-		  [hidden addObject: obj];
 		  [obj close];
 		}
 	    }
-	  else if ([obj isKindOfClass: [NSWindow class]] == YES)
+	    else 
+	  */
+	  if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
-	      [obj setReleasedWhenClosed: NO];
-	      if ([obj isVisible] == YES)
-		{
-		  [hidden addObject: obj];
-		  [obj orderOut: self];
-		}
+	      [obj setReleasedWhenClosed: YES];
+	      [obj close];
 	    }
 	}
-      
+
       // deactivate the document...
       [self setDocumentActive: NO];
       [self setSelectionFromEditor: nil];
       [self closeAllEditors]; // shut down all of the editors..
-      [nc postNotificationName: IBWillCloseDocumentNotification
-	  object: self];
+      [nc postNotificationName: IBWillCloseDocumentNotification object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
-      // [window setToolbar: nil]; // close the toolbar
-      // [toolbar setDelegate: nil]; // unset the delegate...
-      // RELEASE(self);
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
     {
@@ -2437,7 +2450,6 @@ static NSImage  *fileImage = nil;
       [self setName: @"My Window" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       [self setObject: aWindow isVisibleAtLaunch: YES];
-      RELEASE(aWindow);
 
       [aMenu setTitle: _(@"Main Menu")];
       [aMenu addItemWithTitle: _(@"Hide") 
@@ -2449,9 +2461,8 @@ static NSImage  *fileImage = nil;
 
       // the first menu attached becomes the main menu.
       [self attachObject: aMenu toParent: nil]; 
-      [objectsView addObject: aMenu];
       [[aMenu window] setFrameTopLeftPoint: origin];
-      RELEASE(aMenu);
+      // RETAIN(aMenu);
     }
   else if ([type isEqual: @"Inspector"] == YES)
     {
@@ -2481,7 +2492,7 @@ static NSImage  *fileImage = nil;
       [aWindow setTitle: _(@"Inspector Window")];
       [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
-      RELEASE(aWindow);
+      // RELEASE(aWindow);
     }
   else if ([type isEqual: @"Palette"] == YES)
     {
@@ -2511,7 +2522,7 @@ static NSImage  *fileImage = nil;
       [aWindow setTitle: _(@"Palette Window")];
       [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
-      RELEASE(aWindow);
+      // RELEASE(aWindow);
     }
 }
 
@@ -2528,6 +2539,7 @@ static NSImage  *fileImage = nil;
       NSDebugLog(@"Attempt to set name for nil object");
       return;
     }
+
   if (aName == nil)
     {
       /*
@@ -2588,7 +2600,7 @@ static NSImage  *fileImage = nil;
     }
   nameCopy = [aName copy];	/* Make sure it's immutable */
   [nameTable setObject: object forKey: nameCopy];
-  AUTORELEASE(object); // make sure that when it's removed from the table, it's released.
+  RELEASE(object); // make sure that when it's removed from the table, it's released.
   NSMapInsert(objToName, (void*)object, (void*)nameCopy);
   if (oldName != nil)
     {
