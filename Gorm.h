@@ -182,6 +182,7 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 			 inEditor: (id<IBEditors>)anEditor
 			   create: (BOOL)flag;
 - (NSString*) nameForObject: (id)anObject;
+- (id) objectForName: (NSString*)aName;
 - (NSArray*) objects;
 - (id<IBEditors>) openEditorForObject: (id)anObject;
 - (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor;

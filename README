@@ -102,11 +102,26 @@ class of the files owner (it defaults to NSApplication).
 
 There is a crude panel for setting the name of the selected object.
 
-I've created a couple of new images and got rid of thh two NeXT images that
+I've created a couple of new images and got rid of the two NeXT images that
 were lurking in there.
 
 There is a Testing directory, with a GormTest application that lets you load
 a nib for testing - it assumes that the nib will set its FilesOwners delegate
 to point to a window, and makes that window the key window ...
 
+23 December 1999
+
+Last work before christmas ...
+
+Various bits of tidying up plus -
+
+Added an evil hack of a generic attributes inspector ...  This looks through
+all the methods of the selected object to find those taking a single argument
+and beginning with 'set'.  It makes all these setting methods (whose argument
+is a simple scalar type or an object) available for you to invoke from the
+inspector panel.
+
+This makes it possible to set pretty much any attribute of any object, but
+you do need to have the GNUstep header files to hand, so you can tell what
+numeric values to enter to achieve a desired result.
 
