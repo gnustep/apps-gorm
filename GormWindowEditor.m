@@ -133,13 +133,13 @@
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
-  NSDebugLog(@"********* TELL pyr *********** acceptsFirstMouse");
+  NSDebugLog(@"acceptsFirstMouse");
   return YES;
 }
 
 - (BOOL) acceptsFirstResponder
 {
-  NSDebugLog(@"********* TELL pyr *********** acceptsFirstResponder");
+  NSDebugLog(@"acceptsFirstResponder");
   return YES;
 }
 
@@ -176,7 +176,7 @@
 
 - (void) changeFont: (id)sender
 {
-  NSDebugLog(@"********* TELL pyr *********** changeFont");
+  NSDebugLog(@"changeFont");
 }
 
 - (void) close
@@ -211,7 +211,7 @@
 
 - (void) copySelection
 {
-  NSDebugLog(@"********* TELL pyr *********** copySelection");
+  NSDebugLog(@"copySelection");
 }
 
 - (void) deactivate
@@ -246,7 +246,7 @@
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSDebugLog(@"********* TELL pyr *********** draggedImage");
+  NSDebugLog(@"draggedImage");
   /*
    * FIXME - handle this.
    * Notification that a drag failed/succeeded.
@@ -255,7 +255,7 @@
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
-  NSDebugLog(@"********* TELL pyr *********** draggingSourceOperationMaskForLocal");
+  NSDebugLog(@"draggingSourceOperationMaskForLocal");
   return NSDragOperationNone;
 }
 
@@ -271,7 +271,7 @@
 
 - (void) drawSelection
 {
-  NSDebugLog(@"********* TELL pyr *********** drawSelection");
+  NSDebugLog(@"drawSelection");
 }
 
 - (id<IBDocuments>) document
@@ -336,7 +336,7 @@
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject
 {
-  NSDebugLog(@"********* TELL pyr *********** openSubeditorForObject");
+  NSDebugLog(@"openSubeditorForObject");
   return nil;
 }
 
@@ -347,13 +347,12 @@
 
 - (void) pasteInSelection
 {
-  NSDebugLog(@"********* TELL pyr *********** pasteInSelection");
-//    [self pasteInView: edit_view];
+  NSDebugLog(@"pasteInSelection");
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSDebugLog(@"********* TELL pyr *********** performDragOperation");
+  NSDebugLog(@"performDragOperation");
   return NO;
 }
 
@@ -369,20 +368,19 @@
 
 - (id) selectAllItems: (id)sender
 {
-  NSDebugLog(@"********* TELL pyr *********** selectAllItems");
+  NSDebugLog(@"selectAllItems");
   return nil;
 }
 
 - (unsigned) selectionCount
 {
-  NSDebugLog(@"********* TELL pyr *********** selectionCount");
+  NSDebugLog(@"selectionCount");
   return  0;
-//    return [selection count];
 }
 
 - (void) validateEditing
 {
-  NSDebugLog(@"********* TELL pyr *********** validateEditing");
+  NSDebugLog(@"validateEditing");
 }
 
 - (void)windowDidBecomeMain: (id) aNotification
