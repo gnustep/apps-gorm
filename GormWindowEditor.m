@@ -387,71 +387,108 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [self lockFocus];
 
 	  /*
-	   * Get size limits for resizing subview and calculate maximum
+	   * Get size limits for resizing or moving and calculate maximum
 	   * and minimum mouse positions that won't cause us to exceed
 	   * those limits.
 	   */
-	  if (view != self && knob != IBNoneKnobPosition)
+	  if (view != self)
 	    {
-	      NSSize	max = [view maximumSizeFromKnobPosition: knob];
-	      NSSize	min = [view minimumSizeFromKnobPosition: knob];
-
-	      r = [self bounds];
-	      minMouse = NSMakePoint(NSMinX(r), NSMinY(r));
-	      maxMouse = NSMakePoint(NSMaxX(r), NSMaxY(r));
-	      r = [view frame];
-	      switch (knob)
+	      if (knob == IBNoneKnobPosition)
 		{
-		  case IBBottomLeftKnobPosition:
-		    maxMouse.x = NSMaxX(r) - min.width;
-		    minMouse.x = NSMaxX(r) - max.width;
-		    maxMouse.y = NSMaxY(r) - min.height;
-		    minMouse.y = NSMaxY(r) - max.height;
-		    break;
-		    
-		  case IBMiddleLeftKnobPosition:
-		    maxMouse.x = NSMaxX(r) - min.width;
-		    minMouse.x = NSMaxX(r) - max.width;
-		    break;
+		  NSRect	vf = [view frame];
+		  NSRect	sf = [self frame];
+		  NSPoint	tr = NSMakePoint(NSMaxX(vf), NSMaxY(vf));
+		  NSPoint	bl = NSMakePoint(NSMinX(vf), NSMinY(vf));
 
-		  case IBTopLeftKnobPosition:
-		    maxMouse.x = NSMaxX(r) - min.width;
-		    minMouse.x = NSMaxX(r) - max.width;
-		    maxMouse.y = NSMinY(r) + max.height;
-		    minMouse.y = NSMinY(r) + min.height;
-		    break;
-		    
-		  case IBTopMiddleKnobPosition:
-		    maxMouse.y = NSMinY(r) + max.height;
-		    minMouse.y = NSMinY(r) + min.height;
-		    break;
+		  enumerator = [selection objectEnumerator];
+		  while ((subview = [enumerator nextObject]) != nil)
+		    {
+		      if (subview != view)
+			{
+			  float	tmp;
 
-		  case IBTopRightKnobPosition:
-		    maxMouse.x = NSMinX(r) + max.width;
-		    minMouse.x = NSMinX(r) + min.width;
-		    maxMouse.y = NSMinY(r) + max.height;
-		    minMouse.y = NSMinY(r) + min.height;
-		    break;
+			  vf = [subview frame];
+			  tmp = NSMaxX(vf);
+			  if (tmp > tr.x)
+			    tr.x = tmp;
+			  tmp = NSMaxY(vf);
+			  if (tmp > tr.y)
+			    tr.y = tmp;
+			  tmp = NSMinX(vf);
+			  if (tmp < bl.x)
+			    bl.x = tmp;
+			  tmp = NSMinY(vf);
+			  if (tmp < bl.y)
+			    bl.y = tmp;
+			}
+		    }
+		  minMouse.x = point.x - bl.x;
+		  minMouse.y = point.y - bl.y;
+		  maxMouse.x = NSMaxX(sf) - tr.x + point.x;
+		  maxMouse.y = NSMaxY(sf) - tr.y + point.y;
+		}
+	      else
+		{
+		  NSSize	max = [view maximumSizeFromKnobPosition: knob];
+		  NSSize	min = [view minimumSizeFromKnobPosition: knob];
 
-		  case IBMiddleRightKnobPosition:
-		    maxMouse.x = NSMinX(r) + max.width;
-		    minMouse.x = NSMinX(r) + min.width;
-		    break;
+		  r = [self bounds];
+		  minMouse = NSMakePoint(NSMinX(r), NSMinY(r));
+		  maxMouse = NSMakePoint(NSMaxX(r), NSMaxY(r));
+		  r = [view frame];
+		  switch (knob)
+		    {
+		      case IBBottomLeftKnobPosition:
+			maxMouse.x = NSMaxX(r) - min.width;
+			minMouse.x = NSMaxX(r) - max.width;
+			maxMouse.y = NSMaxY(r) - min.height;
+			minMouse.y = NSMaxY(r) - max.height;
+			break;
+			
+		      case IBMiddleLeftKnobPosition:
+			maxMouse.x = NSMaxX(r) - min.width;
+			minMouse.x = NSMaxX(r) - max.width;
+			break;
 
-		  case IBBottomRightKnobPosition:
-		    maxMouse.x = NSMinX(r) + max.width;
-		    minMouse.x = NSMinX(r) + min.width;
-		    maxMouse.y = NSMaxY(r) - min.height;
-		    minMouse.y = NSMaxY(r) - max.height;
-		    break;
+		      case IBTopLeftKnobPosition:
+			maxMouse.x = NSMaxX(r) - min.width;
+			minMouse.x = NSMaxX(r) - max.width;
+			maxMouse.y = NSMinY(r) + max.height;
+			minMouse.y = NSMinY(r) + min.height;
+			break;
+			
+		      case IBTopMiddleKnobPosition:
+			maxMouse.y = NSMinY(r) + max.height;
+			minMouse.y = NSMinY(r) + min.height;
+			break;
 
-		  case IBBottomMiddleKnobPosition:
-		    maxMouse.y = NSMaxY(r) - min.height;
-		    minMouse.y = NSMaxY(r) - max.height;
-		    break;
+		      case IBTopRightKnobPosition:
+			maxMouse.x = NSMinX(r) + max.width;
+			minMouse.x = NSMinX(r) + min.width;
+			maxMouse.y = NSMinY(r) + max.height;
+			minMouse.y = NSMinY(r) + min.height;
+			break;
 
-		  case IBNoneKnobPosition:
-		    break;	/* NOT REACHED */
+		      case IBMiddleRightKnobPosition:
+			maxMouse.x = NSMinX(r) + max.width;
+			minMouse.x = NSMinX(r) + min.width;
+			break;
+
+		      case IBBottomRightKnobPosition:
+			maxMouse.x = NSMinX(r) + max.width;
+			minMouse.x = NSMinX(r) + min.width;
+			maxMouse.y = NSMaxY(r) - min.height;
+			minMouse.y = NSMaxY(r) - max.height;
+			break;
+
+		      case IBBottomMiddleKnobPosition:
+			maxMouse.y = NSMaxY(r) - min.height;
+			minMouse.y = NSMaxY(r) - max.height;
+			break;
+
+		      case IBNoneKnobPosition:
+			break;	/* NOT REACHED */
+		    }
 		}
 	    }
 
@@ -499,33 +536,6 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		      r = NSRectFromPoints(point, mouseDownPoint);
 		      GormShowFrameWithKnob(r, IBNoneKnobPosition);
 		    }
-		  else if (knob == IBNoneKnobPosition)
-		    {
-		      float	xDiff = point.x - lastPoint.x;
-		      float	yDiff = point.y - lastPoint.y;
-
-		      lastPoint = point;
-		      if (dragStarted == NO)
-			{
-			  /*
-			   * Remove selection knobs before moving selection.
-			   */
-			  dragStarted = YES;
-			  [self makeSelectionVisible: NO];
-			}
-		      enumerator = [selection objectEnumerator];
-		      while ((subview = [enumerator nextObject]) != nil)
-			{
-			  NSRect	oldFrame = [subview frame];
-
-			  r = oldFrame;
-			  r.origin.x += xDiff;
-			  r.origin.y += yDiff;
-			  [subview setFrame: r];
-			  [self displayRect: oldFrame];
-			  [subview display];
-			}
-		    }
 		  else
 		    {
 		      float	xDiff;
@@ -544,62 +554,88 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		      yDiff = point.y - lastPoint.y;
 		      lastPoint = point;
 
-		      r = GormExtBoundsForRect(lastRect);
-		      r.origin.x--;
-		      r.origin.y--;
-		      r.size.width += 2;
-		      r.size.height += 2;
-		      [self displayRect: r];
-		      r = lastRect;
-		      switch (knob)
+		      if (knob == IBNoneKnobPosition)
 			{
-			  case IBBottomLeftKnobPosition:
-			    r.origin.x += xDiff;
-			    r.origin.y += yDiff;
-			    r.size.width -= xDiff;
-			    r.size.height -= yDiff;
-			    break;
-			    
-			  case IBMiddleLeftKnobPosition:
-			    r.origin.x += xDiff;
-			    r.size.width -= xDiff;
-			    break;
+			  if (dragStarted == NO)
+			    {
+			      /*
+			       * Remove selection knobs before moving selection.
+			       */
+			      dragStarted = YES;
+			      [self makeSelectionVisible: NO];
+			    }
+			  enumerator = [selection objectEnumerator];
+			  while ((subview = [enumerator nextObject]) != nil)
+			    {
+			      NSRect	oldFrame = [subview frame];
 
-			  case IBTopLeftKnobPosition:
-			    r.origin.x += xDiff;
-			    r.size.width -= xDiff;
-			    r.size.height += yDiff;
-			    break;
-			    
-			  case IBTopMiddleKnobPosition:
-			    r.size.height += yDiff;
-			    break;
-
-			  case IBTopRightKnobPosition:
-			    r.size.width += xDiff;
-			    r.size.height += yDiff;
-			    break;
-
-			  case IBMiddleRightKnobPosition:
-			    r.size.width += xDiff;
-			    break;
-
-			  case IBBottomRightKnobPosition:
-			    r.origin.y += yDiff;
-			    r.size.width += xDiff;
-			    r.size.height -= yDiff;
-			    break;
-
-			  case IBBottomMiddleKnobPosition:
-			    r.origin.y += yDiff;
-			    r.size.height -= yDiff;
-			    break;
-
-			  case IBNoneKnobPosition:
-			    break;	/* NOT REACHED */
+			      r = oldFrame;
+			      r.origin.x += xDiff;
+			      r.origin.y += yDiff;
+			      [subview setFrame: r];
+			      [self displayRect: oldFrame];
+			      [subview display];
+			    }
 			}
-		      lastRect = r;
-		      GormShowFrameWithKnob(lastRect, knob);
+		      else
+			{
+			  r = GormExtBoundsForRect(lastRect);
+			  r.origin.x--;
+			  r.origin.y--;
+			  r.size.width += 2;
+			  r.size.height += 2;
+			  [self displayRect: r];
+			  r = lastRect;
+			  switch (knob)
+			    {
+			      case IBBottomLeftKnobPosition:
+				r.origin.x += xDiff;
+				r.origin.y += yDiff;
+				r.size.width -= xDiff;
+				r.size.height -= yDiff;
+				break;
+				
+			      case IBMiddleLeftKnobPosition:
+				r.origin.x += xDiff;
+				r.size.width -= xDiff;
+				break;
+
+			      case IBTopLeftKnobPosition:
+				r.origin.x += xDiff;
+				r.size.width -= xDiff;
+				r.size.height += yDiff;
+				break;
+				
+			      case IBTopMiddleKnobPosition:
+				r.size.height += yDiff;
+				break;
+
+			      case IBTopRightKnobPosition:
+				r.size.width += xDiff;
+				r.size.height += yDiff;
+				break;
+
+			      case IBMiddleRightKnobPosition:
+				r.size.width += xDiff;
+				break;
+
+			      case IBBottomRightKnobPosition:
+				r.origin.y += yDiff;
+				r.size.width += xDiff;
+				r.size.height -= yDiff;
+				break;
+
+			      case IBBottomMiddleKnobPosition:
+				r.origin.y += yDiff;
+				r.size.height -= yDiff;
+				break;
+
+			      case IBNoneKnobPosition:
+				break;	/* NOT REACHED */
+			    }
+			  lastRect = r;
+			  GormShowFrameWithKnob(lastRect, knob);
+			}
 		    }
 
 		  /*

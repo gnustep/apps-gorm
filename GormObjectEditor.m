@@ -318,8 +318,6 @@ static NSMapTable	*docMap = 0;
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  NSView	*view;
-
   mouseDownPoint = [theEvent locationInWindow];
   [super mouseDown: theEvent];
 }
@@ -340,12 +338,92 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  return YES;
+  if (dragType == IBObjectPboardType)
+    {
+      NSArray		*array;
+      NSEnumerator	*enumerator;
+      id		obj;
+
+      /*
+       * Ask the document to get the dragged objects from the pasteboard and
+       * add them to it's collection of known objects.
+       */
+      array = [document pasteType: IBViewPboardType
+		   fromPasteboard: dragPb
+			   parent: [objects objectAtIndex: 0]];
+      enumerator = [array objectEnumerator];
+      while ((obj = [enumerator nextObject]) != nil)
+	{
+	  [self addObject: obj];
+	}
+      return YES;
+    }
+  else if (dragType == GormLinkPboardType)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      NSString	*name = [dragPb stringForType: GormLinkPboardType];
+      int	r, c;
+      int	pos;
+      id	obj = nil;
+
+NSLog(@"Got link from %@", name);
+      loc = [self convertPoint: loc fromView: nil];
+      [self getRow: &r column: &c forPoint: loc];
+      pos = r * [self numberOfColumns] + c;
+      if (pos >= 0 && pos < [objects count])
+	{
+	  obj = [objects objectAtIndex: pos];
+	}
+      if (obj == nil)
+	{
+	  return NO;
+	}
+      else
+	{
+	  [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
+	  [NSApp startConnecting];
+	  return YES;
+	}
+    }
+  else
+    {
+      NSLog(@"Drop with unrecognized type!");
+      return NO;
+    }
 }
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
-  return YES;
+  /*
+   * Tell the source that we will accept the drop if we can.
+   */
+  if (dragType == IBObjectPboardType)
+    {
+      /*
+       * We can accept objects dropped anywhere.
+       */
+      return YES;
+    }
+  else if (dragType == GormLinkPboardType)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      int	r, c;
+      int	pos;
+      id	obj = nil;
+
+      loc = [self convertPoint: loc fromView: nil];
+      [self getRow: &r column: &c forPoint: loc];
+      pos = r * [self numberOfColumns] + c;
+      if (pos >= 0 && pos < [objects count])
+	{
+	  obj = [objects objectAtIndex: pos];
+	}
+      if (obj != nil)
+	{
+	  return YES;
+	}
+    }
+  return NO;
 }
 
 - (id) raiseSelection: (id)sender

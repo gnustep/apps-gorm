@@ -1,3 +1,9 @@
+Sat Dec 18 21:24:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Add partial support for draagging into object view.
+	Fix move/resize of window subviews to make sure subviews can't be
+	dragged outside visible area.
+
 Fri Dec 17 18:44:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Add some support for connections - handle link dragging within window
