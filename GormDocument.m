@@ -583,7 +583,7 @@ static NSImage  *fileImage = nil;
 	  NSString *label = NSStringFromSelector(sel);
 	  id source = anObject;
 	  NSNibControlConnector *con = [NSNibControlConnector new];
-	  id destination = [anObject target];
+	  id destination = [(NSControl *)anObject target];
 	  NSArray *sourceConnections = [self connectorsForSource: source];
 
 	  // if it's a menu item we want to connect it to it's parent...
@@ -2991,10 +2991,10 @@ static NSImage  *fileImage = nil;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  // NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
 
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
   lastEditor = anEditor;
+  [(Gorm *)NSApp stopConnecting]; // cease any connection
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeFirstResponder: (id)anEditor];
