@@ -134,7 +134,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       printf("count %i\n",c);
       for (i=0;i<c;i++)
 	{
-
+	  NSLog(@"====> %@",[data objectAtIndex:i]);
  	  id placeHolder = 
  	    [(GormDocument *)document _createImagePlaceHolder: [data objectAtIndex: i]];
  	  NSLog(@"here1 %@", [data objectAtIndex: i]);
@@ -143,10 +143,8 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
  	    {
  	      NSLog(@"here %@", [data objectAtIndex: i]);
    	      [self addObject: placeHolder];
-   	      [(GormDocument *)document addImage: 
-   			  [[[data objectAtIndex: i] 
-   			     lastPathComponent] 
-   			    stringByDeletingPathExtension]];
+   	      [(GormDocument *)document addImage: [data objectAtIndex: i]];
+
 	    }
 
 	}
