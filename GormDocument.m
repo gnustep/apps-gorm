@@ -2833,6 +2833,56 @@ static NSImage	*classesImage = nil;
   return removed;
 }
 
+- (BOOL) renameConnectionsForClassNamed: (NSString *)className
+				 toName: (NSString *)newName
+{
+  NSEnumerator *en = [connections objectEnumerator];
+  id<IBConnectors> c = nil;
+  BOOL removed = YES;
+  int retval = -1;
+  NSString *title = [NSString stringWithFormat: @"Modifying Class"];
+  NSString *msg = [NSString stringWithFormat: 
+			      @"Change class name '%@' to '%@'.  Continue?",
+			    className, newName];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title,msg,@"OK",@"Cancel",nil,nil);
+  if(retval == NSAlertDefaultReturn)
+    {
+      removed = YES;
+    }
+  else
+    {
+      removed = NO;
+    }
+
+  // remove all.
+  while((c = [en nextObject]) != nil)
+    {
+      id source = [c source];
+      id destination = [c destination];
+
+      // check both...
+      if([[[c source] className] isEqualToString: className])
+	{
+	  [source setClassName: newName];
+	  NSLog(@"Found matching source");
+	}
+      else if([[[c destination] className] isEqualToString: className])
+	{
+	  [destination setClassName: newName];
+	  NSLog(@"Found matching destination");
+	}
+    }
+
+  // Get the object from the object editor so that we can change the name
+  // there too.
+  
+  // done...
+  NSDebugLog(@"Changed references to actions/outlets for objects of %@", className);
+  return removed;
+}
+
 // --- NSOutlineView dataSource ---
 - (id)        outlineView: (NSOutlineView *)anOutlineView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
@@ -2931,8 +2981,8 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     {
       if(![anObject isEqualToString: @""])
 	{
-	  BOOL removed = [self removeConnectionsForClassNamed: item];
-	  if(removed)
+	  BOOL rename = [self renameConnectionsForClassNamed: item toName: anObject];
+	  if(rename)
 	    {
 	      [classManager renameClassNamed: item newName: anObject];
 	      [self detachObject: [self objectForName: item]];

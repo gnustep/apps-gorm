@@ -26,6 +26,7 @@ extern NSString *GormLinkPboardType;
  * This is done so that we can provide our own decoding method
  * (GSNibItem tries to morph into the actual class)
  */
+- (void) setClassName: (NSString *)className;
 @end
 
 // Additions to template classes within gorm.

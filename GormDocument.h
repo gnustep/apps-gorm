@@ -118,6 +118,8 @@
                       forClassNamed: (NSString *)className
                            isAction: (BOOL)action;
 - (BOOL) removeConnectionsForClassNamed: (NSString *)name;
+- (BOOL) renameConnectionsForClassNamed: (NSString *)name 
+                                 toName: (NSString *)newName;
 @end
 
 #endif

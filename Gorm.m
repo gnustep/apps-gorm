@@ -146,6 +146,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 {
   return @"GormNotApplicableInspector";
 }
+
+- (void) setClassName: (NSString *)className
+{
+  RELEASE(theClass);
+  theClass = [className copy];
+}
 @end
 
 // add methods to all of the template objects for use

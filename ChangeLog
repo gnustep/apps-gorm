@@ -1,3 +1,11 @@
+2002-12-05  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.[mh]: Added method named
+	-[GormDocument renameConnectionsForClassNamed:toName:]
+	to rename the object in the object editor so that the
+	connections stay in sync w/ the new name.
+	* Gorm.m/GormPrivate.h: Added -[GormObjectProxy setClassName:]
+	
 2002-12-04  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.2.0
