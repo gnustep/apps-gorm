@@ -80,6 +80,7 @@
 	NSViewHeightSizable | NSViewWidthSizable];
       [button setStringValue: @"Empty Selection"];
       [button setBordered: NO];
+      [button setEnabled: NO];
       [contents addSubview: button];
       RELEASE(button);
     }
@@ -121,6 +122,7 @@
 	NSViewHeightSizable | NSViewWidthSizable];
       [button setStringValue: @"Unknown object"];
       [button setBordered: NO];
+      [button setEnabled: NO];
       [contents addSubview: button];
       RELEASE(button);
     }
@@ -161,11 +163,20 @@
 	NSViewHeightSizable | NSViewWidthSizable];
       [button setStringValue: @"Multiple Selection"];
       [button setBordered: NO];
+      [button setEnabled: NO];
       [contents addSubview: button];
       RELEASE(button);
     }
   return self;
 }
+@end
+
+@interface GormISelectionView : NSView
+{
+}
+@end
+
+@implementation GormISelectionView : NSView
 @end
 
 
@@ -206,48 +217,71 @@
 - (id) init
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSCell	*cell;
+  NSPopUpButton	*popup;
+  NSMenuItem	*item;
   NSRect	contentRect = {{0, 0}, {272, 420}};
-  NSRect	selectionRect = {{0, 378}, {272, 52}};
-  NSRect	dividerRect = {{0, 361}, {272, 2}};
-  NSRect	inspectorRect = {{0, 0}, {272, 360}};
+  NSRect	popupRect = {{60, 15}, {152, 20}};
+  NSRect	selectionRect = {{0, 380}, {272, 40}};
+  NSRect	inspectorRect = {{0, 0}, {272, 378}};
   unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
 
   panel = [[NSPanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained
 					 defer: NO];
-  divider = [[NSBox alloc] initWithFrame: dividerRect];
-  [divider setBorderType: NSLineBorder];
-  [divider setTitlePosition: NSNoTitle];
-  [divider setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
-  [[panel contentView] addSubview: divider]; 
-  RELEASE(divider);
-
   [panel setTitle: @"Inspector"];
   [panel setMinSize: [panel frame].size];
 
-  selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
-					     mode: NSRadioModeMatrix
-					cellClass: [NSCell class]
-				     numberOfRows: 1
-				  numberOfColumns: 4];
-  [selectionView setTarget: self];
-  [selectionView setAction: @selector(setCurrentInspector:)];
-  [selectionView setCellSize: NSMakeSize(52,52)];
-  [selectionView setIntercellSpacing: NSMakeSize(0,0)];
-  [selectionView setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
-  cell = [selectionView cellAtRow: 0 column: 0];
-  [cell setStringValue: @"Attr"];
-  cell = [selectionView cellAtRow: 0 column: 1];
-  [cell setStringValue: @"Size"];
-  cell = [selectionView cellAtRow: 0 column: 2];
-  [cell setStringValue: @"Conn"];
-  cell = [selectionView cellAtRow: 0 column: 3];
-  [cell setStringValue: @"Help"];
+  /*
+   * The selection view sits at the top of the panel and is always the
+   * same height.
+   */
+  selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
+  [selectionView setAutoresizingMask:
+    NSViewMinYMargin | NSViewWidthSizable];
   [[panel contentView] addSubview: selectionView]; 
   RELEASE(selectionView);
 
+  /*
+   * The selection view contains a popup menu identifying the type of
+   * inspector being used.
+   */
+  popup = [[NSPopUpButton alloc] initWithFrame: popupRect pullsDown: NO];
+  [popup setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
+  [selectionView addSubview: popup];
+  RELEASE(popup);
+
+  [popup addItemWithTitle: @"Attributes"];
+  item = [popup itemAtIndex: 0];
+  [item setTarget: self];
+  [item setAction: @selector(setCurrentInspector:)];
+  [item setKeyEquivalent: @"1"];
+  [item setTag: 0];
+
+  [popup addItemWithTitle: @"Connections"];
+  item = [popup itemAtIndex: 1];
+  [item setTarget: self];
+  [item setAction: @selector(setCurrentInspector:)];
+  [item setKeyEquivalent: @"2"];
+  [item setTag: 1];
+
+  [popup addItemWithTitle: @"Size"];
+  item = [popup itemAtIndex: 2];
+  [item setTarget: self];
+  [item setAction: @selector(setCurrentInspector:)];
+  [item setKeyEquivalent: @"3"];
+  [item setTag: 2];
+
+  [popup addItemWithTitle: @"Help"];
+  item = [popup itemAtIndex: 3];
+  [item setTarget: self];
+  [item setAction: @selector(setCurrentInspector:)];
+  [item setKeyEquivalent: @"4"];
+  [item setTag: 3];
+
+  /*
+   * The inspector view fills the area below the selection view.
+   */
   inspectorView = [[NSView alloc] initWithFrame: inspectorRect];
   [inspectorView setAutoresizingMask:
     NSViewHeightSizable | NSViewWidthSizable];
@@ -295,7 +329,7 @@
 
   if (anObj != self)
     {
-      current = [anObj selectedColumn];
+      current = [anObj tag];
     }
 
   /*
@@ -355,7 +389,7 @@
 	  buttonView = nil;
 	}
 
-      rect.size.height = [divider frame].origin.y;
+      rect.size.height = [selectionView frame].origin.y;
       if ([inspector wantsButtons] == YES)
 	{
 	  NSRect	buttonsRect;
