@@ -764,7 +764,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   for (i = 0; i < n; i++)
     {
       actionName = [actions objectAtIndex: i];
-      actionName = [actionName substringToIndex: [actionName length] - 1];
       [headerFile appendFormat: @"- (void) %@: (id)sender;\n", actionName];
       [sourceFile appendFormat:
 	@"\n"
@@ -804,6 +803,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   BOOL			editActions;
 }
 
+- (NSString*) identifierString: (NSString*)str;
 - (void) updateButtons;
 - (void) renameClass: (id)sender;
 - (void) changeSuperClass: (id)sender;
@@ -953,7 +953,8 @@ selectCellWithString: (NSString*)title
       superClassPU = [[NSPopUpButton alloc] initWithFrame: rect pullsDown: NO];
       [superClassPU setTarget: self];
       [superClassPU setAction: @selector(changeSuperClass:)];
-      [superClassPU setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
+      [superClassPU setAutoresizingMask:
+	NSViewWidthSizable|NSViewHeightSizable];
       [superClassPU removeAllItems];
       [superClassPU addItemWithTitle: @"superclass !"];
       [contents addSubview: superClassPU];
@@ -1049,7 +1050,7 @@ selectCellWithString: (NSString*)title
       NSString	*cn = [object className];
       NSString  *oldName = [[browser selectedCell] stringValue];
 
-      name = [editNameTF stringValue];
+      name = [self identifierString: [editNameTF stringValue]];
 
       switch (editActions)
 	{ // Rename
@@ -1100,7 +1101,7 @@ selectCellWithString: (NSString*)title
       switch (editActions)
 	{ // Add
 	  case 0: // outlets
-	    name = [editNameTF stringValue];
+	    name = [self identifierString: [editNameTF stringValue]];
 	    NSLog(@"add outlet : %@", name);
 
 	    if (name != nil && ![name isEqualToString: @""])
@@ -1121,7 +1122,7 @@ selectCellWithString: (NSString*)title
 	    break;
 
 	  default: // actions
-	    name = [editNameTF stringValue];
+	    name = [self identifierString: [editNameTF stringValue]];
 	    NSLog(@"add action : %@", name);
 
 	    if (name != nil && ![name isEqualToString: @""])
@@ -1195,6 +1196,7 @@ selectCellWithString: (NSString*)title
       [self updateButtons];
     }
 }
+
 - (void) renameClass: (id)sender
 {
   GormClassManager	*cm = [(id)[(id)NSApp activeDocument] classManager];
@@ -1203,7 +1205,7 @@ selectCellWithString: (NSString*)title
   NSLog(@"rename class : Attention, the current implementation won't "
     @"rename classes for objects already instantiated !");
 
-  newName = [classNameTF stringValue];
+  newName = [self identifierString: [classNameTF stringValue]];
   if (newName != nil && [newName isEqualToString: @""] == NO)
     {
       if ([cm renameClassNamed: [object className] newName: newName])
@@ -1219,6 +1221,51 @@ selectCellWithString: (NSString*)title
     {
       [classNameTF setStringValue: [object className]];
     }
+}
+
+/*
+ * Produce identifier string byn removing illegal characters
+ * and leading numerics
+ */
+- (NSString*) identifierString: (NSString*)str
+{
+  static NSCharacterSet	*illegal = nil;
+  static NSCharacterSet	*numeric = nil;
+  NSRange		r;
+  NSMutableString	*m;
+
+  if (illegal == nil)
+    {
+      illegal = [[NSCharacterSet characterSetWithCharactersInString:
+	@"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
+	invertedSet];
+      numeric = [NSCharacterSet characterSetWithCharactersInString:
+	@"0123456789"];
+      RETAIN(illegal); 
+      RETAIN(numeric); 
+    }
+  if (str == nil)
+    {
+      return nil;
+    }
+  m = [str mutableCopy];
+  r = [str rangeOfCharacterFromSet: illegal];
+  while (r.length > 0)
+    {
+      [m deleteCharactersInRange: r];
+      r = [m rangeOfCharacterFromSet: illegal];
+    }
+  r = [str rangeOfCharacterFromSet: numeric];
+  while (r.length > 0 && r.location == 0)
+    {
+      [m deleteCharactersInRange: r];
+      r = [m rangeOfCharacterFromSet: numeric];
+    }
+  str = [m copy];
+  RELEASE(m);
+  AUTORELEASE(str);
+
+  return str;
 }
 
 - (void) updateButtons

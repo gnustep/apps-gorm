@@ -1,3 +1,11 @@
+2001-10-26  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormClassManager.m: Force class, action, and outlet names to be
+	legal identifiers ... ie consist of alhpanumeric and underscore
+	characters with a non-numeric initial character.
+	A roundabout/fundamental fix for a problem generating output files
+	reported by Ludovic Marcotte
+
 2001-10-27  Laurent Julliard  <laurent@julliard-online.org>
 
 	* ClassInformation.plist: IBInspector actions/outlets closer to OS 4.2
