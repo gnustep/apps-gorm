@@ -40,7 +40,7 @@
   id		v;
 
   contents = [originalWindow contentView];
-  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(172, 147, 89, 20)];
+  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(118, 139, 87, 22)];
   [v addItemWithTitle: @"Item 1"];
   [v addItemWithTitle: @"Item 2"];
   [v addItemWithTitle: @"Item 3"];
