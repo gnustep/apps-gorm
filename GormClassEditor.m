@@ -61,6 +61,10 @@
 
 }
 
+- (void) makeSelectionVisible: (BOOL)flag
+{
+
+}
 @end
 
 
