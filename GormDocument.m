@@ -2766,7 +2766,7 @@ static NSImage	*classesImage = nil;
   if(willUpgradeArchive)
     {
       retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.3 Release or CVS prior to Jun 29 2004."),
+			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.3 Release or CVS prior to Jun 28 2004."),
 			       _(@"Save"),
 			       _(@"Don't Save"), nil, nil);
       if (retval != NSAlertDefaultReturn)
