@@ -321,6 +321,7 @@ static NSImage	*classesImage = nil;
 
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   [window setDelegate: nil];
   [window performClose: self];
   RELEASE(window);
@@ -375,7 +376,9 @@ static NSImage	*classesImage = nil;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-  if ([[aNotification name] isEqual: NSWindowWillCloseNotification] == YES)
+  NSString	*name = [aNotification name];
+
+  if ([name isEqual: NSWindowWillCloseNotification] == YES)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       Class		winClass = [NSWindow class];
@@ -397,6 +400,100 @@ static NSImage	*classesImage = nil;
 	    }
 	}
       [self setDocumentActive: NO];
+    }
+  else if ([name isEqual: IBWillBeginTestingInterfaceNotification] == YES)
+    {
+      if ([window isVisible] == YES)
+	{
+	  hiddenDuringTest = YES;
+	  [window setExcludedFromWindowsMenu: YES];
+	  [window orderOut: self];
+	  /*
+	   * If this is the active document, we must replace the main menu with
+	   * our own version using a modified 'Quit' item (to end testing).
+	   * and we should try to make one of our windows key.
+	   */
+	  if ([(id<IB>)NSApp activeDocument] == self)
+	    {
+	      NSWindow		*keyWindow = nil;
+	      NSMenu		*testMenu = nil;
+	      NSMenuItem	*item;
+	      NSArray		*links;
+	      NSEnumerator	*e;
+	      NSNibConnector	*con;
+
+	      /*
+	       * Get links for all the top-level objects
+	       */
+	      links = [self connectorsForDestination: filesOwner
+					     ofClass: [NSNibConnector class]];
+	      e = [links objectEnumerator];
+	      while ((con = [e nextObject]) != nil)
+		{
+		  id	obj = [con source];
+
+		  if ([obj isKindOfClass: [NSMenu class]] == YES)
+		    {
+		      testMenu = obj;
+		    }
+		  else if ([obj isKindOfClass: [NSWindow class]] == YES)
+		    {
+		      if (keyWindow == nil || [keyWindow isVisible] == NO)
+			{
+			  keyWindow = obj;
+			}
+		    }
+		}
+
+	      if (testMenu == nil)
+		{
+		  testMenu = [[NSMenu alloc] initWithTitle: @"Test"];
+		  AUTORELEASE(testMenu);
+		}
+	      item = [testMenu itemWithTitle: @"Quit"];
+	      if (item != nil)
+		{
+		  quitItem = RETAIN(item);
+		  [testMenu removeItem: item];
+		}
+	      [testMenu addItemWithTitle: @"Quit" 
+				  action: @selector(endTesting:)
+			   keyEquivalent: @"q"];	
+	      [NSApp setMainMenu: testMenu];
+	      [keyWindow makeKeyAndOrderFront: self];
+	      RELEASE(testMenu);
+	    }
+	}
+    }
+  else if ([name isEqual: IBWillEndTestingInterfaceNotification] == YES)
+    {
+      if (hiddenDuringTest == YES)
+	{
+	  hiddenDuringTest = NO;
+	  /*
+	   * If this is the active document, we must restore the main menu
+	   * and restore the 'Quit' menu item (which was used to end testing)
+	   * to its original value.
+	   */
+	  if ([(id<IB>)NSApp activeDocument] == self)
+	    {
+	      NSMenu		*testMenu = [NSApp mainMenu];
+	      NSMenuItem	*item = [testMenu itemWithTitle: @"Quit"];
+
+	      [testMenu removeItem: item];
+	      if (quitItem != nil)
+		{
+		  [testMenu addItem: quitItem];
+		  DESTROY(quitItem);
+		}
+	      /*
+	       * restore the main menu.
+	       */
+	      [NSApp setMainMenu: [(Gorm*)NSApp gormMenu]];
+	    }
+	  [window orderFront: self];
+	  [window setExcludedFromWindowsMenu: NO];
+	}
     }
 }
 
@@ -597,6 +694,18 @@ static NSImage	*classesImage = nil;
       [self setName: @"NSFirst" forObject: firstResponder];
       [objectsView addObject: firstResponder];
       fontManager = [GormFontManager new];
+
+      /*
+       * Watch to see when we are starting/ending testing.
+       */
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBWillBeginTestingInterfaceNotification
+	       object: nil];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBWillEndTestingInterfaceNotification
+	       object: nil];
     }
   return self;
 }

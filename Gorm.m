@@ -24,6 +24,15 @@
 
 #include "GormPrivate.h"
 
+NSString *IBWillBeginTestingInterfaceNotification
+  = @"IBWillBeginTestingInterfaceNotification";
+NSString *IBDidBeginTestingInterfaceNotification
+  = @"IBDidBeginTestingInterfaceNotification";
+NSString *IBWillEndTestingInterfaceNotification
+  = @"IBWillEndTestingInterfaceNotification";
+NSString *IBDidEndTestingInterfaceNotification
+  = @"IBDidEndTestingInterfaceNotification";
+
 @class	InfoPanel;
 
 @implementation Gorm
@@ -71,16 +80,60 @@
   return YES;
 }
 
+- (id) beginTesting: (id)sender
+{
+  if (isTesting == YES)
+    {
+      return nil;
+    }
+  else
+    {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+      [nc postNotificationName: IBWillBeginTestingInterfaceNotification
+			object: self];
+      isTesting = YES;
+      [nc postNotificationName: IBDidBeginTestingInterfaceNotification
+			object: self];
+      return self;
+    }
+}
+
 - (void) dealloc
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
+  RELEASE(gormMenu);
   RELEASE(infoPanel);
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
   RELEASE(documents);
   [super dealloc];
+}
+
+- (id) endTesting: (id)sender
+{
+  if (isTesting == NO)
+    {
+      return nil;
+    }
+  else
+    {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+      [nc postNotificationName: IBWillEndTestingInterfaceNotification
+			object: self];
+      isTesting = NO;
+      [nc postNotificationName: IBDidEndTestingInterfaceNotification
+			object: self];
+      return self;
+    }
+}
+
+- (NSMenu*) gormMenu
+{
+  return gormMenu;
 }
 
 - (void) handleNotification: (NSNotification*)notification
@@ -122,6 +175,8 @@
 		 name: IBWillCloseDocumentNotification
 	       object: nil];
 
+      gormMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
+
       /*
        * Make sure the palettes manager exists, so that the editors and
        * inspectors provided in the standard palettes are available.
@@ -138,6 +193,11 @@
       inspectorsManager = [GormInspectorsManager new];
     }
   return inspectorsManager;
+}
+
+- (BOOL) isTestingInterface
+{
+  return isTesting;
 }
 
 - (id) makeNewDocument: (id) sender
@@ -206,6 +266,27 @@
   return self;
 }
 
+- (id) revertToSaved: (id)sender
+{
+  NSLog(@"Revert to save not yet implemented");
+  return nil;
+}
+
+- (id) saveAll: (id)sender
+{
+  NSEnumerator	*e = [documents objectEnumerator];
+  id		doc;
+
+  while ((doc = [e nextObject]) != nil)
+    {
+      if ([[doc window] isDocumentEdited] == YES)
+	{
+	  [doc saveDocument: sender];
+	}
+    }
+  return self;
+}
+
 - (id) saveAsDocument: (id)sender
 {
   return [(id)activeDocument saveAsDocument: sender];
@@ -235,6 +316,7 @@ main(void)
   NSMenu		*mainMenu;
   NSMenu		*windowsMenu;
   NSMenuItem		*menuItem;
+  Gorm			*theApp;
 
   pool = [NSAutoreleasePool new];
   initialize_gnustep_backend ();
@@ -243,9 +325,9 @@ main(void)
    * Install an instance of Gorm as the application so that the app
    * can conform to the IB protocol
    */
-  NSApp = [Gorm new];
+  NSApp = theApp = [Gorm new];
 
-  mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
+  mainMenu = [theApp gormMenu];
 
   /*
    * Set up info menu.
@@ -279,6 +361,15 @@ main(void)
   [aMenu addItemWithTitle: @"Save As..." 
 		   action: @selector(saveAsDocument:) 
 	    keyEquivalent: @"S"];
+  [aMenu addItemWithTitle: @"Save All" 
+		   action: @selector(saveAll:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Revert to Saved" 
+		   action: @selector(revertToSaved:) 
+	    keyEquivalent: @"u"];
+  [aMenu addItemWithTitle: @"Test Interface"
+		   action: @selector(beginTesting:) 
+	    keyEquivalent: @"r"];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
 				 action: NULL 
 			  keyEquivalent: @""];

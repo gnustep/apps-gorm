@@ -1,6 +1,7 @@
-Wed Dec 15 11:12:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+Wed Dec 15 15:27:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Archive save/restore fixes.
+	Implementation of framework for interactive testing mode.
 
 Tue Dec 14 20:13:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 

@@ -19,8 +19,13 @@
   id<IBSelectionOwners>	selectionOwner;
   id<IBDocuments>	activeDocument;
   NSMutableArray	*documents;
+  NSMenu		*gormMenu;
+  BOOL			isTesting;
 }
 - (id<IBDocuments>) activeDocument;
+- (id) beginTesting: (id)sender;
+- (id) endTesting: (id)sender;
+- (NSMenu*) gormMenu;
 - (void) handleNotification: (NSNotification*)aNotification;
 - (GormInspectorsManager*) inspectorsManager;
 - (id) makeNewDocument: (id) sender;

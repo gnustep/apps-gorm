@@ -148,6 +148,11 @@
  */
 - (NSView*) hitTest: (NSPoint)loc
 {
+  if ([(id<IB>)NSApp isTestingInterface] == YES)
+    {
+      return [super hitTest: loc];
+    }
+
   /*
    * Stop the subviews receiving events - we grab them all.
    */
@@ -159,6 +164,12 @@
 - (void) mouseDown: (NSEvent*)theEvent
 {
   NSView	*view;
+
+  if ([(id<IB>)NSApp isTestingInterface] == YES)
+    {
+      [super mouseDown: theEvent];
+      return;
+    }
 
   mouseDownPoint = [theEvent locationInWindow];
   view = [super hitTest: mouseDownPoint];
@@ -175,6 +186,11 @@
 
 - (void) mouseDragged: (NSEvent*)theEvent
 {
+  if ([(id<IB>)NSApp isTestingInterface] == YES)
+    {
+      [super mouseDown: theEvent];
+      return;
+    }
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
@@ -295,9 +311,7 @@
 
 - (void) dealloc
 {
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
-  [nc removeObserver: self];
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   [self close];
   RELEASE(edited);
   RELEASE(selection);

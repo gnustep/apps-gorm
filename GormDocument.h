@@ -30,6 +30,8 @@
   NSMatrix		*selectionView;
   NSScrollView		*scrollView;
   id			objectsView;
+  BOOL			hiddenDuringTest;
+  NSMenuItem		*quitItem;		/* Replaced during test */
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

@@ -9,8 +9,8 @@
   NSMutableArray	*bundles;
   NSMutableArray	*palettes;
   int			current;
+  BOOL			hiddenDuringTest;
 }
-
 - (void) loadPalette: (NSString*)path;
 - (id) openPalette: (id) sender;
 - (NSPanel*) panel;

@@ -12,6 +12,7 @@
   IBInspector		*multipleInspector;
   IBInspector		*inspector;
   int			current;
+  BOOL			hiddenDuringTest;
 }
 - (NSPanel*) panel;
 - (void) setCurrentInspector: (id)anObject;

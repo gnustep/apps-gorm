@@ -190,14 +190,38 @@ static NSImage	*dragImage = nil;
 
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(panel);
   RELEASE(bundles);
   RELEASE(palettes);
   [super dealloc];
 }
 
+- (void) handleNotification: (NSNotification*)aNotification
+{
+  NSString	*name = [aNotification name];
+
+  if ([name isEqual: IBWillBeginTestingInterfaceNotification] == YES)
+    {
+      if ([panel isVisible] == YES)
+	{
+	  hiddenDuringTest = YES;
+	  [panel orderOut: self];
+	}
+    }
+  else if ([name isEqual: IBWillEndTestingInterfaceNotification] == YES)
+    {
+      if (hiddenDuringTest == YES)
+	{
+	  hiddenDuringTest = NO;
+	  [panel orderFront: self];
+	}
+    }
+}
+
 - (id) init
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSScrollView	*scrollView;
   NSArray	*array;
   NSRect	contentRect = {{0, 0}, {272, 266}};
@@ -254,6 +278,15 @@ static NSImage	*dragImage = nil;
 	  [self loadPalette: [array objectAtIndex: index]];
 	}
     }
+
+  [nc addObserver: self
+	 selector: @selector(handleNotification:)
+	     name: IBWillBeginTestingInterfaceNotification
+	   object: nil];
+  [nc addObserver: self
+	 selector: @selector(handleNotification:)
+	     name: IBWillEndTestingInterfaceNotification
+	   object: nil];
 
   return self;
 }
