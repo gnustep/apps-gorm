@@ -95,9 +95,16 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   int version = [aCoder versionForClassName: 
-			  NSStringFromClass([GSCustomView class])];
+			  NSStringFromClass([GSNibItem class])];
+  
+  if (version == NSNotFound)
+    {
+      NSLog(@"no GSNibItem");
+      version = [aCoder versionForClassName: 
+			  NSStringFromClass([GormObjectProxy class])];
+    }
 
-  if (version == 1)
+  if (version == 0)
     {
       // do not decode super (it would try to morph into theClass ! )
       [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
@@ -107,7 +114,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       
       return self; 
     }
-  else if (version == 0)
+  else if (version == 1)
     {
       // do not decode super (it would try to morph into theClass ! )
       [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
@@ -121,13 +128,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   else
     {
-      NSLog(@"no initWithCoder for version");
+      NSLog(@"no initWithCoder for version %d", version);
       RELEASE(self);
       return nil;
     }
 }
 @end
 @implementation GormClassProxy
+
+
 
 - (id) initWithClassName: (NSString*)n
 {
