@@ -711,16 +711,6 @@ static NSString *ITEM=@"item";
       return nil;
     }
 
-
-  if ([NSBundle loadNibNamed: @"GormTabViewInspector" owner: self] == NO)
-    {
-      NSLog(@"Could not gorm GormTableViewInspector");
-      return nil;
-    }
-//    itemsViewArray=[[NSMutableArray alloc] initWithCapacity:2];
-//    [itemsViewArray setArray: [NSArray arrayWithObjects:@"plop",@"plip",nil]];
-//    numberOfDisplayItem = [itemsViewArray count];
-//    [itemsViewArray retain];
   return self;
 }
 
