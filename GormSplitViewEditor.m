@@ -367,7 +367,7 @@
   if ([toUngroup isKindOfClass: [GormBoxEditor class]]
       || [toUngroup isKindOfClass: [GormSplitViewEditor class]])
     {
-      id contentView = toUngroup;;
+      id contentView = toUngroup;
 
       NSMutableArray *newSelection = [NSMutableArray array];
       NSArray *views;

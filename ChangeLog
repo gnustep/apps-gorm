@@ -1,4 +1,8 @@
-2002-08-14  Pierre-Yves Rivaille
+2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormSplitViewEditor.m: removean extra ; that was breaking gcc 2.*
+
+2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Major changes in editing widgets.
 	* Basic support for NSSplitView and NSTabView.
