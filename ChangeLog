@@ -1,5 +1,12 @@
 2003-05-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Corrected a problem which was causing the 
+	NSVisible array in the nameTable to become corrupted when 
+	using custom classes.  Also added a NSDebugLog call to help
+	find problems in the nameTable.
+	
+2003-05-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	Applied patch submitted by Rob Burns
 	* GNUmakefile: Added FileIcon_gmodel.tiff.
 	* GormInfo.plist: Added FileIcon_gmodel.tiff as default

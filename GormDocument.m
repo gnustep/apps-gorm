@@ -2445,7 +2445,7 @@ static NSImage	*classesImage = nil;
 	{
 	  a = [NSMutableArray new];
 	  [nameTable setObject: a forKey: @"NSVisible"];
-	  RELEASE(a);
+	  // RELEASE(a);
 	}
       if ([a containsObject: anObject] == NO)
 	{
@@ -2608,7 +2608,7 @@ static NSImage	*classesImage = nil;
 	    intoClassName: @"NSMenuTemplate"];
 
   [archiver encodeRootObject: self];
-
+  NSDebugLog(@"nameTable = %@",nameTable);
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
   if (fileExists)
     {
