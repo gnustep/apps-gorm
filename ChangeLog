@@ -1,3 +1,8 @@
+2005-03-30 22:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m: Update to version 0.9.5.
+	* GormInfo.plist: Update to version 0.9.5.
+
 2005-03-30 06:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Merge: from branch: build_reorg_branch.
