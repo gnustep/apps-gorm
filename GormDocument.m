@@ -1461,6 +1461,26 @@ static NSImage	*classesImage = nil;
 
 - (void) _closeAllEditors
 {
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  NSMutableArray        *editors = [NSMutableArray array];
+
+  // remove the editor connections from the connection array...
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [editors addObject: con];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+	{
+	  [editors addObject: con];
+	}
+    }
+  [connections removeObjectsInArray: editors];
+  [editors removeAllObjects];
+
   // close all of the editors & get all of the objects out.
   [openEditors makeObjectsPerformSelector: @selector(close)]; 
   [openEditors removeAllObjects];
