@@ -355,6 +355,13 @@ static NSImage	*classesImage = nil;
 	      [self addConnector: (id<IBConnectors>)con];
 	    }
 
+	  // destroy the connection in the object to
+	  // prevent any conflict.   The connections are restored when the 
+	  // .gorm is loaded, so there's no need for it anymore.
+	  [anObject setTarget: nil];
+	  [anObject setAction: NULL];
+
+	  // release the connection.
 	  RELEASE(con);
 	}
     }

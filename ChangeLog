@@ -1,3 +1,14 @@
+2004-02-04 23:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument attachObject:toParent:]
+	added code to reset the target/action of an object after
+	it's connection has been added to the connections list.
+	Since the connections are restored when the .gorm is loaded,
+	this prevents the target/action from being persisted when
+	it's not going to get used anyway.
+	* Palettes/1Windows/GormNSWindow.m: Added -(BOOL)canBecomeMainWindow
+	implementation to return NO. (suggested by Jeff Tuniessen)
+	
 2004-02-01 18:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument attachObject:toParent:]

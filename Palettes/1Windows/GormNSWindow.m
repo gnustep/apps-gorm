@@ -58,4 +58,9 @@
 {
   return _gormStyleMask;
 }
+
+- (BOOL) canBecomeMainWindow
+{
+  return NO;
+}
 @end
