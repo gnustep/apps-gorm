@@ -1,5 +1,12 @@
 2002-09-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
+	* GormTableViewEditor.m: removed (was moved in Palettes/3Containers
+	some time ago).
+	* Palettes/3Containers/GormTableViewEditor.m: updated drag'n'drop support
+	
+
+2002-09-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
 	* Gorm.m: fix segfault when leaving test mode.
 	Save whether palettes and inspectors are opened upon exiting.
 	Open them on startup if necessary.

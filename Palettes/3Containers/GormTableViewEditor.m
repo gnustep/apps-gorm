@@ -435,14 +435,11 @@ static NSText *_textObject;
 			    objectAtIndex: columnNumber];
 	}
 
-      if ([hitView isKindOfClass: [NSScroller class]]
-	  || [hitView isKindOfClass: [NSScrollView class]])
-	{
-	  destination = _editedObject;
-	}
-	  
-      if (destination == nil)
+      if (hitView == tableView)
 	destination = tableView;
+
+      if (destination == nil)
+	destination = _editedObject;
 
       [NSApp displayConnectionBetween: [NSApp connectSource] 
 	     and: destination];
@@ -482,14 +479,11 @@ static NSText *_textObject;
 			    objectAtIndex: columnNumber];
 	}
 
-      if ([hitView isKindOfClass: [NSScroller class]]
-	  || [hitView isKindOfClass: [NSScrollView class]])
-	{
-	  destination = _editedObject;
-	}
-	  
-      if (destination == nil)
+      if (hitView == tableView)
 	destination = tableView;
+
+      if (destination == nil)
+	destination = _editedObject;
 
       [NSApp displayConnectionBetween: [NSApp connectSource] 
 	     and: destination];
