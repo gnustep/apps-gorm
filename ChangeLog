@@ -1,3 +1,12 @@
+2004-06-24 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Additions to [GormDocument attachObject:
+	withParent:], [GormDocument loadDocument:], [GormDocument
+	setupDefaults:] to move the main menu appropriately when
+	it is either added to the documnent, loaded, or added when
+	the user selects the "Application" type from the New menu.
+	This helps alleviate confusion when editing the menu.
+	
 2004-06-22 23:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: A fix in  -[GormDocument pasteType:

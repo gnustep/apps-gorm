@@ -64,7 +64,6 @@
 }
 @end
 
-
 // Internal only
 NSString *GSCustomClassMap = @"GSCustomClassMap";
 
@@ -502,26 +501,41 @@ static NSImage	*classesImage = nil;
    */
   if ([anObject isKindOfClass: [NSMenu class]] == YES)
     {
+      BOOL isMainMenu = NO;
+
       // if there is no main menu and a menu gets added, it
       // will become the main menu.
       if([self objectForName: @"NSMenu"] == nil)
 	{
 	  [self setName: @"NSMenu" forObject: anObject];
 	  [objectsView addObject: anObject];
+	  isMainMenu = YES;
 	}
       else
 	{
-	  if([[anObject title] isEqual: @"Services"])
+	  if([[anObject title] isEqual: @"Services"] && [self servicesMenu] == nil)
 	    {
 	      [self setServicesMenu: anObject];
 	    }
-	  else if([[anObject title] isEqual: @"Windows"])
+	  else if([[anObject title] isEqual: @"Windows"] && [self windowsMenu] == nil)
 	    {
 	      [self setWindowsMenu: anObject];
 	    }
 	}
 
       [[self openEditorForObject: anObject] activate];
+
+      // if it's the main menu... locate it appropriately...
+      if(isMainMenu)
+	{
+	  NSRect frame = [window frame];
+	  NSPoint origin = frame.origin;
+
+	  origin.y += (frame.size.height + 150);
+
+	  // place the main menu appropriately...
+	  [[anObject window] setFrameTopLeftPoint: origin];
+	}
     }
 
   /*
@@ -1771,17 +1785,18 @@ static NSImage	*classesImage = nil;
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSMutableDictionary	*nt;
       NSMutableDictionary	*cc;
-      NSData		*data;
+      NSData		        *data;
       NSUnarchiver		*u;
-      GSNibContainer	*c;
+      GSNibContainer	        *c;
       NSEnumerator		*enumerator;
-      id <IBConnectors>	con;
-      NSString              *ownerClass, *key;
+      id <IBConnectors>	         con;
+      NSString                  *ownerClass, *key;
       NSFileManager	        *mgr = [NSFileManager defaultManager];
-      BOOL                  isDir = NO;
-      NSDirectoryEnumerator *dirEnumerator;
-      BOOL                  repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
-      
+      BOOL                       isDir = NO;
+      NSDirectoryEnumerator     *dirEnumerator;
+      BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
+      NSMenu                    *mainMenu;
+
       if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
 	{
 	  // if the data is in a directory, then load from objects.gorm 
@@ -2017,7 +2032,22 @@ static NSImage	*classesImage = nil;
 	      [o awakeFromDocument: self];
 	    }
 	}
-      
+
+      // reposition the loaded menu appropriately...
+      mainMenu = [nameTable objectForKey: @"NSMenu"];
+      if(mainMenu != nil)
+	{
+	  NSRect frame = [window frame];
+	  NSPoint origin = frame.origin;
+	  NSRect menuFrame = [[mainMenu window] frame];
+
+	  // account for the height of the menu we're loading.
+	  origin.y += (frame.size.height + menuFrame.size.height + 150);
+	  
+	  // place the main menu appropriately...
+	  [[mainMenu window] setFrameTopLeftPoint: origin];
+	}
+
       // this is the last thing we should do...
       [nc postNotificationName: IBDidOpenDocumentNotification
 	  object: self];
@@ -2296,9 +2326,13 @@ static NSImage	*classesImage = nil;
     {
       NSMenu	*aMenu;
       NSWindow	*aWindow;
+      NSRect    winFrame = [window frame];
+      NSPoint   origin = winFrame.origin;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask
                         | NSResizableWindowMask | NSMiniaturizableWindowMask;
+
+      origin.y += (winFrame.size.height + 150);
 
       if ([NSMenu respondsToSelector: @selector(allocSubstitute)])
 	{
@@ -2343,8 +2377,7 @@ static NSImage	*classesImage = nil;
       [self setName: @"NSMenu" forObject: aMenu];
       [self attachObject: aMenu toParent: nil];
       [objectsView addObject: aMenu];
-      [[aMenu window] setFrameTopLeftPoint:
-			NSMakePoint(1, frame.size.height-200)];
+      [[aMenu window] setFrameTopLeftPoint: origin];
       RELEASE(aMenu);
     }
   else if ([type isEqual: @"Inspector"] == YES)
