@@ -2,23 +2,14 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "capitalizeWord:",
 	    "changeFont:",
-	    "delete:",
 	    "deleteWordBackward:",
-	    "loosenKerning:",
 	    "moveDown:",
-	    "moveToBeginningOfParagraph:",
 	    "moveWordForward:",
-	    "orderFrontDataLinkPanel:",
 	    "orderFrontFontPanel:",
-	    "pasteAsPlainText:",
 	    "raiseBaseline:",
-	    "scrollLineDown:",
 	    "selectParagraph:",
-	    "showWindow:",
 	    "takeObjectValueFrom:",
-	    "toggleTraditionalCharacterShape:",
 	    "unscript:",
 	    "removeOutlet:",
 	    "addOutlet:",

@@ -1,6 +1,12 @@
+2004-12-10 23:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormClassInspector.gorm: Added proper resizing
+	settings so that the buttons on the outlets and actions 
+	tabs resize in the same way.
+
 2004-12-10 17:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormClassEditor.m: Changes to return a item if it's an'
+	* GormClassEditor.m: Changes to return a item if it's an
 	action/outlet holder without generating a string.
 	* GormOutlineView.m: Modifications to make drawing of the
 	actions and outlets more efficient.
