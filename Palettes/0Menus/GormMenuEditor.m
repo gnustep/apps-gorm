@@ -494,7 +494,7 @@
 
       [self makeSelectionVisible: NO];
       [self selectObjects: [NSArray array]];
-      while ((i = [e nextObject]) != nil)
+      while ((i = [e nextObject]) != nil && [edited numberOfItems] > 1)
 	{
 	  [edited removeItem: i];
 	}
