@@ -1,0 +1,23 @@
+
+Notes on implementation
+=======================
+
+
+The IB documentation on how object selection is managed and how editors and
+inspectors are used is unclear ... so I've gone my own way.
+
+1. When a document is loaded, the document object creates an editor attached
+to each top-level object in the user interface (NSMenu and NSWindow objects).
+
+These editors must be aware of their edited objects being clicked upon, and
+clicking on one of these should cause the corresponding editor to become the
+active editor.
+
+The active editor is responsible for handling selection of the edited object
+(and any objects below it in the object hierarchy).  Upon change of selection,
+the editor is responsible for sending an IBSelectionChangedNotification with
+the selection owner (normally the editor itsself) as the notification owner.
+
+The main application watches for these notifications in order to keep track
+of who has the selection.
+

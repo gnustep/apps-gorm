@@ -1,0 +1,6 @@
+Sat Nov 27 05:25:15 1999  Nicola Pero  <n.pero@mi.flashnet.it>
+
+	* KeyboardInput-test/KeyboardInput-test.m ([inputTestView
+ 	-drawRect:]): Fixed bug.
+	* KeyboardInput-test/KeyboardInput-test.m ([KeyboardInputTest
+ 	-init]): Moved typing view to top.
