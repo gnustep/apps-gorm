@@ -428,7 +428,7 @@
     }
 
   // select the current class in the document...
-  [(GormDocument *)[(id <IB>)NSApp activeDocument] selectClassWithObject: obj];
+  // [(GormDocument *)[(id <IB>)NSApp activeDocument] selectClassWithObject: obj];
 
 
   /*
