@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormFunctions.h"
 #include <AppKit/NSSound.h>
 
 /*
@@ -169,6 +170,12 @@ static NSMapTable	*docMap = 0;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
+  NSString *name = [aNotification name];
+  if([name isEqual: GormResizeCellNotification])
+    {
+      NSDebugLog(@"Recieved notification");
+      [self setCellSize: defaultCellSize()];
+    }
 }
 
 /*
@@ -219,6 +226,13 @@ static NSMapTable	*docMap = 0;
       RELEASE(proto);
       NSMapInsert(docMap, (void*)aDocument, (void*)self);
       [self addObject: anObject];
+
+      // set up the notification...
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(handleNotification:)
+	name: GormResizeCellNotification
+	object: nil];
     }
   return self;
 }

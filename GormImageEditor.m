@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormFunctions.h"
 
 /*
  * Method to return the image that should be used to display objects within
@@ -169,7 +170,13 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
-{
+{  
+  NSString *name = [aNotification name];
+  if([name isEqual: GormResizeCellNotification])
+    {
+      NSDebugLog(@"Recieved notification");
+      [self setCellSize: defaultCellSize()];
+    }
 }
 
 /*
@@ -220,6 +227,13 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       RELEASE(proto);
       NSMapInsert(docMap, (void*)aDocument, (void*)self);
       [self addObject: anObject];
+
+      // set up the notification...
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(handleNotification:)
+	name: GormResizeCellNotification
+	object: nil];
     }
   return self;
 }

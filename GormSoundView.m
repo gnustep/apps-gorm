@@ -28,6 +28,39 @@
 
 #include <AppKit/AppKit.h>
 #include "GormSoundView.h"
+#include <AppKit/PSOperators.h>
+
+// add a data method to the NSSound class...
+@interface NSSound (SoundView)
+- (NSData *)data;
+@end
+
+@implementation NSSound (SoundView)
+- (NSData *)data
+{
+  return _data;
+}
+@end
+
+static float findMax(NSData *data)
+{
+  float max = 0.0;
+  int index = 0;
+  float *array = (float *)[data bytes];
+  int len = [data length];
+
+  // find the maximum...
+  for(index = 0; index < len; index++)
+    {
+      float d = array[index];
+      if(d > max)
+	{
+	  max = d;
+	}
+    }
+
+  return max;
+}
 
 @implementation GormSoundView
 - (void) setSound: (NSSound *)sound
@@ -42,9 +75,48 @@
   return _sound;
 }
 
+/*
 - (void) drawRect: (NSRect)aRect
 {
-  [super drawRect: aRect];
-}
+  float w = aRect.size.width;
+  float h = aRect.size.height;
+  float offset = (h/2);
+  NSData *soundData = [_sound data];
+  float *data = 0;
+  float x1 = 0, x2 = 0, y1 = offset, y2 = offset;
+  float max = findMax(soundData);
+  float multiplier = h/max;
+  int length = [soundData length];
+  int index = 0;
+  int step = (length/(int)w);
 
+  [super drawRect: aRect];
+  
+  PSsetrgbcolor(1.0,0,0); // red
+  data = (float *)[soundData bytes];
+  
+  if( length > 2 )
+    {
+
+      x1 = (data[0] * multiplier);
+      y1 = offset; 
+      for(index = step; index < w; index+=step)
+	{
+	  int i = (int)index;
+	  float d = data[i];
+	  
+	  // calc new position...
+	  x2 = d * multiplier;
+	  y2 = index + offset;
+
+	  PSmoveto(x1,y1);
+	  PSlineto(x2,y2);
+	  
+	  // move to old vars...
+	  x1 = x2;
+	  y1 = y2;
+	}
+    }
+}
+*/
 @end
