@@ -270,7 +270,7 @@ This information is needed by Gorm so that it can mark the connection.
 The editors mananging the drag-and-drop operation for a connection must call
 [NSApp -displayConnectionBetween:and:] to tell Gorm to update its display.
 This method sets the values currently returned by
-[BSApp -connectSource] and [NSApp -connectDestination]
+[NSApp -connectSource] and [NSApp -connectDestination]
 
 @node Preferences, , Implementation, Implementation
 @unnumbered Preferences
