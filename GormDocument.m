@@ -2571,6 +2571,7 @@ static NSImage	*classesImage = nil;
   if (documentPath == nil)
     {
       [self saveAsDocument: sender];
+      if(documentPath == nil) return; // if the user canceled or didn't set a filename, quit.
     }
 
   [nc postNotificationName: IBWillSaveDocumentNotification

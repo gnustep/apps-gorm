@@ -1,5 +1,11 @@
 2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Corrected bug#3663.  There was an
+	issue with saving which was causing Gorm to fail if
+	a save was canceled.
+	
+2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
+
         Applied patch submitted by Fabien <fabien@tuxfamily.org>
 	* GNUmakefile: Added .gorm files and new .h and .m files.
 	* Gorm.m/GormPrivate.h: Removed code to automatically 
