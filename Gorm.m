@@ -1032,7 +1032,7 @@ static NSButtonType _buttonTypeForObject( id button )
      forKey: @"ApplicationDescription"];
   [d setObject: @"Gorm 0.3.0" 
      forKey: @"ApplicationRelease"];
-  [d setObject: @"0.2.5 Dec 2002" 
+  [d setObject: @"0.3.0 Jul 2003" 
      forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
