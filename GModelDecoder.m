@@ -261,14 +261,15 @@ static BOOL gormFileOwnerDecoded;
 /* importing of legacy gmodel files.*/
 - (id) openGModel: (NSString *)path
 {
-  id       obj, con;
-  id       unarchiver;
-  id       decoded;
-  NSEnumerator *enumerator;
-  NSArray  *gmobjects;
-  NSArray  *gmconnections;
-  Class    u = gmodel_class(@"GMUnarchiver");
-  
+  id                obj, con;
+  id                unarchiver;
+  id                decoded;
+  NSEnumerator     *enumerator;
+  NSArray          *gmobjects;
+  NSArray          *gmconnections;
+  Class             u = gmodel_class(@"GMUnarchiver");
+  GormClassManager *classManager = [(Gorm *)NSApp classManager];
+
   NSLog (@"Loading gmodel file %@...", path);
   gormNibOwner = nil;
   gormRealObject = nil;
@@ -288,7 +289,7 @@ static BOOL gormFileOwnerDecoded;
   [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
   [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];
 
-  unarchiver = [u unarchiverWithContentsOfFile: path];
+  unarchiver = RETAIN([u unarchiverWithContentsOfFile: path]);
   if (!unarchiver)
     {
       NSLog(@"Failed to load gmodel file %@!!",path);
@@ -359,7 +360,9 @@ static BOOL gormFileOwnerDecoded;
 	    [self setName: nil forObject: obj];
 	}
       if ([gormRealObject mainMenu])
-	[self setName: nil forObject: [gormRealObject mainMenu]];
+	{
+	  [self setName: @"NSMenu" forObject: [gormRealObject mainMenu]];
+	}
     }
   else
     {

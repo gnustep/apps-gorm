@@ -465,7 +465,6 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [super setObject: anObject];
   ASSIGN(classManager, [(Gorm *)NSApp classManager]);
   ASSIGN(currentClass, [object className]);
-  RETAIN(object);
   [self _refreshView];
 }
 

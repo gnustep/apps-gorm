@@ -781,6 +781,7 @@
 - (void) dealloc
 {
   RELEASE(classInformation);
+  RELEASE(customClassMap);
   [super dealloc];
 }
 
@@ -961,7 +962,6 @@
       NSArray *subclasses = [self subClassesOf: oldName];
 
       [self _touch];
-      RETAIN(classInfo);
 
       [classInformation removeObjectForKey: oldName];
       [classInformation setObject: classInfo forKey: name];
@@ -1093,7 +1093,7 @@
    */
   RELEASE(classInformation);
   classInformation = [NSMutableDictionary new];
-  RETAIN(classInformation);
+  RETAIN(classInformation); // released in dealloc...
   enumerator = [dict keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -1416,7 +1416,7 @@
   // copy the dictionary..
   NSDebugLog(@"dictionary = %@",dict);
   ASSIGN(customClassMap, [dict mutableCopy]);
-  RETAIN(customClassMap);
+  RETAIN(customClassMap); // released in dealloc
 }
 
 - (BOOL) isCustomClassMapEmpty

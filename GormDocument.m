@@ -295,7 +295,7 @@ static NSImage	*classesImage = nil;
       [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
-	  RETAIN(anObject);
+	  // RETAIN(anObject);
 	  [anObject setReleasedWhenClosed: NO];
 	}
     }
@@ -801,7 +801,7 @@ static NSImage	*classesImage = nil;
 
 - (void) detachObject: (id)anObject
 {
-  NSString	*name = RETAIN([self nameForObject: anObject]);
+  NSString	*name = RETAIN([self nameForObject: anObject]); // released at end of method...
   GormClassManager *cm = [self classManager];
   unsigned	count;
   
@@ -1999,7 +1999,7 @@ static NSImage	*classesImage = nil;
 	    // the detach also does a release.  Unfortunately, this causes a
 	    // crash, so this extra retain is only here to stave off the 
 	    // release, so the autorelease can release the menu when it should.
-	    RETAIN(obj);
+	    RETAIN(obj); // extra retain to stave off autorelease...
 	  }
       }
 
@@ -2615,10 +2615,11 @@ static NSImage	*classesImage = nil;
 
 - (void) setName: (NSString*)aName forObject: (id)object
 {
-  id		oldObject;
-  NSString	*oldName;
+  id		       oldObject;
+  NSString	      *oldName;
   NSMutableDictionary *cc = [classManager customClassMap];
-  NSString      *className = nil;
+  NSString            *className;
+  NSString            *nameCopy;
 
   if (object == nil)
     {
@@ -2678,15 +2679,15 @@ static NSImage	*classesImage = nil;
 	    {
 	      return;	/* Already have this name ... nothing to do */
 	    }
-	  RETAIN(object);
-          AUTORELEASE(object);
+	  RETAIN(object); // the next operation will attempt to release the object, we need to retain it.
 	  [nameTable removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
-  aName = [aName copy];	/* Make sure it's immutable	*/
-  [nameTable setObject: object forKey: aName];
-  NSMapInsert(objToName, (void*)object, (void*)aName);
+  nameCopy = [aName copy];	/* Make sure it's immutable */
+  [nameTable setObject: object forKey: nameCopy];
+  AUTORELEASE(object); // make sure that when it's removed from the table, it's released.
+  NSMapInsert(objToName, (void*)object, (void*)nameCopy);
   if (oldName != nil)
     {
       [nameTable removeObjectForKey: oldName];
@@ -2704,10 +2705,10 @@ static NSImage	*classesImage = nil;
       if(className != nil)
 	{
 	  [cc removeObjectForKey: oldName];
-	  [cc setObject: className forKey: aName];
+	  [cc setObject: className forKey: nameCopy];
 	}
     }
-  RELEASE(aName);
+  RELEASE(nameCopy); // release the copy of the name which we made...
 }
 
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag
@@ -2828,7 +2829,6 @@ static NSImage	*classesImage = nil;
     {
       NSFileManager	*mgr = [NSFileManager defaultManager];
       NSString		*path = [sp filename];
-      NSString		*old = documentPath;
 
       if ([path isEqual: documentPath] == NO
 	&& [mgr fileExistsAtPath: path] == YES)
@@ -2839,12 +2839,12 @@ static NSImage	*classesImage = nil;
 	  [mgr removeFileAtPath: bPath handler: nil];
 	  [mgr movePath: path toPath: bPath handler: nil];
 	}
-      documentPath = RETAIN(path);
+
+      // set the path...
+      ASSIGN(documentPath, path);
       [self saveGormDocument: sender];
-      RELEASE(old);
       
       return YES;
-      /* FIXME - need to update files window title etc */
     }
   return NO;
 }
@@ -3504,7 +3504,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  NSString *name = [item getName];
 
 	  // retain the name and add the action/outlet...
-	  RETAIN(name);
+	  // RETAIN(name);
 	  if ([gov editType] == Actions)
 	    {
 	      NSString *formattedAction = [GormDocument formatAction: anObject];
@@ -3580,7 +3580,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	    {
 	      int row = 0;
 
-	      RETAIN(item); // retain the new name
+	      // RETAIN(item); // retain the new name
 	      [classManager renameClassNamed: item newName: anObject];
 	      [gov reloadData];
 	      row = [gov rowForItem: anObject];

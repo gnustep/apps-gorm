@@ -118,7 +118,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
       theFrame = [aCoder decodeRect];
       //NSLog(@"Decoding proxy : %@", theClass);
-      RETAIN(theClass); 
+      RETAIN(theClass); // release in dealloc of GSNibItem... 
       
       return self; 
     }
@@ -130,7 +130,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       [aCoder decodeValueOfObjCType: @encode(unsigned int) 
 	      at: &autoresizingMask];  
       //NSLog(@"Decoding proxy : %@", theClass);
-      RETAIN(theClass); 
+      RETAIN(theClass); // release in dealloc of GSNibItem... 
       
       return self; 
     }
@@ -744,7 +744,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  [archiver encodeClassName: @"GormNSOutlineView" 
 		    intoClassName: @"NSOutlineView"];
 	  [archiver encodeRootObject: activDoc];
-	  data = RETAIN([archiver archiverData]);
+	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activDoc endArchiving];
 	  RELEASE(archiver);
 	  
@@ -764,8 +764,8 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  if (testContainer != nil)
 	    {
 	      [testContainer awakeWithContext: nil
-			     topLevelItems: nil];
-	      RETAIN(testContainer);
+			     topLevelItems: nil]; // FIXME: Top level items will leak...
+	      RETAIN(testContainer); // released in endTesting:
 	    }
 	  
 	  /*
@@ -1081,7 +1081,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
+      
       RELEASE(pool);
+
       return self;
     }
 }
@@ -1135,7 +1137,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
-      RETAIN(obj);
+      RETAIN(obj); // release below...
       [documents removeObjectIdenticalTo: obj];
       AUTORELEASE(obj);
     }
@@ -1491,13 +1493,15 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
 - (void) unhide: (id)sender
 {
-  id document = [self activeDocument];
-  id window = [document window];
-
   [super unhide: sender];
-  [(GormDocument *)document setDocumentActive: NO];
-  [(GormDocument *)document setDocumentActive: YES];
-  [window orderFront: sender];
+  if(!isTesting)
+    {
+      id document = [self activeDocument];
+      id window = [document window];
+      [(GormDocument *)document setDocumentActive: NO];
+      [(GormDocument *)document setDocumentActive: YES];
+      [window orderFront: sender];
+    }
 }
 @end
 

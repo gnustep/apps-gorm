@@ -1,3 +1,13 @@
+2004-05-08 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: [GModelDecoder openGModel:] 
+	Corrected issue which was causing a crash.
+	* GormDocument.m: Cleaned up a memory leak.  Commented/Documented
+	the location / justification for all memory operations.
+	* Gorm.m: same as above.  Also added code to [Gorm unhide:]
+	to prevent bringing forward the document window when 
+	clicking on the app icon in test mode.
+	
 2004-05-06 21:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument selectClass:] do not switch if
