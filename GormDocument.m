@@ -1966,7 +1966,7 @@ static NSImage	*classesImage = nil;
 // to repair old .gorm files.
 - (void) _repairFile
 {
-  NSEnumerator *en = [nameTable keyEnumerator];
+  NSEnumerator *en = [[nameTable allKeys] objectEnumerator];
   NSString *key = nil;
 
   while((key = [en nextObject]) != nil)
@@ -2233,17 +2233,17 @@ static NSImage	*classesImage = nil;
 
   NSDebugLog(@"nameTable = %@",[c nameTable]);
 
-  /*
-  enumerator = [[c nameTable] keyEnumerator];
-  while ((key = [enumerator nextObject]) != nil)
-    {
-      id o = [[c nameTable] objectForKey: key];
-      if ([o respondsToSelector: @selector(awakeFromDocument:)])
-	{
-	  [o awakeFromDocument: self];
-	}
-    }
-  */
+  //
+  // enumerator = [[c nameTable] keyEnumerator];
+  // while ((key = [enumerator nextObject]) != nil)
+  //  {
+  //    id o = [[c nameTable] objectForKey: key];
+  //    if ([o respondsToSelector: @selector(awakeFromDocument:)])
+  //	{
+  //	  [o awakeFromDocument: self];
+  //	}
+  //  }
+  //
 
   // repair the .gorm file, if needed.
   if(repairFile == YES)
