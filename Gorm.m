@@ -299,12 +299,7 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
     {
       if([a count] > 0)
 	{
-	  BOOL result = NSRunAlertPanel(NULL, _(@"Please deactivate any user bundles before starting Gorm."),
-					_(@"Continue"),_( @"Quit"), nil);
-	  if(result != NSAlertDefaultReturn)
-	    {
-	      [self terminate: self];
-	    }
+	  NSLog(@"WARNING: Gorm has detected that you are using user bundles.  Please make certain that these are capatible with Gorm as some bundles can cause issues which may corrupt your .gorm files.");
 	}
     }
 }
