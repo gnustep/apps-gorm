@@ -13,5 +13,9 @@ table which seem intersting:
 
 * Look into automatic "localization" of .gorm files for applications.
   (martin)
+
+* Create an xml output format for Gorm files so that they can be used
+  on both MOSX and on GNUstep.   This will be done w/ an extension
+  library.
 --
 Gregory John Casamento
