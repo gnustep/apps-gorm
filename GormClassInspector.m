@@ -62,7 +62,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (int)rowIndex
 {
   NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
-  return [list objectAtIndex: rowIndex];
+  id value = nil;
+  if([list count] > 0)
+    {
+      value = [list objectAtIndex: rowIndex];
+    }
+  return value;
 }
 
 - (void) tableView: (NSTableView *)tv

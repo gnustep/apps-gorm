@@ -1,4 +1,10 @@
-2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-08-28  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Cleanup some of the extra logs.
+	* GormClassInspector.m: Add logic to prefent index out of bounds
+	exception.
+
+2003-08-27  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Corrected some memory related issues.
 	* GormCustomClassManager.m: Added to log which informs
@@ -6,7 +12,7 @@
 	* Gorm.m: Cleaned up some comments and updated the version of
 	the application.
 
-2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-08-26  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added some debug logs.  And in
 	_replaceObjectsWithTemplates: modified the method to use the

@@ -1906,8 +1906,8 @@ static NSImage	*classesImage = nil;
       [[c nameTable] setObject: cc forKey: GSCustomClassMap];
     }
   [classManager setCustomClassMap: cc];
-  NSLog(@"cc = %@", cc);
-  NSLog(@"customClasses = %@", [classManager customClassMap]);
+  NSDebugLog(@"cc = %@", cc);
+  NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
 
   // convert from old file format...
   if (isDir == NO)
@@ -2655,9 +2655,9 @@ static NSImage	*classesImage = nil;
   [self _replaceObjectsWithTemplates: archiver];
 
   [archiver encodeRootObject: self];
-  NSLog(@"nameTable = %@",nameTable);
+  NSDebugLog(@"nameTable = %@",nameTable);
 
-  NSLog(@"customClasses = %@", [classManager customClassMap]);
+  NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
 
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
   if (fileExists)
