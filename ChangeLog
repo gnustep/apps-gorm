@@ -1,3 +1,14 @@
+2005-03-05 23:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added new class.
+	* GormImageEditor.m: Refactored all of the code into the
+	new parent.  Implemented only those methods needed.
+	* GormPrivate.h: Changed hierarchy of GormImageEditor and 
+	GormSoundEditor to have GormResourceEditor as their parent
+	* GormResourceEditor.m:  New parent for sound/image editors.
+	* GormSoundEditor.m: Refactored all of the code into the 
+	new parent class.  Implemented needed methods.
+
 2005-03-04 04:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageEditor.m

@@ -217,6 +217,7 @@ Gorm_OBJC_FILES = \
 	GormPalettesPref.m \
 	GormPrefController.m \
 	GormResource.m \
+	GormResourceEditor.m \
 	GormScrollViewAttributesInspector.m \
 	GormScrollViewEditor.m \
 	GormSetNameController.m \

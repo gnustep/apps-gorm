@@ -250,21 +250,29 @@ extern NSString *GormResizeCellNotification;
 - (void) removeAllInstancesOfClass: (NSString *)className;
 @end
 
-@interface GormSoundEditor : GormGenericEditor 
-{
-}
-+ (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-@end
-
-@interface GormImageEditor : GormGenericEditor 
+@interface GormResourceEditor : GormGenericEditor
 {
 }
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;
 - (id) placeHolderWithPath: (NSString *)path;
+- (NSArray *) fileTypes;
+- (NSArray *) pbTypes;
+- (NSString *) resourceType;
+- (void) addSystemResources;
+@end
+
+@interface GormSoundEditor : GormResourceEditor 
+{
+}
++ (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
+@end
+
+@interface GormImageEditor : GormResourceEditor 
+{
+}
++ (GormImageEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 @end
 
 /*
