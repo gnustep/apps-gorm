@@ -4,18 +4,22 @@
 	);
 	Outlets = (
 	    borderMatrix,
+	    horizontalSlider,
 	    positionMatrix,
 	    tagField,
-	    titleField
+	    tagForm,
+	    titleField,
+	    verticalSlider
 	);
 	Super = IBInspector;
     };
     IBInspector = {
 	Actions = (
+	    ok:,
+	    revert:,
+	    touch:
 	);
 	Outlets = (
-	    okButton,
-	    revertButton,
 	    window
 	);
 	Super = NSObject;
@@ -31,11 +35,11 @@
     };
     NSControl = {
 	Actions = (
-	    "takeDoubleValueFrom:",
-	    "takeFloatValueFrom:",
-	    "takeIntValueFrom:",
-	    "takeObjectValueFrom:",
-	    "takeStringValueFrom:"
+	    takeDoubleValueFrom:,
+	    takeFloatValueFrom:,
+	    takeIntValueFrom:,
+	    takeObjectValueFrom:,
+	    takeStringValueFrom:
 	);
 	Outlets = (
 	    target

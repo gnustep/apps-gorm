@@ -3,19 +3,25 @@
 	Actions = (
 	);
 	Outlets = (
-	    backgroundColor,
-	    drawsBackground,
+	    autosizeSwitch,
+	    autotagSwitch,
+	    backgroundColorWell,
+	    drawsBackgroundSwitch,
 	    modeMatrix,
-	    tagField
+	    propagateSwitch,
+	    prototypeMatrix,
+	    selRectSwitch,
+	    tagForm
 	);
 	Super = IBInspector;
     };
     IBInspector = {
 	Actions = (
+	    ok:,
+	    revert:,
+	    touch:
 	);
 	Outlets = (
-	    okButton,
-	    revertButton,
 	    window
 	);
 	Super = NSObject;
@@ -31,11 +37,11 @@
     };
     NSControl = {
 	Actions = (
-	    "takeDoubleValueFrom:",
-	    "takeFloatValueFrom:",
-	    "takeIntValueFrom:",
-	    "takeObjectValueFrom:",
-	    "takeStringValueFrom:"
+	    takeDoubleValueFrom:,
+	    takeFloatValueFrom:,
+	    takeIntValueFrom:,
+	    takeObjectValueFrom:,
+	    takeStringValueFrom:
 	);
 	Outlets = (
 	    target

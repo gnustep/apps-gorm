@@ -14,10 +14,11 @@
     };
     IBInspector = {
 	Actions = (
+	    ok:,
+	    revert:,
+	    touch:
 	);
 	Outlets = (
-	    okButton,
-	    revertButton,
 	    window
 	);
 	Super = NSObject;
