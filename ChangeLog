@@ -1,3 +1,15 @@
+2004-01-06 01:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument attachObject:] added logic
+	to automatically add predefined connections to the connectors
+	array so that they can be manipulated in Gorm.  If a palette
+	defines the destination to be the First Responder, 
+	and the label to be "orderFrontStandardInfoPanel:" then this
+	will be reflected in the connections inspector.
+	* GormLib/IBConnectors.h: Made the comments into documentation
+	style comments so, if/when I start using gsdoc to document the
+	innerworkings of Gorm, it will be ready.
+	
 2004-01-04 22:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Made -[GormDocument _identifierString:],

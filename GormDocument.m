@@ -44,6 +44,37 @@
 }
 @end
 
+/*
+@implementation NSMenuItem (IBObjectAdditions)
+- (void)awakeFromDocument: (id <IBDocuments>)doc
+{
+  NSLog(@"In here");
+  // [self setState: NSOnState];
+  // [self setState: NSOffState];
+  
+}
+@end
+*/
+
+@interface NSNibControlConnector (GormExtension)
+- (BOOL) isEqual: (id)object;
+@end
+
+@implementation NSNibControlConnector (GormExtension)
+- (BOOL) isEqual: (id)object
+{
+  BOOL result = NO;
+  if([[self source] isEqual: [object source]] &&
+     [[self destination] isEqual: [object destination]] &&
+     [[self label] isEqual: [object label]])
+    {
+      result = YES;
+    }
+  return result;
+}
+@end
+
+
 // Internal only
 NSString *GSCustomClassMap = @"GSCustomClassMap";
 
@@ -284,6 +315,44 @@ static NSImage	*classesImage = nil;
 					  [NSTextView class]] == YES)
 	{
 	  [self attachObject: [anObject documentView] toParent: aParent];
+	}
+    }
+
+  // Detect and add any connection the object might have.
+  // This is done so that any palette items which have predefined connections will be
+  // shown in the connections list.
+  if([anObject respondsToSelector: @selector(action)] == YES &&
+     [anObject respondsToSelector: @selector(target)] == YES)
+    {
+      SEL sel = [anObject action];
+
+      if(sel != NULL)
+	{
+	  NSString *label = NSStringFromSelector(sel);
+	  id source = anObject;
+	  NSNibControlConnector *con = [NSNibControlConnector new];
+	  id destination = [anObject target];
+	  NSArray *sourceConnections = [self connectorsForSource: source];
+
+	  if(destination == nil)
+	    {
+	      destination = firstResponder;
+	    }
+
+	  // build the connection
+	  [con setSource: source];
+	  [con setDestination: destination];
+	  [con setLabel: label];
+	  
+	  // don't duplicate the connection if it already exists.
+	  // if([sourceConnections indexOfObjectIdenticalTo: con] == NSNotFound)
+	  if([sourceConnections containsObject: con] == NO)
+	    {
+	      // add it to our connections set.
+	      [self addConnector: (id<IBConnectors>)con];
+	    }
+
+	  RELEASE(con);
 	}
     }
 }

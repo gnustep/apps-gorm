@@ -60,30 +60,30 @@ extern NSString *IBDidRemoveConnectorNotification;
 @end
 
 @interface NSApplication (IBConnections)
-/*
+/**
  * [NSApp -connectSource] returns the source object as set by the most recent
  * [NSApp -displayConnectionBetween:and:]
  */
 - (id) connectSource;
 
-/*
+/**
  * [NSApp -connectDestination] returns the target object as set by the most
  * recent [NSApp -displayConnectionBetween:and:]
  */
 - (id) connectDestination;
 
-/*
+/**
  * [NSApp -isConnecting] simply lets you know if a connection is in progress.
  */
 - (BOOL) isConnecting;
 
-/*
+/**
  * [NSApp -stopConnecting] terminates the current connection process and
  * removes the connection marks from the display.
  */
 - (void) stopConnecting;
 
-/*
+/**
  * [NSApp -displayConnectionBetween:and:] is used to set the source and target
  * objects and mark the display appropriately.  Setting either source or
  * target to 'nil' will remove markup from any previous source or target.

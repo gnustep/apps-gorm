@@ -140,6 +140,28 @@
 }
 @end
 
+/*
+@interface GormNSMenu (GNUstepExtra)
+- (void) setTornOff: (BOOL)flag;
+- (void) _showTornOffMenuIfAny: (NSNotification*)notification;
+- (void) _showOnActivateApp: (NSNotification*)notification;
+@end
+
+@implementation GormNSMenu (GNUstepExtra)
+- (void) setTornOff: (BOOL)flag
+{
+}
+
+- (void) _showTornOffMenuIfAny: (NSNotification*)notification
+{
+}
+
+- (void) _showOnActivateApp: (NSNotification*)notification
+{
+}
+@end
+*/
+
 @implementation NSMenu (GormNSMenu)
 + (id) allocSubstitute
 {
