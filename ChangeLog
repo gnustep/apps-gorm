@@ -1,3 +1,14 @@
+2004-10-03 12:51 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormMatrixEditor.m: Added performDragOperation implementation
+	to allow the drag and drop of sound/images to a matrix cell.
+	* GormPrivate.h: Moved a category which defines a method called
+	on setArchiveByName to this header so it's useful to more than
+	just the editors.
+	* GormViewEditor.m: Removed category declaration.
+	* Palettes/2Controls/GormButtonEditor.m: Removed some old,
+	commented out code.
+	
 2004-10-02 13:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormDocument.gorm: Changed the spacing of the

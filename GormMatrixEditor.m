@@ -24,6 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <AppKit/AppKit.h>
+
 #include "GormPrivate.h"
 #include "GormViewEditor.h"
 #include "GormMatrixEditor.h"
@@ -105,6 +107,8 @@ static BOOL done_editing;
  */
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
+  NSMutableArray *draggedTypes = [NSMutableArray array];
+
   opened = NO;
   selected = nil;
   selectedCol = -1;
@@ -112,6 +116,15 @@ static BOOL done_editing;
   _displaySelection = YES;
   self = [super initWithObject: anObject 
 		inDocument: aDocument];
+
+  // dragged types...
+  [draggedTypes addObject: GormImagePboardType];
+  [draggedTypes addObject: GormLinkPboardType];
+  [draggedTypes addObject: GormSoundPboardType];
+
+  // register...
+  [self registerForDraggedTypes: draggedTypes];
+
   return self;
 }
 
@@ -381,9 +394,7 @@ static BOOL done_editing;
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  if ([types containsObject: IBObjectPboardType] == YES)
-    return YES;
-  return NO;
+  return ([types containsObject: IBObjectPboardType] || [types containsObject: GormImagePboardType]);
 }
 
 - (void) postDraw: (NSRect) rect
@@ -669,6 +680,58 @@ static BOOL done_editing;
 
   return;
 }
+
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  NSPoint       dropPoint = [sender draggedImageLocation];
+  NSPoint       mouseDownPoint = 
+    [_EO convertPoint: dropPoint fromView: nil];
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+
+  if ([types containsObject: GormLinkPboardType])
+    {
+      [NSApp displayConnectionBetween: [NSApp connectSource] 
+	     and: _EO];
+      [NSApp startConnecting];
+    }
+  else if([types containsObject: GormImagePboardType] == YES ||
+	  [types containsObject: GormSoundPboardType] == YES)
+    {
+      int row, col;
+      if([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
+	{
+	  id object = [_EO cellAtRow: row column: col];
+	  if ([types containsObject: GormImagePboardType] == YES)
+	    {
+	      NSString *name = [dragPb stringForType: GormImagePboardType];
+	      NSImage *image = [NSImage imageNamed: name];
+	      [image setArchiveByName: NO];
+	      if([object respondsToSelector: @selector(setSound:)])
+		{
+		  [object setImage: image];
+		}
+	      return YES;
+	    }
+	  else if([types containsObject: GormSoundPboardType] == YES)
+	    {
+	      NSString *name;
+	      name = [dragPb stringForType: GormSoundPboardType];
+	      if([object respondsToSelector: @selector(setSound:)])
+		{
+		  [object setSound: [NSSound soundNamed: name]];
+		}
+	      return YES;
+	    }
+	}
+    }
+  
+  return NO;
+}
+
 @end
 
 

@@ -85,18 +85,6 @@
   if (backgroundColor == nil)
     backgroundColor = [NSColor controlBackgroundColor];
 
-  /* Draw the cell's background color.  
-     We draw when there is a border or when highlightsByMask
-     is NSChangeBackgroundCellMask or NSChangeGrayCellMask,
-     as required by our nextstep-like look and feel.  */
-  if (_cell.is_bordered 
-      || (_highlightsByMask & NSChangeBackgroundCellMask)
-      || (_highlightsByMask & NSChangeGrayCellMask))
-    {
-//        [backgroundColor set];
-//        NSRectFill (cellFrame);
-    }
-
   /*
    * Determine the image and the title that will be
    * displayed. If the NSContentsCellMask is set the
@@ -121,19 +109,10 @@
 
   if (imageToDisplay)
     {
-      /* FIXME - the following is a hack!  Because we don't seem to be
-	 getting alpha composing of images right, we use this hack of
-	 hard-setting manually the background color of the image to
-	 the wanted background color ... this should go away when
-	 alpha composing of images works 100%.  */
-//        [imageToDisplay setBackgroundColor: backgroundColor];
       imageSize = [imageToDisplay size];
     }
 
-//    if (titleToDisplay && (ipos == NSImageAbove || ipos == NSImageBelow))
-//      {
-      titleSize = [self _sizeText: titleToDisplay];
-//      }
+  titleSize = [self _sizeText: titleToDisplay];
 
   if (flippedView == YES)
     {

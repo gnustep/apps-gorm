@@ -351,6 +351,12 @@ extern NSString *GormResizeCellNotification;
 - (void) addImage: (NSString*) path;
 @end
 
+// to allow us to load the image by name, but save it within the archive.
+// this is a bit of a cheat.
+@interface NSImage (GormNSImageAddition)
+- (void) setArchiveByName: (BOOL) archiveByName;
+@end
+
 /*
  * Functions for drawing knobs etc.
  */
