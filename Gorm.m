@@ -1099,6 +1099,13 @@ static NSButtonType _buttonTypeForObject( id button )
   return self;
 }
 
+- (void) awakeFromNib
+{
+  NSLog(@"Setting menu...%@",gormMenu);
+  // set the menu...
+  mainMenu = (NSMenu *)gormMenu;
+}
+
 - (id) inspector: (id) sender
 {
   [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];

@@ -113,6 +113,7 @@ extern NSString *GormLinkPboardType;
   BOOL			isConnecting;
   BOOL			isTesting;
   id			testContainer;
+  id                    gormMenu;
   NSMenu		*mainMenu;
   NSMenu                *classMenu; // so we can set it for the class view
   NSDictionary		*menuLocations;

@@ -186,6 +186,7 @@
 	    "preferencesPanel:"
 	);
 	Outlets = (
+	    gormMenu
 	);
 	Super = NSApplication;
     };
