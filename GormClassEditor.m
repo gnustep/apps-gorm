@@ -30,6 +30,11 @@
 
 NSString *GormClassPboardType = @"GormClassPboardType";
 
+@interface GormOutlineView (PrivateMethods)
+- (void) _addNewActionToObject: (id)item;
+- (void) _addNewOutletToObject: (id)item;
+@end
+
 @implementation	GormClassEditor
 
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc
@@ -470,6 +475,25 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 	{
 	  NSRunAlertPanel(_(@"Problem pasting class"),
 			  _(@"FirstResponder cannot have subclasses."), nil, nil, nil);
+	}
+    }
+}
+
+
+- (void) addAttributeToClass
+{
+  if (_isEditing == YES)
+    {
+      if (_edittype == Actions)
+	{
+	  [self _addNewActionToObject: _itemBeingEdited];
+	}
+      if (_edittype == Outlets)
+	{
+	  if([classManager isCustomClass: _itemBeingEdited])
+	    {
+	      [self _addNewOutletToObject: _itemBeingEdited];
+	    }
 	}
     }
 }

@@ -1,3 +1,10 @@
+2005-03-27 06:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Added addAttributeToClass here. Also
+	added a check to prevent changing the outline row count.
+	* GormOutlineView.m: Removed addAttributeToClass from here.
+	* GormPrivate.h: Moved addAttributeToClass to class editor.
+
 2005-03-26 10:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* install-windows.sh: Installation script for windows.

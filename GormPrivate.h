@@ -184,6 +184,7 @@ extern NSString *GormResizeCellNotification;
 - (BOOL) currentSelectionIsClass;
 - (void) editClass;
 - (void) createSubclass;
+- (void) addAttributeToClass;
 - (void) deleteSelection;
 @end
 

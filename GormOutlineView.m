@@ -633,21 +633,6 @@ static NSColor *darkGreyBlueColor = nil;
   return _edittype;
 }
 
-- (void) addAttributeToClass
-{
-  if (_isEditing == YES)
-    {
-      if (_edittype == Actions)
-	{
-	  [self _addNewActionToObject: _itemBeingEdited];
-	}
-      if (_edittype == Outlets)
-	{
-	  [self _addNewOutletToObject: _itemBeingEdited];
-	}
-    }
-}
-
 - (void) editColumn: (int) columnIndex 
 		row: (int) rowIndex 
 	  withEvent: (NSEvent *) theEvent 
