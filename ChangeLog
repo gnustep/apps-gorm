@@ -1,3 +1,8 @@
+Sun Feb  6  8:44:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Removed InfoPanel.m and updated Gorm to use standard panel now that
+	NSApplication supports it.
+
 Fri Feb  4 11:10:59 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Palettes/0Menu/GormMenuInspectors.m: Added code for setting

@@ -77,7 +77,6 @@ Gorm_OBJC_FILES = \
 	GormDocument.m \
 	IBInspector.m \
 	IBPalette.m \
-	InfoPanel.m \
 	GormViewKnobs.m \
 	GormFilesOwner.m \
 	GormObjectEditor.m \

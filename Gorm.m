@@ -528,11 +528,24 @@ NSAutoreleasePool *p = [NSAutoreleasePool new];
 
 - (id) infoPanel: (id) sender
 {
-  if (infoPanel == nil)
-    {
-      infoPanel = [InfoPanel new];
-    }
-  [infoPanel orderFront: nil];
+  NSMutableDictionary *d;
+
+  d = [NSMutableDictionary dictionaryWithCapacity: 8];
+  [d setObject: @"Gorm" forKey: @"ApplicationName"];
+  [d setObject: @"GNUstep Graphicsl Object Relationship Modeller"
+	forKey: @"ApplicationDescription"];
+  [d setObject: @"Gorm 0.1" forKey: @"ApplicationRelease"];
+  [d setObject: @"0.1 Feb 2000" forKey: @"FullVersionID"];
+  [d setObject: [NSArray arrayWithObject: 
+		  @"Richard Frith-Macdonald <richard@brainstorm.co.uk>"]
+	forKey: @"Authors"];
+  //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
+  [d setObject: @"Copyright (C) 1999, 2000 Free Software Foundation, Inc."
+	forKey: @"Copyright"];
+  [d setObject: @"Released under the GNU General Public License 2.0"
+	forKey: @"CopyrightDescription"];
+  
+  [self orderFrontStandardInfoPanelWithOptions: d];
   return self;
 }
 
