@@ -1401,13 +1401,18 @@
 {
   NSString *result = className;
   
-  NSAssert([self isCustomClass: className],NSInvalidArgumentException);
-
-  // iterate up the chain until a non-custom superclass is found...
-  while ([self isCustomClass: result])
+  if(![self isCustomClass: className] && ![className isEqual: @"NSObject"])
     {
-      NSDebugLog(@"result = %@",result);
       result = [self superClassNameForClassNamed: result];
+    }
+  else
+    {
+      // iterate up the chain until a non-custom superclass is found...
+      while ([self isCustomClass: result])
+	{
+	  NSDebugLog(@"result = %@",result);
+	  result = [self superClassNameForClassNamed: result];
+	}
     }
 
   return result;

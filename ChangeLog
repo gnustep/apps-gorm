@@ -1,5 +1,13 @@
 2003-09-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: [nonCustomSuperClassOf:] if the class
+	passed in is not custom it will return the immediate superclass
+	of that class.   This is to allow the use of the custom class
+	mechanism to select classes which are not custom but are not
+	offered in the palettes (i.e. NSSecureTextField).
+
+2003-09-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormViewWindow.[hm]: Provides a holder for standalone views
 	in Gorm.
 
