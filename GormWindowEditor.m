@@ -183,6 +183,164 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   return nil;
 }
 
+/* Called when the frame of a view object is changed. Takes care of
+   validating the frame and updating the object */
+- (BOOL) _validateFrame: (NSRect)frame 
+	     forViewPtr: (id *)view_ptr 
+	      withEvent: (NSEvent *)theEvent
+		 update: (BOOL) update
+{
+  int rows, cols;
+  NSSize cellSize, intercellSpace, minSize;
+  id view = *view_ptr;
+  BOOL isMatrix = [view isKindOfClass: [NSMatrix class]];
+  BOOL isControl = [view isKindOfClass: [NSControl class]];
+
+  /* What's the minimum size of a cell? */
+  minSize = NSZeroSize;
+  if (isMatrix)
+    minSize = [[view prototype] cellSize];
+  else if (isControl)
+    minSize = [[view cell] cellSize];
+  /* Sliders are a special case, I guess... */
+  if ([view isKindOfClass: [NSSlider class]])
+    {
+      minSize = NSMakeSize(15, 15);
+    }
+  if (NSEqualSizes(minSize, NSZeroSize))
+    minSize = NSMakeSize(20, 20);
+  
+  if (!isMatrix)
+    {
+      if (NSWidth(frame) < minSize.width)
+	return NO;
+      if (NSHeight(frame) < minSize.height)
+	return NO;
+      if (([theEvent modifierFlags] & NSAlternateKeyMask) 
+	  != NSAlternateKeyMask || isControl == NO)
+	return YES;
+    }
+
+  /* After here, everything is a matrix or will be converted to one */
+  if (isMatrix)
+    {
+      cellSize = [view cellSize];
+      intercellSpace = [view intercellSpacing];
+      rows = [view numberOfRows];
+      cols = [view numberOfColumns];
+    }
+  if (([theEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask)
+    {
+      /* Keep the cell size the same but increase the intercell spacing. */
+      if ([view isKindOfClass: [NSForm class]] == NO)
+	intercellSpace.width = (NSWidth(frame)-cellSize.width*cols)/(cols-1);
+      intercellSpace.height = (NSHeight(frame)-cellSize.height*rows)/(rows-1);
+      if (intercellSpace.width < 0)
+	return NO;
+      if (intercellSpace.height < 0)
+	return NO;
+      if ([view isKindOfClass: [NSForm class]] 
+	  && NSWidth(frame) != NSWidth([view frame]))
+	return NO;
+      if (update)
+	[view setIntercellSpacing: intercellSpace];
+    }
+  else if (([theEvent modifierFlags] & NSAlternateKeyMask) 
+	   == NSAlternateKeyMask)
+    {
+      BOOL redisplay;
+      int new_rows, new_cols;
+      /* If possible convert the object to a matrix with the cell given by the
+	 current object. If already a matrix, set the number of rows/cols
+         based on the frame size. */
+      if (!isMatrix)
+	{
+	  /* Convert to a matrix object */
+	  NSMutableArray *array;
+	  NSMatrix *matrix = [[NSMatrix alloc] initWithFrame: frame
+					                mode: NSRadioModeMatrix
+					           prototype: [view cell]
+					        numberOfRows: 1
+					     numberOfColumns: 1];
+	  /* Remove this view and add the new matrix */
+	  [self addSubview: AUTORELEASE(matrix)];
+	  //[self makeSelectionVisible: NO];
+	  array = [NSMutableArray arrayWithArray: [self selection]];
+	  [array removeObjectIdenticalTo: view];
+	  [array addObject: matrix];
+	  [self selectObjects: array];
+	  [self removeSubview: view];
+	  *view_ptr = view = matrix;
+	  cols = rows = 1;
+	}
+      if (NSWidth(frame) < (cellSize.width+intercellSpace.width)*cols
+	  - intercellSpace.width)
+	return NO;
+      if (NSHeight(frame) < (cellSize.height+intercellSpace.height)*rows
+	  - intercellSpace.height)
+	return NO;
+      new_cols = (NSWidth(frame)+intercellSpace.width)
+	/ (cellSize.width + intercellSpace.width);
+      new_rows = (NSHeight(frame)+intercellSpace.height)
+	/ (cellSize.height+intercellSpace.height);
+      if (new_rows < 0 || new_rows-rows > 50 
+	  || new_cols < 0 || new_cols-cols > 50)
+	{
+	  /* Something wierd happened. Hopefully just a transient thing */
+	  NSLog(@"Internal Error: Invalid frame during view resize (%d,%d)",
+		new_rows, new_cols);
+	  return YES;
+	}
+      redisplay = NO;
+      if (new_cols > cols)
+	{
+	  if ([view isKindOfClass: [NSForm class]] == NO)
+	    {
+	      redisplay = YES;
+	      while (new_cols - cols)
+		{
+		  [view addColumn];
+		  new_cols--;
+		}
+	    }
+	}
+      if (new_rows > rows)
+	{
+	  int i;
+	  redisplay = YES;
+	  for (i = 0; i < new_rows-rows; i++)
+	    {
+	      if ([view isKindOfClass: [NSForm class]])
+		[view addEntry: [NSString stringWithFormat: @"Form %0d", i+rows]];
+	      else
+		[view addRow];
+	    }
+	}
+      if (redisplay)
+	{
+	  /* Redisplay regardless of 'update, since number of cells changed */
+	  [view setFrame: frame];
+	  [self displayRect: [view frame]];
+	}
+    }
+  else
+    {
+      /* Increase the cell size */
+      cellSize = NSMakeSize((NSWidth(frame)+intercellSpace.width)/cols 
+                              - intercellSpace.width, 
+			    (NSHeight(frame)+intercellSpace.height)/rows 
+                              - intercellSpace.height);
+      /* Reasonable minimum size? - NSMatrix should do this? */
+      if (cellSize.width < minSize.width)
+	return NO;
+      if (cellSize.height < minSize.height)
+	return NO;
+      if (update)
+	[view setCellSize: cellSize];
+    }
+  return YES;
+}
+
 - (void) mouseDown: (NSEvent*)theEvent
 {
   NSEnumerator		*enumerator;
@@ -616,7 +774,11 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 			  case IBNoneKnobPosition:
 			    break;	/* NOT REACHED */
 			}
-		      lastRect = r;
+		      if ([self _validateFrame: r 
+				    forViewPtr: &view
+				     withEvent: theEvent
+				        update: NO])
+			lastRect = r;
 		      GormShowFrameWithKnob(lastRect, knob);
 		    }
 		}
@@ -687,6 +849,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	      r.size.width += 2;
 	      r.size.height += 2;
 	      redrawRect = r;
+	      [self _validateFrame: lastRect 
+		        forViewPtr: &view 
+		         withEvent: theEvent
+			    update: YES];
 	      [view setFrame: lastRect];
 	      r = GormExtBoundsForRect([view frame]);
 	      r.origin.x--;

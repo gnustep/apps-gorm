@@ -1,3 +1,8 @@
+2001-05-09  Adam Fedor  <fedor@gnu.org>
+
+	* GormWindowEditor.m (-_validateFrame:forViewPtr:withEvent:update:): 
+	New method - validate and update view during resize.
+
 2001-05-08  Richard Frith-Macdonald <rfm@gnu.org>
 
 	Applied patch by Raphael Sebbe to add support for custom objects.
