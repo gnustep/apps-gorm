@@ -45,7 +45,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
@@ -86,7 +86,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
@@ -125,7 +125,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];

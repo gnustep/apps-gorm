@@ -139,13 +139,21 @@
 
 @interface GormWindowAttributesInspector : IBInspector
 {
+  NSTextField	*titleText;
   NSButton	*visibleAtLaunchTime;
 }
 @end
 
 @implementation GormWindowAttributesInspector
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  [object setTitle: [titleText stringValue]];
+}
+
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -155,22 +163,35 @@
   self = [super init];
   if (self != nil)
     {
-      NSView	*contents;
-      NSBox	*box;
+      NSView		*contents;
+      NSTextField	*title;
+      NSBox		*box;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
 
-      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 300, 100, 50)];
-      [box setTitle: @"Backing"];
-      [box setBorderType: NSGrooveBorder];
-      [contents addSubview: box];
-      RELEASE(box);
+      title
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,70,20)];
+      [title setEditable: NO];
+      [title setSelectable: NO];
+      [title setBezeled: NO];
+      [title setAlignment: NSLeftTextAlignment];
+      [title setFont: [NSFont systemFontOfSize: 14.0]];
+      [title setDrawsBackground: NO];
+      [title setStringValue: @"Title:"];
+      [contents addSubview: title];
+      RELEASE(title);
 
-      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 10, 210, 250)];
+      titleText
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-30,IVW-80,20)];
+      [titleText setDelegate: self];
+      [contents addSubview: titleText];
+      RELEASE(titleText);
+
+      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 10, IVW-20, IVW)];
       [box setTitle: @"Options"];
       [box setBorderType: NSGrooveBorder];
       [contents addSubview: box];
@@ -221,6 +242,7 @@
     {
       [visibleAtLaunchTime setState: NSOffState];
     }
+  [titleText setStringValue: [object title]];
 }
 
 @end

@@ -1,9 +1,11 @@
-Wed Jan  5 13:32:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+Wed Jan  5 17:00:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Palettes/1Menu/main.m: First cut at code for providing menus items
 	on the palette.
 	* GormWindowEditor.m: accept first mouse so we act immediately that
 	the mouse is clicked anywhere in the window.
+	* Palettes/2Window/main.m: Tidy attributes editor and add support
+	for setting window title.
 
 Tue Jan  4 17:42:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
