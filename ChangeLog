@@ -1,3 +1,13 @@
+2004-05-16 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormSoundEditor.m: Added methods to GormSound class to 
+	show the "not applicable" inspector on all options but the
+	attributes inspector.
+	* GormImageEditor.m: same as above for GormImage.
+	* GormInspectorsManager.m: Added code to show "Sound Inspector"
+	or "Image Inspector" when appropriate for either GormSound or
+	GormImage respectively.
+	
 2004-05-15 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageInspector.gorm: Repositioned fields.

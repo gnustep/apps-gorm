@@ -567,4 +567,19 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 {
   return @"GormImageInspector"; 
 }
+
+- (NSString*) classInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) connectInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
 @end

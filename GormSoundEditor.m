@@ -618,6 +618,21 @@ static NSMapTable	*docMap = 0;
 
 - (NSString *)inspectorClassName
 {
-  return @"GormSoundInspector"; //[self soundInspectorClassName];
+  return @"GormSoundInspector";
+}
+
+- (NSString*) classInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) connectInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
 }
 @end
