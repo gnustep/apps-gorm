@@ -25,22 +25,9 @@
 #include "GormNSMenu.h"
 #include <AppKit/NSPopUpButton.h>
 #include <AppKit/NSPopUpButtonCell.h>
-
-@interface NSMenu (GormNSMenuPrivate)
-- (NSPopUpButtonCell *)popUpButtonCell;
-@end
-
-@implementation NSMenu (GormNSMenuPrivate)
-- (NSPopUpButtonCell *)popUpButtonCell
-{
-  return _popUpButtonCell;
-}
-@end
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @interface GormNSMenuWindow : NSPanel
-{
-  BOOL opened;
-}
 @end
 
 @implementation GormNSMenuWindow
@@ -67,26 +54,6 @@
 			NSModalPanelRunLoopMode,
 			NSEventTrackingRunLoopMode, 
 			nil]];
-      opened = NO;
-    }
-}
-
-- (void)becomeMainWindow
-{
-  [super becomeMainWindow];
-  if ( [[self menu] _ownedByPopUp] )
-    {
-      /*
-      if(opened == YES)
-	{
-	  [[self menu] close];
-	  opened = NO;
-	}
-      else 
-	{
-	  opened = YES;
-	}
-      */
     }
 }
 
@@ -113,6 +80,33 @@
 @end
 
 @implementation GormNSMenu
+- (id) initWithCoder: (NSCoder *)coder
+{
+  if((self = [super initWithCoder: coder]) != nil)
+    {
+      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBSelectionChangedNotification
+	  object: nil];
+    }
+
+  return self;
+}
+
+- (void) handleNotification: (NSNotification *)notification
+{
+  id<IBEditors> object = [notification object];
+  if(object != nil)
+    {
+      id edited = [object editedObject];
+      if(self != edited && [self _ownedByPopUp])
+	{
+	  [self close];
+	}
+    }
+}
+
 - (BOOL) performKeyEquivalent: (NSEvent*)theEvent
 {
   return NO;
@@ -159,14 +153,17 @@
   NSLog(@"Being released... %d: %@", [self retainCount], self);
   [super release];
 }
+*/
+#endif
 
 - (void) dealloc
 {
-  NSLog(@"Deallocing %@",self);
+  [[NSNotificationCenter defaultCenter] removeObserver: self
+					name: IBSelectionChangedNotification
+					object: nil];
   [super dealloc];
 }
-*/
-#endif
+
 @end
 
 @implementation NSMenu (GormNSMenu)
