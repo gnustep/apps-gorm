@@ -721,13 +721,15 @@ static NSImage	*classesImage = nil;
   NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
   NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
   GormClassManager *cm = [self classManager];
+  NSCharacterSet *terminatorSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
+  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
+  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
 
   while(![headerScanner isAtEnd])
     {
       NSString *classString = nil;
       BOOL classfound = NO, result = NO;
-      NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
-      NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
       NSEnumerator *outletEnum = [outletTokens objectEnumerator];
       NSEnumerator *actionEnum = [actionTokens objectEnumerator];
       NSString *outletToken = nil;
@@ -750,7 +752,6 @@ static NSImage	*classesImage = nil;
 	    *classScanner = [NSScanner scannerWithString: classString],
 	    *ivarScanner = nil,
 	    *methodScanner = nil;
-	  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
 	  NSMutableArray 
 	    *actions = [NSMutableArray array],
 	    *outlets = [NSMutableArray array];
@@ -761,7 +762,7 @@ static NSImage	*classesImage = nil;
 			intoString: &className];
 	  [classScanner scanString: @":"
 			intoString: NULL];
-	  [classScanner scanUpToString: @"\n"
+	  [classScanner scanUpToCharactersFromSet: terminatorSet
 			intoString: &superClassName];
 	  [classScanner scanUpToString: @"{"
 			intoString: NULL];
@@ -859,7 +860,15 @@ static NSImage	*classesImage = nil;
 	    }
 	  else
 	    {
-	      NSLog(@"Class %@ failed to add", className);
+	      NSString *message = [NSString stringWithFormat: 
+					      @"The class %@ could not be added", 
+					    className];
+	      NSRunAlertPanel(@"Problem adding class from header", 
+			      message,
+			      nil, 
+			      nil, 
+			      nil);
+	      NSDebugLog(@"Class %@ failed to add", className);
 	    }
 	} // if we found a class
     }

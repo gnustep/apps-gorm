@@ -1,3 +1,8 @@
+2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument parseHeader:] corrected problem
+	pointed out be Enrico Sersale.   Applied patch.  Thanks!
+	
 2002-12-21  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added code in loadDocument: to create an empty
