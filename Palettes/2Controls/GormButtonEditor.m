@@ -30,17 +30,11 @@
 
 #define _EO ((NSButton *)_editedObject)
 
-@implementation NSButton (GormObjectAdditions)
-- (NSString*) editorClassName
-{
-  return @"GormButtonEditor";
-}
-@end
-
 @interface NSButtonCell (GormObjectAdditions)
 - (NSRect) gormTitleRectForFrame: (NSRect) cellFrame
 			  inView: (NSView *)controlView;
 @end
+
 @implementation NSButtonCell (GormObjectAdditions)
 - (NSRect) gormTitleRectForFrame: (NSRect) cellFrame
 			  inView: (NSView *)controlView

@@ -25,13 +25,13 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
 #include "GormViewEditor.h"
 #include "GormMatrixEditor.h"
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
 #include "GormFontViewController.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 #define _EO ((NSMatrix*)_editedObject)
 
@@ -40,7 +40,7 @@
      withPlacementInfo: (GormPlacementInfo*)gpi;
 @end
 
-@implementation NSMatrix (GormObjectAdditions)
+@implementation NSMatrix (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormMatrixEditor";

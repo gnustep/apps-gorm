@@ -24,11 +24,14 @@
 
 #include "GormPrivate.h"
 #include "GormViewWithContentViewEditor.h"
-#include <math.h>
-#define _EO ((NSWindow *)_editedObject)
 #include "GormInternalViewEditor.h"
+#include <InterfaceBuilder/IBViewAdditions.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
+#include <math.h>
 
-@implementation NSWindow (GormObjectAdditions)
+#define _EO ((NSWindow *)_editedObject)
+
+@implementation NSWindow (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormWindowEditor";
@@ -52,28 +55,11 @@
 }
 @end
 
-@interface NSWindow (GormWindowEditorAdditions)
-- (void) unsetInitialFirstResponder;
-@end
-
-@implementation NSWindow (GormWindowEditorAdditions)
-/*
- * The setFirstResponder method is used in this editor to allow it to
- * respond to messages forwarded to the window appropriately.
- * Unfortunately, once it's set to something, it cannot be set to nil.
- * This method allows us to set it to nil, thus preventing a memory leak.
- */
-- (void) unsetInitialFirstResponder
-{
-  ASSIGN(_initialFirstResponder, nil);
-}
-@end
-
 /*
  *	Default implementations of methods used for updating a view by
  *	direct action through an editor.
  */
-@implementation NSView (ViewAdditions)
+@implementation NSView (IBViewAdditions)
 
 - (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point
 {
@@ -108,6 +94,23 @@
   [self setFrame: newFrame];		/* View changed by editor.	*/
 }
 
+@end
+
+@interface NSWindow (GormWindowEditorAdditions)
+- (void) unsetInitialFirstResponder;
+@end
+
+@implementation NSWindow (GormWindowEditorAdditions)
+/*
+ * The setFirstResponder method is used in this editor to allow it to
+ * respond to messages forwarded to the window appropriately.
+ * Unfortunately, once it's set to something, it cannot be set to nil.
+ * This method allows us to set it to nil, thus preventing a memory leak.
+ */
+- (void) unsetInitialFirstResponder
+{
+  ASSIGN(_initialFirstResponder, nil);
+}
 @end
 
 

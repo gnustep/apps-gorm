@@ -8,6 +8,11 @@
 {
   return @"GormNSSplitViewInspector";
 }
+
+- (NSString*) editorClassName
+{
+  return @"GormSplitViewEditor";
+}
 @end
 
 @implementation GormNSSplitViewInspector

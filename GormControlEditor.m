@@ -24,19 +24,17 @@
 
 #include <AppKit/AppKit.h>
 #include <Foundation/NSArchiver.h>
-
 #include "GormPrivate.h"
-
 #include "GormViewWithSubviewsEditor.h"
 #include "GormControlEditor.h"
-
 #include "GormPlacementInfo.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 #define _EO ((NSControl *)_editedObject)
 
 @class GormWindowEditor;
 
-@implementation NSControl (GormObjectAdditions)
+@implementation NSControl (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormControlEditor";
@@ -606,7 +604,7 @@
 }
 @end
 
-@implementation NSTextField (GormObjectAdditions)
+@implementation NSTextField (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormTextFieldEditor";

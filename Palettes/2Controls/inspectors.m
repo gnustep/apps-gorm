@@ -126,6 +126,11 @@
  */
 @implementation	NSButton (IBObjectAdditions)
 
+- (NSString*) editorClassName
+{
+  return @"GormButtonEditor";
+}
+
 - (NSString*) inspectorClassName
 {
   return @"GormButtonAttributesInspector";

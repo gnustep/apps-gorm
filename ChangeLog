@@ -1,3 +1,22 @@
+2004-12-04 17:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormBoxEditor.m
+	* GormControlEditor.m
+	* GormInternalViewEditor.m
+	* GormMatrixEditor.m
+	* GormNSSplitViewInspector.m
+	* GormObjectEditor.m
+	* GormScrollViewAttributesInspector.m
+	* GormScrollViewEditor.m
+	* GormSplitViewEditor.m
+	* GormWindowEditor.m
+	* Palettes/2Controls/GormButtonEditor.m
+	* Palettes/2Controls/inspectors.m
+	* Palettes/3Containers/GormTabViewEditor.m
+	* Palettes/3Containers/inspectors.m: Replaced all references
+	of GormObjectAdditions with IBObjectAdditions.  This makes
+	Gorm more compliant with the IB API spec.
+	
 2004-12-03 07:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: New method allCustomClassNames which

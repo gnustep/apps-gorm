@@ -27,16 +27,9 @@
 #include "GormSplitViewEditor.h"
 #include "GormInternalViewEditor.h"
 #include "GormBoxEditor.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 #define _EO ((NSSplitView *)_editedObject)
-
-@implementation NSSplitView (GormObjectAdditions)
-- (NSString*) editorClassName
-{
-  return @"GormSplitViewEditor";
-}
-@end
-
 
 @implementation GormSplitViewEditor
 

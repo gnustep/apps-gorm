@@ -737,6 +737,11 @@ static NSString *ITEM=@"item";
   return @"GormTabViewInspector";
 }
 
+- (NSString*) editorClassName
+{
+  return @"GormTabViewEditor";
+}
+
 @end
 
 @interface GormTabViewInspector : IBInspector

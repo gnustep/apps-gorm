@@ -35,6 +35,18 @@
 {
   return @"GormScrollViewAttributesInspector";
 }
+
+- (NSString*) editorClassName
+{
+  if ([self documentView]
+      && [[self documentView] isKindOfClass: [NSTableView class]])
+    return @"GormTableViewEditor";
+  else if ([self documentView]
+      && [[self documentView] isKindOfClass: [NSTextView class]])
+    return @"GormTextViewEditor";
+  else 
+    return @"GormScrollViewEditor";
+}
 @end
 
 @implementation GormScrollViewAttributesInspector

@@ -25,16 +25,9 @@
 #include <AppKit/AppKit.h>
 #include "GormPrivate.h"
 #include "GormTabViewEditor.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 #define _EO ((NSTabView *)_editedObject)
-
-@implementation NSTabView (GormObjectAdditions)
-- (NSString*) editorClassName
-{
-  return @"GormTabViewEditor";
-}
-@end
-
 
 @implementation GormTabViewEditor
 

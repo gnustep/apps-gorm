@@ -27,12 +27,13 @@
 #include "GormPrivate.h"
 #include "GormBoxEditor.h"
 #include "GormInternalViewEditor.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 #define _EO ((NSBox *)_editedObject)
 
 @class GormWindowEditor;
 
-@implementation NSBox (GormObjectAdditions)
+@implementation NSBox (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   //  if([[self superview] isKindOfClass: [NSClipView class]])

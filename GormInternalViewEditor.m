@@ -26,6 +26,7 @@
 #include "GormPrivate.h"
 #include "GormInternalViewEditor.h"
 #include "GormFontViewController.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 @class GormEditorToParent;
 
@@ -41,7 +42,7 @@ static NSImage *horizontalImage;
 #endif
 
 
-@implementation NSView (GormObjectAdditions)
+@implementation NSView (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   if ([self superview] && 
