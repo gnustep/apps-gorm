@@ -56,6 +56,7 @@ extern NSString	*IBMenuCellPboardType;
 extern NSString	*IBObjectPboardType;
 extern NSString	*IBViewPboardType;
 extern NSString	*IBWindowPboardType;
+extern NSString	*IBFormatterPboardType;
 
 /*
  * Notification for editing and inspecting the objects etc.
