@@ -1478,7 +1478,7 @@ static NSImage	*classesImage = nil;
       objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
 	NSObjectMapValueCallBacks, 128, [self zone]);
 
-      // for saving objects when the gorm file is persisted.  Used for templates.
+      // saving objects when the gorm file is persisted.  Used for templates.
       tempNameTable = [[NSMutableDictionary alloc] initWithCapacity: 8];
 
       // for saving the editors when the gorm file is persisted.
@@ -1592,12 +1592,16 @@ static NSImage	*classesImage = nil;
       scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [scrollView setHasVerticalScroller: YES];
       [scrollView setHasHorizontalScroller: NO];
-      [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setBorderType: NSBezelBorder];
+
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
-					      inDocument: self];
+						  inDocument: self];
       AUTORELEASE(objectsView);
       [objectsView setFrame: mainRect];
-      [objectsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [objectsView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];
       RELEASE(objectsView);
 
@@ -1606,9 +1610,12 @@ static NSImage	*classesImage = nil;
       imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [imagesScrollView setHasVerticalScroller: YES];
       [imagesScrollView setHasHorizontalScroller: NO];
-      [imagesScrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [imagesScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [imagesScrollView setBorderType: NSBezelBorder];
+
       imagesView = [[GormImageEditor alloc] initWithObject: nil
-					    inDocument: self];
+						inDocument: self];
       AUTORELEASE(imagesView);
       [imagesView setFrame: mainRect];
       [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
@@ -1620,9 +1627,12 @@ static NSImage	*classesImage = nil;
       soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [soundsScrollView setHasVerticalScroller: YES];
       [soundsScrollView setHasHorizontalScroller: NO];
-      [soundsScrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [soundsScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [soundsScrollView setBorderType: NSBezelBorder];
+
       soundsView = [[GormSoundEditor alloc] initWithObject: nil
-					    inDocument: self];
+						inDocument: self];
       AUTORELEASE(soundsView);
       [soundsView setFrame: mainRect];
       [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
@@ -1634,7 +1644,8 @@ static NSImage	*classesImage = nil;
       [classesScrollView setHasVerticalScroller: YES];
       [classesScrollView setHasHorizontalScroller: NO];
       [classesScrollView setAutoresizingMask:
-			   NSViewHeightSizable|NSViewWidthSizable];
+	NSViewHeightSizable|NSViewWidthSizable];
+      [classesScrollView setBorderType: NSBezelBorder];
 
       mainRect.origin = NSMakePoint(0,0);
       classesView = [[GormOutlineView alloc] initWithFrame: mainRect];

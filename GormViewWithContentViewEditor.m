@@ -960,6 +960,7 @@
   scrollView = [[NSScrollView alloc] initWithFrame: rect];
   [scrollView setHasHorizontalScroller: YES];
   [scrollView setHasVerticalScroller: YES];
+  [scrollView setBorderType: NSBezelBorder];
 
   [document attachObject: scrollView
 	    toParent: _editedObject];

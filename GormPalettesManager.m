@@ -260,6 +260,8 @@ static NSImage	*dragImage = nil;
   [scrollView setHasHorizontalScroller: YES];
   [scrollView setHasVerticalScroller: NO];
   [scrollView setAutoresizingMask: NSViewMinYMargin | NSViewWidthSizable];
+  [scrollView setBorderType: NSBezelBorder];
+
   selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 					     mode: NSRadioModeMatrix
 					cellClass: [NSImageCell class]

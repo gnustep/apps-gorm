@@ -1,3 +1,7 @@
+2003-03-02  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormDocument.m: Give scrollviews bezelled border.
+
 2003-02-13  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormOutlineView.m: Fix code to update view when outlet/action
