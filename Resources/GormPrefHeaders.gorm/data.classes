@@ -67,6 +67,7 @@
 	    "orderFront:",
 	    "orderFrontColorPanel:",
 	    "orderFrontDataLinkPanel:",
+	    "orderFrontFontPanel:",
 	    "orderFrontHelpPanel:",
 	    "orderFrontStandardAboutPanel:",
 	    "orderFrontStandardInfoPanel:",
@@ -141,14 +142,19 @@
 	);
 	Super = NSObject;
     };
-    GormPrefController = {
+    GormHeadersPref = {
 	Actions = (
-	    "popupAction:"
+	    "addAction:",
+	    "removeAction:",
+	    "preloadAction:"
 	);
 	Outlets = (
-	    popup,
-	    prefBox
+	    preloadButton,
+	    browser,
+	    addButton,
+	    removeButton,
+	    window
 	);
-	Super = NSWindowController;
+	Super = NSObject;
     };
 }

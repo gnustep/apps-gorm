@@ -104,7 +104,7 @@ extern NSString *GormLinkPboardType;
 @interface Gorm : NSApplication <IB>
 {
   id			infoPanel;
-  id                    preferencesPanel;
+  id                    preferencesController;
   GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
@@ -142,7 +142,7 @@ extern NSString *GormLinkPboardType;
 - (id) delete: (id)sender;
 - (id) endTesting: (id)sender;
 - (id) infoPanel: (id) sender;
-- (id) preferencesPanel: (id) sender;
+- (void) preferencesPanel: (id) sender;
 - (id) inspector: (id) sender;
 - (id) newApplication: (id) sender;
 - (id) loadPalette: (id) sender;

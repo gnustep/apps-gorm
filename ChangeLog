@@ -1,5 +1,19 @@
 2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
+        Applied patch submitted by Fabien <fabien@tuxfamily.org>
+	* GNUmakefile: Added .gorm files and new .h and .m files.
+	* Gorm.m/GormPrivate.h: Removed code to automatically 
+	update the preferences values.  Removed references to 
+	preferencesPanel and added the new GormController class.
+	* GormPreferences.gorm: Updated for new preferences.
+	* GormGeneralPref.gorm: Added. I updated this only slightly to
+	avoid a warning against NSWindow. (GJC)
+	* GormHeadersPref.gorm: Added.
+	* GormGeneralPref.[hm]: Added.
+	* GormHeafersPref.[hm]: Added.
+	
+2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormViewWithContentViewEditor.m: The copyInView method was
 	not adding views to the document.   Added a method which adds 
 	the view and it's subviews.  This fix corrects bug#3490.   

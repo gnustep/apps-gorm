@@ -23,7 +23,7 @@
  */
 
 #include "GormPrivate.h"
-#include "GormPreferences.h"
+#include "GormPrefController.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -575,12 +575,12 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) applicationWillTerminate: (NSApplication*)sender
 {
-  [[NSUserDefaults standardUserDefaults] 
-    setBool: [[[self inspectorsManager] panel] isVisible]
-    forKey: @"ShowInspectors"];
-  [[NSUserDefaults standardUserDefaults] 
-    setBool: [[[self palettesManager] panel] isVisible]
-    forKey: @"ShowPalettes"];
+//   [[NSUserDefaults standardUserDefaults] 
+//     setBool: [[[self inspectorsManager] panel] isVisible]
+//     forKey: @"ShowInspectors"];
+//   [[NSUserDefaults standardUserDefaults] 
+//     setBool: [[[self palettesManager] panel] isVisible]
+//     forKey: @"ShowPalettes"];
 }
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
@@ -1038,15 +1038,14 @@ static NSButtonType _buttonTypeForObject( id button )
   return self;
 }
 
-- (id) preferencesPanel: (id) sender
+- (void) preferencesPanel: (id) sender
 {
-  if(preferencesPanel == nil)
+  if(! preferencesController)
     {
-      preferencesPanel = [[[GormPreferences alloc] init] window];
+      preferencesController =  [[GormPrefController alloc] initWithWindowNibName:@"GormPreferences"];
     }
 
-  [preferencesPanel makeKeyAndOrderFront: self];
-  return preferencesPanel;
+  [[preferencesController window] makeKeyAndOrderFront:nil];
 }
 
 - (void) orderFrontFontPanel: (id) sender
@@ -1070,7 +1069,6 @@ static NSButtonType _buttonTypeForObject( id button )
       path = [bundle pathForImageResource: @"GormTargetTag"];
       targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 
-      preferencesPanel = nil;
       documents = [NSMutableArray new];
       [nc addObserver: self
 	     selector: @selector(handleNotification:)

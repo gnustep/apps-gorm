@@ -67,6 +67,7 @@
 	    "orderFront:",
 	    "orderFrontColorPanel:",
 	    "orderFrontDataLinkPanel:",
+	    "orderFrontFontPanel:",
 	    "orderFrontHelpPanel:",
 	    "orderFrontStandardAboutPanel:",
 	    "orderFrontStandardInfoPanel:",
@@ -141,14 +142,18 @@
 	);
 	Super = NSObject;
     };
-    GormPrefController = {
+    GormGeneralPref = {
 	Actions = (
-	    "popupAction:"
+	    "palettesAction:",
+	    "inspectorAction:",
+	    "backupAction:"
 	);
 	Outlets = (
-	    popup,
-	    prefBox
+	    window,
+	    palettesButton,
+	    inspectorButton,
+	    backupButton
 	);
-	Super = NSWindowController;
+	Super = NSObject;
     };
 }
