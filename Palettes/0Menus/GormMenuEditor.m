@@ -811,6 +811,19 @@ void _attachAll(NSMenu *menu, id document)
       items = [document pasteType: IBMenuPboardType
 		   fromPasteboard: dragPb
 			   parent: edited];
+
+      // Test to see if the first item is a menu, if so reject the drag.  If the
+      // first item is a menu item, accept it.
+      if([items count] > 0)
+	{
+	  id itemZero = [items objectAtIndex: 0];
+	  if([itemZero isKindOfClass: [NSMenu class]])
+	    {
+	      return NO;
+	    }
+	}
+
+      // enumerate through the items and add them.
       enumerator = [items objectEnumerator];
       while ((item = [enumerator nextObject]) != nil)
 	{
