@@ -746,6 +746,11 @@ Congratulations, you now know how Palettes work.
 @subsection Should I modify the data.classes of file in the .gorm package?
 
 My advice is never to do this, ever.  Some have said that ``they're plain text and I should be able to change them''.   My response to this rather loosely pronounced and weak rationale is that if they are modified I cannot and will not guarantee that Gorm will be able to read them or will function correctly if it does.
+@subsection Why does my application crash when I add additional attributes for encoding in encodeWithCoder: or initWithCoder: in my custom class?
+
+If you've selected the custom class by clicking on an existing object and then selecting a subclass in the Custom Class Inspector in Gorm's inspector panel, then when the .gorm file is saved, Gorm must use what is called a template to take the place of the class so that when the .gorm is unarchived in the running application, the template can become the custom subclass you specified.  Gorm has no way of knowing about the additional attributes of your subclass, so when it's archived the template depends on the encodeWithCoder: of the existing class.  Also, when AppKit loads the .gorm file, the initWithCoder: on the subclass is called to allow the user to do any actions, except for additional encoding, which need to be done at that time.  This is particularly true when non-keyed coding is used, since, with keyed coding, it's possible to skip keys that are not present.  The application may not crash if keyed coding is used, but Gorm would still not know about the additional attributes and would not be able to persist them anyway.
+
+Please see information in previous chapters regarding palettes, if you would like to be able to add your classes to Gorm so that they don't need to be replaced by templates, or proxy objects.
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index
