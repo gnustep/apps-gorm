@@ -95,6 +95,11 @@ static NSMapTable	*docMap = 0;
   return editor;
 }
 
+- (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
+{
+  return YES;   /* Ensure we get initial mouse down event.      */
+}
+
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   if ([types containsObject: IBObjectPboardType] == YES)
