@@ -1,4 +1,12 @@
-2003-05-07  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-05-09  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Further improved the fix to the problem found
+	yesterday.  The custom class code was issuing a RELEASE call to 
+	all of the objects in the nameTable.   This was not necessary unless
+	the object is a template object and was causing some issues with
+	gorm file corruption.
+
+2003-05-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Corrected a problem which was causing the 
 	NSVisible array in the nameTable to become corrupted when 

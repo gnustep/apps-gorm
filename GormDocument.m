@@ -1259,33 +1259,39 @@ static NSImage	*classesImage = nil;
 	  [(NSWindow *)obj setContentView: [template contentView]];
 	  [self setObject: template isVisibleAtLaunch: NO];
 	  [self setObject: obj isVisibleAtLaunch: isVisible];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSTextViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSTextTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSButtonTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSControlTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSMenuTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
+	  RELEASE(template); // get rid of the template...
 	}
       [nameTable setObject: obj forKey: key];
-      RELEASE(template); // get rid of the template...
     }
   [tempNameTable removeAllObjects];
 }
@@ -2445,7 +2451,7 @@ static NSImage	*classesImage = nil;
 	{
 	  a = [NSMutableArray new];
 	  [nameTable setObject: a forKey: @"NSVisible"];
-	  // RELEASE(a);
+	  RELEASE(a);
 	}
       if ([a containsObject: anObject] == NO)
 	{
