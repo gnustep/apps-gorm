@@ -88,6 +88,14 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) setSource: (id)anObject;
 @end
 
+@interface NSApplication (IBConnections)
+- (id) connectSource;
+- (id) connectDestination;
+- (BOOL) isConnecting;
+- (void) stopConnecting;
+- (void) displayConnectionBetween: (id)source and: (id)destination;
+@end
+
 @interface NSObject (IBEditorSpecification)
 - (NSString*) editorClassName;
 @end

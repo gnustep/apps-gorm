@@ -33,6 +33,9 @@ NSString *IBWillEndTestingInterfaceNotification
 NSString *IBDidEndTestingInterfaceNotification
   = @"IBDidEndTestingInterfaceNotification";
 
+
+NSString *GormLinkPboardType = @"GormLinkPboardType";
+
 @class	InfoPanel;
 
 @implementation Gorm
@@ -89,6 +92,16 @@ NSString *IBDidEndTestingInterfaceNotification
   return self;
 }
 
+- (id) connectDestination
+{
+  return connectDestination;
+}
+
+- (id) connectSource
+{
+  return connectSource;
+}
+
 - (id) cut: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
@@ -119,6 +132,10 @@ NSString *IBDidEndTestingInterfaceNotification
     return nil;
   [selectionOwner deleteSelection];
   return self;
+}
+
+- (void) displayConnectionBetween: (id)source and: (id)destination
+{
 }
 
 - (id) endTesting: (id)sender
@@ -185,8 +202,6 @@ NSString *IBDidEndTestingInterfaceNotification
       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
 
-      path = [bundle pathForImageResource: @"GormLinkImage"];
-      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
       path = [bundle pathForImageResource: @"GormSourceTag"];
       sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
       path = [bundle pathForImageResource: @"GormTargetTag"];
@@ -226,14 +241,28 @@ NSString *IBDidEndTestingInterfaceNotification
   return inspectorsManager;
 }
 
+- (BOOL) isConnecting
+{
+  if (connectDestination == nil || connectSource == nil)
+    {
+      return NO;
+    }
+  if ([activeDocument containsObject: connectDestination] == NO)
+    {
+      NSLog(@"Oops - connectDestination not in active document");
+      return NO;
+    }
+  if ([activeDocument containsObject: connectSource] == NO)
+    {
+      NSLog(@"Oops - connectSource not in active document");
+      return NO;
+    }
+  return YES;
+}
+
 - (BOOL) isTestingInterface
 {
   return isTesting;
-}
-
-- (NSImage*) linkImage
-{
-  return linkImage;
 }
 
 - (id) loadPalette: (id) sender
@@ -341,6 +370,26 @@ NSString *IBDidEndTestingInterfaceNotification
   return [[selectionOwner selection] lastObject];
 } 
 
+- (void) setConnectDestination: (id)anObject
+{
+  connectDestination = anObject;
+  if ([self isConnecting])
+    {
+      [self displayConnectionBetween: connectSource and: connectDestination];
+      [[self inspectorsManager] updateSelection];
+    }
+}
+
+- (void) setConnectSource: (id)anObject
+{
+  connectSource = anObject;
+  if ([self isConnecting])
+    {
+      [self displayConnectionBetween: connectSource and: connectDestination];
+      [[self inspectorsManager] updateSelection];
+    }
+}
+
 - (id) setName: (id)sender
 {
   /* FIXME */
@@ -350,6 +399,16 @@ NSString *IBDidEndTestingInterfaceNotification
 - (NSImage*) sourceImage
 {
   return sourceImage;
+}
+
+- (void) stopConnecting
+{
+  if ([self isConnecting])
+    {
+      [self displayConnectionBetween: nil and: nil];
+    }
+  connectDestination = nil;
+  connectSource = nil;
 }
 
 - (NSImage*) targetImage

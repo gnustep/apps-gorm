@@ -4,6 +4,7 @@
 @interface GormInspectorsManager : NSObject
 {
   NSPanel		*panel;
+  NSPopUpButton		*popup;
   NSView		*selectionView;
   NSView		*inspectorView;
   NSView		*buttonView;

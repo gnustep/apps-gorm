@@ -11,6 +11,8 @@
 #include "GormInspectorsManager.h"
 #include "GormPalettesManager.h"
 
+extern NSString *GormLinkPboardType;
+
 @interface Gorm : NSApplication <IB>
 {
   id			infoPanel;
@@ -20,16 +22,23 @@
   id			activeDocument;
   NSMutableArray	*documents;
   BOOL			isTesting;
-  NSImage		*linkImage;
   NSImage		*sourceImage;
   NSImage		*targetImage;
+  id			connectSource;
+  id			connectDestination;
 }
 - (id<IBDocuments>) activeDocument;
+- (id) connectSource;
+- (id) connectDestination;
+- (void) displayConnectionBetween: (id)source and: (id)destination;
 - (void) handleNotification: (NSNotification*)aNotification;
 - (GormInspectorsManager*) inspectorsManager;
-- (NSImage*) linkImage;
+- (BOOL) isConnecting;
 - (GormPalettesManager*) palettesManager;
+- (void) setConnectDestination: (id)anObject;
+- (void) setConnectSource: (id)anObject;
 - (NSImage*) sourceImage;
+- (void) stopConnecting;
 - (NSImage*) targetImage;
 
 - (id) copy: (id)sender;

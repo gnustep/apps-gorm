@@ -51,8 +51,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormSound.tiff \
 	Images/GormSourceTag.tiff \
 	Images/GormTargetTag.tiff \
-        Images/Gorm.tiff \
-        Images/GormLinkImage.tiff
+        Images/Gorm.tiff
 
 Gorm_HEADERS = \
 	Gorm.h \

@@ -328,6 +328,42 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	}
 
       /*
+       * Control-click on a subview initiates a connection attempt.
+       */
+      if (view != nil && view != self && knob == IBNoneKnobPosition
+	&& ([theEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask)
+	{
+	  NSPoint	dragPoint = [theEvent locationInWindow];
+	  NSPasteboard	*pb;
+	  NSString	*name = [document nameForObject: view];
+
+	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
+		     owner: self];
+	  [pb setString: name forType: GormLinkPboardType];
+	  [(Gorm*)NSApp setConnectSource: view];
+
+	  /*
+	   * Mark the view as being a drag source.
+	   */
+	  [self lockFocus];
+	  [[(Gorm*)NSApp sourceImage]
+	    compositeToPoint: [view frame].origin operation: NSCompositeCopy];
+	  [self unlockFocus];
+	  [[self window] flushWindow];
+
+	  [self dragImage: [(Gorm*)NSApp targetImage]
+		       at: dragPoint
+		   offset: NSZeroSize
+		    event: theEvent
+	       pasteboard: pb
+		   source: self
+		slideBack: YES];
+	  [self makeSelectionVisible: YES];
+	  return;
+	}
+
+      /*
        * Having determined the current selection, we now handle events.
        */
       if (view != nil)
@@ -483,25 +519,17 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 			  dragStarted = YES;
 			  [self makeSelectionVisible: NO];
 			}
-		      if ([theEvent modifierFlags] & NSControlKeyMask)
+		      enumerator = [selection objectEnumerator];
+		      while ((subview = [enumerator nextObject]) != nil)
 			{
-			  NSLog(@"Control key not yet supported");
-			  /* FIXME */
-			}
-		      else
-			{
-			  enumerator = [selection objectEnumerator];
-			  while ((subview = [enumerator nextObject]) != nil)
-			    {
-			      NSRect	oldFrame = [subview frame];
+			  NSRect	oldFrame = [subview frame];
 
-			      r = oldFrame;
-			      r.origin.x += xDiff;
-			      r.origin.y += yDiff;
-			      [subview setFrame: r];
-			      [self displayRect: oldFrame];
-			      [subview display];
-			    }
+			  r = oldFrame;
+			  r.origin.x += xDiff;
+			  r.origin.y += yDiff;
+			  [subview setFrame: r];
+			  [self displayRect: oldFrame];
+			  [subview display];
 			}
 		    }
 		  else
@@ -665,19 +693,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     }
 }
 
-- (void) mouseDragged: (NSEvent*)theEvent
-{
-  if ([(id<IB>)NSApp isTestingInterface] == YES)
-    {
-      [super mouseDown: theEvent];
-      return;
-    }
-}
-
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   /*
-   * A window editor can accept views dropped in to the window.
+   * A window editor can accept views pasted in to the window.
    */
   return [types containsObject: IBViewPboardType];
 }
@@ -799,22 +818,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSString	*type = [[dragPb types] lastObject];
-
   /*
-   * Windows are an exception to the normal DnD mechanism - we create them
-   * if they are dropped anywhere except back in the pallettes view -
-   * ie. if they are dragged, but the drop fails.
+   * FIXME - handle this.
+   * Notification that a drag failed/succeeded.
    */
-  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
-    {
-      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
-
-      if (active != nil)
-	{
-	  [active pasteType: type fromPasteboard: dragPb parent: nil];
-	}
-    }
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
@@ -884,10 +891,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   subeditors = [NSMutableArray new];
 
   /*
-   * Permit views to be dragged in to the window.
+   * Permit views and connections to be dragged in to the window.
    */
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, nil]];
+    IBViewPboardType, GormLinkPboardType, nil]];
 
   return self;
 }
@@ -974,43 +981,90 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPoint	loc = [sender draggedImageLocation];
   NSPasteboard	*pb = [sender draggingPasteboard];
-  NSArray	*views;
-  NSEnumerator	*enumerator;
-  NSView	*sub;
+  NSArray	*types = [pb types];
 
-  /*
-   * Ask the document to get the dragged views from the pasteboard and add
-   * them to it's collection of known objects.
-   */
-  views = [document pasteType: IBViewPboardType
-	       fromPasteboard: pb
-		       parent: edited];
-  /*
-   * Now make all the views subviews of ourself, setting their origin to be
-   * the point at which they were dropped (converted from window coordinates
-   * to our own coordinates).
-   */
-  loc = [self convertPoint: loc fromView: nil];
-  enumerator = [views objectEnumerator];
-  while ((sub = [enumerator nextObject]) != nil)
+  if ([types containsObject: IBViewPboardType] == YES)
     {
-      NSRect	rect = [sub frame];
+      NSPoint		loc = [sender draggedImageLocation];
+      NSArray		*views;
+      NSEnumerator	*enumerator;
+      NSView		*sub;
 
-      rect.origin = loc;
-      [sub setFrame: rect];
-      [self addSubview: sub];
+      /*
+       * Ask the document to get the dragged views from the pasteboard and add
+       * them to it's collection of known objects.
+       */
+      views = [document pasteType: IBViewPboardType
+		   fromPasteboard: pb
+			   parent: edited];
+      /*
+       * Now make all the views subviews of ourself, setting their origin to
+       * be the point at which they were dropped (converted from window
+       * coordinates to our own coordinates).
+       */
+      loc = [self convertPoint: loc fromView: nil];
+      enumerator = [views objectEnumerator];
+      while ((sub = [enumerator nextObject]) != nil)
+	{
+	  NSRect	rect = [sub frame];
+
+	  rect.origin = loc;
+	  [sub setFrame: rect];
+	  [self addSubview: sub];
+	}
+    }
+  else if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      NSString	*name = [pb stringForType: GormLinkPboardType];
+      NSView	*sub = [super hitTest: loc];
+
+NSLog(@"Got link from %@", name);
+      [(Gorm*)NSApp setConnectDestination: sub];
+      [self lockFocus];
+      [[(Gorm*)NSApp targetImage]
+	compositeToPoint: [sub frame].origin operation: NSCompositeCopy];
+      [self unlockFocus];
+      [[self window] flushWindow];
+    }
+  else
+    {
+      NSLog(@"Drop with unrecognized type!");
+      return NO;
     }
   return YES;
 }
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
+  NSPasteboard	*pb = [sender draggingPasteboard];
+  NSArray	*types = [pb types];
+
   /*
-   * Tell the source that we will accept the drop.
+   * Tell the source that we will accept the drop if we can.
    */
-  return YES;
+  if ([types containsObject: IBViewPboardType] == YES)
+    {
+      /*
+       * We can accept views dropped anywhere.
+       */
+      return YES;
+    }
+  else if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      NSView	*sub = [super hitTest: loc];
+
+      /*
+       * We can accept a link dropped on any of our subviews.
+       */
+      if (sub != nil && sub != self)
+	{
+	  return YES;
+	}
+    }
+  return NO;
 }
 
 - (void) resetObject: (id)anObject

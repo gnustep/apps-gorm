@@ -217,7 +217,6 @@
 - (id) init
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSPopUpButton	*popup;
   NSMenuItem	*item;
   NSRect	contentRect = {{0, 0}, {272, 420}};
   NSRect	popupRect = {{60, 15}, {152, 20}};
@@ -317,7 +316,16 @@
 
 - (void) updateSelection
 {
-  [self setCurrentInspector: self];
+  if ([NSApp isConnecting] == YES)
+    {
+      [popup selectItemAtIndex: 1];
+      [popup setNeedsDisplay: YES];
+      [panel makeKeyAndOrderFront: self];
+    }
+  else
+    {
+      [self setCurrentInspector: self];
+    }
 }
 
 - (void) setCurrentInspector: (id)anObj
@@ -454,6 +462,10 @@
       [newView setFrame: rect];
       [inspectorView addSubview: newView];
     }
+  /*
+   * Tell inspector to update from its object.
+   */
+  [inspector revert: self];
 }
 
 @end
