@@ -118,7 +118,7 @@
 {
   NSPoint	loc = [theEvent locationInWindow];
   NSView	*hit = [super hitTest: loc];
-
+  
   if (hit == rep)
     {
       int	pos = [rep indexOfItemAtPoint: loc];

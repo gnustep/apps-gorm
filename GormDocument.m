@@ -1130,6 +1130,7 @@ static NSImage	*classesImage = nil;
       mainRect.origin = NSMakePoint(0,0);
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
 						  inDocument: self];
+      AUTORELEASE(objectsView);
       [objectsView setFrame: mainRect];
       [objectsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];

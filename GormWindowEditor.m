@@ -85,6 +85,7 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
     }
   return image;
 }
+
 @end
 
 /*
@@ -900,6 +901,9 @@ static BOOL done_editing;
 	    }
 	}
 
+      /* Set the arrows cursor in case it might be something else */
+      [[NSCursor arrowCursor] push];
+
       /*
        * Track mouse movements until left mouse up.
        * While we keep track of all mouse movements, we only act on a
@@ -1067,6 +1071,14 @@ static BOOL done_editing;
 	  eType = [e type];
 	}
       [NSEvent stopPeriodicEvents];
+      [NSCursor pop];
+      /* Typically after a view has been dragged in a window, NSWindow
+	 sends a spurious moustEntered event. Sending the mouseUp
+	 event back to the NSWindow resets the NSWindow's idea of the
+	 last mouse point so it doesn't think that the mouse has
+	 entered the view (since it was always there, it's just that
+	 the view moved).  */
+      [[self window] postEvent: e atStart: NO];
 
       /*
        * Perform any necessary cleanup.

@@ -1,3 +1,11 @@
+2002-01-13  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m ([GormDocument -init]): Autorelease objectsView.
+
+	* GormWindowEditor.m ([GormWindowEditor -mouseDown:]): Set the
+	arrowCursor for dragging, etc. push back the mouseUp event to
+	make cursor tracking work correctly.
+
 2001-12-18  Gregory John Casamento <greg_casamento@yahoo.com>
 	* Gorm.m: loadClass method added to call the method in GormDocument
 	* GormDocument.m: loadClass method and parseClass method added
