@@ -1236,6 +1236,12 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   GormClassManager *cm = [active classManager];
   NSArray	*s = [selectionOwner selection];
 
+  // temporarily disabling this functionality....
+  if (sel_eq(action, @selector(loadClass:)))
+    {
+      return NO;
+    }
+
   if (sel_eq(action, @selector(close:))
     || sel_eq(action, @selector(miniaturize:))
     || sel_eq(action, @selector(save:))

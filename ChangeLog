@@ -1,3 +1,12 @@
+2004-08-13 18:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Disabled class parser menu item in [Gorm
+	validateMenuItem:].
+	* GormClassManager.m: [GormClassManager parseClass:]
+	commented out contents of this method.   The class
+	parser needs to be replaced and it shouldn't be
+	used until it's rewritten.
+	
 2004-08-12 21:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm validateMenuItem:] deselect the cut, delete,

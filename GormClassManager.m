@@ -1382,6 +1382,7 @@
 
 - (BOOL) parseHeader: (NSString *)headerPath
 {
+  /*
   NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
   NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
@@ -1574,7 +1575,7 @@
 			{
 			  if (isAction)
 			    {
-			      /* Add the ':' back */
+			      // Add the ':' back /
 			      action = [action stringByAppendingString: @":"];
 			      NSDebugLog(@"action = %@", action);
 			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalActionSet],notFoundRange))
@@ -1645,6 +1646,9 @@
 	} // if we found a class
     }
   return YES;
+  */
+  
+  return NO;
 }
 
 - (BOOL) isAction: (NSString *)name ofClass: (NSString *)className
