@@ -144,11 +144,6 @@ static NSColor *darkGreyBlueColor = nil;
   return self;
 }
 
-- (void) dealloc
-{
-  [super dealloc];
-}
-
 - (void) collapseItem: (id)item collapseChildren: (BOOL)collapseChildren;
 {
   if (!_isEditing)
@@ -321,7 +316,6 @@ static NSColor *darkGreyBlueColor = nil;
   NSRect imageRect;
   int i;
   float x_pos;
-  static BOOL drawingEditedObject = NO;
 
   if (_dataSource == nil)
     {
@@ -379,7 +373,6 @@ static NSColor *darkGreyBlueColor = nil;
 	    {
 	      valueforcell = [value getName];
 	      isOutletAction = YES;
-	      drawingEditedObject = YES;
  	    }
 	  else
 	    {
@@ -406,27 +399,12 @@ static NSColor *darkGreyBlueColor = nil;
 	      drawingRect.size.width -= _attributeOffset;
 	    }	  
 
-
-	  /* For later...
-	  if (drawingEditedObject)
-	    {
-	      [self setBackgroundColor: salmonColor];
-	    }
-	  else
-	    if (_isEditing)
-	      {
-		[self setBackgroundColor: darkSalmonColor]; 
-	      }
-	  */
-
 	  if (tb == _outlineTableColumn && !isOutletAction)
 	    {
 	      NSImage *image = nil;
 	      int level = 0;
 	      float indentationFactor = 0.0;
-	      // float originalWidth = drawingRect.size.width;
 
-	      drawingEditedObject = NO;
 	      // display the correct arrow...
 	      if ([self isItemExpanded: item])
 		{
@@ -466,11 +444,10 @@ static NSColor *darkGreyBlueColor = nil;
 	     	+= indentationFactor + [image size].width + 5;
 	      drawingRect.size.width
 	        -= indentationFactor + [image size].width + 5;
+	      // [cell drawWithFrame: drawingRect inView: self];
 	    }
-	  
-	  
-	  if ((tb == _actionColumn || tb == _outletColumn)
-	    && !drawingEditedObject)
+	  else if ((tb == _actionColumn || tb == _outletColumn)
+		   && isOutletAction == NO)
 	    {
 	      NSImage *image = nil;
 
@@ -494,10 +471,10 @@ static NSColor *darkGreyBlueColor = nil;
 	      // Adjust drawing rect of cell being displayed...
 	      drawingRect.origin.x += [image size].width + 5;
 	      drawingRect.size.width -= [image size].width + 5;
+	      // [cell drawWithFrame: drawingRect inView: self];
 	    }
 	  
-	  if (((tb != _outletColumn || tb != _actionColumn)
-	    && !drawingEditedObject) || (tb == _outlineTableColumn))
+	  if (((tb != _outletColumn || tb != _actionColumn) && !isOutletAction) || (tb == _outlineTableColumn))
 	    {
 	      [cell drawWithFrame: drawingRect inView: self];
 	    }

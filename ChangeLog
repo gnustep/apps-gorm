@@ -1,3 +1,10 @@
+2004-12-10 17:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Changes to return a item if it's an'
+	action/outlet holder without generating a string.
+	* GormOutlineView.m: Modifications to make drawing of the
+	actions and outlets more efficient.
+
 2004-12-08 21:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormOutlineView.m: Corrected a leak.

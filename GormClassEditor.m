@@ -378,6 +378,9 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
   id identifier = [aTableColumn identifier];
   id className = item;
   
+  if([item isKindOfClass: [GormOutletActionHolder class]])
+    return item;
+
   if ([identifier isEqualToString: @"classes"])
     {
       return className;
