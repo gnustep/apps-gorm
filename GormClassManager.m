@@ -206,6 +206,10 @@
 
   [extraActions addObject: anAction];
   [[info objectForKey: @"AllActions"] insertObject: anAction atIndex: 0];
+  if(![className isEqualToString: @"FirstResponder"]) 
+    {
+      [self addAction: anAction forClassNamed: @"FirstResponder"];
+    }
 }
 
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className
@@ -259,6 +263,10 @@
 
       [actions replaceObjectAtIndex: actions_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
+    }
+  if(![className isEqualToString: @"FirstResponder"]) 
+    {
+      [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
     }
 }
 
@@ -812,6 +820,10 @@
 	}
       [extraActions removeObject: anAction];
     }
+  if(![className isEqualToString: @"FirstResponder"]) 
+    {
+      [self removeAction: anAction fromClassNamed: @"FirstResponder"];
+    }
 }
 
 - (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject
@@ -1046,7 +1058,8 @@
 
 - (BOOL) isCustomClass: (NSString *)className
 {
-  return ([customClasses indexOfObject: className] != NSNotFound);
+  return ([customClasses indexOfObject: className] != NSNotFound && 
+	  ![className isEqualToString: @"FirstResponder"]);
 }
 
 - (BOOL) isKnownClass: (NSString *)className

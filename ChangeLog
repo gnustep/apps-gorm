@@ -1,3 +1,14 @@
+2003-05-24  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: Made changes to revert inspector to
+	"empty" when a document is closed.
+	* GormClassManager.m: Prevent user from adding methods to FirstResponder.
+	FirstResponder now automatically adds all action methods to it's action.
+	* GormDocument.m: Corrected a problem which was allowing the user to 
+	instantiate FirstResponder.
+	* Gorm.m: Cleaned up some places where I was using (Gorm *) and should
+	have been using (id<IB>).
+	
 2003-05-25  Fabien Vallon  <fabien@tuxfamily>
 
 	* Gorm.m : fix typo
@@ -41,14 +52,16 @@
 	* GormCustomClassEditor.[hm]: Removed Gorm.h header reference.
 	* GormDocument.h: Added some headers.
 	* GormDocument.m: General code cleanup.  Removed Notifications which
-	will be in GormLib classes.  Implemented use of "awakeFromDocument:" a new
-	method defined in GormLib which allows implemention of behavior when
-	a class is loaded by Gorm. (see Apple's interface builder framework)
+	will be in GormLib classes.  Implemented use of "awakeFromDocument:" 
+	a new method defined in GormLib which allows implemention of 
+	behavior when a class is loaded by Gorm. (see Apple's interface 
+	builder framework)
 	* GormFilesOwner.m: Added NSNibConnector header which was previously
 	provided by Gorm.h.  This was the only include needed here.
 	* GormInspectorsManager.m: Same as above.
 	* GormPrivate.h: Added GPL notice and include for InterfaceBuilder.h
-	* GormSoundInspector.h: Corrected description for GormSoundInspector class.
+	* GormSoundInspector.h: Corrected description for GormSoundInspector 
+	class.
 	* Palettes: Updated all palettes in the palettes directory to include 
 	the new headers.
 	* GormLib/GNUmakefile: new file.

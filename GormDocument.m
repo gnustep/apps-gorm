@@ -420,7 +420,7 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom objects with templates for archiving.
    */
-  if (![(Gorm *)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
+  if (![(id<IB>)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
     {
       [self _replaceObjectsWithTemplates];
     }
@@ -1165,7 +1165,7 @@ static NSImage	*classesImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
-  if ([(Gorm *)NSApp selectionOwner] == 
+  if ([(id<IB>)NSApp selectionOwner] == 
       anEditor)
     {
       [self resignSelectionForEditor: anEditor];
@@ -1319,7 +1319,7 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom templates with objects for archiving.
    */
-  if (![(Gorm *)NSApp isTestingInterface])
+  if (![(id<IB>)NSApp isTestingInterface])
   // do not use templates if we are testing.
     {
       [self _replaceTemplatesWithObjects];
@@ -1779,6 +1779,10 @@ static NSImage	*classesImage = nil;
       if (i >= 0)
 	{
 	  id className = [classesView itemAtRow: i];
+
+	  if([className isEqualToString: @"FirstResponder"])
+	    return nil;
+
 	  GSNibItem *item = 
 	    [[GormObjectProxy alloc] initWithClassName: className
 						 frame: NSMakeRect(0,0,0,0)];
@@ -1793,7 +1797,7 @@ static NSImage	*classesImage = nil;
 
     }
 
-  return nil;
+  return self;
 }
 
 - (BOOL) isActive

@@ -16,6 +16,7 @@
 }
 - (NSPanel*) panel;
 - (void) setClassInspector;
+- (void) setEmptyInspector;
 - (void) setCurrentInspector: (id)anObject;
 - (void) updateSelection;
 @end

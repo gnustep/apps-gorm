@@ -197,6 +197,12 @@
 	  // [NSApp stopConnecting];
 	}
     }
+  else if ([name isEqual: IBWillCloseDocumentNotification] == YES)
+    {
+      // show an empty selection of the document closes
+      [self setEmptyInspector];
+      // [panel orderOut: self];
+    }
 }
 
 - (id) init
@@ -304,21 +310,29 @@
   [self setCurrentInspector: 0];
 
   [nc addObserver: self
-	 selector: @selector(handleNotification:)
-	     name: IBWillBeginTestingInterfaceNotification
-	   object: nil];
+      selector: @selector(handleNotification:)
+      name: IBWillBeginTestingInterfaceNotification
+      object: nil];
   [nc addObserver: self
-	 selector: @selector(handleNotification:)
-	     name: IBWillEndTestingInterfaceNotification
-	   object: nil];
+      selector: @selector(handleNotification:)
+      name: IBWillEndTestingInterfaceNotification
+      object: nil];
   [nc addObserver: self
-	 selector: @selector(handleNotification:)
-	     name: NSWindowDidResignKeyNotification
-	   object: panel];
+      selector: @selector(handleNotification:)
+      name: NSWindowDidResignKeyNotification
+      object: panel];
   [nc addObserver: self
-	 selector: @selector(updateInspectorPopUp:)
-	     name: NSPopUpButtonWillPopUpNotification
-	   object: popup];
+      selector: @selector(updateInspectorPopUp:)
+      name: NSPopUpButtonWillPopUpNotification
+      object: popup];
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: NSPopUpButtonWillPopUpNotification
+      object: popup];
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: IBWillCloseDocumentNotification
+      object: [(id<IB>)NSApp activeDocument]];
   [popup setTarget: self];
   [popup setAction: @selector(updateInspectorPopUp:)];
   return self;
@@ -349,6 +363,45 @@
 {
   current = 4;
   [self setCurrentInspector: self];
+}
+
+- (void) setEmptyInspector
+{
+  NSString *newInspector = @"GormEmptyInspector";
+  NSView	*newView = nil;
+
+  // current = 1;
+  [panel setTitle: @"Inspector"];
+  inspector = [cache objectForKey: newInspector];
+  if(inspector == nil)
+    {
+	  Class	c = NSClassFromString(newInspector);
+	  inspector = [c new];
+    }
+
+  newView = [[inspector window] contentView];
+  if (newView != nil)
+    {
+      NSView	*outer = [panel contentView];
+      NSRect	rect = [outer bounds];
+
+      if (buttonView != nil)
+	{
+	  [buttonView removeFromSuperview];
+	  buttonView = nil;
+	}
+      
+      rect.size.height = [selectionView frame].origin.y;
+
+      /*
+       * Make the inspector view the correct size for the viewable panel,
+       * and set the frame size for the new contents before adding them.
+       */
+      [inspectorView setFrame: rect];
+      rect.origin = NSZeroPoint;
+      [newView setFrame: rect];
+      [inspectorView addSubview: newView];
+    }
 }
 
 - (void) setCurrentInspector: (id)anObj
@@ -507,7 +560,7 @@
 	      if (revert != nil)
 		{
 		  bRect = [revert frame];
-		  bRect.origin.y = 10;
+	 	  bRect.origin.y = 10;
 		  bRect.origin.x = 10;
 		  [revert setFrame: bRect];
 		  [buttonView addSubview: revert];
@@ -916,11 +969,21 @@ selectCellWithString: (NSString*)title
   [super dealloc];
 }
 
+- (void) handleNotification: (NSNotification *)notification
+{
+  // got the notification...  since we only subscribe to one, just do what
+  // needs to be done.
+  [self setObject: object];
+  // [newBrowser loadColumnZero];
+  [self _internalCall: newBrowser]; // reload the connections browser..  
+}
+
 - (id) init
 {
   self = [super init];
   if (self != nil)
     {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSView		*contents;
       NSSplitView	*split;
       NSRect		rect;
@@ -975,6 +1038,12 @@ selectCellWithString: (NSString*)title
       [revertButton setTarget: self];
       [revertButton setTitle: _(@"Revert")];
       [revertButton setEnabled: NO];
+
+      // catch notifications concerning connection deletions...
+      [nc addObserver: self 
+	  selector: @selector(handleNotification:)
+	  name: IBDidRemoveConnectorNotification
+	  object: nil];
     }
   return self;
 }
@@ -1062,7 +1131,7 @@ selectCellWithString: (NSString*)title
 
 - (void) setObject: (id)anObject
 {
-  if (anObject != nil && anObject != object)
+  if (anObject != nil) // && anObject != object)
     {
       NSArray		*array;
 

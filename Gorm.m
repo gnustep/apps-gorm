@@ -1560,7 +1560,7 @@ static NSButtonType _buttonTypeForObject( id button )
      sel_eq(action, @selector(addAttributeToClass:)) ||
      sel_eq(action, @selector(remove:)))
     {
-      id document = [(Gorm *)NSApp activeDocument];
+      id document = [(id<IB>)NSApp activeDocument];
       if(document == nil)
 	{
 	  return NO;
@@ -1576,7 +1576,7 @@ static NSButtonType _buttonTypeForObject( id button )
      sel_eq(action, @selector(loadImage:)) ||
      sel_eq(action, @selector(debug:)))
     {
-      id document = [(Gorm *)NSApp activeDocument];
+      id document = [(id<IB>)NSApp activeDocument];
       if(document == nil)
 	{
 	  return NO;
