@@ -58,4 +58,7 @@ NSDictionary *colorToDict(NSColor *color);
 
 // get the list of images...
 NSArray *systemImagesList();
+
+// get the list of images...
+NSArray *systemSoundsList();
 #endif

@@ -244,3 +244,26 @@ NSArray *systemImagesList()
 
   return result;
 }
+
+NSArray *systemSoundsList()
+{
+  NSString *system = [NSOpenStepRootDirectory() stringByAppendingPathComponent: @"System"];
+  NSString *lib = [system stringByAppendingPathComponent: @"Library"];
+  NSString *path = [lib stringByAppendingPathComponent: @"Sounds"];
+  NSArray *contents = [[NSFileManager defaultManager] directoryContentsAtPath: path];
+  NSEnumerator *en = [contents objectEnumerator];
+  NSMutableArray *result = [NSMutableArray array];
+  id obj;
+  NSArray *fileTypes = [NSSound soundUnfilteredFileTypes];
+
+  while((obj = [en nextObject]) != nil)
+    {
+      if([fileTypes containsObject: [obj pathExtension]])
+	{
+	  NSString *pathString = [path stringByAppendingPathComponent: obj];
+	  [result addObject: pathString];
+	}
+    }
+
+  return result;
+}

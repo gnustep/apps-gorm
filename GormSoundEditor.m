@@ -198,6 +198,9 @@ static NSMapTable	*docMap = 0;
   if (self != nil)
     {
       NSButtonCell	*proto;
+      NSArray           *list;
+      NSEnumerator      *en;
+      id                obj;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	IBObjectPboardType, GormLinkPboardType, nil]];
@@ -224,7 +227,23 @@ static NSMapTable	*docMap = 0;
       [self setPrototype: proto];
       RELEASE(proto);
       NSMapInsert(docMap, (void*)aDocument, (void*)self);
-      [self addObject: anObject];
+
+      // do not insert it if it's nil.
+      if(anObject != nil)
+	{
+	  [self addObject: anObject];
+	}
+
+      // add all of the system objects...
+      list = systemSoundsList();
+      en = [list objectEnumerator];
+      while((obj = [en nextObject]) != nil)
+	{
+	  NSString *name = [[obj lastPathComponent] stringByDeletingPathExtension];
+	  GormSound *sound = [[GormSound alloc] initWithName: name path: obj];
+	  [sound setSystemSound: YES];
+	  [self addObject: sound];
+	}
 
       // set up the notification...
       [[NSNotificationCenter defaultCenter]

@@ -1,3 +1,11 @@
+2004-05-15 12:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFunctions.[hm]: added function to get all system sounds.
+	NOTE: Current there aren't any, but why wait?  I'm assuming
+	that they'll go into $GNUSTEP_SYSTEM_ROOT/Library/Sounds.
+	* GormSoundEditor.m: Added call to add all system sounds
+	to the editor.
+	
 2004-05-15 11:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Add call to [GormDocument closeAllEditors] to 
