@@ -1,3 +1,16 @@
+2003-09-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewWindow.[hm]: Provides a holder for standalone views
+	in Gorm.
+
+2003-09-08  Andy Ruder <aeruder@kse.edu>
+	comitted by Gregory Casamento
+	
+	* GormSetName.gorm: New gorm file for setname panel.
+	* GormSetNameController.[hm]: Controls the actions of the panel
+	* Gorm.m: Modified the portion of code which calls the 
+	panel
+
 2003-09-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: Similar to the previous check.  Modified

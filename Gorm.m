@@ -26,6 +26,7 @@
 #include "GormPrivate.h"
 #include "GormPrefController.h"
 #include "GormFontViewController.h"
+#include "GormSetNameController.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -806,21 +807,16 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 
 - (void) setName: (id)sender
 {
-  NSPanel	*panel;
+  GormSetNameController *panel;
   int		returnPanel;
   NSTextField	*textField;
   NSArray	*selectionArray = [selectionOwner selection];
   id		obj = [selectionArray objectAtIndex: 0];
   NSString	*name;
 
-  panel = NSGetAlertPanel(_(@"Set Name"), _(@"Name: "), _(@"OK"), _(@"Cancel"), nil);
-  textField = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
-  [[panel contentView] addSubview: textField];
-  [panel makeFirstResponder: textField];
-  [panel makeKeyAndOrderFront: self];
-  [textField performClick: self];
-
-  returnPanel = [(id) panel runModal];
+  panel = [GormSetNameController new];
+  returnPanel = [panel runAsModal];
+  textField = [panel textField];
 
   if (returnPanel == NSAlertDefaultReturn)
     {
@@ -830,11 +826,8 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 	  [[self activeDocument] setName: name forObject: obj];
 	}
     }
-  [textField removeFromSuperview];
-  RELEASE(textField);
-  NSReleaseAlertPanel(panel);
+  RELEASE(panel);
 }
-
 
 - (void) guideline: (id) sender
 {

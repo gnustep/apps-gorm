@@ -125,6 +125,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormScrollViewAttributesInspector.gorm \
 	Resources/GormClassInspector.gorm \
 	Resources/GormFontView.gorm \
+	Resources/GormSetName.gorm \
 	Resources/Gorm.gorm
 
 Gorm_HEADERS = \
@@ -157,6 +158,7 @@ Gorm_HEADERS = \
 	GormHeadersPref.h \
 	GormClassInspector.h \
 	GormFontViewController.h \
+	GormSetNameController.h \
 	GormGeneralPref.h 
 
 
@@ -199,6 +201,7 @@ Gorm_OBJC_FILES = \
 	GormHeadersPref.m \
 	GormClassInspector.m \
 	GormFontViewController.m \
+	GormSetNameController.m \
 	GormGeneralPref.m
 
 
