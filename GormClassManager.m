@@ -741,6 +741,20 @@
     }
 }
 
+- (NSArray *) allSubclassesOf: (NSString *)superClass
+{
+  NSMutableArray *array = [NSMutableArray array];
+  
+  if(superClass != nil)
+    {
+      [self allSubclassesOf: superClass
+	    referenceClassList: [classInformation allKeys]
+	    intoArray: array];
+    }
+
+  return array;
+}
+
 - (NSArray *) allCustomSubclassesOf: (NSString *)superClass
 {
   NSMutableArray *array = [NSMutableArray array];

@@ -22,6 +22,7 @@
 - (NSArray*) extraActionsForObject: (id)anObject;
 - (NSArray*) extraOutletsForObject: (id)anObject;
 - (NSArray*) subClassesOf: (NSString *)superclass;
+- (NSArray*) allSubclassesOf: (NSString *)superClass;
 - (NSArray*) customSubClassesOf: (NSString *)superclass;
 - (NSArray*) allCustomSubclassesOf: (NSString *)superclass;
 - (void) removeAction: (NSString*)anAction forObject: (id)anObject;

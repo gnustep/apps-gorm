@@ -1,3 +1,10 @@
+2003-11-23 15:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.[hm]: Added method allSubclassesOf: to get all
+	subclasses whether custom or not.
+	* GormCustomClassInspector.m: Call new method in class manager to 
+	get the subclasses.  Corrects Report #6345.
+	
 2003-11-23 10:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m: Added flag to allow resizing of 
