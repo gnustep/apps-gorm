@@ -1,9 +1,9 @@
-/* OCHeaderParser.m
+/* OCIVarDecl.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * Copyright (C) 2004 Free Software Foundation, Inc.
  *
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2002
+ * Date:	2004
  *
  * This file is part of GNUstep.
  *
@@ -27,6 +27,7 @@
 #include <GormObjCHeaderParser/OCIVar.h>
 #include <GormObjCHeaderParser/OCIVarDecl.h>
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
+#include <GormObjCHeaderParser/ParserFunctions.h>
 
 @implementation OCIVarDecl
 
@@ -60,31 +61,39 @@
 - (void) _strip
 {
   NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
-  NSString *resultString = [NSString stringWithString: @""];
+  NSString *resultString = nil;
+  NSString *tempString = [NSString stringWithString: @""];
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+  NSString *typeName = [NSString stringWithString: @""];
+  NSString *varName = [NSString stringWithString: @""];
 
   while(![stripScanner isAtEnd])
     {
       NSString *string = nil;
       [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
-      resultString = [resultString stringByAppendingString: string];
+      tempString = [tempString stringByAppendingString: string];
       if(![stripScanner isAtEnd])
 	{
-	  resultString = [resultString stringByAppendingString: @" "];
+	  tempString = [tempString stringByAppendingString: @" "];
 	}
     }
+
+  // strip protocol qualifiers
+  stripScanner = [NSScanner scannerWithString: tempString];
+  [stripScanner scanUpToString: @"<" intoString: &typeName];
+  [stripScanner scanUpToAndIncludingString: @">" intoString: NULL];
+  [stripScanner scanUpToCharactersFromSet: wsnl intoString: &varName];
+  resultString = [typeName stringByAppendingString: varName];
 
   ASSIGN(ivarString, resultString);
 }
 
 - (void) parse
 {
-  NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  NSRange range;
 
   [self _strip];
-  if(NSEqualRanges((range = [ivarString rangeOfString: @","]),notFound) == NO)
+  if(lookAhead(ivarString,@","))
     {
       OCIVar *ivar = nil;
       NSScanner *scanner = [NSScanner scannerWithString: ivarString];

@@ -1,3 +1,13 @@
+2005-01-30 14:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/GNUmakefile: Added new files.
+	* GormObjCHeaderParser/OCClass.m: Uses lookAhead function
+	* GormObjCHeaderParser/OCIVarDecl.m: Uses lookAhead function
+	* GormObjCHeaderParser/OCIVar.m: Uses lookAhead function
+	* GormObjCHeaderParser/ParserFunctions.[hm]: New functions for
+	use by the class parser.
+	* Resources/GormDocument.gorm: Corrected background color.
+
 2005-01-30 00:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Build new file.

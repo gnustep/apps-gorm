@@ -32,6 +32,7 @@
 #include <GormObjCHeaderParser/OCIVar.h>
 #include <GormObjCHeaderParser/OCIVarDecl.h>
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
+#include <GormObjCHeaderParser/ParserFunctions.h>
 
 @implementation OCClass
 - (id) initWithString: (NSString *)string
@@ -138,15 +139,13 @@
   NSString *interfaceLine = nil;
   NSString *methodsString = nil;
   NSString *ivarsString = nil;
-  NSRange range;
-  NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
   NSCharacterSet *pmcs = [NSCharacterSet characterSetWithCharactersInString: @"+-"];
 
   // get the interface line... look ahead...  
   [self _strip];
   scanner = [NSScanner scannerWithString: classString];
-  if(NSEqualRanges(range = [classString rangeOfString: @"{"], notFound) == NO)
+  if(lookAhead(classString, @"{")) 
     {
       [scanner scanUpToString: @"@interface" intoString: NULL]; 
       [scanner scanUpToString: @"{" intoString: &interfaceLine];
@@ -160,7 +159,7 @@
     }
 
   // look ahead...  
-  if(NSEqualRanges([interfaceLine rangeOfString: @":"], notFound) == NO)
+  if(lookAhead(interfaceLine, @":"))
     {
       NSString *cn = nil, *scn = nil;
 

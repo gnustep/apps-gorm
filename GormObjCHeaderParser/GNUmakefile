@@ -41,24 +41,27 @@ libGormObjCHeaderParser_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LI
 #
 
 libGormObjCHeaderParser_HEADER_FILES= \
-OCHeaderParser.h \
+NSScanner+OCHeaderParser.h \
 OCClass.h \
+OCHeaderParser.h \
 OCIVar.h \
 OCIVarDecl.h \
 OCMethod.h \
-NSScanner+OCHeaderParser.h
+ParserFunctions.h
+
 
 #
 # Class files
 #
 
 libGormObjCHeaderParser_OBJC_FILES= \
-OCHeaderParser.m \
+NSScanner+OCHeaderParser.m \
 OCClass.m \
+OCHeaderParser.m \
 OCIVar.m \
 OCIVarDecl.m \
 OCMethod.m \
-NSScanner+OCHeaderParser.m
+ParserFunctions.m
 
 #
 # C files

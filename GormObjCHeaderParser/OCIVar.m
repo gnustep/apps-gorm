@@ -26,6 +26,7 @@
 #include <Foundation/Foundation.h>
 #include <GormObjCHeaderParser/OCIVar.h>
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
+#include <GormObjCHeaderParser/ParserFunctions.h>
 
 @implementation OCIVar
 
@@ -71,6 +72,7 @@
   NSString *resultString = [NSString stringWithString: @""];
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
+  // string whitespace
   while(![stripScanner isAtEnd])
     {
       NSString *string = nil;
@@ -87,16 +89,13 @@
 
 - (void) parse
 {
-  NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  NSScanner *scanner = nil; // [NSScanner scannerWithString: ivarString];
-  NSRange range;
+  NSScanner *scanner = nil; 
   NSString *tempName = nil;
 
   [self _strip];
   scanner = [NSScanner scannerWithString: ivarString];
-  if(NSEqualRanges((range = [ivarString rangeOfString: @"IBOutlet"]),notFound) == NO &&
-     range.location == 0)
+  if(lookAhead(ivarString,@"IBOutlet"))
     {
       [scanner scanUpToAndIncludingString: @"IBOutlet" intoString: NULL];  // return type
       [scanner scanCharactersFromSet: wsnl intoString: NULL];  
@@ -105,8 +104,7 @@
       [scanner scanUpToCharactersFromSet: wsnl intoString: &tempName]; // variable name...
       [self setIsOutlet: YES];
     }
-  else if(NSEqualRanges((range = [ivarString rangeOfString: @"id"]),notFound) == NO &&
-	  range.location == 0)
+  else if(lookAhead(ivarString, @"id"))
     {
       [scanner scanUpToCharactersFromSet: wsnl intoString: NULL];  // id
       [scanner scanCharactersFromSet: wsnl intoString: NULL];        
