@@ -1,5 +1,9 @@
 2002-03-24  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Minor cleanup of debug statements.
+
+2002-03-24  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Made necessary modifications to change the
 	classesView from an NSTableView to an NSOutlineView.
 	* GormClassManager.m: Added method to return all subclasses for

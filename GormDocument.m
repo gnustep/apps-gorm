@@ -2039,7 +2039,6 @@ static NSImage	*classesImage = nil;
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
 	    byItem: item
 {
-  NSLog(@"outlineView:objectValue... item = %@", item);
   if (anOutlineView == classesView)
     {
       id identifier = [aTableColumn identifier];
@@ -2074,7 +2073,6 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (int) outlineView: (NSOutlineView *)anOutlineView 
 numberOfChildrenOfItem: (id)item
 {
-  NSLog(@"numchild");
   if(item == nil) 
     {
       return 1;
@@ -2092,7 +2090,6 @@ numberOfChildrenOfItem: (id)item
     isItemExpandable: (id)item
 {
   NSArray *subclasses = nil;
-  NSLog(@"isExpandable");
   if(item == nil)
     return YES;
 
@@ -2110,13 +2107,11 @@ numberOfChildrenOfItem: (id)item
   NSLog(@"child:ofItem");
   if(item == nil && index == 0)
     {
-      NSLog(@"return default");
       return @"NSObject";
     }
   else
     {
       NSArray *subclasses = [classManager subClassesOf: item];
-      NSLog(@"child:ofItem = %@",[subclasses objectAtIndex: index]);
       return [subclasses objectAtIndex: index];
     }
 
