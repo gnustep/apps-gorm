@@ -1,4 +1,14 @@
 {
+  IBInspector = {
+    Actions = (
+    );
+    Outlets = (
+      okButton,
+      revertButton,
+      window
+    );
+    Super = NSObject;
+  };
   NSApplication = {
     Super = NSResponder;
     Outlets = (

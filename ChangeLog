@@ -1,3 +1,7 @@
+2001-10-14  Adam Fedor  <fedor@gnu.org>
+
+	* ClassInformation.plist: Add IBInspector
+
 2001-10-05  Adam Fedor  <fedor@gnu.org>
 
 	* GormDocument.m (-loadDocument:): Typo fix - don't include
