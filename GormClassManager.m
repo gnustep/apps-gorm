@@ -1458,7 +1458,7 @@
 	}
       else
 	{
-	  NSLog(@"This should never happen...  an instance without an associated class.");
+	  NSLog(@"This should never happen...  an instance without an associated class: %@",className);
 	  break;
 	}
     }

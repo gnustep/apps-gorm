@@ -32,6 +32,7 @@
 #include "GormClassManager.h"
 #include "GormDocument.h"
 #include "GormPrivate.h"
+#include "GormSoundView.h"
 
 @implementation GormSoundInspector
 + (void) initialize
@@ -99,6 +100,7 @@
 	  RELEASE(_currentSound);
 	  _currentSound = [[NSSound alloc] initWithContentsOfFile: [sndobject soundPath]
 					   byReference: YES];
+	  [soundView setSound: _currentSound];
 	  RETAIN(_currentSound);
 	  NSDebugLog(@"Loaded sound");
 	}

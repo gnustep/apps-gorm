@@ -149,7 +149,15 @@
 	    "stop:"
 	);
 	Outlets = (
+	    soundView
 	);
 	Super = IBInspector;
+    };
+    GormSoundView = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
     };
 }

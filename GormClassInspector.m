@@ -116,9 +116,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   // collapse the class in question if it's being edited and make
   // certain that names in the list are kept in sync.
-  [document collapseClass: name];
+  [document collapseClass: [inspector _currentClass]];
   [document reloadClasses];
-  [document selectClass: name];
+  [document selectClass: [inspector _currentClass]];
 }
 
 // set methods
@@ -160,9 +160,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   // collapse the class in question if it's being edited and make
   // certain that names in the list are kept in sync.
-  [document collapseClass: name];
+  [document collapseClass: [inspector _currentClass]];
   [document reloadClasses];
-  [document selectClass: name];
+  [document selectClass: [inspector _currentClass]];
 }
 
 // set method

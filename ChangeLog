@@ -1,3 +1,19 @@
+2004-05-01 11:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormSoundView.[hm]: New class to visualize the sound being
+	inspected.
+	* GormSoundInspector.m: Modifications so that it can now use
+	a GormSoundView.
+	* GormSoundInspector.gorm: Added soundView to .gorm file
+	and made appropriate connections.
+	
+2004-05-01 11:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Corrected a problem with the 
+	wrong name being sent to the class manager.  This was causing
+	an error to be printed by the class manager.   This problem
+	had no effect, but was annoying.
+	
 2004-05-01 09:44 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added implementation for unhide: to bring forward the

@@ -1,10 +1,10 @@
-/** <title>GormSoundInspector</title>
+/** <title>GormSoundView</title>
 
-   <abstract>allow user to inspect sound files in Gorm</abstract>
+   <abstract>Visualizes a sound.<abstract>
 
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    Author:  Gregory John Casamento <greg_casamento@yahoo.com>
-   Date: September 2002
+   Date: May 2004
 
    This file is part of GNUstep.
 
@@ -23,24 +23,15 @@
    If not, write to the Free Software Foundation,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
-#ifndef	INCLUDED_GormSoundInspector_h
-#define	INCLUDED_GormSoundInspector_h
+
+/* All Rights reserved */
 
 #include <AppKit/AppKit.h>
-#include <InterfaceBuilder/InterfaceBuilder.h>
 
-@class GormClassManager;
-@class GormSoundView;
-
-@interface GormSoundInspector : IBInspector
+@interface GormSoundView : NSView
 {
-  NSSound *_currentSound;
-  GormSoundView *soundView;
+  NSSound *_sound;
 }
-- (void) stop: (id)sender;
-- (void) play: (id)sender;
-- (void) pause: (id)sender;
-- (void) record: (id)sender;
+- (void)setSound: (NSSound *)sound;
+- (NSSound *)sound;
 @end
-
-#endif

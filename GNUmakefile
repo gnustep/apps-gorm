@@ -169,7 +169,8 @@ Gorm_HEADERS = \
 	GormGeneralPref.h \
 	GormFunctions.h \
 	GormShelfPref.h \
-	GormColorsPref.h
+	GormColorsPref.h \
+	GormSoundView.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -215,7 +216,8 @@ Gorm_OBJC_FILES = \
 	GormGeneralPref.m \
 	GormFunctions.m \
 	GormShelfPref.m \
-	GormColorsPref.m
+	GormColorsPref.m \
+	GormSoundView.m
 
 -include GNUmakefile.preamble
 
