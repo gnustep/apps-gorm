@@ -156,7 +156,7 @@
 	  // copy all actions from the class imported to the first responder
 	  while((action = [e nextObject]))
 	    {
-	      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+	      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
 		{
 		  [self addAction: action forClassNamed: @"FirstResponder"];
 		}
@@ -208,7 +208,7 @@
   [[info objectForKey: @"AllActions"] insertObject: anAction atIndex: 0];
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
 	{
 	  [self addAction: anAction forClassNamed: @"FirstResponder"];
 	}
@@ -303,7 +303,7 @@
 
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
 	{
 	  [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
 	}
@@ -397,7 +397,7 @@
 
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
 	{
 	  [self removeAction: anAction fromClassNamed: @"FirstResponder"];
 	}

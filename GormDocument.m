@@ -1646,10 +1646,12 @@ static NSImage	*classesImage = nil;
   else if ([name isEqual: IBClassNameChangedNotification] == YES)
     {
       [classesView reloadData];
+      [self touch];
     }
   else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)
     {
       [classesView reloadData];
+      [self touch];
     }
   else if ([name isEqual: GormDidModifyClassNotification] == YES)
     {
@@ -1967,6 +1969,22 @@ static NSImage	*classesImage = nil;
        * Now we merge the objects from the nib container into our own data
        * structures, taking care not to overwrite our NSOwner and NSFirst.
        */
+      if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
+	{
+	  id obj;
+	  NSEnumerator *en = [nt objectEnumerator];
+
+	  // get all of the GSNibItem subclasses which could be top level objects
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      if([obj isKindOfClass: [GSNibItem class]] &&
+		 [obj isKindOfClass: [GSCustomView class]] == NO)
+		{
+		  [topLevelObjects addObject: obj];
+		}
+	    }
+	}
+
       [nt removeObjectForKey: @"NSOwner"];
       [nt removeObjectForKey: @"NSFirst"];
       [topLevelObjects addObjectsFromArray: [[c topLevelObjects] allObjects]];
@@ -1974,7 +1992,9 @@ static NSImage	*classesImage = nil;
       [nameTable addEntriesFromDictionary: nt];
       [self rebuildObjToNameMapping];
 
-      // repair the .gorm file, if needed.
+      /*
+       * repair the .gorm file, if needed.
+       */
       if(repairFile == YES)
 	{
 	  [self _repairFile];

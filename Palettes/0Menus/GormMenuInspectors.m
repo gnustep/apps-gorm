@@ -41,7 +41,9 @@
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
+  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
   [object setTitle: [titleText stringValue]];
+  [doc touch];
 }
 
 - (id) init
@@ -165,6 +167,7 @@
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id	o = [aNotification object];
+  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
 
   if (o == titleText)
     {
@@ -180,6 +183,8 @@
     {
       [object setTag: [tagText intValue]];
     }
+
+  [doc touch];
   [[object menu] display];
 }
 

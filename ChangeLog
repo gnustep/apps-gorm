@@ -1,3 +1,11 @@
+2004-06-30 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument loadDocument:] the application
+	was not picking up subclasses of GSNibItem (GormObjectProxy) 
+	properly from version 0 files.  I needed to add a loop which
+	iterates through the objects, since the GormObjectProxy doesn't
+	call the super class's initWithCoder: method.
+
 2004-06-28 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: -[Gorm testInterface:] changed awakeWithContext: call
