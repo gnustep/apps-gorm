@@ -1,3 +1,7 @@
+2003-08-04  Fabien Vallon  <fabien@tuxfamily>
+
+	* Add a good when adding Images
+
 2003-08-04  Fabien Vallon  <fabien@tuxfamily.org>
 
 	* GormImageEditor.m : Fix dnd (Todo : accept NSTIFFPboardType)
