@@ -719,16 +719,6 @@ static NSImage  *fileImage = nil;
 	if ([selection count] > 0)
 	  {
 	    id obj = [selection objectAtIndex: 0];
-	    // if it's a scrollview focus on it's contents.
-	    if([obj isKindOfClass: [NSScrollView class]])
-	      {
-		id newobj = nil;
-		newobj = [obj documentView];
-		if(newobj != nil)
-		  {
-		    obj = newobj;
-		  }
-	      }
 	    [classesView selectClassWithObject: obj];
 	  }
       }
@@ -2920,6 +2910,8 @@ static NSImage  *fileImage = nil;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  // NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
   lastEditor = anEditor;
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])

@@ -122,15 +122,25 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   return className;
 }
 
-// class selection...
 - (void) selectClass: (NSString *)className
+{
+  [self selectClass: className editClass: YES];
+}
+
+// class selection...
+- (void) selectClass: (NSString *)className editClass: (BOOL)flag
 {
   NSString	*currentClass = nil;
   NSArray	*classes;
   NSEnumerator	*en;
   int		row = 0;
+
+  // abort, if we're editing a class.
+  if([self isEditing])
+    {
+      return;
+    }
   
-  ASSIGN(selectedClass, className);
   if(className != nil)
     {
       if([className isEqual: @"CustomView"] || 
@@ -162,21 +172,44 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [self scrollRowToVisible: row];
     }
 
-  // set the editor...
-  [document setSelectionFromEditor: (id)self];
+  if(flag)
+    {
+      // set the editor...
+      ASSIGN(selectedClass, className);
+      [document setSelectionFromEditor: (id)self];
+    }
 }
 
 - (void) selectClassWithObject: (id)obj 
 {
-  NSString *customClass = [classManager customClassForObject: obj];
+  [self selectClassWithObject: obj editClass: YES];
+}
 
+- (void) selectClassWithObject: (id)object editClass: (BOOL)flag
+{
+  id obj = object;
+  NSString *customClass = nil;
+
+  // if it's a scrollview focus on it's contents.
+  if([obj isKindOfClass: [NSScrollView class]])
+    {
+      id newobj = nil;
+      newobj = [obj documentView];
+      if(newobj != nil)
+	{
+	  obj = newobj;
+	}
+    }
+  
+  // check for a custom class.
+  customClass = [classManager customClassForObject: obj];
   if(customClass != nil)
     {
-      [self selectClass: customClass];
+      [self selectClass: customClass editClass: flag];
     }
   else if ([obj respondsToSelector: @selector(className)])
     { 
-      [self selectClass: [obj className]];
+      [self selectClass: [obj className] editClass: flag];
     }
 }
 
@@ -199,6 +232,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 - (void) editClass
 {
   int	row = [self selectedRow];
+
   if (row >= 0)
     {
       ASSIGN(selectedClass, [self selectedClassName]);
@@ -379,16 +413,19 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 {
   if(selectedClass != nil)
     {
-      NSPasteboard *pb = [NSPasteboard generalPasteboard];
-      NSMutableDictionary *dict = 
-	[NSMutableDictionary dictionaryWithObjectsAndKeys: [classManager dictionaryForClassNamed: selectedClass], 
-			     selectedClass, nil];
-      id classPlist = [[dict description] propertyList];
-      
-      if(classPlist != nil)
+      if([selectedClass isEqual: @"FirstResponder"] == NO)
 	{
-	  [pb declareTypes: [NSArray arrayWithObject: GormClassPboardType] owner: self];
-	  [pb setPropertyList: classPlist forType: GormClassPboardType];
+	  NSPasteboard *pb = [NSPasteboard generalPasteboard];
+	  NSMutableDictionary *dict = 
+	    [NSMutableDictionary dictionaryWithObjectsAndKeys: [classManager dictionaryForClassNamed: selectedClass], 
+				 selectedClass, nil];
+	  id classPlist = [[dict description] propertyList];
+	  
+	  if(classPlist != nil)
+	    {
+	      [pb declareTypes: [NSArray arrayWithObject: GormClassPboardType] owner: self];
+	      [pb setPropertyList: classPlist forType: GormClassPboardType];
+	    }
 	}
     }
 }
@@ -434,6 +471,22 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 	}
     }
 }
+
+/*
+- (void) handleNotification: (NSNotification *)notification
+{
+  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  [selectionBox setContentView: classesScrollView];
+  
+  // if something is selected, in the object view.
+  // show the equivalent class in the classes view.
+  if ([selection count] > 0)
+    {
+      id obj = [selection objectAtIndex: 0];
+      [classesView selectClassWithObject: obj];
+    }  
+}
+*/
 @end
 
 @implementation GormClassEditor (NSOutlineViewDataSource)

@@ -1,3 +1,13 @@
+2004-12-15 01:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Code from -changeView added to select
+	contents of a scrollview instead of the scrollview itself
+	(when appropriate).
+	* GormDocument.m: Moved code from -changeView: to 
+	GormClassEditor.
+	* GormPrivate.h: Added methods for changing the selection
+	in the outline view without setting the inspector.
+
 2004-12-14 21:26 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: -addClassNamed:withSuperClassNamed:
