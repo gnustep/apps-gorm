@@ -1,3 +1,11 @@
+2002-05-04  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Added blank implementation of
+	[GormClassEditor -makeSelectionVisible:(BOOL)] method.   
+	When creating a new class and editing it, the application was 
+	throwing an exception due to the abcense of this method.  
+	It now seems to function correctly.
+	
 2002-04-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenu.m
