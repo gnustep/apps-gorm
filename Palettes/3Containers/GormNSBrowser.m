@@ -22,6 +22,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <Foundation/NSObject.h>
+#include <Foundation/NSDebug.h>
+#include <AppKit/NSBrowserCell.h>
 #include "GormNSBrowser.h"
 
 /* --------------------------------------------------------------- 

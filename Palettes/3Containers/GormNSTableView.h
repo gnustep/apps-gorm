@@ -24,7 +24,9 @@
 #ifndef	INCLUDED_GormNSTableView_h
 #define	INCLUDED_GormNSTableView_h
 
-#include <AppKit/AppKit.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/NSColor.h>
+#include <AppKit/NSTableView.h>
 
 @interface GormNSTableView : NSTableView
 {

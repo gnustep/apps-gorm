@@ -37,7 +37,7 @@
 #include <AppKit/NSNibConnector.h>
 #include <AppKit/NSNibLoading.h>
 #include <GNUstepGUI/GSNibTemplates.h>
-
+#include "NSView+GormExtensions.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -196,7 +196,7 @@ static NSImage  *fileImage = nil;
 	  
 	  // initialize...
 	  openEditors = [NSMutableArray new];
-	  classManager = [[GormClassManager alloc] initWithDocument: self]; 
+	  classManager = [(GormClassManager *)[GormClassManager alloc] initWithDocument: self]; 
 	  
 	  /*
 	   * NB. We must retain the map values (object names) as the nameTable
@@ -310,7 +310,7 @@ static NSImage  *fileImage = nil;
 	  [classesScrollView setBorderType: NSBezelBorder];
 	  
 	  mainRect.origin = NSMakePoint(0,0);
-	  classesView = [[GormClassEditor alloc] initWithDocument: self];
+	  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
 	  [classesView setFrame: mainRect];
 	  [classesScrollView setDocumentView: classesView];
 	  RELEASE(classesView);	  
@@ -370,7 +370,7 @@ static NSImage  *fileImage = nil;
 - (void) awakeFromNib
 {
   // set up the toolbar...
-  toolbar = [[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
+  toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
   [toolbar setAllowsUserCustomization: NO];
   [toolbar setDelegate: self];
   [window setToolbar: toolbar];
@@ -1839,6 +1839,21 @@ static NSImage  *fileImage = nil;
 		NSArray *menus = findAll(sm);
 		[self detachObjects: menus];
 	      }
+	  }
+      }
+
+    /**
+     * If it's a view and it does't have a window *AND* it's not a top level object
+     * then it's not a standalone view, it's an orphan.   Delete it.
+     */
+    if([obj isKindOfClass: [NSView class]])
+      {
+	if([obj window] == nil && 
+	   [topLevelObjects containsObject: obj] == NO &&
+	   [obj hasSuperviewKindOfClass: [NSTabView class]] == NO)
+	  {
+	    NSLog(@"Found and removed an orphan view %@, %@",obj,[self nameForObject: obj]);
+	    [self detachObject: obj];
 	  }
       }
   }

@@ -339,7 +339,7 @@ static BOOL gormFileOwnerDecoded;
     {
       if([obj isKindOfClass: [NSDictionary class]])
 	{
-	  NSString *objIsa = [obj objectForKey: @"isa"];
+	  NSString *objIsa = [(NSMutableDictionary *)obj objectForKey: @"isa"];
 	  Class cls = NSClassFromString(objIsa);
 	  
 	  // NSLog(@"isa = %@",objIsa);
@@ -355,7 +355,7 @@ static BOOL gormFileOwnerDecoded;
 	      NSLog(@"%@ is not a known class",objIsa);
 	      [self defineClass: objIsa inFile: path];
 	      superClass = [classManager superClassNameForClassNamed: objIsa];
-	      [obj setObject: superClass forKey: @"isa"];
+	      [(NSMutableDictionary *)obj setObject: superClass forKey: @"isa"];
 
 	      // guess at name which will be given in the nameTable...
 	      /*
@@ -566,9 +566,9 @@ static BOOL gormFileOwnerDecoded;
 	  
 	  if([gormRealObject respondsToSelector: @selector(mainMenu)])
 	    {
-	      if ([gormRealObject mainMenu])
+	      if ([(GModelApplication *)gormRealObject mainMenu])
 		{
-		  [self attachObject: [gormRealObject mainMenu] toParent: nil];
+		  [self attachObject: [(GModelApplication *)gormRealObject mainMenu] toParent: nil];
 		}
 	    }
 	}

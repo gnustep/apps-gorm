@@ -26,7 +26,7 @@
 #define INCLUDED_IBEDITORS_H
 
 #include <Foundation/NSObject.h>
-#include <InterfaceBuilder/IBDocuments.h>
+// #include <InterfaceBuilder/IBDocuments.h>
 
 // forward references
 @class NSString;

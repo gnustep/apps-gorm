@@ -30,7 +30,9 @@
 @class	GormInspectorsManager;
 @class	GormPalettesManager;
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
+#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBViewAdditions.h>
 #include "GormFilesOwner.h"
 #include "GormDocument.h"
 #include "GormInspectorsManager.h"
@@ -198,7 +200,7 @@ extern NSString *GormResizeCellNotification;
 - (void) refreshCells;
 - (void) removeObject: (id)anObject;
 - (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
+- (id) initWithObject: (id)anObject inDocument: (id)aDocument;
 - (void) close;
 - (void) closeSubeditors;
 - (BOOL) containsObject: (id)anObject;
@@ -228,6 +230,7 @@ extern NSString *GormResizeCellNotification;
 @interface	GormObjectEditor : GormGenericEditor 
 {
 }
++ (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;

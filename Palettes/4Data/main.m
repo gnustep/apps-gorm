@@ -23,8 +23,18 @@
 */
 
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <Foundation/NSFormatter.h>
+#include <Foundation/NSNumberFormatter.h>
+#include <AppKit/NSComboBox.h>
+#include <AppKit/NSScrollView.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/NSImageView.h>
+#include <AppKit/NSTextContainer.h>
+#include <AppKit/NSTextView.h>
+#include <AppKit/NSWindow.h>
+#include <AppKit/NSClipView.h>
+#include <InterfaceBuilder/IBPalette.h>
+#include "GormPrivate.h"
 
 /* -----------------------------------------------------------
  * Some additions to the NSNumberFormatter Class specific to Gorm
@@ -215,12 +225,12 @@ int defaultDateFormatIndex = 3;
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
   [v setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
-  [[v contentView] setAutoresizingMask: NSViewHeightSizable 
+  [[(NSScrollView *)v contentView] setAutoresizingMask: NSViewHeightSizable 
 			    | NSViewWidthSizable];
-  [[v contentView] setAutoresizesSubviews:YES];
+  [[(NSScrollView *)v contentView] setAutoresizesSubviews:YES];
   [v setBorderType: NSBezelBorder];
 
-  rect = [[v contentView] frame];
+  rect = [[(NSScrollView *)v contentView] frame];
 
   tv = [[NSTextView alloc] initWithFrame: rect];
   [tv setMinSize: NSMakeSize(0.0, 0.0)];
@@ -233,8 +243,7 @@ int defaultDateFormatIndex = 3;
   [tv setRichText: YES];
   [tv setImportsGraphics: YES];
 
-  [[tv textContainer] setContainerSize:NSMakeSize(rect.size.width,
-						  1e7)];
+  [[tv textContainer] setContainerSize:NSMakeSize(rect.size.width,1e7)];
   [[tv textContainer] setWidthTracksTextView:YES];
   
   [v setDocumentView:tv];

@@ -24,8 +24,9 @@
 */
 
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <AppKit/NSTableColumn.h>
+#include <AppKit/NSBrowser.h>
+#include <InterfaceBuilder/IBInspector.h>
 #include "GormNSTableView.h"
 #include "GormPrivate.h"
 
@@ -288,7 +289,7 @@
       break;
     }
 
-  [identifierTextField setStringValue: [anObject identifier]];
+  [identifierTextField setStringValue: [(NSTableColumn *)anObject identifier]];
 
   if ([anObject isResizable])
     [resizableSwitch setState: NSOnState];
@@ -392,7 +393,7 @@
 	  [doc attachObject: cell toParent: object];
 	  if((name = [doc nameForObject: cell]) != nil)
 	    {
-	      [classManager setCustomClass: className forObject: name];
+	      [classManager setCustomClass: className forName: name];
 	    } 
 	}
 
@@ -589,7 +590,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 	      for(i = 0; i < colsToAdd; i++)
 		{
 		  NSString *identifier = [NSString stringWithFormat: @"column%d",(numCols + i + 1)];
-		  NSTableColumn *tc = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: identifier]);
+		  NSTableColumn *tc = AUTORELEASE([(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: (id)identifier]);
 		  [tc setWidth: 50];
 		  [tc setMinWidth: 20];
 		  [tc setResizable: YES];
@@ -793,7 +794,7 @@ static NSString *ITEM=@"item";
 	  for (i=([object numberOfTabViewItems]+1);i<=newNumber;i++)
 	    {
 	      NSString *identif = [NSString stringWithFormat:@"%i",i]; 
-	      newTabItem = [[NSTabViewItem alloc] initWithIdentifier:identif];
+	      newTabItem = [(NSTabViewItem *)[NSTabViewItem alloc] initWithIdentifier: (id)identif];
 	      [newTabItem setLabel:[ITEM  stringByAppendingString:identif]]; 
 	      [newTabItem setView:[[NSView alloc] init]];
 	      [object addTabViewItem:newTabItem];

@@ -22,7 +22,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
+#include <AppKit/NSTableColumn.h>
+#include <AppKit/NSTabView.h>
+#include <AppKit/NSWindow.h>
+#include <AppKit/NSTabViewItem.h>
+#include <AppKit/NSScrollView.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSBrowser.h"
 #include "GormNSTableView.h"

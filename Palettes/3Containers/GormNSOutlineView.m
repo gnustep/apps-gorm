@@ -23,6 +23,7 @@
 */
 
 #include "GormNSOutlineView.h"
+#include <AppKit/NSTableColumn.h>
 
 /* --------------------------------------------------------------- 
  * NSTableView dataSource

@@ -1279,8 +1279,8 @@
   NSMutableDictionary		*dict;
   NSEnumerator                  *en;
   id                             key;
-  int                            hash;
-  int                            hashDict;
+  // int                            hash;
+  // int                            hashDict;
 
   NSDebugLog(@"Load custom classes from file %@",path);
 

@@ -1,4 +1,37 @@
-2004-11-17 12:59 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-11-18 00:23 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Addition of entries for new 
+	NSView+GormExtensions.[hm] files.
+	* NSView+GormExtensions.[hm]: Added to hold extensions for the 
+	NSView class in Gorm.
+	* GModelDecoder.m: Changes to minimize warnings during compilation
+	with gcc 3.x.  
+	* GormClassEditor.m: Same as above
+	* GormClassManager.m: Same as above
+	* GormDocument.m: Same as above + new code to eliminate orphaned 
+	views in _repairFile.
+	* GormGenericEditor.m: Added copyright comment.
+	* GormInspectorsManager.h: Added copyright comment.  Made
+	changes to minimize warnings.
+	* GormPrivate.h: Removed AppKit.h include and replaced it with
+	several specific includes to reduce compile issues.  This was
+	causing a lot of warnings because of similar selectors.
+	* GormLib/IBEditors.h: removed circular referece to IBDocuments.h
+	* Palettes/3Containers/GormNSBrowser.h: Removed AppKit.h and
+	replaced it with a specific include.
+	* Palettes/3Containers/GormNSBrowser.m: Added specific includes
+	for classes used.
+	* Palettes/3Containers/GormNSOutlineView.m: Same as above.
+	* Palettes/3Containers/GormNSTableView.m: Same as above.
+	* Palettes/3Containers/inspectors.m: fix for method name
+	on GormClassManager which changed from setCustomClass:forObject: to
+	setCustomClass:forName:.  Also, other changes which needed
+	to be made to minimize warnings. 
+	* Palettes/3Containers/main.m: Removed overly general includes
+	and added specific includes for each class used.  Made changes to
+	minimize warnings.
+	
+2004-11-17 00:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: initWithObject:withDocument: added code
 	to instantiated GormViewWindow if the view being added has no

@@ -24,6 +24,7 @@
 
 #include <AppKit/NSNibConnector.h>
 #include <Foundation/NSException.h>
+#include <InterfaceBuilder/IBInspector.h>
 #include "GormPrivate.h"
 
 #define HASFORMATTER(obj) \
@@ -1192,7 +1193,7 @@ selectCellWithString: (NSString*)title
     }
   else
     {
-      id active = [(id<IB>)NSApp activeDocument];
+      GormDocument *active = (GormDocument *)[(id<IB>)NSApp activeDocument];
       id src = [currentConnector source];
       id dest = [currentConnector destination];
 

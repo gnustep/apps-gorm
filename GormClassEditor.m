@@ -57,7 +57,7 @@
       [self setBackgroundColor: salmonColor ];
 
       // add the table columns...
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
+      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
       [[tableColumn headerCell] setStringValue: _(@"Classes")];
       [tableColumn setMinWidth: 190];
       [tableColumn setResizable: YES];
@@ -66,7 +66,7 @@
       [self setOutlineTableColumn: tableColumn];
       RELEASE(tableColumn);
       
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"outlets"];
       [[tableColumn headerCell] setStringValue: _(@"Outlet")];
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
@@ -75,7 +75,7 @@
       [self setOutletColumn: tableColumn];
       RELEASE(tableColumn);
       
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
+      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"actions"];
       [[tableColumn headerCell] setStringValue: _(@"Action")];
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
@@ -99,7 +99,7 @@
 
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc
 {
-  return AUTORELEASE([[self alloc] initWithDocument: doc]);
+  return AUTORELEASE([(GormClassEditor *)[self alloc] initWithDocument: doc]);
 }
 
 - (void) setSelectedClassName: (NSString*)cn

@@ -176,7 +176,8 @@ Gorm_HEADERS = \
 	GormPalettesPref.h \
 	GormSoundView.h \
 	GormFilePrefsManager.h \
-	GormClassPanelController.h
+	GormClassPanelController.h \
+	NSView+GormExtensions.h
 
 Gorm_OBJC_FILES = \
 	main.m \
@@ -225,7 +226,8 @@ Gorm_OBJC_FILES = \
 	GormPalettesPref.m \
 	GormSoundView.m \
 	GormFilePrefsManager.m \
-	GormClassPanelController.m
+	GormClassPanelController.m \
+	NSView+GormExtensions.m
 
 -include GNUmakefile.preamble
 

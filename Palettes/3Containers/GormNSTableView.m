@@ -22,6 +22,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <Foundation/NSObject.h>
+#include <AppKit/NSTableColumn.h>
 #include "GormNSTableView.h"
 
 /* --------------------------------------------------------------- 
