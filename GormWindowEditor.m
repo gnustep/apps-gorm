@@ -146,7 +146,6 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   BOOL			isClosed;
   NSPasteboard		*dragPb;
   NSString		*dragType;
-  NSView		*lastLinkView;
 }
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
@@ -338,23 +337,17 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  NSPoint	dragPoint = [theEvent locationInWindow];
 	  NSPasteboard	*pb;
 	  NSString	*name = [document nameForObject: view];
+	  NSRect	r = [view bounds];
 
 	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
 	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
 		     owner: self];
 	  [pb setString: name forType: GormLinkPboardType];
-	  [(Gorm*)NSApp setConnectSource: view];
+	  [NSApp setConnectSource: view
+			   window: [view window]
+			     rect: [view convertRect: r toView: nil]];
 
-	  /*
-	   * Mark the view as being a drag source.
-	   */
-	  [self lockFocus];
-	  [[(Gorm*)NSApp sourceImage]
-	    compositeToPoint: [view frame].origin operation: NSCompositeCopy];
-	  [self unlockFocus];
-	  [[self window] flushWindow];
-
-	  [self dragImage: [(Gorm*)NSApp targetImage]
+	  [self dragImage: [NSApp linkImage]
 		       at: dragPoint
 		   offset: NSZeroSize
 		    event: theEvent
@@ -862,44 +855,25 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     {
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
+      NSRect	r;
 
       if (sub == self)
 	{
 	  sub = nil;
+	  r = NSZeroRect;
 	}
       else if (sub == [NSApp connectSource])
 	{
 	  sub = nil;
+	  r = NSZeroRect;
 	}
-
-      if (sub != lastLinkView)
+      else
 	{
-	  NSImage	*image = [(Gorm*)NSApp targetImage];
-
-	  [self lockFocus];
-	  if (lastLinkView != nil)
-	    {
-	      NSRect	rect = [lastLinkView frame];
-
-	      /*
-	       * Erase image from old location.
-	       */
-	      rect.origin.x -= 1.0;
-	      rect.origin.y += 1.0;
-	      rect.size = [image size];
-	      rect.size.width += 2.0;
-	      rect.size.height += 2.0;
-	      [self displayRect: rect];
-	    }
-	  if (sub != nil)
-	    {
-	      [image compositeToPoint: [sub frame].origin
-			    operation: NSCompositeCopy];
-	    }
-	  lastLinkView = sub;
-	  [self unlockFocus];
-	  [[self window] flushWindow];
+	  r = [sub convertRect: [sub bounds] toView: nil];
 	}
+      [NSApp setConnectDestination: sub
+			    window: [sub window]
+			      rect: r];
       return NSDragOperationLink;
     }
   else
@@ -1087,14 +1061,13 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSPoint	loc = [sender draggingLocation];
       NSString	*name = [dragPb stringForType: GormLinkPboardType];
       NSView	*sub = [super hitTest: loc];
+      NSRect	r = [sub convertRect: [sub bounds] toView: nil];
 
 NSLog(@"Got link from %@", name);
-      [(Gorm*)NSApp setConnectDestination: sub];
-      [self lockFocus];
-      [[(Gorm*)NSApp targetImage]
-	compositeToPoint: [sub frame].origin operation: NSCompositeCopy];
-      [self unlockFocus];
-      [[self window] flushWindow];
+      [NSApp setConnectDestination: sub
+			    window: [sub window]
+			      rect: r];
+      [NSApp startConnecting];
     }
   else
     {
@@ -1135,6 +1108,12 @@ NSLog(@"Got link from %@", name);
 - (void) resetObject: (id)anObject
 {
   [self display];
+}
+
+- (id) selectAll: (id)sender
+{
+  [self selectObjects: [self subviews]];
+  return self;
 }
 
 - (void) selectObjects: (NSArray*)anArray

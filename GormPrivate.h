@@ -13,6 +13,13 @@
 
 extern NSString *GormLinkPboardType;
 
+@interface NSApplication (Gorm)
+- (NSImage*) linkImage;
+- (void) setConnectDestination: (id)o window: (NSWindow*)w rect: (NSRect)r;
+- (void) setConnectSource: (id)o window: (NSWindow*)w rect: (NSRect)r;
+- (void) startConnecting;
+@end
+
 @interface Gorm : NSApplication <IB>
 {
   id			infoPanel;
@@ -21,11 +28,17 @@ extern NSString *GormLinkPboardType;
   id			selectionOwner;
   id			activeDocument;
   NSMutableArray	*documents;
+  BOOL			isConnecting;
   BOOL			isTesting;
+  NSImage		*linkImage;
   NSImage		*sourceImage;
   NSImage		*targetImage;
   id			connectSource;
+  NSWindow		*connectSWindow;
+  NSRect		connectSRect;
   id			connectDestination;
+  NSWindow		*connectDWindow;
+  NSRect		connectDRect;
 }
 - (id<IBDocuments>) activeDocument;
 - (id) connectSource;
@@ -35,11 +48,7 @@ extern NSString *GormLinkPboardType;
 - (GormInspectorsManager*) inspectorsManager;
 - (BOOL) isConnecting;
 - (GormPalettesManager*) palettesManager;
-- (void) setConnectDestination: (id)anObject;
-- (void) setConnectSource: (id)anObject;
-- (NSImage*) sourceImage;
 - (void) stopConnecting;
-- (NSImage*) targetImage;
 
 - (id) copy: (id)sender;
 - (id) cut: (id)sender;

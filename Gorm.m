@@ -168,7 +168,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
   if ([name isEqual: IBSelectionChangedNotification])
     {
-      selectionOwner = [notification object];
+      /*
+       * If we are connecting - stop it - a change in selection must mean
+       * that the connection process has ended.
+       */
+      if ([self isConnecting] == YES)
+	{
+	  [self stopConnecting];
+	}
+      selectionOwner = obj;
       [[self inspectorsManager] updateSelection];
     }
   else if ([name isEqual: IBWillCloseDocumentNotification])
@@ -202,6 +210,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
 
+      path = [bundle pathForImageResource: @"GormLinkImage"];
+      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
       path = [bundle pathForImageResource: @"GormSourceTag"];
       sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
       path = [bundle pathForImageResource: @"GormTargetTag"];
@@ -243,26 +253,17 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (BOOL) isConnecting
 {
-  if (connectDestination == nil || connectSource == nil)
-    {
-      return NO;
-    }
-  if ([activeDocument containsObject: connectDestination] == NO)
-    {
-      NSLog(@"Oops - connectDestination not in active document");
-      return NO;
-    }
-  if ([activeDocument containsObject: connectSource] == NO)
-    {
-      NSLog(@"Oops - connectSource not in active document");
-      return NO;
-    }
-  return YES;
+  return isConnecting;
 }
 
 - (BOOL) isTestingInterface
 {
   return isTesting;
+}
+
+- (NSImage*) linkImage
+{
+  return linkImage;
 }
 
 - (id) loadPalette: (id) sender
@@ -370,23 +371,95 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [[selectionOwner selection] lastObject];
 } 
 
-- (void) setConnectDestination: (id)anObject
+- (void) setConnectDestination: (id)o window: (NSWindow*)w rect: (NSRect)r
 {
-  connectDestination = anObject;
-  if ([self isConnecting])
+  if (connectSource != nil && o == connectSource)
     {
-      [self displayConnectionBetween: connectSource and: connectDestination];
-      [[self inspectorsManager] updateSelection];
+      return;	/* Can't link to self	*/
+    }
+
+  if (connectDestination != o)
+    {
+      connectDestination = o;
+
+      if (connectDWindow != nil)
+	{
+	  NSView	*wv = [[connectDWindow contentView] superview];
+	  NSRect	rect = connectDRect;
+
+	  /*
+	   * Erase image from old location.
+	   */
+	  rect.origin.x -= 1.0;
+	  rect.origin.y += 1.0;
+	  rect.size = [targetImage size];
+	  rect.size.width += 2.0;
+	  rect.size.height += 2.0;
+
+	  [wv lockFocus];
+	  [wv displayRect: rect];
+	  [wv unlockFocus];
+	  [connectDWindow flushWindow];
+	}
+      connectDWindow = w;
+      connectDRect = r;
+      if (connectDWindow != nil)
+	{
+	  NSView	*wv = [[connectDWindow contentView] superview];
+	  NSRect	rect = connectDRect;
+
+	  [wv lockFocus];
+	  [targetImage compositeToPoint: rect.origin
+			      operation: NSCompositeCopy];
+	  [wv unlockFocus];
+	  [connectDWindow flushWindow];
+	}
     }
 }
 
-- (void) setConnectSource: (id)anObject
+- (void) setConnectSource: (id)o window: (NSWindow*)w rect: (NSRect)r
 {
-  connectSource = anObject;
-  if ([self isConnecting])
+  if (connectDestination != nil && o == connectDestination)
     {
-      [self displayConnectionBetween: connectSource and: connectDestination];
-      [[self inspectorsManager] updateSelection];
+      return;	/* Can't link to self	*/
+    }
+
+  if (connectSource != o)
+    {
+      connectSource = o;
+
+      if (connectSWindow != nil)
+	{
+	  NSView	*wv = [[connectSWindow contentView] superview];
+	  NSRect	rect = connectSRect;
+
+	  /*
+	   * Erase image from old location.
+	   */
+	  rect.origin.x -= 1.0;
+	  rect.origin.y += 1.0;
+	  rect.size = [sourceImage size];
+	  rect.size.width += 2.0;
+	  rect.size.height += 2.0;
+
+	  [wv lockFocus];
+	  [wv displayRect: rect];
+	  [wv unlockFocus];
+	  [connectSWindow flushWindow];
+	}
+      connectSWindow = w;
+      connectSRect = r;
+      if (connectSWindow != nil)
+	{
+	  NSView	*wv = [[connectSWindow contentView] superview];
+	  NSRect	rect = connectSRect;
+
+	  [wv lockFocus];
+	  [sourceImage compositeToPoint: rect.origin
+			      operation: NSCompositeCopy];
+	  [wv unlockFocus];
+	  [connectSWindow flushWindow];
+	}
     }
 }
 
@@ -396,9 +469,28 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return nil;
 }
 
-- (NSImage*) sourceImage
+- (void) startConnecting
 {
-  return sourceImage;
+  if (isConnecting == YES)
+    {
+      [self stopConnecting];
+    }
+  if (connectDestination == nil || connectSource == nil)
+    {
+      return;
+    }
+  if ([activeDocument containsObject: connectDestination] == NO)
+    {
+      NSLog(@"Oops - connectDestination not in active document");
+      return;
+    }
+  if ([activeDocument containsObject: connectSource] == NO)
+    {
+      NSLog(@"Oops - connectSource not in active document");
+      return;
+    }
+  isConnecting = YES;
+  [[self inspectorsManager] updateSelection];
 }
 
 - (void) stopConnecting
@@ -409,11 +501,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   connectDestination = nil;
   connectSource = nil;
-}
-
-- (NSImage*) targetImage
-{
-  return targetImage;
+  isConnecting = NO;
 }
 
 - (id) testInterface: (id)sender
