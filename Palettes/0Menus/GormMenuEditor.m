@@ -535,6 +535,8 @@
 	{
 	  [edited removeItem: i];
 	}
+      [edited sizeToFit];
+      [edited display];
     }
 }
 
