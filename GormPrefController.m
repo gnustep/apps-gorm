@@ -23,6 +23,7 @@
 
   [[self window] setFrameUsingName: @"Preferences"];
   [[self window] setFrameAutosaveName: @"Preferences"];
+  [[self window] center];
 }
 
 - (void) popupAction: (id)sender
