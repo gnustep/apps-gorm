@@ -14,6 +14,32 @@
 	* GormViewSizeInspector.m: new file. Contains code moved from 
 	GormObjectEditor.m.
 
+2002-11-18  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m ([Gorm -testInterface:]): Move "isTesting = YES" before the
+	calls to [GormDocument -beginArchiving] and 
+	[GormDocument -endArchiving]
+	so that we can testing the state in those methods.
+	* GormClassManager.h: set return type of 
+	[GormClassManager -customClassMap]
+	to NSMutableDictionary and set parameter of 
+	[GormClassManager -setCustomClassMap:] to NSMutableDictionary.
+	* GormClassManager.m: [GormClassManager -setCustomClassMap:]
+	now simply assigns the class map instead of copying it.
+	* GormCustomClassInspector.m: Copy the name of the class from 
+	the cell using [NSString stringWithString:] instead of using 
+	the value directly which might cause memory issues.  Also changed 
+	code to remove the custom class mapping if if the class is 
+	mapped back to the parent class name.
+	* GormDocument.m: Set the version of the GormDocument class in the
+	[GormDocument +initialize] method.   Removed some commented out code
+	in the [GormDocument -_createSoundPlaceHolder:] method.   In
+	[GormDocument -beginArchiving] and [GormDocument -endArchiving] added 
+	code to avoid template replacement, if we are in testing mode.  This 
+	corrected a core dump when testing w/ a .gorm that used custom 
+	classes.  Moved place where the custom classes are set 
+	in [GormDocument -loadDocument] which was causing a core dump.
+	
 2002-11-14  Adam Fedor  <fedor@gnu.org>
 
 	* GormDocument.m ([GormDocument -parseHeader:]): Reload the class
