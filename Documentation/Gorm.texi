@@ -191,7 +191,7 @@ Here is a description of the menu structure and what each menu does -
 
 @itemize @bullet
 @item Info @*
-The @samp{info} menu item produces a submenu ...
+The @samp{Info} menu item produces a submenu ...
 @itemize @bullet
 @item Info Panel @*
 A panel giving very limited information about Gorm
@@ -202,7 +202,7 @@ A panel providing general help on using Gorm
 @end itemize
 
 @item Document @*
-The @samp{document} menu item produces a submenu ...
+The @samp{Document} menu item produces a submenu ...
 @itemize @bullet
 @item Open @*
 This produces an open panel that lets you open a Gorm document.
@@ -210,13 +210,15 @@ You use this if you want to use Gorm to edit an exisiting document.
 @item New Application @*
 This creates a new application document within Gorm, you may then use the
 Palettes panel to drag new objects into the document.
+@item New Module @*
+Contains a submenu, which also contains @samp{New Empty}, @samp{New Inspector} and @samp{New Palette}.   @samp{New Empty} produces an empty document with only NSFirst and NSOwner, @samp{New Inspector} produces a document with NSOwner, NSFirst and a window which is the correct size for an inspector, @samp{New Palette} produces a document which is like the one by @samp{New Inspector}, but it's window is the right size for a Palette. 
 @item Save @*
 This saves the current document
 @item Save As @*
 This saves the current document to a new file and changes the document name
 to match the new name on disk.
-@item Save To @*
-This saves the current document to a new file without changing its name.
+@item Save All @*
+This saves all documents currently being edited by Gorm.
 @item Revert To Saved @*
 This removes all changes made to the document sunce the last save, or since
 the document was opened.
@@ -227,6 +229,12 @@ need to select the @samp{quit} menu item.
 This miniaturises the active document (or whatever panel is currently key).
 @item Close @*
 This closes the currenly active document.
+@item Debug @*
+Prints some useful internal information.
+@item Load Sound @*
+Loads a sound into the .gorm file.
+@item Image @*
+Loads an image into the .gorm file.
 @end itemize
 
 @end itemize
@@ -305,6 +313,66 @@ Determines if the old .gorm is moved to .gorm~ when the modified version is save
 @chapter My First Application
 
 This chapter will cover the steps taken by the user to create his/her first application with Gorm.
+
+@subsection Getting Started
+
+First you need to understand a few basic concepts.   Gorm's main window includes a few standard entries which must be explained before we can proceed.
+
+They are:
+
+@itemize @bullet
+
+@item NSOwner
+
+@item NSFirst
+
+@item NSFont
+
+@end itemize
+
+@section What is NSOwner?
+
+NSOwner is the class which ``owns'' the interface.  This is, by default, NSApplication, but it can be any class you like.   You can change it by selecting NSOwner in the document window and going to the ``Custom Class'' inspector in the inspectors window.  From there, you should see all of the classes which the NSOwner can assume.   We'll discuss more about this later when we go over how to create a new application
+
+@section What is NSFirst?
+
+NSFirst is your interface to the responder chain.  NSFirst is representative of the current ``first responder'' in the application.  When you want a message, such as a changeFont: message, to go to the current first responder from, say, a menu, you connect the menu item to the NSFirst object in the document window.  By doing this, it means that whichever object has first responder status at that time in the application will become the reciever of the ``changeFont:'' message. 
+
+@subsection Responders
+
+A responder is any subclass of NSResponder.  This includes NSWindow, NSView and all of the NSControl subclasses.
+
+@subsection The Responder Chain
+
+The responder chain is a sequence of objects which are called to determine where a message sent to the first responder will go.   A message invoked on the first responder will be invoked on the first object in the responder chain which responds to that message.
+
+The object which this message will be called on is determined in the method [NSApplication targetForAction:].  The call sequence is as follows, it will only proceed to the next step in each case if the current step fails to respond to the message which was invoked:
+
+@itemize @bullet
+
+@item The firstResponder of the keyWindow, if one exists. 
+@item Iterates through all responders by pulling each in the linked list of responders for the key window.   
+@item It then tries the keyWindow.
+@item Then the keyWindow's delegate
+@item if the application is document based it tries the document controller object for the key window.
+@item then it tries the mainWindow's list of responders (as above)
+@item the mainWindow's delegate
+@item if the app is document based, it tries the document controller for the main window
+@item and finally, it tries the NSApplication delegate.
+
+@end itemize
+
+If all of the options in this list are exhausted, it then gives up and returns nil for the object which is to respond.
+
+@section What is NSFont
+
+NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
+
+@section Creating A New Application
+
+First you need to start Gorm up.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer. 
+
+You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window. 
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index

@@ -1,5 +1,11 @@
-2004-09-26 08:16 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-09-27 07:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormFilePrefsManager.m: Bumped version to 0.8.1 (Alpha)
+	* GormInfo.plist: Bumped version to 0.8.1 (Alpha)
+	* Documentation/Gorm.texi: Updated documentation.
+	
+2004-09-26 08:16 Gregory John Casamento <greg_casamento@yahoo.com>
+	
 	* Version 0.8.0
 	
 2004-09-25 07:21 Gregory John Casamento <greg_casamento@yahoo.com>

@@ -85,7 +85,7 @@ NSString *formatVersion(int version)
 
 - (void) awakeFromNib
 {
-  version = appVersion(0,8,0); 
+  version = appVersion(0,8,1); 
   [gormAppVersion setStringValue: formatVersion(version)];
   ASSIGN(targetVersionName, [[targetVersion selectedItem] title]);
   ASSIGN(archiveTypeName, [[archiveType selectedItem] title]);
