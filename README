@@ -24,11 +24,11 @@ Software Foundation.
 Status
 ======
 
-   At this point, Gorm is usable only for very simple stuff as it only
-supports the most commonly used gui elements.  However, the binary
-format in which documents are archived is stable, so documents created
-using Gorm now should remain useful.  Interface test mode qorks quite
-nicely - you really can see things working.
+   Gorm is now completely usable.  The necessary functionality to 
+support custom classes has been implemented and Gorm should now support
+any user defined widget or AppKit widget.   Bugs in Gorm should be
+reported to the bug-gnustep mailing list, to one of the authors, or
+on savannah.gnu.org.
 
    Known problems (things to do) -
 
@@ -41,3 +41,4 @@ Acknowledgements
 
    Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
 
+Last Updated: 01/01/2003 by GJC
