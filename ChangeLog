@@ -1,3 +1,9 @@
+2004-12-17 21:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Set the double action and target
+	for parentClass.
+	* GormObjectEditor.m: Moved the pasteInSelection method.
+
 2004-12-17 05:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Changed implementation here to call the one

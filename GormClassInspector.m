@@ -291,6 +291,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [outletTable setDataSource: outletData];
   [parentClass setDataSource: parentClassData];
   [parentClass setDoubleAction: @selector(selectClass:)];
+  [parentClass setTarget: self];
 
   // delegate...
   [actionTable setDelegate: self];
@@ -471,26 +472,34 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [classManager allClassNames];
   int row = [parentClass selectedRow];
-  NSString *newParent = [list objectAtIndex: row];
-  NSString *name = [self _currentClass];
-  BOOL removed = NO;
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
-  // check to see if the user wants to do this and remove the connections.
-  removed = [document removeConnectionsForClassNamed: name]; 
-
-  // if removed, move the class and notify... 
-  if(removed)
+  if(row >= 0)
     {
-      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
+      NSString *newParent = [list objectAtIndex: row];
+      NSString *name = [self _currentClass];
+      BOOL removed = NO;
+      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
       
-      [classManager setSuperClassNamed: newParent forClassNamed: name];
-      [nc postNotificationName: IBInspectorDidModifyObjectNotification
-	  object: classManager];
-      [document collapseClass: oldSuper];
-      [document collapseClass: name];
-      [document reloadClasses];
-      [document selectClass: name];
+      // if it's a custom class, let it go, if not do nothing.
+      if([classManager isCustomClass: name])
+	{     
+	  // check to see if the user wants to do this and remove the connections.
+	  removed = [document removeConnectionsForClassNamed: name]; 
+	  
+	  // if removed, move the class and notify... 
+	  if(removed)
+	    {
+	      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
+	      
+	      [classManager setSuperClassNamed: newParent forClassNamed: name];
+	      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		  object: classManager];
+	      [document collapseClass: oldSuper];
+	      [document collapseClass: name];
+	      [document reloadClasses];
+	      [document selectClass: name];
+	    }
+	}
     }
 }
 

@@ -138,6 +138,10 @@ static NSMapTable	*docMap = 0;
   return NO;
 }
 
+- (void) pasteInSelection
+{
+}
+
 - (void) copySelection
 {
   if (selected != nil)
@@ -431,11 +435,6 @@ static NSMapTable	*docMap = 0;
     }
 
   [super mouseDown: theEvent];
-}
-
-
-- (void) pasteInSelection
-{
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
