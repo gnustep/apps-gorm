@@ -1,3 +1,20 @@
+2004-11-07 14:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added entry for NSObject.
+	* Gorm.m: Removed check for adding attribute to class so that
+	"category" actions can be added to existing AppKit classes.
+	* GormClassEditor.m: Removed check for custom in outlineView:
+	addActionToClass: for category method support.
+	* GormClassInspector.m: Changed "isCustom" to isEditable in 
+	table delegate method.
+	* GormClassManager.[hm]: Changed grouping of methods.  Also
+	made changes to correct various problems found while 
+	implementing category support.    Fixes Bug#10934.
+	* GormDocument.m: [GormDocument remove:] added check for 
+	custom class or for category to allow remove.
+	* GormLib/IBConnectors.m: Added default implementation of
+	nibInstantiate.
+	
 2004-11-04 01:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Corrected a memory leak in 

@@ -34,3 +34,15 @@ NSString *IBWillRemoveConnectorNotification
 NSString *IBDidRemoveConnectorNotification
   = @"IBDidRemoveConnectorNotification";
 
+
+@interface NSObject (IBNibInstantiation)
+- (id) nibInstantiate;
+@end
+
+@implementation NSObject (IBNibInstantiation)
+- (id) nibInstantiate
+{
+  // default implementation of nibInstantiate
+  return self;
+}
+@end

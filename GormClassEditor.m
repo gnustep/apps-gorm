@@ -352,12 +352,8 @@ numberOfChildrenOfItem: (id)item
 - (NSString *)outlineView: (NSOutlineView *)anOutlineView
      addNewActionForClass: (id)item
 {
-  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-  if (![classManager isCustomClass: [gov itemBeingEdited]])
-    {
-      return nil;
-    }
-
+  // removed the restriction, since it's now possible to add
+  // actions for kit classes.
   return [classManager addNewActionToClassNamed: item];
 }
 
@@ -409,6 +405,14 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 					 ofClass: itemBeingEdited];
 		}	       
 	    }
+	  else if ([classManager isCategoryForClass: itemBeingEdited])
+	    {
+	      if ([gov editType] == Actions)
+		{
+		  result = [classManager isAction: [item getName]
+					 ofClass: itemBeingEdited];
+		}
+	    }	    
 	}
     }
 

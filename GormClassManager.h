@@ -49,11 +49,11 @@
 - (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject;
 - (NSArray*) allActionsForClassNamed: (NSString*)className;
 - (NSArray*) allActionsForObject: (id)anObject;
-- (NSArray*) allClassNames;
+- (NSArray*) extraActionsForObject: (id)anObject;
 - (NSArray*) allOutletsForClassNamed: (NSString*)className;
 - (NSArray*) allOutletsForObject: (id)anObject;
-- (NSArray*) extraActionsForObject: (id)anObject;
 - (NSArray*) extraOutletsForObject: (id)anObject;
+- (NSArray*) allClassNames;
 - (void) removeAction: (NSString*)anAction forObject: (id)anObject;
 - (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject;
 - (void) removeAction: (NSString*)anAction fromClassNamed: (NSString*)anObject;
@@ -116,6 +116,7 @@
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
+- (BOOL) isAction: (NSString *)actionName  onCategoryForClassNamed: (NSString *)className;
 
 /** Parsing and creating classes */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className

@@ -306,7 +306,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   id removeOutletCell = [removeOutlet cell];
   id selectClassCell = [selectClass cell];
   id searchCell = [search cell];
-  BOOL isCustom = [classManager isCustomClass: [self _currentClass]];
+  BOOL isEditable = [classManager isCustomClass: [self _currentClass]]; 
   BOOL isFirstResponder = [[self _currentClass] isEqualToString: @"FirstResponder"];
   NSArray *list = [classManager allClassNames];
   NSString *superClass = [classManager parentOfClass: [self _currentClass]];
@@ -318,19 +318,19 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [parentClass reloadData];
 
   // activate for actions...
-  [addActionCell setEnabled: isCustom];
-  [removeActionCell setEnabled: isCustom];
+  [addActionCell setEnabled: YES]; //isEditable];
+  [removeActionCell setEnabled: YES]; //isEditable];
 
   // activate for outlet...
-  [addOutletCell setEnabled: (isCustom && !isFirstResponder)];
-  [removeOutletCell setEnabled: (isCustom && !isFirstResponder)];
+  [addOutletCell setEnabled: (isEditable && !isFirstResponder)];
+  [removeOutletCell setEnabled: (isEditable && !isFirstResponder)];
 
   // activate select class...
-  [selectClassCell setEnabled: (isCustom && !isFirstResponder)];
-  [parentClass setEnabled: (isCustom && !isFirstResponder)];
-  [searchCell setEnabled: (isCustom && !isFirstResponder)];
-  [classField setEditable: (isCustom && !isFirstResponder)];
-  [classField setBackgroundColor: (isCustom?[NSColor whiteColor]:[NSColor lightGrayColor])];
+  [selectClassCell setEnabled: (isEditable && !isFirstResponder)];
+  [parentClass setEnabled: (isEditable && !isFirstResponder)];
+  [searchCell setEnabled: (isEditable && !isFirstResponder)];
+  [classField setEditable: (isEditable && !isFirstResponder)];
+  [classField setBackgroundColor: (isEditable?[NSColor whiteColor]:[NSColor lightGrayColor])];
 
   // select the parent class
   if(index != NSNotFound)
@@ -344,13 +344,17 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
   NSString *className = [self _currentClass];
+  NSString *newAction = [classManager addNewActionToClassNamed: className];  
+  NSArray *list = [classManager allActionsForClassNamed: className];
+  int row = [list indexOfObject: newAction];
 
-  [classManager addNewActionToClassNamed: className];
   [document collapseClass: className];
   [document reloadClasses];
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [actionTable reloadData];
+  [actionTable scrollRowToVisible: row];
+  [actionTable selectRow: row byExtendingSelection: NO];
   [document selectClass: className];
 }
 
@@ -358,13 +362,17 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
   NSString *className = [self _currentClass];
-
-  [classManager addNewOutletToClassNamed: className];  
+  NSString *newOutlet = [classManager addNewOutletToClassNamed: className];  
+  NSArray *list = [classManager allOutletsForClassNamed: className];
+  int row = [list indexOfObject: newOutlet];
+  
   [document collapseClass: className];
   [document reloadClasses];
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [outletTable reloadData];
+  [outletTable scrollRowToVisible: row];
+  [outletTable selectRow: row byExtendingSelection: NO];
   [document selectClass: className];
 }
 
@@ -378,25 +386,32 @@ objectValueForTableColumn: (NSTableColumn *)tc
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   // check the count...
-  if([list count] > 0 && i >= 0 && i < [list count])
+  if([classManager isCustomClass: className] || 
+     [classManager isCategoryForClass: className])
     {
-      [actionTable deselectAll: self];
-      name = [list objectAtIndex: i];
-      removed = [document 
-		  removeConnectionsWithLabel: name 
-		  forClassNamed: currentClass
-		  isAction: YES];
-    }
-
-  if(removed)
-    {
-      [document collapseClass: className];
-      [document reloadClasses];
-      [classManager removeAction: name fromClassNamed: className];
-      [nc postNotificationName: IBInspectorDidModifyObjectNotification
-	  object: classManager];
-      [actionTable reloadData];
-      [document selectClass: className];
+      if([list count] > 0 && i >= 0 && i < [list count])
+	{
+	  [actionTable deselectAll: self];
+	  name = [list objectAtIndex: i];
+	  if([classManager isAction: name onCategoryForClassNamed: className])
+	    {
+	      removed = [document 
+			  removeConnectionsWithLabel: name 
+			  forClassNamed: currentClass
+			  isAction: YES];
+	    }
+	}
+      
+      if(removed)
+	{
+	  [document collapseClass: className];
+	  [document reloadClasses];
+	  [classManager removeAction: name fromClassNamed: className];
+	  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	      object: classManager];
+	  [actionTable reloadData];
+	  [document selectClass: className];
+	}
     }
 }
 
@@ -565,6 +580,10 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 	      result = [classManager isOutlet: name
 				     ofClass: className];
 	    }	       
+	}
+      else 
+	{
+	  result = [classManager isAction: name onCategoryForClassNamed: className];
 	}
     }
 

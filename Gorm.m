@@ -1407,8 +1407,7 @@ static NSImage *testingImage = nil;
 	    return NO;
 	}
       
-      if(sel_eq(action, @selector(addAttributeToClass:)) ||
-	 sel_eq(action, @selector(createClassFiles:)) || 
+      if(sel_eq(action, @selector(createClassFiles:)) || 
 	 sel_eq(action, @selector(remove:)))
 	{
 	  id o = nil;

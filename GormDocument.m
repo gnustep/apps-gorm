@@ -1159,12 +1159,13 @@ static NSImage  *fileImage = nil;
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
+      NSString *name = [anitem getName];
 
-      // if the class being edited is a custom class, then allow the deletion...
-      if ([classManager isCustomClass: itemBeingEdited])
+      // if the class being edited is a custom class or a category, 
+      // then allow the deletion...
+      if ([classManager isCustomClass: itemBeingEdited] ||
+	  [classManager isAction: name onCategoryForClassNamed: itemBeingEdited])
 	{
-	  NSString *name = [anitem getName];
-
 	  if ([classesView editType] == Actions)
 	    {
 	      // if this action is an action on the class, not it's superclass
