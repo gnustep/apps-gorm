@@ -1061,76 +1061,42 @@ int _sortViews(id view1, id view2, void *context)
       return;
     }
   
-  // if there is more than one view we must join them together.
-  if([selection count] > 1)
+  enumerator = [selection objectEnumerator];
+  
+  while ((subview = [enumerator nextObject]) != nil)
     {
-      // deactivate the editor for each subview.
-      enumerator = [selection objectEnumerator];
-      while ((subview = [enumerator nextObject]) != nil)
-	{
-	  superview = [subview superview];
-	  rect = NSUnionRect(rect, [subview frame]);
-	  [subview deactivate];
-	}
-
-      // create the containing view.
-      view = [[NSView alloc] initWithFrame: 
-			       NSMakeRect(0, 0, rect.size.width, rect.size.height)];
-      // create scroll view now.
-      scrollView = [[NSScrollView alloc] initWithFrame: rect];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setBorderType: NSBezelBorder];
-
-      // attach the scroll view...
-      [document attachObject: scrollView
-		toParent: _editedObject];
-      [superview addSubview: scrollView];
-      [scrollView setDocumentView: view];
-
-      // add the views.
-      enumerator = [selection objectEnumerator];
-      while ((subview = [enumerator nextObject]) != nil)
-	{
-	  NSPoint frameOrigin;
-	  [view addSubview: [subview editedObject]];
-	  frameOrigin = [[subview editedObject] frame].origin;
-	  frameOrigin.x -= rect.origin.x;
-	  frameOrigin.y -= rect.origin.y;
-	  [[subview editedObject] setFrameOrigin: frameOrigin];
-	  [subview close];
-	}
-    }
-  else if([selection count] == 1)
-    {
-      NSPoint frameOrigin;
-
-      // since we have one view, it will be used as the document view.
-      subview = [selection objectAtIndex: 0];
       superview = [subview superview];
       rect = NSUnionRect(rect, [subview frame]);
       [subview deactivate];
+    }
 
-      // create scroll view now.
-      scrollView = [[NSScrollView alloc] initWithFrame: rect];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setBorderType: NSBezelBorder];
+  view = [[NSView alloc] initWithFrame: 
+			   NSMakeRect(0, 0, rect.size.width, rect.size.height)];
+  scrollView = [[NSScrollView alloc] initWithFrame: rect];
+  [scrollView setHasHorizontalScroller: YES];
+  [scrollView setHasVerticalScroller: YES];
+  [scrollView setBorderType: NSBezelBorder];
 
-      // attach the scroll view...
-      [document attachObject: scrollView
-		toParent: _editedObject];
-      [superview addSubview: scrollView];
-      [scrollView setDocumentView: [subview editedObject]];
+  [document attachObject: scrollView
+	    toParent: _editedObject];
 
-      // set the origin..
+  [superview addSubview: scrollView];
+  [scrollView setDocumentView: view];
+
+
+  enumerator = [selection objectEnumerator];
+
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      NSPoint frameOrigin;
+      [view addSubview: [subview editedObject]];
       frameOrigin = [[subview editedObject] frame].origin;
       frameOrigin.x -= rect.origin.x;
       frameOrigin.y -= rect.origin.y;
       [[subview editedObject] setFrameOrigin: frameOrigin];
       [subview close];
     }
-  
+
   editor = [document editorForObject: scrollView
 		     inEditor: self
 		     create: YES];
