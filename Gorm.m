@@ -653,15 +653,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
   d = [NSMutableDictionary dictionaryWithCapacity: 8];
   [d setObject: @"Gorm" forKey: @"ApplicationName"];
-  [d setObject: @"GNUstep Graphicsl Object Relationship Modeller"
+  [d setObject: @"GNUstep Graphical Object Relationship Modeller"
 	forKey: @"ApplicationDescription"];
   [d setObject: @"Gorm 0.1" forKey: @"ApplicationRelease"];
   [d setObject: @"0.1 Feb 2000" forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObject: 
-		  @"Richard Frith-Macdonald <richard@brainstorm.co.uk>"]
+		  @"Richard Frith-Macdonald <rfm@gnu.org>"]
 	forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
-  [d setObject: @"Copyright (C) 1999, 2000 Free Software Foundation, Inc."
+  [d setObject: @"Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc."
 	forKey: @"Copyright"];
   [d setObject: @"Released under the GNU General Public License 2.0"
 	forKey: @"CopyrightDescription"];
