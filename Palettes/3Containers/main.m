@@ -18,7 +18,7 @@
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
+    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 #include <Foundation/Foundation.h>
@@ -112,8 +112,6 @@
 
   tv = [[GormNSTableView alloc] initWithFrame:
 				  NSZeroRect];
-  //[v setDocumentView: tv];
-  //RELEASE(tv);
 
   tc = [[NSTableColumn alloc] initWithIdentifier: @"column1"];
   [[tc headerCell] setStringValue: @" "];
@@ -148,8 +146,6 @@
 
   ov = [[GormNSOutlineView alloc] initWithFrame:
 				    NSZeroRect];
-  //[v setDocumentView: ov];
-  //RELEASE(ov);
 
   tc = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
   [[tc headerCell] setStringValue: @" "];
@@ -169,9 +165,20 @@
   [tc setEditable: YES];
   [ov addTableColumn: tc];
   RELEASE(tc);
+
+  tc = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
+  [[tc headerCell] setStringValue: @" "];
+  [tc setWidth: ceil(contentSize.width/2)];
+  [tc setMinWidth: 20];
+  [tc setResizable: YES];
+  [tc setEditable: YES];
+  [ov addTableColumn: tc];
+  RELEASE(tc);
+
   [ov setDrawsGrid: NO];
   [ov setIndentationPerLevel: 10.];
   [ov setIndentationMarkerFollowsCell: YES];
+  [ov expandItem: @"NSObject" expandChildren: YES];
   [v setDocumentView: ov];
 
   RELEASE(ov);

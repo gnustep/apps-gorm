@@ -60,33 +60,27 @@
 	  return @"NSApplication";
 	  break;
 	case 1:
-	  return @"NSPanel";
+	  return @"NSTableColumn";
 	  break;
 	case 2:
-	  return @"NSWindow";
+	  return @"NSStatusBar";
 	  break;
 	case 3:
-	  return @"NSOutlineView";
+	  return @"NSResponder";
 	  break;
 	default:
 	  break;
 	}
     }
-  if([item isEqual: @"NSPanel"])
+  if([item isEqual: @"NSResponder"])
     {
       switch(index)
 	{
 	case 0:
-	  return @"class1";
+	  return @"NSWindow";
 	  break;
 	case 1:
-	  return @"class2";
-	  break;
-	case 2:
-	  return @"class3";
-	  break;
-	case 3:
-	  return @"class4";
+	  return @"NSView";
 	  break;
 	default:
 	  break;
@@ -107,7 +101,7 @@
 {
   if([item isEqual: @"NSObject"])
     return YES;
-  if([item isEqual: @"NSPanel"])
+  if([item isEqual: @"NSResponder"])
     return YES;
 
   return NO;
@@ -122,8 +116,8 @@
     if([item isEqual: @"NSObject"])
       return 4;
   else
-    if([item isEqual: @"NSPanel"])
-      return 4;
+    if([item isEqual: @"NSResponder"])
+      return 2;
 
   return 0;
 }
@@ -142,91 +136,19 @@
       else
       if([[tableColumn identifier] isEqual: @"outlets"])
 	{
-	  value = @"1";
+	  value = @"0";
 	}
       else
       if([[tableColumn identifier] isEqual: @"actions"])
 	{
-	  value = @"2";
+	  value = @"0";
 	}
     }
-  if([item isEqual: @"NSApplication"])
+  else
     {
       if([[tableColumn identifier] isEqual: @"classes"])
 	{
 	  value = @"NSApplication";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"outlets"])
-	{
-	  value = @"2";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"actions"])
-	{
-	  value = @"3";
-	}
-    }
-  if([item isEqual: @"NSPanel"])
-    {
-      if([[tableColumn identifier] isEqual: @"classes"])
-	{
-	  value = @"NSPanel";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"outlets"])
-	{
-	  value = @"2";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"actions"])
-	{
-	  value = @"3";
-	}
-    }
-  if([item isEqual: @"NSWindow"])
-    {
-      if([[tableColumn identifier] isEqual: @"classes"])
-	{
-	  value = @"NSWindow";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"outlets"])
-	{
-	  value = @"3";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"actions"])
-	{
-	  value = @"5";
-	}
-    }
-  if([item isEqual: @"NSOutlineView"])
-    {
-      if([[tableColumn identifier] isEqual: @"classes"])
-	{
-	  value = @"NSOutlineView";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"outlets"])
-	{
-	  value = @"4";
-	}
-      else
-      if([[tableColumn identifier] isEqual: @"actions"])
-	{
-	  value = @"6";
-	}
-    }
-  
-  if([item isEqual: @"class1"] ||
-     [item isEqual: @"class2"] ||
-     [item isEqual: @"class3"] ||
-     [item isEqual: @"class4"])
-    {
-      if([[tableColumn identifier] isEqual: @"classes"])
-	{
-	  value = item;
 	}
       else
       if([[tableColumn identifier] isEqual: @"outlets"])

@@ -451,7 +451,46 @@
   
   else if (control == rowsHeightForm)
     {
+      int numCols = [object numberOfColumns];
+      int newNumCols = [[control cellAtIndex: 1] intValue];
+
+      // add/delete columns based on number in #columns field...
       [object setRowHeight: [[control cellAtIndex: 0] intValue] ];
+      if(newNumCols > 0)
+	{
+	  if(numCols < newNumCols)
+	    {
+	      int colsToAdd = newNumCols - numCols;
+	      int i = 0;
+	      // Add columns from the last to the target number...
+	      for(i = 0; i < colsToAdd; i++)
+		{
+		  NSString *identifier = [NSString stringWithFormat: @"TableColumn%d",(numCols + i + 1)];
+		  NSTableColumn *tc = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: identifier]);
+		  [tc setWidth: 50];
+		  [tc setMinWidth: 20];
+		  [tc setResizable: YES];
+		  [tc setEditable: YES];
+		  [object addTableColumn: tc];
+		}
+	    }
+	  else if(numCols > newNumCols)
+	    {
+	      int colsToDelete = numCols - newNumCols;
+	      int i = 0;
+	      NSArray *columns = [object tableColumns];
+	      // remove columns...
+	      for(i = 0; i < colsToDelete; i++)
+		{
+	      NSTableColumn *tc = [columns objectAtIndex: (i + newNumCols)];
+	      [object removeTableColumn: tc];
+		}
+	    }
+	}
+
+      // recompute column sizes..
+      [object sizeToFit];
+      [object tile];
     } 
 
   else if (control == optionMatrix)
@@ -516,7 +555,8 @@
     }
 
   [[rowsHeightForm cellAtIndex: 0] setIntValue: [anObject rowHeight] ];
-  
+  [[rowsHeightForm cellAtIndex: 1] setIntValue: [anObject numberOfColumns]];
+
   [optionMatrix deselectAllCells];
   if ([anObject drawsGrid])
     [optionMatrix selectCellAtRow: 0 column: 0];
