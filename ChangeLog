@@ -1,3 +1,16 @@
+2004-04-27 01:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Modified 
+	[GormClassManager addAction:forClassNamed:],
+	[GormClassManager addOutlet:forClassNamed:],
+	[GormClassManager removeAction:fromClassNamed:],
+	[GormClassManager removeOutlet:fromClassNamed:],
+	[GormClassManager replaceAction:withAction:forClassNamed:],
+	[GormClassManager replaceOutlet:withOutlet:forClassNamed:],
+	to allow synchronization in the class list. When a outlet/action
+	is added/removed/replaced the subclasses of that action stay
+	in sync.
+	
 2004-04-26 01:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Modifications to addAction: removeAction:
