@@ -33,10 +33,10 @@
 // forward declarations
 @class NSString;
 
-IB_EXPORT NSString *IBWillAddConnectorNotification;
-IB_EXPORT NSString *IBDidAddConnectorNotification;
-IB_EXPORT NSString *IBWillRemoveConnectorNotification;
-IB_EXPORT NSString *IBDidRemoveConnectorNotification;
+IB_EXTERN NSString *IBWillAddConnectorNotification;
+IB_EXTERN NSString *IBDidAddConnectorNotification;
+IB_EXTERN NSString *IBWillRemoveConnectorNotification;
+IB_EXTERN NSString *IBDidRemoveConnectorNotification;
 
 /*
  * Connector objects are used to record connections between nib objects.

@@ -1,4 +1,4 @@
-/* IBInspector.h
+/* IBPalette.h
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
@@ -41,22 +41,22 @@
  * window into another window in Gorm (or, in the case of IBWindowPboardType
  * onto the desktop).
  */
-IB_EXPORT NSString	*IBCellPboardType;
-IB_EXPORT NSString	*IBMenuPboardType;
-IB_EXPORT NSString	*IBMenuCellPboardType;
-IB_EXPORT NSString	*IBObjectPboardType;
-IB_EXPORT NSString	*IBViewPboardType;
-IB_EXPORT NSString	*IBWindowPboardType;
-IB_EXPORT NSString	*IBFormatterPboardType;
+IB_EXTERN NSString	*IBCellPboardType;
+IB_EXTERN NSString	*IBMenuPboardType;
+IB_EXTERN NSString	*IBMenuCellPboardType;
+IB_EXTERN NSString	*IBObjectPboardType;
+IB_EXTERN NSString	*IBViewPboardType;
+IB_EXTERN NSString	*IBWindowPboardType;
+IB_EXTERN NSString	*IBFormatterPboardType;
 
 /*
  * Pasteboard types used for DnD from images or sounds tab
  * to views or inspector's textfield onto the desktop).
  * NOTE: These are specific to Gorm... 
  */
-IB_EXPORT NSString	*GormImagePboardType;
-IB_EXPORT NSString	*GormSoundPboardType;
-IB_EXPORT NSString      *GormLinkPboardType;
+IB_EXTERN NSString	*GormImagePboardType;
+IB_EXTERN NSString	*GormSoundPboardType;
+IB_EXTERN NSString      *GormLinkPboardType;
 
 @interface IBPalette : NSObject
 {

@@ -28,14 +28,14 @@
 #ifdef GNUSTEP_WITH_DLL 
 
 #if BUILD_libGormLib_DLL
-#  define IB_EXPORT  __declspec(dllexport)
+#  define IB_EXTERN  __declspec(dllexport)
 #else
-#  define IB_EXPORT  extern __declspec(dllimport)
+#  define IB_EXTERN  extern __declspec(dllimport)
 #endif
 
 #else /* GNUSTEP_WITH[OUT]_DLL */
 
-#  define IB_EXPORT extern
+#  define IB_EXTERN extern
 
 #endif
 

@@ -29,10 +29,10 @@
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBSystem.h>
 
-IB_EXPORT NSString *IBWillBeginTestingInterfaceNotification;
-IB_EXPORT NSString *IBDidBeginTestingInterfaceNotification;
-IB_EXPORT NSString *IBWillEndTestingInterfaceNotification;
-IB_EXPORT NSString *IBDidEndTestingInterfaceNotification;
+IB_EXTERN NSString *IBWillBeginTestingInterfaceNotification;
+IB_EXTERN NSString *IBDidBeginTestingInterfaceNotification;
+IB_EXTERN NSString *IBWillEndTestingInterfaceNotification;
+IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
 
 @protocol IB <NSObject>
 - (id<IBDocuments>) activeDocument;

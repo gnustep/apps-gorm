@@ -30,10 +30,10 @@
 #include <InterfaceBuilder/IBConnectors.h>
 #include <InterfaceBuilder/IBSystem.h>
 
-IB_EXPORT NSString *IBDidOpenDocumentNotification;
-IB_EXPORT NSString *IBWillSaveDocumentNotification;
-IB_EXPORT NSString *IBDidSaveDocumentNotification;
-IB_EXPORT NSString *IBWillCloseDocumentNotification;
+IB_EXTERN NSString *IBDidOpenDocumentNotification;
+IB_EXTERN NSString *IBWillSaveDocumentNotification;
+IB_EXTERN NSString *IBDidSaveDocumentNotification;
+IB_EXTERN NSString *IBWillCloseDocumentNotification;
 
 @protocol IBDocuments <NSObject>
 - (void) addConnector: (id<IBConnectors>)aConnector;

@@ -36,10 +36,10 @@
 /*
  * Notification for editing and inspecting the objects etc.
  */
-IB_EXPORT NSString *IBAttributesChangedNotification;
-IB_EXPORT NSString *IBInspectorDidModifyObjectNotification;
-IB_EXPORT NSString *IBSelectionChangedNotification;
-IB_EXPORT NSString *IBClassNameChangedNotification;
+IB_EXTERN NSString *IBAttributesChangedNotification;
+IB_EXTERN NSString *IBInspectorDidModifyObjectNotification;
+IB_EXTERN NSString *IBSelectionChangedNotification;
+IB_EXTERN NSString *IBClassNameChangedNotification;
 
 /**
  * The IBSelectionOwners protocol defines the methods that a selection owner

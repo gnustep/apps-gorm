@@ -1,3 +1,12 @@
+2004-12-18 13:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBApplicationAdditions.h
+	* GormLib/IBConnectors.h
+	* GormLib/IBDocuments.h
+	* GormLib/IBEditors.h
+	* GormLib/IBPalette.h
+	* GormLib/IBSystem.h: Changed IB_EXPORT to IB_EXTERN.
+
 2004-12-18 10:05 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m:
