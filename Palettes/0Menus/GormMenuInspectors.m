@@ -28,6 +28,7 @@
 @interface GormMenuAttributesInspector : IBInspector
 {
   NSTextField	*titleText;
+  NSMatrix      *menuType;
 }
 @end
 
@@ -40,38 +41,13 @@
 
 - (id) init
 {
-  self = [super init];
-  if (self != nil)
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormMenuAttributesInspector" owner: self] == NO)
     {
-      NSView		*contents;
-      NSTextField	*title;
-
-      RELEASE(window);
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      title
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,70,20)];
-      [title setEditable: NO];
-      [title setSelectable: NO];
-      [title setBezeled: NO];
-      [title setAlignment: NSLeftTextAlignment];
-      [title setFont: [NSFont systemFontOfSize: 14.0]];
-      [title setDrawsBackground: NO];
-      [title setStringValue: @"Title:"];
-      [contents addSubview: title];
-      RELEASE(title);
-
-      titleText
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-30,IVW-80,20)];
-      [titleText setDelegate: self];
-      [contents addSubview: titleText];
-      RELEASE(titleText);
-
-
+      NSLog(@"Could not gorm GormMenuAttributesInspector");
+      return nil;
     }
   return self;
 }
@@ -126,60 +102,13 @@
 
 - (id) init
 {
-  self = [super init];
-  if (self != nil)
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormMenuItemAttributesInspector" owner: self] == NO)
     {
-      NSView		*contents;
-      NSTextField	*title;
-
-      RELEASE(window);
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      title
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,50,20)];
-      [title setEditable: NO];
-      [title setSelectable: NO];
-      [title setBezeled: NO];
-      [title setAlignment: NSLeftTextAlignment];
-      [title setFont: [NSFont systemFontOfSize: 14.0]];
-      [title setDrawsBackground: NO];
-      [title setStringValue: @"Title:"];
-      [contents addSubview: title];
-      RELEASE(title);
-
-      titleText
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-30,IVW-80,20)];
-      [titleText setDelegate: self];
-      [contents addSubview: titleText];
-      RELEASE(titleText);
-
-      title
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-60,70,20)];
-      [title setEditable: NO];
-      [title setSelectable: NO];
-      [title setBezeled: NO];
-      [title setAlignment: NSLeftTextAlignment];
-      [title setFont: [NSFont systemFontOfSize: 14.0]];
-      [title setDrawsBackground: NO];
-      [title setStringValue: @"Shortcut:"];
-      [contents addSubview: title];
-      RELEASE(title);
-
-      shortCut
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(80,IVH-60,20,20)];
-      [shortCut setDelegate: self];
-      [contents addSubview: shortCut];
-      RELEASE(shortCut);
-
-      tagText
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-90,IVW-80,20)];
-      [tagText setDelegate: self];
-      [contents addSubview: tagText];
-      RELEASE(tagText);
+      NSLog(@"Could not gorm GormMenuItemAttributesInspector");
+      return nil;
     }
   return self;
 }
@@ -190,7 +119,6 @@
   [titleText setStringValue: [object title]];
   [shortCut setStringValue: [object keyEquivalent]];
   [tagText setIntValue: [object tag]];
-
 }
 
 @end

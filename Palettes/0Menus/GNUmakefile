@@ -30,8 +30,11 @@ PALETTE_NAME = 0Menus
 	GormMenuInspectors.m \
 	GormNSMenu.m \
 	main.m
+
 0Menus_PRINCIPAL_CLASS = MenusPalette
-0Menus_RESOURCE_FILES = MenusPalette.tiff
+0Menus_RESOURCE_FILES = MenusPalette.tiff \
+	GormMenuAttributesInspector.gorm \
+	GormMenuItemAttributesInspector.gorm
 
 0Menus_STANDARD_INSTALL = no
 

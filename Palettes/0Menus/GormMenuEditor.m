@@ -183,8 +183,6 @@
 	      [tf setEditable: YES];
 	      [tf setBezeled: NO];
 	      [tf setBordered: NO];
-//  	      [tf setAlignment: [_EO alignment]];
-//  	      [tf setFont: [_EO font]];
 	      [self addSubview: tf];
 	      [tf setStringValue: [[cell menuItem] title]];
 	      [self editTextField: tf
@@ -385,7 +383,7 @@
 
 - (BOOL) activate
 {
-  // NSAssert(isClosed == NO, NSInternalInconsistencyException);
+  NSAssert(isClosed == NO, NSInternalInconsistencyException);
   if (original == nil)
     {
       NSWindow		*w;
@@ -393,10 +391,10 @@
       NSView		*sub;
       NSMenuItem	*item;
 
-      /*
-       * Swap ourselves in as a replacement for the original window
-       * content view.
-       */
+      //
+      // Swap ourselves in as a replacement for the original window
+      // content view.
+      //
       w = [rep window];
       original = RETAIN([w contentView]);
       [self setFrame: [original frame]];
@@ -405,11 +403,12 @@
 	{
 	  [self addSubview: sub];
 	}
+
       [w setContentView: self];
 
-      /*
-       * Line up submenu with parent menu.
-       */
+      //
+      // Line up submenu with parent menu.
+      //
       item = [document parentOfObject: edited];
       if (item != nil)
 	{
@@ -772,14 +771,6 @@
       enumerator = [items objectEnumerator];
       while ((item = [enumerator nextObject]) != nil)
 	{
-//  	  NSString	*title = [item title];
-
-//  	  if ([edited indexOfItemWithTitle: title] > 0)
-//  	    {
-//  	      [document detachObject: item];	/* Already exists */
-//  	    }
-//  	  else
-//  	    {
 	  if ([edited _ownedByPopUp])
 	    {
 	      NSLog(@"owned by popup");
@@ -789,7 +780,6 @@
 	  else
 	    NSLog(@"not owned by popup");
 	  [edited insertItem: item atIndex: pos++];
-//  	    }
 	}
       [edited sizeToFit];
       [edited display];

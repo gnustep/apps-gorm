@@ -49,18 +49,6 @@
 @end
 
 @implementation GormNSMenuWindow
-- initWithCoder: (NSCoder *)coder
-{
-  NSLog(@"initWithCoder");
-  return [super initWithCoder: coder];
-}
-
-- (void) encodeWithCoder: (NSCoder *)coder
-{
-  NSLog(@"encode");
-  [super encodeWithCoder: coder];
-}
-
 - (BOOL)canBecomeMainWindow
 {
   return YES;
@@ -90,10 +78,10 @@
 	target: [self _menu]
 	argument: nil
 	order: 500000
-	modes: [NSArray arrayWithObjects:
-			  NSDefaultRunLoopMode,
+	modes: [NSArray arrayWithObjects: NSDefaultRunLoopMode, 
 			NSModalPanelRunLoopMode,
-			NSEventTrackingRunLoopMode, nil]];
+			NSEventTrackingRunLoopMode, 
+			nil]];
     }
 }
 
@@ -102,7 +90,7 @@
   [super becomeMainWindow];
   if ([[self _menu] _ownedByPopUp] )
     {
-
+      // do nothing...
     }
 }
 
@@ -113,10 +101,6 @@
   type = [theEvent type];
   if (type == NSLeftMouseDown)
     {
-      if (_f.is_main == YES)
-	{
-  	  NSLog(@"already main %@", [NSApp mainWindow]);
-	}
       [self makeMainWindow];
       [self makeKeyWindow];
     }
@@ -126,29 +110,23 @@
 @end
 
 @implementation GormNSMenu
-
 - (BOOL) performKeyEquivalent: (NSEvent*)theEvent
 {
   return NO;
 }
 
-
 - (NSPanel*) _createWindow
 {
   NSPanel *win = [[GormNSMenuWindow alloc] 
 		   initWithContentRect: NSZeroRect
-		   styleMask: /*NSTitledWindowMask/*/NSBorderlessWindowMask
+		   styleMask: NSBorderlessWindowMask
 		   backing: NSBackingStoreBuffered
 		   defer: YES];
   [win setMenu: self];
-  // [win setLevel: NSSubmenuWindowLevel];
-
-  //  [win setWorksWhenModal: YES];
-  //  [win setBecomesKeyOnlyIfNeeded: YES];
-
+  [win setLevel: NSSubmenuWindowLevel];
+  
   return win;
 }
-
 @end
 
 @implementation NSMenu (GormNSMenu)
