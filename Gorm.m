@@ -1238,6 +1238,7 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
   SEL		action = [item action];
+  GormClassManager *cm = [active classManager];
 
   if (sel_eq(action, @selector(close:))
     || sel_eq(action, @selector(miniaturize:))
@@ -1326,6 +1327,31 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	  return NO;
 	}
 
+      
+      if(sel_eq(action, @selector(addAttributeToClass:)) ||
+	 sel_eq(action, @selector(createClassFiles:)) || 
+	 sel_eq(action, @selector(remove:)))
+	{
+	  NSArray *s = [selectionOwner selection];
+	  id o = nil;
+	  NSString *name = nil;
+
+	  if ([s count] == 0)
+	    {
+	      return NO;
+	    }
+	  if ([s count] > 1)
+	    {
+	      return NO;
+	    }
+
+	  o = [s objectAtIndex: 0];
+	  name = [o className];
+	  if(![cm isCustomClass: name])
+	    {
+	      return NO;
+	    }
+	}
       if(sel_eq(action, @selector(instantiateClass:)))
 	{
 	  NSArray *s = [selectionOwner selection];
@@ -1348,6 +1374,11 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	      id cm = [self classManager];
 	      // there are some classes which can't be instantiated directly
 	      // in Gorm.
+	      if([cm isSuperclass: @"NSApplication" linkedToClass: name] || 
+		 [name isEqualToString: @"NSApplication"])
+		{
+		  return NO;
+		}
 	      if([cm isSuperclass: @"NSCell" linkedToClass: name] || 
 		 [name isEqualToString: @"NSCell"])
 		{
@@ -1397,9 +1428,15 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 		{
 		  return NO;
 		}
-	      else if([cm isSuperclass: @"NSView" linkedToClass: name] || 
-		      [name isEqualToString: @"NSView"])
+	      else if([cm isSuperclass: @"NSWindow" linkedToClass: name] || 
+		      [name isEqualToString: @"NSWindow"])
 		{
+		  return NO;
+		}
+	      else if([cm isSuperclass: @"FirstResponder" linkedToClass: name] || 
+		      [name isEqualToString: @"FirstResponder"])
+		{
+		  // special case, FirstResponder.
 		  return NO;
 		}
 

@@ -1,3 +1,8 @@
+2004-01-01 00:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: More usability changes to grey out menu items which
+	can't/shouldn't be invoked.
+	
 2003-12-31 20:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Corrected an issue with testInterface because of the new
