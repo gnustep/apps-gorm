@@ -69,6 +69,6 @@
   cell = [orientation cellAtRow: 0 column: 0];
   state = ([cell state] == NSOnState)?NO:YES;
   [object setVertical: state];
-  [object setNeedsDisplay: YES];
+  [object adjustSubviews];
 }
 @end
