@@ -1,5 +1,15 @@
 2003-08-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: Removed extraneous release calls.  In most
+	cases only initWithCapacity and such were being called to create
+	dictionaries.  These are not retained, so they will be garbage 
+	collected.
+	* GormDocument.m: Corrected detachObject: method to handle scroll
+	views.  The document view was not being deleted from the custom class
+	list, so Gorm was saving a corrupted .gorm file.
+
+2003-08-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Removed refrences to old template classes.
 	Added code to use new template classes and fixed several 
 	bugs.

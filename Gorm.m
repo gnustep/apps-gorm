@@ -155,55 +155,6 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 }
 @end
 
-// add methods to all of the template objects for use
-// in Gorm.
-static NSButtonType _buttonTypeForObject( id button )
-{
-  NSButtonCell *cell;
-  NSButtonType type;
-  int highlight, stateby;
-
-  /* We could be passed the button or the cell */
-  cell = ([button isKindOfClass: [NSButton class]]) ? [button cell] : button;
-
-  highlight = [cell highlightsBy];
-  stateby = [cell showsStateBy];
-  NSDebugLog(@"highlight = %d, stateby = %d",
-    [cell highlightsBy],[cell showsStateBy]);
-  
-  type = NSMomentaryPushButton;
-  if (highlight == NSChangeBackgroundCellMask)
-    {
-      if (stateby == NSNoCellMask)
-	type = NSMomentaryLight;
-      else 
-	type = NSOnOffButton;
-    }
-  else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask))
-    {
-      if (stateby == NSNoCellMask)
-	type = NSMomentaryPushButton;
-      else
-	type = NSPushOnPushOffButton;
-    }
-  else if (highlight == (NSPushInCellMask | NSContentsCellMask))
-    {
-      type = NSToggleButton;
-    }
-  else if (highlight == NSContentsCellMask)
-    {
-      if (stateby == NSNoCellMask)
-	type = NSMomentaryChangeButton;
-      else
-	type = NSToggleButton; /* Really switch or radio. What should it be? */
-    }
-  else
-    {
-      NSDebugLog(@"Ack! no button type");
-    }
-  return type;
-}
-
 // define the class proxy...
 @implementation GormClassProxy
 - (id) initWithClassName: (NSString*)n
@@ -1399,6 +1350,7 @@ int
 main(int argc, const char **argv)
 { 
   startDate = [[NSDate alloc] init];
+  // [NSObject enableDoubleReleaseCheck: YES];
   NSApplicationMain(argc, argv);
 
   return 0;

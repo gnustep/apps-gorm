@@ -59,7 +59,6 @@
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraActions forKey: @"ExtraActions"];
-      // RELEASE(extraActions);
     }
   [extraActions addObject: anAction];
   if ([allActions containsObject: anAction] == NO)
@@ -87,9 +86,7 @@
       i = 1;
 
       [classInfo setObject: outlets forKey: @"Outlets"];
-      RELEASE(outlets);
       [classInfo setObject: actions forKey: @"Actions"];
-      RELEASE(actions);
       [classInfo setObject: name forKey: @"Super"];
 
       while ([classInformation objectForKey: newClassName] != nil)
@@ -100,7 +97,6 @@
 	}
       [classInformation setObject: classInfo forKey: newClassName];
       [customClasses addObject: newClassName];
-      RELEASE(classInfo);
 
       [[NSNotificationCenter defaultCenter] 
 	postNotificationName: GormDidAddClassNotification
@@ -175,7 +171,6 @@
 	  [classInfo setObject: superClassName forKey: @"Super"];
 	  [classInformation setObject: classInfo forKey: className];
 	  [customClasses addObject: className];
-	  RELEASE(classInfo);
 
 	  // copy all actions from the class imported to the first responder
 	  while((action = [e nextObject]))
@@ -215,7 +210,6 @@
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
-      // RELEASE(extraOutlets);
     }
   [extraOutlets addObject: anOutlet];
   [[info objectForKey: @"AllOutlets"] addObject: anOutlet];
@@ -236,7 +230,6 @@
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraActions forKey: @"ExtraActions"];
-      // RELEASE(extraActions);
     }
 
   [extraActions addObject: anAction];
@@ -263,7 +256,6 @@
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
-      // RELEASE(extraOutlets);
     }
 
   [extraOutlets addObject: anOutlet];
@@ -459,7 +451,6 @@
 		}
 	    }
 	  [info setObject: allActions forKey: @"AllActions"];
-	  RELEASE(allActions);
 	}
       return AUTORELEASE([allActions copy]);
     }
@@ -587,7 +578,6 @@
 		}
 	    }
 	  [info setObject: allOutlets forKey: @"AllOutlets"];
-	  RELEASE(allOutlets);
 	}
       return AUTORELEASE([allOutlets copy]);
     }
@@ -624,7 +614,6 @@
 		  o = [[self allOutletsForClassNamed: name] mutableCopy];
 		  [info setObject: o forKey: @"AllOutlets"];
 		  [classInformation setObject: info forKey: className];
-		  RELEASE(info);
 		}
 	    }
 	}
@@ -935,8 +924,6 @@
       [classInformation removeObjectForKey: oldName];
       [classInformation setObject: classInfo forKey: name];
 
-      RELEASE(classInfo);
-
       if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
 	{
 	  [customClasses replaceObjectAtIndex: index withObject: name];
@@ -967,7 +954,6 @@
       classInfo = [classInformation objectForKey: key];
       newInfo = [NSMutableDictionary new];
       [ci setObject: newInfo forKey: key];
-      RELEASE(newInfo);
 
       obj = [classInfo objectForKey: @"Super"];
       if (obj != nil)
@@ -1039,7 +1025,6 @@
       oldInfo = [classInformation objectForKey: key];
     
       [classInformation setObject: newInfo forKey: key];
-      RELEASE(newInfo);
       
       obj = [classInfo objectForKey: @"Super"];
       if (obj != nil)
@@ -1054,7 +1039,6 @@
 	  obj = [obj mutableCopy];
 	  [obj sortUsingSelector: @selector(compare:)];
 	  [newInfo setObject: obj forKey: @"Outlets"];
-	  RELEASE(obj);
 	}
 
       // actions
@@ -1064,7 +1048,6 @@
 	  obj = [obj mutableCopy];
 	  [obj sortUsingSelector: @selector(compare:)];
 	  [newInfo setObject: obj forKey: @"Actions"];
-	  RELEASE(obj);
 	}
     }
   return YES;

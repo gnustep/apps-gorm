@@ -637,7 +637,7 @@ static NSImage	*classesImage = nil;
   NSString	*name = RETAIN([self nameForObject: anObject]);
   GormClassManager *cm = [self classManager];
   unsigned	count;
-
+  
   [[self editorForObject: anObject create: NO] close];
 
   count = [connections count];
@@ -663,7 +663,15 @@ static NSImage	*classesImage = nil;
   [self setObject: anObject isVisibleAtLaunch: NO];
 
   // remove from custom class map...
+  NSDebugLog(@"Delete from custom class map -> %@",name);
   [cm removeCustomClassForObject: name];
+  if([anObject isKindOfClass: [NSScrollView class]] == YES)
+    {
+      NSView *subview = [anObject documentView];
+      NSString *objName = [self nameForObject: subview];
+      NSDebugLog(@"Delete from custom class map -> %@",objName);
+      [cm removeCustomClassForObject: objName];
+    }
 
   // remove from name table...
   [nameTable removeObjectForKey: name];
@@ -3177,6 +3185,9 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       if (![anObject isEqualToString: @""])
 	{
 	  NSString *name = [item getName];
+
+	  // retain the name and add the action/outlet...
+	  RETAIN(name);
 	  if ([gov editType] == Actions)
 	    {
 	      NSString *formattedAction = [self _formatAction: anObject];
@@ -3251,6 +3262,8 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  if (rename)
 	    {
 	      int row = 0;
+
+	      RETAIN(item); // retain the new name
 	      [classManager renameClassNamed: item newName: anObject];
 	      [gov reloadData];
 	      row = [gov rowForItem: anObject];
