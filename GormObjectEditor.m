@@ -39,11 +39,11 @@
 }
 - (NSString*) sizeInspectorClassName
 {
-  return @"GormObjectInspector";
+  return @"GormNotApplicableInspector";
 }
 - (NSString*) helpInspectorClassName
 {
-  return @"GormObjectInspector";
+  return @"GormNotApplicableInspector";
 }
 - (NSString*) classInspectorClassName
 {
