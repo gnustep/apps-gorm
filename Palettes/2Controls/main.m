@@ -30,6 +30,7 @@
 }
 @end
 
+
 @implementation ControlsPalette
 - (void) finishInstantiate
 {
@@ -42,43 +43,60 @@
 					   defer: NO];
   contents = [window contentView];
 
-  v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 160, 80, 20)];
+
+/*******************/
+/* First Column... */
+/*******************/
+
+  // Editable text field
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 127, 56, 21)];
   [v setStringValue: @"Text"];
   [contents addSubview: v];
   RELEASE(v);
 
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 125, 80, 20)];
+  // Push button
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 90, 56, 24)];
   [v setButtonType: NSToggleButton];
   [v setTitle: @"Button"];
   [contents addSubview: v];
   RELEASE(v);
 
-#if 0
-  // Need image encoding/decoding
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 90, 80, 20)];
+  // Checkbox
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 60, 56, 16)];
   [v setButtonType: NSSwitchButton];
   [v setImagePosition: NSImageRight];
   [v setTitle: @"Switch"];
-  [contents addSubview: v];
-  RELEASE(v);
-#endif
-
-  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(10, 60, 80, 20)];
-  [v addItemWithTitle: @"PopUp1"];
-  [v addItemWithTitle: @"PopUp2"];
-  [v addItemWithTitle: @"PopUp3"];
+  [v setBordered: NO];
   [contents addSubview: v];
   RELEASE(v);
 
-  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(10, 30, 80, 20)];
-  [v setPullsDown: YES];
-  [v addItemWithTitle: @"PullDown1"];
-  [v addItemWithTitle: @"PullDown2"];
-  [v addItemWithTitle: @"PullDown3"];
+  // Radio button: default on
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 35, 56, 15)];
+  [v setButtonType: NSRadioButton];
+  [v setImagePosition: NSImageLeft];
+  [v setTitle: @"Radio"];
+  [v setBordered: NO];
+  [v setState: NSOnState];
   [contents addSubview: v];
   RELEASE(v);
 
-  v = [[NSTextField alloc] initWithFrame: NSMakeRect(100, 160, 80, 20)];
+  // Radio button: default off
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(10, 17, 56, 15)];
+  [v setButtonType: NSRadioButton];
+  [v setImagePosition: NSImageLeft];
+  [v setTitle: @"Radio"];
+  [v setBordered: NO];
+  [v setState: NSOffState];
+  [contents addSubview: v];
+  RELEASE(v);
+
+
+/********************/
+/* Second Column... */
+/********************/
+
+  // Non editable text field (label)
+  v = [[NSTextField alloc] initWithFrame: NSMakeRect(78, 132, 83, 14)];
   [v setEditable: NO];
   [v setSelectable: NO];
   [v setBezeled: NO];
@@ -89,15 +107,51 @@
   [contents addSubview: v];
   RELEASE(v);
 
-  v = [[NSSlider alloc] initWithFrame: NSMakeRect(100, 60, 14, 90)];
+  // Group box
+  v = [[NSBox alloc] initWithFrame: NSMakeRect(78, 78, 53, 44)];
+  [v setTitle: @"Box"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  // Color well
+  v = [[NSColorWell alloc] initWithFrame: NSMakeRect(78, 42, 53, 30)];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  // Horizontal Slider
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(78, 19, 83, 16)];
   [v setContinuous: YES];
   [contents addSubview: v];
   RELEASE(v);
 
-  v = [[NSSlider alloc] initWithFrame: NSMakeRect(100, 20, 90, 14)];
+  // Vertical Slider
+  v = [[NSSlider alloc] initWithFrame: NSMakeRect(145, 42, 16, 76)];
   [v setContinuous: YES];
   [contents addSubview: v];
   RELEASE(v);
+
+
+/*******************/
+/* Third Column... */
+/*******************/
+
+  // Popup button
+  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(172, 127, 89, 20)];
+  [v addItemWithTitle: @"Item 1"];
+  [v addItemWithTitle: @"Item 2"];
+  [v addItemWithTitle: @"Item 3"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  // Form
+  v = [[NSForm alloc] initWithFrame: NSMakeRect(172, 81, 87, 45)];
+  [v addEntry: @"Field 1"];
+  [v addEntry: @"Field 2"];
+  [v setEntryWidth: 87];
+  [v setInterlineSpacing: 3];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  // TODO: Add CustomView as soon as I figure out how it works.
 }
 @end
-

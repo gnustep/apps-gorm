@@ -123,13 +123,6 @@ static NSMapTable	*docMap = 0;
       nc = [NSNotificationCenter defaultCenter];
 
       [objects addObject: anObject];
-      if ([anObject isKindOfClass: [NSWindow class]] == YES)
-	{
-	  [nc addObserver: self
-		 selector: @selector(handleNotification:)
-		     name: NSWindowDidBecomeKeyNotification
-		   object: anObject];
-	}
       [self refreshCells];
     }
 }
@@ -200,9 +193,6 @@ static NSMapTable	*docMap = 0;
       [document detachObject: selected];
       if ([selected isKindOfClass: [NSWindow class]] == YES)
 	{
-	  [nc removeObserver: self
-			name: NSWindowDidBecomeKeyNotification
-		      object: selected];
 	  [selected close];
 	}
       [objects removeObjectIdenticalTo: selected];
@@ -298,10 +288,6 @@ static NSMapTable	*docMap = 0;
   id		object = [aNotification object];
   NSString	*name = [aNotification name];
 
-  if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
-    {
-      [self selectObjects: [NSArray arrayWithObject: object]];
-    }
 }
 
 - (id) editedObject
