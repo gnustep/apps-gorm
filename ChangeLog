@@ -1,3 +1,9 @@
+2004-05-22 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument awakeFromNib] added call
+	to [NSToolbar setUsesStandardBackgroundColor:] to make the 
+	background light-grey instead of clear.
+	
 2004-05-22 12:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm validateMenuItem:] removed code which greys

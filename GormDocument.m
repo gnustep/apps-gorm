@@ -408,6 +408,7 @@ static NSImage	*classesImage = nil;
   [toolbar setAllowsUserCustomization: NO];
   [toolbar setDelegate: self];
   [window setToolbar: toolbar];  
+  [toolbar setUsesStandardBackgroundColor: YES];
 }
 
 - (void) addConnector: (id<IBConnectors>)aConnector
