@@ -163,6 +163,7 @@ static NSImage	*dragImage = nil;
   id		obj;
   NSPasteboard	*pb;
   NSImageRep	*rep;
+  NSMenu        *menu;
 
   if (view == self || view == nil)
     {
@@ -195,6 +196,8 @@ static NSImage	*dragImage = nil;
   ASSIGN(dragPb, pb);
   [active copyObject: obj type: type toPasteboard: pb];
   NSDebugLog(@"type: %@, obj: %@,", type, obj);
+
+  menu = [active objectForName: @"NSMenu"];
   
   [self dragImage: dragImage
 	       at: rect.origin
@@ -203,7 +206,7 @@ static NSImage	*dragImage = nil;
        pasteboard: pb
 	   source: self
 	slideBack: ([type isEqual: IBWindowPboardType] || 
-		    [type isEqual: IBMenuPboardType]) ? NO : YES];
+		    ([type isEqual: IBMenuPboardType] && menu == nil)) ? NO : YES];
 }
 @end
 
