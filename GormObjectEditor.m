@@ -413,6 +413,7 @@ static NSMapTable	*docMap = 0;
       enumerator = [array objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
+	  RETAIN(obj);  // FIXME: This will probably leak...
 	  [[(GormDocument *)document topLevelObjects] addObject: obj];
 	  [self addObject: obj];
 	}

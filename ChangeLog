@@ -1,5 +1,10 @@
 2004-08-06 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormObjectEditor.m: Temporary fix for recently discovered
+	crash.
+	
+2004-08-06 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Palettes/GormMenuEditor.m: Added rightMouseDown: method
 	to effectively ignore when the right mouse button is 
 	pressed when over a menu that is being edited.  This was
