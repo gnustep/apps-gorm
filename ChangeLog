@@ -1,3 +1,7 @@
+2004-12-08 21:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormOutlineView.m: Corrected a leak.
+	
 2004-12-08 19:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Use new ivar to store selected class.

@@ -129,20 +129,24 @@ static NSColor *darkGreyBlueColor = nil;
 
 - init
 {
-  [super init];
-  _actionColumn = nil;
-  _outletColumn = nil;
-  _isEditing = NO;
-  _attributeOffset = 0.0;
-  _edittype = None;
-  _menuItem = nil;
-  [self setDoubleAction: @selector(_handleDoubleClick:)];
-  [self setTarget: self];
+  if((self = [super init]) != nil)
+    {
+      _actionColumn = nil;
+      _outletColumn = nil;
+      _isEditing = NO;
+      _attributeOffset = 0.0;
+      _edittype = None;
+      _menuItem = nil;
+      [self setDoubleAction: @selector(_handleDoubleClick:)];
+      [self setTarget: self];
+    }
+
   return self;
 }
 
 - (void) dealloc
 {
+  [super dealloc];
 }
 
 - (void) collapseItem: (id)item collapseChildren: (BOOL)collapseChildren;

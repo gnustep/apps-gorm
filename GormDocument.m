@@ -918,7 +918,6 @@ static NSImage  *fileImage = nil;
   RELEASE(filePrefsView);
 
   // release editors...
-  RELEASE(classesView);
   RELEASE(savedEditors);
   RELEASE(openEditors);
 
