@@ -173,6 +173,11 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) awakeWithContext: (NSDictionary *)context
+{
+  // do nothing..  This is defined to override the one in GSNibContainer.
+}
+
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
   if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)

@@ -1,5 +1,12 @@
 2003-08-30  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Added blank implementation of awakeWithContext:
+	since this method is only used to establish connections in a live
+	application.  This should not be done when the file is loaded
+	into Gorm itself.
+
+2003-08-30  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormImageEditor.m: Minor correction to allow compilation with
 	gcc < 3.x. (found my Riccardo Mattola/grey_gandalf)
 
