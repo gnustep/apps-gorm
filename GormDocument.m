@@ -945,8 +945,19 @@ static NSImage	*classesImage = nil;
 
       NSMapInsert(objToName, (void*)obj, (void*)name);
 
-      if ([obj isKindOfClass: [NSWindow class]] == YES
-       || [obj isKindOfClass: [NSMenu class]] == YES)
+      if ([obj isKindOfClass: [NSMenu class]] == YES)
+	{
+	  [objectsView addObject: obj];
+	  if ([name isEqual: @"NSMenu"] == YES)
+	    {
+	      NSRect	frame = [[NSScreen mainScreen] frame];
+
+	      [[obj window] setFrameTopLeftPoint:
+		NSMakePoint(1, frame.size.height-200)];
+	      [[self openEditorForObject: obj] activate];
+	    }
+	}
+      else if ([obj isKindOfClass: [NSWindow class]] == YES)
 	{
 	  [objectsView addObject: obj];
 	  [[self openEditorForObject: obj] activate];
@@ -1103,6 +1114,46 @@ static NSImage	*classesImage = nil;
    * No editor available to take the selection - set a nil owner.
    */
   [self setSelectionFromEditor: nil];
+}
+
+- (void) setupDefaults: (NSString*)type
+{
+  if (hasSetDefaults == YES)
+    {
+      return;
+    }
+  hasSetDefaults = YES;
+  if ([type isEqual: @"Application"] == YES)
+    {
+      NSMenu	*aMenu = [NSMenu new];
+      NSWindow	*aWindow;
+      NSRect	frame = [[NSScreen mainScreen] frame];
+      unsigned	style = NSTitledWindowMask | NSClosableWindowMask
+                        | NSResizableWindowMask | NSMiniaturizableWindowMask;
+
+      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,600, 400)
+					    styleMask: style
+					      backing: NSBackingStoreRetained
+						defer: NO];
+      [aWindow setFrameTopLeftPoint:
+	NSMakePoint(220, frame.size.height-100)];
+      [aWindow setTitle: @"My Window"];
+      [self attachObject: aWindow toParent: nil];
+      RELEASE(aWindow);
+
+      [aMenu setTitle: @"Main Menu"];
+      [aMenu addItemWithTitle: @"Hide" 
+		       action: @selector(hide:)
+		keyEquivalent: @"h"];	
+      [aMenu addItemWithTitle: @"Quit" 
+		       action: @selector(terminate:)
+		keyEquivalent: @"q"];	
+      [self setName: @"NSMenu" forObject: aMenu];
+      [self attachObject: aMenu toParent: nil];
+      [[aMenu window] setFrameTopLeftPoint:
+	NSMakePoint(1, frame.size.height-200)];
+      RELEASE(aMenu);
+    }
 }
 
 - (void) setName: (NSString*)aName forObject: (id)object
@@ -1368,20 +1419,41 @@ static NSImage	*classesImage = nil;
 
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object
 {
+  /*
+   * Get the window and rectangle for which link markup should be drawn.
+   */
   if ([objectsView containsObject: object] == YES)
     {
-      NSRect	rect = [objectsView rectForObject: object];
-
-      rect = [objectsView convertRect: rect toView: nil];
-      *r = rect;
+      /*
+       * objects that exist in the document objects view must have their link
+       * markup drawn there, so we ask the view for the required rectangle.
+       */
+      *r = [objectsView rectForObject: object];
       return [objectsView window];
+    }
+  else if ([object isKindOfClass: [NSMenuItem class]] == YES)
+    {
+      NSArray	*links;
+      NSMenu	*menu;
+      id	editor;
+
+      /*
+       * Menu items must have their markup drawn in the window of the
+       * editor of the parent menu.
+       */
+      links = [self connectorsForSource: object
+				ofClass: [NSNibConnector class]];
+      menu = [[links lastObject] destination];
+      editor = [self editorForObject: menu create: NO];
+      *r = [editor rectForObject: object];
+      return [editor window];
     }
   else if ([object isKindOfClass: [NSView class]] == YES)
     {
-      NSRect	rect = [object bounds];
-
-      rect = [object convertRect: rect toView: nil];
-      *r = rect;
+      /*
+       * Nowmal view objects just get link markup drawn on them.
+       */
+      *r = [object convertRect: [object bounds] toView: nil];
       return [object window];
     }
   else

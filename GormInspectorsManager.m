@@ -558,28 +558,44 @@ selectCellWithString: (NSString*)title
 	{
 	  if ([title isEqual: @"target"])
 	    {
-	      if (actions == nil)
-		{
-		  actions = [[NSApp classManager] allActionsForObject:
-		    [NSApp connectDestination]];
-		  RETAIN(actions);
-		}
+	      id	con = nil;
+	      NSString	*action;
+
 	      for (index = 0; index < numConnectors; index++)
 		{
-		  id	con = [connectors objectAtIndex: index];
-
+		  con = [connectors objectAtIndex: index];
 		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
 		    {
-		      NSString	*action = [con label];
-
-		      ASSIGN(currentConnector, con);
-		      [newBrowser selectRow: [actions indexOfObject: action]
-				   inColumn: 1];
-		      [oldBrowser selectRow: index inColumn: 0];
-		      [NSApp displayConnectionBetween: object
-						  and: [con destination]];
+		      RELEASE(actions);
+		      actions = RETAIN([[NSApp classManager]
+			allActionsForObject: [con destination]]);
 		      break;
 		    }
+		}
+	      if (con == nil)
+		{
+		  RELEASE(actions);
+		  actions = RETAIN([[NSApp classManager]
+		    allActionsForObject: [NSApp connectDestination]]);
+		  if ([actions count] > 0)
+		    {
+		      con = [NSNibControlConnector new];
+		      [con setSource: object];
+		      [con setDestination: [NSApp connectDestination]];
+		      [con setLabel: [actions objectAtIndex: 0]];
+		      AUTORELEASE(con);
+		    }
+		}
+	      if (currentConnector != con)
+		{
+		  ASSIGN(currentConnector, con);
+		  [newBrowser setLastColumn: 0];
+		}
+	      action = [con label];
+	      if (action != nil)
+		{
+		  [newBrowser selectRow: [actions indexOfObject: action]
+			       inColumn: 1];
 		}
 	    }
 	  else
@@ -593,12 +609,9 @@ selectCellWithString: (NSString*)title
 		{
 		  id	con = [connectors objectAtIndex: index];
 
-		  if ([[con label] isEqual: title] == YES)
+		  if ([con label] == nil || [[con label] isEqual: title] == YES)
 		    {
 		      ASSIGN(currentConnector, con);
-		      [oldBrowser selectRow: index inColumn: 0];
-		      [NSApp displayConnectionBetween: object
-						  and: [con destination]];
 		      found = YES;
 		      break;
 		    }
@@ -613,10 +626,15 @@ selectCellWithString: (NSString*)title
 		  [currentConnector setSource: object];
 		  [currentConnector setDestination: [NSApp connectDestination]];
 		  [currentConnector setLabel: title];
-		  [oldBrowser loadColumnZero];
-		  [oldBrowser selectRow: index inColumn: 0];
 		}
 	    }
+	  /*
+	   * Update the bottom browser.
+	   */
+	  [oldBrowser loadColumnZero];
+	  [oldBrowser selectRow: index inColumn: 0];
+	  [NSApp displayConnectionBetween: object
+				      and: [currentConnector destination]];
 	}
       else
 	{
@@ -848,6 +866,28 @@ selectCellWithString: (NSString*)title
     }
   else
     {
+      /*
+       * Establishing a target/action type connection will automatically
+       * remove any previous target/action connection.
+       */
+      if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
+	{
+	  NSEnumerator	*enumerator = [connectors objectEnumerator];
+	  id		con;
+
+	  while ((con = [enumerator nextObject]) != nil)
+	    {
+	      if ([con isKindOfClass: [NSNibControlConnector class]])
+		{
+		  [[(id<IB>)NSApp activeDocument] removeConnector: con];
+		  [con setDestination: nil];
+		  [con setLabel: nil];
+		  [con establishConnection];
+		  [connectors removeObjectIdenticalTo: con];
+		  break;
+		}
+	    }
+	}
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
       [currentConnector establishConnection];
@@ -911,6 +951,13 @@ selectCellWithString: (NSString*)title
 	      [newBrowser selectRow: 0 inColumn: 0];
 	    }
 	}
+      else if ([currentConnector isKindOfClass:
+	[NSNibControlConnector class]] == YES)
+	{
+	  [newBrowser selectRow: [outlets indexOfObject: @"target"]
+		       inColumn: 0];
+	}
+
       [self updateButtons];
     }
 }

@@ -37,7 +37,6 @@ SUBPROJECTS = \
 #
 APP_NAME = Gorm
 Gorm_PRINCIPAL_CLASS=Gorm
-Gorm_MAIN_MODEL_FILE=Gorm.gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
 	ClassInformation.plist \

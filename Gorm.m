@@ -604,11 +604,13 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) newApplication: (id) sender
 {
-  id	doc = [GormDocument new];
+  id		doc = [GormDocument new];
 
   [documents addObject: doc];
   RELEASE(doc);
+  [doc setupDefaults: @"Application"];
   [[doc window] makeKeyAndOrderFront: self];
+
   return doc;
 }
 

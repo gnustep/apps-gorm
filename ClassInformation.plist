@@ -21,6 +21,15 @@
     );
     Super = NSView;
   };
+  NSMenu = {
+    Super = NSObject;
+  };
+  NSMenuItem = {
+    Outlets = (
+      target
+    );
+    Super = NSObject;
+  };
   NSSlider = {
     Super = NSControl;
   };

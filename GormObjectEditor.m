@@ -538,6 +538,7 @@ static NSMapTable	*docMap = 0;
 
 /*
  * Return the rectangle in which an objects image will be displayed.
+ * (use window coordinates)
  */
 - (NSRect) rectForObject: (id)anObject
 {
@@ -556,6 +557,7 @@ static NSMapTable	*docMap = 0;
    */
   rect.size.width -= 15;
   rect.size.height -= 15;
+  rect = [self convertRect: rect toView: nil];
   return rect;
 }
 

@@ -52,31 +52,16 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   return r;
 }
 
-/*
- * Methods to return the images that should be used to display objects within
- * the matrix containing the objects in a document.
- */
-@implementation NSMenu (GormObjectAdditions)
-- (NSImage*) imageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormMenu"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-@end
-
 @implementation NSWindow (GormObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormWindowEditor";
 }
+
+/*
+ * Method to return the image that should be used to display windows within
+ * the matrix containing the objects in a document.
+ */
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -174,10 +159,6 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
-  if ([(id<IB>)NSApp isTestingInterface] == YES)
-    {
-      return NO;
-    }
   return YES;
 }
 
@@ -192,561 +173,546 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
  */
 - (NSView*) hitTest: (NSPoint)loc
 {
-  if ([(id<IB>)NSApp isTestingInterface] == YES)
+  /*
+   * Stop the subviews receiving events - we grab them all.
+   */
+  if ([super hitTest: loc] != nil)
     {
-      return [super hitTest: loc];
+      return self;
     }
-  else
-    {
-      /*
-       * Stop the subviews receiving events - we grab them all.
-       */
-      if ([super hitTest: loc] != nil)
-	{
-	  return self;
-	}
-      return nil;
-    }
+  return nil;
 }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  if ([(id<IB>)NSApp isTestingInterface] == YES)
-    {
-      [super mouseDown: theEvent];
-      return;
-    }
-  else
-    {
-      NSEnumerator	*enumerator;
-      NSView		*view = nil;
-      IBKnobPosition	knob = IBNoneKnobPosition;
-      NSPoint		mouseDownPoint;
-      NSMutableArray	*array;
+  NSEnumerator	*enumerator;
+  NSView		*view = nil;
+  IBKnobPosition	knob = IBNoneKnobPosition;
+  NSPoint		mouseDownPoint;
+  NSMutableArray	*array;
 
-      mouseDownPoint = [theEvent locationInWindow];
+  mouseDownPoint = [theEvent locationInWindow];
 
-      /*
-       * If we have any subviews selected, we need to check to see if the knob
-       * of any subview has been hit, or if a subview itsself has been hit.
-       */
-      if ([selection count] != 0)
+  /*
+   * If we have any subviews selected, we need to check to see if the knob
+   * of any subview has been hit, or if a subview itsself has been hit.
+   */
+  if ([selection count] != 0)
+    {
+      enumerator = [selection objectEnumerator];
+      while ((view = [enumerator nextObject]) != nil)
+	{
+	  knob = GormKnobHitInRect([view frame], mouseDownPoint);
+	  if (knob != IBNoneKnobPosition)
+	    {
+	      /*
+	       * Clicked on the knob of a selected subview.
+	       * If it's not the only selected view - make it so.
+	       * We now expect to drag from this.
+	       */
+	      if ([selection count] != 1)
+		{
+		  [self selectObjects: [NSArray arrayWithObject: view]];
+		}
+	      [self makeSelectionVisible: NO];
+	      [self lockFocus];
+	      GormShowFrameWithKnob([view frame], knob);
+	      [self unlockFocus];
+	      [[self window] flushWindow];
+	      break;
+	    }
+	}
+      if (view == nil)
 	{
 	  enumerator = [selection objectEnumerator];
 	  while ((view = [enumerator nextObject]) != nil)
 	    {
-	      knob = GormKnobHitInRect([view frame], mouseDownPoint);
-	      if (knob != IBNoneKnobPosition)
+	      if (NSMouseInRect(mouseDownPoint, [view frame], NO) == YES)
 		{
 		  /*
-		   * Clicked on the knob of a selected subview.
-		   * If it's not the only selected view - make it so.
-		   * We now expect to drag from this.
+		   * Clicked inside a selected subview.
 		   */
-		  if ([selection count] != 1)
-		    {
-		      [self selectObjects: [NSArray arrayWithObject: view]];
-		    }
-		  [self makeSelectionVisible: NO];
-		  [self lockFocus];
-		  GormShowFrameWithKnob([view frame], knob);
-		  [self unlockFocus];
-		  [[self window] flushWindow];
-		  break;
-		}
-	    }
-	  if (view == nil)
-	    {
-	      enumerator = [selection objectEnumerator];
-	      while ((view = [enumerator nextObject]) != nil)
-		{
-		  if (NSMouseInRect(mouseDownPoint, [view frame], NO) == YES)
+		  if ([theEvent modifierFlags] & NSShiftKeyMask)
 		    {
 		      /*
-		       * Clicked inside a selected subview.
-		       */
-		      if ([theEvent modifierFlags] & NSShiftKeyMask)
-			{
-			  /*
-			   * remove this view from the selection.
-			   */
-			  [self makeSelectionVisible: NO];
-			  array = [NSMutableArray arrayWithArray: selection];
-			  [array removeObjectIdenticalTo: view];
-			  [self selectObjects: array];
-			}
-		      else
-			{
-			  [self makeSelectionVisible: YES];
-			}
-		      break;
-		    }
-		}
-	    }
-	}
-
-      /*
-       * If we haven't clicked in a selected subview - find out where we
-       * actually did click.
-       */
-      if (view == nil)
-	{
-	  view = [super hitTest: mouseDownPoint];
-	  if (view == self)
-	    {
-	      /*
-	       * Clicked on an window background - empty the selection.
-	       */
-	      [self makeSelectionVisible: NO];
-	      [self selectObjects: [NSArray array]];
-	    }
-	  else if (view != nil)
-	    {
-	      /*
-	       * Clicked on an unselected subview.
-	       */
-	      if ([theEvent modifierFlags] & NSShiftKeyMask)
-		{
-		  if ([selection lastObject] == edited
-		    || ([theEvent modifierFlags] & NSControlKeyMask))
-		    {
-		      /*
-		       * Can't extend the selection - change it to the subview.
+		       * remove this view from the selection.
 		       */
 		      [self makeSelectionVisible: NO];
-		      [self selectObjects: [NSArray arrayWithObject: view]];
+		      array = [NSMutableArray arrayWithArray: selection];
+		      [array removeObjectIdenticalTo: view];
+		      [self selectObjects: array];
 		    }
 		  else
 		    {
-		      /*
-		       * extend the selection to include this subview.
-		       */
-		      array = [NSMutableArray arrayWithArray: selection];
-		      [array addObject: view];
-		      [self selectObjects: array];
+		      [self makeSelectionVisible: YES];
 		    }
+		  break;
 		}
-	      else
+	    }
+	}
+    }
+
+  /*
+   * If we haven't clicked in a selected subview - find out where we
+   * actually did click.
+   */
+  if (view == nil)
+    {
+      view = [super hitTest: mouseDownPoint];
+      if (view == self)
+	{
+	  /*
+	   * Clicked on an window background - empty the selection.
+	   */
+	  [self makeSelectionVisible: NO];
+	  [self selectObjects: [NSArray array]];
+	}
+      else if (view != nil)
+	{
+	  /*
+	   * Clicked on an unselected subview.
+	   */
+	  if ([theEvent modifierFlags] & NSShiftKeyMask)
+	    {
+	      if ([selection lastObject] == edited
+		|| ([theEvent modifierFlags] & NSControlKeyMask))
 		{
 		  /*
-		   * Select the new view (clear the old selection markings)
+		   * Can't extend the selection - change it to the subview.
 		   */
 		  [self makeSelectionVisible: NO];
 		  [self selectObjects: [NSArray arrayWithObject: view]];
 		}
-	    }
-	}
-      else if ([selection indexOfObjectIdenticalTo: view] == NSNotFound)
-	{
-	  /*
-	   * This view has just been deselected.
-	   */
-	  view = nil;
-	}
-
-      /*
-       * Control-click on a subview initiates a connection attempt.
-       */
-      if (view != nil && view != self && knob == IBNoneKnobPosition
-	&& ([theEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask)
-	{
-	  NSPoint	dragPoint = [theEvent locationInWindow];
-	  NSPasteboard	*pb;
-	  NSString	*name = [document nameForObject: view];
-
-	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
-		     owner: self];
-	  [pb setString: name forType: GormLinkPboardType];
-	  [NSApp displayConnectionBetween: view and: nil];
-
-	  isLinkSource = YES;
-	  [self dragImage: [NSApp linkImage]
-		       at: dragPoint
-		   offset: NSZeroSize
-		    event: theEvent
-	       pasteboard: pb
-		   source: self
-		slideBack: YES];
-	  isLinkSource = NO;
-	  [self makeSelectionVisible: YES];
-	  return;
-	}
-
-      /*
-       * Having determined the current selection, we now handle events.
-       */
-      if (view != nil)
-	{
-	  NSDate		*future = [NSDate distantFuture];
-	  NSView		*subview;
-	  BOOL			acceptsMouseMoved;
-	  BOOL			dragStarted = NO;
-	  unsigned		eventMask;
-	  NSEvent		*e;
-	  NSEventType		eType;
-	  NSRect		r;
-	  NSPoint		maxMouse;
-	  NSPoint		minMouse;
-	  NSRect		lastRect = [view frame];
-	  NSPoint		lastPoint = mouseDownPoint;
-	  NSPoint		point = mouseDownPoint;
-
-	  eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
-	    | NSLeftMouseDraggedMask | NSMouseMovedMask | NSPeriodicMask;
-	  [[self window] setAcceptsMouseMovedEvents: YES];
-
-	  /*
-	   * Save window state info.
-	   */
-	  acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
-	  [self lockFocus];
-
-	  /*
-	   * Get size limits for resizing or moving and calculate maximum
-	   * and minimum mouse positions that won't cause us to exceed
-	   * those limits.
-	   */
-	  if (view != self)
-	    {
-	      if (knob == IBNoneKnobPosition)
-		{
-		  NSRect	vf = [view frame];
-		  NSRect	sf = [self frame];
-		  NSPoint	tr = NSMakePoint(NSMaxX(vf), NSMaxY(vf));
-		  NSPoint	bl = NSMakePoint(NSMinX(vf), NSMinY(vf));
-
-		  enumerator = [selection objectEnumerator];
-		  while ((subview = [enumerator nextObject]) != nil)
-		    {
-		      if (subview != view)
-			{
-			  float	tmp;
-
-			  vf = [subview frame];
-			  tmp = NSMaxX(vf);
-			  if (tmp > tr.x)
-			    tr.x = tmp;
-			  tmp = NSMaxY(vf);
-			  if (tmp > tr.y)
-			    tr.y = tmp;
-			  tmp = NSMinX(vf);
-			  if (tmp < bl.x)
-			    bl.x = tmp;
-			  tmp = NSMinY(vf);
-			  if (tmp < bl.y)
-			    bl.y = tmp;
-			}
-		    }
-		  minMouse.x = point.x - bl.x;
-		  minMouse.y = point.y - bl.y;
-		  maxMouse.x = NSMaxX(sf) - tr.x + point.x;
-		  maxMouse.y = NSMaxY(sf) - tr.y + point.y;
-		}
 	      else
 		{
-		  NSSize	max = [view maximumSizeFromKnobPosition: knob];
-		  NSSize	min = [view minimumSizeFromKnobPosition: knob];
-
-		  r = [self bounds];
-		  minMouse = NSMakePoint(NSMinX(r), NSMinY(r));
-		  maxMouse = NSMakePoint(NSMaxX(r), NSMaxY(r));
-		  r = [view frame];
-		  switch (knob)
-		    {
-		      case IBBottomLeftKnobPosition:
-			maxMouse.x = NSMaxX(r) - min.width;
-			minMouse.x = NSMaxX(r) - max.width;
-			maxMouse.y = NSMaxY(r) - min.height;
-			minMouse.y = NSMaxY(r) - max.height;
-			break;
-			
-		      case IBMiddleLeftKnobPosition:
-			maxMouse.x = NSMaxX(r) - min.width;
-			minMouse.x = NSMaxX(r) - max.width;
-			break;
-
-		      case IBTopLeftKnobPosition:
-			maxMouse.x = NSMaxX(r) - min.width;
-			minMouse.x = NSMaxX(r) - max.width;
-			maxMouse.y = NSMinY(r) + max.height;
-			minMouse.y = NSMinY(r) + min.height;
-			break;
-			
-		      case IBTopMiddleKnobPosition:
-			maxMouse.y = NSMinY(r) + max.height;
-			minMouse.y = NSMinY(r) + min.height;
-			break;
-
-		      case IBTopRightKnobPosition:
-			maxMouse.x = NSMinX(r) + max.width;
-			minMouse.x = NSMinX(r) + min.width;
-			maxMouse.y = NSMinY(r) + max.height;
-			minMouse.y = NSMinY(r) + min.height;
-			break;
-
-		      case IBMiddleRightKnobPosition:
-			maxMouse.x = NSMinX(r) + max.width;
-			minMouse.x = NSMinX(r) + min.width;
-			break;
-
-		      case IBBottomRightKnobPosition:
-			maxMouse.x = NSMinX(r) + max.width;
-			minMouse.x = NSMinX(r) + min.width;
-			maxMouse.y = NSMaxY(r) - min.height;
-			minMouse.y = NSMaxY(r) - max.height;
-			break;
-
-		      case IBBottomMiddleKnobPosition:
-			maxMouse.y = NSMaxY(r) - min.height;
-			minMouse.y = NSMaxY(r) - max.height;
-			break;
-
-		      case IBNoneKnobPosition:
-			break;	/* NOT REACHED */
-		    }
-		}
-	    }
-
-	  /*
-	   * Track mouse movements until left mouse up.
-	   * While we keep track of all mouse movements, we only act on a
-	   * movement when a periodic event arives (every 20th of a second)
-	   * in order to avoid excessive amounts of drawing.
-	   */
-	  [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
-	  e = [NSApp nextEventMatchingMask: eventMask
-				 untilDate: future
-				    inMode: NSEventTrackingRunLoopMode
-				   dequeue: YES];
-	  eType = [e type];
-	  while (eType != NSLeftMouseUp)
-	    {
-	      if (eType != NSPeriodic)
-		{
-		  point = [self convertPoint: [e locationInWindow]
-				    fromView: nil];
-		}
-	      else if (NSEqualPoints(point, lastPoint) == NO)
-		{
-		  [[self window] disableFlushWindow];
-
-		  if (view == self)
-		    {
-		      /*
-		       * Handle wire-frame for selecting contents of window.
-		       *
-		       * FIXME - there has to be a more efficient way to
-		       * restore the display under the box.
-		       * FIXME - does the fact that we need to redisplay a
-		       * rectangle slightly larger than the one we drew mean
-		       * that there is a drawing bug?
-		       */
-		      r = NSRectFromPoints(lastPoint, mouseDownPoint);
-		      lastPoint = point;
-		      r.origin.x--;
-		      r.origin.y--;
-		      r.size.width += 2;
-		      r.size.height += 2;
-		      [self displayRect: r];
-		      r = NSRectFromPoints(point, mouseDownPoint);
-		      GormShowFrameWithKnob(r, IBNoneKnobPosition);
-		    }
-		  else
-		    {
-		      float	xDiff;
-		      float	yDiff;
-
-		      if (point.x < minMouse.x)
-			point.x = minMouse.x;
-		      if (point.y < minMouse.y)
-			point.y = minMouse.y;
-		      if (point.x > maxMouse.x)
-			point.x = maxMouse.x;
-		      if (point.y > maxMouse.y)
-			point.y = maxMouse.y;
-
-		      xDiff = point.x - lastPoint.x;
-		      yDiff = point.y - lastPoint.y;
-		      lastPoint = point;
-
-		      if (knob == IBNoneKnobPosition)
-			{
-			  if (dragStarted == NO)
-			    {
-			      /*
-			       * Remove selection knobs before moving selection.
-			       */
-			      dragStarted = YES;
-			      [self makeSelectionVisible: NO];
-			    }
-			  enumerator = [selection objectEnumerator];
-			  while ((subview = [enumerator nextObject]) != nil)
-			    {
-			      NSRect	oldFrame = [subview frame];
-
-			      r = oldFrame;
-			      r.origin.x += xDiff;
-			      r.origin.y += yDiff;
-			      [subview setFrame: r];
-			      [self displayRect: oldFrame];
-			      [subview display];
-			    }
-			}
-		      else
-			{
-			  r = GormExtBoundsForRect(lastRect);
-			  r.origin.x--;
-			  r.origin.y--;
-			  r.size.width += 2;
-			  r.size.height += 2;
-			  [self displayRect: r];
-			  r = lastRect;
-			  switch (knob)
-			    {
-			      case IBBottomLeftKnobPosition:
-				r.origin.x += xDiff;
-				r.origin.y += yDiff;
-				r.size.width -= xDiff;
-				r.size.height -= yDiff;
-				break;
-				
-			      case IBMiddleLeftKnobPosition:
-				r.origin.x += xDiff;
-				r.size.width -= xDiff;
-				break;
-
-			      case IBTopLeftKnobPosition:
-				r.origin.x += xDiff;
-				r.size.width -= xDiff;
-				r.size.height += yDiff;
-				break;
-				
-			      case IBTopMiddleKnobPosition:
-				r.size.height += yDiff;
-				break;
-
-			      case IBTopRightKnobPosition:
-				r.size.width += xDiff;
-				r.size.height += yDiff;
-				break;
-
-			      case IBMiddleRightKnobPosition:
-				r.size.width += xDiff;
-				break;
-
-			      case IBBottomRightKnobPosition:
-				r.origin.y += yDiff;
-				r.size.width += xDiff;
-				r.size.height -= yDiff;
-				break;
-
-			      case IBBottomMiddleKnobPosition:
-				r.origin.y += yDiff;
-				r.size.height -= yDiff;
-				break;
-
-			      case IBNoneKnobPosition:
-				break;	/* NOT REACHED */
-			    }
-			  lastRect = r;
-			  GormShowFrameWithKnob(lastRect, knob);
-			}
-		    }
-
 		  /*
-		   * Flush any drawing performed for this event.
+		   * extend the selection to include this subview.
 		   */
-		  [[self window] enableFlushWindow];
-		  [[self window] flushWindow];
-		}
-	      e = [NSApp nextEventMatchingMask: eventMask
-				     untilDate: future
-					inMode: NSEventTrackingRunLoopMode
-				       dequeue: YES];
-	      eType = [e type];
-	    }
-	  [NSEvent stopPeriodicEvents];
-
-	  /*
-	   * Perform any necessary cleanup.
-	   */
-	  if (view == self)
-	    {
-	      /*
-	       * restore the display
-	       */
-	      r = NSRectFromPoints(lastPoint, mouseDownPoint);
-	      r.origin.x--;
-	      r.origin.y--;
-	      r.size.width += 2;
-	      r.size.height += 2;
-	      [self displayRect: r];
-
-	      /*
-	       * Now finally check the selected rectangle to find the views in
-	       * it and make them (if any) into our current selection.
-	       */
-	      point = [self convertPoint: [e locationInWindow]
-				fromView: nil];
-	      r = NSRectFromPoints(point, mouseDownPoint);
-	      array = [NSMutableArray arrayWithCapacity: 8];
-	      enumerator = [[self subviews] objectEnumerator];
-	      while ((subview = [enumerator nextObject]) != nil)
-		{
-		  if (NSIntersectsRect(r, [subview frame]) == YES)
-		    {
-		      [array addObject: subview];
-		    }
-		}
-	      if ([array count] > 0)
-		{
+		  array = [NSMutableArray arrayWithArray: selection];
+		  [array addObject: view];
 		  [self selectObjects: array];
 		}
 	    }
 	  else
 	    {
-	      if (knob != IBNoneKnobPosition)
-		{
-		  NSRect	redrawRect;
+	      /*
+	       * Select the new view (clear the old selection markings)
+	       */
+	      [self makeSelectionVisible: NO];
+	      [self selectObjects: [NSArray arrayWithObject: view]];
+	    }
+	}
+    }
+  else if ([selection indexOfObjectIdenticalTo: view] == NSNotFound)
+    {
+      /*
+       * This view has just been deselected.
+       */
+      view = nil;
+    }
 
-		  /*
-		   * This was a subview resize, so we must clean up by removing
-		   * the highlighted knob and the wireframe around the view.
-		   */
-		  r = GormExtBoundsForRect([view frame]);
-		  r.origin.x--;
-		  r.origin.y--;
-		  r.size.width += 2;
-		  r.size.height += 2;
-		  redrawRect = r;
-		  [view setFrame: lastRect];
-		  r = GormExtBoundsForRect([view frame]);
-		  r.origin.x--;
-		  r.origin.y--;
-		  r.size.width += 2;
-		  r.size.height += 2;
-		  redrawRect = NSUnionRect(r, redrawRect);
-		  [self displayRect: redrawRect];
-		  [self makeSelectionVisible: YES];
-		}
-	      if (NSEqualPoints(point, mouseDownPoint) == NO)
+  /*
+   * Control-click on a subview initiates a connection attempt.
+   */
+  if (view != nil && view != self && knob == IBNoneKnobPosition
+    && ([theEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask)
+    {
+      NSPoint	dragPoint = [theEvent locationInWindow];
+      NSPasteboard	*pb;
+      NSString	*name = [document nameForObject: view];
+
+      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+      [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
+		 owner: self];
+      [pb setString: name forType: GormLinkPboardType];
+      [NSApp displayConnectionBetween: view and: nil];
+
+      isLinkSource = YES;
+      [self dragImage: [NSApp linkImage]
+		   at: dragPoint
+	       offset: NSZeroSize
+		event: theEvent
+	   pasteboard: pb
+	       source: self
+	    slideBack: YES];
+      isLinkSource = NO;
+      [self makeSelectionVisible: YES];
+      return;
+    }
+
+  /*
+   * Having determined the current selection, we now handle events.
+   */
+  if (view != nil)
+    {
+      NSDate		*future = [NSDate distantFuture];
+      NSView		*subview;
+      BOOL		acceptsMouseMoved;
+      BOOL		dragStarted = NO;
+      unsigned		eventMask;
+      NSEvent		*e;
+      NSEventType	eType;
+      NSRect		r;
+      NSPoint		maxMouse;
+      NSPoint		minMouse;
+      NSRect		lastRect = [view frame];
+      NSPoint		lastPoint = mouseDownPoint;
+      NSPoint		point = mouseDownPoint;
+
+      eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
+	| NSLeftMouseDraggedMask | NSMouseMovedMask | NSPeriodicMask;
+      [[self window] setAcceptsMouseMovedEvents: YES];
+
+      /*
+       * Save window state info.
+       */
+      acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
+      [self lockFocus];
+
+      /*
+       * Get size limits for resizing or moving and calculate maximum
+       * and minimum mouse positions that won't cause us to exceed
+       * those limits.
+       */
+      if (view != self)
+	{
+	  if (knob == IBNoneKnobPosition)
+	    {
+	      NSRect	vf = [view frame];
+	      NSRect	sf = [self frame];
+	      NSPoint	tr = NSMakePoint(NSMaxX(vf), NSMaxY(vf));
+	      NSPoint	bl = NSMakePoint(NSMinX(vf), NSMinY(vf));
+
+	      enumerator = [selection objectEnumerator];
+	      while ((subview = [enumerator nextObject]) != nil)
 		{
-		  /*
-		   * A subview was moved or resized, so we must mark the
-		   * doucment as edited.
-		   */
-		  [document touch];
+		  if (subview != view)
+		    {
+		      float	tmp;
+
+		      vf = [subview frame];
+		      tmp = NSMaxX(vf);
+		      if (tmp > tr.x)
+			tr.x = tmp;
+		      tmp = NSMaxY(vf);
+		      if (tmp > tr.y)
+			tr.y = tmp;
+		      tmp = NSMinX(vf);
+		      if (tmp < bl.x)
+			bl.x = tmp;
+		      tmp = NSMinY(vf);
+		      if (tmp < bl.y)
+			bl.y = tmp;
+		    }
+		}
+	      minMouse.x = point.x - bl.x;
+	      minMouse.y = point.y - bl.y;
+	      maxMouse.x = NSMaxX(sf) - tr.x + point.x;
+	      maxMouse.y = NSMaxY(sf) - tr.y + point.y;
+	    }
+	  else
+	    {
+	      NSSize	max = [view maximumSizeFromKnobPosition: knob];
+	      NSSize	min = [view minimumSizeFromKnobPosition: knob];
+
+	      r = [self bounds];
+	      minMouse = NSMakePoint(NSMinX(r), NSMinY(r));
+	      maxMouse = NSMakePoint(NSMaxX(r), NSMaxY(r));
+	      r = [view frame];
+	      switch (knob)
+		{
+		  case IBBottomLeftKnobPosition:
+		    maxMouse.x = NSMaxX(r) - min.width;
+		    minMouse.x = NSMaxX(r) - max.width;
+		    maxMouse.y = NSMaxY(r) - min.height;
+		    minMouse.y = NSMaxY(r) - max.height;
+		    break;
+		    
+		  case IBMiddleLeftKnobPosition:
+		    maxMouse.x = NSMaxX(r) - min.width;
+		    minMouse.x = NSMaxX(r) - max.width;
+		    break;
+
+		  case IBTopLeftKnobPosition:
+		    maxMouse.x = NSMaxX(r) - min.width;
+		    minMouse.x = NSMaxX(r) - max.width;
+		    maxMouse.y = NSMinY(r) + max.height;
+		    minMouse.y = NSMinY(r) + min.height;
+		    break;
+		    
+		  case IBTopMiddleKnobPosition:
+		    maxMouse.y = NSMinY(r) + max.height;
+		    minMouse.y = NSMinY(r) + min.height;
+		    break;
+
+		  case IBTopRightKnobPosition:
+		    maxMouse.x = NSMinX(r) + max.width;
+		    minMouse.x = NSMinX(r) + min.width;
+		    maxMouse.y = NSMinY(r) + max.height;
+		    minMouse.y = NSMinY(r) + min.height;
+		    break;
+
+		  case IBMiddleRightKnobPosition:
+		    maxMouse.x = NSMinX(r) + max.width;
+		    minMouse.x = NSMinX(r) + min.width;
+		    break;
+
+		  case IBBottomRightKnobPosition:
+		    maxMouse.x = NSMinX(r) + max.width;
+		    minMouse.x = NSMinX(r) + min.width;
+		    maxMouse.y = NSMaxY(r) - min.height;
+		    minMouse.y = NSMaxY(r) - max.height;
+		    break;
+
+		  case IBBottomMiddleKnobPosition:
+		    maxMouse.y = NSMaxY(r) - min.height;
+		    minMouse.y = NSMaxY(r) - max.height;
+		    break;
+
+		  case IBNoneKnobPosition:
+		    break;	/* NOT REACHED */
 		}
 	    }
-	  [self unlockFocus];
-	  /*
-	   * Restore state to what it was on entry.
-	   */
-	  [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
 	}
-      [self makeSelectionVisible: YES];
+
+      /*
+       * Track mouse movements until left mouse up.
+       * While we keep track of all mouse movements, we only act on a
+       * movement when a periodic event arives (every 20th of a second)
+       * in order to avoid excessive amounts of drawing.
+       */
+      [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
+      e = [NSApp nextEventMatchingMask: eventMask
+			     untilDate: future
+				inMode: NSEventTrackingRunLoopMode
+			       dequeue: YES];
+      eType = [e type];
+      while (eType != NSLeftMouseUp)
+	{
+	  if (eType != NSPeriodic)
+	    {
+	      point = [self convertPoint: [e locationInWindow]
+				fromView: nil];
+	    }
+	  else if (NSEqualPoints(point, lastPoint) == NO)
+	    {
+	      [[self window] disableFlushWindow];
+
+	      if (view == self)
+		{
+		  /*
+		   * Handle wire-frame for selecting contents of window.
+		   *
+		   * FIXME - there has to be a more efficient way to
+		   * restore the display under the box.
+		   * FIXME - does the fact that we need to redisplay a
+		   * rectangle slightly larger than the one we drew mean
+		   * that there is a drawing bug?
+		   */
+		  r = NSRectFromPoints(lastPoint, mouseDownPoint);
+		  lastPoint = point;
+		  r.origin.x--;
+		  r.origin.y--;
+		  r.size.width += 2;
+		  r.size.height += 2;
+		  [self displayRect: r];
+		  r = NSRectFromPoints(point, mouseDownPoint);
+		  GormShowFrameWithKnob(r, IBNoneKnobPosition);
+		}
+	      else
+		{
+		  float	xDiff;
+		  float	yDiff;
+
+		  if (point.x < minMouse.x)
+		    point.x = minMouse.x;
+		  if (point.y < minMouse.y)
+		    point.y = minMouse.y;
+		  if (point.x > maxMouse.x)
+		    point.x = maxMouse.x;
+		  if (point.y > maxMouse.y)
+		    point.y = maxMouse.y;
+
+		  xDiff = point.x - lastPoint.x;
+		  yDiff = point.y - lastPoint.y;
+		  lastPoint = point;
+
+		  if (knob == IBNoneKnobPosition)
+		    {
+		      if (dragStarted == NO)
+			{
+			  /*
+			   * Remove selection knobs before moving selection.
+			   */
+			  dragStarted = YES;
+			  [self makeSelectionVisible: NO];
+			}
+		      enumerator = [selection objectEnumerator];
+		      while ((subview = [enumerator nextObject]) != nil)
+			{
+			  NSRect	oldFrame = [subview frame];
+
+			  r = oldFrame;
+			  r.origin.x += xDiff;
+			  r.origin.y += yDiff;
+			  [subview setFrame: r];
+			  [self displayRect: oldFrame];
+			  [subview display];
+			}
+		    }
+		  else
+		    {
+		      r = GormExtBoundsForRect(lastRect);
+		      r.origin.x--;
+		      r.origin.y--;
+		      r.size.width += 2;
+		      r.size.height += 2;
+		      [self displayRect: r];
+		      r = lastRect;
+		      switch (knob)
+			{
+			  case IBBottomLeftKnobPosition:
+			    r.origin.x += xDiff;
+			    r.origin.y += yDiff;
+			    r.size.width -= xDiff;
+			    r.size.height -= yDiff;
+			    break;
+			    
+			  case IBMiddleLeftKnobPosition:
+			    r.origin.x += xDiff;
+			    r.size.width -= xDiff;
+			    break;
+
+			  case IBTopLeftKnobPosition:
+			    r.origin.x += xDiff;
+			    r.size.width -= xDiff;
+			    r.size.height += yDiff;
+			    break;
+			    
+			  case IBTopMiddleKnobPosition:
+			    r.size.height += yDiff;
+			    break;
+
+			  case IBTopRightKnobPosition:
+			    r.size.width += xDiff;
+			    r.size.height += yDiff;
+			    break;
+
+			  case IBMiddleRightKnobPosition:
+			    r.size.width += xDiff;
+			    break;
+
+			  case IBBottomRightKnobPosition:
+			    r.origin.y += yDiff;
+			    r.size.width += xDiff;
+			    r.size.height -= yDiff;
+			    break;
+
+			  case IBBottomMiddleKnobPosition:
+			    r.origin.y += yDiff;
+			    r.size.height -= yDiff;
+			    break;
+
+			  case IBNoneKnobPosition:
+			    break;	/* NOT REACHED */
+			}
+		      lastRect = r;
+		      GormShowFrameWithKnob(lastRect, knob);
+		    }
+		}
+
+	      /*
+	       * Flush any drawing performed for this event.
+	       */
+	      [[self window] enableFlushWindow];
+	      [[self window] flushWindow];
+	    }
+	  e = [NSApp nextEventMatchingMask: eventMask
+				 untilDate: future
+				    inMode: NSEventTrackingRunLoopMode
+				   dequeue: YES];
+	  eType = [e type];
+	}
+      [NSEvent stopPeriodicEvents];
+
+      /*
+       * Perform any necessary cleanup.
+       */
+      if (view == self)
+	{
+	  /*
+	   * restore the display
+	   */
+	  r = NSRectFromPoints(lastPoint, mouseDownPoint);
+	  r.origin.x--;
+	  r.origin.y--;
+	  r.size.width += 2;
+	  r.size.height += 2;
+	  [self displayRect: r];
+
+	  /*
+	   * Now finally check the selected rectangle to find the views in
+	   * it and make them (if any) into our current selection.
+	   */
+	  point = [self convertPoint: [e locationInWindow]
+			    fromView: nil];
+	  r = NSRectFromPoints(point, mouseDownPoint);
+	  array = [NSMutableArray arrayWithCapacity: 8];
+	  enumerator = [[self subviews] objectEnumerator];
+	  while ((subview = [enumerator nextObject]) != nil)
+	    {
+	      if (NSIntersectsRect(r, [subview frame]) == YES)
+		{
+		  [array addObject: subview];
+		}
+	    }
+	  if ([array count] > 0)
+	    {
+	      [self selectObjects: array];
+	    }
+	}
+      else
+	{
+	  if (knob != IBNoneKnobPosition)
+	    {
+	      NSRect	redrawRect;
+
+	      /*
+	       * This was a subview resize, so we must clean up by removing
+	       * the highlighted knob and the wireframe around the view.
+	       */
+	      r = GormExtBoundsForRect([view frame]);
+	      r.origin.x--;
+	      r.origin.y--;
+	      r.size.width += 2;
+	      r.size.height += 2;
+	      redrawRect = r;
+	      [view setFrame: lastRect];
+	      r = GormExtBoundsForRect([view frame]);
+	      r.origin.x--;
+	      r.origin.y--;
+	      r.size.width += 2;
+	      r.size.height += 2;
+	      redrawRect = NSUnionRect(r, redrawRect);
+	      [self displayRect: redrawRect];
+	      [self makeSelectionVisible: YES];
+	    }
+	  if (NSEqualPoints(point, mouseDownPoint) == NO)
+	    {
+	      /*
+	       * A subview was moved or resized, so we must mark the
+	       * doucment as edited.
+	       */
+	      [document touch];
+	    }
+	}
+      [self unlockFocus];
+      /*
+       * Restore state to what it was on entry.
+       */
+      [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
     }
+  [self makeSelectionVisible: YES];
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
@@ -1176,7 +1142,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (void) selectObjects: (NSArray*)anArray
 {
-  if (anArray != selection)
+  if ([anArray isEqual: selection] == NO)
     {
       unsigned	count;
 
@@ -1197,22 +1163,22 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	      [selection removeObjectAtIndex: count];
 	    }
 	}
-      /*
-       * Now we must let the document (and hence the rest of the app) know
-       * about our new selection.  If there is nothing in it, make sure
-       * that our edited window is selected instead.
-       */
-      if ([selection count] > 0)
-	{
-	  [document setSelectionFromEditor: self];
-	}
-      else
-	{
-	  GormObjectEditor	*ed;
+    }
+  /*
+   * Now we must let the document (and hence the rest of the app) know
+   * about our new selection.  If there is nothing in it, make sure
+   * that our edited window is selected instead.
+   */
+  if ([selection count] > 0)
+    {
+      [document setSelectionFromEditor: self];
+    }
+  else
+    {
+      GormObjectEditor	*ed;
 
-	  ed = [GormObjectEditor editorForDocument: document];
-	  [ed selectObjects: [NSArray arrayWithObject: edited]];
-	}
+      ed = [GormObjectEditor editorForDocument: document];
+      [ed selectObjects: [NSArray arrayWithObject: edited]];
     }
 }
 
