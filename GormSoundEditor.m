@@ -265,6 +265,22 @@ static NSMapTable	*docMap = 0;
   NSMapRemove(docMap,document);
 }
 
+- (void) addObject: (id)anObject
+{
+  if([objects containsObject: anObject] == NO)
+    {
+      [super addObject: anObject];
+    }
+  else
+    {
+      NSRunAlertPanel (_(@"Problem adding sound"), 
+		       _(@"An sound with the same name exists, remove it first."), 
+		       _(@"OK"), 
+		       nil, 
+		       nil);      
+    }
+}
+
 - (void) makeSelectionVisible: (BOOL)flag
 {
   if (flag == YES && selected != nil)

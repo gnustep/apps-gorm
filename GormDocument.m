@@ -1004,10 +1004,13 @@ static NSImage  *fileImage = nil;
     }
 
   /*
-   * Make sure this object isn't in the list of objects to be made visible
+   * Make sure this window isn't in the list of objects to be made visible
    * on nib loading.
    */
-  [self setObject: anObject isVisibleAtLaunch: NO];
+  if([anObject isKindOfClass: [NSWindow class]])
+    {
+      [self setObject: anObject isVisibleAtLaunch: NO];
+    }
 
   // some objects are given a name, some are not.  The only ones we need
   // to worry about are those that have names.

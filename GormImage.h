@@ -63,6 +63,7 @@
 - (NSString *)inspectorClassName;
 - (NSImage *)image;
 - (NSImage *)normalImage;
+- (BOOL) isEqual: (id)object;
 @end
 
 /**

@@ -136,4 +136,18 @@
 {
   return @"GormNotApplicableInspector";
 }
+
+- (BOOL) isEqual: (id)object
+{
+  BOOL result = NO;
+
+  if(object == self)
+    result = YES;
+  else if([object isKindOfClass: [self class]] == NO)
+    result = NO;
+  else if([[self soundName] isEqual: [object soundName]])
+    result = YES;
+
+  return result;
+}
 @end

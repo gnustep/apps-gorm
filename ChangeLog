@@ -1,3 +1,19 @@
+2005-01-22 12:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: In [GormDocument detachObject:] made 
+	[GormDocument setObject:isVisibleAtLaunch:] called only when the
+	object is an NSWindow subclass.
+	* GormImageEditor.m: Added implementation of addObject: to
+	prevent addition of duplicate images.
+	* GormImage.h: Added isEqual: so that containsObject: can
+	find the image.
+	* GormImage.m: Added isEqual: declaration.
+	* GormSoundEditor.m: Added implementation of addObject to
+	prevent addition of duplicate sounds.
+	* GormSound.h: Added isEqual: so that containsObject can
+	find the sound.
+	* GormSound.m: Added isEqual: declaration.
+
 2005-01-11 22:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: Default NSWindows being imported from the

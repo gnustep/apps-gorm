@@ -59,6 +59,7 @@
 - (void) setInWrapper: (BOOL)flag;
 - (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;
+- (BOOL) isEqual: (id)object;
 @end
 
 #endif
