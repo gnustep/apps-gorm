@@ -161,7 +161,7 @@
 		}
 	    }
 	  
-	  ASSIGN(name, selectorPart);
+	  ASSIGN(name, [selectorPart stringByTrimmingCharactersInSet: wsnl]);
 	}
       else // No return type specified.  The default is id, so we must treat it as a potential action...
 	{
@@ -192,7 +192,7 @@
 	      selectorPart = [selectorPart stringByAppendingString: argPart];
 	    }
 
-	  ASSIGN(name, selectorPart);
+	  ASSIGN(name, [selectorPart stringByTrimmingCharactersInSet: wsnl]);
 	}
     }
   else
@@ -203,7 +203,7 @@
 	  NSScanner *selScanner = [NSScanner scannerWithString: tempSelector];
 	  [selScanner scanUpToAndIncludingString: @")" intoString: NULL];
 	  [selScanner scanUpToCharactersFromSet: wsnl intoString: &selectorPart];
-	  ASSIGN(name, selectorPart);
+	  ASSIGN(name, [selectorPart stringByTrimmingCharactersInSet: wsnl]);
 	}
     }
 }

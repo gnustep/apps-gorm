@@ -26,6 +26,7 @@
 #include <Foundation/NSString.h>
 #include <Foundation/NSArray.h>
 #include <Foundation/NSScanner.h>
+#include <Foundation/NSCharacterSet.h>
 #include <GormObjCHeaderParser/OCClass.h>
 #include <GormObjCHeaderParser/OCMethod.h>
 #include <GormObjCHeaderParser/OCIVar.h>
@@ -124,23 +125,45 @@
   NSString *methodsString = nil;
   NSString *ivarsString = nil;
   NSScanner *methodScan = nil;
-
-  [scanner scanUpToString: @"@interface" intoString: NULL]; // look ahead...  
-  [scanner scanUpToString: @"\n" intoString: &interfaceLine];
-  iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
-  if(NSEqualRanges([interfaceLine rangeOfString: @":"],NSMakeRange(NSNotFound,0)) == NO)
+  NSRange range;
+  NSRange notFound = NSMakeRange(NSNotFound,0);
+  NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+  
+  // get the interface line... look ahead...  
+  if(NSEqualRanges(range = [classString rangeOfString: @"{"], notFound) == NO)
     {
+      [scanner scanUpToString: @"@interface" intoString: NULL]; 
+      [scanner scanUpToString: @"{" intoString: &interfaceLine];
+      iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
+    }
+  else // if there is no "{", then there are no ivars...
+    {
+      [scanner scanUpToString: @"@interface" intoString: NULL]; 
+      [scanner scanUpToString: @"\n" intoString: &interfaceLine];
+      iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
+    }
+
+  // look ahead...  
+  if(NSEqualRanges([interfaceLine rangeOfString: @":"], notFound) == NO)
+    {
+      NSString *cn = nil, *scn = nil;
+
       [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
-      [iscan scanUpToString: @":" intoString: &className];
+      [iscan scanUpToString: @":" intoString: &cn];
+      className = [cn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(className);
       [iscan scanString: @":" intoString: NULL];
-      [iscan scanUpToString: @" " intoString: &superClassName];
+      [iscan scanUpToCharactersFromSet: wsnl intoString: &scn];
+      superClassName = [scn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(superClassName);
     }
   else // category...
     {
+      NSString *cn = nil;
+
       [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
-      [iscan scanUpToString: @" " intoString: &className];
+      [iscan scanUpToString: @" " intoString: &cn];
+      className = [cn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(className);
       isCategory = YES;
     }

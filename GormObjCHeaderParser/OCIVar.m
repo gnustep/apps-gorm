@@ -102,6 +102,7 @@
   scanner = [NSScanner scannerWithString: tempName];
   [scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @"*"]];
   [scanner scanUpToCharactersFromSet: wsnl intoString: &name];
+  name = [name stringByTrimmingCharactersInSet: wsnl];
   RETAIN(name);
 }
 @end
