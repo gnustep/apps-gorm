@@ -1,3 +1,40 @@
+2002-10-13  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Implemented methods necessary to read the
+	templates back from the gorm file and transform them
+	back into the appropriate parent class.   Also made modifications
+	to the template additions for NSWindowTemplate, and all other
+	templates so that the correct init method is called.
+	* GormClassManager.h: Added more methods to handle custom classes and
+	cleaned up some of the references to "NSObject".  These should be
+	"id" instead.
+	* GormClassManager.m: Added implementations of the custom class
+	methods.  Removed the old implementation for the 
+	"GormClassInspector" from the source.
+	* GormCustomClassInspector.m: Added license comment.  Implemented
+	methods necessary to allow the user to select a class from a list
+	of classes presented in the inspector.
+	* GormDocument.h: Added tempNameTable variable to hold the objects 
+	while the gorm is being persisted.   This allows the templates
+	to be substituted during the archiving process and the real
+	objects to be saved and restored afterwards.  Added deferred windows
+	variable.
+	* GormDocument.m: Added -[_replaceObjectsWithTemplates] and
+	-[replaceTemplatesWithObjects] which are called from -[beginArchiving]
+	and -[endArchiving] respectively.  These methods substitute the
+	templates into the object graph when the gorm is persisted and restore
+	the original objects so that the gorm can continue to be edited after
+	the save.   Also made necessary modifications to -[loadDocument] and
+	-[saveDocument] to save the custom class list.   Added methods to
+	allow windows to be deffered [setWindow:isDeffered] and
+	-[isWindowDeferred].
+	* GormPrivate.h: Declared GormTemplate and added it to the
+	categories for the template classes.  Declared Gorm template
+	classes.
+	* GormCustomClassInspector.gorm: Made some small adjustments to the
+	size of the view.
+	
+	
 2002-10-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.h : Added missing include.

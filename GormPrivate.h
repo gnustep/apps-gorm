@@ -6,7 +6,6 @@
 @class	GormPalettesManager;
 
 #include "Gorm.h"
-
 #include "GormFilesOwner.h"
 #include "GormDocument.h"
 #include "GormInspectorsManager.h"
@@ -29,6 +28,59 @@ extern NSString *GormLinkPboardType;
  */
 @end
 
+// Additions to template classes within gorm.
+@protocol GormTemplate
+- (id) initWithObject: (id)object className: (NSString *)name;
+@end
+
+@interface NSWindowTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSViewTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSTextTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSControlTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSButtonTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSTextViewTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+@interface NSMenuTemplate (GormCustomClassAdditions) <GormTemplate>
+@end
+
+// gorm template subclasses
+@interface GormNSWindowTemplate : NSWindowTemplate
+@end
+
+@interface GormNSViewTemplate : NSViewTemplate
+@end
+
+@interface GormNSTextTemplate : NSTextTemplate
+@end
+
+@interface GormNSControlTemplate : NSControlTemplate
+@end
+
+@interface GormNSButtonTemplate : NSButtonTemplate
+@end
+
+@interface GormNSTextViewTemplate : NSTextViewTemplate
+@end
+
+@interface GormNSMenuTemplate : NSMenuTemplate
+@end
+
+// custom class support
+@interface NSObject (GormCustomClassAdditions)
++ (BOOL) canSubstituteForClass: (Class)aClass;
+@end
+
 @interface GormClassProxy : NSObject
 {
   NSString *name;
@@ -37,7 +89,6 @@ extern NSString *GormLinkPboardType;
 
 - initWithClassName: (NSString*)n;
 - (NSString*) className;
-
 - (NSString*) inspectorClassName;
 - (NSString*) connectInspectorClassName;
 - (NSString*) sizeInspectorClassName;
@@ -195,6 +246,10 @@ extern NSString *GormLinkPboardType;
 + (id) defaultFormatValue;
 - (NSString *) zeroFormat;
 
+@end
+
+@interface NSObject (GormAdditions)
+- (id) allocSubstitute;
 @end
 
 /*

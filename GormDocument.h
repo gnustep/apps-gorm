@@ -30,6 +30,7 @@
   GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
+  NSMutableDictionary   *tempNameTable;
   NSWindow		*window;
   NSMatrix		*selectionView;
   NSBox                 *selectionBox;
@@ -43,6 +44,7 @@
   NSMenuItem		*quitItem;		/* Replaced during test */
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
+  NSMutableArray	*deferredWindows;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
@@ -92,7 +94,7 @@
 - (NSWindow*) window;
 - (BOOL) windowShouldClose: (id)sender;
 
-// classes support 
+// classes support..
 - (id) createSubclass: (id)sender;
 - (id) instantiateClass: (id)sender;
 - (id) editClass: (id)sender;

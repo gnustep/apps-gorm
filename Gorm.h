@@ -449,5 +449,4 @@ extern NSString *IBClassNameChangedNotification;
 - (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position;
 - (void) placeView: (NSRect)newFrame;
 @end
-
-#endif
+ #endif

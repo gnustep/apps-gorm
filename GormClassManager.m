@@ -30,7 +30,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
 @interface	GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;
-- (NSMutableDictionary*) classInfoForObject: (NSObject*)anObject;
+- (NSMutableDictionary*) classInfoForObject: (id)anObject;
 @end
 
 @implementation GormClassManager
@@ -145,7 +145,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     || [classInformation objectForKey: superClassName] != nil)
     {
       NSMutableDictionary	*classInfo;
-//        NSString			*newClassName;
 
       if(![classInformation objectForKey: className])
 	{
@@ -293,13 +292,20 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     }
 }
 
-- (NSArray*) allActionsForObject: (NSObject*)obj
+- (NSArray*) allActionsForObject: (id)obj
 {
   NSString	*className;
   NSArray	*actions;
-  Class		theClass = [obj class];
+  Class		 theClass = [obj class];
+  NSString      *customClassName = [self customClassForObject: obj];
 
-  if (theClass == [GormFirstResponder class])
+  if(customClassName != nil)
+    {
+      // if the object has been mapped to a custom class, then
+      // get the information for it.
+      className = customClassName;
+    }
+  else if (theClass == [GormFirstResponder class])
     {
       className = @"FirstResponder";
     }
@@ -310,17 +316,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   else if ([obj isKindOfClass: [GSNibItem class]] == YES)
     {
       // this adds support for custom objects
-      className = [(id)obj className];
+      className = [obj className];
     }
   else if ([obj isKindOfClass: [GormClassProxy class]] == YES)
     {
       // this adds support for class proxies
-      className = [(id)obj className];
+      className = [obj className];
     }
   else if ([obj isKindOfClass: [GormCustomView class]] == YES)
     {
       // this adds support for custom views
-      className = [(id)obj className];
+      className = [obj className];
     }
   else
     {
@@ -410,18 +416,24 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     [[classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)]];
 }
 
-- (NSArray*) allOutletsForObject: (NSObject*)obj
+- (NSArray*) allOutletsForObject: (id)obj
 {
   NSString	*className;
   NSArray	*outlets;
   Class		theClass = [obj class];
+  NSString      *customClassName = [self customClassForObject: obj];
 
-  if (theClass == [GormFirstResponder class])
+  if(customClassName != nil)
+    {
+      // if the object has been mapped to a custom class, then
+      // get the information for it.
+      className = customClassName; 
+    }
+  else if (theClass == [GormFirstResponder class])
     {
       return nil;
     }
-
-  if (theClass == [GormFilesOwner class])
+  else if (theClass == [GormFilesOwner class])
     {
       className = [(GormFilesOwner*)obj className];
     }
@@ -560,7 +572,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return info;
 }
 
-- (NSMutableDictionary*) classInfoForObject: (NSObject*)obj
+- (NSMutableDictionary*) classInfoForObject: (id)obj
 {
   NSString		*className;
   Class			theClass = [obj class];
@@ -604,14 +616,14 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [super dealloc];
 }
 
-- (NSArray*) extraActionsForObject: (NSObject*)anObject
+- (NSArray*) extraActionsForObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
 
   return [info objectForKey: @"ExtraActions"];
 }
 
-- (NSArray*) extraOutletsForObject: (NSObject*)anObject
+- (NSArray*) extraOutletsForObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
 
@@ -633,10 +645,15 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	}
       else
 	{
+	  // load the classes, initialize the custom class array and map..
 	  [self loadFromFile: path];
 	  customClasses = RETAIN([NSMutableArray arrayWithCapacity: 1]);
+	  customClassMap = RETAIN([NSMutableDictionary dictionaryWithCapacity: 10]); 
+	  // NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
+	  //			      NSObjectMapValueCallBacks, 128, [self zone]);
 	}
     }
+  
   return self;
 }
 
@@ -1175,525 +1192,54 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
   return result;
 }
+
+// custom class support...
+- (NSString *) customClassForObject: (id)object
+{
+  return [customClassMap objectForKey: object];
+}
+
+- (void) setCustomClass: (NSString *)className
+              forObject: (id)object
+{
+  [customClassMap setObject: className forKey: object];
+}
+
+- (void) removeCustomClassForObject: (id) object
+{
+  [customClassMap removeObjectForKey: object];
+}
+
+- (NSDictionary *)customClassMap
+{
+  return customClassMap;
+}
+
+- (void)setCustomClassMap: (NSDictionary *)dict
+{
+  // copy the dictionary..
+  NSLog(@"dictionary = %@",dict);
+  [customClassMap removeAllObjects];
+  [customClassMap addEntriesFromDictionary: dict];
+}
+
+- (BOOL)isCustomClassMapEmpty
+{
+  return ([customClassMap count] == 0);
+}
+
+- (NSString *)nonCustomSuperClassOf: (NSString *)className
+{
+  NSString *result = className;
+
+  // iterate up the chain until a non-custom superclass is found...
+  while([self isCustomClass: result])
+    {
+      NSLog(@"result = %@",result);
+      result = [self superClassNameForClassNamed: result];
+    }
+
+  return result;
+}
+
 @end
-
-
-@interface GormClassInspector : IBInspector
-{
-  NSArray		*actions;
-  NSArray		*outlets;
-  NSBrowser		*browser;
-  NSPopUpButton         *superClassPU;
-  NSTextField           *classNameTF;
-  NSMatrix              *connectionRadios;
-  NSTextField           *editNameTF;
-  BOOL			editClass;
-  BOOL			editActions;
-}
-
-- (NSString*) identifierString: (NSString*)str;
-- (void) updateButtons;
-- (void) renameClass: (id)sender;
-- (void) changeSuperClass: (id)sender;
-@end
-
-@implementation GormClassInspector
-
-- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
-{
-  if (!editActions)
-    {
-      return [outlets count];
-    }
-  else
-    {
-      return [actions count];
-    }
-}
-
-- (BOOL) browser: (NSBrowser*)sender
-selectCellWithString: (NSString*)title
-	inColumn: (int)col
-{
-  if (col == 0)
-    {
-    }
-  [editNameTF setStringValue: title];
-  //[self updateButtons];
-  return YES;
-}
-
-- (void) browser: (NSBrowser*)sender
- willDisplayCell: (id)aCell
-	   atRow: (int)row
-	  column: (int)col
-{
-  NSString	*name;
-
-  //if (col == 0)
-  if (!editActions)
-    {
-      if (row >= 0 && row < [outlets count])
-	{
-	  name = [outlets objectAtIndex: row];
-	  [aCell setStringValue: name];
-	  [aCell setEnabled: YES];
-	}
-      else
-	{
-	  [aCell setStringValue: @""];
-	  [aCell setEnabled: NO];
-	}
-    }
-  else
-    {
-      if (row >= 0 && row < [actions count])
-	{
-	  name = [actions objectAtIndex: row];
-	  [aCell setStringValue: name];
-	  [aCell setEnabled: YES];
-	}
-      else
-	{
-	  [aCell setStringValue: @""];
-	  [aCell setEnabled: NO];
-	}
-    }
-  [aCell setLeaf: YES];
-}
-
-- (void) dealloc
-{
-  RELEASE(actions);
-  RELEASE(outlets);
-  RELEASE(okButton);
-  RELEASE(revertButton);
-  //  RELEASE(window);
-  [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView		*contents;
-      NSRect		windowRect = NSMakeRect(0, 0, IVW, IVH-IVB);
-      NSRect		rect;
-      NSButtonCell	*cell;
-      NSTextField	*text;
-      NSMatrix		*matrix;
-
-      window = [[NSWindow alloc] initWithContentRect: windowRect
-					   styleMask: NSBorderlessWindowMask
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      rect = windowRect;
-      // Class Name :
-      rect.origin.y += rect.size.height - 22;
-      rect.size.height = 22;
-      rect.origin.x = 20;
-      rect.size.width = 90-20;
-
-      text = [[NSTextField alloc] initWithFrame: rect];
-      [text setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [text setEditable: NO];
-      [text setSelectable: NO];
-      [text setBordered: NO];
-      [text setBezeled: NO];
-      [text setDrawsBackground: NO];
-      [text setStringValue: @"Class name: "];
-      [contents addSubview: text];
-      RELEASE(text);
-
-      rect.origin.x += 95;
-      rect.size.width = 150;
-
-      classNameTF = text = [[NSTextField alloc] initWithFrame: rect];
-      [text setTarget: self];
-      [text setAction: @selector(renameClass:)];
-      [text setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [contents addSubview: text];
-      RELEASE(text);
-
-      // Super Class :
-      rect.origin.x = 20;
-      rect.origin.y -= 24;
-      rect.size.height = 20;
-      rect.size.width = 90-20;
-
-      text = [[NSTextField alloc] initWithFrame: rect];
-      [text setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [text setEditable: NO];
-      [text setSelectable: NO];
-      [text setBordered: NO];
-      [text setBezeled: NO];
-      [text setDrawsBackground: NO];
-      [text setStringValue: @"Super class: "];
-      [contents addSubview: text];
-      RELEASE(text);
-
-      rect.origin.x += 95;
-      rect.size.width = 150;
-
-      superClassPU = [[NSPopUpButton alloc] initWithFrame: rect pullsDown: NO];
-      [superClassPU setTarget: self];
-      [superClassPU setAction: @selector(changeSuperClass:)];
-      [superClassPU setAutoresizingMask:
-	NSViewWidthSizable|NSViewHeightSizable];
-      [superClassPU removeAllItems];
-      [superClassPU addItemWithTitle: @"superclass !"];
-      [contents addSubview: superClassPU];
-      RELEASE(superClassPU);
-
-      // Outlets/Actions Radios
-      rect.size = windowRect.size;
-      rect.origin.x = 0;
-      rect.origin.y -= 30;
-      rect.size.height = 20;
-
-      cell = [[NSButtonCell alloc] init];
-      [cell setButtonType: NSRadioButton];
-      [cell setBordered: NO];
-      [cell setImagePosition: NSImageLeft];
-
-      matrix = [[NSMatrix alloc] initWithFrame: rect
-					  mode: NSRadioModeMatrix
-				     prototype: cell
-				  numberOfRows: 1
-			       numberOfColumns: 2];
-      RELEASE(cell);
-
-      rect.size.width /= 2;
-      [matrix setIntercellSpacing: NSZeroSize];
-      [matrix setCellSize: rect.size];
-      [matrix setTarget: self];
-      [matrix setAutosizesCells: YES];
-
-      cell = [matrix cellAtRow: 0 column: 0];
-      [cell setTitle: @"Outlets"];
-      [cell setAction: @selector(setOutlets:)];
-
-      cell = [matrix cellAtRow: 0 column: 1];
-      [cell setTitle: @"Actions"];
-      [cell setAction: @selector(setActions:)];
-
-      [matrix selectCellAtRow: 0 column: 0];
-      [matrix setAutoresizingMask: (NSViewMinYMargin | NSViewWidthSizable)];
-      [contents addSubview: matrix];
-      connectionRadios = matrix;
-      RELEASE(matrix);
-
-      // Browser
-      rect.size = windowRect.size;
-      rect.size.height -= 110;
-      rect.origin.y = 28;
-
-      browser = [[NSBrowser alloc] initWithFrame: rect];
-      [browser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [browser setMaxVisibleColumns: 1];
-      [browser setAllowsMultipleSelection: NO];
-      [browser setHasHorizontalScroller: NO];
-      [browser setTitled: NO];
-      [browser setDelegate: self];
-
-      [contents addSubview: browser];
-      RELEASE(browser);
-
-      rect = windowRect;
-      rect.size.height = 22;
-      rect.origin.y = 0;
-      editNameTF = text = [[NSTextField alloc] initWithFrame: rect];
-      [contents addSubview: text];
-      RELEASE(text);
-
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: @"Add"];
-      [okButton setEnabled: YES];
-
-      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [revertButton setAction: @selector(revert:)];
-      [revertButton setTarget: self];
-      [revertButton setTitle: @"Revert"];
-      [revertButton setEnabled: YES];
-    }
-  return self;
-}
-
-- (void) ok: (id)sender
-{
-  GormClassManager	*cm = [(id)[(id)NSApp activeDocument] classManager];
-
-  if (editClass == NO)
-    {
-      int i;
-      NSString	*name;
-      NSArray   *connections;
-      NSString	*cn = [object className];
-      NSString  *oldName = [[browser selectedCell] stringValue];
-
-      name = [self identifierString: [editNameTF stringValue]];
-
-      switch (editActions)
-	{ // Rename
-	  case 0: // outlets
-
-	    [editNameTF setStringValue: name];
-	    if (name != nil && ![name isEqualToString: @""])
-	      {
-		NSLog(@"rename old outlet %@ to %@", oldName, name);
-		[cm removeOutlet: oldName forObject: object];
-		[cm addOutlet: name forObject: object];
-		ASSIGN(outlets, [cm allOutletsForClassNamed: cn]);
-		[browser reloadColumn: 0];
-		
-		/* Now check if this is connected to anything and make sure
-		   the connection changes */
-		connections = [[(id<IB>)NSApp activeDocument] allConnectors];
-		for (i = 0; i < [connections count]; i++)
-		  {
-		    id<IBConnectors>	con = [connections objectAtIndex: i];
-		    
-		    if ([con class] == [NSNibOutletConnector class]
-			&& [[con label] isEqual: oldName])
-		      {
-			[con setLabel: name];
-			break;
-		      }
-		  }
-	      }
-	    break;
-
-	  default: // actions
-	    name = [name stringByAppendingString: @":"];
-	    [editNameTF setStringValue: name];
-	    NSLog(@"rename old outlet %@ to %@ (not implemented)", 
-		  oldName, name);
-	    break;
-	}
-    }
-}
-
-- (void) revert: (id)sender
-{
-  GormClassManager	*cm = [(id)[(id)NSApp activeDocument] classManager];
-  NSString		*name;
-
-  if (editClass == NO)
-    {
-      NSString	*cn = [object className];
-
-      switch (editActions)
-	{ // Add
-	  case 0: // outlets
-	    name = [self identifierString: [editNameTF stringValue]];
-	    [editNameTF setStringValue: name];
-	    NSLog(@"add outlet : %@", name);
-
-	    if (name != nil && ![name isEqualToString: @""])
-	      {
-		NSArray		*classOutlets;
-
-		classOutlets = [cm allOutletsForClassNamed: cn];
-
-		if ([classOutlets containsObject: name] == NO)
-		  {
-		    GormClassManager	*m = [NSApp classManager];
-
-		    [cm addOutlet: name forObject: object];
-		    ASSIGN(outlets, [m allOutletsForClassNamed: cn]);
-		    [browser reloadColumn: 0];
-		  }
-	      }
-	    break;
-
-	  default: // actions
-	    name = [self identifierString: [editNameTF stringValue]];
-	    name = [name stringByAppendingString: @":"];
-	    [editNameTF setStringValue: name];
-	    NSLog(@"add action : %@", name);
-
-	    if (name != nil && ![name isEqualToString: @""])
-	      {
-		NSArray	*classActions;
-
-		classActions = [cm allActionsForClassNamed: cn];
-		if ([classActions containsObject: name] == NO)
-		  {
-		    GormClassManager	*m = [NSApp classManager];
-
-		    [cm addAction: name forObject: object];
-		    ASSIGN(actions, [m allActionsForClassNamed: cn]);
-		    [browser reloadColumn: 0];
-		  }
-	      }
-	    break;
-	  }
-    }
-}
-
-- (id) setActions: (id)sender
-{
-  if (editActions == NO)
-    {
-      editActions = YES;
-      [self updateButtons];
-      [browser reloadColumn: 0];
-    }
-  return self;
-}
-
-- (void) setObject: (id)anObject
-{
-  //NSLog(@"class inspector : %@", anObject);
-  if (anObject != nil && anObject != object
-    && [anObject isKindOfClass: [GormClassProxy class]])
-    {
-      NSString	*cn = [anObject className];
-
-      ASSIGN(object, anObject);
-      ASSIGN(actions, [[NSApp classManager] allActionsForClassNamed: cn]);
-      ASSIGN(outlets, [[NSApp classManager] allOutletsForClassNamed: cn]);
-      //NSLog(@"%@", actions);
-      //[browser loadColumnZero];
-      [browser reloadColumn: 0];
-      [self updateButtons];
-    }
-}
-
-- (id) setOutlets: (id)sender
-{
-  if (editActions == YES)
-    {
-      editActions = NO;
-      [self updateButtons];
-      [browser reloadColumn: 0];
-    }
-  return self;
-}
-
-- (void) changeSuperClass: (id)sender
-{
-  GormClassManager *cm = [(id)[(id)NSApp activeDocument] classManager];
-  NSLog(@"change superclass");
-
-  if ([cm setSuperClassNamed: [sender title]
-    forClassNamed: [object className]] == NO)
-    {
-      NSRunAlertPanel(@"Error", @"Cyclic definition", @"OK", NULL, NULL);
-      [self updateButtons];
-    }
-}
-
-- (void) renameClass: (id)sender
-{
-  GormClassManager	*cm = [(id)[(id)NSApp activeDocument] classManager];
-  NSString		*newName;
-
-  NSLog(@"rename class : Attention, the current implementation won't "
-    @"rename classes for objects already instantiated !");
-
-  newName = [self identifierString: [classNameTF stringValue]];
-  if (newName != nil && [newName isEqualToString: @""] == NO)
-    {
-      if ([cm renameClassNamed: [object className] newName: newName])
-	{
-	  GormClassProxy	*cp;
-
-	  cp = [[GormClassProxy alloc] initWithClassName: newName];
-	  [self setObject: cp];
-	  RELEASE(cp);
-	}
-    }
-  else
-    {
-      [classNameTF setStringValue: [object className]];
-    }
-}
-
-/*
- * Produce identifier string byn removing illegal characters
- * and leading numerics
- */
-- (NSString*) identifierString: (NSString*)str
-{
-  static NSCharacterSet	*illegal = nil;
-  static NSCharacterSet	*numeric = nil;
-  NSRange		r;
-  NSMutableString	*m;
-
-  if (illegal == nil)
-    {
-      illegal = [[NSCharacterSet characterSetWithCharactersInString:
-	@"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
-	invertedSet];
-      numeric = [NSCharacterSet characterSetWithCharactersInString:
-	@"0123456789"];
-      RETAIN(illegal); 
-      RETAIN(numeric); 
-    }
-  if (str == nil)
-    {
-      return nil;
-    }
-  m = [str mutableCopy];
-  r = [str rangeOfCharacterFromSet: illegal];
-  while (r.length > 0)
-    {
-      [m deleteCharactersInRange: r];
-      r = [m rangeOfCharacterFromSet: illegal];
-    }
-  r = [str rangeOfCharacterFromSet: numeric];
-  while (r.length > 0 && r.location == 0)
-    {
-      [m deleteCharactersInRange: r];
-      r = [m rangeOfCharacterFromSet: numeric];
-    }
-  str = [m copy];
-  RELEASE(m);
-  AUTORELEASE(str);
-
-  return str;
-}
-
-- (void) updateButtons
-{
-  GormClassManager *cm = [(id)[(id)NSApp activeDocument] classManager];
-  /*if (editClass == YES)
-    {
-      [okButton setTitle: @"Rename Class"];
-      [revertButton setTitle: @"Add Class"];
-      }*/
-
-  if (editActions == YES)
-    {
-      [okButton setTitle: @"Rename Action"];
-      [revertButton setTitle: @"Add Action"];
-    }
-  else
-    {
-      [okButton setTitle: @"Rename Outlet"];
-      [revertButton setTitle: @"Add Outlet"];
-    }
-
-  [classNameTF setStringValue: [object className]];
-
-  [superClassPU removeAllItems];
-  //[superClassPU addItemWithTitle: @"NSObject"]; // now done in ClassManager
-  [superClassPU addItemsWithTitles: [cm allClassNames]];
-  [superClassPU selectItemWithTitle:
-    [cm superClassNameForClassNamed: [object className]]];
-}
-
-- (BOOL) wantsButtons
-{
-  return YES;
-}
-@end
-

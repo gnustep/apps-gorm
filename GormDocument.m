@@ -234,7 +234,6 @@ static NSImage	*classesImage = nil;
 	  [self attachObject: [anObject documentView]
 		toParent: aParent];
 	}
-
     }
 }
 
@@ -249,6 +248,80 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) _replaceObjectsWithTemplates
+{
+  if(![classManager isCustomClassMapEmpty])
+    {
+      NSEnumerator *en = [nameTable keyEnumerator];
+      NSString *key = nil;
+      
+      // initialize the holding space for the objects to be replaced...
+      // tempNameTable = [NSMutableDictionary dictionary];
+      while((key = [en nextObject]) != nil)
+	{
+	  id obj = [nameTable objectForKey: key];
+	  id template = nil;
+	  NSString *className = [classManager customClassForObject: key];
+	  
+	  [tempNameTable setObject: obj forKey: key]; // save the old object
+	  NSLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
+	  if(className != nil)
+	    {
+	      // The order in which these are handled is important.  The mutually
+	      // exclusive conditions below need to be evaluated in sequence to determine
+	      // which template class should be used.
+
+	      if([obj isKindOfClass: [NSWindow class]])
+		{
+		  BOOL isVisible = [self objectIsVisibleAtLaunch: obj];
+		  template = [[GormNSWindowTemplate alloc] initWithObject: obj
+							   className: className];
+		  [self setObject: obj isVisibleAtLaunch: NO];
+		  [self setObject: template isVisibleAtLaunch: isVisible];
+		}
+	      else if([obj isKindOfClass: [NSTextView class]])
+		{
+		  template = [[GormNSTextViewTemplate alloc] initWithObject: obj
+							     className: className];
+		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		}
+	      else if([obj isKindOfClass: [NSText class]])
+		{
+		  template = [[GormNSTextTemplate alloc] initWithObject: obj
+							 className: className];
+		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		}
+	      else if([obj isKindOfClass: [NSButton class]])
+		{
+		  template = [[GormNSButtonTemplate alloc] initWithObject: obj
+							   className: className];
+		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		  NSLog(@"window = %@",[template window]);
+		  [[template window] update];
+		}
+	      else if([obj isKindOfClass: [NSControl class]])
+		{
+		  template = [[GormNSControlTemplate alloc] initWithObject: obj
+							    className: className];
+		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		}
+	      else if([obj isKindOfClass: [NSView class]])
+		{
+		  template = [[GormNSViewTemplate alloc] initWithObject: obj
+							 className: className];
+		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		}
+	      else if([obj isKindOfClass: [NSMenu class]])
+		{
+		  template = [[GormNSMenuTemplate alloc] initWithObject: obj
+							 className: className];
+		}
+	      [nameTable setObject: template forKey: key];
+	    }
+	}
+    }
+}
+
 - (void) beginArchiving
 {
   NSEnumerator		*enumerator;
@@ -259,6 +332,7 @@ static NSImage	*classesImage = nil;
    * Map all connector sources and destinations to their name strings.
    * Deactivate editors so they won't be archived.
    */
+
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
@@ -283,6 +357,13 @@ static NSImage	*classesImage = nil;
 	}
     }
   [connections removeObjectsInArray: savedEditors];
+
+  /*
+   * Method to replace custom objects with templates for archiving.
+   */
+  [self _replaceObjectsWithTemplates];
+  NSLog(@"*** customClassMap = %@",[classManager customClassMap]);
+  [nameTable setObject: [classManager customClassMap] forKey: @"GSCustomClassMap"];
 
   /*
    * Remove objects and connections that shouldn't be archived.
@@ -323,13 +404,20 @@ static NSImage	*classesImage = nil;
 
   switch (tag)
     {
-      case 0: // objects
-	[selectionBox setContentView: scrollView];
-	break;
-
-      case 3: // classes
-	[selectionBox setContentView: classesScrollView];
-	break;
+    case 0: // objects
+      [selectionBox setContentView: scrollView];
+      break;
+      /*
+    case 1: // images
+      [selectionBox setContentView: imagesScrollView];
+      break;
+    case 2: // sounds
+      [selectionBox setContentView: soundsScrollView];
+      break;
+      */
+    case 3: // classes
+      [selectionBox setContentView: classesScrollView];
+      break;
     }
 }
 
@@ -883,7 +971,7 @@ static NSImage	*classesImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
-  if ([(id<IB>)NSApp selectionOwner] == anEditor)
+  if ([(id<IBSelectionOwners>)NSApp selectionOwner] == anEditor)
     {
       [self resignSelectionForEditor: anEditor];
     }
@@ -959,6 +1047,52 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) _replaceTemplatesWithObjects
+{
+  NSEnumerator *en = [tempNameTable keyEnumerator];
+  NSString *key = nil;
+  
+  while((key = [en nextObject]) != nil)
+    {
+      id obj = [tempNameTable objectForKey: key];
+      id template = [nameTable objectForKey: key];
+      
+      if([template isKindOfClass: [GormNSWindowTemplate class]])
+	{
+	  BOOL isVisible = [self objectIsVisibleAtLaunch: template];
+	  [obj setContentView: [template contentView]];
+	  [self setObject: template isVisibleAtLaunch: NO];
+	  [self setObject: obj isVisibleAtLaunch: isVisible];
+	}
+      else if([template isKindOfClass: [GormNSTextViewTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      else if([template isKindOfClass: [GormNSTextTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      else if([template isKindOfClass: [GormNSButtonTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      else if([template isKindOfClass: [GormNSControlTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      else if([template isKindOfClass: [GormNSViewTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      else if([template isKindOfClass: [GormNSMenuTemplate class]])
+	{
+	  [[template superview] replaceSubview: template with: obj];
+	}
+      [nameTable setObject: obj forKey: key];
+    }
+  [tempNameTable removeAllObjects];
+}
+
 - (void) endArchiving
 {
   NSEnumerator		*enumerator;
@@ -980,6 +1114,12 @@ static NSImage	*classesImage = nil;
       [nameTable setObject: fontManager forKey: @"NSFont"];
       NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
     }
+
+  /*
+   * Method to replace custom templates with objects for archiving.
+   */
+  [self _replaceTemplatesWithObjects];
+  [nameTable removeObjectForKey: @"GSCustomClassMap"];
 
   /*
    * Map all connector source and destination names to their objects.
@@ -1165,7 +1305,14 @@ static NSImage	*classesImage = nil;
       objToName = NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
 	NSObjectMapValueCallBacks, 128, [self zone]);
 
+      // for saving objects when the gorm file is persisted.  Used for templates.
+      tempNameTable = [[NSMutableDictionary alloc] initWithCapacity: 8];
+
+      // for saving the editors when the gorm file is persisted.
       savedEditors = [NSMutableArray new];
+
+      // defferred windows for this document...
+      deferredWindows = [NSMutableArray new];
 
       style = NSTitledWindowMask | NSClosableWindowMask
 	| NSResizableWindowMask | NSMiniaturizableWindowMask;
@@ -1467,6 +1614,16 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"NSPopUpButton" asClassName: @"GormNSPopUpButton"];
   [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
 
+  // templates
+  [u decodeClassName: @"NSWindowTemplate" asClassName: @"GormNSWindowTemplate"];
+  [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
+  [u decodeClassName: @"NSTextTemplate" asClassName: @"GormNSTextTemplate"];
+  [u decodeClassName: @"NSControlTemplate" asClassName: @"GormNSControlTemplate"];
+  [u decodeClassName: @"NSButtonTemplate" asClassName: @"GormNSButtonTemplate"];
+  [u decodeClassName: @"NSTextViewTemplate" asClassName: @"GormNSTextViewTemplate"];
+  [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
+  [u decodeClassName: @"NSMenuTemplate" asClassName: @"GormNSMenuTemplate"];
+
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
     {
@@ -1565,6 +1722,13 @@ static NSImage	*classesImage = nil;
   [window setTitleWithRepresentedFilename: documentPath];
   [nc postNotificationName: IBDidOpenDocumentNotification
 		    object: self];
+
+  // get the custom class map and set it into the class manager...
+  NSLog(@"GSCustomClassMap = %@",[[c nameTable] objectForKey: @"GSCustomClassMap"]);
+  [classManager setCustomClassMap: [[c nameTable] objectForKey: @"GSCustomClassMap"]];
+
+  NSLog(@"nameTable = %@",[c nameTable]);
+
   return self;
 }
 
@@ -1930,6 +2094,26 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) setWindow: (id)anObject isDeffered: (BOOL)flag
+{
+  if (flag == YES)
+    {
+      if ([deferredWindows containsObject: anObject] == NO)
+	{
+	  [deferredWindows addObject: anObject];
+	}
+    }
+  else
+    {
+      [deferredWindows removeObject: anObject];
+    }
+}
+
+- (BOOL) isWindowDeferred: (id)aWindow
+{
+  return [deferredWindows containsObject: aWindow];
+}
+
 /*
  * To revert to a saved version, we actually load a new document and
  * close the original document, returning the id of the new document.
@@ -2026,8 +2210,8 @@ static NSImage	*classesImage = nil;
 
   [self beginArchiving];
 
-  //NSLog(@"nametable : %@", nameTable);
-  //NSLog(@"connections : %@", connections);
+  NSLog(@"nametable : %@", nameTable);
+  NSLog(@"connections : %@", connections);
 
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
@@ -2048,6 +2232,25 @@ static NSImage	*classesImage = nil;
 	      intoClassName: @"NSPopUpButton"];
   [archiver encodeClassName: @"GormNSPopUpButtonCell" 
 	      intoClassName: @"NSPopUpButtonCell"];
+
+  // templates
+  [archiver encodeClassName: @"GormNSWindowTemplate" 
+	    intoClassName: @"NSWindowTemplate"];
+  [archiver encodeClassName: @"GormNSViewTemplate" 
+	    intoClassName: @"NSViewTemplate"];
+  [archiver encodeClassName: @"GormNSTextTemplate" 
+	    intoClassName: @"NSTextTemplate"];
+  [archiver encodeClassName: @"GormNSControlTemplate" 
+	    intoClassName: @"NSControlTemplate"];
+  [archiver encodeClassName: @"GormNSButtonTemplate" 
+	    intoClassName: @"NSButtonTemplate"];
+  [archiver encodeClassName: @"GormNSTextViewTemplate" 
+	    intoClassName: @"NSTextViewTemplate"];
+  [archiver encodeClassName: @"GormNSViewTemplate" 
+	    intoClassName: @"NSViewTemplate"];
+  [archiver encodeClassName: @"GormNSMenuTemplate" 
+	    intoClassName: @"NSMenuTemplate"];
+
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
@@ -2351,49 +2554,51 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       forTableColumn: (NSTableColumn *)aTableColumn
 	      byItem: (id)item
 {
+  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
+
   if([item isKindOfClass: [GormOutletActionHolder class]])
     {
       if(![anObject isEqualToString: @""])
 	{
 	  NSString *name = [item getName];
-	  if([anOutlineView editType] == Actions)
+	  if([gov editType] == Actions)
 	    {
 	      NSString *formattedAction = [self _formatAction: anObject];
 	      if(![classManager isAction: formattedAction 
-				ofClass: [anOutlineView itemBeingEdited]])
+				ofClass: [gov itemBeingEdited]])
 		{
 		  [classManager replaceAction: name 
 				withAction: formattedAction 
-				forClassNamed: [anOutlineView itemBeingEdited]];
-		  [item setName: formattedAction];
+				forClassNamed: [gov itemBeingEdited]];
+		  [(GormOutletActionHolder *)item setName: formattedAction];
 		}
 	      else
 		{
 		  NSString *message = [NSString stringWithFormat: 
 						  @"The class %@ already has an action named %@",
-						[anOutlineView itemBeingEdited],formattedAction];
+						[gov itemBeingEdited],formattedAction];
 		  NSRunAlertPanel(@"Problem Adding Action",
 				  message,nil,nil,nil);
 				  
 		}
 	    }
-	  else if([anOutlineView editType] == Outlets)
+	  else if([gov editType] == Outlets)
 	    {
 	      NSString *formattedOutlet = [self _formatOutlet: anObject];
 	      
 	      if(![classManager isOutlet: formattedOutlet 
-				ofClass: [anOutlineView itemBeingEdited]])
+				ofClass: [gov itemBeingEdited]])
 		{
 		  [classManager replaceOutlet: name 
 				withOutlet: formattedOutlet 
-				forClassNamed: [anOutlineView itemBeingEdited]];
-		  [item setName: formattedOutlet];
+				forClassNamed: [gov itemBeingEdited]];
+		  [(GormOutletActionHolder *)item setName: formattedOutlet];
 		}
 	      else
 		{
 		  NSString *message = [NSString stringWithFormat: 
 						  @"The class %@ already has an outlet named %@",
-						[anOutlineView itemBeingEdited],formattedOutlet];
+						[gov itemBeingEdited],formattedOutlet];
 		  NSRunAlertPanel(@"Problem Adding Outlet",
 				  message,nil,nil,nil);
 				  
@@ -2406,10 +2611,10 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       if(![anObject isEqualToString: @""])
 	{
 	  [classManager renameClassNamed: item newName: anObject];
-	  [anOutlineView reloadData];
+	  [gov reloadData];
 	}
     }
-  [anOutlineView setNeedsDisplay: YES];
+  [gov setNeedsDisplay: YES];
 }
 
 - (int) outlineView: (NSOutlineView *)anOutlineView 
@@ -2477,7 +2682,8 @@ numberOfChildrenOfItem: (id)item
 - (NSString *)outlineView: (NSOutlineView *)anOutlineView
      addNewActionForClass: (id)item
 {
-  if(![classManager isCustomClass: [anOutlineView itemBeingEdited]])
+  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
+  if(![classManager isCustomClass: [gov itemBeingEdited]])
     {
       return nil;
     }
@@ -2487,7 +2693,8 @@ numberOfChildrenOfItem: (id)item
 - (NSString *)outlineView: (NSOutlineView *)anOutlineView
      addNewOutletForClass: (id)item		 
 {
-  if(![classManager isCustomClass: [anOutlineView itemBeingEdited]])
+  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
+  if(![classManager isCustomClass: [gov itemBeingEdited]])
     {
       return nil;
     }
@@ -2500,9 +2707,10 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 		 item: (id)item
 {
   BOOL result = NO;
+  GormOutlineView *gov = (GormOutlineView *)outlineView;
 
   NSLog(@"in the delegate %@", [tableColumn identifier]);
-  if(tableColumn == [outlineView outlineTableColumn])
+  if(tableColumn == [gov outlineTableColumn])
     {
       NSLog(@"outline table col");
       if(![item isKindOfClass: [GormOutletActionHolder class]])
@@ -2511,15 +2719,15 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 	}
       else
 	{
-	  id itemBeingEdited = [outlineView itemBeingEdited];
+	  id itemBeingEdited = [gov itemBeingEdited];
 	  if([classManager isCustomClass: itemBeingEdited])
 	    {
-	      if([outlineView editType] == Actions)
+	      if([gov editType] == Actions)
 		{
 		  result = [classManager isAction: [item getName]
 					 ofClass: itemBeingEdited];
 		}
-	      else if([outlineView editType] == Outlets)
+	      else if([gov editType] == Outlets)
 		{
 		  result = [classManager isOutlet: [item getName]
 					 ofClass: itemBeingEdited];
@@ -2548,6 +2756,5 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 
   NSLog(@"all editors %@", set);
 }
-
 @end
 

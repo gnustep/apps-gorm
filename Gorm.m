@@ -24,6 +24,10 @@
 
 #include "GormPrivate.h"
 
+// for templates...
+#include <AppKit/NSControl.h>
+#include <AppKit/NSButton.h>
+
 NSString *IBWillBeginTestingInterfaceNotification
   = @"IBWillBeginTestingInterfaceNotification";
 NSString *IBDidBeginTestingInterfaceNotification
@@ -138,10 +142,341 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
 }
 @end
+
+// add methods to all of the template objects for use
+// in Gorm.
+static NSButtonType _buttonTypeForObject( id button )
+{
+  NSButtonCell *cell;
+  NSButtonType type;
+  int highlight, stateby;
+
+  /* We could be passed the button or the cell */
+  cell = ([button isKindOfClass: [NSButton class]]) ? [button cell] : button;
+
+  highlight = [cell highlightsBy];
+  stateby = [cell showsStateBy];
+  NSDebugLog(@"highlight = %d, stateby = %d",
+    [cell highlightsBy],[cell showsStateBy]);
+  
+  type = NSMomentaryPushButton;
+  if (highlight == NSChangeBackgroundCellMask)
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryLight;
+      else 
+	type = NSOnOffButton;
+    }
+  else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask))
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryPushButton;
+      else
+	type = NSPushOnPushOffButton;
+    }
+  else if (highlight == (NSPushInCellMask | NSContentsCellMask))
+    {
+      type = NSToggleButton;
+    }
+  else if (highlight == NSContentsCellMask)
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryChangeButton;
+      else
+	type = NSToggleButton; /* Really switch or radio. What should it be? */
+    }
+  else
+    {
+      NSDebugLog(@"Ack! no button type");
+    }
+  return type;
+}
+
+@implementation NSWindowTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  NSLog(@"Creating the new object...");
+  [super init];
+  [self setBackgroundColor: [object backgroundColor]];
+  [self setContentView: [object contentView]];
+  [self setFrameAutosaveName: [object frameAutosaveName]];
+  [self setHidesOnDeactivate: [object hidesOnDeactivate]];
+  [self setInitialFirstResponder: [object initialFirstResponder]];
+  [self setAutodisplay: [object isAutodisplay]];
+  [self setReleasedWhenClosed: [object isReleasedWhenClosed]];
+  [self _setVisible: [object isVisible]];
+  [self setTitle: [object title]];
+  [self setFrame: [object frame] display: NO];
+  [self setClassName: name];
+  [object setContentView: nil];
+  [self update];
+  [object update];
+  // [self setDeferFlag: [[(Gorm)NSApp activeDocument] isWindowDeferred: object]];
+
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSViewTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // call the super constructor
+  [self initWithFrame: [object frame]];
+
+  // set the attributes for the view
+  [self setBounds: [object bounds]];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSControlTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // call the super constructor
+  [self initWithFrame: [object frame]];
+
+  // set the attributes for the view
+  [self setBounds: [object bounds]];
+  
+  // set the attributes for the control
+  [self setDoubleValue: [object doubleValue]];
+  [self setFloatValue: [object floatValue]];
+  [self setIntValue: [object intValue]];
+  [self setObjectValue: [object objectValue]];
+  [self setStringValue: [object stringValue]];
+  [self setTag: [object tag]];
+  [self setFont: [object font]];
+  [self setAlignment: [object alignment]];
+  [self setEnabled: [object isEnabled]];
+  [self setContinuous: [object isContinuous]];
+
+  // since only some controls have delegates, we need to test...
+  if([object respondsToSelector: @selector(delegate)])
+      _delegate = [object delegate];
+
+  // since only some controls have data sources, we need to test...
+  if([object respondsToSelector: @selector(dataSource)])
+      _dataSource = [object dataSource];
+
+  // since only some controls have data sources, we need to test...
+  if([object respondsToSelector: @selector(usesDataSource)])
+      _usesDataSource = [object usesDataSource];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSButtonTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // call the super constructor
+  [self initWithFrame: [object frame]];
+
+  // set the attributes for the view
+  [self setBounds: [object bounds]];
+
+  // set the attributes for the control
+  [self setDoubleValue: [object doubleValue]];
+  [self setFloatValue: [object floatValue]];
+  [self setIntValue: [object intValue]];
+  [self setObjectValue: [object objectValue]];
+  [self setStringValue: [object stringValue]];
+  [self setTag: [object tag]];
+  [self setFont: [object font]];
+  [self setAlignment: [object alignment]];
+  [self setEnabled: [object isEnabled]];
+  [self setContinuous: [object isContinuous]];
+
+  // set up template
+  _buttonType = _buttonTypeForObject( object );
+  [self setButtonType: _buttonType];
+  [self setBezelStyle: [object bezelStyle]];
+  [self setBordered: [object isBordered]];
+  [self setAllowsMixedState: [object allowsMixedState]];
+  [self setTitle: [object title]];
+  [self setAlternateTitle: [object alternateTitle]];
+  [self setImage: [object image]];
+  [self setAlternateImage: [object alternateImage]];
+  [self setImagePosition: [object imagePosition]];
+  [self setKeyEquivalent: [object keyEquivalent]];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+
+@implementation NSTextTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // call the super constructor
+  [self initWithFrame: [object frame]];
+
+  // set the attributes for the view
+  [self setBounds: [object bounds]];
+
+  // set the attributes for text
+  [self setBackgroundColor: [object backgroundColor]];
+  [self setDrawsBackground: [object drawsBackground]];
+  [self setEditable: [object isEditable]];
+  [self setSelectable: [object isSelectable]];
+  [self setFieldEditor: [object isFieldEditor]];
+  [self setRichText: [object isRichText]];
+  [self setImportsGraphics: [object importsGraphics]];
+  [self setDelegate: [object delegate]];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSTextViewTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // call the super constructor
+  [self initWithFrame: [object frame]];
+
+  // set the attributes for the view
+  [self setBounds: [object bounds]];
+  [self setFrame: [object frame]];
+
+  // set the attributes for text
+  [self setBackgroundColor: [object backgroundColor]];
+  [self setDrawsBackground: [object drawsBackground]];
+  [self setEditable: [object isEditable]];
+  [self setSelectable: [object isSelectable]];
+  [self setFieldEditor: [object isFieldEditor]];
+  [self setRichText: [object isRichText]];
+  [self setImportsGraphics: [object importsGraphics]];
+  [self setDelegate: [object delegate]];
+
+  // text view
+  [self setRulerVisible: [object isRulerVisible]];
+  [self setInsertionPointColor: [object insertionPointColor]];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSMenuTemplate (GormCustomClassAdditions)
+- (id) initWithObject: (id)object
+	    className: (NSString *)name
+{
+  // copy attributes
+  [self setAutoenablesItems: [object autoenablesItems]];
+  [self setTitle: [object title]];
+
+  [self setClassName: name];
+  _parentClassName = NSStringFromClass([object class]);
+  return self;
+}
+@end
+
+@implementation NSObject (GormCustomClassAdditions)
++ (BOOL) canSubstituteForClass: (Class)aClass
+{
+  // only for now...
+  return NO;
+}
+@end
+
+// Gorm template subclasses to allow persisting and unpersisting from Gorm w/o the
+// class trying to transform itself into the custom class instance.  Instead the
+// class will transform itself into the appropriate parent class which Gorm knows
+// about.
+@implementation GormNSWindowTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj; 
+}
+@end
+
+@implementation GormNSViewTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj;
+}
+@end
+
+@implementation GormNSTextTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj;
+}
+@end
+
+@implementation GormNSControlTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  NSString *name = [[(Gorm *)NSApp activeDocument] nameForObject: self];
+  NSLog(@"**** NAME: %@",name);
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj;
+}
+@end
+
+@implementation GormNSButtonTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  NSString *name = [[(Gorm *)NSApp activeDocument] nameForObject: self];
+  NSLog(@"**** NAME: %@ %@",name, self);   
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  NSLog(@"********  OBJECT: %@",obj);
+  return obj;
+}
+@end
+
+@implementation GormNSTextViewTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj;
+}
+@end
+
+@implementation GormNSMenuTemplate
+- awakeAfterUsingCoder: (NSCoder *)coder
+{
+  id obj = nil;
+  [self setClassName: _parentClassName];
+  obj = RETAIN([self instantiateObject: coder]);
+  return obj;
+}
+@end
+
+// define the class proxy...
 @implementation GormClassProxy
-
-
-
 - (id) initWithClassName: (NSString*)n
 {
   self = [super init];

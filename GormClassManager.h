@@ -10,21 +10,22 @@
 {
   NSMutableDictionary	*classInformation;
   NSMutableArray        *customClasses;
+  NSMutableDictionary   *customClassMap;
 }
-- (void) addAction: (NSString*)anAction forObject: (NSObject*)anObject;
-- (void) addOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
+- (void) addAction: (NSString*)anAction forObject: (id)anObject;
+- (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject;
 - (NSArray*) allActionsForClassNamed: (NSString*)className;
-- (NSArray*) allActionsForObject: (NSObject*)anObject;
+- (NSArray*) allActionsForObject: (id)anObject;
 - (NSArray*) allClassNames;
 - (NSArray*) allOutletsForClassNamed: (NSString*)className;
-- (NSArray*) allOutletsForObject: (NSObject*)anObject;
-- (NSArray*) extraActionsForObject: (NSObject*)anObject;
-- (NSArray*) extraOutletsForObject: (NSObject*)anObject;
+- (NSArray*) allOutletsForObject: (id)anObject;
+- (NSArray*) extraActionsForObject: (id)anObject;
+- (NSArray*) extraOutletsForObject: (id)anObject;
 - (NSArray*) subClassesOf: (NSString *)superclass;
 - (NSArray*) customSubClassesOf: (NSString *)superclass;
 - (NSArray*) allCustomSubclassesOf: (NSString *)superclass;
-- (void) removeAction: (NSString*)anAction forObject: (NSObject*)anObject;
-- (void) removeOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
+- (void) removeAction: (NSString*)anAction forObject: (id)anObject;
+- (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject;
 - (void) removeAction: (NSString*)anAction fromClassNamed: (NSString*)anObject;
 - (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString*)anObject;
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className;
@@ -56,6 +57,16 @@
 - (BOOL) isCustomClass: (NSString *)className;
 - (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
 - (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
+
+// custom class support...
+- (NSString *) customClassForObject: (id)object;
+- (void) setCustomClass: (NSString *)className
+              forObject: (id)object;
+- (void) removeCustomClassForObject: (id) object;
+- (NSDictionary *) customClassMap;
+- (void) setCustomClassMap: (NSDictionary *)dict;
+- (BOOL) isCustomClassMapEmpty;
+- (NSString *) nonCustomSuperClassOf: (NSString *)className;
 @end
 
 #endif
