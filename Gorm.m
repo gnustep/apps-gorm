@@ -32,8 +32,7 @@
 
 NSDate	*startDate;
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
-// NSString *GormAddedActionNotification = @"GormAddedActionNotification";
-// NSString *GormAddedOutletNotification = @"GormAddedOutletNotification";
+NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
 
 @class	InfoPanel;
 
@@ -947,8 +946,6 @@ static NSButtonType _buttonTypeForObject( id button )
 
       [self setMainMenu: mainMenu];
 
-      DESTROY(testContainer);
-
       isTesting = NO;
 
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
@@ -1469,7 +1466,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
 			object: self];
-
+ 
       RELEASE(d);
       return self;
     }

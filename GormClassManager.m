@@ -38,6 +38,9 @@
 - (void) _touch
 {
   id<IBDocuments>        doc = [(id<IB>)NSApp activeDocument];
+  [[NSNotificationCenter defaultCenter] 
+    postNotificationName: GormDidModifyClassNotification
+    object: self];
   [doc touch];
 }
 
@@ -171,7 +174,7 @@
 	  RELEASE(classInfo);
 
 	  // copy all actions from the class imported to the first responder
-	  while(action = [e nextObject])
+	  while((action = [e nextObject]))
 	    {
 	      [self addAction: action forClassNamed: @"FirstResponder"];
 	    }

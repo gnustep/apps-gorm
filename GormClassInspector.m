@@ -31,6 +31,7 @@
 #include "GormPrivate.h"
 #include "GormClassManager.h"
 #include "GormDocument.h"
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 NSNotificationCenter *nc = nil;
 
@@ -155,6 +156,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  NSLog(@"Could not open gorm GormClassInspector");
 	  return nil;
 	}
+
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: GormDidModifyClassNotification
+	       object: nil];
+
     }
   return self;
 }
@@ -256,6 +263,15 @@ objectValueForTableColumn: (NSTableColumn *)tc
   return [theobject className];
 }
 
+- (void) handleNotification: (NSNotification *)notification
+{
+  if([notification object] == classManager)
+    {
+      [self _refreshView];
+    }
+}
+
+// table delegate/data source methods...
 - (BOOL)    tableView: (NSTableView *)tableView
 shouldEditTableColumn: (NSTableColumn *)aTableColumn
 		  row: (int)rowIndex

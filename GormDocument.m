@@ -1568,7 +1568,12 @@ static NSImage	*classesImage = nil;
 	     selector: @selector(handleNotification:)
 		 name: IBInspectorDidModifyObjectNotification
 	       object: nil];
-
+      /*
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: GormDidModifyClassNotification
+	       object: nil];
+      */
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 						 mode: NSRadioModeMatrix
 					    cellClass: [GormDisplayCell class]

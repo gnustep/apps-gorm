@@ -58,4 +58,6 @@
 - (void) removeOutlet: (id)sender;
 - (void) select: (id)sender;
 - (NSString *) _currentClass;
+- (void) _refreshView;
+- (void) handleNotification: (NSNotification *)notification;
 @end
