@@ -99,9 +99,18 @@
   id<IBEditors> object = [notification object];
   if(object != nil)
     {
-      id edited = [object editedObject];
-      if(self != edited && [self _ownedByPopUp])
+      // don't call, unless it does respond...
+      if([(id)object respondsToSelector: @selector(editedObject)])
 	{
+	  id edited = [object editedObject];
+	  if(self != edited && [self _ownedByPopUp])
+	    {
+	      [self close];
+	    }
+	}
+      else
+	{
+	  // Close anyway if the editor doesn't respond.
 	  [self close];
 	}
     }

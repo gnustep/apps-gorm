@@ -1,3 +1,10 @@
+2004-08-08 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormNSMenu.m: Changed the code in 
+	handleNotification to not call edited object blindly.
+	It now checks to make sure the object responds to the 
+	message before calling.
+	
 2004-08-08 13:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindow.m: Removed some debugging
