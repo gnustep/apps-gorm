@@ -1,5 +1,11 @@
 2003-08-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormInternalViewEditor.m: Added initilization for variable r so
+	that it is not used uninitialized if the first event is not 
+	NSLeftMouseUp.
+
+2003-08-10  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocuments.m: -[GormDocument
 	pasteType:fromPasteBoard:parent:] Added check to determine if
 	frame is responded to by the object being copied.  This was

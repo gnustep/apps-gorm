@@ -537,7 +537,7 @@ static NSImage *horizontalImage;
 	// BOOL first = YES;
 	NSRect oldRect = NSZeroRect;
 	NSPoint p, oldp;
-	NSRect r;
+	NSRect r = NSZeroRect;
 	float x, y, w, h;
 	
 	oldp = [self convertPoint: [theEvent locationInWindow] fromView: nil];
