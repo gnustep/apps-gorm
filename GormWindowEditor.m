@@ -1060,6 +1060,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSEnumerator	*enumerator;
       NSView		*sub;
 
+      [self makeSelectionVisible: NO];
       /*
        * Ask the document to get the dragged views from the pasteboard and add
        * them to it's collection of known objects.
@@ -1082,6 +1083,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [sub setFrame: rect];
 	  [self addSubview: sub];
 	}
+      [self selectObjects: views];
+      [self displayIfNeeded];
+      [self makeSelectionVisible: YES];
     }
   else if (dragType == GormLinkPboardType)
     {

@@ -341,6 +341,11 @@ static NSImage	*classesImage = nil;
   return [aPasteboard setData: obj forType: aType];
 }
 
+- (void) pasteboardChangedOwner: (NSPasteboard*)sender
+{
+  NSLog(@"Owner changed for %@", sender);
+}
+
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -468,10 +473,18 @@ static NSImage	*classesImage = nil;
       [link setDestination: editor];
       [connections addObject: link];
       RELEASE(link);
-      if (anEditor != nil)
+      if (anEditor == nil)
 	{
 	  /*
-	   * This editor has a parent - so link to it.
+	   * By default all editors are owned by the top-level editor of
+	   * the document.
+           */
+	  anEditor = objectsView;
+	}
+      if (anEditor != editor)
+	{
+	  /*
+	   * Link to the parent of the editor.
 	   */
 	  link = [GormEditorToParent new];
 	  [link setSource: editor];
@@ -1010,7 +1023,7 @@ static NSImage	*classesImage = nil;
   id<IBEditors>	e = [self editorForObject: anObject create: YES];
   id<IBEditors>	p = [self parentEditorForEditor: e];
   
-  if (p != nil)
+  if (p != nil && p != objectsView)
     {
       [self openEditorForObject: [p editedObject]];
     }
@@ -1048,12 +1061,20 @@ static NSImage	*classesImage = nil;
         fromPasteboard: (NSPasteboard*)aPasteboard
                 parent: (id)parent
 {
-  NSData	*data = [aPasteboard dataForType: aType];
-  NSArray	*objects = [NSUnarchiver unarchiveObjectWithData: data];
-  NSEnumerator	*enumerator = [objects objectEnumerator];
+  NSData	*data;
+  NSArray	*objects;
+  NSEnumerator	*enumerator;
   NSPoint	filePoint;
   NSPoint	screenPoint;
 
+  data = [aPasteboard dataForType: aType];
+  if (data == nil)
+    {
+      NSLog(@"Pasteboard %@ doesn't contain data of %@", aPasteboard, aType);
+      return nil;
+    }
+  objects = [NSUnarchiver unarchiveObjectWithData: data];
+  enumerator = [objects objectEnumerator];
   filePoint = [window mouseLocationOutsideOfEventStream];
   screenPoint = [window convertBaseToScreen: filePoint];
 

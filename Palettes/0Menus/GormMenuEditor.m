@@ -299,8 +299,10 @@
     {
       /*
        * The mouse down wasn't over the menu items, so we just let the menu
-       * handle it.
+       * handle it - but make sure the menu is selected in the editor first.
        */
+      [[document parentEditorForEditor: self] selectObjects:
+	[NSArray arrayWithObject: edited]];
       [hit mouseDown: theEvent];
     }
 }
@@ -674,7 +676,7 @@
       loc.y += 10;
       pos = [rep indexOfItemAtPoint: loc] + 1;
 
-NSLog(@"Drop at index: %d (%@)", pos, NSStringFromPoint(loc));
+      [self makeSelectionVisible: NO];
       /*
        * Ask the document to get the dragged views from the pasteboard and add
        * them to it's collection of known objects.
@@ -698,6 +700,8 @@ NSLog(@"Drop at index: %d (%@)", pos, NSStringFromPoint(loc));
 	}
       [edited sizeToFit];
       [edited display];
+      [self selectObjects: items];
+      [self makeSelectionVisible: YES];
     }
   else if (dragType == GormLinkPboardType)
     {
