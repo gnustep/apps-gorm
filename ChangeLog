@@ -1,3 +1,7 @@
+2004-05-15 23:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageInspector.gorm: Repositioned fields.
+	
 2004-05-15 16:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument init] changed initialization
