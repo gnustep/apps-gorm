@@ -122,3 +122,144 @@
 }
 
 @end
+
+@implementation	NSStepper (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormStepperAttributesInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return nil;
+}
+@end
+
+@interface GormStepperAttributesInspector : IBInspector
+{
+  NSTextField *valueField;
+  NSTextField *minimumValueField;
+  NSTextField *maximumValueField;
+  NSTextField *incrementValueField;
+  NSButton *autorepeatButton;
+  NSButton *valueWrapsButton;
+}
+@end
+
+@implementation GormStepperAttributesInspector
+
+- (void) _setValuesFromControl: control
+{
+  if (control == valueField)
+    {
+      [object setDoubleValue:[control doubleValue]];
+      [object setNeedsDisplay: YES];
+    }
+  else if (control == minimumValueField)
+    {
+      [object setMinValue:[control doubleValue]];
+      [object setNeedsDisplay: YES];
+    }
+  else if (control == maximumValueField)
+    {
+      [object setMaxValue:[control doubleValue]];
+      [object setNeedsDisplay: YES];
+    }
+  else if (control == incrementValueField)
+    {
+      [object setIncrement:[control doubleValue]];
+      [object setNeedsDisplay: YES];
+    }
+  else if (control == autorepeatButton)
+    {
+      switch ([control state])
+	{
+	case 0:
+	  [object setAutorepeat: NO];
+	  break;
+	case 1:
+	  [object setAutorepeat: YES];
+	  break;
+	}
+    }
+  else if (control == valueWrapsButton)
+    {
+      switch ([control state])
+	{
+	case 0:
+	  [object setValueWraps: NO];
+	  break;
+	case 1:
+	  [object setValueWraps: YES];
+	  break;
+	}
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  if (anObject != object)
+    return;
+
+  [valueField setDoubleValue: [anObject doubleValue]];
+  [minimumValueField setDoubleValue: [anObject minValue]];
+  [maximumValueField setDoubleValue: [anObject maxValue]];
+  if ([object autorepeat])
+    [autorepeatButton setState: 1];
+  else
+    [autorepeatButton setState: 0];
+  if ([object valueWraps])
+    [valueWrapsButton setState: 1];
+  else
+    [valueWrapsButton setState: 0];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormStepperInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormStepperAttributesInspector");
+      return nil;
+    }
+
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: valueField];
+  [self _setValuesFromControl: minimumValueField];
+  [self _setValuesFromControl: maximumValueField];
+  [self _setValuesFromControl: incrementValueField];
+  [self _setValuesFromControl: autorepeatButton];
+  [self _setValuesFromControl: valueWrapsButton];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
+@end

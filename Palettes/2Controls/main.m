@@ -152,6 +152,11 @@
   [contents addSubview: v];
   RELEASE(v);
 
+  // Stepper
+  v = [[NSStepper alloc] initWithFrame: NSMakeRect(172, 56, 40, 23)];
+  [contents addSubview: v];
+  RELEASE(v);
+
   // TODO: Add CustomView as soon as I figure out how it works.
 }
 @end
