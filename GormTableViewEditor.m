@@ -262,8 +262,8 @@ static NSColor *_oldColor;
  */
 - (void) selectObjects: (NSArray*)anArray
 {
-  NSLog(@"selectObjects");
   id	obj = [anArray lastObject];
+  NSLog(@"selectObjects");
   [self makeSelectionVisible: NO];
   selected = obj;
   [document setSelectionFromEditor: self];
