@@ -1,3 +1,8 @@
+Fri Feb  4 11:10:59 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Palettes/0Menu/GormMenuInspectors.m: Added code for setting
+	key-equivalent in menu item inspector.
+
 Thu Feb  3 16:16:59 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Gorm.m: tidied start/end testing.

@@ -106,6 +106,7 @@
 @interface GormMenuItemAttributesInspector : IBInspector
 {
   NSTextField	*titleText;
+  NSTextField	*shortCut;
 }
 @end
 
@@ -113,7 +114,19 @@
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
-  [object setTitle: [titleText stringValue]];
+  id	o = [aNotification object];
+
+  if (o == titleText)
+    {
+      [object setTitle: [titleText stringValue]];
+    }
+  if (o == shortCut)
+    {
+      NSString	*s = [[shortCut stringValue] stringByTrimmingSpaces];
+
+      [object setKeyEquivalent: s];
+    }
+  [[object menu] display];
 }
 
 - (void) dealloc
@@ -138,7 +151,7 @@
       contents = [window contentView];
 
       title
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,70,20)];
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,50,20)];
       [title setEditable: NO];
       [title setSelectable: NO];
       [title setBezeled: NO];
@@ -154,6 +167,24 @@
       [titleText setDelegate: self];
       [contents addSubview: titleText];
       RELEASE(titleText);
+
+      title
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-60,70,20)];
+      [title setEditable: NO];
+      [title setSelectable: NO];
+      [title setBezeled: NO];
+      [title setAlignment: NSLeftTextAlignment];
+      [title setFont: [NSFont systemFontOfSize: 14.0]];
+      [title setDrawsBackground: NO];
+      [title setStringValue: @"Shortcut:"];
+      [contents addSubview: title];
+      RELEASE(title);
+
+      shortCut
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(80,IVH-60,20,20)];
+      [shortCut setDelegate: self];
+      [contents addSubview: shortCut];
+      RELEASE(shortCut);
     }
   return self;
 }
@@ -162,6 +193,7 @@
 {
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
+  [shortCut setStringValue: [object keyEquivalent]];
 }
 
 @end
