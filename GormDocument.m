@@ -32,6 +32,15 @@
 #include <AppKit/NSSound.h>
 #include <Foundation/NSUserDefaults.h>
 
+@interface	GormDisplayCell : NSButtonCell
+@end
+@implementation	GormDisplayCell
+- (void) setShowsFirstResponder: (BOOL)flag
+{
+  [super setShowsFirstResponder: NO];	// Never show ugly frame round button
+}
+@end
+
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
@@ -1457,12 +1466,12 @@ static NSImage	*classesImage = nil;
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSRect			winrect = NSMakeRect(100,100,340,252);
-      NSRect			selectionRect = {{0, 188}, {240, 64}};
+      NSRect			winrect = NSMakeRect(100,100,342,256);
+      NSRect			selectionRect = {{6, 188}, {234, 64}};
       NSRect			scrollRect = {{0, 0}, {340, 188}};
       NSRect			mainRect = {{20, 0}, {320, 188}};
       NSImage			*image;
-      NSButtonCell		*cell;
+      GormDisplayCell		*cell;
       NSTableColumn             *tableColumn;
       unsigned			style;
       NSColor *salmonColor = 
@@ -1525,14 +1534,14 @@ static NSImage	*classesImage = nil;
 
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 						 mode: NSRadioModeMatrix
-					    cellClass: [NSButtonCell class]
+					    cellClass: [GormDisplayCell class]
 					 numberOfRows: 1
 				      numberOfColumns: 4];
       [selectionView setTarget: self];
       [selectionView setAction: @selector(changeView:)];
       [selectionView setAutosizesCells: NO];
       [selectionView setCellSize: NSMakeSize(64,64)];
-      [selectionView setIntercellSpacing: NSMakeSize(28,0)];
+      [selectionView setIntercellSpacing: NSMakeSize(24,0)];
       [selectionView setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
 
       if ((image = objectsImage) != nil)
@@ -1544,6 +1553,7 @@ static NSImage	*classesImage = nil;
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
 	}
 
       if ((image = imagesImage) != nil)
@@ -1555,6 +1565,7 @@ static NSImage	*classesImage = nil;
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
 	}
 
       if ((image = soundsImage) != nil)
@@ -1566,6 +1577,7 @@ static NSImage	*classesImage = nil;
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
 	}
 
       if ((image = classesImage) != nil)
@@ -1577,6 +1589,7 @@ static NSImage	*classesImage = nil;
 	  [cell setBordered: NO];
 	  [cell setAlignment: NSCenterTextAlignment];
 	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
 	}
 
       [[window contentView] addSubview: selectionView];
@@ -2494,7 +2507,7 @@ static NSImage	*classesImage = nil;
   return nil;
 }
 
-- (id) saveAsDocument: (id)sender
+- (void) saveAsDocument: (id)sender
 {
   NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
   NSSavePanel		*sp;
@@ -2508,7 +2521,6 @@ static NSImage	*classesImage = nil;
       NSFileManager	*mgr = [NSFileManager defaultManager];
       NSString		*path = [sp filename];
       NSString		*old = documentPath;
-      id		retval;
 
       if ([path isEqual: documentPath] == NO
 	&& [mgr fileExistsAtPath: path] == YES)
@@ -2520,23 +2532,13 @@ static NSImage	*classesImage = nil;
 	  [mgr movePath: path toPath: bPath handler: nil];
 	}
       documentPath = RETAIN(path);
-      retval = [self saveDocument: sender];
-      if (retval == nil)
-	{
-	  RELEASE(documentPath);
-	  documentPath = old;
-	}
-      else
-	{
-	  RELEASE(old);
-	  /* FIXME - need to update files window title etc */
-	  return self;
-	}
+      [self saveDocument: sender];
+      RELEASE(old);
+      /* FIXME - need to update files window title etc */
     }
-  return nil;
 }
 
-- (id) saveDocument: (id)sender
+- (void) saveDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   BOOL			archiveResult;
@@ -2550,7 +2552,7 @@ static NSImage	*classesImage = nil;
 
   if (documentPath == nil)
     {
-      return [self saveAsDocument: sender];
+      [self saveAsDocument: sender];
     }
 
   [nc postNotificationName: IBWillSaveDocumentNotification
@@ -2700,15 +2702,15 @@ static NSImage	*classesImage = nil;
     {
       NSRunAlertPanel(NULL, @"Could not save document", 
 		       @"OK", NULL, NULL);
-      return nil;
     }
+  else
+    {
+      [window setDocumentEdited: NO];
+      [window setTitleWithRepresentedFilename: documentPath];
 
-  [window setDocumentEdited: NO];
-  [window setTitleWithRepresentedFilename: documentPath];
-
-  [nc postNotificationName: IBDidSaveDocumentNotification
-		    object: self];
-  return self;
+      [nc postNotificationName: IBDidSaveDocumentNotification
+			object: self];
+    }
 }
 
 - (void) setDocumentActive: (BOOL)flag

@@ -1,3 +1,14 @@
+2003-04-18  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Gorm.m: Minor updates to compile with latest gui ... use void return
+	for saving documents.
+	* GormDocument.h: ditto
+	* GormDocument.m: as above, plus a few fixes for bugs that have crept
+	in to the toolbar due to gui changes ... tweak layout a little, make
+	the button highlighting correct, and use a button subclass to avoid
+	new matrix behavior of setting the buttons to do the ugly
+	showsFirstResponder stuff.
+
 2003-03-06  Gregory Casamento <greg_casamento@yahoo.com>
 
 	* GormFilesOwner.m: Corrected minor problem with updating

@@ -1288,7 +1288,8 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) save: (id)sender
 {
-  return [(id)[self activeDocument] saveDocument: sender];
+  [(id)[self activeDocument] saveDocument: sender];
+  return self;
 }
 
 - (id) saveAll: (id)sender
@@ -1308,7 +1309,8 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) saveAs: (id)sender
 {
-  return [(id)[self activeDocument] saveAsDocument: sender];
+  [(id)[self activeDocument] saveAsDocument: sender];
+  return self;
 }
 
 - (id) selectAllItems: (id)sender
@@ -1459,7 +1461,7 @@ static NSButtonType _buttonTypeForObject( id button )
       else
 	{
           NSMenu	*testMenu = [self mainMenu];
-	  NSMenuItem	*item;
+	  id		item;
 
 	  item = [testMenu itemWithTitle: @"Quit"];
 	  if (item != nil)

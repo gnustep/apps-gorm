@@ -91,8 +91,8 @@
 		parent: (id)parent;
 - (void) removeConnector: (id<IBConnectors>)aConnector;
 - (id) revertDocument: (id)sender;
-- (id) saveAsDocument: (id)sender;
-- (id) saveDocument: (id)sender;
+- (void) saveAsDocument: (id)sender;
+- (void) saveDocument: (id)sender;
 - (void) setupDefaults: (NSString*)type;
 - (void) setDocumentActive: (BOOL)flag;
 - (void) setName: (NSString*)aName forObject: (id)object;
