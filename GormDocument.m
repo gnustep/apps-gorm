@@ -399,10 +399,16 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (void) _selectClassWithObject: (id)obj 
+- (void) selectClassWithObject: (id)obj 
 {
-  if ([obj respondsToSelector: @selector(className)])
+  NSString *customClass = [classManager customClassForObject: obj];
+
+  if(customClass != nil)
     {
+      [self _selectClass: customClass];
+    }
+  else if ([obj respondsToSelector: @selector(className)])
+    { 
       [self _selectClass: [obj className]];
     }
 }
@@ -439,7 +445,7 @@ static NSImage	*classesImage = nil;
 	  if ([selection count] > 0)
 	    {
 	      id obj = [[objectsView selection] objectAtIndex: 0];
-	      [self _selectClassWithObject: obj];
+	      [self selectClassWithObject: obj];
 	    }
 	}
 	break;

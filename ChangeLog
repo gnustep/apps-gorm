@@ -1,3 +1,9 @@
+2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.[hm]: Made selectClassWithObject public.
+	* GormInspectorManager.m: Added logic to call selectClassWithObject
+	so that when an object is selected, the classes view focuses on it.
+	
 2003-08-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Removed extraneous release calls.  In most

@@ -145,6 +145,7 @@
 - (id) remove: (id)sender;
 - (id) createClassFiles: (id)sender;
 - (id) instantiateClass: (id)sender;
+- (void) selectClassWithObject: (id)obj;
 
 // sound & image support
 - (id) openSound: (id)sender;
