@@ -72,7 +72,22 @@ Gorm_RESOURCE_FILES = \
 	Images/GormMHLine.tiff \
 	Images/GormMVCoil.tiff \
 	Images/GormMVLine.tiff \
-        Images/Gorm.tiff
+        Images/Gorm.tiff \
+        Images/leftalign_nib.tiff \
+        Images/rightalign_nib.tiff \
+        Images/centeralign_nib.tiff \
+        Images/justifyalign_nib.tiff \
+        Images/naturalalign_nib.tiff \
+	Images/iconAbove_nib.tiff \
+	Images/iconBelow_nib.tiff \
+	Images/iconLeft_nib.tiff \
+	Images/iconOnly_nib.tiff \
+	Images/iconRight_nib.tiff \
+	Images/titleOnly_nib.tiff \
+	Images/line_nib.tiff \
+	Images/bezel_nib.tiff \
+	Images/noBorder_nib.tiff \
+	Images/ridge_nib.tiff
 
 Gorm_HEADERS = \
 	Gorm.h \
