@@ -44,7 +44,7 @@
   contents = [window contentView];
 
   v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 20)];
-  [v setBordered: YES];
+  [v setButtonType: NSToggleButton];
   [v setTitle: @"Button"];
   [contents addSubview: v];
   RELEASE(v);
