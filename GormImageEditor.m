@@ -41,6 +41,7 @@
 @implementation	GormImageEditor
 
 static NSMapTable	*docMap = 0;
+static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperationPrivate;
 
 + (void) initialize
 {
@@ -70,17 +71,6 @@ static NSMapTable	*docMap = 0;
   return NO;
 }
 
-
-//  - (void) copySelection
-//  {
-//    if (selected != nil)
-//      {
-//        [document copyObjects: [self selection]
-//  		       type: IBViewPboardType
-//  	       toPasteboard: [NSPasteboard generalPasteboard]];
-//      }
-//  }
-
 /*
  *	Dragging source protocol implementation
  */
@@ -88,75 +78,93 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (unsigned int) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  NSArray	*types;
+  NSArray *types=[[sender draggingPasteboard] types];
+  unsigned int mask=[sender draggingSourceOperationMask];
 
-  return NSDragOperationCopy;
+  NSLog(@"GormImageEditor draggingEntered mask=%i types=%@",mask,types);
+  
+   if (  mask&handled_mask &&
+       ([types containsObject: NSFilenamesPboardType] ||
+        [types containsObject: NSTIFFPboardType]))
 
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: IBObjectPboardType] == YES)
-    {
-      dragType = IBObjectPboardType;
-    }
-  else if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      dragType = GormLinkPboardType;
-    }
-  else
-    {
-      dragType = nil;
-    }
-  return [self draggingUpdated: sender];
+    return NSDragOperationCopy;
+
+  return NSDragOperationNone;
 }
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationCopy;
+  NSArray *types=[[sender draggingPasteboard] types];
+  unsigned int mask=[sender draggingSourceOperationMask];
 
-  if (dragType == IBObjectPboardType)
-    {
-      return NSDragOperationCopy;
-    }
-  else if (dragType == GormLinkPboardType)
-    {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
+  NSDebugLLog(@"dragndrop",@"GormImageEditor draggingEntered mask=%x types=%@",mask,types);
+  
+  if (mask&handled_mask &&
+       ([types containsObject: NSFilenamesPboardType] ||
+        [types containsObject: NSTIFFPboardType]))
+    return NSDragOperationCopy;
 
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
-	{
-	  obj = [objects objectAtIndex: pos];
-	}
-      if (obj == [NSApp connectSource])
-	{
-	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
-	}
-      [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-      if (obj != nil)
-	{
-	  return NSDragOperationLink;
-	}
-      else
-	{
-	  return NSDragOperationNone;
-	}
-    }
-  else
-    {
-      return NSDragOperationNone;
-    }
+
+  return NSDragOperationNone;
 }
 
-//  - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
-//  {
-//    return NSDragOperationCopy;
-//  }
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *pb=[sender draggingPasteboard];
+  NSArray *types=[pb types];
+  unsigned int mask=[sender draggingSourceOperationMask];
+
+  NSDebugLLog(@"dragndrop",@"performDrag %x %@",mask,types);
+
+   if (!(mask&handled_mask))
+     return NO;
+
+  if ([types containsObject: NSFilenamesPboardType])
+    {
+      NSArray *data;
+      int i,c;
+
+      data=[pb propertyListForType: NSFilenamesPboardType];
+      if (!data)
+	data=[NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
+
+      c=[data count];
+      printf("count %i\n",c);
+      for (i=0;i<c;i++)
+	{
+
+ 	  id placeHolder = 
+ 	    [(GormDocument *)document _createImagePlaceHolder: [data objectAtIndex: i]];
+ 	  NSLog(@"here1 %@", [data objectAtIndex: i]);
+
+	  if (placeHolder)
+ 	    {
+ 	      NSLog(@"here %@", [data objectAtIndex: i]);
+   	      [self addObject: placeHolder];
+   	      [(GormDocument *)document addImage: 
+   			  [[[data objectAtIndex: i] 
+   			     lastPathComponent] 
+   			    stringByDeletingPathExtension]];
+	    }
+
+	}
+      return YES;
+    }
+  return NO;
+
+
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  return YES;
+}
+
+
+
+
 
 - (void) drawSelection
 {
@@ -359,80 +367,6 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  id filesArray;
-  id data;
-
-  if ( [[[NSPasteboard pasteboardWithName: NSDragPboard] types]
-	 containsObject: NSFilenamesPboardType])
-    {
-      int i, count;
-      data = [[NSPasteboard pasteboardWithName: NSDragPboard]
-	       dataForType: NSFilenamesPboardType];
-      filesArray = [NSUnarchiver unarchiveObjectWithData: data];
-      
-      count = [filesArray count];
-
-      NSLog(@"filesArray %@", filesArray);
-      for (i = 0; i < count; i ++ )
-	{
-	  id placeHolder = 
-	    [(GormDocument *)document _createImagePlaceHolder: [filesArray objectAtIndex: i]];
-	  NSLog(@"here1 %@", [filesArray objectAtIndex: i]);
-	  if (placeHolder)
-	    {
-	      NSLog(@"here %@", [filesArray objectAtIndex: i]);
-	      [self addObject: placeHolder];
-	      [(GormDocument *)document addImage: 
-			  [[[filesArray objectAtIndex: i] 
-			     lastPathComponent] 
-			    stringByDeletingPathExtension]];
-	    }
-
-	}
-//        NSLog(@"filesArray %@", filesArray);
-//        NSLog(@"filesArray %@", [filesArray class]);
-      return YES;
-    }  
-  return NO;
-}
-
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
-
-//    /*
-//     * Tell the source that we will accept the drop if we can.
-//     */
-//    if (dragType == IBObjectPboardType)
-//      {
-//        /*
-//         * We can accept objects dropped anywhere.
-//         */
-//        return YES;
-//      }
-//    else if (dragType == GormLinkPboardType)
-//      {
-//        NSPoint	loc = [sender draggingLocation];
-//        int	r, c;
-//        int	pos;
-//        id	obj = nil;
-
-//        loc = [self convertPoint: loc fromView: nil];
-//        [self getRow: &r column: &c forPoint: loc];
-//        pos = r * [self numberOfColumns] + c;
-//        if (pos >= 0 && pos < [objects count])
-//  	{
-//  	  obj = [objects objectAtIndex: pos];
-//  	}
-//        if (obj != nil)
-//  	{
-//  	  return YES;
-//  	}
-//      }
-//    return NO;
-}
 
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
