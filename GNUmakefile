@@ -49,6 +49,8 @@ Gorm_RESOURCE_FILES = \
 	Images/GormMenu.tiff \
 	Images/GormObject.tiff \
 	Images/GormSound.tiff \
+	Images/GormSourceTag.tiff \
+	Images/GormTargetTag.tiff \
         Images/Gorm.tiff \
         Images/GormLinkImage.tiff
 

@@ -20,6 +20,9 @@
   id			activeDocument;
   NSMutableArray	*documents;
   BOOL			isTesting;
+  NSImage		*linkImage;
+  NSImage		*sourceImage;
+  NSImage		*targetImage;
 }
 - (id<IBDocuments>) activeDocument;
 - (void) handleNotification: (NSNotification*)aNotification;
