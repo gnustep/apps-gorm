@@ -94,13 +94,37 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
  */
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  // do not decode super (it would try to morph into theClass ! )
-  [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
-  theFrame = [aCoder decodeRect];
-  //NSLog(@"Decoding proxy : %@", theClass);
-  RETAIN(theClass); 
+  int version = [aCoder versionForClassName: 
+			  NSStringFromClass([GSCustomView class])];
 
-  return self; 
+  if (version == 1)
+    {
+      // do not decode super (it would try to morph into theClass ! )
+      [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+      theFrame = [aCoder decodeRect];
+      //NSLog(@"Decoding proxy : %@", theClass);
+      RETAIN(theClass); 
+      
+      return self; 
+    }
+  else if (version == 0)
+    {
+      // do not decode super (it would try to morph into theClass ! )
+      [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+      theFrame = [aCoder decodeRect];
+      [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+	      at: &autoresizingMask];  
+      //NSLog(@"Decoding proxy : %@", theClass);
+      RETAIN(theClass); 
+      
+      return self; 
+    }
+  else
+    {
+      NSLog(@"no initWithCoder for version");
+      RELEASE(self);
+      return nil;
+    }
 }
 @end
 @implementation GormClassProxy

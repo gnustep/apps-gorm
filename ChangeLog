@@ -1,3 +1,8 @@
+2002-03-04  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* Gorm.m ([GormObjectProxy -initWithCoder:]): 
+	updated to conform with GSNibItem new encoding scheme.
+
 2002-03-01  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormCustomView.m ([GormCustomView -classForCoder]): 
