@@ -1632,12 +1632,12 @@
 }
 
 - (void) setCustomClass: (NSString *)className
-              forObject: (id)object
+                forName: (NSString *)object
 {
   [customClassMap setObject: className forKey: object];
 }
 
-- (void) removeCustomClassForObject: (id) object
+- (void) removeCustomClassForName: (NSString *)object
 {
   [customClassMap removeObjectForKey: object];
 }

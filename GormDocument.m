@@ -465,11 +465,19 @@ static NSImage  *fileImage = nil;
 	  [anObject setReleasedWhenClosed: NO];
 	}
     }
-
+  /*
+   * Check if it's a font manager.
+   */
+  else if([anObject isKindOfClass: [NSFontManager class]])
+    {
+      // if someone tries to attach a font manager, we must attach
+      // the proxy instead.
+      [self _instantiateFontManager];
+    }
   /*
    * Add the current menu and any submenus.
    */
-  if ([anObject isKindOfClass: [NSMenu class]] == YES)
+  else if ([anObject isKindOfClass: [NSMenu class]] == YES)
     {
       BOOL isMainMenu = NO;
 
@@ -508,13 +516,12 @@ static NSImage  *fileImage = nil;
 	  [[anObject window] setFrameTopLeftPoint: origin];
 	}
     }
-
   /*
    * if this a scrollview, it is interesting to add its contentview
    * if it is a tableview or a textview
    */
-  if (([anObject isKindOfClass: [NSScrollView class]] == YES)
-    && ([(NSScrollView *)anObject documentView] != nil))
+  else if (([anObject isKindOfClass: [NSScrollView class]] == YES)
+	   && ([(NSScrollView *)anObject documentView] != nil))
     {
       if ([[anObject documentView] isKindOfClass: 
 				    [NSTableView class]] == YES)
@@ -1102,13 +1109,13 @@ static NSImage  *fileImage = nil;
     {
       // remove from custom class map...
       NSDebugLog(@"Delete from custom class map -> %@",name);
-      [cm removeCustomClassForObject: name];
+      [cm removeCustomClassForName: name];
       if([anObject isKindOfClass: [NSScrollView class]] == YES)
 	{
 	  NSView *subview = [anObject documentView];
 	  NSString *objName = [self nameForObject: subview];
 	  NSDebugLog(@"Delete from custom class map -> %@",objName);
-	  [cm removeCustomClassForObject: objName];
+	  [cm removeCustomClassForName: objName];
 	}
       
       // remove from name table...
@@ -1722,7 +1729,7 @@ static NSImage  *fileImage = nil;
 		{
 		  NSString *name = [self nameForObject: instance];
 		  [classManager setCustomClass: object
-				forObject: name];
+				forName: name];
 		}
 
 	      [selectionBox setContentView: scrollView];

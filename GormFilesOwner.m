@@ -191,11 +191,11 @@
        * Create list of existing connections for selected object.
        */
       array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
-	ofClass: [NSNibControlConnector class]];
+					      ofClass: [NSNibOutletConnector class]];
       if ([array count] > 0)
 	hasConnections = YES;
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
-	ofClass: [NSNibOutletConnector class]];
+      array = [[(id<IB>)NSApp activeDocument] connectorsForDestination: object
+					      ofClass: [NSNibControlConnector class]];
       if ([array count] > 0)
 	hasConnections = YES;
 
@@ -230,15 +230,15 @@
 	  unsigned	i;
 
 	  array = [doc connectorsForSource: object
-				   ofClass: [NSNibControlConnector class]];
+		       ofClass: [NSNibOutletConnector class]];
 	  for (i = 0; i < [array count]; i++)
 	    {
 	      id<IBConnectors>	con = [array objectAtIndex: i];
 
 	      [doc removeConnector: con];
 	    }
-	  array = [doc connectorsForSource: object
-				   ofClass: [NSNibOutletConnector class]];
+	  array = [doc connectorsForDestination: object
+		       ofClass: [NSNibControlConnector class]];
 	  for (i = 0; i < [array count]; i++)
 	    {
 	      id<IBConnectors>	con = [array objectAtIndex: i];

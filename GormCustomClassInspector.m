@@ -168,11 +168,11 @@
       if (![stringValue isEqualToString: classForObject])
 	{
 	  [_classManager setCustomClass: stringValue
-			 forObject: nameForObject];
+			 forName: nameForObject];
 	}
       else
 	{
-	  [_classManager removeCustomClassForObject: nameForObject];
+	  [_classManager removeCustomClassForName: nameForObject];
 	}
 
       [self _replaceCellClassForObject: [self object]

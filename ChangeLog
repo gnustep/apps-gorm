@@ -1,3 +1,17 @@
+2004-11-12 17:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: Changes to improve loading of .gmodel files.
+	* GormClassManager.[hm]: Changed name of setCustomClass:forObject:
+	to setCustomClass:forName: and also removeCustomClassforObject: to
+	removeCustomClassForName:
+	* GormCustomClassInspector.m: Changes to accomodate the new method
+	name.
+	* GormDocument.m: Changes to accomodate the new method name.
+	* GormFilesOwner.m: Corrected an issue with changing the class
+	for the file's owner.   Added code which checks both the actions
+	and outlets attached to see if it's necessary to prompt before
+	destroying connections.
+	
 2004-11-09 09:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormNSStepperInspector.gorm: Changed
