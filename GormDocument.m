@@ -455,6 +455,16 @@ static NSImage	*classesImage = nil;
 	  if ([selection count] > 0)
 	    {
 	      id obj = [selection objectAtIndex: 0];
+	      // if it's a scrollview focus on it's contents.
+	      if([obj isKindOfClass: [NSScrollView class]])
+		{
+		  id newobj = nil;
+		  newobj = [obj documentView];
+		  if(newobj != nil)
+		    {
+		      obj = newobj;
+		    }
+		}
 	      [self selectClassWithObject: obj];
 	    }
 	}
@@ -2582,8 +2592,8 @@ static NSImage	*classesImage = nil;
       
       NSDebugLog(@"customClass = %@",customClass);
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
-      id <GSTemplate> template = [GSTemplateFactory templateForObject: object
-						    withClassName: customClass
+      id <GSTemplate> template = [GSTemplateFactory templateForObject: RETAIN(object)
+						    withClassName: RETAIN([customClass copy])
 						    withSuperClassName: superClass];
       NSDebugLog(@"object = %@, key = %@, className = %@", object, key, customClass);
       [archiver replaceObject: object withObject: template];

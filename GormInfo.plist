@@ -14,9 +14,9 @@
     ApplicationDescription = "Gorm";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "0.3.0";
+    ApplicationRelease = "0.3.1";
     Authors = ();
     Copyright = "Copyright (C) 1999-2001 FSF";
     CopyrightDescription = "Released under the GNU GPL";
-    FullVersionID = "0.3.0";
+    FullVersionID = "0.3.1";
 }

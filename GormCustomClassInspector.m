@@ -127,7 +127,7 @@
 	}
     }
   else
-    NSLog(@"Name for object returned as nil");
+    NSLog(@"name for object %@ returned as nil",_currentSelection);
 }
 
 // Browser delegate

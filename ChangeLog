@@ -1,5 +1,13 @@
 2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Corrected some memory related issues.
+	* GormCustomClassManager.m: Added to log which informs
+	user of a nil object returned from the name map.
+	* Gorm.m: Cleaned up some comments and updated the version of
+	the application.
+
+2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Added some debug logs.  And in
 	_replaceObjectsWithTemplates: modified the method to use the
 	customClassMap call instead of accessing the map directly.
