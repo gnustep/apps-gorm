@@ -103,6 +103,7 @@ Gorm_RESOURCE_FILES = \
 	Images/iconTopLeft_nib.tiff \
 	Images/iconTopRight_nib.tiff \
 	Images/iconTop_nib.tiff \
+	Resources/GormViewSizeInspector.gorm
 
 Gorm_HEADERS = \
 	Gorm.h \

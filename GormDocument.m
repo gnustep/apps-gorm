@@ -1343,6 +1343,7 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
   [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
+  [u decodeClassName: @"NSOutlineView" asClassName: @"GormNSOutlineView"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -1882,14 +1883,16 @@ static NSImage	*classesImage = nil;
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
   [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
-  [archiver encodeClassName: @"GormCustomView" 
+  [archiver encodeClassName: @"GormCustomView"
 	      intoClassName: @"GSCustomView"];
-  [archiver encodeClassName: @"GormNSWindow" 
+  [archiver encodeClassName: @"GormNSWindow"
 	      intoClassName: @"NSWindow"];
-  [archiver encodeClassName: @"GormNSBrowser" 
+  [archiver encodeClassName: @"GormNSBrowser"
 	      intoClassName: @"NSBrowser"];
-  [archiver encodeClassName: @"GormNSTableView" 
+  [archiver encodeClassName: @"GormNSTableView"
 	      intoClassName: @"NSTableView"];
+  [archiver encodeClassName: @"GormNSOutlineView" 
+	      intoClassName: @"NSOutlineView"];
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
@@ -2150,7 +2153,6 @@ numberOfChildrenOfItem: (id)item
 	     child: (int)index
 	    ofItem: (id)item
 {
-  NSLog(@"child:ofItem");
   if(item == nil && index == 0)
     {
       return @"NSObject";

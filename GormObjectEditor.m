@@ -740,36 +740,18 @@ NSImage	*mVLine = nil;
   self = [super init];
   if (self != nil)
     {
-      NSView		*contents;
-      NSButton		*button;
-      NSBox		*box, *sizeBox;
-      NSRect		rect;
+      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" owner: self] == NO)
+	{
+	  NSLog(@"Could not open gorm GormViewSizeInspector");
+	  return nil;
+	}
 
-      rect = NSMakeRect(0, 0, IVW, IVH);
-      window = [[NSWindow alloc] initWithContentRect: rect
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      rect = NSMakeRect((IVW-200)/2, IVW, 200, 80);
-      sizeBox = [[NSBox alloc] initWithFrame: NSZeroRect];
-      [sizeBox setBorderType: NSBezelBorder];
-      [sizeBox setTitle: @"Size"];
-      [sizeBox setTitlePosition: NSAtTop];
-      [sizeBox setFrameFromContentFrame: rect];
-      [contents addSubview: sizeBox];
-      RELEASE(sizeBox);
-
-      rect = NSMakeRect(25, 5, 150, 75);
-      sizeForm = [[NSForm alloc] initWithFrame: rect];
-      [sizeForm addEntry: @"X"];
-      [sizeForm addEntry: @"Y"];
-      [sizeForm addEntry: @"Width"];
-      [sizeForm addEntry: @"Height"];
-      [sizeForm setEntryWidth: 150];
-      [sizeForm setInterlineSpacing: 3];
-      [sizeBox addSubview: sizeForm];
+      [top setTag: NSViewMaxYMargin];  
+      [bottom setTag: NSViewMinYMargin];
+      [right setTag: NSViewMaxXMargin];
+      [left setTag: NSViewMinXMargin];
+      [width setTag: NSViewWidthSizable];
+      [height setTag: NSViewHeightSizable];
 
       [[NSNotificationCenter defaultCenter] 
         addObserver: self
@@ -782,98 +764,6 @@ NSImage	*mVLine = nil;
 	       name: NSControlTextDidEndEditingNotification
 	     object: nil];
 
-      rect = NSMakeRect((IVW-200)/2, (IVW-200)/2, 200, 200);
-      box = [[NSBox alloc] initWithFrame: NSZeroRect];
-      [box setBorderType: NSBezelBorder];
-      [box setTitle: @"Autosizing"];
-      [box setTitlePosition: NSAtTop];
-      [box setFrameFromContentFrame: rect];
-      [contents addSubview: box];
-      RELEASE(box);
-
-      rect = NSMakeRect(50, 50, 100, 100);
-      button = [[NSButton alloc] initWithFrame: rect];
-      [button setTitle: @""];
-      [button setEnabled: NO];
-      [box addSubview: button];
-
-      rect = NSMakeRect(91,151,20,50);
-      top = [[NSButton alloc] initWithFrame: rect];
-      [top setImagePosition: NSImageOnly];
-      [top setImage: eVLine];
-      [top setAlternateImage: eVCoil];
-      [top setBordered: NO];
-      [top setButtonType: NSToggleButton];
-      [top setTag: NSViewMaxYMargin];
-      [top setTarget: self];
-      [top setAction: @selector(setAutosize:)];
-      [box addSubview: top];
-      RELEASE(top);
-
-      rect = NSMakeRect(91,0,20,50);
-      bottom = [[NSButton alloc] initWithFrame: rect];
-      [bottom setImagePosition: NSImageOnly];
-      [bottom setImage: eVLine];
-      [bottom setAlternateImage: eVCoil];
-      [bottom setBordered: NO];
-      [bottom setButtonType: NSToggleButton];
-      [bottom setTag: NSViewMinYMargin];
-      [bottom setTarget: self];
-      [bottom setAction: @selector(setAutosize:)];
-      [box addSubview: bottom];
-      RELEASE(bottom);
-
-      rect = NSMakeRect(0,91,50,20);
-      left = [[NSButton alloc] initWithFrame: rect];
-      [left setImagePosition: NSImageOnly];
-      [left setImage: eHLine];
-      [left setAlternateImage: eHCoil];
-      [left setBordered: NO];
-      [left setButtonType: NSToggleButton];
-      [left setTag: NSViewMinXMargin];
-      [left setTarget: self];
-      [left setAction: @selector(setAutosize:)];
-      [box addSubview: left];
-      RELEASE(left);
-
-      rect = NSMakeRect(151,91,50,20);
-      right = [[NSButton alloc] initWithFrame: rect];
-      [right setImagePosition: NSImageOnly];
-      [right setImage: eHLine];
-      [right setAlternateImage: eHCoil];
-      [right setBordered: NO];
-      [right setButtonType: NSToggleButton];
-      [right setTag: NSViewMaxXMargin];
-      [right setTarget: self];
-      [right setAction: @selector(setAutosize:)];
-      [box addSubview: right];
-      RELEASE(right);
-
-      rect = NSMakeRect(51,92,97,19);
-      width = [[NSButton alloc] initWithFrame: rect];
-      [width setImagePosition: NSImageOnly];
-      [width setImage: mHLine];
-      [width setAlternateImage: mHCoil];
-      [width setBordered: NO];
-      [width setButtonType: NSToggleButton];
-      [width setTag: NSViewWidthSizable];
-      [width setTarget: self];
-      [width setAction: @selector(setAutosize:)];
-      [box addSubview: width];
-      RELEASE(width);
-
-      rect = NSMakeRect(91,52,19,96);
-      height = [[NSButton alloc] initWithFrame: rect];
-      [height setImagePosition: NSImageOnly];
-      [height setImage: mVLine];
-      [height setAlternateImage: mVCoil];
-      [height setBordered: NO];
-      [height setButtonType: NSToggleButton];
-      [height setTag: NSViewHeightSizable];
-      [height setTarget: self];
-      [height setAction: @selector(setAutosize:)];
-      [box addSubview: height];
-      RELEASE(height);
     }
   return self;
 }

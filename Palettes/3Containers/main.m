@@ -26,6 +26,7 @@
 #include "../../Gorm.h"
 #include "GormNSBrowser.h"
 #include "GormNSTableView.h"
+#include "GormNSOutlineView.h"
 #include <math.h>
 
 
@@ -44,9 +45,10 @@
 { 
 
   NSView	   *contents;
-  NSTableView    *tv;
-  NSTableColumn  *tc;
-  NSSize          contentSize;
+  NSTableView      *tv;
+  NSOutlineView    *ov;
+  NSTableColumn    *tc;
+  NSSize           contentSize;
   id		   v;
 
   window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
@@ -86,7 +88,8 @@
 
 
   // NSTableView
-  v = [[NSScrollView alloc] initWithFrame: NSMakeRect(136, 38, 124, 116)];
+  v = [[NSScrollView alloc] initWithFrame: 
+			      NSMakeRect(136, 10, 124, 78)];
   
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
@@ -94,7 +97,7 @@
   contentSize = [v contentSize];
 
   tv = [[GormNSTableView alloc] initWithFrame:
-             NSMakeRect(0,0,contentSize.width, contentSize.height)];
+             NSZeroRect];
   //  [tv setDataSource: [[NSTableViewDataSource alloc] init]];
   //  [tv setAutoresizesAllColumnsToFit: YES];
   [v setDocumentView: tv];
@@ -123,6 +126,49 @@
   [contents addSubview: v];
   RELEASE(tv);
   RELEASE(v);
+  
+  // NSOutlineView
+  v = [[NSScrollView alloc] initWithFrame: 
+			      NSMakeRect(136, 98, 124, 78)];
+  
+  [v setHasVerticalScroller: YES];
+  [v setHasHorizontalScroller: NO];
+  //[v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+  contentSize = [v contentSize];
+
+  ov = [[GormNSOutlineView alloc] initWithFrame:
+             NSMakeRect(0,0,contentSize.width, contentSize.height)];
+  //  [tv setAutoresizesAllColumnsToFit: YES];
+  [v setDocumentView: ov];
+  RELEASE(tv);
+
+  tc = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
+  [[tc headerCell] setStringValue: @" "];
+  [tc setWidth: floor(contentSize.width/2)];
+  [tc setMinWidth: 20];
+  [tc setResizable: YES];
+  [tc setEditable: YES];
+  [ov addTableColumn: tc];
+  [ov setOutlineTableColumn: tc];
+  RELEASE(tc);
+
+  tc = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+  [[tc headerCell] setStringValue: @" "];
+  [tc setWidth: ceil(contentSize.width/2)];
+  [tc setMinWidth: 20];
+  [tc setResizable: YES];
+  [tc setEditable: YES];
+  [ov addTableColumn: tc];
+  RELEASE(tc);
+  [ov setFrame: NSMakeRect(0,0,contentSize.width, contentSize.height)];
+  [ov setDrawsGrid: NO];
+  [ov setIndentationPerLevel: 10.];
+  [ov setIndentationMarkerFollowsCell: YES];
+  
+  [contents addSubview: v];
+  RELEASE(ov);
+  RELEASE(v);
+  
   
 }
 

@@ -478,6 +478,10 @@
     Super = NSControl;
   };
 
+  NSOutlineView = {
+    Super = NSTableView;
+  };
+
   NSText = {
     Actions = (
       alignCenter:,

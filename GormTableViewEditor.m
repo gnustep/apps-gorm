@@ -306,7 +306,6 @@ static NSColor *_oldColor;
 	[[[tableView enclosingScrollView] superview]
 	  convertPoint: [theEvent locationInWindow]
 	  fromView: nil]];
-  NSLog(@"mouseDown %@", hitView);
 
   if (hitView == [tableView headerView])
     {
@@ -343,6 +342,23 @@ static NSColor *_oldColor;
       NSLog(@"no selection");
     }
 }
+
+
+- (void) outlineViewSelectionDidChange: (id) tv
+{
+  if ([tableView selectedColumn] != -1)
+    {
+      selected = [[tableView tableColumns]
+		   objectAtIndex: [tableView selectedColumn]];
+      [self selectObjects: 
+	      [NSArray arrayWithObject: selected]];
+    }
+  else
+    {
+      NSLog(@"no selection");
+    }
+}
+
 - (void) editHeader: (NSTableHeaderView*) th
 	  withEvent: (NSEvent *) theEvent 
 {

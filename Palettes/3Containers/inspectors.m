@@ -337,7 +337,6 @@
 
 - (void) ok: (id)sender
 {
-  NSLog(@"ok");
   [self _setValuesFromControl: sender];
 }
 

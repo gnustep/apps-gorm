@@ -24,6 +24,8 @@
 
 #include "GormPrivate.h"
 
+#include <math.h>
+
 static NSRect
 NSRectFromPoints(NSPoint p0, NSPoint p1)
 {
@@ -590,10 +592,12 @@ static BOOL done_editing;
   else
     {
       /* Increase the cell size */
-      cellSize = NSMakeSize((NSWidth(frame)+intercellSpace.width)/cols 
-                              - intercellSpace.width, 
-			    (NSHeight(frame)+intercellSpace.height)/rows 
-                              - intercellSpace.height);
+      cellSize = NSMakeSize
+	(floor((NSWidth(frame)+intercellSpace.width)/cols - 
+	       intercellSpace.width), 
+	 floor((NSHeight(frame)+intercellSpace.height)/rows -
+	       intercellSpace.height));
+
       /* Check if it is already too small and we're just making it bigger */
       if (NSWidth(frame) < NSWidth(oldFrame) 
 	  && NSHeight(frame) < NSHeight(oldFrame))
@@ -604,6 +608,7 @@ static BOOL done_editing;
 	  if (cellSize.height < minSize.height)
 	    return NO;
 	}
+
       if (update)
 	[view setCellSize: cellSize];
     }
@@ -1686,9 +1691,14 @@ static BOOL done_editing;
       while ((sub = [enumerator nextObject]) != nil)
 	{
 	  NSRect	rect = [sub frame];
-
+	  
 	  rect.origin = loc;
 	  [sub setFrame: rect];
+	  rect.origin.x = (int) rect.origin.x;
+	  rect.origin.y = (int) rect.origin.y;
+	  rect.size.width = (int) rect.size.width;
+	  rect.size.height = (int) rect.size.height;
+
 	  [edit_view addSubview: sub];
 	}
       [self selectObjects: views];

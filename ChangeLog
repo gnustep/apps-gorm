@@ -1,3 +1,35 @@
+2002-03-31  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+	* GormWindowEditor.m
+	When resizing matrix, use integer values for setCellSize.
+	When dropping an object from the palettes, use integer
+	coordinates for its frame.
+	
+	* GNUMakefile
+	* GormObjectEditor.m
+	* Resources/GormViewSizeInspector.gorm
+	* Resources/GormViewSizeInspector.classes
+	Moved GormViewSizeInspector to gorm.
+
+	* ClassInformation.plist: NSOutlineView declaration.
+	* GormDocument.m ([GormDocument -{load, save}Document]):
+	* GormTableViewEditor.m ([-outlineViewSelectionDidChange:])
+	* Palettes/3Containers/GNUMakefile
+	* Palettes/3Containers/main.m
+	* Palettes/3Containers/GormNSOutlineView.m
+	* Palettes/3Containers/GormNSOutlineView.h
+	* Palettes/3Containers/inspectors.m
+	GormNSOutlineView replaces NSOutlineView when editing interface.
+	GormNSOutlineView features a dummy dataSource during editing and
+	testing.
+
+	* Palettes/2Controls/GormBoxInspector.gorm
+	* Palettes/2Controls/GormButtonInspector.gorm
+	* Palettes/2Controls/GormFormInspector.gorm
+	* Palettes/2Controls/GormSliderInspector.gorm
+	* Palettes/2Controls/GormTextFieldInspector.gorm
+	Cosmetic changes.
+
+	
 2002-03-29  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormDocument.m ([GormDocument -windowAndRect:forObject:]): 
