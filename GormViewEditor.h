@@ -21,6 +21,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef	INCLUDED_GormViewEditor_h
+#define	INCLUDED_GormViewEditor_h
 
 @class GormViewWithSubviewsEditor;
 @class GormPlacementInfo;
@@ -68,3 +70,5 @@
 - (NSWindow *)windowAndRect: (NSRect *)prect
                   forObject: (id) object;
 @end
+
+#endif

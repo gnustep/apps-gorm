@@ -23,13 +23,13 @@
  */
 
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
-#import "GormPrivate.h"
+#include "GormPrivate.h"
 
-#import "GormBoxEditor.h"
+#include "GormBoxEditor.h"
 
-#import "GormInternalViewEditor.h"
+#include "GormInternalViewEditor.h"
 
 #define _EO ((NSBox *)_editedObject)
 

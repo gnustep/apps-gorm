@@ -1,4 +1,4 @@
-#import "GormPrivate.h"
+#include "GormPrivate.h"
 
 @implementation	GormGenericEditor
 

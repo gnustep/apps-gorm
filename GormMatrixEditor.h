@@ -21,8 +21,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef	INCLUDED_GormMatrixEditor_h
+#define	INCLUDED_GormMatrixEditor_h
 
-#import "GormViewWithSubviewsEditor.h"
+#include "GormViewWithSubviewsEditor.h"
 
 @interface GormMatrixEditor : GormViewWithSubviewsEditor
 {
@@ -31,3 +33,5 @@
   int selectedCol;
 }
 @end
+
+#endif

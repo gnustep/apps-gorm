@@ -22,13 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
 #include "GormPrivate.h"
 
-#import "GormViewEditor.h"
-#import "GormViewWithSubviewsEditor.h"
-#import "GormPlacementInfo.h"
+#include "GormViewEditor.h"
+#include "GormViewWithSubviewsEditor.h"
+#include "GormPlacementInfo.h"
 
 #include <math.h>
 #include <stdlib.h>

@@ -22,9 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#import <AppKit/AppKit.h>
-#import <Foundation/NSUserDefaults.h>
-#import "GormPreferences.h"
+#include <AppKit/AppKit.h>
+#include <Foundation/NSUserDefaults.h>
+#include "GormPreferences.h"
 
 @implementation GormPreferences
 

@@ -690,7 +690,10 @@ static NSImage	*classesImage = nil;
   RELEASE(filesOwner);
   RELEASE(firstResponder);
   RELEASE(fontManager);
-  NSFreeMapTable(objToName);
+  if (objToName != 0)
+    {
+      NSFreeMapTable(objToName);
+    }
   RELEASE(documentPath);
   RELEASE(savedEditors);
   RELEASE(scrollView);
@@ -1821,7 +1824,7 @@ static NSImage	*classesImage = nil;
   
   if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
     {
-      // if the data is in a directory, then load from objects.gorm in the directory
+      // if the data is in a directory, then load from objects.gorm 
       if (isDir == NO)
 	{
 	  data = [NSData dataWithContentsOfFile: aFile];
@@ -1829,7 +1832,9 @@ static NSImage	*classesImage = nil;
 	}
       else
 	{
-	  NSString *newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
+	  NSString *newFileName;
+
+	  newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
 	  data = [NSData dataWithContentsOfFile: newFileName];
 	  NSDebugLog(@"Loaded data from %@...", newFileName);
 	}
@@ -1865,15 +1870,18 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView" asClassName: @"GormNSOutlineView"];
   [u decodeClassName: @"NSPopUpButton" asClassName: @"GormNSPopUpButton"];
-  [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
+  [u decodeClassName: @"NSPopUpButtonCell"
+	 asClassName: @"GormNSPopUpButtonCell"];
 
   // templates
   [u decodeClassName: @"NSWindowTemplate" asClassName: @"GormNSWindowTemplate"];
   [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
   [u decodeClassName: @"NSTextTemplate" asClassName: @"GormNSTextTemplate"];
-  [u decodeClassName: @"NSControlTemplate" asClassName: @"GormNSControlTemplate"];
+  [u decodeClassName: @"NSControlTemplate"
+	 asClassName: @"GormNSControlTemplate"];
   [u decodeClassName: @"NSButtonTemplate" asClassName: @"GormNSButtonTemplate"];
-  [u decodeClassName: @"NSTextViewTemplate" asClassName: @"GormNSTextViewTemplate"];
+  [u decodeClassName: @"NSTextViewTemplate"
+	 asClassName: @"GormNSTextViewTemplate"];
   [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
   [u decodeClassName: @"NSMenuTemplate" asClassName: @"GormNSMenuTemplate"];
 
@@ -1897,21 +1905,27 @@ static NSImage	*classesImage = nil;
   // convert from old file format...
   if (isDir == NO)
     {
-      if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
-					      stringByAppendingPathExtension: @"classes"]])
+      NSString	*s;
+
+      s = [aFile stringByDeletingPathExtension];
+      s = [s stringByAppendingPathExtension: @"classes"];
+      if (![classManager loadCustomClasses: s])
 	{
 	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
-			  @"You won't be able to edit connections on custom classes", 
-			  @"OK", NULL, NULL);
+	    @"You won't be able to edit connections on custom classes", 
+	    @"OK", NULL, NULL);
 	}
     }
   else
     {
-      if (![classManager loadCustomClasses: [aFile stringByAppendingPathComponent: @"data.classes"]]) 
+      NSString	*s;
+
+      s = [aFile stringByAppendingPathComponent: @"data.classes"];
+      if (![classManager loadCustomClasses: s]) 
 	{
 	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
-			  @"You won't be able to edit connections on custom classes", 
-			  @"OK", NULL, NULL);
+	    @"You won't be able to edit connections on custom classes", 
+	    @"OK", NULL, NULL);
 	}
     }
 

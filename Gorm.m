@@ -45,7 +45,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 @class	InfoPanel;
 
 // we had this include for grouping/ungrouping selectors
-#import "GormViewWithContentViewEditor.h"
+#include "GormViewWithContentViewEditor.h"
 
 @implementation NSCell (GormAdditions)
 /*

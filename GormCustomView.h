@@ -22,8 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef GormCustomView_H
-#define GormCustomView_H
+#ifndef INCLUDED_GormCustomView_h
+#define INCLUDED_GormCustomView_h
 
 #include <AppKit/NSTextField.h>
 

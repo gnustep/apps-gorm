@@ -21,10 +21,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef	INCLUDED_GormButtonEditor_h
+#define	INCLUDED_GormButtonEditor_h
 
-#import "GormControlEditor.h"
+#include "GormControlEditor.h"
 
 @interface GormButtonEditor : GormControlEditor
 {
 }
 @end
+
+#endif

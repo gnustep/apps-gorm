@@ -22,13 +22,17 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#ifndef	INCLUDED_GormNSPanel_h
+#define	INCLUDED_GormNSPanel_h
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
 @interface GormNSPanel : NSPanel
 {
   unsigned _gormStyleMask;
 }
-- (void)setStyleMask: (unsigned) newStyleMask;
-- (unsigned)styleMask;
+- (void) setStyleMask: (unsigned)newStyleMask;
+- (unsigned) styleMask;
 @end
+
+#endif

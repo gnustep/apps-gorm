@@ -1,5 +1,5 @@
-#ifndef GORMPRIVATE_H
-#define GORMPRIVATE_H
+#ifndef INCLUDED_GormPrivate_h
+#define INCLUDED_GormPrivate_h
 
 @class	GormDocument;
 @class	GormInspectorsManager;

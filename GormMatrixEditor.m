@@ -26,11 +26,11 @@
 
 #include "GormPrivate.h"
 
-#import "GormViewEditor.h"
+#include "GormViewEditor.h"
 
-#import "GormMatrixEditor.h"
-#import "GormViewWithSubviewsEditor.h"
-#import "GormPlacementInfo.h"
+#include "GormMatrixEditor.h"
+#include "GormViewWithSubviewsEditor.h"
+#include "GormPlacementInfo.h"
 
 #define _EO ((NSMatrix*)_editedObject)
 

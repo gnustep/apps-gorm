@@ -1155,17 +1155,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   
   [headerFile appendString: @"/* All Rights reserved */\n\n"];
   [sourceFile appendString: @"/* All Rights reserved */\n\n"];
-  [headerFile appendString: @"#import <AppKit/AppKit.h>\n\n"];
-  [sourceFile appendString: @"#import <AppKit/AppKit.h>\n"];
+  [headerFile appendString: @"#include <AppKit/AppKit.h>\n\n"];
+  [sourceFile appendString: @"#include <AppKit/AppKit.h>\n"];
   if ([[headerPath stringByDeletingLastPathComponent]
     isEqualToString: [sourcePath stringByDeletingLastPathComponent]])
     {
-      [sourceFile appendFormat: @"#import \"%@\"\n\n", 
+      [sourceFile appendFormat: @"#include \"%@\"\n\n", 
 	[headerPath lastPathComponent]];
     }
   else
     {
-      [sourceFile appendFormat: @"#import \"%@\"\n\n", 
+      [sourceFile appendFormat: @"#include \"%@\"\n\n", 
 	headerPath];      
     }
   [headerFile appendFormat: @"@interface %@ : %@\n{\n", className,

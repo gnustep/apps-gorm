@@ -21,8 +21,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef	INCLUDED_GormTableViewEditor_h
+#define	INCLUDED_GormTableViewEditor_h
 
-#import "../../GormViewWithSubviewsEditor.h"
+#include "../../GormViewWithSubviewsEditor.h"
 
 @class GormNSTableView;
 
@@ -31,3 +33,5 @@
   GormNSTableView *tableView;
 }
 @end
+
+#endif

@@ -22,7 +22,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#import "GormNSTableView.h"
+#include "GormNSTableView.h"
 
 /* --------------------------------------------------------------- 
  * NSTableView dataSource

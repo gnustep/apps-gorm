@@ -21,8 +21,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef	INCLUDED_GormViewWithSubviewsEditor_h
+#define	INCLUDED_GormViewWithSubviewsEditor_h
 
-#import "GormViewEditor.h"
+#include "GormViewEditor.h"
 
 @interface GormViewWithSubviewsEditor : GormViewEditor <IBSelectionOwners>
 {
@@ -51,3 +53,5 @@
 - (void) closeSubeditors;
 - (void) deactivateSubeditors;
 @end
+
+#endif

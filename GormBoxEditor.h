@@ -19,11 +19,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#import "GormViewWithContentViewEditor.h"
-#import "GormInternalViewEditor.h"
+#ifndef	INCLUDED_GormBoxEditor_h
+#define	INCLUDED_GormBoxEditor_h
+
+#include "GormViewWithContentViewEditor.h"
+#include "GormInternalViewEditor.h"
 
 @interface GormBoxEditor : GormViewWithSubviewsEditor
 {
@@ -31,3 +34,5 @@
 }
 - (NSArray *)destroyAndListSubviews;
 @end
+
+#endif

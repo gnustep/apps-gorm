@@ -24,7 +24,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
-#import "../../GormViewEditor.h"
+#include "../../GormViewEditor.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})

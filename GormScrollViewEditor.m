@@ -22,11 +22,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
-#import "GormPrivate.h"
+#include "GormPrivate.h"
 
-#import "GormBoxEditor.h"
+#include "GormBoxEditor.h"
 
 #define _EO ((NSScrollView *)_editedObject)
 

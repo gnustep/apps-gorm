@@ -24,8 +24,8 @@
 
 #include "../../GormPrivate.h"
 
-#import "GormTableViewEditor.h"
-#import "GormNSTableView.h"
+#include "GormTableViewEditor.h"
+#include "GormNSTableView.h"
 
 NSString *IBTableColumnPboardType = @"IBTableColumnPboardType";
 

@@ -24,10 +24,11 @@
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* All Rights reserved */
+#ifndef	INCLUDED_GormCustomClassInspector_h
+#define	INCLUDED_GormCustomClassInspector_h
 
-#import <AppKit/AppKit.h>
-#import "Gorm.h"
+#include <AppKit/AppKit.h>
+#include "Gorm.h"
 
 @class GormClassManager;
 
@@ -43,3 +44,5 @@
 }
 - (void) select: (id)sender;
 @end
+
+#endif

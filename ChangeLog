@@ -1,3 +1,69 @@
+2003-03-03  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Gorm.h:
+	* Gorm.m:
+	* GormBoxEditor.h:
+	* GormBoxEditor.m:
+	* GormButtonEditor.h:
+	* GormButtonEditor.m:
+	* GormClassEditor.m:
+	* GormClassManager.h:
+	* GormClassManager.m:
+	* GormControlEditor.h:
+	* GormControlEditor.m:
+	* GormCustomClassInspector.h:
+	* GormCustomView.h:
+	* GormCustomView.m:
+	* GormDocument.h:
+	* GormDocument.m:
+	* GormFilesOwner.h:
+	* GormGenericEditor.m:
+	* GormInspectorsManager.h:
+	* GormInternalViewEditor.h:
+	* GormInternalViewEditor.m:
+	* GormMatrixEditor.h:
+	* GormMatrixEditor.m:
+	* GormOutlineView.h:
+	* GormPalettesManager.h:
+	* GormPlacementInfo.h:
+	* GormPosingView.h:
+	* GormPosingView.m:
+	* GormPreferences.h:
+	* GormPreferences.m:
+	* GormPrivate.h:
+	* GormScrollViewEditor.m:
+	* GormSoundInspector.h:
+	* GormSplitViewEditor.h:
+	* GormSplitViewEditor.m:
+	* GormTabViewEditor.h:
+	* GormTabViewEditor.m:
+	* GormViewEditor.h:
+	* GormViewEditor.m:
+	* GormViewWithContentViewEditor.h:
+	* GormViewWithContentViewEditor.m:
+	* GormViewWithSubviewsEditor.h:
+	* GormViewWithSubviewsEditor.m:
+	* GormWindowEditor.m:
+	* Palettes/0Menus/GormNSMenu.h:
+	* Palettes/0Menus/GormNSMenu.m:
+	* Palettes/1Windows/GormNSPanel.h:
+	* Palettes/1Windows/GormNSPanel.m:
+	* Palettes/1Windows/GormNSWindow.h:
+	* Palettes/1Windows/GormNSWindow.m:
+	* Palettes/2Controls/GormPopUpButtonEditor.m:
+	* Palettes/3Containers/GormNSBrowser.h:
+	* Palettes/3Containers/GormNSBrowser.m:
+	* Palettes/3Containers/GormNSOutlineView.h:
+	* Palettes/3Containers/GormNSOutlineView.m:
+	* Palettes/3Containers/GormNSTableView.h:
+	* Palettes/3Containers/GormNSTableView.m:
+	* Palettes/3Containers/GormTableViewEditor.h:
+	* Palettes/3Containers/GormTableViewEditor.m:
+	* Palettes/3Containers/inspectors.m:
+	* Palettes/4Data/inspectors.m:
+	Corrected to avoid use of #import (which has been deprecated for years)
+	and to protect headers using #define instead.
+
 2003-03-02  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormDocument.m: Give scrollviews bezelled border.

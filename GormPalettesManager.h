@@ -1,5 +1,5 @@
-#ifndef GORMPALETTESMANAGER_H
-#define GORMPALETTESMANAGER_H
+#ifndef INCLUDED_GormPalettesManager_h
+#define INCLUDED_GormPalettesManager_h
 
 @interface GormPalettesManager : NSObject
 {

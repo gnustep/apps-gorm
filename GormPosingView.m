@@ -1,4 +1,4 @@
-#import "GormPosingView.h"
+#include "GormPosingView.h"
 
 
 @implementation GormPosingView

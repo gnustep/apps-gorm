@@ -26,8 +26,8 @@
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */ 
 
-#ifndef _GNUstep_H_GormOutlineView
-#define _GNUstep_H_GormOutlineView
+#ifndef INCLUDED_GormOutlineView_h
+#define INCLUDED_GormOutlineView_h
 
 #include <AppKit/NSOutlineView.h>
 #include <Foundation/NSMapTable.h>

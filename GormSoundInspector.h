@@ -23,11 +23,11 @@
    If not, write to the Free Software Foundation,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
+#ifndef	INCLUDED_GormSoundInspector_h
+#define	INCLUDED_GormSoundInspector_h
 
-/* All Rights reserved */
-
-#import <AppKit/AppKit.h>
-#import "Gorm.h"
+#include <AppKit/AppKit.h>
+#include "Gorm.h"
 
 @class GormClassManager;
 
@@ -40,3 +40,5 @@
 - (void) pause: (id)sender;
 - (void) record: (id)sender;
 @end
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef GORMDOCUMENT_H
-#define GORMDOCUMENT_H
+#ifndef INCLUDED_GormDocument_h
+#define INCLUDED_GormDocument_h
 
 @class GormClassManager, GormClassEditor;
 

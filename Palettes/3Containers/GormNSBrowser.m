@@ -22,7 +22,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#import "GormNSBrowser.h"
+#include "GormNSBrowser.h"
 
 /* --------------------------------------------------------------- 
  * NSBrowser Delegate

@@ -1,5 +1,5 @@
-#ifndef GORMCLASSMANAGER_H
-#define GORMCLASSMANAGER_H
+#ifndef INCLUDED_GormClassManager_h
+#define INCLUDED_GormClassManager_h
 
 // the custom classes array will hold only those things which will be persisted
 // to the .classes file.   Since the overall list of classes will not change

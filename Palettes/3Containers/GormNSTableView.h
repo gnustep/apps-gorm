@@ -21,8 +21,10 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#ifndef	INCLUDED_GormNSTableView_h
+#define	INCLUDED_GormNSTableView_h
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
 @interface GormNSTableView : NSTableView
 {
@@ -47,3 +49,5 @@
 - (void) setGormAllowsColumnSelection: (BOOL)flag;
 - (BOOL) gormAllowsColumnSelection;
 @end
+
+#endif

@@ -21,8 +21,10 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#ifndef	INCLUDED_GormNSOutlineView_h
+#define	INCLUDED_GormNSOutlineView_h
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
 @interface GormNSOutlineView : NSOutlineView
 {
@@ -35,3 +37,5 @@
   BOOL _gormAllowsEmptySelection;
 }
 @end
+
+#endif

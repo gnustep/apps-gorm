@@ -1,5 +1,5 @@
-#ifndef GORMINSPECTORSMANAGER_H
-#define GORMINSPECTORSMANAGER_H
+#ifndef INCLUDED_GormInspectorsManager_h
+#define INCLUDED_GormInspectorsManager_h
 
 @interface GormInspectorsManager : NSObject
 {

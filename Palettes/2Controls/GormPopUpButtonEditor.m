@@ -1,10 +1,10 @@
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
-#import "../../GormPrivate.h"
+#include "../../GormPrivate.h"
 
-#import "../../GormControlEditor.h"
+#include "../../GormControlEditor.h"
 
-#import "../../GormViewWithSubviewsEditor.h"
+#include "../../GormViewWithSubviewsEditor.h"
 
 #define _EO ((NSPopUpButton *)_editedObject)
 

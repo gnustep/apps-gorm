@@ -22,8 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef GORM_H
-#define GORM_H
+#ifndef INCLUDED_GORM_H
+#define INCLUDED_GORM_H
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>

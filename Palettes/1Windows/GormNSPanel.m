@@ -23,8 +23,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#import <AppKit/AppKit.h>
-#import "GormNSPanel.h"
+#include <AppKit/AppKit.h>
+#include "GormNSPanel.h"
 
 
 @implementation GormNSPanel

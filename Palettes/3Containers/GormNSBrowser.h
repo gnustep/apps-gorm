@@ -21,11 +21,15 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#ifndef	INCLUDED_GormNSBrowser_h
+#define	INCLUDED_GormNSBrowser_h
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
 @interface GormNSBrowser : NSBrowser
 {
   id _gormDelegate;
 }
 @end
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef GORMFILESOWNER_H
-#define GORMFILESOWNER_H
+#ifndef INCLUDED_GormFilesOwner_h
+#define INCLUDED_GormFilesOwner_h
 
 /*
  * Each document has a GormFilesOwner object that is used as a placeholder

@@ -22,12 +22,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#import <AppKit/AppKit.h>
-#import "GormNSWindow.h"
-
+#include "GormNSWindow.h"
 
 @implementation GormNSWindow
-- (void)encodeWithCoder: (NSCoder*) aCoder
+- (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;
   oldStyleMask = _styleMask;
@@ -51,12 +49,12 @@
 		screen: aScreen];
 }
 
-- (void)setStyleMask: (unsigned) newStyleMask
+- (void) setStyleMask: (unsigned)newStyleMask
 {
   _gormStyleMask = newStyleMask;
 }
 
-- (unsigned)styleMask
+- (unsigned) styleMask
 {
   return _gormStyleMask;
 }

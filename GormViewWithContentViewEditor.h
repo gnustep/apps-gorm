@@ -21,7 +21,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#import "GormViewWithSubviewsEditor.h"
+#ifndef	INCLUDED_GormViewWithContentViewEditor_h
+#define	INCLUDED_GormViewWithContentViewEditor_h
+
+#include "GormViewWithSubviewsEditor.h"
 
 @class GormInternalViewEditor;
 
@@ -42,3 +45,5 @@
 - (void) ungroup;
 - (void) pasteInView: (NSView *)view;
 @end
+
+#endif

@@ -1,5 +1,5 @@
-#import "Gorm.h"
-#import "GormPrivate.h"
+#include "Gorm.h"
+#include "GormPrivate.h"
 
 @implementation	GormClassEditor
 

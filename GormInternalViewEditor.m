@@ -22,11 +22,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#import <AppKit/AppKit.h>
+#include <AppKit/AppKit.h>
 
-#import "GormPrivate.h"
+#include "GormPrivate.h"
 
-#import "GormInternalViewEditor.h"
+#include "GormInternalViewEditor.h"
 
 @class GormEditorToParent;
 @class GSWindowView;

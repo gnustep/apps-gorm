@@ -24,13 +24,13 @@
 
 #include "GormPrivate.h"
 
-#import "GormViewWithContentViewEditor.h"
+#include "GormViewWithContentViewEditor.h"
 
 #include <math.h>
 
 #define _EO ((NSWindow *)_editedObject)
 
-#import "GormInternalViewEditor.h"
+#include "GormInternalViewEditor.h"
 
 
 //  static NSRect
