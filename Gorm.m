@@ -589,7 +589,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else
     {
-      NSDictionary *nameTable = [(id<IBDocuments>)doc nameTable];
+      NSDictionary *nameTable = [doc nameTable];
       NSEnumerator *enumerator = [nameTable keyEnumerator];
       NSString *key = nil;
 
@@ -751,7 +751,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  
 	  if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	    {
-	      [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
+	      [selectionOwner makeSelectionVisible: NO];
 	    }
 	  
 	  defaults = [NSUserDefaults standardUserDefaults];
@@ -1075,7 +1075,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{
-	  [(id<IBEditors>)selectionOwner makeSelectionVisible: YES];
+	  [selectionOwner makeSelectionVisible: YES];
 	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
