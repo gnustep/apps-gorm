@@ -1,9 +1,14 @@
 2003-05-24  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Prevent subclassing of FirstResponder.
+
+2003-05-24  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormInspectorsManager.m: Made changes to revert inspector to
 	"empty" when a document is closed.
-	* GormClassManager.m: Prevent user from adding methods to FirstResponder.
-	FirstResponder now automatically adds all action methods to it's action.
+	* GormClassManager.m: Prevent user from adding methods to 
+	FirstResponder.  FirstResponder now automatically adds all 
+	action methods to it's action.
 	* GormDocument.m: Corrected a problem which was allowing the user to 
 	instantiate FirstResponder.
 	* Gorm.m: Cleaned up some places where I was using (Gorm *) and should
@@ -24,10 +29,11 @@
 
 2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
 
-	* Gorm.m : refactored newApplication, newEmpty, newPalettes,newInspector.
-	new method : newGormDocument
+	* Gorm.m : refactored newApplication, newEmpty, newPalettes,
+	newInspector. new method : newGormDocument
 	Add inteligent window placement (cascade)
-	* Gorm.gorm : add tags for newApplication, newEmpty, newPalettes,newInspector
+	* Gorm.gorm : add tags for newApplication, newEmpty, newPalettes,
+	newInspector
 	
 2003-05-22  Gregory John Casamento <greg_casamento@yahoo.com>
 

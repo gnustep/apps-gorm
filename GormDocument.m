@@ -668,15 +668,23 @@ static NSImage	*classesImage = nil;
       NSString	   *newClassName;
       id            itemSelected = [classesView itemAtRow: i];
       
-      newClassName = [classManager addClassWithSuperClassName:
-				     itemSelected];
-      RETAIN(newClassName);
-      [classesView reloadData];
-      [classesView expandItem: itemSelected];
-      i = [classesView rowForItem: newClassName]; 
-      [classesView selectRow: i byExtendingSelection: NO];
-      [classesView scrollRowToVisible: i];
-      [self editClass: self];
+      if(![itemSelected isEqualToString: @"FirstResponder"])
+	{
+	  newClassName = [classManager addClassWithSuperClassName:
+					 itemSelected];
+	  RETAIN(newClassName);
+	  [classesView reloadData];
+	  [classesView expandItem: itemSelected];
+	  i = [classesView rowForItem: newClassName]; 
+	  [classesView selectRow: i byExtendingSelection: NO];
+	  [classesView scrollRowToVisible: i];
+	  [self editClass: self];
+	}
+      else
+	{
+	  // beep to inform the user of this error.
+	  NSBeep();
+	}
     }
 
   return self;
