@@ -24,9 +24,9 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <AppKit/AppKit.h>
-#include "GormPrivate.h"
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormViewWithSubviewsEditor.h>
 #include "GormButtonEditor.h"
-#include "GormViewWithSubviewsEditor.h"
 
 #define _EO ((NSButton *)_editedObject)
 
@@ -279,7 +279,7 @@ static NSRect oldFrame;
 {
   [_EO setTitle: [[aNotification object] string]];
   [_EO setNeedsDisplay: NO];
-  [[(Gorm*)NSApp inspectorsManager] updateSelection];
+  [[(id<Gorm>)NSApp inspectorsManager] updateSelection];
 }
 
 - (void) textDidEndEditing: (NSNotification *)aNotification

@@ -2,8 +2,20 @@
 ADDITIONAL_INCLUDE_DIRS += -I../..
 
 ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-ADDITIONAL_GUI_LIBS += -lGorm ../../Gorm.app/Gorm.exe.a
+ADDITIONAL_LIB_DIRS += \
+        -L../../GormLib/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormPrefs/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormCore/$(GNUSTEP_OBJ_DIR)
+
+ADDITIONAL_GUI_LIBS += -lGorm -lGormCore
 endif
 ifeq ($(GNUSTEP_TARGET_OS),cygwin)
-1Windows_LIBRARIES_DEPEND_UPON += -lGorm
+ADDITIONAL_LIB_DIRS += \
+        -L../../GormLib/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormPrefs/$(GNUSTEP_OBJ_DIR) \
+        -L../../GormCore/$(GNUSTEP_OBJ_DIR)
+
+0Menus_LIBRARIES_DEPEND_UPON += -lGorm -lGormCore
 endif

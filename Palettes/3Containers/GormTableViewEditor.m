@@ -26,7 +26,7 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormTableViewEditor.h"
 #include "GormNSTableView.h"
-#include "GormViewKnobs.h"
+#include <GormCore/GormViewKnobs.h>
 
 NSString *IBTableColumnPboardType = @"IBTableColumnPboardType";
 

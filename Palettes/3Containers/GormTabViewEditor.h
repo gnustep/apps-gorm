@@ -24,9 +24,8 @@
 #ifndef	INCLUDED_GormTabViewEditor_h
 #define	INCLUDED_GormTabViewEditor_h
 
-#include "GormViewWithSubviewsEditor.h"
-
-#include "GormInternalViewEditor.h"
+#include <GormCore/GormViewWithSubviewsEditor.h>
+#include <GormCore/GormInternalViewEditor.h>
 
 @interface GormTabViewEditor : GormViewWithSubviewsEditor
 {

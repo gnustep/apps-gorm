@@ -1,4 +1,4 @@
-/* GormTableViewEditor.h - Editor for tableviews.
+/* GormSplitViewEditor.h - Editor for splitviews.
  *
  * Copyright (C) 2002 Free Software Foundation, Inc.
  *
@@ -21,17 +21,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef	INCLUDED_GormTableViewEditor_h
-#define	INCLUDED_GormTableViewEditor_h
+#ifndef	INCLUDED_GormSplitViewEditor_h
+#define	INCLUDED_GormSplitViewEditor_h
 
 #include <GormCore/GormViewWithSubviewsEditor.h>
 
-@class GormNSTableView;
-
-@interface GormTableViewEditor : GormViewWithSubviewsEditor
+@interface GormSplitViewEditor : GormViewWithSubviewsEditor
 {
-  GormNSTableView *tableView;
 }
+- (NSArray *)destroyAndListSubviews;
 @end
 
 #endif

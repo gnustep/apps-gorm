@@ -26,22 +26,11 @@ before-all::
 	rm -rf InterfaceBuilder
 	$(LN_S) GormLib InterfaceBuilder
 
-# FIXME: Obviously this is quite ugly and if you want to run Gorm
-# without installing you have to type 'make' twice.
 after-all::
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-	(cd Palettes; $(MAKE))
-endif
 
 after-clean::
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-	(cd Palettes; $(MAKE) clean)
-endif
 
 after-distclean::
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-	(cd Palettes; $(MAKE) distclean)
-endif
 
 after-clean::
 	rm -rf InterfaceBuilder

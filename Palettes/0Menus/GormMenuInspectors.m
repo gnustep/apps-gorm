@@ -24,8 +24,8 @@
 
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
-#include "GormPrivate.h"
-#include "GormDocument.h"
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormDocument.h>
 
 @interface GormMenuAttributesInspector : IBInspector
 {

@@ -5,6 +5,97 @@
 	* GormOutlineView.m: Removed addAttributeToClass from here.
 	* GormPrivate.h: Moved addAttributeToClass to class editor.
 
+2005-03-30 06:09 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* GNUmakefile: Added GormInfo.plist back to the top level
+	dir
+	* Resources/GormInfo.plist: Removed from here.
+
+2005-03-29 21:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* GNUmakefile
+	* GNUmakefile.preamble
+	* GormPrefs/GNUmakefile
+	* GormPrefs/GNUmakefile.preamble
+	* Palettes/0Menus/GNUmakefile.preamble
+	* Palettes/1Windows/GNUmakefile.preamble
+	* Palettes/2Controls/GNUmakefile.preamble
+	* Palettes/3Containers/GNUmakefile.preamble
+	* Palettes/4Data/GNUmakefile.preamble: Removed GormPrefs framework,
+	it is now a library.
+	* Resources: Moved all .gorm files from here..
+	* English.lproj: To here.
+	
+2005-03-29  Richard Frith-Macdonald <rfm@gnu.org>
+
+        BRANCH: build_reorg_branch
+	* GormPalettesManager.m: Fix some coordinate translation bugs when
+	the gui is decorating windows itsself.
+
+2005-03-29 02:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* GormCore/GNUmakefile.preamble: Removed link to GormPrefs.
+	* GormCore/GormPrivate.m: Removed uneeded reference to GormPrefs.
+
+2005-03-29 02:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* GNUmakefile.postamble: Removed kludge for windows.
+	* GormCore/GNUmakefile.preamble: Fixed path.
+
+2005-03-29 01:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* GNUmakefile: Reorganized the build order so that GormCore is
+	built before GormPrefs.
+
+2005-03-29 01:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	BRANCH: build_reorg_branch
+	* GNUmakefile.preamble
+	* GormPrefs/GNUmakefile
+	* Palettes/0Menus/GNUmakefile.preamble
+	* Palettes/1Windows/GNUmakefile.preamble
+	* Palettes/2Controls/GNUmakefile.preamble
+	* Palettes/3Containers/GNUmakefile.preamble
+	* Palettes/4Data/GNUmakefile.preamble: Build and link
+	GormPrefs as a library on windows, for now, until the bug is
+	fixed.
+
+2005-03-29 01:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+        BRANCH: build_reorg_branch
+	* Palettes/0Menus/GNUmakefile.preamble
+	* Palettes/1Windows/GNUmakefile.preamble
+	* Palettes/2Controls/GNUmakefile.preamble
+	* Palettes/3Containers/GNUmakefile.preamble
+	* Palettes/4Data/GNUmakefile.preamble: Added lines to all
+	of these files to link the GormCore when the palette is built
+	on windows.
+
+2005-03-29 01:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	BRANCH: build_reorg_branch
+	* Gorm.m: Added new version here, after factoring out of 
+	GormCore.
+	* install-windows.sh: Removed.
+	
+2005-03-28 19:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	BRANCH: build_reorg_branch
+	* GormCore: New library (may become a framework)
+	* *.[hm]: Except for main.m, moved to GormCore.
+	
+2005-03-26 15:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	BRANCH: build_reorg_branch
+	* GNUmakefile: Add new framework to makefile.
+	* Resources: Removed pref gorms.
+	* GormLib: New framework.  Pref gorms moved here as 
+
 2005-03-26 10:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* install-windows.sh: Installation script for windows.

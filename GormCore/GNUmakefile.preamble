@@ -24,19 +24,15 @@
 
 # ADDITIONAL_OBJCFLAGS += -Wall -Werror
 ADDITIONAL_GUI_LIBS += \
-	-lGormCore \
 	-lGorm \
-	-lGormObjCHeaderParser \
-	-lGormPrefs 
+	-lGormObjCHeaderParser 
 
-ADDITIONAL_INCLUDE_DIRS += \
-	-IInterfaceBuilder \
-	-IGormObjCHeaderParser \
-	-IGormPrefs \
-	-IGormCore
-
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
 ADDITIONAL_LIB_DIRS += \
-	-LGormLib/$(GNUSTEP_OBJ_DIR) \
-	-LGormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
-	-LGormPrefs/$(GNUSTEP_OBJ_DIR) \
-	-LGormCore/$(GNUSTEP_OBJ_DIR)
+	-L../GormLib/$(GNUSTEP_OBJ_DIR) \
+	-L../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
+else
+ADDITIONAL_LIB_DIRS += \
+	-L../GormLib/$(GNUSTEP_OBJ_DIR) \
+	-L../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
+endif

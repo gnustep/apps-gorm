@@ -24,7 +24,7 @@
 
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
-#include "GormFunctions.h"
+#include <GormCore/GormFunctions.h>
 
 @implementation NSMenu (IBObjectAdditions)
 - (NSString*) editorClassName
