@@ -28,19 +28,6 @@
 #include <AppKit/NSImage.h>
 #include "GormImage.h"
 
-/*
- * Method to return the image that should be used to display objects within
- * the matrix containing the objects in a document.
- */
-@implementation NSObject (GormImageAdditions)
-- (NSString*) imageInspectorClassName
-{
-  return @"GormImageInspector";
-}
-@end
-
-
-
 @implementation	GormImageEditor
 
 static NSMapTable	*docMap = 0;
@@ -241,7 +228,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       while((obj = [en nextObject]) != nil)
 	{
 	  GormImage *image = [GormImage imageForPath: obj];
-	  [image setSystemImage: YES];
+	  [image setSystemResource: YES];
 	  [self addObject: image];
 	}
 
@@ -395,7 +382,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
 	      [pb declareTypes: [NSArray arrayWithObject: GormImagePboardType]
 		  owner: self];
-	      [pb setString: [[objects objectAtIndex: pos] imageName] 
+	      [pb setString: [(GormResource *)[objects objectAtIndex: pos] name] 
 		  forType: GormImagePboardType];
 	      [self dragImage: [[objects objectAtIndex: pos] image]
 		    at: lastLocation
@@ -429,12 +416,12 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 - (void) deleteSelection
 {
-  if(![selected isSystemImage])
+  if(![selected isSystemResource])
     {
       if([selected isInWrapper])
 	{
 	  NSFileManager *mgr = [NSFileManager defaultManager];
-	  NSString *path = [selected imagePath];
+	  NSString *path = [selected path];
 	  BOOL removed = [mgr removeFileAtPath: path
 			      handler: nil];
 	  if(!removed)
@@ -498,9 +485,9 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
     {
       id		obj = [objects objectAtIndex: index];
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-      NSString          *name = [obj imageName];
+      NSString          *name = [(GormResource *)obj name];
 
-      [but setImage: [obj image]];
+      [but setImage: [obj imageForViewer]];
       [but setTitle: name];
       [but setShowsStateBy: NSChangeGrayCellMask];
       [but setHighlightsBy: NSChangeGrayCellMask];

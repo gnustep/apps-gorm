@@ -1,3 +1,15 @@
+2005-03-01 21:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added new files.
+	* GormDocument.m: Calls new resource methods.
+	* GormImageEditor.m: Calls new resource methods.
+	* GormImage.[hm]: Now inherits from GormResource.
+	* GormResource.[hm]: Added.  New abstract resource class which
+	implements IBResourceFiles. 
+	* GormSoundEditor.m: Calls new methods.
+	* GormSound.[hm]: Now inherits from GormResource.
+	* GormSoundInspector.m: Calls new methods.
+
 2005-02-28 20:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFilePrefsManager.m

@@ -168,6 +168,7 @@ Gorm_HEADERS = \
 	GormPlacementInfo.h \
 	GormPrefController.h \
 	GormPrivate.h \
+	GormResource.h \
 	GormScrollViewAttributesInspector.h \
 	GormSetNameController.h \
 	GormShelfPref.h \
@@ -215,6 +216,7 @@ Gorm_OBJC_FILES = \
 	GormPalettesManager.m \
 	GormPalettesPref.m \
 	GormPrefController.m \
+	GormResource.m \
 	GormScrollViewAttributesInspector.m \
 	GormScrollViewEditor.m \
 	GormSetNameController.m \

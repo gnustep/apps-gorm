@@ -29,41 +29,21 @@
 #define INCLUDED_GormImage_h
 
 #include <Foundation/NSObject.h>
+#include "GormResource.h"
 
 @class NSString, NSImage;
 
-@interface GormImage : NSObject
+@interface GormImage : GormResource
 {
-  NSString *name;
-  NSString *path;
   NSImage  *image;
   NSImage  *smallImage;
-  BOOL     isSystemImage;
-  BOOL     isInWrapper; 
 }
 
 + (GormImage *) imageForPath: (NSString *)path;
 + (GormImage *) imageForPath: (NSString *)path inWrapper: (BOOL)flag;
-- (id) initWithPath: (NSString *)aPath;
-- (id) initWithPath: (NSString *)aPath
-          inWrapper: (BOOL)flag;
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath;
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath
-          inWrapper: (BOOL)flag;
-- (void) setImageName: (NSString *)aName;
-- (NSString *) imageName;
-- (void) setImagePath: (NSString *)aPath;
-- (NSString *) imagePath;
-- (void) setSystemImage: (BOOL)flag;
-- (BOOL) isSystemImage;
-- (void) setInWrapper: (BOOL)flag;
-- (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;
 - (NSImage *)image;
 - (NSImage *)normalImage;
-- (BOOL) isEqual: (id)object;
 @end
 
 /**

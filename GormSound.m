@@ -24,6 +24,7 @@
 
 #include <Foundation/NSString.h>
 #include <AppKit/NSSound.h>
+#include <AppKit/NSImage.h>
 #include "GormSound.h"
 
 // sound proxy object...
@@ -38,83 +39,18 @@
   return AUTORELEASE([[GormSound alloc] initWithPath: aPath inWrapper: flag]);
 }
 
-- (id) initWithPath: (NSString *)aPath
-{
-  return [self initWithPath: aPath inWrapper: NO];
-}
-
-- (id) initWithPath: (NSString *)aPath inWrapper: (BOOL)flag
-{
-  NSString *aName = [[aPath lastPathComponent] stringByDeletingPathExtension];
-  if((self = [self initWithName: aName path: aPath inWrapper: flag]) == nil)
-    {
-      RELEASE(self);
-    }
-  return self;
-}
-
-- (id) initWithName: (NSString *)aName
-	       path: (NSString *)aPath
-{
-  return [self initWithName: aName path: aPath inWrapper: NO];
-}
-
-
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag
 {
-  NSSound *sound = [[NSSound alloc] initWithContentsOfFile: aPath
-		   byReference: YES];
-  [super init];
-  ASSIGN(name, aName);
-  ASSIGN(path, aPath);
-
-  //#warning "we want to store the sound somewhere"
-  [(NSSound *)sound setName: aName];
-  isSystemSound = NO;
-  isInWrapper = flag;
+  if((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
+    {
+      NSSound *sound = [[NSSound alloc] initWithContentsOfFile: aPath
+					byReference: YES];
+      
+      [(NSSound *)sound setName: aName]; // cache the sound under the given name.
+    }
   return self;
-}
-
-- (void) setSoundName: (NSString *)aName
-{
-  ASSIGN(name, aName);
-}
-
-- (NSString *) soundName
-{
-  return name;
-}
-
-- (void) setSoundPath: (NSString *)aPath
-{
-  ASSIGN(path, aPath);
-}
-
-- (NSString *) soundPath
-{
-  return path;
-}
-
-- (void) setSystemSound: (BOOL)flag
-{
-  isSystemSound = flag;
-}
-
-- (BOOL) isSystemSound
-{
-  return isSystemSound;
-}
-
-- (void) setInWrapper: (BOOL)flag
-{
-  isInWrapper = flag;
-}
-
-- (BOOL) isInWrapper
-{
-  return isInWrapper;
 }
 
 - (NSString *)inspectorClassName
@@ -132,22 +68,17 @@
   return @"GormNotApplicableInspector";
 }
 
-- (NSString*) sizeInspectorClassName
+- (NSImage *) imageForViewer
 {
-  return @"GormNotApplicableInspector";
-}
+  static NSImage	*image = nil;
 
-- (BOOL) isEqual: (id)object
-{
-  BOOL result = NO;
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*bpath = [bundle pathForImageResource: @"GormSound"];
 
-  if(object == self)
-    result = YES;
-  else if([object isKindOfClass: [self class]] == NO)
-    result = NO;
-  else if([[self soundName] isEqual: [object soundName]])
-    result = YES;
-
-  return result;
+      image = [[NSImage alloc] initWithContentsOfFile: bpath];
+    }
+  return image;
 }
 @end

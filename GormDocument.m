@@ -2826,27 +2826,29 @@ static NSImage  *fileImage = nil;
 	    {
 	      NSArray *sounds = [soundsView objects];
 	      NSArray *images = [imagesView objects];
+	      NSArray *resources = [sounds arrayByAddingObjectsFromArray: images];
+	      
 	      id object = nil;
-	      NSEnumerator *en = [sounds objectEnumerator];
+	      NSEnumerator *en = [resources objectEnumerator];
 	      while ((object = [en nextObject]) != nil)
 		{
-		  if(![object isSystemSound])
+		  if(![object isSystemResource])
 		    {
-		      NSString *soundPath;
-		      NSString *path = [object soundPath];
+		      NSString *rscPath;
+		      NSString *path = [object path];
 		      BOOL copied = NO;
 		      
-		      soundPath = [documentPath stringByAppendingPathComponent:
-						  [path lastPathComponent]];
-		      if(![path isEqualToString: soundPath])
+		      rscPath = [documentPath stringByAppendingPathComponent:
+						[path lastPathComponent]];
+		      if(![path isEqualToString: rscPath])
 			{
 			  copied = [mgr copyPath: path
-					toPath: soundPath
+					toPath: rscPath
 					handler: nil];
 			  if(copied)
 			    {
 			      [object setInWrapper: YES];
-			      [object setSoundPath: soundPath];
+			      [object setPath: rscPath];
 			    }
 			}
 		      else
@@ -2858,47 +2860,10 @@ static NSImage  *fileImage = nil;
 		      
 		      if (!copied)
 			{
-			  NSDebugLog(@"Could not find sound at path %@", object);
+			  NSDebugLog(@"Could not find resource at path %@", object);
 			}
 		    }
 		}
-	      
-	      en = [images objectEnumerator];
-	      while ((object = [en nextObject]) != nil)
-		{
-		  if(![object isSystemImage])
-		    {
-		      NSString *imagePath;
-		      NSString *path = [object imagePath];
-		      BOOL copied = NO;
-		      
-		      imagePath = [documentPath stringByAppendingPathComponent:
-						  [path lastPathComponent]];
-		      
-		      if(![path isEqualToString: imagePath])
-			{
-			  copied = [mgr copyPath: path
-					toPath: imagePath
-					handler: nil];
-			  if(copied)
-			    {
-			      [object setInWrapper: YES];
-			      [object setImagePath: imagePath];
-			    }
-			}
-		      else
-			{
-			  // mark it as copied if paths are equal.
-			  copied = YES;
-			  [object setInWrapper: YES];
-			}
-		      
-		      if (!copied)
-			{
-			  NSDebugLog(@"Could not find image at path %@", object);
-			}
-		    }
-		} 
 	    }
 	}
     }

@@ -244,7 +244,7 @@ static NSMapTable	*docMap = 0;
       while((obj = [en nextObject]) != nil)
 	{
 	  GormSound *sound = [GormSound soundForPath: obj];
-	  [sound setSystemSound: YES];
+	  [sound setSystemResource: YES];
 	  [self addObject: sound];
 	}
 
@@ -386,7 +386,7 @@ static NSMapTable	*docMap = 0;
 	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
 	      [pb declareTypes: [NSArray arrayWithObject: GormSoundPboardType]
 		  owner: self];
-	      [pb setString: [[objects objectAtIndex: pos] soundName] 
+	      [pb setString: [(GormResource *)[objects objectAtIndex: pos] name] 
 		  forType: GormSoundPboardType];
 	      [self dragImage: [[objects objectAtIndex: pos] soundImageForViewer]
 		    at: lastLocation
@@ -420,12 +420,12 @@ static NSMapTable	*docMap = 0;
 
 - (void) deleteSelection
 {
-  if(![selected isSystemSound])
+  if(![selected isSystemResource])
     {
       if([selected isInWrapper])
 	{
 	  NSFileManager *mgr = [NSFileManager defaultManager];
-	  NSString *path = [selected soundPath];
+	  NSString *path = [selected path];
 	  BOOL removed = [mgr removeFileAtPath: path
 			      handler: nil];
 	  if(!removed)
@@ -578,7 +578,7 @@ static NSMapTable	*docMap = 0;
     {
       id		obj = [objects objectAtIndex: index];
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-      NSString          *name = [obj soundName];
+      NSString          *name = [(GormResource *)obj name];
 
       NSDebugLog(@"sound name = %@",name);
       [but setImage: [obj soundImageForViewer]];

@@ -29,37 +29,17 @@
 #define INCLUDED_GormSound_h
 
 #include <Foundation/NSObject.h>
+#include "GormResource.h"
 
 @class NSString;
 
-@interface GormSound : NSObject
+@interface GormSound : GormResource
 {
-  NSString *name;
-  NSString *path;
-  BOOL     isSystemSound;
-  BOOL     isInWrapper; 
 }
 
 + (GormSound*) soundForPath: (NSString *)path;
 + (GormSound*) soundForPath: (NSString *)path inWrapper: (BOOL)flag;
-- (id) initWithPath: (NSString *)aPath;
-- (id) initWithPath: (NSString *)aPath
-          inWrapper: (BOOL)flag;
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath;
-- (id) initWithName: (NSString *)aName
-               path: (NSString *)aPath
-          inWrapper: (BOOL)flag;
-- (void) setSoundName: (NSString *)aName;
-- (NSString *) soundName;
-- (void) setSoundPath: (NSString *)aPath;
-- (NSString *) soundPath;
-- (void) setSystemSound: (BOOL)flag;
-- (BOOL) isSystemSound;
-- (void) setInWrapper: (BOOL)flag;
-- (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;
-- (BOOL) isEqual: (id)object;
 @end
 
 #endif

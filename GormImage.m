@@ -50,48 +50,23 @@
   return AUTORELEASE([[GormImage alloc] initWithPath: aPath inWrapper: flag]);
 }
 
-- (id) initWithPath: (NSString *)aPath
-{
-  return [self initWithPath: aPath inWrapper: NO];
-}
-
-- (id) initWithPath: (NSString *)aPath inWrapper: (BOOL)flag
-{
-  NSString *aName = [[aPath lastPathComponent] stringByDeletingPathExtension];
-  if((self = [self initWithName: aName path: aPath inWrapper: flag]) == nil)
-    {
-      RELEASE(self);
-    }
-  return self;
-}
-
-
-- (id) initWithName: (NSString *)aName
-	       path: (NSString *)aPath
-{
-  return [self initWithName: aName path: aPath inWrapper: NO];
-}
-
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag
 {
-  if((self = [super init]) != nil)
+  if((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
     {
       NSSize originalSize;
       float ratioH;
       float ratioW;
 
-      ASSIGN(name, aName);
-      ASSIGN(path, aPath);
       image = RETAIN([[NSImage alloc] initByReferencingFile: aPath]);
       smallImage = RETAIN([[NSImage alloc] initWithContentsOfFile: aPath]);
       [image setName: aName];
       
       if (smallImage == nil)
 	{
-	  RELEASE(name);
-	  RELEASE(path);
+	  RELEASE(self);
 	  return nil;
 	}
       
@@ -112,8 +87,6 @@
 	    }
 	}
 
-      isSystemImage = NO;
-      isInWrapper = flag;
       [image setArchiveByName: NO];
       [smallImage setArchiveByName: NO];
     }
@@ -127,31 +100,9 @@
 
 - (void) dealloc
 {
-  RELEASE(name);
-  RELEASE(path);
   RELEASE(image);
   RELEASE(smallImage);
   [super dealloc];
-}
-
-- (void) setImageName: (NSString *)aName
-{
-  ASSIGN(name, aName);
-}
-
-- (NSString *) imageName
-{
-  return name;
-}
-
-- (void) setImagePath: (NSString *)aPath
-{
-  ASSIGN(path, aPath);
-}
-
-- (NSString *) imagePath
-{
-  return path;
 }
 
 - (NSImage *) normalImage
@@ -164,26 +115,11 @@
   return smallImage;
 }
 
-- (void) setSystemImage: (BOOL)flag
+- (void) setSystemResource: (BOOL)flag
 {
-  isSystemImage = flag;
+  [super setSystemResource: flag];
   [image setArchiveByName: flag];
   [smallImage setArchiveByName: flag];
-}
-
-- (BOOL) isSystemImage
-{
-  return isSystemImage;
-}
-
-- (void) setInWrapper: (BOOL)flag
-{
-  isInWrapper = flag;
-}
-
-- (BOOL) isInWrapper
-{
-  return isInWrapper;
 }
 
 - (NSString *)inspectorClassName
@@ -191,32 +127,18 @@
   return @"GormImageInspector"; 
 }
 
-- (NSString*) classInspectorClassName
+- (NSString *) classInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
 
-- (NSString*) connectInspectorClassName
+- (NSString *) connectInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
 
-- (NSString*) sizeInspectorClassName
+- (NSImage *) imageForViewer
 {
-  return @"GormNotApplicableInspector";
-}
-
-- (BOOL) isEqual: (id)object
-{
-  BOOL result = NO;
-
-  if(object == self)
-    result = YES;
-  else if([object isKindOfClass: [self class]] == NO)
-    result = NO;
-  else if([[self imageName] isEqual: [object imageName]])
-    result = YES;
-
-  return result;
+  return [self image];
 }
 @end

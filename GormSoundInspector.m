@@ -76,7 +76,7 @@
 	  id snd;
 
 	  NSDebugLog(@"Sound inspector notified: %@",anObject);
-	  snd = AUTORELEASE([[NSSound alloc] initWithContentsOfFile: [anObject soundPath]
+	  snd = AUTORELEASE([[NSSound alloc] initWithContentsOfFile: [anObject path]
 					     byReference: YES]);
 	  [super setObject: snd];
 	  [soundView setSound: snd];
