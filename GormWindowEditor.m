@@ -62,6 +62,46 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   return point;
 }
 
+@interface NSFormCell (GormAdditions)
+- (void) printAuto;
+@end
+
+@implementation NSFormCell (GormAdditions)
+
+- (void) printAuto
+{
+  NSLog(@"Auto for cell is %d, width %f", 
+	_formcell_auto_title_width, _displayedTitleWidth);
+}
+@end
+
+@interface NSForm (GormAdditions)
+- (float) titleWidth;
+@end
+
+@implementation NSForm (GormAdditions)
+
+- (float)titleWidth
+{
+  int i, count = [self numberOfRows];
+  float new_title_width = 0;
+  float candidate_title_width = 0;
+
+  // Compute max of title width in the cells
+  for (i = 0; i < count; i++)
+    {
+      candidate_title_width = [_cells[i][0] titleWidth];
+      [_cells[i][0] printAuto];
+      if (candidate_title_width > new_title_width)  
+	new_title_width = candidate_title_width;
+    }
+  return new_title_width;
+}
+
+@end
+
+
+
 @implementation NSWindow (GormObjectAdditions)
 - (NSString*) editorClassName
 {
@@ -230,9 +270,7 @@ static BOOL done_editing;
   editCell = [(NSForm *)view cellAtRow: row column: col];
   frame = [(NSForm *)view cellFrameAtRow: row column: col];
   frame.origin.x += NSMinX([view frame]);
-  frame.size.width = [(NSFormCell *)editCell titleWidth];
-  /* Disable resizing of the title */
-  [editCell setTitleWidth: frame.size.width];
+  frame.size.width = [(NSForm *)view titleWidth];
   if ([view isFlipped])
     {
       frame.origin.y = NSMaxY([view frame]) - NSMaxY(frame);
@@ -309,10 +347,27 @@ static BOOL done_editing;
   [nc removeObserver: self
                 name: NSControlTextDidEndEditingNotification
               object: nil];
-  [(NSFormCell *)editCell setTitle: [editField stringValue]];
 
+  /* Set the new title and resize the form to match the titles */
+  [self makeSelectionVisible: NO];
+  {
+    float oldTitleWidth, titleWidth;
+    NSRect oldFrame;
+    oldTitleWidth = [(NSForm *)view titleWidth];
+    [(NSFormCell *)editCell setTitle: [editField stringValue]];
+    [(NSForm *)view calcSize];
+    titleWidth = [(NSForm *)view titleWidth];
+    NSLog(@"old width %f new %f", oldTitleWidth, titleWidth);
+    oldFrame = frame = [view frame];
+    frame.origin.x -= (titleWidth - oldTitleWidth);
+    frame.size.width += (titleWidth - oldTitleWidth);
+    [(NSForm *)view setEntryWidth: NSWidth(frame)];
+    [(NSForm *)view setFrame: frame];
+    frame = NSUnionRect(frame, oldFrame);
+  }
   [edit_view removeSubview: editField];
   [edit_view displayRect: frame];
+  [self makeSelectionVisible: YES];
 
   RELEASE(editField);
 }

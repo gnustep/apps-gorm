@@ -1,3 +1,13 @@
+2001-08-18  Adam Fedor  <fedor@gnu.org>
+
+	* GormWindowEditor.m (-_editTextView:withEvent:): Size the NSForm
+	to fit when titles are edited.
+
+	* Add slider inspector.
+	* Palettes/2Controls/inspectors.m: New file.
+	* Palettes/2Controls/GormSliderInspector.gorm: Likewise.
+	* Palettes/2Controls/GNUmakefile: Update
+
 2001-07-18  Adam Fedor  <fedor@gnu.org>
 
 	* Version 0.0.3.
