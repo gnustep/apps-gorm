@@ -1,3 +1,9 @@
+2004-07-17 17:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFilePrefsManager.m: Removed reference to math.h and values.h
+	in includes.   They were there temporarily for something which I
+	ended up not doing anyway.   Causing compilation problem on FreeBSD.
+
 2004-07-15 21:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added a check in applicationDidFinishLaunching:

@@ -37,8 +37,6 @@
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSArchiver.h>
 #include <GNUstepBase/GSObjCRuntime.h>
-#include <values.h>
-#include <math.h>
 
 NSString *formatVersion(int version)
 {
