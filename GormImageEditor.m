@@ -68,45 +68,57 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 - (unsigned int) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  NSArray *types=[[sender draggingPasteboard] types];
-  unsigned int mask=[sender draggingSourceOperationMask];
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *pbtypes = [pb types];
+  unsigned int mask = [sender draggingSourceOperationMask];
 
-  // NSDebugLLog(@"GormImageEditor draggingEntered mask=%d types=%@",mask,types);
-  
-   if (  mask&handled_mask &&
-       ([types containsObject: NSFilenamesPboardType] ||
-        [types containsObject: NSTIFFPboardType]))
+  if ((mask & handled_mask) && [pbtypes containsObject: NSFilenamesPboardType])
+    {
+      NSArray *data;
+      NSEnumerator *en;
+      NSString *fileName;
+      NSArray *types = [NSImage imageFileTypes];
 
-    return NSDragOperationCopy;
+      data = [pb propertyListForType: NSFilenamesPboardType];
+      if (!data)
+	{
+	  data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
+	}
+
+      en = [data objectEnumerator];
+      while((fileName = (NSString *)[en nextObject]) != nil)
+	{
+	  NSString *ext = [fileName pathExtension];
+	  if([types containsObject: ext] == YES)
+	    {
+	      return NSDragOperationCopy;
+	    }
+	  else
+	    {
+	      return NSDragOperationNone;
+	    }
+	}
+
+      return NSDragOperationCopy;
+    }
 
   return NSDragOperationNone;
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  NSArray *types=[[sender draggingPasteboard] types];
-  unsigned int mask=[sender draggingSourceOperationMask];
-
-  NSDebugLLog(@"dragndrop",@"GormImageEditor draggingEntered mask=%x types=%@",mask,types);
-  
-  if (mask&handled_mask &&
-       ([types containsObject: NSFilenamesPboardType] ||
-        [types containsObject: NSTIFFPboardType]))
-    return NSDragOperationCopy;
-
-
-  return NSDragOperationNone;
+  return [self draggingEntered: sender];
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard *pb=[sender draggingPasteboard];
-  NSArray *types=[pb types];
-  unsigned int mask=[sender draggingSourceOperationMask];
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *types = [pb types];
+  unsigned int mask = [sender draggingSourceOperationMask];
 
   NSDebugLLog(@"dragndrop",@"performDrag %x %@",mask,types);
 
-   if (!(mask&handled_mask))
+   if (!(mask & handled_mask))
      return NO;
 
   if ([types containsObject: NSFilenamesPboardType])
@@ -114,20 +126,17 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       NSArray *data;
       int i,c;
 
-      data=[pb propertyListForType: NSFilenamesPboardType];
+      data = [pb propertyListForType: NSFilenamesPboardType];
       if (!data)
-	data=[NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
+	data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
 
       c=[data count];
-      printf("count %i\n",c);
       for (i=0;i<c;i++)
 	{
- 	  id placeHolder =  nil;
+	  NSString *fileName = [data objectAtIndex: i];
+ 	  id placeHolder =  [self placeHolderWithPath: [data objectAtIndex: i]];
 
 	  NSLog(@"====> %@",[data objectAtIndex:i]);
-	  placeHolder = [GormImage imageForPath: [data objectAtIndex: i]];
- 	  NSLog(@"here1 %@", [data objectAtIndex: i]);
-
 	  if (placeHolder)
  	    {
  	      NSLog(@"here %@", [data objectAtIndex: i]);
@@ -137,13 +146,21 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       return YES;
     }
   return NO;
-
-
 }
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
   return YES;
+}
+
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+{
+  return NSDragOperationCopy;
+}
+
+- (id) placeHolderWithPath: (NSString *)string
+{
+  return [GormImage imageForPath: string];
 }
 
 - (void) drawSelection
@@ -432,11 +449,6 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	}
       [super deleteSelection];
     }
-}
-
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
-{
-  return NSDragOperationCopy;
 }
 
 - (id) raiseSelection: (id)sender

@@ -264,6 +264,7 @@ extern NSString *GormResizeCellNotification;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;
+- (id) placeHolderWithPath: (NSString *)path;
 @end
 
 /*

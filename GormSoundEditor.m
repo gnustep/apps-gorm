@@ -28,36 +28,10 @@
 #include <AppKit/NSSound.h>
 #include "GormSound.h"
 
-/*
- * Method to return the image that should be used to display objects within
- * the matrix containing the objects in a document.
- */
-@implementation NSObject (GormSoundAdditions)
-- (NSString*) soundInspectorClassName
-{
-  return @"GormSoundInspector";
-}
-
-- (NSImage*) soundImageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormSound"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-@end
-
-
-
 @implementation	GormSoundEditor
 
 static NSMapTable	*docMap = 0;
+static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperationPrivate;
 
 + (void) initialize
 {
@@ -107,63 +81,96 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  NSArray	*types;
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *pbtypes = [pb types];
+  unsigned int mask = [sender draggingSourceOperationMask];
 
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: IBObjectPboardType] == YES)
+  if ((mask & handled_mask) && [pbtypes containsObject: NSFilenamesPboardType])
     {
-      dragType = IBObjectPboardType;
+      NSArray *data;
+      NSEnumerator *en;
+      NSString *fileName;
+      NSArray *types = [NSSound soundUnfilteredFileTypes];
+
+      data = [pb propertyListForType: NSFilenamesPboardType];
+      if (!data)
+	{
+	  data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
+	}
+
+      en = [data objectEnumerator];
+      while((fileName = (NSString *)[en nextObject]) != nil)
+	{
+	  NSString *ext = [fileName pathExtension];
+	  if([types containsObject: ext] == YES)
+	    {
+	      return NSDragOperationCopy;
+	    }
+	  else
+	    {
+	      return NSDragOperationNone;
+	    }
+	}
+
+      return NSDragOperationCopy;
     }
-  else if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      dragType = GormLinkPboardType;
-    }
-  else
-    {
-      dragType = nil;
-    }
-  return [self draggingUpdated: sender];
+
+  return NSDragOperationNone;
 }
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  if (dragType == IBObjectPboardType)
-    {
-      return NSDragOperationCopy;
-    }
-  else if (dragType == GormLinkPboardType)
-    {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
+  return [self draggingEntered: sender];
+}
 
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
-	{
-	  obj = [objects objectAtIndex: pos];
-	}
-      if (obj == [NSApp connectSource])
-	{
-	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
-	}
-      [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-      if (obj != nil)
-	{
-	  return NSDragOperationLink;
-	}
-      else
-	{
-	  return NSDragOperationNone;
-	}
-    }
-  else
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *types = [pb types];
+  unsigned int mask = [sender draggingSourceOperationMask];
+
+  NSDebugLLog(@"dragndrop",@"performDrag %x %@",mask,types);
+
+   if (!(mask & handled_mask))
+     return NO;
+
+  if ([types containsObject: NSFilenamesPboardType])
     {
-      return NSDragOperationNone;
+      NSArray *data;
+      int i,c;
+
+      data = [pb propertyListForType: NSFilenamesPboardType];
+      if (!data)
+	data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
+
+      c=[data count];
+      for (i=0;i<c;i++)
+	{
+ 	  id placeHolder =  nil;
+
+	  NSLog(@"====> %@",[data objectAtIndex:i]);
+	  placeHolder = [GormSound soundForPath: [data objectAtIndex: i]];
+ 	  NSLog(@"here1 %@", [data objectAtIndex: i]);
+
+	  if (placeHolder)
+ 	    {
+ 	      NSLog(@"here %@", [data objectAtIndex: i]);
+   	      [self addObject: placeHolder];
+	    }
+	}
+      return YES;
     }
+  return NO;
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  return YES;
+}
+
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag
+{
+  return NSDragOperationCopy;
 }
 
 - (void) drawSelection
@@ -206,7 +213,7 @@ static NSMapTable	*docMap = 0;
       GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	IBObjectPboardType, GormLinkPboardType, nil]];
+	NSFilenamesPboardType, nil]];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];
@@ -388,7 +395,7 @@ static NSMapTable	*docMap = 0;
 		  owner: self];
 	      [pb setString: [(GormResource *)[objects objectAtIndex: pos] name] 
 		  forType: GormSoundPboardType];
-	      [self dragImage: [[objects objectAtIndex: pos] soundImageForViewer]
+	      [self dragImage: [[objects objectAtIndex: pos] imageForViewer]
 		    at: lastLocation
 		    offset: NSZeroSize
   		    event: theEvent
@@ -437,100 +444,6 @@ static NSMapTable	*docMap = 0;
       [super deleteSelection];
     }
 }
-
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  if (dragType == IBObjectPboardType)
-    {
-      NSArray		*array;
-      NSEnumerator	*enumerator;
-      id		obj;
-
-      /*
-       * Ask the document to get the dragged objects from the pasteboard and
-       * add them to it's collection of known objects.
-       */
-      array = [document pasteType: IBViewPboardType
-		   fromPasteboard: dragPb
-			   parent: [objects objectAtIndex: 0]];
-      enumerator = [array objectEnumerator];
-      while ((obj = [enumerator nextObject]) != nil)
-	{
-	  [self addObject: obj];
-	}
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
-    {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
-
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
-	{
-	  obj = [objects objectAtIndex: pos];
-	}
-      if (obj == nil)
-	{
-	  return NO;
-	}
-      else
-	{
-	  [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-	  [NSApp startConnecting];
-	  return YES;
-	}
-    }
-  else
-    {
-      NSDebugLog(@"Drop with unrecognized type!");
-      return NO;
-    }
-}
-
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  /*
-   * Tell the source that we will accept the drop if we can.
-   */
-  if (dragType == IBObjectPboardType)
-    {
-      /*
-       * We can accept objects dropped anywhere.
-       */
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
-    {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
-
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
-	{
-	  obj = [objects objectAtIndex: pos];
-	}
-      if (obj != nil)
-	{
-	  return YES;
-	}
-    }
-  return NO;
-}
-
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag
-{
-  return NSDragOperationCopy;
-}
-
 
 - (id) raiseSelection: (id)sender
 {
@@ -581,7 +494,7 @@ static NSMapTable	*docMap = 0;
       NSString          *name = [(GormResource *)obj name];
 
       NSDebugLog(@"sound name = %@",name);
-      [but setImage: [obj soundImageForViewer]];
+      [but setImage: [obj imageForViewer]];
       [but setTitle: name];
       [but setShowsStateBy: NSChangeGrayCellMask];
       [but setHighlightsBy: NSChangeGrayCellMask];

@@ -1,3 +1,10 @@
+2005-03-04 04:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageEditor.m
+	* GormPrivate.h: Added declaration for new method.
+	* GormSoundEditor.m: Streamlined drag/drop code in image/sound
+	editors.
+
 2005-03-01 21:34 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added new files.
