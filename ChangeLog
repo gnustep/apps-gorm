@@ -1,3 +1,9 @@
+2003-02-10  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormInspectorsManager.m: _internalCall:
+	only reload the column when needed, this was causing segfaults
+	with the new lockFocus code.
+
 2003-02-02  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormTableViewEditor.m: missing

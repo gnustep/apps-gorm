@@ -648,7 +648,9 @@
       [self browser: newBrowser
 	    selectCellWithString: [[newBrowser selectedCell] stringValue]
 	    inColumn: [newBrowser selectedColumn]];
-      [newBrowser reloadColumn: 1];
+      if ([newBrowser selectedColumn] == 0
+	  && [[newBrowser selectedCell] isLeaf] == NO)
+	[newBrowser reloadColumn: 1];
     }
   else if (sender == oldBrowser)
     {
