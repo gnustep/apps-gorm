@@ -862,6 +862,7 @@
   id typeMatrix;
   id disabledSwitch;
   id tagForm;
+  id defaultItemForm;
 }
 @end
 
@@ -885,6 +886,15 @@
     {
       [object setTag: [[control cellAtIndex: 0] intValue]];
     }
+  else if (control == defaultItemForm)
+    {
+      int index = [[control cellAtIndex: 0] intValue];
+      int num = [object numberOfItems];
+
+      // if the user enters more than the number, select the last item.
+      index = (index < num && index >= 0) ? index : num;
+      [object selectItemAtIndex: index];
+    }
 }
 
 - (void) _getValuesFromObject: (id)anObject
@@ -896,6 +906,7 @@
   [typeMatrix selectCellWithTag: [anObject pullsDown]];
   [disabledSwitch setState: ![anObject autoenablesItems]];
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
+  [[defaultItemForm cellAtRow: 0 column: 0] setIntValue: [anObject indexOfSelectedItem]];
 }
 
 - (id) init

@@ -147,7 +147,8 @@
 	Outlets = (
 	    disabledSwitch,
 	    tagForm,
-	    typeMatrix
+	    typeMatrix,
+	    defaultItemForm
 	);
 	Super = IBInspector;
     };
