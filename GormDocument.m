@@ -701,6 +701,12 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
+- (id) addAttributeToClass: (id)sender
+{
+  [classesView addAttributeToClass];
+  return self;
+}
+
 - (id) loadClass: (id)sender
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];

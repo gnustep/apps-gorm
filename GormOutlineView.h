@@ -33,6 +33,7 @@
 #include <Foundation/NSMapTable.h>
 
 @class NSTableColumn;
+@class NSMenuItem;
 
 typedef enum {None, Outlets, Actions} GSAttributeType;
 
@@ -44,6 +45,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
   NSTableColumn *_actionColumn;
   NSTableColumn *_outletColumn;
   GSAttributeType _edittype;
+  NSMenuItem *_menuItem;
 }
 
 // Instance methods
@@ -57,6 +59,9 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
 - (void) setActionColumn: (NSTableColumn *)ac;
 - (NSTableColumn *)outletColumn;
 - (void) setOutletColumn: (NSTableColumn *)oc;
+- (NSMenuItem *)menuItem;
+- (void) setMenuItem: (NSMenuItem *)item;
+- (void) addAttributeToClass;
 @end /* interface of GormOutlineView */
 
 // informal protocol to define necessary methods on

@@ -133,6 +133,7 @@ static NSColor *darkGreyBlueColor = nil;
   _isEditing = NO;
   _attributeOffset = 0.0;
   _edittype = None;
+  _menuItem = nil;
   return self;
 }
 
@@ -174,6 +175,19 @@ static NSColor *darkGreyBlueColor = nil;
   return NO;
 }
 
+- (void)_addAction: (NSString *)actionname
+	  toObject: (id)item
+{
+  int insertionPoint = 0;
+  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: actionname];
+  NSLog(@"Adding an action: %@", actionname);
+  _numberOfRows += 1;
+  insertionPoint = [_items indexOfObject: item];
+  [_items insertObject: holder atIndex: insertionPoint + 1];
+  [self setNeedsDisplay: YES];
+  [self noteNumberOfRowsChanged];
+}
+
 - (void)_openActions: (id)item
 {
   int numchildren = 0;
@@ -211,6 +225,19 @@ static NSColor *darkGreyBlueColor = nil;
       GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: child];
       [_items insertObject: holder atIndex: insertionPoint];
     }
+  [self noteNumberOfRowsChanged];
+}
+
+- (void)_addOutlet: (NSString *)outletname
+	  toObject: (id)item
+{
+  int insertionPoint = 0;
+  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: outletname];
+  NSLog(@"Adding an outlet: %@", outletname);
+  _numberOfRows += 1;
+  insertionPoint = [_items indexOfObject: item];
+  [_items insertObject: holder atIndex: insertionPoint + 1];
+  [self setNeedsDisplay: YES];
   [self noteNumberOfRowsChanged];
 }
 
@@ -566,6 +593,31 @@ static NSColor *darkGreyBlueColor = nil;
 - (NSTableColumn *)outletColumn
 {
   return _outletColumn;
+}
+
+- (void)setMenuItem: (NSMenuItem *)item
+{
+  ASSIGN(_menuItem, item);
+}
+
+- (NSMenuItem *)menuItem
+{
+  return _menuItem;
+}
+
+- (void)addAttributeToClass
+{
+  NSLog(@"got it here 2");
+  if(_edittype == Actions)
+    {
+      [self _addAction: @"newAction:"
+	    toObject: _itemBeingEdited];
+    }
+  if(_edittype == Outlets)
+    {
+      [self _addOutlet: @"newOutlet"
+	    toObject: _itemBeingEdited];
+    }
 }
 @end /* implementation of GormOutlineView */
 

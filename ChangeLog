@@ -1,3 +1,14 @@
+2002-07-09  Gregory John Casamento <greg_casamento@yahoo.com
+
+	* Gorm.m: Added new menu item and method to add outlet/action
+	-[Gorm addAttributeToClass:]
+	* GormDocument.m: Added new method which gets called by the one
+	in Gorm.m and passes control to the classesView.
+	* GormOutlineView.m added -[GormOutlineView addAttributeToClass]
+	to add either an outlet or an action depending on what type 
+	is currently open.  Currently it only adds the name and doesn't
+	modify the datasource.  The next version will.
+	
 2002-07-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormOutlineView.m -[drawRow:] Added logic to draw inverse
