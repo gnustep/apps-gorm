@@ -428,7 +428,7 @@ static NSImage	*classesImage = nil;
     }
   else
     {
-      NSLog(@"Strange - removing editor without link from edited object");
+      NSLog(@"Strange - removing editor without link from %@", anObject);
     }
 }
 
@@ -481,99 +481,6 @@ static NSImage	*classesImage = nil;
   else
     {
       return [links lastObject];
-    }
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  NSMutableArray	*editorInfo;
-  NSEnumerator		*enumerator;
-  id<IBConnectors>	con;
-  id			obj;
-
-  /*
-   * Map all connector sources and destinations to their name strings.
-   */
-  editorInfo = [NSMutableArray new];
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	{
-	  [editorInfo addObject: con];
-	}
-      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
-	{
-	  [editorInfo addObject: con];
-	}
-      else
-	{
-	  NSString	*name;
-	  id		obj;
-
-	  obj = [con source];
-	  name = [self nameForObject: obj];
-	  [con setSource: name];
-	  obj = [con destination];
-	  name = [self nameForObject: obj];
-	  [con setDestination: name];
-	}
-    }
-  /*
-   * Remove objects and connections that shouldn't be archived.
-   * All editors are closed (this removes their links).
-   */
-  enumerator = [editorInfo objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	{
-	  [[con destination] close];
-	}
-    }
-  RELEASE(editorInfo);
-  [nameTable removeObjectForKey: @"NSOwner"];
-  [nameTable removeObjectForKey: @"NSFirst"];
-
-  /*
-   * Archive self into file
-   */
-  [super encodeWithCoder: aCoder];
-
-  /*
-   * Restore removed objects.
-   */
-  [nameTable setObject: filesOwner forKey: @"NSOwner"];
-  [nameTable setObject: firstResponder forKey: @"NSFirst"];
-
-  /*
-   * Map all connector source and destination names to their objects.
-   */
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSString	*name;
-      id	obj;
-
-      name = (NSString*)[con source];
-      obj = [self objectForName: name];
-      [con setSource: obj];
-      name = (NSString*)[con destination];
-      obj = [self objectForName: name];
-      [con setDestination: obj];
-    }
-
-  /*
-   * Restore basic editor information.
-   */
-  enumerator = [nameTable objectEnumerator];
-  while ((obj = [enumerator nextObject]) != nil)
-    {
-      if ([obj isKindOfClass: [NSWindow class]] == YES
-       || [obj isKindOfClass: [NSMenu class]] == YES)
-	{
-	  [[self openEditorForObject: obj] activate];
-	}
     }
 }
 
@@ -905,7 +812,7 @@ static NSImage	*classesImage = nil;
    * This editor wants to give up the selection.  Go through all the known
    * editors (with links in the connections array) and try to find one
    * that wants to take over the selection.  Activate whatever editor we
-   * find (or re-activate the one we already have).
+   * find (if any).
    */
   while ((c = [enumerator nextObject]) != nil)
     {
@@ -915,12 +822,11 @@ static NSImage	*classesImage = nil;
 
 	  if (e != editor && [e wantsSelection] == YES)
 	    {
-	      editor = e;
+	      [e activate];
 	      break;
 	    }
 	}
     }
-  [editor activate];
 }
 
 - (void) setName: (NSString*)aName forObject: (id)object
@@ -1042,6 +948,11 @@ static NSImage	*classesImage = nil;
 - (id) saveDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSMutableArray	*editorInfo;
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+  BOOL			archiveResult;
 
   if (documentPath == nil || [documentPath isEqualToString: @""])
     {
@@ -1051,16 +962,108 @@ static NSImage	*classesImage = nil;
   [nc postNotificationName: IBWillSaveDocumentNotification
 		    object: self];
 
-  if ([NSArchiver archiveRootObject: self toFile: documentPath] == NO)
+  /*
+   * Map all connector sources and destinations to their name strings.
+   */
+  editorInfo = [NSMutableArray new];
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [editorInfo addObject: con];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+	{
+	  [editorInfo addObject: con];
+	}
+      else
+	{
+	  NSString	*name;
+	  id		obj;
+
+	  obj = [con source];
+	  name = [self nameForObject: obj];
+	  [con setSource: name];
+	  obj = [con destination];
+	  name = [self nameForObject: obj];
+	  [con setDestination: name];
+	}
+    }
+  /*
+   * Remove objects and connections that shouldn't be archived.
+   * All editors are closed (this removes their links).
+   */
+  enumerator = [editorInfo objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [[con destination] close];
+	}
+    }
+  enumerator = [editorInfo objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([connections indexOfObjectIdenticalTo: con] != NSNotFound)
+	{
+	  NSLog(@"Argh - not all editor linkss removed");
+	  break;
+	}
+    }
+  RELEASE(editorInfo);
+  [nameTable removeObjectForKey: @"NSOwner"];
+  [nameTable removeObjectForKey: @"NSFirst"];
+
+  archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
+
+  /*
+   * Restore removed objects.
+   */
+  [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  [nameTable setObject: firstResponder forKey: @"NSFirst"];
+
+  /*
+   * Map all connector source and destination names to their objects.
+   */
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString	*name;
+      id	obj;
+
+      name = (NSString*)[con source];
+      obj = [self objectForName: name];
+      [con setSource: obj];
+      name = (NSString*)[con destination];
+      obj = [self objectForName: name];
+      [con setDestination: obj];
+    }
+
+  /*
+   * Restore basic editor information.
+   */
+  enumerator = [nameTable objectEnumerator];
+  while ((obj = [enumerator nextObject]) != nil)
+    {
+      if ([obj isKindOfClass: [NSWindow class]] == YES
+       || [obj isKindOfClass: [NSMenu class]] == YES)
+	{
+	  [[self openEditorForObject: obj] activate];
+	}
+    }
+
+  if (archiveResult == NO)
     {
       NSRunAlertPanel(NULL, @"Could not save document", 
 		       @"OK", NULL, NULL);
       return nil;
     }
+
   [window setDocumentEdited: NO];
   [window setTitleWithRepresentedFilename: documentPath];
 
-  [nc postNotificationName: IBWillSaveDocumentNotification
+  [nc postNotificationName: IBDidSaveDocumentNotification
 		    object: self];
   return self;
 }

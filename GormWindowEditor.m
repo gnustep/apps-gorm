@@ -116,6 +116,7 @@
   NSMutableArray	*subeditors;
   NSPoint		mouseDownPoint;
   BOOL			shouldBeginDrag;
+  BOOL			isClosed;
   NSPasteboard		*dragPb;
 }
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
@@ -244,6 +245,7 @@
     {
       [document resignSelectionForEditor: self];
     }
+  [document editor: self didCloseForObject: edited];
 }
 
 - (void) closeSubeditors
