@@ -764,10 +764,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   for (i = 0; i < n; i++)
     {
       actionName = [actions objectAtIndex: i];
-      [headerFile appendFormat: @"- (void) %@: (id)sender;\n", actionName];
+      [headerFile appendFormat: @"- (void) %@ (id)sender;\n", actionName];
       [sourceFile appendFormat:
 	@"\n"
-	@"- (void) %@: (id)sender\n"
+	@"- (void) %@ (id)sender\n"
 	@"{\n"
 	@"  /* insert your code here */\n"
 	@"}\n"
@@ -1056,6 +1056,7 @@ selectCellWithString: (NSString*)title
 	{ // Rename
 	  case 0: // outlets
 
+	    [editNameTF setStringValue: name];
 	    if (name != nil && ![name isEqualToString: @""])
 	      {
 		NSLog(@"rename old outlet %@ to %@", oldName, name);
@@ -1082,6 +1083,8 @@ selectCellWithString: (NSString*)title
 	    break;
 
 	  default: // actions
+	    name = [name stringByAppendingString: @":"];
+	    [editNameTF setStringValue: name];
 	    NSLog(@"rename old outlet %@ to %@ (not implemented)", 
 		  oldName, name);
 	    break;
@@ -1102,6 +1105,7 @@ selectCellWithString: (NSString*)title
 	{ // Add
 	  case 0: // outlets
 	    name = [self identifierString: [editNameTF stringValue]];
+	    [editNameTF setStringValue: name];
 	    NSLog(@"add outlet : %@", name);
 
 	    if (name != nil && ![name isEqualToString: @""])
@@ -1123,6 +1127,8 @@ selectCellWithString: (NSString*)title
 
 	  default: // actions
 	    name = [self identifierString: [editNameTF stringValue]];
+	    name = [name stringByAppendingString: @":"];
+	    [editNameTF setStringValue: name];
 	    NSLog(@"add action : %@", name);
 
 	    if (name != nil && ![name isEqualToString: @""])
