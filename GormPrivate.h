@@ -175,6 +175,39 @@ extern NSString *GormLinkPboardType;
 @end
 
 /*
+ * NSDateFormatter and NSNumberFormatter extensions
+ * for Gorm Formatters used in the Data Palette
+ */
+
+@interface NSDateFormatter (GormAdditions)
+
++ (void) initialize;
++ (int) formatCount;
++ (NSString *) formatAtIndex: (int)index;
++ (int) indexOfFormat: (NSString *) format;
++ (NSString *) defaultFormat;
++ (id) defaultFormatValue;
+
+@end
+
+@interface NSNumberFormatter (GormAdditions)
+
++ (void) initialize;
++ (int) formatCount;
++ (NSString *) formatAtIndex: (int)index;
++ (NSString *) positiveFormatAtIndex: (int)index;
++ (NSString *) zeroFormatAtIndex: (int)index;
++ (NSString *) negativeFormatAtIndex: (int)index;
++ (NSDecimalNumber *) positiveValueAtIndex: (int)index;
++ (NSDecimalNumber *) negativeValueAtIndex: (int)index;
++ (int) indexOfFormat: format;
++ (NSString *) defaultFormat;
++ (id) defaultFormatValue;
+- (NSString *) zeroFormat;
+
+@end
+
+/*
  * Functions for drawing knobs etc.
  */
 void GormDrawKnobsForRect(NSRect aFrame);
