@@ -78,14 +78,12 @@ NSString *formatVersion(int version)
   [iwindow performClose: self];
   RELEASE(iwindow);
   RELEASE(versionProfiles);
-  // TEST_RELEASE(targetVersionName);
-  // TEST_RELEASE(archiveTypeName);
   [super dealloc];
 }
 
 + (int) currentVersion
 {
-  return appVersion(0,8,7); 
+  return appVersion(0,8,9); 
 }
 
 - (void) awakeFromNib

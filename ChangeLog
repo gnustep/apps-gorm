@@ -1,3 +1,10 @@
+2005-01-31 23:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Corrected bug#11778.  Added code which
+	removes connections when a class is being reparsed.
+	* GormFilePrefsManager.m: Updated file prefs with new version.
+	* GormInfo.plist: Updated plist with new version.
+
 2005-01-31 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: In the -[GormDocument removeConnections:..]

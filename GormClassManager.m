@@ -1659,10 +1659,27 @@
 	      
 	      if([self isKnownClass: superClass])
 		{
-		  [self addClassNamed: className
-			withSuperClassNamed: superClass
-			withActions: actions
-			withOutlets: outlets];	 
+		  if([self isKnownClass: className])
+		    {
+		      if([document removeConnectionsForClassNamed: className])
+			{
+			  // delete the class..
+			  [self removeClassNamed: className];
+			  
+			  // re-add it.
+			  [self addClassNamed: className
+				withSuperClassNamed: superClass
+				withActions: actions
+				withOutlets: outlets];
+			}
+		    }
+		  else
+		    {
+		      [self addClassNamed: className
+			    withSuperClassNamed: superClass
+			    withActions: actions
+			    withOutlets: outlets];	 
+		    }
 		}
 	      else
 		{
