@@ -1,3 +1,7 @@
+2004-12-14 06:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Further correction to previous issue.
+
 2004-12-14 06:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Corrected potential issue after delete

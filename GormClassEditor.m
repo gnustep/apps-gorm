@@ -100,9 +100,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) dealloc
 {
-  // selectedClass is one of the items in the items in the outlineView.
-  // it will be deallocated there.
-  // RELEASE(selectedClass);
+  RELEASE(selectedClass);
   [super dealloc];
 }
 
@@ -132,7 +130,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   NSEnumerator	*en;
   int		row = 0;
   
-  selectedClass = className;
+  ASSIGN(selectedClass, className);
   if(className != nil)
     {
       if([className isEqual: @"CustomView"] || 
@@ -203,7 +201,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   int	row = [self selectedRow];
   if (row >= 0)
     {
-      selectedClass = [self selectedClassName];
+      ASSIGN(selectedClass, [self selectedClassName]);
       [document setSelectionFromEditor: (id)self];
     }
 }
@@ -362,7 +360,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
 		      object: classManager];
-		  selectedClass = nil; // don't keep the class we're pointing to.
+		  ASSIGN(selectedClass, nil); // don't keep the class we're pointing to.
 		}
 	    }
 	}
