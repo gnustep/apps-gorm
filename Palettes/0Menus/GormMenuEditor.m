@@ -156,6 +156,11 @@
   return NO;
 }
 
+- (void) rightMouseDown: (NSEvent*)theEvent
+{
+  // Do nothing.  We want to ignore when the right mouse button is pressed.
+}
+
 - (void) mouseDown: (NSEvent*)theEvent
 {
   NSPoint	loc = [theEvent locationInWindow];
