@@ -168,6 +168,7 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor;
 - (void) touch;		/* Mark document as having been changed.	*/
+- (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 @end
 
 @protocol IB <NSObject>

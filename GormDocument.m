@@ -29,8 +29,6 @@ NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
-@class	GormObjectEditor;
-
 /*
  * Each document has a GormFilesOwner object that is used as a placeholder
  * for the owner of the document.
@@ -1220,6 +1218,31 @@ static NSImage	*classesImage = nil;
 - (void) touch
 {
   [window setDocumentEdited: YES];
+}
+
+- (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object
+{
+  if ([objectsView containsObject: object] == YES)
+    {
+      NSRect	rect = [objectsView rectForObject: object];
+
+      rect = [objectsView convertRect: rect toView: nil];
+      *r = rect;
+      return [objectsView window];
+    }
+  else if ([object isKindOfClass: [NSView class]] == YES)
+    {
+      NSRect	rect = [object bounds];
+
+      rect = [object convertRect: rect toView: nil];
+      *r = rect;
+      return [object window];
+    }
+  else
+    {
+      *r = NSZeroRect;
+      return nil;
+    }
 }
 
 - (BOOL) windowShouldClose

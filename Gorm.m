@@ -136,6 +136,89 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (void) displayConnectionBetween: (id)source and: (id)destination
 {
+  NSWindow	*w;
+  NSRect	r;
+
+  if (source != connectSource)
+    {
+      if (connectSource != nil)
+	{
+	  w = [activeDocument windowAndRect: &r forObject: connectSource];
+	  if (w != nil)
+	    {
+	      NSView	*wv = [[w contentView] superview];
+
+	      /*
+	       * Erase image from old location.
+	       */
+	      r.origin.x -= 1.0;
+	      r.origin.y += 1.0;
+	      r.size = [sourceImage size];
+	      r.size.width += 2.0;
+	      r.size.height += 2.0;
+
+	      [wv lockFocus];
+	      [wv displayRect: r];
+	      [wv unlockFocus];
+	      [w flushWindow];
+	    }
+	}
+      connectSource = source;
+      if (connectSource != nil)
+	{
+	  w = [activeDocument windowAndRect: &r forObject: connectSource];
+	  if (w != nil)
+	    {
+	      NSView	*wv = [[w contentView] superview];
+
+	      [wv lockFocus];
+	      [sourceImage compositeToPoint: r.origin
+				  operation: NSCompositeCopy];
+	      [wv unlockFocus];
+	      [w flushWindow];
+	    }
+	}
+    }
+  if (destination != connectDestination)
+    {
+      if (connectDestination != nil)
+	{
+	  w = [activeDocument windowAndRect: &r forObject: connectDestination];
+	  if (w != nil)
+	    {
+	      NSView	*wv = [[w contentView] superview];
+
+	      /*
+	       * Erase image from old location.
+	       */
+	      r.origin.x -= 1.0;
+	      r.origin.y += 1.0;
+	      r.size = [targetImage size];
+	      r.size.width += 2.0;
+	      r.size.height += 2.0;
+
+	      [wv lockFocus];
+	      [wv displayRect: r];
+	      [wv unlockFocus];
+	      [w flushWindow];
+	    }
+	}
+      connectDestination = destination;
+      if (connectDestination != nil)
+	{
+	  w = [activeDocument windowAndRect: &r forObject: connectDestination];
+	  if (w != nil)
+	    {
+	      NSView	*wv = [[w contentView] superview];
+
+	      [wv lockFocus];
+	      [targetImage compositeToPoint: r.origin
+				  operation: NSCompositeCopy];
+	      [wv unlockFocus];
+	      [w flushWindow];
+	    }
+	}
+    }
 }
 
 - (id) endTesting: (id)sender
@@ -371,98 +454,6 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [[selectionOwner selection] lastObject];
 } 
 
-- (void) setConnectDestination: (id)o window: (NSWindow*)w rect: (NSRect)r
-{
-  if (connectSource != nil && o == connectSource)
-    {
-      return;	/* Can't link to self	*/
-    }
-
-  if (connectDestination != o)
-    {
-      connectDestination = o;
-
-      if (connectDWindow != nil)
-	{
-	  NSView	*wv = [[connectDWindow contentView] superview];
-	  NSRect	rect = connectDRect;
-
-	  /*
-	   * Erase image from old location.
-	   */
-	  rect.origin.x -= 1.0;
-	  rect.origin.y += 1.0;
-	  rect.size = [targetImage size];
-	  rect.size.width += 2.0;
-	  rect.size.height += 2.0;
-
-	  [wv lockFocus];
-	  [wv displayRect: rect];
-	  [wv unlockFocus];
-	  [connectDWindow flushWindow];
-	}
-      connectDWindow = w;
-      connectDRect = r;
-      if (connectDWindow != nil)
-	{
-	  NSView	*wv = [[connectDWindow contentView] superview];
-	  NSRect	rect = connectDRect;
-
-	  [wv lockFocus];
-	  [targetImage compositeToPoint: rect.origin
-			      operation: NSCompositeCopy];
-	  [wv unlockFocus];
-	  [connectDWindow flushWindow];
-	}
-    }
-}
-
-- (void) setConnectSource: (id)o window: (NSWindow*)w rect: (NSRect)r
-{
-  if (connectDestination != nil && o == connectDestination)
-    {
-      return;	/* Can't link to self	*/
-    }
-
-  if (connectSource != o)
-    {
-      connectSource = o;
-
-      if (connectSWindow != nil)
-	{
-	  NSView	*wv = [[connectSWindow contentView] superview];
-	  NSRect	rect = connectSRect;
-
-	  /*
-	   * Erase image from old location.
-	   */
-	  rect.origin.x -= 1.0;
-	  rect.origin.y += 1.0;
-	  rect.size = [sourceImage size];
-	  rect.size.width += 2.0;
-	  rect.size.height += 2.0;
-
-	  [wv lockFocus];
-	  [wv displayRect: rect];
-	  [wv unlockFocus];
-	  [connectSWindow flushWindow];
-	}
-      connectSWindow = w;
-      connectSRect = r;
-      if (connectSWindow != nil)
-	{
-	  NSView	*wv = [[connectSWindow contentView] superview];
-	  NSRect	rect = connectSRect;
-
-	  [wv lockFocus];
-	  [sourceImage compositeToPoint: rect.origin
-			      operation: NSCompositeCopy];
-	  [wv unlockFocus];
-	  [connectSWindow flushWindow];
-	}
-    }
-}
-
 - (id) setName: (id)sender
 {
   /* FIXME */
@@ -473,7 +464,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 {
   if (isConnecting == YES)
     {
-      [self stopConnecting];
+      return;
     }
   if (connectDestination == nil || connectSource == nil)
     {
@@ -495,8 +486,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (void) stopConnecting
 {
-  [self setConnectDestination: nil window: nil rect: NSZeroRect];
-  [self setConnectSource: nil window: nil rect: NSZeroRect];
+  [self displayConnectionBetween: nil and: nil];
   isConnecting = NO;
 }
 

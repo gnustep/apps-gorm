@@ -15,8 +15,6 @@ extern NSString *GormLinkPboardType;
 
 @interface NSApplication (Gorm)
 - (NSImage*) linkImage;
-- (void) setConnectDestination: (id)o window: (NSWindow*)w rect: (NSRect)r;
-- (void) setConnectSource: (id)o window: (NSWindow*)w rect: (NSRect)r;
 - (void) startConnecting;
 @end
 
@@ -68,6 +66,42 @@ extern NSString *GormLinkPboardType;
 - (id) selectAll: (id)sender;
 - (id) setName: (id)sender;
 - (id) testInterface: (id)sender;
+@end
+
+@interface	GormObjectEditor : NSMatrix <IBEditors>
+{
+  NSMutableArray	*objects;
+  id<IBDocuments>	document;
+  id			selected;
+  NSPoint		mouseDownPoint;
+  BOOL			shouldBeginDrag;
+  NSPasteboard		*dragPb;
+}
+- (void) addObject: (id)anObject;
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (void) refreshCells;
+- (void) removeObject: (id)anObject;
+- (BOOL) acceptsTypeFromArray: (NSArray*)types;
+- (BOOL) activate;
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
+- (void) close;
+- (void) closeSubeditors;
+- (BOOL) containsObject: (id)anObject;
+- (void) copySelection;
+- (void) deleteSelection;
+- (id<IBDocuments>) document;
+- (id) editedObject;
+- (void) makeSelectionVisible: (BOOL)flag;
+- (id<IBEditors>) openSubeditorForObject: (id)anObject;
+- (void) orderFront;
+- (void) pasteInSelection;
+- (NSRect) rectForObject: (id)anObject;
+- (void) resetObject: (id)anObject;
+- (void) selectObjects: (NSArray*)objects;
+- (void) validateEditing;
+- (BOOL) wantsSelection;
+- (NSWindow*) window;
 @end
 
 /*

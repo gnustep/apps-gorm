@@ -337,15 +337,12 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  NSPoint	dragPoint = [theEvent locationInWindow];
 	  NSPasteboard	*pb;
 	  NSString	*name = [document nameForObject: view];
-	  NSRect	r = [view bounds];
 
 	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
 	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
 		     owner: self];
 	  [pb setString: name forType: GormLinkPboardType];
-	  [NSApp setConnectSource: view
-			   window: [view window]
-			     rect: [view convertRect: r toView: nil]];
+	  [NSApp displayConnectionBetween: view and: nil];
 
 	  [self dragImage: [NSApp linkImage]
 		       at: dragPoint
@@ -855,25 +852,16 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     {
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
-      NSRect	r;
 
       if (sub == self)
 	{
 	  sub = nil;
-	  r = NSZeroRect;
 	}
       else if (sub == [NSApp connectSource])
 	{
 	  sub = nil;
-	  r = NSZeroRect;
 	}
-      else
-	{
-	  r = [sub convertRect: [sub bounds] toView: nil];
-	}
-      [NSApp setConnectDestination: sub
-			    window: [sub window]
-			      rect: r];
+      [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       return NSDragOperationLink;
     }
   else
@@ -1061,12 +1049,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSPoint	loc = [sender draggingLocation];
       NSString	*name = [dragPb stringForType: GormLinkPboardType];
       NSView	*sub = [super hitTest: loc];
-      NSRect	r = [sub convertRect: [sub bounds] toView: nil];
 
 NSLog(@"Got link from %@", name);
-      [NSApp setConnectDestination: sub
-			    window: [sub window]
-			      rect: r];
+      [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       [NSApp startConnecting];
     }
   else

@@ -70,40 +70,6 @@
 
 
 
-@interface	GormObjectEditor : NSMatrix <IBEditors>
-{
-  NSMutableArray	*objects;
-  id<IBDocuments>	document;
-  id			selected;
-  NSPoint		mouseDownPoint;
-  BOOL			shouldBeginDrag;
-  NSPasteboard		*dragPb;
-}
-- (void) addObject: (id)anObject;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (void) refreshCells;
-- (void) removeObject: (id)anObject;
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
-- (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
-- (void) close;
-- (void) closeSubeditors;
-- (void) copySelection;
-- (void) deleteSelection;
-- (id<IBDocuments>) document;
-- (id) editedObject;
-- (void) makeSelectionVisible: (BOOL)flag;
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
-- (void) orderFront;
-- (void) pasteInSelection;
-- (void) resetObject: (id)anObject;
-- (void) selectObjects: (NSArray*)objects;
-- (void) validateEditing;
-- (BOOL) wantsSelection;
-- (NSWindow*) window;
-@end
-
 @implementation	GormObjectEditor
 
 static NSMapTable	*docMap = 0;
