@@ -29,6 +29,7 @@
 #include <AppKit/AppKit.h>
 #include <AppKit/NSNibConnector.h>
 #include <AppKit/NSNibLoading.h>
+#include <AppKit/GSNibTemplates.h>
 
 /*
  * Positions of handles for resizing items.

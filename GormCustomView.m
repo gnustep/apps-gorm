@@ -28,6 +28,7 @@
 #include <AppKit/NSFont.h>
 
 #import <AppKit/NSNibLoading.h>
+#import <AppKit/GSNibTemplates.h>
 
 @class GSCustomView;
 

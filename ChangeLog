@@ -1,3 +1,8 @@
+2002-10-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.h : Added missing include.
+	* GormCustomView.h : Added missing include.
+	
 2002-10-08  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Gorm.m: added menu item for "group in scroll view".
