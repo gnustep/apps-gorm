@@ -1,5 +1,12 @@
 2003-01-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Palettes/3Containers/inspector.m: NSTabView was not
+	defining a size inspector.  I commented out the method which
+	was returning nothing and now the NSTabView uses the default
+	view size inspector.
+
+2003-01-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormClassManager.m: -[GormClassManager customClassForObject:]:
 	Added code to resolve the object being passed in to the name
 	which is used in the name table.   This is for lookup in the

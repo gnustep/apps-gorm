@@ -596,10 +596,12 @@ static NSString *ITEM=@"item";
   return @"GormTabViewInspector";
 }
 
+/*
 - (NSString*) sizeInspectorClassName
 {
   //  return @"GormTableViewSizeInspector";
 }
+*/
 
 @end
 
