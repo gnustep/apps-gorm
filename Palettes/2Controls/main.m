@@ -151,6 +151,7 @@
   [v addEntry: @"Field 2"];
   [v setEntryWidth: 87];
   [v setInterlineSpacing: 3];
+  [v setCellSize: NSMakeSize([v cellSize].width, 21)];
   [contents addSubview: v];
   RELEASE(v);
 

@@ -1693,11 +1693,11 @@ static BOOL done_editing;
 	  NSRect	rect = [sub frame];
 	  
 	  rect.origin = loc;
-	  [sub setFrame: rect];
 	  rect.origin.x = (int) rect.origin.x;
 	  rect.origin.y = (int) rect.origin.y;
 	  rect.size.width = (int) rect.size.width;
 	  rect.size.height = (int) rect.size.height;
+	  [sub setFrame: rect];
 
 	  [edit_view addSubview: sub];
 	}

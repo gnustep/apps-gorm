@@ -1,4 +1,5 @@
 2002-03-31  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
 	* GormWindowEditor.m
 	When resizing matrix, use integer values for setCellSize.
 	When dropping an object from the palettes, use integer
@@ -22,6 +23,7 @@
 	GormNSOutlineView features a dummy dataSource during editing and
 	testing.
 
+	* Palettes/2Controls/main.m
 	* Palettes/2Controls/GormBoxInspector.gorm
 	* Palettes/2Controls/GormButtonInspector.gorm
 	* Palettes/2Controls/GormFormInspector.gorm
