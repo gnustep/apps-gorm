@@ -855,11 +855,13 @@ static NSButtonType _buttonTypeForObject( id button )
   return [(id)[self activeDocument] remove: sender];
 }
 
+/*
 - (id) editClass: (id)sender
 {
   [self inspector: self];
   return [(id)[self activeDocument] editClass: sender];
 }
+*/
 
 - (id) createClassFiles: (id)sender
 {
@@ -1026,6 +1028,9 @@ static NSButtonType _buttonTypeForObject( id button )
   [aMenu addItemWithTitle: @"Debug"
 		   action: @selector(debug:) 
 	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Load Sound"
+		   action: @selector(loadSound:) 
+	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
 				 action: NULL 
 			  keyEquivalent: @""];
@@ -1090,9 +1095,9 @@ static NSButtonType _buttonTypeForObject( id button )
   [aMenu addItemWithTitle: @"Load Class..." 
 		   action: @selector(loadClass:) 
 	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Edit Class..." 
-		   action: @selector(editClass:) 
-	    keyEquivalent: @""];  
+  // [aMenu addItemWithTitle: @"Edit Class..." 
+  //		   action: @selector(editClass:) 
+  //	    keyEquivalent: @""];  
   [aMenu addItemWithTitle: @"Create Class's Files..." 
 		   action: @selector(createClassFiles:) 
 	    keyEquivalent: @""];  
@@ -1309,6 +1314,11 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 - (void) debug: (id) sender
 {
   [[self activeDocument] performSelector: @selector(printAllEditors)];
+}
+
+- (void) loadSound: (id) sender
+{
+  [[self activeDocument] openSound: sender];
 }
 
 - (id) miniaturize: (id)sender

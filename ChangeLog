@@ -1,3 +1,19 @@
+2002-11-03  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added methods for class support
+	-[GormDocument openSound:], -[GormDocument _createSoundPlaceHolder:].
+	Modified -[GormDocument saveDocument], and
+	-[GormDocument loadDocument] to handle copying of sounds into the 
+	gorm file package when the .gorm is saved and registering them w/
+	Gorm when the package is subsequently loaded.
+	* GormPrivate.h: Added class declaration for GormSound, the
+	sound placeholder class.  This class contains the minimal information
+	needed to handle sounds in Gorm.
+	* GormSoundInspector.[hm]: The sound inspector.
+	* Resources/GormSoundInspector.gorm: The beginnings of the sound
+	inspector gui.
+	* Resources: Replaced old gorm files w/ packages.
+	
 2002-10-31  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument saveDocument:] made changes to allow

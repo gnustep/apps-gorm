@@ -26,6 +26,7 @@
 #include "GormClassManager.h"
 #include "GormCustomView.h"
 #include "GormOutlineView.h"
+#include <AppKit/NSSound.h>
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
@@ -248,6 +249,17 @@ static NSImage	*classesImage = nil;
     }
 }
 
+// sound support
+- (GormSound *)_createSoundPlaceHolder: (NSString *)path
+{
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
+  // [dict setObject: path forKey: @"Path"];
+  // [dict setObject: name forKey: @"Name"];
+  return AUTORELEASE([[GormSound alloc] initWithName: name path: path]);
+}
+
+// template support
 - (void) _replaceObjectsWithTemplates
 {
   if(![classManager isCustomClassMapEmpty])
@@ -407,10 +419,10 @@ static NSImage	*classesImage = nil;
     case 1: // images
       [selectionBox setContentView: imagesScrollView];
       break;
+      */
     case 2: // sounds
       [selectionBox setContentView: soundsScrollView];
       break;
-      */
     case 3: // classes
       [selectionBox setContentView: classesScrollView];
       break;
@@ -1297,6 +1309,9 @@ static NSImage	*classesImage = nil;
       // defferred windows for this document...
       deferredWindows = [NSMutableArray new];
 
+      // defferred windows for this document...
+      sounds = [NSMutableSet new];
+
       style = NSTitledWindowMask | NSClosableWindowMask
 	| NSResizableWindowMask | NSMiniaturizableWindowMask;
       window = [[NSWindow alloc] initWithContentRect: winrect
@@ -1395,26 +1410,41 @@ static NSImage	*classesImage = nil;
 	NSViewHeightSizable|NSViewWidthSizable];
       [[window contentView] addSubview: selectionBox];
       RELEASE(selectionBox);
-
+      
+      // objects...
+      mainRect.origin = NSMakePoint(0,0);
       scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [scrollView setHasVerticalScroller: YES];
       [scrollView setHasHorizontalScroller: NO];
       [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-
-      mainRect.origin = NSMakePoint(0,0);
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
-						  inDocument: self];
+					      inDocument: self];
       AUTORELEASE(objectsView);
       [objectsView setFrame: mainRect];
       [objectsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];
       RELEASE(objectsView);
 
+      // sounds...
+      mainRect.origin = NSMakePoint(0,0);
+      soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [soundsScrollView setHasVerticalScroller: YES];
+      [soundsScrollView setHasHorizontalScroller: NO];
+      [soundsScrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      soundsView = [[GormSoundEditor alloc] initWithObject: nil
+					    inDocument: self];
+      AUTORELEASE(soundsView);
+      [soundsView setFrame: mainRect];
+      [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [soundsScrollView setDocumentView: soundsView];
+      RELEASE(soundsView);
+
+      // classes...
       classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [classesScrollView setHasVerticalScroller: YES];
       [classesScrollView setHasHorizontalScroller: NO];
       [classesScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
+			   NSViewHeightSizable|NSViewWidthSizable];
 
       mainRect.origin = NSMakePoint(0,0);
       classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
@@ -1435,7 +1465,7 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
       [[tableColumn headerCell] setStringValue: @"Classes"];
-      [tableColumn setMinWidth: 200];
+      [tableColumn setMinWidth: 190]; // 200
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
       [classesView addTableColumn: tableColumn];     
@@ -1443,8 +1473,8 @@ static NSImage	*classesImage = nil;
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-      [[tableColumn headerCell] setStringValue: @"O"];
-      [tableColumn setWidth: 45];
+      [[tableColumn headerCell] setStringValue: @"Outlet"];
+      [tableColumn setWidth: 50]; // 45
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
@@ -1452,8 +1482,8 @@ static NSImage	*classesImage = nil;
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
-      [[tableColumn headerCell] setStringValue: @"A"];
-      [tableColumn setWidth: 45];
+      [[tableColumn headerCell] setStringValue: @"Action"];
+      [tableColumn setWidth: 50]; // 45
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
@@ -1572,6 +1602,7 @@ static NSImage	*classesImage = nil;
   NSString              *ownerClass;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
+  NSDirectoryEnumerator *dirEnumerator;
 
   if([mgr fileExistsAtPath: aFile isDirectory: &isDir])
     {
@@ -1734,14 +1765,35 @@ static NSImage	*classesImage = nil;
 	  //[[self openEditorForObject: obj] activate];
 	}
     }
-
+  
   /*
-   * Finally, we set our new file name
+   * set our new file name
    */
   ASSIGN(documentPath, aFile);
   [window setTitleWithRepresentedFilename: documentPath];
   [nc postNotificationName: IBDidOpenDocumentNotification
 		    object: self];
+
+  /*
+   * read in all of the sounds in the .gorm wrapper and load them into the editor.
+   */
+  dirEnumerator = [mgr enumeratorAtPath: documentPath];
+  if(dirEnumerator)
+    {
+      NSString *file = nil;
+      NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
+      while(file = [dirEnumerator nextObject])
+	{
+	  if([fileTypes containsObject: [file pathExtension]])
+	    {
+	      NSString *soundPath = [documentPath stringByAppendingPathComponent: file];
+	      // add the sound...
+	      NSLog(@"Add the sound %@",file);
+	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
+	      [sounds addObject: soundPath];
+	    }
+	}
+    }
 
   // get the custom class map and set it into the class manager...
   NSDebugLog(@"GSCustomClassMap = %@",[[c nameTable] objectForKey: @"GSCustomClassMap"]);
@@ -2319,10 +2371,28 @@ static NSImage	*classesImage = nil;
 	{
 	  // save the custom classes.. and we're done...
 	  archiveResult = [classManager saveToFile: classesPath];
+
+	  // copy sounds into the new folder...
+	  if(archiveResult)
+	    {
+	      NSEnumerator *en = [sounds objectEnumerator];
+	      id object = nil;
+
+	      while((object = [en nextObject]) != nil)
+		{
+		  NSString *soundPath = [documentPath stringByAppendingPathComponent: [object lastPathComponent]];
+		  BOOL copied = [mgr copyPath: object toPath: soundPath handler: nil];
+
+		  if(!copied)
+		    {
+		      NSLog(@"Could not find sound at path %@", object);
+		    }
+		}
+	    }
 	}
     }
 
-  [self endArchiving];
+   [self endArchiving];
 
   if (archiveResult == NO)
     {
@@ -2817,6 +2887,30 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
     }
 
   NSLog(@"all editors %@", set);
+}
+
+// sound support...
+- (id) openSound: (id)sender
+{
+  NSArray	*fileTypes = [NSSound soundUnfilteredFileTypes]; 
+  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  int		result;
+
+  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setCanChooseFiles: YES];
+  [oPanel setCanChooseDirectories: NO];
+  result = [oPanel runModalForDirectory: nil
+				   file: nil
+				  types: fileTypes];
+  if (result == NSOKButton)
+    {
+      NSLog(@"Loading sound file: %@",[oPanel filename]);
+      [soundsView addObject: [self _createSoundPlaceHolder: [oPanel filename]]];
+      [sounds addObject: [oPanel filename]];
+      return self;
+    }
+
+  return nil;
 }
 @end
 

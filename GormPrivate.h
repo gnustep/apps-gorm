@@ -14,7 +14,7 @@
 
 extern NSString *GormLinkPboardType;
 
-
+// templates
 @interface GSNibItem (GormAdditions)
 - initWithClassName: (NSString*)className frame: (NSRect)frame;
 - (NSString*) className;
@@ -142,6 +142,7 @@ extern NSString *GormLinkPboardType;
 - (id) inspector: (id) sender;
 - (id) newApplication: (id) sender;
 - (id) loadPalette: (id) sender;
+- (void) loadSound: (id) sender;
 - (id) open: (id)sender;
 - (id) palettes: (id) sender;
 - (id) paste: (id)sender;
@@ -178,7 +179,7 @@ extern NSString *GormLinkPboardType;
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }
-+ (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
+// + (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 - (void) addObject: (id)anObject;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
@@ -203,6 +204,30 @@ extern NSString *GormLinkPboardType;
 - (void) selectObjects: (NSArray*)objects;
 - (BOOL) wantsSelection;
 - (NSWindow*) window;
+@end
+
+@interface	GormSoundEditor : NSMatrix <IBEditors, IBSelectionOwners>
+{
+  NSMutableArray        *objects;
+  id<IBDocuments>       document;
+  id			selected;
+  NSPasteboard		*dragPb;
+  NSString		*dragType;
+}
+// don't redeclare methods already declared in protocols.
++ (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
+- (void) addObject: (id)anObject;
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (void) refreshCells;
+- (void) removeObject: (id)anObject;
+- (void) closeSubeditors;
+- (BOOL) containsObject: (id)anObject;
+- (void) copySelection;
+- (void) deleteSelection;
+- (id<IBEditors>) openSubeditorForObject: (id)anObject;
+- (void) pasteInSelection;
+- (NSRect) rectForObject: (id)anObject;
 @end
 
 
@@ -250,6 +275,28 @@ extern NSString *GormLinkPboardType;
 
 @interface NSObject (GormAdditions)
 - (id) allocSubstitute;
+@end
+
+// we don't use the actual sound since we don't want to read the entire sound into
+// memory.
+@interface GormSound : NSObject
+{
+  NSString *name;
+  NSString *path;
+  BOOL     isSystemSound;
+  BOOL     isInWrapper; 
+}
+- (id) initWithName: (NSString *)aName
+               path: (NSString *)aPath;
+- (void) setSoundName: (NSString *)aName;
+- (NSString *) soundName;
+- (void) setSoundPath: (NSString *)aPath;
+- (NSString *) soundPath;
+- (void) setSystemSound: (BOOL)flag;
+- (BOOL) isSystemSound;
+- (void) setInWrapper: (BOOL)flag;
+- (BOOL) isInWrapper;
+- (NSString *)inspectorClassName;
 @end
 
 /*

@@ -384,11 +384,13 @@
     {
       [panel setTitle: @"Inspector"];
     }
+  /*
   else if ([obj isKindOfClass: [GormClassProxy class]])
     {
       [panel setTitle: [NSString stringWithFormat: @"Class Edit Inspector:%@",
 	[obj className]]];
     }
+  */
   else
     {
       [panel setTitle: [NSString stringWithFormat: @"%@ Inspector",

@@ -36,8 +36,10 @@
   NSBox                 *selectionBox;
   NSScrollView		*scrollView;
   NSScrollView          *classesScrollView;
+  NSScrollView          *soundsScrollView;
   id                    classesView;
   id			objectsView;
+  id			soundsView;
   BOOL			hasSetDefaults;
   BOOL			isActive;
   NSMenu		*savedMenu;
@@ -45,6 +47,7 @@
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
   NSMutableArray	*deferredWindows;
+  NSMutableSet          *sounds;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
@@ -100,6 +103,9 @@
 - (id) editClass: (id)sender;
 - (id) createClassFiles: (id)sender;
 - (void) changeCurrentClass: (id)sender;
+
+// sound support
+- (id) openSound: (id)sender;
 @end
 
 #endif

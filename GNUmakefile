@@ -108,7 +108,8 @@ Gorm_RESOURCE_FILES = \
 	Images/GormActionSelected.tiff \
 	Images/GormOutletSelected.tiff \
 	Resources/GormViewSizeInspector.gorm \
-	Resources/GormCustomClassInspector.gorm
+	Resources/GormCustomClassInspector.gorm \
+	Resources/GormSoundInspector.gorm
 
 Gorm_HEADERS = \
 	Gorm.h \
@@ -116,6 +117,7 @@ Gorm_HEADERS = \
 	GormCustomView.h \
 	GormOutlineView.h \
 	GormCustomClassInspector.h \
+	GormSoundInspector.h \
 	GormMatrixEditor.h \
 	GormPalettesManager.h \
 	GormViewEditor.h \
@@ -160,7 +162,9 @@ Gorm_OBJC_FILES = \
 	GormPalettesManager.m \
 	GormOutlineView.m \
 	GormCustomClassInspector.m \
-	GormScrollViewEditor.m
+	GormSoundInspector.m \
+	GormScrollViewEditor.m \
+	GormSoundEditor.m
 
 -include GNUmakefile.preamble
 
