@@ -1,3 +1,7 @@
+2003-08-13  Fabien Vallon  <fabien@tuxfamily.org>
+
+	* GormNSPopUpButton.goem : Add Visual help
+
 2003-08-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInternalViewEditor.m: Added initilization for variable r so
@@ -18,7 +22,7 @@
 	which was causing a problem when removing connections from
 	NSOwner.
 
-2003-08-04  Fabien Vallon  <fabien@tuxfamily>
+2003-08-04  Fabien Vallon  <fabien@tuxfamily.org>
 
 	* Add a good when adding Images
 
