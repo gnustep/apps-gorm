@@ -1,3 +1,7 @@
+2004-05-01 07:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Removed some NSLog messages.
+	
 2004-04-30 20:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Removed code which calls "awakeFromDocument:" on

@@ -495,8 +495,8 @@
     }
   if (className == nil)
     {
-      NSLog(@"attempt to get actions for non-existent class (%@)",	
-      	[obj class]);
+      // NSLog(@"attempt to get actions for non-existent class (%@)",	
+      //	[obj class]);
       return nil;
     }
 
