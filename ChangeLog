@@ -1,5 +1,12 @@
 2003-05-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Made the IB*RemoveConnectorNotification being
+	sent in removeConnector: the document instead of the connector which
+	was removed.  This prevents a core dump which was occurring when
+	loading a gorm and removing or renaming outlets/actions.
+	
+2003-05-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* TODO: Updated.
 	* GNUmakefile: Added reference to GormLib as a subproject of Gorm
 	* GModelDecoder.m: Cleaned up some code.

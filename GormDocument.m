@@ -2252,10 +2252,10 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
-      object: aConnector];
+      object: self];
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
-      object: aConnector];
+      object: self];
 }
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
