@@ -37,6 +37,7 @@
 @interface	GormPaletteView : NSView
 {
   NSPoint	mouseDownPoint;
+  NSEvent	*mouseDownEvent;
   BOOL		shouldBeginDrag;
   NSPasteboard	*dragPb;
 }
@@ -67,6 +68,13 @@ static NSImage	*dragImage = nil;
 	IBObjectPboardType, IBViewPboardType, IBWindowPboardType, nil]];
     }
   return self;
+}
+
+- (void) dealloc
+{
+  DESTROY(dragPb);
+  DESTROY(mouseDownEvent);
+  [super dealloc];
 }
 
 /*
@@ -138,7 +146,8 @@ static NSImage	*dragImage = nil;
 {
   NSView	*view;
 
-  mouseDownPoint = [theEvent locationInWindow];
+  ASSIGN(mouseDownEvent, theEvent);
+  mouseDownPoint = [mouseDownEvent locationInWindow];
   view = [super hitTest: mouseDownPoint];
   if (view == self)
     {
@@ -183,7 +192,7 @@ static NSImage	*dragImage = nil;
       [self dragImage: dragImage
 		   at: rect.origin
 	       offset: offset
-		event: theEvent
+		event: mouseDownEvent
 	   pasteboard: pb
 	       source: self
 	    slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
