@@ -1,4 +1,4 @@
-2004-07-17 17:54 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-07-20 20:04 Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* GormDocument.m: Leak fixes and general clean up.
 	* GormGenericEditor.m: Same.
