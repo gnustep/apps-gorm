@@ -103,12 +103,15 @@ Gorm_RESOURCE_FILES = \
 	Images/iconTopLeft_nib.tiff \
 	Images/iconTopRight_nib.tiff \
 	Images/iconTop_nib.tiff \
+	Images/GormAction.tiff \
+	Images/GormOutlet.tiff \
 	Resources/GormViewSizeInspector.gorm
 
 Gorm_HEADERS = \
 	Gorm.h \
 	GormPrivate.h \
-	GormCustomView.h
+	GormCustomView.h \
+	GormOutlineView.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -126,7 +129,8 @@ Gorm_OBJC_FILES = \
 	GormWindowEditor.m \
 	GormClassManager.m \
 	GormInspectorsManager.m \
-	GormPalettesManager.m
+	GormPalettesManager.m \
+	GormOutlineView.m
 
 -include GNUmakefile.preamble
 

@@ -677,6 +677,11 @@ static NSMapTable	*docMap = 0;
 {
   return @"GormViewSizeInspector";
 }
+
+- (NSString*) customClassInspector
+{
+  return @"GormCustomClassInspector";
+}
 @end
 
 @interface GormViewSizeInspector : IBInspector
@@ -903,6 +908,13 @@ NSImage	*mVLine = nil;
       [anObject setPostsFrameChangedNotifications: YES];
     }
 }
-
 @end
 
+// Custom class inspector declaration and definition
+@interface GormCustomClassInspector : IBInspector
+{ 
+}
+@end
+
+@implementation GormCustomClassInspector
+@end

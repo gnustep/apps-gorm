@@ -1,3 +1,13 @@
+2002-07-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormOutlineView.[hm] : Added.   This is a NSOutlineView
+	subclass handles outlets and actions for the class view.  
+	As of this revision, you can view the actions and outlets of
+	a class, but you can't edit them.
+	* GormDocument.m: Modified to use new class.
+	* GormInspectorsManager.m: Removed some code which was causing
+	the application to dump core on exit.
+
 2002-05-04  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Added blank implementation of

@@ -25,6 +25,7 @@
 #include "GormPrivate.h"
 #include "GormClassManager.h"
 #include "GormCustomView.h"
+#include "GormOutlineView.h"
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
@@ -1051,6 +1052,26 @@ static NSImage	*classesImage = nil;
       NSButtonCell		*cell;
       NSTableColumn             *tableColumn;
       unsigned			style;
+      NSColor *salmonColor = 
+	[NSColor colorWithCalibratedRed: 0.850980 
+		 green: 0.737255
+		 blue: 0.576471
+		 alpha: 1.0 ];
+      NSColor *darkSalmonColor = 
+	[NSColor colorWithCalibratedRed: 0.568627 
+		 green: 0.494118
+		 blue: 0.384314
+		 alpha: 1.0 ];
+      NSColor *lightGreyBlueColor = 
+	[NSColor colorWithCalibratedRed: 0.450980 
+		 green: 0.450980
+		 blue: 0.521569
+		 alpha: 1.0 ];
+      NSColor *darkGreyBlueColor = 
+	[NSColor colorWithCalibratedRed: 0.333333 
+		 green: 0.333333
+		 blue: 0.384314
+		 alpha: 1.0 ];
 
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
@@ -1183,7 +1204,7 @@ static NSImage	*classesImage = nil;
 	NSViewHeightSizable|NSViewWidthSizable];
 
       mainRect.origin = NSMakePoint(0,0);
-      classesView = [[NSOutlineView alloc] initWithFrame: mainRect];
+      classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
       [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
       [classesView setDataSource: self];
       [classesView setAutoresizesAllColumnsToFit: YES];
@@ -1192,12 +1213,14 @@ static NSImage	*classesImage = nil;
       [classesView setIndentationMarkerFollowsCell: YES];
       [classesView setAutoresizesOutlineColumn: YES];
       [classesView setIndentationPerLevel: 10];
+      [classesView setAttributeOffset: 30];
+      [classesView setBackgroundColor: salmonColor ];
       [classesScrollView setDocumentView: classesView];
       RELEASE(classesView);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
       [[tableColumn headerCell] setStringValue: @"Classes"];
-      [tableColumn setMinWidth: 250];
+      [tableColumn setMinWidth: 200];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
       [classesView addTableColumn: tableColumn];     
@@ -1206,16 +1229,18 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
       [[tableColumn headerCell] setStringValue: @"O"];
-      [tableColumn setWidth: 25];
+      [tableColumn setWidth: 45];
       [tableColumn setResizable: NO];
       [classesView addTableColumn: tableColumn];
+      [classesView setOutletColumn: tableColumn];
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
       [[tableColumn headerCell] setStringValue: @"A"];
-      [tableColumn setWidth: 25];
+      [tableColumn setWidth: 45];
       [tableColumn setResizable: NO];
       [classesView addTableColumn: tableColumn];
+      [classesView setActionColumn: tableColumn];
       RELEASE(tableColumn);
 
       [classesView sizeToFit];
@@ -2134,7 +2159,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       if ([identifier isEqualToString: @"classes"])
 	{
 	  return className;
-	}
+	} 
       else if ([identifier isEqualToString: @"outlets"])
 	{
 	  return [NSString stringWithFormat: @"%d",
@@ -2201,6 +2226,20 @@ numberOfChildrenOfItem: (id)item
     }
 
   return nil;
+}
+
+- (NSArray *)outlineView: (GormOutlineView *)anOutlineView
+	  actionsForItem: (id)item
+{
+  NSArray *actions = [classManager allActionsForClassNamed: item];
+  return actions;
+}
+
+- (NSArray *)outlineView: (GormOutlineView *)anOutlineView
+	  outletsForItem: (id)item
+{
+  NSArray *outlets = [classManager allOutletsForClassNamed: item];
+  return outlets;
 }
 @end
 

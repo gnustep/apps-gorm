@@ -38,7 +38,7 @@
 @implementation GormEmptyInspector
 - (void) dealloc
 {
-  RELEASE(window);
+  //RELEASE(window);
   [super dealloc];
 }
 
@@ -79,7 +79,7 @@
 @implementation GormMultipleInspector
 - (void) dealloc
 {
-  RELEASE(window);
+  //RELEASE(window);
   [super dealloc];
 }
 
@@ -118,7 +118,7 @@
 @implementation GormNotApplicableInspector
 - (void) dealloc
 {
-  RELEASE(window);
+  //RELEASE(window);
   [super dealloc];
 }
 
@@ -267,7 +267,7 @@
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
-  [popup addItemWithTitle: @"Custom Class"];
+  [popup addItemWithTitle: @"Class Edit"];
   item = [popup itemAtIndex: 4];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
@@ -382,7 +382,7 @@
     }
   else if ([obj isKindOfClass: [GormClassProxy class]])
     {
-      [panel setTitle: [NSString stringWithFormat: @"Custom Class Inspector:%@",
+      [panel setTitle: [NSString stringWithFormat: @"Class Edit Inspector:%@",
 	[obj className]]];
     }
   else
