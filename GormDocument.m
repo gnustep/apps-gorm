@@ -774,9 +774,10 @@ static NSImage	*classesImage = nil;
   GormClassManager *cm = [self classManager];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
   NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
-  NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
+  NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
   NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
 
   while (![headerScanner isAtEnd])
@@ -837,6 +838,7 @@ static NSImage	*classesImage = nil;
 	      while (![ivarScanner isAtEnd])
 		{
 		  NSString *outlet = nil;
+		  NSString *type = nil;
 
 		  if (delimiter == nil || [delimiter isEqualToString: @";"])
 		    {
@@ -845,6 +847,20 @@ static NSImage	*classesImage = nil;
 		      [ivarScanner scanString: outletToken
 				   intoString: NULL];
 		    }
+
+		  // if using the IBOutlet token in the header, scan in the outlet type
+		  // as well.
+		  if([outletToken isEqualToString: @"IBOutlet"])
+		    {
+		      [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				   intoString: NULL];
+		      [ivarScanner scanCharactersFromSet: typeStopSet
+				   intoString: NULL];
+		      [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				   intoString: &type];
+		      NSLog(@"outlet type = %@",type);
+		    }
+
 		  [ivarScanner scanUpToCharactersFromSet: outletStopSet
 			       intoString: &outlet];
 		  [ivarScanner scanCharactersFromSet: outletStopSet

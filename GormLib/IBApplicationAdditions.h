@@ -40,4 +40,9 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (id) selectedObject;
 @end
 
+@interface NSApplication (GormSpecific)
+- (NSImage *) linkImage;
+- (void) startConnecting;
+@end
+
 #endif

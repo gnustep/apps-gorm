@@ -199,8 +199,9 @@
     }
   else if ([name isEqual: IBWillCloseDocumentNotification] == YES)
     {
+      // FIXME
       // show an empty selection of the document closes
-      [self setEmptyInspector];
+      // [self setEmptyInspector];
       // [panel orderOut: self];
     }
 }

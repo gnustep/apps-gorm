@@ -21,10 +21,11 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../GormPrivate.h"
-#include "../../GormViewEditor.h"
+#include "GormPrivate.h"
+#include "GormViewEditor.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})

@@ -1,13 +1,9 @@
 #include <AppKit/AppKit.h>
-
-#include "../../GormPrivate.h"
-
-#include "../../GormControlEditor.h"
-
-#include "../../GormViewWithSubviewsEditor.h"
+#include "GormPrivate.h"
+#include "GormControlEditor.h"
+#include "GormViewWithSubviewsEditor.h"
 
 #define _EO ((NSPopUpButton *)_editedObject)
-
 
 @class GormNSPopUpButtonCell;
 

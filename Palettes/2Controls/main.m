@@ -24,7 +24,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/IBPalette.h>
-#include "../../GormCustomView.h"
+#include "GormCustomView.h"
 
 //  @class GormPopUpNSMenu;
 @class GormNSPopUpButton;

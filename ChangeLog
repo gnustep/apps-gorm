@@ -1,3 +1,21 @@
+2003-05-29  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* Resources/GormScrollViewAttributesInspector.gorm: new
+	* GormScrollViewAttributesInspector.h: new
+	* GormScrollViewAttributesInspector.m: new
+	* Palettes/0Menu/GNUmakefile.preamble: new
+	* Palettes/1Windows/GNUmakefile.preamble: new
+	* Palettes/2Controls/GNUmakefile.preamble: new
+	* Palettes/3Containers/GNUmakefile.preamble: new
+	* Palettes/4Data/GNUmakefile.preamble: new
+	* Gorm.m: Removed some constants and moved them to GormLib.
+	* GormDocument.m: Removed some constants and moved them to
+	GormLib.
+	* Palettes/(all files): Cleaned up includes.  
+	Got rid of "../.." style of includes by using GNUmakefile 
+	settings.  Also corrected the category that some of the 
+	classes are implementing to provide inspector names to Gorm.
+
 2003-05-24  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Prevent subclassing of FirstResponder.

@@ -24,17 +24,17 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../GormPrivate.h"
-
 #include "GormNSTableView.h"
-#include "../../GormInternalViewEditor.h"
+#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
+
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
 /*----------------------------------------------------------------------------
  * NSBrowser
  */
-@implementation	NSBrowser (IBInspectorClassNames)
+@implementation	NSBrowser (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -164,7 +164,7 @@
 /*----------------------------------------------------------------------------
  * NSTableColumn
  */
-@implementation NSTableColumn (IBInspectorClassNames)
+@implementation NSTableColumn (IBObjectAdditions)
 - (NSString *) inspectorClassName
 {
   return @"GormTableColumnAttributesInspector";
@@ -376,7 +376,7 @@
 /*----------------------------------------------------------------------------
  * NSTableView (possibly embedded in a Scroll view)
  */
-@implementation	NSTableView (IBInspectorClassNames)
+@implementation	NSTableView (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -564,7 +564,7 @@
  * (like horizontal and vertical scrollbar)
 */
 
-@implementation	NSScrollView (IBInspectorClassNames)
+@implementation	NSScrollView (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -588,19 +588,12 @@
 
 static NSString *ITEM=@"item";
 
-@implementation	NSTabView (IBInspectorClassNames)
+@implementation	NSTabView (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
   return @"GormTabViewInspector";
 }
-
-/*
-- (NSString*) sizeInspectorClassName
-{
-  //  return @"GormTableViewSizeInspector";
-}
-*/
 
 @end
 

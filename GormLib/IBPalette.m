@@ -34,6 +34,11 @@ NSString	*IBViewPboardType = @"IBViewPboardType";
 NSString	*IBWindowPboardType = @"IBWindowPboardType";
 NSString	*IBFormatterPboardType = @"IBFormatterPboardType";
 
+// Gorm specific paste board types..
+NSString        *GormImagePboardType = @"GormImagePboardType";
+NSString        *GormSoundPboardType = @"GormSoundPboardType";
+NSString        *GormLinkPboardType = @"GormLinkPboardType";
+
 @implementation	IBPalette
 
 static NSMapTable	*viewToObject = 0;

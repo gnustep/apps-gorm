@@ -23,9 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
-
 #include "GormBoxEditor.h"
 
 #define _EO ((NSScrollView *)_editedObject)

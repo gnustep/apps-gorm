@@ -54,6 +54,7 @@ extern NSString	*IBFormatterPboardType;
  * NOTE: These are specific to Gorm... */
 extern NSString	*GormImagePboardType;
 extern NSString	*GormSoundPboardType;
+extern NSString *GormLinkPboardType;
 
 @interface IBPalette : NSObject
 {

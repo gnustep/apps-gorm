@@ -22,14 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../../GormPrivate.h"
-
-@implementation	NSMenu (IBInspectorClassNames)
-- (NSString*) inspectorClassName
-{
-  return @"GormMenuAttributesInspector";
-}
-@end
+#include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @interface GormMenuAttributesInspector : IBInspector
 {
@@ -92,7 +86,7 @@
 
 
 
-@implementation	NSMenuItem (IBInspectorClassNames)
+@implementation	NSMenuItem (IBObjectAdditions)
 - (NSString*) inspectorClassName
 {
   return @"GormMenuItemAttributesInspector";

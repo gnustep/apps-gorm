@@ -24,7 +24,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../GormPrivate.h"
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -32,7 +32,7 @@
 /*----------------------------------------------------------------------------
  * NSBox
  */
-@implementation	NSBox (IBInspectorClassNames)
+@implementation	NSBox (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -124,7 +124,7 @@
 /*----------------------------------------------------------------------------
  * NSButton
  */
-@implementation	NSButton (IBInspectorClassNames)
+@implementation	NSButton (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -383,7 +383,7 @@
 /*----------------------------------------------------------------------------
  * NSButtonCell
  */
-@implementation	NSButtonCell (IBInspectorClassNames)
+@implementation	NSButtonCell (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -403,7 +403,7 @@
 /*----------------------------------------------------------------------------
  * NSCell
  */
-@implementation	NSCell (IBInspectorClassNames)
+@implementation	NSCell (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -472,7 +472,7 @@
 /*----------------------------------------------------------------------------
  * NSForm
  */
-@implementation	NSForm (IBInspectorClassNames)
+@implementation	NSForm (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -636,7 +636,7 @@
 /*----------------------------------------------------------------------------
  * NSMatrix
  */
-@implementation	NSMatrix (IBInspectorClassNames)
+@implementation	NSMatrix (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -794,7 +794,7 @@
 /*----------------------------------------------------------------------------
  * NSPopUpButton
  */
-@implementation	NSPopUpButton (IBInspectorClassNames)
+@implementation	NSPopUpButton (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -877,7 +877,7 @@
 /*----------------------------------------------------------------------------
  * NSSlider
  */
-@implementation	NSSlider (IBInspectorClassNames)
+@implementation	NSSlider (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -990,7 +990,7 @@
 /*----------------------------------------------------------------------------
  * NSStepper
  */
-@implementation	NSStepper (IBInspectorClassNames)
+@implementation	NSStepper (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -1116,7 +1116,7 @@
 /*----------------------------------------------------------------------------
  * NSStepperCell
  */
-@implementation	NSStepperCell (IBInspectorClassNames)
+@implementation	NSStepperCell (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {
@@ -1136,7 +1136,7 @@
 /*----------------------------------------------------------------------------
  * NSTextField
  */
-@implementation	NSTextField (IBInspectorClassNames)
+@implementation	NSTextField (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
 {

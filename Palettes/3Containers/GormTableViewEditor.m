@@ -22,8 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../../GormPrivate.h"
-
+#include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormTableViewEditor.h"
 #include "GormNSTableView.h"
 

@@ -24,8 +24,6 @@
 
 #include "GormPrivate.h"
 
-NSString *GormImagePboardType = @"GormImagePboardType";
-
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.

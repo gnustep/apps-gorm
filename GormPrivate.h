@@ -118,8 +118,6 @@ extern NSString *GormToggleGuidelineNotification;
 
 @interface NSApplication (Gorm)
 - (GormClassManager*) classManager;
-- (NSImage*) linkImage;
-- (void) startConnecting;
 @end
 
 @interface Gorm : NSApplication <IB>

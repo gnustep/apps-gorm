@@ -31,7 +31,6 @@
 #include <AppKit/NSButton.h>
 
 NSDate	*startDate;
-NSString *GormLinkPboardType = @"GormLinkPboardType";
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 
 @class	InfoPanel;

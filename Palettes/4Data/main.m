@@ -21,11 +21,10 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include <InterfaceBuilder/IBPalette.h>
-#include "../../GormPrivate.h"
-
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 /* -----------------------------------------------------------
  * Some additions to the NSNumberFormatter Class specific to Gorm

@@ -22,9 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../../GormPrivate.h"
+#include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
-@implementation NSMenu (GormObjectAdditions)
+@implementation NSMenu (IBObjectAdditions)
 - (NSString*) editorClassName
 {
   return @"GormMenuEditor";
@@ -46,12 +47,19 @@
     }
   return image;
 }
+
+- (NSString*) inspectorClassName
+{
+  return @"GormMenuAttributesInspector";
+}
 @end
 
+/*
 @interface NSButtonCell (GormObjectAdditions)
 - (NSRect) gormTitleRectForFrame: (NSRect) cellFrame
 			  inView: (NSView *)controlView;
 @end
+*/
 
 
 
@@ -912,6 +920,8 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
     {
       [document setSelectionFromEditor: self];
     }
+
+  /*
   else
     {
       id ed = nil;
@@ -920,6 +930,7 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
       ed = [GormObjectEditor editorForDocument: document];
       [ed selectObjects: [NSArray arrayWithObject: edited]];
     }
+  */
 }
 
 - (NSArray*) selection
