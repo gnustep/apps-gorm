@@ -109,6 +109,7 @@
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
   contentSize = [v contentSize];
+  [v setBorderType: NSBezelBorder];
 
   tv = [[GormNSTableView alloc] initWithFrame:
 				  NSZeroRect];
@@ -143,6 +144,7 @@
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
   contentSize = [v contentSize];
+  [v setBorderType: NSBezelBorder];
 
   ov = [[GormNSOutlineView alloc] initWithFrame:
 				    NSZeroRect];
@@ -182,9 +184,7 @@
   [v setDocumentView: ov];
 
   RELEASE(ov);
-  RELEASE(v);
-  
-  
+  RELEASE(v);  
 }
 
 @end

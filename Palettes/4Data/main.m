@@ -217,6 +217,7 @@ int defaultDateFormatIndex = 3;
   [[v contentView] setAutoresizingMask: NSViewHeightSizable 
 			    | NSViewWidthSizable];
   [[v contentView] setAutoresizesSubviews:YES];
+  [v setBorderType: NSBezelBorder];
 
   rect = [[v contentView] frame];
 

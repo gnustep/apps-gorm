@@ -1,4 +1,14 @@
-2004-05-28 21:48 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-05-29 08:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/main.m: Had some DOS formatted lines.   Simply
+	converted to UNIX format.
+	* Palettes/3Containers/main.m: Changed the default border type
+	for both NSTableView and NSOutlineView to NSBezelBorder in 
+	-finishInstantiate.
+	* Palettes/4Data/main.m: Changed the default border type for the
+	NSTextView to NSBezelBorder in -finishInstantiate.
+	
+2004-05-29 07:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/4Data/GormNSComboBoxInspector.gorm: Improved the layout
 	a little.
