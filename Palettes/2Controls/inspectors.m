@@ -263,15 +263,18 @@
 	  [object setAlternateImage: image];
 	}
     }
-  else if ([control isKindOfClass: [NSMenuItem class]])
+  else if (control == typeButton) 
+    {
+      [self setButtonType: [[control selectedItem] tag] forObject: object];
+    }
+  else if ([control isKindOfClass: [NSMenuItem class]] )
     {
       /*
-       * We do receive the selected menu item here.
-       * Not the PopUpbutton 'typeButton'
-       * FIXME: Ideally we should test if the menu item belongs
-       * to the 'type button' control. How to do that?
-       */
-      NSDebugLog(@"button type from OK= %d",[control tag]);
+            * In old NSPopUpButton implementation we do receive
+            * the selected menu item here. Not the PopUpbutton 'typeButton'
+            * FIXME: Ideally we should also test if the menu item belongs
+            * to the 'type button' control. How to do that?
+            */
       [self setButtonType: [control tag] forObject: object];
     }
 }
