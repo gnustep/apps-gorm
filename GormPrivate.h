@@ -175,6 +175,8 @@ extern NSString *GormResizeCellNotification;
   id			selected;
   NSPasteboard		*dragPb;
   NSString		*dragType;
+  BOOL                  closed;
+  BOOL                  activated;
 }
 // selection methods...
 - (void) selectObjects: (NSArray*)objects;
@@ -214,15 +216,9 @@ extern NSString *GormResizeCellNotification;
 - (id) changeSelection: (id)sender;
 @end
 
-@interface	GormObjectEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
+@interface	GormObjectEditor : GormGenericEditor 
 {
-//    NSMutableArray	*objects;
-//    id<IBDocuments>	document;
-//    id			selected;
-//    NSPasteboard		*dragPb;
-//    NSString		*dragType;
 }
-// + (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
@@ -230,13 +226,8 @@ extern NSString *GormResizeCellNotification;
 - (void) resetObject: (id)anObject;
 @end
 
-@interface	GormSoundEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
+@interface	GormSoundEditor : GormGenericEditor 
 {
-//    NSMutableArray        *objects;
-//    id<IBDocuments>       document;
-//    id			selected;
-//    NSPasteboard		*dragPb;
-//    NSString		*dragType;
 }
 // don't redeclare methods already declared in protocols.
 + (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
@@ -244,7 +235,7 @@ extern NSString *GormResizeCellNotification;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 @end
 
-@interface	GormImageEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
+@interface	GormImageEditor : GormGenericEditor 
 {
 }
 // don't redeclare methods already declared in protocols.

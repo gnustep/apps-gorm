@@ -117,7 +117,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       // do not decode super (it would try to morph into theClass ! )
       [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
       theFrame = [aCoder decodeRect];
-      //NSLog(@"Decoding proxy : %@", theClass);
       RETAIN(theClass); // release in dealloc of GSNibItem... 
       
       return self; 
@@ -129,7 +128,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       theFrame = [aCoder decodeRect];
       [aCoder decodeValueOfObjCType: @encode(unsigned int) 
 	      at: &autoresizingMask];  
-      //NSLog(@"Decoding proxy : %@", theClass);
       RETAIN(theClass); // release in dealloc of GSNibItem... 
       
       return self; 
@@ -578,10 +576,10 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 /***********************************************************************/
 - (void) open: (id) sender
 {
-  GormDocument	*doc = [GormDocument new];
+  GormDocument	*doc = AUTORELEASE([GormDocument new]);
 
   [documents addObject: doc];
-  RELEASE(doc);
+  // RELEASE(doc);
   if ([doc openDocument: sender] == nil)
     {
       [documents removeObjectIdenticalTo: doc];
@@ -614,9 +612,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 //include Modules Menu
 - (void) newGormDocument : (id) sender 
 {
-  id doc = [GormDocument new];
+  id doc = AUTORELEASE([GormDocument new]);
   [documents addObject: doc];
-  RELEASE(doc);
+  // RELEASE(doc);
   switch ([sender tag]) 
     {
     case 0:
@@ -678,13 +676,15 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   if (doc != nil)
     {
       [documents addObject: doc];
+      // RELEASE(doc);
       [[doc window] makeKeyAndOrderFront: self];
     }
 }
 
 - (void) close: (id)sender
 {
-  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
+  GormDocument  *document = (GormDocument *)[self activeDocument];
+  NSWindow	*window = [document window];
 
   [window setReleasedWhenClosed: YES];
   [window performClose: self];
@@ -1137,13 +1137,10 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
-      RETAIN(obj); // release below...
       [documents removeObjectIdenticalTo: obj];
-      AUTORELEASE(obj);
+      // AUTORELEASE(obj); // let the document go, once everything is done...
     }
 }
-
-
 
 - (void) awakeFromNib
 {
@@ -1192,10 +1189,10 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
-  GormDocument	*doc = [GormDocument new];
+  GormDocument	*doc = AUTORELEASE([GormDocument new]);
 
   [documents addObject: doc];
-  RELEASE(doc);
+  // RELEASE(doc);
   if ([doc loadDocument: fileName] == nil)
     {
       [documents removeObjectIdenticalTo: doc];

@@ -384,7 +384,6 @@
 
 - (BOOL) activate
 {
-  // NSAssert(isClosed == NO, NSInternalInconsistencyException);
   if (original == nil)
     {
       NSWindow		*w;
@@ -435,7 +434,6 @@
 
 - (void) close
 {
-  // NSAssert(isClosed == NO, NSInternalInconsistencyException);
   isClosed = YES;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
@@ -446,11 +444,8 @@
     }
 
   [self closeSubeditors];
-
   [self deactivate];
-
   [edited close];
-
   [document editor: self didCloseForObject: edited];
 }
 
@@ -503,10 +498,9 @@
     {
       [self close];
     }
-  RELEASE(edited);
+  // RELEASE(edited);
   RELEASE(selection);
   RELEASE(subeditor);
-  RELEASE(document);
   [super dealloc];
 }
 
@@ -666,21 +660,25 @@ void _attachAll(NSMenu *menu, id document)
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
   self = [super init];
-  ASSIGN(document, aDocument);
-  ASSIGN(edited, anObject);
-  selection = [NSMutableArray new];
-  rep = [edited menuRepresentation];
-  /*
-   * Permit views and connections to be dragged in to the window.
-   */
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBMenuPboardType, GormLinkPboardType, nil]];
-
-  /*
-   * Make sure that all our menu items are attached in the document.
-   */
-  _attachAll(edited, document);
-  // [document attachObjects: [edited itemArray] toParent: edited];
+  if(self != nil)
+    {
+      document = aDocument;
+      ASSIGN(edited, anObject);
+      RETAIN(edited);
+      selection = [NSMutableArray new];
+      rep = [edited menuRepresentation];
+      
+      /*
+       * Permit views and connections to be dragged in to the window.
+       */
+      [self registerForDraggedTypes: [NSArray arrayWithObjects:
+						IBMenuPboardType, GormLinkPboardType, nil]];
+      
+      /*
+       * Make sure that all our menu items are attached in the document.
+       */
+      _attachAll(edited, document);
+    }
 
   return self;
 }

@@ -22,6 +22,7 @@
 
 - (BOOL) activate
 {
+  activated = YES;
   [[self window] makeKeyAndOrderFront: self];
   return YES;
 }
@@ -87,6 +88,7 @@
 
 - (void) close
 {
+  closed = YES;
   [self deactivate];
   [self closeSubeditors];
 }
@@ -103,6 +105,13 @@
 
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
+  if((self = [super init]) != nil)
+    {
+      // don't retain the document...
+      document = aDocument;
+      closed = NO;
+      activated = NO;
+    }
   return self;
 }
 
@@ -117,6 +126,7 @@
 
 - (void) deactivate
 {
+  activated = NO;
 }
 
 - (void) copySelection
@@ -130,7 +140,10 @@
 
 - (void) dealloc
 {
-  RELEASE(objects);
+  if(closed == NO)
+    [self close];
+
+  // RELEASE(objects); // FIXME: This will leak... 
   [super dealloc];
 }
 

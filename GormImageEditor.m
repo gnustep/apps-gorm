@@ -49,7 +49,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   if (self == [GormImageEditor class])
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
-	NSObjectMapValueCallBacks, 2);
+				NSObjectMapValueCallBacks, 2);
     }
 }
 
@@ -170,7 +170,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
-{  
+{
   NSString *name = [aNotification name];
   if([name isEqual: GormResizeCellNotification])
     {
@@ -194,12 +194,10 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       return self;
     }
 
-  self = [super init];
+  self = [super initWithObject: anObject inDocument: aDocument];
   if (self != nil)
     {
       NSButtonCell	*proto;
-
-      document = aDocument;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	NSFilenamesPboardType, nil]];
@@ -236,6 +234,13 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 	object: nil];
     }
   return self;
+}
+
+- (void) close
+{
+  [super close];
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  NSMapRemove(docMap,document);
 }
 
 - (void) makeSelectionVisible: (BOOL)flag
@@ -489,6 +494,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   RELEASE(name);
   RELEASE(path);
   RELEASE(image);
+  [super dealloc];
 }
 
 - (void) setImageName: (NSString *)aName

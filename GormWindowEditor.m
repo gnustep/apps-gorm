@@ -227,13 +227,12 @@
 - (void) dealloc
 {
   if (closed == NO)
-    {
       [self close];
-    }
-  RELEASE(edited);
+
+  // RELEASE(edited);
   RELEASE(selection);
   RELEASE(subeditors);
-  RELEASE(document);
+  // RELEASE(document);
   [super dealloc];
 }
 
@@ -282,15 +281,23 @@
 - (id) initWithObject: (id)anObject 
 	   inDocument: (id<IBDocuments>)aDocument
 {
-  _displaySelection = YES;
-  _editedObject = (NSView*)anObject;
-  edited = anObject;
-
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  
   if ((self = [super initWithFrame: NSZeroRect]) == nil)
     return nil;
 
-   document = aDocument;
- 
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: IBWillCloseDocumentNotification
+      object: aDocument];
+      
+  _displaySelection = YES;
+  _editedObject = (NSView*)anObject;
+  ASSIGN(edited, anObject);
+  RETAIN(edited);
+  // we don't retain the document...
+  document = aDocument;
+
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     GormLinkPboardType, IBViewPboardType, nil]];
 
@@ -400,5 +407,4 @@
   // [document setSelectionFromEditor: self];
   [self makeSelectionVisible: NO];
 }
-
 @end

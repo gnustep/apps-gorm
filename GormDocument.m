@@ -107,44 +107,6 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 }
 @end
 
-/*
-@implementation	GormFontManager
-- (NSImage*) imageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormFontManager"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-- (NSString*) inspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-- (NSString*) connectInspectorClassName
-{
-  return @"GormConnectionInspector";
-}
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-- (NSString*) classInspectorClassName
-{
-  return @"GormNotApplicableInspector";
-}
-- (NSString *)className
-{
-  return @"NSFontManager";
-}
-@end
-*/
-
 
 
 /*
@@ -204,14 +166,6 @@ static NSImage	*classesImage = nil;
       [self setVersion: GNUSTEP_NIB_VERSION];
     }
 }
-
-/*
-- (void) awakeWithContext: (NSDictionary *)context
-{
-  // do nothing..  This is defined to override the one in GSNibContainer.
-  NSLog(@"In awakeWithContext");
-}
-*/
 
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
@@ -295,7 +249,6 @@ static NSImage	*classesImage = nil;
       [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
-	  // RETAIN(anObject);
 	  [anObject setReleasedWhenClosed: NO];
 	}
     }
@@ -501,7 +454,7 @@ static NSImage	*classesImage = nil;
     {
       [classEditor setSelectedClassName: [classesView itemAtRow: row]];
       [self setSelectionFromEditor: (id)classEditor];
-    }
+    } 
 }
 
 // class selection...
@@ -701,7 +654,7 @@ static NSImage	*classesImage = nil;
         toPasteboard: (NSPasteboard*)aPasteboard
 {
   NSEnumerator	*enumerator;
-  NSMutableSet	*editors;
+  NSMutableSet	*editorSet;
   id		obj;
   NSMutableData	*data;
   NSArchiver    *archiver;
@@ -710,14 +663,14 @@ static NSImage	*classesImage = nil;
    * Remove all editors from the selected objects before archiving
    * and restore them afterwards.
    */
-  editors = [NSMutableSet new];
+  editorSet = [NSMutableSet new];
   enumerator = [anArray objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {
       id editor = [self editorForObject: obj create: NO];
       if (editor != nil)
 	{
-	  [editors addObject: editor];
+	  [editorSet addObject: editor];
 	  [editor deactivate];
 	}
     }
@@ -730,12 +683,12 @@ static NSImage	*classesImage = nil;
   [archiver encodeRootObject: anArray];
 
   // reactivate
-  enumerator = [editors objectEnumerator];
+  enumerator = [editorSet objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {
       [obj activate];
     }
-  RELEASE(editors);
+  RELEASE(editorSet);
 
   [aPasteboard declareTypes: [NSArray arrayWithObject: aType]
 		      owner: self];
@@ -772,6 +725,21 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
+/*
+//  For debugging
+- (id) retain
+{
+  NSLog(@"Document being retained... %d: %@", [self retainCount], self);
+  return [super retain];
+}
+
+- (oneway void) release
+{
+  NSLog(@"Document being released... %d: %@", [self retainCount], self);
+  [super release];
+}
+*/ 
+
 - (void) pasteboardChangedOwner: (NSPasteboard*)sender
 {
   NSDebugLog(@"Owner changed for %@", sender);
@@ -780,8 +748,6 @@ static NSImage	*classesImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  [window setDelegate: nil];
-  [window performClose: self];
   RELEASE(classManager);
   RELEASE(classEditor);
   RELEASE(hidden);
@@ -796,6 +762,7 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
+  RELEASE(window);
   [super dealloc];
 }
 
@@ -1358,6 +1325,11 @@ static NSImage	*classesImage = nil;
     }
 
   /*
+   * Add to the master list of editors for this document
+   */
+  // [editors removeObjectIdenticalTo: anEditor];
+
+  /*
    * Make sure that this editor is not the selection owner.
    */
   if ([(id<IB>)NSApp selectionOwner] == 
@@ -1398,6 +1370,15 @@ static NSImage	*classesImage = nil;
       [link setSource: anObject];
       [link setDestination: editor];
       [connections addObject: link];
+
+      // add to the list...
+      /*
+      if(![editors containsObject: editor])
+	{
+	  [editors addObject: editor];
+	}
+      */
+
       RELEASE(link);
       if (anEditor == nil)
 	{
@@ -1480,19 +1461,38 @@ static NSImage	*classesImage = nil;
   [savedEditors removeAllObjects];
 }
 
+- (void) _closeAllEditors
+{
+  NSEnumerator		*enumerator;
+  id                    con;
+  
+  // close all editors attached to objects...
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [[con destination] close];
+	}
+    }
+  
+  // close the editors in the document window...
+  [objectsView close];
+  [imagesView close];
+  [soundsView close];
+}
+
+
 - (void) handleNotification: (NSNotification*)aNotification
 {
-  NSString	*name = [aNotification name];
+  NSString *name = [aNotification name];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   if ([name isEqual: NSWindowWillCloseNotification] == YES)
     {
       NSEnumerator	*enumerator;
       id		obj;
-
-      [nc postNotificationName: IBWillCloseDocumentNotification
-			object: self];
-
+      
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
@@ -1506,6 +1506,7 @@ static NSImage	*classesImage = nil;
 	    }
 	  else if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
+	      [obj setReleasedWhenClosed: NO];
 	      if ([obj isVisible] == YES)
 		{
 		  [hidden addObject: obj];
@@ -1513,9 +1514,14 @@ static NSImage	*classesImage = nil;
 		}
 	    }
 	}
-
+      
+      // deactivate the document...
       [self setDocumentActive: NO];
       [self setSelectionFromEditor: nil];
+      [self _closeAllEditors];
+      // [editors makeObjectsPerformSelector: @selector(close)]; // close all of the editors...
+      [nc postNotificationName: IBWillCloseDocumentNotification
+	  object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
@@ -1632,9 +1638,11 @@ static NSImage	*classesImage = nil;
 		 blue: 0.576471
 		 alpha: 1.0 ];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
+      
+      // editors = [NSMutableArray new];
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
+
       /*
        * NB. We must retain the map values (object names) as the nameTable
        * may not hold identical name objects, but merely equal strings.
@@ -1657,7 +1665,7 @@ static NSImage	*classesImage = nil;
 					       defer: NO];
       [window setMinSize: [window frame].size];
       [window setTitle: _(@"UNTITLED")];
-
+      [window setReleasedWhenClosed: NO];
       [window setDelegate: self];
 
       [nc addObserver: self
@@ -1770,12 +1778,11 @@ static NSImage	*classesImage = nil;
 
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
 						  inDocument: self];
-      AUTORELEASE(objectsView);
       [objectsView setFrame: mainRect];
       [objectsView setAutoresizingMask:
 	NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];
-      RELEASE(objectsView);
+      RELEASE(objectsView); 
 
       // images...
       mainRect.origin = NSMakePoint(0,0);
@@ -1788,7 +1795,6 @@ static NSImage	*classesImage = nil;
 
       imagesView = [[GormImageEditor alloc] initWithObject: nil
 						inDocument: self];
-      AUTORELEASE(imagesView);
       [imagesView setFrame: mainRect];
       [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [imagesScrollView setDocumentView: imagesView];
@@ -1805,7 +1811,6 @@ static NSImage	*classesImage = nil;
 
       soundsView = [[GormSoundEditor alloc] initWithObject: nil
 						inDocument: self];
-      AUTORELEASE(soundsView);
       [soundsView setFrame: mainRect];
       [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [soundsScrollView setDocumentView: soundsView];
@@ -1912,6 +1917,13 @@ static NSImage	*classesImage = nil;
 	    }
 	}
 
+      /*
+      // add editors here to the list...
+      // [editors addObject: classEditor];
+      [editors addObject: objectsView];
+      [editors addObject: imagesView];
+      [editors addObject: soundsView];
+      */
     }
   return self;
 }
@@ -2600,7 +2612,7 @@ static NSImage	*classesImage = nil;
       [self attachObject: aMenu toParent: nil];
       [objectsView addObject: aMenu];
       [[aMenu window] setFrameTopLeftPoint:
-	NSMakePoint(1, frame.size.height-200)];
+			NSMakePoint(1, frame.size.height-200)];
       RELEASE(aMenu);
     }
   else if ([type isEqual: @"Inspector"] == YES)
@@ -2627,7 +2639,7 @@ static NSImage	*classesImage = nil;
 	}
 
       [aWindow setFrameTopLeftPoint:
-	NSMakePoint(220, frame.size.height-100)];
+		 NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: _(@"Inspector Window")];
       [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
@@ -2657,7 +2669,7 @@ static NSImage	*classesImage = nil;
 	}
 
       [aWindow setFrameTopLeftPoint:
-	NSMakePoint(220, frame.size.height-100)];
+		 NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: _(@"Palette Window")];
       [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
@@ -3307,11 +3319,11 @@ static NSImage	*classesImage = nil;
       //Cancel
       else if (result == NSAlertOtherReturn)
 	return NO; 
-    }      
-  
-  return YES;
+    }
 
+  return YES;
 }
+
 - (BOOL) windowShouldClose: (id)sender
 {
   return [self couldCloseDocument];

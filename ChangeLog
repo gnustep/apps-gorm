@@ -1,3 +1,30 @@
+2004-05-13 01:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	NOTE: These changes might unstabilize things a bit.
+	* Gorm.m: The document is now autoreleased when it is instantiated.
+	This change was made in [Gorm application:openFile:],[Gorm open:], 
+	[Gorm newGormDocument:].
+	* GormDocument.m: Addition of a method called 
+	[GormDocument _closeAllEditors] this closes all of the editors from
+	the handleNotification method before the any objects are ultimately
+	released.  Removal of old, commented out GormFontManager implementation.
+	Streamlined the dealloc method to make certain everything is released.
+	Also changed the window in the init method so that it doesn't release itself
+	when it's closed by the user. This allows for a more controlled shutdown.
+	* GormDocument.h: Minor code cleanup.
+	* GormGenericEditor.[hm]: Added activate, closed ivars.  Also added code
+	in close and activate to make use of them. Added code in dealloc to call
+	[GormGenericEditor close] if there the flag indicates the editor is 
+	open.  Also moved some common, trivial, operations to the parent class 
+	implementation of initWithObject:inDocument:.
+	* GormObjectEditor.m: Added code in close to remove the document from the
+	map.  This eliminates a crash which was occurring.  
+	* GormSoundEditor.m: Same.
+	* GormImageEditor.m: Same.
+	* GormViewEditor.m: Re-arranged the initWithObject:inDocument:.
+	* GormWindowEditor.m: Same.
+	* GormMenuEditor.m: Same.
+	
 2004-05-10 21:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument handleNotification:] was failing

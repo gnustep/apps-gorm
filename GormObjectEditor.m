@@ -111,9 +111,6 @@ static NSMapTable	*docMap = 0;
   return NO;
 }
 
-
-
-
 - (void) copySelection
 {
   if (selected != nil)
@@ -252,17 +249,16 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
+
   if([name isEqual: GormResizeCellNotification])
     {
       NSDebugLog(@"Recieved notification");
       [self setCellSize: defaultCellSize()];
     }
 }
-
 
 /*
  *	Initialisation - register to receive DnD with our own types.
@@ -279,7 +275,7 @@ static NSMapTable	*docMap = 0;
       return self;
     }
 
-  self = [super init];
+  self = [super initWithObject: anObject inDocument: aDocument];
   if (self != nil)
     {
       NSButtonCell	*proto;
@@ -322,6 +318,13 @@ static NSMapTable	*docMap = 0;
 	object: nil];
     }
   return self;
+}
+
+- (void) close
+{
+  [super close];
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  NSMapRemove(docMap,document);
 }
 
 - (void) makeSelectionVisible: (BOOL)flag

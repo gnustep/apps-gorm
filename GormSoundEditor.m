@@ -171,6 +171,7 @@ static NSMapTable	*docMap = 0;
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
+
   if([name isEqual: GormResizeCellNotification])
     {
       NSDebugLog(@"Recieved notification");
@@ -193,12 +194,10 @@ static NSMapTable	*docMap = 0;
       return self;
     }
 
-  self = [super init];
+  self = [super initWithObject: anObject inDocument: aDocument];
   if (self != nil)
     {
       NSButtonCell	*proto;
-
-      document = aDocument;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	IBObjectPboardType, GormLinkPboardType, nil]];
@@ -235,6 +234,13 @@ static NSMapTable	*docMap = 0;
 	object: nil];
     }
   return self;
+}
+
+- (void) close
+{
+  [super close];
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  NSMapRemove(docMap,document);
 }
 
 - (void) makeSelectionVisible: (BOOL)flag

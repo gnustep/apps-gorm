@@ -69,7 +69,7 @@
   NSMutableArray	*hidden;
   NSMutableSet          *sounds;
   NSMutableSet          *images;
-  // NSFileWrapper         *wrapper;
+  // NSMutableArray        *editors;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

@@ -213,7 +213,6 @@ static BOOL currently_displaying = NO;
 
 - (void) close
 {
-
   if (closed == NO)
     {
       [self deactivate];
@@ -248,7 +247,6 @@ static BOOL currently_displaying = NO;
   if (closed == NO)
     [self close];
 
-  // RELEASE(_editedObject);
   [super dealloc];
 }
 
@@ -256,36 +254,32 @@ static BOOL currently_displaying = NO;
 	   inDocument: (id<IBDocuments>)aDocument
 {
   NSMutableArray *draggedTypes;
-  _editedObject = (NSView*)anObject;
 
-  if ((self = [super initWithFrame: [_editedObject frame]]) == nil)
-    return nil;
-  
-  RETAIN(_editedObject);
+  ASSIGN(_editedObject, (NSView*)anObject);
 
-  document = aDocument;
-
-  draggedTypes = [NSMutableArray arrayWithObject: GormLinkPboardType];
-  
-
-  if ([_editedObject respondsToSelector: @selector(setImage:)])
+  if ((self = [super initWithFrame: [_editedObject frame]]) != nil)
     {
-      [draggedTypes addObject: GormImagePboardType];
+      // we do not retain the document...
+      document = aDocument;
+      
+      draggedTypes = [NSMutableArray arrayWithObject: GormLinkPboardType];
+      if ([_editedObject respondsToSelector: @selector(setImage:)])
+	{
+	  [draggedTypes addObject: GormImagePboardType];
+	}
+      if ([_editedObject respondsToSelector: @selector(setSound:)])
+	{
+	  [draggedTypes addObject: GormSoundPboardType];
+	}
+      
+      [self registerForDraggedTypes: draggedTypes];
+      
+      activated = NO;
+      closed = NO;
     }
-  if ([_editedObject respondsToSelector: @selector(setSound:)])
-    {
-      [draggedTypes addObject: GormSoundPboardType];
-    }
-
-  [self registerForDraggedTypes: draggedTypes];
-
-
-  activated = NO;
-  closed = NO;
 
   return self;
 }
-
 
 - (void) editedObjectFrameDidChange: (id) sender
 {
