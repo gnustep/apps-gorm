@@ -2,7 +2,7 @@
 ADDITIONAL_INCLUDE_DIRS += -I../..
 
 ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-4Data_LIBRARIES_DEPEND_UPON += -lGorm     
+ADDITIONAL_GUI_LIBS += -lGorm     
 endif
 ifeq ($(GNUSTEP_TARGET_OS),cygwin)
 4Data_LIBRARIES_DEPEND_UPON += -lGorm
