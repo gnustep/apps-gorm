@@ -527,7 +527,6 @@
 
   	    if ([selection count] == 1)
   	      {
-		NSRect tempFrame = [[selection objectAtIndex: 0] frame];
 		[[selection objectAtIndex: 0] 
 		  setFrameOrigin:
 		    NSMakePoint(NSMaxX([self bounds]),
