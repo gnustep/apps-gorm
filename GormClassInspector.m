@@ -233,11 +233,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   int i = [actionTable selectedRow];
   NSString *className = [self _currentClass];
   NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: className];
-  NSString *name = [list objectAtIndex: i];
-  BOOL removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-		   removeConnectionsWithLabel: name 
-		   forClassNamed: currentClass
-		   isAction: YES];
+  BOOL removed = NO;
+  NSString *name = nil;
+
+  // check the count...
+  if([list count] > 0)
+    {
+      name = [list objectAtIndex: i];
+      removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
+				 removeConnectionsWithLabel: name 
+				 forClassNamed: currentClass
+				 isAction: YES];
+    }
 
   if(removed)
     {
@@ -254,11 +261,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   int i = [outletTable selectedRow];
   NSString *className = [self _currentClass];
   NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: className];
-  NSString *name = [list objectAtIndex: i];
-  BOOL removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-		   removeConnectionsWithLabel: name 
-		   forClassNamed: currentClass
-		   isAction: NO];
+  BOOL removed = NO;
+  NSString *name = nil;
+
+  // check the count...
+  if([list count] > 0)
+    {
+      name = [list objectAtIndex: i];
+      removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
+				 removeConnectionsWithLabel: name 
+				 forClassNamed: currentClass
+				 isAction: NO];
+    }
 
   if(removed)
     {

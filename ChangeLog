@@ -1,3 +1,10 @@
+2004-01-03 02:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Minor correction to -removeAction: and
+	-removeOutlet: to prevent an exception being raised when 
+	performing remove when there are not outlets/actions in the
+	list.
+	
 2004-01-01 00:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: More usability changes to grey out menu items which

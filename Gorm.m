@@ -299,7 +299,7 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
     {
       if([a count] > 0)
 	{
-	  NSLog(@"WARNING: Gorm has detected that you are using user bundles.  Please make certain that these are capatible with Gorm as some bundles can cause issues which may corrupt your .gorm files.");
+	  NSLog(@"WARNING: Gorm has detected that you are using user bundles.  Please make certain that these are compatible with Gorm as some bundles can cause issues which may corrupt your .gorm files.");
 	}
     }
 }
