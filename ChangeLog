@@ -1,3 +1,10 @@
+2004-05-15 16:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument init] changed initialization
+	of scrollviews to allow horizontal scroller to be used.
+	* GormImageInspector.gorm: resized some of the fields which
+	were too short.
+	
 2004-05-15 12:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFunctions.[hm]: added function to get all system sounds.

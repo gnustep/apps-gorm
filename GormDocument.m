@@ -1799,7 +1799,7 @@ static NSImage	*classesImage = nil;
       mainRect.origin = NSMakePoint(0,0);
       imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [imagesScrollView setHasVerticalScroller: YES];
-      [imagesScrollView setHasHorizontalScroller: NO];
+      [imagesScrollView setHasHorizontalScroller: YES];
       [imagesScrollView setAutoresizingMask:
 	NSViewHeightSizable|NSViewWidthSizable];
       [imagesScrollView setBorderType: NSBezelBorder];
@@ -1815,7 +1815,7 @@ static NSImage	*classesImage = nil;
       mainRect.origin = NSMakePoint(0,0);
       soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [soundsScrollView setHasVerticalScroller: YES];
-      [soundsScrollView setHasHorizontalScroller: NO];
+      [soundsScrollView setHasHorizontalScroller: YES];
       [soundsScrollView setAutoresizingMask:
 	NSViewHeightSizable|NSViewWidthSizable];
       [soundsScrollView setBorderType: NSBezelBorder];
