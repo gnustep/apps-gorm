@@ -128,7 +128,7 @@
     }
   if ([NSBundle loadNibNamed: @"GormNSBoxInspector" owner: self] == NO)
     {
-      NSLog(@"Could not gorm GormBoxInspector");
+      NSLog(@"Could not load GormBoxInspector");
       return nil;
     }
 

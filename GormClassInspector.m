@@ -344,113 +344,157 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addAction: (id)sender
 {
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-  NSString *className = [self _currentClass];
-  NSString *newAction = [classManager addNewActionToClassNamed: className];  
-  NSArray *list = [classManager allActionsForClassNamed: className];
-  int row = [list indexOfObject: newAction];
-
-  [document collapseClass: className];
-  [document reloadClasses];
-  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		    object: classManager];
-  [actionTable reloadData];
-  [actionTable scrollRowToVisible: row];
-  [actionTable selectRow: row byExtendingSelection: NO];
-  [document selectClass: className];
-  [super ok: sender];
+  NS_DURING
+    {
+      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      if(document != nil)
+	{
+	  NSString *className = [self _currentClass];
+	  NSString *newAction = [classManager addNewActionToClassNamed: className];  
+	  NSArray *list = [classManager allActionsForClassNamed: className];
+	  int row = [list indexOfObject: newAction];
+	  
+	  [document collapseClass: className];
+	  [document reloadClasses];
+	  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	      object: classManager];
+	  [actionTable reloadData];
+	  [actionTable scrollRowToVisible: row];
+	  [actionTable selectRow: row byExtendingSelection: NO];
+	  [document selectClass: className];
+	  [super ok: sender];
+	}
+    }
+  NS_HANDLER
+    {
+      NSLog(@"%@",[localException reason]);
+    }
+  NS_ENDHANDLER;
 }
 
 - (void) addOutlet: (id)sender
 {
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-  NSString *className = [self _currentClass];
-  NSString *newOutlet = [classManager addNewOutletToClassNamed: className];  
-  NSArray *list = [classManager allOutletsForClassNamed: className];
-  int row = [list indexOfObject: newOutlet];
-  
-  [document collapseClass: className];
-  [document reloadClasses];
-  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		    object: classManager];
-  [outletTable reloadData];
-  [outletTable scrollRowToVisible: row];
-  [outletTable selectRow: row byExtendingSelection: NO];
-  [document selectClass: className];
-  [super ok: sender];
+  NS_DURING
+    {
+      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      if(document != nil)
+	{
+	  NSString *className = [self _currentClass];
+	  NSString *newOutlet = [classManager addNewOutletToClassNamed: className];  
+	  NSArray *list = [classManager allOutletsForClassNamed: className];
+	  int row = [list indexOfObject: newOutlet];
+	  
+	  [document collapseClass: className];
+	  [document reloadClasses];
+	  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	      object: classManager];
+	  [outletTable reloadData];
+	  [outletTable scrollRowToVisible: row];
+	  [outletTable selectRow: row byExtendingSelection: NO];
+	  [document selectClass: className];
+	  [super ok: sender];
+	}
+    }
+  NS_HANDLER
+    {
+      NSLog(@"%@",[localException reason]);
+    }
+  NS_ENDHANDLER;
 }
 
 - (void) removeAction: (id)sender
 {
-  int i = [actionTable selectedRow];
-  NSString *className = [self _currentClass];
-  NSArray *list = [classManager allActionsForClassNamed: className];
-  BOOL removed = NO;
-  BOOL isCustom = [classManager isCustomClass: className]; 
-  NSString *name = nil;
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-
-  // check the count...
-  if(isCustom || [classManager isCategoryForClass: className])
+  NS_DURING
     {
-      if([list count] > 0 && i >= 0 && i < [list count])
+      int i = [actionTable selectedRow];
+      NSString *className = [self _currentClass];
+      NSArray *list = [classManager allActionsForClassNamed: className];
+      BOOL removed = NO;
+      BOOL isCustom = [classManager isCustomClass: className]; 
+      NSString *name = nil;
+      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      
+      if(document != nil)
 	{
-	  [actionTable deselectAll: self];
-	  name = [list objectAtIndex: i];
-	  if(isCustom || [classManager isAction: name onCategoryForClassNamed: className])
+	  // check the count...
+	  if(isCustom || [classManager isCategoryForClass: className])
 	    {
-	      removed = [document 
-			  removeConnectionsWithLabel: name 
-			  forClassNamed: currentClass
-			  isAction: YES];
+	      if([list count] > 0 && i >= 0 && i < [list count])
+		{
+		  [actionTable deselectAll: self];
+		  name = [list objectAtIndex: i];
+		  if(isCustom || [classManager isAction: name onCategoryForClassNamed: className])
+		    {
+		      removed = [document 
+				  removeConnectionsWithLabel: name 
+				  forClassNamed: currentClass
+				  isAction: YES];
+		    }
+		}
+	      
+	      if(removed)
+		{
+		  [super ok: sender];
+		  [document collapseClass: className];
+		  [document reloadClasses];
+		  [classManager removeAction: name fromClassNamed: className];
+		  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		      object: classManager];
+		  [actionTable reloadData];
+		  [document selectClass: className];
+		}
 	    }
 	}
-      
-      if(removed)
-	{
-	  [super ok: sender];
-	  [document collapseClass: className];
-	  [document reloadClasses];
-	  [classManager removeAction: name fromClassNamed: className];
-	  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-	      object: classManager];
-	  [actionTable reloadData];
-	  [document selectClass: className];
-	}
     }
+  NS_HANDLER
+    {
+      NSLog(@"%@",[localException reason]);
+    }
+  NS_ENDHANDLER;
 }
 
 - (void) removeOutlet: (id)sender
 {
-  int i = [outletTable selectedRow];
-  NSString *className = [self _currentClass];
-  NSArray *list = [classManager allOutletsForClassNamed: className];
-  BOOL removed = NO;
-  NSString *name = nil;
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-
-  // check the count...
-  if([list count] > 0 && i >= 0 && i < [list count])
+  NS_DURING
     {
-      [outletTable deselectAll: self];
-      name = [list objectAtIndex: i];
-      removed = [document 
-		  removeConnectionsWithLabel: name 
-		  forClassNamed: currentClass
-		  isAction: NO];
+      int i = [outletTable selectedRow];
+      NSString *className = [self _currentClass];
+      NSArray *list = [classManager allOutletsForClassNamed: className];
+      BOOL removed = NO;
+      NSString *name = nil;
+      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      
+      if(document != nil)
+	{ 
+	  // check the count...
+	  if([list count] > 0 && i >= 0 && i < [list count])
+	    {
+	      [outletTable deselectAll: self];
+	      name = [list objectAtIndex: i];
+	      removed = [document 
+			  removeConnectionsWithLabel: name 
+			  forClassNamed: currentClass
+			  isAction: NO];
+	    }
+	  
+	  if(removed)
+	    {
+	      [super ok: sender];
+	      [document collapseClass: className];
+	      [document reloadClasses];
+	      [classManager removeOutlet: name fromClassNamed: className];
+	      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		  object: classManager];
+	      [outletTable reloadData];
+	      [document selectClass: className];
+	    }
+	}
     }
-
-  if(removed)
+  NS_HANDLER
     {
-      [super ok: sender];
-      [document collapseClass: className];
-      [document reloadClasses];
-      [classManager removeOutlet: name fromClassNamed: className];
-      [nc postNotificationName: IBInspectorDidModifyObjectNotification
-	  object: classManager];
-      [outletTable reloadData];
-      [document selectClass: className];
+      NSLog(@"%@",[localException reason]);
     }
+  NS_ENDHANDLER;
 }
 
 - (void) select: (id)sender
@@ -479,36 +523,47 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [classManager allClassNames];
   int row = [parentClass selectedRow];
 
-  if(row >= 0)
+  NS_DURING
     {
-      NSString *newParent = [list objectAtIndex: row];
-      NSString *name = [self _currentClass];
-      BOOL removed = NO;
-      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-      
-      // if it's a custom class, let it go, if not do nothing.
-      if([classManager isCustomClass: name])
-	{     
-	  [super ok: sender];
-
-	  // check to see if the user wants to do this and remove the connections.
-	  removed = [document removeConnectionsForClassNamed: name]; 
+      if(row >= 0)
+	{
+	  NSString *newParent = [list objectAtIndex: row];
+	  NSString *name = [self _currentClass];
+	  BOOL removed = NO;
+	  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 	  
-	  // if removed, move the class and notify... 
-	  if(removed)
+	  // if it's a custom class, let it go, if not do nothing.
+	  if(document != nil)
 	    {
-	      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
-	      
-	      [classManager setSuperClassNamed: newParent forClassNamed: name];
-	      [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		  object: classManager];
-	      [document collapseClass: oldSuper];
-	      [document collapseClass: name];
-	      [document reloadClasses];
-	      [document selectClass: name];
+	      if([classManager isCustomClass: name])
+		{     
+		  [super ok: sender];
+		  
+		  // check to see if the user wants to do this and remove the connections.
+		  removed = [document removeConnectionsForClassNamed: name]; 
+		  
+		  // if removed, move the class and notify... 
+		  if(removed)
+		    {
+		      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
+		      
+		      [classManager setSuperClassNamed: newParent forClassNamed: name];
+		      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+			  object: classManager];
+		      [document collapseClass: oldSuper];
+		      [document collapseClass: name];
+		      [document reloadClasses];
+		      [document selectClass: name];
+		    }
+		}
 	    }
 	}
     }
+  NS_HANDLER
+    {
+      NSLog(@"%@",[localException reason]);
+    }
+  NS_ENDHANDLER;
 }
 
 - (void) changeClassName: (id)sender
@@ -568,7 +623,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) handleNotification: (NSNotification *)notification
 {
-  if([notification object] == classManager)
+  if([notification object] == classManager &&
+     [(id<IB>)NSApp activeDocument] != nil)
     {
       [self _refreshView];
     }
