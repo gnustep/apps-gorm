@@ -589,9 +589,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else
     {
-      NSDictionary *nameTable = [doc nameTable];
-      NSEnumerator *enumerator = [nameTable keyEnumerator];
-      NSString *key = nil;
+      // NSDictionary *nameTable = [doc nameTable];
+      // NSEnumerator *enumerator = [nameTable keyEnumerator];
+      // NSString *key = nil;
 
       // order everything front.
       [[doc window] makeKeyAndOrderFront: self];
@@ -1487,6 +1487,15 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 - (NSMenu*) classMenu
 {
   return classMenu;
+}
+
+- (void) unhide: (id)sender
+{
+  id document = [self activeDocument];
+  id window = [document window];
+
+  [super unhide: sender];
+  [window orderFront: sender];
 }
 @end
 

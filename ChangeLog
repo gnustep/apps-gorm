@@ -1,3 +1,9 @@
+2004-05-01 09:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added implementation for unhide: to bring forward the
+	document window as well as any other windows. This corrects
+	Report #3269.
+	
 2004-05-01 09:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormNSMenu.m: [GormNSMenu _createWindow] added call to
