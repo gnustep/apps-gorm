@@ -1221,6 +1221,19 @@ int _sortViews(id view1, id view2, void *context)
     {
       if ([sub isKindOfClass: [NSView class]] == YES)
 	{
+	  //
+	  // Correct the frame if it is outside of the containing view.
+	  // this prevents issues where the subview is placed outside the
+	  // viewable region of the superview.
+	  //
+	  if(NSContainsRect([view frame], [sub frame]) == NO)
+	    {
+	      NSRect newFrame = [sub frame];
+	      newFrame.origin.x = 0;
+	      newFrame.origin.y = 0;
+	      [sub setFrame: newFrame];
+	    }
+
 	  [view addSubview: sub];
 	  [self _addViewToDocument: sub];
 	  [array addObject:

@@ -1,3 +1,9 @@
+2005-01-08 12:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewWithContentViewEditor.m: Change in pasteInView: to
+	move a view to the origin if it's rect is outside the view it's
+	being placed into. 
+
 2005-01-03 23:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Improved resource handling in saveGormDocument:
