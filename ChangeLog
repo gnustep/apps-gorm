@@ -1,5 +1,10 @@
 2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* Gorm.m: -[GormObjectProxy classInspectorClassName]
+	added code to return @"GormNotApplicableInspector".
+	
+2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* GormFilesOwner.m: -[GormFilesOwner classInspectorClassName]
 	implemented to return @"GormNotApplicableInspector".
 	* GormDocument.m: -[GormFirstResponder classInspectorClassName]
