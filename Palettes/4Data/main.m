@@ -34,7 +34,7 @@
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSClipView.h>
 #include <InterfaceBuilder/IBPalette.h>
-#include "GormPrivate.h"
+#include <GormCore/GormPrivate.h>
 
 /* -----------------------------------------------------------
  * Some additions to the NSNumberFormatter Class specific to Gorm

@@ -23,7 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
-#include "GormPrivate.h"
+#include <GormCore/GormPrivate.h>
 #include "GormTabViewEditor.h"
 #include <InterfaceBuilder/IBObjectAdditions.h>
 

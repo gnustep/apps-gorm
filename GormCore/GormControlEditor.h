@@ -1,9 +1,9 @@
-/* GormTableViewEditor.h - Editor for tableviews.
+/* GormControlEditor.h
  *
  * Copyright (C) 2002 Free Software Foundation, Inc.
  *
- * Author:	Pierre-Yves Rivaille
- * Date:	Aug 2002
+ * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+ * Date:	2002
  * 
  * This file is part of GNUstep.
  * 
@@ -21,17 +21,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef	INCLUDED_GormTableViewEditor_h
-#define	INCLUDED_GormTableViewEditor_h
+#ifndef	INCLUDED_GormControlEditor_h
+#define	INCLUDED_GormControlEditor_h
 
-#include <GormCore/GormViewWithSubviewsEditor.h>
+#include <GormCore/GormViewEditor.h>
 
-@class GormNSTableView;
+@interface GormControlEditor : GormViewEditor
 
-@interface GormTableViewEditor : GormViewWithSubviewsEditor
-{
-  GormNSTableView *tableView;
-}
 @end
 
 #endif

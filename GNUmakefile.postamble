@@ -26,5 +26,11 @@ before-all::
 	rm -rf InterfaceBuilder
 	$(LN_S) GormLib InterfaceBuilder
 
+after-all::
+
+after-clean::
+
+after-distclean::
+
 after-clean::
 	rm -rf InterfaceBuilder

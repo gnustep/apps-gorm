@@ -26,10 +26,10 @@
 #include <InterfaceBuilder/IBPalette.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBApplicationAdditions.h>
-#include "GormDocument.h"
+#include <GormCore/GormDocument.h>
+#include <GormCore/NSColorWell+GormExtensions.h>
 #include "GormNSWindow.h"
 #include "GormNSPanel.h"
-#include "NSColorWell+GormExtensions.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {

@@ -24,9 +24,10 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "GormPrivate.h"
-#include "GormViewEditor.h"
-#include "NSColorWell+GormExtensions.h"
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormViewEditor.h>
+#include <GormCore/NSColorWell+GormExtensions.h>
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -623,7 +624,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if (control == detachButton)
     {
       [[object cell] setFormatter: nil];
-      [[(Gorm *)NSApp activeDocument] setSelectionFromEditor: nil];
+      [[(id<IB>)NSApp activeDocument] setSelectionFromEditor: nil];
     }
   else
     {
@@ -824,7 +825,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if (control == detachButton)
     { 
       [cell setFormatter: nil];
-      [[(Gorm *)NSApp activeDocument] setSelectionFromEditor: nil];
+      [[(id<IB>)NSApp activeDocument] setSelectionFromEditor: nil];
     }
   else
     {

@@ -27,9 +27,9 @@
 #include <AppKit/NSTableColumn.h>
 #include <AppKit/NSBrowser.h>
 #include <InterfaceBuilder/IBInspector.h>
+#include <GormCore/GormPrivate.h>
+#include <GormCore/NSColorWell+GormExtensions.h>
 #include "GormNSTableView.h"
-#include "GormPrivate.h"
-#include "NSColorWell+GormExtensions.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -233,7 +233,7 @@
 - (NSString *)_getCellClassName
 {
   id cell = [[self object] dataCell];
-  NSString *customClassName = [[(Gorm *)NSApp classManager] customClassForObject: cell];
+  NSString *customClassName = [[(id<Gorm>)NSApp classManager] customClassForObject: cell];
   NSString *result = nil;
 
   if(customClassName == nil)
@@ -250,7 +250,7 @@
 
 - (void) _getValuesFromObject: anObject
 {
-  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
   NSString *cellClassName = [self _getCellClassName];
   int index = [list indexOfObject: cellClassName];
 
@@ -361,7 +361,7 @@
     }
   else if (control == setButton || control == cellTable)
     {
-      id classManager = [(Gorm *)NSApp classManager];
+      id classManager = [(id<Gorm>)NSApp classManager];
       id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
       id cell = nil;
       int i = [cellTable selectedRow];
@@ -413,7 +413,7 @@
 // data source
 - (int) numberOfRowsInTableView: (NSTableView *)tv
 {
-  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
   return [list count];
 }
 
@@ -421,7 +421,7 @@
 objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (int)rowIndex
 {
-  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
   id value = nil;
   if([list count] > 0)
     {
