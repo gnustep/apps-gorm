@@ -326,7 +326,7 @@ extern NSString *IBClassNameChangedNotification;
 + (id) objectForView: (NSView*)aView;
 + (NSString*) typeForView: (NSView*)aView;
 
-/*
+/**
  * Associate a particular object and DnD type with a view - so that
  * Gorm knows to initiate a DnD session with the specified object
  * and type rather than an archived copy of the view itsself and
@@ -336,18 +336,24 @@ extern NSString *IBClassNameChangedNotification;
 		    type: (NSString*)aType
 		    with: (NSView*)aView;
 
-/*
+/**
+ * Releases all the instance variables and removes self as an observer
+ * of notifications before destroying self.
+ */
+- (void) dealloc;
+
+/**
  * Method called by Gorm when a new palette has been created and its nib
  * (if any) has been loaded.  Any palette initialisation should be done here.
  */
 - (void) finishInstantiate;
 
-/*
+/**
  * Return the icon representing the palette.
  */
 - (NSImage*) paletteIcon;
 
-/*
+/**
  * Return the window containing the views that may be dragged from the
  * palette.
  */
@@ -379,59 +385,65 @@ extern NSString *IBClassNameChangedNotification;
   NSButton	*revertButton;
 }
 
+/**
+ * Releases all the instance variables and removes self as an observer
+ * of notifications before destroying self.
+ */
+- (void) dealloc;
+
 - (NSView*) initialFirstResponder;
 
-/*
+/**
  * The object being inspected.
  */
 - (id) object;
 
-/*
+/**
  * Action to take when user clicks the OK button
  */
 - (void) ok: (id)sender;
 
-/*
+/**
  * Inspector supplied button - the inspectors manager will position this
  * button for you.
  */
 - (NSButton*) okButton;
 
-/*
+/**
  * Action to take when user clicks the revert button
  */
 - (void) revert: (id)sender;
 
-/*
+/**
  * Inspector supplied button - the inspectors manager will position this
  * button for you.
  */
 - (NSButton*) revertButton;
 
-/*
+/**
  * Extension - not in NeXTstep - this message is sent to your inspector to
  * tell it to set its edited object and make any changes to its UI needed.
  */
 - (void) setObject: (id)anObject;
 
-/*
+/**
  * Used to take notice of textfields in inspector being updated.
  */
 - (void) textDidBeginEditing: (NSNotification*)aNotification;
 
-/*
+/**
  * Method to mark the inspector as needing saving (ok or revert).
  */
 - (void) touch: (id)sender;
 
-/*
+/**
  * If this method returns YES, the manager will partition off a section of
  * the inspector panel for display of 'ok' and 'revert' buttons, which
  * your inspector must supply.
  */
 - (BOOL) wantsButtons;
 
-/*
+/**
  * The window that the UI of the inspector exists in.
  */
 - (NSWindow*) window;
