@@ -30,6 +30,7 @@ NSString	*IBMenuCellPboardType = @"IBMenuCellPboardType";
 NSString	*IBObjectPboardType = @"IBObjectPboardType";
 NSString	*IBViewPboardType = @"IBViewPboardType";
 NSString	*IBWindowPboardType = @"IBWindowPboardType";
+NSString	*IBFormatterPboardType = @"IBFormatterPboardType";
 
 @implementation	IBPalette
 

@@ -1343,7 +1343,7 @@ static BOOL done_editing;
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSArray	*types;
-
+  
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: IBViewPboardType] == YES)
@@ -1353,6 +1353,10 @@ static BOOL done_editing;
   else if ([types containsObject: GormLinkPboardType] == YES)
     {
       dragType = GormLinkPboardType;
+    }
+  else if ([types containsObject: IBFormatterPboardType] == YES)
+    {
+      dragType = IBFormatterPboardType;
     }
   else
     {
@@ -1383,9 +1387,13 @@ static BOOL done_editing;
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       return NSDragOperationLink;
     }
-  else
+  else if (dragType == IBFormatterPboardType)
     {
-      return 0;
+      return NSDragOperationCopy;
+    }
+   else
+    {
+      return NSDragOperationNone;
     }
 }
 
@@ -1449,7 +1457,7 @@ static BOOL done_editing;
    * Permit views and connections to be dragged in to the window.
    */
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, GormLinkPboardType, nil]];
+    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
 
   [win setInitialFirstResponder: self];
   return self;
@@ -1587,6 +1595,44 @@ static BOOL done_editing;
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       [NSApp startConnecting];
     }
+  else if (dragType == IBFormatterPboardType)
+    {
+      NSData	*data;
+      NSPoint	loc = [sender draggingLocation];
+      id        obj = [super hitTest: loc];
+      id        fmtr;
+
+       data = [dragPb dataForType: IBFormatterPboardType];
+       if (data == nil)
+         {
+           NSLog(@"Pasteboard %@ doesn't contain any formatter data", dragPb);
+           return NO;
+         }
+       fmtr = [[NSUnarchiver unarchiveObjectWithData: data] objectAtIndex:0];
+       
+       if (![fmtr isKindOfClass: [NSFormatter class]] )
+         {
+           NSLog(@"Object in pasteboard %@ not a formatter (%@)", [fmtr class]);
+           return NO;
+         }
+       
+       // If object respond to formatter then set it up and make it the
+       // current selection so that inspector displays ok
+       if ([obj respondsToSelector: @selector(cell)] &&
+           [[obj cell] respondsToSelector: @selector(formatter)] &&
+           [[obj cell] formatter] == nil )
+         {
+           NSDebugLog (@"Setting formatter %@ for cell  %@",fmtr, [obj cell]);
+           [[obj cell] setFormatter: fmtr];
+           [[obj cell] setObjectValue: [[fmtr class] defaultFormatValue] ];
+
+           [self makeSelectionVisible: NO];
+           
+           [self selectObjects: [NSArray arrayWithObject: obj]];
+           [self displayIfNeeded];
+           [self makeSelectionVisible: YES];
+         }    
+    }
   else
     {
       NSLog(@"Drop with unrecognized type (%@)!", dragType);
@@ -1622,6 +1668,21 @@ static BOOL done_editing;
 	  return YES;
 	}
     }
+  else if (dragType == IBFormatterPboardType)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      NSView	*sub = [super hitTest: loc];
+      /*
+            * We can accept a formatter dropped on a cell of type text.
+            */
+      if (sub != nil && sub != self &&
+          [sub isKindOfClass: [NSTextField class]] )
+	{
+	  return YES;
+	}
+ 
+    }
+  
   return NO;
 }
 

@@ -71,7 +71,8 @@ static NSImage	*dragImage = nil;
     {
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	IBCellPboardType, IBMenuPboardType, IBMenuCellPboardType,
-	IBObjectPboardType, IBViewPboardType, IBWindowPboardType, nil]];
+	IBObjectPboardType, IBViewPboardType, IBWindowPboardType,
+        IBFormatterPboardType,nil]];
     }
   return self;
 }
@@ -188,7 +189,8 @@ static NSImage	*dragImage = nil;
   pb = [NSPasteboard pasteboardWithName: NSDragPboard];
   ASSIGN(dragPb, pb);
   [active copyObject: obj type: type toPasteboard: pb];
-
+  NSDebugLog(@"type: %@, obj: %@,", type, obj);
+  
   [self dragImage: dragImage
 	       at: rect.origin
 	   offset: NSMakeSize(0,0)

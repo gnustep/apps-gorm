@@ -24,6 +24,11 @@
 
 #include "GormPrivate.h"
 
+#define HASFORMATTER(obj) \
+      [obj respondsToSelector: @selector(cell)] && \
+      [[obj cell] respondsToSelector: @selector(formatter)] && \
+      [[obj cell] formatter] != nil
+
 /*
  *	The GormEmptyInspector is a placeholder for an empty selection.
  */
@@ -262,6 +267,14 @@
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
+  [popup addItemWithTitle: @"Custom Class"];
+  item = [popup itemAtIndex: 4];
+  [item setTarget: self];
+  [item setAction: @selector(setCurrentInspector:)];
+  [item setKeyEquivalent: @"5"];
+  [item setTag: 4];
+  [item setEnabled: NO];
+
   bar = [[NSBox alloc] initWithFrame: NSMakeRect (0, 0, IVW, 2)];
   [bar setBorderType: NSGrooveBorder];
   [bar setTitlePosition: NSNoTitle];
@@ -304,7 +317,12 @@
 	 selector: @selector(handleNotification:)
 	     name: NSWindowDidResignKeyNotification
 	   object: panel];
-
+  [nc addObserver: self
+	 selector: @selector(updateInspectorPopUp:)
+	     name: NSPopUpButtonWillPopUpNotification
+	   object: popup];
+  [popup setTarget: self];
+  [popup setAction: @selector(updateInspectorPopUp:)];
   return self;
 }
 
@@ -322,7 +340,7 @@
       [panel makeKeyAndOrderFront: self];
       current = 1;
     }
-  else if (current == 4)
+  else if (current >= [popup numberOfItems])
     {
       current = 1;
     }
@@ -389,6 +407,21 @@
 	  case 1: newInspector = [obj connectInspectorClassName]; break;
 	  case 2: newInspector = [obj sizeInspectorClassName]; break;
 	  case 3: newInspector = [obj helpInspectorClassName]; break;
+          case 5: 
+            {
+              // If the object doesn't understand formatter then default to attributes
+              if (HASFORMATTER(obj))
+                {
+                  newInspector = [ [[obj cell] formatter] inspectorClassName];
+                }
+              else
+                {
+                  current = 0;
+                  [popup selectItemAtIndex: 0];
+                  newInspector = [obj inspectorClassName];
+                }
+              break;
+            }  
 	  default: newInspector = [obj classInspectorClassName]; break;
 	}
     }
@@ -489,7 +522,43 @@
 	  [inspectorView addSubview: newView];
 	}
     }
+
   [inspector setObject: obj];
+}
+
+/* This is to include the formatter item in the pop up button
+ * if the selected object in Gorm has a formatter set
+ */
+- (void) updateInspectorPopUp: (NSNotification*)aNotification
+{
+  NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
+  id		obj = [selection lastObject];
+ 
+  // See if the selected object has a formatter
+  if (HASFORMATTER(obj))
+    {
+      // Ifso add the Formatter menu item if not already there
+      if ([popup numberOfItems] < 6)
+        {
+          NSMenuItem *item;
+          [popup addItemWithTitle: @"Formatter"];
+          item = [popup itemAtIndex: 5];
+          [item setTarget: self];
+          [item setAction: @selector(setCurrentInspector:)];
+          [item setKeyEquivalent: @"6"];
+          [item setTag: 5];
+        }
+    }
+  else
+    {
+      // Remove the Formatter menu item
+      if ([popup numberOfItems] == 6)
+        {
+          [popup removeItemAtIndex: 5];
+        }
+    }
+ 
+ 
 }
 
 @end
