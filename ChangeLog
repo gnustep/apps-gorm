@@ -1,10 +1,5 @@
 2003-01-03  Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* Menu/Text/View/Window: Obsolete/superflous directories
-	removed from Gorm directory
-
-2003-01-03  Gregory John Casamento <greg_casamento@yahoo.com>
-
 	* Palettes: Replaced all old .gorm/.classes files with
 	.gorm packages.
 	
