@@ -2742,6 +2742,43 @@ static NSImage	*classesImage = nil;
   return identifier;
 }
 
+- (void) removeConnectionsWithLabel: (NSString *)name
+		      forClassNamed: (NSString *)className
+			   isAction: (BOOL)action
+{
+  NSEnumerator *en = [connections objectEnumerator];
+  id<IBConnectors> c = nil;
+
+  // remove all.
+  while((c = [en nextObject]) != nil)
+    {
+      id proxy = nil;
+      NSString *label = [c label];
+
+      if(action)
+	{
+	  if(![label hasSuffix: @":"]) 
+	    continue;
+	  proxy = [c destination];
+	}
+      else
+	{
+	  if([label hasSuffix: @":"]) 
+	    continue;
+	  proxy = [c source];
+	}
+      
+      if([label isEqualToString: name] && 
+	 [[proxy className] isEqualToString: className])
+	{
+	  [self removeConnector: c];
+	}
+    }
+
+  // done...
+  NSDebugLog(@"Removed references to %@ on %@",name, className);
+}
+
 // --- NSOutlineView dataSource ---
 - (id)        outlineView: (NSOutlineView *)anOutlineView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
@@ -2789,10 +2826,17 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	      if(![classManager isAction: formattedAction 
 				ofClass: [gov itemBeingEdited]])
 		{
-		  [classManager replaceAction: name 
-				withAction: formattedAction 
-				forClassNamed: [gov itemBeingEdited]];
-		  [(GormOutletActionHolder *)item setName: formattedAction];
+		  NSString *msg = [NSString stringWithFormat: @"This will break all connections to '%@'.  Continue?",
+					    name];
+		  int retval = NSRunAlertPanel(@"Renaming action",msg,@"OK",@"Cancel",nil,nil);
+		  if(retval == NSAlertDefaultReturn)
+		    {
+		      [self removeConnectionsWithLabel: name forClassNamed: [gov itemBeingEdited] isAction: YES];
+		      [classManager replaceAction: name 
+				    withAction: formattedAction 
+				    forClassNamed: [gov itemBeingEdited]];
+		      [(GormOutletActionHolder *)item setName: formattedAction];
+		    }
 		}
 	      else
 		{
@@ -2811,10 +2855,17 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	      if(![classManager isOutlet: formattedOutlet 
 				ofClass: [gov itemBeingEdited]])
 		{
-		  [classManager replaceOutlet: name 
-				withOutlet: formattedOutlet 
-				forClassNamed: [gov itemBeingEdited]];
-		  [(GormOutletActionHolder *)item setName: formattedOutlet];
+		  NSString *msg = [NSString stringWithFormat: @"This will break all connections to '%@'.  Continue?",
+					    name];
+		  int retval = NSRunAlertPanel(@"Renaming outlet",msg,@"OK",@"Cancel",nil,nil);
+		  if(retval == NSAlertDefaultReturn)
+		    {
+		      [self removeConnectionsWithLabel: name forClassNamed: [gov itemBeingEdited] isAction: NO];
+		      [classManager replaceOutlet: name 
+				    withOutlet: formattedOutlet 
+				    forClassNamed: [gov itemBeingEdited]];
+		      [(GormOutletActionHolder *)item setName: formattedOutlet];
+		    }
 		}
 	      else
 		{

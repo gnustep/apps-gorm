@@ -114,6 +114,9 @@
 // Internals support
 - (void) rebuildObjToNameMapping;
 - (id) parseHeader: (NSString *)headerPath;
+- (void) removeConnectionsWithLabel: (NSString *)name
+                      forClassNamed: (NSString *)className
+                           isAction: (BOOL)action;
 @end
 
 #endif
