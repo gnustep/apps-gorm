@@ -174,7 +174,7 @@
 
   if (opened == NO)
     {
-      NSLog(@"GormBoxEditor not opened");
+//        NSLog(@"GormBoxEditor not opened");
       [super mouseDown: theEvent];
       return;
     }
@@ -183,14 +183,14 @@
   if ([[_EO hitTest: [theEvent locationInWindow]]
 	isDescendantOf: contentViewEditor])
     {
-      NSLog(@"md %@ descendant of", self);
+//        NSLog(@"md %@ descendant of", self);
       if ([contentViewEditor isOpened] == NO)
 	[contentViewEditor setOpened: YES];
       [contentViewEditor mouseDown: theEvent];
     }
   else
     {      
-      NSLog(@"md %@ not descendant of sending to %@", self, _EO);
+//        NSLog(@"md %@ not descendant of sending to %@", self, _EO);
       if ([contentViewEditor isOpened] == YES)
 	[contentViewEditor setOpened: NO];
       

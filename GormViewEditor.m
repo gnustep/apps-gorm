@@ -98,33 +98,21 @@
 
 - (int) distanceToFrame: (NSRect) frame
 {
-  NSRect rect = [self rectWithHalfDistance: 5];
+  NSRect rect = [self rectWithHalfDistance: 6];
   if (NSIntersectsRect(frame, rect) == NO)
-    return 20;
+    return 10;
   switch (_border)
     {
     case Top:
-      if (_position >= NSMaxY(frame))
-	return 2 * (_position - NSMaxY(frame));
-      else
-	return 2 * (- _position + NSMaxY(frame)) + 1;
+      return abs (_position - NSMaxY(frame));
     case Bottom:
-      if (_position >= NSMinY(frame))
-	return 2 * (_position - NSMinY(frame));
-      else
-	return 2 * (- _position + NSMinY(frame)) + 1;
+      return abs (_position - NSMinY(frame));
     case Left:
-      if (_position >= NSMinX(frame))
-	return 2 * (_position - NSMinX(frame));
-      else
-	return 2 * (- _position + NSMinX(frame)) + 1;
+      return abs (_position - NSMinX(frame));
     case Right:
-      if (_position >= NSMaxX(frame))
-	return 2 * (_position - NSMaxX(frame));
-      else
-	return 2 * (- _position + NSMaxX(frame)) + 1;
+      return abs (_position - NSMaxX(frame));
     default:
-      return 20;
+      return 10;
     }
 }
 @end
@@ -527,6 +515,23 @@ static BOOL currently_displaying = NO;
   int count;
   int lastDistance;
   int minimum = 10;
+  BOOL leftEmpty = YES;
+  BOOL rightEmpty = YES;
+  BOOL topEmpty = YES;
+  BOOL bottomEmpty = YES;
+  float bestLeftPosition;
+  float bestRightPosition;
+  float bestTopPosition;
+  float bestBottomPosition;
+  float leftStart;
+  float rightStart;
+  float topStart;
+  float bottomStart;
+  float leftEnd;
+  float rightEnd;
+  float topEnd;
+  float bottomEnd;
+
   NSMutableArray *bests;
   if (gpi->hintInitialized == NO)
     {
@@ -566,7 +571,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomLeftKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 10;
+    minimum = 6;
     count = [gpi->leftHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -577,31 +582,26 @@ static BOOL currently_displaying = NO;
 	    bests = [NSMutableArray arrayWithCapacity: 4];
 	    [bests addObject: [gpi->leftHints objectAtIndex: i]];
 	    minimum = lastDistance;
+	    bestLeftPosition = [[gpi->leftHints objectAtIndex: i] position];
+	    leftEmpty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (leftEmpty == NO)
+		 && ([[gpi->leftHints objectAtIndex: i] position] == bestLeftPosition))
 	  [bests addObject: [gpi->leftHints objectAtIndex: i]];
       }
     
     count = [bests count];
-    
-    
     if (count >= 1)
       {
-	float start, end, position;
-	position = [[bests objectAtIndex: 0] position];
-	
-	start = NSMinY(frame);
-	end = NSMaxY(frame);
-	for ( i = 0; i < count; i++ )
+	leftStart = NSMinY([[bests objectAtIndex: 0] frame]);
+	leftEnd = NSMaxY([[bests objectAtIndex: 0] frame]);
+
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinY([[bests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxY([[bests objectAtIndex: i] frame]), end);
+	    leftStart = MIN(NSMinY([[bests objectAtIndex: i] frame]), leftStart);
+	    leftEnd = MAX(NSMaxY([[bests objectAtIndex: i] frame]), leftEnd);
 	  }
-	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-	gpi->lastLeftRect = NSMakeRect(position - 1, start, 2, end - start);
-	leftOfFrame = position;
+	leftOfFrame = bestLeftPosition;
       }
   }
 
@@ -610,7 +610,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomRightKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 10;
+    minimum = 6;
     count = [gpi->rightHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -621,31 +621,26 @@ static BOOL currently_displaying = NO;
 	    bests = [NSMutableArray arrayWithCapacity: 4];
 	    [bests addObject: [gpi->rightHints objectAtIndex: i]];
 	    minimum = lastDistance;
+	    bestRightPosition = [[gpi->rightHints objectAtIndex: i] position];
+	    rightEmpty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (rightEmpty == NO)
+		 && ([[gpi->rightHints objectAtIndex: i] position] == bestRightPosition))
 	  [bests addObject: [gpi->rightHints objectAtIndex: i]];
       }
     
     count = [bests count];
-    
-    
     if (count >= 1)
       {
-	float start, end, position;
-	position = [[bests objectAtIndex: 0] position];
-	
-	start = NSMinY(frame);
-	end = NSMaxY(frame);
-	for ( i = 0; i < count; i++ )
+	rightStart = NSMinY([[bests objectAtIndex: 0] frame]);
+	rightEnd = NSMaxY([[bests objectAtIndex: 0] frame]);
+
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinY([[bests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxY([[bests objectAtIndex: i] frame]), end);
+	    rightStart = MIN(NSMinY([[bests objectAtIndex: i] frame]), rightStart);
+	    rightEnd = MAX(NSMaxY([[bests objectAtIndex: i] frame]), rightEnd);
 	  }
-	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-	gpi->lastRightRect = NSMakeRect(position - 1, start, 2, end - start);
-	rightOfFrame = position;
+	rightOfFrame = bestRightPosition;
       }
   }
 
@@ -654,7 +649,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBTopMiddleKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 10;
+    minimum = 6;
     count = [gpi->topHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -665,31 +660,25 @@ static BOOL currently_displaying = NO;
 	    bests = [NSMutableArray arrayWithCapacity: 4];
 	    [bests addObject: [gpi->topHints objectAtIndex: i]];
 	    minimum = lastDistance;
+	    bestTopPosition = [[gpi->topHints objectAtIndex: i] position];
+	    topEmpty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (topEmpty == NO)
+		 && ([[gpi->topHints objectAtIndex: i] position] == bestTopPosition))
 	  [bests addObject: [gpi->topHints objectAtIndex: i]];
       }
     
     count = [bests count];
-    
-    
     if (count >= 1)
       {
-	float start, end, position;
-	position = [[bests objectAtIndex: 0] position];
-	
-	start = NSMinX(frame);
-	end = NSMaxX(frame);
-	for ( i = 0; i < count; i++ )
+	topStart = NSMinX([[bests objectAtIndex: 0] frame]);
+	topEnd = NSMaxX([[bests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinX([[bests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxX([[bests objectAtIndex: i] frame]), end);
+	    topStart = MIN(NSMinX([[bests objectAtIndex: i] frame]), topStart);
+	    topEnd = MAX(NSMaxX([[bests objectAtIndex: i] frame]), topEnd);
 	  }
-	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-	gpi->lastTopRect = NSMakeRect(start, position - 1, end - start, 2);
-	topOfFrame = position;
+	topOfFrame = bestTopPosition;
       }
   }
 
@@ -698,7 +687,7 @@ static BOOL currently_displaying = NO;
       || gpi->knob == IBBottomMiddleKnobPosition)
   {
     bests = [NSMutableArray arrayWithCapacity: 4];
-    minimum = 10;
+    minimum = 6;
     count = [gpi->bottomHints count];
     for ( i = 0; i < count; i++ )
       {
@@ -709,37 +698,69 @@ static BOOL currently_displaying = NO;
 	    bests = [NSMutableArray arrayWithCapacity: 4];
 	    [bests addObject: [gpi->bottomHints objectAtIndex: i]];
 	    minimum = lastDistance;
+	    bestBottomPosition = [[gpi->bottomHints objectAtIndex: i] position];
+	    bottomEmpty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (bottomEmpty == NO)
+		 && ([[gpi->bottomHints objectAtIndex: i] position] == bestBottomPosition))
 	  [bests addObject: [gpi->bottomHints objectAtIndex: i]];
       }
     
     count = [bests count];
-    
-    
     if (count >= 1)
       {
-	float start, end, position;
-	position = [[bests objectAtIndex: 0] position];
-	
-	start = NSMinX(frame);
-	end = NSMaxX(frame);
-	for ( i = 0; i < count; i++ )
+	bottomStart = NSMinX([[bests objectAtIndex: 0] frame]);
+	bottomEnd = NSMaxX([[bests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinX([[bests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxX([[bests objectAtIndex: i] frame]), end);
+	    bottomStart = MIN(NSMinX([[bests objectAtIndex: i] frame]), bottomStart);
+	    bottomEnd = MAX(NSMaxX([[bests objectAtIndex: i] frame]), bottomEnd);
 	  }
-	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-	gpi->lastBottomRect = NSMakeRect(start, position - 1, end - start, 2);
-	bottomOfFrame = position;
+	bottomOfFrame = bestBottomPosition;
       }
   }
 
   gpi->hintFrame = NSMakeRect (leftOfFrame, bottomOfFrame,
 			  rightOfFrame - leftOfFrame,
 			  topOfFrame - bottomOfFrame);
+  {
+    [[NSColor redColor] set];
+    if (!leftEmpty)
+      {
+	leftStart = MIN(NSMinY(gpi->hintFrame), leftStart);
+	leftEnd = MAX(NSMaxY(gpi->hintFrame), leftEnd);
+	gpi->lastLeftRect = NSMakeRect(bestLeftPosition - 1, leftStart, 
+				       2, leftEnd - leftStart);
+	NSRectFill(gpi->lastLeftRect);
+      }
+    if (!rightEmpty)
+      {
+	rightStart = MIN(NSMinY(gpi->hintFrame), rightStart);
+	rightEnd = MAX(NSMaxY(gpi->hintFrame), rightEnd);
+	gpi->lastRightRect = NSMakeRect(bestRightPosition - 1, rightStart, 
+					2, rightEnd - rightStart);
+	NSRectFill(gpi->lastRightRect);
+      }
+    if (!topEmpty)
+      {
+	topStart = MIN(NSMinX(gpi->hintFrame), topStart);
+	topEnd = MAX(NSMaxX(gpi->hintFrame), topEnd);
+	gpi->lastTopRect = NSMakeRect(topStart, bestTopPosition - 1,
+				      topEnd - topStart, 2);
+	NSRectFill(gpi->lastTopRect);
+      }
+    if (!bottomEmpty)
+      {
+	bottomStart = MIN(NSMinX(gpi->hintFrame), bottomStart);
+	bottomEnd = MAX(NSMaxX(gpi->hintFrame), bottomEnd);
+	gpi->lastBottomRect = NSMakeRect(bottomStart, bestBottomPosition - 1, 
+					 bottomEnd - bottomStart, 2);
+	NSRectFill(gpi->lastBottomRect);
+      }
+
+  }
+
+
 
   GormShowFrameWithKnob(gpi->hintFrame, gpi->knob);
   gpi->oldRect = GormExtBoundsForRect(gpi->hintFrame);
@@ -797,6 +818,22 @@ static BOOL currently_displaying = NO;
   int count;
   int lastDistance;
   int minimum = 10;
+  BOOL leftEmpty = YES;
+  BOOL rightEmpty = YES;
+  BOOL topEmpty = YES;
+  BOOL bottomEmpty = YES;
+  float bestLeftPosition;
+  float bestRightPosition;
+  float bestTopPosition;
+  float bestBottomPosition;
+  float leftStart;
+  float rightStart;
+  float topStart;
+  float bottomStart;
+  float leftEnd;
+  float rightEnd;
+  float topEnd;
+  float bottomEnd;
 
   if (gpi->hintInitialized == NO)
     {
@@ -826,10 +863,11 @@ static BOOL currently_displaying = NO;
 
 
   {
+    BOOL empty = YES;
     float bestPosition;
     NSMutableArray *leftBests;
     NSMutableArray *rightBests;
-    minimum = 10;
+    minimum = 6;
     count = [gpi->leftHints count];
 
     leftBests = [NSMutableArray arrayWithCapacity: 4];
@@ -843,8 +881,10 @@ static BOOL currently_displaying = NO;
 	    [leftBests addObject: [gpi->leftHints objectAtIndex: i]];
 	    minimum = lastDistance;
 	    bestPosition = [[gpi->leftHints objectAtIndex: i] position];
+	    empty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (empty == NO)
+		 && ([[gpi->leftHints objectAtIndex: i] position] == bestPosition))
 	  [leftBests addObject: [gpi->leftHints objectAtIndex: i]];
       }
 
@@ -862,8 +902,9 @@ static BOOL currently_displaying = NO;
 	    minimum = lastDistance;
 	    bestPosition = [[gpi->rightHints objectAtIndex: i] position] 
 	      - widthOfFrame;
+	    empty = NO;
 	  }
-	else if (lastDistance == minimum 
+	else if ((lastDistance == minimum) && (empty == NO)
 		 && ([[gpi->rightHints objectAtIndex: i] position] - bestPosition
 		     == widthOfFrame))
 	  [rightBests addObject: [gpi->rightHints objectAtIndex: i]];
@@ -872,20 +913,18 @@ static BOOL currently_displaying = NO;
     count = [leftBests count];
     if (count >= 1)
       {
-	float start, end, position;
+	float position;
+	leftEmpty = NO;
 	position = [[leftBests objectAtIndex: 0] position];
 	
-	start = NSMinY(frame);
-	end = NSMaxY(frame);
-	for ( i = 0; i < count; i++ )
+	leftStart = NSMinY([[leftBests objectAtIndex: 0] frame]);
+	leftEnd = NSMaxY([[leftBests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinY([[leftBests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxY([[leftBests objectAtIndex: i] frame]), end);
+	    leftStart = MIN(NSMinY([[leftBests objectAtIndex: i] frame]), leftStart);
+	    leftEnd = MAX(NSMaxY([[leftBests objectAtIndex: i] frame]), leftEnd);
 	  }
 	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-	gpi->lastLeftRect = NSMakeRect(position - 1, start, 2, end - start);
 	leftOfFrame = position;
 	rightOfFrame = position + widthOfFrame;
       }
@@ -893,30 +932,29 @@ static BOOL currently_displaying = NO;
     count = [rightBests count];
     if (count >= 1)
       {
-	float start, end, position;
+	float position;
+	rightEmpty = NO;
 	position = [[rightBests objectAtIndex: 0] position];
 	
-	start = NSMinY(frame);
-	end = NSMaxY(frame);
-	for ( i = 0; i < count; i++ )
+	rightStart = NSMinY([[rightBests objectAtIndex: 0] frame]);
+	rightEnd = NSMaxY([[rightBests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinY([[rightBests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxY([[rightBests objectAtIndex: i] frame]), end);
+	    rightStart = MIN(NSMinY([[rightBests objectAtIndex: i] frame]), rightStart);
+	    rightEnd = MAX(NSMaxY([[rightBests objectAtIndex: i] frame]), rightEnd);
 	  }
 	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-	gpi->lastRightRect = NSMakeRect(position - 1, start, 2, end - start);
 	rightOfFrame = position;
 	leftOfFrame = position - widthOfFrame;
       }
   }
 
   {
+    BOOL empty = YES;
     float bestPosition;
     NSMutableArray *bottomBests;
     NSMutableArray *topBests;
-    minimum = 10;
+    minimum = 6;
     count = [gpi->bottomHints count];
 
     bottomBests = [NSMutableArray arrayWithCapacity: 4];
@@ -930,8 +968,10 @@ static BOOL currently_displaying = NO;
 	    [bottomBests addObject: [gpi->bottomHints objectAtIndex: i]];
 	    minimum = lastDistance;
 	    bestPosition = [[gpi->bottomHints objectAtIndex: i] position];
+	    empty = NO;
 	  }
-	else if (lastDistance == minimum)
+	else if ((lastDistance == minimum) && (empty == NO)
+		 && ([[gpi->bottomHints objectAtIndex: i] position] == bestPosition))
 	  [bottomBests addObject: [gpi->bottomHints objectAtIndex: i]];
       }
 
@@ -949,8 +989,9 @@ static BOOL currently_displaying = NO;
 	    minimum = lastDistance;
 	    bestPosition = [[gpi->topHints objectAtIndex: i] position] 
 	      - heightOfFrame;
+	    empty = NO;
 	  }
-	else if (lastDistance == minimum 
+	else if (lastDistance == minimum && (empty == NO)
 		 && ([[gpi->topHints objectAtIndex: i] position] - bestPosition
 		     == heightOfFrame))
 	  [topBests addObject: [gpi->topHints objectAtIndex: i]];
@@ -959,20 +1000,18 @@ static BOOL currently_displaying = NO;
     count = [bottomBests count];
     if (count >= 1)
       {
-	float start, end, position;
+	float position;
+	bottomEmpty = NO;
 	position = [[bottomBests objectAtIndex: 0] position];
 	
-	start = NSMinX(frame);
-	end = NSMaxX(frame);
-	for ( i = 0; i < count; i++ )
+	bottomStart = NSMinX([[bottomBests objectAtIndex: 0] frame]);
+	bottomEnd = NSMaxX([[bottomBests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinX([[bottomBests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxX([[bottomBests objectAtIndex: i] frame]), end);
+	    bottomStart = MIN(NSMinX([[bottomBests objectAtIndex: i] frame]), bottomStart);
+	    bottomEnd = MAX(NSMaxX([[bottomBests objectAtIndex: i] frame]), bottomEnd);
 	  }
 	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-	gpi->lastBottomRect = NSMakeRect(start, position - 1, end - start, 2);
 	bottomOfFrame = position;
 	topOfFrame = position + heightOfFrame;
       }
@@ -980,28 +1019,67 @@ static BOOL currently_displaying = NO;
     count = [topBests count];
     if (count >= 1)
       {
-	float start, end, position;
+	float position;
+	topEmpty = NO;
 	position = [[topBests objectAtIndex: 0] position];
 	
-	start = NSMinX(frame);
-	end = NSMaxX(frame);
-	for ( i = 0; i < count; i++ )
+	topStart = NSMinX([[topBests objectAtIndex: 0] frame]);
+	topEnd = NSMaxX([[topBests objectAtIndex: 0] frame]);
+	for ( i = 1; i < count; i++ )
 	  {
-	    start = MIN(NSMinX([[topBests objectAtIndex: i] frame]), start);
-	    end = MAX(NSMaxX([[topBests objectAtIndex: i] frame]), end);
+	    topStart = MIN(NSMinX([[topBests objectAtIndex: i] frame]), topStart);
+	    topEnd = MAX(NSMaxX([[topBests objectAtIndex: i] frame]), topEnd);
 	  }
 	
-	[[NSColor redColor] set];
-	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-	gpi->lastTopRect = NSMakeRect(start, position - 1, end - start, 2);
 	topOfFrame = position;
 	bottomOfFrame = position - heightOfFrame;
       }
   }
 
-  return NSMakeRect (leftOfFrame, bottomOfFrame,
+  gpi->hintFrame = NSMakeRect (leftOfFrame, bottomOfFrame,
 		     rightOfFrame - leftOfFrame,
 		     topOfFrame - bottomOfFrame);
+
+  {
+    [[NSColor redColor] set];
+    if (!leftEmpty)
+      {
+	leftStart = MIN(NSMinY(gpi->hintFrame), leftStart);
+	leftEnd = MAX(NSMaxY(gpi->hintFrame), leftEnd);
+	gpi->lastLeftRect = NSMakeRect(leftOfFrame - 1, leftStart, 
+				       2, leftEnd - leftStart);
+	NSRectFill(gpi->lastLeftRect);
+      }
+    
+    if (!rightEmpty)
+      {
+	rightStart = MIN(NSMinY(gpi->hintFrame), rightStart);
+	rightEnd = MAX(NSMaxY(gpi->hintFrame), rightEnd);
+	gpi->lastRightRect = NSMakeRect(rightOfFrame - 1, rightStart, 
+					2, rightEnd - rightStart);
+	NSRectFill(gpi->lastRightRect);
+      }
+    
+    if (!topEmpty)
+      {
+	topStart = MIN(NSMinX(gpi->hintFrame), topStart);
+	topEnd = MAX(NSMaxX(gpi->hintFrame), topEnd);
+	gpi->lastTopRect = NSMakeRect(topStart, topOfFrame - 1, 
+					 topEnd - topStart, 2);
+	NSRectFill(gpi->lastTopRect);
+      }
+
+    if (!bottomEmpty)
+      {
+	bottomStart = MIN(NSMinX(gpi->hintFrame), bottomStart);
+	bottomEnd = MAX(NSMaxX(gpi->hintFrame), bottomEnd);
+	gpi->lastBottomRect = NSMakeRect(bottomStart, bottomOfFrame - 1, 
+				      bottomEnd - bottomStart, 2);
+	NSRectFill(gpi->lastBottomRect);
+      }
+  }
+
+  return gpi->hintFrame;
 }
 
 

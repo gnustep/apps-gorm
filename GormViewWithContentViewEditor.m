@@ -527,16 +527,13 @@
 
   	    if ([selection count] == 1)
   	      {
-		{
-		  NSRect tempFrame = [[selection objectAtIndex: 0] frame];
-		  [[selection objectAtIndex: 0] 
-		    setFrameOrigin:
-		      NSMakePoint(NSMaxX([self bounds]),
-				  NSMaxY([self bounds]))];
-		  [superview display];
-		  [[selection objectAtIndex: 0] 
-		    setFrameOrigin: tempFrame.origin];
-		}
+		NSRect tempFrame = [[selection objectAtIndex: 0] frame];
+		[[selection objectAtIndex: 0] 
+		  setFrameOrigin:
+		    NSMakePoint(NSMaxX([self bounds]),
+				NSMaxY([self bounds]))];
+		[superview display];
+
 		r = oldMovingFrame;
 		r.origin.x += xDiff;
 		r.origin.y += yDiff;

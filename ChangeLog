@@ -1,7 +1,12 @@
 2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
-	* GormSplitViewEditor.m: removean extra ; that was breaking gcc 2.*
-
+	* GormSplitViewEditor.m: removed an extra ; that was breaking gcc 2.*.
+	* GormBoxEditor.m: removed NSLogs.
+	* GormViewEditor.m: neater display of intelligent placement hints.
+	* GormControlEditor.m: intelligent placement take minsize into account.
+	* GormViewWithContentEditor.m: fixed display problem when moving 
+	selection.
+	
 2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Major changes in editing widgets.
