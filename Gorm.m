@@ -34,6 +34,8 @@
 NSDate	*startDate;
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
+NSString *GormDidAddClassNotification = @"GormDidAddClassNotification";
+NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 
 @class	InfoPanel;
 
@@ -1057,7 +1059,6 @@ static NSButtonType _buttonTypeForObject( id button )
   NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
   GormFontViewController *gfvc = [[GormFontViewController alloc] init];
   [fontPanel setAccessoryView: [gfvc view]];
-  [fontPanel setNextResponder: gfvc];
   [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
 }
 

@@ -102,6 +102,10 @@
       [customClasses addObject: newClassName];
       RELEASE(classInfo);
 
+      [[NSNotificationCenter defaultCenter] 
+	postNotificationName: GormDidAddClassNotification
+	object: self];
+
       return newClassName;
     }
   return @"";
@@ -180,6 +184,11 @@
 	    }
 
 	  result = YES;
+
+	  // post the notification
+	  [[NSNotificationCenter defaultCenter] 
+	    postNotificationName: GormDidAddClassNotification
+	    object: self];
 	}
       else
 	{
@@ -905,11 +914,16 @@
     }
 
   [classInformation removeObjectForKey: className];
+
+  [[NSNotificationCenter defaultCenter] 
+    postNotificationName: GormDidDeleteClassNotification
+    object: self];
 }
 
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name
 {
   id classInfo = [classInformation objectForKey: oldName];
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
   if (classInfo != nil && [classInformation objectForKey: name] == nil)
     {
@@ -928,8 +942,7 @@
 	  [customClasses replaceObjectAtIndex: index withObject: name];
 	}
 
-      [[NSNotificationCenter defaultCenter]
-	postNotificationName: IBClassNameChangedNotification object: self];
+      [nc postNotificationName: IBClassNameChangedNotification object: self];
       return YES;
     }
   else return NO;

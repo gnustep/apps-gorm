@@ -40,6 +40,8 @@
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;
 extern NSString *GormDidModifyClassNotification;
+extern NSString *GormDidAddClassNotification;
+extern NSString *GormDidDeleteClassNotification;
 
 // templates
 @interface GSNibItem (GormAdditions)

@@ -1,5 +1,15 @@
 2003-06-29  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: Added code to send notifications when
+	a class is add/deleted.
+	* GormPrivate.h: Added declarations for new notifications.
+	* Gorm.m: Added actual constants for new notifications.
+	* GormFilesOwner.m: Added code to the inspector to receive 
+	the notifications and reload the class list when a class 
+	is added/deleted.
+	
+2003-06-29  Gregory John Casamento <greg_casamento@yahoo.com>
+
         Applied patch submitted by Matt Rice
 	* GormDocument.m: Added code to allow multiple selection of
 	images and sounds when adding them to a .gorm file.

@@ -110,6 +110,16 @@
   [super dealloc];
 }
 
+- (void) _classAdded: (NSNotification *)notification
+{
+  [self setObject: object];
+}
+
+- (void) _classDeleted: (NSNotification *)notification
+{
+  [self setObject: object];
+}
+
 - (id) init
 {
   self = [super init];
@@ -136,6 +146,19 @@
 
       [contents addSubview: browser];
       RELEASE(browser);
+
+      // add observers for relavent notifications.
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(_classAdded:)
+	name: GormDidAddClassNotification
+	object: [NSApp classManager]];
+
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(_classDeleted:)
+	name: GormDidDeleteClassNotification
+	object: [NSApp classManager]];
     }
   return self;
 }
@@ -143,7 +166,7 @@
 - (void) setObject: (id)anObject
 {
   ASSIGN(classes, [[NSApp classManager] allClassNames]);
-  if (anObject != nil && anObject != object)
+  if (anObject != nil)
     {
       NSArray	*array;
       unsigned	pos;
