@@ -45,7 +45,7 @@
 {
   _gormStyleMask = aStyle;
   return [super initWithContentRect: contentRect
-		styleMask: NSTitledWindowMask | NSClosableWindowMask
+		styleMask: NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask
 		backing: bufferingType
 		defer: flag
 		screen: aScreen];
