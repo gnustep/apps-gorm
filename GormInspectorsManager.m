@@ -1049,8 +1049,7 @@ selectCellWithString: (NSString*)title
 
 - (void) ok: (id)sender
 {
-  id first = [[(id<IB>)NSApp activeDocument] objectForName: @"NSFirst"];
-  if([currentConnector destination] == nil || [currentConnector destination] == first)
+  if([currentConnector destination] == nil)
     {
       NSRunAlertPanel(_(@"Problem making connection"),
 		      _(@"Please select a valid destination."), 

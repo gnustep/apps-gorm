@@ -2057,10 +2057,6 @@ static NSImage	*classesImage = nil;
 	}
     }
 
-  // get the custom class map and set it into the class manager...
-  // NSLog(@"customClasses = %@", customClasses);
-  // [classManager setCustomClassMap: customClasses];
-  
   NSDebugLog(@"nameTable = %@",[c nameTable]);
 
   enumerator = [[c nameTable] keyEnumerator];
