@@ -105,6 +105,8 @@ Gorm_RESOURCE_FILES = \
 	Images/iconTop_nib.tiff \
 	Images/GormAction.tiff \
 	Images/GormOutlet.tiff \
+	Images/GormActionSelected.tiff \
+	Images/GormOutletSelected.tiff \
 	Resources/GormViewSizeInspector.gorm
 
 Gorm_HEADERS = \

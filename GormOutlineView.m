@@ -42,6 +42,8 @@ static NSImage *expanded  = nil;
 static NSImage *unexpandable  = nil;
 static NSImage *action = nil;
 static NSImage *outlet = nil;
+static NSImage *actionSelected = nil;
+static NSImage *outletSelected = nil;
 
 // some common colors which will be used to indicate state in the outline
 // view.
@@ -96,6 +98,8 @@ static NSColor *darkGreyBlueColor = nil;
       unexpandable = [NSImage imageNamed: @"common_outlineUnexpandable.tiff"];
       action       = [NSImage imageNamed: @"GormAction.tiff"];
       outlet       = [NSImage imageNamed: @"GormOutlet.tiff"];
+      actionSelected = [NSImage imageNamed: @"GormActionSelected.tiff"];
+      outletSelected = [NSImage imageNamed: @"GormOutletSelected.tiff"];
 
       // initialize colors
       salmonColor = 
@@ -128,6 +132,7 @@ static NSColor *darkGreyBlueColor = nil;
   _outletColumn = nil;
   _isEditing = NO;
   _attributeOffset = 0.0;
+  _edittype = None;
   return self;
 }
 
@@ -409,7 +414,15 @@ static NSColor *darkGreyBlueColor = nil;
 	  
 	  if((tb == _actionColumn || tb == _outletColumn) && !drawingEditedObject)
 	    {
-	      NSImage *image = (tb == _actionColumn)?action:outlet;
+	      NSImage *image = nil;
+
+	      if(item == _itemBeingEdited && tb == _actionColumn && _edittype == Actions)
+		image = actionSelected;
+	      else
+		if(item == _itemBeingEdited && tb == _outletColumn && _edittype == Outlets)
+		  image = outletSelected;
+	      else
+		image = (tb == _actionColumn)?action:outlet;
 	      
 	      // Prepare image cell...
 	      imageCell = [[NSCell alloc] initImageCell: image];
@@ -472,10 +485,12 @@ static NSColor *darkGreyBlueColor = nil;
 	  // [self setBackgroundColor: darkSalmonColor]; // for later
 	  if(tb == _actionColumn)
 	    {
+	      _edittype = Actions;
 	      [self _openActions: _clickedItem];
 	    }
 	  else if(tb == _outletColumn)
 	    {
+	      _edittype = Outlets;
 	      [self _openOutlets: _clickedItem];
 	    }
 	}

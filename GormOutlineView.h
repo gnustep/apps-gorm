@@ -34,6 +34,8 @@
 
 @class NSTableColumn;
 
+typedef enum {None, Outlets, Actions} GSAttributeType;
+
 @interface GormOutlineView : NSOutlineView
 {
   float _attributeOffset;
@@ -41,6 +43,7 @@
   id _itemBeingEdited;
   NSTableColumn *_actionColumn;
   NSTableColumn *_outletColumn;
+  GSAttributeType _edittype;
 }
 
 // Instance methods

@@ -1,5 +1,16 @@
 2002-07-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormOutlineView.m -[drawRow:] Added logic to draw inverse
+	image of the outlet or action button to visually indicate which
+	is being edited in the outline view.
+	* GormOutlineView.h: Added typedef to indicate whether actions or
+	outlets are being edited.
+	* Images/GormActionSelected.tiff: Added
+	* Images/GormOutletSelected.tiff: Added
+	* GNUmakefile: Modified to copy images to the resources directory.
+	
+2002-07-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormOutlineView.[hm] : Added.   This is a NSOutlineView
 	subclass handles outlets and actions for the class view.  
 	As of this revision, you can view the actions and outlets of
