@@ -3498,10 +3498,13 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 - (id) openSound: (id)sender
 {
   NSArray	*fileTypes = [NSSound soundUnfilteredFileTypes]; 
+  NSArray	*filenames;
+  NSString	*filename;
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
+  int		i;
 
-  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setAllowsMultipleSelection: YES];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
   result = [oPanel runModalForDirectory: nil
@@ -3509,23 +3512,31 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSDebugLog(@"Loading sound file: %@",[oPanel filename]);
-      [soundsView addObject: [self _createSoundPlaceHolder: [oPanel filename]]];
-      [sounds addObject: [oPanel filename]];
+      filenames = [oPanel filenames];
+      for (i=0; i<[filenames count]; i++)
+      {
+        filename = [filenames objectAtIndex:i];
+        NSDebugLog(@"Loading sound file: %@",filenames);
+        [soundsView addObject: [self _createSoundPlaceHolder: filename]];
+        [sounds addObject: filename];
+      }
       return self;
     }
 
   return nil;
 }
 
-// image/sound support...
+// image support...
 - (id) openImage: (id)sender
 {
   NSArray	*fileTypes = [NSImage imageFileTypes]; 
+  NSArray	*filenames;
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  NSString	*filename;
   int		result;
+  int		i;
 
-  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setAllowsMultipleSelection: YES];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
   result = [oPanel runModalForDirectory: nil
@@ -3533,9 +3544,14 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSDebugLog(@"Loading image file: %@",[oPanel filename]);
-      [imagesView addObject: [self _createImagePlaceHolder: [oPanel filename]]];
-      [images addObject: [oPanel filename]];
+      filenames = [oPanel filenames];
+      for (i=0; i<[filenames count]; i++)
+      {
+        filename = [filenames objectAtIndex:i];
+        NSDebugLog(@"Loading image file: %@",filename);
+        [imagesView addObject: [self _createImagePlaceHolder: filename]];
+        [images addObject: filename];
+      }
       return self;
     }
 

@@ -1,3 +1,10 @@
+2003-06-29  Gregory John Casamento <greg_casamento@yahoo.com>
+
+        Applied patch submitted by Matt Rice
+	* GormDocument.m: Added code to allow multiple selection of
+	images and sounds when adding them to a .gorm file.
+	Thanks, Matt!!
+
 2003-06-26  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormNSColorWellInspector.gorm: Redid the
