@@ -444,16 +444,60 @@ If all of the options in this list are exhausted, it then gives up and returns n
 
 NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
 
-@chapter Creating A New Application in Gorm's menu
+@chapter Creating A New Application
 
-If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.
+If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.   From there you can open the MainMenu.gorm by clicking on interfaces and selecting MainMenu.gorm.   If Gorm.app is properly installed, you Gorm should start up.
 
-First you need to start Gorm up.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer.
+If you don't have ProjectCenter, you can create the Gorm file by hand.    First you need to start Gorm.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer.
  
-You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window.
+You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window.  This should be the same as with the ProjectCenter gorm file since this is the basic starting point for an application.
 
+For the sections below...  only do one or the other, not both. 
 
+@section Creating A Class In Gorm
+@cindex Creating Classes
 
+There are two ways to do this next operation.  I will take you through each step by step.  First click on the classes icon in the toolbar on the top of the Gorm document window.   You should see the view below change to an outline view containing a list of class names.   Once this happens we're ready to create a class.
+Select the class you wish to subclass in the outline view.  For our example we will use the simplest: NSObject.  Select it by clicking on the class name once.  Then go to the Classes menu in the main menu and select Create Subclass (you can also type Alt-Shift-c, which will do this as well.  The new class will be created in the list with the name ``NewClass''.
+
+@section Using The Outline View
+@cindex Classes Outline View
+
+From here double click on the subclass name to make it editable.  Type the name of the class and hit enter.  For our example, please use the class name MyController.  When you hit enter an alert panel will appear and warn you about breaking connections, simply select OK and continue.
+
+This method of inputting the classes was inspired by IB in OPENSTEP 4.2/Mach which had functionality very similar to this.  For users of that the transition to Gorm will be seamless.
+
+@subsection Adding Outlets In The Outline View
+
+Too add an outlet, select the round icon with the two horizontal lines in it (it sort of looks like a wall outlet.   This should become depressed.  Here you need to go to the Gorm Menu, under Classes select ``Add Outlet/Action''.  Each time you press this menu item another outlet will be added with a name similar to newOutlet, as you add more the number at the end will increase.  For now add only one outlet.
+
+To rename the outlet simply double click it and change it's name like you did the class above to ``value'' for the sake of our example.
+
+@subsection Adding Actions In the Outline View
+
+The procedure to add on action is precisely the same as adding an outlet, except you must click on the button which looks like a target (a circle with a + inside).   Add an action and name it ``buttonPressed:'' for the sake of our example.
+
+@section Using The Class Edit Inspector
+@cindex Class Edit Inspector
+
+This way is much more inline with the ``OPENSTEP/GNUstep'' philosophy.   For each object there is an inspector, even for Class objects.
+
+Once you have created the class as described in the previous section ``Creating a Class In Gorm'', you must skip to this section to use the inspector.   In the Gorm main menu select Tools and then select ``Inspectors''.  This will make certain that the inspectors window is being displayed.   Once the inspectors window is up move the pulldown on the top to ``Attributes'' and select the class you created which should, at this point, have the name ``NewClass''.  You'll notice that the ``Class'' field at the top which shows the name's background color has turned white, instead of grey.  This indicates that this class name is editable.   Erase ``NewClass'' from the text field and type ``MyController''.
+
+@subsection Adding Outlets In The Inspector
+
+Adding outlets is very intuitive in the inspector.  Simply select the ``Outlets'' tab in the tab view and click ``Add'' to add more outlets, and ``Remove'' to remove them.  For the sake of our example, add one outlet and name it ``value''.
+
+@subsection Adding Actions In the Inspector
+
+Very much like above only with the ``Actions'' tab, add an action called button pressed.
+
+@section Saving the gorm file
+@cindex Saving
+
+At this point you must save the .gorm file.  Go to the Gorm menu and click Documents and then select ``Save''.  If the document was opened from a pre-existing .gorm, it will save to that same file name.   If it is an UNTITLED .gorm file a file dialog will appear and you will need to select the directory where you want to store the .gorm file and type the name of the .gorm file.  
+
+ 
 @chapter Advanced Topics
 
 This section will cover some topics which won't be of general interest to most users.   The details in this section pertain to the internal workings of Gorm.
