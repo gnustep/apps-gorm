@@ -1,0 +1,29 @@
+
+25 Feb 2000
+
+At this point, Gorm is usable only for very simple stuff as it only supports
+the most commonly used gui elements.  However, the binary format in which
+documents are archived is stable, so documents created using Gorm now should
+remain useful.
+Interface test mode qorks quite nicely - you really can see things working.
+
+Known problems (things to do) -
+
+1. Documentation - only a tiny start has been made on this!
+
+2. Support for custom objects needs to be added.
+
+3. Editors and inspectors need writing for most gui elements -
+  popup menus
+  boxes
+  browsers
+  scrollviews
+  splitviews
+  etc etc
+
+4. Support for color and images on buttons etc.
+  This requires improved image and color support in the gui library
+
+5. Support for fonts etc
+  This requires improved font management support in the gui library
+
