@@ -148,6 +148,7 @@ extern NSString *GormToggleGuidelineNotification;
   id			connectDestination;
   NSWindow		*connectDWindow;
   NSRect		connectDRect;
+  NSPoint               cascadePoint;
 }
 - (id<IBDocuments>) activeDocument;
 - (id) connectSource;
@@ -166,7 +167,7 @@ extern NSString *GormToggleGuidelineNotification;
 - (id) infoPanel: (id) sender;
 - (void) preferencesPanel: (id) sender;
 - (id) inspector: (id) sender;
-- (id) newApplication: (id) sender;
+- (void) newGormDocument: (id) sender;
 - (id) loadPalette: (id) sender;
 - (id) open: (id)sender;
 - (id) palettes: (id) sender;
