@@ -168,6 +168,10 @@
 // first responder/font manager
 - (id) fontManager;
 - (id) firstResponder;
+
+// windowAndRect:forObject: is called by Gorm to determine where it should
+// draw selection markup
+- (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 @end
 
 @interface GormDocument (MenuValidation)

@@ -39,6 +39,14 @@ NSString        *GormImagePboardType = @"GormImagePboardType";
 NSString        *GormSoundPboardType = @"GormSoundPboardType";
 NSString        *GormLinkPboardType = @"GormLinkPboardType";
 
+@interface IBPaletteDocument : NSObject <IBDocuments>
+{
+  NSMutableDictionary *nameTable;
+  NSMutableArray *connections;
+  NSString *documentPath;
+}
+@end
+
 @implementation	IBPalette
 
 static NSMapTable	*viewToObject = 0;
@@ -89,6 +97,7 @@ static NSMapTable	*viewToType = 0;
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(icon);
+  RELEASE(document);
   [super dealloc];
 }
 
@@ -104,10 +113,12 @@ static NSMapTable	*viewToType = 0;
   
   bundle = [NSBundle bundleForClass: [self class]]; 
 
+  // load the palette dictionary...
   fileName = [bundle pathForResource: @"palette" ofType: @"table"];
   paletteInfo = [[NSString stringWithContentsOfFile: fileName]
 		  propertyList];
 
+  // load the image...
   fileName = [paletteInfo objectForKey: @"Icon"];
   fileName = [bundle pathForImageResource: fileName];
   if (fileName == nil)
@@ -119,6 +130,7 @@ static NSMapTable	*viewToType = 0;
     }
   icon = [[NSImage alloc] initWithContentsOfFile: fileName];
 
+  // load the nibfile...
   fileName = [paletteInfo objectForKey: @"NibFile"];
   if (fileName != nil && [fileName isEqual: @""] == NO)
     {
@@ -133,6 +145,8 @@ static NSMapTable	*viewToType = 0;
 	  return nil;
 	}
     }
+
+  document = [[IBPaletteDocument alloc] init];
 
   return self;
 }
@@ -153,3 +167,189 @@ static NSMapTable	*viewToType = 0;
 }
 @end
 
+/**
+ * Implementation of document protocol.  
+ */
+
+@implementation IBPaletteDocument
+
+- (id) initWithDocumentPath: (NSString *)docPath
+{
+  if((self = [super init]) != nil)
+    {
+      ASSIGN(documentPath, docPath);
+      nameTable = [[NSMutableDictionary alloc] init];
+      connections = [[NSMutableArray alloc] init];
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(documentPath);
+  RELEASE(nameTable);
+  RELEASE(connections);
+  [super dealloc];
+}
+
+- (void) addConnector: (id<IBConnectors>)aConnector
+{
+  // does nothing...
+}
+
+- (NSArray*) allConnectors
+{
+  return nil;
+}
+
+- (void) attachObject: (id)anObject toParent: (id)aParent
+{
+  // does nothing...
+}
+
+- (void) attachObjects: (NSArray*)anArray toParent: (id)aParent
+{
+  // does nothing...
+}
+
+- (NSArray*) connectorsForDestination: (id)destination
+{
+  return nil;
+}
+
+- (NSArray*) connectorsForDestination: (id)destination
+			      ofClass: (Class)aConnectorClass
+{
+  return nil;
+}
+
+- (NSArray*) connectorsForSource: (id)source
+{
+  return nil;
+}
+
+- (NSArray*) connectorsForSource: (id)source
+			 ofClass: (Class)aConnectorClass
+{
+  return nil;
+}
+
+- (BOOL) containsObject: (id)anObject
+{
+  return NO;
+}
+
+- (BOOL) containsObjectWithName: (NSString*)aName forParent: (id)parent
+{
+  return NO;
+}
+
+- (BOOL) copyObject: (id)anObject
+	       type: (NSString*)aType
+       toPasteboard: (NSPasteboard*)aPasteboard
+{
+  return NO;
+}
+
+- (BOOL) copyObjects: (NSArray*)anArray
+		type: (NSString*)aType
+	toPasteboard: (NSPasteboard*)aPasteboard
+{
+  return NO;
+}
+
+- (void) detachObject: (id)anObject
+{
+  // does nothing...
+}
+
+- (void) detachObjects: (NSArray*)anArray
+{
+  // does nothing...
+}
+
+- (NSString*) documentPath
+{
+  return documentPath;
+}
+
+- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
+{
+  // does nothing...
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+			   create: (BOOL)flag
+{
+  return nil;
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+			 inEditor: (id<IBEditors>)anEditor
+			   create: (BOOL)flag
+{
+  return nil;
+}
+
+- (NSString*) nameForObject: (id)anObject
+{
+  return nil;
+}
+
+- (id) objectForName: (NSString*)aName
+{
+  return nil;
+}
+
+- (NSArray*) objects
+{
+  return nil;
+}
+
+- (id<IBEditors>) openEditorForObject: (id)anObject
+{
+  return nil;
+}
+
+- (id<IBEditors, IBSelectionOwners>) parentEditorForEditor: (id<IBEditors>)anEditor
+{
+  return nil;
+}
+
+- (id) parentOfObject: (id)anObject
+{
+  return nil;
+}
+
+- (NSArray*) pasteType: (NSString*)aType
+	fromPasteboard: (NSPasteboard*)aPasteboard
+		parent: (id)parent
+{
+  return nil;
+}
+
+- (void) removeConnector: (id<IBConnectors>)aConnector
+{
+  // does nothing...
+}
+
+- (void) resignSelectionForEditor: (id<IBEditors>)editor
+{
+  // does nothing...
+}
+
+- (void) setName: (NSString*)aName forObject: (id)object
+{
+  
+}
+ 
+- (void) setSelectionFromEditor: (id<IBEditors>)anEditor
+{
+  // does nothing...
+}
+
+- (void) touch
+{
+  // does nothing...
+}
+@end

@@ -76,12 +76,6 @@ extern NSString *IBWillCloseDocumentNotification;
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor;
 - (void) touch;		/* Mark document as having been changed.	*/
-
-/*
- * windowAndRect:forObject: is called by Gorm to determine where it should
- * draw selection markup
- */
-- (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 @end
 
 #endif

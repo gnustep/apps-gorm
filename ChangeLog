@@ -1,3 +1,15 @@
+2004-12-12 20:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.h: Added declaration for windowAndRect:forObject:
+	* GormLib/IBDocuments.h: Removed the declaration for 
+	windowAndRect:forObject: from here as it doesn't belong in the
+	IBDocuments protocol.
+	* GormLib/IBPalette.m: Started implementing the private class
+	IBPaletteDocument. 
+	* Gorm.m: Changed some code due to to switch in location of the
+	windowAndRect:forObject: method from IBDocuments.h to 
+	GormDocument.h.
+
 2004-12-12 16:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/GNUmakefile: Added new header files.

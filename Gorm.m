@@ -435,8 +435,8 @@ static NSImage *testingImage = nil;
     {
       if (connectSource != nil)
 	{
-	  window = [[self activeDocument] windowAndRect: &rect
-					 forObject: connectSource];
+	  window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
+				    forObject: connectSource];
 	  if (window != nil)
 	    {
 	      NSView	*view = [[window contentView] superview];
@@ -459,8 +459,8 @@ static NSImage *testingImage = nil;
     {
       if (connectDestination != nil)
 	{
-	  window = [[self activeDocument] windowAndRect: &rect
-					  forObject: connectDestination];
+	  window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
+				    forObject: connectDestination];
 	  if (window != nil)
 	    {
 	      NSView	*view = [[window contentView] superview];
@@ -482,7 +482,7 @@ static NSImage *testingImage = nil;
     }
   if (connectSource != nil)
     {
-      window = [[self activeDocument] windowAndRect: &rect forObject: connectSource];
+      window = [(GormDocument *)[self activeDocument] windowAndRect: &rect forObject: connectSource];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
@@ -502,8 +502,8 @@ static NSImage *testingImage = nil;
     }
   if (connectDestination != nil && connectDestination == connectSource)
     {
-      window = [[self activeDocument] windowAndRect: &rect
-				     forObject: connectDestination];
+      window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
+				forObject: connectDestination];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
@@ -525,8 +525,8 @@ static NSImage *testingImage = nil;
     }
   else if (connectDestination != nil)
     {
-      window = [[self activeDocument] windowAndRect: &rect
-				      forObject: connectDestination];
+      window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
+				forObject: connectDestination];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
