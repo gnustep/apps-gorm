@@ -1,3 +1,9 @@
+2004-12-23 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormClassPanel.gorm: Set nextKeyView for all views
+	in the window and the initialFirstResponder of the window to the
+	table view.
+
 2004-12-23 06:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Fix for issue when loading from gmodel.
