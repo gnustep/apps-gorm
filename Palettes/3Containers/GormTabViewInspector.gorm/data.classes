@@ -147,7 +147,10 @@
 	Outlets = (
 	    typeMatrix,
 	    numberOfItemsField,
-	    allowtruncate
+	    allowtruncate,
+	    itemLabel,
+	    itemStepper,
+	    itemIdentifier
 	);
 	Super = IBInspector;
     };

@@ -1,3 +1,8 @@
+2003-03-04  Fabien <fabien@tuxfamily.org>
+
+	* Palettes/3Containers/inspectors.m: Update TabView inspector
+	* Palettes/4Data/inspectors.m: Update comboBox inspector.
+
 2003-03-04  Adam Fedor  <fedor@gnu.org>
 
 	* Gorm.m ([Gorm -infoPanel:sender]): Update application name.

@@ -208,7 +208,6 @@
 
 - (void) ok: (id)sender
 {
-  NSLog(@"ok");
   [self _setValuesFromControl: sender];
 }
 
@@ -611,6 +610,9 @@ static NSString *ITEM=@"item";
   int numberOfDisplayItem;
   id allowtruncate;
   id  numberOfItemsField;
+  id  itemStepper;
+  id  itemLabel;
+  id  itemIdentifier;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -624,24 +626,28 @@ static NSString *ITEM=@"item";
 - (void) _setValuesFromControl: (id)control
 {
   if (control == typeMatrix)
-    {
       [object setTabViewType:[[control selectedCell] tag]];
-    }
-
-  if (control == allowtruncate)
+  else if (control == allowtruncate)
     {
       BOOL flag;
       flag = ([allowtruncate state] == NSOnState) ? YES : NO;
       [object setAllowsTruncatedLabels:flag];
     }
+  else if (control == itemStepper )
+    {
+      int number = [itemStepper intValue];
+      [itemLabel setStringValue:[[object tabViewItemAtIndex:number] label]];
+      [itemIdentifier setStringValue:[[object tabViewItemAtIndex:number] identifier]];
+      [object selectTabViewItemAtIndex:number];
+    }
+  
 
-
-  if (control == numberOfItemsField)
+  else if (control == numberOfItemsField)
     {
       int newNumber = [[numberOfItemsField stringValue] intValue];
 
       //Can we allow stupid numbers like 66666666 ????????
-      if (newNumber < 0) 
+      if (newNumber <= 0) 
 	{
 	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",[object numberOfTabViewItems]]];
 	  return; 
@@ -667,27 +673,18 @@ static NSString *ITEM=@"item";
 	      [object removeTabViewItem:[object tabViewItemAtIndex:i]];
 	    }
 	}
-
+      [itemStepper setMaxValue:(newNumber - 1)];
     }
-
-//        int newNumber = [itemStepper intValue];
-//        NSTabViewItem *newTabItem;
-//        if ( newNumber > numberOfDisplayItem ) 
-//  	{
-//  	  NSString *identif = [NSString stringWithFormat:@"%i",newNumber]; 
-//  	  newTabItem = [[NSTabViewItem alloc] initWithIdentifier:identif];
-//  	  [newTabItem setLabel:[ITEM  stringByAppendingString:identif]]; 
-//  	  [newTabItem setView:[[NSView alloc] init]];
-//  	  [object addTabViewItem:newTabItem];
-//  	  [displayItemsField setStringValue:identif];
-//  	  [labelField setStringValue: [ITEM  stringByAppendingString:identif]];
-//  	  [identifierField setStringValue:[ITEM stringByAppendingString:identif]];
-//  	  numberOfDisplayItem = newNumber;
-//  	}
-//        if ( newNumber < numberOfDisplayItem ) 
-//  	{
-//  	  NSLog(@"remove");
-//  	}
+  else if ( control == itemLabel )
+    {
+      if ( ! [[itemLabel stringValue] isEqualToString:@""] )
+	[[object selectedTabViewItem] setLabel:[itemLabel stringValue]];
+    }
+  else if ( control == itemIdentifier )
+    {
+      if ( ! [[itemIdentifier stringValue] isEqualToString:@""] )
+	[[object selectedTabViewItem] setIdentifier:[itemIdentifier stringValue]];
+    }
 
 
   [object display];
@@ -695,57 +692,16 @@ static NSString *ITEM=@"item";
 
 - (void) _getValuesFromObject: anObject
 {
-//    BOOL isScrollView;
-//    id scrollView;
+  //TODO ScrollView 
+  unsigned int i,numberOfTabViewItems;
+  numberOfTabViewItems=[anObject numberOfTabViewItems];
+  
+  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",numberOfTabViewItems]];
 
-//    scrollView = //[[object superview] superview];
-//      [object enclosingScrollView];
+  [itemStepper setMaxValue:(numberOfTabViewItems -1)];
 
-//    isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
-
-//    if (anObject != object)
-//      {
-//        return;
-//      }
-
-//    [selectionMatrix deselectAllCells];
-//    if ([anObject gormAllowsMultipleSelection])
-//      [selectionMatrix selectCellAtRow: 0 column: 0];
-//    if ([anObject gormAllowsEmptySelection])
-//      [selectionMatrix selectCellAtRow: 1 column: 0];
-//    if ([anObject gormAllowsColumnSelection])
-//      [selectionMatrix selectCellAtRow: 2 column: 0];
-
-//    if (isScrollView)
-//      {
-//        [verticalScrollerSwitch setEnabled: YES];
-//        [verticalScrollerSwitch setState: 
-//           ([scrollView hasVerticalScroller]) ? NSOnState : NSOffState];
-
-//        [horizontalScrollerSwitch setEnabled: YES];   
-//        [horizontalScrollerSwitch setState: 
-//           ([scrollView hasHorizontalScroller]) ? NSOnState : NSOffState];
-
-//        [borderMatrix setEnabled: YES];
-//        [borderMatrix selectCellWithTag: [scrollView borderType]];
-//      }
-//    else
-//      {
-//        [verticalScrollerSwitch setEnabled: NO];
-//        [horizontalScrollerSwitch setEnabled: NO];   
-//        [borderMatrix setEnabled: NO];   
-//      }
-
-//    [[rowsHeightForm cellAtIndex: 0] setIntValue: [anObject rowHeight] ];
-
-//    [optionMatrix deselectAllCells];
-//    if ([anObject drawsGrid])
-//      [optionMatrix selectCellAtRow: 0 column: 0];
-//    if ([anObject gormAllowsColumnResizing])
-//      [optionMatrix selectCellAtRow: 1 column: 0];
-//    if ([anObject gormAllowsColumnReordering])
-//      [optionMatrix selectCellAtRow: 2 column: 0];
-//    [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
+  [itemLabel setStringValue:[[anObject selectedTabViewItem] label]];
+  [itemIdentifier setStringValue:[[anObject selectedTabViewItem] identifier]];
 }
 
 - (id) init

@@ -100,9 +100,8 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       if ( ! [[itemTxt stringValue] isEqualToString:@""] )
 	{
-	  [itemsArray addObject:[itemTxt stringValue]];
+ 	  [object addItemWithObjectValue:[itemTxt stringValue]];
 	  [itemTableView reloadData];
-	  [object addItemWithObjectValue:[itemTxt stringValue]];
 	}
     }
   else if (control == removeButton) 
@@ -110,10 +109,9 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       int selected = [itemTableView selectedRow];
       if ( selected != -1 ) 
 	{
-	  [itemsArray removeObjectAtIndex: selected];
 	  [itemTxt setStringValue:@""];
-	  [itemTableView reloadData];
 	  [object removeItemAtIndex:selected];
+	  [itemTableView reloadData];
 	}
     }
 }
@@ -122,9 +120,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 {
   int i;
   if (anObject != object)
-    {
-      return;
-    }
+    return;
 
   [backgroundColorWell setColor: [anObject backgroundColor]];
   [textColorWell setColor: [anObject textColor]];
@@ -138,18 +134,12 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     [optionMatrix selectCellAtRow: 1 column: 0];
   if ([anObject usesDataSource])
     [optionMatrix selectCellAtRow: 2 column: 0];
-  if ([anObject numberOfItems] > 0 ) 
-    {
-      for (i=0;i<[anObject numberOfItems];i++)
-	{
-	  NSLog(@"plop => %i",i);
-	  [itemsArray insertObject:[anObject itemObjectValueAtIndex:i] atIndex:i];
-	}
-      [itemTableView reloadData];
-    }
+
+  [itemTableView reloadData];
+  [itemTxt setStringValue:@""];
+
   [[visibleItemsForm cellAtIndex: 0]
     setIntValue: [anObject numberOfVisibleItems]];
-  
 }
 
 
@@ -164,8 +154,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       NSLog(@"Could not gorm GormNSComboBoxInspector");
       return nil;
     }
-  itemsArray=[[NSMutableArray alloc] initWithCapacity:1];
-
   return self;
 }
 
@@ -180,31 +168,49 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   [self _getValuesFromObject: anObject];
 }
 
-
 // TableView DataSource
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
   if (aTableView == itemTableView )
-    return [itemsArray count];
+    {
+      return [[object objectValues]  count];
+    }
   else
     return 0;
 }
+
 
 - (id)tableView:(NSTableView *)aTableView 
     objectValueForTableColumn:(NSTableColumn *)aTableColumn
     row:(int)rowIndex
 {
   if (aTableView == itemTableView )
-    return [itemsArray objectAtIndex:rowIndex];
+    return  [object itemObjectValueAtIndex:rowIndex];
 }
 
 //TableView delegate
 - (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
 {
   if ( aTableView == itemTableView ) 
-    [itemTxt setStringValue:[itemsArray objectAtIndex:rowIndex]];
+    {
+      [itemTxt setStringValue:[object itemObjectValueAtIndex:rowIndex]];
+      return YES;
+    }
 }
 
+//itemTxt delegate
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
+{
+//   if (fieldEditor != itemTxt )
+//     return YES;
+//   if ( [[itemTxt setStringValue] isEqualToString:@""] )
+//     return YES;
+//   else if ( [aTableView selectedRow] != -1 )
+//     {
+//       [object 
+    
+  return YES;
+}
 
 @end
 
