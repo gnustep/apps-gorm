@@ -6,6 +6,8 @@
 	NSObject now that NSObject is part of the classInformation plist.
 	* GormFunctions.[hm]: Added parameter to pass in the current list of
 	classes from the calling document.
+	* GormClassPanelController.[hm]: New class.
+	* GormClassPanel.gorm: Added interface.
 	
 2004-11-12 17:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
