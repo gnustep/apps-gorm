@@ -267,7 +267,7 @@
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
-  [popup addItemWithTitle: @"Class Edit"];
+  [popup addItemWithTitle: @"Custom Class"];
   item = [popup itemAtIndex: 4];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
@@ -873,7 +873,7 @@ selectCellWithString: (NSString*)title
   RELEASE(outlets);
   RELEASE(okButton);
   RELEASE(revertButton);
-  RELEASE(window);
+  // RELEASE(window);
   [super dealloc];
 }
 

@@ -214,33 +214,12 @@ static NSColor *darkGreyBlueColor = nil;
     }
 }
 
-- (void)removeSelectedItem
+- (void) removeItemAtRow: (int)row
 {
-  id item = [self itemAtRow: [self selectedRow]];
-  int deletionPoint = 0;
-  
-  if(![item isKindOfClass: [GormOutletActionHolder class]])
-    {
-      if(item == _itemBeingEdited)
-	return; // we do not delete a class while it's being edited
-    }
-
-  if(![_dataSource outlineView: self
-		   shouldEditTableColumn: _outlineTableColumn
-		   item: item])
-    {
-      return; // return if this is something we can't edit...
-    }
-
+  [_items removeObjectAtIndex: row];
   _numberOfRows -= 1;
-  [_dataSource outlineView: self removeItem: item];
-  deletionPoint = [_items indexOfObject: item];
-  if(deletionPoint != NSNotFound)
-    {
-      [_items removeObjectAtIndex: deletionPoint];
-      [self setNeedsDisplay: YES];
-      [self noteNumberOfRowsChanged];
-    }
+  [self setNeedsDisplay: YES];
+  [self noteNumberOfRowsChanged];
 }
 
 - (void)_openActions: (id)item

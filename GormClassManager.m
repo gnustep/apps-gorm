@@ -104,14 +104,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *combined = [NSMutableArray arrayWithArray: array];
   NSString *new = @"newAction", *search = [new stringByAppendingString: @":"];
   int i = 1;
-      NSLog(@"before...");
   [combined addObjectsFromArray: extra];
   while([combined containsObject: search])
     {
-      NSLog(@"Here...");
       new = [new stringByAppendingString: [NSString stringWithFormat: @"%d", i++]];
       search = [new stringByAppendingString: @":"];
-      NSLog(@"string = %@ %@", new, search);
     }
 
   [self addAction: search forClassNamed: name];
@@ -198,8 +195,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSArray *allActions = [self allActionsForClassNamed: className];
 
-  NSLog(@"action: %@",anAction);
-
   if([allActions containsObject: anAction])
     {
       return;
@@ -243,6 +238,12 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *actions = [info objectForKey: @"Actions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
 
+  if([allActions containsObject: newAction] || 
+     [extraActions containsObject: newAction])
+    {
+      return;
+    }
+
   if([extraActions containsObject: oldAction])
     {
       int all_index = [allActions indexOfObject: oldAction];
@@ -267,6 +268,12 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
+
+  if([allOutlets containsObject: newOutlet] || 
+     [extraOutlets containsObject: newOutlet])
+    {
+      return;
+    }
 
   if([extraOutlets containsObject: oldOutlet])
     {
@@ -1141,7 +1148,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
       [combined addObjectsFromArray: array];
       [combined addObjectsFromArray: extra_array];
-      NSLog(@"action = %@, actions = %@",name,combined);
       result = ([combined indexOfObject: name] != NSNotFound);
     }
 
@@ -1161,7 +1167,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
       [combined addObjectsFromArray: array];
       [combined addObjectsFromArray: extra_array];
-      NSLog(@"outlet = %@, outlets = %@",name,combined);
       result = ([combined indexOfObject: name] != NSNotFound);
     }
 

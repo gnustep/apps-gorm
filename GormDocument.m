@@ -471,6 +471,7 @@ static NSImage	*classesImage = nil;
       
       newClassName = [classManager addClassWithSuperClassName:
 				     itemSelected];
+      RETAIN(newClassName);
       [classesView reloadData];
       [classesView expandItem: itemSelected];
       i = [classesView rowForItem: newClassName]; 
@@ -709,7 +710,64 @@ static NSImage	*classesImage = nil;
 
 - (id) remove: (id)sender
 {
-  [classesView removeSelectedItem];
+  int i = [classesView selectedRow];
+  id anitem = [classesView itemAtRow: i];
+  if([anitem isKindOfClass: [GormOutletActionHolder class]])
+    {
+      id itemBeingEdited = [classesView itemBeingEdited];
+      
+      // if the class being edited is a custom class, then allow the deletion...
+      if([classManager isCustomClass: itemBeingEdited])
+	{
+	  if([classesView editType] == Actions)
+	    {
+	      // if this action is an action on the class, not it's superclass
+	      // allow the deletion...
+	      if([classManager isAction: [anitem getName]
+			       ofClass: itemBeingEdited])
+		{
+		  [classManager removeAction: [anitem getName]
+				fromClassNamed: itemBeingEdited];
+		  [classesView removeItemAtRow: i];
+		}
+	    }
+	  else if([classesView editType] == Outlets)
+	    {
+	      // if this outlet is an outlet on the class, not it's superclass
+	      // allow the deletion...
+	      if([classManager isOutlet: [anitem getName]
+			       ofClass: itemBeingEdited])
+		{
+		  [classManager removeOutlet: [anitem getName]
+				fromClassNamed: itemBeingEdited];
+		  [classesView removeItemAtRow: i];
+		}
+	    }
+	}
+    }
+  else
+    {
+      NSArray *subclasses = [classManager subClassesOf: anitem];
+      // if the class has no subclasses, then delete.
+      if([subclasses count] == 0)
+	{
+	  // if the class being edited is a custom class, then allow the deletion...
+	  if([classManager isCustomClass: anitem])
+	    {
+	      [classManager removeClassNamed: anitem];
+	      [classesView reloadData];
+	    }
+	}
+      else
+	{
+	  NSString *message = [NSString stringWithFormat: 
+					  @"The class %@ has subclasses which must be removed", 
+					anitem];
+	  NSRunAlertPanel(@"Problem removing class", 
+			  message,
+			  nil, nil, nil);
+	}
+    }    
   return self;
 }
 
@@ -2216,9 +2274,9 @@ static NSImage	*classesImage = nil;
 }
 
 // --- NSOutlineView dataSource ---
-- (id) outlineView: (NSOutlineView *)anOutlineView 
+- (id)        outlineView: (NSOutlineView *)anOutlineView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	    byItem: item
+	           byItem: item
 {
   if (anOutlineView == classesView)
     {
@@ -2258,14 +2316,45 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  if([anOutlineView editType] == Actions)
 	    {
 	      NSString *formattedAction = [self _formatAction: anObject];
-	      [classManager replaceAction: name withAction: formattedAction forClassNamed: [anOutlineView itemBeingEdited]];
-	      [item setName: formattedAction];
+	      if(![classManager isAction: formattedAction 
+				ofClass: [anOutlineView itemBeingEdited]])
+		{
+		  [classManager replaceAction: name 
+				withAction: formattedAction 
+				forClassNamed: [anOutlineView itemBeingEdited]];
+		  [item setName: formattedAction];
+		}
+	      else
+		{
+		  NSString *message = [NSString stringWithFormat: 
+						  @"The class %@ already has an action named %@",
+						[anOutlineView itemBeingEdited],formattedAction];
+		  NSRunAlertPanel(@"Problem Adding Action",
+				  message,nil,nil,nil);
+				  
+		}
 	    }
 	  else if([anOutlineView editType] == Outlets)
 	    {
 	      NSString *formattedOutlet = [self _formatOutlet: anObject];
-	      [classManager replaceOutlet: name withOutlet: formattedOutlet forClassNamed: [anOutlineView itemBeingEdited]];
-	      [item setName: formattedOutlet];
+	      
+	      if(![classManager isOutlet: formattedOutlet 
+				ofClass: [anOutlineView itemBeingEdited]])
+		{
+		  [classManager replaceOutlet: name 
+				withOutlet: formattedOutlet 
+				forClassNamed: [anOutlineView itemBeingEdited]];
+		  [item setName: formattedOutlet];
+		}
+	      else
+		{
+		  NSString *message = [NSString stringWithFormat: 
+						  @"The class %@ already has an outlet named %@",
+						[anOutlineView itemBeingEdited],formattedOutlet];
+		  NSRunAlertPanel(@"Problem Adding Outlet",
+				  message,nil,nil,nil);
+				  
+		}
 	    }
 	}
     }
@@ -2360,29 +2449,6 @@ numberOfChildrenOfItem: (id)item
       return nil;
     }
   return [classManager addNewOutletToClassNamed: item];
-}
-
-- (void) outlineView: (NSOutlineView)anOutlineView
-	  removeItem: (id)item
-{
-  if([item isKindOfClass: [GormOutletActionHolder class]])
-    {
-      id itemBeingEdited = [classesView itemBeingEdited];
-      if([classesView editType] == Actions)
-	{
-	  [classManager removeAction: [item getName]
-			fromClassNamed: itemBeingEdited];
-	}
-      else if([classesView editType] == Outlets)
-	{
-	  [classManager removeOutlet: [item getName]
-			fromClassNamed: itemBeingEdited];
-	}
-    }
-  else
-    {
-      [classManager removeClassNamed: item];
-    }    
 }
 
 // Delegate methods

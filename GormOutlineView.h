@@ -63,7 +63,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
 - (void) setMenuItem: (NSMenuItem *)item;
 - (void) addAttributeToClass;
 - (GSAttributeType)editType;
-- (void) removeSelectedItem;
+- (void) removeItemAtRow: (int)row;
 @end /* interface of GormOutlineView */
 
 // informal protocol to define necessary methods on
@@ -84,8 +84,6 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
      addNewActionForClass: (id)item;
 - (NSString *)outlineView: (NSOutlineView *)anOutlineView
      addNewOutletForClass: (id)item;
-- (void)outlineView: (NSOutlineView *)anOutlineView
-         removeItem: (id)item;
 @end
 
 @interface NSObject (GormOutlineViewDelegate)

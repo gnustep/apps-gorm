@@ -47,7 +47,7 @@
 }
 - (NSString*) classInspectorClassName
 {
-  return @"GormClassInspector";
+  return @"GormCustomClassInspector";
 }
 - (NSString*) editorClassName
 {
@@ -908,13 +908,4 @@ NSImage	*mVLine = nil;
       [anObject setPostsFrameChangedNotifications: YES];
     }
 }
-@end
-
-// Custom class inspector declaration and definition
-@interface GormCustomClassInspector : IBInspector
-{ 
-}
-@end
-
-@implementation GormCustomClassInspector
 @end

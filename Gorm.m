@@ -304,7 +304,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   RELEASE(palettesManager);
   RELEASE(documents);
   RELEASE(classManager);
-  [super dealloc];
+  //  [super dealloc];
 }
 
 - (id) delete: (id)sender
@@ -753,8 +753,8 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
   [d setObject: @"Gorm" forKey: @"ApplicationName"];
   [d setObject: @"GNUstep Graphical Object Relationship Modeller"
 	forKey: @"ApplicationDescription"];
-  [d setObject: @"Gorm 0.1" forKey: @"ApplicationRelease"];
-  [d setObject: @"0.1 Feb 2000" forKey: @"FullVersionID"];
+  [d setObject: @"Gorm 0.2" forKey: @"ApplicationRelease"];
+  [d setObject: @"0.2 Jul 2002" forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObjects: 
 		  @"Gregory John Casamento <greg_casamento@yahoo.com>",
 		  @"Richard Frith-Macdonald <rfm@gnu.org>",

@@ -107,13 +107,15 @@ Gorm_RESOURCE_FILES = \
 	Images/GormOutlet.tiff \
 	Images/GormActionSelected.tiff \
 	Images/GormOutletSelected.tiff \
-	Resources/GormViewSizeInspector.gorm
+	Resources/GormViewSizeInspector.gorm \
+	Resources/GormCustomClassInspector.gorm
 
 Gorm_HEADERS = \
 	Gorm.h \
 	GormPrivate.h \
 	GormCustomView.h \
-	GormOutlineView.h
+	GormOutlineView.h \
+	GormCustomClassInspector.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -132,7 +134,8 @@ Gorm_OBJC_FILES = \
 	GormClassManager.m \
 	GormInspectorsManager.m \
 	GormPalettesManager.m \
-	GormOutlineView.m
+	GormOutlineView.m \
+	GormCustomClassInspector.m
 
 -include GNUmakefile.preamble
 

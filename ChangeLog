@@ -1,3 +1,25 @@
+2002-07-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormCustomClassInspector.[gorm,classes]: Added.
+	* GormCustomClassInspector.[hm]: Added.	Custom class support is not 
+	fully functional.   I am currently working on it, but I thought 
+	it would be useful to commit the code sooner rather than later.
+	* Gorm.m: Made some fixes to prevent core dump.
+	* GormClassManager.m: Removed some debugging NSLog calls and
+	added logic to prevent the addition of duplication outlets/actions
+	to a class.
+	* GormDocument.m: Finished up the delete functionality.   Added code
+	to show an alert panel when the user tries to add a duplicate outlet/
+	action to the class.
+	* GormOutlineView.m: Added method to allow deletion of a given
+	row directly from the outline view.
+	* GormInspectorsManager.m: Modified to pop up button to show custom
+	class inspector as an option.
+	* GormObjectEditor.m: returns custom class inspector when
+	class1InspectorClassName is called.
+	* IBInspector.m: Removed some code which was causing core dump.
+	
+
 2002-07-21  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: Added some methods to support custom
