@@ -1,3 +1,10 @@
+2002-08-20  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* GormDocument.m: -[GormDocument setSelectionFromEditor:]
+	added conditional to test if a given editor responds to
+	the method window prior to calling makeFirstResponder.  This
+	was causing a problem when adding new classes.
+
 2002-08-17  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/main.m: The scroll view for the table view and

@@ -2115,7 +2115,10 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
-  [[anEditor window] makeFirstResponder: anEditor];
+  if([(id)anEditor respondsToSelector: @selector(window)])
+    {
+      [[anEditor window] makeFirstResponder: anEditor];
+    }
   [nc postNotificationName: IBSelectionChangedNotification
 		    object: anEditor];
 }
