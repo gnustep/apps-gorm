@@ -382,18 +382,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *className = [self _currentClass];
   NSArray *list = [classManager allActionsForClassNamed: className];
   BOOL removed = NO;
+  BOOL isCustom = [classManager isCustomClass: className]; 
   NSString *name = nil;
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   // check the count...
-  if([classManager isCustomClass: className] || 
-     [classManager isCategoryForClass: className])
+  if(isCustom || [classManager isCategoryForClass: className])
     {
       if([list count] > 0 && i >= 0 && i < [list count])
 	{
 	  [actionTable deselectAll: self];
 	  name = [list objectAtIndex: i];
-	  if([classManager isAction: name onCategoryForClassNamed: className])
+	  if(isCustom || [classManager isAction: name onCategoryForClassNamed: className])
 	    {
 	      removed = [document 
 			  removeConnectionsWithLabel: name 

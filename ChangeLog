@@ -1,3 +1,8 @@
+2004-11-07 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: [GormClassManager removeAction:]
+	added code to check for a custom class.
+	
 2004-11-07 14:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Added entry for NSObject.
