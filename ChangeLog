@@ -1,3 +1,9 @@
+2005-02-14 01:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/OCIVarDecl.m: Corrected problem with
+	reading declarations which have the "*" spaced oddly.  Problem
+	reported by Nicolas Roard.
+
 2005-02-13 09:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: After gmodel load, mark the document as

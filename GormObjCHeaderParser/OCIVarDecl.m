@@ -63,6 +63,7 @@
   NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
   NSString *resultString = nil;
   NSString *tempString = [NSString stringWithString: @""];
+  NSString *tempString2 = [NSString stringWithString: @""];
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
   NSString *typeName = [NSString stringWithString: @""];
   NSString *varName = [NSString stringWithString: @""];
@@ -78,10 +79,28 @@
 	}
     }
 
-  // strip protocol qualifiers
-  if(lookAhead(tempString,@"<"))
+  if(lookAhead(tempString, @"*"))
     {
       stripScanner = [NSScanner scannerWithString: tempString];
+      while(![stripScanner isAtEnd])
+	{
+	  NSString *string = nil, *string2 = nil;
+	  [stripScanner scanUpToString: @"*" intoString: &string];
+	  [stripScanner scanString: @"*" intoString: NULL];
+	  [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string2];
+	  tempString2 = [tempString2 stringByAppendingString: string];
+	  tempString2 = [tempString2 stringByAppendingString: string2];
+	}
+    }
+  else
+    {
+      tempString2 = tempString;
+    }
+  
+  // strip protocol qualifiers
+  if(lookAhead(tempString2,@"<"))
+    {
+      stripScanner = [NSScanner scannerWithString: tempString2];
       [stripScanner scanUpToString: @"<" intoString: &typeName];
       [stripScanner scanUpToAndIncludingString: @">" intoString: NULL];
       [stripScanner scanUpToCharactersFromSet: wsnl intoString: &varName];
@@ -91,7 +110,7 @@
     }
   else
     {
-      resultString = tempString;
+      resultString = tempString2;
     }
 
   ASSIGN(ivarString, resultString);
