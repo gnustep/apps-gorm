@@ -1,0 +1,14 @@
+@c -*-texinfo-*-
+
+@ifset TEXT-ONLY
+@include version.texi
+@end ifset
+
+Version 0.0.1
+
+@itemize @bullet
+
+@item Pre-pre-alpha
+
+@end itemize
+

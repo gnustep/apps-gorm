@@ -1,0 +1,219 @@
+\input texinfo @c -*-texinfo-*-
+
+@c %**start of header
+@settitle Guide to the Gorm application
+@setfilename gstep_guile.info
+@c %**end of header
+@defcodeindex cl
+@defcodeindex pr
+@ignore
+I'm using cindex for concepts, findex for procedures and macros.
+@end ignore
+
+@include version.texi
+
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+* Gorm::                      The GNUstep Graphical Object Relationship Modeler
+END-INFO-DIR-ENTRY
+@end format
+@end ifinfo
+
+@ifinfo
+This file documents the features and implementation of the Gorm
+application.
+
+Copyright (C) 1999,2000 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through @TeX{} and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU Library General Public License'' is included exactly as
+in the original, and provided that the entire resulting derived work is
+distributed under the terms of a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU Library General Public License'' and
+this permission notice may be included in translations approved by the
+Free Software Foundation instead of in the original English.
+@end ifinfo
+
+@iftex
+@finalout
+@c @smallbook
+@c @cropmarks
+@end iftex
+
+@setchapternewpage odd
+
+@titlepage
+@title Guide to the
+@title Gorm application
+@sp 3
+@c @subtitle last updated December, 1998
+@subtitle Version @value{GORM-VERSION}
+@subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION}
+@author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1999 Free Software Foundation, Inc.
+
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU Library General Public License'' is included exactly as
+in the original, and provided that the entire resulting derived work is
+distributed under the terms of a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU Library General Public License'' may be
+included in a translation approved by the author instead of in the original
+English.
+
+@strong{Note: The GNUstep-Guile library is in alpha release. You will
+be performing a valuable service if you report any bugs you encounter.}
+
+@end titlepage
+
+@node Top, Copying, , 
+
+@menu
+* Copying::	    GNU Library Public License says how you can copy
+                    and share Gorm.
+* Contributors::    People who have contributed to Gorm.
+* Installation::    How to build and install Gorm.
+* News::	    The latest changes to Gorm.
+
+* Overview::        Gorm in brief.
+* Implementation::  Implementation notes.
+
+* Concept Index::
+@end menu
+
+@node Copying, Contributors, Top, Top
+@unnumbered Copying
+
+See the file @samp{COPYING}.
+
+@node Contributors, Installation, Copying, Top
+@unnumbered Contributors to Gorm
+
+@itemize @bullet
+@item
+Richard Frith-Macdonald <richard@@brainstorm.co.uk> wrote
+Gorm as part of the GNUstep project.
+
+@end itemize
+
+@node Installation, News, Contributors, Top
+@chapter Installing Gorm
+
+@include install.texi
+
+@node News, Overview, Installation, Top
+@chapter News
+
+@include news.texi
+
+@subsection To Do
+
+
+@itemize @bullet
+
+@item Add more inspectors
+
+@item Add more editors
+
+@item Add support for matrix
+
+@item Add support for grouping in box/scrollview
+
+@end itemize
+
+
+@node Overview, Implementation, News, Top
+@chapter Overview
+
+Gorm is an application for creating the user interface (and possibly entire
+applications) for a GNUstep application.
+
+You can find out more about GNUstep at
+@url{http://www.gnustep.org}@*
+
+@subsection Major features
+@cindex features
+
+@itemize bullet
+@item
+Direct on-screen manipulation of GUI elements
+
+@item
+Ineractive test mode for interfaces under development.
+
+@end itemize
+
+@node Implementation, Concept Index, Overview, Top
+@chapter Implementation
+
+Notes on implementation
+
+The IB documentation on how object selection is managed and how editors and
+inspectors are used is unclear ... so I've gone my own way.
+
+1. When a document is loaded, the document object creates an editor attached
+to each top-level object in the user interface (NSMenu and NSWindow objects).
+
+These editors must be aware of their edited objects being clicked upon, and
+clicking on one of these should cause the corresponding editor to become the
+active editor.
+
+The active editor is responsible for handling selection of the edited object
+(and any objects below it in the object hierarchy).  Upon change of selection,
+the editor is responsible for sending an IBSelectionChangedNotification with
+the selection owner (normally the editor itsself) as the notification owner.
+
+The main application watches for these notifications in order to keep track
+of who has the selection.
+
+
+
+Connections
+
+The connection API is the same as that for IB, but with the extension that the
+document object must implement [-windowAndRect:forObject:] to return the
+window in which the object is being displayed, and the rectangle enclosing
+the object (in window base coordinates).
+
+This information is neede by Gorm so that it can mark the connection.
+
+The editors mananging the drag-and-drop operation for a connection must call
+[NSApp -displayConnectionBetween:and:] to tell Gorm to update its display.
+This method sets the values currently returned by
+[BSApp -connectSource] and [NSApp -connectDestination]
+
+
+@node Concept Index, , Implementation, Top
+@unnumbered Concept Index
+@printindex cp
+
+@summarycontents
+@contents
+
+@bye

@@ -1,0 +1,53 @@
+@c -*-texinfo-*-
+
+@ifset TEXT-ONLY
+@include version.texi
+@end ifset
+
+@subsection Required software
+
+@itemize @bullet
+
+@item Gorm	@*
+Available by anonymous cvs -
+
+CVSROOT=":pserver:anoncvs@@cvs.net-community.com:/gnustep"@*
+export CVSROOT@*
+cvs login (password is `anoncvs')@*
+cvs -z3 checkout dev-apps
+
+@item gstep-core-@value{GNUSTEP-VERSION}	@*
+Available from 
+@url{ftp://ftp.gnu.org/gnu/gstep} or see
+@url{http://www.gnustep.org/} for further information.
+
+@item gcc-2.8.*@*
+Gcc should be available from any GNU ftp site @*
+You may also use a recent version of egcs. @*
+NB. For debugging, you need gdb-4.17 with the objc patch.
+The patch for gdb-4.17 is available at
+@url{ftp://alpha.gnu.org/gnu/gnustep/contrib/} @*
+
+@end itemize
+
+
+@subsection Build and Install
+
+@itemize @bullet
+
+@item Make sure you have gcc-2.8.* installed.
+
+@item Make sure you have gstep-core-@value{GNUSTEP-VERSION} (or later)
+installed and have your account properly set up to use GNUstep.sh from
+the gstep-make package to set up your environment.
+
+@item To build Gorm, simply type 'make'
+
+@end itemize
+
+
+@subsection Trouble
+
+Try to fix the problem.  Send patches to <richard@@brainstorm.co.uk>.
+
+
