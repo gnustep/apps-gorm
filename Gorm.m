@@ -775,6 +775,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  // reset the application after the error.
 	  NSLog(@"Error while testing interface: %@", 
 		[localException reason]);
+	  NSRunAlertPanel(NULL, [NSString stringWithFormat: @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
+					  [localException reason]], 
+			  _(@"OK"), NULL, NULL);
 	  [self endTesting: self];
 	}
       NS_ENDHANDLER;

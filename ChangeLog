@@ -1,3 +1,11 @@
+2004-06-10 01:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm testInterface] added code in the exception
+	handler to show an alert panel when an exception occurs along
+	with a warning (and the actual exception, of course).  This
+	allows users to see what the issue was when trying to test
+	the interface.
+	
 2004-06-07 23:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: [GormConnectionInspector setObject:]
