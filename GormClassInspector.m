@@ -373,9 +373,16 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [classManager allClassNames];
   int row = [parentClass selectedRow];
   NSString *newParent = [list objectAtIndex: row];
+  BOOL removed = NO;
+
   [classManager setSuperClassNamed: newParent forClassNamed: [self _currentClass]];
-  [nc postNotificationName: IBInspectorDidModifyObjectNotification
-		    object: classManager];
+  removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
+			     removeConnectionsForClassNamed: [self _currentClass]]; 
+  if(removed)
+    {
+      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	  object: classManager];
+    }
 }
 
 - (void) clickOnClass: (id)sender
