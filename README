@@ -87,3 +87,26 @@ Once these are done, the object editor needs to be made to support connections
 so that we can connect between objects other than views, then we need to write
 a menu editor.
 
+22 December 1999
+
+Connections inspector is now working - but it needs some effort to tidy it up.
+Class info (outlets and actions) is specified in 'ClassInformation.plist'
+and needs to be present so that the app knows what outlets/actions an object
+has (and therefore what connections can be made).
+
+The view size inspector is working - allowing you to set the size of the
+subviews within a window.
+
+The attributes inspector for 'FilesOwner' is working, so you can define the
+class of the files owner (it defaults to NSApplication).
+
+There is a crude panel for setting the name of the selected object.
+
+I've created a couple of new images and got rid of thh two NeXT images that
+were lurking in there.
+
+There is a Testing directory, with a GormTest application that lets you load
+a nib for testing - it assumes that the nib will set its FilesOwners delegate
+to point to a window, and makes that window the key window ...
+
+

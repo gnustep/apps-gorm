@@ -1091,7 +1091,7 @@ static NSImage	*classesImage = nil;
     {
       if ([connections indexOfObjectIdenticalTo: con] != NSNotFound)
 	{
-	  NSLog(@"Argh - not all editor linkss removed");
+	  NSLog(@"Argh - not all editor links removed");
 	  break;
 	}
     }

@@ -37,6 +37,7 @@
 {
   NSArray	*fileTypes = [NSArray arrayWithObject: @"nib"];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  id		oldDelegate = [NSApp delegate];
   int		result;
 
   [oPanel setAllowsMultipleSelection: NO];
@@ -51,6 +52,21 @@
 	  externalNameTable:
 	[NSDictionary dictionaryWithObject: NSApp forKey: @"NSOwner"]
 		   withZone: NSDefaultMallocZone()];
+      if ([NSApp delegate] == oldDelegate)
+	{
+	  NSRunAlertPanel(NULL,
+	    [NSString stringWithFormat: @"Nib did not set app delegate"],
+	     @"OK", NULL, NULL);
+	  return nil;
+	}
+      if ([[NSApp delegate] isKindOfClass: [NSWindow class]] == NO)
+	{
+	  NSRunAlertPanel(NULL,
+	    [NSString stringWithFormat:
+	      @"Nib set app delegate to something other than a window"],
+	      @"OK", NULL, NULL);
+	  return nil;
+	}
       [[NSApp delegate] makeKeyAndOrderFront: self];
       return self;
     }

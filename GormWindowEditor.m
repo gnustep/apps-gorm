@@ -171,6 +171,11 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 @implementation	GormWindowEditor
 
+- (void) encodeWithCoder: (NSCoder*)aCoder
+{
+  NSLog(@"Argh - encoding window editor!");
+  [super encodeWithCoder: aCoder];
+}
 /*
  *	Intercepting events in the view and handling them
  */
