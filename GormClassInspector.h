@@ -39,8 +39,12 @@
   id addOutlet;
   id classField;
   id outletTable;
+  id parentClass;
   id removeAction;
   id removeOutlet;
+  id selectClass;
+  id search;
+  id searchText;
   id tabView;
 
   // internal vars
@@ -48,6 +52,7 @@
   id theobject;
   id actionData;
   id outletData;
+  id parentClassData;
 
   // class manager..
   GormClassManager *classManager;
@@ -57,6 +62,8 @@
 - (void) addOutlet: (id)sender;
 - (void) removeOutlet: (id)sender;
 - (void) select: (id)sender;
+- (void) searchForClass: (id)sender;
+- (void) selectClass: (id)sender;
 - (NSString *) _currentClass;
 - (void) _refreshView;
 - (void) handleNotification: (NSNotification *)notification;

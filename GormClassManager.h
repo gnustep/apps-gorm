@@ -73,6 +73,7 @@
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
+- (NSString *)parentOfClass: (NSString *)aClass;
 
 // class methods
 // Maps internally used names to actual names.

@@ -1,3 +1,12 @@
+2004-02-12 02:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Added new ivars/methods to support
+	the new table for the feature mentioned in Report #7579.
+	Basically it allows the user to change the parent class of
+	of the currently selected class.  This is similar to feature
+	which existed a while back, but was removed because it was
+	very buggy.  Thanks to Stefan for suggesting this. GJC
+	
 2004-02-09 22:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.6.0

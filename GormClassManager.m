@@ -1027,6 +1027,12 @@
 
 }
 
+- (NSString *)parentOfClass: (NSString *)aClass
+{
+  NSDictionary *dictForClass = [classInformation objectForKey: aClass];
+  return [dictForClass objectForKey: @"Super"];
+}
+
 - (BOOL) saveToFile: (NSString*)path
 {
   NSMutableDictionary	*ci;

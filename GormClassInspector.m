@@ -50,6 +50,13 @@ NSNotificationCenter *nc = nil;
 - (void) setInspector: (id)ins;
 @end
 
+@interface GormClassesDataSource : NSObject
+{
+  id inspector;
+}
+- (void) setInspector: (id)ins;
+@end
+
 @implementation GormOutletDataSource 
 - (int) numberOfRowsInTableView: (NSTableView *)tv
 {
@@ -129,6 +136,41 @@ objectValueForTableColumn: (NSTableColumn *)tc
 }
 @end
 
+@implementation GormClassesDataSource 
+- (int) numberOfRowsInTableView: (NSTableView *)tv
+{
+  NSArray *list = [[(Gorm *)NSApp classManager] allClassNames];
+  return [list count];
+}
+
+- (id)          tableView: (NSTableView *)tv
+objectValueForTableColumn: (NSTableColumn *)tc
+	              row: (int)rowIndex
+{
+  NSArray *list = [[(Gorm *)NSApp classManager] allClassNames];
+  id value = nil;
+  if([list count] > 0)
+    {
+      value = [list objectAtIndex: rowIndex];
+    }
+  return value;
+}
+
+- (void) tableView: (NSTableView *)tv
+    setObjectValue: (id)anObject
+    forTableColumn: (NSTableColumn *)tc
+	       row: (int)rowIndex
+{
+  // cannot replace any values for this data source...
+}
+
+// set methods
+- (void) setInspector: (id)ins
+{
+  ASSIGN(inspector, ins);
+}
+@end
+
 @implementation GormClassInspector
 + (void) initialize
 {
@@ -155,6 +197,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
       currentClass = nil;
       actionData = nil;
       outletData = nil;
+      parentClassData = nil;
 
       // load the gui...
       if (![NSBundle loadNibNamed: @"GormClassInspector"
@@ -178,18 +221,23 @@ objectValueForTableColumn: (NSTableColumn *)tc
   // instantiate..
   actionData = [[GormActionDataSource alloc] init];
   outletData = [[GormOutletDataSource alloc] init];
+  parentClassData = [[GormClassesDataSource alloc] init];
 
   // initialize..
   [actionData setInspector: self];
   [outletData setInspector: self];
+  [parentClassData setInspector: self];
 
   // use..
   [actionTable setDataSource: actionData];
   [outletTable setDataSource: outletData];
+  [parentClass setDataSource: parentClassData];
+  [parentClass setDoubleAction: @selector(selectClass:)];
 
   // delegate...
   [actionTable setDelegate: self];
   [outletTable setDelegate: self];
+  [parentClass setDelegate: self];
 }
 
 - (void) _refreshView
@@ -198,12 +246,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   id removeActionCell = [removeAction cell];
   id addOutletCell = [addOutlet cell];
   id removeOutletCell = [removeOutlet cell];
+  id selectClassCell = [selectClass cell];
+  id searchCell = [search cell];
   BOOL isCustom = [classManager isCustomClass: [self _currentClass]];
   BOOL isFirstResponder = [[self _currentClass] isEqualToString: @"FirstResponder"];
+  NSArray *list = [classManager allClassNames];
+  NSString *superClass = [classManager parentOfClass: [self _currentClass]];
+  int index = [list indexOfObject: superClass];
 
   [classField setStringValue: [self _currentClass]];
   [outletTable reloadData];
   [actionTable reloadData];
+  [parentClass reloadData];
 
   // activate for actions...
   [addActionCell setEnabled: isCustom];
@@ -212,11 +266,20 @@ objectValueForTableColumn: (NSTableColumn *)tc
   // activate for outlet...
   [addOutletCell setEnabled: (isCustom && !isFirstResponder)];
   [removeOutletCell setEnabled: (isCustom && !isFirstResponder)];
+
+  // activate select class...
+  [selectClassCell setEnabled: (isCustom && !isFirstResponder)];
+  [parentClass setEnabled: (isCustom && !isFirstResponder)];
+  [searchCell setEnabled: (isCustom && !isFirstResponder)];
+  
+  // select the parent class
+  [parentClass selectRow: index byExtendingSelection: NO];
+  [parentClass scrollRowToVisible: index];
 }
 
 - (void) addAction: (id)sender
 {
-  [[(Gorm *)NSApp classManager] addNewActionToClassNamed: [self _currentClass]];
+  [classManager addNewActionToClassNamed: [self _currentClass]];
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [actionTable reloadData];
@@ -224,7 +287,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addOutlet: (id)sender
 {
-  [[(Gorm *)NSApp classManager] addNewOutletToClassNamed: [self _currentClass]];  
+  [classManager addNewOutletToClassNamed: [self _currentClass]];  
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [outletTable reloadData];
@@ -234,7 +297,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   int i = [actionTable selectedRow];
   NSString *className = [self _currentClass];
-  NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: className];
+  NSArray *list = [classManager allActionsForClassNamed: className];
   BOOL removed = NO;
   NSString *name = nil;
 
@@ -250,7 +313,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   if(removed)
     {
-      [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: className];
+      [classManager removeAction: name fromClassNamed: className];
       
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
@@ -262,7 +325,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   int i = [outletTable selectedRow];
   NSString *className = [self _currentClass];
-  NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: className];
+  NSArray *list = [classManager allOutletsForClassNamed: className];
   BOOL removed = NO;
   NSString *name = nil;
 
@@ -278,7 +341,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   if(removed)
     {
-      [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: className];
+      [classManager removeOutlet: name fromClassNamed: className];
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
       [outletTable reloadData];
@@ -288,6 +351,36 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) select: (id)sender
 {
   NSLog(@"select...");
+}
+
+- (void) searchForClass: (id)sender
+{
+  NSArray *list = [classManager allClassNames];
+  NSString *stringValue = [searchText stringValue];
+  int index = [list indexOfObject: stringValue];
+
+  NSLog(@"Search... %@",[searchText stringValue]);
+  if(index != NSNotFound && [stringValue isEqualToString: @"FirstResponder"] == NO)
+    {
+      // select the parent class
+      [parentClass selectRow: index byExtendingSelection: NO];
+      [parentClass scrollRowToVisible: index];
+    }
+}
+
+- (void) selectClass: (id)sender
+{
+  NSArray *list = [classManager allClassNames];
+  int row = [parentClass selectedRow];
+  NSString *newParent = [list objectAtIndex: row];
+  [classManager setSuperClassNamed: newParent forClassNamed: [self _currentClass]];
+  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		    object: classManager];
+}
+
+- (void) clickOnClass: (id)sender
+{
+  NSLog(@"Click on class %@",sender);
 }
 
 - (void) setObject: (id)anObject
@@ -317,37 +410,62 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 		  row: (int)rowIndex
 {
   BOOL result = NO;
-  NSArray *list = nil;
-  NSString *name = nil;
-  NSTabViewItem *tvi = [tabView selectedTabViewItem];
-  BOOL isAction = [[tvi identifier] isEqualToString: @"Actions"];
-  NSString *className = [self _currentClass];
-  // id classManager = [(Gorm *)NSApp classManager];
 
-  if(isAction)
+  if(tableView != parentClass)
     {
-      list = [classManager allActionsForClassNamed: className];
-      name = [list objectAtIndex: rowIndex];
-    }
-  else
-    {
-      list = [classManager allOutletsForClassNamed: className];
-      name = [list objectAtIndex: rowIndex];
-    }
-  
-  if([classManager isCustomClass: className])
-    {
-      if (isAction)
+      NSArray *list = nil;
+      NSString *name = nil;
+      NSTabViewItem *tvi = [tabView selectedTabViewItem];
+      BOOL isAction = [[tvi identifier] isEqualToString: @"Actions"];
+      NSString *className = [self _currentClass];
+      // id classManager = [(Gorm *)NSApp classManager];
+      
+      if(isAction)
 	{
-	  result = [classManager isAction: name
-				 ofClass: className];
+	  list = [classManager allActionsForClassNamed: className];
+	  name = [list objectAtIndex: rowIndex];
 	}
-      else 
+      else
 	{
-	  result = [classManager isOutlet: name
-				 ofClass: className];
-	}	       
+	  list = [classManager allOutletsForClassNamed: className];
+	  name = [list objectAtIndex: rowIndex];
+	}
+      
+      if([classManager isCustomClass: className])
+	{
+	  if (isAction)
+	    {
+	      result = [classManager isAction: name
+				     ofClass: className];
+	    }
+	  else 
+	    {
+	      result = [classManager isOutlet: name
+				     ofClass: className];
+	    }	       
+	}
+    }
+
+  return result;
+}
+
+- (BOOL) tableView: (NSTableView *)tv
+   shouldSelectRow: (int)rowIndex
+{
+  BOOL result = YES;
+  if(tv == parentClass)
+    {
+      NSArray *list = [classManager allClassNames];
+      NSString *className = [list objectAtIndex: rowIndex];
+      BOOL isFirstResponder = [className isEqualToString: @"FirstResponder"];
+      BOOL isCurrentClass = [className isEqualToString: [self _currentClass]];
+      if(isFirstResponder || isCurrentClass)
+	{
+	  NSBeep();
+	  result = NO;
+	}
     }
   return result;
 }
+
 @end

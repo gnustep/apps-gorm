@@ -140,7 +140,10 @@
 	    "yank:",
 	    "zoom:",
 	    "removeOutlet:",
-	    "addOutlet:"
+	    "addOutlet:",
+	    "selectClass:",
+	    "searchForClass:",
+	    "clickOnClass:"
 	);
 	Super = NSObject;
     };
@@ -150,7 +153,10 @@
 	    "removeAction:",
 	    "addAction:",
 	    "removeOutlet:",
-	    "addOutlet:"
+	    "addOutlet:",
+	    "selectClass:",
+	    "searchForClass:",
+	    "clickOnClass:"
 	);
 	Outlets = (
 	    classField,
@@ -160,7 +166,11 @@
 	    actionTable,
 	    outletTable,
 	    removeAction,
-	    addOutlet
+	    addOutlet,
+	    selectClass,
+	    parentClass,
+	    search,
+	    searchText
 	);
 	Super = IBInspector;
     };
