@@ -1,3 +1,7 @@
+2002-01-29  Adam Fedor  <fedor@gnu.org>
+
+	* ClassInformation.plist: Update (I forgot who sent me this...).
+
 2002-01-13  Adam Fedor  <fedor@gnu.org>
 
 	* GormDocument.m ([GormDocument -init]): Autorelease objectsView.

@@ -15,9 +15,42 @@
     Outlets = (
       delegate
     );
+    Actions = (
+        "arrangeInFront:",
+        "hide:",
+        "hideOtherApplications:",
+        "miniaturizeAll:",
+        "orderFrontColorPanel:",
+        "orderFrontDataLinkPanel:",
+        "orderFrontHelpPanel:",
+        "orderFrontStandardAboutPanel:",
+        "orderFrontStandardInfoPanel:",
+        "runPageLayout:",
+        "stop:",
+        "terminate:",
+        "unhide:",
+        "unhideAllApplications:"
+    );
   };
   NSButton = {
     Super = NSControl;
+  };
+  NSBrowser = 
+  {
+    Outlets = (
+      delegate
+    );
+    Super = NScontrol;
+    Actions = (
+        "doClick:",
+        "doDoubleClick:"
+    );
+  };
+  NSColorWell = {
+    Super = NSControl;
+    Actions = (
+        "takeColorFrom:"
+    );
   };
   NSControl = {
     Actions = (
@@ -32,6 +65,62 @@
     );
     Super = NSView;
   };
+  NSDocumentController = 
+  {
+    Super = NSObject;
+    Actions = (
+      "saveAllDocuments:",
+      "openDocument:",
+      "newDocument:",
+      "clearRecentDocuments:"
+    );
+  };
+  NSDocument = 
+  {
+    Super = NSObject;
+    Actions = (
+        "runPageLayout:",
+        "printDocument:",
+        "saveDocument:",
+        "saveDocumentAs:",
+        "saveDocumentTo:",
+        "revertDocumentToSaved:"
+    );
+  };
+  NSDrawer = 
+  {
+    Super = NSResponder;
+    Actions = (
+        "close:",
+        "open:",
+        "toggle:"
+    );
+    Outlets = (
+      delegate
+    );
+  };
+  NSFontManager = 
+  {
+    Super = NSResponder;
+    Actions = (
+        "addFontTrait:",
+        "removeFontTrait:",
+        "modifyFont:",
+        "modifyFontViaPanel:",
+        "orderFrontFontPanel:"
+    );
+  };
+
+  NSHelpManager = 
+  {
+    Super = NSResponder;
+    Actions = (
+        "showHelp:",
+        "activateContextHelpMode:"
+    );
+  };
+  
+
   NSMenu = {
     Super = NSObject;
   };
@@ -44,25 +133,141 @@
   NSPanel = {
     Super = NSWindow;
   };
+  NSProgressIndicator = {
+    Super = NSObject;
+    Actions = (
+        "animate:",
+        "startAnimation:",
+        "stopAnimation:"
+    );
+  };
+  
   NSSlider = {
     Super = NSControl;
   };
+  
   NSTextField = {
     Outlets = (
       delegate
     );
     Super = NSControl;
   };
+
   NSResponder = {
     Super = NSObject;
+    Actions = (
+        "selectAll:",
+        "deselectAll:",
+        "selectText:"
+    );
   };
+
+  NSTabView = {
+    Super = NSView;
+    Actions = (
+        "selectFirstTabViewItem:",
+        "selectLastTabViewItem:",
+        "selectNextTabViewItem:",
+        "selectPreviousTabViewItem:",
+        "takeSelectedTabViewItemFromSender:"
+    );
+    Outlets = (
+      delegate
+    );
+  };
+
+  NSText = {
+    Super = NSView;
+    Actions = (
+        "toggleRuler:",
+        "copy:",
+        "copyFont:",
+        "copyRuler:",
+        "cut:",
+        "delete:",
+        "paste:",
+        "pasteFont:",
+        "pasteRuler:",
+        "selectAll:",
+        "changeFont:",
+        "alignCenter:",
+        "alignLeft:",
+        "alignRight:",
+        "subscript:",
+        "superscript:",
+        "underline:",
+        "unscript:",
+        "checkSpelling:",
+        "showGuessPanel:",
+        "changeSpelling:",
+        "ignoreSpelling:"
+    );
+    Outlets = (
+      delegate
+    );
+  };
+
+  NSTextView = {
+    Super = NSText;
+    Actions = (
+        "changeColor:",
+        "alignJustified:",
+        "pasteAsPlainText:",
+        "pasteAsRichText:",
+        "turnOffKerning:",
+        "tightenKerning:",
+        "loosenKerning:",
+        "useStandardKerning:",
+        "turnOffLigatures:",
+        "useStandardLigatures:",
+        "useAllLigatures:",
+        "raiseBaseline:",
+        "lowerBaseline:",
+        "toggleTraditionalCharacterShape:",
+        "toggleContinuousSpellChecking:"
+    );
+  };
+    
   NSView = {
     Super = NSResponder;
+    Actions = (
+        "fax:",
+        "print:"
+    );
   };
+  
   NSWindow = {
     Outlets = (
       delegate
     );
     Super = NSResponder;
+    Actions = (
+        "performZoom:",
+        "zoom:",
+        "orderBack:",
+        "orderFront:",
+        "orderOut:",
+        "makeKeyAndOrderFront:",
+        "selectNextKeyView:",
+        "selectPreviousKeyView:",
+        "performClose:",
+        "deminiaturize:",
+        "miniaturize:",
+        "performMiniaturize:",
+        "fax:",
+        "print:",
+        "toggleToolbarShown:",
+        "runToolbarCustomizationPalette:"
+    );
   };
+  NSWindowController = {
+    Outlets = (
+      document
+    );
+    Super = NSResponder;
+    Actions = (
+        "showWindow:"
+    );
+  };
+
 }
