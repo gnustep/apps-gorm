@@ -155,7 +155,8 @@
 	    selectionBox,
 	    window,
 	    filePrefsView,
-	    filePrefsManager
+	    filePrefsManager,
+	    filePrefsWindow
 	);
 	Super = GSNibContainer;
     };

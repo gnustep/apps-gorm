@@ -1090,6 +1090,7 @@ static NSImage  *fileImage = nil;
 
   // NSLog(@"window = %@",window);
   RELEASE(window);
+  RELEASE(filePrefsWindow);
   [super dealloc];
 }
 

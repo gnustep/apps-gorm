@@ -73,6 +73,7 @@
   BOOL                  isOlderArchive;
   id                    filePrefsView;
   id                    filePrefsManager;
+  NSWindow              *filePrefsWindow;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
