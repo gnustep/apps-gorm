@@ -1,3 +1,9 @@
+2003-10-12 01:49 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added code to help with copy/paste issue.
+	* GormInspectorsManager.m: Added code to do addional checks to
+	ensure that the user cannot make erroneous connections.
+
 2003-10-08 01:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added include for GSNibTemplates.h removed some

@@ -575,7 +575,8 @@ static NSImage	*classesImage = nil;
   NSEnumerator	*enumerator;
   NSMutableSet	*editors;
   id		obj;
-  NSData	*data;
+  NSMutableData	*data;
+  NSArchiver    *archiver;
 
   /*
    * Remove all editors from the selected objects before archiving
@@ -593,7 +594,15 @@ static NSImage	*classesImage = nil;
 	  [editor deactivate];
 	}
     }
-  data = [NSArchiver archivedDataWithRootObject: anArray];
+
+  // encode the data
+  data = [NSMutableData dataWithCapacity: 0];
+  archiver = [[NSArchiver alloc] initForWritingWithMutableData: data];
+  [archiver encodeClassName: @"GormCustomView" 
+	    intoClassName: @"GSCustomView"];
+  [archiver encodeRootObject: anArray];
+
+  // reactivate
   enumerator = [editors objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {

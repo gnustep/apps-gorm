@@ -1067,7 +1067,19 @@ selectCellWithString: (NSString*)title
 	  if ([[currentConnector source] isKindOfClass: 
 		   [GormObjectProxy class]] == NO)
 	  {
+	    // prevent invalid connections from being made...
+	    NS_DURING
 	      [currentConnector establishConnection];
+	    NS_HANDLER
+	      NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
+					[localException reason]];
+	      // get rid of the bad connector and recover.
+	      [[currentConnector source] setTarget: nil]; // unset these values on the source.
+	      [[currentConnector source] setAction: nil]; // ibid.
+	      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
+	      NSRunAlertPanel(_(@"Problem making connection"), msg,
+			      _(@"OK"),nil,nil,nil);
+	    NS_ENDHANDLER
 	  }
 	}
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
@@ -1123,6 +1135,8 @@ selectCellWithString: (NSString*)title
 	    NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
 				      [localException reason]];
 	    // get rid of the bad connector and recover.
+	    [[currentConnector source] setTarget: nil]; // unset these values on the source.
+	    [[currentConnector source] setAction: nil]; // ibid.
 	    [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
 	    NSRunAlertPanel(_(@"Problem making connection"), msg,
 			    _(@"OK"),nil,nil,nil);
