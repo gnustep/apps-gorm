@@ -866,6 +866,108 @@ static NSImage	*classesImage = nil;
  * NB. This assumes we have an empty document to start with - the loaded
  * document is merged in to it.
  */
+- (id) loadDocument: (NSString*)aFile
+{
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSMutableDictionary	*nt;
+  NSData		*data;
+  NSUnarchiver		*u;
+  GSNibContainer	*c;
+  NSEnumerator		*enumerator;
+  id <IBConnectors>	con;
+  NSString		*name;
+
+  data = [NSData dataWithContentsOfFile: aFile];
+  if (data == nil)
+    {
+      NSRunAlertPanel(NULL,
+	[NSString stringWithFormat: @"Could not read '%@' data", aFile],
+	 @"OK", NULL, NULL);
+      return nil;
+    }
+
+  /*
+   * Create an unarchiver, and use it to unarchive the nib file while
+   * handling class replacement so that standard objects understood
+   * by the gui library are converted to their Gorm internal equivalents.
+   */
+  u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
+  [u decodeClassName: @"GSNibContainer"
+	 asClassName: @"GormDocument"];
+  c = [u decodeObject];
+  if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
+    {
+      NSRunAlertPanel(NULL, @"Could not unarchive document data", 
+		       @"OK", NULL, NULL);
+      return nil;
+    }
+
+  /*
+   * In the newly loaded nib container, we change all the connectors
+   * to hold the objects rather than their names (using our own dummy
+   * object as the 'NSOwner'.
+   */
+  [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
+  [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
+  nt = [c nameTable];
+  enumerator = [[c connections] objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString  *name;
+      id        obj;
+
+      name = (NSString*)[con source];
+      obj = [nt objectForKey: name];
+      [con setSource: obj];
+      name = (NSString*)[con destination];
+      obj = [nt objectForKey: name];
+      [con setDestination: obj];
+    }
+
+  /*
+   * Now we merge the objects from the nib container into our own data
+   * structures, taking care not to overwrite our NSOwner and NSFirst.
+   */
+  [nt removeObjectForKey: @"NSOwner"];
+  [nt removeObjectForKey: @"NSFirst"];
+  [connections addObjectsFromArray: [c connections]];
+  [nameTable addEntriesFromDictionary: nt];
+
+  /*
+   * Now we build our reverse mapping information and other initialisation
+   */
+  NSResetMapTable(objToName);
+  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
+  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
+  enumerator = [nameTable keyEnumerator];
+  while ((name = [enumerator nextObject]) != nil)
+    {
+      id	obj = [nameTable objectForKey: name];
+
+      NSMapInsert(objToName, (void*)obj, (void*)name);
+
+      if ([obj isKindOfClass: [NSWindow class]] == YES
+       || [obj isKindOfClass: [NSMenu class]] == YES)
+	{
+	  [objectsView addObject: obj];
+	  [[self openEditorForObject: obj] activate];
+	}
+    }
+
+  /*
+   * Finally, we set our new file name
+   */
+  ASSIGN(documentPath, aFile);
+  [window setTitleWithRepresentedFilename: documentPath];
+  [nc postNotificationName: IBDidOpenDocumentNotification
+		    object: self];
+  return self;
+}
+
+/*
+ * NB. This assumes we have an empty document to start with - the loaded
+ * document is merged in to it.
+ */
 - (id) openDocument: (id)sender
 {
   NSArray	*fileTypes;
@@ -888,101 +990,7 @@ static NSImage	*classesImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSMutableDictionary	*nt;
-      NSString		*aFile = [oPanel filename];
-      NSData		*data;
-      NSUnarchiver	*u;
-      GSNibContainer	*c;
-      NSEnumerator	*enumerator;
-      id <IBConnectors>	con;
-      NSString		*name;
-
-      data = [NSData dataWithContentsOfFile: aFile];
-      if (data == nil)
-	{
-	  NSRunAlertPanel(NULL,
-	    [NSString stringWithFormat: @"Could not read '%@' data", aFile],
-	     @"OK", NULL, NULL);
-	  return nil;
-	}
-
-      /*
-       * Create an unarchiver, and use it to unarchive the nib file while
-       * handling class replacement so that standard objects understood
-       * by the gui library are converted to their Gorm internal equivalents.
-       */
-      u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
-      [u decodeClassName: @"GSNibContainer"
-	     asClassName: @"GormDocument"];
-      c = [u decodeObject];
-      if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
-	{
-	  NSRunAlertPanel(NULL, @"Could not unarchive document data", 
-			   @"OK", NULL, NULL);
-	  return nil;
-	}
-
-      /*
-       * In the newly loaded nib container, we change all the connectors
-       * to hold the objects rather than their names (using our own dummy
-       * object as the 'NSOwner'.
-       */
-      [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
-      [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
-      nt = [c nameTable];
-      enumerator = [[c connections] objectEnumerator];
-      while ((con = [enumerator nextObject]) != nil)
-	{
-	  NSString  *name;
-	  id        obj;
-
-	  name = (NSString*)[con source];
-	  obj = [nt objectForKey: name];
-	  [con setSource: obj];
-	  name = (NSString*)[con destination];
-	  obj = [nt objectForKey: name];
-	  [con setDestination: obj];
-	}
- 
-      /*
-       * Now we merge the objects from the nib container into our own data
-       * structures, taking care not to overwrite our NSOwner and NSFirst.
-       */
-      [nt removeObjectForKey: @"NSOwner"];
-      [nt removeObjectForKey: @"NSFirst"];
-      [connections addObjectsFromArray: [c connections]];
-      [nameTable addEntriesFromDictionary: nt];
-
-      /*
-       * Now we build our reverse mapping information and other initialisation
-       */
-      NSResetMapTable(objToName);
-      NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
-      NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-      enumerator = [nameTable keyEnumerator];
-      while ((name = [enumerator nextObject]) != nil)
-	{
-	  id	obj = [nameTable objectForKey: name];
-
-	  NSMapInsert(objToName, (void*)obj, (void*)name);
-
-	  if ([obj isKindOfClass: [NSWindow class]] == YES
-	   || [obj isKindOfClass: [NSMenu class]] == YES)
-	    {
-	      [objectsView addObject: obj];
-	      [[self openEditorForObject: obj] activate];
-	    }
-	}
-
-      /*
-       * Finally, we set our new file name
-       */
-      ASSIGN(documentPath, aFile);
-      [window setTitleWithRepresentedFilename: documentPath];
-      [nc postNotificationName: IBDidOpenDocumentNotification
-			object: self];
-      return self;
+      return [self loadDocument: [oPanel filename]];
     }
   return nil;		/* Failed	*/
 }
@@ -1191,6 +1199,26 @@ static NSImage	*classesImage = nil;
     }
 }
 
+/*
+ * To revert to a saved version, we actually load a new document and
+ * close the original document, returning the id of the new document.
+ */
+- (id) revertDocument: (id)sender
+{
+  GormDocument	*reverted = AUTORELEASE([GormDocument new]);
+
+  if ([reverted loadDocument: documentPath] != nil)
+    {
+      NSRect	frame = [window frame];
+
+      [window setReleasedWhenClosed: YES];
+      [window close];
+      [[reverted window] setFrame: frame display: YES];
+      return reverted;
+    }
+  return nil;
+}
+
 - (id) saveAsDocument: (id)sender
 {
   NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
@@ -1255,7 +1283,7 @@ static NSImage	*classesImage = nil;
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   BOOL			archiveResult;
 
-  if (documentPath == nil || [documentPath isEqualToString: @""])
+  if (documentPath == nil)
     {
       return [self saveAsDocument: sender];
     }
@@ -1376,7 +1404,7 @@ static NSImage	*classesImage = nil;
       NSString	*msg;
       int	result;
 
-      if (documentPath == nil || [documentPath isEqualToString: @""])
+      if (documentPath == nil)
 	{
 	  msg = @"Document 'UNTITLED' has been modified";
 	}

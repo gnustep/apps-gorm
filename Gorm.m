@@ -478,7 +478,13 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) revertToSaved: (id)sender
 {
-  NSLog(@"Revert to save not yet implemented");
+  id	doc = [(id)[self activeDocument] revertDocument: sender];
+
+  if (doc != nil)
+    {
+      [documents addObject: doc];
+      [[doc window] makeKeyAndOrderFront: self];
+    }
   return nil;
 }
 
@@ -653,7 +659,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
   if (sel_eq(action, @selector(revertToSaved:)))
     {
-      if (active == nil)
+      if (active == nil || [active documentPath] == nil
+	|| [[active window] isDocumentEdited] == NO)
 	return NO;
     }
 

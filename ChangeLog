@@ -1,3 +1,8 @@
+Tue Jan  4 17:42:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Added 'miniaturize', 'close', and 'revert to saved' menu items and
+	implemented their actions.
+
 Tue Jan  4 12:13:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Various tidyups

@@ -65,12 +65,14 @@
 - (id) objectForName: (NSString*)aString;
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject;
 - (NSArray*) objects;
+- (id) loadDocument: (NSString*)path;
 - (id) openDocument: (id)sender;
 - (id) parentOfObject: (id)anObject;
 - (NSArray*) pasteType: (NSString*)aType
 	fromPasteboard: (NSPasteboard*)aPasteboard
 		parent: (id)parent;
 - (void) removeConnector: (id<IBConnectors>)aConnector;
+- (id) revertDocument: (id)sender;
 - (id) saveAsDocument: (id)sender;
 - (id) saveDocument: (id)sender;
 - (void) setDocumentActive: (BOOL)flag;
