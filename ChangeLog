@@ -1,3 +1,17 @@
+2001-08-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	Added the ability to change the font of the selected objects
+	* Gorm.m:
+	new category : NSCell (GormAdditions) (it gives us full control of 
+	the font's changes)
+	added a menu item for the font panel
+	added a shortcut for the palettes panel (@"p")
+	* GormWindowEditor.m : [-acceptsFirstResponder] new method, returns YES
+	[-initWithObject] set self as initialFirstResponder of the window
+	[-changeFont:] new method, change the font of the selected controls
+	[-selectObjects:] update the font in the font panel
+	* Palettes/2Controls/GormSliderInspector.gorm: font updates
+
 2001-08-20  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Palettes/2Controls/main.m: Add stepper control to the controls' 
