@@ -207,6 +207,11 @@ static NSImage	*dragImage = nil;
 	   source: self
 	slideBack: ([type isEqual: IBWindowPboardType] || 
 		    ([type isEqual: IBMenuPboardType] && menu == nil)) ? NO : YES];
+
+  // Temporary fix for the art backend.  This is harmless, and
+  // shouldn't effect users of xlib, but it's necessary for now
+  // so that users can work.
+  [self setNeedsDisplay: YES]; 
 }
 @end
 

@@ -1,3 +1,10 @@
+2004-03-30 15:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: [GormPaletteView draggedImage:endedAt:
+	deposited:] added code to refresh the palette view after the
+	drag is done.   This is a harmless, temporary fix for users of
+	the art backend.
+	
 2004-03-24 15:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/GormMenuEditor.m: Minor cleanup which prevents
