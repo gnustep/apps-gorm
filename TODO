@@ -6,10 +6,10 @@ table which seem intersting:
 
 * Add support for Font Aliases so that fonts are not archived into the
   .gorm file.   This will allow the application to use the fonts as 
-  defined by the user, not as archived in .gorm. (fabien)
+  defined by the user, not as archived in .gorm. (fabien) (DONE!)
 
 * Set up defaults to allow Gorm to "preload" headers each time it starts
-  up.   (cbv)
+  up.   (cbv) (DONE!)
 
 * Look into automatic "localization" of .gorm files for applications.
   (martin)
@@ -22,7 +22,7 @@ table which seem intersting:
   without windows so that the developer doesn't need to create a "dummy"
   window to hold them. (fabien)
 
-* Add Feature to automatically add actions to FirstResponder.
+* Add Feature to automatically add actions to FirstResponder. (DONE!)
 --
 Gregory John Casamento
 
