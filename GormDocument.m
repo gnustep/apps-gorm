@@ -3449,10 +3449,15 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 - (void) outlineViewSelectionDidChange: (NSNotification *)notification
 {
   id object = [notification object];
-  id item = [object itemAtRow: [object selectedRow]];
-  if (![item isKindOfClass: [GormOutletActionHolder class]])
+  int row = [object selectedRow];
+
+  if(row != -1)
     {
-      [self editClass: item];
+      id item = [object itemAtRow: [object selectedRow]];
+      if (![item isKindOfClass: [GormOutletActionHolder class]])
+	{
+	  [self editClass: item];
+	}
     }
 }
 
