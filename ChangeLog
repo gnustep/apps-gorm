@@ -1,3 +1,10 @@
+Wed Jan  5 13:32:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Palettes/1Menu/main.m: First cut at code for providing menus items
+	on the palette.
+	* GormWindowEditor.m: accept first mouse so we act immediately that
+	the mouse is clicked anywhere in the window.
+
 Tue Jan  4 17:42:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Added 'miniaturize', 'close', and 'revert to saved' menu items and

@@ -172,6 +172,15 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 @implementation	GormWindowEditor
 
+- (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
+{
+  if ([(id<IB>)NSApp isTestingInterface] == YES)
+    {
+      return NO;
+    }
+  return YES;
+}
+
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   [NSException raise: NSInternalInconsistencyException
