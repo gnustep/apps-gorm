@@ -65,41 +65,6 @@
   return self;
 }
 
-
-- (NSString *)_correctClassName: (NSString *)className
-{
-  if ([className isEqualToString: @"GormNSMenu"])
-    {
-      return @"NSMenu";
-    }
-  if ([className isEqualToString: @"GormNSWindow"])
-    {
-      return @"NSWindow";
-    }
-  if ([className isEqualToString: @"GormNSBrowser"])
-    {
-      return @"NSBrowser";
-    }
-  if ([className isEqualToString: @"GormNSTableView"])
-    {
-      return @"NSTableView";
-    }
-  if ([className isEqualToString: @"GormNSOutlineView"])
-    {
-      return @"NSOutlineView";
-    }
-  if ([className isEqualToString: @"GormNSPopUpButton"])
-    {
-      return @"NSPopUpButton";
-    }
-  if ([className isEqualToString: @"GormNSPopUpButtonCell"])
-    {
-      return @"NSPopUpButtonCell";
-    }
-
-  return className;
-}
-
 - (void) _setCurrentSelectionClassName: (id)anobject
 {
   NSString *nameForObject = [_document nameForObject: anobject];
@@ -113,8 +78,8 @@
       className = NSStringFromClass([anobject class]);
     }
 
-  ASSIGN(_currentSelectionClassName, [self _correctClassName: className]);
-  ASSIGN(_parentClassName, [self _correctClassName: NSStringFromClass([anobject class])]);
+  ASSIGN(_currentSelectionClassName, [GormClassManager correctClassName: className]);
+  ASSIGN(_parentClassName, [GormClassManager correctClassName: NSStringFromClass([anobject class])]);
 }
 
 - (void) setObject: (id)anObject

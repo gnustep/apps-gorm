@@ -1,3 +1,15 @@
+2002-12-15  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* Gorm.m: Minor cleanup.
+	* GormClassManager.[hm]: Added method to get all superclasses
+	of a given class.  Moved the "correctClassName" method which maps
+	names of internal classes to thier external exquivalents.
+	* GormCustomClassInspector.m: Made changes to call new class method
+	in GormClassManager.
+	* GormDocument.m: Minor cleanup.  Addition of _selectClass method
+	which will cause the classes view to show the class of the instance
+	currently selected in the object view.
+
 2002-12-14  Pierre-Yves Rivaille  <pyrivail@ens-lyon.fr>
 
 	* GormViewEditor.m

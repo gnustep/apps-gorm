@@ -1274,4 +1274,54 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return result;
 }
 
+- (NSArray *)allSuperClassesOf: (NSString *)className
+{
+  NSMutableArray *classes = [NSMutableArray array];
+  while(![className isEqualToString: @"NSObject"])
+    {
+      NSDictionary *dict = [self classInfoForClassName: className];
+      className = [dict objectForKey: @"Super"];
+      [classes insertObject: className atIndex: 0];
+    }
+  return classes;
+}
+
+
++ (NSString *) correctClassName: (NSString *)className
+{
+  if ([className isEqualToString: @"GormNSMenu"])
+    {
+      return @"NSMenu";
+    }
+  if ([className isEqualToString: @"GormNSWindow"])
+    {
+      return @"NSWindow";
+    }
+  if ([className isEqualToString: @"GormNSBrowser"])
+    {
+      return @"NSBrowser";
+    }
+  if ([className isEqualToString: @"GormNSTableView"])
+    {
+      return @"NSTableView";
+    }
+  if ([className isEqualToString: @"GormNSOutlineView"])
+    {
+      return @"NSOutlineView";
+    }
+  if ([className isEqualToString: @"GormNSPopUpButton"])
+    {
+      return @"NSPopUpButton";
+    }
+  if ([className isEqualToString: @"GormNSPopUpButtonCell"])
+    {
+      return @"NSPopUpButtonCell";
+    }
+  if ([className isEqualToString: @"GormFirstResponder"])
+    {
+      return @"FirstResponder";
+    }
+
+  return className;
+}
 @end

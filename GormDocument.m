@@ -274,8 +274,6 @@ static NSImage	*classesImage = nil;
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionary];
   NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  // [dict setObject: path forKey: @"Path"];
-  // [dict setObject: name forKey: @"Name"];
   return TEST_AUTORELEASE([[GormImage alloc] initWithName: name path: path]);
 }
 
@@ -430,6 +428,37 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) _selectClass
+{
+  NSArray *selection = [objectsView selection];
+
+  if([selection count] > 0)
+    {
+      id obj = nil;
+      GormClassManager *cm = [self classManager];
+
+      obj = [[objectsView selection] objectAtIndex: 0];
+      if([obj respondsToSelector: @selector(className)])
+	{
+	  NSString *className = [GormClassManager correctClassName: [obj className]], *currentClass = nil;
+	  NSArray *classes = [[self classManager] allSuperClassesOf: className];
+	  NSEnumerator *en = [classes objectEnumerator];
+	  int row = 0;
+
+	  // open the items...
+	  while((currentClass = [en nextObject]) != nil)
+	    {
+	      [classesView expandItem: currentClass];
+	    }
+	  
+	  // select the item...
+	  row = [classesView rowForItem: className];
+	  [classesView selectRow: row byExtendingSelection: NO];
+	  [classesView scrollRowToVisible: row];
+	}
+    }
+}
+
 - (void) changeView: (id)sender
 {
   int tag = [[sender selectedCell] tag];
@@ -437,16 +466,26 @@ static NSImage	*classesImage = nil;
   switch (tag)
     {
     case 0: // objects
-      [selectionBox setContentView: scrollView];
+      {
+	[selectionBox setContentView: scrollView];
+	NSLog(@"Switching to objects");
+      }
       break;
     case 1: // images
-      [selectionBox setContentView: imagesScrollView];
+      {
+	[selectionBox setContentView: imagesScrollView];
+      }
       break;
     case 2: // sounds
-      [selectionBox setContentView: soundsScrollView];
+      {
+	[selectionBox setContentView: soundsScrollView];
+      }
       break;
     case 3: // classes
-      [selectionBox setContentView: classesScrollView];
+      {
+	[selectionBox setContentView: classesScrollView];
+	[self _selectClass];
+      }
       break;
     }
 }

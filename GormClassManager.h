@@ -58,6 +58,7 @@
 - (BOOL) isKnownClass: (NSString *)className;
 - (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
 - (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
+- (NSArray *) allSuperClassesOf: (NSString *)className;
 
 // custom class support...
 - (NSString *) customClassForObject: (id)object;
@@ -68,6 +69,10 @@
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
+
+// class methods
+// Maps internally used names to actual names.
++ (NSString *) correctClassName: (NSString *)className;
 @end
 
 #endif
