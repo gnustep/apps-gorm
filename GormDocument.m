@@ -1935,7 +1935,7 @@ static NSImage  *fileImage = nil;
 		  
 		  NSDebugLog(@"Add the sound %@", file);
 		  soundPath = [documentPath stringByAppendingPathComponent: file];
-		  [soundsView addObject: [GormSound soundForPath: soundPath]];
+		  [soundsView addObject: [[GormSound alloc] initWithPath: soundPath]];
 		}
 	    }
 	}
@@ -1954,15 +1954,10 @@ static NSImage  *fileImage = nil;
 	      if ([fileTypes containsObject: [file pathExtension]])
 		{
 		  NSString	*imagePath;
-		  id	placeHolder;
 		  
+		  NSDebugLog(@"Add the image %@", file);
 		  imagePath = [documentPath stringByAppendingPathComponent: file];
-		  placeHolder = [GormImage imageForPath: imagePath];
-		  if (placeHolder)
-		    {
-		      NSDebugLog(@"Add the image %@", file);
-		      [imagesView addObject: placeHolder];
-		    }
+		  [imagesView addObject: [GormImage imageForPath: imagePath]];
 		}
 	    }
 	}

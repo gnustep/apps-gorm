@@ -28,10 +28,19 @@
 
 // sound proxy object...
 @implementation GormSound
-+ (GormSound*) soundForPath: (NSString *)apath
++ (GormSound*) soundForPath: (NSString *)aPath
 {
-  NSString *aname = [[apath lastPathComponent] stringByDeletingPathExtension];
-  return AUTORELEASE([[GormSound alloc] initWithName: aname path: apath]);
+  return AUTORELEASE([[GormSound alloc] initWithPath: aPath]);
+}
+
+- (id) initWithPath: (NSString *)aPath
+{
+  NSString *aName = [[aPath lastPathComponent] stringByDeletingPathExtension];
+  if((self = [self initWithName: aName path: aPath]) == nil)
+    {
+      RELEASE(self);
+    }
+  return self;
 }
 
 - (id) initWithName: (NSString *)aName

@@ -27,51 +27,68 @@
 
 // image proxy object...
 @implementation GormImage
-+ (GormImage*)imageForPath: (NSString *)apath
++ (GormImage*)imageForPath: (NSString *)aPath
 {  
-  NSString *aname = [[apath lastPathComponent] stringByDeletingPathExtension];
-  return AUTORELEASE([[GormImage alloc] initWithName: aname path: apath]);
+  return AUTORELEASE([[GormImage alloc] initWithPath: aPath]);
+}
+
+- (id) initWithPath: (NSString *)aPath
+{
+  NSString *aName = [[aPath lastPathComponent] stringByDeletingPathExtension];
+  if((self = [self initWithName: aName path: aPath]) == nil)
+    {
+      RELEASE(self);
+    }
+  return self;
 }
 
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 {
-  NSSize originalSize;
-  float ratioH;
-  float ratioW;
-  [super init];
-  ASSIGN(name, aName);
-  ASSIGN(path, aPath);
-  image = [[NSImage alloc] initByReferencingFile: aPath];
-  smallImage = [[NSImage alloc] initWithContentsOfFile: aPath];
-  [image setName: aName];
-
-  if (smallImage == nil)
+  if((self = [super init]) != nil)
     {
-      RELEASE(name);
-      RELEASE(path);
-      return nil;
+      NSSize originalSize;
+      float ratioH;
+      float ratioW;
+
+      ASSIGN(name, aName);
+      ASSIGN(path, aPath);
+      image = RETAIN([[NSImage alloc] initByReferencingFile: aPath]);
+      smallImage = RETAIN([[NSImage alloc] initWithContentsOfFile: aPath]);
+      [image setName: aName];
+      
+      if (smallImage == nil)
+	{
+	  RELEASE(name);
+	  RELEASE(path);
+	  return nil;
+	}
+      
+      originalSize = [smallImage size];
+      ratioW = originalSize.width / 70;
+      ratioH = originalSize.height / 55;
+      
+      if (ratioH > 1 || ratioW > 1)
+	{
+	  [smallImage setScalesWhenResized: YES];
+	  if (ratioH > ratioW)
+	    {
+	      [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
+	    }
+	  else 
+	    {
+	      [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
+	    }
+	}
+
+      isSystemImage = NO;
+      isInWrapper = NO;
+    }
+  else
+    {
+      RELEASE(self);
     }
 
-  originalSize = [smallImage size];
-  ratioW = originalSize.width / 70;
-  ratioH = originalSize.height / 55;
-  
-  if (ratioH > 1 || ratioW > 1)
-    {
-      [smallImage setScalesWhenResized: YES];
-      if (ratioH > ratioW)
-	{
-	  [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
-	}
-      else 
-	{
-	  [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
-	}
-    }
-
-  isSystemImage = NO;
-  isInWrapper = NO;
   return self;
 }
 

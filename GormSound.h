@@ -40,6 +40,7 @@
   BOOL     isInWrapper; 
 }
 + (GormSound*) soundForPath: (NSString *)path;
+- (id) initWithPath: (NSString *)aPath;
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath;
 - (void) setSoundName: (NSString *)aName;

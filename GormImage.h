@@ -43,6 +43,7 @@
 }
 
 + (GormImage *) imageForPath: (NSString *)path;
+- (id) initWithPath: (NSString *)aPath;
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath;
 - (void) setImageName: (NSString *)aName;

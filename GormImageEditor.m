@@ -256,6 +256,17 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   return self;
 }
 
+- (void) dealloc
+{
+  if(closed == NO)
+    [self close];
+
+  // TODO: This is a band-aid fix until I find the actual problem. 
+  // This *WILL* leak, but I don't want it crashing on people.
+
+  NSLog(@"Released...");
+}
+
 - (void) close
 {
   [super close];
@@ -448,7 +459,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       id		obj = [objects objectAtIndex: index];
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
       NSString          *name = [obj imageName];
-      
+
       [but setImage: [obj image]];
       [but setTitle: name];
       [but setShowsStateBy: NSChangeGrayCellMask];
