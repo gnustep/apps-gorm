@@ -1,3 +1,8 @@
+2003-11-19 01:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Removed AUTORELEASE from creation of placeholders
+	for both the image and the sound.   This was causing a segfault.
+	
 2003-11-15 16:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewWithContectViewEditor.m: Added methods 
@@ -34,7 +39,7 @@
 	* GormBoxEditor.m: Removed commented out code.
 	* GormControlEditor.m: same
 	* GormCustomView.m: same
-	* GormFintViewController.m: same
+	* GormFontViewController.m: same
 	* GormGenericEditor.m: same
 	* GormImageEditor.m: same
 	* GormSoundEditor.m: same

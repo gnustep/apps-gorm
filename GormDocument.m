@@ -301,14 +301,14 @@ static NSImage	*classesImage = nil;
 - (GormSound *)_createSoundPlaceHolder: (NSString *)path
 {
   NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  return AUTORELEASE([[GormSound alloc] initWithName: name path: path]);
+  return [[GormSound alloc] initWithName: name path: path];
 }
 
 // image support
 - (GormImage *)_createImagePlaceHolder: (NSString *)path
 {
   NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  return TEST_AUTORELEASE([[GormImage alloc] initWithName: name path: path]);
+  return [[GormImage alloc] initWithName: name path: path];
 }
 
 - (void) beginArchiving
@@ -2003,8 +2003,6 @@ static NSImage	*classesImage = nil;
    */
   ASSIGN(documentPath, aFile);
   [window setTitleWithRepresentedFilename: documentPath];
-  [nc postNotificationName: IBDidOpenDocumentNotification
-		    object: self];
 
   /*
    * read in all of the sounds in the .gorm wrapper and
@@ -2068,6 +2066,10 @@ static NSImage	*classesImage = nil;
 	  [o awakeFromDocument: self];
 	}
     }
+
+  // this is the last thing we should do...
+  [nc postNotificationName: IBDidOpenDocumentNotification
+		    object: self];
 
   return self;
 }
