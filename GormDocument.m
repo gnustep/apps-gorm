@@ -839,6 +839,11 @@ static NSImage	*classesImage = nil;
       fontManager = [GormFontManager new];
       [self setName: @"NSFont" forObject: fontManager];
 
+      /*
+       * Set image for this miniwindow.
+       */
+      [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
+
       hidden = [NSMutableArray new];
       /*
        * Watch to see when we are starting/ending testing.
