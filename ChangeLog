@@ -1,0 +1,4 @@
+Wed Dec  8 16:33:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* GormObjecteditor.m: ([-refreshCells]) cell highlighting fixed so
+	that empty cells in the matrix can't be highlighted.
