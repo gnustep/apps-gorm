@@ -1,5 +1,9 @@
 2003-07-23  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Version 0.3.0
+
+2003-07-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Palettes/0Menu/GormNSMenu.m: Added category to access
 	private member of NSResponder, which is needed by
 	the menu editor.

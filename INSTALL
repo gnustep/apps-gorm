@@ -16,14 +16,10 @@ compile and use Gorm. The core packages are, at a minimum:
 
 Build and Install
 -----------------
-  You need 	
 
-   To build Gorm, you need to install GormLib first.
+   Steps to build:
 
-   cd GormLib; make; su -c "make install; cd -
-   
-   To install Gorm itself : 	
-   type 'make'. To install, type 'make install'
+   * make && make install
 
 Trouble
 -------

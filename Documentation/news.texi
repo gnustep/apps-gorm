@@ -4,6 +4,22 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.3.0}
+
+@itemize @bullet
+@item Preferences added.
+@item User can now enable and disable guidlines for easier editing.
+@item Refactored code into GormLib which is a clone of the InterfaceBuilder framework.  This facilitates creating palettes and inspectors outside of Gorm.
+@item Added class inspector for easier editing of classes.  This gives the user the option to use either the outline view or the inspector to edit new classes.
+@item Added inspectors for the following: NSScrollView, NSProgressIndicator, NSColorWell, GormImageInspector (for images added to .gorm files).
+@item Improved look of NSTabView inspector.
+@item Removed all warnings from the code.
+@item various bug fixes.
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.2.5}.
 
 Many fixes and improvements to make the app work better.
@@ -13,10 +29,6 @@ Many fixes and improvements to make the app work better.
 @item Interface code redone as gorm files.
 @item Re-add multiple selection via mouse drag.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.2.0} snapshot.
 

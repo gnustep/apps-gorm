@@ -1,7 +1,32 @@
+Noteworthy changes in version `0.3.0'
+=====================================
+
+   * Preferences added.
+
+   * User can now enable and disable guidlines for easier editing.
+
+   * Refactored code into GormLib which is a clone of the
+     InterfaceBuilder framework.  This facilitates creating palettes
+     and inspectors outside of Gorm.
+
+   * Added class inspector for easier editing of classes.  This gives
+     the user the option to use either the outline view or the
+     inspector to edit new classes.
+
+   * Added inspectors for the following: NSScrollView,
+     NSProgressIndicator, NSColorWell, GormImageInspector (for images
+     added to .gorm files).
+
+   * Improved look of NSTabView inspector.
+
+   * Removed all warnings from the code.
+
+   * various bug fixes.
+
 Noteworthy changes in version `0.2.5'.
 ======================================
 
-Many fixes and improvements to make the app work better.
+   Many fixes and improvements to make the app work better.
 
    * Better parsing of headers
 

@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.2.6 of Gorm.
+This is version 0.3.0 of Gorm.
 
 What is Gorm?
 =============
@@ -12,15 +12,30 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-   Gorm is not `gormless' (a Yorkshire dialect word that my parents
-used when they spotted me staring, slack-jawed, at the TV).
+Noteworthy changes in version `0.3.0'
+=====================================
 
-Noteworthy changes in version `0.2.6'.
-======================================
+   * Preferences added.
 
-   Fix an incompatibility with the gui 0.8.4 release
+   * User can now enable and disable guidlines for easier editing.
 
-   * Better combo box and tab view inspector
+   * Refactored code into GormLib which is a clone of the
+     InterfaceBuilder framework.  This facilitates creating palettes
+     and inspectors outside of Gorm.
+
+   * Added class inspector for easier editing of classes.  This gives
+     the user the option to use either the outline view or the
+     inspector to edit new classes.
+
+   * Added inspectors for the following: NSScrollView,
+     NSProgressIndicator, NSColorWell, GormImageInspector (for images
+     added to .gorm files).
+
+   * Improved look of NSTabView inspector.
+
+   * Removed all warnings from the code.
+
+   * various bug fixes.
 
 How can I get support for this software?
 ========================================
