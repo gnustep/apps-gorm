@@ -978,229 +978,9 @@ static NSButtonType _buttonTypeForObject( id button )
 	}
     }
 
-  mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
-
-  /*
-   * Set up info menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Info Panel..." 
-		   action: @selector(infoPanel:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Preferences..." 
-		   action: NULL
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Help..." 
-		   action: NULL 
-	    keyEquivalent: @"?"];
-  menuItem = [mainMenu addItemWithTitle: @"Info" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  /*
-   * Set up document menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Open..." 
-		   action: @selector(open:) 
-	    keyEquivalent: @"o"];
-  [aMenu addItemWithTitle: @"New Application" 
-		   action: @selector(newApplication:)
-	    keyEquivalent: @"n"];
-  modulesMenu = [NSMenu new];
-  [modulesMenu addItemWithTitle: @"New Empty" 
-			 action: @selector(newEmpty:) 
-		  keyEquivalent: @"N"];
-  [modulesMenu addItemWithTitle: @"New Inspector" 
-			 action: @selector(newInspector:) 
-		  keyEquivalent: @""];
-  [modulesMenu addItemWithTitle: @"New Palette" 
-			 action: @selector(newPalette:) 
-		  keyEquivalent: @""];
-  menuItem = [aMenu addItemWithTitle: @"New Module" 
-			      action: NULL 
-		       keyEquivalent: @""];
-  [aMenu setSubmenu: modulesMenu forItem: menuItem];
-  RELEASE(modulesMenu);
-  [aMenu addItemWithTitle: @"Save" 
-		   action: @selector(save:) 
-	    keyEquivalent: @"s"];
-  [aMenu addItemWithTitle: @"Save As..." 
-		   action: @selector(saveAs:) 
-	    keyEquivalent: @"S"];
-  [aMenu addItemWithTitle: @"Save All" 
-		   action: @selector(saveAll:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Revert to Saved" 
-		   action: @selector(revertToSaved:) 
-	    keyEquivalent: @"u"];
-  [aMenu addItemWithTitle: @"Test Interface"
-		   action: @selector(testInterface:) 
-	    keyEquivalent: @"r"];
-  [aMenu addItemWithTitle: @"Miniaturize"
-		   action: @selector(miniaturize:) 
-	    keyEquivalent: @"m"];
-  [aMenu addItemWithTitle: @"Close"
-		   action: @selector(close:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Debug"
-		   action: @selector(debug:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Load Sound"
-		   action: @selector(loadSound:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Load Image"
-		   action: @selector(loadImage:) 
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Document" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-
-
-
-
-  /*
-   * Set up edit menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Cut" 
-		   action: @selector(cut:) 
-	    keyEquivalent: @"x"];
-  [aMenu addItemWithTitle: @"Copy" 
-		   action: @selector(copy:) 
-	    keyEquivalent: @"c"];
-  [aMenu addItemWithTitle: @"Paste" 
-		   action: @selector(paste:) 
-	    keyEquivalent: @"v"];
-  [aMenu addItemWithTitle: @"Delete" 
-		   action: @selector(delete:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Select All" 
-		   action: @selector(selectAllItems:) 
-	    keyEquivalent: @"a"];
-  [aMenu addItemWithTitle: @"Set Name..." 
-		   action: @selector(setName:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Group in splitview" 
-		   action: @selector(groupSelectionInSplitView:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Group in box" 
-		   action: @selector(groupSelectionInBox:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Group in scrollview" 
-		   action: @selector(groupSelectionInScrollView:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Ungroup" 
-		   action: @selector(ungroup:) 
-	    keyEquivalent: @""];
-  [[aMenu addItemWithTitle: @"Font Panel" 
-	  action: @selector(orderFrontFontPanel:) 
-	  keyEquivalent: @"t"] setTarget: [NSFontManager sharedFontManager]];
-  menuItem = [mainMenu addItemWithTitle: @"Edit" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-
-  /*
-   * Set up classes menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Create Subclass..." 
-	 action: @selector(createSubclass:) 
-	    keyEquivalent: @"C"];
-  [aMenu addItemWithTitle: @"Load Class..." 
-		   action: @selector(loadClass:) 
-	    keyEquivalent: @"L"];
-  [aMenu addItemWithTitle: @"Create Class's Files..." 
-		   action: @selector(createClassFiles:) 
-	    keyEquivalent: @"B"];  
-  [aMenu addItemWithTitle: @"Instantiate" 
-		   action: @selector(instantiateClass:) 
-	    keyEquivalent: @"I"];
-  [aMenu addItemWithTitle: @"Add Outlet/Action..."
-	           action: @selector(addAttributeToClass:)
-	    keyEquivalent: @"A"];
-  [aMenu addItemWithTitle: @"Remove..."
-	           action: @selector(remove:)
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Classes" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  classMenu = aMenu;
-  RELEASE(aMenu);
-
-  /*
-   * Set up tools menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Inspector..." 
-		   action: @selector(inspector:) 
-	    keyEquivalent: @"i"];
-  [aMenu addItemWithTitle: @"Palettes..." 
-		   action: @selector(palettes:) 
-	    keyEquivalent: @"p"];
-  [aMenu addItemWithTitle: @"Load Palette..." 
-		   action: @selector(loadPalette:) 
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Tools" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-
-  /*
-   * Set up Windows menu
-   */
-  windowsMenu = [NSMenu new];
-  [windowsMenu addItemWithTitle: @"Arrange"
-			 action: @selector(arrangeInFront:)
-		  keyEquivalent: @""];
-  [windowsMenu addItemWithTitle: @"Miniaturize"
-			 action: @selector(performMiniaturize:)
-		  keyEquivalent: @"m"];
-  [windowsMenu addItemWithTitle: @"Close"
-			 action: @selector(performClose:)
-		  keyEquivalent: @"w"];
-  menuItem = [mainMenu addItemWithTitle: @"Windows" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: windowsMenu forItem: menuItem];
-  RELEASE(windowsMenu);
-
-  /*
-   * Set up Services menu
-   */
-  aMenu = [NSMenu new];
-  menuItem = [mainMenu addItemWithTitle: @"Services" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  [mainMenu addItemWithTitle: @"Hide" 
-		      action: @selector(hide:)
-	       keyEquivalent: @"h"];	
-
-  [mainMenu addItemWithTitle: @"Quit" 
-		      action: @selector(terminate:)
-	       keyEquivalent: @"q"];	
-
-
-  [self setMainMenu: mainMenu];
-  [self setWindowsMenu: windowsMenu];
-  //  [mainMenu display];
   [self setDelegate: self];
   [super finishLaunching];
-NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
+  NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 }
 
 - (void) handleNotification: (NSNotification*)notification
@@ -1286,6 +1066,13 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
        * inspectors provided in the standard palettes are available.
        */
       [self palettesManager];
+
+      // load the interface...
+      if(![NSBundle loadNibNamed: @"Gorm" owner: self])
+	{
+	  NSLog(@"Failed to load interface");
+	  exit(-1);
+	}
     }
   return self;
 }
@@ -1737,6 +1524,36 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 
       if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"]
 	|| [n isEqual: @"NSFont"])
+	{
+	  return NO;
+	}
+    }
+
+  if(sel_eq(action, @selector(createSubclass:)) ||
+     sel_eq(action, @selector(loadClass:)) ||
+     sel_eq(action, @selector(createClassFiles:)) ||
+     sel_eq(action, @selector(instantiateClass:)) ||
+     sel_eq(action, @selector(addAttributeToClass:)) ||
+     sel_eq(action, @selector(remove:)))
+    {
+      id document = [(Gorm *)NSApp activeDocument];
+      if(document == nil)
+	{
+	  return NO;
+	}
+
+      if(![document isEditingClasses])
+	{
+	  return NO;
+	}
+    }
+
+  if(sel_eq(action, @selector(loadSound:)) ||
+     sel_eq(action, @selector(loadImage:)) ||
+     sel_eq(action, @selector(debug:)))
+    {
+      id document = [(Gorm *)NSApp activeDocument];
+      if(document == nil)
 	{
 	  return NO;
 	}

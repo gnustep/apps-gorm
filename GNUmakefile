@@ -109,7 +109,8 @@ Gorm_RESOURCE_FILES = \
 	Images/GormOutletSelected.tiff \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
-	Resources/GormSoundInspector.gorm
+	Resources/GormSoundInspector.gorm \
+	Resources/Gorm.gorm
 
 Gorm_HEADERS = \
 	Gorm.h \

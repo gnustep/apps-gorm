@@ -1,5 +1,19 @@
 2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Gorm.gorm: Added to replace about 200+ lines of 
+	code in the Gorm.m file.
+	* Gorm.m: -[Gorm finishLaunching:] removed code
+	which sets up the menu.  It has been superceded by
+	the Gorm.gorm file.   -[Gorm init] added code
+	to load the .gorm file.  -[Gorm validateMenuItem:]
+	modified to turn certain menu items on/off when
+	appropriate.
+	* GormDocument.[hm]: Added MenuValidation category 
+	to allow the app to determine which view is being 
+	edited (objects, images, sounds, classes).  
+
+2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormClassManager.m: Made a minor correction to the 
 	removeAction:forClassNamed: to allow actions to be deleted
 	from custom classes.

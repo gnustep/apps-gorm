@@ -3291,3 +3291,25 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   [images addObject: path];
 }
 @end
+
+@implementation GormDocument (MenuValidation)
+- (BOOL) isEditingObjects
+{
+  return ([selectionBox contentView] == scrollView);
+}
+
+- (BOOL) isEditingImages
+{
+  return ([selectionBox contentView] == imagesScrollView);
+}
+
+- (BOOL) isEditingSounds
+{
+  return ([selectionBox contentView] == soundsScrollView);
+}
+
+- (BOOL) isEditingClasses
+{
+  return ([selectionBox contentView] == classesScrollView);
+}
+@end

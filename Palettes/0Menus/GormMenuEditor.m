@@ -852,7 +852,7 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
       NSMenuItem	*item;
 
       [selection removeAllObjects];
-      NSLog(@"selectObjects %@ %@", selection, anArray);
+      NSDebugLog(@"selectObjects %@ %@", selection, anArray);
       [selection addObjectsFromArray: anArray];
 
       count = [selection count];

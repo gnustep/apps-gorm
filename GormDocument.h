@@ -122,4 +122,11 @@
                                  toName: (NSString *)newName;
 @end
 
+@interface GormDocument (MenuValidation)
+- (BOOL) isEditingObjects;
+- (BOOL) isEditingImages;
+- (BOOL) isEditingSounds;
+- (BOOL) isEditingClasses;
+@end
+
 #endif

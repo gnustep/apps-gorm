@@ -253,13 +253,13 @@
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
-  NSLog(@"********* TELL pyr *********** acceptsFirstMouse");
+  NSDebugLog(@"********* TELL pyr *********** acceptsFirstMouse");
   return YES;
 }
 
 - (BOOL) acceptsFirstResponder
 {
-  NSLog(@"********* TELL pyr *********** acceptsFirstResponder");
+  NSDebugLog(@"********* TELL pyr *********** acceptsFirstResponder");
   return YES;
 }
 
