@@ -1,3 +1,16 @@
+2004-01-29 01:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInternalViewEditor.m: Added code to -destroyAndListSubviews
+	to remove the view from the document as appropriate.
+	* GormSplitViewEditor.m: Same as above.
+	* GormViewEditor.m: Added methods to handle view when inside the 
+	scroll view directly as opposed to being contained in the NSView.
+	* GormScrollViewEditor.m: Same as above.  Also added code to 
+	handle removal of single view from the scroll view.  
+	* GormViewWithContentViewEditor.m: Removed some debug code and
+	added code in -groupSelectionInScrollView to add the view itself
+	if there is only one view selected.
+		
 2004-01-29 12:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.6.0

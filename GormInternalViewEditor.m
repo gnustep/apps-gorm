@@ -921,7 +921,7 @@ static NSImage *horizontalImage;
 	id thisView = [parent editedObject];
 	[parent close];
 	[thisView removeFromSuperview];
-
+	[document detachObject: thisView];
       }
       
       return newSelection;

@@ -35,19 +35,22 @@
 @implementation NSBox (GormObjectAdditions)
 - (NSString*) editorClassName
 {
+  //  if([[self superview] isKindOfClass: [NSClipView class]])
+  //    return @"GormInternalViewEditor";
+
   return @"GormBoxEditor";
 }
+
 - (NSFont *) font
 {
   return [self titleFont];
 }
+
 - (void) setFont: (NSFont *)aFont
 {
   [self setTitleFont: aFont];
 }
 @end
-
-
 
 @implementation GormBoxEditor
 

@@ -924,7 +924,7 @@ int _sortViews(id view1, id view2, void *context)
       prevRect = currRect;
     }
 
-  NSLog(@"The vote is %d",count);
+  NSDebugLog(@"The vote is %d",count);
 
   if(count >= 0)
     vertical = YES;
@@ -1061,42 +1061,80 @@ int _sortViews(id view1, id view2, void *context)
       return;
     }
   
-  enumerator = [selection objectEnumerator];
-  
-  while ((subview = [enumerator nextObject]) != nil)
+  // if there is more than one view we must join them together.
+  if([selection count] > 1)
     {
+      // deactivate the editor for each subview.
+      enumerator = [selection objectEnumerator];
+      while ((subview = [enumerator nextObject]) != nil)
+	{
+	  superview = [subview superview];
+	  rect = NSUnionRect(rect, [subview frame]);
+	  [subview deactivate];
+	}
+
+      // create the containing view.
+      view = [[NSView alloc] initWithFrame: 
+			       NSMakeRect(0, 0, rect.size.width, rect.size.height)];
+      // create scroll view now.
+      scrollView = [[NSScrollView alloc] initWithFrame: rect];
+      [scrollView setHasHorizontalScroller: YES];
+      [scrollView setHasVerticalScroller: YES];
+      [scrollView setBorderType: NSBezelBorder];
+
+      // attach the scroll view...
+      [document attachObject: scrollView
+		toParent: _editedObject];
+      [superview addSubview: scrollView];
+      [scrollView setDocumentView: view];
+
+      // add the views.
+      enumerator = [selection objectEnumerator];
+      while ((subview = [enumerator nextObject]) != nil)
+	{
+	  NSPoint frameOrigin;
+	  [view addSubview: [subview editedObject]];
+	  frameOrigin = [[subview editedObject] frame].origin;
+	  frameOrigin.x -= rect.origin.x;
+	  frameOrigin.y -= rect.origin.y;
+	  [[subview editedObject] setFrameOrigin: frameOrigin];
+	  [subview close];
+	}
+    }
+  else if([selection count] == 1)
+    {
+      NSPoint frameOrigin;
+      id v = nil;
+
+      // since we have one view, it will be used as the document view.
+      subview = [selection objectAtIndex: 0];
       superview = [subview superview];
       rect = NSUnionRect(rect, [subview frame]);
       [subview deactivate];
-    }
 
-  view = [[NSView alloc] initWithFrame: 
-			   NSMakeRect(0, 0, rect.size.width, rect.size.height)];
-  scrollView = [[NSScrollView alloc] initWithFrame: rect];
-  [scrollView setHasHorizontalScroller: YES];
-  [scrollView setHasVerticalScroller: YES];
-  [scrollView setBorderType: NSBezelBorder];
+      // create scroll view now.
+      scrollView = [[NSScrollView alloc] initWithFrame: rect];
+      [scrollView setHasHorizontalScroller: YES];
+      [scrollView setHasVerticalScroller: YES];
+      [scrollView setBorderType: NSBezelBorder];
 
-  [document attachObject: scrollView
-	    toParent: _editedObject];
+      // attach the scroll view...
+      [document attachObject: scrollView
+		toParent: _editedObject];
+      [superview addSubview: scrollView];
 
-  [superview addSubview: scrollView];
-  [scrollView setDocumentView: view];
+      // add the view
+      v = [subview editedObject];
+      [scrollView setDocumentView: v];
 
-
-  enumerator = [selection objectEnumerator];
-
-  while ((subview = [enumerator nextObject]) != nil)
-    {
-      NSPoint frameOrigin;
-      [view addSubview: [subview editedObject]];
-      frameOrigin = [[subview editedObject] frame].origin;
+      // set the origin..
+      frameOrigin = [v frame].origin;
       frameOrigin.x -= rect.origin.x;
       frameOrigin.y -= rect.origin.y;
-      [[subview editedObject] setFrameOrigin: frameOrigin];
+      [v setFrameOrigin: frameOrigin];
       [subview close];
     }
-
+  
   editor = [document editorForObject: scrollView
 		     inEditor: self
 		     create: YES];
@@ -1115,11 +1153,11 @@ int _sortViews(id view1, id view2, void *context)
   if ([selection count] != 1)
     return;
   
-  NSLog(@"ungroup called");
+  NSDebugLog(@"ungroup called");
 
   toUngroup = [selection objectAtIndex: 0];
 
-  NSLog(@"toUngroup = %@",[toUngroup description]);
+  NSDebugLog(@"toUngroup = %@",[toUngroup description]);
 
   if ([toUngroup isKindOfClass: [GormBoxEditor class]]
       || [toUngroup isKindOfClass: [GormSplitViewEditor class]]

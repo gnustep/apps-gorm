@@ -29,20 +29,15 @@
 @interface GormViewWithSubviewsEditor : GormViewEditor <IBSelectionOwners>
 {
   BOOL _displaySelection;
-  BOOL opened;
   GormViewWithSubviewsEditor *openedSubeditor;
   NSMutableArray *selection;
+  BOOL opened;
 }
 
-- (BOOL) isOpened;
-- (BOOL) canBeOpened;
 - (void) setOpenedSubeditor: (GormViewWithSubviewsEditor *) newEditor;
-- (void) setOpened: (BOOL) value;
 - (void) openParentEditor;
 - (void) makeSubeditorResign;
 - (void) silentlyResetSelection;
-- (void) makeSelectionVisible: (BOOL) value;
-- (NSArray*) selection;
 - (void) selectObjects: (NSArray *) objects;
 - (void) copySelection;
 - (void) deleteSelection;

@@ -167,28 +167,47 @@
 
 - (NSArray *)destroyAndListSubviews
 {
-  id internalView = [[[_EO documentView] subviews] objectAtIndex: 0];
-  NSEnumerator *enumerator = [[internalView subviews] objectEnumerator];
-  GormViewEditor *subview;
+  id documentView = [_EO documentView];
+  NSArray *subviews = [documentView subviews];
   NSMutableArray *newSelection = [NSMutableArray array];
-  
-  [parent makeSubeditorResign];
-  while ((subview = [enumerator nextObject]) != nil)
+
+  if([documentView conformsToProtocol: @protocol(IBEditors)] == YES)
     {
-      id v;
-      NSRect frame;
-      v = [subview editedObject];
-      frame = [v frame];
-      frame = [parent convertRect: frame fromView: _EO];
-      [subview deactivate];      
-      [v setFrame: frame];
-      [newSelection addObject: v];
+      id internalView = [subviews objectAtIndex: 0];
+      NSEnumerator *enumerator = [[internalView subviews] objectEnumerator];
+      GormViewEditor *subview;
+      
+      [parent makeSubeditorResign];
+      while ((subview = [enumerator nextObject]) != nil)
+	{
+	  id v;
+	  NSRect frame;
+	  v = [subview editedObject];
+	  frame = [v frame];
+	  frame = [parent convertRect: frame fromView: _EO];
+	  [subview deactivate];      
+	  [v setFrame: frame];
+	  [newSelection addObject: v];
+	}
     }
-  
+  else
+    {
+      NSRect frame = [documentView frame];
+
+      // in this case the view editor is the documentView and
+      // we need to add the internal view back into the superview
+      frame = [parent convertRect: frame fromView: _EO];
+      [documentView setFrame: frame];
+      [newSelection addObject: documentView];
+      [_EO setDocumentView: nil]; // remove any reference to the box.
+      // RELEASE(_EO);
+    }
+
   {
     id thisView = [self editedObject];
     [self close];
     [thisView removeFromSuperview];
+    [document detachObject: thisView];
   }
 
   return newSelection;

@@ -80,7 +80,6 @@
     }
 }
 
-
 - (BOOL) canBeOpened
 {
   return YES;

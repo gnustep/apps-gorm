@@ -1423,6 +1423,28 @@ static BOOL currently_displaying = NO;
 - (void) makeSelectionVisible: (BOOL) value
 {
 }
+
+- (BOOL) canBeOpened
+{
+  return NO;
+}
+
+- (BOOL) isOpened
+{
+  return NO;
+}
+
+- (void) setOpened: (BOOL) value
+{
+  if (value == YES)
+    {
+      [document setSelectionFromEditor: self];      
+    }
+  else
+    {
+      [self setNeedsDisplay: YES];
+    }
+}
 @end
 
 

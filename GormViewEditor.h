@@ -34,7 +34,6 @@
   BOOL                  activated;
   BOOL                  closed;
   GormViewWithSubviewsEditor        *parent;
-
 }
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject 
@@ -46,8 +45,11 @@
 - (void) detachSubviews;
 - (void) postDraw: (NSRect) rect;
 - (id) parent;
-- (NSArray *)selection;
+- (NSArray *) selection;
 - (void) makeSelectionVisible: (BOOL) value;
+- (BOOL) isOpened;
+- (BOOL) canBeOpened;
+- (void) setOpened: (BOOL) value;
 @end
 
 @interface GormViewEditor (EditingAdditions)

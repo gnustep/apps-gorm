@@ -387,7 +387,7 @@
     id thisView = [self editedObject];
     [self close];
     [thisView removeFromSuperview];
-    
+    [document detachObject: thisView];
   }
   return newSelection;
 }
