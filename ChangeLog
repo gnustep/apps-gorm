@@ -1,3 +1,12 @@
+2003-07-20  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: (-[GormDocument saveGormDocument:]) added
+	code to prevent copying of images/sounds if the source path
+	is the same as the destination.  This was causing the file
+	to be truncated to zero and caused Gorm to lock.
+	* (-[GormDocument parseHeader:]): removed 
+	extra characterset definition/
+	
 2003-07-14  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: Added implementation for new methods 

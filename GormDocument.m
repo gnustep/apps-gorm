@@ -183,7 +183,6 @@ static NSImage	*classesImage = nil;
       [connections addObject: aConnector];
       [nc postNotificationName: IBDidAddConnectorNotification
 			object: aConnector];
-
     }
 }
 
@@ -773,7 +772,6 @@ static NSImage	*classesImage = nil;
   NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
   GormClassManager *cm = [self classManager];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
-  NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
   NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
   NSCharacterSet *categoryStopSet = [NSCharacterSet characterSetWithCharactersInString: @" ("];
   NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
@@ -784,6 +782,7 @@ static NSImage	*classesImage = nil;
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
   NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
   NSRange notFoundRange = NSMakeRange(NSNotFound,0);
+  // NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
 
   while (![headerScanner isAtEnd])
     {
@@ -2782,12 +2781,13 @@ static NSImage	*classesImage = nil;
       // create the directory...
       archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
     }
+  
+  RELEASE(archiver); // We're done with the archiver here..
 
   if (archiveResult)
     {
       // save the data...
       archiveResult = [archiverData writeToFile: gormPath atomically: YES]; 
-      RELEASE(archiver);
       if (archiveResult) 
 	{
 	  // save the custom classes.. and we're done...
@@ -2802,13 +2802,21 @@ static NSImage	*classesImage = nil;
 	      while ((object = [en nextObject]) != nil)
 		{
 		  NSString *soundPath;
-		  BOOL copied;
+		  BOOL copied = NO;
 
-		  soundPath = [documentPath stringByAppendingPathComponent:
-		    [object lastPathComponent]];
-		  copied = [mgr copyPath: object
-		 		  toPath: soundPath
-				 handler: nil];
+		  if(![object isEqualToString: imagePath])
+		    {
+		      soundPath = [documentPath stringByAppendingPathComponent:
+						  [object lastPathComponent]];
+		      copied = [mgr copyPath: object
+				    toPath: soundPath
+				    handler: nil];
+		    }
+		  else
+		    {
+		      // mark as copied if paths are equal...
+		      copied = YES;
+		    }
 
 		  if (!copied)
 		    {
@@ -2821,13 +2829,22 @@ static NSImage	*classesImage = nil;
 	      while ((object = [en nextObject]) != nil)
 		{
 		  NSString *imagePath;
-		  BOOL copied;
+		  BOOL copied = NO;
 
 		  imagePath = [documentPath stringByAppendingPathComponent:
 		    [object lastPathComponent]];
-		  copied = [mgr copyPath: object
-		 		  toPath: imagePath
-				 handler: nil];
+
+		  if(![object isEqualToString: imagePath])
+		    {
+		      copied = [mgr copyPath: object
+				    toPath: imagePath
+				    handler: nil];
+		    }
+		  else
+		    {
+		      // mark it as copied if paths are equal.
+		      copied = YES;
+		    }
 
 		  if (!copied)
 		    {
