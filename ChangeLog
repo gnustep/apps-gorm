@@ -1,3 +1,16 @@
+2002-03-01  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormCustomView.m ([GormCustomView -classForCoder]): 
+	new method. Easy way to make sure GormCustomView is always
+	encoded as a GSCustomView.
+	* GormCustomView.m ([GormCustomView -initWithCoder:]): 
+	([GormCustomView -encodeWithCoder:]): 
+	new encoding (works with the new GSCustomView encoding),
+	ability to open old documents.
+	* GormDocument.m: 
+	([GormDocument -pasteType:fromPasteboard:parent:]): 
+	decode GSCustomView as GormCustomView.
+
 2002-02-18  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Palettes/3Containers/GNUmakefile

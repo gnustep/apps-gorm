@@ -27,6 +27,8 @@
 #include <AppKit/NSGraphics.h>
 #include <AppKit/NSFont.h>
 
+@class GSCustomView;
+
 @implementation GormCustomView 
 
 - (id)initWithFrame:(NSRect)frameRect
@@ -58,6 +60,12 @@
   return [self stringValue];
 }
 
+
+- (Class) classForCoder
+{
+  return [GSCustomView class];
+}
+
 /*
  * This needs to be coded like a GSNibItem. How do we make sure this
  * tracks changes in GSNibItem coding?
@@ -66,18 +74,45 @@
 {
   [aCoder encodeObject: [self stringValue]];
   [aCoder encodeRect: _frame];
+  [aCoder encodeValueOfObjCType: @encode(unsigned int) 
+	  at: &_autoresizingMask];
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  NSString *string;
-  // do not decode super. We need to maintain mapping to NibItems
-  string = [aCoder decodeObject];
-  _frame = [aCoder decodeRect];
+  int version = [aCoder versionForClassName: 
+			  NSStringFromClass([GSCustomView class])];
 
-  [self initWithFrame: _frame];
-  [self setClassName: string];
-  return self; 
+  if (version == 1)
+    {
+      NSString *string;
+      unsigned int mask;
+      // do not decode super. We need to maintain mapping to NibItems
+      string = [aCoder decodeObject];
+      _frame = [aCoder decodeRect];
+      [self initWithFrame: _frame];
+      [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+	      at: &_autoresizingMask];
+      [self setClassName: string];
+      return self;
+    }
+  else if (version == 0)
+    {
+      NSString *string;
+      // do not decode super. We need to maintain mapping to NibItems
+      string = [aCoder decodeObject];
+      _frame = [aCoder decodeRect];
+      
+      [self initWithFrame: _frame];
+      [self setClassName: string];
+      return self;
+    }
+  else
+    {
+      NSLog(@"no initWithCoder for version");
+      RELEASE(self);
+      return nil;
+    }
 }
 
 

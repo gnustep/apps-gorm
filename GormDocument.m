@@ -1505,6 +1505,7 @@ static NSImage	*classesImage = nil;
   NSEnumerator	*enumerator;
   NSPoint	filePoint;
   NSPoint	screenPoint;
+  NSUnarchiver *u;
 
   data = [aPasteboard dataForType: aType];
   if (data == nil)
@@ -1512,7 +1513,10 @@ static NSImage	*classesImage = nil;
       NSLog(@"Pasteboard %@ doesn't contain data of %@", aPasteboard, aType);
       return nil;
     }
-  objects = [NSUnarchiver unarchiveObjectWithData: data];
+  u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
+  [u decodeClassName: @"GSCustomView" 
+     asClassName: @"GormCustomView"];
+  objects = [u decodeObject];
   enumerator = [objects objectEnumerator];
   filePoint = [window mouseLocationOutsideOfEventStream];
   screenPoint = [window convertBaseToScreen: filePoint];
