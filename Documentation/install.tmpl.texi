@@ -21,6 +21,9 @@ Available from
 @url{ftp://ftp.gnu.org/gnu/gstep} or see
 @url{http://www.gnustep.org/} for further information.
 
+NB. Until gstep-core-@value{GNUSTEP-VERSION} is released, you will need to get
+the latest source from gstep-core from the CVS repository.
+
 @item gcc-2.8.*@*
 Gcc should be available from any GNU ftp site @*
 You may also use a recent version of egcs. @*
