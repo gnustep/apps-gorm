@@ -1,3 +1,9 @@
+2004-05-28 21:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Corrected a problem the the renameClassNamed:
+	newName: method.   It was releasing the classInformation and causing 
+	a crash.
+	
 2004-05-25 07:01 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm testInterface:] added code to save the services

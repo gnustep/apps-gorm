@@ -965,9 +965,10 @@
       int index = 0;
       NSArray *subclasses = [self subClassesOf: oldName];
 
-
+      RETAIN(classInfo); // prevent loss of the information...
       [classInformation removeObjectForKey: oldName];
       [classInformation setObject: classInfo forKey: name];
+      RELEASE(classInfo); // release our hold on it.
 
       if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
 	{
