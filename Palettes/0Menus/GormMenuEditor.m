@@ -637,6 +637,7 @@ void _attachAllSubmenus(id menu, NSArray *items, id document)
   NSEnumerator *e = [items objectEnumerator];
   id i = nil;
   
+  [menu display];
   while((i = [e nextObject]) != nil)
     {
       [document attachObject: i toParent: menu];
@@ -645,6 +646,7 @@ void _attachAllSubmenus(id menu, NSArray *items, id document)
 	  id submenu = [i submenu];
 	  NSArray *submenuItems = [submenu itemArray];
 	  
+	  [submenu setSupermenu: menu];
 	  [document attachObject: submenu toParent: i];
 	  _attachAllSubmenus(submenu, submenuItems, document);
 	}
@@ -948,6 +950,8 @@ void _attachAll(NSMenu *menu, id document)
 	    {
 	      [self closeSubeditors];
 	    }
+	  [menu display];
+	  [[item submenu] display];
 	  [editor orderFront];
 	  [editor activate];
 	  ASSIGN(subeditor, editor);
