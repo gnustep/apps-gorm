@@ -148,14 +148,6 @@ static NSImage	*classesImage = nil;
 {
   NSArray	*old;
 
-  RETAIN(anObject);
-  /*
-   * remove any old linkage
-   */
-  if ([self containsObject: anObject] == YES)
-    {
-      [self detachObject: anObject];
-    }
   /*
    * Create a connector that links this object to its parent.
    * A nil parent is the root of the hierarchy so we use a dummy object for it.
@@ -178,15 +170,22 @@ static NSImage	*classesImage = nil;
       [self addConnector: (id<IBConnectors>)con];
       RELEASE(con);
     }
-  [self setName: nil forObject: anObject];
-
+  /*
+   * Make sure that there is a name for this object.
+   */
+  if ([self nameForObject: anObject] == nil)
+    {
+      [self setName: nil forObject: anObject];
+    }
+  /*
+   * Add top-level objects to objectsView and open their editors.
+   */
   if ([anObject isKindOfClass: [NSWindow class]] == YES
     || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
     }
-  RELEASE(anObject);
 }
 
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent

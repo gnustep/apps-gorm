@@ -26,7 +26,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PALETTE_NAME = 3Containers
 3Containers_PALETTE_ICON = ContainersPalette
 3Containers_OBJC_FILES = main.m
-3Containers_PALETTE_CLASS = ContainersPalette
+3Containers_PRINCIPAL_CLASS = ContainersPalette
 3Containers_RESOURCE_FILES = ContainersPalette.tiff
 
 -include GNUmakefile.preamble

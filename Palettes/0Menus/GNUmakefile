@@ -25,8 +25,10 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 0Menus
 0Menus_PALETTE_ICON = MenusPalette
-0Menus_OBJC_FILES = main.m
-0Menus_PALETTE_CLASS = MenusPalette
+0Menus_OBJC_FILES = \
+	GormMenuEditor.m \
+	main.m
+0Menus_PRINCIPAL_CLASS = MenusPalette
 0Menus_RESOURCE_FILES = MenusPalette.tiff
 
 -include GNUmakefile.preamble
