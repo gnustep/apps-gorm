@@ -466,8 +466,43 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) setName: (id)sender
 {
-  /* FIXME */
-  return nil;
+  NSPanel	*p;
+  int		r;
+  NSTextField	*t;
+  NSString	*n;
+  NSArray	*s = [selectionOwner selection];
+
+  if ([s count] == 0)
+    {
+      NSRunAlertPanel (@"Set Name", @"Nothing currently selected", 
+		       @"OK", NULL, NULL);
+      return nil;
+    }
+  if ([s count] > 1)
+    {
+      NSRunAlertPanel (@"Set Name", @"Multiple objects selected", 
+		       @"OK", NULL, NULL);
+      return nil;
+    }
+  p = NSGetAlertPanel(@"Set Name", @"Name: ", @"OK", @"Cancel", nil);
+  t = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
+  [[p contentView] addSubview: t];
+  [p makeFirstResponder: t];
+  [p makeKeyAndOrderFront: self];
+  [t performClick: self];
+  r = [(id)p runModal];
+  if (r == NSAlertDefaultReturn)
+    {
+      n = [[t stringValue] stringByTrimmingSpaces];
+      if (n != nil && [n isEqual: @""] == NO)
+	{
+	  [activeDocument setName: n forObject: [s lastObject]];
+	}
+    }
+  [t removeFromSuperview];
+  RELEASE(t);
+  NSReleaseAlertPanel(p);
+  return self;
 }
 
 - (void) startConnecting
