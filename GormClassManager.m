@@ -147,12 +147,78 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [[info objectForKey: @"AllOutlets"] addObject: anOutlet];
 }
 
-- (void) addAction: (NSString *)anOutlet forClassNamed: (NSString *)className
+- (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className
 {
+  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
+  NSArray *allActions = [self allActionsForClassNamed: className];
+
+  if([allActions containsObject: anAction])
+    {
+      return;
+    }
+  if(extraActions == nil)
+    {
+      extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
+      [info setObject: extraActions forKey: @"ExtraActions"];
+      RELEASE(extraActions);
+    }
+
+  [extraActions addObject: anAction];
+  [[info objectForKey: @"AllActions"] insertObject: anAction atIndex: 0];
 }
 
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className
 {
+  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
+  NSArray *allOutlets = [self allOutletsForClassNamed: className];
+
+  if([allOutlets containsObject: anOutlet])
+    {
+      return;
+    }
+  if(extraOutlets == nil)
+    {
+      extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
+      [info setObject: extraOutlets forKey: @"ExtraOutlets"];
+      RELEASE(extraOutlets);
+    }
+
+  [extraOutlets addObject: anOutlet];
+  [[info objectForKey: @"AllOutlets"] insertObject: anOutlet atIndex: 0];
+}
+
+- (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className
+{
+  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
+  NSArray *allActions = [self allActionsForClassNamed: className];
+
+  if([extraActions containsObject: oldAction])
+    {
+      int all_index = [allActions indexOfObject: oldAction];
+      int extra_index = [allActions indexOfObject: oldAction];
+
+      [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
+      [[info objectForKey: @"AllActions"] replaceObjectAtIndex: all_index withObject: newAction];
+    }
+}
+
+- (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: className
+{
+  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
+  NSArray *allOutlets = [self allOutletsForClassNamed: className];
+
+  if([extraOutlets containsObject: oldOutlet])
+    {
+      int all_index = [allOutlets indexOfObject: oldOutlet];
+      int extra_index = [allOutlets indexOfObject: oldOutlet];
+
+      [extraOutlets replaceObjectAtIndex: extra_index withObject: newOutlet];
+      [[info objectForKey: @"AllOutlets"] replaceObjectAtIndex: all_index withObject: newOutlet];
+    }
 }
 
 - (NSArray*) allActionsForObject: (NSObject*)obj

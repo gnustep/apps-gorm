@@ -73,6 +73,12 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
            actionsForItem: (id)item;
 - (NSArray *) outlineView: (GormOutlineView *)ov
            outletsForItem: (id)item;
+- (void)outlineView: (NSOutlineView *)anOutlineView
+	  addAction: (NSString *)action
+           forClass: (id)item;
+- (void)outlineView: (NSOutlineView *)anOutlineView
+	  addOutlet: (NSString *)outlet
+           forClass: (id)item;
 @end
 
 // a class to hold the outlet/actions so that the

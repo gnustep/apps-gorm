@@ -415,9 +415,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) addAttributeToClass: (id)sender
 {  
-  NSLog(@"add outlet/action");
-  // return self;
   return [(id)[self activeDocument] addAttributeToClass: sender];
+}
+
+- (id) removeAttributeFromClass: (id)sender
+{  
+  return [(id)[self activeDocument] revoveAttributeFromClass: sender];
 }
 
 - (id) editClass: (id)sender
@@ -638,6 +641,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Add Outlet/Action.."
 	           action: @selector(addAttributeToClass:)
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Delete Outlet/Action.."
+	           action: @selector(removeAttributeFromClass:)
 	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Classes" 
 				 action: NULL 

@@ -1,3 +1,17 @@
+2002-07-12  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [-removeAttributeFromClass] added method to be
+	used by new menu item "Delete Outlet/Action".  Removed some
+	NSLog statements.
+	* GormClassManager.[hm]: Added methods to support adding and
+	replacing actions and outlets.
+	* GormDocument.m: Modified data source methods to use the methods
+	added to the class manager to edit the contents of the class list.
+	* GormOutlineView.[hm]: Added methods to add actions and outlets
+	to the data source from the outline view.  Also changed the drawing
+	code so that the outlet/action being edited doesn't shift when
+	clicked.
+
 2002-07-11  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Added stubs for two new method to add actions

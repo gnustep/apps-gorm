@@ -183,10 +183,10 @@ static NSColor *darkGreyBlueColor = nil;
 {
   int insertionPoint = 0;
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: actionname];
-  NSLog(@"Adding an action: %@", actionname);
   _numberOfRows += 1;
   insertionPoint = [_items indexOfObject: item];
   [_items insertObject: holder atIndex: insertionPoint + 1];
+  [_dataSource outlineView: self addAction: actionname forClass: _itemBeingEdited];
   [self setNeedsDisplay: YES];
   [self noteNumberOfRowsChanged];
 }
@@ -236,11 +236,10 @@ static NSColor *darkGreyBlueColor = nil;
 {
   int insertionPoint = 0;
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: outletname];
-  NSLog(@"Adding an outlet: %@", outletname);
   _numberOfRows += 1;
   insertionPoint = [_items indexOfObject: item];
   [_items insertObject: holder atIndex: insertionPoint + 1];
-  //  [self editColumn: 0 row: insertionPoint+1 withEvent: nil select: YES];
+  [_dataSource outlineView: self addOutlet: outletname forClass: _itemBeingEdited];
   [self setNeedsDisplay: YES];
   [self noteNumberOfRowsChanged];
 }
@@ -491,16 +490,13 @@ static NSColor *darkGreyBlueColor = nil;
   _clickedItem = [self itemAtRow: _clickedRow];
   isActionOrOutlet = [_clickedItem isKindOfClass: [GormOutletActionHolder class]];
 
-  NSLog(@"clickedItem = %@",_clickedItem);
   tb = [_tableColumns objectAtIndex: _clickedColumn];
   if(tb == _actionColumn)
     {
-      NSLog(@"setting action image");
       image = action;
     }
   else if (tb == _outletColumn)
     {
-      NSLog(@"setting outlet image");
       image = outlet;
     }
 
@@ -532,7 +528,6 @@ static NSColor *darkGreyBlueColor = nil;
       if(_clickedItem != [self itemBeingEdited] &&
 	 !isActionOrOutlet)
 	{
-	  NSLog(@"RESETTING......");
 	  [self setItemBeingEdited: nil];
 	  [self setIsEditing: NO];
 	  [self setBackgroundColor: salmonColor];
@@ -542,7 +537,6 @@ static NSColor *darkGreyBlueColor = nil;
   else if(isActionOrOutlet)
     {
       NSString *name = [_clickedItem getName];
-      NSLog(@"clicked on action/outlet: %@",name);
     }
 
   [super mouseDown: theEvent];
@@ -616,7 +610,6 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void)addAttributeToClass
 {
-  NSLog(@"got it here 2");
   if(_isEditing == YES)
     {
       if(_edittype == Actions)
@@ -630,6 +623,11 @@ static NSColor *darkGreyBlueColor = nil;
 		toObject: _itemBeingEdited];
 	}
     }
+}
+
+- (void)removeAttributeFromClass
+{
+  NSLog(@"Remove attribute not yet implemented.");
 }
 
 - (void) editColumn: (int) columnIndex 
@@ -647,6 +645,7 @@ static NSColor *darkGreyBlueColor = nil;
   NSImage *image = nil;
   NSCell *imageCell = nil;
   id value = nil;
+  BOOL isOutletOrAction = NO;
 
   // We refuse to edit cells if the delegate can not accept results 
   // of editing.
@@ -696,6 +695,7 @@ static NSColor *darkGreyBlueColor = nil;
 			byItem: item];
   if([value isKindOfClass: [GormOutletActionHolder class]])
     {
+      isOutletOrAction = YES;
       value = [value getName];
     }
 
@@ -755,9 +755,17 @@ static NSColor *darkGreyBlueColor = nil;
   level = [self levelForItem: item];
   indentationFactor = _indentationPerLevel * level;
   drawingRect = [self frameOfCellAtColumn: columnIndex  row: rowIndex];
-  drawingRect.origin.x += indentationFactor + 5 + [image size].width;
-  drawingRect.size.width -= indentationFactor + 5 + [image size].width;
-
+  if(isOutletOrAction)
+    {
+      drawingRect.origin.x += _attributeOffset;
+      drawingRect.size.width -= _attributeOffset;
+    }
+  else
+    {
+      drawingRect.origin.x += indentationFactor + 5 + [image size].width;
+      drawingRect.size.width -= indentationFactor + 5 + [image size].width;
+    }
+  
   // create the image cell..
   imageCell = [[NSCell alloc] initImageCell: image];
   if(_indentationMarkerFollowsCell)

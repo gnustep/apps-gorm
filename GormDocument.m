@@ -707,6 +707,12 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
+- (id) removeAttributeFromClass: (id)sender
+{
+  [classesView removeAttributeFromClass];
+  return self;
+}
+
 - (id) loadClass: (id)sender
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
@@ -1221,6 +1227,7 @@ static NSImage	*classesImage = nil;
       [classesView setIndentationPerLevel: 10];
       [classesView setAttributeOffset: 30];
       [classesView setBackgroundColor: salmonColor ];
+      [classesView setRowHeight: 18];
       [classesScrollView setDocumentView: classesView];
       RELEASE(classesView);
 
@@ -2193,19 +2200,22 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       forTableColumn: (NSTableColumn *)aTableColumn
 	      byItem: (id)item
 {
-  NSLog(@"Edit item %@",item);
   if([item isKindOfClass: [GormOutletActionHolder class]])
     {
       if([anOutlineView editType] == Actions)
 	{
-	  NSLog(@"the action %@",[item getName]);
+	  [classManager replaceAction: [item getName] withAction: anObject forClassNamed: [anOutlineView itemBeingEdited]];
 	}
       else if([anOutlineView editType] == Outlets)
 	{
-	  NSLog(@"the outlet %@",[item getName]);
+	  [classManager replaceOutlet: [item getName] withOutlet: anObject forClassNamed: [anOutlineView itemBeingEdited]];
 	}
       [item setName: anObject];
-      NSLog(@"Replaced by %@",anObject);
+    }
+  else
+    {
+      [classManager renameClassNamed: item newName: anObject];
+      [anOutlineView reloadData];
     }
 }
 
@@ -2268,6 +2278,20 @@ numberOfChildrenOfItem: (id)item
 {
   NSArray *outlets = [classManager allOutletsForClassNamed: item];
   return outlets;
+}
+
+- (void)outlineView: (NSOutlineView *)anOutlineView
+	  addAction: (NSString *)action
+	   forClass: (id)item
+{
+  [classManager addAction: action forClassNamed: item];
+}
+
+- (void)outlineView: (NSOutlineView *)anOutlineView
+	  addOutlet: (NSString *)outlet
+	   forClass: (id)item
+{
+  [classManager addOutlet: outlet forClassNamed: item];
 }
 @end
 
