@@ -1,3 +1,8 @@
+2004-09-08 22:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed main function from Gorm class file.
+	* main.m: Added main function here.
+	
 2004-09-07 21:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Removed some old code which measured the startup

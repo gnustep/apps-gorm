@@ -176,6 +176,7 @@ Gorm_HEADERS = \
 	GormFilePrefsManager.h 
 
 Gorm_OBJC_FILES = \
+	main.m \
         Gorm.m \
 	GormDocument.m \
 	GModelDecoder.m \

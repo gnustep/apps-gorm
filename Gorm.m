@@ -1591,10 +1591,4 @@ static BOOL _isInInterfaceBuilder = NO;
 // END OF DEPRECATED TEMPLATES                        //
 ////////////////////////////////////////////////////////
 
-// main...
-int 
-main(int argc, const char **argv)
-{ 
-  return NSApplicationMain(argc, argv);
-}
 
