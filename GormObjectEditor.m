@@ -162,7 +162,7 @@ static NSMapTable	*docMap = 0;
 	      [document detachObject: obj];
 	    }
 	}
-
+      
       [objects removeObjectIdenticalTo: selected];
       [self selectObjects: [NSArray array]];
       [self refreshCells];

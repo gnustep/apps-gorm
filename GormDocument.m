@@ -1951,7 +1951,6 @@ static NSImage	*classesImage = nil;
 
 	  [self setName: nil forObject: item];
 	  [self attachObject: item toParent: nil];
-	  RELEASE(item);
 
 	  [selectionView selectCellWithTag: 0];
 	  [selectionBox setContentView: scrollView];

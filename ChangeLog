@@ -1,3 +1,14 @@
+2004-05-14 11:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormButtonEditor.m: Added a line between some methods to 
+	improve readability.
+	* GormDocument.m: [GormDocument instantiateClass:] removed
+	extra release for an object being added to the objectsView
+	which is already autoreleased (in setName:forObject:).
+	* GormInspectorsManager.m: [GormNotApplicableInspector setObject:] 
+	method removed.  This was a temporary hack until the memory leak
+	was located.
+	
 2004-05-14 02:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Moved the call to _touch to the bottom of

@@ -145,15 +145,9 @@
     }
   return self;
 }
-
-- (void) setObject: (id)anObject
-{
-  object = nil;
-  [super setObject: anObject];
-}
 @end
 
-
+ 
 
 @interface GormISelectionView : NSView
 {

@@ -301,6 +301,7 @@ static NSRect oldFrame;
       done_editing = YES;
     }
 }
+
 - (void) textDidChange: (NSNotification *)aNotification
 {
   [_EO setTitle: [[aNotification object] string]];
