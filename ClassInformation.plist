@@ -67,6 +67,7 @@
       orderFront:,
       orderFrontColorPanel:,
       orderFrontDataLinkPanel:,
+      orderFrontFontPanel:,
       orderFrontHelpPanel:,
       orderFrontStandardAboutPanel:,
       orderFrontStandardInfoPanel:,

@@ -1047,6 +1047,11 @@ static NSButtonType _buttonTypeForObject( id button )
   return preferencesPanel;
 }
 
+- (void) orderFrontFontPanel: (id) sender
+{
+  [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
+}
+
 - (id) init 
 {
   self = [super init];

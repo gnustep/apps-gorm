@@ -137,7 +137,8 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
     };

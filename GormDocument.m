@@ -90,6 +90,22 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
     }
   return image;
 }
+- (NSString*) inspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+- (NSString*) connectInspectorClassName
+{
+  return @"GormConnectionInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+- (NSString*) classInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
 @end
 
 
@@ -1653,6 +1669,7 @@ static NSImage	*classesImage = nil;
       [objectsView addObject: firstResponder];
       fontManager = [GormFontManager new];
       [self setName: @"NSFont" forObject: fontManager];
+      // [objectsView addObject: fontManager];
 
       /*
        * Set image for this miniwindow.
