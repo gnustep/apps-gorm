@@ -609,12 +609,16 @@ static BOOL done_editing;
   if (view == nil)
     {
       view = [super hitTest: [theEvent locationInWindow]];
+      NSDebugMLog(@"Mousedown on view : %@, self : %@", view, self);
+      NSDebugLog(@"edit view : %@", edit_view);
+      
       /* Make sure we're selecting the proper view - must be a direct
 	 decendant of the edit_view */
       while (view != nil && view != self 
 	&& view != edit_view && [view superview] != edit_view)
 	{
 	  view = [view superview];
+          NSDebugLog(@"superview... : %@", view);
 	}
       if (view == self && edit_view != self)
 	{
