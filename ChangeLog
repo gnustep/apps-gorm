@@ -1,3 +1,7 @@
+2005-03-06 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Gorm.texi: Added FAQ concerning font modification.
+
 2005-03-05 23:07 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added new class.

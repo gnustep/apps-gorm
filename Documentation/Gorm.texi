@@ -767,6 +767,10 @@ Doing this overrides the settings in NSGlobalDomain for Gorm and forces Gorm not
 
 @samp{ defaults delete Gorm GSAppKitUserBundles }
 
+@subsection How can I change the font for a widget?
+
+This is a simple two step process.  Select the window the widget is in and then select the widget itself, then bring up the font panel by hitting Command-t (or by choosing the menu item).  By doing this you're making the window the main window and by selecting the widget, you're telling the editor for that object to accept changes.   Then you can select the font in the panel and hit ``Set''.   For some objects, the font panel isn't effective because those objects can't have a font directly set.
+
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index
 @printindex cp
