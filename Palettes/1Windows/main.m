@@ -283,15 +283,8 @@ NSwindow inspector
   
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -306,12 +299,6 @@ NSwindow inspector
       NSLog(@"Could not gorm GormWindowInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
-
   return self;
 }
 
@@ -378,12 +365,6 @@ NSwindow inspector
   [[minForm cellAtIndex: 1] setFloatValue: size.height];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) windowChangeNotification: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
@@ -418,11 +399,6 @@ NSwindow inspector
          selector: @selector(windowChangeNotification:)
              name: NSWindowDidResizeNotification
            object: object];
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
   return self;
 }
 

@@ -26,6 +26,9 @@
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
 
+/* This macro makes sure that the string contains a value, even if @"" */
+#define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
+
 /*----------------------------------------------------------------------------
  * NSBox
  */
@@ -84,21 +87,13 @@
     }
   [positionMatrix selectCellWithTag: [anObject titlePosition]];
   [borderMatrix selectCellWithTag: [anObject borderType]];
-  [[titleField cellAtIndex: 0] setStringValue: [anObject title]];
+  [[titleField cellAtIndex: 0] setStringValue: VSTR([anObject title])];
   [horizontalSlider setFloatValue: [anObject contentViewMargins].width];
   [verticalSlider setFloatValue: [anObject contentViewMargins].height];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -114,11 +109,6 @@
       NSLog(@"Could not gorm GormBoxInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }
@@ -296,7 +286,7 @@
     } 
   [alignMatrix selectCellWithTag: [anObject alignment]];
   [iconMatrix selectCellWithTag: [anObject imagePosition]];
-  [[keyField cellAtIndex: 0] setStringValue: [anObject keyEquivalent]];
+  [[keyField cellAtIndex: 0] setStringValue: VSTR([anObject keyEquivalent])];
   
   [optionMatrix deselectAllCells];
   if ([anObject isBordered])
@@ -312,13 +302,13 @@
 
   [[tagField cellAtIndex: 0] setIntValue: [anObject tag]];
 
-  [[titleForm cellAtIndex: 0] setStringValue: [anObject title]];
-  [[titleForm cellAtIndex: 1] setStringValue: [anObject alternateTitle]];
+  [[titleForm cellAtIndex: 0] setStringValue: VSTR([anObject title])];
+  [[titleForm cellAtIndex: 1] setStringValue: VSTR([anObject alternateTitle])];
 
   image = [anObject image];
   if (image != nil)
     {
-      [[titleForm cellAtIndex: 2] setStringValue: [image name]];
+      [[titleForm cellAtIndex: 2] setStringValue: VSTR([image name])];
     }
   else
     {
@@ -328,7 +318,7 @@
   image = [anObject alternateImage];
   if (image != nil)
     {
-      [[titleForm cellAtIndex: 3] setStringValue: [image name]];
+      [[titleForm cellAtIndex: 3] setStringValue: VSTR([image name])];
     }
   else
     {
@@ -339,16 +329,8 @@
     [typeButton indexOfItemWithTag: [self buttonTypeForObject: anObject]]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   RELEASE(okButton);
   [super dealloc];
@@ -365,11 +347,6 @@
       NSLog(@"Could not gorm GormButtonInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   /* Need to set up popup button */
   [typeButton removeAllItems];
@@ -474,16 +451,8 @@
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -499,11 +468,6 @@
       NSLog(@"Could not gorm GormCellInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }
@@ -656,16 +620,8 @@
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -681,11 +637,6 @@
       NSLog(@"Could not gorm GormFormInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }
@@ -834,16 +785,8 @@
   [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   RELEASE(okButton);
   [super dealloc];
@@ -860,11 +803,6 @@
       NSLog(@"Could not gorm GormMatrixInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }
@@ -931,16 +869,8 @@
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -956,11 +886,6 @@
       NSLog(@"Could not gorm GormPopUpButtonInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }
@@ -1066,16 +991,8 @@
   [[tagForm cellAtIndex: 0] setIntValue: [[anObject cell] tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -1091,11 +1008,6 @@
       NSLog(@"Could not gorm GormSliderInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
   return self;
 }
 
@@ -1209,16 +1121,8 @@
     [valueWrapsButton setState: 0];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -1235,11 +1139,6 @@
       return nil;
     }
 
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
   return self;
 }
 
@@ -1402,16 +1301,8 @@
   [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
 }
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-
-  [self _setValuesFromControl: notifier];
-}
-
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   RELEASE(okButton);
   [super dealloc];
@@ -1429,11 +1320,6 @@
       NSLog(@"Could not gorm GormTextFieldInspector");
       return nil;
     }
-  [[NSNotificationCenter defaultCenter] 
-      addObserver: self
-         selector: @selector(controlTextDidEndEditing:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
 
   return self;
 }

@@ -1277,7 +1277,7 @@ static NSImage	*classesImage = nil;
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: NSHomeDirectory()
+  result = [oPanel runModalForDirectory: nil
 				   file: nil
 				  types: fileTypes];
   if (result == NSOKButton)

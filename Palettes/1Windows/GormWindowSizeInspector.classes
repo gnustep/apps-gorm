@@ -11,6 +11,9 @@
     };
     IBInspector = {
 	Actions = (
+	    ok:,
+	    revert:,
+	    touch:
 	);
 	Outlets = (
 	);
@@ -27,11 +30,11 @@
     };
     NSControl = {
 	Actions = (
-	    "takeDoubleValueFrom:",
-	    "takeFloatValueFrom:",
-	    "takeIntValueFrom:",
-	    "takeObjectValueFrom:",
-	    "takeStringValueFrom:"
+	    takeDoubleValueFrom:,
+	    takeFloatValueFrom:,
+	    takeIntValueFrom:,
+	    takeObjectValueFrom:,
+	    takeStringValueFrom:
 	);
 	Outlets = (
 	    target

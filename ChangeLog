@@ -1,3 +1,15 @@
+2001-11-01  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m ([GormDocument -openDocument:]): Open file
+	from current dir.
+
+	* Palettes/1Windows/main.m: Set action/target to ok: in NSForms in
+	GormWindowInspector and GormWindowSizeInspector. Remove all
+	TextDidEndEditing Notifications.
+	* Palettes/2Controls/inspectors.m: Likewise for all control
+	inspectors. Also make sure all setStringValue: messages get sent
+	a non-nil string.
+
 2001-10-30  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormWindowEditor.m: Fixed various drawing glitches when managing
