@@ -714,6 +714,11 @@ static BOOL done_editing;
 		{
 		  [object setImage: image];
 		}
+	      else
+		{
+		  return NO;
+		}
+
 	      return YES;
 	    }
 	  else if([types containsObject: GormSoundPboardType] == YES)
@@ -724,6 +729,11 @@ static BOOL done_editing;
 		{
 		  [object setSound: [NSSound soundNamed: name]];
 		}
+	      else
+		{
+		  return NO;
+		}
+
 	      return YES;
 	    }
 	}
