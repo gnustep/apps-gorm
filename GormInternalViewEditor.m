@@ -572,6 +572,8 @@
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
+  NSRect         rect;
+
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   
@@ -582,7 +584,7 @@
     }
 
 
-  NSRect rect = [_editedObject bounds];
+  rect = [_editedObject bounds];
   rect.origin.x += 3;
   rect.origin.y += 2;
   rect.size.width -= 5;
