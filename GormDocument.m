@@ -243,7 +243,7 @@ static NSImage	*classesImage = nil;
   RELEASE(item);
 
   // set the holder in the document.
-  fontManager = (GormProxyObject *)item;
+  fontManager = (GormObjectProxy *)item;
   
   [selectionView selectCellWithTag: 0];
   [selectionBox setContentView: scrollView];
@@ -792,7 +792,7 @@ static NSImage	*classesImage = nil;
   RELEASE(hidden);
   RELEASE(filesOwner);
   RELEASE(firstResponder);
-  // RELEASE(fontManager);
+  RELEASE(fontManager);
   if (objToName != 0)
     {
       NSFreeMapTable(objToName);

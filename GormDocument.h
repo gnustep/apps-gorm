@@ -30,7 +30,7 @@
 #include <Foundation/Foundation.h>
 #include <GNUstepGUI/GSNibTemplates.h>
 
-@class GormClassManager, GormClassEditor, GormProxyObject;
+@class GormClassManager, GormClassEditor, GormObjectProxy;
 
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder
@@ -46,7 +46,7 @@
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
-  GormProxyObject       *fontManager;
+  GormObjectProxy       *fontManager;
   GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
