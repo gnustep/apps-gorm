@@ -30,7 +30,7 @@
 #include <Foundation/Foundation.h>
 #include <GNUstepGUI/GSNibTemplates.h>
 
-@class GormClassManager, GormClassEditor, GormObjectProxy;
+@class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner;
 
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder

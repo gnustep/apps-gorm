@@ -479,15 +479,16 @@ static NSImage *testingImage = nil;
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
-	  
-	  rect.origin.x++;
-	  rect.size.width--;
-	  rect.size.height--;
+	  NSRect        imageRect = rect;
+
+	  imageRect.origin.x++;
+	  //rect.size.width--;
+	  //rect.size.height--;
 	  [view lockFocus];
 	  [[NSColor greenColor] set];
-	  NSFrameRectWithWidth(rect, 2);
+	  NSFrameRectWithWidth(rect, 1);
 	  
-	  [sourceImage compositeToPoint: rect.origin
+	  [sourceImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];
@@ -500,17 +501,18 @@ static NSImage *testingImage = nil;
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
+	  NSRect        imageRect = rect;
 
-	  rect.origin.x += 3;
-	  rect.origin.y += 2;
-	  rect.size.width -= 5;
-	  rect.size.height -= 5;
+	  imageRect.origin.x += 3;
+	  imageRect.origin.y += 2;
+	  // rect.size.width -= 5;
+	  // rect.size.height -= 5;
 	  [view lockFocus];
 	  [[NSColor purpleColor] set];
-	  NSFrameRectWithWidth(rect, 2);
+	  NSFrameRectWithWidth(rect, 1);
 	  
-	  rect.origin.x += [targetImage size].width;
-	  [targetImage compositeToPoint: rect.origin
+	  imageRect.origin.x += [targetImage size].width;
+	  [targetImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];
@@ -523,15 +525,16 @@ static NSImage *testingImage = nil;
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
+	  NSRect        imageRect = rect;
 
-	  rect.origin.x++;
-	  rect.size.width--;
-	  rect.size.height--;
+	  imageRect.origin.x++;
+	  // rect.size.width--;
+	  // rect.size.height--;
 	  [view lockFocus];
 	  [[NSColor purpleColor] set];
-	  NSFrameRectWithWidth(rect, 2);
+	  NSFrameRectWithWidth(rect, 1);
 	  
-	  [targetImage compositeToPoint: rect.origin
+	  [targetImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];

@@ -23,7 +23,10 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "GormPrivate.h"
+#include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
+#include "GormDocument.h"
 #include "GormNSWindow.h"
 #include "GormNSPanel.h"
 
