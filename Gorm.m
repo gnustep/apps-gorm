@@ -372,6 +372,13 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
 }
 
+- (id) loadClass: (id)sender
+{
+  // Call the current document and create the class 
+  // descibed by the header
+  return [(id)[self activeDocument] loadClass: sender];
+}
+
 - (id) editClass: (id)sender
 {
   [self inspector: self];

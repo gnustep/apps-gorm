@@ -513,6 +513,173 @@ static NSImage	*classesImage = nil;
   return documentPath;
 }
 
+- (id) parseHeader: (NSString *)headerPath
+{
+  NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
+  NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
+  GormClassManager *cm = [self classManager];
+
+  while(![headerScanner isAtEnd])
+    {
+      NSScanner *classScanner = nil;
+      NSString *classString = nil;
+      BOOL classfound = NO, result = NO;
+      NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
+      NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
+      NSEnumerator *outletEnum = [outletTokens objectEnumerator];
+      NSEnumerator *actionEnum = [actionTokens objectEnumerator];
+      NSString *outletToken = nil;
+      NSString *actionToken = nil;
+
+      classfound = [headerScanner scanUpToString: @"@interface"
+			     intoString: nil];
+
+      [headerScanner scanUpToString: @"@end"
+		     intoString: &classString];
+      
+      if(classfound && ![headerScanner isAtEnd])
+	{
+	  NSString 
+	    *className = nil,
+	    *superClassName = nil,
+	    *ivarString = nil,
+	    *methodString = nil;
+	  NSScanner 
+	    *classScanner = [NSScanner scannerWithString: classString],
+	    *ivarScanner = nil,
+	    *methodScanner = nil;
+	  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+	  NSMutableArray 
+	    *actions = [NSMutableArray array],
+	    *outlets = [NSMutableArray array];
+
+	  [classScanner scanString: @"@interface"
+			intoString: nil];
+	  [classScanner scanUpToCharactersFromSet: stopSet
+			intoString: &className];
+	  [classScanner scanString: @":"
+			intoString: nil];
+	  [classScanner scanUpToString: @"\n"
+			intoString: &superClassName];
+	  [classScanner scanUpToString: @"{"
+			intoString: nil];
+	  [classScanner scanUpToString: @"}"
+			intoString: &ivarString];
+	  [classScanner scanUpToString: @"@end"
+			intoString: &methodString];
+	  NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
+		     superClassName);
+
+	  // Interate over the possible tokens which can make an
+	  // ivar an outlet.
+	  while((outletToken = [outletEnum nextObject]) != nil)
+	    {
+	      NSDebugLog(@"outlet Token = %@",outletToken);
+	      // Scan the variables of the class...
+	      ivarScanner = [NSScanner scannerWithString: ivarString];
+	      while(![ivarScanner isAtEnd])
+		{
+		  NSString *outlet = nil;
+		  
+		  [ivarScanner scanUpToString: outletToken
+			       intoString: nil];
+		  [ivarScanner scanString: outletToken
+			       intoString: nil];
+		  [ivarScanner scanUpToString: @";"
+			       intoString: &outlet];
+		  if(![ivarScanner isAtEnd])
+		    {
+		      NSDebugLog(@"outlet = %@",outlet);
+		      [outlets addObject: outlet];
+		    }
+		}
+	    }
+	  
+	  while((actionToken = [actionEnum nextObject]) != nil)
+	    {
+	      NSDebugLog(@"Action token %@",actionToken);
+	      methodScanner = [NSScanner scannerWithString: methodString];
+	      while(![methodScanner isAtEnd])
+		{
+		  NSString *action = nil;
+		  BOOL hasArguments = NO;
+		  NSCharacterSet *stopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
+		  
+		  // Scan the method name
+		  [methodScanner scanUpToString: actionToken
+				 intoString: nil];
+		  [methodScanner scanString: actionToken
+				 intoString: nil];
+		  [methodScanner scanUpToCharactersFromSet: stopSet
+				 intoString: &action];
+		  
+		  // This will return true if the method has args.
+		  hasArguments = [methodScanner scanString: @":"
+						intoString: nil];
+		  
+		  if(hasArguments)
+		    {
+		      BOOL isAction = NO;
+		      NSString *argType = nil;
+		      
+		      // If the argument is (id) then the method can
+		      // be considered an action and we add it to the list.
+		      isAction = [methodScanner scanString: @"(id)"
+						intoString: &argType];
+		      
+		      if(![methodScanner isAtEnd])
+			{
+			  if(isAction)
+			    {
+			      NSDebugLog(@"action = %@",action);
+			      [actions addObject: action];
+			    }
+			  else
+			    {
+			      NSDebugLog(@"Not an action");
+			    }
+			}
+		    }
+		} // end while
+	    } // end while 
+
+	  result = [cm addClassNamed: className
+		       withSuperClassNamed: superClassName
+		       withActions: actions
+		       withOutlets: outlets];
+	  if(result)
+	    {
+	      NSLog(@"Class %@ added", className);
+	    }
+	  else
+	    {
+	      NSLog(@"Class %@ failed to add", className);
+	    }
+	} // if we found a class
+    }
+  return self;
+}
+
+- (id) loadClass: (id)sender
+{
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
+  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  int		result;
+
+  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setCanChooseFiles: YES];
+  [oPanel setCanChooseDirectories: NO];
+  result = [oPanel runModalForDirectory: nil
+				   file: nil
+				  types: fileTypes];
+  if (result == NSOKButton)
+    {
+       return [self parseHeader: [oPanel filename]];
+    }
+
+  return nil;
+}
+
 - (id) editClass: (id)sender
 {
   [self changeCurrentClass: sender];

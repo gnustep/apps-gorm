@@ -1,3 +1,10 @@
+2001-12-18  Gregory John Casamento <greg_casamento@yahoo.com>
+	* Gorm.m: loadClass method added to call the method in GormDocument
+	* GormDocument.m: loadClass method and parseClass method added
+		to parse the contents of a .[hH] file to produce an
+		entry in the classes list.
+	* GormClassManager.[hm]:  addClassNamed:... method added.
+	
 2001-12-04  Laurent Julliard  <laurent@moldus.org>
 
 	* Palettes/4Data/main.m: Date and Number Formatters added

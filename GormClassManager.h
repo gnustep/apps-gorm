@@ -19,6 +19,10 @@
 
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name;
 - (NSString*) addClassWithSuperClassName: (NSString*)name;
+- (BOOL) addClassNamed: (NSString*)className
+   withSuperClassNamed: (NSString*)superClassName
+	   withActions: (NSArray*)actions
+           withOutlets: (NSArray*)outlets;
 - (BOOL) setSuperClassNamed: (NSString*)superclass
 	      forClassNamed: (NSString*)subclass;
 

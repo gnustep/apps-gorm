@@ -93,6 +93,40 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return @"";
 }
 
+- (BOOL) addClassNamed: (NSString*)className
+   withSuperClassNamed: (NSString*)superClassName
+	   withActions: (NSArray*)actions
+	   withOutlets: (NSArray*)outlets
+{
+  BOOL result = NO;
+
+  if ([superClassName isEqualToString: @"NSObject"]
+    || [classInformation objectForKey: superClassName] != nil)
+    {
+      NSMutableDictionary	*classInfo;
+      NSString			*newClassName;
+
+      if(![classInformation objectForKey: className])
+	{
+	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
+	  
+	  [classInfo setObject: outlets forKey: @"Outlets"];
+	  [classInfo setObject: actions forKey: @"Actions"];
+	  [classInfo setObject: superClassName forKey: @"Super"];
+	  [classInformation setObject: classInfo forKey: className];
+	  RELEASE(classInfo);
+	  result = YES;
+	}
+      else
+	{
+	  NSLog(@"Class already exists");
+	  result = NO;
+	}
+    }
+
+  return result;
+}
+
 - (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
