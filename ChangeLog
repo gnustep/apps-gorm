@@ -1,3 +1,35 @@
+2001-11-20  Laurent Julliard <laurent@julliard-online.org>
+
+	* GNUMakefile: data palette and new icons added
+	* GormInspectorManager.m (-setCurrentInspector): Controls embedded
+	in NSScrollView must be handled differently
+	* GormWindowEditor.m (-mouseDown) : some debugging code added
+	* Palettes/2Controls/GormBoxInspector.gorm: alignment tuning
+        * Palettes/3Containers/GormBrowserInspector.gorm : New NSBrowser
+	inspector
+        * Palettes/3Containers/GormTableViewInspector.gorm: New NSTableView
+	inspector
+        * Palettes/4Data/main.m: new Data Palette
+        * Palettes/4Data/inspectors.m: new Data Palette
+        * Palettes/4Data/GormComboBoxInspector.gorm: new NSComboBox inspector
+	 (incomplete)
+        * Palettes/4Data/GormImageViewInspector.gorm: new NSImageView inspector
+        * Palettes/4Data/GormTextViewInspector.gorm: new NSTextView inspector
+	* Images/Sunday_seurat.tiff: new inspector icon
+        * Images/button_nib.tiff: new inspector icon
+        * Images/date_formatter.tiff: new inspector icon
+        * Images/iconBottomLeft_nib.tiff: new inspector icon
+        * Images/iconBottomRight_nib.tiff: new inspector icon
+        * Images/iconBottom_nib.tiff: new inspector icon
+        * Images/iconCenterLeft_nib.tiff: new inspector icon
+        * Images/iconCenterRight_nib.tiff: new inspector icon
+        * Images/iconCenter_nib.tiff: new inspector icon
+        * Images/iconTopLeft_nib.tiff: new inspector icon
+        * Images/iconTopRight_nib.tiff: new inspector icon
+        * Images/iconTop_nib.tiff: new inspector icon
+        * Images/number_formatter.tiff: new inspector icon
+        * Images/photoframe_nib.tiff: new inspector icon
+	
 2001-11-03  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormDocument.m: Removed extra RELEASEes (reported by Ludovic
