@@ -159,7 +159,8 @@ Gorm_OBJC_FILES = \
 	GormInternalViewEditor.m \
 	GormPalettesManager.m \
 	GormOutlineView.m \
-	GormCustomClassInspector.m
+	GormCustomClassInspector.m \
+	GormScrollViewEditor.m
 
 -include GNUmakefile.preamble
 

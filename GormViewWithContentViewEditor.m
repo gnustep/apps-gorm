@@ -617,6 +617,117 @@
  
 }
 
+- (void) moveSelectionByX: (float)x 
+		     andY: (float)y
+{
+  int i;
+  int count = [selection count];
+
+  for (i = 0; i < count; i++)
+    {
+      id v = [selection objectAtIndex: i];
+      NSRect f = [v frame];
+      
+      f.origin.x += x;
+      f.origin.y += y;
+
+      [v setFrameOrigin: f.origin];
+    }
+}
+
+- (void) resizeSelectionByX: (float)x 
+		       andY: (float)y
+{
+  int i;
+  int count = [selection count];
+
+  for (i = 0; i < count; i++)
+    {
+      id v = [selection objectAtIndex: i];
+      NSRect f = [v frame];
+      
+      f.size.width += x;
+      f.size.height += y;
+
+      [v setFrameSize: f.size];
+    }
+}
+
+- (void) keyDown: (NSEvent *)theEvent
+{
+  NSString *characters = [theEvent characters];
+  unichar character = 0;
+  float moveBy = 1.0;
+
+  if ([characters length] > 0)
+    {
+      character = [characters characterAtIndex: 0];
+    }
+
+  if (([theEvent modifierFlags] & NSShiftKeyMask) == NSShiftKeyMask)
+    {
+      if (([theEvent modifierFlags] & NSAlternateKeyMask) == NSAlternateKeyMask)
+	{
+	  moveBy = 10.0;
+	}
+      
+      if ([selection count] == 1)
+	{
+	  switch (character)
+	    {
+	    case NSUpArrowFunctionKey:
+	      [self resizeSelectionByX: 0 andY: 1*moveBy];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSDownArrowFunctionKey:
+	      [self resizeSelectionByX: 0 andY: -1*moveBy];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSLeftArrowFunctionKey:
+	      [self resizeSelectionByX: -1*moveBy andY: 0];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSRightArrowFunctionKey:
+	      [self resizeSelectionByX: 1*moveBy andY: 0];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    }
+	}
+    }
+  else
+    {
+      if (([theEvent modifierFlags] & NSAlternateKeyMask) == NSAlternateKeyMask)
+	{
+	  moveBy = 10.0;
+	}
+      
+      if ([selection count] > 0)
+	{
+	  switch (character)
+	    {
+	    case NSUpArrowFunctionKey:
+	      [self moveSelectionByX: 0 andY: 1*moveBy];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSDownArrowFunctionKey:
+	      [self moveSelectionByX: 0 andY: -1*moveBy];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSLeftArrowFunctionKey:
+	      [self moveSelectionByX: -1*moveBy andY: 0];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    case NSRightArrowFunctionKey:
+	      [self moveSelectionByX: 1*moveBy andY: 0];
+	      [self setNeedsDisplay: YES];
+	      return;
+	    }
+	}
+    }
+  [super keyDown: theEvent];
+
+}
+
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   if ([super acceptsTypeFromArray: types])
@@ -786,6 +897,63 @@
     }
 
   editor = [document editorForObject: box
+		     inEditor: self
+		     create: YES];
+  
+  [self selectObjects: [NSArray arrayWithObject: editor]];
+}
+
+- (void) groupSelectionInScrollView
+{
+  NSEnumerator *enumerator;
+  GormViewEditor *subview;
+  NSView *view;
+  NSScrollView *scrollView;
+  NSRect rect = NSZeroRect;
+  GormViewEditor *editor;
+  NSView *superview;
+
+  if ([selection count] < 1)
+    {
+      return;
+    }
+  
+  enumerator = [selection objectEnumerator];
+  
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      superview = [subview superview];
+      rect = NSUnionRect(rect, [subview frame]);
+      [subview deactivate];
+    }
+
+  view = [[NSView alloc] initWithFrame: 
+			   NSMakeRect(0, 0, rect.size.width, rect.size.height)];
+  scrollView = [[NSScrollView alloc] initWithFrame: rect];
+  [scrollView setHasHorizontalScroller: YES];
+  [scrollView setHasVerticalScroller: YES];
+
+  [document attachObject: scrollView
+	    toParent: _editedObject];
+
+  [superview addSubview: scrollView];
+  [scrollView setDocumentView: view];
+
+
+  enumerator = [selection objectEnumerator];
+
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      NSPoint frameOrigin;
+      [view addSubview: [subview editedObject]];
+      frameOrigin = [[subview editedObject] frame].origin;
+      frameOrigin.x -= rect.origin.x;
+      frameOrigin.y -= rect.origin.y;
+      [[subview editedObject] setFrameOrigin: frameOrigin];
+      [subview close];
+    }
+
+  editor = [document editorForObject: scrollView
 		     inEditor: self
 		     create: YES];
   

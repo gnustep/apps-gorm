@@ -599,7 +599,6 @@
     );
     Super = NSResponder;
   };
-
   NSWindowController = {
     Actions = (
       showWindow:

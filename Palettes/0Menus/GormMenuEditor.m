@@ -698,7 +698,13 @@
 	}
       else
 	{
+	  if ([_menu _ownedByPopUp])
+	    {
+	      [item setOnStateImage: nil];
+	      [item setMixedStateImage: nil];
+	    }
 	  [edited addItem: item];
+	  
 	}
     }
   [edited sizeToFit];
@@ -749,7 +755,15 @@
 //  	    }
 //  	  else
 //  	    {
-	      [edited insertItem: item atIndex: pos++];
+	  if ([edited _ownedByPopUp])
+	    {
+	      NSLog(@"owned by popup");
+	      [item setOnStateImage: nil];
+	      [item setMixedStateImage: nil];
+	    }
+	  else
+	    NSLog(@"not owned by popup");
+	  [edited insertItem: item atIndex: pos++];
 //  	    }
 	}
       [edited sizeToFit];

@@ -515,7 +515,7 @@ static NSRect oldFrame;
     }
 
 
-  [[[self window] contentView] setNeedsDisplayInRect: oldFrame];
+  [/*[[self window] contentView]*/[self superview] setNeedsDisplayInRect: oldFrame];
   inside = NO;
 }
 
@@ -568,7 +568,7 @@ static NSRect oldFrame;
 //        frame.origin.y -= 2;
 //        frame.size.height = 2;
       NSTextView *tv = [self startEditingInFrame: frame];
-      [[[self window] contentView] addSubview: tv];
+      [/*[[self window] contentView]*/[self superview] addSubview: tv];
       [tv setText: [_EO stringValue]];
       [tv setAlignment: [_EO alignment]];
       [tv setFont: [_EO font]];

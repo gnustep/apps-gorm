@@ -343,6 +343,14 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return self;
 }
 
+- (id) groupSelectionInScrollView: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
+    return nil;
+  [(id)selectionOwner groupSelectionInScrollView];
+  return self;
+}
+
 - (id) ungroup: (id)sender
 {
   NSLog(@"ungroup: selectionOwner %@", selectionOwner);
@@ -720,6 +728,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Group in box" 
 		   action: @selector(groupSelectionInBox:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Group in scrollview" 
+		   action: @selector(groupSelectionInScrollView:) 
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Ungroup" 
 		   action: @selector(ungroup:) 

@@ -12,9 +12,9 @@
     };
     IBInspector = {
 	Actions = (
-	    ok:,
-	    revert:,
-	    touch:
+	    "ok:",
+	    "revert:",
+	    "touch:"
 	);
 	Outlets = (
 	    window
@@ -32,11 +32,11 @@
     };
     NSControl = {
 	Actions = (
-	    takeDoubleValueFrom:,
-	    takeFloatValueFrom:,
-	    takeIntValueFrom:,
-	    takeObjectValueFrom:,
-	    takeStringValueFrom:
+	    "takeDoubleValueFrom:",
+	    "takeFloatValueFrom:",
+	    "takeIntValueFrom:",
+	    "takeObjectValueFrom:",
+	    "takeStringValueFrom:"
 	);
 	Outlets = (
 	    target
@@ -68,19 +68,16 @@
 	Super = NSControl;
     };
     NSView = {
+	Outlets = (
+	    nextKeyView
+	);
 	Super = NSResponder;
     };
     NSWindow = {
 	Outlets = (
-	    delegate
+	    delegate,
+	    initialFirstResponder
 	);
 	Super = NSResponder;
-    };
-    NewClass1 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = IBInspector;
     };
 }

@@ -41,6 +41,8 @@
        [[self superview] isKindOfClass: [NSTabView class]]
        || 
        [[self superview] isKindOfClass: [GSWindowView class]]
+       ||
+       [[self superview] isKindOfClass: [NSClipView class]]
        ))
     {
       return @"GormInternalViewEditor";
@@ -99,6 +101,10 @@
       else if ([superview isKindOfClass: [GSWindowView class]])
 	{
 	  [[superview window] setContentView: self];
+	}
+      else if ([superview isKindOfClass: [NSClipView class]])
+	{
+	  [superview setDocumentView: self];
 	}
 
       [self addSubview: _editedObject];
@@ -199,6 +205,10 @@
 	{
 	  [self removeSubview: _editedObject];
 	  [[superview window] setContentView: _editedObject];
+	}
+      else if ([superview isKindOfClass: [NSClipView class]])
+	{
+	  [superview setDocumentView: _editedObject];
 	}
       [[NSNotificationCenter defaultCenter] removeObserver: self];
 

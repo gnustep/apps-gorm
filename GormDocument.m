@@ -1594,10 +1594,10 @@ static NSImage	*classesImage = nil;
   result = [oPanel runModalForDirectory: pth
 				   file: nil
 				  types: fileTypes];
-  [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
-					 forKey:@"OpenDir"];
   if (result == NSOKButton)
     {
+      [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
+					     forKey:@"OpenDir"];
       return [self loadDocument: [oPanel filename]];
     }
   return nil;		/* Failed	*/

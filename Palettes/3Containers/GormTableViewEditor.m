@@ -33,16 +33,16 @@ static NSCell *_editedCell;
 static NSCell *_currentHeaderCell;
 static NSText *_textObject;
 
-@implementation NSScrollView (GormObjectAdditions)
-- (NSString*) editorClassName
-{
-  if ([self documentView]
-      && [[self documentView] isKindOfClass: [NSTableView class]])
-    return @"GormTableViewEditor";
-  else
-    return [super editorClassName];
-}
-@end
+//  @implementation NSScrollView (GormObjectAdditions)
+//  - (NSString*) editorClassName
+//  {
+//    if ([self documentView]
+//        && [[self documentView] isKindOfClass: [NSTableView class]])
+//      return @"GormTableViewEditor";
+//    else
+//      return [super editorClassName];
+//  }
+//  @end
 
 @interface GormTableViewEditor (Private)
 - (void) editHeader: (NSTableHeaderView*) th

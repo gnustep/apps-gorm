@@ -1,3 +1,28 @@
+2002-10-08  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* Gorm.m: added menu item for "group in scroll view".
+	* GNUmakefile: added GormScrollViewEditor.m
+	* GormScrollViewEditor.m: new file.
+	* GormInternalViewEditor.m: added support for NSScrollView
+	contents editing.
+	* Palettes/3Containers/GormTableViewEditor.m: removed old support
+	for NSScrollView.
+	* GormViewWithContentViewEditor.m: added support for keyboard
+	moving & resizing of elements & support for "group in scroll view".
+
+	* Palettes/0Menus/GormMenuEditor.m: fixes when adding a menu item
+	into an NSPopupButton.
+	
+	* Palettes/2Controls/GormBoxInspector.gorm:
+	* Palettes/1Windows/GormWindowInspector.gorm:
+	* Palettes/1Windows/GormWindowSizeInspector.gorm: 
+	updated for better visual aspect.	
+	
+	* GormButtonEditor.m: fixed inline title editing.
+
+	* GormDocument.m: do not save the last directory if the save/openpanel
+	do not return NSOKButton.
+
 2002-10-04  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInternalViewEditor.m: (dragExited:) move variable up for 
