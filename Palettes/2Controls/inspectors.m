@@ -1336,3 +1336,97 @@
 }
 
 @end
+
+@interface GormProgressIndicatorInspector : IBInspector
+{
+  id doubleValue;
+  id borderMatrix;
+  id indeterminate;
+  id minValue;
+  id maxValue;
+  id vertical;
+}
+- (void) indeterminateSelected: (id)sender;
+- (void) verticalSelected: (id)sender;
+- (void) borderSelected: (id)sender;
+@end
+
+@implementation NSProgressIndicator (IBObjectAdditions)
+- (NSString *) inspectorClassName
+{
+  return @"GormProgressIndicatorInspector";
+}
+@end
+
+@implementation GormProgressIndicatorInspector
+- init
+{
+  NSDebugLog(@"Starting to instantiate...");
+  self = [super init];
+  if (self != nil)
+    {
+      if ([NSBundle loadNibNamed: @"GormNSProgressIndicatorInspector" 
+		    owner: self] == NO)
+	{
+	  
+	  NSDictionary	*table;
+	  NSBundle	*bundle;
+	  table = [NSDictionary dictionaryWithObject: self forKey: @"NSOwner"];
+	  bundle = [NSBundle mainBundle];
+	  if ([bundle loadNibFile: @"GormNSProgressIndicatorInspector"
+		      externalNameTable: table
+		      withZone: [self zone]] == NO)
+	    {
+	      NSLog(@"Could not open gorm GormNSProgressIndicatorInspector");
+	      NSLog(@"self %@", self);
+	      return nil;
+	    }
+	}
+    }
+  NSDebugLog(@"Made it...");
+  return self;
+}
+
+- (void) _getValuesFromObject
+{
+  [indeterminate setState: [object isIndeterminate]?NSOnState:NSOffState];
+  [vertical setState: [(NSProgressIndicator *)object isVertical]?NSOnState:NSOffState];
+  [minValue setIntValue: [object minValue]];
+  [maxValue setIntValue: [object maxValue]];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject];
+}
+
+- (void) indeterminateSelected: (id)sender
+{
+  /* insert your code here */
+  [object setIndeterminate: ([indeterminate state] == NSOnState)];
+}
+
+
+- (void) verticalSelected: (id)sender
+{
+  /* insert your code here */
+  [object setVertical: ([vertical state] == NSOnState)];
+}
+
+- (void) borderSelected: (id)sender
+{
+  /* insert your code here */
+  [object setBorderType: [[borderMatrix selectedCell] tag]];
+}
+
+- (void) minValueSelected: (id)sender
+{
+  [object setMinValue: [minValue doubleValue]];
+}
+
+- (void) maxValueSelected: (id)sender
+{
+  [object setMaxValue: [maxValue doubleValue]];
+}
+@end

@@ -1,3 +1,11 @@
+2003-06-25  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm: Added
+	* Palettes/2Controls/inspector.m: Added 
+	GormProgressIndicatorInspector class to handle inspection of
+	NSProgressIndicator.  
+	* Palettes/2Controls/Makefile: added line to copy the .gorm file.
+
 2003-06-22  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: parseHeader added logic to prevent the
