@@ -38,7 +38,6 @@ NSString *IBSelectionChangedNotification
   RELEASE(object);
   RELEASE(okButton);
   RELEASE(revertButton);
-  RELEASE(window);
   [super dealloc];
 }
 

@@ -337,7 +337,8 @@ extern NSString *IBClassNameChangedNotification;
 		    with: (NSView*)aView;
 
 /**
- * Releases all the instance variables and removes self as an observer
+ * Releases all the instance variables apart from the window (which is
+ * presumed to release itsself when closed) and removes self as an observer
  * of notifications before destroying self.
  */
 - (void) dealloc;
@@ -386,7 +387,8 @@ extern NSString *IBClassNameChangedNotification;
 }
 
 /**
- * Releases all the instance variables and removes self as an observer
+ * Releases all the instance variables (apart from the window, which is
+ * presumed to release itself when closed) and removes self as an observer
  * of notifications before destroying self.
  */
 - (void) dealloc;
