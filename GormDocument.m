@@ -370,7 +370,7 @@ static NSImage	*classesImage = nil;
 
 - (void) pasteboardChangedOwner: (NSPasteboard*)sender
 {
-  NSLog(@"Owner changed for %@", sender);
+  NSDebugLog(@"Owner changed for %@", sender);
 }
 
 - (void) dealloc
