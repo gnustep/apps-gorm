@@ -155,7 +155,7 @@
   RELEASE(v);
 
   // Stepper
-  v = [[NSStepper alloc] initWithFrame: NSMakeRect(172, 56, 40, 23)];
+  v = [[NSStepper alloc] initWithFrame: NSMakeRect(172, 56, 16, 23)];
   [contents addSubview: v];
   RELEASE(v);
 
