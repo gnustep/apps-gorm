@@ -441,7 +441,7 @@
     }
   else
     {
-      NSString *newTitle = [GormClassManager correctClassName: NSStringFromClass([obj class])];
+      NSString *newTitle = [obj className]; 
       [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
     }
 

@@ -100,6 +100,10 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 {
   return @"GormNotApplicableInspector";
 }
+- (NSString*) className
+{
+  return @"FirstResponder";
+}
 @end
 
 @implementation	GormFontManager
@@ -462,7 +466,6 @@ static NSImage	*classesImage = nil;
 // class selection...
 - (void) _selectClass: (NSString *)className
 {
-  NSString	*newClassName;
   NSString	*currentClass = nil;
   NSArray	*classes;
   NSEnumerator	*en;
@@ -478,8 +481,7 @@ static NSImage	*classesImage = nil;
       return; // return if it is nil
     }
 
-  newClassName = [GormClassManager correctClassName: className];
-  classes = [[self classManager] allSuperClassesOf: newClassName];
+  classes = [[self classManager] allSuperClassesOf: className]; 
   en = [classes objectEnumerator];
 
   // open the items...
@@ -489,7 +491,7 @@ static NSImage	*classesImage = nil;
     }
   
   // select the item...
-  row = [classesView rowForItem: newClassName];
+  row = [classesView rowForItem: className];
   if (row != NSNotFound)
     {
       [classesView selectRow: row byExtendingSelection: NO];

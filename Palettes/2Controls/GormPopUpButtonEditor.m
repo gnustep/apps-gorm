@@ -10,6 +10,7 @@
 Class _gormnspopupbuttonCellClass = 0;
 @interface GormNSPopUpButton : NSPopUpButton
 @end
+
 @implementation GormNSPopUpButton
 /*
  * Class methods
@@ -37,6 +38,11 @@ Class _gormnspopupbuttonCellClass = 0;
 - (NSString*) editorClassName
 {
   return @"GormPopUpButtonEditor";
+}
+
+- (NSString *) className
+{
+  return @"NSPopUpButton";
 }
 @end
 
@@ -77,6 +83,11 @@ Class _gormnspopupbuttonCellClass = 0;
   [_menu _setOwnedByPopUp: self];
 
   return self;
+}
+
+- (NSString *) className
+{
+  return @"NSPopUpButtonCell";
 }
 @end
 //  @interface GormPopUpNSMenu : NSMenu

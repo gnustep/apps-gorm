@@ -108,4 +108,9 @@ static id _sharedDelegate = nil;
   self = [super initWithCoder: aCoder];
   return self;
 }
+
+- (NSString *) className
+{
+  return @"NSBrowser";
+}
 @end

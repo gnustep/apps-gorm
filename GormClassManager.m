@@ -1470,54 +1470,13 @@
 	  className = [dict objectForKey: @"Super"];
 	  [classes insertObject: className atIndex: 0];
 	}
+      else
+	{
+	  NSLog(@"This should never happen...  an instance without an associated class.");
+	  break;
+	}
     }
   return classes;
-}
-
-+ (NSString *) correctClassName: (NSString *)className
-{
-  if ([className isEqualToString: @"GormNSMenu"])
-    {
-      return @"NSMenu";
-    }
-  if ([className isEqualToString: @"GormNSWindow"])
-    {
-      return @"NSWindow";
-    }
-  if ([className isEqualToString: @"GormNSPanel"])
-    {
-      return @"NSPanel";
-    }
-  if ([className isEqualToString: @"GormNSBrowser"])
-    {
-      return @"NSBrowser";
-    }
-  if ([className isEqualToString: @"GormNSTableView"])
-    {
-      return @"NSTableView";
-    }
-  if ([className isEqualToString: @"GormNSOutlineView"])
-    {
-      return @"NSOutlineView";
-    }
-  if ([className isEqualToString: @"GormNSPopUpButton"])
-    {
-      return @"NSPopUpButton";
-    }
-  if ([className isEqualToString: @"GormNSPopUpButtonCell"])
-    {
-      return @"NSPopUpButtonCell";
-    }
-  if ([className isEqualToString: @"GormFirstResponder"])
-    {
-      return @"FirstResponder";
-    }
-  if ([className isEqualToString: @"GormFilesOwner"])
-    {
-      return @"FilesOwner";
-    }
-
-  return className;
 }
 
 - (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className

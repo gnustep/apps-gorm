@@ -63,4 +63,9 @@
 {
   return NO;
 }
+
+- (NSString *) className
+{
+  return @"NSWindow";
+}
 @end

@@ -75,9 +75,6 @@
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
 - (NSString *)parentOfClass: (NSString *)aClass;
 
-// class methods
-// Maps internally used names to actual names.
-+ (NSString *) correctClassName: (NSString *)className;
 @end
 
 #endif

@@ -215,4 +215,8 @@ static id _sharedDataSource = nil;
   return _gormAllowsColumnSelection;
 }
 
+- (NSString *) className
+{
+  return @"NSTableView";
+}
 @end

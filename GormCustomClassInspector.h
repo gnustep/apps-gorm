@@ -37,7 +37,6 @@
   id browser;
   id _document;
   GormClassManager *_classManager;
-  id _currentSelection;
   NSString *_currentSelectionClassName;
   NSString *_parentClassName;
   int _rowToSelect;

@@ -49,7 +49,6 @@
     {
       // initialize all member variables...
       _classManager = nil;
-      _currentSelection = nil;
       _currentSelectionClassName = nil;
       _rowToSelect = 0;
       
@@ -67,52 +66,52 @@
 - (void) _setCurrentSelectionClassName: (id)anobject
 {
   NSString	 *className;
-  NSMutableArray *classes = nil; 
 
   className = [_classManager customClassForObject: anobject];
   if ([className isEqualToString: @""]
     || className == nil)
     {
-      className = NSStringFromClass([anobject class]);
+      className = [anobject className];
     }
 
-  ASSIGN(_currentSelectionClassName,
-    [GormClassManager correctClassName: className]);
-  ASSIGN(_parentClassName,
-    [GormClassManager correctClassName: NSStringFromClass([anobject class])]);
-
-  // get a list of all of the classes allowed and the class to be shown.
-  classes = [NSMutableArray arrayWithObject: _parentClassName];
-  [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
-
-  // select the appropriate row in the inspector...
-  _rowToSelect = [classes indexOfObject: className];
-  _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
+  ASSIGN(_currentSelectionClassName, className);
+  ASSIGN(_parentClassName, [anobject className]);
 }
 
 - (void) setObject: (id)anObject
 {
+  NSMutableArray *classes = nil; 
+
   [super setObject: anObject];
   _document = [(Gorm *)NSApp activeDocument];
   _classManager = [(Gorm *)NSApp classManager];
-  _currentSelection = anObject;
 
+  // get the information...
+  NSDebugLog(@"Current selection %@", [self object]);
+  [self _setCurrentSelectionClassName: [self object]];
+
+  // load the array...
   [browser loadColumnZero];  
-  NSDebugLog(@"Current selection %@", _currentSelection);
-  [self _setCurrentSelectionClassName: _currentSelection];
-  
-  // select the class...
-  [browser selectRow: _rowToSelect inColumn: 0];
+
+  // get a list of all of the classes allowed and the class to be shown
+  // and select the appropriate row in the inspector...
+  classes = [NSMutableArray arrayWithObject: _parentClassName];
+  [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
+
+  _rowToSelect = [classes indexOfObject: _currentSelectionClassName];
+  _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
+
+  if(_rowToSelect != NSNotFound)
+    {
+      [browser selectRow: _rowToSelect inColumn: 0];
+    }
   [browser setNeedsDisplay: YES];
-
 }
-
 
 - (void) awakeFromNib
 {
   [browser setTarget: self];
   [browser setAction: @selector(select:)];
-  [browser reloadColumn: 0];
 }
 
 - (void) _replaceCellClassForObject: (id)obj
@@ -156,8 +155,8 @@
 {
   NSCell *cell = [browser selectedCellInColumn: 0];
   NSString *stringValue = [NSString stringWithString: [cell stringValue]];
-  NSString *nameForObject = [_document nameForObject: _currentSelection];
-  NSString *classForObject = [GormClassManager correctClassName: NSStringFromClass([_currentSelection class])];
+  NSString *nameForObject = [_document nameForObject: [self object]];
+  NSString *classForObject = [[self object] className]; 
 
   NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
 
@@ -179,7 +178,7 @@
 
     }
   else
-    NSLog(@"name for object %@ returned as nil",_currentSelection);
+    NSLog(@"name for object %@ returned as nil",[self object]);
 }
 
 // Browser delegate

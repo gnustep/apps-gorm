@@ -199,7 +199,7 @@
 {
   NSString	*title = [[browser selectedCell] stringValue];
 
-NSLog(@"Selected %d, %@", [browser selectedRowInColumn: 0], title);
+  NSDebugLog(@"Selected %d, %@", [browser selectedRowInColumn: 0], title);
   if (hasConnections > 0 && [title isEqual: [object className]] == NO)
     {
       if (NSRunAlertPanel(0, _(@"This operation will break existing connection"),

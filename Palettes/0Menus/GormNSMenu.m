@@ -138,6 +138,11 @@
       // bring main menu to front.
     }
 }
+
+- (NSString *)className
+{
+  return @"NSMenu";
+}
 @end
 
 /*

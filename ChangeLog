@@ -1,3 +1,27 @@
+2004-03-03 11:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomClassInspector.[hm]: Removed _currentSelection
+	as it was redundant with the "object" ivar.  Rearranged the
+	call for setObject:.  it was sligtly out of sync.  The user
+	needed to click on the object twice to make certain everything
+	is set properly.  Removed references to "correctClassName".
+	* GormClassManager.[hm]: Removed the class method "correctClassName"
+	the function is now done by overriding the "className" method
+	when necessary to return the name of the class the Gorm* equivalent
+	is standing in for.  This is a cleaner solution.
+	* GormDocument.m: Removed all references to "correctClassName" in the
+	_selectClass: method.
+	* GormFilesOwner.m: Changed some NSLogs to NSDebugLog so that the
+	selection of classes for the File's Owner wont display on the console
+	what class was chosen.
+	* Palettes/GormNSMenu.m: Added className.
+	* Palettes/GormNSPanel.m: same.
+	* Palettes/GormNSWindow.m: same.
+	* Palettes/GormPopUpButtonEditor.m: Added className to implementation
+	of GormNSPopUpButton and GormNSPopUpButtonCell.
+	* Palettes/GormNSOutlineView: added className.
+	* Palettes/GormNSTableView: same.
+	
 2004-02-29 11:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomClassInspector.m: -[GormCustomClassInspector setObject:]

@@ -60,4 +60,9 @@
 {
   return _gormStyleMask;
 }
+
+- (NSString *) className
+{
+  return @"NSPanel";
+}
 @end
