@@ -780,20 +780,13 @@ void _attachAll(NSMenu *menu, id document)
     {
       NSString	*title = [item title];
 
-      if ([edited indexOfItemWithTitle: title] == -1)
+      if ([[self _menu] _ownedByPopUp])
 	{
-	  if ([[self _menu] _ownedByPopUp])
-	    {
-	      [item setOnStateImage: nil];
-	      [item setMixedStateImage: nil];
-	    }
-	  [edited addItem: item];
-	  [document attachObject: item toParent: [self _menu]];
+	  [item setOnStateImage: nil];
+	  [item setMixedStateImage: nil];
 	}
-      else
-	{
-	  NSBeep(); // warn the user about pasting duplicates.
-	}
+      [edited addItem: item];
+      [document attachObject: item toParent: [self _menu]];
     }
   [edited sizeToFit];
   [edited display];
