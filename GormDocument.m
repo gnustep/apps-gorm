@@ -973,6 +973,10 @@ static NSImage	*classesImage = nil;
     {
       [nameTable removeObjectForKey: oldName];
     }
+  if ([objectsView containsObject: object] == YES)
+    {
+      [objectsView refreshCells];
+    }
 }
 
 - (id) saveAsDocument: (id)sender

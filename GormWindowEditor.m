@@ -1106,9 +1106,11 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     }
   else
     {
-      NSLog(@"Drop with unrecognized type!");
+      NSLog(@"Drop with unrecognized type (%@)!", dragType);
+      dragType = nil;
       return NO;
     }
+  dragType = nil;
   return YES;
 }
 

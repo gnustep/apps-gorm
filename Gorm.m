@@ -469,21 +469,10 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   NSPanel	*p;
   int		r;
   NSTextField	*t;
-  NSString	*n;
   NSArray	*s = [selectionOwner selection];
+  id		o = [s objectAtIndex: 0];
+  NSString	*n;
 
-  if ([s count] == 0)
-    {
-      NSRunAlertPanel (@"Set Name", @"Nothing currently selected", 
-		       @"OK", NULL, NULL);
-      return nil;
-    }
-  if ([s count] > 1)
-    {
-      NSRunAlertPanel (@"Set Name", @"Multiple objects selected", 
-		       @"OK", NULL, NULL);
-      return nil;
-    }
   p = NSGetAlertPanel(@"Set Name", @"Name: ", @"OK", @"Cancel", nil);
   t = [[NSTextField alloc] initWithFrame: NSMakeRect(60,46,240,20)];
   [[p contentView] addSubview: t];
@@ -496,7 +485,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       n = [[t stringValue] stringByTrimmingSpaces];
       if (n != nil && [n isEqual: @""] == NO)
 	{
-	  [activeDocument setName: n forObject: [s lastObject]];
+	  [activeDocument setName: n forObject: o];
 	}
     }
   [t removeFromSuperview];
@@ -611,8 +600,26 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
   if (sel_eq(action, @selector(setName:)))
     {
-      if ([[selectionOwner selection] count] != 1)
-	return NO;
+      NSArray	*s = [selectionOwner selection];
+      NSString	*n;
+      id	o;
+
+      if ([s count] == 0)
+	{
+	  return NO;
+	}
+      if ([s count] > 1)
+	{
+	  return NO;
+	}
+      o = [s objectAtIndex: 0];
+      n = [activeDocument nameForObject: o];
+
+      if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"]
+	|| [n isEqual: @"NSFont"])
+	{
+	  return NO;
+	}
     }
 
   return YES;
