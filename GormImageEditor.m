@@ -134,9 +134,10 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       printf("count %i\n",c);
       for (i=0;i<c;i++)
 	{
+ 	  id placeHolder =  nil;
+
 	  NSLog(@"====> %@",[data objectAtIndex:i]);
- 	  id placeHolder = 
- 	    [(GormDocument *)document _createImagePlaceHolder: [data objectAtIndex: i]];
+	  placeHolder = [(GormDocument *)document _createImagePlaceHolder: [data objectAtIndex: i]];
  	  NSLog(@"here1 %@", [data objectAtIndex: i]);
 
 	  if (placeHolder)
