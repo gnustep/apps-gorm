@@ -130,6 +130,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   RELEASE(infoPanel);
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
+  RELEASE(hiddenDuringTest);
   RELEASE(documents);
   RELEASE(classManager);
   [super dealloc];
@@ -240,10 +241,39 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   else
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSEnumerator		*e;
+      NSWindow			*w;
+      id			val;
 
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
 			object: self];
+
+      /*
+       * Make sure windows will go away when the container is destroyed.
+       */
+      e = [[testContainer nameTable] objectEnumerator];
+      while ((val = [e nextObject]) != nil)
+	{
+	  if ([val isKindOfClass: [NSWindow class]] == YES)
+	    {
+	      [val setReleasedWhenClosed: YES];
+	      [val close];
+	    }
+	}
+      DESTROY(testContainer);
+
+      /*
+       * Restore old windows.
+       */
+      e = [hiddenDuringTest objectEnumerator];
+      while ((w = [e nextObject]) != nil)
+	{
+	  [w orderFront: self];
+	}
+      [hiddenDuringTest removeAllObjects];
+
       isTesting = NO;
+
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{
 	  [(id<IBEditors>)selectionOwner makeSelectionVisible: YES];
@@ -311,6 +341,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 
       documents = [NSMutableArray new];
+      hiddenDuringTest = [NSMutableArray new];
       [nc addObserver: self
 	     selector: @selector(handleNotification:)
 		 name: IBSelectionChangedNotification
@@ -533,16 +564,85 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   else
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSEnumerator		*e;
+      NSWindow			*w;
+      NSData			*d;
 
       [nc postNotificationName: IBWillBeginTestingInterfaceNotification
 			object: self];
+
       isTesting = YES;
+
+      [activeDocument beginArchiving];
+      d = [NSArchiver archivedDataWithRootObject: activeDocument];
+      [activeDocument endArchiving];
+
+      e = [[self windows] objectEnumerator];
+      while ((w = [e nextObject]) != nil)
+	{
+	  if ([w isVisible] == YES
+	    && [w isKindOfClass: [NSMenuWindow class]] == NO)
+	    {
+	      [hiddenDuringTest addObject: w];
+	      [w orderOut: self];
+	    }
+	}
+
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{
 	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
 	}
+
+      testContainer = [NSUnarchiver unarchiveObjectWithData: d];
+      if (testContainer != nil)
+	{
+	  NSDictionary		*nameTable = [testContainer nameTable];
+	  NSEnumerator		*enumerator;
+	  id<IBConnectors>	connection;
+	  id			val;
+
+	  RETAIN(testContainer);
+	  /*
+           * establish connections
+	   */
+	  enumerator = [[testContainer connections] objectEnumerator];
+	  while ((connection = [enumerator nextObject]) != nil)
+	    {
+	      val = [nameTable objectForKey: [connection source]];
+	      [connection setSource: val];
+	      val = [nameTable objectForKey: [connection destination]];
+	      [connection setDestination: val];
+	      [connection establishConnection];
+	    }
+	  /*
+	   * wake loaded objects.
+           */
+	  enumerator = [nameTable objectEnumerator];
+	  while ((val = [enumerator nextObject]) != nil)
+	    {
+	      if ([val respondsToSelector: @selector(awakeFromNib)])
+		{
+		  [val awakeFromNib];
+		}
+	    }
+	  /*
+	   * See if there are objects that should be made visible.
+	   */
+	  val = [nameTable objectForKey: @"NSVisible"];
+	  if (val != nil && [val isKindOfClass: [NSArray class]] == YES)
+	    {
+	      unsigned	pos = [val count];
+
+	      while (pos-- > 0)
+		{
+		  [[val objectAtIndex: pos] orderFront: self];
+		}
+	    }
+	}
+
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
 			object: self];
+
       return self;
     }
 }

@@ -148,6 +148,14 @@ static NSImage	*classesImage = nil;
 {
   NSArray	*old;
 
+  RETAIN(anObject);
+  /*
+   * remove any old linkage
+   */
+  if ([self containsObject: anObject] == YES)
+    {
+      [self detachObject: anObject];
+    }
   /*
    * Create a connector that links this object to its parent.
    * A nil parent is the root of the hierarchy so we use a dummy object for it.
@@ -178,6 +186,7 @@ static NSImage	*classesImage = nil;
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
     }
+  RELEASE(anObject);
 }
 
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent
@@ -188,6 +197,53 @@ static NSImage	*classesImage = nil;
   while ((obj = [enumerator nextObject]) != nil)
     {
       [self attachObject: obj toParent: aParent];
+    }
+}
+
+- (void) beginArchiving
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+
+  /*
+   * Map all connector sources and destinations to their name strings.
+   * Deactivate editors so they won't be archived.
+   */
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [savedEditors addObject: con];
+	  [[con destination] deactivate];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+	{
+	  [savedEditors addObject: con];
+	}
+      else
+	{
+	  NSString	*name;
+
+	  obj = [con source];
+	  name = [self nameForObject: obj];
+	  [con setSource: name];
+	  obj = [con destination];
+	  name = [self nameForObject: obj];
+	  [con setDestination: name];
+	}
+    }
+  [connections removeObjectsInArray: savedEditors];
+
+  /*
+   * Remove objects and connections that shouldn't be archived.
+   */
+  [nameTable removeObjectForKey: @"NSOwner"];
+  [nameTable removeObjectForKey: @"NSFirst"];
+  if (fontManager != nil)
+    {
+      [nameTable removeObjectForKey: @"NSFont"];
     }
 }
 
@@ -297,16 +353,18 @@ static NSImage	*classesImage = nil;
   RELEASE(fontManager);
   NSFreeMapTable(objToName);
   RELEASE(documentPath);
+  RELEASE(savedEditors);
   [super dealloc];
 }
 
 - (void) detachObject: (id)anObject
 {
   NSString	*name = [self nameForObject: anObject];
-  unsigned	count = [connections count];
+  unsigned	count;
 
   [[self editorForObject: anObject create: NO] close];
 
+  count = [connections count];
   while (count-- > 0)
     {
       id<IBConnectors>	con = [connections objectAtIndex: count];
@@ -322,6 +380,12 @@ static NSImage	*classesImage = nil;
     {
       [objectsView removeObject: anObject];
     }
+  /*
+   * Make sure this object isn't in the list of objects to be made visible
+   * on nib loading.
+   */
+  [self setObject: anObject isVisibleAtLaunch: NO];
+
   [nameTable removeObjectForKey: name];
 }
 
@@ -339,6 +403,50 @@ static NSImage	*classesImage = nil;
 - (NSString*) documentPath
 {
   return documentPath;
+}
+
+- (void) endArchiving
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+
+  /*
+   * Restore removed objects.
+   */
+  [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  [nameTable setObject: firstResponder forKey: @"NSFirst"];
+  if (fontManager != nil)
+    {
+      [nameTable setObject: fontManager forKey: @"NSFont"];
+    }
+
+  /*
+   * Map all connector source and destination names to their objects.
+   */
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString	*name;
+
+      name = (NSString*)[con source];
+      obj = [self objectForName: name];
+      [con setSource: obj];
+      name = (NSString*)[con destination];
+      obj = [self objectForName: name];
+      [con setDestination: obj];
+    }
+
+  /*
+   * Restore editor links and reactivate the editors.
+   */
+  [connections addObjectsFromArray: savedEditors];
+  enumerator = [savedEditors objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      [[con destination] activate];
+    }
+  [savedEditors removeAllObjects];
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
@@ -470,33 +578,25 @@ static NSImage	*classesImage = nil;
 - (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
 {
   NSArray		*links;
-  id<IBConnectors>	con;
 
   /*
    * If there is a link from this editor to a parent, remove it.
    */
   links = [self connectorsForSource: anEditor
 			    ofClass: [GormEditorToParent class]];
-  con = [links lastObject];
-  if (con != nil)
+  NSAssert([links count] < 2, NSInternalInconsistencyException);
+  if ([links count] == 1)
     {
-      [connections removeObjectIdenticalTo: con];
+      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
     }
-      
+
   /*
    * Remove the connection linking the object to this editor.
    */
   links = [self connectorsForSource: anObject
 			    ofClass: [GormObjectToEditor class]];
-  con = [links lastObject];
-  if (con != nil)
-    {
-      [connections removeObjectIdenticalTo: con];
-    }
-  else
-    {
-      NSLog(@"Strange - removing editor without link from %@", anObject);
-    }
+  NSAssert([links count] == 1, NSInternalInconsistencyException);
+  [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
 }
 
 - (id<IBEditors>) editorForObject: (id)anObject
@@ -568,6 +668,7 @@ static NSImage	*classesImage = nil;
       objToName = NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
 	NSNonRetainedObjectMapValueCallBacks, 128, [self zone]);
 
+      savedEditors = [NSMutableArray new];
 
       style = NSTitledWindowMask | NSClosableWindowMask
 	| NSResizableWindowMask | NSMiniaturizableWindowMask;
@@ -689,6 +790,11 @@ static NSImage	*classesImage = nil;
 - (id) objectForName: (NSString*)name
 {
   return [nameTable objectForKey: name];
+}
+
+- (BOOL) objectIsVisibleAtLaunch: (id)anObject
+{
+  return [[nameTable objectForKey: @"NSVisible"] containsObject: anObject];
 }
 
 - (NSArray*) objects
@@ -822,6 +928,8 @@ static NSImage	*classesImage = nil;
     {
       [self openEditorForObject: [p editedObject]];
     }
+  [e orderFront];
+  [[e window] makeKeyAndOrderFront: self];
   return e;
 }
 
@@ -979,6 +1087,29 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag
+{
+  NSMutableArray	*a = [nameTable objectForKey: @"NSVisible"];
+
+  if (flag == YES)
+    {
+      if (a == nil)
+	{
+	  a = [NSMutableArray new];
+	  [nameTable setObject: a forKey: @"NSVisible"];
+	  RELEASE(a);
+	}
+      if ([a containsObject: anObject] == NO)
+	{
+	  [a addObject: anObject];
+	}
+    }
+  else
+    {
+      [a removeObject: anObject];
+    }
+}
+
 - (id) saveAsDocument: (id)sender
 {
   NSSavePanel	*sp;
@@ -1032,10 +1163,6 @@ static NSImage	*classesImage = nil;
 - (id) saveDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSMutableArray	*editorInfo;
-  NSEnumerator		*enumerator;
-  id<IBConnectors>	con;
-  id			obj;
   BOOL			archiveResult;
 
   if (documentPath == nil || [documentPath isEqualToString: @""])
@@ -1046,104 +1173,11 @@ static NSImage	*classesImage = nil;
   [nc postNotificationName: IBWillSaveDocumentNotification
 		    object: self];
 
-  /*
-   * Map all connector sources and destinations to their name strings.
-   */
-  editorInfo = [NSMutableArray new];
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	{
-	  [editorInfo addObject: con];
-	}
-      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
-	{
-	  [editorInfo addObject: con];
-	}
-      else
-	{
-	  NSString	*name;
-	  id		obj;
-
-	  obj = [con source];
-	  name = [self nameForObject: obj];
-	  [con setSource: name];
-	  obj = [con destination];
-	  name = [self nameForObject: obj];
-	  [con setDestination: name];
-	}
-    }
-  /*
-   * Remove objects and connections that shouldn't be archived.
-   * All editors are closed (this removes their links).
-   */
-  enumerator = [editorInfo objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	{
-	  [[con destination] close];
-	}
-    }
-  enumerator = [editorInfo objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([connections indexOfObjectIdenticalTo: con] != NSNotFound)
-	{
-	  NSLog(@"Argh - not all editor links removed");
-	  break;
-	}
-    }
-  RELEASE(editorInfo);
-  [nameTable removeObjectForKey: @"NSOwner"];
-  [nameTable removeObjectForKey: @"NSFirst"];
-  if (fontManager != nil)
-    {
-      [nameTable removeObjectForKey: @"NSFont"];
-    }
+  [self beginArchiving];
 
   archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
 
-  /*
-   * Restore removed objects.
-   */
-  [nameTable setObject: filesOwner forKey: @"NSOwner"];
-  [nameTable setObject: firstResponder forKey: @"NSFirst"];
-  if (fontManager != nil)
-    {
-      [nameTable setObject: fontManager forKey: @"NSFont"];
-    }
-
-  /*
-   * Map all connector source and destination names to their objects.
-   */
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSString	*name;
-      id	obj;
-
-      name = (NSString*)[con source];
-      obj = [self objectForName: name];
-      [con setSource: obj];
-      name = (NSString*)[con destination];
-      obj = [self objectForName: name];
-      [con setDestination: obj];
-    }
-
-  /*
-   * Restore basic editor information.
-   */
-  enumerator = [nameTable objectEnumerator];
-  while ((obj = [enumerator nextObject]) != nil)
-    {
-      if ([obj isKindOfClass: [NSWindow class]] == YES
-       || [obj isKindOfClass: [NSMenu class]] == YES)
-	{
-	  [[self openEditorForObject: obj] activate];
-	}
-    }
+  [self endArchiving];
 
   if (archiveResult == NO)
     {

@@ -23,7 +23,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../Gorm.h"
+#include "../../GormPrivate.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {
@@ -138,6 +138,9 @@
 
 
 @interface GormWindowAttributesInspector : IBInspector
+{
+  NSButton	*visibleAtLaunchTime;
+}
 @end
 
 @implementation GormWindowAttributesInspector
@@ -160,13 +163,65 @@
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
+
       box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 300, 100, 50)];
       [box setTitle: @"Backing"];
       [box setBorderType: NSGrooveBorder];
       [contents addSubview: box];
       RELEASE(box);
+
+      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 10, 210, 250)];
+      [box setTitle: @"Options"];
+      [box setBorderType: NSGrooveBorder];
+      [contents addSubview: box];
+      RELEASE(box);
+
+      visibleAtLaunchTime
+	= [[NSButton alloc] initWithFrame: NSMakeRect(10, 10, 180, 20)];
+      [visibleAtLaunchTime setButtonType: NSSwitchButton];
+      [visibleAtLaunchTime setBordered: NO];
+      [visibleAtLaunchTime setImagePosition: NSImageRight];
+      [visibleAtLaunchTime setTitle: @"Visible at launch time:"];
+      [visibleAtLaunchTime setTarget: self];
+      [visibleAtLaunchTime setAction: @selector(ok:)];
+      [box addSubview: visibleAtLaunchTime];
+      RELEASE(visibleAtLaunchTime);
     }
   return self;
 }
+
+- (void) ok: (id)sender
+{
+  GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+
+  if (sender == visibleAtLaunchTime)
+    {
+      if ([sender state] == NSOnState)
+	{
+	  [doc setObject: object isVisibleAtLaunch: YES];
+	}
+      else
+	{
+	  [doc setObject: object isVisibleAtLaunch: NO];
+	}
+    } 
+}
+
+- (void) setObject: (id)anObject
+{
+  GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+
+  [super setObject: anObject];
+
+  if ([doc objectIsVisibleAtLaunch: object] == YES)
+    {
+      [visibleAtLaunchTime setState: NSOnState];
+    }
+  else
+    {
+      [visibleAtLaunchTime setState: NSOffState];
+    }
+}
+
 @end
 

@@ -32,6 +32,8 @@ extern NSString *GormLinkPboardType;
   NSMutableArray	*documents;
   BOOL			isConnecting;
   BOOL			isTesting;
+  NSMutableArray	*hiddenDuringTest;
+  id			testContainer;
   NSImage		*linkImage;
   NSImage		*sourceImage;
   NSImage		*targetImage;

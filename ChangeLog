@@ -1,3 +1,13 @@
+Mon Jan  3 10:50:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Rewrote testing mechanism so that we test by creating an in-memory
+	nib, and load that nib.  This way, the testing process has no effect
+	on the original objects in the document we are working on.
+	Also changed the editor api so that we have a deactivate method.
+	Editors are deactivated on archiving and reactivated afterwords -
+	this means that we no longer need to destroy all editors during
+	archiving in order to stop them being included in the archive.
+
 Thu Dec 23 16:32:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Added generic object inspector.

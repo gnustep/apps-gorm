@@ -153,6 +153,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 - (void) close;
 - (void) closeSubeditors;
 - (void) copySelection;
+- (void) deactivate;
 - (void) deleteSelection;
 - (id<IBDocuments>) document;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
@@ -173,9 +174,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  NSLog(@"Argh - encoding window editor!");
-  [super encodeWithCoder: aCoder];
+  [NSException raise: NSInternalInconsistencyException
+	      format: @"Argh - encoding window editor"];
 }
+
 /*
  *	Intercepting events in the view and handling them
  */
@@ -748,6 +750,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (BOOL) activate
 {
+  NSAssert(isClosed == NO, NSInternalInconsistencyException);
   if (original == nil)
     {
       NSEnumerator	*enumerator;
@@ -765,47 +768,27 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [self addSubview: sub];
 	}
       [edited setContentView: self];
-    }
-  if ([edited isKeyWindow] == NO)
-    {
-      [window makeKeyAndOrderFront: self];
-    }
-  if ([selection count] == 0)
-    {
-      [selection addObject: edited];
-    }
-  if ([(id<IB>)NSApp selectionOwner] != self)
-    {
-      [document setSelectionFromEditor: self];
+      return NO;
     }
   return YES;
 }
 
 - (void) close
 {
-  [self closeSubeditors];
+  NSAssert(isClosed == NO, NSInternalInconsistencyException);
+  isClosed = YES;
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
 
-  if (original != nil)
-    {
-      NSEnumerator	*enumerator;
-      NSView		*sub;
-
-      /*
-       * Swap ourselves out and the original window content view in.
-       */
-      [original setFrame: [self frame]];
-      enumerator = [[self subviews] objectEnumerator];
-      while ((sub = [enumerator nextObject]) != nil)
-	{
-	  [original addSubview: sub];
-	}
-      [edited setContentView: original];
-      DESTROY(original);
-    }
+  [self makeSelectionVisible: NO];
   if ([(id<IB>)NSApp selectionOwner] == self)
     {
       [document resignSelectionForEditor: self];
     }
+
+  [self closeSubeditors];
+
+  [self deactivate];
+
   [document editor: self didCloseForObject: edited];
 }
 
@@ -830,10 +813,35 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
     }
 }
 
+- (void) deactivate
+{
+  if (original != nil)
+    {
+      NSEnumerator	*enumerator;
+      NSView		*sub;
+
+      RETAIN(self);
+      /*
+       * Swap ourselves out and the original window content view in.
+       */
+      [original setFrame: [self frame]];
+      [edited setContentView: original];
+      enumerator = [[self subviews] objectEnumerator];
+      while ((sub = [enumerator nextObject]) != nil)
+	{
+	  [original addSubview: sub];
+	}
+      DESTROY(original);
+      RELEASE(self);
+    }
+}
+
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-  [self close];
+  if (isClosed == NO)
+    {
+      [self close];
+    }
   RELEASE(edited);
   RELEASE(selection);
   RELEASE(subeditors);

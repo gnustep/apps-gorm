@@ -117,39 +117,141 @@ extern NSString *IBDidEndTestingInterfaceNotification;
  * objects and mark the display appropriately.  Setting either source or
  * target to 'nil' will remove markup from any previous source or target.
  * NB. This method expects to be able to call the active document to ask it
- * for the window adn rectangle in which to perform markup.
+ * for the window and rectangle in which to perform markup.
  */
 - (void) displayConnectionBetween: (id)source and: (id)destination;
 @end
 
+/*
+ * The [-editorClassName] method is used to return the name of the editor
+ * class for the object.  Documents use this method to create editors for
+ * objects, it shouldn't be used elsewhere.
+ * If you are writing a custom editor for a particular class of object, you
+ * need to override this method for objects of that class.
+ */
 @interface NSObject (IBEditorSpecification)
 - (NSString*) editorClassName;
 @end
 
+/*
+ * The IBSelectionOwners protocol defines the methods that a selection owner
+ * must implement.
+ */
 @protocol IBSelectionOwners <NSObject>
 - (unsigned) selectionCount;
 - (NSArray*) selection;
 - (void) drawSelection;
 @end
 
+/*
+ * The IBEditors protocol defines API for object editors.  This is probably the
+ * area in which Gorm differs most from InterfaceBuilder, as I have no clear
+ * idea of how InterfaceBuilder editors are meant to operate.
+ */
 @protocol IBEditors <IBSelectionOwners>
+/*
+ * Decide whether an editor can accept data from the pasteboard.
+ */
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
+
+/*
+ * Activate an editor - inserts it into the view hierarchy or whatever is
+ * needed for the editor to be able to provide its functionality.
+ * This method should be called by the document when an editor is created
+ * or opened.  It should be safe to call repeatedly.
+ */
 - (BOOL) activate;
+
 - (id) initWithObject: (id)anObject inDocument: (id/*<IBDocuments>*/)aDocument;
+
+/*
+ * Close an editor - this destroys the editor.  In this method the editor
+ * should tell its document that it has been closed, so that the document
+ * can remove all its references to the editor.
+ */
 - (void) close;
+
+/*
+ * Close subeditors of this editor.
+ */
 - (void) closeSubeditors;
+
+/*
+ * This method places the current selection from the editor on the pasteboard.
+ */
 - (void) copySelection;
+
+/*
+ * Deactivate an editor - removes it from the view hierarchy so that objects
+ * can be archived without including the editor.
+ * This method should be called automatically by the 'close' method.
+ * It should be safe to call repeatedly.
+ */
+- (void) deactivate;
+
+/*
+ * This method deletes all the objects in the current selection in the editor.
+ */
 - (void) deleteSelection;
+
+/*
+ * This method returns the document that owns the object that the editor edits.
+ */
 - (id /*<IBDocuments>*/) document;
+
+/*
+ * This method returns the object that the editor is editing.
+ */
 - (id) editedObject;
+
+/*
+ * This method is used to draw or remove markup that identifies selected
+ * objects within the object being edited.
+ */
 - (void) makeSelectionVisible: (BOOL)flag;
+
+/*
+ * This method is used to open an editor for an object within the object
+ * currently being edited.
+ */
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
+
+/*
+ * This method is used to ensure that the editor is visible on screen.
+ */
 - (void) orderFront;
+
+/*
+ * This method is used to add the contents of the pasteboard to the current
+ * selection of objects within the editor.
+ */
 - (void) pasteInSelection;
+
+/*
+ * FIXME - I don't think we use this.
+ */
 - (void) resetObject: (id)anObject;
+
+/*
+ * This method changes the current selection to those objects in the array.
+ */
 - (void) selectObjects: (NSArray*)objects;
+
+/*
+ * FIXME - I don't think we use this.
+ */
 - (void) validateEditing;
+
+/*
+ * When an editor resigns the selection ownership, all editors are asked if
+ * they want selection ownership, and the first one to return YES gets made
+ * into the current selection owner.
+ */
 - (BOOL) wantsSelection;
+
+/*
+ * This returns the window in which the editor is drawn.
+ */
 - (NSWindow*) window;
 @end
 

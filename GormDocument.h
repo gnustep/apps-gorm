@@ -33,11 +33,13 @@
   BOOL			hiddenDuringTest;
   NSMenu		*savedMenu;
   NSMenuItem		*quitItem;		/* Replaced during test */
+  NSMutableArray	*savedEditors;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
 - (void) attachObject: (id)anObject toParent: (id)aParent;
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent;
+- (void) beginArchiving;
 - (NSArray*) connectorsForDestination: (id)destination;
 - (NSArray*) connectorsForDestination: (id)destination
 			      ofClass: (Class)aConnectorClass;
@@ -55,9 +57,11 @@
 - (void) detachObject: (id)anObject;
 - (void) detachObjects: (NSArray*)anArray;
 - (NSString*) documentPath;
+- (void) endArchiving;
 - (void) handleNotification: (NSNotification*)aNotification;
 - (NSString*) nameForObject: (id)anObject;
 - (id) objectForName: (NSString*)aString;
+- (BOOL) objectIsVisibleAtLaunch: (id)anObject;
 - (NSArray*) objects;
 - (id) openDocument: (id)sender;
 - (id) parentOfObject: (id)anObject;
@@ -69,6 +73,7 @@
 - (id) saveDocument: (id)sender;
 - (void) setDocumentActive: (BOOL)flag;
 - (void) setName: (NSString*)aName forObject: (id)object;
+- (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag;
 - (void) touch;		/* Mark document as having been changed.	*/
 - (BOOL) windowShouldClose;
 @end

@@ -123,6 +123,7 @@ static NSMapTable	*docMap = 0;
 
 - (void) close
 {
+  [self deactivate];
   [self closeSubeditors];
 }
 
@@ -145,6 +146,10 @@ static NSMapTable	*docMap = 0;
 		       type: IBViewPboardType
 	       toPasteboard: [NSPasteboard generalPasteboard]];
     }
+}
+
+- (void) deactivate
+{
 }
 
 - (void) dealloc
