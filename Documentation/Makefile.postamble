@@ -15,7 +15,7 @@ before-all:: version.texi
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
-		  ../GormLib/*.h
+		  ../GormLib/*.h 2> /dev/null
 
 # Things to do after compiling
 # after-all::
