@@ -143,5 +143,10 @@ static NSMapTable	*viewToType = 0;
 {
   return window;
 }
+
+- (id<IBDocuments>) paletteDocument
+{
+  return document;
+}
 @end
 

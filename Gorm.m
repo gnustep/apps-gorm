@@ -782,6 +782,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 			    keyEquivalent: @"q"];	
 		}
 	    }
+
+	  // display the current main menu...
+	  [[self mainMenu] display];
 	  
 	  [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
 		       object: self];
@@ -1054,6 +1057,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	}
 
       [self setMainMenu: mainMenu];
+      [mainMenu display]; // bring it to the front...
 
       isTesting = NO;
 
@@ -1478,6 +1482,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       [(GormDocument *)document setDocumentActive: NO];
       [(GormDocument *)document setDocumentActive: YES];
       [window orderFront: sender];
+      [[self mainMenu] display];
     }
 }
 

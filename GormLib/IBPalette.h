@@ -27,6 +27,7 @@
 
 #include <Foundation/NSMapTable.h>
 #include <Foundation/NSObject.h>
+#include <InterfaceBuilder/IBDocuments.h>
 
 // forward references
 @class NSString;
@@ -58,8 +59,9 @@ extern NSString *GormLinkPboardType;
 
 @interface IBPalette : NSObject
 {
-  NSWindow	*window;
-  NSImage	*icon;
+  NSWindow	  *window;
+  NSImage	  *icon;
+  id<IBDocuments> document;
 }
 /*
  * For internal use only - these class methods return the information
@@ -101,5 +103,11 @@ extern NSString *GormLinkPboardType;
  * palette.
  */
 - (NSWindow*) originalWindow;
+
+/**
+ * Returns an object representing the palette which conforms to the
+ * IBDocuments protocol.
+ */
+- (id<IBDocuments>) paletteDocument;
 @end
 #endif

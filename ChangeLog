@@ -1,5 +1,15 @@
 2004-05-16 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Gorm.m: in testInterface: bring the temporary menu to the 
+	front.   There has been an issue with it sometimes not 
+	displaying.   In endTesting bring the normal menu to the front.
+	In unhide, bring the menu to the front.
+	* GormLib/IBPalette.[hm]: Added paletteDocument method as 
+	per specs.  Currently this method will return nil unless 
+	the ivar is set to something conforming to IBDocuments.
+	
+2004-05-16 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormSoundEditor.m: Added methods to GormSound class to 
 	show the "not applicable" inspector on all options but the
 	attributes inspector.
