@@ -1803,6 +1803,7 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
   [u decodeClassName: @"NSMenu" asClassName: @"GormNSMenu"];
   [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
+  [u decodeClassName: @"NSPanel" asClassName: @"GormNSPanel"];
   [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView" asClassName: @"GormNSOutlineView"];
@@ -2488,6 +2489,8 @@ static NSImage	*classesImage = nil;
 	    intoClassName: @"NSMenu"];
   [archiver encodeClassName: @"GormNSWindow"
 	    intoClassName: @"NSWindow"];
+  [archiver encodeClassName: @"GormNSPanel"
+	    intoClassName: @"NSPanel"];
   [archiver encodeClassName: @"GormNSBrowser"
 	    intoClassName: @"NSBrowser"];
   [archiver encodeClassName: @"GormNSTableView"

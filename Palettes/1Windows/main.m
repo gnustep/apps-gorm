@@ -25,6 +25,7 @@
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
 #include "GormNSWindow.h"
+#include "GormNSPanel.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {
@@ -72,19 +73,17 @@
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   id		w;
-  unsigned	style = NSTitledWindowMask | NSClosableWindowMask
-			| NSResizableWindowMask | NSMiniaturizableWindowMask;
+  unsigned	style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSRect        screenRect = [[NSScreen mainScreen] frame];
   float         
     x = (screenRect.size.width - 500)/2, 
     y = (screenRect.size.height - 300)/2;
   NSRect        windowRect = NSMakeRect(x,y,500,300);
   
-  // NSLog(@"Making panel %@",NSStringFromRect(windowRect));
-  w = [[NSPanel alloc] initWithContentRect: windowRect 
-				 styleMask: style 
-				   backing: NSBackingStoreRetained
-				     defer: NO];
+  w = [[GormNSPanel alloc] initWithContentRect: windowRect 
+			   styleMask: style 
+			   backing: NSBackingStoreRetained
+			   defer: NO];
   [w setFrame: windowRect display: YES];
   [w setTitle: @"Panel"];
   [w orderFront: self];
@@ -166,7 +165,7 @@ NSwindow inspector
 }
 @end
 
-@implementation	NSPanel (IBInspectorClassNames)
+@implementation	GormNSPanel (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
   return @"GormWindowAttributesInspector";
@@ -242,25 +241,24 @@ NSwindow inspector
       }
 
       // Deferred
-      // FIXME: This flag is not a WIndow property. Like Visible at launch time
+      // FIXME: This flag is not a Window property. Like Visible at launch time
       // it should be stored in the Nib File and used at the Window creation time
       // but I do not know how to do that
       flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
 
 
       // One shot
-     flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
-     [object setOneShot: flag];
+      flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
+      [object setOneShot: flag];
 
       // Dynamic depth limit
-     flag = ([[control cellAtRow: 5 column: 0] state] == NSOnState) ? YES : NO;
-     [object setDynamicDepthLimit: flag];
+      flag = ([[control cellAtRow: 5 column: 0] state] == NSOnState) ? YES : NO;
+      [object setDynamicDepthLimit: flag];
 
-     // wants to be color
-     // FIXME:  probably means window depth > 2 bits per pixel but don't know
-     // exactly what NSWindow method to use to enforce  that.
-     flag = ([[control cellAtRow: 6 column: 0] state] == NSOnState) ? YES : NO;
-     
+      // wants to be color
+      // FIXME:  probably means window depth > 2 bits per pixel but don't know
+      // exactly what NSWindow method to use to enforce  that.
+      flag = ([[control cellAtRow: 6 column: 0] state] == NSOnState) ? YES : NO;
     }
 }
 
@@ -306,6 +304,22 @@ NSwindow inspector
   
 }
 
+- (void) _validate: (id)anObject
+{
+  id cell = [controlMatrix cellAtRow: 0 column: 0];
+  // Assumed to be the "miniaturize" cell.
+  // panels should not be allowed to miniaturize the app.
+
+  if([anObject isKindOfClass: [NSPanel class]])
+    {
+      [cell setEnabled: NO];
+    }
+  else
+    {
+      [cell setEnabled: YES];
+    }
+}
+
 - (id) init
 {
   if ([super init] == nil)
@@ -326,7 +340,10 @@ NSwindow inspector
 
 - (void) setObject: (id)anObject
 {
+  // Need to do something here to disable certain portions of
+  // the inspector if the object being edited is an NSPanel.
   [super setObject: anObject];
+  //  [self _validate: anObject];
   [self _getValuesFromObject: anObject];
 }
 

@@ -464,10 +464,10 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   id obj = nil;
   NSString *name = [[(Gorm *)NSApp activeDocument] nameForObject: self];
-  NSLog(@"**** NAME: %@ %@",name, self);   
+  NSDebugLog(@"**** NAME: %@ %@",name, self);   
   [self setClassName: _parentClassName];
   obj = RETAIN([self instantiateObject: coder]);
-  NSLog(@"********  OBJECT: %@",obj);
+  NSDebugLog(@"********  OBJECT: %@",obj);
   return obj;
 }
 @end
@@ -1390,6 +1390,8 @@ static NSButtonType _buttonTypeForObject( id button )
       [a beginArchiving];
       [archiver encodeClassName: @"GormNSWindow" 
 		intoClassName: @"NSWindow"];
+      [archiver encodeClassName: @"GormNSPanel" 
+		intoClassName: @"NSPanel"]; 
       [archiver encodeClassName: @"GormNSMenu" 
 		intoClassName: @"NSMenu"];
       [archiver encodeClassName: @"GormNSPopUpButton" 

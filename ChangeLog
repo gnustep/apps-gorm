@@ -1,4 +1,20 @@
-2003-01-03  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-01-05  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Cleaned up some NSLog statements. 
+	-[Gorm testInterface]: Added call to encode GormNSPanel
+	as NSPanel when testing.
+	* GormDocument.m: -[GormDocument saveDocument]: Added
+	code to encode GormNSPanel as NSPanel.
+	-[GormDocument loadDocument]: Added code to decode NSPanel
+	as GormNSPanel so it can be edited.
+	* Palettes/1Windows/GNUmakefile: Added new files GormNSPanel.[hm].
+	* Palettes/1Windows/GormNSPanel.[hm]: Added.
+	* Palettes/1WIndows/main.m: Modified to use new GormNSPanel
+	class.
+	* Resources/GormPreferences.gorm: Modified to disallow resizing
+	of the panel.
+	
+2003-01-04  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes: Replaced all old .gorm/.classes files with
 	.gorm packages.

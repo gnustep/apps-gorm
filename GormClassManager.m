@@ -1301,6 +1301,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     {
       return @"NSWindow";
     }
+  if ([className isEqualToString: @"GormNSPanel"])
+    {
+      return @"NSPanel";
+    }
   if ([className isEqualToString: @"GormNSBrowser"])
     {
       return @"NSBrowser";
