@@ -509,11 +509,3 @@ static NSText *_textObject;
 }
 
 @end
-
-
-
-
-
-
-
-

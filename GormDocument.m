@@ -3262,7 +3262,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   return nil;
 }
 
-// sound support...
+// image/sound support...
 - (id) openImage: (id)sender
 {
   NSArray	*fileTypes = [NSImage imageFileTypes]; 

@@ -108,8 +108,9 @@
 - (id) createClassFiles: (id)sender;
 - (void) changeCurrentClass: (id)sender;
 
-// sound support
+// sound & image support
 - (id) openSound: (id)sender;
+- (id) openImage: (id)sender;
 
 // Internals support
 - (void) rebuildObjToNameMapping;

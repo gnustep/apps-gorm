@@ -1137,12 +1137,12 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) loadSound: (id) sender
 {
-  [[self activeDocument] openSound: sender];
+  [(id)[self activeDocument] openSound: sender];
 }
 
 - (void) loadImage: (id) sender
 {
-  [[self activeDocument] openImage: sender];
+  [(id)[self activeDocument] openImage: sender];
 }
 
 - (id) miniaturize: (id)sender

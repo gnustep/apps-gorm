@@ -91,6 +91,10 @@
 - (NSWindow*) window;
 @end
 
+@interface      GormMenuEditor (Private)
+- (NSEvent *) editTextField: view withEvent: (NSEvent *)theEvent;
+@end
+
 @implementation	GormMenuEditor
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
@@ -910,7 +914,8 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
     }
   else
     {
-      GormObjectEditor	*ed;
+      id ed = nil;
+      //GormObjectEditor	*ed;
 
       ed = [GormObjectEditor editorForDocument: document];
       [ed selectObjects: [NSArray arrayWithObject: edited]];

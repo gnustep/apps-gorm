@@ -1,3 +1,17 @@
+2003-01-03  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Eliminated some compilation warnings.
+	* GormDocument.m: Eliminated some compilation warnings.
+	* GormMenuEditor.m: same as above.
+	* GormPopupButtonEditor.m: same as above.
+	* GormTableViewEditor.m: same as above.
+	* GormViewEditor.h: Added category to declare windowAndRect:forObject:
+	to prevent compilation warnings in the editor classes.
+	* GormCustomView.m: Created dummy implementation of encodeWithCoder: to
+	prevent warnings.
+	* Palettes/1Windows/main.m: Added a category to NSPanel
+	to use the window inspector to edit an NSPanel instance.
+	
 2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Defaults.plist: Added some new defaults and deleted some

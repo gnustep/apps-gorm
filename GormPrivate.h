@@ -145,7 +145,6 @@ extern NSString *GormLinkPboardType;
 - (id) inspector: (id) sender;
 - (id) newApplication: (id) sender;
 - (id) loadPalette: (id) sender;
-- (void) loadSound: (id) sender;
 - (id) open: (id)sender;
 - (id) palettes: (id) sender;
 - (id) paste: (id)sender;
@@ -157,10 +156,19 @@ extern NSString *GormLinkPboardType;
 - (id) setName: (id)sender;
 - (id) testInterface: (id)sender;
 
+// sound & images.
+- (void) loadSound: (id) sender;
+- (void) loadImage: (id) sender;
+
+// grouping
+- (id) groupSelectionInSplitView: (id)sender;
+- (id) groupSelectionInBox: (id)sender;
+- (id) groupSelectionInScrollView: (id)sender;
+- (id) ungroup: (id)sender;
+
 // added for classes support
 - (id) createSubclass: (id)sender;
 - (id) instantiateClass: (id)sender;
-- (id) editClass: (id)sender;
 - (NSMenu*) classMenu;
 @end
 
@@ -182,6 +190,11 @@ extern NSString *GormLinkPboardType;
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }
+@end
+
+// private methods...
+@interface GormGenericEditor (PrivateMethods)
+- (void) groupSelectionInScrollView;
 @end
 
 @interface	GormObjectEditor : GormGenericEditor <IBEditors, IBSelectionOwners>

@@ -166,6 +166,18 @@ NSwindow inspector
 }
 @end
 
+@implementation	NSPanel (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormWindowAttributesInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormWindowSizeInspector";
+}
+@end
+
+
 
 
 @interface GormWindowAttributesInspector : IBInspector

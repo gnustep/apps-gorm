@@ -60,3 +60,11 @@
 	     withEvent: (NSEvent *) theEvent
       andPlacementInfo: (GormPlacementInfo*)gpi;
 @end
+
+@interface GormViewEditor (WindowAndRect)
+/*
+ * Pull the window object and it's rect.
+ */
+- (NSWindow *)windowAndRect: (NSRect *)prect
+                  forObject: (id) object;
+@end

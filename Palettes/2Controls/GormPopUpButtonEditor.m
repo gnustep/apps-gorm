@@ -49,6 +49,10 @@ Class _gormnspopupbuttonCellClass = 0;
 }
 @end
 
+@interface NSPopUpButtonCell (DirtyHack)
+- (id) _gormInitTextCell: (NSString *) string;
+@end
+
 @implementation NSPopUpButtonCell (DirtyHack)
 - (id) _gormInitTextCell: (NSString *) string
 {
