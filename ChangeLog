@@ -1,3 +1,7 @@
+2003-03-05  Adam Fedor  <fedor@gnu.org>
+
+	* Version: 0.2.6
+
 2003-03-04  Fabien <fabien@tuxfamily.org>
 
 	* Palettes/3Containers/inspectors.m: Update TabView inspector
