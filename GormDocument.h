@@ -28,7 +28,7 @@
 
 #include <AppKit/AppKit.h>
 #include <Foundation/Foundation.h>
-#include <AppKit/GSNibTemplates.h>
+#include <GNUstepGUI/GSNibTemplates.h>
 
 @class GormClassManager, GormClassEditor;
 

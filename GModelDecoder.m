@@ -22,12 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <AppKit/GMArchiver.h>
-#include <AppKit/IMLoading.h>
-#include <AppKit/IMCustomObject.h>
 #include <AppKit/NSWindow.h>
-#include <AppKit/GSDisplayServer.h>
 #include <AppKit/NSNibConnector.h>
+#include <GNUstepGUI/GMArchiver.h>
+#include <GNUstepGUI/IMLoading.h>
+#include <GNUstepGUI/IMCustomObject.h>
+#include <GNUstepGUI/GSDisplayServer.h>
 #include "GormPrivate.h"
 #include "GormCustomView.h"
 
