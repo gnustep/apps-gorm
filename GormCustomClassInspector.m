@@ -66,9 +66,10 @@
 
 - (void) _setCurrentSelectionClassName: (id)anobject
 {
-  NSString	*className;
+  NSString	 *className;
+  NSMutableArray *classes = nil; 
 
-  className = [_classManager customClassForObject: anobject]; // nameForObject];
+  className = [_classManager customClassForObject: anobject];
   if ([className isEqualToString: @""]
     || className == nil)
     {
@@ -79,6 +80,14 @@
     [GormClassManager correctClassName: className]);
   ASSIGN(_parentClassName,
     [GormClassManager correctClassName: NSStringFromClass([anobject class])]);
+
+  // get a list of all of the classes allowed and the class to be shown.
+  classes = [NSMutableArray arrayWithObject: _parentClassName];
+  [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
+
+  // select the appropriate row in the inspector...
+  _rowToSelect = [classes indexOfObject: className];
+  _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
 }
 
 - (void) setObject: (id)anObject
@@ -87,14 +96,15 @@
   _document = [(Gorm *)NSApp activeDocument];
   _classManager = [(Gorm *)NSApp classManager];
   _currentSelection = anObject;
-  
+
+  [browser loadColumnZero];  
   NSDebugLog(@"Current selection %@", _currentSelection);
   [self _setCurrentSelectionClassName: _currentSelection];
-  [browser reloadColumn: 0];
   
   // select the class...
   [browser selectRow: _rowToSelect inColumn: 0];
   [browser setNeedsDisplay: YES];
+
 }
 
 
@@ -102,6 +112,7 @@
 {
   [browser setTarget: self];
   [browser setAction: @selector(select:)];
+  [browser reloadColumn: 0];
 }
 
 - (void) _replaceCellClassForObject: (id)obj

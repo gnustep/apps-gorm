@@ -1,3 +1,11 @@
+2004-02-29 11:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomClassInspector.m: -[GormCustomClassInspector setObject:]
+	corrected Report #7938.  Inspector now properly selects the subclass
+	of the object when the .gorm is initially loaded.
+	* GormInspectorsManager.m: Removed some uneeded calls to 
+	"establishConnection".
+
 2004-02-23 23:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: reformatted and added/removed some
