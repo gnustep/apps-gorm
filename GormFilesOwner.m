@@ -59,12 +59,13 @@
 
 - (NSString*) inspectorClassName
 {
+  // return @"GormNotApplicableInspector";
   return @"GormFilesOwnerInspector";
 }
 
 - (NSString*) classInspectorClassName
 {
-  return @"GormNotApplicableInspector";
+  return @"GormFilesOwnerInspector";
 }
 
 - (void) setClassName: (NSString*)aName
@@ -127,6 +128,7 @@
     {
       NSView		*contents;
       NSRect		rect;
+      NSRect            browserRect;
 
       rect = NSMakeRect(0, 0, IVW, IVH);
       window = [[NSWindow alloc] initWithContentRect: rect
@@ -135,7 +137,8 @@
 					       defer: NO];
       contents = [window contentView];
 
-      browser = [[NSBrowser alloc] initWithFrame: rect];
+      browserRect = NSMakeRect(31,56,203,299);
+      browser = [[NSBrowser alloc] initWithFrame: browserRect];
       [browser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
       [browser setMaxVisibleColumns: 1];
       [browser setAllowsMultipleSelection: NO];

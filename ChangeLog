@@ -1,3 +1,10 @@
+2004-03-04 10:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFilesOwner.m: -[GormFilesOwner init] changed the dimensions
+	of browser.   Also made it so that the inspector shows up in 
+	both the attributes and the custom class slots as expected.  This is
+	like in IB under OS4.2. 
+	
 2004-03-04 01:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument setName:forObject:] added
