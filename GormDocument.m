@@ -46,17 +46,18 @@
 }
 @end
 
-@interface NSNibControlConnector (GormExtension)
+@interface NSNibConnector (GormExtension)
 - (BOOL) isEqual: (id)object;
 @end
 
-@implementation NSNibControlConnector (GormExtension)
+@implementation NSNibConnector (GormExtension)
 - (BOOL) isEqual: (id)object
 {
   BOOL result = NO;
   if([[self source] isEqual: [object source]] &&
      [[self destination] isEqual: [object destination]] &&
-     [[self label] isEqual: [object label]])
+     [[self label] isEqual: [object label]] &&
+     ([self class] == [object class]))
     {
       result = YES;
     }

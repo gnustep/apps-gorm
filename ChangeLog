@@ -1,3 +1,14 @@
+2004-06-26 08:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: There was problem which crops up when the
+	user has many connections to the same object both action/outlet
+	in the same list.  When disconnecting it the inspector,
+	because of a memory leak, was deleting the outlet & the 
+	action following it.   This was happening inconsistently and
+	would cause a blank line to appear in the connections inspector
+	when the user would click on the object.  This was reported as
+	Bug #9461.
+	
 2004-06-25 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument(GormOutlineDataSource)

@@ -1074,17 +1074,20 @@ selectCellWithString: (NSString*)title
     }
   else if ([connectors containsObject: currentConnector] == YES)
     {
-      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
-      if ([currentConnector isKindOfClass: [NSNibOutletConnector class]])
+      id con = currentConnector;
+      RETAIN(con);
+      [[(id<IB>)NSApp activeDocument] removeConnector: con];
+      if ([con isKindOfClass: [NSNibOutletConnector class]])
 	{
-	  [currentConnector setDestination: nil];
+	  [con setDestination: nil];
 	}
-      if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
+      if ([con isKindOfClass: [NSNibControlConnector class]])
 	{
-	  [currentConnector setDestination: nil];
-	  [currentConnector setLabel: nil];
+	  [con setDestination: nil];
+	  [con setLabel: nil];
 	}
-      [connectors removeObject: currentConnector];
+      [connectors removeObject: con];
+      RELEASE(con);
       [oldBrowser loadColumnZero];
     }
   else
