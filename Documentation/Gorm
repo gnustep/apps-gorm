@@ -135,13 +135,9 @@ Gorm as part of the GNUstep project.
 @itemize @bullet
 
 @item Add support for menus
-
 @item Add more inspectors
-
 @item Add more editors
-
 @item Add support for matrix
-
 @item Add support for grouping in box/scrollview
 
 @end itemize
@@ -173,33 +169,62 @@ interface or some subsystem.
 @cindex features
 
 @itemize bullet
-@item
-Drag-and-drop creation of GUI elements from palettes.
-
-@item
-Run-time loading of additional palettes that may be written using an API
+@item Drag-and-drop creation of GUI elements from palettes.
+@item Run-time loading of additional palettes that may be written using an API
 very similar to that of Apple/NeXTs interface Builder palette API.
-
-@item
-Direct on-screen manipulation of GUI elements
-
-@item
-Manipulation and examination of objects via inspectors.
-
-@item
-Drag-and-drop creation of connections between objects.
-
-@item
-Ineractive test mode for interfaces/object-networks under development.
-
-@item
-Saving data in a format loadable by GNUstep applications.
-
+@item Direct on-screen manipulation of GUI elements
+@item Manipulation and examination of objects via inspectors.
+@item Drag-and-drop creation of connections between objects.
+@item Interactive test mode for interfaces/object-networks under development.
+@item Saving data in a format loadable by GNUstep applications.
 @end itemize
 
 @node Usage, Implementation, Overview, Top
 @chapter Usage
 
+Here is a description of the menu structure and what each menu does -
+
+@itemize @bullet
+@item Info @*
+The @samp{info} menu item produces a submenu ...
+@itemize @bullet
+@item Info Panel @*
+A panel giving very limited information about Gorm
+@item Preferences (not implemented) @*
+A panel allowing you to set preferences about how Gorm operates
+@item Help (not implemented) @*
+A panel providing general help on using Gorm
+@end itemize
+
+@item Document @*
+The @samp{document} menu item produces a submenu ...
+@itemize @bullet
+@item Open @*
+This produces an open panel that lets you open a Gorm document.
+You use this if you want to use Gorm to edit an exisiting document.
+@item New Application @*
+This creates a new application document within Gorm, you may then use the
+Palettes panel to drag new objects into the document.
+@item Save @*
+This saves the current document
+@item Save As @*
+This saves the current document to a new file and changes the document name
+to match the new name on disk.
+@item Save To @*
+This saves the current document to a new file without changing its name.
+@item Revert To Saved @*
+This removes all changes made to the document sunce the last save, or since
+the document was opened.
+@item Test Interface @*
+This provides interactive testing of the active document.  To end testing, you
+need to select the @samp{quit} menu item.
+@item Miniaturize @*
+This miniaturises the active document (or whatever panel is currently key).
+@item Close @*
+This closes the currenly active document.
+@end itemize
+
+@end itemize
 
 @node Implementation, Concept Index, Usage, Top
 @chapter Implementation
@@ -256,14 +281,12 @@ determines the default values if they are not overridden.
 The current defaults are -
 
 @itemize @bullet
-@item SaveAsNib
 
+@item SaveAsNib @*
 If this boolean is set to @samp{YES} then Gorm will save documents with a
 @samp{.nib} file extension (for NeXT/Apple compatibility), otherwise it will
 save with a @samp{.gorm} extension.
-
-@item OpenNibs
-
+@item OpenNibs @*
 If this boolean is set to @samp{YES} then Gorm will accept an attempt to open
 a document with a @samp{.nib} file extension (for NeXT/Apple compatibility),
 otherwise it will only open documents with a @samp{.gorm} extension.

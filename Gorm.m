@@ -773,6 +773,9 @@ main(void)
   [aMenu addItemWithTitle: @"Info Panel..." 
 		   action: @selector(infoPanel:) 
 	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Preferences..." 
+		   action: NULL
+	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Help..." 
 		   action: NULL 
 	    keyEquivalent: @"?"];
