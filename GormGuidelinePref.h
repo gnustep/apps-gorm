@@ -1,9 +1,9 @@
-/* GormColorsPref.h
+/* GormGuidelinePref.h
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2003
+ * Date:	1999, 2003, 2005
  * 
  * This file is part of GNUstep.
  * 
@@ -22,8 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef INCLUDED_GormColorsPref_h
-#define INCLUDED_GormColorsPref_h
+#ifndef INCLUDED_GormGuidelinePref_h
+#define INCLUDED_GormGuidelinePref_h
 
 #include <Foundation/NSObject.h>
 #include <Foundation/NSArray.h>
@@ -31,14 +31,17 @@
 
 @class NSWindow;
 
-@interface GormColorsPref : NSObject
+@interface GormGuidelinePref : NSObject
 {
-  id color;
   NSWindow *window;
   id _view;
+  id spacingSlider;
+  id currentSpacing;
+  id halfSpacing;
 }
 - (NSView *) view;
 - (void)ok: (id)sender;
+- (void)reset: (id)sender;
 @end
 
 #endif

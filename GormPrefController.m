@@ -4,6 +4,7 @@
 #include "GormShelfPref.h"
 #include "GormColorsPref.h"
 #include "GormPalettesPref.h"
+#include "GormGuidelinePref.h"
 
 #include <AppKit/NSBox.h>
 #include <AppKit/NSPopUpButton.h>
@@ -19,6 +20,8 @@
   _shelfView    = [[GormShelfPref alloc] init];
   _colorsView   = [[GormColorsPref alloc] init];
   _palettesView = [[GormPalettesPref alloc] init];
+  _guidelineView = [[GormGuidelinePref alloc] init];
+
   [prefBox setContentView:[_generalView view]];
 
   [[self window] setFrameUsingName: @"Preferences"];
@@ -49,6 +52,9 @@
 	break;
       case 4:
 	[prefBox setContentView: [_palettesView view]];
+	break;
+      case 5:
+	[prefBox setContentView: [_guidelineView view]];
 	break;
       default:
 	NSLog(@"Error Default (GormPrefController.m) : - (void) popupAction: (id)sender, no match for tag %d",tag);

@@ -1,3 +1,17 @@
+2005-03-19 04:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Defaults.plist: Added default of 10 for "GuideSpacing".
+	* GNUmakefile: Added new files.
+	* GormColorsPref.h: Removed extra "#" from header.
+	* GormGuidelinePref.[hm]: New controller class for preference
+	module.
+	* GormPrefController.[hm]: Added new preference panel.
+	* GormViewEditor.m: Modifed to use new GuideSpacing preference
+	value instead of a hardcoded value of 10 or 5.
+	* Resources/GormPreferences.gorm: Added new pulldown.
+	* Resources/GormPrefGuideline.gorm: New gui for setting 
+	GuideSpacing default.
+
 2005-03-19 03:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Defaults.plist: Change default to allow user bundles to

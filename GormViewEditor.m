@@ -95,9 +95,13 @@
 
 - (int) distanceToFrame: (NSRect) frame
 {
-  NSRect rect = [self rectWithHalfDistance: 6];
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  int halfSpacing = guideSpacing / 2;
+  NSRect rect = [self rectWithHalfDistance: (halfSpacing + 1)];
+
   if (NSIntersectsRect(frame, rect) == NO)
-    return 10;
+    return guideSpacing;
   switch (_border)
     {
     case Top:
@@ -109,7 +113,7 @@
     case Right:
       return abs (_position - NSMaxX(frame));
     default:
-      return 10;
+      return guideSpacing;
     }
 }
 @end
@@ -372,6 +376,10 @@ static BOOL currently_displaying = NO;
   NSArray *subviews = [[self superview] subviews];
   int count = [subviews count];
   NSView *v;
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  int halfSpacing = guideSpacing / 2;
+
 //    NSLog(@"initializing hints");
   gpi->lastLeftRect = NSZeroRect;
   gpi->lastRightRect = NSZeroRect;
@@ -393,7 +401,7 @@ static BOOL currently_displaying = NO;
   [gpi->leftHints addObject: 
 	       [[GormPlacementHint alloc]
 		 initWithBorder: Left
-		 position: NSMinX([[self superview] bounds]) + 10
+		 position: NSMinX([[self superview] bounds]) + guideSpacing
 		 validityStart: NSMinY([[self superview] bounds])
 		 validityEnd: NSMaxY([[self superview] bounds])
 		 frame: [[self superview] bounds]]];
@@ -408,7 +416,7 @@ static BOOL currently_displaying = NO;
   [gpi->rightHints addObject: 
 	       [[GormPlacementHint alloc]
 		 initWithBorder: Right
-		 position: NSMaxX([[self superview] bounds]) - 10
+		 position: NSMaxX([[self superview] bounds]) - guideSpacing
 		 validityStart: NSMinY([[self superview] bounds])
 		 validityEnd: NSMaxY([[self superview] bounds])
 		 frame: [[self superview] bounds]]];
@@ -423,7 +431,7 @@ static BOOL currently_displaying = NO;
   [gpi->topHints addObject: 
 	       [[GormPlacementHint alloc]
 		 initWithBorder: Top
-		 position: NSMaxY([[self superview] bounds]) - 10
+		 position: NSMaxY([[self superview] bounds]) - guideSpacing
 		 validityStart: NSMinX([[self superview] bounds])
 		 validityEnd: NSMaxX([[self superview] bounds])
 		 frame: [[self superview] bounds]]];
@@ -438,7 +446,7 @@ static BOOL currently_displaying = NO;
   [gpi->bottomHints addObject: 
 	       [[GormPlacementHint alloc]
 		 initWithBorder: Bottom
-		 position: NSMinY([[self superview] bounds]) + 10
+		 position: NSMinY([[self superview] bounds]) + guideSpacing
 		 validityStart: NSMinX([[self superview] bounds])
 		 validityEnd: NSMaxX([[self superview] bounds])
 		 frame: [[self superview] bounds]]];
@@ -466,9 +474,9 @@ static BOOL currently_displaying = NO;
       [gpi->leftHints addObject: 
 		   [[GormPlacementHint alloc]
 		     initWithBorder: Left
-		     position: NSMaxX([v frame]) + 5
-		     validityStart: NSMinY([v frame]) - 10
-		     validityEnd: NSMaxY([v frame]) + 10
+		     position: NSMaxX([v frame]) + halfSpacing
+		     validityStart: NSMinY([v frame]) - guideSpacing
+		     validityEnd: NSMaxY([v frame]) + guideSpacing
 		     frame: [v frame]]];
 
       [gpi->rightHints addObject: 
@@ -488,9 +496,9 @@ static BOOL currently_displaying = NO;
       [gpi->rightHints addObject: 
 		    [[GormPlacementHint alloc]
 		      initWithBorder: Right
-		      position: NSMinX([v frame]) - 5
-		      validityStart: NSMinY([v frame]) - 10
-		      validityEnd: NSMaxY([v frame]) + 10
+		      position: NSMinX([v frame]) - halfSpacing
+		      validityStart: NSMinY([v frame]) - guideSpacing
+		      validityEnd: NSMaxY([v frame]) + guideSpacing
 		      frame: [v frame]]];
 
       [gpi->topHints addObject: 
@@ -510,9 +518,9 @@ static BOOL currently_displaying = NO;
       [gpi->topHints addObject: 
 		    [[GormPlacementHint alloc]
 		      initWithBorder: Top
-		      position: NSMinY([v frame]) - 5
-		      validityStart: NSMinX([v frame]) - 10
-		      validityEnd: NSMaxX([v frame]) + 10
+		      position: NSMinY([v frame]) - halfSpacing
+		      validityStart: NSMinX([v frame]) - guideSpacing
+		      validityEnd: NSMaxX([v frame]) + guideSpacing
 		      frame: [v frame]]];
 
       [gpi->bottomHints addObject: 
@@ -532,9 +540,9 @@ static BOOL currently_displaying = NO;
       [gpi->bottomHints addObject: 
 		    [[GormPlacementHint alloc]
 		      initWithBorder: Bottom
-		      position: NSMaxY([v frame]) + 5
-		      validityStart: NSMinX([v frame]) - 10
-		      validityEnd: NSMaxX([v frame]) + 10
+		      position: NSMaxY([v frame]) + halfSpacing
+		      validityStart: NSMinX([v frame]) - guideSpacing
+		      validityEnd: NSMaxX([v frame]) + guideSpacing
 		      frame: [v frame]]];
     }
 }
@@ -550,6 +558,8 @@ static BOOL currently_displaying = NO;
 - (void) _displayFrameWithHint: (NSRect) frame
 	     withPlacementInfo: (GormPlacementInfo*)gpi
 {
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
@@ -557,7 +567,7 @@ static BOOL currently_displaying = NO;
   int i;
   int count;
   int lastDistance;
-  int minimum = 10;
+  int minimum = guideSpacing;
   BOOL leftEmpty = YES;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;
@@ -856,6 +866,8 @@ static BOOL currently_displaying = NO;
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame
 		      andPlacementInfo: (GormPlacementInfo*)gpi
 {
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
@@ -865,7 +877,7 @@ static BOOL currently_displaying = NO;
   int i;
   int count;
   int lastDistance;
-  int minimum = 10;
+  int minimum = guideSpacing;
   BOOL leftEmpty = YES;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;

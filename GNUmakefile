@@ -128,6 +128,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormPreferences.gorm \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
+	Resources/GormPrefGuideline.gorm \
 	Resources/GormPrefPalettes.gorm \
 	Resources/GormShelfPref.gorm \
 	Resources/GormScrollViewAttributesInspector.gorm \
@@ -154,6 +155,7 @@ Gorm_HEADERS = \
 	GormFontViewController.h \
 	GormFunctions.h \
 	GormGeneralPref.h \
+	GormGuidelinePref.h \
 	GormHeadersPref.h \
 	GormImage.h \
 	GormImageInspector.h \
@@ -201,6 +203,7 @@ Gorm_OBJC_FILES = \
 	GormFontViewController.m \
 	GormFunctions.m \
 	GormGeneralPref.m \
+	GormGuidelinePref.m \
 	GormGenericEditor.m \
 	GormHeadersPref.m \
 	GormImage.m \

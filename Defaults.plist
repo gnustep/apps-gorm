@@ -15,6 +15,7 @@
 	green = 0;
 	red = 1;
     };
+    GuideSpacing = 10;
     HeaderList = (
     );
     PreloadHeaders = NO;
