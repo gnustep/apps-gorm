@@ -1,3 +1,8 @@
+2003-11-12 00:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: Removed extra RELEASE which was causing
+	a segfault.
+
 2003-11-11 17:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormNSSplitViewInspector.[hm]: Added implementation

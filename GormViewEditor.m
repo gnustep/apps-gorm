@@ -277,7 +277,7 @@ static BOOL currently_displaying = NO;
   if (closed == NO)
     [self close];
 
-  RELEASE(_editedObject);
+  // RELEASE(_editedObject);
   [super dealloc];
 }
 
