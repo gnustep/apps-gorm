@@ -139,10 +139,12 @@
 	      [cls parse];
 	      [classes addObject: cls];
 	    }
-	  else
-	    {
-	      result = NO;
-	    }
+	}
+
+      // if we got zero classes, return NO.
+      if([classes count] == 0)
+	{
+	  result = NO;
 	}
     }
   NS_HANDLER
