@@ -1707,7 +1707,7 @@ static NSImage	*classesImage = nil;
       mainRect.origin = NSMakePoint(0,0);
       scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [scrollView setHasVerticalScroller: YES];
-      [scrollView setHasHorizontalScroller: NO];
+      [scrollView setHasHorizontalScroller: YES];
       [scrollView setAutoresizingMask:
 	NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setBorderType: NSBezelBorder];

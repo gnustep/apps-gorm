@@ -1,6 +1,7 @@
 #include "GormPrefController.h"
 #include "GormGeneralPref.h"
 #include "GormHeadersPref.h"
+#include "GormShelfPref.h"
 
 #include <AppKit/NSBox.h>
 #include <AppKit/NSPopUpButton.h>
@@ -13,6 +14,7 @@
 {
   _generalView = [[GormGeneralPref alloc] init];
   _headersView = [[GormHeadersPref alloc] init];
+  _shelfView   = [[GormShelfPref alloc] init];
 
   [prefBox setContentView:[_generalView view]];
 
@@ -36,9 +38,12 @@
       case 1:
 	[prefBox setContentView: [_headersView view]];
 	break;
+      case 2:
+	[prefBox setContentView: [_shelfView view]];
+	break;
       default:
 	NSLog(@"Ouch Default : - (void) popupAction: (id)sender");
-
+	break;
       }
   }
 }

@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormFunctions.h"
 
 /*
  * Method to return the image that should be used to display objects within
@@ -238,6 +239,12 @@ static NSMapTable	*docMap = 0;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
+  NSString *name = [aNotification name];
+  if([name isEqual: GormResizeCellNotification])
+    {
+      NSDebugLog(@"Recieved notification");
+      [self setCellSize: defaultCellSize()];
+    }
 }
 
 
@@ -267,7 +274,7 @@ static NSMapTable	*docMap = 0;
 	IBObjectPboardType, GormLinkPboardType, nil]];
 
       [self setAutosizesCells: NO];
-      [self setCellSize: NSMakeSize(72,72)];
+      [self setCellSize: defaultCellSize()];
       [self setIntercellSpacing: NSMakeSize(8,8)];
       [self setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
       [self setMode: NSRadioModeMatrix];
@@ -290,6 +297,13 @@ static NSMapTable	*docMap = 0;
       [self setEditor: self
 	    forDocument: aDocument];
       [self addObject: anObject];
+
+      // set up the notification...
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(handleNotification:)
+	name: GormResizeCellNotification
+	object: nil];
     }
   return self;
 }

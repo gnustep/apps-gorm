@@ -35,4 +35,11 @@ NSArray* findAllSubmenus(NSArray *array);
 
 // find all items in the menu...
 NSArray* findAll(NSMenu *menu);
+
+// cut the file label to the appropriate length...
+NSString *cutFileLabelText(NSString *filename, id label, int length);
+
+// get the cell size for all editors
+NSSize defaultCellSize();
+
 #endif

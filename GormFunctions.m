@@ -67,3 +67,79 @@ NSArray* findAll(NSMenu *menu)
   NSArray *items = [menu itemArray];
   return findAllSubmenus(items);
 }
+
+// cut the text...  code taken from GWorkspace, by Enrico Sersale
+static inline NSString *cutText(NSString *filename, id label, int lenght)
+{
+  NSString *cutname = nil;
+  NSString *reststr = nil;
+  NSString *dots;
+  NSFont *labfont;
+  NSDictionary *attr;
+  float w, cw, dotslenght;
+  int i;
+  
+  cw = 0;
+  labfont = [label font];
+  
+  attr = [NSDictionary dictionaryWithObjectsAndKeys: 
+			 labfont, NSFontAttributeName, nil];  
+  
+  dots = @"...";  
+  dotslenght = [dots sizeWithAttributes: attr].width;  
+  w = [filename sizeWithAttributes: attr].width;
+  
+  if (w > lenght) 
+    {
+      i = 0;
+      while (cw <= (lenght - dotslenght)) 
+	{
+	  if (i == [filename cStringLength]) 
+	    {
+	      break;
+	    }
+	  cutname = [filename substringToIndex: i];
+	  reststr = [filename substringFromIndex: i];
+	  cw = [cutname sizeWithAttributes: attr].width;
+	  i++;
+	}	
+      if ([cutname isEqual: filename] == NO) 
+	{      
+	  if ([reststr cStringLength] <= 3) 
+	    { 
+	      return filename;
+	    } 
+	  else 
+	    {
+	      cutname = [cutname stringByAppendingString: dots];
+	    }
+	} 
+      else 
+	{
+	  return filename;
+	}	
+    } 
+  else 
+    {
+      return filename;
+    }
+  
+  return cutname;
+}
+
+NSString *cutFileLabelText(NSString *filename, id label, int length)
+{
+  if (length > 0) 
+    {
+      return cutText(filename, label, length);
+    }
+  return filename;
+}
+
+NSSize defaultCellSize()
+{
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; 
+  int width = [defaults integerForKey: @"CellSizeWidth"];
+  NSSize size = NSMakeSize(width, 72);
+  return size;
+}

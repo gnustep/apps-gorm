@@ -115,6 +115,8 @@ Gorm_RESOURCE_FILES = \
 	Images/tabtop_nib.tiff \
 	Images/tabbot_nib.tiff \
 	Images/GormView.tiff \
+	Images/LeftArr.tiff \
+	Images/RightArr.tiff \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \
@@ -122,6 +124,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormPreferences.gorm \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
+	Resources/GormShelfPref.gorm \
 	Resources/GormScrollViewAttributesInspector.gorm \
 	Resources/GormNSSplitViewInspector.gorm \
 	Resources/GormClassInspector.gorm \
@@ -162,7 +165,8 @@ Gorm_HEADERS = \
 	GormFontViewController.h \
 	GormSetNameController.h \
 	GormGeneralPref.h \
-	GormFunctions.h
+	GormFunctions.h \
+	GormShelfPref.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -206,7 +210,8 @@ Gorm_OBJC_FILES = \
 	GormFontViewController.m \
 	GormSetNameController.m \
 	GormGeneralPref.m \
-	GormFunctions.m
+	GormFunctions.m \
+	GormShelfPref.m
 
 -include GNUmakefile.preamble
 

@@ -1,3 +1,14 @@
+2004-02-14 19:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormShelfPref.[hm]: Added controller class for new preferences
+	module.
+	* GormShelfPref.gorm: Added interface for new preferences
+	module.
+	Thanks to Enrico Sersale.  This preferences module for Gorm
+	is based heavily on code that he wrote for GWorkspace.
+	* Gorm.m: Definitions for notification.
+	* GormPrivate.h: Declaractions for notification.
+	
 2004-02-12 22:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Added category to allow direct manipulation

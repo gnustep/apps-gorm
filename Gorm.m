@@ -39,6 +39,7 @@ NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
 NSString *GormDidAddClassNotification = @"GormDidAddClassNotification";
 NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectFromDocumentNotification";
+NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
 @class	InfoPanel;
 

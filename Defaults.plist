@@ -3,4 +3,5 @@
   ShowPalettes = YES;
   ShowInspectors = YES;	
   HeaderList = ();
+  CellSizeWidth = 72;
 }
