@@ -62,8 +62,8 @@ Free Software Foundation instead of in the original English.
 @c @subtitle last updated February, 2001
 @subtitle Version @value{GORM-VERSION}
 @subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION})
+@author Gregory John Casamento <greg_casamento@@yahoo.com>
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
-@author Gregory John Casamento <greg_casamento@yahoo.com>
 @page
 @vskip 0pt plus 1filll
 Copyright @copyright{} 1999,2000 Free Software Foundation, Inc.
