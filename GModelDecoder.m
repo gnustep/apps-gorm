@@ -245,7 +245,7 @@ static BOOL gormFileOwnerDecoded;
       result = 
 	NSRunAlertPanel(_(@"GModel Loading"),
 			_(@"Unknown class %@. Parse header file to define?"),
-			_(@"Yes"), _(@"No"), nil,
+			_(@"Yes"), _(@"No, Choose Superclass"), nil,
 			className, nil);
       if (result == NSAlertDefaultReturn)
 	result = NSAlertOtherReturn;
