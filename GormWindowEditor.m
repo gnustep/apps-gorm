@@ -145,6 +145,8 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   BOOL			shouldBeginDrag;
   BOOL			isClosed;
   NSPasteboard		*dragPb;
+  NSString		*dragType;
+  NSView		*lastLinkView;
 }
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
@@ -831,10 +833,79 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  /*
-   * Let the dragging source know we will copy the dragged object.
-   */
-  return NSDragOperationCopy;;
+  NSArray	*types;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: IBViewPboardType] == YES)
+    {
+      dragType = IBViewPboardType;
+    }
+  else if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      dragType = GormLinkPboardType;
+    }
+  else
+    {
+      dragType = nil;
+    }
+  return [self draggingUpdated: sender];
+}
+
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+{
+  if (dragType == IBViewPboardType)
+    {
+      return NSDragOperationCopy;
+    }
+  else if (dragType == GormLinkPboardType)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      NSView	*sub = [super hitTest: loc];
+
+      if (sub == self)
+	{
+	  sub = nil;
+	}
+      else if (sub == [NSApp connectSource])
+	{
+	  sub = nil;
+	}
+
+      if (sub != lastLinkView)
+	{
+	  NSImage	*image = [(Gorm*)NSApp targetImage];
+
+	  [self lockFocus];
+	  if (lastLinkView != nil)
+	    {
+	      NSRect	rect = [lastLinkView frame];
+
+	      /*
+	       * Erase image from old location.
+	       */
+	      rect.origin.x -= 1.0;
+	      rect.origin.y += 1.0;
+	      rect.size = [image size];
+	      rect.size.width += 2.0;
+	      rect.size.height += 2.0;
+	      [self displayRect: rect];
+	    }
+	  if (sub != nil)
+	    {
+	      [image compositeToPoint: [sub frame].origin
+			    operation: NSCompositeCopy];
+	    }
+	  lastLinkView = sub;
+	  [self unlockFocus];
+	  [[self window] flushWindow];
+	}
+      return NSDragOperationLink;
+    }
+  else
+    {
+      return 0;
+    }
 }
 
 - (void) drawSelection
@@ -981,10 +1052,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*pb = [sender draggingPasteboard];
-  NSArray	*types = [pb types];
-
-  if ([types containsObject: IBViewPboardType] == YES)
+  if (dragType == IBViewPboardType)
     {
       NSPoint		loc = [sender draggedImageLocation];
       NSArray		*views;
@@ -996,7 +1064,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
        * them to it's collection of known objects.
        */
       views = [document pasteType: IBViewPboardType
-		   fromPasteboard: pb
+		   fromPasteboard: dragPb
 			   parent: edited];
       /*
        * Now make all the views subviews of ourself, setting their origin to
@@ -1014,10 +1082,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [self addSubview: sub];
 	}
     }
-  else if ([types containsObject: GormLinkPboardType] == YES)
+  else if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      NSString	*name = [pb stringForType: GormLinkPboardType];
+      NSString	*name = [dragPb stringForType: GormLinkPboardType];
       NSView	*sub = [super hitTest: loc];
 
 NSLog(@"Got link from %@", name);
@@ -1038,20 +1106,17 @@ NSLog(@"Got link from %@", name);
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*pb = [sender draggingPasteboard];
-  NSArray	*types = [pb types];
-
   /*
    * Tell the source that we will accept the drop if we can.
    */
-  if ([types containsObject: IBViewPboardType] == YES)
+  if (dragType == IBViewPboardType)
     {
       /*
        * We can accept views dropped anywhere.
        */
       return YES;
     }
-  else if ([types containsObject: GormLinkPboardType] == YES)
+  else if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];

@@ -1,3 +1,8 @@
+Fri Dec 17 18:44:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Add some support for connections - handle link dragging within window
+	editor - raise connection inspector on completion.
+
 Thu Dec 16 21:35:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Change directory structure - add palettes directory, move palettes
