@@ -1313,11 +1313,16 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else if (sel_eq(action, @selector(paste:)))
     {
-      id	o = [s objectAtIndex: 0];
-      NSString *n = [active nameForObject: o];
-      if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+      if ([s count] == 0)
+	return NO;
+      else
 	{
-	  return NO;
+	  id	o = [s objectAtIndex: 0];
+	  NSString *n = [active nameForObject: o];
+	  if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+	    {
+	      return NO;
+	    }
 	}
 
       return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
