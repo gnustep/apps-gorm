@@ -30,7 +30,8 @@
 #include "GormPalettesManager.h"
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBPalette.h>
-// #include <GNUstepBase/GSCategories.h>
+#include <GNUstepBase/GSCategories.h>
+#include <Foundation/NSValue.h>
 
 /** Private methods not accesible from outside */
 @interface GormClassManager (Private)
@@ -1196,15 +1197,21 @@
 	}
     }
 
+  // add the extras...
   [ci setObject: @"Do NOT change this file, Gorm maintains it"
       forKey: @"## Comment"];
+
+  /*
+  [ci setObject: [NSNumber numberWithInt: [[ci description] hash]]
+      forKey: @"hashValue"];
+  */
 
   return [ci writeToFile: path atomically: YES];
 }
 
 - (BOOL) loadFromFile: (NSString*)path
 {
-  NSDictionary		*dict;
+  NSDictionary 	        *dict;
   NSEnumerator		*enumerator;
   NSString		*key;
 
@@ -1222,6 +1229,8 @@
    */
   RELEASE(classInformation);
   classInformation = [[NSMutableDictionary alloc] init];
+
+  // iterate over all entries..
   enumerator = [dict keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -1272,6 +1281,8 @@
   NSMutableDictionary		*dict;
   NSEnumerator                  *en;
   id                             key;
+  int                            hash;
+  int                            hashDict;
 
   NSDebugLog(@"Load custom classes from file %@",path);
 
@@ -1287,6 +1298,18 @@
       NSLog(@"Default classes file not loaded");
       return NO;
     }
+
+  /*
+  // Hash value to prevent tampering.  This value stops someone from
+  // being able to manually modify the file.
+  hash = [[dict objectForKey: @"hashValue"] intValue];
+  [dict removeObjectForKey: @"hashValue"];
+  hashDict = [[dict description] hash];
+  if(hash != hashDict && hash != 0)
+    {
+      NSLog(@"WARNING: The data.classes file has been tampered with");
+    }
+  */
 
   // Iterate over the set of classes, if it's in the classInformation 
   // list, it's a category, if it's not it's a custom class.

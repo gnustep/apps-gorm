@@ -553,16 +553,14 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
     {
       NSArray *list = nil;
       NSString *name = nil;
-      NSTabViewItem *tvi = [tabView selectedTabViewItem];
-      BOOL isAction = [[tvi identifier] isEqualToString: @"Actions"];
       NSString *className = [self _currentClass];
       
-      if(isAction)
+      if(tableView == actionTable)
 	{
 	  list = [classManager allActionsForClassNamed: className];
 	  name = [list objectAtIndex: rowIndex];
 	}
-      else
+      else if(tableView == outletTable)
 	{
 	  list = [classManager allOutletsForClassNamed: className];
 	  name = [list objectAtIndex: rowIndex];
@@ -570,12 +568,12 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
       
       if([classManager isCustomClass: className])
 	{
-	  if (isAction)
+	  if(tableView == actionTable)
 	    {
 	      result = [classManager isAction: name
 				     ofClass: className];
 	    }
-	  else 
+	  else if(tableView == outletTable)
 	    {
 	      result = [classManager isOutlet: name
 				     ofClass: className];
@@ -589,6 +587,43 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 
   return result;
 }
+
+/*
+- (void) tableView: (NSTableView *)tableView
+   willDisplayCell: (id)aCell
+    forTableColumn: (NSTableColumn *)aTableColumn
+	       row: (int)rowIndex
+{
+  NSString *name = [aCell stringValue];
+  NSString *className = [self _currentClass];
+
+  if(tableView == actionTable)
+    {
+      if(([classManager isCustomClass: className] &&
+	  [classManager isAction: name ofClass: className]) ||
+	 [classManager isAction: name onCategoryForClassNamed: className])
+	{
+	  [aCell setTextColor: [NSColor blackColor]];
+	}
+      else
+	{
+	  [aCell setTextColor: [NSColor darkGrayColor]];
+	}
+    }
+  else if(tableView == outletTable)
+    {
+      if([classManager isCustomClass: className] &&
+	 [classManager isOutlet: name ofClass: className])
+	{
+	  [aCell setTextColor: [NSColor blackColor]];
+	}
+      else
+	{
+	  [aCell setTextColor: [NSColor darkGrayColor]];
+	}
+    }
+}
+*/
 
 - (BOOL) tableView: (NSTableView *)tv
    shouldSelectRow: (int)rowIndex

@@ -269,7 +269,7 @@ static NSImage  *fileImage = nil;
 			 NSViewHeightSizable|NSViewWidthSizable];
 	  [scrollView setDocumentView: objectsView];
 	  RELEASE(objectsView); 
-	  
+
 	  // images...
 	  mainRect.origin = NSMakePoint(0,0);
 	  imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -285,7 +285,7 @@ static NSImage  *fileImage = nil;
 	  [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
 	  [imagesScrollView setDocumentView: imagesView];
 	  RELEASE(imagesView);
-	  
+
 	  // sounds...
 	  mainRect.origin = NSMakePoint(0,0);
 	  soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -301,7 +301,7 @@ static NSImage  *fileImage = nil;
 	  [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
 	  [soundsScrollView setDocumentView: soundsView];
 	  RELEASE(soundsView);
-	  
+
 	  // classes...
 	  classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
 	  [classesScrollView setHasVerticalScroller: YES];
@@ -315,7 +315,6 @@ static NSImage  *fileImage = nil;
 	  [classesView setFrame: mainRect];
 	  [classesScrollView setDocumentView: classesView];
 	  RELEASE(classesView);	  
-	  [classesView sizeToFit];
 	  
 	  /*
 	   * Set the objects view as the initial view the user's see on startup.

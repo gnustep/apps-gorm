@@ -1,3 +1,9 @@
+2004-11-08 00:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Modified the code in the table delegate
+	to use the NSTableView * to determine which table is calling
+	the delegate instead of which tab is currently selected.
+	
 2004-11-07 22:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Added code to [GormClassManager 
