@@ -3196,6 +3196,7 @@ static NSImage  *fileImage = nil;
 	  else
 	    {
 	      removed = NO;
+	      break;
 	    }
 	}
     }

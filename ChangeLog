@@ -1,3 +1,13 @@
+2005-02-02 22:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument removeConnectionsWithLabel:..] added
+	break to avoid iterating through all connections when the user has 
+	responded "NO".
+	* GormFilePrefsManager.m: Update version to 0.9.1
+	* GormInfo.plist: Update version to 0.9.1
+	* GormObjCHeaderParser/OCIVarDecl.m: Change to correct problem
+	reading ivars with <...> in them such as id<SomeProtocol> xxx.
+
 2005-02-01 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.9.0

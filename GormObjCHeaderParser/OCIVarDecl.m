@@ -79,11 +79,20 @@
     }
 
   // strip protocol qualifiers
-  stripScanner = [NSScanner scannerWithString: tempString];
-  [stripScanner scanUpToString: @"<" intoString: &typeName];
-  [stripScanner scanUpToAndIncludingString: @">" intoString: NULL];
-  [stripScanner scanUpToCharactersFromSet: wsnl intoString: &varName];
-  resultString = [typeName stringByAppendingString: varName];
+  if(lookAhead(tempString,@"<"))
+    {
+      stripScanner = [NSScanner scannerWithString: tempString];
+      [stripScanner scanUpToString: @"<" intoString: &typeName];
+      [stripScanner scanUpToAndIncludingString: @">" intoString: NULL];
+      [stripScanner scanUpToCharactersFromSet: wsnl intoString: &varName];
+      
+      resultString = [[typeName stringByAppendingString: @" "] 
+		       stringByAppendingString: varName]; 
+    }
+  else
+    {
+      resultString = tempString;
+    }
 
   ASSIGN(ivarString, resultString);
 }
