@@ -1467,6 +1467,7 @@ static NSImage	*classesImage = nil;
 	}
 
       [self setDocumentActive: NO];
+      [self setSelectionFromEditor: nil];
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
     {
