@@ -1,3 +1,11 @@
+2004-09-06 08:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added missing NSImageCell class
+	description.
+	* Palettes/3Containers/inspectors.m: Corrected issue with
+	getting the class name of the data cell in
+	[GormTableColumnAttributesInspector _getCellClassName].
+	
 2004-09-06 08:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Reformatted to canonical plist.

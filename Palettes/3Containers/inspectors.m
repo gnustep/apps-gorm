@@ -234,7 +234,7 @@
 
   if(customClassName == nil)
     {
-      result = NSStringFromClass(cell);
+      result = NSStringFromClass([cell class]);
     }
   else
     {

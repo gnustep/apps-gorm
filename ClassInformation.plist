@@ -334,6 +334,9 @@
     NSImage = {
 	Super = NSObject;
     };
+    NSImageCell = {
+	Super = NSCell;
+    };
     NSImageView = {
 	Super = NSControl;
     };
