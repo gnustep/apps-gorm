@@ -47,7 +47,7 @@
 # ADDITIONAL_CFLAGS += -Wall -Werror
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += 
+ADDITIONAL_INCLUDE_DIRS += -I../InterfaceBuilder
 
 # Additional LDFLAGS to pass to the linker
 #ADDITIONAL_LDFLAGS += 

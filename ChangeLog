@@ -1,3 +1,8 @@
+2004-10-23 08:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/GNUmakefile.postamble: Changed the build process a little
+	to be more compatible with mingw on win32.
+	
 2004-10-17 12:51 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormControlEditor.m: Added necessary methods for dragging
