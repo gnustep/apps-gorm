@@ -696,7 +696,7 @@ This array is used to form the connections after the .gorm file is loaded.  The 
 
 Custom objects are an interesting challenge in Gorm.  By definition, custom classes are not known to Gorm, unless they are in a palette (covered elsewhere).   For classes which are not in a palette instances of these classes in Gorm are encoding in one of three ways:
 
-@itemize bullet
+@itemize @bullet
 @item A Proxy - This is a standin object which takes the place of the custom object.   This is usually used when the superclass of the object is a non-graphical object, such as a controller.  The init message is called on this object when it's unarchived.
 @item A Custom View - This is a standin view object similar to the one descrribed above, but it is a subclass of NSView.  When this is used the initWithFrame: message is called on the view instance which is created (based on what view subclass the user selects)
 @item A Template Class - Probably the most interesting of the three.  This is a standin class which uses an existing instance created in Gorm to build a custom subclass from.   For instance when a window subclass is created, call it MyWindow, a template class called GSWindowTemplate is used to hold the NSWindow created in Gorm as well as the name of the subclass to be created when the class is unarchived outside of Gorm as well as some additional information.   When the classes are unarchived in the running app, the designated initializer for that class will be invoked, except in the case of NSControl subclasses.  See the Apple documentation for more information.
