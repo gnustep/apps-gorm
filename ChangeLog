@@ -1,3 +1,8 @@
+2005-03-19 03:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Defaults.plist: Change default to allow user bundles to
+	YES.
+
 2005-03-11 21:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Remove Testing directory from makefile.

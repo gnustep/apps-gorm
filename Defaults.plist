@@ -1,5 +1,5 @@
 {
-    AllowUserBundles = NO;
+    AllowUserBundles = YES;
     ArchiveType = Typed;
     BuiltinPalettes = (
 	0Menus.palette,
