@@ -1069,6 +1069,7 @@
   [valueField setDoubleValue: [anObject doubleValue]];
   [minimumValueField setDoubleValue: [anObject minValue]];
   [maximumValueField setDoubleValue: [anObject maxValue]];
+  [incrementValueField setDoubleValue: [anObject increment]];
   if ([object autorepeat])
     [autorepeatButton setState: 1];
   else

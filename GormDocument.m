@@ -889,6 +889,7 @@ static NSImage	*classesImage = nil;
 - (id) createClassFiles: (id)sender
 {
   NSSavePanel		*sp;
+  NSString              *className;
   int	row = [classesView selectedRow];
   id	classes = [classManager allClassNames];
   int			result;
@@ -896,12 +897,14 @@ static NSImage	*classesImage = nil;
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
   [sp setTitle: @"Save source file as..."];
+  className = [classesView itemAtRow: row];
   if (documentPath == nil)
-    result = [sp runModalForDirectory: NSHomeDirectory() file: @""];
+    result = [sp runModalForDirectory: NSHomeDirectory() 
+		file: [className stringByAppendingPathExtension: @"m"]];
   else
     result = [sp runModalForDirectory: 
 		   [documentPath stringByDeletingLastPathComponent]
-		 file: @""];
+		file: [className stringByAppendingPathExtension: @"m"]];
 
   if (result == NSOKButton)
     {
@@ -919,16 +922,12 @@ static NSImage	*classesImage = nil;
       if (result == NSOKButton)
 	{
 	  headerName = [sp filename];
-	  
-	  NSLog(@"createClassFiles");
 	  if (row >= 0)
 	    {
 	      NSLog([classesView itemAtRow: row]);
-	      if (![classManager 
-		     makeSourceAndHeaderFilesForClass: 
-		       [classesView itemAtRow: row]
-		     withName: sourceName
-		     and: headerName])
+	      if (![classManager makeSourceAndHeaderFilesForClass: className
+				 withName: sourceName
+				 and: headerName])
 		{
 		  NSRunAlertPanel(@"Alert", 
 				  @"Could not create the class's file",

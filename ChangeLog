@@ -1,3 +1,11 @@
+2002-10-23  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m (-createClassFiles:): Set default save file
+	to className.
+
+	* Palettes/2Controls/inspectors.m ([GormStepperAttributesInspector
+	-_getValuesFromObject:]): Get increment value.
+
 2002-10-13  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.1.9 snapshot.
