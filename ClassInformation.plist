@@ -378,6 +378,9 @@
   };
 
   NSMenu = {
+    Actions = (
+	submenuAction:
+    );
     Super = NSObject;
   };
 

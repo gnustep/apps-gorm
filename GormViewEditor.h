@@ -46,6 +46,8 @@
 - (void) detachSubviews;
 - (void) postDraw: (NSRect) rect;
 - (id) parent;
+- (NSArray *)selection;
+- (void) makeSelectionVisible: (BOOL) value;
 @end
 
 @interface GormViewEditor (EditingAdditions)

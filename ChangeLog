@@ -1,3 +1,18 @@
+2004-01-17 23:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.[hm]: Addition of selection and makeSelectionVisible
+	methods to allow views to exist within a scrollview without a
+	containing NSView. 
+	* GormViewWithContentViewEditor.m: Changed code in 
+	groupSelectionInScrollView to not insert a NSView to contain the 
+	subview being grouped in the case where there is only one
+	view selected.   These fixes correct Report#6890.
+		
+2004-01-14 10:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added submenuAction: to the NSMenu
+	class.
+	
 2004-01-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: attachObject:toParent: when the connection

@@ -1406,6 +1406,23 @@ static BOOL currently_displaying = NO;
 {
   return NO;
 }
+
+- (NSArray*) selection
+{
+  NSMutableArray *result = [NSMutableArray arrayWithCapacity: 1];
+
+  // add self to the result...
+  if ([self respondsToSelector: @selector(editedObject)])
+    [result addObject: [self editedObject]];
+  else
+    [result addObject: self];
+
+  return result;
+}
+
+- (void) makeSelectionVisible: (BOOL) value
+{
+}
 @end
 
 

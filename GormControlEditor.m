@@ -603,7 +603,6 @@
     }
 
 }
-
 @end
 
 @implementation NSTextField (GormObjectAdditions)
