@@ -1,3 +1,9 @@
+Fri Jan 14 16:22:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* GormDocument.m: Fix to deactivate editors while copying to pb
+	and add support for a few more document setup types.
+	* Gorm.m: Add Inspector, Panel and Empty documents.
+
 Fri Jan 14  9:34:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Palettes/OMenus/GormMenuEditor.m: ([mouseDown:]) support for

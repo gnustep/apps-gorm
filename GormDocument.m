@@ -334,11 +334,38 @@ static NSImage	*classesImage = nil;
                 type: (NSString*)aType
         toPasteboard: (NSPasteboard*)aPasteboard
 {
-  NSData	*obj = [NSArchiver archivedDataWithRootObject: anArray];
+  NSEnumerator	*enumerator;
+  NSMutableSet	*editors;
+  id		obj;
+  NSData	*data;
+
+  /*
+   * Remove all editors from the selected objects before archiving
+   * and restore them afterwards.
+   */
+  editors = [NSMutableSet new];
+  enumerator = [anArray objectEnumerator];
+  while ((obj = [enumerator nextObject]) != nil)
+    {
+      id	editor = [self editorForObject: obj create: NO];
+
+      if (editor != nil)
+	{
+	  [editors addObject: editor];
+	  [editor deactivate];
+	}
+    }
+  data = [NSArchiver archivedDataWithRootObject: anArray];
+  enumerator = [editors objectEnumerator];
+  while ((obj = [enumerator nextObject]) != nil)
+    {
+      [obj activate];
+    }
+  RELEASE(editors);
 
   [aPasteboard declareTypes: [NSArray arrayWithObject: aType]
 		      owner: self];
-  return [aPasteboard setData: obj forType: aType];
+  return [aPasteboard setData: data forType: aType];
 }
 
 - (void) pasteboardChangedOwner: (NSPasteboard*)sender
@@ -1079,8 +1106,7 @@ static NSImage	*classesImage = nil;
   screenPoint = [window convertBaseToScreen: filePoint];
 
   /*
-   * Windows and panels are a special case - they need to be set to be
-   * visible at launch time (by default), and for a multiple window paste,
+   * Windows and panels are a special case - for a multiple window paste,
    * the windows need to be positioned so they are not on top of each other.
    */
   if ([aType isEqualToString: IBWindowPboardType] == YES)
@@ -1089,7 +1115,6 @@ static NSImage	*classesImage = nil;
 
       while ((win = [enumerator nextObject]) != nil)
 	{
-	  [self setObject: win isVisibleAtLaunch: YES];
 	  [win setFrameTopLeftPoint: screenPoint];
 	  screenPoint.x += 10;
 	  screenPoint.y -= 10;
@@ -1160,6 +1185,7 @@ static NSImage	*classesImage = nil;
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"My Window"];
       [self attachObject: aWindow toParent: nil];
+      [self setObject: aWindow isVisibleAtLaunch: YES];
       RELEASE(aWindow);
 
       [aMenu setTitle: @"Main Menu"];
@@ -1174,6 +1200,38 @@ static NSImage	*classesImage = nil;
       [[aMenu window] setFrameTopLeftPoint:
 	NSMakePoint(1, frame.size.height-200)];
       RELEASE(aMenu);
+    }
+  else if ([type isEqual: @"Inspector"] == YES)
+    {
+      NSWindow	*aWindow;
+      NSRect	frame = [[NSScreen mainScreen] frame];
+      unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
+
+      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,IVW,IVH)
+					    styleMask: style
+					      backing: NSBackingStoreRetained
+					        defer: NO];
+      [aWindow setFrameTopLeftPoint:
+	NSMakePoint(220, frame.size.height-100)];
+      [aWindow setTitle: @"Inspector Window"];
+      [self attachObject: aWindow toParent: nil];
+      RELEASE(aWindow);
+    }
+  else if ([type isEqual: @"Palette"] == YES)
+    {
+      NSWindow	*aWindow;
+      NSRect	frame = [[NSScreen mainScreen] frame];
+      unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
+
+      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,272,192)
+					    styleMask: style
+					      backing: NSBackingStoreRetained
+					        defer: NO];
+      [aWindow setFrameTopLeftPoint:
+	NSMakePoint(220, frame.size.height-100)];
+      [aWindow setTitle: @"Palette Window"];
+      [self attachObject: aWindow toParent: nil];
+      RELEASE(aWindow);
     }
 }
 

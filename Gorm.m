@@ -314,6 +314,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 {
   NSMenu		*aMenu;
   NSMenu		*mainMenu;
+  NSMenu		*modulesMenu;
   NSMenu		*windowsMenu;
   NSMenuItem		*menuItem;
   NSBundle		*bundle;
@@ -368,6 +369,21 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   [aMenu addItemWithTitle: @"New Application" 
 		   action: @selector(newApplication:)
 	    keyEquivalent: @"n"];
+  modulesMenu = [NSMenu new];
+  [modulesMenu addItemWithTitle: @"New Empty" 
+			 action: @selector(newEmpty:) 
+		  keyEquivalent: @"N"];
+  [modulesMenu addItemWithTitle: @"New Inspector" 
+			 action: @selector(newInspector:) 
+		  keyEquivalent: @""];
+  [modulesMenu addItemWithTitle: @"New Palette" 
+			 action: @selector(newPalette:) 
+		  keyEquivalent: @""];
+  menuItem = [aMenu addItemWithTitle: @"New Module" 
+			      action: NULL 
+		       keyEquivalent: @""];
+  [aMenu setSubmenu: modulesMenu forItem: menuItem];
+  RELEASE(modulesMenu);
   [aMenu addItemWithTitle: @"Save" 
 		   action: @selector(save:) 
 	    keyEquivalent: @"s"];
@@ -610,7 +626,39 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   RELEASE(doc);
   [doc setupDefaults: @"Application"];
   [[doc window] makeKeyAndOrderFront: self];
+  return doc;
+}
 
+- (id) newEmpty: (id) sender
+{
+  id		doc = [GormDocument new];
+
+  [documents addObject: doc];
+  RELEASE(doc);
+  [doc setupDefaults: @"Empty"];
+  [[doc window] makeKeyAndOrderFront: self];
+  return doc;
+}
+
+- (id) newInspector: (id) sender
+{
+  id		doc = [GormDocument new];
+
+  [documents addObject: doc];
+  RELEASE(doc);
+  [doc setupDefaults: @"Inspector"];
+  [[doc window] makeKeyAndOrderFront: self];
+  return doc;
+}
+
+- (id) newPalette: (id) sender
+{
+  id		doc = [GormDocument new];
+
+  [documents addObject: doc];
+  RELEASE(doc);
+  [doc setupDefaults: @"Palette"];
+  [[doc window] makeKeyAndOrderFront: self];
   return doc;
 }
 
