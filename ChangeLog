@@ -1,3 +1,10 @@
+2004-06-15 01:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: [GormPalettesManager mouseDown:] a
+	call to convertRect:toView: was added to correctly translate the
+	view being dragged in all cases.   This will show no real benefit
+	until Alex M. adds the window decoration patches.
+	
 2004-06-10 01:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm testInterface] added code in the exception

@@ -173,7 +173,8 @@ static NSImage	*dragImage = nil;
      control (like the contentView of an NSBox) */
   while (view != nil && [view superview] != self)
     view = [view superview];
-  rect = [view frame];
+  rect = [[view superview] convertRect: [view frame] 
+			   toView: nil]; // this will always get the correct coordinates...
 
   if (active == nil)
     {
