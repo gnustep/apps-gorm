@@ -403,6 +403,7 @@
   id rowsHeightForm;
   id optionMatrix;
   id tagField;
+  id backgroundColor;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -492,7 +493,6 @@
       [object sizeToFit];
       [object tile];
     } 
-
   else if (control == optionMatrix)
     {
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
@@ -506,7 +506,11 @@
     {
       [object setTag:[[tagField cellAtIndex:0] intValue]];
     }
-  
+  else if( control == backgroundColor )
+    {
+      [object setBackgroundColor: [backgroundColor color]];
+    }
+
   [scrollView setNeedsDisplay: YES];
 
 }
@@ -565,6 +569,9 @@
   if ([anObject gormAllowsColumnReordering])
     [optionMatrix selectCellAtRow: 2 column: 0];
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
+
+  // set the background color into the inspector...
+  [backgroundColor setColor: [anObject backgroundColor]];
 }
 
 - (id) init

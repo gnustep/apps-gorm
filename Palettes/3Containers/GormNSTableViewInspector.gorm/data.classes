@@ -150,7 +150,8 @@
 	    optionMatrix,
 	    rowsHeightForm,
 	    selectionMatrix,
-	    verticalScrollerSwitch
+	    verticalScrollerSwitch,
+	    backgroundColor
 	);
 	Super = IBInspector;
     };

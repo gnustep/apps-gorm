@@ -1,3 +1,11 @@
+2004-04-17 13:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/inspectors.m: Added code to the 
+	GormTableViewInspector update the background color when
+	the user changes it in the inspector.
+	* Palettes/3Containers/GormNSTableViewInspector.gorm: added
+	color well to allow changing of the background color.
+	
 2004-04-17 12:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjectEditor.m: [GormObjectEditor mouseDown:] check
