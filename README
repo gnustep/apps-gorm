@@ -5,7 +5,8 @@ This is Gorm version 0.0 ... a very pre-pre-alpha release.
 
 I'm away from home until the 13th of December, so my aim in placing this
 code in the CVS repository is to let people have a look over the next few
-days and let me know if I'm heading in the wrong direction.
+days and let me know if I'm heading in the wrong direction.  After all,
+this is the very first OpenStep gui app I've written ...
 
 Please note - to build this code you will need the latest library source
 from the CVS repository, and it may be that you also need to be using the

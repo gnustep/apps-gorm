@@ -123,6 +123,12 @@
 	     selector: @selector(handleNotification:)
 		 name: IBWillCloseDocumentNotification
 	       object: nil];
+
+      /*
+       * Make sure the palettes manager exists, so that the editors and
+       * inspectors provided in the standard palettes are available.
+       */
+      [self palettesManager];
     }
   return self;
 }
@@ -340,6 +346,7 @@ main(void)
    * Set Gorm up as its own delegate
    */
   [NSApp setDelegate: NSApp];
+
   [NSApp run];
   [pool release];
   return 0;

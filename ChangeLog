@@ -1,3 +1,7 @@
+Wed Dec  8 20:54:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Gorm.m: ([-init]) make sure that the palettes manager is loaded.
+
 Wed Dec  8 16:33:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* GormObjecteditor.m: ([-refreshCells]) cell highlighting fixed so
