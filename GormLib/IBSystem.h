@@ -29,8 +29,15 @@
 
 #ifdef GNUSTEP_WITH_DLL 
 
-#if BUILD_libGormLib_DLL
+#if BUILD_libGorm_DLL
+# if defined(__MINGW32__)
+  /* On Mingw, the compiler will export all symbols automatically, so
+   * __declspec(dllexport) is not needed.
+   */
+#  define IB_EXTERN  extern
+# else
 #  define IB_EXTERN  __declspec(dllexport)
+# endif
 #else
 #  define IB_EXTERN  extern __declspec(dllimport)
 #endif
