@@ -1,3 +1,10 @@
+2002-12-21  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added code in loadDocument: to create an empty
+	dictionary for custom classes.  Corrected problem in createClassFiles:
+	which prevented writing files when the class wasn't being edited.
+	General cleanup.
+	
 2002-12-15  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Changed NSLog to NSDebugLog.

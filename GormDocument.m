@@ -36,6 +36,9 @@ NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
+// Internal only
+NSString *GSCustomClassMap = @"GSCustomClassMap";
+
 @interface GormDocument (GModel)
 - (id) openGModel: (NSString *)path;
 @end
@@ -388,16 +391,13 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom objects with templates for archiving.
    */
-  // ASSIGN(customClasses, [classManager customClassMap]); // assign the custom classes in the class manager
-  // RETAIN(customClasses);
   if(![(Gorm *)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
     {
       [self _replaceObjectsWithTemplates];
     }
 
-  // [customClasses setObject: @"TestValue" forKey: @"TestKey"]; // temporary
   NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
-  [nameTable setObject: [classManager customClassMap] forKey: @"GSCustomClassMap"];
+  [nameTable setObject: [classManager customClassMap] forKey: GSCustomClassMap];
 
   /*
    * Remove objects and connections that shouldn't be archived.
@@ -973,19 +973,29 @@ static NSImage	*classesImage = nil;
 - (id) createClassFiles: (id)sender
 {
   NSSavePanel		*sp;
-  NSString              *className = [classesView itemBeingEdited];
+  int                   row = [classesView selectedRow];
+  id                    className = [classesView itemAtRow: row];
   int			result;
+
+  if([className isKindOfClass: [GormOutletActionHolder class]])
+    {
+      className = [classesView itemBeingEdited];
+    }
   
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
   [sp setTitle: @"Save source file as..."];
   if (documentPath == nil)
-    result = [sp runModalForDirectory: NSHomeDirectory() 
-		file: [className stringByAppendingPathExtension: @"m"]];
+    {
+      result = [sp runModalForDirectory: NSHomeDirectory() 
+		   file: [className stringByAppendingPathExtension: @"m"]];
+    }
   else
-    result = [sp runModalForDirectory: 
-		   [documentPath stringByDeletingLastPathComponent]
-		file: [className stringByAppendingPathExtension: @"m"]];
+    {
+      result = [sp runModalForDirectory: 
+		     [documentPath stringByDeletingLastPathComponent]
+		   file: [className stringByAppendingPathExtension: @"m"]];
+    }
 
   if (result == NSOKButton)
     {
@@ -1548,7 +1558,7 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
       [[tableColumn headerCell] setStringValue: @"Classes"];
-      [tableColumn setMinWidth: 190]; // 200
+      [tableColumn setMinWidth: 190];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
       [classesView addTableColumn: tableColumn];     
@@ -1557,7 +1567,7 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
       [[tableColumn headerCell] setStringValue: @"Outlet"];
-      [tableColumn setWidth: 50]; // 45
+      [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
@@ -1566,7 +1576,7 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
       [[tableColumn headerCell] setStringValue: @"Action"];
-      [tableColumn setWidth: 50]; // 45
+      [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
       [classesView addTableColumn: tableColumn];
@@ -1630,7 +1640,6 @@ static NSImage	*classesImage = nil;
 
 	  [self setName: nil forObject: item];
 	  [self attachObject: item toParent: nil];
-	  //[self setObject: item isVisibleAtLaunch: NO];
 	  RELEASE(item);
 
 	  [selectionView selectCellWithTag: 0];
@@ -1752,10 +1761,11 @@ static NSImage	*classesImage = nil;
     }
 
   // retrieve the custom class data...
-  cc = [[c nameTable] objectForKey: @"GSCustomClassMap"];
+  cc = [[c nameTable] objectForKey: GSCustomClassMap];
   if(cc == nil)
     {
       cc = [NSMutableDictionary dictionary]; // create an empty one.
+      [[c nameTable] setObject: cc forKey: GSCustomClassMap];
     }
   [classManager setCustomClassMap: cc];
 
