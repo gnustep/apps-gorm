@@ -8,11 +8,6 @@ Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
 
 This is Gorm version 0.0 ... a very pre-pre-alpha release.
 
-I'm away from home until the 13th of December, so my aim in placing this
-code in the CVS repository is to let people have a look over the next few
-days and let me know if I'm heading in the wrong direction.  After all,
-this is the very first OpenStep gui app I've written ...
-
 Please note - to build this code you will need the latest library source
 from the CVS repository, and it may be that you also need to be using the
 xgps backend rather than xdps (I don't have xdps running to test it on).
@@ -70,4 +65,25 @@ Basic framework
   The Window palette is more fully fleshed out than the other palettes.
   It permits windows and panels to be created in Gorm.
   If provides the start of a window attributes inspector.
+
+18 December 1999
+
+You can drag views from a palette into a window or panel.
+You can select views in a window by clicking on them, shift-clicking
+(for multiple selection), or click-drag on the window background to select
+views in a box.
+You can delete/cut/copy/paste views betwen windows.
+You can move views in a window by clicking on them and dragging.
+You can resize views by clicking on their knobs and dragging.
+You can control-drag to mark source and destination views for a connection.
+
+Next task - inspectors.
+The connection inspector needs to be implemented to complete the process of
+establishing connections.
+The size inspector needs to be implemented to set autosizing parameters for
+a view.
+
+Once these are done, the object editor needs to be made to support connections
+so that we can connect between objects other than views, then we need to write
+a menu editor.
 
