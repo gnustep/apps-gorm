@@ -25,6 +25,27 @@
 #include <AppKit/NSImage.h>
 #include "GormImage.h"
 
+//
+// To allow us to load the image by name, but save it 
+// within the archive.  This is a bit of a cheat.
+//
+@interface NSImage (GormNSImageAddition)
+- (void) setArchiveByName: (BOOL) archiveByName;
+- (BOOL) archiveByName;
+@end
+
+@implementation NSImage (GormNSImageAddition)
+- (void) setArchiveByName: (BOOL) archiveByName
+{
+  _flags.archiveByName = archiveByName;
+}
+
+- (BOOL) archiveByName
+{
+  return _flags.archiveByName;
+}
+@end
+
 // image proxy object...
 @implementation GormImage
 + (GormImage*)imageForPath: (NSString *)aPath
@@ -83,6 +104,8 @@
 
       isSystemImage = NO;
       isInWrapper = NO;
+      [image setArchiveByName: NO];
+      [smallImage setArchiveByName: NO];
     }
   else
     {
@@ -134,6 +157,8 @@
 - (void) setSystemImage: (BOOL)flag
 {
   isSystemImage = flag;
+  [image setArchiveByName: flag];
+  [smallImage setArchiveByName: flag];
 }
 
 - (BOOL) isSystemImage

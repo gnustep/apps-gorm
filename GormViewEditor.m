@@ -35,13 +35,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-@implementation NSImage (GormNSImageAddition)
-- (void) setArchiveByName: (BOOL) archiveByName
-{
-  _flags.archiveByName = archiveByName;
-}
-@end
-
 @implementation GormPlacementInfo
 @end
 
@@ -1332,9 +1325,12 @@ static BOOL currently_displaying = NO;
   else if ([types containsObject: GormImagePboardType] == YES)
     {
       NSString *name = [dragPb stringForType: GormImagePboardType];
-      NSImage *image = [NSImage imageNamed: name];
-      [image setArchiveByName: NO];
-      [(id)_editedObject setImage: AUTORELEASE([image copy])];
+      if([(id)_editedObject respondsToSelector: @selector(setImage:)])
+	{
+	  NSImage *image = [NSImage imageNamed: name];
+	  // [image setArchiveByName: NO];
+	  [(id)_editedObject setImage: AUTORELEASE([image copy])];
+	}
       return YES;
     }
   else   if ([types containsObject: GormSoundPboardType] == YES)

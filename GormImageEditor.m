@@ -37,7 +37,6 @@
 {
   return @"GormImageInspector";
 }
-
 @end
 
 
