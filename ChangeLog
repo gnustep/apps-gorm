@@ -1,7 +1,14 @@
+2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
+
+	* GormFilesOwner.m: -[GormFilesOwner classInspectorClassName]
+	implemented to return @"GormNotApplicableInspector".
+	* GormDocument.m: -[GormFirstResponder classInspectorClassName]
+	same as above.
+	
 2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
 	* Gorm.m: -[GormClassProxy inspectorClassName]:
-	changed to return @"GormNotApplicationInspector" so that
+	changed to return @"GormNotApplicableInspector" so that
 	when a user creates a new subclass in the class editor an
 	inspector no longer appears which contains "GormClassProxy"
 	which is an internal class.
@@ -9,7 +16,7 @@
 2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
 	* Gorm.m: -[GormClassProxy classInspectorClassName]:
-	changed to return @"GormNotApplicationInspector" so that
+	changed to return @"GormNotApplicableInspector" so that
 	when a user creates a new subclass in the class editor an
 	inspector no longer appears which contains "GormClassProxy"
 	which is an internal class.

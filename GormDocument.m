@@ -66,6 +66,10 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 {
   return @"GormNotApplicableInspector";
 }
+- (NSString*) classInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
 @end
 
 @implementation	GormFontManager

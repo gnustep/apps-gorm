@@ -61,6 +61,11 @@
   return @"GormFilesOwnerInspector";
 }
 
+- (NSString*) classInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
 - (void) setClassName: (NSString*)aName
 {
   ASSIGN(className, aName);
