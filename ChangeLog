@@ -1,5 +1,12 @@
 2003-06-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Added 
+	key equivalent pulldown
+	* Palettes/2Controls/inspectors.m: Added code to handle
+	new pulldown.
+	
+2003-06-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormPreferences.[hm]: Removed.  These were superceded
 	by the GormPrefController.
 

@@ -137,12 +137,14 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "selectKeyEquivalent:"
 	);
 	Super = NSObject;
     };
     GormButtonInspector = {
 	Actions = (
+	    "selectKeyEquivalent:"
 	);
 	Outlets = (
 	    alignMatrix,
@@ -151,7 +153,8 @@
 	    optionMatrix,
 	    tagField,
 	    titleForm,
-	    typeButton
+	    typeButton,
+	    keyEquiv
 	);
 	Super = IBInspector;
     };

@@ -142,6 +142,7 @@
   id tagField;
   id titleForm;
   id typeButton;
+  id keyEquiv;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -216,6 +217,7 @@
     }
   else if (control == keyField)
     {
+      [keyEquiv selectItem: nil]; // if the user does his own thing, select the default...
       [object setKeyEquivalent: [[control cellAtIndex: 0] stringValue]];
     }
   else if (control == optionMatrix)
@@ -276,7 +278,8 @@
 - (void) _getValuesFromObject: anObject
 {
   NSImage *image;
-
+  NSString *key = VSTR([anObject keyEquivalent]);
+ 
   if (anObject != object)
     {
       return;
@@ -284,7 +287,28 @@
   [alignMatrix selectCellWithTag: [anObject alignment]];
   [iconMatrix selectCellWithTag: [anObject imagePosition]];
   [[keyField cellAtIndex: 0] setStringValue: VSTR([anObject keyEquivalent])];
-  
+
+  if([key isEqualToString: @"\n"])
+    {
+      [keyEquiv selectItemAtIndex: 1];
+    }
+  else if([key isEqualToString: @"\b"])
+    {
+      [keyEquiv selectItemAtIndex: 2];
+    }
+  else if([key isEqualToString: @"\E"])
+    {
+      [keyEquiv selectItemAtIndex: 3];
+    }
+  else if([key isEqualToString: @"\t"])
+    {
+      [keyEquiv selectItemAtIndex: 4];
+    }
+  else
+    {
+      [keyEquiv selectItem: nil];
+    }
+
   [optionMatrix deselectAllCells];
   if ([anObject isBordered])
     [optionMatrix selectCellAtRow: 0 column: 0];
@@ -378,6 +402,36 @@
   [self _getValuesFromObject: anObject];
 }
 
+- (void) selectKeyEquivalent: (id)sender
+{
+  int code = [[keyEquiv selectedItem] tag];
+  id cell = [keyField cellAtIndex: 0];
+  switch(code)
+    {
+    case 0:
+      [cell setStringValue: @""];
+      [object setKeyEquivalent: @""];
+      break;
+    case 1:
+      [cell setStringValue: @"\n"];
+      [object setKeyEquivalent: @"\n"];
+      break;
+    case 2:
+      [cell setStringValue: @"\b"];
+      [object setKeyEquivalent: @"\b"];
+      break;
+    case 3:
+      [cell setStringValue: @"\E"];
+      [object setKeyEquivalent: @"\E"];
+      break;
+    case 4:
+      [cell setStringValue: @"\t"];
+      [object setKeyEquivalent: @"\t"];
+      break;
+    default:
+      break;
+    }
+}
 @end
 
 /*----------------------------------------------------------------------------
