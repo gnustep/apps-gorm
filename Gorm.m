@@ -200,6 +200,29 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return nil;
 }
 
+- (void) applicationDidFinishLaunching: (NSApplication*)sender
+{
+  if ( [[NSUserDefaults standardUserDefaults] boolForKey: @"ShowInspectors"] )
+    {
+      [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
+    }
+  if ( [[NSUserDefaults standardUserDefaults] boolForKey: @"ShowPalettes"] )
+    {
+      [[[self palettesManager] panel] makeKeyAndOrderFront: self];
+    }
+}
+
+
+- (void) applicationWillTerminate: (NSApplication*)sender
+{
+  [[NSUserDefaults standardUserDefaults] 
+    setBool: [[[self inspectorsManager] panel] isVisible]
+    forKey: @"ShowInspectors"];
+  [[NSUserDefaults standardUserDefaults] 
+    setBool: [[[self palettesManager] panel] isVisible]
+    forKey: @"ShowPalettes"];
+}
+
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
 {
   NSEnumerator	*enumerator = [[self windows] objectEnumerator];
@@ -849,6 +872,7 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
   [d setObject: [NSArray arrayWithObjects: 
 		  @"Gregory John Casamento <greg_casamento@yahoo.com>",
 		  @"Richard Frith-Macdonald <rfm@gnu.org>",
+		  @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
 		  nil]
 	forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];

@@ -1,6 +1,8 @@
 2002-09-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
-	* Gorm.m: fixes segfault when leaving test mode.
+	* Gorm.m: fix segfault when leaving test mode.
+	Save whether palettes and inspectors are opened upon exiting.
+	Open them on startup if necessary.
 	* GormDocument.m: fixes bad reactivating of editors.
 	* GormBoxEditor.m: commented unused drag'n'drop code.
 	* GormCustomView.m: added GormTestCustomView class to deal with unknown
