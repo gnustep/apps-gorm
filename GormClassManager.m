@@ -698,7 +698,8 @@
 
 - (NSArray*) allCustomClassNames
 {
-  return [customClassMap allKeys];
+  // return [customClassMap allKeys];
+  return customClasses;
 }
 
 - (NSArray*) allClassNames

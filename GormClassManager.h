@@ -75,6 +75,7 @@
 - (NSArray*) allSubclassesOf: (NSString *)superClass;
 - (NSArray*) customSubClassesOf: (NSString *)superclass;
 - (NSArray*) allCustomSubclassesOf: (NSString *)superclass;
+- (NSArray*) allCustomClassNames;
 
 - (BOOL) addClassNamed: (NSString*)className
    withSuperClassNamed: (NSString*)superClassName

@@ -1687,9 +1687,17 @@ static NSImage  *fileImage = nil;
     }
   else if ([name isEqual: GormDidAddClassNotification])
     {
+      NSArray *customClasses = [classManager allCustomClassNames];
+      NSString *newClass = [customClasses lastObject];
+
       // go to the class which was just loaded in the classes view...
       [classesView reloadData];
       [selectionBox setContentView: classesScrollView];
+
+      if(newClass != nil)
+	{
+	  [self selectClass: newClass];
+	}
     }
 }
 

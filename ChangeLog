@@ -1,3 +1,10 @@
+2004-12-03 07:09 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.[hm]: New method allCustomClassNames which
+	returns the customClasses array.
+	* GormDocument.m: Change in handleNotification: method to 
+	select the class just added.
+	
 2004-12-02 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/OCClass.m: [OCClass parse] added
