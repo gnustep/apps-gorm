@@ -1483,10 +1483,10 @@ static NSImage	*classesImage = nil;
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString	*name = [aNotification name];
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   if ([name isEqual: NSWindowWillCloseNotification] == YES)
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSEnumerator	*enumerator;
       id		obj;
 
@@ -1516,6 +1516,7 @@ static NSImage	*classesImage = nil;
 
       [self setDocumentActive: NO];
       [self setSelectionFromEditor: nil];
+      [nc removeObserver: self]; // stop listening to all notifications.
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
     {

@@ -1,3 +1,11 @@
+2004-05-10 21:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument handleNotification:] was failing
+	to remove the document as an observer in the notification center.
+	This was causing the old document to be retained and was, also causing
+	"Test Interface" to fail randomly because the notifcation cetner
+	was still attempting to reach the old document.
+	
 2004-05-10 11:58 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Update version to 0.7.7 (Alpha) to avoid confusion between
