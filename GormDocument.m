@@ -2229,6 +2229,7 @@ static NSImage	*classesImage = nil;
 	    frame.origin.x -= 6;
 	    frame.origin.y -= 6;
 	    [obj setFrame: frame];
+	    RETAIN(obj);
 	  }
       } 
     }

@@ -1,3 +1,10 @@
+2004-06-22 23:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: A fix in  -[GormDocument pasteType:
+        fromPasteboard: parent:] to retain objects unarchived
+	from the pasteboard to prevent a recently discovered 
+	segfault.
+
 2004-06-21 23:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: Added code to openGModel: to more automatically
