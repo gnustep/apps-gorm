@@ -1291,7 +1291,11 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
       n = [active nameForObject: o];
 
       if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"]
-	|| [n isEqual: @"NSFont"])
+	|| [n isEqual: @"NSFont"] || [n isEqual: @"NSMenu"])
+	{
+	  return NO;
+	}
+      else if(![(GormDocument *)[self activeDocument] isTopLevelObject: o])
 	{
 	  return NO;
 	}
