@@ -131,6 +131,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormClassInspector.gorm \
 	Resources/GormFontView.gorm \
 	Resources/GormSetName.gorm \
+	Resources/GormDocument.gorm \
 	Resources/Gorm.gorm
 
 Gorm_HEADERS = \

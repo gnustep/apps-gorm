@@ -34,6 +34,7 @@
 #include <AppKit/NSButton.h>
 
 NSDate	*startDate;
+NSString *GormLinkPboardType = @"GormLinkPboardType";
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";
 NSString *GormDidAddClassNotification = @"GormDidAddClassNotification";

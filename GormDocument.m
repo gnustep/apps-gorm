@@ -34,6 +34,7 @@
 #include <AppKit/NSNibConnector.h>
 #include <GNUstepGUI/GSNibTemplates.h>
 #include "GormFunctions.h"
+#include <AppKit/NSNibLoading.h>
 
 @interface	GormDisplayCell : NSButtonCell
 @end
@@ -172,301 +173,241 @@ static NSImage	*classesImage = nil;
   self = [super init];
   if (self != nil)
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSRect			winrect = NSMakeRect(100,100,342,256);
-      NSRect			selectionRect = {{6, 188}, {234, 64}};
-      NSRect			scrollRect = {{0, 0}, {340, 188}};
-      NSRect			mainRect = {{20, 0}, {320, 188}};
-      NSImage			*image;
-      GormDisplayCell		*cell;
-      NSTableColumn             *tableColumn;
-      unsigned			style;
-      NSColor *salmonColor = 
-	[NSColor colorWithCalibratedRed: 0.850980 
-		 green: 0.737255
-		 blue: 0.576471
-		 alpha: 1.0 ];
-      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      
-      openEditors = [NSMutableArray new];
-      classManager = [[GormClassManager alloc] initWithDocument: self]; 
-      classEditor = [[GormClassEditor alloc] initWithDocument: self];
-
-      /*
-       * NB. We must retain the map values (object names) as the nameTable
-       * may not hold identical name objects, but merely equal strings.
-       */
-      objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
-	NSObjectMapValueCallBacks, 128, [self zone]);
-      
-      // for saving the editors when the gorm file is persisted.
-      savedEditors = [NSMutableArray new];
-
-      style = NSTitledWindowMask | NSClosableWindowMask
-	| NSResizableWindowMask | NSMiniaturizableWindowMask;
-      window = [[NSWindow alloc] initWithContentRect: winrect
-					   styleMask: style 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      [window setMinSize: [window frame].size];
-      [window setTitle: _(@"UNTITLED")];
-      [window setReleasedWhenClosed: NO];
-      [window setDelegate: self];
-
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowWillCloseNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowDidBecomeKeyNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowWillMiniaturizeNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowDidDeminiaturizeNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBClassNameChangedNotification
-	       object: classManager];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBInspectorDidModifyObjectNotification
-	       object: classManager];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: GormDidModifyClassNotification
-	       object: classManager];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: GormDidAddClassNotification
-	       object: classManager];
-      selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
-						 mode: NSRadioModeMatrix
-					    cellClass: [GormDisplayCell class]
-					 numberOfRows: 1
-				      numberOfColumns: 4];
-      [selectionView setTarget: self];
-      [selectionView setAction: @selector(changeView:)];
-      [selectionView setAutosizesCells: NO];
-      [selectionView setCellSize: NSMakeSize(64,64)];
-      [selectionView setIntercellSpacing: NSMakeSize(24,0)];
-      [selectionView setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
-
-      if ((image = objectsImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 0];
-	  [cell setTag: 0];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Objects")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = imagesImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 1];
-	  [cell setTag: 1];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Images")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = soundsImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 2];
-	  [cell setTag: 2];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Sounds")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = classesImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 3];
-	  [cell setTag: 3];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Classes")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      [[window contentView] addSubview: selectionView];
-      RELEASE(selectionView);
-
-      selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
-      [selectionBox setTitlePosition: NSNoTitle];
-      [selectionBox setBorderType: NSNoBorder];
-      [selectionBox setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [[window contentView] addSubview: selectionBox];
-      RELEASE(selectionBox);
-      
-      // objects...
-      mainRect.origin = NSMakePoint(0,0);
-      scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setBorderType: NSBezelBorder];
-
-      objectsView = [[GormObjectEditor alloc] initWithObject: nil
+      if([NSBundle loadNibNamed: @"GormDocument" owner: self])
+	{      
+	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+	  NSRect			scrollRect = {{0, 0}, {340, 188}};
+	  NSRect			mainRect = {{20, 0}, {320, 188}};
+	  NSTableColumn                 *tableColumn;
+	  NSColor *salmonColor = 
+	    [NSColor colorWithCalibratedRed: 0.850980 
+		     green: 0.737255
+		     blue: 0.576471
+		     alpha: 1.0 ];
+	  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	  
+	  
+	  openEditors = [NSMutableArray new];
+	  classManager = [[GormClassManager alloc] initWithDocument: self]; 
+	  classEditor = [[GormClassEditor alloc] initWithDocument: self];
+	  
+	  /*
+	   * NB. We must retain the map values (object names) as the nameTable
+	   * may not hold identical name objects, but merely equal strings.
+	   */
+	  objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
+					       NSObjectMapValueCallBacks, 128, [self zone]);
+	  
+	  // for saving the editors when the gorm file is persisted.
+	  savedEditors = [NSMutableArray new];	  
+	  [window setMinSize: [window frame].size];
+	  [window setTitle: _(@"UNTITLED")];
+	  
+	  // observe certain notifications...
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: NSWindowWillCloseNotification
+	      object: window];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: NSWindowDidBecomeKeyNotification
+	      object: window];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: NSWindowWillMiniaturizeNotification
+	      object: window];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: NSWindowDidDeminiaturizeNotification
+	      object: window];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: IBClassNameChangedNotification
+	      object: classManager];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: IBInspectorDidModifyObjectNotification
+	      object: classManager];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: GormDidModifyClassNotification
+	      object: classManager];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: GormDidAddClassNotification
+	      object: classManager];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: IBWillBeginTestingInterfaceNotification
+	      object: nil];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: IBWillEndTestingInterfaceNotification
+	      object: nil];
+	  
+	  // selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
+	  // [selectionBox setTitlePosition: NSNoTitle];
+	  // [selectionBox setBorderType: NSNoBorder];
+	  // [selectionBox setAutoresizingMask:
+	  //     NSViewHeightSizable|NSViewWidthSizable];
+          // [[window contentView] addSubview: selectionBox];
+	  // RELEASE(selectionBox);
+	  
+	  // objects...
+	  mainRect.origin = NSMakePoint(0,0);
+	  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  [scrollView setHasVerticalScroller: YES];
+	  [scrollView setHasHorizontalScroller: YES];
+	  [scrollView setAutoresizingMask:
+			NSViewHeightSizable|NSViewWidthSizable];
+	  [scrollView setBorderType: NSBezelBorder];
+	  
+	  objectsView = [[GormObjectEditor alloc] initWithObject: nil
 						  inDocument: self];
-      [objectsView setFrame: mainRect];
-      [objectsView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setDocumentView: objectsView];
-      RELEASE(objectsView); 
-
-      // images...
-      mainRect.origin = NSMakePoint(0,0);
-      imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [imagesScrollView setHasVerticalScroller: YES];
-      [imagesScrollView setHasHorizontalScroller: YES];
-      [imagesScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [imagesScrollView setBorderType: NSBezelBorder];
-
-      imagesView = [[GormImageEditor alloc] initWithObject: nil
+	  [objectsView setFrame: mainRect];
+	  [objectsView setAutoresizingMask:
+			 NSViewHeightSizable|NSViewWidthSizable];
+	  [scrollView setDocumentView: objectsView];
+	  RELEASE(objectsView); 
+	  
+	  // images...
+	  mainRect.origin = NSMakePoint(0,0);
+	  imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  [imagesScrollView setHasVerticalScroller: YES];
+	  [imagesScrollView setHasHorizontalScroller: YES];
+	  [imagesScrollView setAutoresizingMask:
+			      NSViewHeightSizable|NSViewWidthSizable];
+	  [imagesScrollView setBorderType: NSBezelBorder];
+	  
+	  imagesView = [[GormImageEditor alloc] initWithObject: nil
 						inDocument: self];
-      [imagesView setFrame: mainRect];
-      [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [imagesScrollView setDocumentView: imagesView];
-      RELEASE(imagesView);
-
-      // sounds...
-      mainRect.origin = NSMakePoint(0,0);
-      soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [soundsScrollView setHasVerticalScroller: YES];
-      [soundsScrollView setHasHorizontalScroller: YES];
-      [soundsScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [soundsScrollView setBorderType: NSBezelBorder];
-
-      soundsView = [[GormSoundEditor alloc] initWithObject: nil
+	  [imagesView setFrame: mainRect];
+	  [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+	  [imagesScrollView setDocumentView: imagesView];
+	  RELEASE(imagesView);
+	  
+	  // sounds...
+	  mainRect.origin = NSMakePoint(0,0);
+	  soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  [soundsScrollView setHasVerticalScroller: YES];
+	  [soundsScrollView setHasHorizontalScroller: YES];
+	  [soundsScrollView setAutoresizingMask:
+			      NSViewHeightSizable|NSViewWidthSizable];
+	  [soundsScrollView setBorderType: NSBezelBorder];
+	  
+	  soundsView = [[GormSoundEditor alloc] initWithObject: nil
 						inDocument: self];
-      [soundsView setFrame: mainRect];
-      [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [soundsScrollView setDocumentView: soundsView];
-      RELEASE(soundsView);
-
-      // classes...
-      classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [classesScrollView setHasVerticalScroller: YES];
-      [classesScrollView setHasHorizontalScroller: NO];
-      [classesScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [classesScrollView setBorderType: NSBezelBorder];
-
-      mainRect.origin = NSMakePoint(0,0);
-      classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
-      [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
-      [classesView setDataSource: self];
-      [classesView setDelegate: self];
-      [classesView setAutoresizesAllColumnsToFit: YES];
-      [classesView setAllowsColumnResizing: NO];
-      [classesView setDrawsGrid: NO];
-      [classesView setIndentationMarkerFollowsCell: YES];
-      [classesView setAutoresizesOutlineColumn: YES];
-      [classesView setIndentationPerLevel: 10];
-      [classesView setAttributeOffset: 30];
-      [classesView setBackgroundColor: salmonColor ];
-      [classesView setRowHeight: 18];
-      [classesScrollView setDocumentView: classesView];
-      RELEASE(classesView);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
-      [[tableColumn headerCell] setStringValue: _(@"Classes")];
-      [tableColumn setMinWidth: 190];
-      [tableColumn setResizable: YES];
-      [tableColumn setEditable: YES];
-      [classesView addTableColumn: tableColumn];     
-      [classesView setOutlineTableColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-      [[tableColumn headerCell] setStringValue: _(@"Outlet")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [classesView addTableColumn: tableColumn];
-      [classesView setOutletColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
-      [[tableColumn headerCell] setStringValue: _(@"Action")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [classesView addTableColumn: tableColumn];
-      [classesView setActionColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      [classesView sizeToFit];
-
-      // expand all of the items in the classesView...
-      [classesView expandItem: @"NSObject"];
-
-      [selectionBox setContentView: scrollView];
-
-      /*
-       * Set up special-case dummy objects and add them to the objects view.
-       */
-      filesOwner = [GormFilesOwner new];
-      [self setName: @"NSOwner" forObject: filesOwner];
-      [objectsView addObject: filesOwner];
-      firstResponder = [GormFirstResponder new];
-      [self setName: @"NSFirst" forObject: firstResponder];
-      [objectsView addObject: firstResponder];
-
-      /*
-       * Set image for this miniwindow.
-       */
-      [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
-
-      hidden = [NSMutableArray new];
-      /*
-       * Watch to see when we are starting/ending testing.
-       */
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBWillBeginTestingInterfaceNotification
-	       object: nil];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBWillEndTestingInterfaceNotification
-	       object: nil];
-      
-      // preload headers...
-      if ([defaults boolForKey: @"PreloadHeaders"])
-	{
-	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
-	  NSEnumerator *en = [headerList objectEnumerator];
-	  id obj = nil;
-
-	  while ((obj = [en nextObject]) != nil)
+	  [soundsView setFrame: mainRect];
+	  [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+	  [soundsScrollView setDocumentView: soundsView];
+	  RELEASE(soundsView);
+	  
+	  // classes...
+	  classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  [classesScrollView setHasVerticalScroller: YES];
+	  [classesScrollView setHasHorizontalScroller: NO];
+	  [classesScrollView setAutoresizingMask:
+			       NSViewHeightSizable|NSViewWidthSizable];
+	  [classesScrollView setBorderType: NSBezelBorder];
+	  
+	  mainRect.origin = NSMakePoint(0,0);
+	  classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
+	  [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
+	  [classesView setDataSource: self];
+	  [classesView setDelegate: self];
+	  [classesView setAutoresizesAllColumnsToFit: YES];
+	  [classesView setAllowsColumnResizing: NO];
+	  [classesView setDrawsGrid: NO];
+	  [classesView setIndentationMarkerFollowsCell: YES];
+	  [classesView setAutoresizesOutlineColumn: YES];
+	  [classesView setIndentationPerLevel: 10];
+	  [classesView setAttributeOffset: 30];
+	  [classesView setBackgroundColor: salmonColor ];
+	  [classesView setRowHeight: 18];
+	  [classesScrollView setDocumentView: classesView];
+	  RELEASE(classesView);
+	  
+	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
+	  [[tableColumn headerCell] setStringValue: _(@"Classes")];
+	  [tableColumn setMinWidth: 190];
+	  [tableColumn setResizable: YES];
+	  [tableColumn setEditable: YES];
+	  [classesView addTableColumn: tableColumn];     
+	  [classesView setOutlineTableColumn: tableColumn];
+	  RELEASE(tableColumn);
+	  
+	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+	  [[tableColumn headerCell] setStringValue: _(@"Outlet")];
+	  [tableColumn setWidth: 50]; 
+	  [tableColumn setResizable: NO];
+	  [tableColumn setEditable: NO];
+	  [classesView addTableColumn: tableColumn];
+	  [classesView setOutletColumn: tableColumn];
+	  RELEASE(tableColumn);
+	  
+	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
+	  [[tableColumn headerCell] setStringValue: _(@"Action")];
+	  [tableColumn setWidth: 50]; 
+	  [tableColumn setResizable: NO];
+	  [tableColumn setEditable: NO];
+	  [classesView addTableColumn: tableColumn];
+	  [classesView setActionColumn: tableColumn];
+	  RELEASE(tableColumn);
+	  
+	  [classesView sizeToFit];
+	  
+	  // expand all of the items in the classesView...
+	  [classesView expandItem: @"NSObject"];
+	  
+	  [selectionBox setContentView: scrollView];
+	  
+	  /*
+	   * Set up special-case dummy objects and add them to the objects view.
+	   */
+	  filesOwner = [GormFilesOwner new];
+	  [self setName: @"NSOwner" forObject: filesOwner];
+	  [objectsView addObject: filesOwner];
+	  firstResponder = [GormFirstResponder new];
+	  [self setName: @"NSFirst" forObject: firstResponder];
+	  [objectsView addObject: firstResponder];
+	  
+	  /*
+	   * Set image for this miniwindow.
+	   */
+	  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
+	  
+	  hidden = [NSMutableArray new];
+	  
+	  // preload headers...
+	  if ([defaults boolForKey: @"PreloadHeaders"])
 	    {
-	      NSDebugLog(@"Preloading %@", obj);
-	      [classManager parseHeader: (NSString *)obj];
+	      NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
+	      NSEnumerator *en = [headerList objectEnumerator];
+	      id obj = nil;
+	      
+	      while ((obj = [en nextObject]) != nil)
+		{
+		  NSDebugLog(@"Preloading %@", obj);
+		  [classManager parseHeader: (NSString *)obj];
+		}
 	    }
+	}
+      else
+	{
+	  NSLog(@"Couldn't load GormDocument interface.");
+	  [NSApp terminate: self];
 	}
     }
   return self;
+}
+
+- (void) awakeFromNib
+{
+  // set up the toolbar...
+  toolbar = [[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
+  [toolbar setAllowsUserCustomization: NO];
+  [toolbar setDelegate: self];
+  [window setToolbar: toolbar];  
 }
 
 - (void) addConnector: (id<IBConnectors>)aConnector
@@ -501,7 +442,7 @@ static NSImage	*classesImage = nil;
   // set the holder in the document.
   fontManager = (GormObjectProxy *)item;
   
-  [selectionView selectCellWithTag: 0];
+  // [selectionView selectCellWithTag: 0];
   [selectionBox setContentView: scrollView];
 }
 
@@ -816,7 +757,7 @@ static NSImage	*classesImage = nil;
 // change the views...
 - (void) changeView: (id)sender
 {
-  int tag = [[sender selectedCell] tag];
+  int tag = [sender tag];
 
   switch (tag)
     {
@@ -1053,6 +994,7 @@ static NSImage	*classesImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [window close];
   RELEASE(classManager);
   RELEASE(classEditor);
   RELEASE(hidden);
@@ -1067,6 +1009,7 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
+  RELEASE(toolbar);
   RELEASE(openEditors);
   RELEASE(window);
   [super dealloc];
@@ -1671,30 +1614,26 @@ static NSImage	*classesImage = nil;
 
 - (id) instantiateClass: (id)sender
 {
-  NSDebugLog(@"document -> instantiateClass: ");
-  if ([[selectionView selectedCell] tag] == 3)
+  int i = [classesView selectedRow];
+  
+  if (i >= 0)
     {
-      int i = [classesView selectedRow];
-
-      if (i >= 0)
+      id object = [classesView itemAtRow: i];
+      GSNibItem *item = nil;
+      
+      if([object isKindOfClass: [NSString class]])
 	{
-	  id object = [classesView itemAtRow: i];
-	  GSNibItem *item = nil;
-
-	  if([object isKindOfClass: [NSString class]])
-	    {
-	      if([object isEqualToString: @"FirstResponder"])
-		return nil;
-	      
-	      item = [[GormObjectProxy alloc] initWithClassName: object
-					      frame: NSMakeRect(0,0,0,0)];
-	      
-	      [self setName: nil forObject: item];
-	      [self attachObject: item toParent: nil];
-	      
-	      [selectionView selectCellWithTag: 0];
-	      [selectionBox setContentView: scrollView];
-	    }
+	  if([object isEqualToString: @"FirstResponder"])
+	    return nil;
+	  
+	  item = [[GormObjectProxy alloc] initWithClassName: object
+					  frame: NSMakeRect(0,0,0,0)];
+	  
+	  [self setName: nil forObject: item];
+	  [self attachObject: item toParent: nil];
+	  
+	  // [selectionView selectCellWithTag: 0];
+	  [selectionBox setContentView: scrollView];
 	}
     }
 
@@ -1731,7 +1670,7 @@ static NSImage	*classesImage = nil;
   int i = [classesView selectedRow];
   BOOL result = NO;
 
-  if (i >= 0)
+  if (i >= 0 && i <= ([classesView numberOfRows] - 1))
     {
       id object = [classesView itemAtRow: i];
       if([object isKindOfClass: [NSString class]])
@@ -3711,5 +3650,68 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 - (BOOL) isEditingClasses
 {
   return ([selectionBox contentView] == classesScrollView);
+}
+@end
+
+@implementation GormDocument (NSToolbarDelegate)
+
+- (NSToolbarItem*)toolbar: (NSToolbar*)toolbar
+    itemForItemIdentifier: (NSString*)itemIdentifier
+willBeInsertedIntoToolbar: (BOOL)flag
+{
+  NSToolbarItem *toolbarItem = AUTORELEASE([[NSToolbarItem alloc]
+					     initWithItemIdentifier: itemIdentifier]);
+
+  if([itemIdentifier isEqual: @"ObjectsItem"])
+    {
+      [toolbarItem setLabel: @"Objects"];
+      [toolbarItem setImage: objectsImage];
+      [toolbarItem setTarget: self];
+      [toolbarItem setAction: @selector(changeView:)];     
+      [toolbarItem setTag: 0];
+    }
+  else if([itemIdentifier isEqual: @"ImagesItem"])
+    {
+      [toolbarItem setLabel: @"Images"];
+      [toolbarItem setImage: imagesImage];
+      [toolbarItem setTarget: self];
+      [toolbarItem setAction: @selector(changeView:)];     
+      [toolbarItem setTag: 1];
+    }
+  else if([itemIdentifier isEqual: @"SoundsItem"])
+    {
+      [toolbarItem setLabel: @"Sounds"];
+      [toolbarItem setImage: soundsImage];
+      [toolbarItem setTarget: self];
+      [toolbarItem setAction: @selector(changeView:)];     
+      [toolbarItem setTag: 2];
+    }
+  else if([itemIdentifier isEqual: @"ClassesItem"])
+    {
+      [toolbarItem setLabel: @"Classes"];
+      [toolbarItem setImage: classesImage];
+      [toolbarItem setTarget: self];
+      [toolbarItem setAction: @selector(changeView:)];     
+      [toolbarItem setTag: 3];
+    }
+
+  return toolbarItem;
+}
+
+- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*)toolbar
+{
+  return [NSArray arrayWithObjects: @"ObjectsItem", 
+		  @"ImagesItem", 
+		  @"SoundsItem", 
+		  @"ClassesItem", nil];
+  
+}
+
+- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*)toolbar
+{ 
+  return [NSArray arrayWithObjects: @"ObjectsItem", 
+		  @"ImagesItem", 
+		  @"SoundsItem", 
+		  @"ClassesItem", nil];
 }
 @end

@@ -51,7 +51,7 @@
   NSString		*documentPath;
   NSMapTable		*objToName;
   NSWindow		*window;
-  NSMatrix		*selectionView;
+  // NSMatrix		*selectionView;
   NSBox                 *selectionBox;
   NSScrollView		*scrollView;
   NSScrollView          *classesScrollView;
@@ -68,6 +68,7 @@
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
   NSMutableArray        *openEditors;
+  NSToolbar             *toolbar;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

@@ -149,6 +149,7 @@ static NSColor *darkGreyBlueColor = nil;
 {
   if (!_isEditing)
     {
+      // [self deselectAll: self];
       [super collapseItem: item
 	 collapseChildren: collapseChildren];
     }
@@ -158,6 +159,7 @@ static NSColor *darkGreyBlueColor = nil;
 {
   if (!_isEditing)
     {
+      // [self deselectAll: self];
       [super expandItem: item
 	 expandChildren: expandChildren];
     } 
