@@ -1,3 +1,9 @@
+2001-07-09  Richard Frith-Macdonald <rfm@gnu.org>
+
+	Gorm.m: Tidied code a little to conform to coding standards
+	and avoid gcc-3.0 compiler warning. Incorporated Pierres fixes to his
+	last patch.
+
 2001-07-08  Mirko Viviani  <mirko.viviani@rccr.cremona.it>
 
 	* GormWindowEditor.m ([GormWindowEditor -_editTextView:withEvent:]): 

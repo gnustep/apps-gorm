@@ -486,6 +486,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       [allOutlets removeObject: anOutlet];
     }
 }
+
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name
 {
   id classInfo = [classInformation objectForKey: oldName];
@@ -533,16 +534,28 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	}
       obj = [classInfo objectForKey: @"Outlets"];
       extraObj = [classInfo objectForKey: @"ExtraOutlets"];
-      if (obj && extraObj) obj = [obj arrayByAddingObjectsFromArray: extraObj];
-      else if (extraObj) obj = extraObj;
+      if (obj && extraObj)
+	{
+	  obj = [obj arrayByAddingObjectsFromArray: extraObj];
+	}
+      else if (extraObj)
+	{
+	  obj = extraObj;
+	}
       if (obj != nil)
 	{
 	  [newInfo setObject: obj forKey: @"Outlets"];
 	}
       obj = [classInfo objectForKey: @"Actions"];
       extraObj = [classInfo objectForKey: @"ExtraActions"];
-      if (obj && extraObj) obj = [obj arrayByAddingObjectsFromArray: extraObj];
-      else if (extraObj) obj = extraObj;
+      if (obj && extraObj)
+	{
+	  obj = [obj arrayByAddingObjectsFromArray: extraObj];
+	}
+      else if (extraObj)
+	{
+	  obj = extraObj;
+	}
       if (obj != nil)
 	{
 	  [newInfo setObject: obj forKey: @"Actions"];
@@ -613,9 +626,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSArray *cn = [self allClassNames];
 
   if (superclass != nil && subclass != nil && [cn containsObject: subclass]
-     && ([cn containsObject: superclass]
-       || [superclass isEqualToString: @"NSObject"])
-     && [self isSuperclass: subclass linkedToClass: superclass] == NO)
+    && ([cn containsObject: superclass]
+    || [superclass isEqualToString: @"NSObject"])
+    && [self isSuperclass: subclass linkedToClass: superclass] == NO)
     {
       NSMutableDictionary	*info;
 
@@ -625,7 +638,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	  [info setObject: superclass forKey: @"Super"];
 	  return YES;
 	}
-      else return NO;
+      else
+	{
+	  return NO;
+	}
     }
   else
     {
@@ -649,6 +665,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return superName;
 
 }
+
 - (BOOL) isSuperclass: (NSString*)superclass linkedToClass: (NSString*)subclass
 {
   NSString *ssclass;
@@ -683,17 +700,18 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
  *  create .m & .h files for a class
  */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className 
-				 withName:(NSString*)sourcePath
-				      and:(NSString*)headerPath
+				 withName: (NSString*)sourcePath
+				      and: (NSString*)headerPath
 {
-  NSMutableString *headerFile;
-  NSMutableString *sourceFile;
-  NSData *headerData;
-  NSData *sourceData;
-
-  NSArray *outlets, *actions;
-  int i, n;
-
+  NSMutableString	*headerFile;
+  NSMutableString	*sourceFile;
+  NSData		*headerData;
+  NSData		*sourceData;
+  NSArray		*outlets;
+  NSArray		*actions;
+  NSString		*actionName;
+  int			i;
+  int			n;
 
   headerFile = [NSMutableString stringWithCapacity: 200];
   sourceFile = [NSMutableString stringWithCapacity: 200];
@@ -705,66 +723,53 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [headerFile appendString: @"#import <AppKit/AppKit.h>\n\n"];
   [sourceFile appendString: @"#import <AppKit/AppKit.h>\n"];
   if ([[headerPath stringByDeletingLastPathComponent]
-	isEqualToString: 
-	  [sourcePath stringByDeletingLastPathComponent]])
+    isEqualToString: [sourcePath stringByDeletingLastPathComponent]])
     {
       [sourceFile appendFormat: @"#import \"%@\"\n\n", 
-		  [headerPath lastPathComponent]];
+	[headerPath lastPathComponent]];
     }
   else
     {
       [sourceFile appendFormat: @"#import \"%@\"\n\n", 
-		  headerPath];      
+	headerPath];      
     }
-  [headerFile appendFormat: @"@interface %@ : %@\n{\n", 
-	      className,
-	      [self superClassNameForClassNamed: className]];
-  [sourceFile appendFormat: @"@implementation %@\n\n", 
-	      className];
-	      
+  [headerFile appendFormat: @"@interface %@ : %@\n{\n", className,
+    [self superClassNameForClassNamed: className]];
+  [sourceFile appendFormat: @"@implementation %@\n\n", className];
   
   n = [outlets count]; 
-  for( i = 0; i < n; i++)
+  for (i = 0; i < n; i++)
     {
-      [headerFile appendFormat: @"  id %@;\n", 
-		  [outlets objectAtIndex: i]];
+      [headerFile appendFormat: @"  id %@;\n", [outlets objectAtIndex: i]];
     }
   [headerFile appendFormat: @"}\n"];
 
   n = [actions count]; 
-  for( i = 0; i < n; i++)
+  for (i = 0; i < n; i++)
     {
-      [headerFile appendFormat: @"- (void) %@: (id) sender;\n", 
-		  [actions objectAtIndex: i]];
-      [sourceFile 
-	appendFormat: @"\
-- (void) %@: (id) sender
-{
-  /* insert your code here */
-}
-
-", [actions objectAtIndex: i]];
+      actionName = [actions objectAtIndex: i];
+      actionName = [actionName substringToIndex: [actionName length] - 1];
+      [headerFile appendFormat: @"- (void) %@: (id)sender;\n", actionName];
+      [sourceFile appendFormat:
+	@"\n"
+	@"- (void) %@: (id)sender\n"
+	@"{\n"
+	@"  /* insert your code here */\n"
+	@"}\n"
+	@"\n"
+	, [actions objectAtIndex: i]];
     }
   [headerFile appendFormat: @"@end\n"];
   [sourceFile appendFormat: @"@end\n"];
 
   headerData = [headerFile dataUsingEncoding:
-			     [NSString defaultCStringEncoding]];
+    [NSString defaultCStringEncoding]];
   sourceData = [sourceFile dataUsingEncoding:
-			     [NSString defaultCStringEncoding]];
+    [NSString defaultCStringEncoding]];
 
   [headerData writeToFile: headerPath atomically: NO];
   [sourceData writeToFile: sourcePath atomically: NO];
 
-/*  RELEASE(outlets);
-    RELEASE(actions);
-    RELEASE(commonPath);
-    RELEASE(headerFile);
-    RELEASE(headerData);
-    RELEASE(headerPath);
-    RELEASE(sourceFile);
-    RELEASE(sourceData);
-    RELEASE(sourcePath);*/
   return YES;
 }
 @end
