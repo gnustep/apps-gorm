@@ -1,4 +1,4 @@
-/* GormObjectEditor.m
+/* GormWindowEditor.m
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
@@ -25,10 +25,10 @@
 #include "GormPrivate.h"
 
 /*
- * Method to return the image that should be used to display objects within
+ * Methods to return the images that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSObject (IBObjectAdditions)
+@implementation NSMenu (IBObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -36,7 +36,7 @@
   if (image == nil)
     {
       NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormObject"];
+      NSString	*path = [bundle pathForImageResource: @"GormMenu"];
 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
@@ -44,22 +44,76 @@
 }
 @end
 
+@implementation NSWindow (IBObjectAdditions)
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path = [bundle pathForImageResource: @"GormWindow"];
+
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
+@end
+
+/*
+ *	Default implementations of methods used for updating a view by
+ *	direct action through an editor.
+ */
+@implementation NSView (ViewAdditions)
+
+- (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point
+{
+  return NO;	/* Can the view accept a color drag-and-drop?	*/
+}
+
+- (BOOL) allowsAltDragging
+{
+  return NO;	/* Can the view be dragged into a matrix?	*/
+}
+
+- (void) depositColor: (NSColor*)color atPoint: (NSPoint)point
+{
+  					/* Handle color drop in view.	*/
+}
+
+- (NSSize) maximumSizeFromKnobPosition: (IBKnobPosition)knobPosition
+{
+  NSView	*s = [self superview];
+  NSRect	r = (s != nil) ? [s bounds] : [self bounds];
+
+  return r.size;			/* maximum resize permitted	*/
+}
+
+- (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position
+{
+  return NSZeroSize;			/* Minimum resize permitted	*/
+}
+
+- (void) placeView: (NSRect)newFrame
+{
+  [self setFrame: newFrame];		/* View changed by editor.	*/
+}
+
+@end
+
 
 
-@interface	GormObjectEditor : NSMatrix <IBEditors>
+@interface	GormWindowEditor : NSView <IBEditors>
 {
-  NSMutableArray	*objects;
   id<IBDocuments>	document;
-  id			selected;
+  id			edited;
+  NSMutableArray	*selection;
   NSPoint		mouseDownPoint;
   BOOL			shouldBeginDrag;
   NSPasteboard		*dragPb;
 }
-- (void) addObject: (id)anObject;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (void) refreshCells;
-- (void) removeObject: (id)anObject;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
@@ -80,20 +134,13 @@
 - (NSWindow*) window;
 @end
 
-@implementation	GormObjectEditor
-
-- (void) addObject: (id)anObject
-{
-  if ([objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
-    {
-      [objects addObject: anObject];
-      [self refreshCells];
-    }
-}
+@implementation	GormWindowEditor
 
 - (void) dealloc
 {
-  RELEASE(objects);
+  RELEASE(edited);
+  RELEASE(selection);
+  RELEASE(document);
   [super dealloc];
 }
 
@@ -103,40 +150,9 @@
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
   self = [super init];
-  if (self)
-    {
-      NSButtonCell	*proto;
-
-      selected = anObject;
-      document = aDocument;
-
-      [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	IBCellPboardType, IBMenuPboardType, IBMenuCellPboardType,
-	IBObjectPboardType, IBViewPboardType, IBWindowPboardType, nil]];
-
-      [self setAutosizesCells: NO];
-      [self setCellSize: NSMakeSize(72,72)];
-      [self setIntercellSpacing: NSMakeSize(8,8)];
-      [self setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
-      [self setMode: NSRadioModeMatrix];
-      /*
-       * Send mouse click actions to self, so we can handle selection.
-       */
-      [self setAction: @selector(changeSelection:)];
-      [self setDoubleAction: @selector(raiseSelection:)];
-      [self setTarget: self];
-
-      objects = [NSMutableArray new];
-      proto = [NSButtonCell new];
-      [proto setBordered: NO];
-      [proto setAlignment: NSCenterTextAlignment];
-      [proto setImagePosition: NSImageAbove];
-      [proto setSelectable: NO];
-      [proto setEditable: NO];
-      [self setPrototype: proto];
-      RELEASE(proto);
-      [self refreshCells];
-    }
+  ASSIGN(document, aDocument);
+  ASSIGN(edited, anObject);
+  selection = [NSMutableArray new];
   return self;
 }
 
@@ -242,6 +258,7 @@
 #if 1
 NSLog(@"Could do dragging");
 #else
+      RELEASE(dragImage);
       dragImage = [NSImage new];
       rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
 						rect: rect];
@@ -263,111 +280,6 @@ NSLog(@"Could do dragging");
 	    slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
 #endif
     }
-}
-
-- (id) changeSelection: (id)sender
-{
-  int	row = [self selectedRow];
-  int	col = [self selectedColumn];
-  int	index = row * [self numberOfColumns] + col;
-  id	obj = nil;
-
-  if (index >= 0 && index < [objects count])
-    {
-      obj = [objects objectAtIndex: index];
-      if (obj != selected)
-	{
-	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
-	  selected = obj;
-	  [nc postNotificationName: IBSelectionChangedNotification
-			    object: self];
-	}
-    }
-  return obj;
-}
-
-- (id) raiseSelection: (id)sender
-{
-  id	obj = [self changeSelection: sender];
-
-  if ([obj isKindOfClass: [NSWindow class]])
-    {
-      [obj makeKeyAndOrderFront: self];
-    }
-  else if ([obj isKindOfClass: [NSMenu class]])
-    {
-      NSLog(@"Menu needs raising"); /* FIXME */
-    }
-  return self;
-}
-
-- (void) refreshCells
-{
-  unsigned	count = [objects count];
-  unsigned	index;
-  int		cols = 0;
-  int		rows;
-  int		width;
-
-  width = [[self superview] bounds].size.width;
-  while (width >= 72)
-    {
-      width -= (72 + 8);
-      cols++;
-    }
-  if (cols == 0)
-    {
-      cols = 1;
-    }
-  rows = count / cols;
-  if (rows == 0 || rows * cols != count)
-    {
-      rows++;
-    }
-  [self renewRows: rows columns: cols];
-
-  for (index = 0; index < count; index++)
-    {
-      id		obj = [objects objectAtIndex: index];
-      NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-
-      [but setImage: [obj imageForViewer]];
-      [but setTitle: [document nameForObject: obj]];
-      [but setShowsStateBy: NSChangeGrayCellMask];
-      [but setHighlightsBy: NSChangeGrayCellMask];
-    }
-  while (index < rows * cols)
-    {
-      NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-
-      [but setImage: nil];
-      [but setTitle: nil];
-      [but setShowsStateBy: NSNoCellMask];
-      [but setHighlightsBy: NSNoCellMask];
-      index++;
-    }
-  [self setIntercellSpacing: NSMakeSize(8,8)];
-  [self sizeToCells];
-  [self setNeedsDisplay: YES];
-}
-
-- (void) removeObject: (id)anObject
-{
-  unsigned	pos;
-
-  pos = [objects indexOfObjectIdenticalTo: anObject];
-  if (pos == NSNotFound)
-    {
-      return;
-    }
-  [objects removeObjectAtIndex: pos];
-  [self refreshCells];
-}
-
-- (void) resizeWithOldSuperviewSize: (NSSize)oldSize
-{
-  [self refreshCells];
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
@@ -409,7 +321,7 @@ NSLog(@"Could do dragging");
 
 - (id) editedObject
 {
-  return selected;
+  return edited;
 }
 
 - (void) makeSelectionVisible: (BOOL)flag
@@ -440,15 +352,12 @@ NSLog(@"Could do dragging");
 
 - (NSArray*) selection
 {
-  if (selected == nil)
-    return [NSArray array];
-  else
-    return [NSArray arrayWithObject: selected];
+  return AUTORELEASE([selection copy]);
 }
 
 - (unsigned) selectionCount
 {
-  return (selected == nil) ? 0 : 1;
+  return [selection count];
 }
 
 - (void) validateEditing

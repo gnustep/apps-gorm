@@ -30,14 +30,81 @@ NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 /*
- * A private connector for child->parent relationships.
+ * Each document has a GormFilesOwner object that is used as a placeholder
+ * for the owner of the document.
  */
-@interface GormConnector : NSNibConnector
+@interface	GormFilesOwner : NSObject
+{
+}
 @end
 
-@implementation	GormConnector
+@implementation	GormFilesOwner
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path = [bundle pathForImageResource: @"GormFilesOwner"];
+
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
 @end
 
+/*
+ * Each document has a GormFirstResponder object that is used as a placeholder
+ * for the first responder at any instant.
+ */
+@interface	GormFirstResponder : NSObject
+{
+}
+@end
+
+@implementation	GormFirstResponder
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path = [bundle pathForImageResource: @"GormFirstResponder"];
+
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
+@end
+
+/*
+ * Each document may have a GormFontManager object that is used as a
+ * placeholder for the current fornt manager.
+ */
+@interface	GormFontManager : NSObject
+{
+}
+@end
+
+@implementation	GormFontManager
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path = [bundle pathForImageResource: @"GormFontManager"];
+
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
+@end
+
+
 
 @implementation GormDocument
 
@@ -64,16 +131,16 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
    */
   if (aParent == nil)
     {
-      aParent = owner;
+      aParent = filesOwner;
     }
-  old = [self connectorsForSource: anObject ofClass: [GormConnector class]];
+  old = [self connectorsForSource: anObject ofClass: [NSNibConnector class]];
   if ([old count] > 0)
     {
       [[old objectAtIndex: 0] setDestination: aParent];
     }
   else
     {
-      GormConnector	*con = [GormConnector new];
+      NSNibConnector	*con = [NSNibConnector new];
 
       [con setSource: anObject];
       [con setDestination: aParent];
@@ -82,11 +149,8 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     }
   [self setName: nil forObject: anObject];
 
-  if ([anObject isKindOfClass: [NSWindow class]] == YES)
-    {
-      [resourcesManager addObject: anObject];
-    }
-  else if ([anObject isKindOfClass: [NSMenu class]] == YES)
+  if ([anObject isKindOfClass: [NSWindow class]] == YES
+    || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
       [resourcesManager addObject: anObject];
     }
@@ -101,6 +165,15 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     {
       [self attachObject: obj toParent: aParent];
     }
+}
+
+/*
+ * A Gorm document is encoded in the archive as a GSNibContainer ...
+ * A class that the gnustep gui library knbows about and can unarchive.
+ */
+- (Class) classForCoder
+{
+  return [GSNibContainer class];
 }
 
 - (NSArray*) connectorsForDestination: (id)destination
@@ -194,9 +267,11 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 {
   [[resourcesManager window] performClose: self];
   RELEASE(resourcesManager);
+  RELEASE(filesOwner);
+  RELEASE(firstResponder);
+  RELEASE(fontManager);
   NSFreeMapTable(objToName);
   RELEASE(documentPath);
-  RELEASE(owner);
   [super dealloc];
 }
 
@@ -215,11 +290,8 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 	}
     }
   NSMapRemove(objToName, (void*)anObject);
-  if ([anObject isKindOfClass: [NSWindow class]] == YES)
-    {
-      [resourcesManager removeObject: anObject];
-    }
-  else if ([anObject isKindOfClass: [NSMenu class]] == YES)
+  if ([anObject isKindOfClass: [NSWindow class]] == YES
+    || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
       [resourcesManager removeObject: anObject];
     }
@@ -323,8 +395,6 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
   /*
    * Map all connector sources and destinations to their name strings.
-   * The 'owner' dummy object maps to 'NSOwner'.
-   * The nil object maps to 'NSFirstResponder'.
    */
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
@@ -339,13 +409,25 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
       name = [self nameForObject: obj];
       [con setDestination: name];
     }
+  /*
+   * Remove objects that shouldn't be archived.
+   */
+  [nameTable removeObjectForKey: @"NSOwner"];
+  [nameTable removeObjectForKey: @"NSFirst"];
 
+  /*
+   * Archive self into file
+   */
   [super encodeWithCoder: aCoder];
 
   /*
+   * Restore removed objects.
+   */
+  [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  [nameTable setObject: firstResponder forKey: @"NSFirst"];
+
+  /*
    * Map all connector source and destination names to their objects.
-   * The string 'NSOwner' maps to the 'owner' dummy object.
-   * The string 'NSFirstResponder' maps to nil.
    */
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
@@ -369,40 +451,30 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     {
       objToName = NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
 	NSNonRetainedObjectMapValueCallBacks, 128, [self zone]);
-      owner = [NSObject new];
+
       resourcesManager = [GormResourcesManager newManagerForDocument: self];
+      /*
+       * Set up special-case dummy objects and add them to the resources mgr.
+       */
+      filesOwner = [GormFilesOwner new];
+      [self setName: @"NSOwner" forObject: filesOwner];
+      [resourcesManager addObject: filesOwner];
+      firstResponder = [GormFirstResponder new];
+      [self setName: @"NSFirst" forObject: firstResponder];
+      [resourcesManager addObject: firstResponder];
+      fontManager = [GormFontManager new];
     }
   return self;
 }
 
 - (NSString*) nameForObject: (id)anObject
 {
-  if (anObject == nil)
-    {
-      return @"NSFirstResponder";
-    }
-  else if (anObject == owner)
-    {
-      return @"NSOwner";
-    }
-  else
-    {
-      return (NSString*)NSMapGet(objToName, (void*)anObject);
-    }
+  return (NSString*)NSMapGet(objToName, (void*)anObject);
 }
 
 - (id) objectForName: (NSString*)name
 {
-  id	obj = [nameTable objectForKey: name];
-
-  if (obj == nil)
-    {
-      if ([name isEqualToString: @"NSOwner"] == YES)
-	{
-	  obj = owner;
-	}
-    }
-  return obj;
+  return [nameTable objectForKey: name];
 }
 
 - (NSArray*) objects
@@ -429,12 +501,12 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
   if (result == NSOKButton)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSMutableDictionary	*nt;
       NSString		*aFile = [oPanel filename];
       NSData		*data;
       NSUnarchiver	*u;
       GSNibContainer	*c;
       NSEnumerator	*enumerator;
-      NSDictionary	*nt;
       id <IBConnectors>	con;
       NSString		*name;
 
@@ -446,8 +518,15 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 	     @"OK", NULL, NULL);
 	  return nil;
 	}
+
+      /*
+       * Create an unarchiver, and use it to unarchive the nib file while
+       * handling class replacement so that standard objects understood
+       * by the gui library are converted to their Gorm internal equivalents.
+       */
       u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
-/* FIXME - need to handle class replacement here */
+      [u decodeClassName: @"GSNibContainer"
+	     asClassName: @"GormDocument"];
       c = [u decodeObject];
       if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
 	{
@@ -461,7 +540,8 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
        * to hold the objects rather than their names (using our own dummy
        * object as the 'NSOwner'.
        */
-      [[c nameTable] setObject: owner forKey: @"NSOwner"];
+      [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
+      [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
       nt = [c nameTable];
       enumerator = [[c connections] objectEnumerator];
       while ((con = [enumerator nextObject]) != nil)
@@ -476,19 +556,22 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 	  obj = [nt objectForKey: name];
 	  [con setDestination: obj];
 	}
-      [[c nameTable] removeObjectForKey: @"NSOwner"];
-
+ 
       /*
-       * Now we merge the objects from the nib container into our own
-       * data structures.
+       * Now we merge the objects from the nib container into our own data
+       * structures, taking care not to overwrite our NSOwner and NSFirst.
        */
+      [nt removeObjectForKey: @"NSOwner"];
+      [nt removeObjectForKey: @"NSFirst"];
       [connections addObjectsFromArray: [c connections]];
-      [nameTable addEntriesFromDictionary: [c nameTable]];
+      [nameTable addEntriesFromDictionary: nt];
 
       /*
        * Now we build our reverse mapping information and other initialisation
        */
       NSResetMapTable(objToName);
+      NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
+      NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
       enumerator = [nameTable keyEnumerator];
       while ((name = [enumerator nextObject]) != nil)
 	{
@@ -496,11 +579,8 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 	  NSMapInsert(objToName, (void*)obj, (void*)name);
 
-	  if ([obj isKindOfClass: [NSWindow class]] == YES)
-	    {
-	      [resourcesManager addObject: obj];
-	    }
-	  else if ([obj isKindOfClass: [NSMenu class]] == YES)
+	  if ([obj isKindOfClass: [NSWindow class]] == YES
+	   || [obj isKindOfClass: [NSMenu class]] == YES)
 	    {
 	      [resourcesManager addObject: obj];
 	    }
@@ -537,9 +617,9 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
   NSArray		*old;
   id<IBConnectors>	con;
 
-  old = [self connectorsForSource: anObject ofClass: [GormConnector class]];
+  old = [self connectorsForSource: anObject ofClass: [NSNibConnector class]];
   con = [old lastObject];
-  if (con != nil && [con destination] != owner)
+  if ([con destination] != filesOwner && [con destination] != firstResponder)
     {
       return [con destination];
     }
@@ -654,12 +734,6 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 	    }
 	  NSMapRemove(objToName, (void*)object);
 	}
-    }
-  if ([aName isEqualToString: @"NSOwner"]
-    || [aName isEqualToString: @"NSFirstResponder"])
-    {
-      NSLog(@"Attempt to set object name to '%@' ignored", aName);
-      return;
     }
   [nameTable setObject: object forKey: aName];
   NSMapInsert(objToName, (void*)object, (void*)aName);

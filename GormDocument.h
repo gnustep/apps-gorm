@@ -1,9 +1,30 @@
 #ifndef GORMDOCUMENT_H
 #define GORMDOCUMENT_H
 
+/*
+ * Each document has a GormFilesOwner object that is used as a placeholder
+ * for the owner of the document.
+ */
+@class	GormFilesOwner;
+
+/*
+ * Each document has a GormFirstResponder object that is used as a placeholder
+ * for the first responder at any instant.
+ */
+@class	GormFirstResponder;
+
+/*
+ * Each document may have a GormFontManager object that is used as a
+ * placeholder for the current fornt manager.
+ */
+@class	GormFontManager;
+
 @interface GormDocument : GSNibContainer <IBDocuments>
 {
   GormResourcesManager	*resourcesManager;
+  GormFilesOwner	*filesOwner;
+  GormFirstResponder	*firstResponder;
+  GormFontManager	*fontManager;
   NSString		*documentPath;
   NSMapTable		*objToName;
   id			owner;		/* Dummy object	*/

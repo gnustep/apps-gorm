@@ -33,7 +33,7 @@
 /*
  * Positions of handles for resizing items.
  */
-enum IBKnowPosition {
+typedef enum {
   IBBottomLeftKnobPosition,
   IBMiddleLeftKnobPosition,
   IBTopLeftKnobPosition,
@@ -42,7 +42,7 @@ enum IBKnowPosition {
   IBMiddleRightKnobPosition,
   IBBottomRightKnobPosition,
   IBBottomMiddleKnobPosition
-};
+} IBKnobPosition;
 
 /*
  * Pasteboard types used for DnD when views are dragged out of a palette
@@ -238,6 +238,15 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) touch: (id)sender;
 - (BOOL) wantsButtons;
 - (NSWindow*) window;
+@end
+
+@interface NSView (ViewAdditions)
+- (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point;
+- (BOOL) allowsAltDragging;
+- (void) depositColor: (NSColor*)color atPoint: (NSPoint)point;
+- (NSSize) maximumSizeFromKnobPosition: (IBKnobPosition)knobPosition;
+- (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position;
+- (void) placeView: (NSRect)newFrame;
 @end
 
 #endif

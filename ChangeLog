@@ -1,3 +1,13 @@
+Mon Dec 13 14:57:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Gorm.h: Added NSView additions
+	* GormWindowEditor.m: new skeleton file.
+	* GormDocument.m: handle class replacement on archiving/unarchiving.
+	Add filesOwner and firstResponder dummy objects.
+	* GormResourcesManager.m: tidy files owner and first responder stuff.
+	* GormObjectEditor.m:  Use neater mechanism for determining image to
+	be displayed in matrix.
+
 Wed Dec  8 20:54:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Gorm.m: ([-init]) make sure that the palettes manager is loaded.
