@@ -31,7 +31,10 @@ PALETTE_NAME = 2Controls
 2Controls_RESOURCE_FILES = ControlsPalette.tiff \
 	GormBoxInspector.gorm \
 	GormButtonInspector.gorm \
+	GormCellInspector.gorm \
+	GormFormInspector.gorm \
 	GormMatrixInspector.gorm \
+	GormPopUpButtonInspector.gorm \
 	GormSliderInspector.gorm \
 	GormStepperInspector.gorm \
 	GormTextFieldInspector.gorm

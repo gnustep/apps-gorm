@@ -431,14 +431,295 @@
 @end
 
 /*----------------------------------------------------------------------------
+  NSCell
+*/
+@implementation	NSCell (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormCellAttributesInspector";
+}
+@end
+
+@interface GormCellAttributesInspector: IBInspector
+{
+  id disabledSwitch;
+  id tagForm;
+}
+@end
+
+@implementation GormCellAttributesInspector
+- (void) _setValuesFromControl: control
+{
+  if (control == disabledSwitch)
+    {
+      [object setEnabled: ([control state] == NSOffState)];
+    }
+ else if (control == tagForm)
+    {
+      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  if (anObject != object)
+    return;
+
+  [disabledSwitch setState: ([anObject isEnabled]) ? NSOffState : NSOnState];  
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  RELEASE(okButton);
+  [super dealloc];
+}
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormCellInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormCellInspector");
+      return nil;
+    }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  return self;
+}
+
+- (BOOL) wantsButtons
+{
+  return YES;
+}
+
+- (NSButton*) okButton
+{
+  if (okButton == nil)
+    {
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"OK"];
+      [okButton setEnabled: YES];
+    }
+  return okButton;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: disabledSwitch];
+  [self _setValuesFromControl: tagForm];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
+@end
+
+/*----------------------------------------------------------------------------
   NSForm
 */
 @implementation	NSForm (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
-  // Not Implemented Yet
-  return @"GormObjectInspector";
+  return @"GormFormAttributesInspector";
 }
+@end
+
+@interface GormFormAttributesInspector: IBInspector
+{
+  id backgroundColorWell;
+  id drawsBackgroundSwitch;
+  id optionMatrix;
+  id tagForm;
+  id textMatrix;
+  id titleMatrix;
+
+}
+@end
+
+@implementation GormFormAttributesInspector
+
+- (void) _setValuesFromControl: control
+{
+
+  int rows,cols,i;
+      
+  [object getNumberOfRows: &rows columns: &cols];
+  
+  if (control == backgroundColorWell)
+    {
+      [object setBackgroundColor: [control color]];
+    }
+  else if (control == drawsBackgroundSwitch)
+    {
+      [object setDrawsBackground: ([control state] == NSOnState)];
+    }
+  else if (control == optionMatrix)
+    {
+      BOOL flag;
+
+      // Cells tags = Positions?
+      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
+      if (flag == YES) {
+        for (i=0; i<rows; i++)
+          [[object cellAtIndex: i] setTag: i];
+      }
+
+      // Editable?
+      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      for (i=0; i<rows; i++)
+        [[object cellAtIndex: i] setEditable: flag];
+
+      // Selectable?
+      flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
+      for (i=0; i<rows; i++)
+        [[object cellAtIndex: i] setSelectable: flag];
+
+      // Scrollable?
+      flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
+      for (i=0; i<rows; i++)
+        [[object cellAtIndex: i] setScrollable: flag];
+ 
+    }
+  else if (control == textMatrix)
+    {
+      NSLog(@"Tag of selected cell in Text matrix: %d",[[control selectedCell] tag]);
+      [object setTextAlignment: (NSTextAlignment)[[control selectedCell] tag]];
+    }
+  else if (control == titleMatrix)
+    {
+      NSLog(@"Tag of selected cell in Title matrix: %d",[[control selectedCell] tag]);
+
+      [object setTitleAlignment: (NSTextAlignment)[[control selectedCell] tag]];
+      
+    }
+  else if (control == tagForm)
+    {
+      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  if (anObject != object)
+    return;
+
+  [backgroundColorWell setColor: [anObject backgroundColor] ];
+  [drawsBackgroundSwitch setState: 
+		     ([anObject drawsBackground]) ? NSOnState : NSOffState];
+  [textMatrix selectCellWithTag: [[anObject  cellAtIndex: 0] alignment] ];
+  [titleMatrix selectCellWithTag: [[anObject cellAtIndex: 0] titleAlignment] ];
+  
+  [optionMatrix deselectAllCells];
+  if ([[anObject cellAtIndex: 0] isEditable])
+    [optionMatrix selectCellAtRow: 1 column: 0];
+  if ([[anObject cellAtIndex: 0] isSelectable])
+    [optionMatrix selectCellAtRow: 2 column: 0];
+  if ([[anObject cellAtIndex: 0] isScrollable])
+    [optionMatrix selectCellAtRow: 3 column: 0];
+
+  // Cells tags = position is not directly stored in the Form so guess it.
+  {
+    int rows,cols;
+    [anObject getNumberOfRows: &rows columns: &cols];
+    
+    if ( (rows > 1) && ([[anObject cellAtIndex: rows-1] tag] == rows-1) )
+      {
+        [optionMatrix selectCellAtRow: 0 column: 0];
+      }
+  }
+  
+
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  RELEASE(okButton);
+  [super dealloc];
+}
+
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormFormInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormFormInspector");
+      return nil;
+    }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  return self;
+}
+
+- (BOOL) wantsButtons
+{
+  return YES;
+}
+
+- (NSButton*) okButton
+{
+  if (okButton == nil)
+    {
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,30)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"OK"];
+      [okButton setEnabled: YES];
+    }
+  return okButton;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: optionMatrix];
+  [self _setValuesFromControl: backgroundColorWell];
+  [self _setValuesFromControl: drawsBackgroundSwitch];
+  [self _setValuesFromControl: textMatrix];
+  [self _setValuesFromControl: titleMatrix];
+  [self _setValuesFromControl: tagForm];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
 @end
 
 /*----------------------------------------------------------------------------
@@ -570,10 +851,114 @@
 @implementation	NSPopUpButton (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
-  // Not Implemented Yet
-  return @"GormObjectInspector";
+  return @"GormPopUpButtonAttributesInspector";
 }
 @end
+
+@interface GormPopUpButtonAttributesInspector : IBInspector
+{
+  id typeMatrix;
+  id disabledSwitch;
+  id tagForm;
+}
+@end
+
+@implementation GormPopUpButtonAttributesInspector
+
+- (void) _setValuesFromControl: control
+{
+  if (control == typeMatrix)
+    {
+      [object setPullsDown: [[control selectedCell] tag] ];
+    }
+  else if (control == disabledSwitch)
+    {
+      [object setAutoenablesItems: ([control state] == NSOffState) ];
+    }
+  else if (control == tagForm)
+    {
+      [object setTag: [[control cellAtRow: 0 column: 0] intValue] ];
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  if (anObject != object)
+    return;
+
+  [typeMatrix selectCellWithTag: [anObject pullsDown] ];
+  [disabledSwitch setState: ![anObject autoenablesItems] ];
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  RELEASE(okButton);
+  [super dealloc];
+}
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormPopUpButtonInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormPopUpButtonInspector");
+      return nil;
+    }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  return self;
+}
+
+
+- (BOOL) wantsButtons
+{
+  return YES;
+}
+
+- (NSButton*) okButton
+{
+  if (okButton == nil)
+    {
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"OK"];
+      [okButton setEnabled: YES];
+    }
+  return okButton;
+}
+
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: typeMatrix];
+  [self _setValuesFromControl: disabledSwitch];
+  [self _setValuesFromControl: tagForm];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
+@end
+
 
 /*----------------------------------------------------------------------------
   NSSlider

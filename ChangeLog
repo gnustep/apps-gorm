@@ -1,3 +1,16 @@
+2001-10-17  Laurent Julliard  <laurent@julliard-online.org>>
+
+	* Palettes/2Controls/GormFormInspector.gorm: New Form inspector.
+	* Palettes/2Controls/GormFormInspector.classes: likewise.
+
+	* Palettes/2Controls/GormPopUpButtonInspector.gorm: New PopUp Button inspector
+	* Palettes/2Controls/GormPopUpButtonInspector.classes: likewise
+	* Palettes/2Controls/GormCellInspector.gorm: New Cell Inspector
+	* Palettes/2Controls/GormCellInspector.classes: likewise
+
+	* Palettes/2Controls/inspectors.m: new logic for the new inspectors
+	* Palettes/2Controls/GNUmakefile: new inspectors in resources
+
 2001-10-16  Adam Fedor  <fedor@gnu.org>
 
 	* GormPalettesManager.m ([GormPalettesManager -setCurrentPalette:]): 
