@@ -1,3 +1,9 @@
+2004-09-17 18:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* VersionProfiles.plist: Updated the profile to properly
+	set the version for NSTextFieldCell which has also been
+	updated since the last release.
+	
 2004-09-17 00:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.m: Added code to [GormPalettesManager
