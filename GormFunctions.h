@@ -27,6 +27,8 @@
 
 #include <AppKit/AppKit.h>
 
+// @class NSDictionary;
+
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array);
 
@@ -47,5 +49,11 @@ NSString *cutFileLabelText(NSString *filename, id label, int length);
 
 // get the cell size for all editors
 NSSize defaultCellSize();
+
+// color from string
+NSColor *colorFromDict(NSDictionary *colorString);
+
+// color to string
+NSDictionary *colorToDict(NSColor *color);
 
 #endif

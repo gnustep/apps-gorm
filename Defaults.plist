@@ -5,4 +5,10 @@
   HeaderList = ();
   CellSizeWidth = 72;
   ArchiveType = Typed;
+  GuideColor = {
+    alpha = 1;
+    blue = 0;
+    green = 0;
+    red = 1;
+  };	
 }

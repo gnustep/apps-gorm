@@ -14,6 +14,7 @@
   id _generalView;
   id _headersView;
   id _shelfView;
+  id _colorsView;
 }
 
 - (void) popupAction: (id)sender;

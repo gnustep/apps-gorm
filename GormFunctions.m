@@ -25,6 +25,7 @@
 #include "GormFunctions.h"
 #include "GormViewEditor.h"
 #include <AppKit/AppKit.h>
+#include <Foundation/NSDictionary.h>
 
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array)
@@ -172,4 +173,47 @@ NSSize defaultCellSize()
   int width = [defaults integerForKey: @"CellSizeWidth"];
   NSSize size = NSMakeSize(width, 72);
   return size;
+}
+
+NSColor *colorFromDict(NSDictionary *dict)
+{
+  if(dict != nil)
+    {
+      return [NSColor colorWithCalibratedRed: [[dict objectForKey: @"red"] floatValue]
+		      green: [[dict objectForKey: @"green"] floatValue]
+		      blue: [[dict objectForKey: @"blue"] floatValue]
+		      alpha: [[dict objectForKey: @"alpha"] floatValue]];
+    }
+  return nil;
+}
+
+NSDictionary *colorToDict(NSColor *color)
+{
+  if(color != nil)
+    {
+      NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+      float red, green, blue, alpha;
+      NSNumber *fred = nil;
+      NSNumber *fgreen = nil;
+      NSNumber *fblue = nil;
+      NSNumber *falpha = nil;
+      
+      [color getRed: &red
+	     green: &green
+	     blue: &blue
+	     alpha: &alpha];
+      
+      fred   = [NSNumber numberWithFloat: red];
+      fgreen = [NSNumber numberWithFloat: green];
+      fblue  = [NSNumber numberWithFloat: blue];
+      falpha = [NSNumber numberWithFloat: alpha];
+      
+      [dict setObject: fred   forKey: @"red"];
+      [dict setObject: fgreen forKey: @"green"];
+      [dict setObject: fblue  forKey: @"blue"];
+      [dict setObject: falpha forKey: @"alpha"];
+      
+      return dict;
+    }
+  return nil;
 }

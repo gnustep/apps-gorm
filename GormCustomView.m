@@ -44,11 +44,18 @@
   [self setAlignment: NSCenterTextAlignment];
   [self setFont: [NSFont boldSystemFontOfSize: 0]];
   [self setEditable: NO];
+  [self setSelectable: NO];
   [self setClassName: @"CustomView"];
+  
   return self;
 }
 
 - (NSString*) inspectorClassName
+{
+  return @"GormFilesOwnerInspector";
+}
+
+- (NSString*) classInspectorClassName
 {
   return @"GormFilesOwnerInspector";
 }

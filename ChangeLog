@@ -1,3 +1,13 @@
+2004-04-17 11:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormPrefColors.gorm: New gorm file for color 
+	preferences.
+	* GormColorsPref.[hm]: new class to implement color 
+	preferences.
+	* GormViewEditor.m: Added code to allow the color of guidelines
+	to be changed in preferences.
+	* Defaults.plist: Added entry for GuideColor.  The default is red.
+	
 2004-04-17 13:11 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/inspectors.m: Added code to the 

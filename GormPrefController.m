@@ -2,6 +2,7 @@
 #include "GormGeneralPref.h"
 #include "GormHeadersPref.h"
 #include "GormShelfPref.h"
+#include "GormColorsPref.h"
 
 #include <AppKit/NSBox.h>
 #include <AppKit/NSPopUpButton.h>
@@ -15,7 +16,7 @@
   _generalView = [[GormGeneralPref alloc] init];
   _headersView = [[GormHeadersPref alloc] init];
   _shelfView   = [[GormShelfPref alloc] init];
-
+  _colorsView  = [[GormColorsPref alloc] init];
   [prefBox setContentView:[_generalView view]];
 
   [[self window] setFrameUsingName: @"Preferences"];
@@ -40,6 +41,9 @@
 	break;
       case 2:
 	[prefBox setContentView: [_shelfView view]];
+	break;
+      case 3:
+	[prefBox setContentView: [_colorsView view]];
 	break;
       default:
 	NSLog(@"Ouch Default : - (void) popupAction: (id)sender");

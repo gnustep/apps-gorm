@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
+#include <Foundation/NSUserDefaults.h>
 
 #include "GormPrivate.h"
 #include "GormViewEditor.h"
@@ -737,7 +738,16 @@ static BOOL currently_displaying = NO;
 			  rightOfFrame - leftOfFrame,
 			  topOfFrame - bottomOfFrame);
   {
-    [[NSColor redColor] set];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSColor *aColor = colorFromDict([defaults objectForKey: @"GuideColor"]);
+    
+    // default to the right color...
+    if(aColor == nil)
+      {
+	aColor = [NSColor redColor];
+      }
+
+    [aColor set];
     if (!leftEmpty)
       {
 	leftStart = MIN(NSMinY(gpi->hintFrame), leftStart);
@@ -1046,7 +1056,16 @@ static BOOL currently_displaying = NO;
 		     topOfFrame - bottomOfFrame);
 
   {
-    [[NSColor redColor] set];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSColor *aColor = colorFromDict([defaults objectForKey: @"GuideColor"]);
+    
+    // default to the right color...
+    if(aColor == nil)
+      {
+	aColor = [NSColor redColor];
+      }
+
+    [aColor set];
     if (!leftEmpty)
       {
 	leftStart = MIN(NSMinY(gpi->hintFrame), leftStart);
