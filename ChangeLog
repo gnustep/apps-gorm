@@ -1,3 +1,8 @@
+2005-03-26 01:49 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Correction to previous commit.  Compile palettes
+	after GormLib/InterfaceBuilder library.
+
 2005-03-26 01:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	These changes allow the build to work correctly on UNIX and

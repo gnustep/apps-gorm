@@ -41,8 +41,8 @@ SUBPROJECTS = \
 	GormObjCHeaderParser
 else
 SUBPROJECTS = \
-	Palettes \
 	GormLib \
+	Palettes \
 	GormObjCHeaderParser
 endif
 
