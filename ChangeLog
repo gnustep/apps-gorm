@@ -1,3 +1,7 @@
+2005-02-15 23:37 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPosingView.[hm]: Removed.
+
 2005-02-15 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Disabled poseAs: and poseAsClass: while in Gorm.
