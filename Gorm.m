@@ -1503,6 +1503,25 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       [window orderFront: sender];
     }
 }
+
+- (BOOL) documentNameIsUnique: (NSString *)filename
+{
+  NSEnumerator *en = [documents objectEnumerator];
+  id document;
+  BOOL unique = YES;
+
+  while((document = [en nextObject]) != nil)
+    {
+      NSString *docPath = [document documentPath];
+      if([docPath isEqual: filename])
+	{
+	  unique = NO;
+	  break;
+	}
+    }
+  
+  return unique;
+}
 @end
 
 // custom class additions...

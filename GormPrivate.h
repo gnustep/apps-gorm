@@ -153,6 +153,9 @@ extern NSString *GormResizeCellNotification;
 - (void) createSubclass: (id)sender;
 - (void) instantiateClass: (id)sender;
 - (NSMenu*) classMenu;
+
+// utility...
+- (BOOL) documentNameIsUnique: (NSString *)filename;
 @end
 
 @interface GormClassEditor : NSObject <IBSelectionOwners>

@@ -1,5 +1,20 @@
 2004-05-08 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: [GormDocument loadDocument:] added code
+	to prevent users from invoking "open objects.gorm" or opening
+	"objects.gorm" directly when in GWorkspace.  This caused Gorm
+	to convert the objects.gorm file as if it were an old-style file
+	before gorm packages.  It now issues a warning.  Also added code
+	to [GormDocument openDocument:] to check for a duplicate open 
+	of a model which is already opened.  This can cause confusion.
+	* Gorm.m: Added a new method [Gorm documentNameIsUnique:] which
+	checks all existing open documents for a duplicate name and
+	returns NO, if it's not unique.
+	* GormPrivate.h: Added declaration of the method mentioned above
+	to the Gorm class interface.
+	
+2004-05-08 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GModelDecoder.m: [GModelDecoder openGModel:] 
 	Corrected issue which was causing a crash.
 	* GormDocument.m: Cleaned up a memory leak.  Commented/Documented

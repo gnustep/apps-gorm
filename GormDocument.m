@@ -2049,6 +2049,20 @@ static NSImage	*classesImage = nil;
       // if the data is in a directory, then load from objects.gorm 
       if (isDir == NO)
 	{
+	  NSString *lastComponent = [aFile lastPathComponent];
+	  NSString *parent = [aFile stringByDeletingLastPathComponent];
+	  NSString *parentExt = [parent pathExtension];
+
+	  // test if we're doing it wrong...
+	  if([lastComponent isEqual: @"objects.gorm"] && 
+	     [parentExt isEqual: @"gorm"])
+	    {
+	      NSRunAlertPanel(NULL,
+			      _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
+			      @"OK", NULL, NULL);
+	      return nil;
+	    }
+
 	  data = [NSData dataWithContentsOfFile: aFile];
 	  NSDebugLog(@"Loaded data from file...");
 	}
@@ -2345,19 +2359,30 @@ static NSImage	*classesImage = nil;
     {
       NSString *filename = [oPanel filename];
       NSString *ext      = [filename pathExtension];
+      BOOL uniqueName = [(Gorm *)NSApp documentNameIsUnique: filename];
 
-      [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
-					     forKey:@"OpenDir"];
-      if ([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
+      if(uniqueName)
 	{
-	  return [self loadDocument: filename];
+	  [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
+						 forKey:@"OpenDir"];
+	  if ([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
+	    {
+	      return [self loadDocument: filename];
+	    }
+	  else if ([ext isEqualToString:@"gmodel"])
+	    {
+	      return [self openGModel: filename];
+	    }
 	}
-      else if ([ext isEqualToString:@"gmodel"])
+      else
 	{
-	  return [self openGModel: filename];
+	  // if we get this far, we didn't succeed..
+	  NSRunAlertPanel(NULL,_( @"Attempted to load a model which is already opened."), 
+			  _(@"OK"), NULL, NULL);
 	}
     }
-  return nil;		/* Failed	*/
+
+  return nil; /* Failed */
 }
 
 - (id<IBEditors>) openEditorForObject: (id)anObject
