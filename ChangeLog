@@ -1,4 +1,9 @@
-2004-08-08 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-08-08 16:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resource/GormDocument.gorm: Made text label lengths a
+	little longer.
+
+2004-08-08 16:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenu.m: Changed the code in 
 	handleNotification to not call edited object blindly.
