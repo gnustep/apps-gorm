@@ -299,6 +299,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   Class		 theClass = [obj class];
   NSString      *customClassName = [self customClassForObject: obj];
 
+  NSDebugLog(@"Object: %@",obj);
+  NSDebugLog(@"Custom class: %@",customClassName);
   if(customClassName != nil)
     {
       // if the object has been mapped to a custom class, then
@@ -346,6 +348,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       className = NSStringFromClass(theClass);
       actions = [self allActionsForClassNamed: className];
     }
+
+  NSDebugLog(@"class=%@ actions=%@",className,actions);
   return actions;
 }
 
@@ -1231,7 +1235,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 // custom class support...
 - (NSString *) customClassForObject: (id)object
 {
-  return [customClassMap objectForKey: object];
+  NSString *result = [customClassMap objectForKey: object];
+  NSDebugLog(@"in customClassForObject: object = %@, result = %@, customClassMap = %@",object, result, customClassMap);
+  return result;
 }
 
 - (void) setCustomClass: (NSString *)className
@@ -1328,6 +1334,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   if ([className isEqualToString: @"GormFirstResponder"])
     {
       return @"FirstResponder";
+    }
+  if ([className isEqualToString: @"GormFilesOwner"])
+    {
+      return @"FilesOwner";
     }
 
   return className;

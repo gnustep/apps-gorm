@@ -38,7 +38,6 @@
 @implementation GormEmptyInspector
 - (void) dealloc
 {
-  //RELEASE(window);
   [super dealloc];
 }
 
@@ -79,7 +78,6 @@
 @implementation GormMultipleInspector
 - (void) dealloc
 {
-  //RELEASE(window);
   [super dealloc];
 }
 
@@ -118,7 +116,6 @@
 @implementation GormNotApplicableInspector
 - (void) dealloc
 {
-  //RELEASE(window);
   [super dealloc];
 }
 
@@ -393,8 +390,8 @@
   */
   else
     {
-      [panel setTitle: [NSString stringWithFormat: @"%@ Inspector",
-	NSStringFromClass([obj class])]];
+      NSString *newTitle = [GormClassManager correctClassName: NSStringFromClass([obj class])];
+      [panel setTitle: [NSString stringWithFormat: @"%@ Inspector", newTitle]];
     }
 
   if (count == 0)
@@ -684,17 +681,24 @@ selectCellWithString: (NSString*)title
 		  con = [connectors objectAtIndex: index];
 		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
 		    {
+		      NSString *name = nil;
+
 		      RELEASE(actions);
+		      // get the name of the object...
+		      name = [[(id<IB>)NSApp activeDocument] nameForObject: [con destination]];
 		      actions = RETAIN([[NSApp classManager]
-			allActionsForObject: [con destination]]);
+					 allActionsForObject: name]);
 		      break;
 		    }
 		}
 	      if (con == nil)
 		{
+		  NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject:
+								     [NSApp connectDestination]];
 		  RELEASE(actions);
+		  // get the name of the object...
 		  actions = RETAIN([[NSApp classManager]
-		    allActionsForObject: [NSApp connectDestination]]);
+				     allActionsForObject: name]);
 		  if ([actions count] > 0)
 		    {
 		      con = [NSNibControlConnector new];
@@ -707,7 +711,6 @@ selectCellWithString: (NSString*)title
   	      if (currentConnector != con)
   		{
   		  ASSIGN(currentConnector, con);
-//    		  [newBrowser setLastColumn: 0];
   		}
   	      action = [con label];
   	      if (action != nil)
@@ -901,7 +904,6 @@ selectCellWithString: (NSString*)title
   RELEASE(outlets);
   RELEASE(okButton);
   RELEASE(revertButton);
-  // RELEASE(window);
   [super dealloc];
 }
 

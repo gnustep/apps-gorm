@@ -1,3 +1,11 @@
+2003-01-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Added some NSDebugLog statements
+	to assist with debugging.
+	* GormInspectorManager.m: Corrected a problem which was
+	preventing connections being made to actions added to
+	a subclass.
+
 2003-01-05  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Cleaned up some NSLog statements. 
