@@ -103,7 +103,6 @@
   NSLog(@"Being released... %d: %@", [self retainCount], self);
   [super release];
 }
-*/
 
 - (void) dealloc
 {
@@ -134,4 +133,5 @@
   NSLog(@"Ordering out...%@",self);
   [super orderOut: sender];
 }
+*/
 @end
