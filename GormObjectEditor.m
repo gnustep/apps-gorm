@@ -165,8 +165,6 @@ static NSImage	*dragImage = nil;
       [proto setBordered: NO];
       [proto setAlignment: NSCenterTextAlignment];
       [proto setImagePosition: NSImageAbove];
-      [proto setShowsStateBy: NSChangeGrayCellMask];
-      [proto setHighlightsBy: NSChangeGrayCellMask];
       [proto setSelectable: NO];
       [proto setEditable: NO];
       [self setPrototype: proto];
@@ -403,6 +401,8 @@ NSLog(@"Could do dragging");
 	  [but setImage: objectImage];
 	  [but setTitle: [document nameForObject: obj]];
 	}
+      [but setShowsStateBy: NSChangeGrayCellMask];
+      [but setHighlightsBy: NSChangeGrayCellMask];
     }
   while (index < rows * cols)
     {
@@ -410,7 +410,8 @@ NSLog(@"Could do dragging");
 
       [but setImage: nil];
       [but setTitle: nil];
-      [but setEnabled: NO];
+      [but setShowsStateBy: NSNoCellMask];
+      [but setHighlightsBy: NSNoCellMask];
       index++;
     }
   [self setIntercellSpacing: NSMakeSize(8,8)];
