@@ -1,10 +1,7 @@
-2005-03-27 06:24 Gregory John Casamento <greg_casamento@yahoo.com>
+2005-03-30 06:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormClassEditor.m: Added addAttributeToClass here. Also
-	added a check to prevent changing the outline row count.
-	* GormOutlineView.m: Removed addAttributeToClass from here.
-	* GormPrivate.h: Moved addAttributeToClass to class editor.
-
+	* Merge: from branch: build_reorg_branch.
+	
 2005-03-30 06:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
         BRANCH: build_reorg_branch
@@ -89,6 +86,13 @@
 	* GormCore: New library (may become a framework)
 	* *.[hm]: Except for main.m, moved to GormCore.
 	
+2005-03-27 06:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Added addAttributeToClass here. Also
+	added a check to prevent changing the outline row count.
+	* GormOutlineView.m: Removed addAttributeToClass from here.
+	* GormPrivate.h: Moved addAttributeToClass to class editor.
+
 2005-03-26 15:02 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	BRANCH: build_reorg_branch
