@@ -310,6 +310,183 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
 }
 
+- (void) finishLaunching
+{
+  NSMenu		*aMenu;
+  NSMenu		*mainMenu;
+  NSMenu		*windowsMenu;
+  NSMenuItem		*menuItem;
+  NSBundle		*bundle;
+  NSString		*path;
+
+  /*
+   * establish registration domain defaults from file.
+   */
+  bundle = [NSBundle mainBundle];
+  path = [bundle pathForResource: @"Defaults" ofType: @"plist"];
+  if (path != nil)
+    {
+      NSDictionary	*dict;
+
+      dict = [NSDictionary dictionaryWithContentsOfFile: path];
+      if (dict != nil)
+	{
+	  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+
+	  [defs registerDefaults: dict];
+	}
+    }
+
+  mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
+
+  /*
+   * Set up info menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Info Panel..." 
+		   action: @selector(infoPanel:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Preferences..." 
+		   action: NULL
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Help..." 
+		   action: NULL 
+	    keyEquivalent: @"?"];
+  menuItem = [mainMenu addItemWithTitle: @"Info" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up document menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Open..." 
+		   action: @selector(open:) 
+	    keyEquivalent: @"o"];
+  [aMenu addItemWithTitle: @"New Application" 
+		   action: @selector(newApplication:)
+	    keyEquivalent: @"n"];
+  [aMenu addItemWithTitle: @"Save" 
+		   action: @selector(save:) 
+	    keyEquivalent: @"s"];
+  [aMenu addItemWithTitle: @"Save As..." 
+		   action: @selector(saveAs:) 
+	    keyEquivalent: @"S"];
+  [aMenu addItemWithTitle: @"Save All" 
+		   action: @selector(saveAll:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Revert to Saved" 
+		   action: @selector(revertToSaved:) 
+	    keyEquivalent: @"u"];
+  [aMenu addItemWithTitle: @"Test Interface"
+		   action: @selector(testInterface:) 
+	    keyEquivalent: @"r"];
+  [aMenu addItemWithTitle: @"Miniaturize"
+		   action: @selector(miniaturize:) 
+	    keyEquivalent: @"m"];
+  [aMenu addItemWithTitle: @"Close"
+		   action: @selector(close:) 
+	    keyEquivalent: @""];
+  menuItem = [mainMenu addItemWithTitle: @"Document" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up edit menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Cut" 
+		   action: @selector(cut:) 
+	    keyEquivalent: @"x"];
+  [aMenu addItemWithTitle: @"Copy" 
+		   action: @selector(copy:) 
+	    keyEquivalent: @"c"];
+  [aMenu addItemWithTitle: @"Paste" 
+		   action: @selector(paste:) 
+	    keyEquivalent: @"v"];
+  [aMenu addItemWithTitle: @"Delete" 
+		   action: @selector(delete:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Select All" 
+		   action: @selector(selectAll:) 
+	    keyEquivalent: @"a"];
+  [aMenu addItemWithTitle: @"Set Name..." 
+		   action: @selector(setName:) 
+	    keyEquivalent: @""];
+  menuItem = [mainMenu addItemWithTitle: @"Edit" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up tools menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Inspector..." 
+		   action: @selector(inspector:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Palettes..." 
+		   action: @selector(palettes:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Load Palette..." 
+		   action: @selector(loadPalette:) 
+	    keyEquivalent: @""];
+  menuItem = [mainMenu addItemWithTitle: @"Tools" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up Windows menu
+   */
+  windowsMenu = [NSMenu new];
+  [windowsMenu addItemWithTitle: @"Arrange"
+			 action: @selector(arrangeInFront:)
+		  keyEquivalent: @""];
+  [windowsMenu addItemWithTitle: @"Miniaturize"
+			 action: @selector(performMiniaturize:)
+		  keyEquivalent: @"m"];
+  [windowsMenu addItemWithTitle: @"Close"
+			 action: @selector(performClose:)
+		  keyEquivalent: @"w"];
+  menuItem = [mainMenu addItemWithTitle: @"Windows" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: windowsMenu forItem: menuItem];
+  RELEASE(windowsMenu);
+
+  /*
+   * Set up Services menu
+   */
+  aMenu = [NSMenu new];
+  menuItem = [mainMenu addItemWithTitle: @"Services" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  [mainMenu addItemWithTitle: @"Hide" 
+		      action: @selector(hide:)
+	       keyEquivalent: @"h"];	
+
+  [mainMenu addItemWithTitle: @"Quit" 
+		      action: @selector(terminate:)
+	       keyEquivalent: @"q"];	
+
+
+  [self setMainMenu: mainMenu];
+  [self setWindowsMenu: windowsMenu];
+  [mainMenu display];
+  [self setDelegate: self];
+  [super finishLaunching];
+}
+
 - (void) handleNotification: (NSNotification*)notification
 {
   NSString	*name = [notification name];
@@ -726,205 +903,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 @end
 
 int 
-main(void)
+main(int argc, const char **argv)
 { 
-  NSAutoreleasePool	*pool;
-  NSBundle		*bundle;
-  NSString		*path;
-  NSMenu		*aMenu;
-  NSMenu		*mainMenu;
-  NSMenu		*windowsMenu;
-  NSMenuItem		*menuItem;
-  Gorm			*theApp;
-
-  pool = [NSAutoreleasePool new];
-  initialize_gnustep_backend ();
-
-  /*
-   * establish registration domain defaults from file.
-   */
-  bundle = [NSBundle mainBundle];
-  path = [bundle pathForResource: @"Defaults" ofType: @"plist"];
-  if (path != nil)
-    {
-      NSDictionary	*dict;
-
-      dict = [NSDictionary dictionaryWithContentsOfFile: path];
-      if (dict != nil)
-	{
-	  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
-
-	  [defs registerDefaults: dict];
-	}
-    }
-
-  /*
-   * Install an instance of Gorm as the application so that the app
-   * can conform to the IB protocol
-   */
-  NSApp = theApp = [Gorm new];
-
-  mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
-
-  /*
-   * Set up info menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Info Panel..." 
-		   action: @selector(infoPanel:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Preferences..." 
-		   action: NULL
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Help..." 
-		   action: NULL 
-	    keyEquivalent: @"?"];
-  menuItem = [mainMenu addItemWithTitle: @"Info" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  /*
-   * Set up document menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Open..." 
-		   action: @selector(open:) 
-	    keyEquivalent: @"o"];
-  [aMenu addItemWithTitle: @"New Application" 
-		   action: @selector(newApplication:)
-	    keyEquivalent: @"n"];
-  [aMenu addItemWithTitle: @"Save" 
-		   action: @selector(save:) 
-	    keyEquivalent: @"s"];
-  [aMenu addItemWithTitle: @"Save As..." 
-		   action: @selector(saveAs:) 
-	    keyEquivalent: @"S"];
-  [aMenu addItemWithTitle: @"Save All" 
-		   action: @selector(saveAll:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Revert to Saved" 
-		   action: @selector(revertToSaved:) 
-	    keyEquivalent: @"u"];
-  [aMenu addItemWithTitle: @"Test Interface"
-		   action: @selector(testInterface:) 
-	    keyEquivalent: @"r"];
-  [aMenu addItemWithTitle: @"Miniaturize"
-		   action: @selector(miniaturize:) 
-	    keyEquivalent: @"m"];
-  [aMenu addItemWithTitle: @"Close"
-		   action: @selector(close:) 
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Document" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  /*
-   * Set up edit menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Cut" 
-		   action: @selector(cut:) 
-	    keyEquivalent: @"x"];
-  [aMenu addItemWithTitle: @"Copy" 
-		   action: @selector(copy:) 
-	    keyEquivalent: @"c"];
-  [aMenu addItemWithTitle: @"Paste" 
-		   action: @selector(paste:) 
-	    keyEquivalent: @"v"];
-  [aMenu addItemWithTitle: @"Delete" 
-		   action: @selector(delete:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Select All" 
-		   action: @selector(selectAll:) 
-	    keyEquivalent: @"a"];
-  [aMenu addItemWithTitle: @"Set Name..." 
-		   action: @selector(setName:) 
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Edit" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  /*
-   * Set up tools menu.
-   */
-  aMenu = [NSMenu new];
-  [aMenu addItemWithTitle: @"Inspector..." 
-		   action: @selector(inspector:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Palettes..." 
-		   action: @selector(palettes:) 
-	    keyEquivalent: @""];
-  [aMenu addItemWithTitle: @"Load Palette..." 
-		   action: @selector(loadPalette:) 
-	    keyEquivalent: @""];
-  menuItem = [mainMenu addItemWithTitle: @"Tools" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  /*
-   * Set up Windows menu
-   */
-  windowsMenu = [NSMenu new];
-  [windowsMenu addItemWithTitle: @"Arrange"
-			 action: @selector(arrangeInFront:)
-		  keyEquivalent: @""];
-  [windowsMenu addItemWithTitle: @"Miniaturize"
-			 action: @selector(performMiniaturize:)
-		  keyEquivalent: @"m"];
-  [windowsMenu addItemWithTitle: @"Close"
-			 action: @selector(performClose:)
-		  keyEquivalent: @"w"];
-  menuItem = [mainMenu addItemWithTitle: @"Windows" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: windowsMenu forItem: menuItem];
-  RELEASE(windowsMenu);
-
-  /*
-   * Set up Services menu
-   */
-  aMenu = [NSMenu new];
-  menuItem = [mainMenu addItemWithTitle: @"Services" 
-				 action: NULL 
-			  keyEquivalent: @""];
-  [mainMenu setSubmenu: aMenu forItem: menuItem];
-  RELEASE(aMenu);
-
-  [mainMenu addItemWithTitle: @"Hide" 
-		      action: @selector(hide:)
-	       keyEquivalent: @"h"];	
-
-  [mainMenu addItemWithTitle: @"Quit" 
-		      action: @selector(terminate:)
-	       keyEquivalent: @"q"];	
-
-
-  [NSApp setMainMenu: mainMenu];
-  [NSApp setWindowsMenu: windowsMenu];
-  [mainMenu display];
-
-{
   extern BOOL NSImageDoesCaching;
 
   NSImageDoesCaching = YES;
 //[NSObject enableDoubleReleaseCheck: YES];
-}
 
-  /*
-   * Set Gorm up as its own delegate
-   */
-  [NSApp setDelegate: NSApp];
+  NSApplicationMain(argc, argv);
 
-  [NSApp run];
-  [pool release];
   return 0;
 }
 
