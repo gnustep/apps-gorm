@@ -171,7 +171,7 @@ interface or some subsystem.
 @subsection Major features
 @cindex features
 
-@itemize bullet
+@itemize @bullet
 @item Drag-and-drop creation of GUI elements from palettes.
 @item Run-time loading of additional palettes that may be written using an API
 very similar to that of Apple/NeXTs interface Builder palette API.
