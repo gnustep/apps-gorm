@@ -185,7 +185,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  NSEnumerator	*enumerator;
+  NSEnumerator		*enumerator;
   NSView		*view = nil;
   IBKnobPosition	knob = IBNoneKnobPosition;
   NSPoint		mouseDownPoint;
@@ -359,8 +359,8 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSPoint		lastPoint = mouseDownPoint;
       NSPoint		point = mouseDownPoint;
 
-      eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
-	| NSLeftMouseDraggedMask | NSMouseMovedMask | NSPeriodicMask;
+      eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
+	| NSMouseMovedMask | NSPeriodicMask;
       [[self window] setAcceptsMouseMovedEvents: YES];
 
       /*

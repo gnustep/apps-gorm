@@ -123,7 +123,6 @@
     {
       int	pos = [rep indexOfItemAtPoint: loc];
 
-NSLog(@"Mouse down on item %d", pos);
       if (pos >= 0)
 	{
 	  NSMenuItem	*item = [edited itemAtIndex: pos];
@@ -143,33 +142,155 @@ NSLog(@"Mouse down on item %d", pos);
 		  [array addObject: item];
 		}
 	      [self selectObjects: array];
+	      [self makeSelectionVisible: YES];
+	      return;
+	    }
+
+	  [self selectObjects: [NSArray arrayWithObject: item]];
+	  if ([theEvent modifierFlags] & NSControlKeyMask)
+	    {
+	      NSPoint	dragPoint = [theEvent locationInWindow];
+	      NSPasteboard	*pb;
+	      NSString	*name = [document nameForObject: item];
+
+	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	      [pb declareTypes:
+		[NSArray arrayWithObject: GormLinkPboardType]
+			 owner: self];
+	      [pb setString: name forType: GormLinkPboardType];
+	      [NSApp displayConnectionBetween: item and: nil];
+
+	      isLinkSource = YES;
+	      [self dragImage: [NSApp linkImage]
+			   at: dragPoint
+		       offset: NSZeroSize
+			event: theEvent
+		   pasteboard: pb
+		       source: self
+		    slideBack: YES];
+	      isLinkSource = NO;
 	    }
 	  else
 	    {
-	      [self selectObjects: [NSArray arrayWithObject: item]];
-	      if ([theEvent modifierFlags] & NSControlKeyMask)
+	      NSDate		*future = [NSDate distantFuture];
+	      unsigned		eventMask;
+	      NSEvent		*e;
+	      NSEventType	eType;
+	      BOOL		acceptsMouseMoved;
+	      NSRect		frame = [rep innerRect];
+	      float		maxMouse = NSMaxY(frame);
+	      float		minMouse = NSMinY(frame);
+	      NSPoint		lastPoint = loc;
+	      NSPoint		point = loc;
+	      NSRect		lastRect = [rep rectOfItemAtIndex: pos];
+	      id		cell = [rep menuItemCellForItemAtIndex: pos];
+	      int		newPos;
+
+	      eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
+		| NSMouseMovedMask | NSPeriodicMask;
+	      [[self window] setAcceptsMouseMovedEvents: YES];
+
+	      /*
+	       * Save window state info.
+	       */
+	      acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
+	      [rep lockFocus];
+	    
+	      /*
+	       * Track mouse movements until left mouse up.
+	       * While we keep track of all mouse movements,
+	       * we only act on a movement when a periodic
+	       * event arives (every 20th of a second)
+	       * in order to avoid excessive amounts of drawing.
+	       */
+	      [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
+	      e = [NSApp nextEventMatchingMask: eventMask
+				     untilDate: future
+					inMode: NSEventTrackingRunLoopMode
+				       dequeue: YES];
+	      eType = [e type];
+	      while (eType != NSLeftMouseUp)
 		{
-		  NSPoint	dragPoint = [theEvent locationInWindow];
-		  NSPasteboard	*pb;
-		  NSString	*name = [document nameForObject: item];
+		  if (eType != NSPeriodic)
+		    {
+		      point = [e locationInWindow];
+		    }
+		  else if (NSEqualPoints(point, lastPoint) == NO)
+		    {
+		      /*
+		       * Limit mouse movement.
+		       */
+		      point.x = NSMinX(frame);
+		      if (point.y < minMouse)
+			point.y = minMouse;
+		      if (point.y > maxMouse)
+			point.y = maxMouse;
 
-		  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-		  [pb declareTypes:
-		    [NSArray arrayWithObject: GormLinkPboardType]
-			     owner: self];
-		  [pb setString: name forType: GormLinkPboardType];
-		  [NSApp displayConnectionBetween: item and: nil];
+		      if (NSEqualPoints(point, lastPoint) == NO)
+			{
+			  [[self window] disableFlushWindow];
 
-		  isLinkSource = YES;
-		  [self dragImage: [NSApp linkImage]
-			       at: dragPoint
-			   offset: NSZeroSize
-			    event: theEvent
-		       pasteboard: pb
-			   source: self
-			slideBack: YES];
-		  isLinkSource = NO;
+			  /*
+			   * Redraw cells under area being changed.
+			   */
+			  [rep drawRect: lastRect];
+
+			  /*
+			   * Update location.
+			   */
+			  lastRect.origin.y += point.y - lastPoint.y;
+			  lastPoint = point;
+
+			  /*
+			   * Draw highlighted item being moved.
+			   */
+			  [cell highlight: YES withFrame: lastRect inView: rep];
+			  [cell setHighlighted: NO];
+
+			  /*
+			   * Flush any drawing performed for this event.
+			   */
+			  [[self window] enableFlushWindow];
+			  [[self window] flushWindow];
+			}
+		    }
+		  e = [NSApp nextEventMatchingMask: eventMask
+					 untilDate: future
+					    inMode: NSEventTrackingRunLoopMode
+					   dequeue: YES];
+		  eType = [e type];
 		}
+	      [NSEvent stopPeriodicEvents];
+
+	      [rep drawRect: lastRect];
+	      [rep unlockFocus];
+	      newPos = [rep indexOfItemAtPoint: point];
+	      if (newPos < pos)
+		{
+		  NSMenuItem	*item = [edited itemAtIndex: pos];
+
+		  RETAIN(item);
+		  if (newPos < 0)
+		    newPos = 0;
+		  [edited removeItemAtIndex: pos];
+		  [edited insertItem: item atIndex: newPos];
+		  RELEASE(item);
+		}
+	      else if (newPos > pos)
+		{
+		  NSMenuItem	*item = [edited itemAtIndex: pos];
+
+		  RETAIN(item);
+		  [edited removeItemAtIndex: pos];
+		  [edited insertItem: item atIndex: newPos];
+		  RELEASE(item);
+		}
+	      [edited sizeToFit];
+	      [edited display];
+	      /*
+	       * Restore state to what it was on entry.
+	       */
+	      [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
 	    }
 	  [self makeSelectionVisible: YES];
 	}
