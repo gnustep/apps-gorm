@@ -1060,12 +1060,6 @@ selectCellWithString: (NSString*)title
       if ([currentConnector isKindOfClass: [NSNibOutletConnector class]])
 	{
 	  [currentConnector setDestination: nil];
-
-	  if ([[currentConnector source] isKindOfClass: [GormObjectProxy class]] == YES)
-	  {
-	    [NSException raise: NSInternalInconsistencyException
-			 format: @"Source is a GormProxyObject: invalid connection."];
-	  }
 	}
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
 	{
@@ -1103,17 +1097,6 @@ selectCellWithString: (NSString*)title
 	}
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
-
-      /*
-       * We don't want to establish connections on proxy object as their
-       * class are unknown to IB
-       */
-      if ([[currentConnector source] isKindOfClass: [GormObjectProxy class]] == YES ||
-	  [[currentConnector destination] isKindOfClass: [GormObjectProxy class]] == YES)
-	{
-	    [NSException raise: NSInternalInconsistencyException
-			 format: @"Source/Destination is a GormProxyObject: invalid connection."];
-	}
 
       /*
        * When we establish a connection, we want to highlight it in
