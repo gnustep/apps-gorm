@@ -101,7 +101,6 @@
 - (void) dealloc
 {
   RELEASE(classes);
-  RELEASE(window);
   [super dealloc];
 }
 

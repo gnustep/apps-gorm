@@ -1813,7 +1813,7 @@ static NSImage	*classesImage = nil;
     {
       NSString *file = nil;
       NSArray  *fileTypes = [NSImage imageFileTypes];
-      while(file = [dirEnumerator nextObject])
+      while((file = [dirEnumerator nextObject]))
 	{
 	  if([fileTypes containsObject: [file pathExtension]])
 	    {

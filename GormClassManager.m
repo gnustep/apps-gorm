@@ -1029,6 +1029,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return ([customClasses indexOfObject: className] != NSNotFound);
 }
 
+- (BOOL) isKnownClass: (NSString *)className
+{
+  return ([classInformation objectForKey: className] != nil);
+}
+
 - (BOOL) setSuperClassNamed: (NSString*)superclass
 	      forClassNamed: (NSString*)subclass
 {

@@ -55,6 +55,7 @@
 - (BOOL) loadFromFile: (NSString*)path;
 - (BOOL) loadCustomClasses: (NSString*)path;
 - (BOOL) isCustomClass: (NSString *)className;
+- (BOOL) isKnownClass: (NSString *)className;
 - (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
 - (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
 

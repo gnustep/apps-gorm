@@ -1,3 +1,15 @@
+2002-11-20  Adam Fedor  <fedor@gnu.org>
+
+	* GModelDecoder.m
+	([GormObjectProxy -initWithModelUnarchiver:]): Retain the className.
+	([GormDocument -defineClass:inFile:]): New.
+	([GormDocument -openGModel:]): Define custom classes, setup
+	connection objects appropriatly.
+	* GormClassManager.m (-isKnownClass:): New.
+
+	* GormFilesOwner.m ([GormFilesOwnerInspector -dealloc]): Don't
+	release superclass ivar window.
+
 2002-11-19  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Added entry for NSOpenGLView.

@@ -80,13 +80,10 @@ static BOOL gormFileOwnerDecoded;
   enumerator = [windows objectEnumerator];
   while ((win = [enumerator nextObject]) != nil)
     {
-      /* If we did not retain the windows here, they would all get 
-	 released at the end of the event loop. */
-      //RETAIN (win);
       /* Fix up window frames */
-      NSLog(@"Updating window class %@", win);
       if ([win styleMask] == NSBorderlessWindowMask)
 	{
+	  NSLog(@"Fixing borderless window %@", win);
 	  [win gmSetStyleMask: NSTitledWindowMask];
 	}
     }
@@ -136,7 +133,7 @@ static BOOL gormFileOwnerDecoded;
   id realObject;
   id label;
 
-  theClass = [unarchiver decodeStringWithName: @"className"];
+  theClass = RETAIN([unarchiver decodeStringWithName: @"className"]);
   extension = [unarchiver decodeObjectWithName: @"extension"];
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
 
@@ -171,6 +168,7 @@ static BOOL gormFileOwnerDecoded;
   extension = [unarchiver decodeObjectWithName: @"extension"];
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
   [self setFrame: [unarchiver decodeRectWithName: @"frame"]];
+  [self setClassName: className];
 
   if (!gormFileOwnerDecoded) 
     {
@@ -187,6 +185,77 @@ static BOOL gormFileOwnerDecoded;
 
 @implementation GormDocument (GModel)
 
+/* Try to define a possibly custom class that's in the gmodel
+   file. This is not information that is contained in the file
+   itself. For instance, we don't even know what the superclass
+   is, and at best, we could search the connections to see what
+   outlets and actions are used.
+*/
+- (void) defineClass: (NSString *)classname inFile: (NSString *)path
+{
+  int result;
+  NSString *header;
+  NSFileManager *mgr;
+
+  if ([classManager isKnownClass: classname])
+    return;
+  
+  /* Can we parse a header in this directory? */
+  mgr = [NSFileManager defaultManager];
+  path = [path stringByDeletingLastPathComponent];
+  header = [path stringByAppendingPathComponent: classname];
+  header = [header stringByAppendingPathExtension: @"h"];
+  if ([mgr fileExistsAtPath: header])
+    {
+      result = 
+	NSRunAlertPanel(_(@"GModel Loading"),
+			_(@"Parse %@ to define unknown class %@?"),
+			_(@"Yes"), _(@"No"), _(@"Choose File"),
+			header, classname, nil);
+    }
+  else
+    {
+      result = 
+	NSRunAlertPanel(_(@"GModel Loading"),
+			_(@"Unknown class %@. Parse header file to define?"),
+			_(@"Yes"), _(@"No"), nil,
+			classname, nil);
+      if (result == NSAlertDefaultReturn)
+	result = NSAlertOtherReturn;
+    }
+  if (result == NSAlertOtherReturn)
+    {
+      NSOpenPanel *opanel = [NSOpenPanel openPanel];
+      NSArray	  *fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
+      result = [opanel runModalForDirectory: path
+		       file: nil
+		      types: fileTypes];
+      if (result == NSOKButton)
+	{
+	  header = [opanel filename];
+	  result = NSAlertDefaultReturn;
+	}
+    }
+
+  /* For now, just punt if we have no header. */
+  if (result != NSAlertDefaultReturn)
+    return;
+
+  [self parseHeader: header];
+}
+
+/* Replace the proxy with the real object if necessary and make sure there
+   is a name for the connection object */
+- (id) connectionObjectForObject: object
+{
+  if (object == gormNibOwner)
+    object = filesOwner;
+  else
+    [self setName: nil forObject: object];
+  return object;
+}
+
+
 /* importing of legacy gmodel files.*/
 - (id) openGModel: (NSString *)path
 {
@@ -199,6 +268,9 @@ static BOOL gormFileOwnerDecoded;
   Class    u = gmodel_class(@"GMUnarchiver");
   
   NSLog (@"Loading gmodel file %@...", path);
+  gormNibOwner = nil;
+  gormRealObject = nil;
+  gormFileOwnerDecoded = NO;
   /* GModel classes */
   [u decodeClassName: @"NSApplication"   asClassName: @"GModelApplication"];
   [u decodeClassName: @"IMCustomView"    asClassName: @"GormCustomView"];
@@ -221,25 +293,40 @@ static BOOL gormFileOwnerDecoded;
     }
   
   NSLog(@"----------------- GModel testing -----------------");
-  decoded = [unarchiver decodeObjectWithName:@"RootObject"];
+  NS_DURING
+    decoded = [unarchiver decodeObjectWithName:@"RootObject"];
+  NS_HANDLER
+    NSRunAlertPanel(_(@"GModel Loading"), [localException reason], 
+		    @"Ok", nil, nil);
+    return nil;
+  NS_ENDHANDLER
   gmobjects = [decoded performSelector: @selector(objects)];
   gmconnections = [decoded performSelector: @selector(connections)];
   NSLog(@"Gmodel objects = %@", gmobjects);
   NSLog(@"       Nib Owner %@ class name is %@", 
 	gormNibOwner, [gormNibOwner className]);
 
-  /* FIXME: Need to addClass:... if it isn't known */
   if (gormNibOwner)
-    [filesOwner setClassName: [gormNibOwner className]];
+    {
+      [self defineClass: [gormNibOwner className] inFile: path];
+      [filesOwner setClassName: [gormNibOwner className]];
+    }
 
   enumerator = [gmconnections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       NSNibConnector *newcon;
+      id source, dest;
 
-      newcon = AUTORELEASE([[NSNibConnector alloc] init]);
-      [newcon setSource: [con source]];
-      [newcon setDestination: [con destination]];
+      source = [self connectionObjectForObject: [con source]];
+      dest   = [self connectionObjectForObject: [con destination]];
+      if ([con isKindOfClass: NSClassFromString(@"NSIBOutletConnector")])
+	newcon = AUTORELEASE([[NSNibOutletConnector alloc] init]);
+      else
+	newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
+      
+      [newcon setSource: source];
+      [newcon setDestination: dest];
       [newcon setLabel: [con label]];
       [connections addObject: newcon];
     }
@@ -259,7 +346,8 @@ static BOOL gormFileOwnerDecoded;
       enumerator = [[gormRealObject windows] objectEnumerator];
       while ((obj = [enumerator nextObject]))
 	{
-	  [self setName: nil forObject: obj];
+	  if ([self nameForObject: obj] == nil)
+	    [self setName: nil forObject: obj];
 	}
       if ([gormRealObject mainMenu])
 	[self setName: nil forObject: [gormRealObject mainMenu]];
@@ -267,6 +355,7 @@ static BOOL gormFileOwnerDecoded;
   else
     {
       /* Here we need to addClass:... (outlets, actions).  */
+      //[self defineClass: [gormRealObject className] inFile: path];
       NSLog(@"Don't understand real object %@", gormRealObject);
     }
   

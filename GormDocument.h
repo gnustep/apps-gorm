@@ -14,7 +14,7 @@
 
 /*
  * Each document may have a GormFontManager object that is used as a
- * placeholder for the current fornt manager.
+ * placeholder for the current font manager.
  */
 @interface	GormFontManager : NSObject
 {
@@ -113,6 +113,7 @@
 
 // Internals support
 - (void) rebuildObjToNameMapping;
+- (id) parseHeader: (NSString *)headerPath;
 @end
 
 #endif

@@ -92,9 +92,9 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationCopy;
-
   NSArray	*types;
+
+  return NSDragOperationCopy;
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
