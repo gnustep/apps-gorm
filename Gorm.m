@@ -142,6 +142,11 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
 }
 
+- (NSString*) inspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
 - (NSString*) classInspectorClassName
 {
   return @"GormNotApplicableInspector";

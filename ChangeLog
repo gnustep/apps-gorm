@@ -1,5 +1,11 @@
 2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Gorm.m: -[GormObjectProxy inspectorClassName]: returns
+	GormNotApplicableInspector, since we shouldn't be able to directly
+	change any of the attributes on a GormObjectProxy.
+	
+2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: -[GormDocument parseHeader:] added code to select
 	the class when it is loaded in the classes view.  Also modified the
 	-[GormDocument _selectClass:] method and added a new private method

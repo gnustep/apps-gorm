@@ -1167,7 +1167,7 @@ static NSImage	*classesImage = nil;
 	}
       else
 	{
-	  NSLog(@"WARNING anEditor = editor");
+	  NSDebugLog(@"WARNING anEditor = editor");
 	}
       [editor activate];
       RELEASE(editor);
