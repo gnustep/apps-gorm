@@ -2365,8 +2365,14 @@ static NSImage	*classesImage = nil;
     {
       [self openEditorForObject: [p editedObject]];
     }
-  [e orderFront];
-  [[e window] makeKeyAndOrderFront: self];
+
+  // prevent bringing front of menus before they've been properly sized.
+  if([anObject isKindOfClass: [NSMenu class]] == NO) 
+    {
+      [e orderFront];
+      [[e window] makeKeyAndOrderFront: self];
+    }
+
   return e;
 }
 
@@ -3094,7 +3100,8 @@ static NSImage	*classesImage = nil;
 		{
 		  [obj orderOut: self];
 		}
-	      else if ([obj isKindOfClass: [NSMenu class]] == YES)
+	      else if ([obj isKindOfClass: [NSMenu class]] == YES &&
+		       [[self nameForObject: obj] isEqual: @"NSMenu"] == YES)
 		{
 		  [obj close];
 		}

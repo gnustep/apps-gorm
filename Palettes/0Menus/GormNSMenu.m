@@ -134,6 +134,15 @@
 {
   return @"NSMenu";
 }
+
+#ifdef DEBUG
+// This method is purely for debugging purposes...
+- (void) display
+{
+  NSLog(@"In GormNSMenu display...");
+  [super display];
+}
+#endif
 @end
 
 @implementation NSMenu (GormNSMenu)
