@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.2.5 of Gorm.
+This is version 0.2.6 of Gorm.
 
 What is Gorm?
 =============
@@ -15,16 +15,12 @@ GNUstep.
    Gorm is not `gormless' (a Yorkshire dialect word that my parents
 used when they spotted me staring, slack-jawed, at the TV).
 
-Noteworthy changes in version `0.2.5'.
+Noteworthy changes in version `0.2.6'.
 ======================================
 
-   Many fixes and improvements to make the app work better.
+   Fix an incompatibility with the gui 0.8.4 release
 
-   * Better parsing of headers
-
-   * Interface code redone as gorm files.
-
-   * Re-add multiple selection via mouse drag.
+   * Better combo box and tab view inspector
 
 How can I get support for this software?
 ========================================

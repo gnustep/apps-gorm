@@ -34,6 +34,8 @@ PALETTE_NAME = 4Data
 	GormNSDateFormatterInspector.gorm \
 	GormNSNumberFormatterInspector.gorm
 
+4Data_STANDARD_INSTALL = no
+
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local

@@ -32,6 +32,8 @@ PALETTE_NAME = 1Windows
 	GormNSWindowSizeInspector.gorm \
 	GormNSWindowInspector.gorm
 
+1Windows_STANDARD_INSTALL = no
+
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local

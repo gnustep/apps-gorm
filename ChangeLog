@@ -1,3 +1,8 @@
+2003-04-30  Adam Fedor  <fedor@gnu.org>
+
+	* Palettes/*/GNUmakefile: Set *_STANDARD_INSTALL=no to not install
+	the palettes.
+
 2003-04-18  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Gorm.m: Minor updates to compile with latest gui ... use void return

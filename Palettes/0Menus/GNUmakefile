@@ -33,6 +33,8 @@ PALETTE_NAME = 0Menus
 0Menus_PRINCIPAL_CLASS = MenusPalette
 0Menus_RESOURCE_FILES = MenusPalette.tiff
 
+0Menus_STANDARD_INSTALL = no
+
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local

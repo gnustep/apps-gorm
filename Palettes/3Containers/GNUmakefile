@@ -48,6 +48,8 @@ PALETTE_NAME = 3Containers
 	GormNSTableColumnSizeInspector.gorm \
 	GormTabViewInspector.gorm
 
+3Containers_STANDARD_INSTALL = no
+
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local

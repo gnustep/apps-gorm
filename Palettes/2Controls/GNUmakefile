@@ -43,6 +43,8 @@ PALETTE_NAME = 2Controls
 	GormNSStepperInspector.gorm \
 	GormNSTextFieldInspector.gorm
 
+2Controls_STANDARD_INSTALL = no
+
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local

@@ -24,11 +24,9 @@ Software Foundation.
 Status
 ======
 
-   At this point, Gorm is usable only for very simple stuff as it only
-supports the most commonly used gui elements.  However, the binary
-format in which documents are archived is stable, so documents created
-using Gorm now should remain useful.  Interface test mode qorks quite
-nicely - you really can see things working.
+   Gorm is now completely usable.  There are some minor bugs, but most
+of the major functionality is now implemented.  Please report bugs to
+bug-gnustep@gnu.org
 
    Known problems (things to do) -
 
