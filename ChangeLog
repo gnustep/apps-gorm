@@ -1,3 +1,7 @@
+2003-08-16  Adam Fedor  <fedor@gnu.org>
+
+	* GNUmakefile.preamble (ADDITIONAL_GUI_LIBS): Add -lGormLib
+
 2003-08-13  Fabien Vallon  <fabien@tuxfamily.org>
 
 	* GormNSPopUpButton.goem : Add Visual help
