@@ -26,6 +26,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "GormNSTableView.h"
+#include "GormPrivate.h"
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 
@@ -185,6 +186,9 @@
   id identifierTextField;
   id resizableSwitch;
   id editableSwitch;
+  id setButton;
+  id defaultButton;
+  id cellTable;
 }
 - (void) _getValuesFromObject: (id)anObject;
 - (void) _setValuesFromControl: (id)anObject;
@@ -207,6 +211,11 @@
   return self;
 }
 
+- (void) awakeFromNib
+{
+  [cellTable setDoubleAction: @selector(ok:)];
+}
+
 - (void) ok: (id)sender
 {
   [self _setValuesFromControl: sender];
@@ -219,6 +228,16 @@
 }
 - (void) _getValuesFromObject: anObject
 {
+  NSString *cellClassName = NSStringFromClass([[anObject dataCell] class]);
+  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  int index = [list indexOfObject: cellClassName];
+
+  if(index != NSNotFound && index != -1)
+    {
+      [cellTable selectRow: index byExtendingSelection: NO];
+      [cellTable scrollRowToVisible: index];
+    }
+  
   switch ([[anObject headerCell] alignment])
     {
     case NSLeftTextAlignment:
@@ -262,6 +281,7 @@
     [editableSwitch setState: NSOnState];
   else
     [editableSwitch setState: NSOffState];
+
 }
 
 - (void) _setValuesFromControl: (id) control
@@ -317,6 +337,70 @@
       [object setResizable:
 		([resizableSwitch state] == NSOnState)];
     }
+  else if (control == setButton || control == cellTable)
+    {
+      int i = [cellTable selectedRow];
+      id cell = nil;
+      NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+      NSString *className = [list objectAtIndex: i];
+      BOOL isCustom = [[(Gorm *)NSApp classManager] isCustomClass: className];
+      Class cls = nil;
+
+      if(isCustom)
+	{
+	  NSLog(@"Setting custom cell.. not working yet...");
+	}
+      else
+	{
+	  cls = NSClassFromString(className);
+	}
+
+      // initialize
+      cell = [cls new];
+      [object setDataCell: cell];
+      [[object tableView] setNeedsDisplay: YES];
+      RELEASE(cell);
+    }
+  else if (control == defaultButton)
+    {
+      [object setDataCell: [[NSTextFieldCell alloc] init]];
+      [[object tableView] setNeedsDisplay: YES];
+      [self setObject: [self object]]; // reset...
+    }
+}
+
+// data source
+- (int) numberOfRowsInTableView: (NSTableView *)tv
+{
+  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  return [list count];
+}
+
+- (id)          tableView: (NSTableView *)tv
+objectValueForTableColumn: (NSTableColumn *)tc
+	              row: (int)rowIndex
+{
+  NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  id value = nil;
+  if([list count] > 0)
+    {
+      value = [list objectAtIndex: rowIndex];
+    }
+  return value;
+}
+
+// delegate
+- (BOOL)    tableView: (NSTableView *)tableView
+shouldEditTableColumn: (NSTableColumn *)aTableColumn
+		  row: (int)rowIndex
+{
+  return NO;
+}
+
+- (BOOL) tableView: (NSTableView *)tv
+   shouldSelectRow: (int)rowIndex
+{
+  return YES;
 }
 @end
 

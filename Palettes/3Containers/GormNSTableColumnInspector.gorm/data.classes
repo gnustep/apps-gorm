@@ -143,7 +143,10 @@
 	    editableSwitch,
 	    identifierTextField,
 	    resizableSwitch,
-	    titleAlignmentMatrix
+	    titleAlignmentMatrix,
+	    cellTable,
+	    defaultButton,
+	    setButton
 	);
 	Super = IBInspector;
     };

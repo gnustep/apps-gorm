@@ -1,3 +1,14 @@
+2004-09-05 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm: 
+	Made changes to allow user to edit the tableColumn dataCell.
+	* Palettes/3Containers/inspectors.m: Added code 
+	for the delegate and datasource of the table added to the
+	inspector.   Also modified methods _getValuesFromObject and
+	_setValuesFromControl: in GormTableColumnInspector to 
+	accommodate changing the dataCell and redisplaying the 
+	tableView which the column belongs to.
+	
 2004-08-28 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomView.m: Modified _bestPossibleSuperClass to 
