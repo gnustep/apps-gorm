@@ -252,9 +252,15 @@ static id _sharedDataSource = nil;
   _gormAllowsEmptySelection = _allowsEmptySelection;
   _gormDelegate = _delegate;
   _delegate = nil;
-  _savedColor = [self backgroundColor];
+  ASSIGN(_savedColor, [self backgroundColor]);
 
   return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(_savedColor);
+  [super dealloc];
 }
 
 - (void) setGormAllowsColumnReordering: (BOOL)flag
