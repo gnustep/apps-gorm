@@ -25,15 +25,12 @@
  */
 
 #include "GormPrivate.h"
-
 #include "GormViewEditor.h"
-
 #include "GormMatrixEditor.h"
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
 
 #define _EO ((NSMatrix*)_editedObject)
-
 
 @interface GormViewEditor (Private)
 - (void) _displayFrame: (NSRect) frame
@@ -73,7 +70,6 @@
 
 @implementation	GormMatrixEditor
 
-
 - (void) copySelection
 {
   if (selected != nil)
@@ -83,7 +79,6 @@
 	       toPasteboard: [NSPasteboard generalPasteboard]];
     }
 }
-
 
 - (void) deleteSelection
 {
@@ -385,35 +380,12 @@ static BOOL done_editing;
     return [NSArray arrayWithObject: selected];
 }
 
-//  - (unsigned) selectionCount
-//  {
-//    return (selected == nil) ? 0 : 1;
-//  }
-
-//  - (id<IBEditors>) openSubeditorForObject: (id)anObject
-//  {
-//    return nil;
-//  }
-
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   if ([types containsObject: IBObjectPboardType] == YES)
     return YES;
   return NO;
 }
-
-/*
-- (void) close
-{
-  [self deactivate];
-  [self closeSubeditors];
-}
-
-- (void) closeSubeditors
-{
-}
-*/
-
 
 - (void) postDraw: (NSRect) rect
 {
@@ -436,9 +408,6 @@ static BOOL done_editing;
 	}
     }
 }
-
-
-
 
 - (NSRect) _constrainedFrame: (NSRect) frame
 		   withEvent: (NSEvent *)theEvent

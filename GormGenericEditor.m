@@ -31,8 +31,6 @@
   if (anObject != nil
     && [objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
     {
-//        NSNotificationCenter	*nc;
-//        nc = [NSNotificationCenter defaultCenter];
       [objects addObject: anObject];
       [self refreshCells];
     }
@@ -187,7 +185,6 @@
   /*
    * Adjust to image area.
    */
-//    rect.size.width -= 15;
   rect.size.height -= 15;
   rect = [self convertRect: rect toView: nil];
   return rect;

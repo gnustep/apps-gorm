@@ -58,15 +58,6 @@
 
 @implementation GormControlEditor
 
-
-//  - (GormPlacementInfo *) initializeResizingInFrame: (NSView *)view
-//  						    withKnob: (IBKnobPosition) knob
-//  {
-//    GormPlacementInfo *gip;
-//    gip = [super initializeResizingInFrame: view withKnob: knob];
-//  }
-
-
 - (void) _altDisplayFrame: (NSRect) frame
 	 withPlacementInfo: (GormPlacementInfo*)gpi
 {
@@ -203,246 +194,11 @@
   gpi->oldRect.size.height += 2;
 }
 
-//  - (void) _displayFrameWithHint: (NSRect) frame
-//  	     withPlacementInfo: (GormPlacementInfo*)gpi
-//  {
-//    float leftOfFrame = NSMinX(frame);
-//    float rightOfFrame = NSMaxX(frame);
-//    float topOfFrame = NSMaxY(frame);
-//    float bottomOfFrame = NSMinY(frame);
-//    int i;
-//    int count;
-//    int lastDistance;
-//    int minimum = 10;
-//    NSMutableArray *bests;
-//    if (gpi->hintInitialized == NO)
-//      {
-//        [self _initializeHintWithInfo: gpi];
-//      }
-
-//    {
-//      if (gpi->firstPass == NO)
-//        [gpi->resizingIn displayRect: gpi->oldRect];
-//      else
-//        gpi->firstPass = NO;
-//    }
-//    {
-//      [gpi->resizingIn setNeedsDisplayInRect: gpi->lastLeftRect];
-//      [[self window] displayIfNeeded];
-//      gpi->lastLeftRect = NSZeroRect;
-//    }
-//    {
-//      [gpi->resizingIn setNeedsDisplayInRect: gpi->lastRightRect];
-//      [[self window] displayIfNeeded];
-//      gpi->lastRightRect = NSZeroRect;
-//    }
-//    {
-//      [gpi->resizingIn setNeedsDisplayInRect: gpi->lastTopRect];
-//      [[self window] displayIfNeeded];
-//      gpi->lastTopRect = NSZeroRect;
-//    }
-//    {
-//      [gpi->resizingIn setNeedsDisplayInRect: gpi->lastBottomRect];
-//      [[self window] displayIfNeeded];
-//      gpi->lastBottomRect = NSZeroRect;
-//    }
-
-
-//    if (gpi->knob == IBTopLeftKnobPosition
-//        || gpi->knob == IBMiddleLeftKnobPosition
-//        || gpi->knob == IBBottomLeftKnobPosition)
-//    {
-//      bests = [NSMutableArray arrayWithCapacity: 4];
-//      minimum = 6;
-//      count = [gpi->leftHints count];
-//      for ( i = 0; i < count; i++ )
-//        {
-//  	lastDistance = [[gpi->leftHints objectAtIndex: i] 
-//  			 distanceToFrame: frame];
-//  	if (lastDistance < minimum)
-//  	  {
-//  	    bests = [NSMutableArray arrayWithCapacity: 4];
-//  	    [bests addObject: [gpi->leftHints objectAtIndex: i]];
-//  	    minimum = lastDistance;
-//  	  }
-//  	else if (lastDistance == minimum)
-//  	  [bests addObject: [gpi->leftHints objectAtIndex: i]];
-//        }
-    
-//      count = [bests count];
-    
-    
-//      if (count >= 1)
-//        {
-//  	float start, end, position;
-//  	position = [[bests objectAtIndex: 0] position];
-	
-//  	start = NSMinY(frame);
-//  	end = NSMaxY(frame);
-//  	for ( i = 0; i < count; i++ )
-//  	  {
-//  	    start = MIN(NSMinY([[bests objectAtIndex: i] frame]), start);
-//  	    end = MAX(NSMaxY([[bests objectAtIndex: i] frame]), end);
-//  	  }
-	
-//  	[[NSColor redColor] set];
-//  	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-//  	gpi->lastLeftRect = NSMakeRect(position - 1, start, 2, end - start);
-//  	leftOfFrame = position;
-//        }
-//    }
-
-//    if (gpi->knob == IBTopRightKnobPosition
-//        || gpi->knob == IBMiddleRightKnobPosition
-//        || gpi->knob == IBBottomRightKnobPosition)
-//    {
-//      bests = [NSMutableArray arrayWithCapacity: 4];
-//      minimum = 6;
-//      count = [gpi->rightHints count];
-//      for ( i = 0; i < count; i++ )
-//        {
-//  	lastDistance = [[gpi->rightHints objectAtIndex: i] 
-//  			 distanceToFrame: frame];
-//  	if (lastDistance < minimum)
-//  	  {
-//  	    bests = [NSMutableArray arrayWithCapacity: 4];
-//  	    [bests addObject: [gpi->rightHints objectAtIndex: i]];
-//  	    minimum = lastDistance;
-//  	  }
-//  	else if (lastDistance == minimum)
-//  	  [bests addObject: [gpi->rightHints objectAtIndex: i]];
-//        }
-    
-//      count = [bests count];
-    
-    
-//      if (count >= 1)
-//        {
-//  	float start, end, position;
-//  	position = [[bests objectAtIndex: 0] position];
-	
-//  	start = NSMinY(frame);
-//  	end = NSMaxY(frame);
-//  	for ( i = 0; i < count; i++ )
-//  	  {
-//  	    start = MIN(NSMinY([[bests objectAtIndex: i] frame]), start);
-//  	    end = MAX(NSMaxY([[bests objectAtIndex: i] frame]), end);
-//  	  }
-	
-//  	[[NSColor redColor] set];
-//  	NSRectFill(NSMakeRect(position - 1, start, 2, end - start));
-//  	gpi->lastRightRect = NSMakeRect(position - 1, start, 2, end - start);
-//  	rightOfFrame = position;
-//        }
-//    }
-
-//    if (gpi->knob == IBTopRightKnobPosition
-//        || gpi->knob == IBTopLeftKnobPosition
-//        || gpi->knob == IBTopMiddleKnobPosition)
-//    {
-//      bests = [NSMutableArray arrayWithCapacity: 4];
-//      minimum = 6;
-//      count = [gpi->topHints count];
-//      for ( i = 0; i < count; i++ )
-//        {
-//  	lastDistance = [[gpi->topHints objectAtIndex: i] 
-//  			 distanceToFrame: frame];
-//  	if (lastDistance < minimum)
-//  	  {
-//  	    bests = [NSMutableArray arrayWithCapacity: 4];
-//  	    [bests addObject: [gpi->topHints objectAtIndex: i]];
-//  	    minimum = lastDistance;
-//  	  }
-//  	else if (lastDistance == minimum)
-//  	  [bests addObject: [gpi->topHints objectAtIndex: i]];
-//        }
-    
-//      count = [bests count];
-    
-    
-//      if (count >= 1)
-//        {
-//  	float start, end, position;
-//  	position = [[bests objectAtIndex: 0] position];
-	
-//  	start = NSMinX(frame);
-//  	end = NSMaxX(frame);
-//  	for ( i = 0; i < count; i++ )
-//  	  {
-//  	    start = MIN(NSMinX([[bests objectAtIndex: i] frame]), start);
-//  	    end = MAX(NSMaxX([[bests objectAtIndex: i] frame]), end);
-//  	  }
-	
-//  	[[NSColor redColor] set];
-//  	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-//  	gpi->lastTopRect = NSMakeRect(start, position - 1, end - start, 2);
-//  	topOfFrame = position;
-//        }
-//    }
-
-//    if (gpi->knob == IBBottomRightKnobPosition
-//        || gpi->knob == IBBottomLeftKnobPosition
-//        || gpi->knob == IBBottomMiddleKnobPosition)
-//    {
-//      bests = [NSMutableArray arrayWithCapacity: 4];
-//      minimum = 6;
-//      count = [gpi->bottomHints count];
-//      for ( i = 0; i < count; i++ )
-//        {
-//  	lastDistance = [[gpi->bottomHints objectAtIndex: i] 
-//  			 distanceToFrame: frame];
-//  	if (lastDistance < minimum)
-//  	  {
-//  	    bests = [NSMutableArray arrayWithCapacity: 4];
-//  	    [bests addObject: [gpi->bottomHints objectAtIndex: i]];
-//  	    minimum = lastDistance;
-//  	  }
-//  	else if (lastDistance == minimum)
-//  	  [bests addObject: [gpi->bottomHints objectAtIndex: i]];
-//        }
-    
-//      count = [bests count];
-    
-    
-//      if (count >= 1)
-//        {
-//  	float start, end, position;
-//  	position = [[bests objectAtIndex: 0] position];
-	
-//  	start = NSMinX(frame);
-//  	end = NSMaxX(frame);
-//  	for ( i = 0; i < count; i++ )
-//  	  {
-//  	    start = MIN(NSMinX([[bests objectAtIndex: i] frame]), start);
-//  	    end = MAX(NSMaxX([[bests objectAtIndex: i] frame]), end);
-//  	  }
-	
-//  	[[NSColor redColor] set];
-//  	NSRectFill(NSMakeRect(start, position - 1, end - start, 2));
-//  	gpi->lastBottomRect = NSMakeRect(start, position - 1, end - start, 2);
-//  	bottomOfFrame = position;
-//        }
-//    }
-
-//    gpi->hintFrame = NSMakeRect (leftOfFrame, bottomOfFrame,
-//  			  rightOfFrame - leftOfFrame,
-//  			  topOfFrame - bottomOfFrame);
-
-//    GormShowFrameWithKnob(gpi->hintFrame, gpi->knob);
-//    gpi->oldRect = GormExtBoundsForRect(gpi->hintFrame);
-//    gpi->oldRect.origin.x--;
-//    gpi->oldRect.origin.y--;
-//    gpi->oldRect.size.width += 2;
-//    gpi->oldRect.size.height += 2;
-
-//  }
-
 #undef MIN
 #undef MAX
 
 #define MIN(a,b) (a>b?b:a)
 #define MAX(a,b) (a>b?a:b)
-
 
 - (void) _displayFrameWithHint: (NSRect) frame
 	     withPlacementInfo: (GormPlacementInfo*)gpi
@@ -805,8 +561,6 @@
       col = gpi->lastFrame.size.width / cellSize.width;
       row = gpi->lastFrame.size.height / cellSize.height;
 
-//        NSLog(@"parentEditor %@", we);
-
       // let's morph into a matrix
       matrix = [[NSMatrix alloc] initWithFrame: gpi->lastFrame
 				 mode: NSRadioModeMatrix
@@ -827,12 +581,10 @@
 
       [document attachObject: matrix toParent: _EO];
 
-//        NSLog(@"gonna open editor");
       editor = [document editorForObject: matrix 
 			 inEditor: parent
 			 create: YES];
 
-//        NSLog(@"editor %@", editor);
       
       [parent selectObjects: [NSArray arrayWithObject: editor]];
       
@@ -885,6 +637,4 @@
     }
 }
 @end
-
-
 

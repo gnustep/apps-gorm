@@ -23,11 +23,8 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
-
 #include "GormTabViewEditor.h"
-
 
 #define _EO ((NSTabView *)_editedObject)
 
@@ -117,14 +114,14 @@
   if ([[_EO hitTest: [theEvent locationInWindow]]
 	isDescendantOf: currentView])
     {
-      NSLog(@"md %@ descendant of", self);
+      NSDebugLog(@"md %@ descendant of", self);
       if ([currentView isOpened] == NO)
 	[currentView setOpened: YES];
       [currentView mouseDown: theEvent];
     }
   else
     {      
-      NSLog(@"md %@ not descendant of", self);
+      NSDebugLog(@"md %@ not descendant of", self);
       if ([currentView isOpened] == YES)
 	[currentView setOpened: NO];
       [_EO mouseDown: theEvent];
@@ -147,23 +144,14 @@
 	  currentView = [document editorForObject: [tabViewItem view]
 				  inEditor: self 
 				  create: YES];
-	  NSLog(@"dSTVI %@ %@ %@", self, currentView, [tabViewItem view]);
-	  NSLog(@"dsTVI %@ %@", self, [document parentEditorForEditor: currentView]);
+	  NSDebugLog(@"dSTVI %@ %@ %@", self, currentView, [tabViewItem view]);
+	  NSDebugLog(@"dsTVI %@ %@", self, [document parentEditorForEditor: currentView]);
 	}
       else
 	{
-	  NSLog(@"dsTVI %@ already there", self);
+	  NSDebugLog(@"dsTVI %@ already there", self);
 	}
     }
-
-  /*
-  subs = [[tabViewItem view] subviews];
-
-  if ([[tabViewItem view] isKindOfClass: [GormViewEditor class]] == NO)
-    [document editorForObject: [tabViewItem view]
-	      inEditor: self 
-	      create: YES];
-  */
 }
 
 
@@ -171,14 +159,14 @@
 - (BOOL)          tabView: (NSTabView *)tabView 
   shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
 {
-  NSLog(@"shouldSelectTabViewItem called");
+  NSDebugLog(@"shouldSelectTabViewItem called");
 
   if ([[[tabView selectedTabViewItem] view] 
 	isKindOfClass: 
 	  [GormInternalViewEditor class]])
     {
       
-      NSLog(@"closing tabviewitem");
+      NSDebugLog(@"closing tabviewitem");
       [(GormInternalViewEditor *)[[tabView selectedTabViewItem] view] 
 				 deactivate];
       currentView = nil;
@@ -187,6 +175,4 @@
 
   return YES;
 }
-
-
 @end

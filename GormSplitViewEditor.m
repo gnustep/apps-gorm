@@ -23,9 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
-
 #include "GormSplitViewEditor.h"
 #include "GormInternalViewEditor.h"
 #include "GormBoxEditor.h"
@@ -187,21 +185,6 @@
     }
   else if ([types containsObject: IBViewPboardType] == YES)
     {
-      /*
-      NSArray *sub = [_EO subviews];
-      int count = [sub count];
-      NSPoint loc = [sender draggingLocation];
-      loc = [_EO 
-	      convertPoint: loc fromView: nil];
-      
-      if ([_EO isVertical])
-	{
-	  for ( i = 0; i < count - 1; i++ )
-	    {
-	      if (i < 
-	    }
-	}
-      */
       return NSDragOperationCopy;
     }
   else
@@ -255,7 +238,6 @@
   BOOL onKnob = NO;
   NSView *clickedSubview;
 
-//    NSLog(@"in GormSplitViewEditor -mouseDown");
   {
     if ([parent respondsToSelector: @selector(selection)] &&
 	[[parent selection] containsObject: _EO])
@@ -280,7 +262,6 @@
 
   if (opened == NO)
     {
-//        NSLog(@"not opened");
       [super mouseDown: theEvent];
       return;
     }
@@ -307,24 +288,17 @@
     else
       {
 	clickedSubview = nil;
-//  	NSLog(@"subs %@", subs);
       }
   }  
 
   if (clickedSubview == nil)
     {
-//        NSLog(@"clickedSubview == nil");
       if (openedSubeditor)
 	[openedSubeditor deactivate];
       [_EO mouseDown: theEvent];
     }
   else
     {
-//        NSLog(@"clickedSubview == %@", clickedSubview);
-//        if ([theEvent clickCount] == 2
-//  	  && [clickedSubview respondsToSelector: @selector(canBeOpened)]
-//  	  && ([clickedSubview canBeOpened] == YES)
-//  	  && (clickedSubview != self))
       [self selectObjects: [NSArray arrayWithObject: clickedSubview]];
       [self setNeedsDisplay: YES];
 
@@ -340,7 +314,6 @@
 	  [self setOpenedSubeditor: (GormViewWithSubviewsEditor *)clickedSubview];
 	  if ([(GormViewWithSubviewsEditor *) clickedSubview isOpened] == NO)
 	    [(GormViewWithSubviewsEditor *)clickedSubview setOpened: YES];
-//  	  NSLog(@"md %@ sendind to clickView %@", self, clickedSubview);
 	  [clickedSubview mouseDown: theEvent];
 	}
     }
@@ -407,7 +380,6 @@
       [subview deactivate];
       
       [v setFrame: frame];
-//        [[[parent parent] editedObject] addSubview: v];
       [newSelection addObject: v];
     }
   
@@ -419,42 +391,4 @@
   }
   return newSelection;
 }
-
-
-
-/*
-- (void) postDraw: (NSRect) rect
-{
-  [super postDraw: rect];
-
-  if (openedSubeditor != nil)
-    {
-      GormDrawOpenKnobsForRect(
-			       [self convertRect: [openedSubeditor bounds]
-				     fromView: openedSubeditor]);
-      GormShowFastKnobFills();
-    }
-  else if (_displaySelection)
-    {
-      // FIXME
-    }
-}
-
-- (void) postDrawForView: (GormViewEditor *) viewEditor
-{
-  if (_displaySelection == NO)
-    {
-      return;
-    }
-  if ((openedSubeditor == viewEditor) && (openedSubeditor != nil))
-    {
-      GormDrawOpenKnobsForRect([viewEditor bounds]);
-      GormShowFastKnobFills();
-    }
-  else 
-    {
-      // FIXME
-    }
-}
-*/
 @end

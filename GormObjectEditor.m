@@ -226,9 +226,6 @@ static NSMapTable	*docMap = 0;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-//    id		object = [aNotification object];
-//    NSString	*name = [aNotification name];
-
 }
 
 
@@ -455,9 +452,6 @@ static NSMapTable	*docMap = 0;
   return self;
 }
 
-
-
-
 - (void) resetObject: (id)anObject
 {
   NSString		*name = [document nameForObject: anObject];
@@ -472,9 +466,6 @@ static NSMapTable	*docMap = 0;
       [mgr setClassInspector];
     }
 }
-
-
-
 @end
 
 

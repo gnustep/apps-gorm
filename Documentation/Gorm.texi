@@ -63,6 +63,7 @@ Free Software Foundation instead of in the original English.
 @subtitle Version @value{GORM-VERSION}
 @subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION})
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
+@author Gregory John Casamento <greg_casamento@yahoo.com>
 @page
 @vskip 0pt plus 1filll
 Copyright @copyright{} 1999,2000 Free Software Foundation, Inc.
@@ -276,25 +277,27 @@ This method sets the values currently returned by
 @cindex preferences
 @cindex defaults
 
-Currently (Jan 4 2000) there is no preferences panel.
-Application defaults are stored in the file `Defaults.plist', so this file
-determines the default values if they are not overridden.
+The preferences panel contains a number of use customizable options which can
+be used to modify the behavior of Gorm.
 
-The current defaults are -
+Some of these defaults can be safely modified from the command line by the user.
 
 @itemize @bullet
 
-@item SaveAsNib @*
-If this boolean is set to @samp{YES} then Gorm will save documents with a
-@samp{.nib} file extension (for NeXT/Apple compatibility), otherwise it will
-save with a @samp{.gorm} extension.
-@item OpenNibs @*
-If this boolean is set to @samp{YES} then Gorm will accept an attempt to open
-a document with a @samp{.nib} file extension (for NeXT/Apple compatibility),
-otherwise it will only open documents with a @samp{.gorm} extension.
+@item PreloadHeaders @*
+The user can define a set of headers to load when Gorm starts creation of a new .gorm file.   
+This is useful when the user is building a framework or a set of interfaces for a large 
+application.
 
-NB. While Gorm will attempt to open @samp{.nib} documents, it can't open true
-NeXT/Apple documents, only ones it has written itsself.
+@item ShowInspectors @*
+Controls whether the inspector shows when Gorm is started.
+
+@item ShowPalettes @*
+Controls whether the palettes window shows when Gorm is started.
+
+@item BackupFile @*
+Determines if the old .gorm is moved to .gorm~ when the modified version is saved.
+
 @end itemize
 
 @node Concept Index, , Implementation, Top

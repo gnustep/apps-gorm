@@ -78,7 +78,6 @@
   NSPoint	minMouse;
   NSRect	firstRect = [view frame];
   NSRect	lastRect = [view frame];
-//    NSRect        constrainRect = [view frame];
   NSPoint	lastPoint = mouseDownPoint;
   NSPoint	point = mouseDownPoint;
   NSView        *superview;
@@ -345,8 +344,6 @@
      */
     redrawRect = NSUnionRect(r, redrawRect);
     redrawRect = NSUnionRect(firstRect, redrawRect);
-    //    [superview displayRect: redrawRect];
-    //    [self makeSelectionVisible: YES];
   }
 
   
@@ -395,8 +392,6 @@
   GormPlacementInfo *gpi = nil;
   BOOL shouldUpdateSelection = YES;
   BOOL mouseDidMove = NO;
-
-//    NSLog(@"hMOV %@", self);
 
   eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
     | NSMouseMovedMask | NSPeriodicMask;
@@ -1098,9 +1093,8 @@
 			     create: YES]];
 	}
     }
-  //  [self makeSelectionVisible: NO];
+
   [self selectObjects: array];
-  //  [self makeSelectionVisible: YES];
 }
 
 @end

@@ -66,8 +66,7 @@
     {
       NSView *documentView = [_EO documentView];
       
-      NSLog(@"documentView %@", documentView);
-
+      NSDebugLog(@"documentView %@", documentView);
       documentViewEditor = [document editorForObject: documentView
 				     inEditor: self 
 				     create: YES];
@@ -118,7 +117,6 @@
 
   if (opened == NO)
     {
-//        NSLog(@"GormBoxEditor not opened");
       [super mouseDown: theEvent];
       return;
     }
@@ -127,7 +125,6 @@
   if ([[_EO hitTest: [theEvent locationInWindow]]
 	isDescendantOf: documentViewEditor])
     {
-//        NSLog(@"md %@ descendant of", self);
       if (([self isOpened] == YES) && ([documentViewEditor isOpened] == NO))
 	[documentViewEditor setOpened: YES];
       if ([documentViewEditor isOpened])

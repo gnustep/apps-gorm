@@ -31,8 +31,10 @@
 {
   NSTextField	*titleText;
   NSMatrix      *menuType;
+  id             autoenable;
 }
 - (void) updateMenuType: (id)sender;
+- (void) updateAutoenable: (id)sender;
 @end
 
 @implementation GormMenuAttributesInspector
@@ -63,7 +65,8 @@
   object = nil; // remove reference to old object...
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
-  
+  [autoenable setState: ([object autoenablesItems]?NSOnState:NSOffState)];
+
   // set up the menu type matrix...
   if([doc windowsMenu] == anObject)
     {
@@ -111,6 +114,15 @@
       [doc setWindowsMenu: nil]; 
       [doc setServicesMenu: nil]; 
     }
+}
+
+- (void) updateAutoenable: (id)sender
+{
+  BOOL flag;
+
+  // look at the values passed back in the matrix.
+  flag = ([autoenable state] == NSOnState) ? YES : NO;
+  [object setAutoenablesItems: flag];
 }
 @end
 

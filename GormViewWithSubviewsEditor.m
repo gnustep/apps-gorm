@@ -38,7 +38,6 @@
 {
   if (closed == NO)
     {
-//        NSLog(@"%@ close", self);
       [self deactivate];
       
       [self closeSubeditors];
@@ -47,7 +46,7 @@
     }
   else
     {
-      NSLog(@"%@ close but already closed", self);
+      // NSLog(@"%@ close but already closed", self);
     }
 }
 
@@ -60,13 +59,10 @@
   int count = [subeditorConnections count];
   int i;
   
-//    NSLog(@"start deactivating subeditors");
   for ( i = 0; i < count; i ++ )
     {
-//        NSLog(@"%@", [[subeditorConnections objectAtIndex: i] source]); 
       [[[subeditorConnections objectAtIndex: i] source] deactivate];
     }
-//    NSLog(@"end deactivating subeditors");
 }
 
 - (void) closeSubeditors
@@ -78,13 +74,10 @@
   int count = [subeditorConnections count];
   int i;
 
-//    NSLog(@"start subeditor's list");
   for ( i = 0; i < count; i ++ )
     {
-//        NSLog(@"%@", [[subeditorConnections objectAtIndex: i] source]); 
       [[[subeditorConnections objectAtIndex: i] source] close];
     }
-//    NSLog(@"end subeditor's list");
 }
 
 
@@ -105,7 +98,6 @@
 
   if (value == YES)
     {
-//        NSLog(@"sO %@ we are opened", self);
       [self silentlyResetSelection];
       [document setSelectionFromEditor: self];      
     }
@@ -113,7 +105,6 @@
     {
       if (openedSubeditor != nil)
 	{
-//  	  NSLog(@"let's closed our subeditor");
 	  [self makeSubeditorResign];
 	  [self silentlyResetSelection];
 	}
@@ -164,7 +155,6 @@
 {
   if (openedSubeditor != nil)
     {
-//        NSLog(@"%@ makeSubeditorResign", self);
       [openedSubeditor makeSubeditorResign];
       [openedSubeditor setOpened: NO];
       openedSubeditor = nil;
@@ -235,7 +225,6 @@
 
   for (i = 0; i < count; i++)
     {
-//        NSLog(@"adding %@", [objects objectAtIndex: i]);
       [selection addObject: [objects objectAtIndex: i]];
     }
 

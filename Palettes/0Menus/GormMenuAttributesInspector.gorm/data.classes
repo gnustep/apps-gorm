@@ -140,18 +140,21 @@
 	    "yank:",
 	    "zoom:",
 	    "setObject:",
-	    "updateMenuType:"
+	    "updateMenuType:",
+	    "updateAutoenable:"
 	);
 	Super = NSObject;
     };
     GormMenuAttributesInspector = {
 	Actions = (
 	    "setObject:",
-	    "updateMenuType:"
+	    "updateMenuType:",
+	    "updateAutoenable:"
 	);
 	Outlets = (
 	    titleText,
-	    menuType
+	    menuType,
+	    autoenable
 	);
 	Super = IBInspector;
     };

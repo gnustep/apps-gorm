@@ -112,25 +112,6 @@ static GormFontViewController *gorm_font_cont = nil;
   return view;
 }
 
-/*
-- (BOOL) acceptsFirstResponder
-{
-  return YES;
-}
-
-- (BOOL) becomeFirstResponder
-{
-  return YES;
-}
-
-// delegate methods
-- (void) changeFont: (id)sender
-{
-  NSLog(@"change");
-  [fontSelector selectItem: 0];
-}
-*/
-
 - (void) mouseDragged: (NSEvent *)event
 {
   // here to make certain we don't crash..

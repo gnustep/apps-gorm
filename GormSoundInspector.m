@@ -73,6 +73,7 @@
 {
   RELEASE(_currentSound);
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [super dealloc];
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
@@ -94,24 +95,19 @@
     {
       if([sndobject isKindOfClass: [GormSound class]])
 	{
-	  NSLog(@"Sound inspector notified: %@",sndobject);
+	  NSDebugLog(@"Sound inspector notified: %@",sndobject);
 	  RELEASE(_currentSound);
 	  _currentSound = [[NSSound alloc] initWithContentsOfFile: [sndobject soundPath]
 					   byReference: YES];
 	  RETAIN(_currentSound);
-	  NSLog(@"Loaded sound");
+	  NSDebugLog(@"Loaded sound");
 	}
     }
 }
 
-- (void) awakeFromNib
-{
-  NSLog(@"Sound inspector is awake");
-}
-
 - (void) stop: (id)sender
 {
-  NSLog(@"Stop");
+  NSDebugLog(@"Stop");
   [_currentSound stop];
 }
 
@@ -123,14 +119,13 @@
 
 - (void) pause: (id)sender
 {
-  NSLog(@"Pause");
+  NSDebugLog(@"Pause");
   [_currentSound pause];
 }
 
 - (void) record: (id)sender
 {
-  NSLog(@"Record");
+  NSDebugLog(@"Record");
   // [_currentSound record];
 }
 @end
-

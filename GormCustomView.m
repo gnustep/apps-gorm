@@ -63,12 +63,6 @@
   return [self stringValue];
 }
 
-
-//  - (Class) classForCoder
-//  {
-//    return [GSCustomView class];
-//  }
-
 /*
  * This needs to be coded like a GSNibItem. How do we make sure this
  * tracks changes in GSNibItem coding?
@@ -116,11 +110,7 @@
       return nil;
     }
 }
-
-
 @end
-
-
 
 @interface GormTestCustomView : GSNibItem <NSCoding>
 {

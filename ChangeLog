@@ -1,3 +1,28 @@
+2003-10-28 12:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormBoxEditor.m: Removed commented out code.
+	* GormControlEditor.m: same
+	* GormCustomView.m: same
+	* GormFintViewController.m: same
+	* GormGenericEditor.m: same
+	* GormImageEditor.m: same
+	* GormSoundEditor.m: same
+	* GormInternalViewEditor.m: same
+	* GormObjectEditor.m: same
+	* GormMatrixEditor.m: same
+	* GormSplitViewEditor.m: same
+	* GormViewEditor.m: same	
+	* GormViewWithContentViewEditor.m: same	
+	* GormViewWithSubviewsEditor.m: same	
+	* GormInspectorsManager.m: minor cleanup.	
+	* GormDocument.m: [GormDocument _selectClass:] removed extra, 
+	uneeded RETAIN.  [GormDocument detachObject:] RELEASE the 
+	object when after it's detached from the document.  
+	[GormDocument _indentifierString:] removed extra RETAIN calls.
+	[GormDocument _replaceObjectsWithTemplates:] removed extra RETAIN.
+	* Documentation/Gorm.texi: Updated some of the documentation to reflect
+	recent changes.  More planned documentation additions in the future.
+	
 2003-10-25 17:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added categories for the old templates to allow them

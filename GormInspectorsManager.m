@@ -215,7 +215,7 @@
   NSRect	popupRect = {{60, 5}, {152, 20}};
   NSRect	selectionRect = {{0, 390}, {IVW, 30}};
   NSRect	inspectorRect = {{0, 0}, {IVW, IVH}};
-  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
+  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
 
   cache = [NSMutableDictionary new];
   panel = [[NSPanel alloc] initWithContentRect: contentRect
@@ -617,8 +617,6 @@
           [popup removeItemAtIndex: 5];
         }
     }
- 
- 
 }
 
 @end
@@ -1256,4 +1254,3 @@ selectCellWithString: (NSString*)title
   return YES;
 }
 @end
-

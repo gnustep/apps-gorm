@@ -66,8 +66,6 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-//    if ([types containsObject: IBObjectPboardType] == YES)
-//      return YES;
   return NO;
 }
 
@@ -83,7 +81,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   NSArray *types=[[sender draggingPasteboard] types];
   unsigned int mask=[sender draggingSourceOperationMask];
 
-  NSLog(@"GormImageEditor draggingEntered mask=%i types=%@",mask,types);
+  NSDebugLLog(@"GormImageEditor draggingEntered mask=%i types=%@",mask,types);
   
    if (  mask&handled_mask &&
        ([types containsObject: NSFilenamesPboardType] ||
@@ -161,10 +159,6 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   return YES;
 }
 
-
-
-
-
 - (void) drawSelection
 {
 }
@@ -176,8 +170,6 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-//    id		object = [aNotification object];
-//    NSString	*name = [aNotification name];
 }
 
 /*
@@ -361,12 +353,9 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 }
 
-
 - (void) pasteInSelection
 {
 }
-
-
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
@@ -540,6 +529,6 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
 - (NSString *)inspectorClassName
 {
-  return @"GormImageInspector"; //[self soundInspectorClassName];
+  return @"GormImageInspector"; 
 }
 @end

@@ -61,7 +61,7 @@ struct _rFlagsType2 {
 {
   if ([self isCustom])
     {
-      NSLog(@"%@ display", self);
+      NSDebugLog(@"%@ display", self);
     }
   [super display];
 }
@@ -70,7 +70,7 @@ struct _rFlagsType2 {
 {
   if ([self isCustom])
     {
-      NSLog(@"%@ displayIfNeeded", self);
+      NSDebugLog(@"%@ displayIfNeeded", self);
     }
   [super displayIfNeeded];
 }

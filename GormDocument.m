@@ -244,7 +244,7 @@ static NSImage	*classesImage = nil;
       [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
-	  //	  RETAIN(anObject);
+	  RETAIN(anObject);
 	  [anObject setReleasedWhenClosed: NO];
 	}
     }
@@ -628,7 +628,6 @@ static NSImage	*classesImage = nil;
 	{
 	  newClassName = [classManager addClassWithSuperClassName:
 					 itemSelected];
-	  RETAIN(newClassName);
 	  [classesView reloadData];
 	  [classesView expandItem: itemSelected];
 	  i = [classesView rowForItem: newClassName]; 
@@ -725,6 +724,8 @@ static NSImage	*classesImage = nil;
       NSMapRemove(objToName, (void*)anObject);
       RELEASE(name);
     }
+
+  RELEASE(anObject);
 }
 
 - (void) detachObjects: (NSArray*)anArray
@@ -2363,8 +2364,6 @@ static NSImage	*classesImage = nil;
       [self setName: @"NSMenu" forObject: aMenu];
       [self attachObject: aMenu toParent: nil];
       [objectsView addObject: aMenu];
-      //      RETAIN(aMenu);
-
       [[aMenu window] setFrameTopLeftPoint:
 	NSMakePoint(1, frame.size.height-200)];
       RELEASE(aMenu);
@@ -2644,8 +2643,8 @@ static NSImage	*classesImage = nil;
       id customClass = [cm customClassForName: key];
       id object = [self objectForName: key];
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
-      id template = [GSTemplateFactory templateForObject: RETAIN(object)
-				       withClassName: RETAIN([customClass copy])
+      id template = [GSTemplateFactory templateForObject: object
+				       withClassName: customClass // [customClass copy]
 				       withSuperClassName: superClass];
       
       // if the object is deferrable, then set the flag appropriately.
@@ -3049,8 +3048,6 @@ static NSImage	*classesImage = nil;
 	invertedSet];
       numeric = [NSCharacterSet characterSetWithCharactersInString:
 	@"0123456789"];
-      RETAIN(illegal); 
-      RETAIN(numeric); 
     }
   if (str == nil)
     {

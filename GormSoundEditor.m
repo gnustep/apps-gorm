@@ -169,8 +169,6 @@ static NSMapTable	*docMap = 0;
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
-//    id		object = [aNotification object];
-//    NSString	*name = [aNotification name];
 }
 
 /*
@@ -242,57 +240,6 @@ static NSMapTable	*docMap = 0;
   [self displayIfNeeded];
   [[self window] flushWindow];
 }
-
-//  - (void) mouseDown: (NSEvent*)theEvent
-//  {
-//    if ([theEvent modifierFlags] & NSControlKeyMask)
-//      {
-//        NSPoint	loc = [theEvent locationInWindow];
-//        NSString	*name;
-//        int	r, c;
-//        int	pos;
-//        id	obj;
-
-//        loc = [self convertPoint: loc fromView: nil];
-//        [self getRow: &r column: &c forPoint: loc];
-//        pos = r * [self numberOfColumns] + c;
-//        if (pos >= 0 && pos < [objects count])
-//  	{
-//  	  obj = [objects objectAtIndex: pos];
-//  	}
-//        if (obj != nil && obj != selected)
-//  	{
-//  	  [self selectObjects: [NSArray arrayWithObject: obj]];
-//  	  [self makeSelectionVisible: YES];
-//  	}
-      
-//        /*
-//        name = [document nameForObject: obj];
-//        if ([name isEqualToString: @"NSFirst"] == NO)
-//  	{
-//  	  NSPasteboard	*pb;
-
-//  	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-//  	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
-//  		     owner: self];
-//  	  [pb setString: name forType: GormLinkPboardType];
-//  	  [NSApp displayConnectionBetween: obj and: nil];
-
-//  	  [self dragImage: [NSApp linkImage]
-//  		       at: loc
-//  		   offset: NSZeroSize
-//  		    event: theEvent
-//  	       pasteboard: pb
-//  		   source: self
-//  		slideBack: YES];
-//  	  [self makeSelectionVisible: YES];
-//  	  return;
-//  	}
-//        */
-//      }
-
-//    [super mouseDown: theEvent];
-//  }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
@@ -458,7 +405,7 @@ static NSMapTable	*docMap = 0;
     }
   else
     {
-      NSLog(@"Drop with unrecognized type!");
+      NSDebugLog(@"Drop with unrecognized type!");
       return NO;
     }
 }
@@ -545,7 +492,7 @@ static NSMapTable	*docMap = 0;
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
       NSString          *name = [obj soundName];
 
-      NSLog(@"sound name = %@",name);
+      NSDebugLog(@"sound name = %@",name);
       [but setImage: [obj soundImageForViewer]];
       [but setTitle: name];
       [but setShowsStateBy: NSChangeGrayCellMask];
@@ -566,16 +513,8 @@ static NSMapTable	*docMap = 0;
   [self setNeedsDisplay: YES];
 }
 
-//  - (void) removeObject: (id)anObject
-//  {
-//    [objects removeObject: anObject];
-//    [self refreshCells];
-//  }
-
 - (void) resetObject: (id)anObject
 {
-  // NSString		*name = nil; // [document nameForObject: anObject];
-  // GormInspectorsManager	*mgr = [(Gorm*)NSApp inspectorsManager];
 }
 
 @end

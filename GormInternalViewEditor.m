@@ -23,9 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include "GormPrivate.h"
-
 #include "GormInternalViewEditor.h"
 
 @class GormEditorToParent;
@@ -90,10 +88,6 @@ static NSImage *horizontalImage;
       NSEnumerator	*enumerator;
       NSView		*sub;
       id  superview = [_editedObject superview];
-      // NSView *superview = [_editedObject superview];
-
-//        NSLog(@"ac %@ %@ %@", self, _editedObject, superview);
-
       
       [self setFrame: [_editedObject frame]];
       [self setBounds: [self frame]];
@@ -113,10 +107,6 @@ static NSImage *horizontalImage;
 	  [self setFrame: [tabSuperview contentRect]];
 	  [self setAutoresizingMask: 
 		  NSViewWidthSizable | NSViewHeightSizable];
-//  	  NSLog(@"ac %d %d %d", 
-//  		[tabSuperview autoresizesSubviews],
-//  		[self autoresizesSubviews],
-//  		[_editedObject autoresizesSubviews]);
 	}
       else if ([superview isKindOfClass: [GSWindowView class]])
 	{
@@ -158,10 +148,8 @@ static NSImage *horizontalImage;
 
       while ((sub = [enumerator nextObject]) != nil)
 	{
-//  	  NSLog(@"ac %@ editorForObject: %@", self, sub);
 	  if ([sub isKindOfClass: [GormViewEditor class]] == NO)
 	    {
-//  	      NSLog(@"ac %@ yes", self);
 	      [document editorForObject: sub
 			inEditor: self
 			create: YES];
@@ -172,28 +160,6 @@ static NSImage *horizontalImage;
 
   return NO;
 }
-
-
-//  - (void) close
-//  {
-//    NSEnumerator	*enumerator;
-//    GormViewEditor	*sub;
-  
-//    enumerator = [[NSArray arrayWithArray: [_editedObject subviews]]
-//  		 objectEnumerator];
-  
-//    while ((sub = [enumerator nextObject]) != nil)
-//      {
-//        if ([sub respondsToSelector: @selector(deactivate)] == NO)
-//  	{
-//  	}
-//        else
-//  	{
-//  	  NSLog(@"deactivating, deac %@", sub);
-//  	  [sub deactivate];
-//  	}
-//      }
-//  }
 
 - (void) deactivate
 {
@@ -212,7 +178,6 @@ static NSImage *horizontalImage;
 	}
       else if ([superview isKindOfClass: [NSTabView class]])
 	{
-//  	  NSLog(@"deactivating %@", self);
 	  NSTabView *tabSuperview = (NSTabView *) superview;
 	  [tabSuperview removeSubview: self];
 	  [[tabSuperview selectedTabViewItem] 
@@ -249,8 +214,6 @@ static NSImage *horizontalImage;
     return nil;
 
   selection = [[NSMutableArray alloc] initWithCapacity: 5];
-
-
   
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
@@ -286,21 +249,9 @@ static NSImage *horizontalImage;
   return self;
 }
 
-
-//  - (void) reactivateWithObject: (id) anObject
-//  		   inDocument: (id<IBDocuments>)aDocument
-//  {
-//    [super reactivateWithObject: anObject
-//  	 inDocument: aDocument];
-  
-//  }
-
-
 - (void) makeSelectionVisible: (BOOL) value
-{
-  
+{  
 }
-
 
 - (NSArray*) selection
 {
@@ -341,11 +292,8 @@ static NSImage *horizontalImage;
       [selection removeObjectAtIndex: i];
     }
   
-  [self selectObjects: [NSArray array]];
-  
+  [self selectObjects: [NSArray array]];  
 }
-
-
 
 - (void) mouseDown: (NSEvent *) theEvent
 {
@@ -435,7 +383,6 @@ static NSImage *horizontalImage;
 	[self handleMouseOnKnob: knob
 	      ofView: knobView
 	      withEvent: theEvent];
-	//	NSLog(@"resize %@", knobView);
 	[self setNeedsDisplay: YES];
 	return;
       }
@@ -456,32 +403,21 @@ static NSImage *horizontalImage;
       
       result = [_editedObject hitTest: mouseDownPoint];
       
-//        NSDebugLog(@"md %@ result %@", self, result);
-//        NSLog(@"_editedObject %@", _editedObject);
-
       // we should get a result which is a direct subeditor
       {
 	id temp = result;
-//  	int i = 0;
 
-//  	NSLog(@"md %@ parent %@", self, parent);
 	if ([temp isKindOfClass: [GormViewEditor class]])
 	  theParent = [(GormViewEditor *)temp parent];
 	while ((temp != nil) && (theParent != self) && (temp != self))
 	  {
-//  	    NSLog(@"md %@ temp = %@", self, temp);
 	    temp = [temp superview];
 	    while (![temp isKindOfClass: [GormViewEditor class]])
 	      {
-//  		if (i++ > 100)
-//  		  sleep(3);
-//  		NSLog(@"md %@ temp = %@", self, temp);
 		temp = [temp superview];
 	      }
 	    theParent = [(GormViewEditor *)temp parent];
-//  	    NSLog(@"temp (%@) 's parent is %@", temp, theParent);
 	  }
-//  	NSLog(@"md %@ temp = %@", self, temp);
 	if (temp != nil)
 	  {
 	    result = temp;
@@ -517,7 +453,6 @@ static NSImage *horizontalImage;
 	[self silentlyResetSelection];
 	openedSubeditor = (GormViewWithSubviewsEditor *) editorView;
 	[self setNeedsDisplay: YES];
-//  	NSLog(@"md %@ editor should open", self);
 	return;
       }
 
@@ -528,11 +463,9 @@ static NSImage *horizontalImage;
       }
     else // editorView == self
       {
-//  	NSLog(@"editorView == self");
 	NSEvent *e;
 	unsigned eventMask;
 	NSDate *future = [NSDate distantFuture];
-	// BOOL first = YES;
 	NSRect oldRect = NSZeroRect;
 	NSPoint p, oldp;
 	NSRect r = NSZeroRect;
@@ -592,8 +525,6 @@ static NSImage *horizontalImage;
 
 	    {
 	      NSRect wr;
-	      //NSCachedImageRep *tableRep = 
-	      //  [[verticalImage representations]objectAtIndex:0];
 	      wr = [self convertRect: r
 			 toView: nil];
 	      
@@ -624,7 +555,6 @@ static NSImage *horizontalImage;
 	    NSFrameRect(r);
 	    oldRect = r;
 	    
-	    //    [[self window] displayIfNeeded];
 	    [[self window] enableFlushWindow];
 	    
 	    [[self window] flushWindow];
@@ -694,40 +624,6 @@ static NSImage *horizontalImage;
       }
     
   }
-
-  /*
-  // are we on a selected view ?
-  {
-    int count = [selection count];
-    int i;
-    BOOL inView = NO;
-    NSPoint mouseDownPoint;
-    
-
-    for ( i = 0; i < count; i++ )
-      {
-	mouseDownPoint = [[[selection objectAtIndex: i] superview] 
-			   convertPoint: [theEvent locationInWindow]
-			   fromView: nil];
-
-	if ([[[selection objectAtIndex: i] superview] 
-	      mouse: mouseDownPoint
-	      inRect: [[selection objectAtIndex: i] frame]])
-	  {
-	    inView = YES;
-	    break;
-	  }
-      }
-
-    if (inView)
-      {
-	NSLog(@"inside %@", [selection objectAtIndex: i]);
-	return;
-      }
-  }
-  */
-  // are we on a view ?
-  
 }
 
 
@@ -859,8 +755,6 @@ static NSImage *horizontalImage;
   NSArray *types;
   NSPasteboard		*dragPb;
 
-//    NSLog(@"prepareForDragOperation called");
-
   dragPb = [sender draggingPasteboard];
 
   types = [dragPb types];
@@ -937,17 +831,6 @@ static NSImage *horizontalImage;
       NSView		*sub;
 
       /*
-      if (opened != YES)
-	{
-	  NSLog(@"make ourself the editor");
-	}
-      else if (openedSubeditor != nil)
-	{
-	  NSLog(@"close our subeditors");
-	}
-      */
-
-      /*
        * Ask the document to get the dragged views from the pasteboard and add
        * them to it's collection of known objects.
        */
@@ -985,11 +868,9 @@ static NSImage *horizontalImage;
 	  
 	  {
 	    id editor;
-//  	    NSLog(@"sub %@ %@", sub, [sub editorClassName]);
 	    editor = [document editorForObject: sub 
 			       inEditor: self 
 			       create: YES];
-//  	    NSLog(@"editor %@", editor);
 	    [self selectObjects: 
 		    [NSArray arrayWithObject: editor]];
 	  }
@@ -1000,56 +881,12 @@ static NSImage *horizontalImage;
   return YES;
 }
 
-
 - (void) pasteInSelection
 {
   [self pasteInView: _editedObject];
 }
 
 @class GormBoxEditor;
-
-//  - (void) ungroupSelf
-//  {
-//    if ([parent isKindOfClass: [GormBoxEditor class]]
-//        && [[parent parent] isKindOfClass: 
-//  			    [GormViewWithContentViewEditor class]])
-//      {
-//        NSEnumerator *enumerator;
-//        GormViewEditor *subview;
-//        enumerator = [[_editedObject subviews] objectEnumerator];
-//        NSMutableArray *newSelection = [NSMutableArray array];
-
-//        [[parent parent] makeSubeditorResign];
-
-//        while ((subview = [enumerator nextObject]) != nil)
-//  	{
-//  	  id v;
-//  	  NSRect frame;
-//  	  v = [subview editedObject];
-//  	  frame = [v frame];
-//  	  frame = [[parent parent] convertRect: frame
-//  				   fromView: _editedObject];
-//  	  [subview deactivate];
-	  
-//  	  [[[parent parent] editedObject] addSubview: v];
-//  	  [v setFrame: frame];
-//  	  [subview close];
-//  	  [newSelection addObject: 
-//  			 [document editorForObject: v
-//  				   inEditor: [parent parent]
-//  				   create: YES]];
-//  	}
-//        [[parent parent] selectObjects: newSelection];
-
-//        {
-//  	id thisBox = [parent editedObject];
-//  	[parent close];
-//  	[thisBox removeFromSuperview];
-
-//        }
-//      }
-//  }
-
 @class GormSplitViewEditor;
 
 - (NSArray *)destroyAndListSubviews
@@ -1078,7 +915,6 @@ static NSImage *horizontalImage;
 	  [subview deactivate];
 	  
 	  [v setFrame: frame];
-//  	  [[[parent parent] editedObject] addSubview: v];
 	  [newSelection addObject: v];
 	}
 
@@ -1098,5 +934,4 @@ static NSImage *horizontalImage;
 {
   [self deleteSelection];
 }
-
 @end

@@ -160,9 +160,6 @@ static BOOL currently_displaying = NO;
     {
       NSView *superview = [_editedObject superview];
 
-//        NSLog(@"ac %@ %@ %@", self, _editedObject, superview);
-
-      
       [self setFrame: [_editedObject frame]];
       [self setBounds: [self frame]];
 
@@ -189,8 +186,6 @@ static BOOL currently_displaying = NO;
 	object: self];
 
       parent = [document parentEditorForEditor: self];
-
-//        NSLog(@"ac parent %@", parent);
 
       if ([parent isKindOfClass: [GormViewEditor class]])
 	[parent setNeedsDisplay: YES];
@@ -250,7 +245,6 @@ static BOOL currently_displaying = NO;
 
   if (closed == NO)
     {
-//        NSLog(@"%@ close", self);
       [self deactivate];
       
       [document editor: self didCloseForObject: _editedObject];
@@ -258,23 +252,19 @@ static BOOL currently_displaying = NO;
     }
   else
     {
-      NSLog(@"%@ close but already closed", self);
+      NSDebugLog(@"%@ close but already closed", self);
     }
 }
 
 - (void) deactivate
 {
-//    NSLog(@"%@ deactivate", self);
-
   if (activated == YES)
     {
       NSView *superview = [self superview];
 
       [self removeSubview: _editedObject];
-//        NSLog(@"superview %@ %@", [superview subviews]);
       [superview replaceSubview: self
 		 with: _editedObject];
-//        NSLog(@"superview %@ %@", [superview subviews]);
 
       [[NSNotificationCenter defaultCenter] removeObserver: self];
 
@@ -284,7 +274,6 @@ static BOOL currently_displaying = NO;
 
 - (void) dealloc
 {
-//    NSLog(@"%@ dealloc", self);
   if (closed == NO)
     [self close];
 
@@ -851,7 +840,6 @@ static BOOL currently_displaying = NO;
     }
   else
     {
-//        NSLog(@"seting frame %@", NSStringFromRect(frame));
       [self setFrame: frame];
     }
 }
@@ -1151,7 +1139,6 @@ static BOOL currently_displaying = NO;
 {
   if (anObject != _editedObject)
     {
-//        NSLog(@"%@ windowAndRect: object unknown", self);
       return nil;
     }
   else
@@ -1189,12 +1176,6 @@ static BOOL currently_displaying = NO;
 
   return;  
 }
-
-//  - (BOOL) acceptsTypeFromArray: (NSArray*)types
-//  {
-//    NSLog(@"I said why not !");
-//    return [types containsObject: GormLinkPboardType];
-//  }
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
@@ -1246,27 +1227,6 @@ static BOOL currently_displaying = NO;
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  // the followinfg commented code was useless
-
-//    BOOL onKnob = NO;
-
-//    {
-//      GormViewEditor *parent = [document parentEditorForEditor: self];
-    
-//      if ([parent respondsToSelector: @selector(selection)] &&
-//  	[[parent selection] containsObject: _editedObject])
-//        {
-//  	IBKnobPosition	knob = IBNoneKnobPosition;
-//  	NSPoint mouseDownPoint = 
-//  	  [self convertPoint: [theEvent locationInWindow]
-//  		fromView: nil];
-//  	knob = GormKnobHitInRect([self bounds], 
-//  				 mouseDownPoint);
-//  	if (knob != IBNoneKnobPosition)
-//  	  onKnob = YES;
-//        }
-//    }
-
   if ([theEvent modifierFlags] & NSControlKeyMask)
     // start a action/outlet connection
     {
@@ -1291,11 +1251,6 @@ static BOOL currently_displaying = NO;
   else
     // just send the event to our parent
     {
-//        NSLog(@"md %@ parent is %@ (%@)", self, parent, document);
-//        NSLog(@"md %@ super %@, super's super %@,", 
-//  	    self, [self superview],
-//  	    [[self superview] superview]);
-
       if (parent)
 	{
 	  [parent mouseDown: theEvent];
@@ -1356,20 +1311,10 @@ static BOOL currently_displaying = NO;
     {
       NSString *name;
       name = [dragPb stringForType: GormSoundPboardType];
-      // NSLog(@"sound drag'n'dropping is not currently working, please fix it");
       if([(id)_editedObject respondsToSelector: @selector(setSound:)])
 	{
 	  [(id)_editedObject setSound: [NSSound soundNamed: name]];
 	}
-
-      /*
-      else
-	{
-	  int result = NSRunAlertPanel(NULL, 
-				       _(@"The edited object does not accept sounds."),
-				       _(@"Cancel"));
-	}
-      */
       return YES;
     }
   return NO;
@@ -1431,10 +1376,7 @@ static BOOL currently_displaying = NO;
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
-    }
-
-
-    
+    }    
 }
 
 - (void) displayRectIgnoringOpacity: (NSRect) rect
@@ -1465,9 +1407,6 @@ static BOOL currently_displaying = NO;
   return NO;
 }
 @end
-
-
-
 
 
 @implementation GormViewEditor (ResponderAdditions)
@@ -1630,8 +1569,6 @@ static BOOL done_editing;
   [editField setEditable: YES];
   didDrawBackground = [editField drawsBackground];
   [editField setDrawsBackground: YES];
-
-//    [editField display];
 
   [nc addObserver: self
          selector: @selector(handleNotification:)
