@@ -1,3 +1,8 @@
+2002-12-02  Adam Fedor  <fedor@gnu.org>
+
+	* GModelDecoder.m ([GormDocument -connectionObjectForObject:]): 
+	Return nil if object is nil.
+
 2002-11-29  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* NOTE: Added a patch submitted by Fabien Vallon to 

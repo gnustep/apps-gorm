@@ -248,6 +248,8 @@ static BOOL gormFileOwnerDecoded;
    is a name for the connection object */
 - (id) connectionObjectForObject: object
 {
+  if (object == nil)
+    return nil;
   if (object == gormNibOwner)
     object = filesOwner;
   else
