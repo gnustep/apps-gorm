@@ -1,3 +1,33 @@
+2002-07-01  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* ClassInformation.plist: new outlet for NSWindowController
+	* Gorm.m
+	* GormWindowEditor.m
+	* GormTableViewEditor.m
+	* GormObjectEditor.m
+	Bugfixes for proper drawing/updating of selection.
+
+	* GormDocument.m
+	Only the toplevel menu goes into the objectview panel.
+	The last directory used for opening is now saved and proposed
+	as the default for next time.
+
+	* GormObjectEditor.m
+	* Resources/GormViewSizeInspector.gorm
+	* Resources/GormViewSizeInspector.classes
+	The size inspector is now loaded from a gorm file.
+	
+	* GormDocument.m
+	* Palettes/0Menus/GormNSMenu.m
+	* Palettes/0Menus/GormNSMenu.h
+	* Palettes/0Menus/main.m
+	* Palettes/0Menus/GormMenuEditor.m
+	* Palettes/0Menus/GNUmakefile
+	GormNSMenu replaces NSMenu when editing interface.
+
+	* GormInspectorsManager.m: fix selected item in popupbutton when using
+	keyEquivalent (patch from Fabien Vallon).
+	
 2002-04-01  Pierre-Yves  <pyrivail@spocky>
 
 	* GormTableViewEditor.m ([GormTableViewEditor -activate]): 

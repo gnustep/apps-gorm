@@ -24,6 +24,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
+#include "GormNSMenu.h"
 
 @interface MenusPalette: IBPalette
 {
@@ -50,7 +51,7 @@
   /*
    * The Info menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Info Panel..." 
 	       action: @selector(infoPanel:) 
 	keyEquivalent: @""];
@@ -83,7 +84,7 @@
   /*
    * The Font menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Font Panel..." 
 	       action: @selector(orderFrontFontPanel:) 
 	keyEquivalent: @"t"];
@@ -134,7 +135,7 @@
   /*
    * The Document menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Open..." 
 	       action: @selector(open:) 
 	keyEquivalent: @"o"];
@@ -182,7 +183,7 @@
   /*
    * The Text menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Align Left" 
 	       action: @selector(alignSelLeft:) 
 	keyEquivalent: @""];
@@ -224,7 +225,7 @@
   /*
    * The Edit menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Cut" 
 	       action: @selector(cut:) 
 	keyEquivalent: @"x"];
@@ -260,7 +261,7 @@
   /*
    * The Find menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Find Panel..." 
 	       action: NULL
 	keyEquivalent: @"f"];
@@ -299,14 +300,14 @@
   /*
    * The Format menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   /*
    * Font submenu
    */
   i = [m addItemWithTitle: @"Font" 
 		   action: NULL
 	    keyEquivalent: @""];
-  s = [NSMenu new];
+  s = [GormNSMenu new];
   [s addItemWithTitle: @"Font Panel..." 
 	       action: @selector(orderFrontFontPanel:) 
 	keyEquivalent: @"t"];
@@ -343,7 +344,7 @@
   i = [m addItemWithTitle: @"Text" 
 		   action: NULL
 	    keyEquivalent: @""];
-  s = [NSMenu new];
+  s = [GormNSMenu new];
   [s addItemWithTitle: @"Align Left" 
 	       action: @selector(alignSelLeft:) 
 	keyEquivalent: @""];
@@ -409,7 +410,7 @@
   /*
    * The Windows menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Arrange In Front" 
 	       action: @selector(arrangeInFront:)
 	keyEquivalent: @""];
@@ -460,7 +461,7 @@
   /*
    * The Services menu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m setTitle: @"Services"];
   i = [[NSMenuItem alloc] initWithTitle: @"Services" 
 				 action: @selector(submenuAction:)
@@ -484,7 +485,7 @@
   /*
    * The general submenu
    */
-  m = [NSMenu new];
+  m = [GormNSMenu new];
   [m addItemWithTitle: @"Item" 
 	       action: NULL
 	keyEquivalent: @""];

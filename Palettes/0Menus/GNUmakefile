@@ -28,6 +28,7 @@ PALETTE_NAME = 0Menus
 0Menus_OBJC_FILES = \
 	GormMenuEditor.m \
 	GormMenuInspectors.m \
+	GormNSMenu.m \
 	main.m
 0Menus_PRINCIPAL_CLASS = MenusPalette
 0Menus_RESOURCE_FILES = MenusPalette.tiff

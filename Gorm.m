@@ -718,6 +718,7 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 	{
 	  [self stopConnecting];
 	}
+      [selectionOwner makeSelectionVisible: NO];
       selectionOwner = obj;
       [[self inspectorsManager] updateSelection];
     }
@@ -743,7 +744,7 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 		  @"Richard Frith-Macdonald <rfm@gnu.org>"]
 	forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
-  [d setObject: @"Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc."
+  [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc."
 	forKey: @"Copyright"];
   [d setObject: @"Released under the GNU General Public License 2.0"
 	forKey: @"CopyrightDescription"];
@@ -1070,6 +1071,8 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
       [a beginArchiving];
       [archiver encodeClassName: @"GormNSWindow" 
 		intoClassName: @"NSWindow"];
+      [archiver encodeClassName: @"GormNSMenu" 
+		intoClassName: @"NSMenu"];
       [archiver encodeRootObject: a];
       d = RETAIN([archiver archiverData]);
       [a endArchiving];
@@ -1233,7 +1236,7 @@ main(int argc, const char **argv)
   NSImageDoesCaching = YES;
   //[NSObject enableDoubleReleaseCheck: YES];
 
-startDate = [[NSDate alloc] init];
+  startDate = [[NSDate alloc] init];
   NSApplicationMain(argc, argv);
 
   return 0;

@@ -623,6 +623,8 @@ static BOOL done_editing;
   NSPoint		mouseDownPoint;
   NSMutableArray	*array;
 
+  NSLog(@"mouseDown %@", self);
+
   mouseDownPoint = [edit_view convertPoint: [theEvent locationInWindow]
 				  fromView: nil];
 
@@ -1289,6 +1291,7 @@ static BOOL done_editing;
 
 - (BOOL) activate
 {
+  NSLog(@"GormWindowEditor activate");
   NSAssert(isClosed == NO, NSInternalInconsistencyException);
   if (original == nil)
     {
@@ -1373,6 +1376,7 @@ static BOOL done_editing;
 
 - (void) deactivate
 {
+  NSLog(@"GormWindowEditor deactivate");
   if (original != nil)
     {
       NSEnumerator	*enumerator;
@@ -1389,8 +1393,15 @@ static BOOL done_editing;
 	{
 	  [original addSubview: sub];
 	}
+
+      [[NSNotificationCenter defaultCenter]
+	removeObserver: self
+	name: NSWindowDidBecomeKeyNotification
+	object: nil];
+
       DESTROY(original);
-      RELEASE(self);
+      RELEASE(self);  
+
     }
 }
 
@@ -1572,6 +1583,19 @@ static BOOL done_editing;
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
 
+
+  [[NSNotificationCenter defaultCenter]
+    addObserver: self
+    selector: @selector(windowDidResignMain:)
+    name: NSWindowDidResignMainNotification
+    object: win];
+
+  [[NSNotificationCenter defaultCenter]
+    addObserver: self
+    selector: @selector(windowDidBecomeMain:)
+    name: NSWindowDidBecomeMainNotification
+    object: win];
+
   [win setInitialFirstResponder: self];
   return self;
 }
@@ -1665,6 +1689,11 @@ static BOOL done_editing;
       NSArray		*views;
       NSEnumerator	*enumerator;
       NSView		*sub;
+
+      if ([[NSApplication sharedApplication] selectionOwner] != self)
+	{
+	  [[[NSApplication sharedApplication] selectionOwner] deactivate];
+	}
 
       [self makeSelectionVisible: NO];
       /*
@@ -1906,5 +1935,24 @@ static BOOL done_editing;
 - (NSWindow*) window
 {
   return [super window];
+}
+
+
+- (void)windowDidBecomeMain: (id) aNotification
+{
+  NSLog(@"windowDidBecomeMain %@", selection);
+  if ([NSApp isConnecting] == NO)
+    {
+      [document setSelectionFromEditor: self];
+      NSLog(@"windowDidBecomeMain %@", selection);
+      [self makeSelectionVisible: YES];
+    }
+}
+
+- (void)windowDidResignMain: (id) aNotification
+{
+  NSLog(@"windowDidResignMain");
+  // [document setSelectionFromEditor: self];
+  [self makeSelectionVisible: NO];
 }
 @end

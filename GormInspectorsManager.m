@@ -436,6 +436,7 @@
       [[inspector revertButton] removeFromSuperview];
       [[inspector window] setContentView:
 	[[inspectorView subviews] lastObject]];
+      [popup selectItemAtIndex: current];
 
       ASSIGN(oldInspector, newInspector);
       inspector = [cache objectForKey: newInspector];

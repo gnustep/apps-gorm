@@ -1,9 +1,9 @@
-/* GormMatrixEditor.m - Editor for matrices.
+/* GormTableViewEditor.m - Editor for matrices.
  *
  * Copyright (C) 2002 Free Software Foundation, Inc.
  *
  * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
- * Date:	Sep 2002
+ * Date:	2002
  * 
  * This file is part of GNUstep.
  * 
@@ -68,6 +68,8 @@ static NSColor *_oldColor;
       [tableView setAllowsColumnReordering: YES];
       [tableView setGormDelegate: self];
     }
+  
+
   return YES;
 }
 
@@ -75,8 +77,8 @@ static NSColor *_oldColor;
 	   inDocument: (id/*<IBDocuments>*/)aDocument
 {
   self = [super init];
-  [self changeObject: anObject];
   document = aDocument;
+  [self changeObject: anObject];
   return self;
 }
 
@@ -90,10 +92,6 @@ static NSColor *_oldColor;
   NSLog(@"close");
   if (tableView)
     {
-      if ([tableView selectedColumn] != -1)
-	{
-	  [tableView deselectColumn: [tableView selectedColumn]];
-	}
       [self closeSubeditors];
 	  
       [self deactivate];
@@ -122,6 +120,11 @@ static NSColor *_oldColor;
 {
   if (tableView)
     {
+      [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
+      if ([tableView selectedColumn] != -1)
+	{
+	  [tableView deselectColumn: [tableView selectedColumn]];
+	}
       [tableView setAllowsColumnResizing:
 		  [tableView gormAllowsColumnResizing]];
       [tableView setAllowsColumnSelection:
@@ -133,6 +136,7 @@ static NSColor *_oldColor;
       [tableView setAllowsColumnReordering:
 		  [tableView gormAllowsColumnReordering]];
       [tableView setGormDelegate: nil];
+      [tableView setNeedsDisplay: YES];
     }
   NSLog(@"deactivate");
   selected = nil;
@@ -168,11 +172,16 @@ static NSColor *_oldColor;
 - (void) copySelection
 {
   NSLog(@"copySelection");
-  if (selected != nil)
+  if ([[[self selection] objectAtIndex: 0] 
+	isKindOf: [NSTableColumn class]])
     {
       [document copyObjects: [self selection]
 		       type: IBTableColumnPboardType
 	       toPasteboard: [NSPasteboard generalPasteboard]];
+    }
+  else
+    {
+      NSLog(@"no paste");
     }
 }
 
@@ -199,6 +208,12 @@ static NSColor *_oldColor;
   if ([objects count] > 1)
     {
       NSLog(@"warning strange behaviour : GormTableViewEditor pasteInSelection");
+    }
+  else if ([[objects objectAtIndex: 0] isKindOf: [NSTableColumn class]]
+	   == NO)
+    {
+      NSLog(@"invalid data in IBTableColumnPboardType");
+      return;
     }
 	    
   [tableView addTableColumn: [objects objectAtIndex: 0]];
@@ -263,7 +278,6 @@ static NSColor *_oldColor;
 - (void) selectObjects: (NSArray*)anArray
 {
   id	obj = [anArray lastObject];
-  NSLog(@"selectObjects");
   [self makeSelectionVisible: NO];
   selected = obj;
   [document setSelectionFromEditor: self];
@@ -319,11 +333,34 @@ static NSColor *_oldColor;
 	  [hitView mouseDown: theEvent];
 	}
     }
+  else if ([hitView isKindOf: [NSScroller class]])
+    {
+      [hitView mouseDown: theEvent];
+    }
+  else if (hitView == tableView)
+    {
+      if ([tableView selectedColumn] != -1)
+	{
+	  [tableView deselectColumn: [tableView selectedColumn]];
+	}
+    }
 }
 
 - (void) changeObject: (id)anObject
 {
+  if (tableView != nil)
+    {
+      if ([tableView selectedColumn] != -1)
+	{
+	  [tableView deselectColumn: [tableView selectedColumn]];
+	}
+      [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
+    }
   ASSIGN(tableView, anObject);
+
+  [tableView setBackgroundColor: [NSColor whiteColor]];
+  [tableView setNeedsDisplay: YES];
+  [self selectObjects: [NSArray arrayWithObject: tableView]];
   [self activate];
 }
 
@@ -339,7 +376,8 @@ static NSColor *_oldColor;
     }
   else
     {
-      NSLog(@"no selection");
+      [self selectObjects:
+	      [NSArray arrayWithObject: tableView]];
     }
 }
 
@@ -355,7 +393,9 @@ static NSColor *_oldColor;
     }
   else
     {
-      NSLog(@"no selection");
+      selected = nil;
+      [self selectObjects:
+	      [NSArray arrayWithObject: tableView]];
     }
 }
 
@@ -423,15 +463,17 @@ static NSColor *_oldColor;
 
 - (NSArray*) selection
 {
-  if (selected == nil)
+  if (tableView == nil)
     return [NSArray array];
+  else if (selected == nil)
+    return [NSArray arrayWithObject: tableView];
   else
     return [NSArray arrayWithObject: selected];
 }
 
 - (unsigned) selectionCount
 {
-  return (selected == nil) ? 0 : 1;
+  return 1;
 }
 
 - (void) drawSelection

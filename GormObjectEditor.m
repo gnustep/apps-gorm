@@ -740,10 +740,25 @@ NSImage	*mVLine = nil;
   self = [super init];
   if (self != nil)
     {
-      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" owner: self] == NO)
+      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" 
+		    owner: self] == NO)
 	{
-	  NSLog(@"Could not open gorm GormViewSizeInspector");
-	  return nil;
+
+	  NSDictionary	*table;
+	  NSBundle	*bundle;
+	  
+	  table = [NSDictionary dictionaryWithObject: self
+				forKey: @"NSOwner"];
+	  bundle = [NSBundle mainBundle];
+
+	  if ( [bundle loadNibFile: @"GormViewSizeInspector"
+		       externalNameTable: table
+		       withZone: [self zone]] == NO)
+	    {
+	      NSLog(@"Could not open gorm GormViewSizeInspector");
+	      NSLog(@"self %@", self);
+	      return nil;
+	    }
 	}
 
       [top setTag: NSViewMaxYMargin];  
@@ -777,8 +792,23 @@ NSImage	*mVLine = nil;
                         [[control cellAtIndex: 1] floatValue],
                         [[control cellAtIndex: 2] floatValue],
                         [[control cellAtIndex: 3] floatValue]);
-      [object setFrame: rect];
-      [object setNeedsDisplay: YES];
+
+      if (NSEqualRects(rect, [object frame]) == NO)
+	{
+	  NSRect oldFrame = [object frame];
+
+	  [object setFrame: rect];
+	  [object display];
+
+	  if ([object superview])
+	    [[object superview] displayRect:
+				  GormExtBoundsForRect(oldFrame)];
+	  [[object superview] lockFocus];
+	  GormDrawKnobsForRect([object frame]);
+	  GormShowFastKnobFills();
+	  [[object superview] unlockFocus];
+	  [[object window] flushWindow];
+	}
     }
 }
 
@@ -826,7 +856,7 @@ NSImage	*mVLine = nil;
 
 - (void) setObject: (id)anObject
 {
-  if (object != nil)
+  if ((object != nil) && (anObject != object))
     [object setPostsFrameChangedNotifications: NO];
 
   if (anObject != nil && anObject != object)

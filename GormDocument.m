@@ -184,15 +184,21 @@ static NSImage	*classesImage = nil;
    * Add top-level objects to objectsView and open their editors.
    */
   if ([anObject isKindOfClass: [NSWindow class]] == YES
-    || [anObject isKindOfClass: [NSMenu class]] == YES
-    || [anObject isKindOfClass: [GSNibItem class]] == YES)
+      //      || [anObject isKindOfClass: [NSMenu class]] == YES
+      || [anObject isKindOfClass: [GSNibItem class]] == YES)
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
+	  //	  RETAIN(anObject);
 	  [anObject setReleasedWhenClosed: NO];
 	}
+    }
+
+  if ([anObject isKindOfClass: [NSMenu class]] == YES)
+    {
+      [[self openEditorForObject: anObject] activate];
     }
 
   /*
@@ -292,7 +298,8 @@ static NSImage	*classesImage = nil;
 
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
-  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];  
+  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
+
 }
 
 - (void) changeCurrentClass: (id)sender
@@ -1340,6 +1347,7 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"GSNibContainer" asClassName: @"GormDocument"];
   [u decodeClassName: @"GSNibItem" asClassName: @"GormObjectProxy"];
   [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
+  [u decodeClassName: @"NSMenu" asClassName: @"GormNSMenu"];
   [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
   [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
@@ -1413,7 +1421,6 @@ static NSImage	*classesImage = nil;
       NSMapInsert(objToName, (void*)obj, (void*)name);
       if ([obj isKindOfClass: [NSMenu class]] == YES)
 	{
-	  [objectsView addObject: obj];
 	  if ([name isEqual: @"NSMenu"] == YES)
 	    {
 	      NSRect	frame = [[NSScreen mainScreen] frame];
@@ -1421,6 +1428,7 @@ static NSImage	*classesImage = nil;
 	      [[obj window] setFrameTopLeftPoint:
 		NSMakePoint(1, frame.size.height-200)];
 	      [[self openEditorForObject: obj] activate];
+	      [objectsView addObject: obj];
 	    }
 	}
       else if ([obj isKindOfClass: [NSWindow class]] == YES)
@@ -1455,6 +1463,8 @@ static NSImage	*classesImage = nil;
   NSArray	*fileTypes;
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
+  NSString *pth = [[NSUserDefaults standardUserDefaults] 
+		    objectForKey:@"OpenDir"];
 
   if ([[NSUserDefaults standardUserDefaults] boolForKey: @"OpenNibs"] == YES)
     {
@@ -1467,9 +1477,11 @@ static NSImage	*classesImage = nil;
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: nil
+  result = [oPanel runModalForDirectory: pth
 				   file: nil
 				  types: fileTypes];
+  [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
+					 forKey:@"OpenDir"];
   if (result == NSOKButton)
     {
       return [self loadDocument: [oPanel filename]];
@@ -1607,17 +1619,37 @@ static NSImage	*classesImage = nil;
   hasSetDefaults = YES;
   if ([type isEqual: @"Application"] == YES)
     {
-      NSMenu	*aMenu = [NSMenu new];
+      NSMenu	*aMenu;
       NSWindow	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask
                         | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
-      aWindow = [[NSWindow allocSubstitute]
-		  initWithContentRect: NSMakeRect(0,0,600, 400)
-		  styleMask: style
-		  backing: NSBackingStoreRetained
-		  defer: NO];
+      if ([NSMenu respondsToSelector: @selector(allocSubstitute)])
+	{
+	  aMenu = [[NSMenu allocSubstitute] init];
+	}
+      else
+	{
+	  aMenu = [[NSMenu alloc] init];
+	}
+
+      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+	{
+	  aWindow = [[NSWindow allocSubstitute]
+		      initWithContentRect: NSMakeRect(0,0,600, 400)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
+      else
+	{
+	  aWindow = [[NSWindow alloc]
+		      initWithContentRect: NSMakeRect(0,0,600, 400)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: @"My Window"];
@@ -1632,9 +1664,12 @@ static NSImage	*classesImage = nil;
 		keyEquivalent: @"h"];	
       [aMenu addItemWithTitle: @"Quit" 
 		       action: @selector(terminate:)
-		keyEquivalent: @"q"];	
+		keyEquivalent: @"q"];
       [self setName: @"NSMenu" forObject: aMenu];
       [self attachObject: aMenu toParent: nil];
+      [objectsView addObject: aMenu];
+      //      RETAIN(aMenu);
+
       [[aMenu window] setFrameTopLeftPoint:
 	NSMakePoint(1, frame.size.height-200)];
       RELEASE(aMenu);
@@ -1885,6 +1920,8 @@ static NSImage	*classesImage = nil;
   [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView"
 	      intoClassName: @"GSCustomView"];
+  [archiver encodeClassName: @"GormNSMenu"
+	      intoClassName: @"NSMenu"];
   [archiver encodeClassName: @"GormNSWindow"
 	      intoClassName: @"NSWindow"];
   [archiver encodeClassName: @"GormNSBrowser"
@@ -1964,7 +2001,7 @@ static NSImage	*classesImage = nil;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
+  NSLog(@"setSelectionFromEditor %@", anEditor);
   [nc postNotificationName: IBSelectionChangedNotification
 		    object: anEditor];
 }

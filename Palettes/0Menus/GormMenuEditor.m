@@ -114,11 +114,19 @@
   return nil;
 }
 
+- (BOOL) resignFirstResponder
+{
+  return NO;
+}
+
 - (void) mouseDown: (NSEvent*)theEvent
 {
   NSPoint	loc = [theEvent locationInWindow];
   NSView	*hit = [super hitTest: loc];
   
+  [[self window] becomeMainWindow];
+  [[self window] makeFirstResponder: self];
+
   if (hit == rep)
     {
       int	pos = [rep indexOfItemAtPoint: loc];
@@ -404,6 +412,7 @@
 
 - (void) deactivate
 {
+  NSLog(@"deactivate");
   if (original != nil)
     {
       NSEnumerator	*enumerator;
@@ -413,6 +422,7 @@
       /*
        * Swap ourselves out and the original window content view in.
        */
+      [self makeSelectionVisible: NO];
       [original setFrame: [self frame]];
       [[rep window] setContentView: original];
       enumerator = [[self subviews] objectEnumerator];
