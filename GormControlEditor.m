@@ -622,8 +622,8 @@
 @implementation GormTextFieldEditor
 - (void) mouseDown:  (NSEvent*)theEvent
 {
+  // double-clicked -> let's edit
   if (([theEvent clickCount] == 2) && [parent isOpened])
-    // double-clicked -> let's edit
     {
       [self editTextField: _editedObject
 	    withEvent: theEvent];
@@ -648,6 +648,10 @@
   if ([types containsObject: IBFormatterPboardType] == YES)
     {
       result = NSDragOperationCopy;
+    }
+  else
+    {
+      result = [super draggingEntered: sender];
     }
 
   return result;
@@ -696,6 +700,10 @@
 	    }
 	}
     }
+  else
+    {
+      [super performDragOperation: sender];
+    }
 
   return result;
 }
@@ -711,6 +719,10 @@
   if ([types containsObject: IBFormatterPboardType] == YES)
     {
       result = YES;
+    }
+  else
+    {
+      result = [super prepareForDragOperation: sender];
     }
 
   return result;

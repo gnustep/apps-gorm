@@ -1,3 +1,10 @@
+2004-10-26 21:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormControlEditor.m: Added code to call the superclass in
+	the dragging methods if the type being dragged isn't a formatter.
+	This was a bug introduced on 10-17.   Corrected now.  Thanks to
+	Fabien Vallon for the report.
+	
 2004-10-24 01:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GNUmakefile.preamble
