@@ -1093,22 +1093,19 @@ static NSButtonType _buttonTypeForObject( id button )
   aMenu = [NSMenu new];
   [aMenu addItemWithTitle: @"Create Subclass..." 
 	 action: @selector(createSubclass:) 
-	    keyEquivalent: @""];
+	    keyEquivalent: @"C"];
   [aMenu addItemWithTitle: @"Load Class..." 
 		   action: @selector(loadClass:) 
-	    keyEquivalent: @""];
-  // [aMenu addItemWithTitle: @"Edit Class..." 
-  //		   action: @selector(editClass:) 
-  //	    keyEquivalent: @""];  
+	    keyEquivalent: @"L"];
   [aMenu addItemWithTitle: @"Create Class's Files..." 
 		   action: @selector(createClassFiles:) 
-	    keyEquivalent: @""];  
+	    keyEquivalent: @"B"];  
   [aMenu addItemWithTitle: @"Instantiate" 
 		   action: @selector(instantiateClass:) 
-	    keyEquivalent: @""];
+	    keyEquivalent: @"I"];
   [aMenu addItemWithTitle: @"Add Outlet/Action..."
 	           action: @selector(addAttributeToClass:)
-	    keyEquivalent: @""];
+	    keyEquivalent: @"A"];
   [aMenu addItemWithTitle: @"Remove..."
 	           action: @selector(remove:)
 	    keyEquivalent: @""];

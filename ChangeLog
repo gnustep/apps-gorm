@@ -1,3 +1,8 @@
+2002-11-19  Gregory John Casamento  <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added key equivalents for operations in the Classes
+	menu.
+	
 2002-11-18  Pierre-Yves Rivaille  <pyrivail@ens-lyon.fr>
  
 	* GNUMakefile: added GormViewSizeInspector.m, GormGenericEditor.m
