@@ -1,3 +1,10 @@
+2001-10-23  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormObjectEditor.m: Updated [GormObjectEditor refreshCells] so that 
+	setTitle is not called with nil anymore (but with @"").
+	See change <Tue Oct 23 10:32:18 2001> in gnustep/core/gui/Changelog
+	
+
 2001-10-17  Laurent Julliard  <laurent@julliard-online.org>>
 
 	* Palettes/2Controls/GormFormInspector.gorm: New Form inspector.
