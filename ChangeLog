@@ -1,3 +1,10 @@
+2001-07-10  Richard Frith-Macdonald <rfm@gnu.org>
+
+	GormDocument.m: ([-detachObject:]) retain object name on entry and
+	release on exit, or if the object is not in the name table the detach
+	process could cause the name to be released before we try to use it
+	to remove the object from the table.
+
 2001-07-09  Richard Frith-Macdonald <rfm@gnu.org>
 
 	Gorm.m: Tidied code a little to conform to coding standards

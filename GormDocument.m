@@ -468,7 +468,7 @@ static NSImage	*classesImage = nil;
 
 - (void) detachObject: (id)anObject
 {
-  NSString	*name = [self nameForObject: anObject];
+  NSString	*name = RETAIN([self nameForObject: anObject]);
   unsigned	count;
 
   [[self editorForObject: anObject create: NO] close];
@@ -496,6 +496,7 @@ static NSImage	*classesImage = nil;
   [self setObject: anObject isVisibleAtLaunch: NO];
 
   [nameTable removeObjectForKey: name];
+  RELEASE(name);
 }
 
 - (void) detachObjects: (NSArray*)anArray
