@@ -24,6 +24,34 @@
 
 #include "GormPrivate.h"
 
+static NSRect
+NSRectFromPoints(NSPoint p0, NSPoint p1)
+{
+  NSRect	r;
+
+  if (p0.x < p1.x)
+    {
+      r.origin.x = p0.x;
+      r.size.width = p1.x - p0.x;
+    }
+  else
+    {
+      r.origin.x = p1.x;
+      r.size.width = p0.x - p1.x;
+    }
+  if (p0.y < p1.y)
+    {
+      r.origin.y = p0.y;
+      r.size.height = p1.y - p0.y;
+    }
+  else
+    {
+      r.origin.y = p1.y;
+      r.size.height = p0.y - p1.y;
+    }
+  return r;
+}
+
 /*
  * Methods to return the images that should be used to display objects within
  * the matrix containing the objects in a document.
@@ -114,7 +142,6 @@
   NSView		*original;
   NSMutableArray	*selection;
   NSMutableArray	*subeditors;
-  NSPoint		mouseDownPoint;
   BOOL			shouldBeginDrag;
   BOOL			isClosed;
   NSPasteboard		*dragPb;
@@ -177,8 +204,23 @@
       NSEnumerator	*enumerator;
       NSView		*view = nil;
       IBKnobPosition	knob = IBNoneKnobPosition;
+      NSDate		*future = [NSDate distantFuture];
+      BOOL		acceptsMouseMoved;
+      NSPoint		mouseDownPoint;
+      NSPoint		lastPoint;
+      NSPoint		point;
+      unsigned		eventMask;
+      NSEvent		*e;
+
+      /*
+       * Save window state info.
+       */
+      acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
 
       mouseDownPoint = [theEvent locationInWindow];
+      eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
+	| NSLeftMouseDraggedMask | NSMouseMovedMask | NSPeriodicMask;
+      [[self window] setAcceptsMouseMovedEvents: YES];
 
       /*
        * If our selection is not our window, it must be one or more
@@ -293,12 +335,100 @@
 
       if (view == self)
 	{
+	  NSGraphicsContext	*ctxt = [NSGraphicsContext currentContext];
+	  NSEnumerator		*enumerator;
+	  NSMutableArray	*array;
+	  NSEventType		eType;
+	  NSRect		r;
+
 	  /*
 	   * Clicked on an window background - make window the selection.
 	   */
 	  [self makeSelectionVisible: NO];
 	  [self selectObjects: [NSArray arrayWithObject: edited]];
-	  shouldBeginDrag = NO;
+
+	  /*
+	   * Track mouse movements until left mouse up.
+	   */
+	  lastPoint = mouseDownPoint;
+	  [self lockFocus];
+	  [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
+	  e = [NSApp nextEventMatchingMask: eventMask
+				 untilDate: future
+				    inMode: NSEventTrackingRunLoopMode
+				   dequeue: YES];
+	  eType = [e type];
+	  while (eType != NSLeftMouseUp)
+	    {
+	      if (eType != NSPeriodic)
+		{
+		  point = [self convertPoint: [e locationInWindow]
+				    fromView: nil];
+		}
+	      if (eType == NSPeriodic &&  NSEqualPoints(point, lastPoint) == NO)
+		{
+		  /*
+		   * Clear old box and draw new one.
+		   * FIXME - there has to be a more efficient way to restore
+		   * the display under the box.
+		   */
+		  [[self window] disableFlushWindow];
+		  r = NSRectFromPoints(lastPoint, mouseDownPoint);
+		  r.origin.x--;
+		  r.origin.y--;
+		  r.size.width += 2;
+		  r.size.height += 2;
+		  [self displayRect: r];
+		  r = NSRectFromPoints(point, mouseDownPoint);
+		  DPSsetgray(ctxt, NSBlack);
+		  DPSmoveto(ctxt, NSMinX(r), NSMinY(r));
+		  DPSlineto(ctxt, NSMinX(r), NSMaxY(r));
+		  DPSlineto(ctxt, NSMaxX(r), NSMaxY(r));
+		  DPSlineto(ctxt, NSMaxX(r), NSMinY(r));
+		  DPSlineto(ctxt, NSMinX(r), NSMinY(r));
+		  DPSstroke(ctxt);
+		  [[self window] enableFlushWindow];
+		  [[self window] flushWindow];
+		  lastPoint = point;
+		}
+	      e = [NSApp nextEventMatchingMask: eventMask
+				     untilDate: future
+					inMode: NSEventTrackingRunLoopMode
+				       dequeue: YES];
+	      eType = [e type];
+	    }
+	  [NSEvent stopPeriodicEvents];
+
+	  /*
+	   * restore the display
+	   */
+	  r = NSRectFromPoints(lastPoint, mouseDownPoint);
+	  r.origin.x--;
+	  r.origin.y--;
+	  r.size.width += 2;
+	  r.size.height += 2;
+	  [self displayRect: r];
+	  [self unlockFocus];
+
+	  /*
+	   * Now finally check the selected rectangle to find the views in it.
+	   */
+	  point = [self convertPoint: [e locationInWindow]
+			    fromView: nil];
+	  r = NSRectFromPoints(point, mouseDownPoint);
+	  array = [NSMutableArray arrayWithCapacity: 8];
+	  enumerator = [[self subviews] objectEnumerator];
+	  while ((view = [enumerator nextObject]) != nil)
+	    {
+	      if (NSIntersectsRect(r, [view frame]) == YES)
+		{
+		  [array addObject: view];
+		}
+	    }
+	  if ([array count] > 0)
+	    {
+	      [self selectObjects: array];
+	    }
 	}
       else if (view != nil)
 	{
@@ -321,7 +451,13 @@
 	       */
 	    }
 	}
+
       [self makeSelectionVisible: YES];
+
+      /*
+       * Restore state to what it was on entry.
+       */
+      [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
     }
 }
 
@@ -582,7 +718,7 @@
       if ([selection count] > 0 && [selection lastObject] != edited)
 	{
 	  NSEnumerator	*enumerator = [selection objectEnumerator];
-	  NSView		*view;
+	  NSView	*view;
 
 	  [[self window] disableFlushWindow];
 	  while ((view = [enumerator nextObject]) != nil)
@@ -592,6 +728,7 @@
 	      [self displayRect: rect];
 	    }
 	  [[self window] enableFlushWindow];
+	  [[self window] flushWindowIfNeeded];
 	}
     }
   else
