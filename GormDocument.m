@@ -540,8 +540,7 @@ static NSImage  *fileImage = nil;
 			toParent: aParent];
 	    }
 	}
-      else if ([[anObject documentView] isKindOfClass: 
-					  [NSTextView class]] == YES)
+      else if ([[anObject documentView] isKindOfClass: [NSTextView class]] == YES)
 	{
 	  [self attachObject: [anObject documentView] toParent: aParent];
 	}
@@ -1265,8 +1264,9 @@ static NSImage  *fileImage = nil;
 	{
 	  if(![classManager parseHeader: fileName])
 	    {
+	      NSString *file = [fileName lastPathComponent];
 	      NSString *message = [NSString stringWithFormat: 
-					      _(@"An error occurred while parsing %@"),fileName];
+					      _(@"Unable to parse class in %@"),file];
 	      NSRunAlertPanel(_(@"Problem parsing class"), 
 			      message,
 			      nil, nil, nil);

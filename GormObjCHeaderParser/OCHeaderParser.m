@@ -133,9 +133,16 @@
 	  [scanner scanUpToString: @"@interface" intoString: NULL];
 	  [scanner scanUpToAndIncludingString: @"@end" intoString: &classString];
 	  
-	  cls = AUTORELEASE([[OCClass alloc] initWithString: classString]);
-	  [cls parse];
-	  [classes addObject: cls];
+	  if(classString != nil && [classString length] != 0)
+	    {
+	      cls = AUTORELEASE([[OCClass alloc] initWithString: classString]);
+	      [cls parse];
+	      [classes addObject: cls];
+	    }
+	  else
+	    {
+	      result = NO;
+	    }
 	}
     }
   NS_HANDLER

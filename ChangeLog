@@ -1,3 +1,12 @@
+2004-11-29 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.[hm]: [GormPalettesManager loadPalette:] now
+	returns BOOL. 
+	* GormPalettesManager.m: [GormPalettesManager openPalette:] returns
+	nil of loadPalette returns NO.
+	* GormObjCHeaderParser/OCHeaderParser.m: Returns NO if there is no
+	class in the file.
+
 2004-11-27 13:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/OCClass.m

@@ -357,7 +357,7 @@ static NSImage	*dragImage = nil;
   return self;
 }
 
-- (void) loadPalette: (NSString*)path
+- (BOOL) loadPalette: (NSString*)path
 {
   NSBundle	*bundle;
   NSWindow	*window;
@@ -370,7 +370,7 @@ static NSImage	*dragImage = nil;
   IBPalette	*palette;
   NSImageCell	*cell;
   int		col;
-  
+
   for (col = 0; col < [bundles count]; col++)
     {
       bundle = [bundles objectAtIndex: col];
@@ -378,7 +378,7 @@ static NSImage	*dragImage = nil;
 	{
 	  NSRunAlertPanel (NULL, _(@"Palette has already been loaded"), 
 			   _(@"OK"), NULL, NULL);
-	  return;
+	  return NO;
 	}
     }
   bundle = [NSBundle bundleWithPath: path]; 
@@ -386,16 +386,15 @@ static NSImage	*dragImage = nil;
     {
       NSRunAlertPanel(NULL, _(@"Could not load Palette"), 
 		      _(@"OK"), NULL, NULL);
-      return;
+      return NO;
     }
-  [bundles addObject: bundle];	
 
   path = [bundle pathForResource: @"palette" ofType: @"table"];
   if (path == nil)
     {
       NSRunAlertPanel(NULL, _(@"File 'palette.table' missing"),
 		      _(@"OK"), NULL, NULL);
-      return;
+      return NO;
     }
 
   paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
@@ -403,7 +402,7 @@ static NSImage	*dragImage = nil;
     {
       NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table', you may need to update GNUstep-make and do a clean build of Gorm and it's palettes."),
 		      _(@"OK"), NULL, NULL);
-      return;
+      return NO;
     }
 
   className = [paletteInfo objectForKey: @"Class"];
@@ -411,7 +410,7 @@ static NSImage	*dragImage = nil;
     {
       NSRunAlertPanel(NULL, _(@"No palette class in 'palette.table'"),
 		      _(@"OK"), NULL, NULL);
-      return;
+      return NO;
     }
 
   paletteClass = [bundle classNamed: className];
@@ -419,7 +418,7 @@ static NSImage	*dragImage = nil;
     {
       NSRunAlertPanel (NULL, _(@"Could not load palette class"), 
 		       _(@"OK"), NULL, NULL);
-      return;
+      return NO;
     }
 
   palette = [paletteClass new];
@@ -428,8 +427,11 @@ static NSImage	*dragImage = nil;
       NSRunAlertPanel (NULL, _(@"Palette contains wrong type of class"), 
 		       _(@"OK"), NULL, NULL);
       RELEASE(palette);
-      return;
+      return NO;
     }
+
+  // add to the bundles list...
+  [bundles addObject: bundle];	
 
   exportClasses = [paletteInfo objectForKey: @"ExportClasses"];
   if(exportClasses != nil)
@@ -475,6 +477,8 @@ static NSImage	*dragImage = nil;
   [selectionView selectCellAtRow: 0 column: col];
   [self setCurrentPalette: selectionView];
   RELEASE(palette);
+
+  return YES;
 }
 
 - (id) openPalette: (id) sender
@@ -505,7 +509,10 @@ static NSImage	*dragImage = nil;
 	  NSString	*aFile = [filesToOpen objectAtIndex: i];
 
 	  [newUserPalettes addObject: aFile];
-	  [self loadPalette: aFile];
+	  if([self loadPalette: aFile] == NO)
+	    {
+	      return nil;
+	    }
 	}
 
       // reset the defaults to include the new palette.
