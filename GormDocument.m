@@ -324,7 +324,10 @@ static NSImage	*classesImage = nil;
 
 	  if(destination == nil)
 	    {
-	      destination = firstResponder;
+	      if(aParent == nil)
+		destination = firstResponder;
+	      else
+		destination = aParent;
 	    }
 
 	  // build the connection
@@ -1906,7 +1909,7 @@ static NSImage	*classesImage = nil;
   GSNibContainer	*c;
   NSEnumerator		*enumerator;
   id <IBConnectors>	con;
-  NSString              *ownerClass, *key;
+  NSString              *ownerClass; // , *key;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
@@ -2756,7 +2759,7 @@ static NSImage	*classesImage = nil;
   [archiver encodeClassName: @"GormCustomView"
 	    intoClassName: @"GSCustomView"];
   [archiver encodeClassName: @"GormNSMenu"
-	    intoClassName: @"NSMenu"];
+  	    intoClassName: @"NSMenu"];
   [archiver encodeClassName: @"GormNSWindow"
 	    intoClassName: @"NSWindow"];
   [archiver encodeClassName: @"GormNSPanel"

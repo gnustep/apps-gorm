@@ -1,3 +1,9 @@
+2004-01-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: attachObject:toParent: when the connection
+	contained in the object which is attached is nil, use the 
+	parent.   This corrects a minor issue with greyed out menu entries.
+	
 2004-01-11 13:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Removed awakeFromDocument code and moved it to

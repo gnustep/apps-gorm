@@ -428,7 +428,8 @@
 	{
 	  [edited display];
 	}
-
+      
+      
       return NO;
     }
   return YES;
