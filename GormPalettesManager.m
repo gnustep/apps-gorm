@@ -451,6 +451,17 @@ static NSImage	*dragImage = nil;
   window = [palette originalWindow];
   [window setExcludedFromWindowsMenu: YES];
 
+  // Resize the window appropriately so that we don't have issues
+  // with scrolling.
+  if([window styleMask] & NSBorderlessWindowMask)
+    {
+      [window setFrame: NSMakeRect(0,0,272,160) display: NO];
+    }
+  else
+    {
+      [window setFrame: NSMakeRect(0,0,272,192) display: NO];
+    }
+
   [palettes addObject: palette];
   [selectionView addColumn];
   [[palette paletteIcon] setBackgroundColor: [selectionView backgroundColor]];

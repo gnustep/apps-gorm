@@ -1,3 +1,10 @@
+2004-08-04 01:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: -[GormPalettesManager loadPalette:]
+	added code to made sure that the palette view cannot exceed
+	the maximum size.  This prevents accidentally causing the 
+	issue cited in the previous entry.
+	
 2004-08-04 00:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument setupDefaults:] changed
