@@ -4,7 +4,9 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * 
+ * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:        2002
+ *
  * This file is part of GNUstep.
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -925,20 +927,12 @@ static NSImage	*classesImage = nil;
 - (id) createClassFiles: (id)sender
 {
   NSSavePanel		*sp;
-  NSString              *className;
-  int	                row = [classesView selectedRow];
+  NSString              *className = [classesView itemBeingEdited];
   int			result;
-
-  // if no selection, just return.
-  if(row == -1)
-    {
-      return self;
-    }
-
+  
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
   [sp setTitle: @"Save source file as..."];
-  className = [classesView itemAtRow: row];
   if (documentPath == nil)
     result = [sp runModalForDirectory: NSHomeDirectory() 
 		file: [className stringByAppendingPathExtension: @"m"]];
@@ -963,20 +957,17 @@ static NSImage	*classesImage = nil;
       if (result == NSOKButton)
 	{
 	  headerName = [sp filename];
-	  if (row >= 0)
+	  NSLog(@"Saving %@",className);
+	  if (![classManager makeSourceAndHeaderFilesForClass: className
+			     withName: sourceName
+			     and: headerName])
 	    {
-	      NSLog([classesView itemAtRow: row]);
-	      if (![classManager makeSourceAndHeaderFilesForClass: className
-				 withName: sourceName
-				 and: headerName])
-		{
-		  NSRunAlertPanel(@"Alert", 
-				  @"Could not create the class's file",
-				  nil, nil, nil);
-		}
-	      
-	      return self;
+	      NSRunAlertPanel(@"Alert", 
+			      @"Could not create the class's file",
+			      nil, nil, nil);
 	    }
+	  
+	  return self;
 	}
     }
   return nil;

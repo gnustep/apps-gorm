@@ -1,5 +1,12 @@
 2002-11-22  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* GormDocument.m: -[GormDocument createClassFiles:] fixed problem
+	which was getting the classname from the currently selected row in
+	the classesView.  It now calls -[GormOutlineView itemBeingEdited] to
+	get the class being edited.
+	
+2002-11-22  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* GormDocument.[hm]: added -[GormDocument removeConnectionsWithLabel: 
 	(NSString *)name forClassNamed: (NSString *)className
 	isAction: (BOOL)action.  This method removes the connections relavent
