@@ -1715,7 +1715,15 @@ static NSImage  *fileImage = nil;
       NSDirectoryEnumerator     *dirEnumerator;
       BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
       NSMenu                    *mainMenu;
+      NSString                  *ext = [aFile pathExtension];
 
+      // If someone attempts to open a .gmodel using open or in a 
+      // workspace manager, open it.. otherwise open the .gorm file.
+      if([ext isEqual: @"gmodel"])
+	{
+	  return [self openGModel: aFile];
+	}
+      
       if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
 	{
 	  // if the data is in a directory, then load from objects.gorm 
@@ -2586,7 +2594,7 @@ static NSImage  *fileImage = nil;
   return [nameTable objectForKey: @"NSServicesMenu"];
 }
 
-/*
+/**
  * To revert to a saved version, we actually load a new document and
  * close the original document, returning the id of the new document.
  */
@@ -2605,6 +2613,10 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * Save the document.  If this is called when documentPath is nil, 
+ * then saveGormDocument: will call it to define the path.
+ */
 - (BOOL) saveAsDocument: (id)sender
 {
   NSSavePanel		*sp;
@@ -2635,11 +2647,11 @@ static NSImage  *fileImage = nil;
   return NO;
 }
 
-//
-// Private method which iterates through the list of custom classes and instructs 
-// the archiver to replace the actual object with template during the archiving 
-// process.
-//
+/**
+ * Private method which iterates through the list of custom classes and instructs 
+ * the archiver to replace the actual object with template during the archiving 
+ * process.
+ */
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
   GormClassManager *cm = [self classManager];
@@ -2667,6 +2679,10 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Save the document.  This method creates the directory and the files needed
+ * to comprise the .gorm package.
+ */
 - (BOOL) saveGormDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
@@ -2906,6 +2922,10 @@ static NSImage  *fileImage = nil;
   return YES;
 }
 
+/**
+ * Marks this document as the currently active document.  The active document is
+ * the one being edited by the user.
+ */
 - (void) setDocumentActive: (BOOL)flag
 {
   if (flag != isActive && isDocumentOpen)
