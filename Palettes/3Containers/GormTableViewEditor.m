@@ -136,19 +136,19 @@ static NSText *_textObject;
  */
 - (void) deleteSelection
 {
-  NSLog(@"deleteSelection");
+  NSDebugLog(@"deleteSelection");
   if ([selection count] == 0)
     {
-      NSLog(@"no column to delete");
+      NSDebugLog(@"no column to delete");
     }
   else
   if ([tableView numberOfColumns] <= 1)
     {
-      NSLog(@"can't delete last column");
+      NSDebugLog(@"can't delete last column");
     }
   else
     {
-      NSLog(@"FIXME: remove the tableColumn from toplevel"); // FIXME
+      NSDebugLog(@"FIXME: remove the tableColumn from toplevel"); // FIXME
       [tableView removeTableColumn: [selection objectAtIndex: 0]];
       [tableView deselectAll: self];
       [self selectObjects: [NSArray array]];
@@ -160,7 +160,7 @@ static NSText *_textObject;
  */
 - (void) copySelection
 {
-  NSLog(@"copySelection");
+  NSDebugLog(@"copySelection");
   if ([[[self selection] objectAtIndex: 0] 
 	isKindOfClass: [NSTableColumn class]])
     {
@@ -170,7 +170,7 @@ static NSText *_textObject;
     }
   else
     {
-      NSLog(@"no paste");
+      NSDebugLog(@"no paste");
     }
 }
 
@@ -181,7 +181,7 @@ static NSText *_textObject;
 - (void) pasteInSelection
 {
   NSArray *objects;
-  NSLog(@"pasteInSelection");
+  NSDebugLog(@"pasteInSelection");
   
 
   objects = [document pasteType: IBTableColumnPboardType
@@ -196,12 +196,12 @@ static NSText *_textObject;
 
   if ([objects count] > 1)
     {
-      NSLog(@"warning strange behaviour : GormTableViewEditor pasteInSelection");
+      NSDebugLog(@"warning strange behaviour : GormTableViewEditor pasteInSelection");
     }
   else if ([[objects objectAtIndex: 0] isKindOfClass: [NSTableColumn class]]
 	   == NO)
     {
-      NSLog(@"invalid data in IBTableColumnPboardType");
+      NSDebugLog(@"invalid data in IBTableColumnPboardType");
       return;
     }
 	    
@@ -239,7 +239,7 @@ static NSText *_textObject;
   
   if (opened == NO)
     {
-      NSLog(@"not opened");
+      NSDebugLog(@"not opened");
       [super mouseDown: theEvent];
       return;
     }

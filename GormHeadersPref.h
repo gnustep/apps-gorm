@@ -9,7 +9,7 @@
 @interface GormHeadersPref : NSObject
 {
   id preloadButton;
-  id browser;
+  id table;
   id addButton;
   id removeButton;
   id window;

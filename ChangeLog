@@ -1,3 +1,12 @@
+2004-02-21 01:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormHeaderPref.m: Fixed header pre-loading.
+	* GormHeaderPref.gorm: Added table instead of browser.
+	* Palettes/3Containers/GormTableViewEditor.m: Removed
+	some debugging information.
+	* GormPrefGeneral.gorm: Added section for archive type
+	preferences.
+	
 2004-02-19 00:50 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument handleNotification:]

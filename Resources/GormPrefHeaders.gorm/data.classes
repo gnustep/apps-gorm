@@ -150,10 +150,17 @@
 	);
 	Outlets = (
 	    preloadButton,
-	    browser,
 	    addButton,
 	    removeButton,
-	    window
+	    window,
+	    table
+	);
+	Super = NSObject;
+    };
+    HeaderDataSource = {
+	Actions = (
+	);
+	Outlets = (
 	);
 	Super = NSObject;
     };
