@@ -1,3 +1,11 @@
+2004-06-21 23:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: Added code to openGModel: to more automatically
+	detect what actions should be added to FirstResponder.  This 
+	facilitates importing the .gmodel without even needing the
+	header file.  All of the information necessary to convert the 
+	interface can be gleaned from the .gmodel information.
+	
 2004-06-18 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.7.7

@@ -30,6 +30,7 @@
 #include <GNUstepGUI/GSDisplayServer.h>
 #include "GormPrivate.h"
 #include "GormCustomView.h"
+#include "GormDocument.h"
 
 static Class gmodel_class(NSString *className);
 
@@ -299,6 +300,7 @@ static BOOL gormFileOwnerDecoded;
   NSArray          *gmobjects;
   NSArray          *gmconnections;
   Class             u = gmodel_class(@"GMUnarchiver");
+  NSString         *delegateClass;
 
   NSLog (@"Loading gmodel file %@...", path);
   gormNibOwner = nil;
@@ -382,24 +384,48 @@ static BOOL gormFileOwnerDecoded;
 	      [classManager addOutlet: [con label] 
 			    forClassNamed: [source className]];
 	    }
+
+	  if([[source className] isEqual: @"NSApplication"])
+	    {
+	      delegateClass = [dest className];
+	    }
 	}
       else
 	{
 	  newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
 	  if(![classManager isAction: [con label] 
-			    ofClass: [dest className]])
+			    ofClass: (dest == nil)?@"FirstResponder":[dest className]])
 	    {
 	      [classManager addAction: [con label] 
-			    forClassNamed: [dest className]];
+			    forClassNamed: (dest == nil)?@"FirstResponder":[dest className]];
 	    }	  
 	}
       
       NSDebugLog(@"conn = %@  source = %@ dest = %@ label = %@, src name = %@ dest name = %@", newcon, source, dest, 
 		 [con label], [source className], [dest className]);
       [newcon setSource: source];
-      [newcon setDestination: dest];
+      [newcon setDestination: (dest != nil)?dest:[self firstResponder]];
       [newcon setLabel: [con label]];
       [connections addObject: newcon];
+    }
+
+  // make sure that all of the actions on the application's delegate object are also added to FirstResponder.
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if([con isKindOfClass: [NSNibControlConnector class]])
+	{
+	  id dest = [con destination];
+	  if([[dest className] isEqual: delegateClass])
+	    {
+	      if(![classManager isAction: [con label] 
+				ofClass: @"FirstResponder"])
+		{
+		  [classManager addAction: [con label] 
+				forClassNamed: @"FirstResponder"];
+		} 
+	    }
+	}
     }
 
   if ([gormRealObject isKindOfClass: [GModelApplication class]])
