@@ -56,7 +56,7 @@
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraActions forKey: @"ExtraActions"];
-      RELEASE(extraActions);
+      // RELEASE(extraActions);
     }
   [extraActions addObject: anAction];
   if ([allActions containsObject: anAction] == NO)
@@ -203,7 +203,7 @@
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
-      RELEASE(extraOutlets);
+      // RELEASE(extraOutlets);
     }
   [extraOutlets addObject: anOutlet];
   [[info objectForKey: @"AllOutlets"] addObject: anOutlet];
@@ -224,7 +224,7 @@
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraActions forKey: @"ExtraActions"];
-      RELEASE(extraActions);
+      // RELEASE(extraActions);
     }
 
   [extraActions addObject: anAction];
@@ -251,7 +251,7 @@
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
-      RELEASE(extraOutlets);
+      // RELEASE(extraOutlets);
     }
 
   [extraOutlets addObject: anOutlet];

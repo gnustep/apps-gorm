@@ -4,7 +4,7 @@
  *
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:	2003
- * 
+ *
  * This file is part of GNUstep.
  * 
  * This program is free software; you can redistribute it and/or modify
