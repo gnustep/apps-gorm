@@ -2409,6 +2409,8 @@ static NSImage  *fileImage = nil;
       [self setName: @"PaletteWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
     }
+
+  [self touch];
 }
 
 - (void) setName: (NSString*)aName forObject: (id)object

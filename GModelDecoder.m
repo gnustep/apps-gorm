@@ -609,6 +609,8 @@ static BOOL gormFileOwnerDecoded;
   [self rebuildObjToNameMapping];
 
   // RELEASE(unarchiver);
+  [self touch]; // mark the document
+
   return self;
 }
 @end
