@@ -1,3 +1,9 @@
+2001-06-15  Adam Fedor  <fedor@gnu.org>
+
+	* GormWindowEditor.m (-_editTextView:withEvent:): 
+	New method to edit text in place (handles only NSForms now).
+	(-mouseDown:): Double-click on NSForm edits NSFormCell.
+
 2001-06-06  Adam Fedor  <fedor@gnu.org>
 
 	* Changes to allow an NSBox to be 'edited' and add subviews, move
