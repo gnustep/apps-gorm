@@ -1,3 +1,11 @@
+2004-12-02 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/OCClass.m: added code in parse method
+	to use new class for IVar parsing.
+	* GormObjCHeaderParser/OCIVarDecl.[hm]: New class.  This
+	class handles the declaration and breaks it into separate
+	ivar objects.
+	
 2004-12-01 02:12 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: [GormClassManager parseHeader:] altered

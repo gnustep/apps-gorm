@@ -44,6 +44,7 @@ libGormObjCHeaderParser_HEADER_FILES= \
 OCHeaderParser.h \
 OCClass.h \
 OCIVar.h \
+OCIVarDecl.h \
 OCMethod.h \
 NSScanner+OCHeaderParser.h
 
@@ -55,6 +56,7 @@ libGormObjCHeaderParser_OBJC_FILES= \
 OCHeaderParser.m \
 OCClass.m \
 OCIVar.m \
+OCIVarDecl.m \
 OCMethod.m \
 NSScanner+OCHeaderParser.m
 

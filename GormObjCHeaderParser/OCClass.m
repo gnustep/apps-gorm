@@ -30,6 +30,7 @@
 #include <GormObjCHeaderParser/OCClass.h>
 #include <GormObjCHeaderParser/OCMethod.h>
 #include <GormObjCHeaderParser/OCIVar.h>
+#include <GormObjCHeaderParser/OCIVarDecl.h>
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
 
 @implementation OCClass
@@ -198,13 +199,13 @@
       while(![ivarScan isAtEnd])
 	{
 	  NSString *ivarLine = nil;
-	  OCIVar *ivar = nil;
+	  OCIVarDecl *ivarDecl = nil;
 	  
 	  [ivarScan scanUpToString: @";" intoString: &ivarLine];
 	  [ivarScan scanString: @";" intoString: NULL];
-	  ivar = AUTORELEASE([[OCIVar alloc] initWithString: ivarLine]); 
-	  [ivar parse];
-	  [ivars addObject: ivar];
+	  ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
+	  [ivarDecl parse];
+	  [ivars addObjectsFromArray: [ivarDecl ivars]];
 	}
     }
   
