@@ -986,7 +986,7 @@ static NSImage	*classesImage = nil;
 	      [cm addOutlets: outlets forClassNamed: className];
 	      result = YES;
 	    }
-	  else 
+	  else if(!category)
 	    {
 	      result = [cm addClassNamed: className
 			   withSuperClassNamed: superClassName
