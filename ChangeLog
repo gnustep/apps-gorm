@@ -1,3 +1,14 @@
+2002-07-21  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.[hm]: Added some methods to support custom
+	classes:
+	
+	- (NSArray*) customSubClassesOf: (NSString *)superclass;
+	- (NSArray*) allCustomSubclassesOf: (NSString *)superclass;
+
+	and also made some corrections in the replaceOutlet to correct a
+	problem with editing in the classes view.
+	
 2002-07-16  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjectInspector.m: Removed extra RELEASE at line 93 which

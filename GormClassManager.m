@@ -241,7 +241,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray *actions = [info objectForKey: @"Actions"];
-  NSArray *allActions = [self allActionsForClassNamed: className];
+  NSMutableArray *allActions = [info objectForKey: @"AllActions"];
 
   if([extraActions containsObject: oldAction])
     {
@@ -249,7 +249,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       int extra_index = [extraActions indexOfObject: oldAction];
 
       [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
-      [[info objectForKey: @"AllActions"] replaceObjectAtIndex: all_index withObject: newAction];
+      [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
   else if([actions containsObject: oldAction])
     {
@@ -257,7 +257,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       int actions_index = [actions indexOfObject: oldAction];
 
       [actions replaceObjectAtIndex: actions_index withObject: newAction];
-      [[info objectForKey: @"AllActions"] replaceObjectAtIndex: all_index withObject: newAction];
+      [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
 }
 
@@ -266,15 +266,15 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
-  NSArray *allOutlets = [self allOutletsForClassNamed: className];
+  NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
 
   if([extraOutlets containsObject: oldOutlet])
     {
       int all_index = [allOutlets indexOfObject: oldOutlet];
-      int extra_index = [allOutlets indexOfObject: oldOutlet];
+      int extra_index = [extraOutlets indexOfObject: oldOutlet];
 
       [extraOutlets replaceObjectAtIndex: extra_index withObject: newOutlet];
-      [[info objectForKey: @"AllOutlets"] replaceObjectAtIndex: all_index withObject: newOutlet];
+      [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
   else if([outlets containsObject: oldOutlet])
     {
@@ -282,7 +282,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       int outlets_index = [outlets indexOfObject: oldOutlet];
 
       [outlets replaceObjectAtIndex: outlets_index withObject: newOutlet];
-      [[info objectForKey: @"AllOutlets"] replaceObjectAtIndex: all_index withObject: newOutlet];
+      [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
 }
 
@@ -628,6 +628,53 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	}
     }
   return self;
+}
+
+- (void) allSubclassesOf: (NSString *)superclass
+      referenceClassList: (NSArray *)classList
+	       intoArray: (NSMutableArray *)array
+{
+  NSEnumerator *cen   = [classList objectEnumerator];
+  id object = nil;
+
+  while((object = [cen nextObject]))
+    {
+      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+	{
+	  [array addObject: object];
+	  [self allSubclassesOf: object
+		referenceClassList: classList
+		intoArray: array];
+	}
+    }
+}
+
+- (NSArray *) allCustomSubclassesOf: (NSString *)superClass
+{
+  NSMutableArray *array = [NSMutableArray array];
+  [self allSubclassesOf: superClass
+	referenceClassList: customClasses
+	intoArray: array];
+  return array;
+}
+
+- (NSArray *) customSubClassesOf: (NSString *)superclass
+{
+  NSEnumerator *cen   = [customClasses objectEnumerator];
+  id object = nil;
+  NSMutableArray *subclasses = [NSMutableArray array];
+
+  while((object = [cen nextObject]))
+    {
+      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+	{
+	  [subclasses addObject: object];
+	}
+    }
+      
+  return subclasses;
 }
 
 - (NSArray *) subClassesOf: (NSString *)superclass
@@ -1213,7 +1260,7 @@ selectCellWithString: (NSString*)title
   RELEASE(outlets);
   RELEASE(okButton);
   RELEASE(revertButton);
-  RELEASE(window);
+  //  RELEASE(window);
   [super dealloc];
 }
 
