@@ -39,6 +39,21 @@
 #include <GormObjCHeaderParser/OCMethod.h>
 #include <GormObjCHeaderParser/OCIVar.h>
 
+/**
+ * Just a few definitions to start things out.  To increase efficiency,
+ * so that Gorm doesn't need to constantly derive the method list for
+ * each class, it is necessary to cache some information.  Here is the
+ * way it works.
+ *
+ * Actions = All actions on that class, excluding superclass methods.
+ * AllActions = All actions on that class including superclass methods.
+ * ExtraActions = All actions added during this session.
+ *
+ * Outlets = All actions on that class, excluding superclass methods.
+ * AllOutlets = All actions on that class including superclass methods.
+ * ExtraOutlets = All actions added during this session.
+ */
+
 /** Private methods not accesible from outside */
 @interface GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;
@@ -64,11 +79,11 @@
 
 - (void) mergeObjectsFromArray: (NSArray *)array
 {
-  NSEnumerator	*enumerator = [array objectEnumerator];
   id            obj = nil;
 
   if(array != nil)
     {
+      NSEnumerator	*enumerator = [array objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
 	  [self mergeObject: obj];
@@ -104,9 +119,6 @@
 	  customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
 	  categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
 
-	  // add first responder so that it may be edited.
-	  [customClasses addObject: @"FirstResponder"];
-	  
 	  // add the imported classes to the class information list...
 	  [classInformation addEntriesFromDictionary: [palettesManager importedClasses]];
 	}
@@ -120,6 +132,7 @@
   [[NSNotificationCenter defaultCenter] 
     postNotificationName: GormDidModifyClassNotification
     object: self];
+
   [document touch];
 }
 
@@ -1348,11 +1361,6 @@
 	      [customClasses addObject: key];
 	      [classInformation setObject: classDict forKey: key];
 	    }
-	  else if([key isEqual: @"FirstResponder"] == YES)
-	    {
-	      [customClasses addObject: key];
-	      [classInformation setObject: classDict forKey: key];
-	    }
 	  else
 	    {
 	      NSMutableArray *actions = [classDict objectForKey: @"Actions"];
@@ -1362,21 +1370,11 @@
 	      // remove any duplicate actions...
 	      if(origActions != nil)
 		{
-		  NSEnumerator *en = [actions objectEnumerator];
-		  id action = nil;
-		  
 		  allActions = [NSMutableArray arrayWithArray: origActions];
+		  
+		  [actions removeObjectsInArray: origActions];
 		  [allActions addObjectsFromArray: actions];
 		  [info setObject: allActions forKey: @"AllActions"];
-		  
-		  // take out any duplicates which might be present.
-		  while((action = [en nextObject]) != nil)
-		    {
-		      if([origActions containsObject: action])
-			{
-			  [actions removeObject: action];
-			}
-		    }
 		}
 	      
 	      // if there are any action methods left after the process above,

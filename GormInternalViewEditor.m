@@ -444,7 +444,7 @@ static NSImage *horizontalImage;
 	  }
 	else
 	  {
-	    NSLog(@"WARNING -- strange case");
+	    NSDebugLog(@"WARNING -- strange case");
 	    result = self;
 	  }
       }

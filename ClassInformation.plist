@@ -10,6 +10,7 @@
 	    "cancel:",
 	    "capitalizeWord:",
 	    "changeColor:",
+            "changeFont:",
 	    "checkSpelling:",
 	    "close:",
 	    "complete:",

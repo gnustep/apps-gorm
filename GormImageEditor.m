@@ -264,7 +264,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   // This *WILL* leak, but I don't want it crashing on people.
   
   RELEASE(objects);
-  NSLog(@"Released...");
+  NSDebugLog(@"Released...");
 }
 
 - (void) close

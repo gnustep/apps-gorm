@@ -1,11 +1,5 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "changeFont:"
-	);
-	Super = NSObject;
-    };
     GormWindowInspector = {
 	Actions = (
 	);

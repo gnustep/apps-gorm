@@ -1,3 +1,15 @@
+2005-01-09 01:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added missing changeFont: method.
+	* GormClassManager.m: Changed code to read only the additions to 
+	FirstResponder from the data.classes file.
+	* GormFilePrefsManager.m: Updated version to 0.8.7.
+	* GormImageEditor.m: Made some logs "debug".
+	* GormInfo.plist: Updated version.
+	* GormInternalViewEditor.m: Made some logs "debug".
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Changes to layout
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Same.
+
 2005-01-08 18:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImage.h: Moved the declaration for setArchiveByName: here.
