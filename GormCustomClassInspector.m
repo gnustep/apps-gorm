@@ -146,7 +146,7 @@ createRowsForColumn: (int)column
       classes = [NSMutableArray arrayWithObject: _parentClassName];
       // get a list of all of the classes allowed and the class to be shown.
       [classes addObjectsFromArray:
-	[_classManager allSubclassesOf: _parentClassName]];
+	[_classManager allCustomSubclassesOf: _parentClassName]];
       
       // enumerate through the classes...
       e = [classes objectEnumerator];

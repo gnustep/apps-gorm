@@ -764,11 +764,7 @@
 	      intoArray: array];
 
   // add known allowable subclasses to the list.
-  if ([superClass isEqualToString: @"NSWindow"])
-    {
-      [array addObject: @"NSPanel"];
-    }
-  else if ([superClass isEqualToString: @"NSTextField"])
+  if ([superClass isEqualToString: @"NSTextField"])
     {
       [array addObject: @"NSSecureTextField"];
     }

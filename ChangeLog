@@ -1,3 +1,15 @@
+2003-11-28 18:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.[hm]: Slight modification allCustomSubclassesOf: 
+	previously there was a special case which added NSPanel for NSWindow.
+	That has been taken out.
+	* GormCustomClassInspector.m: Call method in class manager to 
+	get the subclasses.  Undoes previous change for Report #6345.
+	See that report on savannah for more information.
+	* Palettes/2Controls/GormNSSliderInspector.gorm: Changed Disabled
+	checkbox to "Enabled" since this is the way it was being treated
+	in the code and this is how it's done across the rest of the app.
+
 2003-11-24 01:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormMenuEditor.m: Minor change to correct assertion failure.
