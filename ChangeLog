@@ -1,5 +1,14 @@
 2004-05-09 10:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Corrected an issue when creating an
+	"Inspector" or "Palette" in [GormDocument setupDefaults:].
+	The method was creating an NSWindow which doesn't respond
+	to one of the methods the inspector needs it to.
+	* GormSetName.gorm: Reduced the line to 2 pixels high to make it
+	look a little better. 
+
+2004-05-09 10:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GModelDecoder.m: defineClass:inFile: changed signature
 	to take the object and get the classname from it.  This allows
 	a call to add the class under an assumed superclass, if the user

@@ -2608,10 +2608,23 @@ static NSImage	*classesImage = nil;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0, IVW, IVH)
-					    styleMask: style
-					      backing: NSBackingStoreRetained
-					        defer: NO];
+      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+	{
+	  aWindow = [[NSWindow allocSubstitute] 
+		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
+      else
+	{
+	  aWindow = [[NSWindow alloc] 
+		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
+
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: _(@"Inspector Window")];
@@ -2625,10 +2638,23 @@ static NSImage	*classesImage = nil;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,272,192)
-					    styleMask: style
-					      backing: NSBackingStoreRetained
-					        defer: NO];
+      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+	{
+	  aWindow = [[NSWindow allocSubstitute] 
+		      initWithContentRect: NSMakeRect(0,0,272,192)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
+      else
+	{
+	  aWindow = [[NSWindow alloc] 
+		      initWithContentRect: NSMakeRect(0,0,272,192)
+		      styleMask: style
+		      backing: NSBackingStoreRetained
+		      defer: NO];
+	}
+
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
       [aWindow setTitle: _(@"Palette Window")];
