@@ -298,7 +298,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSArray	*actions;
   Class		 theClass = [obj class];
   NSString      *customClassName = [self customClassForObject: obj];
-
+  
+  NSDebugLog(@"** ACTIONS");
   NSDebugLog(@"Object: %@",obj);
   NSDebugLog(@"Custom class: %@",customClassName);
   if(customClassName != nil)
@@ -427,6 +428,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   Class		theClass = [obj class];
   NSString      *customClassName = [self customClassForObject: obj];
 
+  NSDebugLog(@"** OUTLETS");
+  NSDebugLog(@"Object: %@",obj);
+  NSDebugLog(@"Custom class: %@",customClassName);
   if(customClassName != nil)
     {
       // if the object has been mapped to a custom class, then
@@ -1092,7 +1096,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 {
   NSString *ssclass;
 
-  //NSLog(@"isSuperClass : %@, %@", superclass, subclass);
+  //NSDebugLog(@"isSuperClass : %@, %@", superclass, subclass);
 
   if (superclass == nil || subclass == nil)
     {
@@ -1235,8 +1239,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 // custom class support...
 - (NSString *) customClassForObject: (id)object
 {
-  NSString *result = [customClassMap objectForKey: object];
-  NSDebugLog(@"in customClassForObject: object = %@, result = %@, customClassMap = %@",object, result, customClassMap);
+  NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject: object];
+  NSString *result = [customClassMap objectForKey: name];
+  NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",object, name, result, customClassMap);
   return result;
 }
 

@@ -684,21 +684,16 @@ selectCellWithString: (NSString*)title
 		      NSString *name = nil;
 
 		      RELEASE(actions);
-		      // get the name of the object...
-		      name = [[(id<IB>)NSApp activeDocument] nameForObject: [con destination]];
 		      actions = RETAIN([[NSApp classManager]
-					 allActionsForObject: name]);
+					 allActionsForObject: [con destination]]);
 		      break;
 		    }
 		}
 	      if (con == nil)
 		{
-		  NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject:
-								     [NSApp connectDestination]];
 		  RELEASE(actions);
-		  // get the name of the object...
 		  actions = RETAIN([[NSApp classManager]
-				     allActionsForObject: name]);
+				     allActionsForObject: [NSApp connectDestination]]);
 		  if ([actions count] > 0)
 		    {
 		      con = [NSNibControlConnector new];
@@ -1042,6 +1037,7 @@ selectCellWithString: (NSString*)title
   if (anObject != nil && anObject != object)
     {
       NSArray		*array;
+      NSString          *name;
 
       ASSIGN(object, anObject);
       DESTROY(currentConnector);
@@ -1058,7 +1054,8 @@ selectCellWithString: (NSString*)title
       [connectors addObjectsFromArray: array];
 
       RELEASE(outlets);
-      outlets = RETAIN([[NSApp classManager] allOutletsForObject: object]);
+      // name = [[(id<IB>)NSApp activeDocument] nameForObject: object]; // get the name
+      outlets = RETAIN([[NSApp classManager] allOutletsForObject: object]); // name]); // object]);
       DESTROY(actions);
 
       [oldBrowser loadColumnZero];

@@ -1,5 +1,20 @@
 2003-01-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: -[GormClassManager customClassForObject:]:
+	Added code to resolve the object being passed in to the name
+	which is used in the name table.   This is for lookup in the
+	custom class map.   This corrects a problem which was introduced
+	in the previous fix.
+	* GormInspectorsManager.m: in browser delegate.  Removed code
+	which was looking up the name seperately.   Now relies on code
+	added above.
+	* GormCustomClassInspector.m: 
+	-[GormCustomClassInspector _setCurrentSelectionClassName:]:
+	Removed code which looks up the name.  Now uses code in
+	GormClassManager.
+	
+2003-01-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormClassManager.m: Added some NSDebugLog statements
 	to assist with debugging.
 	* GormInspectorManager.m: Corrected a problem which was

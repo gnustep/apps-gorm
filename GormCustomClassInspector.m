@@ -67,11 +67,8 @@
 
 - (void) _setCurrentSelectionClassName: (id)anobject
 {
-  NSString *nameForObject = [_document nameForObject: anobject];
-  NSString *className = [_classManager customClassForObject: nameForObject];
-		     
-  NSDebugLog(@"name for object = %@, object = %@, className = %@",nameForObject, anobject, className);
-  // if no entry, then use the name of the class
+  NSString *className = [_classManager customClassForObject: anobject]; // nameForObject];
+
   if([className isEqualToString: @""] ||
      className == nil)
     {
