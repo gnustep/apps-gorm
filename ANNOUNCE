@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.9.0 of Gorm.
+This is version 0.9.2 of Gorm.
 
 What is Gorm?
 =============
@@ -12,44 +12,26 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.9.0'
+Noteworthy changes in version `0.9.2'
 =====================================
 
-   * Images/Sounds can now be dragged into a matrix cell.
+   NOTE: This is mainly a bugfix release.
 
-   * Fully implemented date and number formatter inspectors (these
-     classes still need work in GUI).
+   * Some improvements to the procedure for removing connections.
 
-   * Added warning panel if the user attempts to edit a .gorm file
-     created with a newer version of Gorm
+   * Corrected various issues with header parsing.
 
-   * Modified data.classes format so that only those actions
-     specifically added to FirstResponder are listed.
+   * Now closes windows which were opened during interface testing such
+     as font panels, info panels, etc.
 
-   * Greatly improved gmodel importation. (experimental)
+   * Minor corrections to background color for a number of inspectors.
 
-   * It's now possible to add methods to classes which are not custom.
-     This allows the user to add actions which may have been added to
-     those classes by categories.
+   * Improvements to gmodel importation.
 
-   * Completely new header parser implemented.
+   * Better detection of when the user is utilizing a user bundle.
+     Gorm will now warn the user with a panel.
 
-   * Improved cut/paste.  It's now possible to use cut/paste from
-     almost anywhere.  The class editor now fully supports it.
-
-   * Improved implementation of some of the InterfaceBuilder framework
-     classes.
-
-   * Object editor will now remove all instances of a class that has
-     been deleted from the class editor.
-
-   * The class inspector and the classes view will now apply stricter
-     rules to names of actions and outlets to ensure that they are
-     properly entered.
-
-   * All inspectors work perfectly with customized colors.
-
-   * Fixed a number of bugs.
+   * Various improvements in documentation
 
 How can I get support for this software?
 ========================================

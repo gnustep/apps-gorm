@@ -1,3 +1,24 @@
+Noteworthy changes in version `0.9.2'
+=====================================
+
+NOTE: This is mainly a bugfix release.
+
+   * Some improvements to the procedure for removing connections.
+
+   * Corrected various issues with header parsing.
+
+   * Now closes windows which were opened during interface testing such
+     as font panels, info panels, etc.
+
+   * Minor corrections to background color for a number of inspectors.
+
+   * Improvements to gmodel importation.
+
+   * Better detection of when the user is utilizing a user bundle.
+     Gorm will now warn the user with a panel.
+
+   * Various improvements in documentation
+
 Noteworthy changes in version `0.9.0'
 =====================================
 

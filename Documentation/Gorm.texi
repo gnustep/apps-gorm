@@ -386,7 +386,8 @@ Controls whether the palettes window shows when Gorm is started.
 
 @item BackupFile @*
 Determines if the old .gorm is moved to .gorm~ when the modified version is saved.
-
+@item AllowUserBundles @*
+If the user sets this to YES, they will still get a warning, but Gorm won't quit.  
 @end itemize
 
 @chapter Basic Concepts
@@ -751,6 +752,20 @@ My advice is never to do this, ever.  Some have said that ``they're plain text a
 If you've selected the custom class by clicking on an existing object and then selecting a subclass in the Custom Class Inspector in Gorm's inspector panel, then when the .gorm file is saved, Gorm must use what is called a template to take the place of the class so that when the .gorm is unarchived in the running application, the template can become the custom subclass you specified.  Gorm has no way of knowing about the additional attributes of your subclass, so when it's archived the template depends on the encodeWithCoder: of the existing class.  Also, when AppKit loads the .gorm file, the initWithCoder: on the subclass is called to allow the user to do any actions, except for additional encoding, which need to be done at that time.  This is particularly true when non-keyed coding is used, since, with keyed coding, it's possible to skip keys that are not present.  The application may not crash if keyed coding is used, but Gorm would still not know about the additional attributes and would not be able to persist them anyway.
 
 Please see information in previous chapters regarding palettes, if you would like to be able to add your classes to Gorm so that they don't need to be replaced by templates, or proxy objects.
+
+@subsection Why does Gorm give me a warning when I have bundles specified in GSAppKitUserBundles?
+
+Some bundles may use poseAs: to affect change in the existing behavior of some GNUstep classes.  The poseAs: method causes an issue which may cause Gorm to incorrectly encode the class name for the object which was replaced.   This makes the resulting .gorm file unusable when another user who is not using the same bundle attempts to load it.
+
+@subsection How can I avoid loading GSAppKitUserBundles in Gorm?
+
+You need to write to Gorm's defaults like this:
+
+@samp{ defaults write Gorm GSAppKitUserBundles '()' }
+
+Doing this overrides the settings in NSGlobalDomain for Gorm and forces Gorm not to load any user bundles at all.  To eliminate this simply do:
+
+@samp{ defaults delete Gorm GSAppKitUserBundles }
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index

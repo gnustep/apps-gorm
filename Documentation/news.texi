@@ -4,6 +4,24 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.9.2}
+
+NOTE: This is mainly a bugfix release.
+
+@itemize @bullet
+@item Some improvements to the procedure for removing connections.
+@item Corrected various issues with header parsing.
+@item Now closes windows which were opened during interface testing such as font panels, info panels, etc.
+@item Minor corrections to background color for a number of inspectors.
+@item Improvements to gmodel importation.
+@item Better detection of when the user is utilizing a user bundle.  Gorm will now warn the user with a panel.
+@item Various improvements in documentation
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.9.0}
 
 @itemize @bullet
@@ -21,10 +39,6 @@
 @item All inspectors work perfectly with customized colors.
 @item Fixed a number of bugs.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.8.0}
 
