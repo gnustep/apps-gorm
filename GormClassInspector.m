@@ -35,6 +35,11 @@
 
 NSNotificationCenter *nc = nil;
 
+// interfaces
+@interface GormDocument (GormClassInspectorAdditions)
+- (void) collapseClass: (NSString *)className;
+@end
+
 // the data source classes for each of the tables...
 @interface GormOutletDataSource : NSObject
 {
@@ -55,6 +60,16 @@ NSNotificationCenter *nc = nil;
   id inspector;
 }
 - (void) setInspector: (id)ins;
+@end
+
+// implementation
+@implementation GormDocument (GormClassInspectorAdditions)
+- (void) collapseClass: (NSString *)className
+{
+  NSDebugLog(@"%@",className);
+  [classesView expandItem: className];
+  [classesView collapseItem: className];
+}
 @end
 
 @implementation GormOutletDataSource 
@@ -373,15 +388,23 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [classManager allClassNames];
   int row = [parentClass selectedRow];
   NSString *newParent = [list objectAtIndex: row];
+  NSString *name = [self _currentClass];
   BOOL removed = NO;
 
-  [classManager setSuperClassNamed: newParent forClassNamed: [self _currentClass]];
+  // check to see if the user wants to do this and remove the connections.
   removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-			     removeConnectionsForClassNamed: [self _currentClass]]; 
+			     removeConnectionsForClassNamed: name]; 
+
+  // if removed, move the class and notify... 
   if(removed)
     {
+      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
+      
+      [classManager setSuperClassNamed: newParent forClassNamed: name];
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
+      [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: oldSuper];
+      [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: name];
     }
 }
 
@@ -464,9 +487,11 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
     {
       NSArray *list = [classManager allClassNames];
       NSString *className = [list objectAtIndex: rowIndex];
+      NSString *name = [self _currentClass];
       BOOL isFirstResponder = [className isEqualToString: @"FirstResponder"];
-      BOOL isCurrentClass = [className isEqualToString: [self _currentClass]];
-      if(isFirstResponder || isCurrentClass)
+      BOOL isCurrentClass = [className isEqualToString: name];
+      BOOL isSubClass = [classManager isSuperclass: name linkedToClass: className];
+      if(isFirstResponder || isCurrentClass || isSubClass)
 	{
 	  NSBeep();
 	  result = NO;

@@ -1540,11 +1540,17 @@ static NSImage	*classesImage = nil;
     }
   else if ([name isEqual: IBClassNameChangedNotification] == YES)
     {
-      if ([aNotification object] == classManager) [classesView reloadData];
+      if ([aNotification object] == classManager) 
+	{
+	  [classesView reloadData];
+	}
     }
   else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)
     {
-      if ([aNotification object] == classManager) [classesView reloadData];
+      if ([aNotification object] == classManager) 
+	{
+	  [classesView reloadData];
+	}
     }
 }
 

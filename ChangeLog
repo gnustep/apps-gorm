@@ -1,3 +1,15 @@
+2004-02-12 22:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Added category to allow direct manipulation
+	of the classes view from the class inspector.  The new method is
+	- (void) collapseClass: (NSString *)className.
+	Modified [GormClassInspector selectClass:] to notify the user when
+	the change has been made and only proceed on confirmation.
+	Added code to delegate to prevent selection of a subclass of the 
+	current class.
+	* GormDocument.m: Cleaned up some of the code formatting in
+	[GormDocument handleNotification:].
+	
 2004-02-12 02:02 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Added new ivars/methods to support
