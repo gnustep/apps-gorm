@@ -161,6 +161,11 @@ NSString *formatVersion(int version)
 // Loading and saving the file.
 - (BOOL) saveToFile: (NSString *)path
 {
+  // upon saving, update to the latest.
+  version = [GormFilePrefsManager currentVersion];
+  [gormAppVersion setStringValue: formatVersion(version)];
+
+  // save.
   return [NSArchiver archiveRootObject: self toFile: path];
 }
 
