@@ -1,3 +1,9 @@
+2004-02-08 11:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added change to NSWindow entry suggested
+	by Stefan Urbanek.   The windowController outlet was missing from the
+	list of outlets for this class.
+	
 2004-02-04 23:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument attachObject:toParent:]

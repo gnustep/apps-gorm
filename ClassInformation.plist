@@ -628,7 +628,8 @@
     );
     Outlets = (
       delegate,
-      initialFirstResponder
+      initialFirstResponder,
+      windowController
     );
     Super = NSResponder;
   };
