@@ -173,7 +173,7 @@ Gorm_HEADERS = \
 	GormColorsPref.h \
 	GormPalettesPref.h \
 	GormSoundView.h \
-	GormFilePrefsManager.h
+	GormFilePrefsManager.h 
 
 Gorm_OBJC_FILES = \
         Gorm.m \

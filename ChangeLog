@@ -1,3 +1,19 @@
+2004-08-11 07:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Removed the delegate and data source
+	for the outline view.   Changed the code in init to use 
+	the GormClassEditor as the outline view, instead of
+	instantiating two different classes.   I also changed
+	the coded in other areas where "classEditor" was being
+	used.  Removed an uneeded method.
+	* GormClassEditor.m: Added the delegate here.   Added the
+	initialization code from GormDocument init to the init 
+	method here.
+	* GormPrivate.h: Made GormClassEditor into a subclass
+	of GormOutlineView.  This ultimately makes the code 
+	cleaner as it unifies the view/editor for the class
+	editor.
+	
 2004-08-09 17:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFilePrefsManager.m: The method showIncompatibilities:

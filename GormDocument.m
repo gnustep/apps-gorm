@@ -192,18 +192,12 @@ static NSImage  *fileImage = nil;
 	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 	  NSRect			scrollRect = {{0, 0}, {340, 188}};
 	  NSRect			mainRect = {{20, 0}, {320, 188}};
-	  NSTableColumn                 *tableColumn;
-	  NSColor *salmonColor = 
-	    [NSColor colorWithCalibratedRed: 0.850980 
-		     green: 0.737255
-		     blue: 0.576471
-		     alpha: 1.0 ];
 	  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	  
 	  
 	  openEditors = [NSMutableArray new];
 	  classManager = [[GormClassManager alloc] initWithDocument: self]; 
-	  classEditor = [[GormClassEditor alloc] initWithDocument: self];
+	  // classEditor = [[GormClassEditor alloc] initWithDocument: self];
 	  
 	  /*
 	   * NB. We must retain the map values (object names) as the nameTable
@@ -258,14 +252,6 @@ static NSImage  *fileImage = nil;
 	      selector: @selector(handleNotification:)
 	      name: IBWillEndTestingInterfaceNotification
 	      object: nil];
-	  
-	  // selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
-	  // [selectionBox setTitlePosition: NSNoTitle];
-	  // [selectionBox setBorderType: NSNoBorder];
-	  // [selectionBox setAutoresizingMask:
-	  //     NSViewHeightSizable|NSViewWidthSizable];
-          // [[window contentView] addSubview: selectionBox];
-	  // RELEASE(selectionBox);
 	  
 	  // objects...
 	  mainRect.origin = NSMakePoint(0,0);
@@ -325,54 +311,15 @@ static NSImage  *fileImage = nil;
 	  [classesScrollView setBorderType: NSBezelBorder];
 	  
 	  mainRect.origin = NSMakePoint(0,0);
-	  classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
-	  [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
-	  [classesView setDataSource: self];
-	  [classesView setDelegate: self];
-	  [classesView setAutoresizesAllColumnsToFit: YES];
-	  [classesView setAllowsColumnResizing: NO];
-	  [classesView setDrawsGrid: NO];
-	  [classesView setIndentationMarkerFollowsCell: YES];
-	  [classesView setAutoresizesOutlineColumn: YES];
-	  [classesView setIndentationPerLevel: 10];
-	  [classesView setAttributeOffset: 30];
-	  [classesView setBackgroundColor: salmonColor ];
-	  [classesView setRowHeight: 18];
+	  classesView = [[GormClassEditor alloc] initWithDocument: self];
+	  [classesView setFrame: mainRect];
 	  [classesScrollView setDocumentView: classesView];
-	  RELEASE(classesView);
-	  
-	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
-	  [[tableColumn headerCell] setStringValue: _(@"Classes")];
-	  [tableColumn setMinWidth: 190];
-	  [tableColumn setResizable: YES];
-	  [tableColumn setEditable: YES];
-	  [classesView addTableColumn: tableColumn];     
-	  [classesView setOutlineTableColumn: tableColumn];
-	  RELEASE(tableColumn);
-	  
-	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-	  [[tableColumn headerCell] setStringValue: _(@"Outlet")];
-	  [tableColumn setWidth: 50]; 
-	  [tableColumn setResizable: NO];
-	  [tableColumn setEditable: NO];
-	  [classesView addTableColumn: tableColumn];
-	  [classesView setOutletColumn: tableColumn];
-	  RELEASE(tableColumn);
-	  
-	  tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
-	  [[tableColumn headerCell] setStringValue: _(@"Action")];
-	  [tableColumn setWidth: 50]; 
-	  [tableColumn setResizable: NO];
-	  [tableColumn setEditable: NO];
-	  [classesView addTableColumn: tableColumn];
-	  [classesView setActionColumn: tableColumn];
-	  RELEASE(tableColumn);
-	  
+	  RELEASE(classesView);	  
 	  [classesView sizeToFit];
 	  
-	  // expand all of the items in the classesView...
-	  [classesView expandItem: @"NSObject"];
-	  
+	  /*
+	   * Set the objects view as the initial view the user's see on startup.
+	   */
 	  [selectionBox setContentView: scrollView];
 	  
 	  /*
@@ -752,8 +699,8 @@ static NSImage  *fileImage = nil;
   int	row = [classesView selectedRow];
   if (row >= 0)
     {
-      [classEditor setSelectedClassName: [classesView itemAtRow: row]];
-      [self setSelectionFromEditor: (id)classEditor];
+      [classesView setSelectedClassName: [classesView itemAtRow: row]];
+      [self setSelectionFromEditor: (id)classesView];
     } 
 }
 
@@ -1072,7 +1019,7 @@ static NSImage  *fileImage = nil;
   RELEASE(filePrefsView);
 
   // release editors...
-  RELEASE(classEditor);
+  RELEASE(classesView);
   RELEASE(savedEditors);
   RELEASE(openEditors);
 
@@ -1578,7 +1525,7 @@ static NSImage  *fileImage = nil;
   [editors removeAllObjects];
 
   // Close the editors in the document window...
-  // don't worry about the "classEditor" since it's not really an
+  // don't worry about the "classesView" since it's not really an
   // editor.
   [objectsView close];
   [imagesView close];
@@ -3485,290 +3432,6 @@ static NSImage  *fileImage = nil;
   return removed;
 }
 
-// --- NSOutlineView dataSource ---
-- (id)        outlineView: (NSOutlineView *)anOutlineView 
-objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	           byItem: item
-{
-  if (anOutlineView == classesView)
-    {
-      id identifier = [aTableColumn identifier];
-      id className = item;
-      
-      if ([identifier isEqualToString: @"classes"])
-	{
-	  return className;
-	} 
-      else if ([identifier isEqualToString: @"outlets"])
-	{
-	  return [NSString stringWithFormat: @"%d",
-	    [[classManager allOutletsForClassNamed: className] count]];
-	}
-      else if ([identifier isEqualToString: @"actions"])
-	{
-	  return [NSString stringWithFormat: @"%d",
-	    [[classManager allActionsForClassNamed: className] count]];
-	}
-
-    }
-  return @"";
-}
-
-- (void) outlineView: (NSOutlineView *)anOutlineView 
-      setObjectValue: (id)anObject 
-      forTableColumn: (NSTableColumn *)aTableColumn
-	      byItem: (id)item
-{
-  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-
-  // ignore object values which come in as nil...
-  if(anObject == nil)
-    return;
-
-  if ([item isKindOfClass: [GormOutletActionHolder class]])
-    {
-      if (![anObject isEqualToString: @""])
-	{
-	  NSString *name = [item getName];
-
-	  // retain the name and add the action/outlet...
-	  // RETAIN(name);
-	  if ([gov editType] == Actions)
-	    {
-	      NSString *formattedAction = [GormDocument formatAction: anObject];
-	      if (![classManager isAction: formattedAction 
-				ofClass: [gov itemBeingEdited]])
-		{
-		  BOOL removed;
-
-		  removed = [self removeConnectionsWithLabel: name
-		    forClassNamed: [gov itemBeingEdited] isAction: YES];
-		  if (removed)
-		    {
-		      [classManager replaceAction: name 
-				    withAction: formattedAction 
-				    forClassNamed: [gov itemBeingEdited]];
-		      [(GormOutletActionHolder *)item setName: formattedAction];
-		    }
-		}
-	      else
-		{
-		  NSString *message;
-
-		  message = [NSString stringWithFormat: 
-		    _(@"The class %@ already has an action named %@"),
-		    [gov itemBeingEdited], formattedAction];
-
-		  NSRunAlertPanel(_(@"Problem Adding Action"),
-				  message, nil, nil, nil);
-				  
-		}
-	    }
-	  else if ([gov editType] == Outlets)
-	    {
-	      NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
-	      
-	      if (![classManager isOutlet: formattedOutlet 
-				  ofClass: [gov itemBeingEdited]])
-		{
-		  BOOL removed;
-
-		  removed = [self removeConnectionsWithLabel: name
-		    forClassNamed: [gov itemBeingEdited] isAction: NO];
-		  if (removed)
-		    {
-		      [classManager replaceOutlet: name 
-				    withOutlet: formattedOutlet 
-				    forClassNamed: [gov itemBeingEdited]];
-		      [(GormOutletActionHolder *)item setName: formattedOutlet];
-		    }
-		}
-	      else
-		{
-		  NSString *message;
-
-		  message = [NSString stringWithFormat: 
-		    _(@"The class %@ already has an outlet named %@"),
-		    [gov itemBeingEdited], formattedOutlet];
-		  NSRunAlertPanel(_(@"Problem Adding Outlet"),
-				  message, nil, nil, nil);
-				  
-		}
-	    }
-	}
-    }
-  else
-    {
-      if  ( ( ![anObject isEqualToString: @""] ) && ( ! [anObject isEqualToString:item]  ) )
-	{
-	  BOOL rename;
-
-	  rename = [self renameConnectionsForClassNamed: item toName: anObject];
-	  if (rename)
-	    {
-	      int row = 0;
-
-	      // RETAIN(item); // retain the new name
-	      [classManager renameClassNamed: item newName: anObject];
-	      [gov reloadData];
-	      row = [gov rowForItem: anObject];
-
-	      // make sure that item is collapsed...
-	      [gov expandItem: anObject];
-	      [gov collapseItem: anObject];
-	      
-	      // scroll to the item..
-	      [gov scrollRowToVisible: row];
-	      // [gov selectRow: row byExtendingSelection: NO];
-	    }
-	}
-    }
-
-  [gov setNeedsDisplay: YES];
-}
-
-- (int) outlineView: (NSOutlineView *)anOutlineView 
-numberOfChildrenOfItem: (id)item
-{
-  if (item == nil) 
-    {
-      return 1;
-    }
-  else
-    {
-      NSArray *subclasses = [classManager subClassesOf: item];
-      return [subclasses count];
-    }
-
-  return 0;
-}
-
-- (BOOL) outlineView: (NSOutlineView *)anOutlineView 
-    isItemExpandable: (id)item
-{
-  NSArray *subclasses = nil;
-  if (item == nil)
-    return YES;
-
-  subclasses = [classManager subClassesOf: item];
-  if ([subclasses count] > 0)
-    return YES;
-
-  return NO;
-}
-
-- (id) outlineView: (NSOutlineView *)anOutlineView 
-	     child: (int)index
-	    ofItem: (id)item
-{
-  if (item == nil && index == 0)
-    {
-      return @"NSObject";
-    }
-  else
-    {
-      NSArray *subclasses = [classManager subClassesOf: item];
-      return [subclasses objectAtIndex: index];
-    }
-
-  return nil;
-}
-
-// GormOutlineView data source methods...
-- (NSArray *)outlineView: (NSOutlineView *)anOutlineView
-	  actionsForItem: (id)item
-{
-  NSArray *actions = [classManager allActionsForClassNamed: item];
-  return actions;
-}
-
-- (NSArray *)outlineView: (NSOutlineView *)anOutlineView
-	  outletsForItem: (id)item
-{
-  NSArray *outlets = [classManager allOutletsForClassNamed: item];
-  return outlets;
-}
-
-- (NSString *)outlineView: (NSOutlineView *)anOutlineView
-     addNewActionForClass: (id)item
-{
-  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-  if (![classManager isCustomClass: [gov itemBeingEdited]])
-    {
-      return nil;
-    }
-
-  return [classManager addNewActionToClassNamed: item];
-}
-
-- (NSString *)outlineView: (NSOutlineView *)anOutlineView
-     addNewOutletForClass: (id)item		 
-{
-  GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-  if (![classManager isCustomClass: [gov itemBeingEdited]])
-    {
-      return nil;
-    }
-
-  if([item isEqualToString: @"FirstResponder"])
-	    return nil;
-
-  return [classManager addNewOutletToClassNamed: item];
-}
-
-// Delegate methods
-- (BOOL)  outlineView: (NSOutlineView *)outlineView
-shouldEditTableColumn: (NSTableColumn *)tableColumn
-		 item: (id)item
-{
-  BOOL result = NO;
-  GormOutlineView *gov = (GormOutlineView *)outlineView;
-
-  NSDebugLog(@"in the delegate %@", [tableColumn identifier]);
-  if (tableColumn == [gov outlineTableColumn])
-    {
-      NSDebugLog(@"outline table col");
-      if (![item isKindOfClass: [GormOutletActionHolder class]])
-	{
-	  result = [classManager isCustomClass: item];
-	  [self editClass: item];
-	}
-      else
-	{
-	  id itemBeingEdited = [gov itemBeingEdited];
-	  if ([classManager isCustomClass: itemBeingEdited])
-	    {
-	      if ([gov editType] == Actions)
-		{
-		  result = [classManager isAction: [item getName]
-					 ofClass: itemBeingEdited];
-		}
-	      else if ([gov editType] == Outlets)
-		{
-		  result = [classManager isOutlet: [item getName]
-					 ofClass: itemBeingEdited];
-		}	       
-	    }
-	}
-    }
-
-  return result;
-}
-
-- (void) outlineViewSelectionDidChange: (NSNotification *)notification
-{
-  id object = [notification object];
-  int row = [object selectedRow];
-
-  if(row != -1)
-    {
-      id item = [object itemAtRow: [object selectedRow]];
-      if (![item isKindOfClass: [GormOutletActionHolder class]])
-	{
-	  [self editClass: item];
-	}
-    }
-}
 
 // for debuging purpose
 - (void) printAllEditors
@@ -3856,30 +3519,6 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
 		   nameTable];
-}
-
-- (BOOL) isTopLevelObject: (id)obj
-{
-  BOOL result = NO;
-
-  if ([obj isKindOfClass: [NSMenu class]] == YES)
-    {
-      if ([self objectForName: @"NSMenu"] == obj)
-	{
-	  result = YES;
-	}
-    }
-  else if ([obj isKindOfClass: [NSWindow class]] == YES)
-    {
-      result = YES;
-    }
-  else if ([obj isKindOfClass: [GSNibItem class]] == YES &&
-	   [obj isKindOfClass: [GormCustomView class]] == NO)
-    {
-      result = YES;
-    }
-
-  return result;
 }
 
 - (id) firstResponder

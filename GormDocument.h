@@ -47,7 +47,6 @@
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
   GormObjectProxy       *fontManager;
-  GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
   NSWindow		*window;
@@ -152,7 +151,6 @@
 - (BOOL) removeConnectionsForClassNamed: (NSString *)name;
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
-- (BOOL) isTopLevelObject: (id)obj;
 - (void) closeAllEditors;
 
 // class loading

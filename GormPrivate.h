@@ -36,6 +36,7 @@
 #include "GormInspectorsManager.h"
 #include "GormClassManager.h"
 #include "GormPalettesManager.h"
+#include "GormOutlineView.h"
 
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;
@@ -158,7 +159,7 @@ extern NSString *GormResizeCellNotification;
 - (BOOL) documentNameIsUnique: (NSString *)filename;
 @end
 
-@interface GormClassEditor : NSObject <IBSelectionOwners>
+@interface GormClassEditor : GormOutlineView <IBSelectionOwners>
 {
   GormDocument          *document;
   NSString              *selectedClassName;
