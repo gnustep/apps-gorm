@@ -307,9 +307,13 @@ static BOOL done_editing;
   /* What's the minimum size of a cell? */
   minSize = NSZeroSize;
   if (isMatrix)
-    minSize = [[view prototype] cellSize];
+    {
+      minSize = [[view prototype] cellSize];
+    }
   else if (isControl)
-    minSize = [[view cell] cellSize];
+    {
+      minSize = [[view cell] cellSize];
+    }
   else if (isBox)
     {
       /* This is wrong. It depends on how we resize the subviews. Maybe we
@@ -322,28 +326,37 @@ static BOOL done_editing;
       minSize = NSMakeSize(15, 15);
     }
   if (NSEqualSizes(minSize, NSZeroSize))
-    minSize = NSMakeSize(20, 20);
+    {
+      minSize = NSMakeSize(20, 20);
+    }
   
   if (!isMatrix)
     {
       NSRect oldFrame = [view frame];
+
       /* Check if it is too small*/
       if (NSWidth(frame) < minSize.width
-	  || NSHeight(frame) < minSize.height)
+	|| NSHeight(frame) < minSize.height)
 	{
 	  /* Check if it is already too small and we're just 
 	     making it bigger */
 	  if (NSWidth(frame) < NSWidth(oldFrame) 
-	      && NSHeight(frame) < NSHeight(oldFrame))
-	    return NO;
+	    && NSHeight(frame) < NSHeight(oldFrame))
+	    {
+	      return NO;
+	    }
 	}
 
       if (([theEvent modifierFlags] & NSAlternateKeyMask) 
-	  != NSAlternateKeyMask || isControl == NO)
-	return YES;
+	!= NSAlternateKeyMask || isControl == NO)
+	{
+	  return YES;
+	}
     }
   if (isBox)
-    return YES;
+    {
+      return YES;
+    }
   
   /* After here, everything is a matrix or will be converted to one */
   if (isMatrix)
@@ -357,26 +370,39 @@ static BOOL done_editing;
     {
       /* Keep the cell size the same but increase the intercell spacing. */
       if ([view isKindOfClass: [NSForm class]] == NO && cols > 1)
-	intercellSpace.width = (NSWidth(frame)-cellSize.width*cols)
-	  / (cols-1);
+	{
+	  intercellSpace.width = (NSWidth(frame)-cellSize.width*cols)
+	    / (cols-1);
+	}
       if (rows > 1)
-	intercellSpace.height = (NSHeight(frame)-cellSize.height*rows)
-	  / (rows-1);
+	{
+	  intercellSpace.height = (NSHeight(frame)-cellSize.height*rows)
+	    / (rows-1);
+	}
       if (intercellSpace.width < 0)
-	return NO;
+	{
+	  return NO;
+	}
       if (intercellSpace.height < 0)
-	return NO;
+	{
+	  return NO;
+	}
       if ([view isKindOfClass: [NSForm class]] 
-	  && NSWidth(frame) != NSWidth([view frame]))
-	return NO;
+	&& NSWidth(frame) != NSWidth([view frame]))
+	{
+	  return NO;
+	}
       if (update)
-	[view setIntercellSpacing: intercellSpace];
+	{
+	  [view setIntercellSpacing: intercellSpace];
+	}
     }
   else if (([theEvent modifierFlags] & NSAlternateKeyMask) 
-	   == NSAlternateKeyMask)
+    == NSAlternateKeyMask)
     {
       BOOL redisplay;
       int new_rows, new_cols;
+
       /* If possible convert the object to a matrix with the cell given by the
 	 current object. If already a matrix, set the number of rows/cols
          based on the frame size. */
@@ -412,11 +438,11 @@ static BOOL done_editing;
 	/ (cellSize.height+intercellSpace.height);
 
       if (new_rows < 0 || new_rows-rows > 50 
-	  || new_cols < 0 || new_cols-cols > 50)
+	|| new_cols < 0 || new_cols-cols > 50)
 	{
 	  /* Something wierd happened. Hopefully just a transient thing */
 	  NSLog(@"Internal Error: Invalid frame during view resize (%d,%d)",
-		new_rows, new_cols);
+	    new_rows, new_cols);
 	  return YES;
 	}
       redisplay = NO;
@@ -448,9 +474,14 @@ static BOOL done_editing;
 	  for (i = 0; i < new_rows-rows; i++)
 	    {
 	      if ([view isKindOfClass: [NSForm class]])
-		[view addEntry: [NSString stringWithFormat: @"Form %0d", i+rows]];
+		{
+		  [view addEntry: [NSString stringWithFormat: @"Form %0d",
+		    i + rows]];
+		}
 	      else
-		[view addRow];
+		{
+		  [view addRow];
+		}
 	    }
 	}
       else if (new_rows < rows)
@@ -502,7 +533,7 @@ static BOOL done_editing;
   NSMutableArray	*array;
 
   mouseDownPoint = [edit_view convertPoint: [theEvent locationInWindow]
-				fromView: nil];
+				  fromView: nil];
 
   /*
    * If we have any subviews selected, we need to check to see if the knob
@@ -573,8 +604,10 @@ static BOOL done_editing;
       /* Make sure we're selecting the proper view - must be a direct
 	 decendant of the edit_view */
       while (view != nil && view != self 
-	     && view != edit_view && [view superview] != edit_view)
-	view = [view superview];
+	&& view != edit_view && [view superview] != edit_view)
+	{
+	  view = [view superview];
+	}
       if (view == self && edit_view != self)
 	{
 	  /* Clicked outside the edit view - just close the edit view(s) */
@@ -582,11 +615,11 @@ static BOOL done_editing;
 	  while (view != self)
 	    {
 	      NSRect r;
+
 	      view = [view superview];
 	      r = GormExtBoundsForRect([view frame]);
 	      r.origin.x--;
 	      r.origin.y--;
-
 	      r.size.width += 2;
 	      r.size.height += 2;
 	      view = [view superview];
@@ -871,7 +904,7 @@ static BOOL done_editing;
 	  if (eType != NSPeriodic)
 	    {
 	      point = [edit_view convertPoint: [e locationInWindow]
-				fromView: nil];
+				     fromView: nil];
 	      if (edit_view != self)
 		point = _constrainPointToBounds(point, [edit_view bounds]);
 	    }
@@ -1001,7 +1034,9 @@ static BOOL done_editing;
 				    forViewPtr: &view
 				     withEvent: theEvent
 				        update: NO])
-			lastRect = r;
+			{
+			  lastRect = r;
+			}
 		      GormShowFrameWithKnob(lastRect, knob);
 		    }
 		}
@@ -1040,7 +1075,7 @@ static BOOL done_editing;
 	   * it and make them (if any) into our current selection.
 	   */
 	  point = [edit_view convertPoint: [e locationInWindow]
-			    fromView: nil];
+				 fromView: nil];
 	  r = NSRectFromPoints(point, mouseDownPoint);
 	  array = [NSMutableArray arrayWithCapacity: 8];
 	  enumerator = [[edit_view subviews] objectEnumerator];
@@ -1066,7 +1101,7 @@ static BOOL done_editing;
 	       * This was a subview resize, so we must clean up by removing
 	       * the highlighted knob and the wireframe around the view.
 	       */
-	      r = GormExtBoundsForRect([view frame]);
+	      r = GormExtBoundsForRect(lastRect);
 	      r.origin.x--;
 	      r.origin.y--;
 	      r.size.width += 2;
@@ -1076,7 +1111,18 @@ static BOOL done_editing;
 		        forViewPtr: &view 
 		         withEvent: theEvent
 			    update: YES];
-	      [view setFrame: lastRect];
+	      /*
+	       * For a matrix, we set the matrix frame to fit its cells,
+	       * otherwise we set it to whatever size it was dragged to.
+	       */
+	      if ([view isKindOfClass: [NSMatrix class]] == YES)
+		{
+		  [(NSMatrix*)view sizeToCells];
+		}
+	      else
+		{
+		  [view setFrame: lastRect];
+		}
 	      r = GormExtBoundsForRect([view frame]);
 	      r.origin.x--;
 	      r.origin.y--;
@@ -1137,11 +1183,12 @@ static BOOL done_editing;
   return YES;
 }
 
-- (void)changeFont: (id)sender
+- (void) changeFont: (id)sender
 {
   NSEnumerator *enumerator = [selection objectEnumerator];
   id anObject;
   NSFont *newFont;
+
   while ((anObject = [enumerator nextObject]))
     {
       if ([anObject respondsToSelector: @selector(font)]

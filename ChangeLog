@@ -1,11 +1,12 @@
 2001-10-29  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
-	* GormDocument.m ([GormDocument -init]): set the NSTableView's properties
-	so that it benefits from [NSTableView -sizeToFit]
+	* GormDocument.m ([GormDocument -init]): set the NSTableView's
+	properties so that it benefits from [NSTableView -sizeToFit]
 
 2001-10-29  Richard Frith-Macdonald <rfm@gnu.org>
 
-	* GormClassManager.m: Tidy action namnes in browser etc.
+	* GormClassManager.m: Tidy action names in browser etc.
+	* GormWindowEditor.m: Tidy size of matrix at end of resize.
 
 2001-10-28  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
