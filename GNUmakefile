@@ -53,6 +53,14 @@ Gorm_RESOURCE_FILES = \
 	Images/GormSourceTag.tiff \
 	Images/GormTargetTag.tiff \
 	Images/GormLinkImage.tiff \
+	Images/GormEHCoil.tiff \
+	Images/GormEHLine.tiff \
+	Images/GormEVCoil.tiff \
+	Images/GormEVLine.tiff \
+	Images/GormMHCoil.tiff \
+	Images/GormMHLine.tiff \
+	Images/GormMVCoil.tiff \
+	Images/GormMVLine.tiff \
         Images/Gorm.tiff
 
 Gorm_HEADERS = \

@@ -1,3 +1,7 @@
+Tue Dec 21 15:30:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Added size inspector for autoresizing of views.
+
 Tue Dec 21  8:10:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Added inspector for files owner so we can create connections from

@@ -621,3 +621,235 @@ NSLog(@"Got link from %@", name);
   return [super window];
 }
 @end
+
+
+@implementation	NSView (GormInspectors)
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormViewSizeInspector";
+}
+@end
+
+@interface GormViewSizeInspector : IBInspector
+{
+  NSButton	*top;
+  NSButton	*bottom;
+  NSButton	*left;
+  NSButton	*right;
+  NSButton	*width;
+  NSButton	*height;
+}
+@end
+
+@implementation GormViewSizeInspector
+
+NSImage	*eHCoil = nil;
+NSImage	*eVCoil = nil;
+NSImage	*eHLine = nil;
+NSImage	*eVLine = nil;
+NSImage	*mHCoil = nil;
+NSImage	*mVCoil = nil;
+NSImage	*mHLine = nil;
+NSImage	*mVLine = nil;
+
++ (void) initialize
+{
+  if (self == [GormViewSizeInspector class])
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path;
+
+      path = [bundle pathForImageResource: @"GormEHCoil"];
+      eHCoil = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormEVCoil"];
+      eVCoil = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormEHLine"];
+      eHLine = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormEVLine"];
+      eVLine = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormMHCoil"];
+      mHCoil = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormMVCoil"];
+      mVCoil = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormMHLine"];
+      mHLine = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormMVLine"];
+      mVLine = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+}
+
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView		*contents;
+      NSButton		*button;
+      NSBox		*box;
+      NSRect		rect;
+
+      rect = NSMakeRect(0, 0, IVW, IVH);
+      window = [[NSWindow alloc] initWithContentRect: rect
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+
+      rect = NSMakeRect((IVW-200)/2, (IVW-200)/2, 200, 200);
+      box = [[NSBox alloc] initWithFrame: NSZeroRect];
+      [box setBorderType: NSBezelBorder];
+      [box setTitle: @"Autosizing"];
+      [box setTitlePosition: NSAtTop];
+      [box setFrameFromContentFrame: rect];
+      [contents addSubview: box];
+      RELEASE(box);
+
+      rect = NSMakeRect(50, 50, 100, 100);
+      button = [[NSButton alloc] initWithFrame: rect];
+      [button setTitle: @""];
+      [button setEnabled: NO];
+      [box addSubview: button];
+
+      rect = NSMakeRect(90,150,20,50);
+      top = [[NSButton alloc] initWithFrame: rect];
+      [top setImagePosition: NSImageOnly];
+      [top setImage: eVLine];
+      [top setAlternateImage: eVCoil];
+      [top setBordered: NO];
+      [top setButtonType: NSToggleButton];
+      [top setTag: NSViewMaxYMargin];
+      [top setTarget: self];
+      [top setAction: @selector(setAutosize:)];
+      [box addSubview: top];
+      RELEASE(top);
+
+      rect = NSMakeRect(90,0,20,50);
+      bottom = [[NSButton alloc] initWithFrame: rect];
+      [bottom setImagePosition: NSImageOnly];
+      [bottom setImage: eVLine];
+      [bottom setAlternateImage: eVCoil];
+      [bottom setBordered: NO];
+      [bottom setButtonType: NSToggleButton];
+      [bottom setTag: NSViewMinYMargin];
+      [bottom setTarget: self];
+      [bottom setAction: @selector(setAutosize:)];
+      [box addSubview: bottom];
+      RELEASE(bottom);
+
+      rect = NSMakeRect(0,90,50,20);
+      left = [[NSButton alloc] initWithFrame: rect];
+      [left setImagePosition: NSImageOnly];
+      [left setImage: eHLine];
+      [left setAlternateImage: eHCoil];
+      [left setBordered: NO];
+      [left setButtonType: NSToggleButton];
+      [left setTag: NSViewMinXMargin];
+      [left setTarget: self];
+      [left setAction: @selector(setAutosize:)];
+      [box addSubview: left];
+      RELEASE(left);
+
+      rect = NSMakeRect(150,90,50,20);
+      right = [[NSButton alloc] initWithFrame: rect];
+      [right setImagePosition: NSImageOnly];
+      [right setImage: eHLine];
+      [right setAlternateImage: eHCoil];
+      [right setBordered: NO];
+      [right setButtonType: NSToggleButton];
+      [right setTag: NSViewMaxXMargin];
+      [right setTarget: self];
+      [right setAction: @selector(setAutosize:)];
+      [box addSubview: right];
+      RELEASE(right);
+
+      rect = NSMakeRect(51,90,97,20);
+      width = [[NSButton alloc] initWithFrame: rect];
+      [width setImagePosition: NSImageOnly];
+      [width setImage: mHLine];
+      [width setAlternateImage: mHCoil];
+      [width setBordered: NO];
+      [width setButtonType: NSToggleButton];
+      [width setTag: NSViewWidthSizable];
+      [width setTarget: self];
+      [width setAction: @selector(setAutosize:)];
+      [box addSubview: width];
+      RELEASE(width);
+
+      rect = NSMakeRect(90,51,20,97);
+      height = [[NSButton alloc] initWithFrame: rect];
+      [height setImagePosition: NSImageOnly];
+      [height setImage: mVLine];
+      [height setAlternateImage: mVCoil];
+      [height setBordered: NO];
+      [height setButtonType: NSToggleButton];
+      [height setTag: NSViewHeightSizable];
+      [height setTarget: self];
+      [height setAction: @selector(setAutosize:)];
+      [box addSubview: height];
+      RELEASE(height);
+    }
+  return self;
+}
+
+- (void) setAutosize: (id)sender
+{
+  unsigned	mask = [sender tag];
+
+  if ([sender state] == NSOnState)
+    {
+      mask = [object autoresizingMask] | mask;
+    }
+  else
+    {
+      mask = [object autoresizingMask] & ~mask;
+    }
+  [object setAutoresizingMask: mask];
+}
+
+- (void) setObject: (id)anObject
+{
+  if (anObject != nil && anObject != object)
+    {
+      unsigned	mask = [anObject autoresizingMask];
+
+      ASSIGN(object, anObject);
+      if (mask & NSViewMaxYMargin)
+	[top setState: NSOnState];
+      else
+	[top setState: NSOffState];
+
+      if (mask & NSViewMinYMargin)
+	[bottom setState: NSOnState];
+      else
+	[bottom setState: NSOffState];
+
+      if (mask & NSViewMaxXMargin)
+	[right setState: NSOnState];
+      else
+	[right setState: NSOffState];
+
+      if (mask & NSViewMinXMargin)
+	[left setState: NSOnState];
+      else
+	[left setState: NSOffState];
+
+      if (mask & NSViewWidthSizable)
+	[width setState: NSOnState];
+      else
+	[width setState: NSOffState];
+
+      if (mask & NSViewHeightSizable)
+	[height setState: NSOnState];
+      else
+	[height setState: NSOffState];
+    }
+}
+
+@end
+
