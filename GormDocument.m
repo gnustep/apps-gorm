@@ -954,18 +954,23 @@ static NSImage	*classesImage = nil;
   if([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
-      
+     
       // if the class being edited is a custom class, then allow the deletion...
       if([classManager isCustomClass: itemBeingEdited])
 	{
+	  NSString *name = [anitem getName];
+
 	  if([classesView editType] == Actions)
 	    {
 	      // if this action is an action on the class, not it's superclass
 	      // allow the deletion...
-	      if([classManager isAction: [anitem getName]
+	      if([classManager isAction: name
 			       ofClass: itemBeingEdited])
 		{
-		  [classManager removeAction: [anitem getName]
+		  BOOL removed = [self removeConnectionsWithLabel: name 
+				       forClassNamed: itemBeingEdited
+				       isAction: YES];
+		  [classManager removeAction: name
 				fromClassNamed: itemBeingEdited];
 		  [classesView removeItemAtRow: i];
 		}
@@ -974,10 +979,13 @@ static NSImage	*classesImage = nil;
 	    {
 	      // if this outlet is an outlet on the class, not it's superclass
 	      // allow the deletion...
-	      if([classManager isOutlet: [anitem getName]
+	      if([classManager isOutlet: name
 			       ofClass: itemBeingEdited])
 		{
-		  [classManager removeOutlet: [anitem getName]
+		  BOOL removed = [self removeConnectionsWithLabel: name 
+				       forClassNamed: itemBeingEdited
+				       isAction: NO];
+		  [classManager removeOutlet: name
 				fromClassNamed: itemBeingEdited];
 		  [classesView removeItemAtRow: i];
 		}
@@ -993,6 +1001,7 @@ static NSImage	*classesImage = nil;
 	  // if the class being edited is a custom class, then allow the deletion...
 	  if([classManager isCustomClass: anitem])
 	    {
+	      BOOL removed = [self removeConnectionsForClassNamed: anitem];
 	      [classManager removeClassNamed: anitem];
 	      [classesView reloadData];
 	    }

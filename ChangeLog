@@ -1,3 +1,9 @@
+2003-01-09  Gregory John Casamento <greg_casamento@yahoo.com
+
+	* GormDocument.m: [GormDocument remove:]: added code
+	to break connections when a class, action or outlet
+	is deleted.  
+
 2003-01-09  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: added missing orderFrontFontPanel: 
