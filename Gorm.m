@@ -213,6 +213,10 @@ static NSButtonType _buttonTypeForObject( id button )
 - (id) initWithObject: (id)object
 	    className: (NSString *)name
 {
+  // GSDataObject *data = [[GSDataObject alloc] initWithObject: object];
+  // RETAIN(data);
+  // NSLog(@"!!!!!!I'm here!!!!!!!!! %@",self);
+
   [super init];
   [self setBackgroundColor: [object backgroundColor]];
   [self setContentView: [object contentView]];

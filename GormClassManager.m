@@ -1427,4 +1427,25 @@
 
   return className;
 }
+
+- (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className
+{
+  id action = nil;
+  NSEnumerator *e = [actions objectEnumerator];
+  while((action = [e nextObject]))
+    {
+      [self addAction: action forClassNamed: className];
+    }
+}
+
+- (void) addOutlets: (NSArray *)outlets forClassNamed: (NSString *)className
+{
+  id action = nil;
+  NSEnumerator *e = [outlets objectEnumerator];
+  while((action = [e nextObject]))
+    {
+      [self addOutlet: action forClassNamed: className];
+    }
+}
+
 @end

@@ -320,7 +320,7 @@ static NSImage	*classesImage = nil;
 	  NSString *className = [classManager customClassForName: key];
 	  
 	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
+	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
 	  if (className != nil)
 	    {
 	      /*
@@ -774,7 +774,7 @@ static NSImage	*classesImage = nil;
   GormClassManager *cm = [self classManager];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
   NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
-  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :("];
   NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
@@ -787,11 +787,12 @@ static NSImage	*classesImage = nil;
   while (![headerScanner isAtEnd])
     {
       NSString *classString = nil;
-      BOOL classfound = NO, result = NO;
+      BOOL classfound = NO, result = NO, category = NO;
       NSEnumerator *outletEnum = [outletTokens objectEnumerator];
       NSEnumerator *actionEnum = [actionTokens objectEnumerator];
       NSString *outletToken = nil;
       NSString *actionToken = nil;
+      int alert;
 
       classfound = [headerScanner scanUpToString: @"@interface"
 			     intoString: NULL];
@@ -831,51 +832,73 @@ static NSImage	*classesImage = nil;
 	  NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
 		     superClassName);
 
-	  // Interate over the possible tokens which can make an
-	  // ivar an outlet.
-	  while ((outletToken = [outletEnum nextObject]) != nil)
+	  category = (ivarString == nil);
+
+	  // if its' not a category and it's known, ask before proceeding...
+	  if([cm isKnownClass: className] && !category)
 	    {
-	      NSString *delimiter = nil;
-	      NSDebugLog(@"outlet Token = %@", outletToken);
-	      // Scan the variables of the class...
-	      ivarScanner = [NSScanner scannerWithString: ivarString];
-	      while (![ivarScanner isAtEnd])
+	      NSString *message = [NSString stringWithFormat: 
+					      _(@"The class %@ already exists. Replace it?"), 
+					    className];
+	      alert = NSRunAlertPanel(_(@"Problem adding class from header"), 
+				      message,
+				      _(@"Yes"), 
+				      _(@"No"), 
+				      nil);
+	      if (alert != NSAlertDefaultReturn)
+		return self;
+	    }
+	  
+	  // if it's not a category go through the ivars...
+	  if(!category)
+	    {
+	      NSDebugLog(@"Ivar string is not nil");
+	      // Interate over the possible tokens which can make an
+	      // ivar an outlet.
+	      while ((outletToken = [outletEnum nextObject]) != nil)
 		{
-		  NSString *outlet = nil;
-		  NSString *type = nil;
-
-		  if (delimiter == nil || [delimiter isEqualToString: @";"])
+		  NSString *delimiter = nil;
+		  NSDebugLog(@"outlet Token = %@", outletToken);
+		  // Scan the variables of the class...
+		  ivarScanner = [NSScanner scannerWithString: ivarString];
+		  while (![ivarScanner isAtEnd])
 		    {
-		      [ivarScanner scanUpToString: outletToken
-				   intoString: NULL];
-		      [ivarScanner scanString: outletToken
-				   intoString: NULL];
-		    }
-
-		  // if using the IBOutlet token in the header, scan in the outlet type
-		  // as well.
-		  if([outletToken isEqualToString: @"IBOutlet"])
-		    {
-		      [ivarScanner scanUpToCharactersFromSet: typeStopSet
-				   intoString: NULL];
-		      [ivarScanner scanCharactersFromSet: typeStopSet
-				   intoString: NULL];
-		      [ivarScanner scanUpToCharactersFromSet: typeStopSet
-				   intoString: &type];
-		      NSDebugLog(@"outlet type = %@",type);
-		    }
-
-		  [ivarScanner scanUpToCharactersFromSet: outletStopSet
-			       intoString: &outlet];
-		  [ivarScanner scanCharactersFromSet: outletStopSet
-			       intoString: &delimiter];
-		  if ([ivarScanner isAtEnd] == NO
-		     && [outlets indexOfObject: outlet] == NSNotFound)
-		    {
-		      NSDebugLog(@"outlet = %@", outlet);
-		      if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalOutletSet],notFoundRange))
+		      NSString *outlet = nil;
+		      NSString *type = nil;
+		      
+		      if (delimiter == nil || [delimiter isEqualToString: @";"])
 			{
-			  [outlets addObject: outlet];
+			  [ivarScanner scanUpToString: outletToken
+				       intoString: NULL];
+			  [ivarScanner scanString: outletToken
+				       intoString: NULL];
+			}
+		      
+		      // if using the IBOutlet token in the header, scan in the outlet type
+		      // as well.
+		      if([outletToken isEqualToString: @"IBOutlet"])
+			{
+			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				       intoString: NULL];
+			  [ivarScanner scanCharactersFromSet: typeStopSet
+				       intoString: NULL];
+			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				       intoString: &type];
+			  NSDebugLog(@"outlet type = %@",type);
+			}
+
+		      [ivarScanner scanUpToCharactersFromSet: outletStopSet
+				   intoString: &outlet];
+		      [ivarScanner scanCharactersFromSet: outletStopSet
+				   intoString: &delimiter];
+		      if ([ivarScanner isAtEnd] == NO
+			  && [outlets indexOfObject: outlet] == NSNotFound)
+			{
+			  NSDebugLog(@"outlet = %@", outlet);
+			  if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalOutletSet],notFoundRange))
+			    {
+			      [outlets addObject: outlet];
+			    }
 			}
 		    }
 		}
@@ -933,52 +956,52 @@ static NSImage	*classesImage = nil;
 		} // end while
 	    } // end while 
 
-	  result = [cm addClassNamed: className
-		       withSuperClassNamed: superClassName
-		       withActions: actions
-		       withOutlets: outlets];
+	  if([cm isKnownClass: className] && 
+	     [cm isCustomClass: className] && category) 
+	    {
+	      [cm addActions: actions forClassNamed: className];
+	      [cm addOutlets: actions forClassNamed: className];
+	      result = YES;
+	    }
+	  else 
+	    {
+	      result = [cm addClassNamed: className
+			   withSuperClassNamed: superClassName
+			   withActions: actions
+			   withOutlets: outlets];
+	    }
+
 	  if (result)
 	    {
 	      NSDebugLog(@"Class %@ added", className);
 	      [classesView reloadData]; 
 	    }
 	  else
-	    {
-	      NSString *message = [NSString stringWithFormat: 
-		_(@"The class %@ already exists. Replace it?"), className];	      
-	      int alert = NSRunAlertPanel(_(@"Problem adding class from header"), 
-					  message,
-					  _(@"Yes"), 
-					  _(@"No"), 
-					  nil);
-
-	      if (alert == NSAlertDefaultReturn)
-		{
-		  [cm removeClassNamed: className];
-		  result = [cm addClassNamed: className
-			       withSuperClassNamed: superClassName
-			       withActions: actions
-			       withOutlets: outlets];
-		  if (!result)
-		    {
-		      NSString *message = [NSString stringWithFormat: 
-			_(@"Could not replace class %@."), className];	      
-		      NSRunAlertPanel(_(@"Problem adding class from header"), 
+	    if (alert == NSAlertDefaultReturn)
+	      {
+		[cm removeClassNamed: className];
+		result = [cm addClassNamed: className
+			     withSuperClassNamed: superClassName
+			     withActions: actions
+			     withOutlets: outlets];
+		if (!result)
+		  {
+		    NSString *message = [NSString stringWithFormat: 
+						    _(@"Could not replace class %@."), className];	      
+		    NSRunAlertPanel(_(@"Problem adding class from header"), 
 				      message,
-				      nil, 
-				      nil, 
-				      nil);
-		      NSDebugLog(@"Class %@ failed to add", className);
+				    nil, 
+				    nil, 
+				    nil);
+		    NSDebugLog(@"Class %@ failed to add", className);
+		  }
+		else
+		  {
+		    NSDebugLog(@"Class %@ replaced.", className);
+		    [classesView reloadData]; 
 		    }
-		  else
-		    {
-		      NSDebugLog(@"Class %@ replaced.", className);
-		      [classesView reloadData]; 
-		    }
-		}
-
-	    }
-
+	      }
+	   
 	  if (result)
 	    {
 	      // go to the class which was just loaded in the classes view...
@@ -1806,7 +1829,7 @@ static NSImage	*classesImage = nil;
 
 	  while ((obj = [en nextObject]) != nil)
 	    {
-	      NSLog(@"Preloading %@", obj);
+	      NSDebugLog(@"Preloading %@", obj);
 	      [self parseHeader: (NSString *)obj];
 	    }
 	}
@@ -2793,7 +2816,7 @@ static NSImage	*classesImage = nil;
 	}
     }
 
-   [self endArchiving];
+  [self endArchiving];
 
   if (archiveResult == NO)
     {

@@ -30,6 +30,8 @@
 - (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString*)anObject;
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className;
 - (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className;
+- (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className;
+- (void) addOutlets: (NSArray *)outlets forClassNamed: (NSString *)className;
 - (NSString *) addNewActionToClassNamed: (NSString *)name;
 - (NSString *) addNewOutletToClassNamed: (NSString *)name;
 - (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className;

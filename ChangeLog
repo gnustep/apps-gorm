@@ -1,3 +1,13 @@
+2003-07-14  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.[hm]: Added implementation for new methods 
+	to add an array of outlets and actions to a class.
+	* GormDocument.[hm]: Added GPL notice to top of file .h file
+	and made changes in the -parseHeader method to properly
+	handle .h files with categories.
+	* GormWindowEditor.m: Removed some very old and commented out
+	code.
+
 2003-06-29  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Added code to send notifications when
