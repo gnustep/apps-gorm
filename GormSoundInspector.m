@@ -68,13 +68,12 @@
 - (void) setObject: (id)anObject
 {
   // if its not nil, load it...
-  if(anObject != nil && anObject != _currentSound)
+  if(anObject != nil)
     {
       if([anObject isKindOfClass: [GormSound class]])
 	{
 	  id snd;
 
-	  _currentSound = anObject;
 	  NSDebugLog(@"Sound inspector notified: %@",anObject);
 	  snd = AUTORELEASE([[NSSound alloc] initWithContentsOfFile: [anObject soundPath]
 					     byReference: YES]);

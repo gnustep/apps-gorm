@@ -1336,6 +1336,26 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  return NO;
 	}
 
+      if(sel_eq(action, @selector(createSubclass:)))
+	{
+	  NSArray *s = [selectionOwner selection];
+	  id o = nil;
+	  NSString *name = nil;
+
+	  if([s count] == 0 || [s count] > 1)
+	    return NO;
+	  
+	  o = [s objectAtIndex: 0];
+	  name = [o className];
+
+	  if([active classIsSelected] == NO)
+	    {
+	      return NO;
+	    }
+	  
+	  if([name isEqual: @"FirstResponder"])
+	    return NO;
+	}
       
       if(sel_eq(action, @selector(addAttributeToClass:)) ||
 	 sel_eq(action, @selector(createClassFiles:)) || 
@@ -1360,7 +1380,11 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	    {
 	      return NO;
 	    }
+
+	  if([name isEqual: @"FirstResponder"])
+	    return NO;
 	}
+
       if(sel_eq(action, @selector(instantiateClass:)))
 	{
 	  NSArray *s = [selectionOwner selection];
@@ -1376,80 +1400,17 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	      return NO;
 	    }
 	  
+	  if([active classIsSelected] == NO)
+	    {
+	      return NO;
+	    }
+	  
 	  o = [s objectAtIndex: 0];
 	  name = [o className];
 	  if(name != nil)
 	    {
 	      id cm = [self classManager];
-	      // there are some classes which can't be instantiated directly
-	      // in Gorm.
-	      if([cm isSuperclass: @"NSApplication" linkedToClass: name] || 
-		 [name isEqualToString: @"NSApplication"])
-		{
-		  return NO;
-		}
-	      if([cm isSuperclass: @"NSCell" linkedToClass: name] || 
-		 [name isEqualToString: @"NSCell"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSDocument"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSDocumentController"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSFontManager"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSHelpManager"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSImage"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"NSMenuItem" linkedToClass: name] || 
-		      [name isEqualToString: @"NSMenuItem"])
-		{
-		  return NO;
-		}
-	      else if([name isEqualToString: @"NSResponder"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"NSSound" linkedToClass: name] || 
-		      [name isEqualToString: @"NSSound"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"NSTableColumn" linkedToClass: name] || 
-		      [name isEqualToString: @"NSTableColumn"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"NSTableViewItem" linkedToClass: name] || 
-		      [name isEqualToString: @"NSTableViewItem"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"NSWindow" linkedToClass: name] || 
-		      [name isEqualToString: @"NSWindow"])
-		{
-		  return NO;
-		}
-	      else if([cm isSuperclass: @"FirstResponder" linkedToClass: name] || 
-		      [name isEqualToString: @"FirstResponder"])
-		{
-		  // special case, FirstResponder.
-		  return NO;
-		}
-
-	      NSDebugLog(@"Selection is %@",name);
+	      return [cm canInstantiateClassNamed: name];
 	    }
 	}
     }

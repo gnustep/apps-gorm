@@ -167,6 +167,308 @@ static NSImage	*classesImage = nil;
     }
 }
 
+- (id) init 
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSRect			winrect = NSMakeRect(100,100,342,256);
+      NSRect			selectionRect = {{6, 188}, {234, 64}};
+      NSRect			scrollRect = {{0, 0}, {340, 188}};
+      NSRect			mainRect = {{20, 0}, {320, 188}};
+      NSImage			*image;
+      GormDisplayCell		*cell;
+      NSTableColumn             *tableColumn;
+      unsigned			style;
+      NSColor *salmonColor = 
+	[NSColor colorWithCalibratedRed: 0.850980 
+		 green: 0.737255
+		 blue: 0.576471
+		 alpha: 1.0 ];
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      
+      openEditors = [NSMutableArray new];
+      classManager = [[GormClassManager alloc] initWithDocument: self]; 
+      classEditor = [[GormClassEditor alloc] initWithDocument: self];
+
+      /*
+       * NB. We must retain the map values (object names) as the nameTable
+       * may not hold identical name objects, but merely equal strings.
+       */
+      objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
+	NSObjectMapValueCallBacks, 128, [self zone]);
+      
+      // for saving the editors when the gorm file is persisted.
+      savedEditors = [NSMutableArray new];
+
+      style = NSTitledWindowMask | NSClosableWindowMask
+	| NSResizableWindowMask | NSMiniaturizableWindowMask;
+      window = [[NSWindow alloc] initWithContentRect: winrect
+					   styleMask: style 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      [window setMinSize: [window frame].size];
+      [window setTitle: _(@"UNTITLED")];
+      [window setReleasedWhenClosed: NO];
+      [window setDelegate: self];
+
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowWillCloseNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowDidBecomeKeyNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowWillMiniaturizeNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowDidDeminiaturizeNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBClassNameChangedNotification
+	       object: classManager];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBInspectorDidModifyObjectNotification
+	       object: classManager];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: GormDidModifyClassNotification
+	       object: classManager];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: GormDidAddClassNotification
+	       object: classManager];
+      selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
+						 mode: NSRadioModeMatrix
+					    cellClass: [GormDisplayCell class]
+					 numberOfRows: 1
+				      numberOfColumns: 4];
+      [selectionView setTarget: self];
+      [selectionView setAction: @selector(changeView:)];
+      [selectionView setAutosizesCells: NO];
+      [selectionView setCellSize: NSMakeSize(64,64)];
+      [selectionView setIntercellSpacing: NSMakeSize(24,0)];
+      [selectionView setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
+
+      if ((image = objectsImage) != nil)
+	{
+	  cell = [selectionView cellAtRow: 0 column: 0];
+	  [cell setTag: 0];
+	  [cell setImage: image];
+	  [cell setTitle: _(@"Objects")];
+	  [cell setBordered: NO];
+	  [cell setAlignment: NSCenterTextAlignment];
+	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
+	}
+
+      if ((image = imagesImage) != nil)
+	{
+	  cell = [selectionView cellAtRow: 0 column: 1];
+	  [cell setTag: 1];
+	  [cell setImage: image];
+	  [cell setTitle: _(@"Images")];
+	  [cell setBordered: NO];
+	  [cell setAlignment: NSCenterTextAlignment];
+	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
+	}
+
+      if ((image = soundsImage) != nil)
+	{
+	  cell = [selectionView cellAtRow: 0 column: 2];
+	  [cell setTag: 2];
+	  [cell setImage: image];
+	  [cell setTitle: _(@"Sounds")];
+	  [cell setBordered: NO];
+	  [cell setAlignment: NSCenterTextAlignment];
+	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
+	}
+
+      if ((image = classesImage) != nil)
+	{
+	  cell = [selectionView cellAtRow: 0 column: 3];
+	  [cell setTag: 3];
+	  [cell setImage: image];
+	  [cell setTitle: _(@"Classes")];
+	  [cell setBordered: NO];
+	  [cell setAlignment: NSCenterTextAlignment];
+	  [cell setImagePosition: NSImageAbove];
+	  [cell setButtonType: NSOnOffButton];
+	}
+
+      [[window contentView] addSubview: selectionView];
+      RELEASE(selectionView);
+
+      selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
+      [selectionBox setTitlePosition: NSNoTitle];
+      [selectionBox setBorderType: NSNoBorder];
+      [selectionBox setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [[window contentView] addSubview: selectionBox];
+      RELEASE(selectionBox);
+      
+      // objects...
+      mainRect.origin = NSMakePoint(0,0);
+      scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [scrollView setHasVerticalScroller: YES];
+      [scrollView setHasHorizontalScroller: YES];
+      [scrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setBorderType: NSBezelBorder];
+
+      objectsView = [[GormObjectEditor alloc] initWithObject: nil
+						  inDocument: self];
+      [objectsView setFrame: mainRect];
+      [objectsView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setDocumentView: objectsView];
+      RELEASE(objectsView); 
+
+      // images...
+      mainRect.origin = NSMakePoint(0,0);
+      imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [imagesScrollView setHasVerticalScroller: YES];
+      [imagesScrollView setHasHorizontalScroller: YES];
+      [imagesScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [imagesScrollView setBorderType: NSBezelBorder];
+
+      imagesView = [[GormImageEditor alloc] initWithObject: nil
+						inDocument: self];
+      [imagesView setFrame: mainRect];
+      [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [imagesScrollView setDocumentView: imagesView];
+      RELEASE(imagesView);
+
+      // sounds...
+      mainRect.origin = NSMakePoint(0,0);
+      soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [soundsScrollView setHasVerticalScroller: YES];
+      [soundsScrollView setHasHorizontalScroller: YES];
+      [soundsScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [soundsScrollView setBorderType: NSBezelBorder];
+
+      soundsView = [[GormSoundEditor alloc] initWithObject: nil
+						inDocument: self];
+      [soundsView setFrame: mainRect];
+      [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [soundsScrollView setDocumentView: soundsView];
+      RELEASE(soundsView);
+
+      // classes...
+      classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [classesScrollView setHasVerticalScroller: YES];
+      [classesScrollView setHasHorizontalScroller: NO];
+      [classesScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [classesScrollView setBorderType: NSBezelBorder];
+
+      mainRect.origin = NSMakePoint(0,0);
+      classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
+      [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
+      [classesView setDataSource: self];
+      [classesView setDelegate: self];
+      [classesView setAutoresizesAllColumnsToFit: YES];
+      [classesView setAllowsColumnResizing: NO];
+      [classesView setDrawsGrid: NO];
+      [classesView setIndentationMarkerFollowsCell: YES];
+      [classesView setAutoresizesOutlineColumn: YES];
+      [classesView setIndentationPerLevel: 10];
+      [classesView setAttributeOffset: 30];
+      [classesView setBackgroundColor: salmonColor ];
+      [classesView setRowHeight: 18];
+      [classesScrollView setDocumentView: classesView];
+      RELEASE(classesView);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
+      [[tableColumn headerCell] setStringValue: _(@"Classes")];
+      [tableColumn setMinWidth: 190];
+      [tableColumn setResizable: YES];
+      [tableColumn setEditable: YES];
+      [classesView addTableColumn: tableColumn];     
+      [classesView setOutlineTableColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+      [[tableColumn headerCell] setStringValue: _(@"Outlet")];
+      [tableColumn setWidth: 50]; 
+      [tableColumn setResizable: NO];
+      [tableColumn setEditable: NO];
+      [classesView addTableColumn: tableColumn];
+      [classesView setOutletColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
+      [[tableColumn headerCell] setStringValue: _(@"Action")];
+      [tableColumn setWidth: 50]; 
+      [tableColumn setResizable: NO];
+      [tableColumn setEditable: NO];
+      [classesView addTableColumn: tableColumn];
+      [classesView setActionColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      [classesView sizeToFit];
+
+      // expand all of the items in the classesView...
+      [classesView expandItem: @"NSObject"];
+
+      [selectionBox setContentView: scrollView];
+
+      /*
+       * Set up special-case dummy objects and add them to the objects view.
+       */
+      filesOwner = [GormFilesOwner new];
+      [self setName: @"NSOwner" forObject: filesOwner];
+      [objectsView addObject: filesOwner];
+      firstResponder = [GormFirstResponder new];
+      [self setName: @"NSFirst" forObject: firstResponder];
+      [objectsView addObject: firstResponder];
+
+      /*
+       * Set image for this miniwindow.
+       */
+      [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
+
+      hidden = [NSMutableArray new];
+      /*
+       * Watch to see when we are starting/ending testing.
+       */
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBWillBeginTestingInterfaceNotification
+	       object: nil];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBWillEndTestingInterfaceNotification
+	       object: nil];
+      
+      // preload headers...
+      if ([defaults boolForKey: @"PreloadHeaders"])
+	{
+	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
+	  NSEnumerator *en = [headerList objectEnumerator];
+	  id obj = nil;
+
+	  while ((obj = [en nextObject]) != nil)
+	    {
+	      NSDebugLog(@"Preloading %@", obj);
+	      [classManager parseHeader: (NSString *)obj];
+	    }
+	}
+    }
+  return self;
+}
+
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
   if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)
@@ -704,21 +1006,24 @@ static NSImage	*classesImage = nil;
       NSString	   *newClassName;
       id            itemSelected = [classesView itemAtRow: i];
       
-      if(![itemSelected isEqualToString: @"FirstResponder"])
+      if([itemSelected isKindOfClass: [NSString class]])
 	{
-	  newClassName = [classManager addClassWithSuperClassName:
-					 itemSelected];
-	  [classesView reloadData];
-	  [classesView expandItem: itemSelected];
-	  i = [classesView rowForItem: newClassName]; 
-	  [classesView selectRow: i byExtendingSelection: NO];
-	  [classesView scrollRowToVisible: i];
-	  [self editClass: self];
-	}
-      else
-	{
-	  // beep to inform the user of this error.
-	  NSBeep();
+	  if(![itemSelected isEqualToString: @"FirstResponder"])
+	    {
+	      newClassName = [classManager addClassWithSuperClassName:
+					     itemSelected];
+	      [classesView reloadData];
+	      [classesView expandItem: itemSelected];
+	      i = [classesView rowForItem: newClassName]; 
+	      [classesView selectRow: i byExtendingSelection: NO];
+	      [classesView scrollRowToVisible: i];
+	      [self editClass: self];
+	    }
+	  else
+	    {
+	      // beep to inform the user of this error.
+	      NSBeep();
+	    }
 	}
     }
 
@@ -843,275 +1148,6 @@ static NSImage	*classesImage = nil;
   return documentPath;
 }
 
-- (id) parseHeader: (NSString *)headerPath
-{
-  NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
-  NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
-  GormClassManager *cm = [self classManager];
-  NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
-  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
-  NSCharacterSet *categoryStopSet = [NSCharacterSet characterSetWithCharactersInString: @" ("];
-  NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
-  NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
-  NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
-  NSCharacterSet *illegalOutletSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\:;'<>?,./"];
-  NSCharacterSet *illegalActionSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\;'<>?,./"];
-  NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
-  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
-  NSRange notFoundRange = NSMakeRange(NSNotFound,0);
-  // NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
-
-  while (![headerScanner isAtEnd])
-    {
-      NSString *classString = nil;
-      BOOL classfound = NO, result = NO, category = NO;
-      NSEnumerator *outletEnum = [outletTokens objectEnumerator];
-      NSEnumerator *actionEnum = [actionTokens objectEnumerator];
-      NSString *outletToken = nil;
-      NSString *actionToken = nil;
-      int alert;
-
-      classfound = [headerScanner scanUpToString: @"@interface"
-			     intoString: NULL];
-
-      [headerScanner scanUpToString: @"@end"
-		     intoString: &classString];
-      
-      if (classfound && ![headerScanner isAtEnd])
-	{
-	  NSString 
-	    *className = nil,
-	    *superClassName = nil,
-	    *ivarString = nil,
-	    *methodString = nil;
-	  NSScanner 
-	    *classScanner = [NSScanner scannerWithString: classString],
-	    *ivarScanner = nil,
-	    *methodScanner = nil;
-	  NSMutableArray 
-	    *actions = [NSMutableArray array],
-	    *outlets = [NSMutableArray array];
-
-	  [classScanner scanString: @"@interface"
-			intoString: NULL];
-	  [classScanner scanUpToCharactersFromSet: classStopSet
-			intoString: &className];
-	  [classScanner scanString: @":"
-			intoString: NULL];
-	  [classScanner scanUpToCharactersFromSet: superClassStopSet
-			intoString: &superClassName];
-	  [classScanner scanUpToString: @"{"
-			intoString: NULL];
-	  [classScanner scanUpToString: @"}"
-			intoString: &ivarString];
-
-	  category = (ivarString == nil);
-	  if(!category)
-	    {
-	      [classScanner scanUpToString: @"@end"
-			    intoString: &methodString];
-	      NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
-			 superClassName);
-	    }
-	  else
-	    {
-	      NSDebugLog(@"A CATEGORY");
-	      classScanner = [NSScanner scannerWithString: classString];
-	      [classScanner scanString: @"@interface"
-			    intoString: NULL];
-	      [classScanner scanUpToCharactersFromSet: categoryStopSet
-			    intoString: &className];
-	      [classScanner scanString: @"("
-			    intoString: NULL];
-	      [classScanner scanUpToCharactersFromSet: superClassStopSet
-			    intoString: &superClassName];
-	      [classScanner scanString: @")"
-			    intoString: NULL];
-	      [classScanner scanUpToString: @"@end"
-			    intoString: &methodString];
-	      NSDebugLog(@"method String %@",methodString);
-	    }
-
-
-	  // if its' not a category and it's known, ask before proceeding...
-	  if([cm isKnownClass: className] && !category)
-	    {
-	      NSString *message = [NSString stringWithFormat: 
-					      _(@"The class %@ already exists. Replace it?"), 
-					    className];
-	      alert = NSRunAlertPanel(_(@"Problem adding class from header"), 
-				      message,
-				      _(@"Yes"), 
-				      _(@"No"), 
-				      nil);
-	      if (alert != NSAlertDefaultReturn)
-		return self;
-	    }
-	  
-	  // if it's not a category go through the ivars...
-	  if(!category)
-	    {
-	      NSDebugLog(@"Ivar string is not nil");
-	      // Interate over the possible tokens which can make an
-	      // ivar an outlet.
-	      while ((outletToken = [outletEnum nextObject]) != nil)
-		{
-		  NSString *delimiter = nil;
-		  NSDebugLog(@"outlet Token = %@", outletToken);
-		  // Scan the variables of the class...
-		  ivarScanner = [NSScanner scannerWithString: ivarString];
-		  while (![ivarScanner isAtEnd])
-		    {
-		      NSString *outlet = nil;
-		      NSString *type = nil;
-		      
-		      if (delimiter == nil || [delimiter isEqualToString: @";"])
-			{
-			  [ivarScanner scanUpToString: outletToken
-				       intoString: NULL];
-			  [ivarScanner scanString: outletToken
-				       intoString: NULL];
-			}
-		      
-		      // if using the IBOutlet token in the header, scan in the outlet type
-		      // as well.
-		      if([outletToken isEqualToString: @"IBOutlet"])
-			{
-			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
-				       intoString: NULL];
-			  [ivarScanner scanCharactersFromSet: typeStopSet
-				       intoString: NULL];
-			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
-				       intoString: &type];
-			  NSDebugLog(@"outlet type = %@",type);
-			}
-
-		      [ivarScanner scanUpToCharactersFromSet: outletStopSet
-				   intoString: &outlet];
-		      [ivarScanner scanCharactersFromSet: outletStopSet
-				   intoString: &delimiter];
-		      if ([ivarScanner isAtEnd] == NO
-			  && [outlets indexOfObject: outlet] == NSNotFound)
-			{
-			  NSDebugLog(@"outlet = %@", outlet);
-			  if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalOutletSet],notFoundRange))
-			    {
-			      [outlets addObject: outlet];
-			    }
-			}
-		    }
-		}
-	    }
-	  
-	  while ((actionToken = [actionEnum nextObject]) != nil)
-	    {
-	      NSDebugLog(@"Action token %@", actionToken);
-	      methodScanner = [NSScanner scannerWithString: methodString];
-	      while (![methodScanner isAtEnd])
-		{
-		  NSString *action = nil;
-		  BOOL hasArguments = NO;
-		  
-		  // Scan the method name
-		  [methodScanner scanUpToString: actionToken
-				 intoString: NULL];
-		  [methodScanner scanString: actionToken
-				 intoString: NULL];
-		  [methodScanner scanUpToCharactersFromSet: actionStopSet
-				 intoString: &action];
-		  
-		  // This will return true if the method has args.
-		  hasArguments = [methodScanner scanString: @":"
-						intoString: NULL];
-		  
-		  if (hasArguments)
-		    {
-		      BOOL isAction = NO;
-		      NSString *argType = nil;
-		      
-		      // If the argument is (id) then the method can
-		      // be considered an action and we add it to the list.
-		      isAction = [methodScanner scanString: @"(id)"
-						intoString: &argType];
-		      
-		      if (![methodScanner isAtEnd])
-			{
-			  if (isAction)
-			    {
-			      /* Add the ':' back */
-			      action = [action stringByAppendingString: @":"];
-			      NSDebugLog(@"action = %@", action);
-			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalActionSet],notFoundRange))
-				{
-				  [actions addObject: action];
-				}
-			    }
-			  else
-			    {
-			      NSDebugLog(@"Not an action");
-			    }
-			}
-		    }
-		} // end while
-	    } // end while 
-
-	  if([cm isKnownClass: className] && 
-	     [cm isCustomClass: className] && category) 
-	    {
-	      [cm addActions: actions forClassNamed: className];
-	      [cm addOutlets: outlets forClassNamed: className];
-	      result = YES;
-	    }
-	  else if(!category)
-	    {
-	      result = [cm addClassNamed: className
-			   withSuperClassNamed: superClassName
-			   withActions: actions
-			   withOutlets: outlets];
-	    }
-
-	  if (result)
-	    {
-	      NSDebugLog(@"Class %@ added", className);
-	      [classesView reloadData]; 
-	    }
-	  else
-	    if (alert == NSAlertDefaultReturn)
-	      {
-		[cm removeClassNamed: className];
-		result = [cm addClassNamed: className
-			     withSuperClassNamed: superClassName
-			     withActions: actions
-			     withOutlets: outlets];
-		if (!result)
-		  {
-		    NSString *message = [NSString stringWithFormat: 
-						    _(@"Could not replace class %@."), className];	      
-		    NSRunAlertPanel(_(@"Problem adding class from header"), 
-				      message,
-				    nil, 
-				    nil, 
-				    nil);
-		    NSDebugLog(@"Class %@ failed to add", className);
-		  }
-		else
-		  {
-		    NSDebugLog(@"Class %@ replaced.", className);
-		    [classesView reloadData]; 
-		    }
-	      }
-	   
-	  if (result)
-	    {
-	      // go to the class which was just loaded in the classes view...
-	      [selectionBox setContentView: classesScrollView];
-	      [self selectClass: className];
-	    }
-	} // if we found a class
-    }
-  return self;
-}
-
 - (id) addAttributeToClass: (id)sender
 {
   [classesView addAttributeToClass];
@@ -1227,7 +1263,8 @@ static NSImage	*classesImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-       return [self parseHeader: [oPanel filename]];
+      [classManager parseHeader: [oPanel filename]];
+      return self;
     }
 
   return nil;
@@ -1611,352 +1648,54 @@ static NSImage	*classesImage = nil;
     }
   else if ([name isEqual: IBClassNameChangedNotification] == YES)
     {
-      if ([aNotification object] == classManager) 
-	{
-	  [classesView reloadData];
-	}
+      [classesView reloadData];
     }
   else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)
     {
-      if ([aNotification object] == classManager) 
-	{
-	  [classesView reloadData];
-	}
+      [classesView reloadData];
     }
   else if ([name isEqual: GormDidModifyClassNotification] == YES)
     {
-      if ([aNotification object] == classManager && [classesView isEditing] == NO) 
+      if ([classesView isEditing] == NO) 
 	{
-	  // NSLog(@"Reloading classesview");
 	  [classesView reloadData];
 	}
     }
-}
-
-- (id) init 
-{
-  self = [super init];
-  if (self != nil)
+  else if ([name isEqual: GormDidAddClassNotification])
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSRect			winrect = NSMakeRect(100,100,342,256);
-      NSRect			selectionRect = {{6, 188}, {234, 64}};
-      NSRect			scrollRect = {{0, 0}, {340, 188}};
-      NSRect			mainRect = {{20, 0}, {320, 188}};
-      NSImage			*image;
-      GormDisplayCell		*cell;
-      NSTableColumn             *tableColumn;
-      unsigned			style;
-      NSColor *salmonColor = 
-	[NSColor colorWithCalibratedRed: 0.850980 
-		 green: 0.737255
-		 blue: 0.576471
-		 alpha: 1.0 ];
-      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      
-      openEditors = [NSMutableArray new];
-      classManager = [[GormClassManager alloc] init]; 
-      classEditor = [[GormClassEditor alloc] initWithDocument: self];
-
-      /*
-       * NB. We must retain the map values (object names) as the nameTable
-       * may not hold identical name objects, but merely equal strings.
-       */
-      objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
-	NSObjectMapValueCallBacks, 128, [self zone]);
-      
-      // for saving the editors when the gorm file is persisted.
-      savedEditors = [NSMutableArray new];
-
-      style = NSTitledWindowMask | NSClosableWindowMask
-	| NSResizableWindowMask | NSMiniaturizableWindowMask;
-      window = [[NSWindow alloc] initWithContentRect: winrect
-					   styleMask: style 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      [window setMinSize: [window frame].size];
-      [window setTitle: _(@"UNTITLED")];
-      [window setReleasedWhenClosed: NO];
-      [window setDelegate: self];
-
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowWillCloseNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowDidBecomeKeyNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowWillMiniaturizeNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: NSWindowDidDeminiaturizeNotification
-	       object: window];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBClassNameChangedNotification
-	       object: nil];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBInspectorDidModifyObjectNotification
-	       object: nil];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: GormDidModifyClassNotification
-	       object: nil];
-      selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
-						 mode: NSRadioModeMatrix
-					    cellClass: [GormDisplayCell class]
-					 numberOfRows: 1
-				      numberOfColumns: 4];
-      [selectionView setTarget: self];
-      [selectionView setAction: @selector(changeView:)];
-      [selectionView setAutosizesCells: NO];
-      [selectionView setCellSize: NSMakeSize(64,64)];
-      [selectionView setIntercellSpacing: NSMakeSize(24,0)];
-      [selectionView setAutoresizingMask: NSViewMinYMargin|NSViewWidthSizable];
-
-      if ((image = objectsImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 0];
-	  [cell setTag: 0];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Objects")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = imagesImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 1];
-	  [cell setTag: 1];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Images")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = soundsImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 2];
-	  [cell setTag: 2];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Sounds")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      if ((image = classesImage) != nil)
-	{
-	  cell = [selectionView cellAtRow: 0 column: 3];
-	  [cell setTag: 3];
-	  [cell setImage: image];
-	  [cell setTitle: _(@"Classes")];
-	  [cell setBordered: NO];
-	  [cell setAlignment: NSCenterTextAlignment];
-	  [cell setImagePosition: NSImageAbove];
-	  [cell setButtonType: NSOnOffButton];
-	}
-
-      [[window contentView] addSubview: selectionView];
-      RELEASE(selectionView);
-
-      selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
-      [selectionBox setTitlePosition: NSNoTitle];
-      [selectionBox setBorderType: NSNoBorder];
-      [selectionBox setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [[window contentView] addSubview: selectionBox];
-      RELEASE(selectionBox);
-      
-      // objects...
-      mainRect.origin = NSMakePoint(0,0);
-      scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setBorderType: NSBezelBorder];
-
-      objectsView = [[GormObjectEditor alloc] initWithObject: nil
-						  inDocument: self];
-      [objectsView setFrame: mainRect];
-      [objectsView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setDocumentView: objectsView];
-      RELEASE(objectsView); 
-
-      // images...
-      mainRect.origin = NSMakePoint(0,0);
-      imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [imagesScrollView setHasVerticalScroller: YES];
-      [imagesScrollView setHasHorizontalScroller: YES];
-      [imagesScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [imagesScrollView setBorderType: NSBezelBorder];
-
-      imagesView = [[GormImageEditor alloc] initWithObject: nil
-						inDocument: self];
-      [imagesView setFrame: mainRect];
-      [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [imagesScrollView setDocumentView: imagesView];
-      RELEASE(imagesView);
-
-      // sounds...
-      mainRect.origin = NSMakePoint(0,0);
-      soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [soundsScrollView setHasVerticalScroller: YES];
-      [soundsScrollView setHasHorizontalScroller: YES];
-      [soundsScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [soundsScrollView setBorderType: NSBezelBorder];
-
-      soundsView = [[GormSoundEditor alloc] initWithObject: nil
-						inDocument: self];
-      [soundsView setFrame: mainRect];
-      [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [soundsScrollView setDocumentView: soundsView];
-      RELEASE(soundsView);
-
-      // classes...
-      classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [classesScrollView setHasVerticalScroller: YES];
-      [classesScrollView setHasHorizontalScroller: NO];
-      [classesScrollView setAutoresizingMask:
-	NSViewHeightSizable|NSViewWidthSizable];
-      [classesScrollView setBorderType: NSBezelBorder];
-
-      mainRect.origin = NSMakePoint(0,0);
-      classesView = [[GormOutlineView alloc] initWithFrame: mainRect];
-      [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
-      [classesView setDataSource: self];
-      [classesView setDelegate: self];
-      [classesView setAutoresizesAllColumnsToFit: YES];
-      [classesView setAllowsColumnResizing: NO];
-      [classesView setDrawsGrid: NO];
-      [classesView setIndentationMarkerFollowsCell: YES];
-      [classesView setAutoresizesOutlineColumn: YES];
-      [classesView setIndentationPerLevel: 10];
-      [classesView setAttributeOffset: 30];
-      [classesView setBackgroundColor: salmonColor ];
-      [classesView setRowHeight: 18];
-      [classesScrollView setDocumentView: classesView];
-      RELEASE(classesView);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
-      [[tableColumn headerCell] setStringValue: _(@"Classes")];
-      [tableColumn setMinWidth: 190];
-      [tableColumn setResizable: YES];
-      [tableColumn setEditable: YES];
-      [classesView addTableColumn: tableColumn];     
-      [classesView setOutlineTableColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-      [[tableColumn headerCell] setStringValue: _(@"Outlet")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [classesView addTableColumn: tableColumn];
-      [classesView setOutletColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
-      [[tableColumn headerCell] setStringValue: _(@"Action")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [classesView addTableColumn: tableColumn];
-      [classesView setActionColumn: tableColumn];
-      RELEASE(tableColumn);
-
-      [classesView sizeToFit];
-
-      // expand all of the items in the classesView...
-      [classesView expandItem: @"NSObject"];
-
-      [selectionBox setContentView: scrollView];
-
-      /*
-       * Set up special-case dummy objects and add them to the objects view.
-       */
-      filesOwner = [GormFilesOwner new];
-      [self setName: @"NSOwner" forObject: filesOwner];
-      [objectsView addObject: filesOwner];
-      firstResponder = [GormFirstResponder new];
-      [self setName: @"NSFirst" forObject: firstResponder];
-      [objectsView addObject: firstResponder];
-
-      /*
-       * Set image for this miniwindow.
-       */
-      [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
-
-      hidden = [NSMutableArray new];
-      /*
-       * Watch to see when we are starting/ending testing.
-       */
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBWillBeginTestingInterfaceNotification
-	       object: nil];
-      [nc addObserver: self
-	     selector: @selector(handleNotification:)
-		 name: IBWillEndTestingInterfaceNotification
-	       object: nil];
-      
-      // preload headers...
-      if ([defaults boolForKey: @"PreloadHeaders"])
-	{
-	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
-	  NSEnumerator *en = [headerList objectEnumerator];
-	  id obj = nil;
-
-	  while ((obj = [en nextObject]) != nil)
-	    {
-	      NSDebugLog(@"Preloading %@", obj);
-	      [self parseHeader: (NSString *)obj];
-	    }
-	}
+      // go to the class which was just loaded in the classes view...
+      [classesView reloadData];
+      [selectionBox setContentView: classesScrollView];
     }
-  return self;
 }
 
 - (id) instantiateClass: (id)sender
 {
   NSDebugLog(@"document -> instantiateClass: ");
-
   if ([[selectionView selectedCell] tag] == 3)
     {
       int i = [classesView selectedRow];
 
       if (i >= 0)
 	{
-	  id className = [classesView itemAtRow: i];
+	  id object = [classesView itemAtRow: i];
 	  GSNibItem *item = nil;
 
-	  if([className isEqualToString: @"FirstResponder"])
-	    return nil;
-
-	  item = [[GormObjectProxy alloc] initWithClassName: className
-					  frame: NSMakeRect(0,0,0,0)];
-
-	  [self setName: nil forObject: item];
-	  [self attachObject: item toParent: nil];
-
-	  [selectionView selectCellWithTag: 0];
-	  [selectionBox setContentView: scrollView];
+	  if([object isKindOfClass: [NSString class]])
+	    {
+	      if([object isEqualToString: @"FirstResponder"])
+		return nil;
+	      
+	      item = [[GormObjectProxy alloc] initWithClassName: object
+					      frame: NSMakeRect(0,0,0,0)];
+	      
+	      [self setName: nil forObject: item];
+	      [self attachObject: item toParent: nil];
+	      
+	      [selectionView selectCellWithTag: 0];
+	      [selectionBox setContentView: scrollView];
+	    }
 	}
-
     }
 
   return self;
@@ -1985,6 +1724,23 @@ static NSImage	*classesImage = nil;
 - (NSArray*) objects
 {
   return [nameTable allValues];
+}
+
+- (BOOL) classIsSelected
+{
+  int i = [classesView selectedRow];
+  BOOL result = NO;
+
+  if (i >= 0)
+    {
+      id object = [classesView itemAtRow: i];
+      if([object isKindOfClass: [NSString class]])
+	{
+	  result = YES;
+	}
+    }
+
+  return result;
 }
 
 // The sole purpose of this method is to clean up .gorm files from older
@@ -2931,7 +2687,7 @@ static NSImage	*classesImage = nil;
       id object = [self objectForName: key];
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
       id template = [GSTemplateFactory templateForObject: object
-				       withClassName: customClass // [customClass copy]
+				       withClassName: customClass 
 				       withSuperClassName: superClass];
       
       // if the object is deferrable, then set the flag appropriately.

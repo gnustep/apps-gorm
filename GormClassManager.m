@@ -37,11 +37,10 @@
 
 - (void) _touch
 {
-  id<IBDocuments>        doc = [(id<IB>)NSApp activeDocument];
   [[NSNotificationCenter defaultCenter] 
     postNotificationName: GormDidModifyClassNotification
     object: self];
-  [doc touch];
+  [document touch];
 }
 
 - (NSString*) addClassWithSuperClassName: (NSString*)name
@@ -802,13 +801,15 @@
   return [info objectForKey: @"ExtraOutlets"];
 }
 
-- (id) init
+- (id) initWithDocument: (id)aDocument
 {
   self = [super init];
   if (self != nil)
     {
       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
+
+      document = aDocument;  // the document retains us, this is for convenience
 
       path = [bundle pathForResource: @"ClassInformation" ofType: @"plist"];
       if (path == nil)
@@ -1344,6 +1345,273 @@
   return YES;
 }
 
+- (BOOL) parseHeader: (NSString *)headerPath
+{
+  NSString *headerFile = [NSString stringWithContentsOfFile: headerPath];
+  NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
+  NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
+  NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
+  NSCharacterSet *categoryStopSet = [NSCharacterSet characterSetWithCharactersInString: @" ("];
+  NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
+  NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
+  NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
+  NSCharacterSet *illegalOutletSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\:;'<>?,./"];
+  NSCharacterSet *illegalActionSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\;'<>?,./"];
+  NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
+  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
+  NSRange notFoundRange = NSMakeRange(NSNotFound,0);
+  // NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
+
+  while (![headerScanner isAtEnd])
+    {
+      NSString *classString = nil;
+      BOOL classfound = NO, result = NO, category = NO;
+      NSEnumerator *outletEnum = [outletTokens objectEnumerator];
+      NSEnumerator *actionEnum = [actionTokens objectEnumerator];
+      NSString *outletToken = nil;
+      NSString *actionToken = nil;
+      int alert;
+
+      classfound = [headerScanner scanUpToString: @"@interface"
+			     intoString: NULL];
+
+      [headerScanner scanUpToString: @"@end"
+		     intoString: &classString];
+      
+      if (classfound && ![headerScanner isAtEnd])
+	{
+	  NSString 
+	    *className = nil,
+	    *superClassName = nil,
+	    *ivarString = nil,
+	    *methodString = nil;
+	  NSScanner 
+	    *classScanner = [NSScanner scannerWithString: classString],
+	    *ivarScanner = nil,
+	    *methodScanner = nil;
+	  NSMutableArray 
+	    *actions = [NSMutableArray array],
+	    *outlets = [NSMutableArray array];
+
+	  [classScanner scanString: @"@interface"
+			intoString: NULL];
+	  [classScanner scanUpToCharactersFromSet: classStopSet
+			intoString: &className];
+	  [classScanner scanString: @":"
+			intoString: NULL];
+	  [classScanner scanUpToCharactersFromSet: superClassStopSet
+			intoString: &superClassName];
+	  [classScanner scanUpToString: @"{"
+			intoString: NULL];
+	  [classScanner scanUpToString: @"}"
+			intoString: &ivarString];
+
+	  category = (ivarString == nil);
+	  if(!category)
+	    {
+	      [classScanner scanUpToString: @"@end"
+			    intoString: &methodString];
+	      NSDebugLog(@"Found a class \"%@\" with super class \"%@\"", className,
+			 superClassName);
+	    }
+	  else
+	    {
+	      NSDebugLog(@"A CATEGORY");
+	      classScanner = [NSScanner scannerWithString: classString];
+	      [classScanner scanString: @"@interface"
+			    intoString: NULL];
+	      [classScanner scanUpToCharactersFromSet: categoryStopSet
+			    intoString: &className];
+	      [classScanner scanString: @"("
+			    intoString: NULL];
+	      [classScanner scanUpToCharactersFromSet: superClassStopSet
+			    intoString: &superClassName];
+	      [classScanner scanString: @")"
+			    intoString: NULL];
+	      [classScanner scanUpToString: @"@end"
+			    intoString: &methodString];
+	      NSDebugLog(@"method String %@",methodString);
+	    }
+
+
+	  // if its' not a category and it's known, ask before proceeding...
+	  if([self isKnownClass: className] && !category)
+	    {
+	      NSString *message = [NSString stringWithFormat: 
+					      _(@"The class %@ already exists. Replace it?"), 
+					    className];
+	      alert = NSRunAlertPanel(_(@"Problem adding class from header"), 
+				      message,
+				      _(@"Yes"), 
+				      _(@"No"), 
+				      nil);
+	      if (alert != NSAlertDefaultReturn)
+		return NO;
+	    }
+	  
+	  // if it's not a category go through the ivars...
+	  if(!category)
+	    {
+	      NSDebugLog(@"Ivar string is not nil");
+	      // Interate over the possible tokens which can make an
+	      // ivar an outlet.
+	      while ((outletToken = [outletEnum nextObject]) != nil)
+		{
+		  NSString *delimiter = nil;
+		  NSDebugLog(@"outlet Token = %@", outletToken);
+		  // Scan the variables of the class...
+		  ivarScanner = [NSScanner scannerWithString: ivarString];
+		  while (![ivarScanner isAtEnd])
+		    {
+		      NSString *outlet = nil;
+		      NSString *type = nil;
+		      
+		      if (delimiter == nil || [delimiter isEqualToString: @";"])
+			{
+			  [ivarScanner scanUpToString: outletToken
+				       intoString: NULL];
+			  [ivarScanner scanString: outletToken
+				       intoString: NULL];
+			}
+		      
+		      // if using the IBOutlet token in the header, scan in the outlet type
+		      // as well.
+		      if([outletToken isEqualToString: @"IBOutlet"])
+			{
+			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				       intoString: NULL];
+			  [ivarScanner scanCharactersFromSet: typeStopSet
+				       intoString: NULL];
+			  [ivarScanner scanUpToCharactersFromSet: typeStopSet
+				       intoString: &type];
+			  NSDebugLog(@"outlet type = %@",type);
+			}
+
+		      [ivarScanner scanUpToCharactersFromSet: outletStopSet
+				   intoString: &outlet];
+		      [ivarScanner scanCharactersFromSet: outletStopSet
+				   intoString: &delimiter];
+		      if ([ivarScanner isAtEnd] == NO
+			  && [outlets indexOfObject: outlet] == NSNotFound)
+			{
+			  NSDebugLog(@"outlet = %@", outlet);
+			  if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalOutletSet],notFoundRange))
+			    {
+			      [outlets addObject: outlet];
+			    }
+			}
+		    }
+		}
+	    }
+	  
+	  while ((actionToken = [actionEnum nextObject]) != nil)
+	    {
+	      NSDebugLog(@"Action token %@", actionToken);
+	      methodScanner = [NSScanner scannerWithString: methodString];
+	      while (![methodScanner isAtEnd])
+		{
+		  NSString *action = nil;
+		  BOOL hasArguments = NO;
+		  
+		  // Scan the method name
+		  [methodScanner scanUpToString: actionToken
+				 intoString: NULL];
+		  [methodScanner scanString: actionToken
+				 intoString: NULL];
+		  [methodScanner scanUpToCharactersFromSet: actionStopSet
+				 intoString: &action];
+		  
+		  // This will return true if the method has args.
+		  hasArguments = [methodScanner scanString: @":"
+						intoString: NULL];
+		  
+		  if (hasArguments)
+		    {
+		      BOOL isAction = NO;
+		      NSString *argType = nil;
+		      
+		      // If the argument is (id) then the method can
+		      // be considered an action and we add it to the list.
+		      isAction = [methodScanner scanString: @"(id)"
+						intoString: &argType];
+		      
+		      if (![methodScanner isAtEnd])
+			{
+			  if (isAction)
+			    {
+			      /* Add the ':' back */
+			      action = [action stringByAppendingString: @":"];
+			      NSDebugLog(@"action = %@", action);
+			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalActionSet],notFoundRange))
+				{
+				  [actions addObject: action];
+				}
+			    }
+			  else
+			    {
+			      NSDebugLog(@"Not an action");
+			    }
+			}
+		    }
+		} // end while
+	    } // end while 
+
+	  if([self isKnownClass: className] && 
+	     [self isCustomClass: className] && category) 
+	    {
+	      [self addActions: actions forClassNamed: className];
+	      [self addOutlets: outlets forClassNamed: className];
+	      result = YES;
+	    }
+	  else if(!category)
+	    {
+	      result = [self addClassNamed: className
+			     withSuperClassNamed: superClassName
+			     withActions: actions
+			     withOutlets: outlets];
+	    }
+
+	  if (result)
+	    {
+	      NSDebugLog(@"Class %@ added", className);
+	    }
+	  else
+	    if (alert == NSAlertDefaultReturn)
+	      {
+		[self removeClassNamed: className];
+		result = [self addClassNamed: className
+			       withSuperClassNamed: superClassName
+			       withActions: actions
+			       withOutlets: outlets];
+		if (!result)
+		  {
+		    NSString *message = [NSString stringWithFormat: 
+						    _(@"Could not replace class %@."), className];	      
+		    NSRunAlertPanel(_(@"Problem adding class from header"), 
+				      message,
+				    nil, 
+				    nil, 
+				    nil);
+		    NSDebugLog(@"Class %@ failed to add", className);
+		  }
+		else
+		  {
+		    NSDebugLog(@"Class %@ replaced.", className);
+		  }
+	      }
+	   
+	  if (result)
+	    {
+	      [[NSNotificationCenter defaultCenter] 
+		postNotificationName: GormDidAddClassNotification
+		object: self];
+	      [document selectClass: className];
+	    }	      
+	} // if we found a class
+    }
+  return YES;
+}
+
 - (BOOL) isAction: (NSString *)name ofClass: (NSString *)className
 {
   BOOL result = NO;
@@ -1391,7 +1659,7 @@
 
 - (NSString *) customClassForObject: (id)object
 {
-  NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject: object];
+  NSString *name = [document nameForObject: object];
   NSString *result = [self customClassForName: name];
   //  NSString *result = [customClassMap objectForKey: name];
   NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",
@@ -1487,6 +1755,79 @@
     {
       [self addOutlet: action forClassNamed: className];
     }
+}
+
+// There are some classes which can't be instantiated directly
+// in Gorm.  These are they.. (GJC)
+- (BOOL) canInstantiateClassNamed: (NSString *)className
+{
+  if([self isSuperclass: @"NSApplication" linkedToClass: className] || 
+     [className isEqualToString: @"NSApplication"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSCell" linkedToClass: className] || 
+	  [className isEqualToString: @"NSCell"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSDocument"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSDocumentController"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSFontManager"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSHelpManager"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSImage"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSMenuItem" linkedToClass: className] || 
+	  [className isEqualToString: @"NSMenuItem"])
+    {
+      return NO;
+    }
+  else if([className isEqualToString: @"NSResponder"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSSound" linkedToClass: className] || 
+	  [className isEqualToString: @"NSSound"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSTableColumn" linkedToClass: className] || 
+	  [className isEqualToString: @"NSTableColumn"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSTableViewItem" linkedToClass: className] || 
+	  [className isEqualToString: @"NSTableViewItem"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"NSWindow" linkedToClass: className] || 
+	  [className isEqualToString: @"NSWindow"])
+    {
+      return NO;
+    }
+  else if([self isSuperclass: @"FirstResponder" linkedToClass: className] || 
+	  [className isEqualToString: @"FirstResponder"])
+    {
+      // special case, FirstResponder.
+      return NO;
+    }
+  
+  return YES;
 }
 
 - (NSString *) description

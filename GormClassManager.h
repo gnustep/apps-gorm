@@ -11,7 +11,9 @@
   NSMutableDictionary	*classInformation;
   NSMutableArray        *customClasses;
   NSMutableDictionary   *customClassMap;
+  id                    document;
 }
+- (id) initWithDocument: (id)aDocument;
 - (void) addAction: (NSString*)anAction forObject: (id)anObject;
 - (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject;
 - (NSArray*) allActionsForClassNamed: (NSString*)className;
@@ -53,7 +55,7 @@
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className
 				 withName:(NSString*)sourcePath
 				      and:(NSString*)headerPath;
-
+- (BOOL) parseHeader: (NSString *)headerPath;
 - (BOOL) saveToFile: (NSString*)path;
 - (BOOL) loadFromFile: (NSString*)path;
 - (BOOL) loadCustomClasses: (NSString*)path;
@@ -62,6 +64,7 @@
 - (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
 - (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
 - (NSArray *) allSuperClassesOf: (NSString *)className;
+- (BOOL) canInstantiateClassNamed: (NSString *)className;
 
 // custom class support...
 - (NSString *) customClassForObject: (id)object;

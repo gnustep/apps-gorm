@@ -1,3 +1,24 @@
+2004-05-18 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: Changed reference to the class loader.
+	* Gorm.m: Added code to inactivate menu items when a
+	class isn't selected.   Moved some code to decide what is
+	instantiable to the GormClassManager.
+	* GormDocument.m: Moved the parseHeader: method to 
+	GormClassManager where it belongs.  All methods dealing with
+	loading classes into Gorm or creating class files from data within
+	the application belong in GormClassManager.  Changed references
+	to the call where appropriate in the code.   Added document as
+	observer when a class is added.  This is to help factilitate the
+	move of the parseHeader method.   Moved the init method near the top
+	of the file. 
+	* GormClassManager.m: added parseHeader method to process headers
+	into data usable by Gorm.  Added an instance variable to cache the
+	document when a class manager is instantiated.   The class manager
+	needs to communicate with the document it belongs to frequently.
+	* GormSoundInspector.m: Backed out previous change.
+	* GormSoundInspector.h: Removed _currentSound ivar.
+	
 2004-05-16 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: in testInterface: bring the temporary menu to the 

@@ -269,8 +269,10 @@ static BOOL gormFileOwnerDecoded;
 	  NSLog(@"Failed to add class %@ with superclass of %@.", classname, superClass);
 	}
     }
-
-  [self parseHeader: header];
+  else
+    {
+      [classManager parseHeader: header];
+    }
 }
 
 /* Replace the proxy with the real object if necessary and make sure there

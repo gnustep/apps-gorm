@@ -132,6 +132,7 @@
 - (id) instantiateClass: (id)sender;
 - (void) selectClassWithObject: (id)obj;
 - (void) selectClass: (NSString *)className;
+- (BOOL) classIsSelected;
 
 // sound & image support
 - (id) openSound: (id)sender;
@@ -139,7 +140,6 @@
 
 // Internals support
 - (void) rebuildObjToNameMapping;
-- (id) parseHeader: (NSString *)headerPath;
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
                       forClassNamed: (NSString *)className
                            isAction: (BOOL)action;
