@@ -758,12 +758,11 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	    {
 	      NSMenu	*testMenu;
 	      
-	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test")];
+	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu")];
 	      [testMenu addItemWithTitle: _(@"Quit") 
 			action: @selector(deferredEndTesting:)
 			keyEquivalent: @"q"];	
-	      [self setMainMenu: testMenu];
-	      RELEASE(testMenu);
+	      [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
 	    }
 	  else
 	    {
