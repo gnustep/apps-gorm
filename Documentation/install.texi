@@ -26,6 +26,8 @@ Steps to build:
 @item make && make install 
 @end itemize
 
+Please note that GormLib must be installed for Gorm.app to run.
+
 @subsection Trouble
 
 Give us feedback!  Tell us what you like; tell us what you think
