@@ -51,7 +51,6 @@
   NSString		*documentPath;
   NSMapTable		*objToName;
   NSWindow		*window;
-  // NSMatrix		*selectionView;
   NSBox                 *selectionBox;
   NSScrollView		*scrollView;
   NSScrollView          *classesScrollView;
@@ -63,6 +62,7 @@
   id			imagesView;
   BOOL			hasSetDefaults;
   BOOL			isActive;
+  BOOL                  isDocumentOpen;
   NSMenu		*savedMenu;
   NSMenuItem		*quitItem;		/* Replaced during test */
   NSMutableArray	*savedEditors;

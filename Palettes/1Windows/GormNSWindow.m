@@ -70,6 +70,11 @@
   return NO;
 }
 
+- (BOOL) canBecomeKeyWindow
+{
+  return NO;
+}
+
 - (NSString *) className
 {
   return @"NSWindow";
@@ -98,11 +103,35 @@
   NSLog(@"Being released... %d: %@", [self retainCount], self);
   [super release];
 }
+*/
 
 - (void) dealloc
 {
   NSLog(@"Deallocing %@",self);
   [super dealloc];
 }
-*/
+
+- (void) orderFront: (id)sender
+{
+  NSLog(@"Ordering front...%@",self);
+  [super orderFront: sender];
+}
+
+- (void) orderFrontRegardless
+{
+  NSLog(@"Ordering front regardless...%@",self);
+  [super orderFrontRegardless];
+}
+
+- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
+{
+  // NSLog(@"Ordering window %@",self);
+  [super orderWindow: place relativeTo: otherWin];
+}
+
+- (void) orderOut: (id)sender
+{
+  NSLog(@"Ordering out...%@",self);
+  [super orderOut: sender];
+}
 @end

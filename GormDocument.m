@@ -410,6 +410,8 @@ static NSImage  *fileImage = nil;
 
 	  // are we upgrading an archive?
 	  isOlderArchive = NO;
+	  // document is open...
+	  isDocumentOpen = YES;
 	}
       else
 	{
@@ -1060,6 +1062,9 @@ static NSImage  *fileImage = nil;
 
   // Get rid of the selection box.
   [selectionBox removeFromSuperviewWithoutNeedingDisplay];
+
+  // remove objects from the topLevelObjects set...
+  // [topLevelObjects removeAllObjects];
 
   // release the managers...
   RELEASE(classManager);
@@ -2196,6 +2201,9 @@ static NSImage  *fileImage = nil;
       [nc postNotificationName: IBDidOpenDocumentNotification
 	  object: self];
       
+      // document opened...
+      isDocumentOpen = YES;
+
       // release the unarchiver.. now that we're all done...
       RELEASE(u);
     }
@@ -3062,7 +3070,7 @@ static NSImage  *fileImage = nil;
 
 - (void) setDocumentActive: (BOOL)flag
 {
-  if (flag != isActive)
+  if (flag != isActive && isDocumentOpen)
     {
       NSEnumerator	*enumerator;
       id		obj;
@@ -3254,12 +3262,23 @@ static NSImage  *fileImage = nil;
 	{ 	  
 	  //Save
 	  if (! [self saveGormDocument: self] )
-	    return NO;
+	    {
+	      return NO;
+	    }
+	  else
+	    {
+	      isDocumentOpen = NO;
+	    }
 	}
-      
-      //Cancel
       else if (result == NSAlertOtherReturn)
-	return NO; 
+	{
+	  //Cancel
+	  return NO;
+	}
+      else // Don't save...
+	{
+	  isDocumentOpen = NO;
+	}
     }
 
   return YES;

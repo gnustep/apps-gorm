@@ -1,4 +1,14 @@
-2004-08-06 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-08-08 13:23 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.[hm]: Added ivar isDocumentOpened
+	to track when document is opened and closed.   
+	The document was being made active while closing and was 
+	causing an issue with some of the windows in the document 
+	being edited being brought to the front even though the 
+	document itself had been deallocated.  This is the
+	permanent fix for the previously discovered issue.
+
+2004-08-07 06:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjectEditor.m: Temporary fix for recently discovered
 	crash.
