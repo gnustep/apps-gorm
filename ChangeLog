@@ -1,9 +1,14 @@
 2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormDocument.m: -[GormDocument remove] added if the simply return
+	* GormDocument.m: -[GormDocument createClassesFiles:] added if the simply return
+	when no row is selected.  This was causing an exception.
+
+2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument remove:] added if the simply return
 	when no row is selected.  This was causing an exception.
 	
-2002-11-05  Gregory John Casamento <greg_casamento@yahoo.com>
+2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormSoundEditor.m: Added missing file.
 	

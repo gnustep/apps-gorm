@@ -938,6 +938,12 @@ static NSImage	*classesImage = nil;
   id	classes = [classManager allClassNames];
   int			result;
 
+  // if no selection, just return.
+  if(row == -1)
+    {
+      return self;
+    }
+
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
   [sp setTitle: @"Save source file as..."];
