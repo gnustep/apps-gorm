@@ -105,13 +105,19 @@
 	  id edited = [object editedObject];
 	  if(self != edited && [self _ownedByPopUp])
 	    {
-	      [self close];
+	      if([[self window] isVisible])
+		{
+		  [self close];
+		}
 	    }
 	}
       else
 	{
 	  // Close anyway if the editor doesn't respond.
-	  [self close];
+	  if([[self window] isVisible])
+	    {
+	      [self close];
+	    }
 	}
     }
 }

@@ -171,6 +171,12 @@ re-loaded into Gorm for further editing, or can be loaded into a running
 GNUstep application in order to provide that application with a user
 interface or some subsystem.
 
+@section What You Must Know To Understand This Manual
+
+This manual assumes a working knowledge of Objective-C and C.  These are 
+necessary prerequisites to understanding some of the technical details and 
+examples given here.
+
 @subsection Major features
 @cindex features
 
@@ -384,7 +390,7 @@ Determines if the old .gorm is moved to .gorm~ when the modified version is save
 
 This chapter will explain some of the basic things you need to understand before starting work on a new application.
 
-@subsection Getting Started
+@section Getting Started
 
 First you need to understand a few basic concepts.   Gorm's main window includes a few standard entries which must be explained before we can proceed.
 
@@ -444,7 +450,7 @@ If all of the options in this list are exhausted, it then gives up and returns n
 
 NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
 
-@chapter Creating A New Application
+@chapter Creating an Application
 
 If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.   From there you can open the MainMenu.gorm by clicking on interfaces and selecting MainMenu.gorm.   If Gorm.app is properly installed, you Gorm should start up.
 
@@ -514,6 +520,8 @@ Now we need to make connections from the controller to the textfield and from th
 
 Next, control-drag from the button to the controller, this will make an action connection.  The connections inspector should again appear.  This time you need to select the ``target'' outlet, to get the list of actions.  The list should have only one entry, which is ``buttonPressed:'' since this is the one we added earlier.  Press Connect.  You should see an entry like ``buttonPressed: (MyController'' in the Connections section of the inspector.
 
+It is also possible to make this connection to NSFirst, but to keep things simple, make it directly to the object.   If you make the connection to buttonPressed: on NSFirst the functionality of the application will be unchanged, but the invocation will take the path described above in the section which describes ``The Responder Chain''.
+
 @section Saving the gorm file
 @cindex Saving
 
@@ -524,8 +532,6 @@ At this point you must save the .gorm file.  Go to the Gorm menu and click Docum
 This is different than saving, some people have gotten this confused with the idea of Gorm generating the code for the gui.  Gorm does nothing of the sort (grin).  
 
 Go to the Classes section in the Document window and select the MyController class yet again.  Now go to the Gorm menu and select Classes and the select ``Create Class Files''.  This will bring up a file panel and it allow you to select the directory in which to put the files.   It will first create the MyController.m file and then the MyController.h file.  Simply select the directory in which your app will reside and hit okay for both.  You can change the names, but the default ones, which are based on the class name, should be sufficient.  When you look at the .m for this class, you should see the @samp{buttonPressed:} method with the commecnt @samp{/* insert your code here */} in it.  Delete this comment and add @samp{[value setStringValue: @@``Hello''];}.   The class should look like this after you're done:
-
-
 
 /* All Rights reserved */
 
@@ -545,13 +551,20 @@ Go to the Classes section in the Document window and select the MyController cla
 
 @@end
 
-If you recall, we connected the textfield to the ``value'' variable.  The call above causes the method setStringValue to be invoked on the textfield you added to the window.  
+You recall, we connected the textfield to the ``value'' variable.  The call above causes the method setStringValue to be invoked on the textfield you added to the window.  
 
 Also, note that the name of the method is ``buttonPressed:''.  This is the action which is bound to the button.  When it is pressed the text in the textfield should change to ``Hello''.
 
 You now need to build the application either by copying in a GNUmakefile and making the appropriate changes or by using ProjectCenter's build capability, depending on if you use it or not.
 
 This app is available as ``SimpleApp'' in the Examples directory under the Documentation directory distributed with Gorm.   Hopefully this has helped to demonstrate, albeit on a small scale, the capabilities of Gorm.  In later chapters we will cover more advanced application architectures and topics.
+
+@chapter Another Simple Application
+
+This chapter will describe an application, very much like the previous one, but using a slightly different structure.  This application uses MyController as the NSOwner of the app instead of making it the delegate of NSApplication.
+
+This application can be viewed as a slight modification of the previous one. 
+
 
 @chapter Advanced Topics
 
