@@ -778,7 +778,8 @@ static NSImage	*classesImage = nil;
   NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
-  NSCharacterSet *illegalSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\:;'<>?,./"];
+  NSCharacterSet *illegalOutletSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\:;'<>?,./"];
+  NSCharacterSet *illegalActionSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\;'<>?,./"];
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
   NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
   NSRange notFoundRange = NSMakeRange(NSNotFound,0);
@@ -872,7 +873,7 @@ static NSImage	*classesImage = nil;
 		     && [outlets indexOfObject: outlet] == NSNotFound)
 		    {
 		      NSDebugLog(@"outlet = %@", outlet);
-		      if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalSet],notFoundRange))
+		      if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalOutletSet],notFoundRange))
 			{
 			  [outlets addObject: outlet];
 			}
@@ -918,7 +919,7 @@ static NSImage	*classesImage = nil;
 			      /* Add the ':' back */
 			      action = [action stringByAppendingString: @":"];
 			      NSDebugLog(@"action = %@", action);
-			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalSet],notFoundRange))
+			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalActionSet],notFoundRange))
 				{
 				  [actions addObject: action];
 				}
