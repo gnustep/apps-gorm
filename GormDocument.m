@@ -106,7 +106,32 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 
 
+/*
+ * Trivial classes for connections from objects to their editors, and from
+ * child editors to their parents.  This does nothing special, but we can
+ * use the fact that it's a different class to search for it in the connections
+ * array.
+ */
+@interface	GormObjectToEditor : NSNibConnector
+@end
+
+@implementation	GormObjectToEditor
+@end
+
+@interface	GormEditorToParent : NSNibConnector
+@end
+
+@implementation	GormEditorToParent
+@end
+
 @implementation GormDocument
+
++ (void) initialize
+{
+  if (self == [GormDocument class])
+    {
+    }
+}
 
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
@@ -118,7 +143,7 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 - (NSArray*) allConnectors
 {
-  return AUTORELEASE([connections copy]);
+  return [NSArray arrayWithArray: connections];
 }
 
 - (void) attachObject: (id)anObject toParent: (id)aParent
@@ -153,6 +178,7 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
       [resourcesManager addObject: anObject];
+      [[self openEditorForObject: anObject] activate];
     }
 }
 
@@ -239,7 +265,6 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     {
       return NO;
     }
- /* FIXME */
   return YES; 
 }
 
@@ -279,6 +304,8 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 {
   NSString	*name = [self nameForObject: anObject];
   unsigned	count = [connections count];
+
+  [[self editorForObject: anObject create: NO] close];
 
   while (count-- > 0)
     {
@@ -369,8 +396,34 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 - (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
+  NSArray		*links;
+  id<IBConnectors>	con;
+
+  /*
+   * If there is a link from this editor to a parent, remove it.
+   */
+  links = [self connectorsForSource: anEditor
+			    ofClass: [GormEditorToParent class]];
+  con = [links lastObject];
+  if (con != nil)
+    {
+      [connections removeObjectIdenticalTo: con];
+    }
+      
+  /*
+   * Remove the connection linking the object to this editor.
+   */
+  links = [self connectorsForSource: anObject
+			    ofClass: [GormObjectToEditor class]];
+  con = [links lastObject];
+  if (con != nil)
+    {
+      [connections removeObjectIdenticalTo: con];
+    }
+  else
+    {
+      NSLog(@"Strange - removing editor without link from edited object");
+    }
 }
 
 - (id<IBEditors>) editorForObject: (id)anObject
@@ -383,35 +436,96 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
                          inEditor: (id<IBEditors>)anEditor
                            create: (BOOL)flag
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
-  return nil;
+  NSArray	*links;
+
+  /*
+   * Look up the editor links for the object to see if it already has an
+   * editor.  If it does return it, otherwise create a new editor and a
+   * link to it if the flag is set.
+   */
+  links = [self connectorsForSource: anObject
+			    ofClass: [GormObjectToEditor class]];
+  if ([links count] == 0 && flag == YES)
+    {
+      Class		eClass;
+      id<IBEditors>	editor;
+      id<IBConnectors>	link;
+
+      eClass = NSClassFromString([anObject editorClassName]);
+      editor = [[eClass alloc] initWithObject: anObject inDocument: self];
+      link = [GormObjectToEditor new];
+      [link setSource: anObject];
+      [link setDestination: editor];
+      [connections addObject: link];
+      RELEASE(link);
+      if (anEditor != nil)
+	{
+	  /*
+	   * This editor has a parent - so link to it.
+	   */
+	  link = [GormEditorToParent new];
+	  [link setSource: editor];
+	  [link setDestination: anEditor];
+	  [connections addObject: link];
+	  RELEASE(link);
+	}
+      RELEASE(editor);
+      return editor;
+    }
+  else
+    {
+      return [links lastObject];
+    }
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
+  NSMutableArray	*editorInfo;
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
+  id			obj;
 
   /*
    * Map all connector sources and destinations to their name strings.
    */
+  editorInfo = [NSMutableArray new];
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
-      NSString	*name;
-      id	obj;
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [editorInfo addObject: con];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+	{
+	  [editorInfo addObject: con];
+	}
+      else
+	{
+	  NSString	*name;
+	  id		obj;
 
-      obj = [con source];
-      name = [self nameForObject: obj];
-      [con setSource: name];
-      obj = [con destination];
-      name = [self nameForObject: obj];
-      [con setDestination: name];
+	  obj = [con source];
+	  name = [self nameForObject: obj];
+	  [con setSource: name];
+	  obj = [con destination];
+	  name = [self nameForObject: obj];
+	  [con setDestination: name];
+	}
     }
   /*
-   * Remove objects that shouldn't be archived.
+   * Remove objects and connections that shouldn't be archived.
+   * All editors are closed (this removes their links).
    */
+  enumerator = [editorInfo objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	{
+	  [[con destination] close];
+	}
+    }
+  RELEASE(editorInfo);
   [nameTable removeObjectForKey: @"NSOwner"];
   [nameTable removeObjectForKey: @"NSFirst"];
 
@@ -441,6 +555,19 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
       name = (NSString*)[con destination];
       obj = [self objectForName: name];
       [con setDestination: obj];
+    }
+
+  /*
+   * Restore basic editor information.
+   */
+  enumerator = [nameTable objectEnumerator];
+  while ((obj = [enumerator nextObject]) != nil)
+    {
+      if ([obj isKindOfClass: [NSWindow class]] == YES
+       || [obj isKindOfClass: [NSMenu class]] == YES)
+	{
+	  [[self openEditorForObject: obj] activate];
+	}
     }
 }
 
@@ -583,6 +710,7 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 	   || [obj isKindOfClass: [NSMenu class]] == YES)
 	    {
 	      [resourcesManager addObject: obj];
+	      [[self openEditorForObject: obj] activate];
 	    }
 	}
 
@@ -600,16 +728,25 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 - (id<IBEditors>) openEditorForObject: (id)anObject
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
-  return nil;
+  id<IBEditors>	e = [self editorForObject: anObject create: YES];
+  id<IBEditors>	p = [self parentEditorForEditor: e];
+  
+  if (p != nil)
+    {
+      [self openEditorForObject: [p editedObject]];
+    }
+  return e;
 }
 
 - (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
-  return nil;
+  NSArray		*links;
+  GormObjectToEditor	*con;
+
+  links = [self connectorsForSource: anEditor
+			    ofClass: [GormObjectToEditor class]];
+  con = [links lastObject];
+  return [con destination];
 }
 
 - (id) parentOfObject: (id)anObject
@@ -646,7 +783,6 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
       while ((win = [enumerator nextObject]) != nil)
 	{
 	  [win setFrameTopLeftPoint: screenPoint];
-	  [win orderFront: self];
 	}
     }
   else
@@ -668,8 +804,30 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
+  NSEnumerator		*enumerator = [connections objectEnumerator];
+  Class			editClass = [GormObjectToEditor class];
+  id<IBConnectors>	c;
+
+  /*
+   * This editor wants to give up the selection.  Go through all the known
+   * editors (with links in the connections array) and try to find one
+   * that wants to take over the selection.  Activate whatever editor we
+   * find (or re-activate the one we already have).
+   */
+  while ((c = [enumerator nextObject]) != nil)
+    {
+      if ([c class] == editClass)
+	{
+	  id<IBEditors>	e = [c destination];
+
+	  if (e != editor && [e wantsSelection] == YES)
+	    {
+	      editor = e;
+	      break;
+	    }
+	}
+    }
+  [editor activate];
 }
 
 - (GormResourcesManager*) resourcesManager
@@ -851,8 +1009,10 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
-  /* FIXME */
-  [self notImplemented: _cmd];
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+  [nc postNotificationName: IBSelectionChangedNotification
+		    object: anEditor];
 }
 
 - (void) touch

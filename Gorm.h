@@ -216,12 +216,13 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 /*
  * How to get the inspector for a particular object.
  */
-@interface NSObject (IBInspectorClassNames)
+@interface NSObject (GormObjectAdditions)
 - (NSString*) inspectorClassName;
 - (NSString*) connectInspectorClassName;
 - (NSString*) sizeInspectorClassName;
 - (NSString*) helpInspectorClassName;
 - (NSString*) classInspectorClassName;
+- (NSString*) editorClassName;
 @end
 
 @interface IBInspector : NSObject

@@ -28,7 +28,7 @@
  * Methods to return the images that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSMenu (IBObjectAdditions)
+@implementation NSMenu (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -44,7 +44,11 @@
 }
 @end
 
-@implementation NSWindow (IBObjectAdditions)
+@implementation NSWindow (GormObjectAdditions)
+- (NSString*) editorClassName
+{
+  return @"GormWindowEditor";
+}
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -103,29 +107,17 @@
 
 
 
-@interface	GormSelectedView : NSObject
-{
-  NSView	*object;
-  NSView	*handles[8];
-}
-@end
-
-@implementation	GormSelection
-@end
-
-
-
 @interface	GormWindowEditor : NSView <IBEditors>
 {
   id<IBDocuments>	document;
-  id			edited;
+  NSWindow		*edited;
+  NSView		*original;
   NSMutableArray	*selection;
+  NSMutableArray	*subeditors;
   NSPoint		mouseDownPoint;
   BOOL			shouldBeginDrag;
   NSPasteboard		*dragPb;
 }
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
@@ -134,6 +126,8 @@
 - (void) copySelection;
 - (void) deleteSelection;
 - (id<IBDocuments>) document;
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (id) editedObject;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
@@ -147,78 +141,6 @@
 @end
 
 @implementation	GormWindowEditor
-
-- (void) dealloc
-{
-  RELEASE(edited);
-  RELEASE(selection);
-  RELEASE(document);
-  [super dealloc];
-}
-
-/*
- *	Initialisation - register to receive DnD with our own types.
- */
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
-{
-  self = [super init];
-  ASSIGN(document, aDocument);
-  ASSIGN(edited, anObject);
-  selection = [NSMutableArray new];
-  return self;
-}
-
-/*
- *	Dragging source protocol implementation
- */
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
-{
-  NSString	*type = [[dragPb types] lastObject];
-
-  /*
-   * Windows are an exception to the normal DnD mechanism - we create them
-   * if they are dropped anywhere except back in the pallettes view -
-   * ie. if they are dragged, but the drop fails.
-   */
-  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
-    {
-      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
-
-      if (active != nil)
-	{
-	  [active pasteType: type fromPasteboard: dragPb parent: nil];
-	}
-    }
-}
-
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
-{
-  return NSDragOperationCopy;
-}
-
-/*
- *	Dragging destination protocol implementation
- *
- *	We actually don't handle anything being dropped on the palette,
- *	but we pretend to accept drops from ourself, so that the drag
- *	session quietly terminates - and it looks like the drop has
- *	been successful - this stops windows being created when they are
- *	dropped back on the palette (a window is normally created if the
- *	dnd drop is refused).
- */
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  return NSDragOperationCopy;;
-}
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
-}
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
-}
-
 
 /*
  *	Intercepting events in the view and handling them
@@ -252,74 +174,185 @@
 
 - (void) mouseDragged: (NSEvent*)theEvent
 {
-  if (shouldBeginDrag == YES)
-    {
-      NSPoint		dragPoint = [theEvent locationInWindow];
-      NSView		*view = [super hitTest: mouseDownPoint];
-      GormDocument	*active = [(id<IB>)NSApp activeDocument];
-      NSRect		rect = [view frame];
-      NSString		*type;
-      id		obj;
-      NSPasteboard	*pb;
-      NSImageRep	*rep;
-      NSSize		offset;
-
-      offset.width = mouseDownPoint.x - dragPoint.x;
-      offset.height = mouseDownPoint.y - dragPoint.y;
-
-#if 1
-NSLog(@"Could do dragging");
-#else
-      RELEASE(dragImage);
-      dragImage = [NSImage new];
-      rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
-						rect: rect];
-      [dragImage setSize: rect.size];
-      [dragImage addRepresentation: rep];
-
-      type = [IBPalette typeForView: view];
-      obj = [IBPalette objectForView: view];
-      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-      ASSIGN(dragPb, pb);
-      [active copyObject: obj type: type toPasteboard: pb];
-
-      [self dragImage: dragImage
-		   at: rect.origin
-	       offset: offset
-		event: theEvent
-	   pasteboard: pb
-	       source: self
-	    slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
-#endif
-    }
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  return NO;
+  /*
+   * A window editor can accept views dropped in to the window.
+   */
+  return [types containsObject: IBViewPboardType];
 }
 
 - (BOOL) activate
 {
-  [window makeKeyAndOrderFront: self];
+  if (original == nil)
+    {
+      NSEnumerator	*enumerator;
+      NSView		*sub;
+
+      /*
+       * Swap ourselves in as a replacement for the original window
+       * content view.
+       */
+      original = RETAIN([edited contentView]);
+      [self setFrame: [original frame]];
+      enumerator = [[original subviews] objectEnumerator];
+      while ((sub = [enumerator nextObject]) != nil)
+	{
+	  [self addSubview: sub];
+	}
+      [edited setContentView: self];
+    }
+  if ([edited isKeyWindow] == NO)
+    {
+      [window makeKeyAndOrderFront: self];
+    }
+  if ([selection count] == 0)
+    {
+      [selection addObject: edited];
+    }
+  if ([(id<IB>)NSApp selectionOwner] != self)
+    {
+      [document setSelectionFromEditor: self];
+    }
   return YES;
 }
 
 - (void) close
 {
   [self closeSubeditors];
+
+  if (original != nil)
+    {
+      NSEnumerator	*enumerator;
+      NSView		*sub;
+
+      /*
+       * Swap ourselves out and the original window content view in.
+       */
+      [original setFrame: [self frame]];
+      enumerator = [[self subviews] objectEnumerator];
+      while ((sub = [enumerator nextObject]) != nil)
+	{
+	  [original addSubview: sub];
+	}
+      [edited setContentView: original];
+      DESTROY(original);
+    }
+  if ([(id<IB>)NSApp selectionOwner] == self)
+    {
+      [document resignSelectionForEditor: self];
+    }
 }
 
 - (void) closeSubeditors
 {
+  while ([subeditors count] > 0)
+    {
+      id<IBEditors>	sub = [subeditors lastObject];
+
+      [sub close];
+      [subeditors removeObjectIdenticalTo: sub];
+    }
 }
 
 - (void) copySelection
 {
+  switch ([selection count])
+    {
+      case 0:
+	break;
+
+      case 1:
+	{
+	  id	obj = [selection lastObject];
+
+	  if (obj == edited)
+	    {
+	      [document copyObject: selection
+			      type: IBWindowPboardType
+		      toPasteboard: [NSPasteboard generalPasteboard]];
+	    }
+	  else
+	    {
+	      [document copyObject: selection
+			      type: IBViewPboardType
+		      toPasteboard: [NSPasteboard generalPasteboard]];
+	    }
+	}
+	break;
+
+      default:
+        [document copyObjects: selection
+			 type: IBViewPboardType
+		 toPasteboard: [NSPasteboard generalPasteboard]];
+	break;
+    }
+}
+
+- (void) dealloc
+{
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+  [nc removeObserver: self];
+  [self close];
+  RELEASE(edited);
+  RELEASE(selection);
+  RELEASE(subeditors);
+  RELEASE(document);
+  [super dealloc];
 }
 
 - (void) deleteSelection
 {
+  NSArray	*a = [NSArray arrayWithArray: selection];
+  unsigned	c = [a count];
+
+  [selection removeAllObjects];
+  [document resignSelectionForEditor: self];
+  while (c-- > 0)
+    {
+      id	obj = [a objectAtIndex: c];
+
+      [document detachObject: obj];
+    }
+}
+
+/*
+ *	Dragging source protocol implementation
+ */
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
+{
+  NSString	*type = [[dragPb types] lastObject];
+
+  /*
+   * Windows are an exception to the normal DnD mechanism - we create them
+   * if they are dropped anywhere except back in the pallettes view -
+   * ie. if they are dragged, but the drop fails.
+   */
+  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
+    {
+      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
+
+      if (active != nil)
+	{
+	  [active pasteType: type fromPasteboard: dragPb parent: nil];
+	}
+    }
+}
+
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+{
+  return NSDragOperationCopy;
+}
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  /*
+   * Let the dragging source know we will copy the dragged object.
+   */
+  return NSDragOperationCopy;;
 }
 
 - (void) drawSelection
@@ -336,22 +369,111 @@ NSLog(@"Could do dragging");
   return edited;
 }
 
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
+{
+  NSWindow	*win = (NSWindow*)anObject;
+  NSView	*cv = [win contentView];
+  NSView	*sub;
+  NSEnumerator	*enumerator;
+
+  /*
+   * Initialize with current window content frame, move window subviews to
+   * self, and replace window content view with self.
+   */
+  if ((self = [super initWithFrame: [cv frame]]) == nil)
+    return nil;
+  original = RETAIN(cv);
+  enumerator = [[original subviews] objectEnumerator];
+  while ((sub = [enumerator nextObject]) != nil)
+    {
+      [self addSubview: sub];
+    }
+  [win setContentView: self];
+
+  ASSIGN(document, aDocument);
+  ASSIGN(edited, anObject);
+  selection = [NSMutableArray new];
+  [selection addObject: edited];
+  subeditors = [NSMutableArray new];
+
+  /*
+   * Permit views to be dragged in to the window.
+   */
+  [self registerForDraggedTypes: [NSArray arrayWithObjects:
+    IBViewPboardType, nil]];
+
+  return self;
+}
+
 - (void) makeSelectionVisible: (BOOL)flag
 {
 }
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject
 {
-  return nil;
+  id<IBEditors>	sub;
+
+  sub = [document editorForObject: anObject inEditor: self create: YES];
+  /*
+   * If we don't already have this subeditor, make a note of it so we
+   * can close it later.
+   */
+  if ([subeditors indexOfObjectIdenticalTo: sub] == NSNotFound)
+    {
+      [subeditors addObject: sub];
+    }
+  return sub;
 }
 
 - (void) orderFront
 {
-  [window orderFront: self];
+  [edited orderFront: self];
 }
 
 - (void) pasteInSelection
 {
+}
+
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPoint	loc = [sender draggingLocation];
+  NSPasteboard	*pb = [sender draggingPasteboard];
+  NSArray	*views;
+  NSEnumerator	*enumerator;
+  NSView	*sub;
+
+  /*
+   * Ask the document to get the dragged views from the pasteboard and add
+   * them to it's collection of known objects.
+   */
+  views = [document pasteType: IBViewPboardType
+	       fromPasteboard: pb
+		       parent: edited];
+  /*
+   * Now make all the views subviews of ourself, setting their origin to be
+   * the point at which they were dropped (which we convert from screen
+   * coordinates to our own coordinates).
+   */
+  loc = [[self window] convertScreenToBase: loc];
+  loc = [self convertPoint: loc fromView: nil];
+  enumerator = [views objectEnumerator];
+  while ((sub = [enumerator nextObject]) != nil)
+    {
+      NSRect	rect = [sub frame];
+
+      rect.origin = loc;
+      [sub setFrame: rect];
+      [self addSubview: sub];
+    }
+  return YES;
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  /*
+   * Tell the source that we will accept the drop.
+   */
+  return YES;
 }
 
 - (void) resetObject: (id)anObject
@@ -360,11 +482,50 @@ NSLog(@"Could do dragging");
 
 - (void) selectObjects: (NSArray*)anArray
 {
+  if (anArray != selection)
+    {
+      [selection removeAllObjects];
+      [selection addObjectsFromArray: anArray];
+      if ([selection indexOfObjectIdenticalTo: edited] != NSNotFound)
+	{
+	  /*
+	   * we have selected our edited window ... we can't have anything
+	   * else selected at the same time.
+	   */
+	  if ([selection count] > 0)
+	    {
+	      [selection removeAllObjects];
+	      [selection addObject: edited];
+	    }
+	}
+      else
+	{
+	  unsigned	count = [selection count];
+
+	  /*
+	   * We can only select views that are direct subviews - discard others.
+	   */
+	  while (count-- > 0)
+	    {
+	      id	o = [selection objectAtIndex: count];
+
+	      if ([[self subviews] indexOfObjectIdenticalTo: o] == NSNotFound)
+		{
+		  [selection removeObjectAtIndex: count];
+		}
+	    }
+	}
+    }
+  /*
+   * Now we must let the document (and hence the rest of the app) know about
+   * our new selection.
+   */
+  [document setSelectionFromEditor: self];
 }
 
 - (NSArray*) selection
 {
-  return AUTORELEASE([selection copy]);
+  return [NSArray arrayWithArray: selection];
 }
 
 - (unsigned) selectionCount
@@ -378,11 +539,20 @@ NSLog(@"Could do dragging");
 
 - (BOOL) wantsSelection
 {
-  return NO;
+  /*
+   * We only want to be the selection owner if we are active (have been
+   * swapped for the windows original content view) and if we have some
+   * object selected.
+   */
+  if (original == nil)
+    return NO;
+  if ([selection count] == 0)
+    return NO;
+  return YES;
 }
 
 - (NSWindow*) window
 {
-  return [self window];
+  return [super window];
 }
 @end

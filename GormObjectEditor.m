@@ -28,7 +28,11 @@
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSObject (IBObjectAdditions)
+@implementation NSObject (GormObjectAdditions)
+- (NSString*) editorClassName
+{
+  return @"GormObjectEditor";
+}
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;

@@ -1,3 +1,10 @@
+Tue Dec 14 17:33:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* GormDocument.m: Major changes - nearly all methods implemented to
+	including all the editor related methods.
+	* GormWindowEditor.m: Loads of stuff fleshed out, mostly just leaving
+	drawing code to do.
+
 Mon Dec 13 20:04:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* GormViewKnobs.m: imported from IM
