@@ -1028,9 +1028,9 @@ static NSButtonType _buttonTypeForObject( id button )
      forKey: @"ApplicationRelease"];
   [d setObject: @"0.2.7 Dec 2002" 
      forKey: @"FullVersionID"];
-  [d setObject: [NSArray arrayWithObjects: @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
+  [d setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
-			 @"Gregory John Casamento <greg_casamento@yahoo.com>",
+			 @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
 			 nil]
      forKey: @"Authors"];
   [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc."
