@@ -1101,7 +1101,6 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) awakeFromNib
 {
-  NSLog(@"Setting menu...%@",gormMenu);
   // set the menu...
   mainMenu = (NSMenu *)gormMenu;
 }
