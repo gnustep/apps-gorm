@@ -916,7 +916,8 @@ static NSImage  *fileImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  
+  ASSIGN(lastEditor, nil);
+
   // close the window...
   [window close];
 
@@ -2960,7 +2961,7 @@ static NSImage  *fileImage = nil;
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
-  lastEditor = anEditor;
+  ASSIGN(lastEditor, anEditor);
   [(Gorm *)NSApp stopConnecting]; // cease any connection
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {

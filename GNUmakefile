@@ -182,6 +182,7 @@ Gorm_HEADERS = \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
 	NSColorWell+GormExtensions.h \
+	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h 
 
 Gorm_OBJC_FILES = \
@@ -235,6 +236,7 @@ Gorm_OBJC_FILES = \
 	GormViewWithSubviewsEditor.m \
 	GormWindowEditor.m \
 	NSColorWell+GormExtensions.m \
+	NSFontManager+GormExtensions.m \
 	NSView+GormExtensions.m \
 	main.m \
         Gorm.m

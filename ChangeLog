@@ -1,3 +1,12 @@
+2005-03-08 00:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added new files.
+	* GormDocument.h: Added header for InterfaceBuilder.h to get
+	the necessary interface declarations.
+	* GormDocument.m: Change to retain and release the last used
+	editor.
+	* NSFontManager+GormExtensions.[hm]: New files.
+	
 2005-03-07 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added code to make the window of the widget 
