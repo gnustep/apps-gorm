@@ -1,6 +1,11 @@
 2002-01-29  Adam Fedor  <fedor@gnu.org>
 
+	* GormClassManager.m (-allActionsForObject:): Get actions for
+	first responder as well.
 	* ClassInformation.plist: Update (from stefanurbanek@yahoo.fr).
+	Add FirstResponder actions.
+
+	* Documentation/news.texi: update
 
 2002-01-13  Adam Fedor  <fedor@gnu.org>
 

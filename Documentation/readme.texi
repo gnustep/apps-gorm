@@ -40,9 +40,6 @@ Known problems (things to do) -
 @item Documentation - only a tiny start has been made on this!
 
 @item Editors and inspectors need writing for most gui elements -
-  popup menus
-  boxes
-  browsers
   scrollviews
   splitviews
   etc etc

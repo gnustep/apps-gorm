@@ -155,10 +155,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
   if (theClass == [GormFirstResponder class])
     {
-      return nil;
+      className = @"FirstResponder";
     }
-
-  if (theClass == [GormFilesOwner class])
+  else if (theClass == [GormFilesOwner class])
     {
       className = [(GormFilesOwner*)obj className];
     }

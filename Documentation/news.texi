@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.1.0}
+
+@itemize @bullet
+@item load/parses class files for entry into class list.
+@item Pallete/inspectors for date and number formatters
+@item Pallete/Inspectors for browsers and tableViews
+@item NSStepper, NSForm, NSPopupButton  pallete item and inspector
+@item Most inspectors greatly improved and fleshed out.
+@item Custom views added.
+@item Ability to edit cells in a matrix.
+@item Ability to change the font of some objects.
+@end itemize
+
 @section Noteworthy changes in version @samp{0.0.3}
 
 @itemize @bullet
