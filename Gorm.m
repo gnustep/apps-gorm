@@ -519,9 +519,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.4.10 (Beta)" 
+  [dict setObject: @"Gorm 0.5.0 (Beta)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.4.10 Nov 23 2003" 
+  [dict setObject: @"0.5.0 Nov 23 2003" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",

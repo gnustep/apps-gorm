@@ -1,3 +1,22 @@
+Noteworthy changes in version `0.5.0'
+=====================================
+
+   * Enabled defer in NSWindow inspector.
+
+   * Added code to the connection inspector to prevent erroneous
+     connections.
+
+   * Added support for upgrading of old .gorm files using the older
+     template mechanism
+
+   * Grouping with an NSSplitView now operates using the relative
+     positions of the views in the window.
+
+   * Custom Class inspector now shows all subclasses, not just direct
+     custom subclasses.
+
+   * Bug fixes, eliminated memory leak, code cleanup, etc.
+
 Noteworthy changes in version `0.4.0'
 =====================================
 

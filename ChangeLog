@@ -1,3 +1,7 @@
+2003-11-23 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 0.5.0
+
 2003-11-23 15:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: Added method allSubclassesOf: to get all

@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.4.0 of Gorm.
+This is version 0.5.0 of Gorm.
 
 What is Gorm?
 =============
@@ -12,27 +12,24 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.4.0'
+Noteworthy changes in version `0.5.0'
 =====================================
 
-   * New Menu and Menu Item inspectors.
+   * Enabled defer in NSWindow inspector.
 
-   * User can now specify the Services and Windows menus in the menu
-     inspector.
+   * Added code to the connection inspector to prevent erroneous
+     connections.
 
-   * User can specify a non-custom subclass as well as a custom one to
-     replace the class when the .gorm is unarchived.  This can be used
-     to turn a NSTextField into NSSecureTextField and etc.
+   * Added support for upgrading of old .gorm files using the older
+     template mechanism
 
-   * New set name panel.
+   * Grouping with an NSSplitView now operates using the relative
+     positions of the views in the window.
 
-   * New switch control on the font panel to allow the user to specify
-     if a font is encoded with its default size or not.
+   * Custom Class inspector now shows all subclasses, not just direct
+     custom subclasses.
 
-   * Added NSStepper and NSStepperCell to the class list to allow
-     creation of custom subclasses.
-
-   * Windows and Services menus now function correctly.
+   * Bug fixes, eliminated memory leak, code cleanup, etc.
 
 How can I get support for this software?
 ========================================
