@@ -141,51 +141,21 @@
 	);
 	Super = NSObject;
     };
-    Gorm = {
+    GormPreferences = {
 	Actions = (
-	    "editClass:",
-	    "instantiateSubclass:",
-	    "createSubclass:",
-	    "testInterface:",
-	    "setName:",
-	    "selectAllItems:",
-	    "saveAs:",
-	    "saveAll:",
-	    "save:",
-	    "revertToSaved:",
-	    "paste:",
-	    "palettes:",
-	    "open:",
-	    "loadSound:",
-	    "loadPalette:",
-	    "newApplication:",
-	    "inspector:",
-	    "infoPanel:",
-	    "endTesting:",
-	    "delete:",
-	    "cut:",
-	    "copy:",
-	    "newPalette:",
-	    "newInspector:",
-	    "newEmpty:",
-	    "close:",
-	    "miniaturize:",
-	    "debug:",
-	    "loadImage:",
-	    "orderFrontFontPanel:",
-	    "ungroup:",
-	    "groupSelectionInScrollView:",
-	    "groupSelectionInBox:",
-	    "groupSelectionInSplitView:",
-	    "remove:",
-	    "addAttributeToClass:",
-	    "instantiateClass:",
-	    "createClassFiles:",
-	    "loadClass:",
-	    "preferencesPanel:"
+	    "setGeneralPreferences:",
+	    "addHeader:",
+	    "removeHeader:",
+	    "selectHeader:"
 	);
 	Outlets = (
+	    window,
+	    box,
+	    preloadHeaders,
+	    showInspectors,
+	    showPalettes,
+	    browser
 	);
-	Super = NSApplication;
+	Super = NSObject;
     };
 }

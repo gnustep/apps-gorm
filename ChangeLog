@@ -1,5 +1,21 @@
 2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Defaults.plist: Added some new defaults and deleted some
+	obsolete ones.
+	* GNUmakefile: Added new files.
+	* Gorm.m/GormPrivate.h: Added method to create the preferences panel
+	called preferencesPanel: as well as a new ivar. 
+	* GormDocument.m: -[GormDocument init]: added code to preload
+	headers into the document based on defaults.  Preloading of headers
+	is a feature suggestion from cbv (Chris) on #gnustep.
+	-[GormDocument loadDocument:]: removed references to OpenNibs
+	default which is obsolete.
+	-[GormDocument saveDocument:]: removed references to SaveAsNib
+	default which is obsolete.
+	* TODO: added some more tasks.
+
+2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Gorm.gorm: Added to replace about 200+ lines of 
 	code in the Gorm.m file.
 	* Gorm.m: -[Gorm finishLaunching:] removed code

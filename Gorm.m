@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormPreferences.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -1035,6 +1036,17 @@ static NSButtonType _buttonTypeForObject( id button )
   return self;
 }
 
+- (id) preferencesPanel: (id) sender
+{
+  if(preferencesPanel == nil)
+    {
+      preferencesPanel = [[[GormPreferences alloc] init] window];
+    }
+
+  [preferencesPanel makeKeyAndOrderFront: self];
+  return preferencesPanel;
+}
+
 - (id) init 
 {
   self = [super init];
@@ -1051,6 +1063,7 @@ static NSButtonType _buttonTypeForObject( id button )
       path = [bundle pathForImageResource: @"GormTargetTag"];
       targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 
+      preferencesPanel = nil;
       documents = [NSMutableArray new];
       [nc addObserver: self
 	     selector: @selector(handleNotification:)

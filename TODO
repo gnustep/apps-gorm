@@ -16,6 +16,10 @@ table which seem intersting:
 
 * Create an xml output format for Gorm files so that they can be used
   on both MOSX and on GNUstep.   This will be done w/ an extension
-  library.
+  library. (me)
+ 
+* Use custom view as container.   MOSX allows the user to create views
+  without windows so that the developer doesn't need to create a "dummy"
+  window to hold them. (fabien)
 --
 Gregory John Casamento

@@ -110,6 +110,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \
+	Resources/GormPreferences.gorm \
 	Resources/Gorm.gorm
 
 Gorm_HEADERS = \
@@ -134,7 +135,8 @@ Gorm_HEADERS = \
 	GormButtonEditor.h \
 	GormTabViewEditor.h \
 	GormSplitViewEditor.h \
-	GormPlacementInfo.h
+	GormPlacementInfo.h \
+	GormPreferences.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -169,7 +171,8 @@ Gorm_OBJC_FILES = \
 	GormSoundInspector.m \
 	GormScrollViewEditor.m \
 	GormImageEditor.m \
-	GormSoundEditor.m
+	GormSoundEditor.m \
+	GormPreferences.m
 
 -include GNUmakefile.preamble
 

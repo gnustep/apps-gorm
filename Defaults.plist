@@ -1,4 +1,6 @@
 {
-  OpenNibs = NO;
-  SaveAsNib = NO;
+  PreloadHeaders = NO;
+  ShowPalettes = YES;
+  ShowInspectors = YES;	
+  HeaderList = ();
 }

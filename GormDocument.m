@@ -30,6 +30,7 @@
 #include "GormOutlineView.h"
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
+#include <Foundation/NSUserDefaults.h>
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
@@ -1418,6 +1419,7 @@ static NSImage	*classesImage = nil;
 		 green: 0.737255
 		 blue: 0.576471
 		 alpha: 1.0 ];
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
@@ -1669,6 +1671,21 @@ static NSImage	*classesImage = nil;
 	     selector: @selector(handleNotification:)
 		 name: IBWillEndTestingInterfaceNotification
 	       object: nil];
+      
+      // preload headers...
+      if([defaults boolForKey: @"PreloadHeaders"])
+	{
+	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
+	  NSEnumerator *en = [headerList objectEnumerator];
+	  id obj = nil;
+
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      NSLog(@"Preloading %@",obj);
+	      [self parseHeader: (NSString *)obj];
+	    }
+	}
+
     }
   return self;
 }
@@ -1997,15 +2014,8 @@ static NSImage	*classesImage = nil;
   int		result;
   NSString *pth = [[NSUserDefaults standardUserDefaults] 
 		    objectForKey:@"OpenDir"];
-
-  if ([[NSUserDefaults standardUserDefaults] boolForKey: @"OpenNibs"] == YES)
-    {
-      fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", @"nib", nil];
-    }
-  else
-    {
-      fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
-    }
+  
+  fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
@@ -2405,18 +2415,8 @@ static NSImage	*classesImage = nil;
   int			result;
 
   sp = [NSSavePanel savePanel];
-
-  if ([defs boolForKey: @"SaveAsNib"] == YES)
-    {
-      [sp setRequiredFileType: @"nib"];
-    }
-  else
-    {
-      [sp setRequiredFileType: @"gorm"];
-    }
-
+  [sp setRequiredFileType: @"gorm"];
   result = [sp runModalForDirectory: NSHomeDirectory() file: @""];
-
   if (result == NSOKButton)
     {
       NSFileManager	*mgr = [NSFileManager defaultManager];
