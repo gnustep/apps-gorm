@@ -444,13 +444,15 @@ If all of the options in this list are exhausted, it then gives up and returns n
 
 NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
 
-@chapter Creating A New Application
+@chapter Creating A New Application in Gorm's menu
 
 If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.
 
-First you need to start Gorm up.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer. 
-
+First you need to start Gorm up.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer.
+ 
 You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window.
+
+
 
 @chapter Advanced Topics
 
@@ -467,6 +469,10 @@ Each object in the .gorm file has a name assigned to it by the application.  Thi
 @subsection The Custom Class Table
 
 This is only used when the user has associated a custom class with an existing instance in the gorm file.  If the user has, for instance, added an NSWindow to the gorm, he/she can use the custom class inspector to select a subclass of NSWindow to change to.   Upon saving the Gorm
+
+@subsection Connections Array
+
+This array is used to form the connections after the .gorm file is loaded.  The method @samp{[... establishConnection]} is never called on either NSNibControlConnector or NSNibOutletConnector objects.   This prevents the connections from having any effect while they are being edited in Gorm itself.   Once they are loaded, the establishConnection method is called and the connections are made.
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index
