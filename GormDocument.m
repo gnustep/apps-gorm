@@ -2501,6 +2501,8 @@ static NSImage	*classesImage = nil;
 {
   id		oldObject;
   NSString	*oldName;
+  NSMutableDictionary *cc = [classManager customClassMap];
+  NSString      *className = nil;
 
   if (object == nil)
     {
@@ -2569,7 +2571,6 @@ static NSImage	*classesImage = nil;
   aName = [aName copy];	/* Make sure it's immutable	*/
   [nameTable setObject: object forKey: aName];
   NSMapInsert(objToName, (void*)object, (void*)aName);
-  RELEASE(aName);
   if (oldName != nil)
     {
       [nameTable removeObjectForKey: oldName];
@@ -2578,6 +2579,19 @@ static NSImage	*classesImage = nil;
     {
       [objectsView refreshCells];
     }
+
+  // check the custom classes map and replace the appropriate
+  // object, if a mapping exists.
+  if(cc != nil)
+    {
+      className = [cc objectForKey: oldName];
+      if(className != nil)
+	{
+	  [cc removeObjectForKey: oldName];
+	  [cc setObject: className forKey: aName];
+	}
+    }
+  RELEASE(aName);
 }
 
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag

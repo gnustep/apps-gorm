@@ -1,3 +1,9 @@
+2004-03-04 01:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument setName:forObject:] added
+	code to remap the name of an object if it is in the custom
+	class map.
+	
 2004-03-03 11:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomClassInspector.[hm]: Removed _currentSelection
