@@ -145,6 +145,12 @@
     }
   return self;
 }
+
+- (void) setObject: (id)anObject
+{
+  object = nil;
+  [super setObject: anObject];
+}
 @end
 
 
@@ -1119,7 +1125,7 @@ selectCellWithString: (NSString*)title
     {
       NSArray		*array;
 
-      ASSIGN(object, anObject);
+      [super setObject: anObject];
       DESTROY(currentConnector);
       RELEASE(connectors);
 

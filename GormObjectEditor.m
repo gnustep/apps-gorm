@@ -129,9 +129,6 @@ static NSMapTable	*docMap = 0;
     {
       NSNotificationCenter	*nc;
 
-      //    && [[document nameForObject: selected] isEqualToString: @"NSFont"] == NO)
-      // we need to check to see if the NSFont object has any connections...
-
       nc = [NSNotificationCenter defaultCenter];
 
       if ([selected isKindOfClass: [NSMenu class]] &&

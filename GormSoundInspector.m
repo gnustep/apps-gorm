@@ -90,6 +90,10 @@
 	  sndobject = [selection objectAtIndex: 0];
 	}
     }
+  else
+    {
+      _currentSound = nil;
+    }
 
   // if its not nil, load it...
   if(sndobject != nil)

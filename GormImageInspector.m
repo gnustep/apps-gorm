@@ -17,9 +17,6 @@
   self = [super init];
   if (self != nil)
     {
-      // initialize all member variables...
-      // none...
-
       // load the gui...
       if (![NSBundle loadNibNamed: @"GormImageInspector"
 		     owner: self])
@@ -42,22 +39,23 @@
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [super dealloc];
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
 }
 
-- (void) setObject: (id)aobject
+- (void) setObject: (id)anObject
 {
-  NSImage *image = [aobject normalImage];
+  NSImage *image = [anObject normalImage];
   NSSize size = [image size];
 
-  object = aobject;
+  [super setObject: anObject];
   [imageView setImageAlignment: NSImageAlignCenter];
   [imageView setImageFrameStyle: NSImageFrameGrayBezel];
   [imageView setImageScaling: NSScaleNone];
-  [imageView setImage: [aobject image]];
+  [imageView setImage: [anObject image]];
   [name setStringValue: [image name]];
   [width setDoubleValue: size.width];
   [height setDoubleValue: size.height];

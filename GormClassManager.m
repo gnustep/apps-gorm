@@ -55,7 +55,6 @@
       NSString			*newClassName;
       int			i;
 
-      [self _touch];
       classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
       outlets = [[NSMutableArray alloc] initWithCapacity: 0];
       actions = [[NSMutableArray alloc] initWithCapacity: 0];
@@ -74,6 +73,8 @@
 	}
       [classInformation setObject: classInfo forKey: newClassName];
       [customClasses addObject: newClassName];
+
+      [self _touch];
 
       [[NSNotificationCenter defaultCenter] 
 	postNotificationName: GormDidAddClassNotification
@@ -197,7 +198,7 @@
     {
       return;
     }
-  [self _touch];
+
   if (extraActions == nil)
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -218,6 +219,8 @@
     {
       [self addAction: anAction forClassNamed: subclassName];
     }
+
+  [self _touch];
 }
 
 - (void) addOutlet: (NSString*)outlet forObject: (id)anObject
@@ -239,7 +242,6 @@
       return;
     }
 
-  [self _touch];
   if (extraOutlets == nil)
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -253,6 +255,8 @@
     {
       [self addOutlet: outlet forClassNamed: subclassName];
     }
+
+  [self _touch];
 }
 
 - (void) replaceAction: (NSString *)oldAction
@@ -278,7 +282,6 @@
       int all_index = [allActions indexOfObject: oldAction];
       int extra_index = [extraActions indexOfObject: oldAction];
 
-      [self _touch];
       [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
@@ -287,10 +290,11 @@
       int all_index = [allActions indexOfObject: oldAction];
       int actions_index = [actions indexOfObject: oldAction];
 
-      [self _touch];
       [actions replaceObjectAtIndex: actions_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
+
+  [self _touch];
 
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
@@ -330,7 +334,6 @@
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int extra_index = [extraOutlets indexOfObject: oldOutlet];
 
-      [self _touch];
       [extraOutlets replaceObjectAtIndex: extra_index withObject: newOutlet];
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
@@ -339,10 +342,11 @@
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int outlets_index = [outlets indexOfObject: oldOutlet];
 
-      [self _touch];
       [outlets replaceObjectAtIndex: outlets_index withObject: newOutlet];
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
+
+  [self _touch];
 
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
@@ -370,7 +374,6 @@
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
-      [self _touch];
       if (superName != nil)
 	{
 	  NSArray	*superActions;
@@ -390,6 +393,7 @@
 	    }
 	}
       [extraActions removeObject: anAction];
+      [self _touch];
     }
 
   if(![className isEqualToString: @"FirstResponder"]) 
@@ -424,7 +428,6 @@
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
-      [self _touch];
       if (superName != nil)
 	{
 	  NSArray	*superOutlets;
@@ -440,6 +443,7 @@
 	    }
 	}
       [extraOutlets removeObject: anOutlet];
+      [self _touch];
     }
 
   while((subclassName = [en nextObject]) != nil)
@@ -923,7 +927,6 @@
       NSEnumerator *en = [customClassMap keyEnumerator];
       id object = nil;
 
-      [self _touch];
       [customClasses removeObject: className];
       
       while((object = [en nextObject]) != nil)
@@ -941,6 +944,7 @@
     }
 
   [classInformation removeObjectForKey: className];
+  [self _touch];
 
   [[NSNotificationCenter defaultCenter] 
     postNotificationName: GormDidDeleteClassNotification
@@ -960,7 +964,6 @@
       int index = 0;
       NSArray *subclasses = [self subClassesOf: oldName];
 
-      [self _touch];
 
       [classInformation removeObjectForKey: oldName];
       [classInformation setObject: classInfo forKey: name];
@@ -999,6 +1002,8 @@
 	      [self setSuperClassNamed: name
 		    forClassNamed: sc];
 	    }
+
+	  [self _touch];
 	}
       else
 	NSLog(@"customClass not found %@",oldName);
