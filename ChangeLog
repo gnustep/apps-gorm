@@ -1,3 +1,8 @@
+2005-02-06 10:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: in -saveAsDocument: return the value
+	returned by -saveGormDocument: when it's called.
+
 2005-02-06 02:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormViewSizeInspector.gorm: Corrected box title color.

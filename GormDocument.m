@@ -2630,9 +2630,7 @@ static NSImage  *fileImage = nil;
 
       // set the path...
       ASSIGN(documentPath, path);
-      [self saveGormDocument: sender];
-      
-      return YES;
+      return [self saveGormDocument: sender];
     }
   return NO;
 }
@@ -2897,9 +2895,11 @@ static NSImage  *fileImage = nil;
     }
   else
     {
+      // mark the file as not edited.
       [window setDocumentEdited: NO];
       [window setTitleWithRepresentedFilename: documentPath];
 
+      // notify everyone of the save.
       [nc postNotificationName: IBDidSaveDocumentNotification
 			object: self];
     }
