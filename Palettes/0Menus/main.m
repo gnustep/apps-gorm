@@ -23,6 +23,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 #include "../../GormPrivate.h"
 #include "GormNSMenu.h"
 

@@ -23,7 +23,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../Gorm.h"
+#include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSBrowser.h"
 #include "GormNSTableView.h"
 #include "GormNSOutlineView.h"

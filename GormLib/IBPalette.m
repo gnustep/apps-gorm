@@ -1,9 +1,9 @@
 /* IBPalette.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	2003
  * 
  * This file is part of GNUstep.
  * 
@@ -22,7 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Gorm.h"
+#include <InterfaceBuilder/IBPalette.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 NSString	*IBCellPboardType = @"IBCellPboardType";
 NSString	*IBMenuPboardType = @"IBMenuPboardType";

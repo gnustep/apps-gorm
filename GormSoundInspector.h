@@ -1,6 +1,6 @@
-/** <title>GormCustomClassInspector</title>
+/** <title>GormSoundInspector</title>
 
-   <abstract>allow user to select custom classes</abstract>
+   <abstract>allow user to inspect sound files in Gorm</abstract>
 
    Copyright (C) 2002 Free Software Foundation, Inc.
    Author:  Gregory John Casamento <greg_casamento@yahoo.com>
@@ -27,7 +27,7 @@
 #define	INCLUDED_GormSoundInspector_h
 
 #include <AppKit/AppKit.h>
-#include "Gorm.h"
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class GormClassManager;
 

@@ -27,6 +27,7 @@
 #include <AppKit/IMCustomObject.h>
 #include <AppKit/NSWindow.h>
 #include <AppKit/GSDisplayServer.h>
+#include <AppKit/NSNibConnector.h>
 #include "GormPrivate.h"
 #include "GormCustomView.h"
 
@@ -284,8 +285,8 @@ static BOOL gormFileOwnerDecoded;
   [u decodeClassName: @"NSTableView"     asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];
   [u decodeClassName: @"NSPopUpButton"   asClassName: @"GormNSPopUpButton"];
-  [u decodeClassName: @"NSPopUpButtonCell" 
-         asClassName: @"GormNSPopUpButtonCell"];
+  [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
+  [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];
 
   unarchiver = [u unarchiverWithContentsOfFile: path];
   if (!unarchiver)

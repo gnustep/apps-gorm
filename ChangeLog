@@ -1,3 +1,52 @@
+2003-05-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* TODO: Updated.
+	* GNUmakefile: Added reference to GormLib as a subproject of Gorm
+	* GModelDecoder.m: Cleaned up some code.
+	and removed reference to IBInspector and IBPalette.
+	* GNUmakefile.preamble: Relaxing the -Werror directive in the 
+	makefile.  For now.
+	* Gorm.m: Removed code which was moved to GormLib classes.
+	* GormButtonEditor.m: Added #include for InterfaceBuilder.
+	* GormClassEditor.m: Removed Gorm.h header which is no longer 
+	pertinent.
+	* GormClassManager.m: Added include to IBEditors.h and
+	* GormCustomClassEditor.[hm]: Removed Gorm.h header reference.
+	* GormDocument.h: Added some headers.
+	* GormDocument.m: General code cleanup.  Removed Notifications which
+	will be in GormLib classes.  Implemented use of "awakeFromDocument:" a new
+	method defined in GormLib which allows implemention of behavior when
+	a class is loaded by Gorm. (see Apple's interface builder framework)
+	* GormFilesOwner.m: Added NSNibConnector header which was previously
+	provided by Gorm.h.  This was the only include needed here.
+	* GormInspectorsManager.m: Same as above.
+	* GormPrivate.h: Added GPL notice and include for InterfaceBuilder.h
+	* GormSoundInspector.h: Corrected description for GormSoundInspector class.
+	* Palettes: Updated all palettes in the palettes directory to include 
+	the new headers.
+	* GormLib/GNUmakefile: new file.
+	* GormLib/GNUmakefile.postamble: new file.
+	* GormLib/GNUmakefile.preamble: new file.
+	* GormLib/IBApplicationAdditions.h: new file.
+	* GormLib/IBApplicationAdditions.m: new file.
+	* GormLib/IBConnectors.h: new file.
+	* GormLib/IBConnectors.m: new file.
+	* GormLib/IBDefines.h: new file.
+	* GormLib/IBDocuments.h: new file.
+	* GormLib/IBDocuments.m: new file.
+	* GormLib/IBEditors.h: new file.
+	* GormLib/IBEditors.m: new file.
+	* GormLib/IBInspector.h: new file.
+	* GormLib/IBInspector.m: new file.
+	* GormLib/IBObjectAdditions.h: new file.
+	* GormLib/IBObjectAdditions.m: new file.
+	* GormLib/IBObjectProtocol.h: new file.
+	* GormLib/IBPalette.h: new file.
+	* GormLib/IBPalette.m: new file.
+	* GormLib/IBViewAdditions.h: new file.
+	* GormLib/InterfaceBuilder.h: new file.
+	* GormLib/README: new file.
+	
 2003-05-19  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	Applied patch submitted by Fabien Vallon <fabien@tuxfamily.org>

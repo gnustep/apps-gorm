@@ -32,7 +32,6 @@
 #include "GormClassManager.h"
 #include "GormDocument.h"
 #include "GormPrivate.h"
-#include "Gorm.h"
 
 @implementation GormCustomClassInspector
 + (void) initialize

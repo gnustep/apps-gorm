@@ -23,7 +23,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include "../../Gorm.h"
+#include <InterfaceBuilder/IBPalette.h>
 #include "../../GormCustomView.h"
 
 //  @class GormPopUpNSMenu;

@@ -1,4 +1,3 @@
-#include "Gorm.h"
 #include "GormPrivate.h"
 
 @implementation	GormClassEditor

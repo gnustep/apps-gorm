@@ -1,9 +1,10 @@
 /* Gorm.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	1999, 2003
  * 
  * This file is part of GNUstep.
  * 
@@ -29,17 +30,7 @@
 #include <AppKit/NSControl.h>
 #include <AppKit/NSButton.h>
 
-NSString *IBWillBeginTestingInterfaceNotification
-  = @"IBWillBeginTestingInterfaceNotification";
-NSString *IBDidBeginTestingInterfaceNotification
-  = @"IBDidBeginTestingInterfaceNotification";
-NSString *IBWillEndTestingInterfaceNotification
-  = @"IBWillEndTestingInterfaceNotification";
-NSString *IBDidEndTestingInterfaceNotification
-  = @"IBDidEndTestingInterfaceNotification";
-
 NSDate	*startDate;
-
 NSString *GormLinkPboardType = @"GormLinkPboardType";
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 
@@ -410,18 +401,10 @@ static NSButtonType _buttonTypeForObject( id button )
 }
 @end
 
-@implementation NSObject (GormCustomClassAdditions)
-+ (BOOL) canSubstituteForClass: (Class)aClass
-{
-  // only for now...
-  return NO;
-}
-@end
-
-// Gorm template subclasses to allow persisting and unpersisting from Gorm w/o the
-// class trying to transform itself into the custom class instance.  Instead the
-// class will transform itself into the appropriate parent class which Gorm knows
-// about.
+// Gorm template subclasses to allow persisting and unpersisting 
+// from Gorm w/o the class trying to transform itself into the custom 
+// class instance.  Instead the class will transform itself into the 
+// appropriate parent class which Gorm knows about.
 @implementation GormNSWindowTemplate
 - awakeAfterUsingCoder: (NSCoder *)coder
 {
@@ -456,8 +439,6 @@ static NSButtonType _buttonTypeForObject( id button )
 - awakeAfterUsingCoder: (NSCoder *)coder
 {
   id obj = nil;
-  NSString *name = [[(Gorm *)NSApp activeDocument] nameForObject: self];
-  NSLog(@"**** NAME: %@",name);
   [self setClassName: _parentClassName];
   obj = RETAIN([self instantiateObject: coder]);
   return obj;
@@ -468,11 +449,8 @@ static NSButtonType _buttonTypeForObject( id button )
 - awakeAfterUsingCoder: (NSCoder *)coder
 {
   id obj = nil;
-  NSString *name = [[(Gorm *)NSApp activeDocument] nameForObject: self];
-  NSDebugLog(@"**** NAME: %@ %@",name, self);   
   [self setClassName: _parentClassName];
   obj = RETAIN([self instantiateObject: coder]);
-  NSDebugLog(@"********  OBJECT: %@",obj);
   return obj;
 }
 @end
@@ -958,9 +936,14 @@ static NSButtonType _buttonTypeForObject( id button )
 	    }
 	}
 
-      defs = [NSUserDefaults standardUserDefaults];
-      [defs setObject: menuLocations forKey: @"NSMenuLocations"];
-      DESTROY(menuLocations);
+      // prevent saving of this, if the menuLocations have not previously been set.
+      if(menuLocations != nil)
+	{
+	  defs = [NSUserDefaults standardUserDefaults];
+	  [defs setObject: menuLocations forKey: @"NSMenuLocations"];
+	  DESTROY(menuLocations);
+	}
+
       [self setMainMenu: mainMenu];
 
       DESTROY(testContainer);

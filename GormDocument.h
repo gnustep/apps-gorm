@@ -1,5 +1,10 @@
+
 #ifndef INCLUDED_GormDocument_h
 #define INCLUDED_GormDocument_h
+
+#include <AppKit/AppKit.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/GSNibTemplates.h>
 
 @class GormClassManager, GormClassEditor;
 

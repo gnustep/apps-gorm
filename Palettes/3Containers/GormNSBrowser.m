@@ -108,5 +108,4 @@ static id _sharedDelegate = nil;
   self = [super initWithCoder: aCoder];
   return self;
 }
-
 @end

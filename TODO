@@ -21,5 +21,7 @@ table which seem intersting:
 * Use custom view as container.   MOSX allows the user to create views
   without windows so that the developer doesn't need to create a "dummy"
   window to hold them. (fabien)
+
+* Add Feature to automatically add actions to FirstResponder.
 --
 Gregory John Casamento

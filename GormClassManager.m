@@ -25,8 +25,7 @@
 
 #include "GormPrivate.h"
 #include "GormCustomView.h"
-
-NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
+#include <InterfaceBuilder/IBEditors.h>
 
 @interface	GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;

@@ -36,6 +36,7 @@ include ./Version
 # Each palette is a subproject
 #
 SUBPROJECTS = \
+	GormLib \
 	Palettes \
 	Testing
 
@@ -149,8 +150,6 @@ Gorm_HEADERS = \
 Gorm_OBJC_FILES = \
         Gorm.m \
 	GormDocument.m \
-	IBInspector.m \
-	IBPalette.m \
 	GModelDecoder.m \
 	GormCustomView.m \
 	GormViewKnobs.m \

@@ -383,7 +383,4 @@ static id _sharedDataSource = nil;
 {
   return _gormAllowsColumnSelection;
 }
-
-
-
 @end

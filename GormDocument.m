@@ -31,6 +31,7 @@
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
 #include <Foundation/NSUserDefaults.h>
+#include <AppKit/NSNibConnector.h>
 
 @interface	GormDisplayCell : NSButtonCell
 @end
@@ -40,11 +41,6 @@
   [super setShowsFirstResponder: NO];	// Never show ugly frame round button
 }
 @end
-
-NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
-NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
-NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
-NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
 // Internal only
 NSString *GSCustomClassMap = @"GSCustomClassMap";
@@ -181,7 +177,13 @@ static NSImage	*classesImage = nil;
 {
   if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)
     {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      [nc postNotificationName: IBWillAddConnectorNotification
+			object: aConnector];
       [connections addObject: aConnector];
+      [nc postNotificationName: IBDidAddConnectorNotification
+			object: aConnector];
+
     }
 }
 
@@ -318,7 +320,7 @@ static NSImage	*classesImage = nil;
 	  NSString *className = [classManager customClassForName: key];
 	  
 	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
+	  NSLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
 	  if (className != nil)
 	    {
 	      /*
@@ -333,44 +335,44 @@ static NSImage	*classesImage = nil;
 
 		  NSDebugLog(@"In the window template if...");
 		  template = [[GormNSWindowTemplate alloc] initWithObject: obj
-		    className: className];
+							   className: className];
 		  [self setObject: obj isVisibleAtLaunch: NO];
 		  [self setObject: template isVisibleAtLaunch: isVisible];
 		}
 	      else if ([obj isKindOfClass: [NSTextView class]])
 		{
 		  template = [[GormNSTextViewTemplate alloc] initWithObject: obj
-		    className: className];
+							     className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if ([obj isKindOfClass: [NSText class]])
 		{
 		  template = [[GormNSTextTemplate alloc] initWithObject: obj
-		    className: className];
+							 className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if ([obj isKindOfClass: [NSButton class]])
 		{
 		  template = [[GormNSButtonTemplate alloc] initWithObject: obj
-		    className: className];
+							   className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if ([obj isKindOfClass: [NSControl class]])
 		{
 		  template = [[GormNSControlTemplate alloc] initWithObject: obj
-		    className: className];
+							    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if ([obj isKindOfClass: [NSView class]])
 		{
 		  template = [[GormNSViewTemplate alloc] initWithObject: obj
-		    className: className];
+							 className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if ([obj isKindOfClass: [NSMenu class]])
 		{
 		  template = [[GormNSMenuTemplate alloc] initWithObject: obj
-		    className: className];
+							 className: className];
 		}
 
 	      [nameTable setObject: template forKey: key];
@@ -1256,37 +1258,37 @@ static NSImage	*classesImage = nil;
 	  [(NSWindow *)obj setContentView: [template contentView]];
 	  [self setObject: template isVisibleAtLaunch: NO];
 	  [self setObject: obj isVisibleAtLaunch: isVisible];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSTextViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSTextTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSButtonTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSControlTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       else if ([template isKindOfClass: [GormNSMenuTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
-	  RELEASE(template); // get rid of the template...
+	  // RELEASE(template); // get rid of the template...
 	}
       [nameTable setObject: obj forKey: key];
     }
@@ -1833,7 +1835,7 @@ static NSImage	*classesImage = nil;
   GSNibContainer	*c;
   NSEnumerator		*enumerator;
   id <IBConnectors>	con;
-  NSString              *ownerClass;
+  NSString              *ownerClass, *key;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
@@ -1882,22 +1884,24 @@ static NSImage	*classesImage = nil;
      asClassName: @"GormObjectProxy"];
   [u decodeClassName: @"GSCustomView" 
      asClassName: @"GormCustomView"];
+
+  // classes
   [u decodeClassName: @"NSMenu" 
      asClassName: @"GormNSMenu"];
   [u decodeClassName: @"NSWindow" 
      asClassName: @"GormNSWindow"];
   [u decodeClassName: @"NSPanel" 
      asClassName: @"GormNSPanel"];
+  [u decodeClassName: @"NSPopUpButton" 
+     asClassName: @"GormNSPopUpButton"];
+  [u decodeClassName: @"NSPopUpButtonCell"
+     asClassName: @"GormNSPopUpButtonCell"];
   [u decodeClassName: @"NSBrowser" 
      asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView" 
      asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView" 
      asClassName: @"GormNSOutlineView"];
-  [u decodeClassName: @"NSPopUpButton" 
-     asClassName: @"GormNSPopUpButton"];
-  [u decodeClassName: @"NSPopUpButtonCell"
-     asClassName: @"GormNSPopUpButtonCell"];
 
   // templates
   [u decodeClassName: @"NSWindowTemplate" 
@@ -2065,6 +2069,16 @@ static NSImage	*classesImage = nil;
   // [classManager setCustomClassMap: customClasses];
   
   NSDebugLog(@"nameTable = %@",[c nameTable]);
+
+  enumerator = [[c nameTable] keyEnumerator];
+  while ((key = [enumerator nextObject]) != nil)
+    {
+      id o = [[c nameTable] objectForKey: key];
+      if ([o respondsToSelector: @selector(awakeFromDocument:)])
+	{
+	  [o awakeFromDocument: self];
+	}
+    }
 
   return self;
 }
@@ -2236,7 +2250,12 @@ static NSImage	*classesImage = nil;
 
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  [nc postNotificationName: IBWillRemoveConnectorNotification
+      object: aConnector];
   [connections removeObjectIdenticalTo: aConnector];
+  [nc postNotificationName: IBDidRemoveConnectorNotification
+      object: aConnector];
 }
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
@@ -2600,16 +2619,16 @@ static NSImage	*classesImage = nil;
 	    intoClassName: @"NSWindow"];
   [archiver encodeClassName: @"GormNSPanel"
 	    intoClassName: @"NSPanel"];
-  [archiver encodeClassName: @"GormNSBrowser"
-	    intoClassName: @"NSBrowser"];
-  [archiver encodeClassName: @"GormNSTableView"
-	    intoClassName: @"NSTableView"];
-  [archiver encodeClassName: @"GormNSOutlineView" 
-	    intoClassName: @"NSOutlineView"];
   [archiver encodeClassName: @"GormNSPopUpButton" 
 	    intoClassName: @"NSPopUpButton"];
   [archiver encodeClassName: @"GormNSPopUpButtonCell" 
 	    intoClassName: @"NSPopUpButtonCell"];
+  [archiver encodeClassName: @"GormNSBrowser" 
+	    intoClassName: @"NSBrowser"];
+  [archiver encodeClassName: @"GormNSTableView" 
+	    intoClassName: @"NSTableView"];
+  [archiver encodeClassName: @"GormNSOutlineView" 
+	    intoClassName: @"NSOutlineView"];
 
   /* Templates */
   [archiver encodeClassName: @"GormNSWindowTemplate" 
@@ -2628,6 +2647,7 @@ static NSImage	*classesImage = nil;
 	    intoClassName: @"NSViewTemplate"];
   [archiver encodeClassName: @"GormNSMenuTemplate" 
 	    intoClassName: @"NSMenuTemplate"];
+
 
   [archiver encodeRootObject: self];
   NSDebugLog(@"nameTable = %@",nameTable);
