@@ -856,7 +856,8 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 - (void) orderFrontFontPanel: (id) sender
 {
   NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
-  GormFontViewController *gfvc = [[GormFontViewController alloc] init];
+  GormFontViewController *gfvc = 
+    [GormFontViewController sharedGormFontViewController];
   [fontPanel setAccessoryView: [gfvc view]];
   [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
 }

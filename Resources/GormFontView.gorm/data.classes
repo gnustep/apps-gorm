@@ -149,7 +149,8 @@
 	);
 	Outlets = (
 	    view,
-	    fontSelector
+	    fontSelector,
+	    encodeButton
 	);
 	Super = NSObject;
     };

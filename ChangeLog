@@ -1,3 +1,19 @@
+2003-09-07  Andrew Ruder <aeruder@ksu.edu>
+	comitted by Gregory Casamento
+
+	* Gorm.m: Added use of new sharedGormFontViewController
+	method when setting up the font panel.
+	* GormBoxEditor.m: Added setFont: and font to allow changing
+	of fonts in the title of an NSBox.
+	* GormFontViewController.[hm]: Added sharedGormFontViewController
+	implementation and refactored selectFont into selectFont and 
+	convertFont methods.  Also added code to enable/disable encoding
+	of font with default size.
+	* GormViewWithSubviewsEditor.m: Added sharedGormFontViewController
+	and convertFont to properly get the new font setting.
+	* Resources/GormFontView.gorm: Added switch to control 
+	if font is encoded with default size.
+
 2003-09-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Added information for NSStepper and 

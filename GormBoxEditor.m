@@ -40,6 +40,14 @@
 {
   return @"GormBoxEditor";
 }
+- (NSFont *) font
+{
+  return [self titleFont];
+}
+- (void) setFont: (NSFont *)aFont
+{
+  [self setTitleFont: aFont];
+}
 @end
 
 

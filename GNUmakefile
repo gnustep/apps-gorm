@@ -114,6 +114,7 @@ Gorm_RESOURCE_FILES = \
 	Images/FileIcon_gmodel.tiff \
 	Images/tabtop_nib.tiff \
 	Images/tabbot_nib.tiff \
+	Images/GormView.tiff \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \
@@ -140,6 +141,7 @@ Gorm_HEADERS = \
 	GormViewEditor.h \
 	GormViewWithSubviewsEditor.h \
 	GormViewWithContentViewEditor.h \
+	GormViewWindow.h \
 	GormBoxEditor.h \
 	GormClassManager.h \
 	GormControlEditor.h \
@@ -178,6 +180,7 @@ Gorm_OBJC_FILES = \
 	GormViewEditor.m \
 	GormViewWithSubviewsEditor.m \
 	GormViewWithContentViewEditor.m \
+	GormViewWindow.m \
 	GormBoxEditor.m \
 	GormControlEditor.m \
 	GormButtonEditor.m \

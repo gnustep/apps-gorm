@@ -28,6 +28,8 @@
 
 #include "GormViewWithSubviewsEditor.h"
 
+#include "GormFontViewController.h"
+
 @class GormEditorToParent;
 
 @implementation GormViewWithSubviewsEditor
@@ -186,6 +188,8 @@
 	  && [anObject respondsToSelector: @selector(setFont:)])
 	{
 	  newFont = [sender convertFont: [anObject font]];
+	  newFont = [[GormFontViewController sharedGormFontViewController] 
+	    convertFont: newFont];
 	  [anObject setFont: newFont];
 	}
     }
