@@ -42,6 +42,7 @@ extern NSString *GormToggleGuidelineNotification;
 extern NSString *GormDidModifyClassNotification;
 extern NSString *GormDidAddClassNotification;
 extern NSString *GormDidDeleteClassNotification;
+extern NSString *GormWillDetachObjectFromDocumentNotification;
 
 // templates
 @interface GSNibItem (GormAdditions)

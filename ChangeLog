@@ -1,3 +1,11 @@
+2003-10-19 01:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuInspectors.m: setObject fix for 
+	segmentation fault.  After menu is deleted, the object is not
+	cleared from the inspector.   This fix sets the old object to nil
+	before setting the new one.
+	* Gorm.[hm]: Added constant for new notification.  Updated patch level.
+	
 2003-10-18 02:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Added information for NSBox.
