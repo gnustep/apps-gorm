@@ -1,5 +1,11 @@
 2003-01-14  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: replaceTemplatesWithObjects: when
+	restoring the editing object the template was not
+	being destroyed properly.  This is now fixed.
+
+2003-01-14  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: replaceObjectsWithTemplates: added a
 	call to a new method in the class manager which returns
 	custom classes based on the name assigned to the object.

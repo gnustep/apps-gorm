@@ -1270,6 +1270,7 @@ static NSImage	*classesImage = nil;
 	  [[template superview] replaceSubview: template with: obj];
 	}
       [nameTable setObject: obj forKey: key];
+      RELEASE(template); // get rid of the template...
     }
   [tempNameTable removeAllObjects];
 }
