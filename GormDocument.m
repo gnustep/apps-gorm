@@ -514,14 +514,18 @@ static NSImage	*classesImage = nil;
   
   if(className != nil)
     {
-      if([className isEqualToString: @"CustomView"])
-	return; // return only if it is a special class name...
+      if([className isEqual: @"CustomView"] || 
+	 [className isEqual: @"GormSound"] || 
+	 [className isEqual: @"GormImage"])
+	{
+	  return; // return only if it is a special class name...
+	}
     }
   else
     {
       return; // return if it is nil
     }
-
+  
   classes = [[self classManager] allSuperClassesOf: className]; 
   en = [classes objectEnumerator];
 

@@ -1,4 +1,10 @@
-2004-05-02 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-05-06 21:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument selectClass:] do not switch if
+	the class is one of GormSound or GormImage.   This prevents a harmless,
+	but annoying message.
+
+2004-05-05 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm unhide:] improvement over previous fix to bring
 	all things to front.   The code now toggles the active status of
