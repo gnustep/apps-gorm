@@ -25,29 +25,9 @@
 #include <AppKit/AppKit.h>
 #include "../../Gorm.h"
 #include "GormNSBrowser.h"
+#include "GormNSTableView.h"
+#include <math.h>
 
-
-
-/* --------------------------------------------------------------- 
- * NSTableView data source
-*/
-
-@interface NSTableViewDataSource: NSObject
-{
-}
-@end
-
-@implementation NSTableViewDataSource
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
-{
-  return 3;
-}
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{
-  return [NSString stringWithFormat:@"%d",rowIndex];
-}
-
-@end
 
 /* --------------------------------------------------------------- 
  * Containers Palette Display
@@ -113,31 +93,33 @@
   //[v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
   contentSize = [v contentSize];
 
-  tv = [[NSTableView alloc] initWithFrame:
+  tv = [[GormNSTableView alloc] initWithFrame:
              NSMakeRect(0,0,contentSize.width, contentSize.height)];
   //  [tv setDataSource: [[NSTableViewDataSource alloc] init]];
-  [tv setAutoresizesAllColumnsToFit: YES];
+  //  [tv setAutoresizesAllColumnsToFit: YES];
   [v setDocumentView: tv];
   RELEASE(tv);
 
-  tc = [[NSTableColumn alloc] initWithIdentifier: @"table"];
+  tc = [[NSTableColumn alloc] initWithIdentifier: @"column1"];
   [[tc headerCell] setStringValue: @" "];
-  [tc setWidth: contentSize.width/2];
+  [tc setWidth: floor(contentSize.width/2)];
+  [tc setMinWidth: 20];
   [tc setResizable: YES];
   [tc setEditable: YES];
   [tv addTableColumn: tc];
   RELEASE(tc);
 
-  tc = [[NSTableColumn alloc] initWithIdentifier: @"view"];
+  tc = [[NSTableColumn alloc] initWithIdentifier: @"column2"];
   [[tc headerCell] setStringValue: @" "];
-  [tc setMinWidth: contentSize.width/2];
+  [tc setWidth: ceil(contentSize.width/2)];
+  [tc setMinWidth: 20];
   [tc setResizable: YES];
   [tc setEditable: YES];
   [tv addTableColumn: tc];
   RELEASE(tc);
   [tv setFrame: NSMakeRect(0,0,contentSize.width, contentSize.height)];
   
-  [v setDocumentView: tv];
+  //  [v setDocumentView: tv];
   [contents addSubview: v];
   RELEASE(tv);
   RELEASE(v);

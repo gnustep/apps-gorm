@@ -83,7 +83,7 @@
 
 - (void) _getValuesFromObject: anObject
 {
-
+  
   if (anObject != object)
     {
       return;
@@ -135,6 +135,30 @@
 
 @end
 
+@interface GormViewSizeInspector : IBInspector
+{
+  NSButton	*top;
+  NSButton	*bottom;
+  NSButton	*left;
+  NSButton	*right;
+  NSButton	*width;
+  NSButton	*height;
+  NSForm        *sizeForm;
+}
+@end
+
+@interface GormTableViewSizeInspector : GormViewSizeInspector
+@end
+@implementation GormTableViewSizeInspector
+- (void) setObject: (id)anObject
+{
+  id scrollView;
+  scrollView = [anObject enclosingScrollView];
+
+  [super setObject: scrollView];
+}
+@end
+
 /*----------------------------------------------------------------------------
  * NSTableView (possibly embedded in a Scroll view)
  */
@@ -143,6 +167,11 @@
 - (NSString*) inspectorClassName
 {
   return @"GormTableViewAttributesInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormTableViewSizeInspector";
 }
 
 @end
@@ -218,6 +247,8 @@
     {
       [object setTag:[[tagField cellAtIndex:0] intValue]];
     }
+  
+  [scrollView setNeedsDisplay: YES];
 }
 
 - (void) _getValuesFromObject: anObject
@@ -225,7 +256,9 @@
   BOOL isScrollView;
   id scrollView;
 
-  scrollView = [[object superview] superview];
+  scrollView = //[[object superview] superview];
+    [object enclosingScrollView];
+
   isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
 
   if (anObject != object)
@@ -249,7 +282,7 @@
 
       [horizontalScrollerSwitch setEnabled: YES];   
       [horizontalScrollerSwitch setState: 
-         ([scrollView hasVerticalScroller]) ? NSOnState : NSOffState];
+         ([scrollView hasHorizontalScroller]) ? NSOnState : NSOffState];
 
       [borderMatrix setEnabled: YES];
       [borderMatrix selectCellWithTag: [scrollView borderType]];

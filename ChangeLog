@@ -1,3 +1,19 @@
+2002-03-26  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormDocument.m ([GormDocument -init]):
+	Call setWidth instead of setMinWidth for non-resizable column.
+	Call sizeToFit on classesView.
+	* GormDocument.m ([GormDocument -{load, save}Document]):
+	Add support for GormNSTableView.
+	* Palettes/3Containers/GNUMakefile
+	* Palettes/3Containers/main.m
+	* Palettes/3Containers/GormNSTableView.m
+	* Palettes/3Containers/GormNSTableView.h
+	* Palettes/3Containers/inspectors.m
+	GormNSTableView replaces NSTableView when editing interface.
+	GormNSTableView features a dummy dataSource during editing and
+	testing.
+
 2002-03-24  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Minor cleanup of debug statements.

@@ -1187,17 +1187,19 @@ static NSImage	*classesImage = nil;
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
       [[tableColumn headerCell] setStringValue: @"O"];
-      [tableColumn setMinWidth: 25];
+      [tableColumn setWidth: 25];
       [tableColumn setResizable: NO];
       [classesView addTableColumn: tableColumn];
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
       [[tableColumn headerCell] setStringValue: @"A"];
-      [tableColumn setMinWidth: 25];
+      [tableColumn setWidth: 25];
       [tableColumn setResizable: NO];
       [classesView addTableColumn: tableColumn];
       RELEASE(tableColumn);
+
+      [classesView sizeToFit];
 
       // expand all of the items in the classesView...
       [classesView expandItem: @"NSObject"];
@@ -1328,6 +1330,7 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
   [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
   [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
+  [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -1873,6 +1876,8 @@ static NSImage	*classesImage = nil;
 	      intoClassName: @"NSWindow"];
   [archiver encodeClassName: @"GormNSBrowser" 
 	      intoClassName: @"NSBrowser"];
+  [archiver encodeClassName: @"GormNSTableView" 
+	      intoClassName: @"NSTableView"];
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
