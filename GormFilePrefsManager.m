@@ -98,13 +98,13 @@ NSString *formatVersion(int version)
   NSEnumerator *en = [currentProfile keyEnumerator];
   id className = nil;
   
-  NSLog(@"set the class versions to the profile selected... %@",targetVersionName);
+  NSDebugLog(@"set the class versions to the profile selected... %@",targetVersionName);
   while((className = [en nextObject]) != nil)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [currentProfile objectForKey: className];
       int v = [[info objectForKey: @"version"] intValue];
-      NSLog(@"Setting version %d for class %@",v,className);
+      NSDebugLog(@"Setting version %d for class %@",v,className);
       [cls setVersion: v];
     }
 }
@@ -116,13 +116,13 @@ NSString *formatVersion(int version)
   id className = nil;
   
   // The "Latest Version" key must always exist.
-  NSLog(@"restore the class versions to the latest version...");
+  NSDebugLog(@"restore the class versions to the latest version...");
   while((className = [en nextObject]) != nil)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [latestVersion objectForKey: className];
       int v = [[info objectForKey: @"version"] intValue];
-      NSLog(@"Setting version %d for class %@",v,className);
+      NSDebugLog(@"Setting version %d for class %@",v,className);
       [cls setVersion: v];
     }
 }
@@ -130,7 +130,7 @@ NSString *formatVersion(int version)
 // class profile
 - (void) loadProfile: (NSString *)profileName
 {
-  NSLog(@"Loading profile %@",profileName);
+  NSDebugLog(@"Loading profile %@",profileName);
   currentProfile = [versionProfiles objectForKey: targetVersionName];
 }
 
@@ -151,7 +151,7 @@ NSString *formatVersion(int version)
 - (void) selectArchiveType: (id)sender
 {
   ASSIGN(archiveTypeName, [[sender selectedItem] title]);
-  NSLog(@"Set Archive type... %@",sender);
+  NSDebugLog(@"Set Archive type... %@",sender);
 }
 
 // Loading and saving the file.

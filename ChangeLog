@@ -1,3 +1,13 @@
+2004-07-15 21:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added a check in applicationDidFinishLaunching:
+	to make certain the user is using the right version of GNUstep
+	by checking for a recent signature change in GSNibContainer.
+	* ClassInformation.plist: Added redo: and undo: to the list of
+	methods on the first responder.
+	* GormFilePrefsManager.m: Changed a lot of the NSLogs to 
+	NSDebugLog.
+	
 2004-07-12 23:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageEditor.m: [GormImageEditor initWithObject:inDocument:]

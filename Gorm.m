@@ -28,6 +28,7 @@
 #include "GormFontViewController.h"
 #include "GormSetNameController.h"
 #include "GNUstepGUI/GSNibCompatibility.h"
+#include "GNUstepBase/GSObjCRuntime.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -300,6 +301,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray *a = nil;
+  
 
   if ( [defaults boolForKey: @"ShowInspectors"] )
     {
@@ -315,6 +317,13 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	{
 	  NSLog(@"WARNING: Gorm has detected that you are using user bundles.  Please make certain that these are compatible with Gorm as some bundles can cause issues which may corrupt your .gorm files.");
 	}
+    }
+  if(GSGetMethod([GSNibContainer class],@selector(awakeWithContext:),YES,YES) == NULL)
+    {
+      NSRunAlertPanel(_(@"Incorrect GNUstep Version"), 
+		      _(@"The version of GNUstep you are using is too old for this version of Gorm, please update."),
+		      _(@"OK"), NULL, NULL);
+      [self terminate: self];
     }
 }
 
@@ -776,7 +785,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  // reset the application after the error.
 	  NSLog(@"Error while testing interface: %@", 
 		[localException reason]);
-	  NSRunAlertPanel(NULL, [NSString stringWithFormat: @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
+	  NSRunAlertPanel(_(@"An Error Occurred"), [NSString stringWithFormat: @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
 					  [localException reason]], 
 			  _(@"OK"), NULL, NULL);
 	  [self endTesting: self];

@@ -30,7 +30,7 @@
 #define BUILTIN_PALETTES @"BuiltinPalettes"
 #define USER_PALETTES    @"UserPalettes"
 
-@interface	GormPalettePanel : NSPanel
+@interface GormPalettePanel : NSPanel
 @end
 
 @implementation	GormPalettePanel
@@ -44,7 +44,7 @@
 }
 @end
 
-@interface	GormPaletteView : NSView
+@interface GormPaletteView : NSView
 {
   NSPasteboard	*dragPb;
 }
