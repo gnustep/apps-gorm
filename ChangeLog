@@ -1,3 +1,8 @@
+2005-03-26 10:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* install-windows.sh: Installation script for windows.
+	This automates the process until the reorg is completed.
+	
 2005-03-26 01:49 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Correction to previous commit.  Compile palettes
