@@ -1,6 +1,7 @@
-2004-01-29 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-01-31 21:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* Version 0.6.0
+	* Palettes/0Menus/GormMenuEditor.m: -[GormMenuEditor activate]
+	removed call to -[NSMenu display].  This corrects Report#3439.
 
 2004-01-29 23:20 Gregory John Casamento <greg_casamento@yahoo.com>
 

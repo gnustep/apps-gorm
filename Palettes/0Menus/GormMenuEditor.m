@@ -425,11 +425,12 @@
 	}
 
       // display the main menu only.
+      /* Don't display.  This is the cause for Report #3439
       if([edited supermenu] == nil)
 	{
-	  [edited display];
+	  // [edited display];
 	}
-      
+      */
       
       return NO;
     }
