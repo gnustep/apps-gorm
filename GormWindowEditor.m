@@ -23,13 +23,9 @@
  */
 
 #include "GormPrivate.h"
-
 #include "GormViewWithContentViewEditor.h"
-
 #include <math.h>
-
 #define _EO ((NSWindow *)_editedObject)
-
 #include "GormInternalViewEditor.h"
 
 
@@ -246,7 +242,7 @@
 //  - (void) selectObjects: (NSArray*)objects;
 //  - (void) validateEditing;
 //  - (BOOL) wantsSelection;
-//- (NSWindow*) window;
+//  - (NSWindow*) window;
 @end
 
 @implementation	GormWindowEditor

@@ -1,3 +1,12 @@
+2003-05-31  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormScrollViewAttributesInspector.m: Added code to make changes
+	to a scroll view.  The inspector is now functional.
+	* GormScrollViewAttributesInspector.gorm: Added connections
+	to window.
+	* Palettes/3Containers/inspectors.m: Commented out dummy inspector
+	for scroll views.
+
 2003-05-29  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* Resources/GormScrollViewAttributesInspector.gorm: new

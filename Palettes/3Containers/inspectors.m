@@ -564,6 +564,7 @@
  * (like horizontal and vertical scrollbar)
 */
 
+/*
 @implementation	NSScrollView (IBObjectAdditions)
 
 - (NSString*) inspectorClassName
@@ -580,7 +581,7 @@
 
 @implementation GormScrollViewAttributesInspector
 @end
-
+*/
 
 /*----------------------------------------------------------------------------
  * NSTabView (possibly embedded in a Scroll view)
