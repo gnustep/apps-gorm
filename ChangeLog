@@ -1,20 +1,32 @@
 2002-07-14  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* GormClassManager.[hm]: Added methods to support deletion of
+	classes, outlets, and actions.
+	* GormDocument.m: Made various bug fixes.   Added methods to
+	support deletion.
+	* Gorm.m: Added menu item fro "Remove..."
+
+2002-07-14  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: Added new methods:
 	- (NSString *) addNewActionToClassNamed: (NSString *)name;
  	- (NSString *) addNewOutletToClassNamed: (NSString *)name;
  	- (BOOL) loadCustomClasses: (NSString*)path;
  	- (BOOL) isCustomClass: (NSString *)className;
- 	- (BOOL) isAction: (NSString *)actionName ofClass: (NSString *)className;
- 	- (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;	
-	Changed the format of the ".classes" file to store only the custom classes.
-	This is more efficient since the full class list is already loaded when the
-	GormClassManager is initialized.  The custom class list is merged with this
+ 	- (BOOL) isAction: (NSString *)actionName 
+		ofClass: (NSString *)className;
+ 	- (BOOL) isOutlet: (NSString *)
+		outletName ofClass: (NSString *)className;	
+	Changed the format of the ".classes" file to store only the 
+	custom classes.  This is more efficient since the full class 
+	list is already loaded when the GormClassManager is 
+	initialized.  The custom class list is merged with this
 	to create the display shown in the classes view.
-	* GormDocument.m: modified to utilize the above routines in the method which
-	loads the .gorm file and the data source.
-	* GormOutlineView.m: Added new methods to add new actions/outlets with generic
-	names so that the user can edit the actions/outlets once added.
+	* GormDocument.m: modified to utilize the above routines in 
+	the method which loads the .gorm file and the data source.
+	* GormOutlineView.m: Added new methods to add new actions/outlets 
+	with generic names so that the user can edit the actions/outlets 
+	once added.
 	
 2002-07-13  Gregory John Casamento <greg_casamento@yahoo.com>
 

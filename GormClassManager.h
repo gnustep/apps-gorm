@@ -23,13 +23,16 @@
 - (NSArray*) subClassesOf: (NSString *)superclass;
 - (void) removeAction: (NSString*)anAction forObject: (NSObject*)anObject;
 - (void) removeOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
+- (void) removeAction: (NSString*)anAction fromClassNamed: (NSString*)anObject;
+- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString*)anObject;
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className;
 - (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className;
 - (NSString *) addNewActionToClassNamed: (NSString *)name;
 - (NSString *) addNewOutletToClassNamed: (NSString *)name;
 - (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className;
 - (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: className;
-- (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name;
+- (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString*)name;
+- (void) removeClassNamed: (NSString *)className;
 - (NSString*) addClassWithSuperClassName: (NSString*)name;
 - (BOOL) addClassNamed: (NSString*)className
    withSuperClassNamed: (NSString*)superClassName

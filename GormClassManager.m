@@ -679,6 +679,36 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     }
 }
 
+- (void) removeAction: (NSString*)anAction fromClassNamed: (NSString *)className
+{
+  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
+
+  if ([extraActions containsObject: anAction] == YES)
+    {
+      NSString	*superName = [info objectForKey: @"Super"];
+
+      if (superName != nil)
+	{
+	  NSArray	*superActions;
+
+	  /*
+	   * If this action is new in this class (ie not overriding an
+	   * action in a parent) then we remove it from the list of all
+	   * actions that the object responds to.
+	   */
+	  superActions = [self allActionsForClassNamed: superName];
+	  if ([superActions containsObject: anAction] == NO)
+	    {
+	      NSMutableArray	*array = [info objectForKey: @"AllActions"];
+
+	      [array removeObject: anAction];
+	    }
+	}
+      [extraActions removeObject: anAction];
+    }
+}
+
 - (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
@@ -693,6 +723,32 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     {
       [allOutlets removeObject: anOutlet];
     }
+}
+
+- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString *)className
+{
+  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
+  NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
+
+  if ([extraOutlets containsObject: anOutlet] == YES)
+    {
+      [extraOutlets removeObject: anOutlet];
+    }
+  if ([allOutlets containsObject: anOutlet] == YES)
+    {
+      [allOutlets removeObject: anOutlet];
+    }
+}
+
+- (void) removeClassNamed: (NSString *)className
+{
+  if([customClasses containsObject: className])
+    {
+      [customClasses removeObject: className];
+    }
+
+  [classInformation removeObjectForKey: className];
 }
 
 - (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name
@@ -841,8 +897,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 - (BOOL)loadCustomClasses: (NSString *)path
 {
   NSDictionary		*dict;
-  NSEnumerator		*enumerator;
-  NSString		*key;
 
   NSLog(@"Load custom classes from file %@",path);
 

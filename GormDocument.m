@@ -707,9 +707,9 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
-- (id) removeAttributeFromClass: (id)sender
+- (id) remove: (id)sender
 {
-  [classesView removeAttributeFromClass];
+  [classesView removeSelectedItem];
   return self;
 }
 
@@ -2161,36 +2161,7 @@ static NSImage	*classesImage = nil;
   return YES;
 }
 
-// --- NSOutlineView dataSource ---
-- (id) outlineView: (NSOutlineView *)anOutlineView 
-objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	    byItem: item
-{
-  if (anOutlineView == classesView)
-    {
-      id identifier = [aTableColumn identifier];
-      id className = item;
-      id classNames = [classManager allClassNames];
-      
-      if ([identifier isEqualToString: @"classes"])
-	{
-	  return className;
-	} 
-      else if ([identifier isEqualToString: @"outlets"])
-	{
-	  return [NSString stringWithFormat: @"%d",
-	    [[classManager allOutletsForClassNamed: className] count]];
-	}
-      else if ([identifier isEqualToString: @"actions"])
-	{
-	  return [NSString stringWithFormat: @"%d",
-	    [[classManager allActionsForClassNamed: className] count]];
-	}
-
-    }
-  return @"";
-}
-
+// convenience methods for formatting outlets/actions
 - (NSString*) _identifierString: (NSString*)str
 {
   static NSCharacterSet	*illegal = nil;
@@ -2242,6 +2213,36 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 {
   NSString *identifier = [self _identifierString: outlet];
   return identifier;
+}
+
+// --- NSOutlineView dataSource ---
+- (id) outlineView: (NSOutlineView *)anOutlineView 
+objectValueForTableColumn: (NSTableColumn *)aTableColumn 
+	    byItem: item
+{
+  if (anOutlineView == classesView)
+    {
+      id identifier = [aTableColumn identifier];
+      id className = item;
+      id classNames = [classManager allClassNames];
+      
+      if ([identifier isEqualToString: @"classes"])
+	{
+	  return className;
+	} 
+      else if ([identifier isEqualToString: @"outlets"])
+	{
+	  return [NSString stringWithFormat: @"%d",
+	    [[classManager allOutletsForClassNamed: className] count]];
+	}
+      else if ([identifier isEqualToString: @"actions"])
+	{
+	  return [NSString stringWithFormat: @"%d",
+	    [[classManager allActionsForClassNamed: className] count]];
+	}
+
+    }
+  return @"";
 }
 
 - (void) outlineView: (NSOutlineView *)anOutlineView 
@@ -2326,6 +2327,7 @@ numberOfChildrenOfItem: (id)item
   return nil;
 }
 
+// GormOutlineView data source methods...
 - (NSArray *)outlineView: (NSOutlineView *)anOutlineView
 	  actionsForItem: (id)item
 {
@@ -2358,6 +2360,29 @@ numberOfChildrenOfItem: (id)item
       return nil;
     }
   return [classManager addNewOutletToClassNamed: item];
+}
+
+- (void) outlineView: (NSOutlineView)anOutlineView
+	  removeItem: (id)item
+{
+  if([item isKindOfClass: [GormOutletActionHolder class]])
+    {
+      id itemBeingEdited = [classesView itemBeingEdited];
+      if([classesView editType] == Actions)
+	{
+	  [classManager removeAction: [item getName]
+			fromClassNamed: itemBeingEdited];
+	}
+      else if([classesView editType] == Outlets)
+	{
+	  [classManager removeOutlet: [item getName]
+			fromClassNamed: itemBeingEdited];
+	}
+    }
+  else
+    {
+      [classManager removeClassNamed: item];
+    }    
 }
 
 // Delegate methods

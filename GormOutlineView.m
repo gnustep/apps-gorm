@@ -196,6 +196,53 @@ static NSColor *darkGreyBlueColor = nil;
     }
 }
 
+- (void)_addNewOutletToObject: (id)item
+{
+  int insertionPoint = 0;
+  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
+  NSString *name = nil;
+
+  _numberOfRows += 1;
+  name = [_dataSource outlineView: self addNewOutletForClass: _itemBeingEdited];
+  if(name != nil)
+    {
+      [holder setName: name];
+      insertionPoint = [_items indexOfObject: item];
+      [_items insertObject: holder atIndex: insertionPoint + 1];
+      [self setNeedsDisplay: YES];
+      [self noteNumberOfRowsChanged];
+    }
+}
+
+- (void)removeSelectedItem
+{
+  id item = [self itemAtRow: [self selectedRow]];
+  int deletionPoint = 0;
+  
+  if(![item isKindOfClass: [GormOutletActionHolder class]])
+    {
+      if(item == _itemBeingEdited)
+	return; // we do not delete a class while it's being edited
+    }
+
+  if(![_dataSource outlineView: self
+		   shouldEditTableColumn: _outlineTableColumn
+		   item: item])
+    {
+      return; // return if this is something we can't edit...
+    }
+
+  _numberOfRows -= 1;
+  [_dataSource outlineView: self removeItem: item];
+  deletionPoint = [_items indexOfObject: item];
+  if(deletionPoint != NSNotFound)
+    {
+      [_items removeObjectAtIndex: deletionPoint];
+      [self setNeedsDisplay: YES];
+      [self noteNumberOfRowsChanged];
+    }
+}
+
 - (void)_openActions: (id)item
 {
   int numchildren = 0;
@@ -234,24 +281,6 @@ static NSColor *darkGreyBlueColor = nil;
       [_items insertObject: holder atIndex: insertionPoint];
     }
   [self noteNumberOfRowsChanged];
-}
-
-- (void)_addNewOutletToObject: (id)item
-{
-  int insertionPoint = 0;
-  GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
-  NSString *name = nil;
-
-  _numberOfRows += 1;
-  name = [_dataSource outlineView: self addNewOutletForClass: _itemBeingEdited];
-  if(name != nil)
-    {
-      [holder setName: name];
-      insertionPoint = [_items indexOfObject: item];
-      [_items insertObject: holder atIndex: insertionPoint + 1];
-      [self setNeedsDisplay: YES];
-      [self noteNumberOfRowsChanged];
-    }
 }
 
 - (void)_openOutlets: (id)item
@@ -631,11 +660,6 @@ static NSColor *darkGreyBlueColor = nil;
 	  [self _addNewOutletToObject: _itemBeingEdited];
 	}
     }
-}
-
-- (void)removeAttributeFromClass
-{
-  NSLog(@"Remove attribute not yet implemented.");
 }
 
 - (void) editColumn: (int) columnIndex 
