@@ -1,3 +1,9 @@
+2002-11-14  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m ([GormDocument -parseHeader:]): Reload the class
+	view after adding a class (suggestion from Fabien
+	<fabien@tuxfamily.org>).
+
 2002-11-13  Adam Fedor  <fedor@gnu.org>
 
 	* Some preliminary work on loading gmodels (not working yet).

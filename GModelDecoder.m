@@ -228,7 +228,7 @@ static BOOL gormFileOwnerDecoded;
   NSLog(@"       Nib Owner %@ class name is %@", 
 	gormNibOwner, [gormNibOwner className]);
 
-  /* FIXME: Need to addClass:... if it isn't known */yy
+  /* FIXME: Need to addClass:... if it isn't known */
   if (gormNibOwner)
     [filesOwner setClassName: [gormNibOwner className]];
 

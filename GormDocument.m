@@ -793,6 +793,7 @@ static NSImage	*classesImage = nil;
 	  if(result)
 	    {
 	      NSLog(@"Class %@ added", className);
+	      [classesView reloadData]; 
 	    }
 	  else
 	    {
