@@ -362,7 +362,7 @@
 
 - (BOOL) activate
 {
-  NSAssert(isClosed == NO, NSInternalInconsistencyException);
+  // NSAssert(isClosed == NO, NSInternalInconsistencyException);
   if (original == nil)
     {
       NSWindow		*w;

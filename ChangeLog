@@ -1,3 +1,11 @@
+2003-01-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Updated version information to 0.2.5 due to all
+	of the recent bug fixes and enhancements.
+	* GormInfo.plist: Same as above.
+	* GormMenuEditor.m: removed an NSAssert which was no longer
+	valid and causing the application to crash.
+	
 2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Added TODO file to document interesting feature suggestions

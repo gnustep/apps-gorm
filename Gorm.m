@@ -1233,24 +1233,23 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 - (id) infoPanel: (id) sender
 {
   NSMutableDictionary *d;
-
+  
   d = [NSMutableDictionary dictionaryWithCapacity: 8];
   [d setObject: @"Gorm" forKey: @"ApplicationName"];
   [d setObject: @"GNUstep Graphical Object Relationship Modeller"
-	forKey: @"ApplicationDescription"];
-  [d setObject: @"Gorm 0.2" forKey: @"ApplicationRelease"];
-  [d setObject: @"0.2 Jul 2002" forKey: @"FullVersionID"];
-  [d setObject: [NSArray arrayWithObjects: 
-		  @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
-		  @"Gregory John Casamento <greg_casamento@yahoo.com>",
-		  @"Richard Frith-Macdonald <rfm@gnu.org>",
-		  nil]
-	forKey: @"Authors"];
+     forKey: @"ApplicationDescription"];
+  [d setObject: @"Gorm 0.2.5" forKey: @"ApplicationRelease"];
+  [d setObject: @"0.2.5 Dec 2002" forKey: @"FullVersionID"];
+  [d setObject: [NSArray arrayWithObjects: @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
+			 @"Gregory John Casamento <greg_casamento@yahoo.com>",
+			 @"Richard Frith-Macdonald <rfm@gnu.org>",
+			 nil]
+     forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
   [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc."
-	forKey: @"Copyright"];
+     forKey: @"Copyright"];
   [d setObject: @"Released under the GNU General Public License 2.0"
-	forKey: @"CopyrightDescription"];
+     forKey: @"CopyrightDescription"];
   
   [self orderFrontStandardInfoPanelWithOptions: d];
   return self;
