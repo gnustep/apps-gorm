@@ -182,6 +182,15 @@ NSString *IBDidEndTestingInterfaceNotification
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSBundle			*bundle = [NSBundle mainBundle];
+      NSString			*path;
+
+      path = [bundle pathForImageResource: @"GormLinkImage"];
+      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormSourceTag"];
+      sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormTargetTag"];
+      targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 
       documents = [NSMutableArray new];
       [nc addObserver: self
@@ -220,6 +229,11 @@ NSString *IBDidEndTestingInterfaceNotification
 - (BOOL) isTestingInterface
 {
   return isTesting;
+}
+
+- (NSImage*) linkImage
+{
+  return linkImage;
 }
 
 - (id) loadPalette: (id) sender
@@ -331,6 +345,16 @@ NSString *IBDidEndTestingInterfaceNotification
 {
   /* FIXME */
   return nil;
+}
+
+- (NSImage*) sourceImage
+{
+  return sourceImage;
+}
+
+- (NSImage*) targetImage
+{
+  return targetImage;
 }
 
 - (id) testInterface: (id)sender

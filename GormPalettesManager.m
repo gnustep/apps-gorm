@@ -51,10 +51,6 @@ static NSImage	*dragImage = nil;
 {
   if (self == [GormPaletteView class])
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormLinkImage"];
-
-      dragImage = [[NSImage alloc] initWithContentsOfFile: path];
     }
 }
 

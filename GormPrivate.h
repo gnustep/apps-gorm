@@ -27,7 +27,10 @@
 - (id<IBDocuments>) activeDocument;
 - (void) handleNotification: (NSNotification*)aNotification;
 - (GormInspectorsManager*) inspectorsManager;
+- (NSImage*) linkImage;
 - (GormPalettesManager*) palettesManager;
+- (NSImage*) sourceImage;
+- (NSImage*) targetImage;
 
 - (id) copy: (id)sender;
 - (id) cut: (id)sender;
