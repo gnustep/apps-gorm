@@ -1986,8 +1986,16 @@ static NSImage	*classesImage = nil;
 	if(sm == nil)
 	  {
 	    NSArray *menus = findAll(obj);
-	    [self detachObjects: menus];
 	    NSLog(@"Found and removed a dangling menu %@, %@.",obj,[self nameForObject: obj]);
+	    [self detachObjects: menus];
+	    [self detachObject: obj];
+	    
+	    // Since the menu is a top level object, it is not retained by
+	    // anything else.  When it was unarchived it was autoreleased, and
+	    // the detach also does a release.  Unfortunately, this causes a
+	    // crash, so this extra retain is only here to stave off the 
+	    // release, so the autorelease can release the menu when it should.
+	    RETAIN(obj);
 	  }
       }
 
@@ -1996,18 +2004,17 @@ static NSImage	*classesImage = nil;
 	id m = [obj menu];
 	if(m == nil)
 	  {
-	    NSArray *menus = findAll(obj);
-	    [self detachObjects: menus];
-	    NSLog(@"Found and removed a dangling menu item %@, %@.",obj,[self nameForObject: obj]);
-	  }
-      }
+	    id sm = [obj submenu];
 
-    if([obj isKindOfClass: [NSView class]])
-      {
-	id sv = [obj superview];
-	if(sv == nil)
-	  {
-	    NSLog(@"Found a dangling view %@, %@.",obj,[self nameForObject: obj]);
+	    NSLog(@"Found and removed a dangling menu item %@, %@.",obj,[self nameForObject: obj]);
+	    [self detachObject: obj];
+
+	    // if there are any submenus, detach those as well.
+	    if(sm != nil)
+	      {
+		NSArray *menus = findAll(sm);
+		[self detachObjects: menus];
+	      }
 	  }
       }
   }
@@ -2179,8 +2186,13 @@ static NSImage	*classesImage = nil;
   [nt removeObjectForKey: @"NSFirst"];
   [connections addObjectsFromArray: [c connections]];
   [nameTable addEntriesFromDictionary: nt];
-
   [self rebuildObjToNameMapping];
+
+  // repair the .gorm file, if needed.
+  if(repairFile == YES)
+    {
+      [self _repairFile];
+    }
 
   /*
    * set our new file name
@@ -2252,12 +2264,6 @@ static NSImage	*classesImage = nil;
   //	}
   //  }
   //
-
-  // repair the .gorm file, if needed.
-  if(repairFile == YES)
-    {
-      [self _repairFile];
-    }
 
   // this is the last thing we should do...
   [nc postNotificationName: IBDidOpenDocumentNotification

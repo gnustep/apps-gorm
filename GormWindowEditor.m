@@ -211,7 +211,7 @@
 
 - (void) copySelection
 {
-  NSDebugLog(@"copySelection");
+  NSLog(@"copySelection");
 }
 
 - (void) deactivate
@@ -347,7 +347,7 @@
 
 - (void) pasteInSelection
 {
-  NSDebugLog(@"pasteInSelection");
+  NSLog(@"pasteInSelection");
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
