@@ -3,13 +3,9 @@
     FirstResponder = {
 	Actions = (
 	    "changeFont:",
-	    "deleteWordBackward:",
 	    "moveDown:",
-	    "moveWordForward:",
 	    "orderFrontFontPanel:",
-	    "raiseBaseline:",
 	    "selectParagraph:",
-	    "takeObjectValueFrom:",
 	    "unscript:",
 	    "removeOutlet:",
 	    "addOutlet:",

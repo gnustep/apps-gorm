@@ -1,3 +1,10 @@
+2004-12-11 00:51 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Added code in setObject: to show the
+	total outlets and actions in the class.
+	* Resources/GormClassInspector.gorm: Swapped the outlet/action
+	tabs.
+
 2004-12-11 00:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: in handleNotification: changed the condition
