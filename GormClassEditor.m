@@ -397,32 +397,40 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 {
   if(selectedClass != nil)
     {
-      NSPasteboard *pb = [NSPasteboard generalPasteboard];
-      NSArray *types = [pb types];
-      
-      if([types containsObject: GormClassPboardType])
+      if([selectedClass isEqual: @"FirstResponder"] == NO)
 	{
-	  id classPlist = [pb propertyListForType: GormClassPboardType];
-	  NSDictionary *classesDict = [NSDictionary dictionaryWithDictionary: classPlist];
-	  id name = nil;
-	  NSEnumerator *en = [classesDict keyEnumerator];
+	  NSPasteboard *pb = [NSPasteboard generalPasteboard];
+	  NSArray *types = [pb types];
 	  
-	  while((name = [en nextObject]) != nil)
+	  if([types containsObject: GormClassPboardType])
 	    {
-	      NSDictionary *classDict = [classesDict objectForKey: name];
-	      NSString *className = [classManager uniqueClassNameFrom: name];
-	      BOOL added = [classManager addClassNamed: className
-					 withSuperClassNamed: selectedClass
-					 withActions: [classDict objectForKey: @"Actions"]
-					 withOutlets: [classDict objectForKey: @"Outlets"]];
-	      if(!added)
+	      id classPlist = [pb propertyListForType: GormClassPboardType];
+	      NSDictionary *classesDict = [NSDictionary dictionaryWithDictionary: classPlist];
+	      id name = nil;
+	      NSEnumerator *en = [classesDict keyEnumerator];
+	      
+	      while((name = [en nextObject]) != nil)
 		{
-		  NSString *message = [NSString stringWithFormat: @"Addition of %@ with superclass %@ failed.", className,
-						selectedClass];
-		  NSRunAlertPanel(_(@"Problem pasting class"),
-				  message, nil, nil, nil);
+		  NSDictionary *classDict = [classesDict objectForKey: name];
+		  NSString *className = [classManager uniqueClassNameFrom: name];
+		  BOOL added = [classManager addClassNamed: className
+					     withSuperClassNamed: selectedClass
+					     withActions: [classDict objectForKey: @"Actions"]
+					     withOutlets: [classDict objectForKey: @"Outlets"]];
+		  if(!added)
+		    {
+		      NSString *message = [NSString stringWithFormat: @"Addition of %@ with superclass %@ failed.", className,
+						    selectedClass];
+		      NSRunAlertPanel(_(@"Problem pasting class"),
+				      message, nil, nil, nil);
+		    }
 		}
 	    }
+	}
+      else
+	{
+	  NSRunAlertPanel(_(@"Problem pasting class"),
+			  _(@"FirstResponder cannot have subclasses."), nil, nil, nil);
 	}
     }
 }
