@@ -60,7 +60,7 @@
   if (image == nil)
     {
       NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormObject"];
+      NSString	*path = [bundle pathForImageResource: @"GormUnknown"];
 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }

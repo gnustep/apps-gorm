@@ -50,6 +50,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormMenu.tiff \
 	Images/GormObject.tiff \
 	Images/GormSound.tiff \
+	Images/GormUnknown.tiff \
 	Images/GormSourceTag.tiff \
 	Images/GormTargetTag.tiff \
 	Images/GormLinkImage.tiff \
