@@ -31,12 +31,14 @@ PALETTE_NAME = 3Containers
 	GormNSBrowser.m \
 	GormNSTableView.m \
 	GormTableViewEditor.m \
+	GormTabViewEditor.m \
 	GormNSOutlineView.m
 
 3Containers_HEADER_FILES = \
 	GormNSBrowser.h \
 	GormNSTableView.h \
 	GormTableViewEditor.h \
+	GormTabViewEditor.h \
 	GormNSOutlineView.h
 
 3Containers_PRINCIPAL_CLASS = ContainersPalette

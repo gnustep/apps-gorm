@@ -1,3 +1,10 @@
+2004-05-14 17:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormButtonEditor.[hm]: Moved to the Controls palette, removed from
+	the main directory.   In general, inspectors and editors should
+	appear in the palette which provides those things.
+	* GormTabViewEditor.[hm]: Moved to Containers palette.
+	
 2004-05-14 11:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormButtonEditor.m: Added a line between some methods to 

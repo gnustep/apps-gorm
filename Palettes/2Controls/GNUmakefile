@@ -28,7 +28,8 @@ PALETTE_NAME = 2Controls
 2Controls_OBJC_FILES = \
 	main.m \
 	inspectors.m \
-	GormPopUpButtonEditor.m
+	GormPopUpButtonEditor.m \
+	GormButtonEditor.m
 
 2Controls_PRINCIPAL_CLASS = ControlsPalette
 
