@@ -1,4 +1,12 @@
-2003-05-19  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-06-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: parseHeader added logic to prevent the
+	addition of outlets/actions with illegal characters when
+	importing from a header.  This also prevents a problem
+	where comments were being imported into the class as
+	outlets.
+	
+2003-06-19  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Moved declaration of GSNibItem in instantiateClass:
 	to the top of the method so that it will compile on gcc < 3.0.   

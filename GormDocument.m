@@ -773,12 +773,15 @@ static NSImage	*classesImage = nil;
   NSScanner *headerScanner = [NSScanner scannerWithString: headerFile];
   GormClassManager *cm = [self classManager];
   NSCharacterSet *superClassStopSet = [NSCharacterSet characterSetWithCharactersInString: @" \n"];
+  NSCharacterSet *commentStopSet = [NSCharacterSet characterSetWithCharactersInString: @"\n"];
   NSCharacterSet *classStopSet = [NSCharacterSet characterSetWithCharactersInString: @" :"];
   NSCharacterSet *typeStopSet = [NSCharacterSet characterSetWithCharactersInString: @" "];
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
+  NSCharacterSet *illegalSet = [NSCharacterSet characterSetWithCharactersInString: @"~`@#$%^&*()+={}|[]\\:;'<>?,./"];
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
   NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
+  NSRange notFoundRange = NSMakeRange(NSNotFound,0);
 
   while (![headerScanner isAtEnd])
     {
@@ -858,7 +861,7 @@ static NSImage	*classesImage = nil;
 				   intoString: NULL];
 		      [ivarScanner scanUpToCharactersFromSet: typeStopSet
 				   intoString: &type];
-		      NSLog(@"outlet type = %@",type);
+		      NSDebugLog(@"outlet type = %@",type);
 		    }
 
 		  [ivarScanner scanUpToCharactersFromSet: outletStopSet
@@ -869,7 +872,10 @@ static NSImage	*classesImage = nil;
 		     && [outlets indexOfObject: outlet] == NSNotFound)
 		    {
 		      NSDebugLog(@"outlet = %@", outlet);
-		      [outlets addObject: outlet];
+		      if(NSEqualRanges([outlet rangeOfCharacterFromSet: illegalSet],notFoundRange))
+			{
+			  [outlets addObject: outlet];
+			}
 		    }
 		}
 	    }
@@ -912,7 +918,10 @@ static NSImage	*classesImage = nil;
 			      /* Add the ':' back */
 			      action = [action stringByAppendingString: @":"];
 			      NSDebugLog(@"action = %@", action);
-			      [actions addObject: action];
+			      if(NSEqualRanges([action rangeOfCharacterFromSet: illegalSet],notFoundRange))
+				{
+				  [actions addObject: action];
+				}
 			    }
 			  else
 			    {
