@@ -491,15 +491,16 @@ static BOOL done_editing;
       int cols = [_EO numberOfColumns];
       NSSize cellSize = [_EO cellSize];
       
-      
-      width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
-      height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
+      height = width = 0;
+      if (cols > 1)
+	width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
+      if (rows > 1)
+	height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
       
       width *= (cols - 1);
       width += cellSize.width * cols;
       height *= (rows - 1);
       height += cellSize.height * rows;
-
     }
   else
     {
@@ -643,8 +644,11 @@ static BOOL done_editing;
       [self setFrame: frame];
       
       
-      width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
-      height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
+      height = width = 0;
+      if (cols > 1)
+	width = ( frame.size.width - cellSize.width * cols) / (cols - 1);
+      if (rows > 1)
+	height = ( frame.size.height - cellSize.height * rows ) / (rows - 1);
       
       [_EO setIntercellSpacing: NSMakeSize(width, height)];
     }

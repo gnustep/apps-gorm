@@ -1,3 +1,10 @@
+2002-10-29  Adam Fedor  <fedor@gnu.org>
+
+	* GormMatrixEditor.m (-_constrainedFrame:framewithEvent:andKnob:knob): 
+	Set height/width to 0 when rows/cols = 1.
+	(-validateFrame:framewithEvent:theEventandPlacementInfo:): Idem.
+	* GormWindowEditor.m: Remove commented out code.
+
 2002-10-29  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormDocument.m: change nameTable retaining policy from 
