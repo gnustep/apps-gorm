@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.6.0 of Gorm.
+This is version 0.7.5 of Gorm.
 
 What is Gorm?
 =============
@@ -12,16 +12,26 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.6.0'
+Noteworthy changes in version `0.7.5'
 =====================================
 
-   * Several major bugs corrected.
+   * The 'reparent' feature in the class inspector.  This allows the
+     user to change the class hierarchy from within Gorm.
 
-   * Clarified some of the inspectors
+   * Some important bugfixes
 
-   * Menu items are now properly enabled/disabled when appropriate
+   * a property 'GormRepairFileOnLoad' (untested) which  should repaire
+     old .gorm files... It is HIGHLY recommended that Gorm not be run
+     with this on constantly and that you back up any files which you
+     want to repair before opening them with this option turned on.
 
-   * More descriptive title displayed when a class is being edited.
+   * A shelf inspector in prefs that lets you expand the size of the
+     names in the object view..
+
+   * Support for NSFontManager
+
+   * A way to restore a complete NSMenu if it's deleted (a new palette
+     entry for NSMenu, not just an item)
 
 How can I get support for this software?
 ========================================

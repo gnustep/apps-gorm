@@ -3,7 +3,18 @@
 @ifset TEXT-ONLY
 @include version.texi
 @end ifset
-
+@section Noteworthy changes in version @samp{0.7.5}
+@itemize @bullet
+@item The 'reparent' feature in the class inspector.  This allows the user to change the class hierarchy from within Gorm.
+@item Some important bugfixes
+@item a property 'GormRepairFileOnLoad' (untested) which  should repaire old .gorm files... It is HIGHLY recommended that Gorm not be run with this on constantly and that you back up any files which you want to repair before opening them with this option turned on.
+@item A shelf inspector in prefs that lets you expand the size of the names in the object view..
+@item Support for NSFontManager
+@item A way to restore a complete NSMenu if it's deleted (a new palette entry for NSMenu, not just an item)
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.6.0}
 
 @itemize @bullet
@@ -12,9 +23,6 @@
 @item Menu items are now properly enabled/disabled when appropriate
 @item More descriptive title displayed when a class is being edited.
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.5.0}
 

@@ -1,3 +1,7 @@
+2004-04-13 20:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 0.7.5
+	
 2004-04-11 21:26 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormBoxEditor.m: Cleaned up warnings.
@@ -12,7 +16,8 @@
 	* Palettes/4Data/inspectors.m: same..
 	* Palettes/4Data/main.m: same..
 	* GormViewKnobs.m: Added reference to new header...
-	* GormViewKnobs.h: New header which declares the knob related functions.
+	* GormViewKnobs.h: New header which declares the knob 
+	related functions.
 	
 2004-04-06 20:16 Gregory John Casamento <greg_casamento@yahoo.com>	
 
