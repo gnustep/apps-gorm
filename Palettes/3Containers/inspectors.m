@@ -3,7 +3,8 @@
    Copyright (C) 2001 Free Software Foundation, Inc.
 
    Author:  Laurent Julliard <laurent@julliard-online.org>
-   Date: Aug 2001
+   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Date: Aug 2001. 2003, 2004
    
    This file is part of GNUstep.
    
@@ -512,7 +513,6 @@
     }
 
   [scrollView setNeedsDisplay: YES];
-
 }
 
 - (void) _getValuesFromObject: anObject
@@ -520,8 +520,7 @@
   BOOL isScrollView;
   id scrollView;
 
-  scrollView = //[[object superview] superview];
-    [object enclosingScrollView];
+  scrollView = [object enclosingScrollView];
 
   isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
 
@@ -602,37 +601,6 @@
 }
 
 @end
-
-
-/*----------------------------------------------------------------------------
- * NSScrollView
- */
-
-/*
- * For now NSScrollView has no inspector in itself. It is only used as a 
- * convenience in the NSTableView and NSTextView controls and there
- * are minimal NSScrollView settings in the inspector of these 2 controls
- * (like horizontal and vertical scrollbar)
-*/
-
-/*
-@implementation	NSScrollView (IBObjectAdditions)
-
-- (NSString*) inspectorClassName
-{
-  return @"GormEmptyInspector";
-}
-
-@end
-
-@interface GormScrollViewAttributesInspector : IBInspector
-{
-}
-@end
-
-@implementation GormScrollViewAttributesInspector
-@end
-*/
 
 /*----------------------------------------------------------------------------
  * NSTabView (possibly embedded in a Scroll view)
