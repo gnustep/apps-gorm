@@ -1,4 +1,12 @@
-2004-05-22 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-05-25 07:01 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm testInterface:] added code to save the services
+	menu and set the current one to nil, if one is not defined in the
+	.gorm file.  This prevents the annoying "Services Menu not in main
+	menu" warning.
+	* GormPrivate.h: Added servicesMenu ivar.
+	
+2004-05-24 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument awakeFromNib] added call
 	to [NSToolbar setUsesStandardBackgroundColor:] to make the 

@@ -671,11 +671,11 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     {
       NS_DURING
 	{
-	  NSUserDefaults		*defaults;
+	  NSUserDefaults	*defaults;
 	  NSNotificationCenter	*notifCenter = [NSNotificationCenter defaultCenter];
 	  GormDocument		*activDoc = (GormDocument*)[self activeDocument];
-	  NSData			*data;
-	  NSArchiver                *archiver;
+	  NSData		*data;
+	  NSArchiver            *archiver;
 	  
 	  
 	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
@@ -715,6 +715,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  defaults = [NSUserDefaults standardUserDefaults];
 	  menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
 	  [defaults removeObjectForKey: @"NSMenuLocations"];
+	  servicesMenu = [self servicesMenu];
 	  
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
@@ -754,6 +755,12 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 			    action: @selector(deferredEndTesting:)
 			    keyEquivalent: @"q"];	
 		}
+	    }
+
+	  // save the services menu...
+	  if([self servicesMenu] == servicesMenu)
+	    {
+	      [self setServicesMenu: nil]; // so we don't get the warning...
 	    }
 
 	  // display the current main menu...
@@ -1030,6 +1037,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	}
 
       [self setMainMenu: mainMenu];
+      [self setServicesMenu: servicesMenu];
       [mainMenu display]; // bring it to the front...
 
       isTesting = NO;

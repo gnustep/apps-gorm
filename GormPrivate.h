@@ -90,7 +90,8 @@ extern NSString *GormResizeCellNotification;
   BOOL			isTesting;
   id			testContainer;
   id                    gormMenu;
-  NSMenu		*mainMenu;
+  NSMenu		*mainMenu; // saves the main menu when testing...
+  NSMenu                *servicesMenu; // saves the services menu when testing...
   NSMenu                *classMenu; // so we can set it for the class view
   NSMenuItem            *guideLineMenuItem; 
   NSDictionary		*menuLocations;
