@@ -162,11 +162,9 @@
   if (activated == NO)
     {
       NSView *contentView = [_EO contentView];
-//        NSLog(@"contentView %@", contentView);
-      contentViewEditor = [document editorForObject: contentView
-				    inEditor: self 
-				    create: YES];
-//        NSLog(@"contentViewEditor %@", contentViewEditor);
+      contentViewEditor = (GormInternalViewEditor *)[document editorForObject: contentView
+							      inEditor: self 
+							      create: YES];
       [(NSWindow *)_editedObject setInitialFirstResponder: self];
       [self setOpened: YES];
       activated = YES;

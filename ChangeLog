@@ -1,3 +1,11 @@
+2004-04-04 12:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: Corrected some warnings and 
+	streamlined the GormConnectionMananger.  Also added code in
+	[GormConnectionManager updateButtons] to grey out the "ok"
+	button when the connection isn't a valid one.
+	* GormWindowEditor.m: Corrected some warnings.
+
 2004-04-03 13:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Corrected a problem with renaming a class

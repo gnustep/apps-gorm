@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/NSNibConnector.h>
+#include <Foundation/NSException.h>
 #include "GormPrivate.h"
 
 #define HASFORMATTER(obj) \
@@ -245,35 +246,35 @@
   RELEASE(popup);
 
   [popup addItemWithTitle: _(@"Attributes")];
-  item = [popup itemAtIndex: 0];
+  item = (NSMenuItem *)[popup itemAtIndex: 0];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"1"];
   [item setTag: 0];
 
   [popup addItemWithTitle: _(@"Connections")];
-  item = [popup itemAtIndex: 1];
+  item = (NSMenuItem *)[popup itemAtIndex: 1];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"2"];
   [item setTag: 1];
 
   [popup addItemWithTitle: _(@"Size")];
-  item = [popup itemAtIndex: 2];
+  item = (NSMenuItem *)[popup itemAtIndex: 2];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"3"];
   [item setTag: 2];
 
   [popup addItemWithTitle: _(@"Help")];
-  item = [popup itemAtIndex: 3];
+  item = (NSMenuItem *)[popup itemAtIndex: 3];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
   [popup addItemWithTitle: _(@"Custom Class")];
-  item = [popup itemAtIndex: 4];
+  item = (NSMenuItem *)[popup itemAtIndex: 4];
   [item setTarget: self];
   [item setAction: @selector(setCurrentInspector:)];
   [item setKeyEquivalent: @"5"];
@@ -600,7 +601,7 @@
         {
           NSMenuItem *item;
           [popup addItemWithTitle: _(@"Formatter")];
-          item = [popup itemAtIndex: 5];
+          item = (NSMenuItem *)[popup itemAtIndex: 5];
           [item setTarget: self];
           [item setAction: @selector(setCurrentInspector:)];
           [item setKeyEquivalent: @"6"];
@@ -971,7 +972,6 @@ selectCellWithString: (NSString*)title
   // got the notification...  since we only subscribe to one, just do what
   // needs to be done.
   [self setObject: object];
-  // [newBrowser loadColumnZero];
   [self _internalCall: newBrowser]; // reload the connections browser..  
 }
 
@@ -1047,7 +1047,8 @@ selectCellWithString: (NSString*)title
 
 - (void) ok: (id)sender
 {
-  if([currentConnector destination] == nil)
+  if([currentConnector destination] == nil ||
+     [currentConnector source] == nil)
     {
       NSRunAlertPanel(_(@"Problem making connection"),
 		      _(@"Please select a valid destination."), 
@@ -1060,22 +1061,10 @@ selectCellWithString: (NSString*)title
 	{
 	  [currentConnector setDestination: nil];
 
-	  if ([[currentConnector source] isKindOfClass: 
-		   [GormObjectProxy class]] == NO)
+	  if ([[currentConnector source] isKindOfClass: [GormObjectProxy class]] == YES)
 	  {
-	    // prevent invalid connections from being made...
-	    NS_DURING
-	      // [currentConnector establishConnection];
-	    NS_HANDLER
-	      NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
-					[localException reason]];
-	      // get rid of the bad connector and recover.
-	      [currentConnector setDestination: nil]; 
-	      // [currentConnector establishConnection]; 
-	      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
-	      NSRunAlertPanel(_(@"Problem making connection"), msg,
-			      _(@"OK"),nil,nil,nil);
-	    NS_ENDHANDLER
+	    [NSException raise: NSInternalInconsistencyException
+			 format: @"Source is a GormProxyObject: invalid connection."];
 	  }
 	}
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
@@ -1107,7 +1096,6 @@ selectCellWithString: (NSString*)title
 		  [[(id<IB>)NSApp activeDocument] removeConnector: con];
 		  [con setDestination: nil];
 		  [con setLabel: nil];
-		  // [con establishConnection];
 		  [connectors removeObjectIdenticalTo: con];
 		  break;
 		}
@@ -1120,23 +1108,11 @@ selectCellWithString: (NSString*)title
        * We don't want to establish connections on proxy object as their
        * class are unknown to IB
        */
-      if ([[currentConnector source]
-	isKindOfClass: [GormObjectProxy class]] == NO
-	&& [[currentConnector destination]
-	isKindOfClass: [GormObjectProxy class]] == NO)
+      if ([[currentConnector source] isKindOfClass: [GormObjectProxy class]] == YES ||
+	  [[currentConnector destination] isKindOfClass: [GormObjectProxy class]] == YES)
 	{
-	  NS_DURING
-	    // [currentConnector establishConnection];
-	  NS_HANDLER
-	    NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
-				      [localException reason]];
-	    // get rid of the bad connector and recover.
-	    [currentConnector setDestination: nil]; 
-	    // [currentConnector establishConnection]; 
-	    [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
-	    NSRunAlertPanel(_(@"Problem making connection"), msg,
-			    _(@"OK"),nil,nil,nil);
-	  NS_ENDHANDLER
+	    [NSException raise: NSInternalInconsistencyException
+			 format: @"Source/Destination is a GormProxyObject: invalid connection."];
 	}
 
       /*
@@ -1156,13 +1132,14 @@ selectCellWithString: (NSString*)title
 
 - (void) setObject: (id)anObject
 {
-  if (anObject != nil) // && anObject != object)
+  if (anObject != nil) 
     {
       NSArray		*array;
 
       ASSIGN(object, anObject);
       DESTROY(currentConnector);
       RELEASE(connectors);
+
       /*
        * Create list of existing connections for selected object.
        */
@@ -1175,18 +1152,18 @@ selectCellWithString: (NSString*)title
       [connectors addObjectsFromArray: array];
 
       RELEASE(outlets);
-      // name = [[(id<IB>)NSApp activeDocument] nameForObject: object]; // get the name
-      outlets = RETAIN([[NSApp classManager] allOutletsForObject: object]); // name]); // object]);
+      outlets = RETAIN([[NSApp classManager] allOutletsForObject: object]); 
       DESTROY(actions);
 
       [oldBrowser loadColumnZero];
+
       /*
        * See if we can do initial selection based on pre-existing connections.
        */
       if ([NSApp isConnecting] == YES)
 	{
-	  id		dest = [NSApp connectDestination];
-	  unsigned	row;
+	  id dest = [currentConnector destination];
+	  unsigned row;
 
 	  for (row = 0; row < [connectors count]; row++)
 	    {
@@ -1218,7 +1195,6 @@ selectCellWithString: (NSString*)title
 	[NSNibControlConnector class]] == YES)
 	{
 	  [newBrowser setPath: @"/target"];
-	  //[newBrowser selectRow: [outlets indexOfObject: @"target"] inColumn: 0];
 	  [newBrowser sendAction];
 	}
 
@@ -1234,14 +1210,30 @@ selectCellWithString: (NSString*)title
     }
   else
     {
-      [okButton setEnabled: YES];
-      if ([connectors containsObject: currentConnector] == YES)
+      id active = [(id<IB>)NSApp activeDocument];
+      id src = [currentConnector source];
+      id dest = [currentConnector destination];
+
+      // highlight or unhiglight the connection depending on
+      // the object being connected to.
+      if((src == nil || src == [active firstResponder]) ||
+	 ((dest == nil || dest == [active firstResponder]) &&
+	  [currentConnector isKindOfClass: [NSNibOutletConnector class]] == YES))
+	
 	{
-	  [okButton setTitle: _(@"Disconnect")];
+	  [okButton setEnabled: NO];
 	}
-       else
+      else
 	{
-	  [okButton setTitle: _(@"Connect")];
+	  [okButton setEnabled: YES];
+	  if ([connectors containsObject: currentConnector] == YES)
+	    {
+	      [okButton setTitle: _(@"Disconnect")];
+	    }
+	  else
+	    {
+	      [okButton setTitle: _(@"Connect")];
+	    }
 	}
     }
 }
