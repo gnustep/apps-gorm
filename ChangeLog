@@ -1,5 +1,10 @@
 2002-10-13  Adam Fedor  <fedor@gnu.org>
 
+	* Version: 0.1.9 snapshot.
+	* Documentation/news.texi: Update.
+
+2002-10-13  Adam Fedor  <fedor@gnu.org>
+
 	* ClassInformation.plist: Added NSDocumentController and
 	NSDocument methods to FirstResponder (openDocument,
 	revertDocumentToSaved:, saveAllDocuments:, saveDocument:,

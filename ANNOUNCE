@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.1.0 of Gorm.
+This is version 0.1.9 of Gorm.
 
 What is Gorm?
 =============
@@ -15,24 +15,22 @@ GNUstep.
    Gorm is not `gormless' (a Yorkshire dialect word that my parents
 used when they spotted me staring, slack-jawed, at the TV).
 
-Noteworthy changes in version `0.1.0'
-=====================================
+Noteworthy changes in version `0.2.0' snapshot.
+===============================================
 
-   * load/parses class files for entry into class list.
+   Gobs of improvements, mostly due to the hard work of Gregory John
+Casamento and Pierre-Yves Rivaille. Thanks guys!
 
-   * Pallete/inspectors for date and number formatters
+   * Custom class support/translations implemented.
 
-   * Pallete/Inspectors for browsers and tableViews
+   * Added NSScrollView, NSPopupButton, NSOutlineView, NSTableView
+     editing.
 
-   * NSStepper, NSForm, NSPopupButton  pallete item and inspector
+   * Improved test mode support.
 
-   * Most inspectors greatly improved and fleshed out.
+   * Improved drag n' drop support on many items.
 
-   * Custom views added.
-
-   * Ability to edit cells in a matrix.
-
-   * Ability to change the font of some objects.
+   * Intelligent placement hints.
 
 How can I get support for this software?
 ========================================

@@ -4,6 +4,23 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.2.0} snapshot.
+
+Gobs of improvements, mostly due to the hard work of
+Gregory John Casamento and Pierre-Yves Rivaille. Thanks guys!
+
+@itemize @bullet
+@item Custom class support/translations implemented.
+@item Added NSScrollView, NSPopupButton, NSOutlineView, NSTableView editing.
+@item Improved test mode support.
+@item Improved drag n' drop support on many items.
+@item Intelligent placement hints.
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.1.0}
 
 @itemize @bullet
@@ -16,10 +33,6 @@
 @item Ability to edit cells in a matrix.
 @item Ability to change the font of some objects.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.0.3}
 

@@ -1,3 +1,20 @@
+Noteworthy changes in version `0.2.0' snapshot.
+===============================================
+
+Gobs of improvements, mostly due to the hard work of Gregory John
+Casamento and Pierre-Yves Rivaille. Thanks guys!
+
+   * Custom class support/translations implemented.
+
+   * Added NSScrollView, NSPopupButton, NSOutlineView, NSTableView
+     editing.
+
+   * Improved test mode support.
+
+   * Improved drag n' drop support on many items.
+
+   * Intelligent placement hints.
+
 Noteworthy changes in version `0.1.0'
 =====================================
 
