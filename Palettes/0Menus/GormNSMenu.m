@@ -49,11 +49,6 @@
 @end
 
 @implementation GormNSMenuWindow
-- (BOOL)isExcludedFromWindowsMenu
-{
-  return YES;
-}
-
 - (BOOL)canBecomeMainWindow
 {
   return YES;
@@ -114,24 +109,6 @@
 }
 @end
 
-/*
-@interface NSMenu (GormAdditions)
-- (NSWindow *)_bWindow;
-- (void) _setBwindow: (NSWindow *)win;
-@end
-
-@implementation NSMenu (GormAdditions)
-- (NSWindow *)_bWindow
-{
-  return _bWindow;
-}
-- (void) _setBwindow: (NSWindow *)win
-{
-  _bWindow = win;
-}
-@end
-*/
-
 @implementation GormNSMenu
 - (BOOL) performKeyEquivalent: (NSEvent*)theEvent
 {
@@ -148,57 +125,16 @@
  
   [win setMenu: self];
   [win setLevel: NSSubmenuWindowLevel];
-  // [win setWorksWhenModal: NO];
-  // [win setBecomesKeyOnlyIfNeeded: YES];
+  [win setExcludedFromWindowsMenu: YES];
 
   return win;
 }
-
-/*
-- (void) awakeFromDocument: (id)document
-{
-  NSWindow *win = [self _bWindow];
-  [win close];
-  RELEASE(win);
-  [self _setBwindow: nil];
-}
-*/
 
 - (NSString *)className
 {
   return @"NSMenu";
 }
-
-/*
-- (void) display
-{
-  NSLog(@"Display...");
-  [super display];
-}
-*/
 @end
-
-/*
-@interface GormNSMenu (GNUstepExtra)
-- (void) setTornOff: (BOOL)flag;
-- (void) _showTornOffMenuIfAny: (NSNotification*)notification;
-- (void) _showOnActivateApp: (NSNotification*)notification;
-@end
-
-@implementation GormNSMenu (GNUstepExtra)
-- (void) setTornOff: (BOOL)flag
-{
-}
-
-- (void) _showTornOffMenuIfAny: (NSNotification*)notification
-{
-}
-
-- (void) _showOnActivateApp: (NSNotification*)notification
-{
-}
-@end
-*/
 
 @implementation NSMenu (GormNSMenu)
 + (id) allocSubstitute

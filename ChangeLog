@@ -1,3 +1,9 @@
+2004-05-01 09:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormNSMenu.m: [GormNSMenu _createWindow] added call to
+	setExcludedFromWindowsMenu: to make certain that the menu windows
+	are not displayed in the Windows menu under Gorm's main menu.
+	
 2004-05-01 07:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Removed some NSLog messages.
