@@ -1218,7 +1218,6 @@ static NSImage	*classesImage = nil;
       id	obj = [nameTable objectForKey: name];
 
       NSMapInsert(objToName, (void*)obj, (void*)name);
-
       if ([obj isKindOfClass: [NSMenu class]] == YES)
 	{
 	  [objectsView addObject: obj];

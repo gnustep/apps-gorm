@@ -1182,7 +1182,7 @@ main(int argc, const char **argv)
   extern BOOL NSImageDoesCaching;
 
   NSImageDoesCaching = YES;
-//[NSObject enableDoubleReleaseCheck: YES];
+  //[NSObject enableDoubleReleaseCheck: YES];
 
   NSApplicationMain(argc, argv);
 

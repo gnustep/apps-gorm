@@ -687,6 +687,7 @@ static NSMapTable	*docMap = 0;
   NSButton	*right;
   NSButton	*width;
   NSButton	*height;
+  NSForm        *sizeForm;
 }
 @end
 
@@ -729,6 +730,7 @@ NSImage	*mVLine = nil;
 
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(window);
   [super dealloc];
 }
@@ -740,7 +742,7 @@ NSImage	*mVLine = nil;
     {
       NSView		*contents;
       NSButton		*button;
-      NSBox		*box;
+      NSBox		*box, *sizeBox;
       NSRect		rect;
 
       rect = NSMakeRect(0, 0, IVW, IVH);
@@ -749,6 +751,36 @@ NSImage	*mVLine = nil;
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
+
+      rect = NSMakeRect((IVW-200)/2, IVW, 200, 80);
+      sizeBox = [[NSBox alloc] initWithFrame: NSZeroRect];
+      [sizeBox setBorderType: NSBezelBorder];
+      [sizeBox setTitle: @"Size"];
+      [sizeBox setTitlePosition: NSAtTop];
+      [sizeBox setFrameFromContentFrame: rect];
+      [contents addSubview: sizeBox];
+      RELEASE(sizeBox);
+
+      rect = NSMakeRect(25, 5, 150, 75);
+      sizeForm = [[NSForm alloc] initWithFrame: rect];
+      [sizeForm addEntry: @"X"];
+      [sizeForm addEntry: @"Y"];
+      [sizeForm addEntry: @"Width"];
+      [sizeForm addEntry: @"Height"];
+      [sizeForm setEntryWidth: 150];
+      [sizeForm setInterlineSpacing: 3];
+      [sizeBox addSubview: sizeForm];
+
+      [[NSNotificationCenter defaultCenter] 
+        addObserver: self
+           selector: @selector(viewFrameChangeNotification:)
+               name: NSViewFrameDidChangeNotification
+             object: nil];
+      [[NSNotificationCenter defaultCenter] 
+	addObserver: self
+	   selector: @selector(controlTextDidEndEditing:)
+	       name: NSControlTextDidEndEditingNotification
+	     object: nil];
 
       rect = NSMakeRect((IVW-200)/2, (IVW-200)/2, 200, 200);
       box = [[NSBox alloc] initWithFrame: NSZeroRect];
@@ -846,6 +878,47 @@ NSImage	*mVLine = nil;
   return self;
 }
 
+- (void) _setValuesFromControl: control
+{
+  if (control == sizeForm)
+    {
+      NSRect rect;
+      rect = NSMakeRect([[control cellAtIndex: 0] floatValue],
+                        [[control cellAtIndex: 1] floatValue],
+                        [[control cellAtIndex: 2] floatValue],
+                        [[control cellAtIndex: 3] floatValue]);
+      [object setFrame: rect];
+      [object setNeedsDisplay: YES];
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  NSRect frame;
+
+  if (anObject != object)
+    return;
+
+  frame = [anObject frame];
+  [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
+  [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
+  [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
+  [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) viewFrameChangeNotification: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  
+  [self _getValuesFromObject: notifier];
+}
+
 - (void) setAutosize: (id)sender
 {
   unsigned	mask = [sender tag];
@@ -863,8 +936,12 @@ NSImage	*mVLine = nil;
 
 - (void) setObject: (id)anObject
 {
+  if (object != nil)
+    [object setPostsFrameChangedNotifications: NO];
+
   if (anObject != nil && anObject != object)
     {
+      NSRect frame;
       unsigned	mask = [anObject autoresizingMask];
 
       ASSIGN(object, anObject);
@@ -897,6 +974,13 @@ NSImage	*mVLine = nil;
 	[height setState: NSOnState];
       else
 	[height setState: NSOffState];
+
+      frame = [anObject frame];
+      [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
+      [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
+      [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
+      [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
+      [anObject setPostsFrameChangedNotifications: YES];
     }
 }
 

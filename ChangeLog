@@ -1,3 +1,20 @@
+2001-09-16  Adam Fedor  <fedor@gnu.org>
+
+	* Fixes to handle matrixes better. Editable matrix cells. Improved
+	editors for window size and buttons.
+	* GormObjectEditor.m ([GormViewSizeInspector -init]): Add size
+	form for resizing. New methods for resizing and obtaining
+	window sizes.
+	* GormMatrixEditor.m: New class for editing matrix cells.
+	* GormWindowEditor.m (_editTextView:withEvent:) Moved to 
+	GormMatrixEditor.m.
+	(-_validateFrame:forViewPtr:withEvent:update:update): When replacing
+	view with matrix detach old view and attach matrix to document.
+	(-mouseDown:): Open matrix subeditor on double-click of matrix.
+	(-deleteSelection): Detach subviews of a box before deleting box.
+
+	* Palettes/2Controls/inspectors.m: New button inspector.
+
 2001-08-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	Added the ability to change the font of the selected objects

@@ -62,46 +62,6 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   return point;
 }
 
-@interface NSFormCell (GormAdditions)
-- (void) printAuto;
-@end
-
-@implementation NSFormCell (GormAdditions)
-
-- (void) printAuto
-{
-  NSLog(@"Auto for cell is %d, width %f", 
-	_formcell_auto_title_width, _displayedTitleWidth);
-}
-@end
-
-@interface NSForm (GormAdditions)
-- (float) titleWidth;
-@end
-
-@implementation NSForm (GormAdditions)
-
-- (float)titleWidth
-{
-  int i, count = [self numberOfRows];
-  float new_title_width = 0;
-  float candidate_title_width = 0;
-
-  // Compute max of title width in the cells
-  for (i = 0; i < count; i++)
-    {
-      candidate_title_width = [_cells[i][0] titleWidth];
-      [_cells[i][0] printAuto];
-      if (candidate_title_width > new_title_width)  
-	new_title_width = candidate_title_width;
-    }
-  return new_title_width;
-}
-
-@end
-
-
-
 @implementation NSWindow (GormObjectAdditions)
 - (NSString*) editorClassName
 {
@@ -240,145 +200,6 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   return nil;
 }
 
-static BOOL done_editing;
-
-- (void) handleTextEditNotification: (NSNotification*)aNotification
-{
-  NSString      *name = [aNotification name];
-
-  if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
-    {
-      done_editing = YES;
-    }
-}
-
-/* Called when we double-click on a text/editable field or form. Overlay
-   a text field so the user can enter the text.
-   FIXME: Only works with NSForms now, doesn't handle different fonts
-   or cell sizes, etc. Needs some work.*/
-- (void) _editTextView: (NSView *)view withEvent: (NSEvent *)theEvent
-{
-  int row, col;
-  unsigned eventMask;
-  NSRect frame;
-  NSPoint point;
-  NSCell *editCell;
-  NSTextField *editField;
-  NSDate		*future = [NSDate distantFuture];
-  NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
-
-  point = [edit_view convertPoint: [theEvent locationInWindow]
-				fromView: nil];
-  point = [view convertPoint: point fromView: edit_view];
-  if ([(NSForm *)view getRow: &row column: &col forPoint: point] == NO)
-    return;
-
-  editCell = [(NSForm *)view cellAtRow: row column: col];
-  frame = [(NSForm *)view cellFrameAtRow: row column: col];
-  frame.origin.x += NSMinX([view frame]);
-  frame.size.width = [(NSForm *)view titleWidth];
-  if ([view isFlipped])
-    {
-      frame.origin.y = NSMaxY([view frame]) - NSMaxY(frame);
-    }
-  else
-    {
-      frame.origin.y = NSMinY([view frame]) + NSMinY(frame);
-    }
-
-  /* Now create an edit field and allow the user to edit the text */
-  editField = [[NSTextField alloc] initWithFrame: frame];
-  [editField setEditable: YES];
-  [editField setSelectable: YES];
-  [editField setBezeled: NO];
-  [editField setEnabled: YES];
-  [editField setStringValue: [(NSFormCell *)editCell title]];
-  [edit_view addSubview: editField];
-  [edit_view displayRect: frame];
-  [nc addObserver: self
-         selector: @selector(handleTextEditNotification:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
-
-  /* Do some modal editing */
-  [editField selectText: self];
-  eventMask = NSLeftMouseDownMask |  NSLeftMouseUpMask  |
-  NSKeyDownMask  |  NSKeyUpMask  | NSFlagsChangedMask;
-
-  done_editing = NO;
-  while (!done_editing)
-    {
-      NSEvent *e;
-      NSEventType eType;
-      e = [NSApp nextEventMatchingMask: eventMask
-		 untilDate: future
-		 inMode: NSEventTrackingRunLoopMode
-		 dequeue: YES];
-      eType = [e type];
-      switch (eType)
-	{
-	case NSLeftMouseDown:
-	  {
-	    NSPoint dp =  [edit_view convertPoint: [e locationInWindow]
-				fromView: nil];
-	    if (NSMouseInRect(dp, frame, NO) == NO)
-	      {
-		done_editing = YES;
-		break;
-	      }
-	  }
-	  [[editField currentEditor] mouseDown: e];
-	  break;
-	case NSLeftMouseUp:
-	  [[editField currentEditor] mouseUp: e];
-	  break;
-	case NSLeftMouseDragged:
-	  [[editField currentEditor] mouseDragged: e];
-	  break;
-	case NSKeyDown:
-	  [[editField currentEditor] keyDown: e];
-	  break;
-	case NSKeyUp:
-	  [[editField currentEditor] keyUp: e];
-	  break;
-	case NSFlagsChanged:
-	  [[editField currentEditor] flagsChanged: e];
-	  break;
-	default:
-	  NSLog(@"Internal Error: Unhandled event during editing: %@", e);
-	  break;
-	}
-    }
-
-  [nc removeObserver: self
-                name: NSControlTextDidEndEditingNotification
-              object: nil];
-
-  /* Set the new title and resize the form to match the titles */
-  [self makeSelectionVisible: NO];
-  {
-    float oldTitleWidth, titleWidth;
-    NSRect oldFrame;
-    oldTitleWidth = [(NSForm *)view titleWidth];
-    [(NSFormCell *)editCell setTitle: [editField stringValue]];
-    [(NSForm *)view calcSize];
-    titleWidth = [(NSForm *)view titleWidth];
-    NSLog(@"old width %f new %f", oldTitleWidth, titleWidth);
-    oldFrame = frame = [view frame];
-    frame.origin.x -= (titleWidth - oldTitleWidth);
-    frame.size.width += (titleWidth - oldTitleWidth);
-    [(NSForm *)view setEntryWidth: NSWidth(frame)];
-    [(NSForm *)view setFrame: frame];
-    frame = NSUnionRect(frame, oldFrame);
-  }
-  [edit_view removeSubview: editField];
-  [edit_view displayRect: frame];
-  [self makeSelectionVisible: YES];
-
-  RELEASE(editField);
-}
-
-
 /* Called when the frame of a view object is changed. Takes care of
    validating the frame and updating the object */
 - (BOOL) _validateFrame: (NSRect)frame 
@@ -473,8 +294,9 @@ static BOOL done_editing;
 	  cellSize.width = [view frame].size.width;
 	  cellSize.height = [view frame].size.height;
 	  /* Remove this view and add the new matrix */
+	  [document detachObject: view];
+	  [document attachObject: matrix toParent: edited];
 	  [edit_view addSubview: AUTORELEASE(matrix)];
-	  //[self makeSelectionVisible: NO];
 	  array = [NSMutableArray arrayWithArray: [self selection]];
 	  [array removeObjectIdenticalTo: view];
 	  [array addObject: matrix];
@@ -715,6 +537,7 @@ static BOOL done_editing;
 	      [self selectObjects: [NSArray arrayWithObject: view]];
 	    }
 	}
+      [self closeSubeditors];
     }
   else if ([selection indexOfObjectIdenticalTo: view] == NSNotFound)
     {
@@ -722,6 +545,7 @@ static BOOL done_editing;
        * This view has just been deselected.
        */
       view = nil;
+      [self closeSubeditors];
     }
 
   /*
@@ -768,12 +592,24 @@ static BOOL done_editing;
 	  [[view superview] unlockFocus];
 	  [self selectObjects: [NSArray array]];
 	}
-      else if ([view isKindOfClass: [NSForm class]])
+      else if ([view isKindOfClass: [NSMatrix class]])
 	{
-	  [self _editTextView: view withEvent: theEvent];
-	  return;
+	  id subeditor;
+	  if ((subeditor = [self openSubeditorForObject: view]) == nil)
+	    {
+	      NSLog(@"Could not open editor for %@", view);
+	    }
+	  if ([subeditor editedObject] != view)
+	    [subeditor changeObject: view];
 	}
       }
+
+  /* If a subeditor exists, it should handle the mouse events */
+  if ([subeditors lastObject])
+    {
+      [[subeditors lastObject] mouseDown: theEvent];
+      return;
+    }
 
   /*
    * Having determined the current selection, we now handle events.
@@ -1301,6 +1137,13 @@ static BOOL done_editing;
     {
       id	obj = [a objectAtIndex: c];
 
+      if ([obj isKindOfClass: [NSBox class]] == YES)
+	{
+	  NSArray *sub = [obj subviews];
+	  int sc = [sub count];
+	  while (sc-- > 0)
+	    [document detachObject: [sub objectAtIndex: sc] ];
+	}
       [document detachObject: obj];
       [self setNeedsDisplayInRect: [obj frame]];
       [obj removeFromSuperview];
@@ -1481,6 +1324,7 @@ static BOOL done_editing;
     {
       [subeditors addObject: sub];
     }
+
   return sub;
 }
 

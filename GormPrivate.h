@@ -155,6 +155,16 @@ extern NSString *GormLinkPboardType;
 - (NSWindow*) window;
 @end
 
+@interface	GormMatrixEditor : NSObject <IBEditors>
+{
+  id<IBDocuments>	document;
+  id			selected;
+  NSMatrix             *matrix;
+}
+
+- (void) changeObject: anObject;
+@end
+
 /*
  * Functions for drawing knobs etc.
  */

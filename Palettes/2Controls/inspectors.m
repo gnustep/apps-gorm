@@ -25,16 +25,206 @@
 #include <AppKit/AppKit.h>
 #include "../../GormPrivate.h"
 
+/*----------------------------------------------------------------------------
+  NSButton
+*/
+@implementation	NSButton (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormButtonAttributesInspector";
+}
+
+@end
+
+@interface GormButtonAttributesInspector : IBInspector
+{
+  id alignMatrix;
+  id iconMatrix;
+  id keyField;
+  id optionMatrix;
+  id tagField;
+  id titleForm;
+  id typeButton;
+}
+@end
+
+@implementation GormButtonAttributesInspector
+
+- (void) _setValuesFromControl: control
+{
+  if (control == alignMatrix)
+    {
+      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag] ];
+    }
+  else if (control == iconMatrix)
+    {
+      [object setImagePosition: 
+		(NSCellImagePosition)[[control selectedCell] tag] ];
+    }
+  else if (control == keyField)
+    {
+      [object setKeyEquivalent: [[control cellAtIndex: 0] stringValue] ];
+    }
+  else if (control == optionMatrix)
+    {
+      BOOL flag;
+      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
+      [object setBordered: flag];
+      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      [object setContinuous: flag];
+      flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
+      [object setEnabled: flag];
+
+      [object setState: [[control cellAtRow: 3 column: 0] state]];
+      flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
+      [object setTransparent: flag];
+    }
+  else if (control == tagField)
+    {
+      [object setTag: [[control cellAtIndex: 0] intValue] ];
+    }
+  else if (control == titleForm)
+    {
+      NSString *string;
+      NSImage *image;
+      [object setTitle: [[control cellAtIndex: 0] stringValue] ];
+      [object setAlternateTitle: [[control cellAtIndex: 1] stringValue] ];
+      string = [[control cellAtIndex: 2] stringValue];
+      if ([string length] > 0)
+	{
+	  image = [NSImage imageNamed: string ];
+	  [object setImage: image ];
+	}
+      string = [[control cellAtIndex: 3] stringValue];
+      if ([string length] > 0)
+	{
+	  image = [NSImage imageNamed: string ];
+	  [object setAlternateImage: image ];
+	}
+    }
+  else if (control == typeButton)
+    {
+    }
+}
+
+- (void) _getValuesFromObject: anObject
+{
+  NSImage *image;
+  if (anObject != object)
+    return;
+  
+  [alignMatrix selectCellWithTag: [anObject alignment] ];
+  [iconMatrix selectCellWithTag: [anObject imagePosition] ];
+  [[keyField cellAtIndex: 0] setStringValue: [anObject keyEquivalent] ];
+  
+  [optionMatrix deselectAllCells];
+  if ([anObject isBordered])
+    [optionMatrix selectCellAtRow: 0 column: 0];
+  if ([anObject isContinuous])
+    [optionMatrix selectCellAtRow: 1 column: 0];
+  if ([anObject isEnabled])
+    [optionMatrix selectCellAtRow: 2 column: 0];
+  if ([anObject state] == NSOnState)
+    [optionMatrix selectCellAtRow: 3 column: 0];
+  if ([anObject isTransparent])
+    [optionMatrix selectCellAtRow: 4 column: 0];
+
+  [[tagField cellAtIndex: 0] setIntValue: [anObject tag] ];
+
+  [[titleForm cellAtIndex: 0] setStringValue: [anObject title] ];
+  [[titleForm cellAtIndex: 1] setStringValue: [anObject alternateTitle] ];
+  image = [anObject image];
+  if (image)
+    [[titleForm cellAtIndex: 2] setStringValue: [image name] ];
+  else
+    [[titleForm cellAtIndex: 2] setStringValue: @""];
+  image = [anObject alternateImage];
+  if (image)
+    [[titleForm cellAtIndex: 3] setStringValue: [image name] ];
+  else
+    [[titleForm cellAtIndex: 3] setStringValue: @"" ];
+
+}
+
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(window);
+  RELEASE(okButton);
+  [super dealloc];
+}
+
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormButtonInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormButtonInspector");
+      return nil;
+    }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+  return self;
+}
+
+- (BOOL) wantsButtons
+{
+  return YES;
+}
+
+- (NSButton*) okButton
+{
+  if (okButton == nil)
+    {
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"OK"];
+      [okButton setEnabled: YES];
+    }
+  return okButton;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: alignMatrix];
+  [self _setValuesFromControl: iconMatrix];
+  [self _setValuesFromControl: keyField];
+  [self _setValuesFromControl: tagField];
+  [self _setValuesFromControl: titleForm];
+  [self _setValuesFromControl: optionMatrix];
+  [self _setValuesFromControl: typeButton];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
+@end
+
+/*----------------------------------------------------------------------------
+  NSSlider
+*/
 @implementation	NSSlider (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
   return @"GormSliderAttributesInspector";
 }
 
-- (NSString*) sizeInspectorClassName
-{
-  return nil;
-}
 @end
 
 @interface GormSliderAttributesInspector : IBInspector
@@ -123,6 +313,9 @@
 
 @end
 
+/*----------------------------------------------------------------------------
+  NSStepper
+*/
 @implementation	NSStepper (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
