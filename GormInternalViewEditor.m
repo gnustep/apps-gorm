@@ -31,6 +31,18 @@
 @class GormEditorToParent;
 @class GSWindowView;
 
+static NSImage *verticalImage;
+static NSImage *horizontalImage;
+
+#ifndef max
+#define max(a,b) ((a) >= (b) ? (a):(b))
+#endif
+
+#ifndef min
+#define min(a,b) ((a) <= (b) ? (a):(b))
+#endif
+
+
 @implementation NSView (GormObjectAdditions)
 - (NSString*) editorClassName
 {
@@ -56,6 +68,13 @@
 
 
 @implementation GormInternalViewEditor
+
+
++ (void)initialize
+{
+  horizontalImage = nil;
+  verticalImage = nil;
+}
 
 - (void) dealloc
 {
@@ -234,6 +253,34 @@
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
   
+
+  if (horizontalImage == nil)
+    {
+      NSCachedImageRep *rep;
+      horizontalImage = [[NSImage allocWithZone:(NSZone *)[(NSObject *)self zone]] 
+                          initWithSize: NSMakeSize(3000, 2)];
+      rep = [[NSCachedImageRep allocWithZone:
+                                  (NSZone *)[(NSObject *)self zone]]
+              initWithSize:NSMakeSize(3000, 2)
+               depth:[NSWindow defaultDepthLimit] 
+               separate:YES 
+               alpha:YES];
+      
+      [horizontalImage addRepresentation: rep];
+      RELEASE(rep);
+      verticalImage = [[NSImage allocWithZone:(NSZone *)[(NSObject *)self zone]] 
+                          initWithSize: NSMakeSize(2, 3000)];
+      rep = [[NSCachedImageRep allocWithZone:
+                                  (NSZone *)[(NSObject *)self zone]]
+              initWithSize:NSMakeSize(2, 3000)
+               depth:[NSWindow defaultDepthLimit] 
+               separate:YES 
+               alpha:YES];
+      
+      [verticalImage addRepresentation: rep];
+      RELEASE(rep);
+    }
+
   return self;
 }
 
@@ -449,28 +496,14 @@
 
       if ([result isKindOfClass: [GormViewEditor class]])
 	{
-	  /*
-	  if (result != self)
-	    {
-	      [self selectObjects: [NSMutableArray arrayWithObject: result]];
-	    }
-	  else
-	    {
-	      [self selectObjects: [NSMutableArray array]];
-	    }
-	  [[self window] disableFlushWindow];
-	  [self display];
-	  [[self window] enableFlushWindow];
-	  [[self window] flushWindow];
-	  NSLog(@"clicked on %@", result);
-	  */
 	}
       else
 	{
-//  	  NSLog(@"md %@ result = nil", self);
 	  result = nil;
 	}
 
+      // this is the direct subeditor the mouse was clicked on
+      // (or self)
       editorView = (GormViewEditor *)result;
     }
 
@@ -478,7 +511,7 @@
 	&& [editorView isKindOfClass: [GormViewWithSubviewsEditor class]]
 	&& ([(id)editorView canBeOpened] == YES)
 	&& (editorView != self))
-       
+      // Let's open a subeditor       
       {
 	[(GormViewWithSubviewsEditor *) editorView setOpened: YES];
 	[self silentlyResetSelection];
@@ -496,12 +529,171 @@
     else // editorView == self
       {
 //  	NSLog(@"editorView == self");
-	[self selectObjects: [NSMutableArray array]];
+	NSEvent *e;
+	unsigned eventMask;
+	NSDate *future = [NSDate distantFuture];
+	BOOL first = YES;
+	NSRect oldRect = NSZeroRect;
+	NSPoint p, oldp;
+	NSRect r;
+	float x, y, w, h;
+	
+	oldp = [self convertPoint: [theEvent locationInWindow] fromView: nil];
+
+	eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask;
+
+	
+	if (!([theEvent modifierFlags] & NSShiftKeyMask))
+	  [self selectObjects: [NSMutableArray array]];
+	[[self window] disableFlushWindow];
 	[self setNeedsDisplay: YES];
+	[self displayIfNeeded];
+	[[self window] enableFlushWindow];
+	[[self window] flushWindowIfNeeded];
+
+	e = [NSApp nextEventMatchingMask: eventMask
+		   untilDate: future
+		   inMode: NSEventTrackingRunLoopMode
+		   dequeue: YES];
+	[self lockFocus];
+	while ([e type] != NSLeftMouseUp)
+	  {
+	    p = [self convertPoint: [e locationInWindow] fromView: nil];
+	    
+	    x = (p.x >= oldp.x) ? oldp.x : p.x;
+	    y = (p.y >= oldp.y) ? oldp.y : p.y;
+	    w = max(p.x, oldp.x) - min(p.x, oldp.x);
+	    w = (w == 0) ? 1 : w;
+	    h = max(p.y, oldp.y) - min(p.y, oldp.y);
+	    h = (h == 0) ? 1 : h;
+	    
+	    r = NSMakeRect(x, y, w, h);
+
+	    if (NSEqualRects(oldRect, NSZeroRect) == NO)
+	      {
+		[verticalImage 
+		  compositeToPoint: NSMakePoint(NSMinX(oldRect), NSMinY(oldRect))
+		  fromRect: NSMakeRect(0.0, 0.0, 1.0, oldRect.size.height)
+		  operation: NSCompositeCopy];
+		[verticalImage
+		  compositeToPoint: NSMakePoint(NSMaxX(oldRect)-1, NSMinY(oldRect))
+		  fromRect: NSMakeRect(1.0, 0.0, 1.0, oldRect.size.height)
+		  operation: NSCompositeCopy];
+		
+		[horizontalImage 
+		  compositeToPoint: NSMakePoint(NSMinX(oldRect), NSMinY(oldRect))
+		  fromRect: NSMakeRect(0.0, 0.0, oldRect.size.width, 1.0)
+		  operation: NSCompositeCopy];
+		[horizontalImage
+		  compositeToPoint: NSMakePoint(NSMinX(oldRect), NSMaxY(oldRect)-1)
+		  fromRect: NSMakeRect(0.0, 1.0, oldRect.size.width, 1.0)
+		  operation: NSCompositeCopy];
+	      }
+
+	    {
+	      NSRect wr;
+	      NSCachedImageRep *tableRep = 
+		[[verticalImage representations]objectAtIndex:0];
+	      wr = [self convertRect: r
+			 toView: nil];
+	      
+	      [verticalImage lockFocus];
+	      NSCopyBits([[self window] gState],
+			 NSMakeRect(NSMinX(wr), NSMinY(wr),
+				    1.0, r.size.height),
+			 NSMakePoint(0.0, 0.0));
+	      NSCopyBits([[self window] gState],
+			 NSMakeRect(NSMaxX(wr)-1, NSMinY(wr),
+				    1.0, r.size.height),
+			 NSMakePoint(1.0, 0.0));
+	      [verticalImage unlockFocus];
+
+	      [horizontalImage lockFocus];
+	      NSCopyBits([[self window] gState],
+			 NSMakeRect(NSMinX(wr), NSMinY(wr),
+				    r.size.width, 1.0),
+			 NSMakePoint(0.0, 0.0));
+	      NSCopyBits([[self window] gState],
+			 NSMakeRect(NSMinX(wr), NSMaxY(wr)-1,
+				    r.size.width, 1.0),
+			 NSMakePoint(0.0, 1.0));
+	      [horizontalImage unlockFocus];
+	    }
+	    
+	    [[NSColor darkGrayColor] set];
+	    NSFrameRect(r);
+	    oldRect = r;
+	    
+	    //    [[self window] displayIfNeeded];
+	    [[self window] enableFlushWindow];
+	    
+	    [[self window] flushWindow];
+	    [[self window] disableFlushWindow];
+
+
+	    e = [NSApp nextEventMatchingMask: eventMask
+		       untilDate: future
+		       inMode: NSEventTrackingRunLoopMode
+		       dequeue: YES];
+	  }
+
+	if (NSEqualRects(r, NSZeroRect) == NO)
+	  {
+	    [verticalImage 
+	      compositeToPoint: NSMakePoint(NSMinX(r), NSMinY(r))
+	      fromRect: NSMakeRect(0.0, 0.0, 1.0, r.size.height)
+	      operation: NSCompositeCopy];
+	    [verticalImage
+	      compositeToPoint: NSMakePoint(NSMaxX(r)-1, NSMinY(r))
+	      fromRect: NSMakeRect(1.0, 0.0, 1.0, r.size.height)
+	      operation: NSCompositeCopy];
+	    
+	    [horizontalImage 
+	      compositeToPoint: NSMakePoint(NSMinX(r), NSMinY(r))
+	      fromRect: NSMakeRect(0.0, 0.0, r.size.width, 1.0)
+	      operation: NSCompositeCopy];
+	    [horizontalImage
+	      compositeToPoint: NSMakePoint(NSMinX(r), NSMaxY(r)-1)
+	      fromRect: NSMakeRect(0.0, 1.0, r.size.width, 1.0)
+	      operation: NSCompositeCopy];
+	  }
+
+
+	{
+	  NSMutableArray *array;
+	  NSEnumerator *enumerator;
+	  NSView *subview;
+
+
+	  if ([theEvent modifierFlags] & NSShiftKeyMask)
+	    array = [NSMutableArray arrayWithArray: selection];
+	  else
+	    array = [NSMutableArray arrayWithCapacity: 8];
+	  enumerator = [[_editedObject subviews] objectEnumerator];
+	  while ((subview = [enumerator nextObject]) != nil)
+	    {
+	      if ((NSIntersectsRect(r, [subview frame]) == YES)
+		  && [subview isKindOfClass: [GormViewEditor class]])
+		{
+		  [array addObject: subview];
+		}
+	    }
+
+	  if ([array count] > 0)
+	    {
+	      [self selectObjects: array];
+	    }
+	  [self displayIfNeeded];
+	  
+	  [self unlockFocus];
+	  [[self window] enableFlushWindow];
+	  
+	  [[self window] flushWindow];
+	}
+
       }
     
   }
-
 
   /*
   // are we on a selected view ?

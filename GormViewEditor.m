@@ -1333,6 +1333,21 @@ static BOOL currently_displaying = NO;
   if ([theEvent modifierFlags] & NSControlKeyMask)
     // start a action/outlet connection
     {
+
+      // first we need to select ourself
+      // to do so we need to find our first ancestor that can handle a selection
+      NSView *view = [self superview];
+
+      while ((view != nil)
+	     && ([view respondsToSelector: @selector(selectObjects:)] == NO))
+	{
+	  view = [view superview];
+	}
+
+      if (view != nil)
+	[(id)view selectObjects: [NSArray arrayWithObject: self]];
+      
+      // now we can start the connection process
       [self startConnectingObject: _editedObject
 	    withEvent: theEvent];
     }

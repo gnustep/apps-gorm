@@ -1,3 +1,13 @@
+2002-12-14  Pierre-Yves Rivaille  <pyrivail@ens-lyon.fr>
+
+	* GormViewEditor.m
+	* GormInternalViewEditor.m
+	* GormViewWithContentViewEditor.m
+	Multiple selection through mouse dragging is back.
+	When attempting to start a connection, make sure the current
+	widget is selected.
+
+
 2002-12-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added code to scroll to the class name

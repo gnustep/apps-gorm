@@ -384,7 +384,9 @@
   NSRect        oldMovingFrame;
   NSRect        suggestedFrame;
   GormPlacementInfo *gpi;
-  
+  BOOL shouldUpdateSelection = YES;
+  BOOL mouseDidMove = NO;
+
 //    NSLog(@"hMOV %@", self);
 
   eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
@@ -415,10 +417,20 @@
 	  newSelection = [selection arrayByAddingObject: view];
 	  [self selectObjects: newSelection];
 	}
+      shouldUpdateSelection = NO;
     }
   else
     {
-      [self selectObjects: [NSArray arrayWithObject: view]];
+      if ([selection containsObject: view])
+	{
+	  if ([selection count] == 1)
+	    shouldUpdateSelection = NO;
+	}
+      else
+	{
+	  shouldUpdateSelection = NO;
+	  [self selectObjects: [NSArray arrayWithObject: view]];
+	}
     }
 
   superview = [view superview];
@@ -467,15 +479,14 @@
       suggestedFrame = oldMovingFrame;
     }
   
-  /* Set the arrows cursor in case it might be something else */
+  // Set the arrows cursor in case it might be something else
   [[NSCursor arrowCursor] push];
 
-  /*
-   * Track mouse movements until left mouse up.
-   * While we keep track of all mouse movements, we only act on a
-   * movement when a periodic event arives (every 20th of a second)
-   * in order to avoid excessive amounts of drawing.
-   */
+  
+  // Track mouse movements until left mouse up.
+  // While we keep track of all mouse movements, we only act on a
+  // movement when a periodic event arives (every 20th of a second)
+  // in order to avoid excessive amounts of drawing.
   [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
   e = [NSApp nextEventMatchingMask: eventMask
 	     untilDate: future
@@ -483,15 +494,32 @@
 	     dequeue: YES];
 
   eType = [e type];
+
+  {
+
+    while ((eType != NSLeftMouseUp) && !mouseDidMove)
+      {
+	if (eType != NSPeriodic)
+	  {
+	    point = [superview convertPoint: [e locationInWindow]
+			       fromView: nil];
+	    if (NSEqualPoints(mouseDownPoint, point) == NO)
+	      mouseDidMove = YES;
+	  }
+	e = [NSApp nextEventMatchingMask: eventMask
+		   untilDate: future
+		   inMode: NSEventTrackingRunLoopMode
+		   dequeue: YES];
+	eType = [e type];
+      }
+  }
+
   while (eType != NSLeftMouseUp)
     {
       if (eType != NSPeriodic)
 	{
 	  point = [superview convertPoint: [e locationInWindow]
 			     fromView: nil];
-	  /*
-	    point = _constrainPointToBounds(point, [superview bounds]);
-	  */
 	}
       else if (NSEqualPoints(point, lastPoint) == NO)
 	{
@@ -516,9 +544,7 @@
 
 	    if (dragStarted == NO)
 	      {
-		/*
-		 * Remove selection knobs before moving selection.
-		 */
+		// Remove selection knobs before moving selection.
 		dragStarted = YES;
 		_displaySelection = NO;
 		[self setNeedsDisplay: YES];
@@ -588,11 +614,17 @@
 
   if ([selection count] == 1)
     [[selection objectAtIndex: 0] setFrame: suggestedFrame];
+
+  if (mouseDidMove == NO && shouldUpdateSelection == YES)
+    {
+      [self selectObjects: [NSArray arrayWithObject: view]];
+    }
+
   [self setNeedsDisplay: YES];
   [NSEvent stopPeriodicEvents];
   [NSCursor pop];
   /* Typically after a view has been dragged in a window, NSWindow
-     sends a spurious moustEntered event. Sending the mouseUp
+     sends a spurious mouseEntered event. Sending the mouseUp
      event back to the NSWindow resets the NSWindow's idea of the
      last mouse point so it doesn't think that the mouse has
      entered the view (since it was always there, it's just that
@@ -602,17 +634,13 @@
   
   if (NSEqualPoints(point, mouseDownPoint) == NO)
     {
-      /*
-       * A subview was moved or resized, so we must mark the
-       * doucment as edited.
-       */
+      // A subview was moved or resized, so we must mark the doucment as edited.
       [document touch];
     }
 
   [superview unlockFocus];
-  /*
-   * Restore state to what it was on entry.
-   */
+
+  // Restore window state to what it was when entering the method.
   [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
  
 }
