@@ -27,9 +27,10 @@
 #include "../../GormPrivate.h"
 
 /*----------------------------------------------------------------------------
-  NSBox
-*/
+ * NSBox
+ */
 @implementation	NSBox (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormBoxAttributesInspector";
@@ -53,41 +54,45 @@
 {
   if (control == positionMatrix)
     {
-      [object setTitlePosition: [[control selectedCell] tag] ];
+      [object setTitlePosition: [[control selectedCell] tag]];
     }
   else if (control == borderMatrix)
     {
-      [object setBorderType: [[control selectedCell] tag] ];
+      [object setBorderType: [[control selectedCell] tag]];
     }
   else if (control == titleField)
     {
-      [object setTitle: [[control cellAtIndex: 0] stringValue] ];
+      [object setTitle: [[control cellAtIndex: 0] stringValue]];
     }
   else if (control == horizontalSlider)
     {
-      [object setContentViewMargins: NSMakeSize([control floatValue], [verticalSlider floatValue]) ];
+      [object setContentViewMargins:
+	NSMakeSize([control floatValue], [verticalSlider floatValue])];
     }
   else if (control == verticalSlider)
     {
-      [object setContentViewMargins: NSMakeSize([horizontalSlider floatValue], [control floatValue]) ];
-    }}
+      [object setContentViewMargins:
+	NSMakeSize([horizontalSlider floatValue], [control floatValue])];
+    }
+}
 
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-
-  [positionMatrix selectCellWithTag: [anObject titlePosition] ];
-  [borderMatrix selectCellWithTag: [anObject borderType] ];
-  [[titleField cellAtIndex: 0] setStringValue: [anObject title] ];
+    {
+      return;
+    }
+  [positionMatrix selectCellWithTag: [anObject titlePosition]];
+  [borderMatrix selectCellWithTag: [anObject borderType]];
+  [[titleField cellAtIndex: 0] setStringValue: [anObject title]];
   [horizontalSlider setFloatValue: [anObject contentViewMargins].width];
   [verticalSlider setFloatValue: [anObject contentViewMargins].height];
-  
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -101,8 +106,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormBoxInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormBoxInspector");
@@ -132,9 +138,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSButton
-*/
+ * NSButton
+ */
 @implementation	NSButton (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormButtonAttributesInspector";
@@ -153,7 +160,7 @@
   id typeButton;
 }
 
-- (void) _getValuesFromObject: anObject;
+- (void) _getValuesFromObject: (id)anObject;
 @end
 
 @implementation GormButtonAttributesInspector
@@ -170,7 +177,8 @@
 
   highlight = [cell highlightsBy];
   stateby = [cell showsStateBy];
-  NSDebugLog(@"highlight = %d, stateby = %d",[cell highlightsBy],[cell showsStateBy]);
+  NSDebugLog(@"highlight = %d, stateby = %d",
+    [cell highlightsBy],[cell showsStateBy]);
   
   type = NSMomentaryPushButton;
   if (highlight == NSChangeBackgroundCellMask)
@@ -180,14 +188,14 @@
       else 
 	type = NSOnOffButton;
     }
-  else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask) )
+  else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask))
     {
       if (stateby == NSNoCellMask)
 	type = NSMomentaryPushButton;
       else
 	type = NSPushOnPushOffButton;
     }
-  else if (highlight == (NSPushInCellMask | NSContentsCellMask) )
+  else if (highlight == (NSPushInCellMask | NSContentsCellMask))
     {
       type = NSToggleButton;
     }
@@ -199,34 +207,37 @@
 	type = NSToggleButton; /* Really switch or radio. What should it be? */
     }
   else
-    NSDebugLog(@"Ack! no button type");
+    {
+      NSDebugLog(@"Ack! no button type");
+    }
   return type;
 }
 
 /* We may need to reset some parameters based on the previous type */
-- (void) setButtonType: (NSButtonType)type forObject: button
+- (void) setButtonType: (NSButtonType)type forObject: (id)button
 {
-  [object setButtonType: type ];
+  [object setButtonType: type];
 }
 
-- (void) _setValuesFromControl: control
+- (void) _setValuesFromControl: (id)control
 {
   if (control == alignMatrix)
     {
-      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag] ];
+      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag]];
     }
   else if (control == iconMatrix)
     {
       [object setImagePosition: 
-		(NSCellImagePosition)[[control selectedCell] tag] ];
+	(NSCellImagePosition)[[control selectedCell] tag]];
     }
   else if (control == keyField)
     {
-      [object setKeyEquivalent: [[control cellAtIndex: 0] stringValue] ];
+      [object setKeyEquivalent: [[control cellAtIndex: 0] stringValue]];
     }
   else if (control == optionMatrix)
     {
       BOOL flag;
+
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
       [object setBordered: flag];
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
@@ -240,32 +251,36 @@
     }
   else if (control == tagField)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
   else if (control == titleForm)
     {
       NSString *string;
       NSImage *image;
-      [object setTitle: [[control cellAtIndex: 0] stringValue] ];
-      [object setAlternateTitle: [[control cellAtIndex: 1] stringValue] ];
+
+      [object setTitle: [[control cellAtIndex: 0] stringValue]];
+      [object setAlternateTitle: [[control cellAtIndex: 1] stringValue]];
       string = [[control cellAtIndex: 2] stringValue];
       if ([string length] > 0)
 	{   
-          image = [NSImage imageNamed: string ];
-	  [object setImage: image ];
+          image = [NSImage imageNamed: string];
+	  [object setImage: image];
 	}
       string = [[control cellAtIndex: 3] stringValue];
       if ([string length] > 0)
 	{
-	  image = [NSImage imageNamed: string ];
-	  [object setAlternateImage: image ];
+	  image = [NSImage imageNamed: string];
+	  [object setAlternateImage: image];
 	}
     }
   else if ([control isKindOfClass: [NSMenuItem class]])
     {
-      // We do receive the selected menu item here. Not the PopUpbutton 'typeButton'
-      // FIXME: Ideally we should test if the menu item belongs to the 'type button'
-      // control. How to do that?
+      /*
+       * We do receive the selected menu item here.
+       * Not the PopUpbutton 'typeButton'
+       * FIXME: Ideally we should test if the menu item belongs
+       * to the 'type button' control. How to do that?
+       */
       NSDebugLog(@"button type from OK= %d",[control tag]);
       [self setButtonType: [control tag] forObject: object];
     }
@@ -274,12 +289,14 @@
 - (void) _getValuesFromObject: anObject
 {
   NSImage *image;
+
   if (anObject != object)
-    return;
-  
-  [alignMatrix selectCellWithTag: [anObject alignment] ];
-  [iconMatrix selectCellWithTag: [anObject imagePosition] ];
-  [[keyField cellAtIndex: 0] setStringValue: [anObject keyEquivalent] ];
+    {
+      return;
+    } 
+  [alignMatrix selectCellWithTag: [anObject alignment]];
+  [iconMatrix selectCellWithTag: [anObject imagePosition]];
+  [[keyField cellAtIndex: 0] setStringValue: [anObject keyEquivalent]];
   
   [optionMatrix deselectAllCells];
   if ([anObject isBordered])
@@ -293,30 +310,39 @@
   if ([anObject isTransparent])
     [optionMatrix selectCellAtRow: 4 column: 0];
 
-  [[tagField cellAtIndex: 0] setIntValue: [anObject tag] ];
+  [[tagField cellAtIndex: 0] setIntValue: [anObject tag]];
 
-  [[titleForm cellAtIndex: 0] setStringValue: [anObject title] ];
-  [[titleForm cellAtIndex: 1] setStringValue: [anObject alternateTitle] ];
+  [[titleForm cellAtIndex: 0] setStringValue: [anObject title]];
+  [[titleForm cellAtIndex: 1] setStringValue: [anObject alternateTitle]];
+
   image = [anObject image];
-  if (image)
-    [[titleForm cellAtIndex: 2] setStringValue: [image name] ];
+  if (image != nil)
+    {
+      [[titleForm cellAtIndex: 2] setStringValue: [image name]];
+    }
   else
-    [[titleForm cellAtIndex: 2] setStringValue: @""];
+    {
+      [[titleForm cellAtIndex: 2] setStringValue: @""];
+    }
+
   image = [anObject alternateImage];
-  if (image)
-    [[titleForm cellAtIndex: 3] setStringValue: [image name] ];
+  if (image != nil)
+    {
+      [[titleForm cellAtIndex: 3] setStringValue: [image name]];
+    }
   else
-    [[titleForm cellAtIndex: 3] setStringValue: @"" ];
+    {
+      [[titleForm cellAtIndex: 3] setStringValue: @""];
+    }
 
   [typeButton selectItemAtIndex: 
-		[typeButton indexOfItemWithTag: 
-			      [self buttonTypeForObject: anObject ] ] ];
-
+    [typeButton indexOfItemWithTag: [self buttonTypeForObject: anObject]]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -331,8 +357,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormButtonInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormButtonInspector");
@@ -373,6 +400,13 @@
 
 - (void) setObject: (id)anObject
 {
+  if ([self object] != anObject)
+    {
+      /*
+       * Ensure textfields in title form are written to old object.
+       */
+      [self _setValuesFromControl: titleForm];
+    }
   [super setObject: anObject];
   [self _getValuesFromObject: anObject];
 }
@@ -380,9 +414,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSButtonCell
-*/
+ * NSButtonCell
+ */
 @implementation	NSButtonCell (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormButtonCellAttributesInspector";
@@ -399,9 +434,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSCell
-*/
+ * NSCell
+ */
 @implementation	NSCell (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormCellAttributesInspector";
@@ -422,24 +458,26 @@
     {
       [object setEnabled: ([control state] == NSOffState)];
     }
- else if (control == tagForm)
+  else if (control == tagForm)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
 }
 
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-
+    {
+      return;
+    }
   [disabledSwitch setState: ([anObject isEnabled]) ? NSOffState : NSOnState];  
-  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -453,8 +491,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormCellInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormCellInspector");
@@ -483,13 +522,15 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSForm
-*/
+ * NSForm
+ */
 @implementation	NSForm (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormFormAttributesInspector";
 }
+
 @end
 
 @interface GormFormAttributesInspector: IBInspector
@@ -500,7 +541,6 @@
   id tagForm;
   id textMatrix;
   id titleMatrix;
-
 }
 @end
 
@@ -508,8 +548,9 @@
 
 - (void) _setValuesFromControl: control
 {
-
-  int rows,cols,i;
+  int	rows;
+  int	cols;
+  int	i;
       
   [object getNumberOfRows: &rows columns: &cols];
   
@@ -527,26 +568,34 @@
 
       // Cells tags = Positions?
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      if (flag == YES) {
-        for (i=0; i<rows; i++)
-          [[object cellAtIndex: i] setTag: i];
-      }
+      if (flag == YES)
+	{
+	  for (i = 0; i < rows; i++)
+	    {
+	      [[object cellAtIndex: i] setTag: i];
+	    }
+	}
 
       // Editable?
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
-      for (i=0; i<rows; i++)
-        [[object cellAtIndex: i] setEditable: flag];
+      for (i = 0; i < rows; i++)
+	{
+	  [[object cellAtIndex: i] setEditable: flag];
+	}
 
       // Selectable?
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      for (i=0; i<rows; i++)
-        [[object cellAtIndex: i] setSelectable: flag];
+      for (i = 0; i < rows; i++)
+	{
+	  [[object cellAtIndex: i] setSelectable: flag];
+	}
 
       // Scrollable?
       flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
-      for (i=0; i<rows; i++)
-        [[object cellAtIndex: i] setScrollable: flag];
- 
+      for (i = 0; i < rows; i++)
+	{
+	  [[object cellAtIndex: i] setScrollable: flag];
+	}
     }
   else if (control == textMatrix)
     {
@@ -555,24 +604,24 @@
   else if (control == titleMatrix)
     {
       [object setTitleAlignment: (NSTextAlignment)[[control selectedCell] tag]];
-      
     }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
 }
 
-- (void) _getValuesFromObject: anObject
+- (void) _getValuesFromObject: (id)anObject
 {
   if (anObject != object)
-    return;
-
-  [backgroundColorWell setColor: [anObject backgroundColor] ];
+    {
+      return;
+    }
+  [backgroundColorWell setColor: [anObject backgroundColor]];
   [drawsBackgroundSwitch setState: 
-		     ([anObject drawsBackground]) ? NSOnState : NSOffState];
-  [textMatrix selectCellWithTag: [[anObject  cellAtIndex: 0] alignment] ];
-  [titleMatrix selectCellWithTag: [[anObject cellAtIndex: 0] titleAlignment] ];
+    ([anObject drawsBackground]) ? NSOnState : NSOffState];
+  [textMatrix selectCellWithTag: [[anObject  cellAtIndex: 0] alignment]];
+  [titleMatrix selectCellWithTag: [[anObject cellAtIndex: 0] titleAlignment]];
   
   [optionMatrix deselectAllCells];
   if ([[anObject cellAtIndex: 0] isEditable])
@@ -584,27 +633,33 @@
 
   // Cells tags = position is not directly stored in the Form so guess it.
   {
-    int rows,cols,i;
-    BOOL flag;
+    int		rows;
+    int		cols;
+    int		i;
+    BOOL	flag;
     
     [anObject getNumberOfRows: &rows columns: &cols];
 
     i = 0;    
-    do {
-        flag = ([[anObject cellAtIndex: i] tag] == i);
-    } while ( flag && (++i < rows)); 
+    do
+      {
+	flag = ([[anObject cellAtIndex: i] tag] == i);
+      }
+    while (flag && (++i < rows)); 
 
     if (flag)
+      {
         [optionMatrix selectCellAtRow: 0 column: 0];
+      }
   }
   
-
-  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -618,8 +673,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormFormInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormFormInspector");
@@ -649,13 +705,15 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSMatrix
-*/
+ * NSMatrix
+ */
 @implementation	NSMatrix (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormMatrixAttributesInspector";
 }
+
 @end
 
 @interface GormMatrixAttributesInspector : IBInspector
@@ -677,25 +735,31 @@
 
 - (void) _setValuesFromControl: control
 {
-  
   if (control == autosizeSwitch)
     {
       [object setAutosizesCells: ([control state] == NSOnState)];
     }
   else if (control == autotagSwitch)
     {
-      int rows,cols,i;
+      int	rows;
+      int	cols;
+      int	i;
+
       [object getNumberOfRows: &rows columns: &cols];
 
       if ((rows == 1) && (cols > 1))
         {
-          for (i=0; i<cols; i++)
-            [[object cellAtRow:0 column:i] setTag: i];
+          for (i = 0; i < cols; i++)
+	    {
+	      [[object cellAtRow:0 column:i] setTag: i];
+	    }
         }
-      else if ( (rows > 1) && (cols ==1))
+      else if ((rows > 1) && (cols ==1))
         {
-          for (i=0; i<rows; i++)
-            [[object cellAtRow:i column:0] setTag: i];
+          for (i = 0; i < rows; i++)
+	    {
+	      [[object cellAtRow:i column:0] setTag: i];
+	    }
         }
     }
   else if (control == backgroundColorWell)
@@ -708,7 +772,7 @@
     }
   else if (control == modeMatrix)
     {
-      [(NSMatrix *)object setMode: [[control selectedCell] tag] ];
+      [(NSMatrix *)object setMode: [[control selectedCell] tag]];
     }
   else if (control == propagateSwitch)
     {
@@ -721,50 +785,59 @@
     }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
 
-  // prototypeMatrix
-  // If prototype cell is set show it else show a matrix cell
+  /*
+   * prototypeMatrix
+   * If prototype cell is set show it else show a matrix cell
+   */
   if ([object prototype] == nil)
-    [prototypeMatrix putCell: [object cellAtRow:0 column:0] atRow:0 column:0];
+    {
+      [prototypeMatrix putCell: [object cellAtRow:0 column:0] atRow:0 column:0];
+    }
    else
-     [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
-  
+    {
+       [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
+    }
 }
 
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-  
+    {
+      return;
+    } 
   [autosizeSwitch setState: 
     ([anObject autosizesCells]) ? NSOnState : NSOffState];
 
   {
-    int rows,cols;
+    int	rows;
+    int cols;
+
     [anObject getNumberOfRows: &rows columns: &cols];
  
-    if ( (rows == 1 && cols>1) || (cols == 1 && rows>1))
+    if ((rows == 1 && cols > 1) || (cols == 1 && rows > 1))
       [autotagSwitch setEnabled: YES];
     else
       [autotagSwitch setEnabled: NO];
   }
 
-  [backgroundColorWell setColor: [anObject backgroundColor] ];
+  [backgroundColorWell setColor: [anObject backgroundColor]];
   [drawsBackgroundSwitch setState: 
-		     ([anObject drawsBackground]) ? NSOnState : NSOffState];
+    ([anObject drawsBackground]) ? NSOnState : NSOffState];
 
-  [modeMatrix selectCellWithTag: [(NSMatrix *)anObject mode] ];
+  [modeMatrix selectCellWithTag: [(NSMatrix *)anObject mode]];
   
   [selRectSwitch setState: 
     ([anObject isSelectionByRect]) ? NSOnState : NSOffState];
-  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag] ];
+  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -779,8 +852,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormMatrixInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormMatrixInspector");
@@ -809,13 +883,15 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSPopUpButton
-*/
+ * NSPopUpButton
+ */
 @implementation	NSPopUpButton (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormPopUpButtonAttributesInspector";
 }
+
 @end
 
 @interface GormPopUpButtonAttributesInspector : IBInspector
@@ -832,31 +908,33 @@
 {
   if (control == typeMatrix)
     {
-      [object setPullsDown: [[control selectedCell] tag] ];
+      [object setPullsDown: [[control selectedCell] tag]];
     }
   else if (control == disabledSwitch)
     {
-      [object setAutoenablesItems: ([control state] == NSOffState) ];
+      [object setAutoenablesItems: ([control state] == NSOffState)];
     }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
 }
 
-- (void) _getValuesFromObject: anObject
+- (void) _getValuesFromObject: (id)anObject
 {
   if (anObject != object)
-    return;
-
-  [typeMatrix selectCellWithTag: [anObject pullsDown] ];
-  [disabledSwitch setState: ![anObject autoenablesItems] ];
-  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag] ];
+    {
+      return;
+    }
+  [typeMatrix selectCellWithTag: [anObject pullsDown]];
+  [disabledSwitch setState: ![anObject autoenablesItems]];
+  [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -866,11 +944,13 @@
   RELEASE(window);
   [super dealloc];
 }
+
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormPopUpButtonInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormPopUpButtonInspector");
@@ -901,9 +981,10 @@
 
 
 /*----------------------------------------------------------------------------
-  NSSlider
-*/
+ * NSSlider
+ */
 @implementation	NSSlider (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormSliderAttributesInspector";
@@ -937,7 +1018,6 @@
       [object setDoubleValue: [[control cellAtIndex: 1] doubleValue]];
       [object setMaxValue: [[control cellAtIndex: 2] doubleValue]];
     }
-
   else if (control == optionMatrix)
     {
        BOOL flag;
@@ -958,16 +1038,16 @@
     }
   else if (control == tagForm)
     {
-    [[object cell] setTag: [[control cellAtIndex: 0] intValue]];
+      [[object cell] setTag: [[control cellAtIndex: 0] intValue]];
     }
-
 }
 
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-
+    {
+      return;
+    }
   [[valueForm cellAtIndex: 0] setDoubleValue: [anObject minValue]];
   [[valueForm cellAtIndex: 1] setDoubleValue: [anObject doubleValue]];
   [[valueForm cellAtIndex: 2] setDoubleValue: [anObject maxValue]];
@@ -980,16 +1060,16 @@
 
 
   [[altIncrementForm cellAtIndex: 0] setDoubleValue: 
-			       [[anObject cell] altIncrementValue] ];
+			       [[anObject cell] altIncrementValue]];
   [[knobThicknessForm cellAtIndex: 0] setFloatValue: 
-			       [[anObject cell] knobThickness] ];
-  [[tagForm cellAtIndex: 0] setIntValue: [[anObject cell] tag] ];
-  
+			       [[anObject cell] knobThickness]];
+  [[tagForm cellAtIndex: 0] setIntValue: [[anObject cell] tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -1003,8 +1083,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormSliderInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormSliderInspector");
@@ -1032,9 +1113,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSStepper
-*/
+ * NSStepper
+ */
 @implementation	NSStepper (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormStepperAttributesInspector";
@@ -1044,6 +1126,7 @@
 {
   return nil;
 }
+
 @end
 
 @interface GormStepperAttributesInspector : IBInspector
@@ -1110,8 +1193,9 @@
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-
+    {
+      return;
+    }
   [valueField setDoubleValue: [anObject doubleValue]];
   [minimumValueField setDoubleValue: [anObject minValue]];
   [maximumValueField setDoubleValue: [anObject maxValue]];
@@ -1128,6 +1212,7 @@
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -1141,8 +1226,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
+    {
+      return nil;
+    }
   if ([NSBundle loadNibNamed: @"GormStepperInspector" owner: self] == NO)
     {
       NSLog(@"Could not gorm GormStepperAttributesInspector");
@@ -1176,9 +1262,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSStepperCell
-*/
+ * NSStepperCell
+ */
 @implementation	NSStepperCell (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormStepperCellAttributesInspector";
@@ -1195,9 +1282,10 @@
 @end
 
 /*----------------------------------------------------------------------------
-  NSTextField
-*/
+ * NSTextField
+ */
 @implementation	NSTextField (IBInspectorClassNames)
+
 - (NSString*) inspectorClassName
 {
   return @"GormTextFieldAttributesInspector";
@@ -1224,7 +1312,7 @@
 {
   if (control == alignMatrix)
     {
-      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag] ];
+      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag]];
     }
   else if (control == backgroundColor)
     {
@@ -1241,6 +1329,7 @@
   else if (control == optionMatrix)
     {
       BOOL flag;
+
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES :NO;
       [object setEditable: flag];
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES :NO;
@@ -1254,34 +1343,38 @@
       BOOL bordered, bezeled;
 
       if ([[control cellAtRow: 0 column: 0] state] == NSOnState)
-        bordered = bezeled = NO;
+	{
+	  bordered = bezeled = NO;
+	}
       else if ([[control cellAtRow: 0 column: 1] state] == NSOnState)
         {
           bordered = YES;
           bezeled = NO;
         } 
       else if ([[control cellAtRow: 0 column: 2] state] == NSOnState)
-        bordered = NO; bezeled = YES;
-
+	{
+	  bordered = NO; bezeled = YES;
+	}
       [object setBordered: bordered];
       [object setBezeled: bezeled];
-   }
+    }
   else if (control == tagForm)
     {
-      [object setTag: [[control cellAtIndex: 0] intValue] ];
+      [object setTag: [[control cellAtIndex: 0] intValue]];
     }
 }
 
 - (void) _getValuesFromObject: anObject
 {
   if (anObject != object)
-    return;
-  
-  [alignMatrix selectCellWithTag: [anObject alignment] ];
-  [backgroundColor setColor: [anObject backgroundColor] ];
-  [textColor setColor: [anObject textColor] ];
+    {
+      return;
+    } 
+  [alignMatrix selectCellWithTag: [anObject alignment]];
+  [backgroundColor setColor: [anObject backgroundColor]];
+  [textColor setColor: [anObject textColor]];
   [drawsBackground setState: 
-		     ([anObject drawsBackground]) ? NSOnState : NSOffState];
+    ([anObject drawsBackground]) ? NSOnState : NSOffState];
   
   [optionMatrix deselectAllCells];
   if ([anObject isEditable])
@@ -1295,7 +1388,9 @@
   NSDebugLog(@"isBezeled: %d",[anObject isBezeled]);
   
   if ([anObject isBordered] == YES)
-    [borderMatrix selectCellAtRow: 0 column: 1];
+    {
+      [borderMatrix selectCellAtRow: 0 column: 1];
+    }
   else
     {
       if ([anObject isBezeled] == YES)
@@ -1304,14 +1399,13 @@
         [borderMatrix selectCellAtRow: 0 column: 0];
     }
 
- 
-
-  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag] ];
+  [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+
   [self _setValuesFromControl: notifier];
 }
 
@@ -1326,7 +1420,9 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
+    {
+      return nil;
+    }
 
   if ([NSBundle loadNibNamed: @"GormTextFieldInspector" owner: self] == NO)
     {
