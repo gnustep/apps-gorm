@@ -47,6 +47,7 @@
 		    screen: (NSScreen*)aScreen
 {
   _gormStyleMask = aStyle;
+  [self setReleasedWhenClosed: NO];
   return [super initWithContentRect: contentRect
 		styleMask: NSTitledWindowMask | NSClosableWindowMask
 		| NSResizableWindowMask | NSMiniaturizableWindowMask
