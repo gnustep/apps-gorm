@@ -380,6 +380,16 @@ static NSImage	*classesImage = nil;
   NSEnumerator	*en;
   int		row = 0;
   
+  if(className != nil)
+    {
+      if([className isEqualToString: @"CustomView"])
+	return; // return only if it is a special class name...
+    }
+  else
+    {
+      return; // return if it is nil
+    }
+
   newClassName = [GormClassManager correctClassName: className];
   classes = [[self classManager] allSuperClassesOf: newClassName];
   en = [classes objectEnumerator];

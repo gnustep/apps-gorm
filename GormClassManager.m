@@ -1356,11 +1356,14 @@
 - (NSArray *) allSuperClassesOf: (NSString *)className
 {
   NSMutableArray *classes = [NSMutableArray array];
-  while (![className isEqualToString: @"NSObject"])
+  while (![className isEqualToString: @"NSObject"] && className != nil)
     {
       NSDictionary *dict = [self classInfoForClassName: className];
-      className = [dict objectForKey: @"Super"];
-      [classes insertObject: className atIndex: 0];
+      if(dict != nil)
+	{
+	  className = [dict objectForKey: @"Super"];
+	  [classes insertObject: className atIndex: 0];
+	}
     }
   return classes;
 }
