@@ -188,7 +188,7 @@
   [m addItemWithTitle: @"Save All" 
 	       action: @selector(saveAllDocuments:)
 	keyEquivalent: @""];
-  [m addItemWithTitle: @"revert To Saved" 
+  [m addItemWithTitle: @"Revert To Saved" 
 	       action: @selector(revertDocumentToSaved:)
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Close" 
