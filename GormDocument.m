@@ -352,6 +352,8 @@ static NSImage	*classesImage = nil;
 		  template = [[GormNSMenuTemplate alloc] initWithObject: obj
 							 className: className];
 		}
+
+	      RETAIN(template);
 	      [nameTable setObject: template forKey: key];
 	    }
 	}

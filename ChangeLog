@@ -1,7 +1,14 @@
+
+2002-11-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: +[GormDocument _replaceObjectsWithTemplates]: 
+	needed to retain the template prevent corruption when 
+	saving the data.
+	
 2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormObjectEditor.m: +[GormObjectEditor initialize]: Corrected how the map table
-	is created to prevent a crash. 
+	* GormObjectEditor.m: +[GormObjectEditor initialize]: Corrected 
+	how the map table is created to prevent a crash. 
 
 2002-11-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
