@@ -264,7 +264,6 @@
     {
       current = [anObj selectedColumn];
     }
-NSLog(@"SetCurrentInspector: %d", current);
 
   /*
    * Set panel title for the type of object being inspected.
@@ -312,7 +311,6 @@ NSLog(@"SetCurrentInspector: %d", current);
     }
 
   newView = [[inspector window] contentView];
-NSLog(@"NewView %@", newView);
   if (newView != nil)
     {
       NSView	*outer = [panel contentView];
