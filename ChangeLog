@@ -1,5 +1,9 @@
 2003-09-01  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Version 0.3.1
+
+2003-09-01  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormViewEditor.m: Added code to allow saving of image as part of 
 	the view.  This provides a fix for Report #4390 and #4852.
 

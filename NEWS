@@ -1,3 +1,14 @@
+Noteworthy changes in version `0.3.1'
+=====================================
+
+   * New custom class system.
+
+   * Images now persist correctly when added to a button or view.
+
+   * Fixed DND
+
+   * Various bugfixes
+
 Noteworthy changes in version `0.3.0'
 =====================================
 

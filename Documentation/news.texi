@@ -4,6 +4,18 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.3.1}
+
+@itemize @bullet
+@item New custom class system.
+@item Images now persist correctly when added to a button or view.
+@item Fixed DND
+@item Various bugfixes
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.3.0}
 
 @itemize @bullet
@@ -16,9 +28,6 @@
 @item Removed all warnings from the code.
 @item various bug fixes.
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.2.5}.
 
