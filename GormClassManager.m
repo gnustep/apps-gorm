@@ -649,8 +649,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	  [self loadFromFile: path];
 	  customClasses = RETAIN([NSMutableArray arrayWithCapacity: 1]);
 	  customClassMap = RETAIN([NSMutableDictionary dictionaryWithCapacity: 10]); 
-	  // NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
-	  //			      NSObjectMapValueCallBacks, 128, [self zone]);
+	  
+	  // add first responder so that it may be edited.
+	  [customClasses addObject: @"FirstResponder"];
 	}
     }
   
@@ -683,6 +684,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [self allSubclassesOf: superClass
 	referenceClassList: customClasses
 	intoArray: array];
+
+  // add known allowable subclasses to the list.
+  if([superClass isEqualToString: @"NSWindow"])
+    {
+      [array addObject: @"NSPanel"];
+    }
+  else if([superClass isEqualToString: @"NSTextField"])
+    {
+      [array addObject: @"NSSecureTextField"];
+    }
+
   return array;
 }
 
@@ -935,17 +947,22 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     {
       NSDictionary		*classInfo = [dict objectForKey: key];
       NSMutableDictionary	*newInfo;
+      NSMutableDictionary       *oldInfo;
       id			obj;
 
       newInfo = [NSMutableDictionary new];
+      oldInfo = [classInformation objectForKey: key];
+    
       [classInformation setObject: newInfo forKey: key];
       RELEASE(newInfo);
-
+      
       obj = [classInfo objectForKey: @"Super"];
       if (obj != nil)
 	{
 	  [newInfo setObject: obj forKey: @"Super"];
 	}
+      
+      // outlets
       obj = [classInfo objectForKey: @"Outlets"];
       if (obj != nil)
 	{
@@ -954,6 +971,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	  [newInfo setObject: obj forKey: @"Outlets"];
 	  RELEASE(obj);
 	}
+
+      // actions
       obj = [classInfo objectForKey: @"Actions"];
       if (obj != nil)
 	{
@@ -966,11 +985,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return YES;
 }
 
+- (void) _convertDictionary: (NSMutableDictionary *)dict
+{
+  NSMutableArray *array = [classInformation allKeys];
+  [dict removeObjectsForKeys: array];
+}
+
 // this method will load the custom classes and merge them with the
 // Class information loaded at initialization time.
 - (BOOL)loadCustomClasses: (NSString *)path
 {
-  NSDictionary		*dict;
+  NSMutableDictionary		*dict;
 
   NSLog(@"Load custom classes from file %@",path);
 
@@ -990,11 +1015,12 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   if([[dict allKeys] containsObject: @"NSObject"])
     {
       NSLog(@"The file being loaded is in the old .classes format.  Updating..");
+      [self _convertDictionary: dict];
     }
 
   [customClasses addObjectsFromArray: [dict allKeys]];
   [classInformation addEntriesFromDictionary: dict];
-  
+
   return YES;
 }
 

@@ -1,3 +1,14 @@
+2002-10-31  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -[GormDocument saveDocument:] made changes to allow
+	saving of .gorm files as directories.  -[GormDocument loadDocument:]
+	made necessary modifications to load .gorm directory contents.  Also
+	made certain that old gorm files are loaded properly and converted
+	when saved.
+	* GormClassManager.m: Made modifications to allow NSSecureTextField
+	to substitute for NSTextField and NSPanel to substitute for NSWindow.
+	Also made changes to allow FirstResponder to modified.
+
 2002-10-29  Adam Fedor  <fedor@gnu.org>
 
 	* GormMatrixEditor.m (-_constrainedFrame:framewithEvent:andKnob:knob): 

@@ -1570,8 +1570,31 @@ static NSImage	*classesImage = nil;
   id <IBConnectors>	con;
   NSString		*name;
   NSString              *ownerClass;
+  NSFileManager	        *mgr = [NSFileManager defaultManager];
+  BOOL                  isDir = NO;
 
-  data = [NSData dataWithContentsOfFile: aFile];
+  if([mgr fileExistsAtPath: aFile isDirectory: &isDir])
+    {
+      // if the data is in a directory, then load from objects.gorm in the directory
+      if(isDir == NO)
+	{
+	  data = [NSData dataWithContentsOfFile: aFile];
+	  NSDebugLog(@"Loaded data from file...");
+	}
+      else
+	{
+	  NSString *newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
+	  data = [NSData dataWithContentsOfFile: newFileName];
+	  NSDebugLog(@"Loaded data from %@...",newFileName);
+	}
+    }
+  else
+    {
+      // no file exists...
+      data = nil;
+    }
+  
+  // check the data...
   if (data == nil)
     {
       NSRunAlertPanel(NULL,
@@ -1614,13 +1637,27 @@ static NSImage	*classesImage = nil;
 		       @"OK", NULL, NULL);
       return nil;
     }
-  if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
-					  stringByAppendingPathExtension: @"classes"]])
+  
+  if(isDir == NO)
     {
-      NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
-	@"You won't be able to edit connections on custom classes", 
-	@"OK", NULL, NULL);
+      if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
+					      stringByAppendingPathExtension: @"classes"]])
+	{
+	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
+			  @"You won't be able to edit connections on custom classes", 
+			  @"OK", NULL, NULL);
+	}
     }
+  else
+    {
+      if (![classManager loadCustomClasses: [aFile stringByAppendingPathComponent: @"data.classes"]]) 
+	{
+	  NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
+			  @"You won't be able to edit connections on custom classes", 
+			  @"OK", NULL, NULL);
+	}
+    }
+
   [classesView reloadData];
 
   /*
@@ -2182,6 +2219,11 @@ static NSImage	*classesImage = nil;
   BOOL			archiveResult;
   NSArchiver            *archiver;
   NSMutableData         *archiverData;
+  NSString              *gormPath;
+  NSString              *classesPath;
+  NSFileManager         *mgr = [NSFileManager defaultManager];
+  BOOL                  isDir;
+  BOOL                  fileExists;
 
   if (documentPath == nil)
     {
@@ -2195,6 +2237,10 @@ static NSImage	*classesImage = nil;
 
   NSDebugLog(@"nametable : %@", nameTable);
   NSDebugLog(@"connections : %@", connections);
+  
+  // set up the necessary paths...
+  gormPath = [documentPath stringByAppendingPathComponent: @"objects.gorm"];
+  classesPath = [documentPath stringByAppendingPathComponent: @"data.classes"];  
 
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
@@ -2235,13 +2281,46 @@ static NSImage	*classesImage = nil;
 	    intoClassName: @"NSMenuTemplate"];
 
   [archiver encodeRootObject: self];
-  archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
-  //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
-  RELEASE(archiver);
-  if (archiveResult) 
-    archiveResult = [classManager saveToFile:
-      [[documentPath stringByDeletingPathExtension] 
-      stringByAppendingPathExtension: @"classes"]];
+
+  fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
+  if(fileExists)
+    {
+      if(isDir == NO)
+	{
+	  NSString *saveFilePath = [documentPath stringByAppendingPathExtension: @"save"];
+
+	  // move the old file to something...
+	  if(![mgr movePath: documentPath toPath: saveFilePath handler: nil])
+	    {
+	      NSLog(@"Error moving old %@ file to %@",documentPath,saveFilePath);
+	    }
+	  
+	  // create the new directory..
+	  archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
+	}
+      else
+	{
+	  // set to yes since the directory is already present.
+	  archiveResult = YES;
+	}
+    }
+  else
+    {
+      // create the directory...
+      archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
+    }
+
+  if(archiveResult)
+    {
+      // save the data...
+      archiveResult = [archiverData writeToFile: gormPath atomically: YES]; 
+      RELEASE(archiver);
+      if (archiveResult) 
+	{
+	  // save the custom classes.. and we're done...
+	  archiveResult = [classManager saveToFile: classesPath];
+	}
+    }
 
   [self endArchiving];
 
