@@ -62,6 +62,7 @@ Free Software Foundation instead of in the original English.
 @c @subtitle last updated February, 2001
 @subtitle Version @value{GORM-VERSION}
 @subtitle (for use with @samp{gnustep-gui} version @value{GNUSTEP-VERSION})
+@subtitle (and with @samp{gnustep-base} version 1.10.0)
 @author Gregory John Casamento <greg_casamento@@yahoo.com>
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
@@ -272,17 +273,45 @@ This item toggles between Enable Guideline and Disable Guideline.  This allows t
 
 @end itemize
 
-@item Classes
+@item Classes @*
+Contains menus for working with classes.
+@itemize @bullet
+@item Create Subclass @*
+Creates a subclass of the currently selected class in the current document classes view.
+@item Load Class @*
+Loads a class from a .h file into the current document.
+@item Create Class Files @*
+Generates a .h and .m file from the currently selected class in the current document classes view.
+@item Instantiate @*
+Creates an instance of the selected class in the current document classes view.
+@item Add Outlet/Action @*
+Adds an outlet or an action depending on what is selected in the document classes view.  If the outlet icon is selected, it will add an outlet, if it the action icon is selected it will add an action.
+@item Remove @*
+Removes the currently selected outlet, action or class.
+@end itemize
 
-@item Tools
+@item Tools @*
+Contains the inspector and the palette menus
+@itemize @bullet
+@item Inspector @*
+Shows the inspector
+@item Palette @*
+Shows the palette
+@item Load Palette @*
+Opens a file panel and allows the user to load a palette into Gorm.
+@end itemize
 
-@item Windows
+@item Windows @*
+Shows currently open windows.
 
-@item Services
+@item Services @*
+Shows currently available services.
 
-@item Hide
+@item Hide @*
+Hides the application.
 
-@item Quit
+@item Quit @*
+Quits the application.
 
 @end itemize
 
@@ -293,7 +322,7 @@ This item toggles between Enable Guideline and Disable Guideline.  This allows t
 * Preferences::
 @end menu
 
-Notes on implementation
+@section Notes on implementation
 
 The IB documentation on how object selection is managed and how editors and
 inspectors are used is unclear ... so I've gone my own way.
@@ -313,9 +342,7 @@ the selection owner (normally the editor itsself) as the notification owner.
 The main application watches for these notifications in order to keep track
 of who has the selection.
 
-
-
-Connections
+@section Connections
 
 The connection API is the same as that for IB, but with the extension that the
 document object must implement [-windowAndRect:forObject:] to return the
@@ -325,20 +352,16 @@ the object (in window base coordinates).
 This information is needed by Gorm so that it can mark the connection.
 
 The editors mananging the drag-and-drop operation for a connection must call
-[NSApp -displayConnectionBetween:and:] to tell Gorm to update its display.
-This method sets the values currently returned by
-[NSApp -connectSource] and [NSApp -connectDestination]
+@samp{[NSApp -displayConnectionBetween:and:]} to tell Gorm to update its display.  This method sets the values currently returned by @samp{[NSApp -connectSource]} and @samp{[NSApp -connectDestination]}.
 
 @node Preferences, , Implementation, Implementation
-@unnumbered Preferences
+@chapter Preferences
 @cindex preferences
 @cindex defaults
 
-The preferences panel contains a number of use customizable options which can
-be used to modify the behavior of Gorm.
+The preferences panel contains a number of useful customizable options which can be used to modify the behavior of Gorm.
 
 Some of these defaults can be safely modified from the command line by the user.
-
 @itemize @bullet
 
 @item PreloadHeaders @*
@@ -357,15 +380,19 @@ Determines if the old .gorm is moved to .gorm~ when the modified version is save
 
 @end itemize
 
-@chapter My First Application
+@chapter Basic Concepts
 
-This chapter will cover the steps taken by the user to create his/her first application with Gorm.
+This chapter will explain some of the basic things you need to understand before starting work on a new application.
 
 @subsection Getting Started
 
 First you need to understand a few basic concepts.   Gorm's main window includes a few standard entries which must be explained before we can proceed.
 
 They are:
+
+@cindex NSOwner
+@cindex NSFirst
+@cindex NSFont
 
 @itemize @bullet
 
@@ -386,10 +413,12 @@ NSOwner is the class which ``owns'' the interface.  This is, by default, NSAppli
 NSFirst is your interface to the responder chain.  NSFirst is representative of the current ``first responder'' in the application.  When you want a message, such as a changeFont: message, to go to the current first responder from, say, a menu, you connect the menu item to the NSFirst object in the document window.  By doing this, it means that whichever object has first responder status at that time in the application will become the reciever of the ``changeFont:'' message. 
 
 @subsection Responders
+@cindex NSResponder
 
 A responder is any subclass of NSResponder.  This includes NSWindow, NSView and all of the NSControl subclasses.
 
 @subsection The Responder Chain
+@cindex Responder Chain
 
 The responder chain is a sequence of objects which are called to determine where a message sent to the first responder will go.   A message invoked on the first responder will be invoked on the first object in the responder chain which responds to that message.
 
@@ -415,11 +444,29 @@ If all of the options in this list are exhausted, it then gives up and returns n
 
 NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
 
-@section Creating A New Application
+@chapter Creating A New Application
+
+If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.
 
 First you need to start Gorm up.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer. 
 
-You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window. 
+You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window.
+
+@chapter Advanced Topics
+
+This section will cover some topics which won't be of general interest to most users.   The details in this section pertain to the internal workings of Gorm.
+
+@section Gorm file format
+
+The current Gorm file format is basically just a set of objects, encoded one after another in a continuous stream with some markers indicating when a new class starts or which class is encoded. 
+
+@subsection The Name Table
+
+Each object in the .gorm file has a name assigned to it by the application.  This allows Gorm to refer to the objects by a name once they are loaded rather than an address.  Each name is associated with it's object in a dictionary which preserves the overall structure of the GUI which has been created.   
+
+@subsection The Custom Class Table
+
+This is only used when the user has associated a custom class with an existing instance in the gorm file.  If the user has, for instance, added an NSWindow to the gorm, he/she can use the custom class inspector to select a subclass of NSWindow to change to.   Upon saving the Gorm
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index
