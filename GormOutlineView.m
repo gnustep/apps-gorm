@@ -151,8 +151,7 @@ static NSColor *darkGreyBlueColor = nil;
     {
       [super collapseItem: item
 	     collapseChildren: collapseChildren];
-    } else
-      NSLog(@"Cannot collapse while editing");
+    }
 }
 
 - (void)expandItem:(id)item expandChildren:(BOOL)expandChildren
@@ -161,8 +160,7 @@ static NSColor *darkGreyBlueColor = nil;
     {
       [super expandItem: item
 	     expandChildren: expandChildren];
-    } else
-      NSLog(@"Cannot expand while editing");
+    } 
 }
 
 - (BOOL)_isOutletOrActionOfItemBeingEdited: (NSString *)name

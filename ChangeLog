@@ -1,4 +1,11 @@
 2002-12-15  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Changed NSLog to NSDebugLog.
+	* GormCustomClassInspector.m: Changed NSLog calls to NSDebugLog.
+	* GormDocument.m: Changed NSLog calls to NSDebugLog where appropriate.
+	* GormOutlineView.m: removed some uneeded NSLog calls.
+	
+2002-12-15  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* Gorm.m: Minor cleanup.
 	* GormClassManager.[hm]: Added method to get all superclasses

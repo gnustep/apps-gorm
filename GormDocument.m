@@ -292,7 +292,7 @@ static NSImage	*classesImage = nil;
 	  NSString *className = [classManager customClassForObject: key];
 	  
 	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
+	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
 	  if(className != nil)
 	    {
 	      // The order in which these are handled is important.  The mutually
@@ -396,7 +396,7 @@ static NSImage	*classesImage = nil;
     }
 
   // [customClasses setObject: @"TestValue" forKey: @"TestKey"]; // temporary
-  NSLog(@"*** customClassMap = %@",[classManager customClassMap]);
+  NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
   [nameTable setObject: [classManager customClassMap] forKey: @"GSCustomClassMap"];
 
   /*
@@ -471,7 +471,6 @@ static NSImage	*classesImage = nil;
     case 0: // objects
       {
 	[selectionBox setContentView: scrollView];
-	NSLog(@"Switching to objects");
       }
       break;
     case 1: // images
@@ -1004,7 +1003,7 @@ static NSImage	*classesImage = nil;
       if (result == NSOKButton)
 	{
 	  headerName = [sp filename];
-	  NSLog(@"Saving %@",className);
+	  NSDebugLog(@"Saving %@",className);
 	  if (![classManager makeSourceAndHeaderFilesForClass: className
 			     withName: sourceName
 			     and: headerName])
@@ -1843,7 +1842,7 @@ static NSImage	*classesImage = nil;
 	    {
 	      NSString *soundPath = [documentPath stringByAppendingPathComponent: file];
 	      // add the sound...
-	      NSLog(@"Add the sound %@",file);
+	      NSDebugLog(@"Add the sound %@",file);
 	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
 	      [sounds addObject: soundPath];
 	    }
@@ -1867,7 +1866,7 @@ static NSImage	*classesImage = nil;
 	      id placeHolder = [self _createImagePlaceHolder: imagePath];
 	      if (placeHolder)
 		{
-		  NSLog(@"Add the image %@",file);
+		  NSDebugLog(@"Add the image %@",file);
 		  [imagesView addObject: placeHolder];
 		  [images addObject: imagePath];
 		}
@@ -1879,7 +1878,7 @@ static NSImage	*classesImage = nil;
   // NSLog(@"customClasses = %@",customClasses);
   // [classManager setCustomClassMap: customClasses];
   
-  NSLog(@"nameTable = %@",[c nameTable]);
+  NSDebugLog(@"nameTable = %@",[c nameTable]);
 
   return self;
 }
@@ -2909,12 +2908,12 @@ static NSImage	*classesImage = nil;
       if([[[c source] className] isEqualToString: className])
 	{
 	  [source setClassName: newName];
-	  NSLog(@"Found matching source");
+	  NSDebugLog(@"Found matching source");
 	}
       else if([[[c destination] className] isEqualToString: className])
 	{
 	  [destination setClassName: newName];
-	  NSLog(@"Found matching destination");
+	  NSDebugLog(@"Found matching destination");
 	}
     }
 
@@ -3131,10 +3130,10 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   BOOL result = NO;
   GormOutlineView *gov = (GormOutlineView *)outlineView;
 
-  NSLog(@"in the delegate %@", [tableColumn identifier]);
+  NSDebugLog(@"in the delegate %@", [tableColumn identifier]);
   if(tableColumn == [gov outlineTableColumn])
     {
-      NSLog(@"outline table col");
+      NSDebugLog(@"outline table col");
       if(![item isKindOfClass: [GormOutletActionHolder class]])
 	{
 	  result = [classManager isCustomClass: item];
@@ -3194,7 +3193,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSLog(@"Loading sound file: %@",[oPanel filename]);
+      NSDebugLog(@"Loading sound file: %@",[oPanel filename]);
       [soundsView addObject: [self _createSoundPlaceHolder: [oPanel filename]]];
       [sounds addObject: [oPanel filename]];
       return self;
@@ -3218,7 +3217,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSLog(@"Loading image file: %@",[oPanel filename]);
+      NSDebugLog(@"Loading image file: %@",[oPanel filename]);
       [imagesView addObject: [self _createImagePlaceHolder: [oPanel filename]]];
       [images addObject: [oPanel filename]];
       return self;

@@ -70,7 +70,7 @@
   NSString *nameForObject = [_document nameForObject: anobject];
   NSString *className = [_classManager customClassForObject: nameForObject];
 		     
-  NSLog(@"name for object = %@, object = %@, className = %@",nameForObject, anobject, className);
+  NSDebugLog(@"name for object = %@, object = %@, className = %@",nameForObject, anobject, className);
   // if no entry, then use the name of the class
   if([className isEqualToString: @""] ||
      className == nil)

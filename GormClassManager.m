@@ -928,7 +928,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSEnumerator		*enumerator;
   NSString		*key;
 
-  NSLog(@"Load from file %@",path);
+  NSDebugLog(@"Load from file %@",path);
 
   dict = [NSDictionary dictionaryWithContentsOfFile: path];
   // customClasses = [NSMutableArray arrayWithCapacity: 1];
@@ -997,7 +997,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 {
   NSMutableDictionary		*dict;
 
-  NSLog(@"Load custom classes from file %@",path);
+  NSDebugLog(@"Load custom classes from file %@",path);
 
   dict = [NSMutableDictionary dictionaryWithContentsOfFile: path];
   if (dict == nil)
@@ -1250,7 +1250,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 - (void)setCustomClassMap: (NSMutableDictionary *)dict
 {
   // copy the dictionary..
-  NSLog(@"dictionary = %@",dict);
+  NSDebugLog(@"dictionary = %@",dict);
   ASSIGN(customClassMap, dict);
   RETAIN(customClassMap);
 }
@@ -1267,7 +1267,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   // iterate up the chain until a non-custom superclass is found...
   while([self isCustomClass: result])
     {
-      NSLog(@"result = %@",result);
+      NSDebugLog(@"result = %@",result);
       result = [self superClassNameForClassNamed: result];
     }
 
