@@ -1940,6 +1940,7 @@ static NSImage  *fileImage = nil;
       [u decodeClassName: @"NSOutlineView" 
 	 asClassName: @"GormNSOutlineView"];
       
+      [GSClassSwapper setIsInInterfaceBuilder: YES]; // turn off custom classes.
       c = [u decodeObject];
       if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
 	{
@@ -1947,6 +1948,7 @@ static NSImage  *fileImage = nil;
 			  _(@"OK"), NULL, NULL);
 	  return nil;
 	}
+      [GSClassSwapper setIsInInterfaceBuilder: NO]; // turn on custom classes.
       
       // retrieve the custom class data...
       cc = [[c nameTable] objectForKey: GSCustomClassMap];

@@ -52,6 +52,11 @@ extern NSString *GormResizeCellNotification;
 - (NSString*) className;
 @end
 
+@interface GSClassSwapper (GormCustomClassAdditions)
++ (void) setIsInInterfaceBuilder: (BOOL)flag;
+- (BOOL) isInInterfaceBuilder;
+@end
+
 @interface GormObjectProxy : GSNibItem 
 /*
  * Use a GormObjectProxy in Gorm, but encode a GSNibItem in the archive.

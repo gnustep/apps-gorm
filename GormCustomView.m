@@ -29,6 +29,7 @@
 
 #include <AppKit/NSNibLoading.h>
 #include <GNUstepGUI/GSNibTemplates.h>
+#include "GormPrivate.h"
 
 @class GSCustomView;
 
@@ -126,6 +127,25 @@
 
 @implementation	GormTestCustomView
 
+- (Class) _bestPossibleSuperClass
+{
+  Class cls = [NSView class];
+  GormClassManager *classManager = [(Gorm *)NSApp classManager];
+  NSString *superClass = [classManager nonCustomSuperClassOf: theClass];
+
+  // get the superclass if one exists...
+  if(superClass != nil)
+    {
+      cls = NSClassFromString(superClass);
+      if(cls == nil)
+	{
+	  cls = [NSView class];
+	}
+    }
+  
+  return cls;
+}
+
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   id		obj;
@@ -140,7 +160,7 @@
   cls = NSClassFromString(theClass);
   if (cls == nil)
     {
-      cls = [NSView class];
+      cls = [self _bestPossibleSuperClass];
     }
   
   obj = [cls allocWithZone: [self zone]];

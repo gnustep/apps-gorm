@@ -43,6 +43,9 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectFromDocumentNotification";
 NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
+// Define this as "NO" initially.   We only want to turn this on while loading or testing.
+static BOOL _isInInterfaceBuilder = NO;
+
 @class	InfoPanel;
 
 // we had this include for grouping/ungrouping selectors
@@ -709,10 +712,12 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  [archiver encodeClassName: @"GormNSOutlineView" 
 		    intoClassName: @"NSOutlineView"];
 	  */
+	  [GSClassSwapper setIsInInterfaceBuilder: YES]; // do not allow custom classes during testing.
 	  [archiver encodeRootObject: activDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activDoc endArchiving];
 	  RELEASE(archiver);
+	  [GSClassSwapper setIsInInterfaceBuilder: NO]; // beginal allowing custom classes...
 	  
 	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
 		       object: self];
@@ -1499,14 +1504,15 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 @end
 
 // custom class additions...
-@interface GSClassSwapper (GormCustomClassAdditions)
-- (BOOL) isInInterfaceBuilder;
-@end
-
 @implementation GSClassSwapper (GormCustomClassAdditions)
++ (void) setIsInInterfaceBuilder: (BOOL)flag
+{
+  _isInInterfaceBuilder = flag;
+}
+
 - (BOOL) isInInterfaceBuilder
 {
-  return YES;
+  return _isInInterfaceBuilder;
 }
 @end
 

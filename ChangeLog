@@ -1,3 +1,19 @@
+2004-08-28 11:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added calls to [GSClassSwapper 
+	setIsInInterfaceBuilder:] to shut off the custom class -> real
+	class morphing when testing.  Added implementation for
+	method which changes the static value of the flag as well
+	called setIsInInterfaceBuilder:.
+	* GormDocument.m: Added calls in loadDocument: to
+	[GSClassSwapper setIsInInterfaceBuilder:] to turn off custom
+	class conversion while loading the .gorm document.
+	* GormCustomView.m: Added implementation of a method 
+	called _bestPossibleSuperClass to get the best substitute
+	for the custom class specified when testing the interface.
+	This allows the user to see a more accurate picture
+	of what the gui will look like when it's done.
+	
 2004-08-25 22:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindow.m: Removed canBecomeKeyWindow
