@@ -98,7 +98,7 @@
   if (value == YES)
     {
       [self silentlyResetSelection];
-      [document setSelectionFromEditor: self];      
+      // [document setSelectionFromEditor: self];      
     }
   else
     {

@@ -1,3 +1,10 @@
+2004-03-05 01:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewWithSubviewsEditor.m: Removed call in
+	[GormViewWithSubviewsEditor setOpened:] to setSelectionFromEditor:
+	on GormDocument.  This was causing the object to be reset to
+	NSWindow on save as well as some other issues.
+	
 2004-03-05 00:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCustomClassInspector.m: Added an "if" in setObject: to
