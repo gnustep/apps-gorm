@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.5.0 of Gorm.
+This is version 0.6.0 of Gorm.
 
 What is Gorm?
 =============
@@ -12,24 +12,16 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.5.0'
+Noteworthy changes in version `0.6.0'
 =====================================
 
-   * Enabled defer in NSWindow inspector.
+   * Several major bugs corrected.
 
-   * Added code to the connection inspector to prevent erroneous
-     connections.
+   * Clarified some of the inspectors
 
-   * Added support for upgrading of old .gorm files using the older
-     template mechanism
+   * Menu items are now properly enabled/disabled when appropriate
 
-   * Grouping with an NSSplitView now operates using the relative
-     positions of the views in the window.
-
-   * Custom Class inspector now shows all subclasses, not just direct
-     custom subclasses.
-
-   * Bug fixes, eliminated memory leak, code cleanup, etc.
+   * More descriptive title displayed when a class is being edited.
 
 How can I get support for this software?
 ========================================

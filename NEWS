@@ -1,3 +1,14 @@
+Noteworthy changes in version `0.6.0'
+=====================================
+
+   * Several major bugs corrected.
+
+   * Clarified some of the inspectors
+
+   * Menu items are now properly enabled/disabled when appropriate
+
+   * More descriptive title displayed when a class is being edited.
+
 Noteworthy changes in version `0.5.0'
 =====================================
 

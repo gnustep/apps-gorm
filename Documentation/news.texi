@@ -4,6 +4,18 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.6.0}
+
+@itemize @bullet
+@item Several major bugs corrected.
+@item Clarified some of the inspectors
+@item Menu items are now properly enabled/disabled when appropriate
+@item More descriptive title displayed when a class is being edited.
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.5.0}
 
 @itemize @bullet
@@ -14,9 +26,7 @@
 @item Custom Class inspector now shows all subclasses, not just direct custom subclasses.
 @item Bug fixes, eliminated memory leak, code cleanup, etc.
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.4.0}
 
 @itemize @bullet
