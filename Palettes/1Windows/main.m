@@ -128,6 +128,22 @@
 }
 @end
 
+/* ---------------------------------------------------------
+NSwindow inspector
+---------------------------------------------------------*/
+@interface NSWindow (GormPrivate)
+- (void) _setStyleMask: (unsigned int)mask;
+@end
+
+@implementation NSWindow (GormPrivate)
+// private method to change the Window style mask on the fly
+- (void) _setStyleMask: (unsigned int)mask
+{
+   _styleMask = mask;
+   DPSstylewindow(GSCurrentContext(), mask, [self windowNumber]);
+}
+@end
+
 @implementation	NSWindow (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
@@ -143,16 +159,134 @@
 
 @interface GormWindowAttributesInspector : IBInspector
 {
-  NSTextField	*titleText;
-  NSButton	*visibleAtLaunchTime;
+  id titleForm;
+  id backingMatrix;
+  id optionMatrix;
+  id controlMatrix;
 }
 @end
 
 @implementation GormWindowAttributesInspector
 
+- (void) _setValuesFromControl: control
+{
+
+  if (control == titleForm)
+    {
+      [object setTitle: [[control cellAtIndex: 0] stringValue] ]; 
+    }
+  else if (control == backingMatrix)
+    {
+      [object setBackingType: [[control selectedCell] tag] ];
+    }
+  else if (control == controlMatrix)
+    {
+      unsigned int newStyleMask;
+      int rows,cols,i;
+
+      [control getNumberOfRows:&rows columns:&cols];
+
+      newStyleMask = [object styleMask];
+      for (i=0;i<rows;i++) {
+        if ([[control cellAtRow: i column: 0] state] == NSOnState)
+          newStyleMask |= [[control cellAtRow: i column: 0] tag];
+        else
+          newStyleMask &= ~[[control cellAtRow: i column: 0] tag];
+      }
+ 
+      [object _setStyleMask: newStyleMask];
+      // FIXME: This doesn't refresh the window decoration. How to do that?
+      // (currently needs manual hide/unhide to update decorations)
+      [object display];
+   }
+  else if (control == optionMatrix)
+    {
+      BOOL flag;
+
+      // Release When Closed
+      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
+      [object setReleasedWhenClosed: flag];
+
+      // Hide on deactivate
+      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      [object setHidesOnDeactivate: flag];
+
+      // Visible at launch time. (not an object property. Stored in a Gorm dictionnary)
+      flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
+      {
+        GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+        [doc setObject: object isVisibleAtLaunch: flag];
+      }
+
+      // Deferred
+      // FIXME: This flag is not a WIndow property. Like Visible at launch time
+      // it should be stored in the Nib File and used at the Window creation time
+      // but I do not know how to do that
+      flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
+
+
+      // One shot
+     flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
+     [object setOneShot: flag];
+
+      // Dynamic depth limit
+     flag = ([[control cellAtRow: 5 column: 0] state] == NSOnState) ? YES : NO;
+     [object setDynamicDepthLimit: flag];
+
+     // wants to be color
+     // FIXME:  probably means window depth > 2 bits per pixel but don't know
+     // exactly what NSWindow method to use to enforce  that.
+     flag = ([[control cellAtRow: 6 column: 0] state] == NSOnState) ? YES : NO;
+     
+    }
+}
+
+
+- (void) _getValuesFromObject: anObject
+{
+  if (anObject != object)
+    return;
+
+  [[titleForm cellAtIndex: 0] setStringValue: [anObject title] ];
+
+  [backingMatrix selectCellWithTag: [anObject backingType] ];
+
+ 
+  [controlMatrix deselectAllCells];
+  if ([anObject styleMask] & NSMiniaturizableWindowMask)
+    [controlMatrix selectCellAtRow: 0 column: 0];
+  if ([anObject styleMask] & NSClosableWindowMask)
+    [controlMatrix selectCellAtRow: 1 column: 0];
+  if ([anObject styleMask] & NSResizableWindowMask)
+    [controlMatrix selectCellAtRow: 2 column: 0];
+
+  [optionMatrix deselectAllCells];
+  if ([anObject isReleasedWhenClosed])
+    [optionMatrix selectCellAtRow: 0 column: 0];
+  if ([anObject hidesOnDeactivate])
+    [optionMatrix selectCellAtRow: 1 column: 0];
+  {
+    GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+    if ([doc objectIsVisibleAtLaunch: anObject])
+      [optionMatrix selectCellAtRow: 2 column: 0];
+  }
+  
+  // FIXME: defer comes here.
+
+  if ([anObject isOneShot])
+    [optionMatrix selectCellAtRow: 4 column: 0];
+
+  if ([anObject hasDynamicDepthLimit])
+    [optionMatrix selectCellAtRow: 5 column: 0];
+  
+  // FIXME: wants to be color comes here
+  
+}
+
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
-  [object setTitle: [titleText stringValue]];
+  id notifier = [aNotification object];
+  [self _setValuesFromControl: notifier];
 }
 
 - (void) dealloc
@@ -164,89 +298,32 @@
 
 - (id) init
 {
-  self = [super init];
-  if (self != nil)
+ if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormWindowInspector" owner: self] == NO)
     {
-      NSView		*contents;
-      NSTextField	*title;
-      NSBox		*box;
-
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      title
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(10,IVH-30,70,20)];
-      [title setEditable: NO];
-      [title setSelectable: NO];
-      [title setBezeled: NO];
-      [title setAlignment: NSLeftTextAlignment];
-      [title setFont: [NSFont systemFontOfSize: 14.0]];
-      [title setDrawsBackground: NO];
-      [title setStringValue: @"Title:"];
-      [contents addSubview: title];
-      RELEASE(title);
-
-      titleText
-	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-30,IVW-80,20)];
-      [titleText setDelegate: self];
-      [contents addSubview: titleText];
-      RELEASE(titleText);
-
-      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 10, IVW-20, IVW)];
-      [box setTitle: @"Options"];
-      [box setBorderType: NSGrooveBorder];
-      [contents addSubview: box];
-      RELEASE(box);
-
-      visibleAtLaunchTime
-	= [[NSButton alloc] initWithFrame: NSMakeRect(10, 10, 180, 20)];
-      [visibleAtLaunchTime setButtonType: NSSwitchButton];
-      [visibleAtLaunchTime setBordered: NO];
-      [visibleAtLaunchTime setImagePosition: NSImageRight];
-      [visibleAtLaunchTime setTitle: @"Visible at launch time:"];
-      [visibleAtLaunchTime setTarget: self];
-      [visibleAtLaunchTime setAction: @selector(ok:)];
-      [box addSubview: visibleAtLaunchTime];
-      RELEASE(visibleAtLaunchTime);
+      NSLog(@"Could not gorm GormWindowInspector");
+      return nil;
     }
+  [[NSNotificationCenter defaultCenter] 
+      addObserver: self
+         selector: @selector(controlTextDidEndEditing:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
   return self;
 }
 
 - (void) ok: (id)sender
 {
-  GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-
-  if (sender == visibleAtLaunchTime)
-    {
-      if ([sender state] == NSOnState)
-	{
-	  [doc setObject: object isVisibleAtLaunch: YES];
-	}
-      else
-	{
-	  [doc setObject: object isVisibleAtLaunch: NO];
-	}
-    } 
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
 {
-  GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-
   [super setObject: anObject];
-
-  if ([doc objectIsVisibleAtLaunch: object] == YES)
-    {
-      [visibleAtLaunchTime setState: NSOnState];
-    }
-  else
-    {
-      [visibleAtLaunchTime setState: NSOffState];
-    }
-  [titleText setStringValue: [object title]];
+  [self _getValuesFromObject: anObject];
 }
 
 @end
