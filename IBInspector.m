@@ -38,6 +38,11 @@ NSString *IBSelectionChangedNotification
   [super dealloc];
 }
 
+- (NSView*) initialFirstResponder
+{
+  return nil;
+}
+
 - (id) object
 {
   return object;
@@ -64,6 +69,10 @@ NSString *IBSelectionChangedNotification
 - (void) setObject: (id)anObject
 {
   ASSIGN(object, anObject);
+}
+
+- (void) textDidBeginEditing: (NSNotification*)aNotification
+{
 }
 
 - (void) touch: (id)sender

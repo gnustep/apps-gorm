@@ -273,6 +273,9 @@ extern NSString *IBDidEndTestingInterfaceNotification;
   NSButton	*okButton;
   NSButton	*revertButton;
 }
+
+- (NSView*) initialFirstResponder;
+
 /*
  * The object being inspected.
  */
@@ -305,6 +308,11 @@ extern NSString *IBDidEndTestingInterfaceNotification;
  * tell it to set its edited object and make any changes to its UI needed.
  */
 - (void) setObject: (id)anObject;
+
+/*
+ * Used to take notice of textfields in inspector being updated.
+ */
+- (void) textDidBeginEditing: (NSNotification*)aNotification;
 
 /*
  * Method to mark the inspector as needing saving (ok or revert).

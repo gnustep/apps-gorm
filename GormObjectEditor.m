@@ -47,7 +47,7 @@
 }
 - (NSString*) classInspectorClassName
 {
-  return @"GormObjectInspector";
+  return @"GormClassInspector";
 }
 - (NSString*) editorClassName
 {
