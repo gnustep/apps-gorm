@@ -4,6 +4,28 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.9.0}
+
+@itemize @bullet
+@item Images/Sounds can now be dragged into a matrix cell.
+@item Fully implemented date and number formatter inspectors (these classes still need work in GUI).
+@item Added warning panel if the user attempts to edit a .gorm file created with a newer version of Gorm
+@item Modified data.classes format so that only those actions specifically added to FirstResponder are listed.
+@item Greatly improved gmodel importation. (experimental)
+@item It's now possible to add methods to classes which are not custom.  This allows the user to add actions which may have been added to those classes by categories.
+@item Completely new header parser implemented.  
+@item Improved cut/paste.  It's now possible to use cut/paste from almost anywhere.  The class editor now fully supports it.
+@item Improved implementation of some of the InterfaceBuilder framework classes.
+@item Object editor will now remove all instances of a class that has been deleted from the class editor.
+@item The class inspector and the classes view will now apply stricter rules to names of actions and outlets to ensure that they are properly entered.
+@item All inspectors work perfectly with customized colors.
+@item Fixed a number of bugs.
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.8.0}
 
 PLEASE NOTE: It is important for this release that you upgrade to Gorm 0.8.0 when using Gorm with the new GNUstep libraries (base-1.10.0 and gui-0.9.4).  This version of Gorm contains some features which are reliant on changes made in those versions of the libraries.  It is stated in Gorm's documentation (the Gorm.texi file) that this is required, but I felt it important enough to also mention it here so that it is known beyond a reasonable doubt.
@@ -19,10 +41,6 @@ PLEASE NOTE: It is important for this release that you upgrade to Gorm 0.8.0 whe
 @item Experimental: ``File'' section.  This is essentially a per-file preference which allows the user to control which version of GNUstep a given file will be compatible with.  It also lists the potential compatibility issues with the selected version.
 @item Improved controls palette.  New items for some of the standard font replace the old ``Title'' widget which was a System-14 font.  The new widgets use a selection of the standard System font to allow the user to easily build a gui using these and reducing the amount of time the user needs to spend fiddling with the font panel.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.7.7}
 

@@ -1,9 +1,48 @@
+Noteworthy changes in version `0.9.0'
+=====================================
+
+   * Images/Sounds can now be dragged into a matrix cell.
+
+   * Fully implemented date and number formatter inspectors (these
+     classes still need work in GUI).
+
+   * Added warning panel if the user attempts to edit a .gorm file
+     created with a newer version of Gorm
+
+   * Modified data.classes format so that only those actions
+     specifically added to FirstResponder are listed.
+
+   * Greatly improved gmodel importation. (experimental)
+
+   * It's now possible to add methods to classes which are not custom.
+     This allows the user to add actions which may have been added to
+     those classes by categories.
+
+   * Completely new header parser implemented.
+
+   * Improved cut/paste.  It's now possible to use cut/paste from
+     almost anywhere.  The class editor now fully supports it.
+
+   * Improved implementation of some of the InterfaceBuilder framework
+     classes.
+
+   * Object editor will now remove all instances of a class that has
+     been deleted from the class editor.
+
+   * The class inspector and the classes view will now apply stricter
+     rules to names of actions and outlets to ensure that they are
+     properly entered.
+
+   * All inspectors work perfectly with customized colors.
+
+   * Fixed a number of bugs.
+
 Noteworthy changes in version `0.8.0'
 =====================================
 
-PLEASE NOTE: It is important for this release that you upgrade to Gorm
-0.8.0 when using Gorm with the new GNUstep libraries (base-1.10.0 and
-gui-0.9.4).  This version of Gorm contains some features which are
+   PLEASE NOTE: It is important for this release that you upgrade to
+Gorm 0.8.0 when using Gorm with the new GNUstep libraries (base-1.10.0
+and gui-0.9.4).  This version of Gorm contains some features which are
 reliant on changes made in those versions of the libraries.  It is
 stated in Gorm's documentation (the Gorm.texi file) that this is
 required, but I felt it important enough to also mention it here so
