@@ -48,10 +48,20 @@
 @end
 
 @interface NSMutableArray (Private)
+- (void) mergeObject: (id)object;
 - (void) mergeObjectsFromArray: (NSArray *)array;
 @end
 
 @implementation NSMutableArray (Private)
+- (void) mergeObject: (id)object
+{
+  if ([self containsObject: object] == NO)
+    {
+      [self addObject: object];
+      [self sortUsingSelector: @selector(compare:)];
+    }
+}
+
 - (void) mergeObjectsFromArray: (NSArray *)array
 {
   NSEnumerator	*enumerator = [array objectEnumerator];
@@ -61,10 +71,7 @@
     {
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  if ([self containsObject: obj] == NO)
-	    {
-	      [self addObject: obj];
-	    }
+	  [self mergeObject: obj];
 	}	  
     }
 }
@@ -277,17 +284,13 @@
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
-  NSMutableArray *allActions = nil;
+  NSMutableArray *allActions = [info objectForKey: @"AllActions"];
   NSString *anAction = [action copy];
-  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
+  NSArray *subClasses = [self allSubclassesOf: className];
+  NSEnumerator *en = [subClasses objectEnumerator];
   NSString *subclassName = nil;
 
-  // regenerate the key...
-  [info removeObjectForKey: @"AllActions"];
-  [self allActionsForClassNamed: className];
-  allActions = [info objectForKey: @"AllActions"];
-
-  // check all actions...
+  // check all
   if ([allActions containsObject: anAction])
     {
       return;
@@ -307,9 +310,8 @@
       [info setObject: extraActions forKey: @"ExtraActions"];
     }
   
-  [extraActions addObject: anAction];
-  [allActions insertObject: anAction atIndex: 0];
-  [allActions sortUsingSelector: @selector(compare:)];
+  [extraActions mergeObject: anAction];
+  [allActions mergeObject: anAction];
 
   if(![className isEqualToString: @"FirstResponder"]) 
     {
@@ -317,8 +319,10 @@
     }
   
   while((subclassName = [en nextObject]) != nil)
-    {
-      [self addAction: anAction forClassNamed: subclassName];
+    {      
+      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
+      NSMutableArray *subAll = [subInfo objectForKey: @"AllActions"];
+      [subAll mergeObject: anAction];
     }
   
   [self touch];
@@ -329,20 +333,16 @@
   [self addOutlet: outlet forClassNamed: [anObject className]];
 }
 
-- (void) addOutlet: (NSString *)outlet forClassNamed: (NSString *)className
+- (void) addOutlet: (NSString *)outlet forClassNamed: (NSString *)className 
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
-  NSMutableArray *allOutlets = nil;
+  NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
   NSString *anOutlet = [outlet copy];
-  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
+  NSArray *subClasses = [self allSubclassesOf: className];
+  NSEnumerator *en = [subClasses objectEnumerator];
   NSString *subclassName = nil;
   
-  // regenerate the key...
-  [info removeObjectForKey: @"AllOutlets"];
-  [self allOutletsForClassNamed: className];
-  allOutlets = [info objectForKey: @"AllOutlets"];
-
   // check all 
   if ([allOutlets containsObject: anOutlet])
     {
@@ -355,13 +355,14 @@
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
     }
   
-  [extraOutlets addObject: anOutlet];
-  [allOutlets insertObject: anOutlet atIndex: 0];
-  [allOutlets sortUsingSelector: @selector(compare:)];
+  [extraOutlets mergeObject: anOutlet];
+  [allOutlets mergeObject: anOutlet];
   
   while((subclassName = [en nextObject]) != nil)
     {
-      [self addOutlet: outlet forClassNamed: subclassName];
+      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
+      NSMutableArray *subAll = [subInfo objectForKey: @"AllOutlets"];
+      [subAll mergeObject: anOutlet];
     }
   
   [self touch];
@@ -402,7 +403,6 @@
     {
       int all_index = [allActions indexOfObject: oldAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
-      [allActions sortUsingSelector: @selector(compare:)];
     }
 
   [self touch];
@@ -687,7 +687,6 @@
 	      [allActions mergeObjectsFromArray: extraActions];
 	    }
 
-	  [allActions sortUsingSelector: @selector(compare:)];
 	  [info setObject: allActions forKey: @"AllActions"];
 	  RELEASE(allActions);
 	}
@@ -809,7 +808,6 @@
 	      [allOutlets mergeObjectsFromArray: extraOutlets];
 	    }
 
-	  [allOutlets sortUsingSelector: @selector(compare:)];
 	  [info setObject: allOutlets forKey: @"AllOutlets"];
 	  RELEASE(allOutlets);
 	}

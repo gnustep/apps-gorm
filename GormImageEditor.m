@@ -263,7 +263,8 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
 
   // TODO: This is a band-aid fix until I find the actual problem. 
   // This *WILL* leak, but I don't want it crashing on people.
-
+  
+  RELEASE(objects);
   NSLog(@"Released...");
 }
 

@@ -170,6 +170,7 @@ extern NSString *GormResizeCellNotification;
 {
   GormDocument          *document;
   GormClassManager      *classManager;
+  NSString              *selectedClass;
 }
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;

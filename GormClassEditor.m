@@ -96,6 +96,12 @@
   return AUTORELEASE([(GormClassEditor *)[self alloc] initWithDocument: doc]);
 }
 
+- (void) dealloc
+{
+  RELEASE(selectedClass);
+  [super dealloc];
+}
+
 - (void) setSelectedClassName: (NSString*)cn
 {
   [self selectClass: cn];
@@ -122,6 +128,8 @@
   NSEnumerator	*en;
   int		row = 0;
   
+  ASSIGN(selectedClass, className);
+
   if(className != nil)
     {
       if([className isEqual: @"CustomView"] || 
@@ -192,6 +200,7 @@
   int	row = [self selectedRow];
   if (row >= 0)
     {
+      selectedClass = [self selectedClassName];
       [document setSelectionFromEditor: (id)self];
     }
 }
@@ -231,16 +240,14 @@
 
 - (NSArray*) selection
 {
-  NSString *selectedClassName = [self selectedClassName];
-
   // when asked for a selection, it returns a class proxy
-  if (selectedClassName != nil) 
+  if (selectedClass != nil) 
     {
       NSArray		*array;
       GormClassProxy	*classProxy;
 
       classProxy = [[GormClassProxy alloc] initWithClassName:
-	selectedClassName];
+	selectedClass];
       array = [NSArray arrayWithObject: classProxy];
       RELEASE(classProxy);
       return array;
