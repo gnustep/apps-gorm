@@ -726,7 +726,12 @@
 			allActionsForObject: [con destination]]);
 		      break;
 		    }
+		  else
+		    {
+		      con = nil;
+		    }
 		}
+
 	      if (con == nil)
 		{
 		  RELEASE(actions);
@@ -741,6 +746,7 @@
 		      AUTORELEASE(con);
 		    }
 		}
+
   	      if (currentConnector != con)
   		{
   		  ASSIGN(currentConnector, con);
