@@ -1237,10 +1237,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 }
 
 // custom class support...
+- (NSString *) customClassForName: (NSString *)name
+{
+  NSString *result = [customClassMap objectForKey: name];
+  return result;
+}
+
 - (NSString *) customClassForObject: (id)object
 {
   NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject: object];
-  NSString *result = [customClassMap objectForKey: name];
+  NSString *result = [self customClassForName: name];
+  //  NSString *result = [customClassMap objectForKey: name];
   NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",object, name, result, customClassMap);
   return result;
 }

@@ -62,6 +62,7 @@
 
 // custom class support...
 - (NSString *) customClassForObject: (id)object;
+- (NSString *) customClassForName: (NSString *)name;
 - (void) setCustomClass: (NSString *)className
               forObject: (id)object;
 - (void) removeCustomClassForObject: (id) object;

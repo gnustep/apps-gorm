@@ -309,10 +309,10 @@ static NSImage	*classesImage = nil;
 	{
 	  id obj = [nameTable objectForKey: key];
 	  id template = nil;
-	  NSString *className = [classManager customClassForObject: key];
+	  NSString *className = [classManager customClassForName: key];
 	  
 	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
+	  NSLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
 	  if(className != nil)
 	    {
 	      // The order in which these are handled is important.  The mutually
@@ -322,6 +322,8 @@ static NSImage	*classesImage = nil;
 	      if([obj isKindOfClass: [NSWindow class]])
 		{
 		  BOOL isVisible = [self objectIsVisibleAtLaunch: obj];
+
+		  NSLog(@"In the window template if...");
 		  template = [[GormNSWindowTemplate alloc] initWithObject: obj
 							   className: className];
 		  [self setObject: obj isVisibleAtLaunch: NO];

@@ -1,3 +1,12 @@
+2003-01-14  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: replaceObjectsWithTemplates: added a
+	call to a new method in the class manager which returns
+	custom classes based on the name assigned to the object.
+	* GormClassManager.m: Added a method to pull the custom
+	class association by name.  This corrected an issue
+	with custom classes.
+
 2003-01-13  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: openGModel: added code to import
