@@ -35,7 +35,7 @@
 
 - (id) open: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObject: @"nib"];
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   id		oldDelegate = [NSApp delegate];
   int		result;

@@ -29,7 +29,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 SUBPROJECTS = \
 	Documentation \
-	Palettes
+	Palettes \
+	Testing
 
 #
 # MAIN APP

@@ -260,8 +260,13 @@ The current defaults are -
 
 If this boolean is set to @samp{YES} then Gorm will save documents with a
 @samp{.nib} file extension (for NeXT/Apple compatibility), otherwise it will
-save with a @samp{.gorm} extension.  In either case, Gorm will permit attempts
-to open either type of document.
+save with a @samp{.gorm} extension.
+
+@item OpenNibs
+
+If this boolean is set to @samp{YES} then Gorm will accept an attempt to open
+a document with a @samp{.nib} file extension (for NeXT/Apple compatibility),
+otherwise it will only open documents with a @samp{.gorm} extension.
 
 NB. While Gorm will attempt to open @samp{.nib} documents, it can't open true
 NeXT/Apple documents, only ones it has written itsself.

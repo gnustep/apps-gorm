@@ -808,10 +808,18 @@ static NSImage	*classesImage = nil;
  */
 - (id) openDocument: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
+  NSArray	*fileTypes;
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
 
+  if ([[NSUserDefaults standardUserDefaults] boolForKey: @"OpenNibs"] == YES)
+    {
+      fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
+    }
+  else
+    {
+      fileTypes = [NSArray arrayWithObjects: @"gorm", nil];
+    }
   [oPanel setAllowsMultipleSelection: NO];
   [oPanel setCanChooseFiles: YES];
   [oPanel setCanChooseDirectories: NO];
