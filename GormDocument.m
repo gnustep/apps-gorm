@@ -29,16 +29,17 @@ NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
-/*
- * Each document has a GormFilesOwner object that is used as a placeholder
- * for the owner of the document.
- */
-@interface	GormFilesOwner : NSObject
-{
-}
-@end
-
 @implementation	GormFilesOwner
+- (NSString*) className
+{
+  return className;
+}
+
+- (void) dealloc
+{
+  RELEASE(className);
+}
+
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -52,15 +53,19 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
     }
   return image;
 }
-@end
 
-/*
- * Each document has a GormFirstResponder object that is used as a placeholder
- * for the first responder at any instant.
- */
-@interface	GormFirstResponder : NSObject
+- (id) init
 {
+  self = [super init];
+  [self setClassName: @"NSApplication"];
+  return self;
 }
+
+- (void) setClassName: (NSString*)aName
+{
+  ASSIGN(className, aName);
+}
+
 @end
 
 @implementation	GormFirstResponder
@@ -76,15 +81,6 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
   return image;
-}
-@end
-
-/*
- * Each document may have a GormFontManager object that is used as a
- * placeholder for the current fornt manager.
- */
-@interface	GormFontManager : NSObject
-{
 }
 @end
 

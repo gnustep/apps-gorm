@@ -5,19 +5,31 @@
  * Each document has a GormFilesOwner object that is used as a placeholder
  * for the owner of the document.
  */
-@class	GormFilesOwner;
+@interface	GormFilesOwner : NSObject
+{
+  NSString	*className;
+}
+- (NSString*) className;
+- (void) setClassName: (NSString*)aName;
+@end
 
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder
  * for the first responder at any instant.
  */
-@class	GormFirstResponder;
+@interface	GormFirstResponder : NSObject
+{
+}
+@end
 
 /*
  * Each document may have a GormFontManager object that is used as a
  * placeholder for the current fornt manager.
  */
-@class	GormFontManager;
+@interface	GormFontManager : NSObject
+{
+}
+@end
 
 @interface GormDocument : GSNibContainer <IBDocuments>
 {

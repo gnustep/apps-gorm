@@ -549,8 +549,8 @@ selectCellWithString: (NSString*)title
 	    {
 	      if (actions == nil)
 		{
-		  actions = [[NSApp classManager] allActionsForClassNamed:
-		    NSStringFromClass([[NSApp connectDestination] class])];
+		  actions = [[NSApp classManager] allActionsForObject:
+		    [NSApp connectDestination]];
 		  RETAIN(actions);
 		}
 	      for (index = 0; index < numConnectors; index++)
@@ -782,8 +782,7 @@ selectCellWithString: (NSString*)title
 	ofClass: [NSNibOutletConnector class]];
       [connectors addObjectsFromArray: array];
 
-      outlets = RETAIN([[NSApp classManager] allOutletsForClassNamed:
-	NSStringFromClass([obj class])]);
+      outlets = RETAIN([[NSApp classManager] allOutletsForObject: obj]);
 
       rect = NSMakeRect(0, 0, IVW, IVH);
       window = [[NSWindow alloc] initWithContentRect: rect

@@ -26,12 +26,25 @@
 
 @implementation GormClassManager
 
-- (NSArray*) allActionsForClass: (Class)theClass
+- (NSArray*) allActionsForObject: (NSObject*)obj
 {
   NSString	*className;
   NSArray	*actions;
+  Class		theClass = [obj class];
 
-  className = NSStringFromClass(theClass);
+  if (theClass == [GormFirstResponder class])
+    {
+      return nil;
+    }
+
+  if (theClass == [GormFilesOwner class])
+    {
+      className = [(GormFilesOwner*)obj className];
+    }
+  else
+    {
+      className = NSStringFromClass(theClass);
+    }
   if (className == nil)
     {
       NSLog(@"attempt to get actions for non-existent class");
@@ -108,12 +121,26 @@
   return nil;
 }
 
-- (NSArray*) allOutletsForClass: (Class)theClass
+- (NSArray*) allOutletsForObject: (NSObject*)obj
 {
   NSString	*className;
   NSArray	*outlets;
+  Class		theClass = [obj class];
 
-  className = NSStringFromClass(theClass);
+  if (theClass == [GormFirstResponder class])
+    {
+      return nil;
+    }
+
+  if (theClass == [GormFilesOwner class])
+    {
+      className = [(GormFilesOwner*)obj className];
+    }
+  else
+    {
+      className = NSStringFromClass(theClass);
+    }
+
   if (className == nil)
     {
       NSLog(@"attempt to get outlets for non-existent class");

@@ -5,10 +5,10 @@
 {
   NSMutableDictionary	*classInformation;
 }
-- (NSArray*) allActionsForClass: (Class)aClass;
 - (NSArray*) allActionsForClassNamed: (NSString*)className;
-- (NSArray*) allOutletsForClass: (Class)aClass;
+- (NSArray*) allActionsForObject: (NSObject*)anObject;
 - (NSArray*) allOutletsForClassNamed: (NSString*)className;
+- (NSArray*) allOutletsForObject: (NSObject*)anObject;
 @end
 
 #endif
