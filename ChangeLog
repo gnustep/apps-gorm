@@ -1,7 +1,11 @@
+2004-06-06 08:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageEditor.m: Corrected comments.
+	
 2004-06-04 23:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageEditor.m: Added some code to correct a problem found
-	by Riccardo Mattolla and Sujin Chun.   The code is as suggested
+	by Riccardo Mattolla and Sungjin Chun.   The code is as suggested
 	by Sujin, to return when the superview is not available.
 	* GormSoundEditor.m: same as above.
 	NOTE: This was due to a recent change to load all images for

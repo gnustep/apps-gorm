@@ -1,4 +1,4 @@
-/* GormSoundEditor.m
+/* GormImageEditor.m
  *
  * Copyright (C) 2002 Free Software Foundation, Inc.
  *
