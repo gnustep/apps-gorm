@@ -2586,15 +2586,12 @@ static NSImage	*classesImage = nil;
   while((key = [en nextObject]) != nil)
     {
       id customClass = [cm customClassForName: key];
-      id object = [self objectForName: key];
-
-      // put code here to repair old .gorm files if necessary.
-      
-      NSDebugLog(@"customClass = %@",customClass);
+      id object = [self objectForName: key];       // put code here to repair old .gorm files if necessary.
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
       id <GSTemplate> template = [GSTemplateFactory templateForObject: RETAIN(object)
 						    withClassName: RETAIN([customClass copy])
 						    withSuperClassName: superClass];
+      NSDebugLog(@"customClass = %@",customClass);
       NSDebugLog(@"object = %@, key = %@, className = %@", object, key, customClass);
       [archiver replaceObject: object withObject: template];
     }

@@ -1,5 +1,10 @@
 2003-08-28  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Minor correction to allow compilation with
+	gcc < 3.x.
+
+2003-08-28  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Cleanup some of the extra logs.
 	* GormClassInspector.m: Add logic to prefent index out of bounds
 	exception.
