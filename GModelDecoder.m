@@ -31,12 +31,30 @@
 #include "GormPrivate.h"
 #include "GormCustomView.h"
 #include "GormDocument.h"
+#include "GormFunctions.h"
 
 static Class gmodel_class(NSString *className);
 
 static id gormNibOwner;
 static id gormRealObject;
 static BOOL gormFileOwnerDecoded;
+
+@interface NSWindow (GormPrivate)
+- (void) gmSetStyleMask: (unsigned int)mask;
+@end
+
+@implementation NSWindow (GormPrivate)
+// private method to change the Window style mask on the fly
+- (void) gmSetStyleMask: (unsigned int)mask
+{
+   _styleMask = mask;
+   [GSServerForWindow(self) stylewindow: mask : [self windowNumber]];
+}
+@end
+
+@interface NSWindow (GormNSWindowPrivate)
+- (unsigned int) _styleMask;
+@end
 
 @interface GModelApplication : NSObject
 {
@@ -54,23 +72,6 @@ static BOOL gormFileOwnerDecoded;
 - delegate;
 - (NSArray *) windows;
 
-@end
-
-@interface NSWindow (GormPrivate)
-- (void) gmSetStyleMask: (unsigned int)mask;
-@end
-
-@implementation NSWindow (GormPrivate)
-// private method to change the Window style mask on the fly
-- (void) gmSetStyleMask: (unsigned int)mask
-{
-   _styleMask = mask;
-   [GSServerForWindow(self) stylewindow: mask : [self windowNumber]];
-}
-@end
-
-@interface NSWindow (GormNSWindowPrivate)
-- (unsigned int) _styleMask;
 @end
 
 @implementation GModelApplication
@@ -126,8 +127,32 @@ static BOOL gormFileOwnerDecoded;
 
 @end
 
-@implementation GormObjectProxy (GModel)
+@interface GModelMenuTemplate : NSObject
+{
+  NSString *menuClassName;
+  id realObject;
+}
 
++ (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver;
+- (id)initWithModelUnarchiver:(GMUnarchiver*)unarchiver;
+@end
+
+@implementation GModelMenuTemplate
+- (id)initWithModelUnarchiver:(GMUnarchiver*)unarchiver
+{
+  menuClassName = [unarchiver decodeObjectWithName:@"menuClassName"];
+  realObject = [unarchiver decodeObjectWithName: @"realObject"];
+  // RELEASE(self);
+  return realObject;
+}
+
++ (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver
+{
+  return AUTORELEASE([[GModelMenuTemplate alloc] init]);
+}
+@end
+
+@implementation GormObjectProxy (GModel)
 + (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver
 {
   return AUTORELEASE([[self alloc] init]);
@@ -143,8 +168,8 @@ static BOOL gormFileOwnerDecoded;
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
 
   //real = [unarchiver representationForName: @"realObject" isLabeled: &label];
-
-  if (!gormFileOwnerDecoded) 
+  if (!gormFileOwnerDecoded || 
+      [realObject isKindOfClass: [GModelApplication class]]) 
     {
       gormFileOwnerDecoded = YES;
       gormNibOwner = self;
@@ -152,12 +177,10 @@ static BOOL gormFileOwnerDecoded;
     }  
   return self;
 }
-
 @end
 
 
 @implementation GormCustomView (GModel)
-
 + (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver
 {
   return AUTORELEASE([[self alloc] initWithFrame: NSMakeRect(0,0,10,10)]);
@@ -184,7 +207,6 @@ static BOOL gormFileOwnerDecoded;
   
   return self;
 }
-
 @end
 
 @implementation GormDocument (GModel)
@@ -243,12 +265,14 @@ static BOOL gormFileOwnerDecoded;
     }
 
   // make a guess and warn the user
-  // cheesy attempt to determine superclass..
   if (result != NSAlertDefaultReturn)
     {
-      NSString *superClass = nil;
+      NSString *superClass = promptForClassName([NSString stringWithFormat: @"Superclass: %@",className],
+						[classManager allClassNames]);
       BOOL added = NO;
 
+      RETAIN(superClass);
+      // cheesy attempt to determine superclass..
       if(superClass == nil && [className isEqual: @"GormCustomView"])
 	{
 	  superClass = @"NSView";
@@ -376,26 +400,27 @@ static BOOL gormFileOwnerDecoded;
   gormRealObject = nil;
   gormFileOwnerDecoded = NO;
   /* GModel classes */
-  [u decodeClassName: @"NSApplication"   asClassName: @"GModelApplication"];
-  [u decodeClassName: @"IMCustomView"    asClassName: @"GormCustomView"];
-  [u decodeClassName: @"IMCustomObject"  asClassName: @"GormObjectProxy"];
+  [u decodeClassName: @"NSApplication"     asClassName: @"GModelApplication"];
+  [u decodeClassName: @"IMCustomView"      asClassName: @"GormCustomView"];
+  [u decodeClassName: @"IMCustomObject"    asClassName: @"GormObjectProxy"];
   /* Gorm classes */
-  [u decodeClassName: @"NSMenu"          asClassName: @"GormNSMenu"];
-  [u decodeClassName: @"NSWindow"        asClassName: @"GormNSWindow"];
-  [u decodeClassName: @"NSPanel"         asClassName: @"GormNSPanel"];
-  [u decodeClassName: @"NSBrowser"       asClassName: @"GormNSBrowser"];
-  [u decodeClassName: @"NSTableView"     asClassName: @"GormNSTableView"];
-  [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];
-  [u decodeClassName: @"NSPopUpButton"   asClassName: @"GormNSPopUpButton"];
+  [u decodeClassName: @"NSMenu"            asClassName: @"GormNSMenu"];
+  [u decodeClassName: @"NSWindow"          asClassName: @"GormNSWindow"];
+  [u decodeClassName: @"NSPanel"           asClassName: @"GormNSPanel"];
+  [u decodeClassName: @"NSBrowser"         asClassName: @"GormNSBrowser"];
+  [u decodeClassName: @"NSTableView"       asClassName: @"GormNSTableView"];
+  [u decodeClassName: @"NSOutlineView"     asClassName: @"GormNSOutlineView"];
+  [u decodeClassName: @"NSPopUpButton"     asClassName: @"GormNSPopUpButton"];
   [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
-  [u decodeClassName: @"NSOutlineView"   asClassName: @"GormNSOutlineView"];
+  [u decodeClassName: @"NSOutlineView"     asClassName: @"GormNSOutlineView"];
+  [u decodeClassName: @"NSMenuTemplate"    asClassName: @"GModelMenuTemplate"];
 
   // process the model to take care of any custom classes...
   model = [NSMutableDictionary dictionaryWithContentsOfFile: path];
   [self processModel: model inPath: path];
   
   // initialize with the property list...
-  unarchiver = RETAIN([[u alloc] initForReadingWithPropertyList: [[model description] propertyList]]);
+  unarchiver = [[u alloc] initForReadingWithPropertyList: [[model description] propertyList]];
   if (!unarchiver)
     {
       NSLog(@"Failed to load gmodel file %@!!",path);
@@ -546,14 +571,19 @@ static BOOL gormFileOwnerDecoded;
 	}
       
     }
-  else
+  else if(gormRealObject != nil)
     {
       // Here we need to addClass:... (outlets, actions).  */
       [self defineClass: [gormRealObject className] inFile: path];
+    }
+  else
+    {
       NSLog(@"Don't understand real object %@", gormRealObject);
     }
-  
+
   [self rebuildObjToNameMapping];
+
+  // RELEASE(unarchiver);
   return self;
 }
 @end

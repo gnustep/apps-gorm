@@ -64,4 +64,7 @@ NSArray *systemSoundsList();
 
 // compute the gorm version
 int appVersion(long a, long b, long c);
+
+// prompt for a class name.  Used mainly for gmodel loading...
+NSString *promptForClassName(NSString *title, NSArray *classes);
 #endif

@@ -194,10 +194,9 @@ static NSImage  *fileImage = nil;
 	  NSRect			mainRect = {{20, 0}, {320, 188}};
 	  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	  
-	  
+	  // initialize...
 	  openEditors = [NSMutableArray new];
 	  classManager = [[GormClassManager alloc] initWithDocument: self]; 
-	  // classEditor = [[GormClassEditor alloc] initWithDocument: self];
 	  
 	  /*
 	   * NB. We must retain the map values (object names) as the nameTable

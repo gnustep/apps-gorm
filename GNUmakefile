@@ -119,6 +119,7 @@ Gorm_RESOURCE_FILES = \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
 	Images/GormTesting.tiff \
+	Resources/GormClassPanel.gorm \
 	Resources/GormPrefColors.gorm \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
@@ -174,7 +175,8 @@ Gorm_HEADERS = \
 	GormColorsPref.h \
 	GormPalettesPref.h \
 	GormSoundView.h \
-	GormFilePrefsManager.h 
+	GormFilePrefsManager.h \
+	GormClassPanelController.h
 
 Gorm_OBJC_FILES = \
 	main.m \
@@ -222,7 +224,8 @@ Gorm_OBJC_FILES = \
 	GormColorsPref.m \
 	GormPalettesPref.m \
 	GormSoundView.m \
-	GormFilePrefsManager.m
+	GormFilePrefsManager.m \
+	GormClassPanelController.m
 
 -include GNUmakefile.preamble
 

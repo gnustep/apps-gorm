@@ -1,3 +1,12 @@
+2004-11-13 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: Added GModelMenuTemplate to allow decoding
+	of .gmodels which contain the menu template class.
+	* GormClassManager.m: Changed the allClassNames method to not prepend
+	NSObject now that NSObject is part of the classInformation plist.
+	* GormFunctions.[hm]: Added parameter to pass in the current list of
+	classes from the calling document.
+	
 2004-11-12 17:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: Changes to improve loading of .gmodel files.

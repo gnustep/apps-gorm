@@ -30,6 +30,7 @@
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSPathUtilities.h>
 #include <Foundation/NSString.h>
+#include "GormClassPanelController.h"
 
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array)
@@ -273,3 +274,8 @@ int appVersion(long a, long b, long c)
   return (((a) << 16)+((b) << 8) + (c));
 }
 
+NSString *promptForClassName(NSString *title, NSArray *classes)
+{
+  GormClassPanelController *cpc = AUTORELEASE([[GormClassPanelController alloc] initWithTitle: title classList: classes]);
+  return [cpc runModal];
+}

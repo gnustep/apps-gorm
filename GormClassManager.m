@@ -697,9 +697,7 @@
 
 - (NSArray*) allClassNames
 {
-  NSArray *array = [NSArray arrayWithObject: @"NSObject"];
-  return [array arrayByAddingObjectsFromArray:
-    [[classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)]];
+  return [[classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)];
 }
 
 - (NSArray*) allOutletsForObject: (id)obj
@@ -1800,5 +1798,11 @@
  		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
  		   customClassMap];
+}
+
+/** Helpful for debugging */
+- (NSString *) dumpClassInformation
+{
+  return [classInformation description];
 }
 @end
