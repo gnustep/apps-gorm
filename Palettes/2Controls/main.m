@@ -63,6 +63,21 @@
   RELEASE(v);
 #endif
 
+  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(10, 60, 80, 20)];
+  [v addItemWithTitle: @"PopUp1"];
+  [v addItemWithTitle: @"PopUp2"];
+  [v addItemWithTitle: @"PopUp3"];
+  [contents addSubview: v];
+  RELEASE(v);
+
+  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(10, 30, 80, 20)];
+  [v setPullsDown: YES];
+  [v addItemWithTitle: @"PullDown1"];
+  [v addItemWithTitle: @"PullDown2"];
+  [v addItemWithTitle: @"PullDown3"];
+  [contents addSubview: v];
+  RELEASE(v);
+
   v = [[NSTextField alloc] initWithFrame: NSMakeRect(100, 160, 80, 20)];
   [v setEditable: NO];
   [v setSelectable: NO];

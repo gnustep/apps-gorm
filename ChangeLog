@@ -1,3 +1,8 @@
+Sun Feb 14 06:56:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	* Palettes/2Control/main.m: Add popup and pulldown menu controls
+	though there is no way to edit them yet.
+
 Sun Feb  6  8:44:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Removed InfoPanel.m and updated Gorm to use standard panel now that
