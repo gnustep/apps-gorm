@@ -1,0 +1,15 @@
+TO DO:
+
+This is my personal TO DO list based on feature requests that I am
+hearing from users of Gorm.   Currently a number of requests are on the
+table which seem intersting:
+
+* Add support for Font Aliases so that fonts are not archived into the
+  .gorm file.   This will allow the application to use the fonts as 
+  defined by the user, not as archived in .gorm. (fabien)
+
+* Set up defaults to allow Gorm to "preload" headers each time it starts
+  up.   (cbv)
+
+--
+Gregory John Casamento

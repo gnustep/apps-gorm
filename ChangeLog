@@ -1,5 +1,10 @@
 2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Added TODO file to document interesting feature suggestions
+	and bugs which need to be fixed.
+	
+2002-12-27  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Gorm.m: -[GormObjectProxy inspectorClassName]: returns
 	GormNotApplicableInspector, since we shouldn't be able to directly
 	change any of the attributes on a GormObjectProxy.
