@@ -196,6 +196,22 @@ static NSMapTable	*docMap = 0;
     }
 }
 
+- (void) removeAllInstancesOfClass: (NSString *)className
+{
+  GormClassManager *classManager = [(GormDocument *)document classManager];
+  NSEnumerator *en = [objects objectEnumerator];
+  id object = nil;
+
+  while((object = [en nextObject]) != nil)
+    {
+      NSString *clsForObj = [classManager classNameForObject: object];
+      if([className isEqual: clsForObj])
+	{
+	  [self removeObject: object];
+	}
+    }
+}
+
 /*
  *	Dragging source protocol implementation
  */

@@ -237,7 +237,7 @@ extern NSString *GormResizeCellNotification;
 - (id) changeSelection: (id)sender;
 @end
 
-@interface	GormObjectEditor : GormGenericEditor 
+@interface GormObjectEditor : GormGenericEditor 
 {
 }
 + (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;
@@ -246,9 +246,10 @@ extern NSString *GormResizeCellNotification;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (void) resetObject: (id)anObject;
+- (void) removeAllInstancesOfClass: (NSString *)className;
 @end
 
-@interface	GormSoundEditor : GormGenericEditor 
+@interface GormSoundEditor : GormGenericEditor 
 {
 }
 + (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
@@ -256,7 +257,7 @@ extern NSString *GormResizeCellNotification;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 @end
 
-@interface	GormImageEditor : GormGenericEditor 
+@interface GormImageEditor : GormGenericEditor 
 {
 }
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;

@@ -1590,18 +1590,7 @@ static NSImage  *fileImage = nil;
 
 - (void) removeAllInstancesOfClass: (NSString *)className
 {
-  NSArray *objects = [objectsView objects];
-  NSEnumerator *en = [objects objectEnumerator];
-  id object = nil;
-
-  while((object = [en nextObject]) != nil)
-    {
-      NSString *clsForObj = [classManager classNameForObject: object];
-      if([className isEqual: clsForObj])
-	{
-	  [objectsView removeObject: object];
-	}
-    }
+  [objectsView removeAllInstancesOfClass: className];
 }
 
 - (void) selectClass: (NSString *)className
