@@ -25,7 +25,7 @@
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#include "GormPrivate.h"
+#include "GormViewKnobs.h"
 #include <math.h>
 
 static int KNOB_WIDTH = 0.0;

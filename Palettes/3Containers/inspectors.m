@@ -229,7 +229,9 @@
     case NSRightTextAlignment:
       [titleAlignmentMatrix selectCellAtRow: 0 column: 2];
       break;
-      
+    default:
+      NSLog(@"Unhandled alignment value...");
+      break;
     }
 
   switch ([[anObject dataCell] alignment])
@@ -243,7 +245,9 @@
     case NSRightTextAlignment:
       [contentsAlignmentMatrix selectCellAtRow: 0 column: 2];
       break;
-      
+    default:
+      NSLog(@"Unhandled alignment value...");
+      break;
     }
 
   [identifierTextField setStringValue: [anObject identifier]];
@@ -686,8 +690,7 @@ static NSString *ITEM=@"item";
 
 - (void) _getValuesFromObject: anObject
 {
-  //TODO ScrollView 
-  unsigned int i,numberOfTabViewItems;
+  unsigned int numberOfTabViewItems;
   numberOfTabViewItems=[anObject numberOfTabViewItems];
   
   [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",numberOfTabViewItems]];

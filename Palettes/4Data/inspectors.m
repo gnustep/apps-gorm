@@ -119,7 +119,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) _getValuesFromObject: anObject
 {
-  int i;
   if (anObject != object)
     return;
 
@@ -187,6 +186,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 {
   if (aTableView == itemTableView )
     return  [object itemObjectValueAtIndex:rowIndex];
+  return nil;
 }
 
 //TableView delegate
@@ -197,6 +197,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       [itemTxt setStringValue:[object itemObjectValueAtIndex:rowIndex]];
       return YES;
     }
+  return NO;
 }
 
 //itemTxt delegate

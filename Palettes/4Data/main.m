@@ -192,7 +192,6 @@ int defaultDateFormatIndex = 3;
 
   NSView	*contents;
   NSTextView	*tv;
-  NSSize        contentSize;
   id		v;
   NSNumberFormatter *nf;
   NSDateFormatter *df;

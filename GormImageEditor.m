@@ -81,7 +81,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   NSArray *types=[[sender draggingPasteboard] types];
   unsigned int mask=[sender draggingSourceOperationMask];
 
-  NSDebugLLog(@"GormImageEditor draggingEntered mask=%i types=%@",mask,types);
+  // NSDebugLLog(@"GormImageEditor draggingEntered mask=%d types=%@",mask,types);
   
    if (  mask&handled_mask &&
        ([types containsObject: NSFilenamesPboardType] ||

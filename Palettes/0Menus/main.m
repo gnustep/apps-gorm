@@ -337,9 +337,9 @@
   /*
    * Font submenu
    */
-  i = [m addItemWithTitle: @"Font" 
-		   action: NULL
-	    keyEquivalent: @""];
+  i = (NSMenuItem *)[m addItemWithTitle: @"Font" 
+		       action: NULL
+		       keyEquivalent: @""];
   s = [GormNSMenu new];
   [s addItemWithTitle: @"Font Panel..." 
 	       action: @selector(orderFrontFontPanel:) 
@@ -374,9 +374,9 @@
   /*
    * Text submenu
    */
-  i = [m addItemWithTitle: @"Text" 
-		   action: NULL
-	    keyEquivalent: @""];
+  i = (NSMenuItem *)[m addItemWithTitle: @"Text" 
+		       action: NULL
+		       keyEquivalent: @""];
   s = [GormNSMenu new];
   [s addItemWithTitle: @"Align Left" 
 	       action: @selector(alignLeft:) 

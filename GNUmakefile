@@ -148,6 +148,7 @@ Gorm_HEADERS = \
 	GormViewWithSubviewsEditor.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWindow.h \
+	GormViewKnobs.h \
 	GormBoxEditor.h \
 	GormClassManager.h \
 	GormControlEditor.h \

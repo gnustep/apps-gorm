@@ -1,4 +1,20 @@
-2004-04-06 20:16 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-04-11 21:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormBoxEditor.m: Cleaned up warnings.
+	* GormImageEditor.m: same..
+	* GormInternalViewEditor.m: same..
+	* GormTabViewEditor.m: same..
+	* GormViewEditor.m: same..
+	* GormViewWithContentViewEditor.m: same..
+	* Palettes/0Menus/main.m: same..
+	* Palettes/3Containers/GormTableViewEditor.m: same..
+	* Palettes/3Containers/inspectors.m: same..
+	* Palettes/4Data/inspectors.m: same..
+	* Palettes/4Data/main.m: same..
+	* GormViewKnobs.m: Added reference to new header...
+	* GormViewKnobs.h: New header which declares the knob related functions.
+	
+2004-04-06 20:16 Gregory John Casamento <greg_casamento@yahoo.com>	
 
 	* GormClassManager.m: Correction to how actions are added to 
 	FirstResponder.  Previously it was adding *all* actions to this

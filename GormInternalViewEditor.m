@@ -133,7 +133,7 @@ static NSImage *horizontalImage;
 	name: NSViewFrameDidChangeNotification
 	object: self];
 
-      parent = [document parentEditorForEditor: self];
+      parent = (GormViewWithSubviewsEditor *)[document parentEditorForEditor: self];
       
       if ([parent isKindOfClass: [GormViewEditor class]])
 	[parent setNeedsDisplay: YES];

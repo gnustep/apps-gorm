@@ -904,9 +904,7 @@ int _sortViews(id view1, id view2, void *context)
 	    y1 = prevRect.origin.y,
 	    y2 = currRect.origin.y,
 	    h1 = prevRect.size.height,
-	    h2 = currRect.size.height,
-	    w1 = prevRect.size.width,
-	    w2 = currRect.size.width;
+	    w1 = prevRect.size.width;
 
 	  if((x1 < x2 || x1 > x2) && ((y2 >= y1 && y2 <= (y1 + h1)) || 
 				      (y2 <= y1 && y2 >= (y1 - h1))))
@@ -975,9 +973,9 @@ int _sortViews(id view1, id view2, void *context)
 
   enumerator = [sortedviews objectEnumerator];
   
-  editor = [document editorForObject: splitView
-		     inEditor: self
-		     create: YES];
+  editor = (GormViewEditor *)[document editorForObject: splitView
+				       inEditor: self
+				       create: YES];
 
   while ((subview = [enumerator nextObject]) != nil)
     {
@@ -1039,9 +1037,9 @@ int _sortViews(id view1, id view2, void *context)
       [subview close];
     }
 
-  editor = [document editorForObject: box
-		     inEditor: self
-		     create: YES];
+  editor = (GormViewEditor *)[document editorForObject: box
+				       inEditor: self
+				       create: YES];
   
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
@@ -1135,9 +1133,9 @@ int _sortViews(id view1, id view2, void *context)
       [subview close];
     }
   
-  editor = [document editorForObject: scrollView
-		     inEditor: self
-		     create: YES];
+  editor = (GormViewEditor *)[document editorForObject: scrollView
+				       inEditor: self
+				       create: YES];
   
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }

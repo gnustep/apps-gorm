@@ -76,9 +76,9 @@
     {
       NSView *contentView = [_EO contentView];
 
-      contentViewEditor = [document editorForObject: contentView
-				    inEditor: self 
-				    create: YES];
+      contentViewEditor = (GormInternalViewEditor *)[document editorForObject: contentView
+							      inEditor: self 
+							      create: YES];
       return YES;
     }
 

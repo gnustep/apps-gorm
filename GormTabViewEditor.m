@@ -141,9 +141,9 @@
     {
       if ([[tabViewItem view] isKindOfClass: [GormViewEditor class]] == NO)
 	{
-	  currentView = [document editorForObject: [tabViewItem view]
-				  inEditor: self 
-				  create: YES];
+	  currentView = (GormInternalViewEditor *)[document editorForObject: [tabViewItem view]
+							    inEditor: self 
+							    create: YES];
 	  NSDebugLog(@"dSTVI %@ %@ %@", self, currentView, [tabViewItem view]);
 	  NSDebugLog(@"dsTVI %@ %@", self, [document parentEditorForEditor: currentView]);
 	}
