@@ -3,7 +3,8 @@
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	1999, 2004
  * 
  * This file is part of GNUstep.
  * 
@@ -172,12 +173,15 @@
   // filter the classes to view only when a custom view is selected.
   if([anObject isKindOfClass: [GormCustomView class]])
     {
-      ASSIGN(classes, [[NSApp classManager] allSubclassesOf: @"NSView"]);
+      ASSIGN(classes, AUTORELEASE([[[NSApp classManager] allSubclassesOf: @"NSView"] mutableCopy]));
     }
   else
     {
-      ASSIGN(classes, [[NSApp classManager] allClassNames]);
+      ASSIGN(classes, AUTORELEASE([[[NSApp classManager] allClassNames] mutableCopy]));
     }
+
+  // remove the first responder, since we don't want the user to choose this.
+  [classes removeObject: @"FirstResponder"];
 
   if (anObject != nil)
     {

@@ -265,16 +265,6 @@ extern NSString *GormResizeCellNotification;
 - (void) refreshCells;
 @end
 
-
-@interface GormFilesOwnerInspector : IBInspector
-{
-  NSBrowser	*browser;
-  NSArray	*classes;
-  BOOL		hasConnections;
-}
-- (void) takeClassFrom: (id)sender;
-@end
-
 /*
  * NSDateFormatter and NSNumberFormatter extensions
  * for Gorm Formatters used in the Data Palette

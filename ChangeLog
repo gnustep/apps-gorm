@@ -1,3 +1,12 @@
+2004-12-23 14:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFilesOwner.h: Added inspector declaration.
+	* GormFilesOwner.m: Changed code in setObject to create an 
+	autoreleased mutableCopy of the array and removed FirstResponder from
+	the list to prevent the user from selecting this.
+	* GormPrivate.h: Added the include for GormFilesOwner.h and also
+	removed the inspector declaration from this file.
+
 2004-12-23 13:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: In -performDragOperation: copy the image/sound
