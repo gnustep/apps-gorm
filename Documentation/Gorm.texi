@@ -115,12 +115,12 @@ See the file @samp{COPYING}.
 
 @itemize @bullet
 @item
-Richard Frith-Macdonald <richard@@brainstorm.co.uk> wrote
-Gorm as part of the GNUstep project.
-@item
 Gregory John Casamento <greg_casamento@@yahoo.com> Is the
 current maintaner of Gorm.   Has implemented lots of new
 features and rewritten large portions of the existing code.
+@item
+Richard Frith-Macdonald <richard@@brainstorm.co.uk> wrote
+Gorm as part of the GNUstep project.
 @item
 Pierre-Yves Rivaille <gnustep@@rivaille.net> Is also a 
 major contributor to the Gorm application.

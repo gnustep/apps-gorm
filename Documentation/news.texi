@@ -4,6 +4,20 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.4.0}
+
+@itemize @bullet
+@item New Menu and Menu Item inspectors. 
+@item User can now specify the Services and Windows menus in the menu inspector.
+@item User can specify a non-custom subclass as well as a custom one to replace the class when the .gorm is unarchived.  This can be used to turn a NSTextField into NSSecureTextField and etc.
+@item New set name panel.
+@item New switch control on the font panel to allow the user to specify if a font is encoded with its default size or not.
+@item Added NSStepper and NSStepperCell to the class list to allow creation of custom subclasses.
+@item Windows and Services menus now function correctly.
+@end itemize
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
 @section Noteworthy changes in version @samp{0.3.1}
 
 @itemize @bullet
@@ -12,9 +26,6 @@
 @item Fixed DND
 @item Various bugfixes
 @end itemize
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.3.0}
 

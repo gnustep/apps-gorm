@@ -2,13 +2,13 @@
 # Compatible with Bourne shell syntax, so it can included there too.
 
 # The gcc version required to compile the library.
-GNUSTEP_GCC=2.8.0
+GNUSTEP_GCC=2.95.0
 
 # GNUstep version required
-GNUSTEP_CORE_VERSION=0.8.9
+GNUSTEP_CORE_VERSION=0.9.0
 
 # The version number of this release.
 MAJOR_VERSION=0
-MINOR_VERSION=3
-SUBMINOR_VERSION=1
+MINOR_VERSION=4
+SUBMINOR_VERSION=0
 VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${SUBMINOR_VERSION}

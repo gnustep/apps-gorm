@@ -1,3 +1,25 @@
+Noteworthy changes in version `0.4.0'
+=====================================
+
+   * New Menu and Menu Item inspectors.
+
+   * User can now specify the Services and Windows menus in the menu
+     inspector.
+
+   * User can specify a non-custom subclass as well as a custom one to
+     replace the class when the .gorm is unarchived.  This can be used
+     to turn a NSTextField into NSSecureTextField and etc.
+
+   * New set name panel.
+
+   * New switch control on the font panel to allow the user to specify
+     if a font is encoded with its default size or not.
+
+   * Added NSStepper and NSStepperCell to the class list to allow
+     creation of custom subclasses.
+
+   * Windows and Services menus now function correctly.
+
 Noteworthy changes in version `0.3.1'
 =====================================
 
