@@ -376,8 +376,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (void) displayConnectionBetween: (id)source and: (id)destination
 {
-  NSWindow	*w, *neww;
-  NSRect	r, newr;
+  NSWindow	*w;
+  NSRect	r;
   
 
   if (source != connectSource)
@@ -524,7 +524,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 }
 
 
-- (id) deferredEndTesting: (id) sender
+- (void) deferredEndTesting: (id) sender
 {
   [[NSRunLoop currentRunLoop]
     performSelector: @selector(endTesting:)
@@ -870,9 +870,9 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
   [d setObject: @"Gorm 0.2" forKey: @"ApplicationRelease"];
   [d setObject: @"0.2 Jul 2002" forKey: @"FullVersionID"];
   [d setObject: [NSArray arrayWithObjects: 
+		  @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
 		  @"Gregory John Casamento <greg_casamento@yahoo.com>",
 		  @"Richard Frith-Macdonald <rfm@gnu.org>",
-		  @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
 		  nil]
 	forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
