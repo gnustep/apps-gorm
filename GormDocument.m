@@ -1063,6 +1063,7 @@ static NSImage  *fileImage = nil;
   // release the managers...
   RELEASE(classManager);
   RELEASE(filePrefsManager);
+  RELEASE(filePrefsView);
 
   // release editors...
   RELEASE(classEditor);
