@@ -641,32 +641,13 @@
     }
 }
 
-- (void) _internalCall: (id) sender
+- (void) _internalCall: (NSBrowser*)sender
 {
-  if (sender == newBrowser)
-    {
-      [self browser: newBrowser
-	    selectCellWithString: [[newBrowser selectedCell] stringValue]
-	    inColumn: [newBrowser selectedColumn]];
-      if ([newBrowser selectedColumn] == 0
-	  && [[newBrowser selectedCell] isLeaf] == NO)
-	[newBrowser reloadColumn: 1];
-    }
-  else if (sender == oldBrowser)
-    {
-      [self browser: oldBrowser
-	    selectCellWithString: [[oldBrowser selectedCell] stringValue]
-	    inColumn: [oldBrowser selectedColumn]];
-    }
-}
-
-- (BOOL) browser: (NSBrowser*)sender
-selectCellWithString: (NSString*)title
-	inColumn: (int)col
-{
-  unsigned		numConnectors = [connectors count];
-  unsigned		index;
-
+  unsigned	numConnectors = [connectors count];
+  unsigned	index;
+  NSBrowserCell	*cell = [sender selectedCell];
+  NSString	*title = [cell stringValue];
+  int		col = [sender selectedColumn];
 
   if (sender == newBrowser)
     {
@@ -677,17 +658,14 @@ selectCellWithString: (NSString*)title
 	      id	con = nil;
 	      NSString	*action;
 
-
 	      for (index = 0; index < numConnectors; index++)
 		{
 		  con = [connectors objectAtIndex: index];
 		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
 		    {
-		      NSString *name = nil;
-
 		      RELEASE(actions);
 		      actions = RETAIN([[NSApp classManager]
-					 allActionsForObject: [con destination]]);
+			allActionsForObject: [con destination]]);
 		      break;
 		    }
 		}
@@ -695,7 +673,7 @@ selectCellWithString: (NSString*)title
 		{
 		  RELEASE(actions);
 		  actions = RETAIN([[NSApp classManager]
-				     allActionsForObject: [NSApp connectDestination]]);
+		    allActionsForObject: [NSApp connectDestination]]);
 		  if ([actions count] > 0)
 		    {
 		      con = [NSNibControlConnector new];
@@ -709,6 +687,11 @@ selectCellWithString: (NSString*)title
   		{
   		  ASSIGN(currentConnector, con);
   		}
+	      /*
+	       * Ensure that the actions are displayed in column one,
+	       * and select the action for the current connection (if any).
+	       */
+	      [newBrowser reloadColumn: 1];
   	      action = [con label];
   	      if (action != nil)
   		{
@@ -790,21 +773,31 @@ selectCellWithString: (NSString*)title
     {
       for (index = 0; index < numConnectors; index++)
 	{
-	  id	con = [connectors objectAtIndex: index];
+	  id		con = [connectors objectAtIndex: index];
+	  NSString	*label = [con label];
 
-	  if ([title hasPrefix: [con label]] == YES)
+	  if ([title hasPrefix: label] == YES)
 	    {
-	      NSString	*label;
 	      NSString	*name;
 	      id	dest = [NSApp connectDestination];
 
-	      label = [con label];
 	      dest = [con destination];
 	      name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
 	      name = [label stringByAppendingFormat: @" (%@)", name];
 	      if ([title isEqual: name] == YES)
 		{
+		  NSString	*path = label;
+
 		  ASSIGN(currentConnector, con);
+		  /*
+		   * Update the main browser to reflect selected connection
+		   */
+		  path = [@"/" stringByAppendingString: label];
+		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
+		    {
+		      path = [@"/target" stringByAppendingString: path];
+		    }
+		  [newBrowser setPath: path];
 		  [NSApp displayConnectionBetween: object
 					      and: [con destination]];
 		  break;
@@ -813,7 +806,27 @@ selectCellWithString: (NSString*)title
 	}
     }
   [self updateButtons];
-  return YES;
+}
+
+- (BOOL) browser: (NSBrowser*)sender
+selectCellWithString: (NSString*)title
+	inColumn: (int)col
+{
+  NSMatrix	*matrix = [sender matrixInColumn: col];
+  int		rows = [matrix numberOfRows];
+  int		i;
+
+  for (i = 0; i < rows; i++)
+    {
+      NSBrowserCell	*cell = [matrix cellAtRow: i column: 0];
+
+      if ([[cell stringValue] isEqual: title] == YES)
+        {
+	  [matrix selectCellAtRow: i column: 0];
+	  return YES;
+	}
+    }
+  return NO;
 }
 
 - (void) browser: (NSBrowser*)sender
@@ -941,8 +954,8 @@ selectCellWithString: (NSString*)title
       [oldBrowser setAllowsMultipleSelection: NO];
       [oldBrowser setHasHorizontalScroller: NO];
       [oldBrowser setDelegate: self];
-      [newBrowser setTarget: self];
-      [newBrowser setAction: @selector(_internalCall:)];
+      [oldBrowser setTarget: self];
+      [oldBrowser setAction: @selector(_internalCall:)];
 
       [split addSubview: oldBrowser];
       RELEASE(oldBrowser);
@@ -989,9 +1002,13 @@ selectCellWithString: (NSString*)title
 	  [currentConnector establishConnection];
 	}
       [connectors removeObject: currentConnector];
+      [oldBrowser loadColumnZero];
     }
   else
     {
+      NSString	*path;
+      id	dest;
+
       /*
        * Establishing a target/action type connection will automatically
        * remove any previous target/action connection.
@@ -1017,6 +1034,10 @@ selectCellWithString: (NSString*)title
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
 
+      /*
+       * We don't want to establish connections on proxy object as their
+       * class are unknown to IB
+       */
       if ([[currentConnector source]
 	isKindOfClass: [GormObjectProxy class]] == NO
 	&& [[currentConnector destination]
@@ -1024,13 +1045,19 @@ selectCellWithString: (NSString*)title
 	{
 	  [currentConnector establishConnection];
 	}
+
       /*
-       * We don't want to establish connections on proxy object as their
-       * class are unknown to IB
+       * When we establish a connection, we want to highlight it in
+       * the browser so the user can see it has been done.
        */
+      dest = [currentConnector destination];
+      path = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+      path = [[currentConnector label] stringByAppendingFormat: @" (%@)", path];
+      path = [@"/" stringByAppendingString: path];
+      [oldBrowser loadColumnZero];
+      [oldBrowser setPath: path];
     }
   [[(id<IB>)NSApp activeDocument] touch];	/* mark as edited.	*/
-  [oldBrowser loadColumnZero];
   [self updateButtons];
 }
 
@@ -1039,7 +1066,6 @@ selectCellWithString: (NSString*)title
   if (anObject != nil && anObject != object)
     {
       NSArray		*array;
-      NSString          *name;
 
       ASSIGN(object, anObject);
       DESTROY(currentConnector);
@@ -1085,16 +1111,22 @@ selectCellWithString: (NSString*)title
       [newBrowser loadColumnZero];
       if (currentConnector == nil)
 	{
-	  if ([outlets count] == 1)
+	  if ([connectors count] > 0)
+	    {
+	      currentConnector = RETAIN([connectors objectAtIndex: 0]);
+	    }
+	  else if ([outlets count] == 1)
 	    {
 	      [newBrowser selectRow: 0 inColumn: 0];
+	      [newBrowser sendAction];
 	    }
 	}
-      else if ([currentConnector isKindOfClass:
+      if ([currentConnector isKindOfClass:
 	[NSNibControlConnector class]] == YES)
 	{
-	  [newBrowser selectRow: [outlets indexOfObject: @"target"]
-		       inColumn: 0];
+	  [newBrowser setPath: @"/target"];
+	  //[newBrowser selectRow: [outlets indexOfObject: @"target"] inColumn: 0];
+	  [newBrowser sendAction];
 	}
 
       [self updateButtons];

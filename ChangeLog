@@ -1,3 +1,10 @@
+2003-02-10  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormInspectorsManager.m: in browser delegate re-ordered mechanism
+	for establishing updates to browsers.  Fixed and added to the code
+	ensuring that highlighting of browser elements correctly indicates
+	established connections clearly.
+
 2003-02-10  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* GormInspectorsManager.m: _internalCall:
