@@ -1,3 +1,8 @@
+2004-02-23 23:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: reformatted and added/removed some
+	methods as needed.   These were pointed out be Deek/Jeff.
+	
 2004-02-21 13:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Defaults.plist: Add new default for "Archive
