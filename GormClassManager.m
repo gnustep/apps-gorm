@@ -179,7 +179,10 @@
 	  // copy all actions from the class imported to the first responder
 	  while((action = [e nextObject]))
 	    {
-	      [self addAction: action forClassNamed: @"FirstResponder"];
+	      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+		{
+		  [self addAction: action forClassNamed: @"FirstResponder"];
+		}
 	    }
 
 	  result = YES;
@@ -242,7 +245,10 @@
   [[info objectForKey: @"AllActions"] insertObject: anAction atIndex: 0];
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      [self addAction: anAction forClassNamed: @"FirstResponder"];
+      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+	{
+	  [self addAction: anAction forClassNamed: @"FirstResponder"];
+	}
     }
 }
 
@@ -305,7 +311,10 @@
     }
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
+      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+	{
+	  [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
+	}
     }
 }
 
@@ -879,7 +888,10 @@
     }
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      [self removeAction: anAction fromClassNamed: @"FirstResponder"];
+      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+	{
+	  [self removeAction: anAction fromClassNamed: @"FirstResponder"];
+	}
     }
 }
 
@@ -1260,8 +1272,6 @@
 - (BOOL) isSuperclass: (NSString*)superclass linkedToClass: (NSString*)subclass
 {
   NSString *ssclass;
-
-  //NSDebugLog(@"isSuperClass : %@, %@", superclass, subclass);
 
   if (superclass == nil || subclass == nil)
     {

@@ -1,3 +1,10 @@
+2004-04-06 20:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Correction to how actions are added to 
+	FirstResponder.  Previously it was adding *all* actions to this
+	entry, but it shouldn't do this.   It now adds only those
+	methods added to subclasses of NSResponder.
+	
 2004-04-06 00:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/inspectors.m: added defaultItemForm attribute.
