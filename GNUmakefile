@@ -38,6 +38,7 @@ include ./Version
 SUBPROJECTS = \
 	GormLib \
 	Palettes \
+	GormObjCHeaderParser \
 	Testing
 
 #

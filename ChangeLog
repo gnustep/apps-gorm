@@ -1,3 +1,18 @@
+2004-11-27 05:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/OCClass.h
+	* GormObjCHeaderParser/OCClass.m
+	* GormObjCHeaderParser/NSScanner+OCHeaderParser.h
+	* GormObjCHeaderParser/NSScanner+OCHeaderParser.m
+	* GormObjCHeaderParser/OCMethod.h
+	* GormObjCHeaderParser/OCMethod.m
+	* GormObjCHeaderParser/OCIVar.h
+	* GormObjCHeaderParser/OCIVar.m
+	* GormObjCHeaderParser/OCHeaderParser.h
+	* GormObjCHeaderParser/OCHeaderParser.m
+	* GormObjCHeaderParser/GNUmakefile: New files for class parser.
+	* GormClassManager.m: Changes to use new class parser.
+
 2004-11-24 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormNSOutlineView.h: Removed savedColor and

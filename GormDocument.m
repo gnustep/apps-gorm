@@ -1258,8 +1258,19 @@ static NSImage  *fileImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      [classManager parseHeader: [oPanel filename]];
-      return self;
+      NSString *fileName = [oPanel filename];
+      if(![classManager parseHeader: fileName])
+	{
+	  NSString *message = [NSString stringWithFormat: 
+	     _(@"An error occurred while parsing %@"),fileName];
+	  NSRunAlertPanel(_(@"Problem parsing class"), 
+			  message,
+			  nil, nil, nil);
+	}
+      else
+	{
+	  return self;
+	}
     }
 
   return nil;

@@ -33,6 +33,11 @@
 #include <GNUstepBase/GSCategories.h>
 #include <Foundation/NSValue.h>
 
+#include <GormObjCHeaderParser/OCHeaderParser.h>
+#include <GormObjCHeaderParser/OCClass.h>
+#include <GormObjCHeaderParser/OCMethod.h>
+#include <GormObjCHeaderParser/OCIVar.h>
+
 /** Private methods not accesible from outside */
 @interface GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;
@@ -1564,13 +1569,54 @@
 
 - (BOOL) parseHeader: (NSString *)headerPath
 {
+  OCHeaderParser *ochp = AUTORELEASE([[OCHeaderParser alloc] initWithContentsOfFile: headerPath]);
   BOOL result = NO;
-  /*
-  OCHeaderParser *ochp = [[OCHeaderParser alloc] initWithContentsOfFile: headerPath];
-  NSArray *classes = [ochp ];
-  NSArray *actions = [ochp actionList];
-  NSString 
-  */
+
+  if(ochp != nil)
+    {
+      result = [ochp parse];
+      if(result)
+	{
+	  NSArray *classes = [ochp classes];
+	  NSEnumerator *en = [classes objectEnumerator];
+	  OCClass *cls = nil;
+	  
+	  while((cls = (OCClass *)[en nextObject]) != nil)
+	    {
+	      NSArray *methods = [cls methods];
+	      NSArray *ivars = [cls ivars];
+	      NSString *superClass = [cls superClassName];
+	      NSString *className = [cls className];
+	      NSEnumerator *ien = [ivars objectEnumerator];
+	      NSEnumerator *men = [methods objectEnumerator];
+	      OCMethod *method = nil;
+	      OCIVar *ivar = nil;
+	      NSMutableArray *actions = [NSMutableArray array];
+	      NSMutableArray *outlets = [NSMutableArray array];
+	      
+	      while((method = (OCMethod *)[men nextObject]) != nil)
+		{
+		  if([method isAction])
+		    {
+		      [actions addObject: [method name]];
+		    }
+		}
+	      
+	      while((ivar = (OCIVar *)[ien nextObject]) != nil)
+		{
+		  if([ivar isOutlet])
+		    {
+		      [outlets addObject: [ivar name]];
+		    }
+		}
+	      
+	      [self addClassNamed: className
+		    withSuperClassNamed: superClass
+		    withActions: actions
+		    withOutlets: outlets];	 
+	    }
+	}
+    }
 
   return result;
 }
