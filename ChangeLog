@@ -1,3 +1,9 @@
+2005-01-08 18:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Corrected bug#11534.
+	* GormFilePrefsManager.m: Updated alpha version
+	* GormInfo.plist: Updated alpha version
+
 2005-01-08 12:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewWithContentViewEditor.m: Change in pasteInView: to

@@ -1348,6 +1348,11 @@
 	      [customClasses addObject: key];
 	      [classInformation setObject: classDict forKey: key];
 	    }
+	  else if([key isEqual: @"FirstResponder"] == YES)
+	    {
+	      [customClasses addObject: key];
+	      [classInformation setObject: classDict forKey: key];
+	    }
 	  else
 	    {
 	      NSMutableArray *actions = [classDict objectForKey: @"Actions"];
