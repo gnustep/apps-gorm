@@ -1,6 +1,14 @@
+Tue Dec 14 20:13:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Enough for today.
+	* View/View.m: Added a single button to the 'View' palette.
+	* GormPaletteManager.m: improve DnD image ffset code.
+	* GormWindowEditor.m: accept dropped views in window.
+ 
 Tue Dec 14 19:53:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Removed GormResourcesManager - merged functionality into GormDocument
+	Loads of other minor changes too - hopefully all simplified a bit.
 
 Tue Dec 14 17:33:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 

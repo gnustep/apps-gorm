@@ -32,5 +32,22 @@
 @end
 
 @implementation ViewPalette
+- (void) finishInstantiate
+{
+  NSView	*contents;
+  id		v;
+
+  window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
+				       styleMask: NSBorderlessWindowMask 
+					 backing: NSBackingStoreRetained
+					   defer: NO];
+  contents = [window contentView];
+
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 20)];
+  [v setBordered: YES];
+  [v setTitle: @"Button"];
+  [contents addSubview: v];
+  RELEASE(v);
+}
 @end
 

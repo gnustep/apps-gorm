@@ -885,13 +885,6 @@ static NSImage	*classesImage = nil;
 	  [win setFrameTopLeftPoint: screenPoint];
 	}
     }
-  else
-    {
-      NSLog(@"Pasting %@ not implemented", aType);
-      objects = nil;
-/* FIXME */
-    }
-
   [self attachObjects: objects toParent: parent];
   [self touch];
   return objects;

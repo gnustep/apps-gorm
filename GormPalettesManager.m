@@ -158,8 +158,8 @@ static NSImage	*dragImage = nil;
       NSImageRep	*rep;
       NSSize		offset;
 
-      offset.width = mouseDownPoint.x - dragPoint.x;
-      offset.height = mouseDownPoint.y - dragPoint.y;
+      offset.width = rect.origin.x - dragPoint.x;
+      offset.height = rect.origin.y - dragPoint.y;
 
       RELEASE(dragImage);
       dragImage = [NSImage new];

@@ -436,7 +436,7 @@
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPoint	loc = [sender draggingLocation];
+  NSPoint	loc = [sender draggedImageLocation];
   NSPasteboard	*pb = [sender draggingPasteboard];
   NSArray	*views;
   NSEnumerator	*enumerator;
@@ -451,10 +451,9 @@
 		       parent: edited];
   /*
    * Now make all the views subviews of ourself, setting their origin to be
-   * the point at which they were dropped (which we convert from screen
-   * coordinates to our own coordinates).
+   * the point at which they were dropped (converted from window coordinates
+   * to our own coordinates).
    */
-  loc = [[self window] convertScreenToBase: loc];
   loc = [self convertPoint: loc fromView: nil];
   enumerator = [views objectEnumerator];
   while ((sub = [enumerator nextObject]) != nil)
