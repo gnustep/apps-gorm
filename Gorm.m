@@ -83,6 +83,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return YES;
 }
 
+- (GormClassManager*) classManager
+{
+  if (classManager == nil)
+    {
+      classManager = [GormClassManager new];
+    }
+  return classManager;
+}
+
 - (id) copy: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
@@ -122,6 +131,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
   RELEASE(documents);
+  RELEASE(classManager);
   [super dealloc];
 }
 
@@ -415,7 +425,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) save: (id)sender
 {
-  return [(id)activeDocument save: sender];
+  return [(id)activeDocument saveDocument: sender];
 }
 
 - (id) saveAll: (id)sender
@@ -427,7 +437,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     {
       if ([[doc window] isDocumentEdited] == YES)
 	{
-	  [doc save: sender];
+	  [doc saveDocument: sender];
 	}
     }
   return self;
@@ -435,7 +445,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) saveAs: (id)sender
 {
-  return [(id)activeDocument saveAs: sender];
+  return [(id)activeDocument saveAsDocument: sender];
 }
 
 - (id) selectAll: (id)sender

@@ -133,22 +133,6 @@
 {
   return @"GormWindowAttributesInspector";
 }
-- (NSString*) connectInspectorClassName
-{
-  return @"GormWindowConnectionsInspector";
-}
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormWindowSizeInspector";
-}
-- (NSString*) helpInspectorClassName
-{
-  return @"GormWindowHelpInspector";
-}
-- (NSString*) classInspectorClassName
-{
-  return @"GormWindowClassInspector";
-}
 @end
 
 
@@ -184,37 +168,5 @@
     }
   return self;
 }
-@end
-
-
-
-@interface GormWindowConnectionsInspector : IBInspector
-@end
-
-@implementation GormWindowConnectionsInspector
-@end
-
-
-
-@interface GormWindowSizeInspector : IBInspector
-@end
-
-@implementation GormWindowSizeInspector
-@end
-
-
-
-@interface GormWindowHelpInspector : IBInspector
-@end
-
-@implementation GormWindowHelpInspector
-@end
-
-
-
-@interface GormWindowClassInspector : IBInspector
-@end
-
-@implementation GormWindowClassInspector
 @end
 

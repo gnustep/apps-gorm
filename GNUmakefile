@@ -36,6 +36,7 @@ SUBPROJECTS = \
 APP_NAME = Gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
+	ClassInformation.plist \
 	Palettes/0Menus/0Menus.palette \
 	Palettes/1Windows/1Windows.palette \
 	Palettes/2Controls/2Controls.palette \
@@ -67,6 +68,7 @@ Gorm_OBJC_FILES = \
 	GormViewKnobs.m \
 	GormObjectEditor.m \
 	GormWindowEditor.m \
+	GormClassManager.m \
 	GormInspectorsManager.m \
 	GormPalettesManager.m
 

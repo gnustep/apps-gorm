@@ -1,0 +1,26 @@
+{
+  NSButton = {
+    Actions = (
+      "takeStringValueFrom:"
+    );
+    Super = NSControl;
+  };
+  NSControl = {
+    Outlets = (
+      target
+    );
+    Super = NSView;
+  };
+  NSResponder = {
+    Super = NSObject;
+  };
+  NSView = {
+    Super = NSResponder;
+  };
+  NSWindow = {
+    Outlets = (
+      delegate
+    );
+    Super = NSResponder;
+  };
+}

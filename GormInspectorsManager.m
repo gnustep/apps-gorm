@@ -24,6 +24,9 @@
 
 #include "GormPrivate.h"
 
+#define	IVW	272
+#define	IVH	388
+
 /*
  *	The GormEmptyInspector is a placeholder for an empty selection.
  */
@@ -45,7 +48,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
@@ -87,7 +90,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
@@ -128,7 +131,7 @@
       NSView	*contents;
       NSButton	*button;
 
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
 					       defer: NO];
@@ -200,11 +203,12 @@
 - (id) init
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSBox		*bar;
   NSMenuItem	*item;
-  NSRect	contentRect = {{0, 0}, {272, 420}};
-  NSRect	popupRect = {{60, 15}, {152, 20}};
-  NSRect	selectionRect = {{0, 380}, {272, 40}};
-  NSRect	inspectorRect = {{0, 0}, {272, 378}};
+  NSRect	contentRect = {{0, 0}, {IVW, 420}};
+  NSRect	popupRect = {{60, 5}, {152, 20}};
+  NSRect	selectionRect = {{0, 390}, {IVW, 30}};
+  NSRect	inspectorRect = {{0, 0}, {IVW, IVH}};
   unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
 
   panel = [[NSPanel alloc] initWithContentRect: contentRect
@@ -261,6 +265,13 @@
   [item setKeyEquivalent: @"4"];
   [item setTag: 3];
 
+  bar = [[NSBox alloc] initWithFrame: NSMakeRect (0, 0, IVW, 2)];
+  [bar setBorderType: NSGrooveBorder];
+  [bar setTitlePosition: NSNoTitle];
+  [bar setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
+  [selectionView addSubview: bar];
+  RELEASE(bar);
+
   /*
    * The inspector view fills the area below the selection view.
    */
@@ -308,6 +319,7 @@
       [popup selectItemAtIndex: 1];
       [popup setNeedsDisplay: YES];
       [panel makeKeyAndOrderFront: self];
+      current = 1;
     }
   [self setCurrentInspector: self];
 }
@@ -341,6 +353,8 @@
    * Return the inspector view to its original window and release the old
    * inspector.
    */
+  [[inspector okButton] removeFromSuperview];
+  [[inspector revertButton] removeFromSuperview];
   [[inspector window] setContentView: [[inspectorView subviews] lastObject]];
   DESTROY(inspector);
   
@@ -446,10 +460,449 @@
       [newView setFrame: rect];
       [inspectorView addSubview: newView];
     }
-  /*
-   * Tell inspector to update from its object.
-   */
-  [inspector revert: self];
 }
 
 @end
+
+
+@interface GormConnectionInspector : IBInspector
+{
+  id			currentConnector;
+  NSMutableArray	*connectors;
+  NSArray		*actions;
+  NSArray		*outlets;
+  NSBrowser		*newBrowser;
+  NSBrowser		*oldBrowser;
+}
+- (void) updateButtons;
+@end
+
+@implementation GormConnectionInspector
+
+- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
+{
+  int		rows = 0;
+
+  if (sender == newBrowser)
+    {
+      if (column == 0)
+	{
+	  rows = [outlets count];
+	}
+      else
+	{
+	  NSString	*name = [[sender selectedCellInColumn: 0] stringValue];
+
+	  if ([name isEqual: @"target"])
+	    {
+	      rows = [actions count];
+	    }
+	}
+    }
+  else
+    {
+      rows = [connectors count];
+    }
+  return rows;
+}
+
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)column
+{
+  if (sender == newBrowser)
+    {
+      if (column == 0)
+	{
+	  return @"Outlets";
+	}
+      else
+	{
+	  NSString	*name = [[sender selectedCellInColumn: 0] stringValue];
+
+	  if ([name isEqual: @"target"])
+	    {
+	      return @"Actions";
+	    }
+	  else
+	    {
+	      return @"";
+	    }
+	}
+    }
+  else
+    {
+      return @"Connections";
+    }
+}
+
+- (BOOL) browser: (NSBrowser*)sender
+selectCellWithString: (NSString*)title
+	inColumn: (int)col
+{
+  unsigned		numConnectors = [connectors count];
+  unsigned		index;
+
+  if (sender == newBrowser)
+    {
+      if (col == 0)
+	{
+	  if ([title isEqual: @"target"])
+	    {
+	      if (actions == nil)
+		{
+		  actions = [[NSApp classManager] allActionsForClassNamed:
+		    NSStringFromClass([[NSApp connectDestination] class])];
+		  RETAIN(actions);
+		}
+	      for (index = 0; index < numConnectors; index++)
+		{
+		  id	con = [connectors objectAtIndex: index];
+
+		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
+		    {
+		      NSString	*action = [con label];
+
+		      ASSIGN(currentConnector, con);
+		      [newBrowser selectRow: [actions indexOfObject: action]
+				   inColumn: 1];
+		      [oldBrowser selectRow: index inColumn: 0];
+		      [NSApp displayConnectionBetween: object
+						  and: [con destination]];
+		      break;
+		    }
+		}
+	    }
+	  else
+	    {
+	      BOOL	found = NO;
+
+	      /*
+	       * See if there already exists a connector for this outlet.
+	       */
+	      for (index = 0; index < numConnectors; index++)
+		{
+		  id	con = [connectors objectAtIndex: index];
+
+		  if ([[con label] isEqual: title] == YES)
+		    {
+		      ASSIGN(currentConnector, con);
+		      [oldBrowser selectRow: index inColumn: 0];
+		      [NSApp displayConnectionBetween: object
+						  and: [con destination]];
+		      found = YES;
+		      break;
+		    }
+		}
+	      /*
+	       * if there was no connector, make one.
+	       */
+	      if (found == NO)
+		{
+		  RELEASE(currentConnector);
+		  currentConnector = [NSNibOutletConnector new];
+		  [currentConnector setSource: object];
+		  [currentConnector setDestination: [NSApp connectDestination]];
+		  [currentConnector setLabel: title];
+		  [oldBrowser loadColumnZero];
+		  [oldBrowser selectRow: index inColumn: 0];
+		}
+	    }
+	}
+      else
+	{
+	  BOOL	found = NO;
+
+	  for (index = 0; index < numConnectors; index++)
+	    {
+	      id	con = [connectors objectAtIndex: index];
+
+	      if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
+		{
+		  NSString	*action = [con label];
+
+		  if ([action isEqual: title] == YES)
+		    {
+		      ASSIGN(currentConnector, con);
+		      found = YES;
+		      break;
+		    }
+		}
+	    }
+	  if (found == NO)
+	    {
+	      RELEASE(currentConnector);
+	      currentConnector = [NSNibControlConnector new];
+	      [currentConnector setSource: object];
+	      [currentConnector setDestination: [NSApp connectDestination]];
+	      [currentConnector setLabel: title];
+	      [oldBrowser loadColumnZero];
+	    }
+	  [oldBrowser selectRow: index inColumn: 0];
+	}
+    }
+  else
+    {
+      for (index = 0; index < numConnectors; index++)
+	{
+	  id	con = [connectors objectAtIndex: index];
+
+	  if ([title hasPrefix: [con label]] == YES)
+	    {
+	      NSString	*label;
+	      NSString	*name;
+	      id	dest = [NSApp connectDestination];
+
+	      label = [con label];
+	      dest = [con destination];
+	      name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+	      name = [label stringByAppendingFormat: @" (%@)", name]; 
+	      if ([title isEqual: name] == YES)
+		{
+		  ASSIGN(currentConnector, con);
+		  [NSApp displayConnectionBetween: object
+					      and: [con destination]];
+		  break;
+		}
+	    }
+	}
+    }
+  [self updateButtons];
+  return YES;
+}
+
+- (void) browser: (NSBrowser*)sender
+ willDisplayCell: (id)aCell
+	   atRow: (int)row
+	  column: (int)col
+{
+  if (sender == newBrowser)
+    {
+      NSString	*name;
+
+      if (col == 0)
+	{
+	  if (row >= 0 && row < [outlets count])
+	    {
+	      name = [outlets objectAtIndex: row];
+	      [aCell setStringValue: name];
+	      if ([name isEqual: @"target"])
+		{
+		  [aCell setLeaf: NO];
+		}
+	      else
+		{
+		  [aCell setLeaf: YES];
+		}
+	      [aCell setEnabled: YES];
+	    }
+	  else
+	    {
+	      [aCell setStringValue: @""];
+	      [aCell setLeaf: YES];
+	      [aCell setEnabled: NO];
+	    }
+	}
+      else
+	{
+	  name = [[sender selectedCellInColumn: 0] stringValue];
+	  if ([name isEqual: @"target"] == NO)
+	    {
+	      NSLog(@"cell selected in actions column without target");
+	    }
+	  if (row >= 0 && row < [actions count])
+	    {
+	      [aCell setStringValue: [actions objectAtIndex: row]];
+	      [aCell setEnabled: YES];
+	    }
+	  else
+	    {
+	      [aCell setStringValue: @""];
+	      [aCell setEnabled: NO];
+	    }
+	  [aCell setLeaf: YES];
+	}
+    }
+  else
+    {
+      if (row >= 0 && row < [connectors count])
+	{
+	  NSString	*label;
+	  NSString	*name;
+	  id		dest = [NSApp connectDestination];
+
+	  label = [[connectors objectAtIndex: row] label];
+	  dest = [[connectors objectAtIndex: row] destination];
+	  name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+	  name = [label stringByAppendingFormat: @" (%@)", name]; 
+
+	  [aCell setStringValue: name];
+	  [aCell setEnabled: YES];
+	}
+      else
+	{
+	  [aCell setStringValue: @""];
+	  [aCell setEnabled: NO];
+	}
+      [aCell setLeaf: YES];
+    }
+}
+
+- (void) dealloc
+{
+  RELEASE(currentConnector);
+  RELEASE(connectors);
+  RELEASE(actions);
+  RELEASE(outlets);
+  RELEASE(okButton);
+  RELEASE(revertButton);
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView		*contents;
+      NSSplitView	*split;
+      NSArray		*array;
+      NSRect		rect;
+      id		obj;
+
+      obj = [[[(Gorm*)NSApp selectionOwner] selection] lastObject];
+
+      /*
+       * Create list of existing connections for selected object.
+       */
+      connectors = [NSMutableArray new];
+      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: obj
+	ofClass: [NSNibControlConnector class]];
+      [connectors addObjectsFromArray: array];
+      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: obj
+	ofClass: [NSNibOutletConnector class]];
+      [connectors addObjectsFromArray: array];
+
+      outlets = RETAIN([[NSApp classManager] allOutletsForClassNamed:
+	NSStringFromClass([obj class])]);
+
+      rect = NSMakeRect(0, 0, IVW, IVH);
+      window = [[NSWindow alloc] initWithContentRect: rect
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      split = [[NSSplitView alloc] initWithFrame: [contents bounds]];
+      [split setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
+
+      newBrowser = [[NSBrowser alloc] initWithFrame: rect];
+      [newBrowser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
+      [newBrowser setMaxVisibleColumns: 2];
+      [newBrowser setAllowsMultipleSelection: NO];
+      [newBrowser setHasHorizontalScroller: NO];
+      [newBrowser setDelegate: self];
+
+      [split addSubview: newBrowser];
+      RELEASE(newBrowser);
+
+      rect.size.height /= 2;
+      oldBrowser = [[NSBrowser alloc] initWithFrame: rect];
+      [oldBrowser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
+      [oldBrowser setMaxVisibleColumns: 1];
+      [oldBrowser setAllowsMultipleSelection: NO];
+      [oldBrowser setHasHorizontalScroller: NO];
+      [oldBrowser setDelegate: self];
+
+      [split addSubview: oldBrowser];
+      RELEASE(oldBrowser);
+
+      [contents addSubview: split];
+      RELEASE(split);
+
+      /*
+       * See if we can do initial selection based on pre-existing connections.
+       */
+      if ([NSApp isConnecting] == YES)
+	{
+	  id		dest = [NSApp connectDestination];
+	  unsigned	row;
+
+	  for (row = 0; row < [connectors count]; row++)
+	    {
+	      id<IBConnectors>	con = [connectors objectAtIndex: row];
+
+	      if ([con destination] == dest)
+		{
+		  ASSIGN(currentConnector, con);
+		  [oldBrowser selectRow: row inColumn: 0];
+		  break;
+		}
+	    }
+	}
+
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: @"Connect"];
+      [okButton setEnabled: NO];
+
+      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [revertButton setAction: @selector(revert:)];
+      [revertButton setTarget: self];
+      [revertButton setTitle: @"Revert"];
+      [revertButton setEnabled: NO];
+
+      if (currentConnector == nil)
+	{
+	  if ([outlets count] == 1)
+	    {
+	      [newBrowser selectRow: 0 inColumn: 0];
+	    }
+	}
+      [self updateButtons];
+    }
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  if ([connectors containsObject: currentConnector] == YES)
+    {
+      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];
+      [connectors removeObject: currentConnector];
+    }
+  else
+    {
+      [connectors addObject: currentConnector];
+      [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
+    }
+  [self updateButtons];
+}
+
+- (void) updateButtons
+{
+  if (currentConnector == nil)
+    {
+      [okButton setEnabled: NO];
+    }
+  else
+    {
+      [okButton setEnabled: YES];
+      if ([connectors containsObject: currentConnector] == YES)
+	{
+	  [okButton setTitle: @"Disconnect"];
+	}
+       else
+	{
+	  [okButton setTitle: @"Connect"];
+	}
+    }
+}
+
+- (BOOL) wantsButtons
+{
+  return YES;
+}
+@end
+

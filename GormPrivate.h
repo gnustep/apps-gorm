@@ -9,11 +9,13 @@
 
 #include "GormDocument.h"
 #include "GormInspectorsManager.h"
+#include "GormClassManager.h"
 #include "GormPalettesManager.h"
 
 extern NSString *GormLinkPboardType;
 
 @interface NSApplication (Gorm)
+- (GormClassManager*) classManager;
 - (NSImage*) linkImage;
 - (void) startConnecting;
 @end
@@ -21,6 +23,7 @@ extern NSString *GormLinkPboardType;
 @interface Gorm : NSApplication <IB>
 {
   id			infoPanel;
+  GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
   id			selectionOwner;

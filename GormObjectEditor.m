@@ -35,7 +35,7 @@
 }
 - (NSString*) connectInspectorClassName
 {
-  return @"GormObjectInspector";
+  return @"GormConnectionInspector";
 }
 - (NSString*) sizeInspectorClassName
 {
@@ -116,14 +116,7 @@ static NSMapTable	*docMap = 0;
   if (index >= 0 && index < [objects count])
     {
       obj = [objects objectAtIndex: index];
-      if (obj != selected)
-	{
-	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
-	  selected = obj;
-	  [nc postNotificationName: IBSelectionChangedNotification
-			    object: self];
-	}
+      [self selectObjects: [NSArray arrayWithObject: obj]];
     }
   return obj;
 }
@@ -351,7 +344,6 @@ static NSMapTable	*docMap = 0;
       if (obj != nil && obj != selected)
 	{
 	  [self selectObjects: [NSArray arrayWithObject: obj]];
-	  [self makeSelectionVisible: YES];
 	  [self makeSelectionVisible: YES];
 	}
       name = [document nameForObject: obj];
@@ -598,11 +590,8 @@ NSLog(@"Got link from %@", name);
 {
   id	obj = [anArray lastObject];
 
-  if (obj != selected)
-    {
-      selected = obj;
-      [document setSelectionFromEditor: self];
-    }
+  selected = obj;
+  [document setSelectionFromEditor: self];
 }
 
 - (NSArray*) selection

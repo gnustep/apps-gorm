@@ -420,6 +420,7 @@ static NSImage	*classesImage = nil;
 	      NSEnumerator	*e;
 	      NSNibConnector	*con;
 
+	      [connections makeObjectsPerform: @selector(establishConnection)];
 	      /*
 	       * Get links for all the top-level objects
 	       */

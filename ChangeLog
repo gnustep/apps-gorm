@@ -1,3 +1,10 @@
+Mon Dec 20 14:16:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
+
+	Added connections inspector so connecting objects should work.
+	Use information from 'ClassInformation.plist' to specify outlets
+	and actions for a class.
+	Added GormClassManager stuff to manage this information.
+
 Sat Dec 18 21:24:00 1999 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	Add partial support for draagging into object view.
