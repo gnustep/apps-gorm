@@ -1,3 +1,10 @@
+2003-08-09  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomView.m: Corrected obsolete header reference.
+	* GormInspectorsManager.m: Removed extra establishConnection call
+	which was causing a problem when removing connections from
+	NSOwner.
+
 2003-08-04  Fabien Vallon  <fabien@tuxfamily>
 
 	* Add a good when adding Images

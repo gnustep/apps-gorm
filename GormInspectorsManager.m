@@ -1058,17 +1058,16 @@ selectCellWithString: (NSString*)title
 	{
 	  [currentConnector setDestination: nil];
 
-	  if ([[currentConnector source] isKindOfClass:
-	    [GormObjectProxy class]] == NO)
-	    {
+	  if ([[currentConnector source] isKindOfClass: 
+		   [GormObjectProxy class]] == NO)
+	  {
 	      [currentConnector establishConnection];
-	    }
+	  }
 	}
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
 	{
 	  [currentConnector setDestination: nil];
 	  [currentConnector setLabel: nil];
-	  [currentConnector establishConnection];
 	}
       [connectors removeObject: currentConnector];
       [oldBrowser loadColumnZero];
