@@ -1,3 +1,15 @@
+2005-02-15 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Disabled poseAs: and poseAsClass: while in Gorm.
+	* Resources/GormClassInspector.gorm
+	* Resources/GormFontView.gorm
+	* Resources/GormImageInspector.gorm
+	* Resources/GormNSSplitViewInspector.gorm
+	* Resources/GormPrefGeneral.gorm
+	* Resources/GormPrefPalettes.gorm
+	* Resources/GormScrollViewAttributesInspector.gorm: made sure that
+	all fonts are system fonts.
+
 2005-02-14 23:35 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: changed [GormClassManager parseHeader:]

@@ -100,6 +100,18 @@ static NSImage *testingImage = nil;
 }
 @end
 
+@interface NSObject (GormPrivate)
++ (void) poseAsClass: (Class)aClassObject;
+@end
+
+@implementation NSObject (GormPrivate)
++ (void) poseAsClass: (Class)aClassObject
+{
+  // disable poseAs: while in Gorm.
+  // class_pose_as(self, aClassObject);
+}
+@end
+
 @implementation GormObjectProxy
 /*
  * Perhaps this would be better to have a dummy initProxyWithCoder
