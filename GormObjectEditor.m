@@ -29,6 +29,26 @@
  * the matrix containing the objects in a document.
  */
 @implementation NSObject (GormObjectAdditions)
+- (NSString*) inspectorClassName
+{
+  return @"GormObjectInspector";
+}
+- (NSString*) connectInspectorClassName
+{
+  return @"GormObjectInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormObjectInspector";
+}
+- (NSString*) helpInspectorClassName
+{
+  return @"GormObjectInspector";
+}
+- (NSString*) classInspectorClassName
+{
+  return @"GormObjectInspector";
+}
 - (NSString*) editorClassName
 {
   return @"GormObjectEditor";
@@ -86,9 +106,21 @@
 
 @implementation	GormObjectEditor
 
+static NSMapTable	*docMap = 0;
+
++ (void) initialize
+{
+  if (self == [GormObjectEditor class])
+    {
+      docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
+	NSObjectMapValueCallBacks, 2);
+    }
+}
+
 - (void) addObject: (id)anObject
 {
-  if ([objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
+  if (anObject != nil
+    && [objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
     {
       [objects addObject: anObject];
       [self refreshCells];
@@ -106,12 +138,21 @@
  */
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
+  id	old = NSMapGet(docMap, (void*)aDocument);
+
+  if (old != nil)
+    {
+      RELEASE(self);
+      self = RETAIN(old);
+      [self addObject: anObject];
+      return self;
+    }
+
   self = [super init];
-  if (self)
+  if (self != nil)
     {
       NSButtonCell	*proto;
 
-      selected = anObject;
       document = aDocument;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
@@ -139,7 +180,8 @@
       [proto setEditable: NO];
       [self setPrototype: proto];
       RELEASE(proto);
-      [self refreshCells];
+      NSMapInsert(docMap, (void*)aDocument, (void*)self);
+      [self addObject: anObject];
     }
   return self;
 }
@@ -394,6 +436,13 @@ NSLog(@"Could do dragging");
 {
 }
 
+- (BOOL) containsObject: (id)object
+{
+  if ([objects indexOfObjectIdenticalTo: object] == NSNotFound)
+    return NO;
+  return YES;
+}
+
 - (void) copySelection
 {
 }
@@ -418,6 +467,18 @@ NSLog(@"Could do dragging");
 
 - (void) makeSelectionVisible: (BOOL)flag
 {
+  if (flag == YES && selected != nil)
+    {
+      unsigned	pos = [objects indexOfObjectIdenticalTo: selected];
+      int	r = pos / [self numberOfColumns];
+      int	c = pos % [self numberOfColumns];
+
+      [self selectCellAtRow: r column: c];
+    }
+  else
+    {
+      [self deselectAllCells];
+    }
 }
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject
@@ -434,12 +495,37 @@ NSLog(@"Could do dragging");
 {
 }
 
+/*
+ * Return the rectangle in which an objects image will be displayed.
+ */
+- (NSRect) rectForObject: (id)anObject
+{
+  unsigned	pos = [objects indexOfObjectIdenticalTo: anObject];
+  NSRect	rect;
+  int		r;
+  int		c;
+
+  if (pos == NSNotFound)
+    return NSZeroRect;
+  r = pos / [self numberOfColumns];
+  c = pos % [self numberOfColumns];
+  rect = [self cellFrameAtRow: r column: c];
+  return rect;
+}
+
 - (void) resetObject: (id)anObject
 {
 }
 
 - (void) selectObjects: (NSArray*)anArray
 {
+  id	obj = [anArray lastObject];
+
+  if (obj != selected)
+    {
+      selected = obj;
+      [document setSelectionFromEditor: self];
+    }
 }
 
 - (NSArray*) selection

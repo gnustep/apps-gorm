@@ -24,31 +24,6 @@
 
 #include "GormPrivate.h"
 
-@implementation NSObject (IBInspectorClassNames)
-- (NSString*) inspectorClassName
-{
-  return @"GormObjectInspector";
-}
-- (NSString*) connectInspectorClassName
-{
-  return @"GormObjectInspector";
-}
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormObjectInspector";
-}
-- (NSString*) helpInspectorClassName
-{
-  return @"GormObjectInspector";
-}
-- (NSString*) classInspectorClassName
-{
-  return @"GormObjectInspector";
-}
-@end
-
-
-
 /*
  *	The GormEmptyInspector is a placeholder for an empty selection.
  */
