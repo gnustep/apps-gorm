@@ -236,8 +236,9 @@
   // We make an autoreleased copy of all of the inputs.  This prevents changes
   // to the original objects from reflecting here. GJC
 
-  if ([superClassNameCopy isEqualToString: @"NSObject"]
-    || [classInformation objectForKey: superClassNameCopy] != nil)
+  if ([superClassNameCopy isEqualToString: @"NSObject"] ||
+      ([classInformation objectForKey: superClassNameCopy] != nil &&
+       [superClassNameCopy isEqualToString: @"FirstResponder"] == NO))
     {
       NSMutableDictionary	*classInfo;
 

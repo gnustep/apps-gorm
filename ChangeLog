@@ -1,3 +1,9 @@
+2004-12-14 21:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: -addClassNamed:withSuperClassNamed:
+	actions:outlets:isCustom: added check for superclass of 
+	"FirstResponder". 
+
 2004-12-14 21:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Added code in pasteInSelection to prevent
@@ -20,9 +26,9 @@
 	* GormClassManager.h: Made variable names conform a little more to 
 	standard practice.  Also changed the declarations of "NSArray*" to 
 	"NSArray *".
-	* GormClassManager.m: Corrected addClass:withSuperClassNamed:actions:
-	outlets: to eliminate duplicate actions, outlets from the class being
-	added if they exist on the superclass.
+	* GormClassManager.m: Corrected addClassNamed:withSuperClassNamed:
+	actions:outlets:isCustom: to eliminate duplicate actions, outlets 
+	from the class being added if they exist on the superclass.
 	* Gorm.m: Changed coercion to id<IBSelectionEditors,IBEditors) in
 	the methods which handle copy, paste, delete, etc.
 	* TODO: Added more items scheduled for 1.0 release.
