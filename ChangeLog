@@ -1,3 +1,12 @@
+2003-06-09  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added mention of GormFontViewController.[hm]
+	to the makefile.
+	* Gorm.m: added header and updated orderFrontFontPanel: to 
+	install the view when the font panel is instantiated.
+	* GormScrollViewEditor.m: Minor code cleanup.
+	* GormFontViewController.[hm]: Added.
+	
 2003-06-08  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormScrollViewEditor.m: Added -[destroyAndListSubviews]

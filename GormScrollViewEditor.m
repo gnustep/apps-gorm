@@ -176,7 +176,6 @@
   NSMutableArray *newSelection = [NSMutableArray array];
   
   [parent makeSubeditorResign];
-  // NSLog(@"documentview = %@",[_EO documentView]);
   while ((subview = [enumerator nextObject]) != nil)
     {
       id v;

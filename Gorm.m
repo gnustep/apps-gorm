@@ -25,6 +25,7 @@
 
 #include "GormPrivate.h"
 #include "GormPrefController.h"
+#include "GormFontViewController.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -1053,6 +1054,10 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) orderFrontFontPanel: (id) sender
 {
+  NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
+  GormFontViewController *gfvc = [[GormFontViewController alloc] init];
+  [fontPanel setAccessoryView: [gfvc view]];
+  [fontPanel setNextResponder: gfvc];
   [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
 }
 
@@ -1062,7 +1067,7 @@ static NSButtonType _buttonTypeForObject( id button )
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSBundle			*bundle = [NSBundle mainBundle];
+       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
 
       path = [bundle pathForImageResource: @"GormLinkImage"];
