@@ -161,39 +161,43 @@ extern NSString *GormDidDeleteClassNotification;
 - (GormPalettesManager*) palettesManager;
 - (void) stopConnecting;
 
-- (id) copy: (id)sender;
-- (id) cut: (id)sender;
-- (id) delete: (id)sender;
-- (id) endTesting: (id)sender;
-- (id) infoPanel: (id) sender;
+- (void) infoPanel: (id) sender;
 - (void) preferencesPanel: (id) sender;
-- (id) inspector: (id) sender;
+
+- (void) copy: (id)sender;
+- (void) cut: (id)sender;
+- (void) paste: (id)sender;
+- (void) delete: (id)sender;
+- (void) selectAllItems: (id)sender;
+- (void) setName: (id)sender;
+
+- (id) endTesting: (id)sender;
+
+- (void) inspector: (id) sender;
+- (void) palettes: (id) sender;
+- (void) loadPalette: (id) sender;
+
 - (void) newGormDocument: (id) sender;
-- (id) loadPalette: (id) sender;
-- (id) open: (id)sender;
-- (id) palettes: (id) sender;
-- (id) paste: (id)sender;
-- (id) revertToSaved: (id)sender;
-- (id) save: (id)sender;
-- (id) saveAll: (id)sender;
-- (id) saveAs: (id)sender;
-- (id) selectAllItems: (id)sender;
-- (id) setName: (id)sender;
-- (id) testInterface: (id)sender;
+- (void) open: (id)sender;
+- (void) revertToSaved: (id)sender;
+- (void) save: (id)sender;
+- (void) saveAll: (id)sender;
+- (void) saveAs: (id)sender;
+- (void) testInterface: (id)sender;
 
 // sound & images.
 - (void) loadSound: (id) sender;
 - (void) loadImage: (id) sender;
 
 // grouping
-- (id) groupSelectionInSplitView: (id)sender;
-- (id) groupSelectionInBox: (id)sender;
-- (id) groupSelectionInScrollView: (id)sender;
-- (id) ungroup: (id)sender;
+- (void) groupSelectionInSplitView: (id)sender;
+- (void) groupSelectionInBox: (id)sender;
+- (void) groupSelectionInScrollView: (id)sender;
+- (void) ungroup: (id)sender;
 
 // added for classes support
-- (id) createSubclass: (id)sender;
-- (id) instantiateClass: (id)sender;
+- (void) createSubclass: (id)sender;
+- (void) instantiateClass: (id)sender;
 - (NSMenu*) classMenu;
 @end
 
