@@ -1,3 +1,8 @@
+2005-01-28 21:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormNSStepperInspector.gorm: Corrected problem
+	with inspector.
+
 2005-01-28 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Added call to super ok: method.
