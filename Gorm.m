@@ -1601,13 +1601,6 @@ static NSButtonType _buttonTypeForObject( id button )
 int 
 main(int argc, const char **argv)
 { 
-  extern BOOL NSImageDoesCaching;
-
-  NSImageDoesCaching = YES;
-
-  //[NSObject enableDoubleReleaseCheck: YES];  
-  //[GormPosingView poseAsClass: [NSView class]];
-
   startDate = [[NSDate alloc] init];
   NSApplicationMain(argc, argv);
 

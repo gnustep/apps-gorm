@@ -1,3 +1,10 @@
+2003-01-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed reference to NSImageDoesCaching.
+	This variable was removed in the gui library and was causing
+	compilation to fail.   Also cleaned up main() by getting rid
+	of some old comments.
+	
 2003-01-21  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.2.5
