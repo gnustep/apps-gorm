@@ -6,6 +6,8 @@
 	* GormControlEditor.m: intelligent placement take minsize into account.
 	* GormViewWithContentEditor.m: fixed display problem when moving 
 	selection.
+	* GormNSTableView.m [GormNSTableView -setGormDelegate]: changed return
+	type from id to void (this was conflicting with GormNSTableView.h).
 	
 2002-08-14  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
