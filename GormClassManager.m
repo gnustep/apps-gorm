@@ -121,8 +121,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 - (NSString *) addNewOutletToClassNamed: (NSString *)name
 {
   NSDictionary *classInfo = [classInformation objectForKey: name];
-  NSArray *array = [classInfo objectForKey: @"Actions"];
-  NSArray *extra = [classInfo objectForKey: @"ExtraActions"];
+  NSArray *array = [classInfo objectForKey: @"Outlets"];
+  NSArray *extra = [classInfo objectForKey: @"ExtraOutlets"];
   NSMutableArray *combined = [NSMutableArray arrayWithArray: array];
   NSString *new = @"newOutlet";
   int i = 1;

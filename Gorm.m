@@ -755,8 +755,10 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 	forKey: @"ApplicationDescription"];
   [d setObject: @"Gorm 0.1" forKey: @"ApplicationRelease"];
   [d setObject: @"0.1 Feb 2000" forKey: @"FullVersionID"];
-  [d setObject: [NSArray arrayWithObject: 
-		  @"Richard Frith-Macdonald <rfm@gnu.org>"]
+  [d setObject: [NSArray arrayWithObjects: 
+		  @"Gregory John Casamento <greg_casamento@yahoo.com>",
+		  @"Richard Frith-Macdonald <rfm@gnu.org>",
+		  nil]
 	forKey: @"Authors"];
   //  [d setObject: @"See http://www.gnustep.org" forKey: @"URL"];
   [d setObject: @"Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc."
