@@ -1,3 +1,13 @@
+2005-03-26 01:37 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	These changes allow the build to work correctly on UNIX and
+	preserve Nicola's changes for mingw.  This is temporary until
+	the build is reorganized.
+	* GNUmakefile: Added Palettes back to subprojects back in with 
+	conditional for mingw.
+	* GNUmakefile.postamble: Added conditional for targets so that
+	they will work as expected on UNIX.
+
 2005-03-22 04:30 Nicola Pero <n.pero@mi.flashnet.it>
 
 	With these changes, Gorm builds and runs out-of-the-box on Mingw32

@@ -35,9 +35,16 @@ include ./Version
 #
 # Each palette is a subproject
 #
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
 SUBPROJECTS = \
 	GormLib \
 	GormObjCHeaderParser
+else
+SUBPROJECTS = \
+	Palettes \
+	GormLib \
+	GormObjCHeaderParser
+endif
 
 #
 # MAIN APP
