@@ -1411,6 +1411,7 @@ static NSImage  *fileImage = nil;
     }
   else if ([name isEqual: NSWindowWillMiniaturizeNotification] == YES)
     {
+      [self setSelectionFromEditor: nil];
       [self setDocumentActive: NO];
     }
   else if ([name isEqual: NSWindowDidDeminiaturizeNotification] == YES)

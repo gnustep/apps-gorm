@@ -1,3 +1,9 @@
+2005-01-29 22:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: in -handleNotification: added code to 
+	reset the selection to nil to clear the inspector when the
+	window is miniaturized.
+
 2005-01-29 18:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: In -addAction:, -addOutlet:, -removeAction:,
