@@ -138,7 +138,8 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "archiveAction:"
 	);
 	Super = NSObject;
     };
@@ -146,13 +147,15 @@
 	Actions = (
 	    "palettesAction:",
 	    "inspectorAction:",
-	    "backupAction:"
+	    "backupAction:",
+	    "archiveAction:"
 	);
 	Outlets = (
 	    window,
 	    palettesButton,
 	    inspectorButton,
-	    backupButton
+	    backupButton,
+	    archiveMatrix
 	);
 	Super = NSObject;
     };

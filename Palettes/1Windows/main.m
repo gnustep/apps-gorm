@@ -48,7 +48,6 @@
     y = (screenRect.size.height - 300)/2;
   NSRect        windowRect = NSMakeRect(x,y,500,300);
 
-  // NSLog(@"Making window %@ on screen: %@",NSStringFromRect(windowRect),NSStringFromRect(screenRect));
   w = [[GormNSWindow alloc] initWithContentRect: windowRect 
 			    styleMask: style 
 			    backing: NSBackingStoreRetained

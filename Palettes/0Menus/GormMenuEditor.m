@@ -175,7 +175,7 @@
 	      tf = [[NSTextField alloc] initWithFrame: [self bounds]];
 	      frame = (NSRect)[cell titleRectForBounds:
 					     [rep rectOfItemAtIndex: pos]];
-	      NSLog(@"cell %@ (%@)", cell, [cell stringValue]);
+	      NSDebugLog(@"cell %@ (%@)", cell, [cell stringValue]);
 	      frame.origin.y += 3;
   	      frame.size.height -= 5;
 	      frame.origin.x += 1;
@@ -787,12 +787,12 @@
 	{
 	  if ([edited _ownedByPopUp])
 	    {
-	      NSLog(@"owned by popup");
+	      NSDebugLog(@"owned by popup");
 	      [item setOnStateImage: nil];
 	      [item setMixedStateImage: nil];
 	    }
 	  else
-	    NSLog(@"not owned by popup");
+	    NSDebugLog(@"not owned by popup");
 	  [edited insertItem: item atIndex: pos++];
 	}
       [edited sizeToFit];
@@ -805,7 +805,7 @@
       NSPoint	loc = [sender draggingLocation];
       int	pos = [rep indexOfItemAtPoint: loc];
 
-NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
+      NSDebugLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
       if (pos >= 0)
 	{
 	  id	item = [edited itemAtIndex: pos];
@@ -816,7 +816,7 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
     }
   else
     {
-      NSLog(@"Drop with unrecognized type (%@)!", dragType);
+      NSDebugLog(@"Drop with unrecognized type (%@)!", dragType);
       dragType = nil;
       return NO;
     }

@@ -2301,7 +2301,7 @@ static NSImage	*classesImage = nil;
   data = [aPasteboard dataForType: aType];
   if (data == nil)
     {
-      NSLog(@"Pasteboard %@ doesn't contain data of %@", aPasteboard, aType);
+      NSDebugLog(@"Pasteboard %@ doesn't contain data of %@", aPasteboard, aType);
       return nil;
     }
   u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
@@ -2502,7 +2502,7 @@ static NSImage	*classesImage = nil;
 
   if (object == nil)
     {
-      NSLog(@"Attempt to set name for nil object");
+      NSDebugLog(@"Attempt to set name for nil object");
       return;
     }
   if (aName == nil)
@@ -2548,7 +2548,7 @@ static NSImage	*classesImage = nil;
       oldObject = [nameTable objectForKey: aName];
       if (oldObject != nil)
 	{
-	  NSLog(@"Attempt to re-use name '%@'", aName);
+	  NSDebugLog(@"Attempt to re-use name '%@'", aName);
 	  return;
 	}
       oldName = [self nameForObject: object];
@@ -2819,7 +2819,7 @@ static NSImage	*classesImage = nil;
 	  // move the old file to something...
 	  if (![mgr movePath: documentPath toPath: saveFilePath handler: nil])
 	    {
-	      NSLog(@"Error moving old %@ file to %@",
+	      NSDebugLog(@"Error moving old %@ file to %@",
 	      	documentPath, saveFilePath);
 	    }
 	  
@@ -2877,7 +2877,7 @@ static NSImage	*classesImage = nil;
 
 		  if (!copied)
 		    {
-		      NSLog(@"Could not find sound at path %@", object);
+		      NSDebugLog(@"Could not find sound at path %@", object);
 		    }
 		}
 	      
@@ -2905,7 +2905,7 @@ static NSImage	*classesImage = nil;
 
 		  if (!copied)
 		    {
-		      NSLog(@"Could not find image at path %@", object);
+		      NSDebugLog(@"Could not find image at path %@", object);
 		    }
 		} 
 
@@ -3053,7 +3053,7 @@ static NSImage	*classesImage = nil;
 
       if (th == nil || tv == nil)
 	{
-	  NSLog(@"fail 1 %@ %@ %@", [(NSTableColumn*)object headerCell], th, tv);
+	  NSDebugLog(@"fail 1 %@ %@ %@", [(NSTableColumn*)object headerCell], th, tv);
 	  *r = NSZeroRect;
 	  return nil;
 	}
@@ -3062,7 +3062,7 @@ static NSImage	*classesImage = nil;
 
       if (index == NSNotFound)
 	{
-	  NSLog(@"fail 2");
+	  NSDebugLog(@"fail 2");
 	  *r = NSZeroRect;
 	  return nil;
 	}

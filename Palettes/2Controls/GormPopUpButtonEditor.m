@@ -120,13 +120,13 @@ Class _gormnspopupbuttonCellClass = 0;
 @implementation GormPopUpButtonEditor
 - (void) mouseDown: (NSEvent *)theEvent
 {
+  // double-clicked -> let's edit
   if (([theEvent clickCount] == 2) && [parent isOpened])
-    // double-clicked -> let's edit
     {
       [[_EO cell]
 	attachPopUpWithFrame: [_EO bounds]
 	inView: _editedObject];
-      NSLog(@"attach down");
+      NSDebugLog(@"attach down");
       [[document openEditorForObject: [[_EO cell] menu]] activate];
     }
   else

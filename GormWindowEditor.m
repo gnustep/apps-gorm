@@ -178,7 +178,7 @@
 
 - (void) changeFont: (id)sender
 {
-  NSLog(@"********* TELL pyr *********** changeFont");
+  NSDebugLog(@"********* TELL pyr *********** changeFont");
 }
 
 - (void) close
@@ -213,7 +213,7 @@
 
 - (void) copySelection
 {
-  NSLog(@"********* TELL pyr *********** copySelection");
+  NSDebugLog(@"********* TELL pyr *********** copySelection");
 }
 
 - (void) deactivate
@@ -248,7 +248,7 @@
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSLog(@"********* TELL pyr *********** draggedImage");
+  NSDebugLog(@"********* TELL pyr *********** draggedImage");
   /*
    * FIXME - handle this.
    * Notification that a drag failed/succeeded.
@@ -257,7 +257,7 @@
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
-  NSLog(@"********* TELL pyr *********** draggingSourceOperationMaskForLocal");
+  NSDebugLog(@"********* TELL pyr *********** draggingSourceOperationMaskForLocal");
   return NSDragOperationNone;
 }
 
@@ -273,7 +273,7 @@
 
 - (void) drawSelection
 {
-  NSLog(@"********* TELL pyr *********** drawSelection");
+  NSDebugLog(@"********* TELL pyr *********** drawSelection");
 }
 
 - (id<IBDocuments>) document
@@ -338,7 +338,7 @@
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject
 {
-  NSLog(@"********* TELL pyr *********** openSubeditorForObject");
+  NSDebugLog(@"********* TELL pyr *********** openSubeditorForObject");
   return nil;
 }
 
@@ -349,13 +349,13 @@
 
 - (void) pasteInSelection
 {
-  NSLog(@"********* TELL pyr *********** pasteInSelection");
+  NSDebugLog(@"********* TELL pyr *********** pasteInSelection");
 //    [self pasteInView: edit_view];
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSLog(@"********* TELL pyr *********** performDragOperation");
+  NSDebugLog(@"********* TELL pyr *********** performDragOperation");
   return NO;
 }
 
@@ -371,36 +371,36 @@
 
 - (id) selectAllItems: (id)sender
 {
-  NSLog(@"********* TELL pyr *********** selectAllItems");
+  NSDebugLog(@"********* TELL pyr *********** selectAllItems");
   return nil;
 }
 
 - (unsigned) selectionCount
 {
-  NSLog(@"********* TELL pyr *********** selectionCount");
+  NSDebugLog(@"********* TELL pyr *********** selectionCount");
   return  0;
 //    return [selection count];
 }
 
 - (void) validateEditing
 {
-  NSLog(@"********* TELL pyr *********** validateEditing");
+  NSDebugLog(@"********* TELL pyr *********** validateEditing");
 }
 
 - (void)windowDidBecomeMain: (id) aNotification
 {
-  NSLog(@"windowDidBecomeMain %@", selection);
+  NSDebugLog(@"windowDidBecomeMain %@", selection);
   if ([NSApp isConnecting] == NO)
     {
       [document setSelectionFromEditor: self];
-      NSLog(@"windowDidBecomeMain %@", selection);
+      NSDebugLog(@"windowDidBecomeMain %@", selection);
       [self makeSelectionVisible: YES];
     }
 }
 
 - (void)windowDidResignMain: (id) aNotification
 {
-  NSLog(@"windowDidResignMain");
+  NSDebugLog(@"windowDidResignMain");
   // [document setSelectionFromEditor: self];
   [self makeSelectionVisible: NO];
 }

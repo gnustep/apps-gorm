@@ -46,7 +46,7 @@
     }
   else
     {
-      // NSLog(@"%@ close but already closed", self);
+      NSDebugLog(@"%@ close but already closed", self);
     }
 }
 

@@ -82,7 +82,7 @@
 
 - (void) deleteSelection
 {
-  NSLog(@"Cannot delete Matrix cell\n");
+  NSDebugLog(@"Cannot delete Matrix cell\n");
 }
 
 static BOOL done_editing;
@@ -393,7 +393,7 @@ static BOOL done_editing;
     {
       if ((selectedRow != -1) && (selectedCol != -1))
 	{
-	  NSLog(@"highlighting %@",
+	  NSDebugLog(@"highlighting %@",
 		NSStringFromRect([_EO 
 				       cellFrameAtRow: selectedRow
 				       column: selectedCol]));

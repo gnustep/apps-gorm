@@ -113,7 +113,7 @@
 
 - (void) play: (id)sender
 {
-  NSLog(@"Play");
+  NSDebugLog(@"Play");
   [_currentSound play];
 }
 

@@ -4,4 +4,5 @@
   ShowInspectors = YES;	
   HeaderList = ();
   CellSizeWidth = 72;
+  ArchiveType = Typed;
 }

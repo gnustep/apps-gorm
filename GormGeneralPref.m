@@ -5,12 +5,13 @@
 #include <AppKit/NSButtonCell.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSWindow.h>
+#include <AppKit/NSMatrix.h>
 
 
 static NSString *SHOWPALETTES=@"ShowPalettes";
 static NSString *SHOWINSPECTOR=@"ShowInspectors";
 static NSString *BACKUPFILE=@"BackupFile";
-
+static NSString *ARCTYPE=@"ArchiveType";
 
 
 @implementation GormGeneralPref
@@ -32,10 +33,32 @@ static NSString *BACKUPFILE=@"BackupFile";
   //Defaults
   {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+    NSString *arcType = [defaults stringForKey: ARCTYPE];
+ 
     [inspectorButton setState: [defaults integerForKey: SHOWINSPECTOR]];
-    [palettesButton setState:[ defaults integerForKey: SHOWPALETTES]];
-    [backupButton setState:[ defaults integerForKey: BACKUPFILE]];
+    [palettesButton setState: [defaults integerForKey: SHOWPALETTES]];
+    [backupButton setState: [defaults integerForKey: BACKUPFILE]];
+
+    
+    if([arcType isEqual: @"Typed"])
+      {
+	[archiveMatrix setState: NSOnState atRow: 0 column: 0];
+	[archiveMatrix setState: NSOffState atRow: 1 column: 0];
+	[archiveMatrix setState: NSOffState atRow: 2 column: 0];
+      }
+    else if([arcType isEqual: @"Keyed"])
+      {
+	[archiveMatrix setState: NSOffState atRow: 0 column: 0];
+	[archiveMatrix setState: NSOnState atRow: 1 column: 0];
+	[archiveMatrix setState: NSOffState atRow: 2 column: 0];
+      }
+    else if([arcType isEqual: @"Both"])
+      {
+	[archiveMatrix setState: NSOffState atRow: 0 column: 0];
+	[archiveMatrix setState: NSOffState atRow: 1 column: 0];
+	[archiveMatrix setState: NSOnState atRow: 2 column: 0];
+      }
+
   }
 
   return self;
@@ -57,11 +80,12 @@ static NSString *BACKUPFILE=@"BackupFile";
 {
   if (sender != palettesButton) 
     return;
-  {
-    NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:[palettesButton state] forKey:SHOWPALETTES];
-    [defaults synchronize];
-  }
+  else
+    {
+      NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+      [defaults setInteger:[palettesButton state] forKey:SHOWPALETTES];
+      [defaults synchronize];
+    }
 }
 
 
@@ -69,11 +93,12 @@ static NSString *BACKUPFILE=@"BackupFile";
 {
   if (sender != inspectorButton) 
     return;
-  {
-    NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:[inspectorButton state] forKey:SHOWINSPECTOR];
-    [defaults synchronize];
-  }
+  else
+    {
+      NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+      [defaults setInteger:[inspectorButton state] forKey:SHOWINSPECTOR];
+      [defaults synchronize];
+    }
 }
 
 
@@ -81,11 +106,35 @@ static NSString *BACKUPFILE=@"BackupFile";
 {
   if (sender != backupButton) 
     return;
-  {
-    NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:[backupButton state] forKey:BACKUPFILE];
-    [defaults synchronize];
-  }
+  else
+    {
+      NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+      [defaults setInteger:[backupButton state] forKey:BACKUPFILE];
+      [defaults synchronize];
+    }
 }
 
+- (void) archiveAction: (id)sender
+{
+  if (sender != archiveMatrix) 
+    return;
+  else
+    {
+      NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+      if([[archiveMatrix cellAtRow: 0 column: 0] state] == NSOnState)
+	{
+	  [defaults setObject: @"Typed" forKey: ARCTYPE];
+	}
+      else if([[archiveMatrix cellAtRow: 1 column: 0] state] == NSOnState)
+	{
+	  [defaults setObject: @"Keyed" forKey: ARCTYPE];
+	}
+      else if([[archiveMatrix cellAtRow: 2 column: 0] state] == NSOnState)
+	{
+	  [defaults setObject: @"Both" forKey: ARCTYPE];
+	}
+      [defaults synchronize];
+    }
+}
 @end
+

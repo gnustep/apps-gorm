@@ -506,7 +506,7 @@
 	  while (inspector == nil && (obj = [obj superclass]) 
 		 && current == 0)
 	    {
-	      NSLog(@"Error loading %@ inspector", newInspector);
+	      NSDebugLog(@"Error loading %@ inspector", newInspector);
 	      newInspector = [obj inspectorClassName];
 	      inspector = [NSClassFromString(newInspector) new];
 	    }
@@ -915,7 +915,7 @@ selectCellWithString: (NSString*)title
 	  name = [[sender selectedCellInColumn: 0] stringValue];
 	  if ([name isEqual: @"target"] == NO)
 	    {
-	      NSLog(@"cell selected in actions column without target");
+	      NSDebugLog(@"cell selected in actions column without target");
 	    }
 	  if (row >= 0 && row < [actions count])
 	    {

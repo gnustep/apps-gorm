@@ -1,3 +1,22 @@
+2004-02-21 13:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Defaults.plist: Add new default for "Archive
+	Compatibility" section in preferences.
+	* GormGeneralPref.[mh]: Added code for new section
+	* GormDocument.m: Remove NSLogs, make NSDebugLog
+	* GormInspectorsManager.m: Same
+	* GormMatrixEditor.m: Same
+	* GormSoundInspector.m: Same
+	* GormSplitViewEditor.m: Same
+	* GormViewWithSubviewsEditor.m: Same
+	* GormWindowEditor.m: Same
+	* Palettes/0Menus/GormMenuEditor.m: Same
+	* Palettes/1Windows/main.m: Same
+	* Palettes/2Controls/GormPopUpButtonEditor.m: Same
+	* Resources/GormPrefGeneral.gorm: New section for "Archive
+	Compatibility."  This currently doesn't work since the
+	keyed archiving capability is not fully implemented.
+	
 2004-02-21 01:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormHeaderPref.m: Fixed header pre-loading.

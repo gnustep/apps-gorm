@@ -10,6 +10,7 @@
   id backupButton;
   id inspectorButton;
   id palettesButton;
+  id archiveMatrix;
 
   id _view;
 }
@@ -18,6 +19,7 @@
 - (void) palettesAction: (id)sender;
 - (void) inspectorAction: (id)sender;
 - (void) backupAction: (id)sender;
+- (void) archiveAction: (id)sender;
 @end
 
 

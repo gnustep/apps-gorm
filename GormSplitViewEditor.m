@@ -63,7 +63,7 @@
       NSEnumerator	*enumerator;
       NSView		*sub;
 
-      NSLog(@"activating %@ GormSplitViewEditor %@", self, _EO);
+      NSDebugLog(@"activating %@ GormSplitViewEditor %@", self, _EO);
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
 	selector: @selector(splitViewDidResizeSubviews:)
@@ -75,10 +75,10 @@
 
       while ((sub = [enumerator nextObject]) != nil)
 	{
-	  NSLog(@"ac %@ editorForObject: %@", self, sub);
+	  NSDebugLog(@"ac %@ editorForObject: %@", self, sub);
 	  if ([sub isKindOfClass: [GormViewEditor class]] == NO)
 	    {
-	      NSLog(@"ac %@ yes", self);
+	      NSDebugLog(@"ac %@ yes", self);
 	      [document editorForObject: sub 
 			inEditor: self 
 			create: YES];
