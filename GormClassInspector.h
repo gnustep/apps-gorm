@@ -35,10 +35,12 @@
 {
   // outlets
   id actionTable; 
-  id add;
+  id addAction;
+  id addOutlet;
   id classField;
   id outletTable;
-  id remove;
+  id removeAction;
+  id removeOutlet;
   id tabView;
 
   // internal vars
@@ -50,8 +52,10 @@
   // class manager..
   GormClassManager *classManager;
 }
-- (void) add: (id)sender;
-- (void) remove: (id)sender;
+- (void) addAction: (id)sender;
+- (void) removeAction: (id)sender;
+- (void) addOutlet: (id)sender;
+- (void) removeOutlet: (id)sender;
 - (void) select: (id)sender;
 - (NSString *) _currentClass;
 @end

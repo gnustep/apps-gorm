@@ -138,23 +138,29 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "removeOutlet:",
+	    "addOutlet:"
 	);
 	Super = NSObject;
     };
     GormClassInspector = {
 	Actions = (
 	    "select:",
-	    "remove:",
-	    "add:"
+	    "removeAction:",
+	    "addAction:",
+	    "removeOutlet:",
+	    "addOutlet:"
 	);
 	Outlets = (
 	    classField,
 	    tabView,
-	    remove,
-	    add,
+	    removeOutlet,
+	    addAction,
 	    actionTable,
-	    outletTable
+	    outletTable,
+	    removeAction,
+	    addOutlet
 	);
 	Super = IBInspector;
     };

@@ -157,6 +157,9 @@
 
       if (![classInformation objectForKey: className])
 	{
+	  NSEnumerator *e = [actions objectEnumerator];
+	  id action = nil;
+
 	  [self _touch];
 	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
 	  
@@ -166,6 +169,13 @@
 	  [classInformation setObject: classInfo forKey: className];
 	  [customClasses addObject: className];
 	  RELEASE(classInfo);
+
+	  // copy all actions from the class imported to the first responder
+	  while(action = [e nextObject])
+	    {
+	      [self addAction: action forClassNamed: @"FirstResponder"];
+	    }
+
 	  result = YES;
 	}
       else
@@ -1085,8 +1095,8 @@
 
 - (BOOL) isCustomClass: (NSString *)className
 {
-  return ([customClasses indexOfObject: className] != NSNotFound && 
-	  ![className isEqualToString: @"FirstResponder"]);
+  return ([customClasses indexOfObject: className] != NSNotFound); // && 
+  // ![className isEqualToString: @"FirstResponder"]);
 }
 
 - (BOOL) isKnownClass: (NSString *)className

@@ -3380,6 +3380,7 @@ numberOfChildrenOfItem: (id)item
     {
       return nil;
     }
+
   return [classManager addNewActionToClassNamed: item];
 }
 
@@ -3391,6 +3392,10 @@ numberOfChildrenOfItem: (id)item
     {
       return nil;
     }
+
+  if([item isEqualToString: @"FirstResponder"])
+	    return nil;
+
   return [classManager addNewOutletToClassNamed: item];
 }
 

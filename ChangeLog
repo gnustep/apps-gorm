@@ -1,3 +1,17 @@
+2003-06-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/GormClassInspector.gorm: Moved buttons into
+	tab view.
+	* GormClassInspector.[hm]: Added new methods and ivars for
+	buttons in each tab view.
+	* GormDocument.m: Added code to prevent addition of outlets
+	to FirstResponder.
+	* GormClassManager.m: Removed code which prevented adding
+	actions to firstresponder.  MOSX is able to add actions, but not
+	outlets to FirstResponder.  Aldo modified call made from
+	parseHeader in the class manager to add all action to
+	FirstResponder when importing the class.
+
 2003-06-06  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormClassInspector.gorm: New inspector

@@ -135,10 +135,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
     {
       // initialize all member variables...
       actionTable = nil;
-      add = nil;
+      addAction = nil;
+      addOutlet = nil;
       classField = nil;
       outletTable = nil;
-      remove = nil;
+      removeAction = nil;
+      removeOutlet = nil;
       tabView = nil;
       currentClass = nil;
       actionData = nil;
@@ -176,52 +178,54 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) _refreshView
 {
-  id addcell = [add cell];
-  id removecell = [remove cell];
+  id addActionCell = [addAction cell];
+  id removeActionCell = [removeAction cell];
+  id addOutletCell = [addOutlet cell];
+  id removeOutletCell = [removeOutlet cell];
   BOOL isCustom = [classManager isCustomClass: [self _currentClass]];
+  BOOL isFirstResponder = [[self _currentClass] isEqualToString: @"FirstResponder"];
 
   [classField setStringValue: [self _currentClass]];
   [outletTable reloadData];
   [actionTable reloadData];
 
-  [addcell setEnabled: isCustom];
-  [removecell setEnabled: isCustom];
+  // activate for actions...
+  [addActionCell setEnabled: isCustom];
+  [removeActionCell setEnabled: isCustom];
+
+  // activate for outlet...
+  [addOutletCell setEnabled: (isCustom && !isFirstResponder)];
+  [removeOutletCell setEnabled: (isCustom && !isFirstResponder)];
 }
 
-- (void) add: (id)sender
+- (void) addAction: (id)sender
 {
-  NSTabViewItem *tvi = [tabView selectedTabViewItem];
-  if([[tvi identifier] isEqualToString: @"Actions"])
-    {
-      [[(Gorm *)NSApp classManager] addNewActionToClassNamed: [self _currentClass]];
-      [actionTable reloadData];
-    }
-  else
-    {
-      [[(Gorm *)NSApp classManager] addNewOutletToClassNamed: [self _currentClass]];
-      [outletTable reloadData];
-    }
+  [[(Gorm *)NSApp classManager] addNewActionToClassNamed: [self _currentClass]];
+  [actionTable reloadData];
 }
 
-- (void) remove: (id)sender
+- (void) addOutlet: (id)sender
 {
-  NSTabViewItem *tvi = [tabView selectedTabViewItem];
-  if([[tvi identifier] isEqualToString: @"Actions"])
-    {
-      int i = [actionTable selectedRow];
-      NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [self _currentClass]];
-      NSString *name = [list objectAtIndex: i];
-      [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: [self _currentClass]];
-      [actionTable reloadData];
-    }
-  else
-    {
-      int i = [outletTable selectedRow];
-      NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [self _currentClass]];
-      NSString *name = [list objectAtIndex: i];
-      [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: [self _currentClass]];
-     [outletTable reloadData];
-    }
+  [[(Gorm *)NSApp classManager] addNewOutletToClassNamed: [self _currentClass]];
+  [outletTable reloadData];
+}
+
+- (void) removeAction: (id)sender
+{
+  int i = [actionTable selectedRow];
+  NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [self _currentClass]];
+  NSString *name = [list objectAtIndex: i];
+  [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: [self _currentClass]];
+  [actionTable reloadData];
+}
+
+- (void) removeOutlet: (id)sender
+{
+  int i = [outletTable selectedRow];
+  NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [self _currentClass]];
+  NSString *name = [list objectAtIndex: i];
+  [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: [self _currentClass]];
+  [outletTable reloadData];
 }
 
 - (void) select: (id)sender
