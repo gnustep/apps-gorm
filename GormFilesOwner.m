@@ -141,6 +141,7 @@
 
 - (void) setObject: (id)anObject
 {
+  ASSIGN(classes, [[NSApp classManager] allClassNames]);
   if (anObject != nil && anObject != object)
     {
       NSArray	*array;
@@ -161,7 +162,6 @@
       if ([array count] > 0)
 	hasConnections = YES;
 
-      ASSIGN(classes, [[NSApp classManager] allClassNames]);
       [browser loadColumnZero];
       pos = [classes indexOfObject: [object className]];
       if (pos != NSNotFound)

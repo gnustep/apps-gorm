@@ -1,3 +1,10 @@
+2003-03-06  Gregory Casamento <greg_casamento@yahoo.com>
+
+	* GormFilesOwner.m: Corrected minor problem with updating
+	class names for the file's owner inspector.   It was not updating
+	the list when reselecting the same object, so new classes were not
+	being displayed.
+	
 2003-03-05  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.2.6
