@@ -544,11 +544,19 @@ static NSImage	*dragImage = nil;
   current = [anObj selectedColumn];
   if (current >= 0 && current < [palettes count])
     {
+      id palette = [palettes objectAtIndex: current];
+
+      /*
+       * Set the window title to reflect the palette selection.
+       */
+      [panel setTitle: [NSString stringWithFormat: @"Palettes (%@)", 
+				 [palette className]]];
+
       /*
        * Move the views from their original window into our drag view.
        * Resize our drag view to the right size fitrst.
        */
-      wv = [[[palettes objectAtIndex: current] originalWindow] contentView];
+      wv = [[palette originalWindow] contentView];
       if (wv)
         [dragView setFrameSize: [wv frame].size];
       enumerator = [[wv subviews] objectEnumerator];
