@@ -405,6 +405,90 @@ static NSImage	*classesImage = nil;
   return documentPath;
 }
 
+- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
+{
+  NSArray		*links;
+
+  /*
+   * If there is a link from this editor to a parent, remove it.
+   */
+  links = [self connectorsForSource: anEditor
+			    ofClass: [GormEditorToParent class]];
+  NSAssert([links count] < 2, NSInternalInconsistencyException);
+  if ([links count] == 1)
+    {
+      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+    }
+
+  /*
+   * Remove the connection linking the object to this editor
+   */
+  links = [self connectorsForSource: anObject
+			    ofClass: [GormObjectToEditor class]];
+  NSAssert([links count] < 2, NSInternalInconsistencyException);
+  [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+
+  /*
+   * Make sure that this editor is not the selection owner.
+   */
+  if ([(id<IB>)NSApp selectionOwner] == anEditor)
+    {
+      [self resignSelectionForEditor: anEditor];
+    }
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+                           create: (BOOL)flag
+{
+  return [self editorForObject: anObject inEditor: nil create: flag];
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+                         inEditor: (id<IBEditors>)anEditor
+                           create: (BOOL)flag
+{
+  NSArray	*links;
+
+  /*
+   * Look up the editor links for the object to see if it already has an
+   * editor.  If it does return it, otherwise create a new editor and a
+   * link to it if the flag is set.
+   */
+  links = [self connectorsForSource: anObject
+			    ofClass: [GormObjectToEditor class]];
+  if ([links count] == 0 && flag == YES)
+    {
+      Class		eClass;
+      id<IBEditors>	editor;
+      id<IBConnectors>	link;
+
+      eClass = NSClassFromString([anObject editorClassName]);
+      editor = [[eClass alloc] initWithObject: anObject inDocument: self];
+      link = [GormObjectToEditor new];
+      [link setSource: anObject];
+      [link setDestination: editor];
+      [connections addObject: link];
+      RELEASE(link);
+      if (anEditor != nil)
+	{
+	  /*
+	   * This editor has a parent - so link to it.
+	   */
+	  link = [GormEditorToParent new];
+	  [link setSource: editor];
+	  [link setDestination: anEditor];
+	  [connections addObject: link];
+	  RELEASE(link);
+	}
+      RELEASE(editor);
+      return editor;
+    }
+  else
+    {
+      return [[links lastObject] destination];
+    }
+}
+
 - (void) endArchiving
 {
   NSEnumerator		*enumerator;
@@ -456,25 +540,59 @@ static NSImage	*classesImage = nil;
   if ([name isEqual: NSWindowWillCloseNotification] == YES)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      Class		winClass = [NSWindow class];
       NSEnumerator	*enumerator;
+      id<IBConnectors>	con;
       id		obj;
 
       [nc postNotificationName: IBWillCloseDocumentNotification
 			object: self];
+
+      [self setDocumentActive: NO];
+
       /*
-       * Close all open windows in this document befoew we go away.
+       * Destroy all windows in this document before we go away.
        */
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  if ([obj isKindOfClass: winClass] == YES)
+	  if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
 	      [obj setReleasedWhenClosed: YES];
 	      [obj close];
 	    }
 	}
+
+      /*
+       * Close all editors.
+       */
+      enumerator = [[NSArray arrayWithArray: connections] objectEnumerator];
+      while ((con = [enumerator nextObject]) != nil)
+	{
+	  if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+	    {
+	      [[con destination] close];
+	    }
+	}
+
+      /*
+       * Remove objects from document.
+       */
+      [connections removeAllObjects];
+      [nameTable removeAllObjects];
+      NSResetMapTable(objToName);
+      DESTROY(documentPath);
+    }
+  else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
+    {
+      [self setDocumentActive: YES];
+    }
+  else if ([name isEqual: NSWindowWillMiniaturizeNotification] == YES)
+    {
       [self setDocumentActive: NO];
+    }
+  else if ([name isEqual: NSWindowDidDeminiaturizeNotification] == YES)
+    {
+      [self setDocumentActive: YES];
     }
   else if ([name isEqual: IBWillBeginTestingInterfaceNotification] == YES)
     {
@@ -575,82 +693,6 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
-{
-  NSArray		*links;
-
-  /*
-   * If there is a link from this editor to a parent, remove it.
-   */
-  links = [self connectorsForSource: anEditor
-			    ofClass: [GormEditorToParent class]];
-  NSAssert([links count] < 2, NSInternalInconsistencyException);
-  if ([links count] == 1)
-    {
-      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
-    }
-
-  /*
-   * Remove the connection linking the object to this editor.
-   */
-  links = [self connectorsForSource: anObject
-			    ofClass: [GormObjectToEditor class]];
-  NSAssert([links count] == 1, NSInternalInconsistencyException);
-  [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
-}
-
-- (id<IBEditors>) editorForObject: (id)anObject
-                           create: (BOOL)flag
-{
-  return [self editorForObject: anObject inEditor: nil create: flag];
-}
-
-- (id<IBEditors>) editorForObject: (id)anObject
-                         inEditor: (id<IBEditors>)anEditor
-                           create: (BOOL)flag
-{
-  NSArray	*links;
-
-  /*
-   * Look up the editor links for the object to see if it already has an
-   * editor.  If it does return it, otherwise create a new editor and a
-   * link to it if the flag is set.
-   */
-  links = [self connectorsForSource: anObject
-			    ofClass: [GormObjectToEditor class]];
-  if ([links count] == 0 && flag == YES)
-    {
-      Class		eClass;
-      id<IBEditors>	editor;
-      id<IBConnectors>	link;
-
-      eClass = NSClassFromString([anObject editorClassName]);
-      editor = [[eClass alloc] initWithObject: anObject inDocument: self];
-      link = [GormObjectToEditor new];
-      [link setSource: anObject];
-      [link setDestination: editor];
-      [connections addObject: link];
-      RELEASE(link);
-      if (anEditor != nil)
-	{
-	  /*
-	   * This editor has a parent - so link to it.
-	   */
-	  link = [GormEditorToParent new];
-	  [link setSource: editor];
-	  [link setDestination: anEditor];
-	  [connections addObject: link];
-	  RELEASE(link);
-	}
-      RELEASE(editor);
-      return editor;
-    }
-  else
-    {
-      return [[links lastObject] destination];
-    }
-}
-
 - (id) init 
 {
   self = [super init];
@@ -680,9 +722,22 @@ static NSImage	*classesImage = nil;
       [window setTitle: @"UNTITLED"];
 
       [window setDelegate: self];
+
       [nc addObserver: self
 	     selector: @selector(handleNotification:)
 		 name: NSWindowWillCloseNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowDidBecomeKeyNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowWillMiniaturizeNotification
+	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: NSWindowDidDeminiaturizeNotification
 	       object: window];
 
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
@@ -780,6 +835,11 @@ static NSImage	*classesImage = nil;
 	       object: nil];
     }
   return self;
+}
+
+- (BOOL) isActive
+{
+  return isActive;
 }
 
 - (NSString*) nameForObject: (id)anObject
@@ -1028,10 +1088,14 @@ static NSImage	*classesImage = nil;
 	    {
 	      [e activate];
 	      [self setSelectionFromEditor: e];
-	      break;
+	      return;
 	    }
 	}
     }
+  /*
+   * No editor available to take the selection - set a nil owner.
+   */
+  [self setSelectionFromEditor: nil];
 }
 
 - (void) setName: (NSString*)aName forObject: (id)object
@@ -1222,31 +1286,43 @@ static NSImage	*classesImage = nil;
 
 - (void) setDocumentActive: (BOOL)flag
 {
-  NSEnumerator	*enumerator = [nameTable objectEnumerator];
-  Class		winClass = [NSWindow class];
-  id		obj;
+  if (flag != isActive)
+    {
+      NSEnumerator	*enumerator;
+      id		obj;
 
-  if (flag == YES)
-    {
-      while ((obj = [enumerator nextObject]) != nil)
+      enumerator = [nameTable objectEnumerator];
+      if (flag == YES)
 	{
-	  if ([obj isKindOfClass: winClass] == YES)
+	  [(GormDocument*)[(id<IB>)NSApp activeDocument] setDocumentActive: NO];
+	  isActive = YES;
+	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      [obj orderFront: self];
+	      if ([obj isKindOfClass: [NSWindow class]] == YES)
+		{
+		  [obj orderFront: self];
+		}
+	      else if ([obj isKindOfClass: [NSMenu class]] == YES)
+		{
+		  [obj display];
+		}
 	    }
 	}
-      [window orderFront: self];
-    }
-  else
-    {
-      while ((obj = [enumerator nextObject]) != nil)
+      else
 	{
-	  if ([obj isKindOfClass: winClass] == YES)
+	  isActive = NO;
+	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      [obj orderOut: self];
+	      if ([obj isKindOfClass: [NSWindow class]] == YES)
+		{
+		  [obj orderOut: self];
+		}
+	      else if ([obj isKindOfClass: [NSMenu class]] == YES)
+		{
+		  [obj close];
+		}
 	    }
 	}
-      [window orderOut: self];
     }
 }
 
@@ -1288,7 +1364,12 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (BOOL) windowShouldClose
+- (NSWindow*) window
+{
+  return window;
+}
+
+- (BOOL) windowShouldClose: (id)sender
 {
   if ([window isDocumentEdited] == YES)
     {

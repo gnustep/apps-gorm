@@ -28,7 +28,6 @@ extern NSString *GormLinkPboardType;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
   id			selectionOwner;
-  id			activeDocument;
   NSMutableArray	*documents;
   BOOL			isConnecting;
   BOOL			isTesting;

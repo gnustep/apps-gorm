@@ -285,6 +285,11 @@ static NSImage	*dragImage = nil;
 	  [self loadPalette: [array objectAtIndex: index]];
 	}
     }
+  /*
+   * Select initial palette - this should be the standard controls palette.
+   */
+  [selectionView selectCellAtRow: 0 column: 2];
+  [self setCurrentPalette: selectionView];
 
   [nc addObserver: self
 	 selector: @selector(handleNotification:)
@@ -383,7 +388,7 @@ static NSImage	*dragImage = nil;
   [cell setImage: [palette paletteIcon]];
   [selectionView sizeToCells];
   [selectionView selectCellAtRow: 0 column: col];
-  [selectionView setNeedsDisplay: YES];
+  [self setCurrentPalette: selectionView];
   RELEASE(palette);
 }
 

@@ -31,6 +31,7 @@
   NSScrollView		*scrollView;
   id			objectsView;
   BOOL			hiddenDuringTest;
+  BOOL			isActive;
   NSMenu		*savedMenu;
   NSMenuItem		*quitItem;		/* Replaced during test */
   NSMutableArray	*savedEditors;
@@ -59,6 +60,7 @@
 - (NSString*) documentPath;
 - (void) endArchiving;
 - (void) handleNotification: (NSNotification*)aNotification;
+- (BOOL) isActive;
 - (NSString*) nameForObject: (id)anObject;
 - (id) objectForName: (NSString*)aString;
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject;
@@ -75,7 +77,8 @@
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag;
 - (void) touch;		/* Mark document as having been changed.	*/
-- (BOOL) windowShouldClose;
+- (NSWindow*) window;
+- (BOOL) windowShouldClose: (id)sender;
 @end
 
 #endif

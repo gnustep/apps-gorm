@@ -42,7 +42,21 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id<IBDocuments>) activeDocument
 {
-  return activeDocument;
+  unsigned	i = [documents count];
+
+  if (i > 0)
+    {
+      while (i-- > 0)
+	{
+	  id	doc = [documents objectAtIndex: i];
+
+	  if ([doc isActive] == YES)
+	    {
+	      return doc;
+	    }
+	}
+    }
+  return nil;
 }
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
@@ -90,6 +104,15 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       classManager = [GormClassManager new];
     }
   return classManager;
+}
+
+- (id) close: (id)sender
+{
+  NSWindow	*window = [(id)[self activeDocument] window];
+
+  [window setReleasedWhenClosed: YES];
+  [window performClose: self];
+  return nil;
 }
 
 - (id) copy: (id)sender
@@ -154,7 +177,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     {
       if (connectSource != nil)
 	{
-	  w = [activeDocument windowAndRect: &r forObject: connectSource];
+	  w = [[self activeDocument] windowAndRect: &r
+					 forObject: connectSource];
 	  if (w != nil)
 	    {
 	      NSView	*wv = [[w contentView] superview];
@@ -178,7 +202,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   if (connectSource != nil)
     {
-      w = [activeDocument windowAndRect: &r forObject: connectSource];
+      w = [[self activeDocument] windowAndRect: &r forObject: connectSource];
       if (w != nil)
 	{
 	  NSView	*wv = [[w contentView] superview];
@@ -194,7 +218,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     {
       if (connectDestination != nil)
 	{
-	  w = [activeDocument windowAndRect: &r forObject: connectDestination];
+	  w = [[self activeDocument] windowAndRect: &r
+					 forObject: connectDestination];
 	  if (w != nil)
 	    {
 	      NSView	*wv = [[w contentView] superview];
@@ -218,7 +243,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   if (connectDestination != nil)
     {
-      w = [activeDocument windowAndRect: &r forObject: connectDestination];
+      w = [[self activeDocument] windowAndRect: &r
+				     forObject: connectDestination];
       if (w != nil)
 	{
 	  NSView	*wv = [[w contentView] superview];
@@ -307,10 +333,6 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       RETAIN(obj);
       [documents removeObjectIdenticalTo: obj];
       AUTORELEASE(obj);
-      if (obj == (id)activeDocument)
-	{
-	  activeDocument = nil;
-	}
     }
 }
 
@@ -395,14 +417,21 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [[self palettesManager] openPalette: sender];
 }
 
+- (id) miniaturize: (id)sender
+{
+  NSWindow	*window = [(id)[self activeDocument] window];
+
+  [window miniaturize: self];
+  return nil;
+}
+
 - (id) newApplication: (id) sender
 {
   id	doc = [GormDocument new];
 
   [documents addObject: doc];
-  [doc setDocumentActive: YES];
-  activeDocument = doc;
   RELEASE(doc);
+  [[doc window] makeKeyAndOrderFront: self];
   return doc;
 }
 
@@ -419,8 +448,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   else
     {
-      [doc setDocumentActive: YES];
-      activeDocument = doc;
+      [[doc window] makeKeyAndOrderFront: self];
     }
   return doc;
 }
@@ -456,7 +484,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) save: (id)sender
 {
-  return [(id)activeDocument saveDocument: sender];
+  return [(id)[self activeDocument] saveDocument: sender];
 }
 
 - (id) saveAll: (id)sender
@@ -476,7 +504,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) saveAs: (id)sender
 {
-  return [(id)activeDocument saveAsDocument: sender];
+  return [(id)[self activeDocument] saveAsDocument: sender];
 }
 
 - (id) selectAll: (id)sender
@@ -516,7 +544,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       n = [[t stringValue] stringByTrimmingSpaces];
       if (n != nil && [n isEqual: @""] == NO)
 	{
-	  [activeDocument setName: n forObject: o];
+	  [[self activeDocument] setName: n forObject: o];
 	}
     }
   [t removeFromSuperview];
@@ -535,12 +563,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     {
       return;
     }
-  if ([activeDocument containsObject: connectDestination] == NO)
+  if ([[self activeDocument] containsObject: connectDestination] == NO)
     {
       NSLog(@"Oops - connectDestination not in active document");
       return;
     }
-  if ([activeDocument containsObject: connectSource] == NO)
+  if ([[self activeDocument] containsObject: connectSource] == NO)
     {
       NSLog(@"Oops - connectSource not in active document");
       return;
@@ -564,6 +592,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   else
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      GormDocument		*a = (GormDocument*)[self activeDocument];
       NSEnumerator		*e;
       NSWindow			*w;
       NSData			*d;
@@ -573,9 +602,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
       isTesting = YES;
 
-      [activeDocument beginArchiving];
-      d = [NSArchiver archivedDataWithRootObject: activeDocument];
-      [activeDocument endArchiving];
+      [a beginArchiving];
+      d = [NSArchiver archivedDataWithRootObject: a];
+      [a endArchiving];
 
       e = [[self windows] objectEnumerator];
       while ((w = [e nextObject]) != nil)
@@ -609,25 +638,28 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
-  SEL	action = [item action];
+  GormDocument	*active = (GormDocument*)[self activeDocument];
+  SEL		action = [item action];
 
-  if (sel_eq(action, @selector(save:))
+  if (sel_eq(action, @selector(close:))
+    || sel_eq(action, @selector(miniaturize:))
+    || sel_eq(action, @selector(save:))
     || sel_eq(action, @selector(saveAs:))
     || sel_eq(action, @selector(saveAll:)))
     {
-      if (activeDocument == nil)
+      if (active == nil)
 	return NO;
     }
 
   if (sel_eq(action, @selector(revertToSaved:)))
     {
-      if (activeDocument == nil)
+      if (active == nil)
 	return NO;
     }
 
   if (sel_eq(action, @selector(testInterface:)))
     {
-      if (activeDocument == nil)
+      if (active == nil)
 	return NO;
     }
 
@@ -673,7 +705,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	  return NO;
 	}
       o = [s objectAtIndex: 0];
-      n = [activeDocument nameForObject: o];
+      n = [active nameForObject: o];
 
       if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"]
 	|| [n isEqual: @"NSFont"])
@@ -768,6 +800,12 @@ main(void)
   [aMenu addItemWithTitle: @"Test Interface"
 		   action: @selector(testInterface:) 
 	    keyEquivalent: @"r"];
+  [aMenu addItemWithTitle: @"Miniaturize"
+		   action: @selector(miniaturize:) 
+	    keyEquivalent: @"m"];
+  [aMenu addItemWithTitle: @"Close"
+		   action: @selector(close:) 
+	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
 				 action: NULL 
 			  keyEquivalent: @""];
