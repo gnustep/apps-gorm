@@ -1,4 +1,4 @@
-/* IBObjectProtocol.h
+/* InterfaceBuilder.h
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
@@ -43,5 +43,6 @@
 #include <InterfaceBuilder/IBSystem.h>
 #include <InterfaceBuilder/IBViewAdditions.h>
 #include <InterfaceBuilder/IBViewProtocol.h>
+#include <InterfaceBuilder/IBViewResourceDragging.h>
 
 #endif

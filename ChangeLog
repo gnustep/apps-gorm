@@ -1,3 +1,9 @@
+2005-03-19 16:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/InterfaceBuilder.h: Added new header
+	* GormLib/IBViewResourceDragging.h: New header
+	* GormLib/GNUmakefile: Added new header
+	
 2005-03-19 05:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: Corrected problem with control snapping to

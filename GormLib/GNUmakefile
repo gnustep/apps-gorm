@@ -59,6 +59,7 @@ IBResourceManager.h \
 IBSystem.h \
 IBViewAdditions.h \
 IBViewProtocol.h \
+IBViewResourceDragging.h \
 InterfaceBuilder.h
 
 #
