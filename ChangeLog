@@ -1,3 +1,13 @@
+2003-11-15 16:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewWithContectViewEditor.m: Added methods 
+	_shouldBeVertical and _sortByPosition:isVertical: and 
+	enhanced the groupSelectionInSplitView method to allow 
+	positional orientation of the splitview.  The user should
+	now expect the splitview to be built based on the relative 
+	position of the views in the window being edited.  This fix 
+	addresses Report/Bug #5253.
+	
 2003-11-12 00:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: Removed extra RELEASE which was causing

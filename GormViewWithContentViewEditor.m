@@ -841,6 +841,100 @@
 #define MAX(A,B) ((A)>(B)?(A):(B))
 #define MIN(A,B) ((A)<(B)?(A):(B))
 
+int _sortViews(id view1, id view2, void *context)
+{
+  BOOL isVertical = *((BOOL *)context);
+  int order = NSOrderedSame;
+  NSRect rect1 = [[view1 editedObject] frame];
+  NSRect rect2 = [[view2 editedObject] frame];
+
+  if(!isVertical)
+    {
+      float y1 = rect1.origin.y;
+      float y2 = rect2.origin.y;
+
+      if(y1 == y2) 
+	order = NSOrderedSame;
+      else
+	order = (y1 > y2)?NSOrderedAscending:NSOrderedDescending;
+    }
+  else
+    {
+      float x1 = rect1.origin.x;
+      float x2 = rect2.origin.x;
+
+      if(x1 == x2) 
+	order = NSOrderedSame;
+      else
+	order = (x1 < x2)?NSOrderedAscending:NSOrderedDescending;
+    }
+
+  return order;
+}
+
+- (NSArray *) _sortByPosition: (NSArray *)subviews
+		   isVertical: (BOOL)isVertical
+{
+  NSMutableArray *array = [subviews mutableCopy];
+  NSMutableArray *result = [array sortedArrayUsingFunction: _sortViews
+				  context: &isVertical];
+  return result;
+}
+
+- (BOOL) _shouldBeVertical: (NSArray *)subviews
+{
+  BOOL vertical = NO;
+  NSEnumerator *enumerator = [subviews objectEnumerator];
+  GormViewEditor *editor = nil;
+  NSRect prevRect = NSZeroRect;
+  NSRect currRect = NSZeroRect;
+  int count = 0;
+
+  // iterate over the list of views...
+  while((editor = [enumerator nextObject]) != nil)
+    {
+      NSView *subview = [editor editedObject];
+      currRect = [subview frame];
+
+      if(!NSEqualRects(prevRect,NSZeroRect))
+	{
+	  float 
+	    x1 = prevRect.origin.x, // pull these for convenience.
+	    x2 = currRect.origin.x,
+	    y1 = prevRect.origin.y,
+	    y2 = currRect.origin.y,
+	    h1 = prevRect.size.height,
+	    h2 = currRect.size.height,
+	    w1 = prevRect.size.width,
+	    w2 = currRect.size.width;
+
+	  if((x1 < x2 || x1 > x2) && ((y2 >= y1 && y2 <= (y1 + h1)) || 
+				      (y2 <= y1 && y2 >= (y1 - h1))))
+	    { 
+	      count++;
+	    }
+
+	  if((y1 < y2 || y1 > y2) && ((x2 >= x1 && x2 <= (x1 + w1)) ||
+				      (x2 <= x1 && x2 >= (x1 - w1))))
+	    {
+	      count--;
+	    }
+	}
+      
+      prevRect = currRect;
+    }
+
+  NSLog(@"The vote is %d",count);
+
+  if(count >= 0)
+    vertical = YES;
+  else
+    vertical = NO;
+
+  // return the result...
+  return vertical;
+}
+
 - (void) groupSelectionInSplitView
 {
   NSEnumerator *enumerator = nil;
@@ -849,6 +943,8 @@
   NSRect rect = NSZeroRect;
   GormViewEditor *editor = nil;
   NSView *superview = nil;
+  NSArray *sortedviews = nil;
+  BOOL vertical = NO;
 
   if ([selection count] < 2)
     {
@@ -872,8 +968,12 @@
 
   [superview addSubview: splitView];
 
+  // positionally determine orientation
+  vertical = [self _shouldBeVertical: selection];
+  sortedviews = [self _sortByPosition: selection isVertical: vertical];
+  [splitView setVertical: vertical];
 
-  enumerator = [selection objectEnumerator];
+  enumerator = [sortedviews objectEnumerator];
   
   editor = [document editorForObject: splitView
 		     inEditor: self
