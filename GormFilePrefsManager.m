@@ -139,6 +139,7 @@ NSString *formatVersion(int version)
 {
   [itable reloadData];
   [iwindow orderFront: self];
+  [iwindow center];
 }
 
 - (void) selectTargetVersion: (id)sender

@@ -1,3 +1,10 @@
+2004-08-09 17:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFilePrefsManager.m: The method showIncompatibilities:
+	added call to "center" method on iwindow so that the 
+	incompatibilities window shows up in the center of the
+	screen.
+	
 2004-08-08 16:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resource/GormDocument.gorm: Made text label lengths a
