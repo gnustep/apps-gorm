@@ -38,6 +38,7 @@ NSNotificationCenter *nc = nil;
 // interfaces
 @interface GormDocument (GormClassInspectorAdditions)
 - (void) collapseClass: (NSString *)className;
+- (void) reloadClasses;
 @end
 
 // the data source classes for each of the tables...
@@ -69,6 +70,11 @@ NSNotificationCenter *nc = nil;
   NSDebugLog(@"%@",className);
   [classesView expandItem: className];
   [classesView collapseItem: className];
+}
+
+- (void) reloadClasses
+{
+  [classesView reloadData];
 }
 @end
 
@@ -320,8 +326,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *name = nil;
 
   // check the count...
-  if([list count] > 0)
+  if([list count] > 0 && i >= 0 && i < [list count])
     {
+      [actionTable deselectAll: self];
       name = [list objectAtIndex: i];
       removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
 				 removeConnectionsWithLabel: name 
@@ -332,7 +339,6 @@ objectValueForTableColumn: (NSTableColumn *)tc
   if(removed)
     {
       [classManager removeAction: name fromClassNamed: className];
-      
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
       [actionTable reloadData];
@@ -348,8 +354,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *name = nil;
 
   // check the count...
-  if([list count] > 0)
+  if([list count] > 0 && i >= 0 && i < [list count])
     {
+      [outletTable deselectAll: self];
       name = [list objectAtIndex: i];
       removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
 				 removeConnectionsWithLabel: name 
@@ -408,6 +415,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  object: classManager];
       [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: oldSuper];
       [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: name];
+      [(GormDocument *)[(id <IB>)NSApp activeDocument] reloadClasses];
     }
 }
 

@@ -1,3 +1,23 @@
+2004-04-25 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: removeOutlet: and removeAction: check for
+	i >= 0 to allow deletion of last element.   This was an issue 
+	introduced in the previous commit.  Also made the tables deselect
+	the previous selection so that it would allow deselection of all
+	rows.
+	* GormClassInspector.gorm: Made both tables capable of having an
+	empty selection.  This corrected an issue with deleting the last
+	element.
+	* GormDocument.m: Added back, in handleNotification:, handling of 
+	GormDidModifyClassNotification.  Previously this was removed since
+	there were no other places where the classes were being modified.
+	This is no longer the case.
+	
+2004-04-25 06:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: removeOutlet: and removeAction: check for
+	i > 0 to prevent and out of range exception if nothing is selected.
+
 2004-04-18 08:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPrefsController.m: Added dealloc to prevent any memory

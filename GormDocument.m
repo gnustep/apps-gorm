@@ -5,7 +5,7 @@
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2002
+ * Date:        2002,2003,2004
  *
  * This file is part of GNUstep.
  * 
@@ -1150,6 +1150,7 @@ static NSImage	*classesImage = nil;
 {
   id anitem;
   int i = [classesView selectedRow];
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   
   // if no selection, then return.
   if (i == -1)
@@ -1161,7 +1162,6 @@ static NSImage	*classesImage = nil;
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
       // if the class being edited is a custom class, then allow the deletion...
       if ([classManager isCustomClass: itemBeingEdited])
@@ -1224,6 +1224,8 @@ static NSImage	*classesImage = nil;
 		{
 		  [classManager removeClassNamed: anitem];
 		  [classesView reloadData];
+		  [nc postNotificationName: GormDidModifyClassNotification
+		      object: classManager];
 		}
 	    }
 	}
@@ -1595,6 +1597,14 @@ static NSImage	*classesImage = nil;
 	  [classesView reloadData];
 	}
     }
+  else if ([name isEqual: GormDidModifyClassNotification] == YES)
+    {
+      if ([aNotification object] == classManager && [classesView isEditing] == NO) 
+	{
+	  // NSLog(@"Reloading classesview");
+	  [classesView reloadData];
+	}
+    }
 }
 
 - (id) init 
@@ -1669,12 +1679,10 @@ static NSImage	*classesImage = nil;
 	     selector: @selector(handleNotification:)
 		 name: IBInspectorDidModifyObjectNotification
 	       object: nil];
-      /*
       [nc addObserver: self
 	     selector: @selector(handleNotification:)
 		 name: GormDidModifyClassNotification
 	       object: nil];
-      */
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 						 mode: NSRadioModeMatrix
 					    cellClass: [GormDisplayCell class]

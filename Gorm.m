@@ -4,7 +4,7 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2003
+ * Date:	1999, 2003, 2004
  * 
  * This file is part of GNUstep.
  * 

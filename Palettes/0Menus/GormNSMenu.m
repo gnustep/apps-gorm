@@ -49,6 +49,11 @@
 @end
 
 @implementation GormNSMenuWindow
+- (BOOL)isExcludedFromWindowsMenu
+{
+  return YES;
+}
+
 - (BOOL)canBecomeMainWindow
 {
   return YES;
