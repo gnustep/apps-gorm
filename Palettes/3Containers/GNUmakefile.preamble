@@ -1,2 +1,2 @@
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += -I../../
+ADDITIONAL_INCLUDE_DIRS += -I../..

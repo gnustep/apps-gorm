@@ -1,7 +1,16 @@
-2004-10-23 08:16 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-10-24 01:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GNUmakefile.preamble
+	* Palettes/1Windows/GNUmakefile.preamble
+	* Palettes/2Controls/GNUmakefile.preamble
+	* Palettes/3Containers/GNUmakefile.preamble
+	* Palettes/4Data/GNUmakefile.preamble: Removed extra slash for
+	compilation under MinGW on win32.
+	
+2004-10-23 20:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/GNUmakefile.postamble: Changed the build process a little
-	to be more compatible with mingw on win32.
+	to be more compatible with MinGW on win32.
 	
 2004-10-17 12:51 Gregory John Casamento <greg_casamento@yahoo.com>
 
