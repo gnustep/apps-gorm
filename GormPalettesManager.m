@@ -186,8 +186,8 @@ static NSImage	*dragImage = nil;
 
   if (active == nil)
     {
-      NSRunAlertPanel (NULL, _(@"No document is currently active"), 
-		       _(@"OK"), NULL, NULL);
+      NSRunAlertPanel (nil, _(@"No document is currently active"), 
+		       _(@"OK"), nil, nil);
       return;
     }
 
@@ -376,56 +376,56 @@ static NSImage	*dragImage = nil;
       bundle = [bundles objectAtIndex: col];
       if ([path isEqualToString: [bundle bundlePath]] == YES)
 	{
-	  NSRunAlertPanel (NULL, _(@"Palette has already been loaded"), 
-			   _(@"OK"), NULL, NULL);
+	  NSRunAlertPanel (nil, _(@"Palette has already been loaded"), 
+			   _(@"OK"), nil, nil);
 	  return NO;
 	}
     }
   bundle = [NSBundle bundleWithPath: path]; 
   if (bundle == nil)
     {
-      NSRunAlertPanel(NULL, _(@"Could not load Palette"), 
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, _(@"Could not load Palette"), 
+		      _(@"OK"), nil, nil);
       return NO;
     }
 
   path = [bundle pathForResource: @"palette" ofType: @"table"];
   if (path == nil)
     {
-      NSRunAlertPanel(NULL, _(@"File 'palette.table' missing"),
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, _(@"File 'palette.table' missing"),
+		      _(@"OK"), nil, nil);
       return NO;
     }
 
   paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
   if (paletteInfo == nil)
     {
-      NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table', you may need to update GNUstep-make and do a clean build of Gorm and it's palettes."),
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, _(@"Failed to load 'palette.table', you may need to update GNUstep-make and do a clean build of Gorm and it's palettes."),
+		      _(@"OK"), nil, nil);
       return NO;
     }
 
   className = [paletteInfo objectForKey: @"Class"];
   if (className == nil)
     {
-      NSRunAlertPanel(NULL, _(@"No palette class in 'palette.table'"),
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, _(@"No palette class in 'palette.table'"),
+		      _(@"OK"), nil, nil);
       return NO;
     }
 
   paletteClass = [bundle classNamed: className];
   if (paletteClass == 0)
     {
-      NSRunAlertPanel (NULL, _(@"Could not load palette class"), 
-		       _(@"OK"), NULL, NULL);
+      NSRunAlertPanel (nil, _(@"Could not load palette class"), 
+		       _(@"OK"), nil, nil);
       return NO;
     }
 
   palette = [paletteClass new];
   if ([palette isKindOfClass: [IBPalette class]] == NO)
     {
-      NSRunAlertPanel (NULL, _(@"Palette contains wrong type of class"), 
-		       _(@"OK"), NULL, NULL);
+      NSRunAlertPanel (nil, _(@"Palette contains wrong type of class"), 
+		       _(@"OK"), nil, nil);
       RELEASE(palette);
       return NO;
     }

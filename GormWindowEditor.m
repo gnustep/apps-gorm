@@ -277,8 +277,8 @@
 
   if(f == NO)
     {
-      NSRunAlertPanel(NULL, _(@"Window drag failed."),
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, _(@"Window drag failed."),
+		      _(@"OK"), nil, nil);
     }
 }
 

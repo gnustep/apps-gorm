@@ -1607,6 +1607,10 @@ static NSImage  *fileImage = nil;
   NSEnumerator *en = [[nameTable allKeys] objectEnumerator];
   NSString *key = nil;
 
+  NSRunAlertPanel(_(@"Warning"), 
+		  _(@"You are running with 'GormRepairFileOnLoad' set to YES."),
+		  nil, nil, nil);
+
   while((key = [en nextObject]) != nil)
   {
     id obj = [nameTable objectForKey: key];
@@ -1701,9 +1705,9 @@ static NSImage  *fileImage = nil;
 	      if([lastComponent isEqual: @"objects.gorm"] && 
 		 [parentExt isEqual: @"gorm"])
 		{
-		  NSRunAlertPanel(NULL,
+		  NSRunAlertPanel(nil,
 				  _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
-				  @"OK", NULL, NULL);
+				  @"OK", nil, nil);
 		  return nil;
 		}
 	      
@@ -1728,9 +1732,9 @@ static NSImage  *fileImage = nil;
       // check the data...
       if (data == nil)
 	{
-	  NSRunAlertPanel(NULL,
+	  NSRunAlertPanel(nil,
 			  [NSString stringWithFormat: @"Could not read '%@' data", aFile],
-			  @"OK", NULL, NULL);
+			  @"OK", nil, nil);
 	  return nil;
 	}
       
@@ -1769,8 +1773,8 @@ static NSImage  *fileImage = nil;
       c = [u decodeObject];
       if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
 	{
-	  NSRunAlertPanel(NULL, _(@"Could not unarchive document data"), 
-			  _(@"OK"), NULL, NULL);
+	  NSRunAlertPanel(nil, _(@"Could not unarchive document data"), 
+			  _(@"OK"), nil, nil);
 	  return nil;
 	}
       [GSClassSwapper setIsInInterfaceBuilder: NO]; // turn on custom classes.
@@ -1795,9 +1799,9 @@ static NSImage  *fileImage = nil;
 	  s = [s stringByAppendingPathExtension: @"classes"];
 	  if (![classManager loadCustomClasses: s])
 	    {
-	      NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+	      NSRunAlertPanel(nil, _(@"Could not open the associated classes file.\n"
 				      @"You won't be able to edit connections on custom classes"), 
-			      _(@"OK"), NULL, NULL);
+			      _(@"OK"), nil, nil);
 	    }
 	}
       else
@@ -1807,9 +1811,9 @@ static NSImage  *fileImage = nil;
 	  s = [aFile stringByAppendingPathComponent: @"data.classes"];
 	  if (![classManager loadCustomClasses: s]) 
 	    {
-	      NSRunAlertPanel(NULL, _(@"Could not open the associated classes file.\n"
+	      NSRunAlertPanel(nil, _(@"Could not open the associated classes file.\n"
 				      @"You won't be able to edit connections on custom classes"), 
-			      _(@"OK"), NULL, NULL);
+			      _(@"OK"), nil, nil);
 	    }
 
 	  s = [aFile stringByAppendingPathComponent: @"data.info"];
@@ -1828,8 +1832,8 @@ static NSImage  *fileImage = nil;
 					       _(@"The file being loaded was created with a newer build, continue?"), 
 					       _(@"OK"), 
 					       _(@"Cancel"), 
-					       NULL,
-					       NULL);
+					       nil,
+					       nil);
 		  if(retval != NSAlertDefaultReturn)
 		    {
 		      return nil;
@@ -1997,8 +2001,8 @@ static NSImage  *fileImage = nil;
     }
   NS_HANDLER
     {
-      NSRunAlertPanel(NULL, [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil, [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
+		      _(@"OK"), nil, nil);
       return nil; // This will cause the calling method to release the document.
     }
   NS_ENDHANDLER
@@ -2083,8 +2087,8 @@ static NSImage  *fileImage = nil;
       else
 	{
 	  // if we get this far, we didn't succeed..
-	  NSRunAlertPanel(NULL,_( @"Attempted to load a model which is already opened."), 
-			  _(@"OK"), NULL, NULL);
+	  NSRunAlertPanel(nil,_( @"Attempted to load a model which is already opened."), 
+			  _(@"OK"), nil, nil);
 	}
     }
 
@@ -2840,8 +2844,8 @@ static NSImage  *fileImage = nil;
 
   if (archiveResult == NO)
     {
-      NSRunAlertPanel(NULL,_( @"Could not save document"), 
-		      _(@"OK"), NULL, NULL);
+      NSRunAlertPanel(nil,_( @"Could not save document"), 
+		      _(@"OK"), nil, nil);
     }
   else
     {
@@ -3044,7 +3048,7 @@ static NSImage  *fileImage = nil;
 	  msg = [NSString stringWithFormat: _(@"Document '%@' has been modified"),
 	    [documentPath lastPathComponent]];
 	}
-      result = NSRunAlertPanel(NULL, msg, _(@"Save"), _(@"Don't Save"), _(@"Cancel"));
+      result = NSRunAlertPanel(nil, msg, _(@"Save"), _(@"Don't Save"), _(@"Cancel"));
 
       if (result == NSAlertDefaultReturn) 
 	{ 	  

@@ -215,8 +215,8 @@
   NSDebugLog(@"Selected %d, %@", [browser selectedRowInColumn: 0], title);
   if (hasConnections > 0 && [title isEqual: [object className]] == NO)
     {
-      if (NSRunAlertPanel(0, _(@"This operation will break existing connection"),
-			  _(@"OK"), _(@"Cancel"), NULL) != NSAlertDefaultReturn)
+      if (NSRunAlertPanel(nil, _(@"This operation will break existing connection"),
+			  _(@"OK"), _(@"Cancel"), nil) != NSAlertDefaultReturn)
 	{
 	  unsigned	pos = [classes indexOfObject: [object className]];
 

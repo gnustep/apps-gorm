@@ -1,3 +1,12 @@
+2004-12-18 10:05 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m:
+	* GormFilesOwner.m:
+	* Gorm.m:
+	* GormPalettesManager.m:
+	* GormWindowEditor.m: Changed NSRunAlertPanel(...) calls
+	to use nil instead of NULL.  NULL shouldn't be used.
+
 2004-12-18 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/GNUmakefile: Added new header

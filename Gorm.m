@@ -331,7 +331,7 @@ static NSImage *testingImage = nil;
     {
       NSRunAlertPanel(_(@"Incorrect GNUstep Version"), 
 		      _(@"The version of GNUstep you are using is too old for this version of Gorm, please update."),
-		      _(@"OK"), NULL, NULL);
+		      _(@"OK"), nil, nil);
       [self terminate: self];
     }
 }
@@ -373,7 +373,7 @@ static NSImage *testingImage = nil;
    if (edited == YES)
      {
        int	result;
-       result = NSRunAlertPanel(NULL, _(@"There are edited windows"),
+       result = NSRunAlertPanel(nil, _(@"There are edited windows"),
 				_(@"Review Unsaved"),_( @"Quit Anyway"), _(@"Cancel"));
       if (result == NSAlertDefaultReturn) 
 	{ 	  
@@ -801,9 +801,11 @@ static NSImage *testingImage = nil;
 	  // reset the application after the error.
 	  NSLog(@"Error while testing interface: %@", 
 		[localException reason]);
-	  NSRunAlertPanel(_(@"An Error Occurred"), [NSString stringWithFormat: @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
-					  [localException reason]], 
-			  _(@"OK"), NULL, NULL);
+	  NSRunAlertPanel(_(@"An Error Occurred"), 
+			  [NSString stringWithFormat: 
+				      @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
+				    [localException reason]], 
+			  _(@"OK"), nil, nil);
 	  [self endTesting: self];
 	}
       NS_ENDHANDLER;
