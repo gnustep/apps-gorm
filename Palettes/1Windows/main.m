@@ -29,6 +29,7 @@
 #include "GormDocument.h"
 #include "GormNSWindow.h"
 #include "GormNSPanel.h"
+#include "NSColorWell+GormExtensions.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {
@@ -201,30 +202,6 @@ NSwindow inspector
 - (NSString*) sizeInspectorClassName
 {
   return @"GormWindowSizeInspector";
-}
-@end
-
-@interface NSColorWell (ColorAdditions)
-- (void) setColorWithoutAction: (NSColor *)color;
-@end
-
-@implementation NSColorWell (ColorAdditions)
-- (void) setColorWithoutAction: (NSColor *)color
-{
-  ASSIGN(_the_color, color);
-  /*
-   * Experimentation with NeXTstep shows that when the color of an active
-   * colorwell is set, the color of the shared color panel is set too,
-   * though this does not raise the color panel, only the event of
-   * activation does that.
-   */
-  if ([self isActive])
-    {
-      NSColorPanel	*colorPanel = [NSColorPanel sharedColorPanel];
-
-      [colorPanel setColor: _the_color];
-    }
-  [self setNeedsDisplay: YES];
 }
 @end
 

@@ -1,3 +1,14 @@
+2005-01-30 00:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Build new file.
+	* NSColorWell+GormExtensions.[hm]: Category which allows the 
+	setting of a color into a color well without invoking the action
+	associated with that control.
+	* Palettes/1Windows/main.m: Include new extension.
+	* Palettes/2Controls/inspectors.m: Include new extension.
+	* Palettes/3Containers/inspectors.m: Include new extension.
+	* Palettes/4Data/inspectors.m: Include new extension.
+
 2005-01-29 22:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: in -handleNotification: added code to 

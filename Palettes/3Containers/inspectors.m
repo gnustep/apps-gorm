@@ -29,6 +29,7 @@
 #include <InterfaceBuilder/IBInspector.h>
 #include "GormNSTableView.h"
 #include "GormPrivate.h"
+#include "NSColorWell+GormExtensions.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -695,7 +696,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
 
   // set the background color into the inspector...
-  [backgroundColor setColor: [anObject backgroundColor]];
+  [backgroundColor setColorWithoutAction: [anObject backgroundColor]];
 }
 
 - (id) init

@@ -26,6 +26,7 @@
 #include <AppKit/AppKit.h>
 #include "GormPrivate.h"
 #include "GormViewEditor.h"
+#include "NSColorWell+GormExtensions.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -122,8 +123,8 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if (anObject != object)
     return;
 
-  [backgroundColorWell setColor: [anObject backgroundColor]];
-  [textColorWell setColor: [anObject textColor]];
+  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
+  [textColorWell setColorWithoutAction: [anObject textColor]];
     
   [alignmentMatrix selectCellWithTag: [anObject alignment]];
 
@@ -539,8 +540,8 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   scrollView = [[anObject superview] superview];
   isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
 
-  [backgroundColorWell setColor: [anObject backgroundColor]];
-  [textColorWell setColor: [anObject textColor]];
+  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
+  [textColorWell setColorWithoutAction: [anObject textColor]];
 
   if (isScrollView) {
     [borderMatrix selectCellWithTag: [scrollView borderType]];

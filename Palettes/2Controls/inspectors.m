@@ -25,6 +25,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include "NSColorWell+GormExtensions.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -114,7 +115,7 @@
   [verticalSlider setFloatValue: [anObject contentViewMargins].height];
   if([titleCell isKindOfClass: [NSTextFieldCell class]])
     {
-      [colorWell setColor: [titleCell backgroundColor]];
+      [colorWell setColorWithoutAction: [titleCell backgroundColor]];
       [backgroundSwitch setState: ([titleCell drawsBackground]?
 				   NSOnState:NSOffState)];
     }
@@ -137,11 +138,7 @@
 
 - (void) ok: (id)sender
 {
-  // FIXME: wont mark as modified for color change, but this is for bw compat anyway.
-  if(sender != colorWell)
-    {
-      [super ok: sender];
-    }
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -662,7 +659,7 @@
     {
       return;
     }
-  [backgroundColorWell setColor: [anObject backgroundColor]];
+  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
   [drawsBackgroundSwitch setState: 
     ([anObject drawsBackground]) ? NSOnState : NSOffState];
   [textMatrix selectCellWithTag: [[anObject  cellAtIndex: 0] alignment]];
@@ -850,7 +847,7 @@
       [autotagSwitch setEnabled: NO];
   }
 
-  [backgroundColorWell setColor: [anObject backgroundColor]];
+  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
   [drawsBackgroundSwitch setState: 
     ([anObject drawsBackground]) ? NSOnState : NSOffState];
 
@@ -1342,8 +1339,8 @@
       return;
     } 
   [alignMatrix selectCellWithTag: [anObject alignment]];
-  [backgroundColor setColor: [anObject backgroundColor]];
-  [textColor setColor: [anObject textColor]];
+  [backgroundColor setColorWithoutAction: [anObject backgroundColor]];
+  [textColor setColorWithoutAction: [anObject textColor]];
   [drawsBackground setState: 
     ([anObject drawsBackground]) ? NSOnState : NSOffState];
   
@@ -1548,7 +1545,7 @@
 {
   [disabled setState: (![object isEnabled])?NSOnState:NSOffState];
   [bordered setState: [object isBordered]?NSOnState:NSOffState];
-  [initialColor setColor: [object color]];
+  [initialColor setColorWithoutAction: [object color]];
   [tagValue setIntValue: [object tag]];
 }
 
