@@ -139,7 +139,7 @@
 // This method is purely for debugging purposes...
 - (void) display
 {
-  NSLog(@"In GormNSMenu display...");
+  NSDebugLog(@"In GormNSMenu display...");
   [super display];
 }
 #endif

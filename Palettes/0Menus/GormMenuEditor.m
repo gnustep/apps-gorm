@@ -56,11 +56,19 @@
 @end
 
 /*
-@interface NSButtonCell (GormObjectAdditions)
-- (NSRect) gormTitleRectForFrame: (NSRect) cellFrame
-			  inView: (NSView *)controlView;
+ * This method will allow us to check if the menu is
+ * open, so that it can be conditionally closed.
+ */
+@interface NSMenu (GormMenuEditorAdditions)
+- (BOOL) isVisible;
 @end
-*/
+
+@implementation NSMenu (GormMenuEditorAdditions)
+- (BOOL) isVisible
+{
+  return [_aWindow isVisible];
+}
+@end
 
 
 
@@ -437,7 +445,6 @@
   isClosed = YES;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
-  [self makeSelectionVisible: NO];
   if ([(id<IB>)NSApp selectionOwner] == self)
     {
       [document resignSelectionForEditor: self];
@@ -445,7 +452,8 @@
 
   [self closeSubeditors];
   [self deactivate];
-  [edited close];
+  if([edited isVisible])
+    [edited close];
   [document editor: self didCloseForObject: edited];
 }
 
@@ -498,7 +506,7 @@
     {
       [self close];
     }
-  // RELEASE(edited);
+
   RELEASE(selection);
   RELEASE(subeditor);
   [super dealloc];

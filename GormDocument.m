@@ -762,6 +762,7 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
+  RELEASE(openEditors);
   RELEASE(window);
   [super dealloc];
 }
@@ -1327,7 +1328,7 @@ static NSImage	*classesImage = nil;
   /*
    * Add to the master list of editors for this document
    */
-  // [editors removeObjectIdenticalTo: anEditor];
+  [openEditors removeObjectIdenticalTo: anEditor];
 
   /*
    * Make sure that this editor is not the selection owner.
@@ -1370,14 +1371,11 @@ static NSImage	*classesImage = nil;
       [link setSource: anObject];
       [link setDestination: editor];
       [connections addObject: link];
-
-      // add to the list...
-      /*
-      if(![editors containsObject: editor])
+      
+      if(![openEditors containsObject: editor])
 	{
-	  [editors addObject: editor];
+	  [openEditors addObject: editor];
 	}
-      */
 
       RELEASE(link);
       if (anEditor == nil)
@@ -1463,20 +1461,13 @@ static NSImage	*classesImage = nil;
 
 - (void) _closeAllEditors
 {
-  NSEnumerator		*enumerator;
-  id                    con;
-  
-  // close all editors attached to objects...
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
-	{
-	  [[con destination] close];
-	}
-    }
-  
+  // close all of the editors & get all of the objects out.
+  [openEditors makeObjectsPerformSelector: @selector(close)]; 
+  [openEditors removeAllObjects];
+
   // close the editors in the document window...
+  // don't worry about the "classEditor" since it's not really an
+  // editor.
   [objectsView close];
   [imagesView close];
   [soundsView close];
@@ -1518,8 +1509,7 @@ static NSImage	*classesImage = nil;
       // deactivate the document...
       [self setDocumentActive: NO];
       [self setSelectionFromEditor: nil];
-      [self _closeAllEditors];
-      // [editors makeObjectsPerformSelector: @selector(close)]; // close all of the editors...
+      [self _closeAllEditors]; // shut down all of the editors..
       [nc postNotificationName: IBWillCloseDocumentNotification
 	  object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
@@ -1639,7 +1629,7 @@ static NSImage	*classesImage = nil;
 		 alpha: 1.0 ];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
       
-      // editors = [NSMutableArray new];
+      openEditors = [NSMutableArray new];
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
 
@@ -1916,14 +1906,6 @@ static NSImage	*classesImage = nil;
 	      [self parseHeader: (NSString *)obj];
 	    }
 	}
-
-      /*
-      // add editors here to the list...
-      // [editors addObject: classEditor];
-      [editors addObject: objectsView];
-      [editors addObject: imagesView];
-      [editors addObject: soundsView];
-      */
     }
   return self;
 }

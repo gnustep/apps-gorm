@@ -579,7 +579,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   GormDocument	*doc = AUTORELEASE([GormDocument new]);
 
   [documents addObject: doc];
-  // RELEASE(doc);
   if ([doc openDocument: sender] == nil)
     {
       [documents removeObjectIdenticalTo: doc];
@@ -587,24 +586,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else
     {
-      // NSDictionary *nameTable = [doc nameTable];
-      // NSEnumerator *enumerator = [nameTable keyEnumerator];
-      // NSString *key = nil;
-
-      // order everything front.
       [[doc window] makeKeyAndOrderFront: self];
-
-      /*
-      // the load is completed, awaken all of the elements.
-      while ((key = [enumerator nextObject]) != nil)
-	{
-	  id o = [nameTable objectForKey: key];
-	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
-	    {
-	      [o awakeFromDocument: doc];
-	    }
-	}
-      */
     }
 }
 
@@ -614,7 +596,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 {
   id doc = AUTORELEASE([GormDocument new]);
   [documents addObject: doc];
-  // RELEASE(doc);
   switch ([sender tag]) 
     {
     case 0:
@@ -1138,7 +1119,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
       [documents removeObjectIdenticalTo: obj];
-      // AUTORELEASE(obj); // let the document go, once everything is done...
     }
 }
 
@@ -1192,7 +1172,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   GormDocument	*doc = AUTORELEASE([GormDocument new]);
 
   [documents addObject: doc];
-  // RELEASE(doc);
   if ([doc loadDocument: fileName] == nil)
     {
       [documents removeObjectIdenticalTo: doc];
