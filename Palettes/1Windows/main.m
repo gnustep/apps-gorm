@@ -41,7 +41,7 @@
   unsigned	style = NSTitledWindowMask | NSClosableWindowMask
 			| NSResizableWindowMask | NSMiniaturizableWindowMask;
 
-  w = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 400, 200)
+  w = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
 				  styleMask: style 
 				    backing: NSBackingStoreRetained
 				      defer: NO];
@@ -67,7 +67,7 @@
   unsigned	style = NSTitledWindowMask | NSClosableWindowMask
 			| NSResizableWindowMask | NSMiniaturizableWindowMask;
 
-  w = [[NSPanel alloc] initWithContentRect: NSMakeRect(0, 0, 400, 200)
+  w = [[NSPanel alloc] initWithContentRect: NSMakeRect(0, 0, 500, 300)
 				 styleMask: style 
 				   backing: NSBackingStoreRetained
 				     defer: NO];

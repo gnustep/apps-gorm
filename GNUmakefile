@@ -28,6 +28,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Each palette is a subproject
 #
 SUBPROJECTS = \
+	Documentation \
 	Palettes
 
 #
@@ -37,6 +38,7 @@ APP_NAME = Gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
 	ClassInformation.plist \
+	Defaults.plist \
 	Palettes/0Menus/0Menus.palette \
 	Palettes/1Windows/1Windows.palette \
 	Palettes/2Controls/2Controls.palette \

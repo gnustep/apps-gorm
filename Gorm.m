@@ -690,6 +690,8 @@ int
 main(void)
 { 
   NSAutoreleasePool	*pool;
+  NSBundle		*bundle;
+  NSString		*path;
   NSMenu		*aMenu;
   NSMenu		*mainMenu;
   NSMenu		*windowsMenu;
@@ -698,6 +700,24 @@ main(void)
 
   pool = [NSAutoreleasePool new];
   initialize_gnustep_backend ();
+
+  /*
+   * establish registration domain defaults from file.
+   */
+  bundle = [NSBundle mainBundle];
+  path = [bundle pathForResource: @"Defaults" ofType: @"plist"];
+  if (path != nil)
+    {
+      NSDictionary	*dict;
+
+      dict = [NSDictionary dictionaryWithContentsOfFile: path];
+      if (dict != nil)
+	{
+	  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+
+	  [defs registerDefaults: dict];
+	}
+    }
 
   /*
    * Install an instance of Gorm as the application so that the app

@@ -83,6 +83,18 @@ static NSMapTable	*docMap = 0;
     }
 }
 
++ (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument
+{
+  id	editor = NSMapGet(docMap, (void*)aDocument);
+
+  if (editor == nil)
+    {
+      editor = [[self alloc] initWithObject: nil inDocument: aDocument];
+      AUTORELEASE(editor);
+    }
+  return editor;
+}
+
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   if ([types containsObject: IBObjectPboardType] == YES)
@@ -101,7 +113,18 @@ static NSMapTable	*docMap = 0;
   if (anObject != nil
     && [objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
     {
+      NSNotificationCenter	*nc;
+
+      nc = [NSNotificationCenter defaultCenter];
+
       [objects addObject: anObject];
+      if ([anObject isKindOfClass: [NSWindow class]] == YES)
+	{
+	  [nc addObserver: self
+		 selector: @selector(handleNotification:)
+		     name: NSWindowDidBecomeKeyNotification
+		   object: anObject];
+	}
       [self refreshCells];
     }
 }
@@ -165,7 +188,19 @@ static NSMapTable	*docMap = 0;
     && [[document nameForObject: selected] isEqualToString: @"NSFirst"] == NO
     && [[document nameForObject: selected] isEqualToString: @"NSFont"] == NO)
     {
+      NSNotificationCenter	*nc;
+
+      nc = [NSNotificationCenter defaultCenter];
+
       [document detachObject: selected];
+      if ([selected isKindOfClass: [NSWindow class]] == YES)
+	{
+	  [nc removeObserver: self
+			name: NSWindowDidBecomeKeyNotification
+		      object: selected];
+	  [selected setReleasedWhenClosed: YES];
+	  [selected close];
+	}
       [objects removeObjectIdenticalTo: selected];
       [self selectObjects: [NSArray array]];
       [self refreshCells];
@@ -252,6 +287,17 @@ static NSMapTable	*docMap = 0;
 - (id<IBDocuments>) document
 {
   return document;
+}
+
+- (void) handleNotification: (NSNotification*)aNotification
+{
+  id		object = [aNotification object];
+  NSString	*name = [aNotification name];
+
+  if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
+    {
+      [self selectObjects: [NSArray arrayWithObject: object]];
+    }
 }
 
 - (id) editedObject
@@ -602,6 +648,7 @@ static NSMapTable	*docMap = 0;
 
   selected = obj;
   [document setSelectionFromEditor: self];
+  [self makeSelectionVisible: YES];
 }
 
 - (NSArray*) selection

@@ -6,9 +6,6 @@
 @c %**end of header
 @defcodeindex cl
 @defcodeindex pr
-@ignore
-I'm using cindex for concepts, findex for procedures and macros.
-@end ignore
 
 @include version.texi
 
@@ -62,13 +59,13 @@ Free Software Foundation instead of in the original English.
 @title Guide to the
 @title Gorm application
 @sp 3
-@c @subtitle last updated December, 1998
+@c @subtitle last updated January, 2000
 @subtitle Version @value{GORM-VERSION}
-@subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION}
+@subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION})
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1999 Free Software Foundation, Inc.
+Copyright @copyright{} 1999,2000 Free Software Foundation, Inc.
 
 
 Permission is granted to make and distribute verbatim copies of
@@ -87,7 +84,7 @@ except that the section entitled ``GNU Library General Public License'' may be
 included in a translation approved by the author instead of in the original
 English.
 
-@strong{Note: The GNUstep-Guile library is in alpha release. You will
+@strong{Note: The Gorm application is in alpha release. You will
 be performing a valuable service if you report any bugs you encounter.}
 
 @end titlepage
@@ -95,13 +92,14 @@ be performing a valuable service if you report any bugs you encounter.}
 @node Top, Copying, , 
 
 @menu
-* Copying::	    GNU Library Public License says how you can copy
+* Copying::	    GNU Public License says how you can copy
                     and share Gorm.
 * Contributors::    People who have contributed to Gorm.
 * Installation::    How to build and install Gorm.
 * News::	    The latest changes to Gorm.
 
 * Overview::        Gorm in brief.
+* Usage::	    How Gorm is used.
 * Implementation::  Implementation notes.
 
 * Concept Index::
@@ -134,8 +132,9 @@ Gorm as part of the GNUstep project.
 
 @subsection To Do
 
-
 @itemize @bullet
+
+@item Add support for menus
 
 @item Add more inspectors
 
@@ -147,30 +146,67 @@ Gorm as part of the GNUstep project.
 
 @end itemize
 
-
-@node Overview, Implementation, News, Top
+@node Overview, Usage, News, Top
 @chapter Overview
 
 Gorm is an application for creating the user interface (and possibly entire
-applications) for a GNUstep application.
+applications) for a GNUstep application.  Initially a close clone of the old
+NeXTstep 3.3 Interface Builder application, I expect that Gorm will mutate
+beyond the capabilities of that app.
+
+GNUstep is an object-oriented programming framework and a collection of tools
+developed for or using the GNUstep libraries.
 
 You can find out more about GNUstep at
 @url{http://www.gnustep.org}@*
+
+The basic idea behind Gorm is simple - it provides a graphical user interface
+with which to connect together objects from the GNUstep libraries (as well as
+custom-written objects) and set their attributes in an easy to use manner.
+
+The collection of objects is then saved as a document which can either be
+re-loaded into Gorm for further editing, or can be loaded into a running
+GNUstep application in order to provide that application with a user
+interface or some subsystem.
 
 @subsection Major features
 @cindex features
 
 @itemize bullet
 @item
+Drag-and-drop creation of GUI elements from palettes.
+
+@item
+Run-time loading of additional palettes that may be written using an API
+very similar to that of Apple/NeXTs interface Builder palette API.
+
+@item
 Direct on-screen manipulation of GUI elements
 
 @item
-Ineractive test mode for interfaces under development.
+Manipulation and examination of objects via inspectors.
+
+@item
+Drag-and-drop creation of connections between objects.
+
+@item
+Ineractive test mode for interfaces/object-networks under development.
+
+@item
+Saving data in a format loadable by GNUstep applications.
 
 @end itemize
 
-@node Implementation, Concept Index, Overview, Top
+@node Usage, Implementation, Overview, Top
+@chapter Usage
+
+
+@node Implementation, Concept Index, Usage, Top
 @chapter Implementation
+
+@menu
+* Preferences::
+@end menu
 
 Notes on implementation
 
@@ -201,13 +237,35 @@ document object must implement [-windowAndRect:forObject:] to return the
 window in which the object is being displayed, and the rectangle enclosing
 the object (in window base coordinates).
 
-This information is neede by Gorm so that it can mark the connection.
+This information is needed by Gorm so that it can mark the connection.
 
 The editors mananging the drag-and-drop operation for a connection must call
 [NSApp -displayConnectionBetween:and:] to tell Gorm to update its display.
 This method sets the values currently returned by
 [BSApp -connectSource] and [NSApp -connectDestination]
 
+@node Preferences, , Implementation, Implementation
+@unnumbered Preferences
+@cindex preferences
+@cindex defaults
+
+Currently (Jan 4 2000) there is no preferences panel.
+Application defaults are stored in the file `Defaults.plist', so this file
+determines the default values if they are not overridden.
+
+The current defaults are -
+
+@itemize @bullet
+@item SaveAsNib
+
+If this boolean is set to @samp{YES} then Gorm will save documents with a
+@samp{.nib} file extension (for NeXT/Apple compatibility), otherwise it will
+save with a @samp{.gorm} extension.  In either case, Gorm will permit attempts
+to open either type of document.
+
+NB. While Gorm will attempt to open @samp{.nib} documents, it can't open true
+NeXT/Apple documents, only ones it has written itsself.
+@end itemize
 
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index

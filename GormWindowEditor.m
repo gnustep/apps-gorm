@@ -1190,9 +1190,20 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	}
       /*
        * Now we must let the document (and hence the rest of the app) know
-       * about our new selection.
+       * about our new selection.  If there is nothing in it, make sure
+       * that our edited window is selected instead.
        */
-      [document setSelectionFromEditor: self];
+      if ([selection count] > 0)
+	{
+	  [document setSelectionFromEditor: self];
+	}
+      else
+	{
+	  GormObjectEditor	*ed;
+
+	  ed = [GormObjectEditor editorForDocument: document];
+	  [ed selectObjects: [NSArray arrayWithObject: edited]];
+	}
     }
 }
 

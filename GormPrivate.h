@@ -82,6 +82,7 @@ extern NSString *GormLinkPboardType;
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }
++ (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 - (void) addObject: (id)anObject;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;

@@ -808,7 +808,7 @@ static NSImage	*classesImage = nil;
  */
 - (id) openDocument: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObject: @"nib"];
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"gorm", @"nib", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
 
@@ -971,13 +971,21 @@ static NSImage	*classesImage = nil;
   filePoint = [window mouseLocationOutsideOfEventStream];
   screenPoint = [window convertBaseToScreen: filePoint];
 
+  /*
+   * Windows and panels are a special case - they need to be set to be
+   * visible at launch time (by default), and for a multiple window paste,
+   * the windows need to be positioned so they are not on top of each other.
+   */
   if ([aType isEqualToString: IBWindowPboardType] == YES)
     {
       NSWindow	*win;
 
       while ((win = [enumerator nextObject]) != nil)
 	{
+	  [self setObject: win isVisibleAtLaunch: YES];
 	  [win setFrameTopLeftPoint: screenPoint];
+	  screenPoint.x += 10;
+	  screenPoint.y -= 10;
 	}
     }
   [self attachObjects: objects toParent: parent];
@@ -1011,6 +1019,7 @@ static NSImage	*classesImage = nil;
 	  if (e != editor && [e wantsSelection] == YES)
 	    {
 	      [e activate];
+	      [self setSelectionFromEditor: e];
 	      break;
 	    }
 	}
@@ -1112,12 +1121,21 @@ static NSImage	*classesImage = nil;
 
 - (id) saveAsDocument: (id)sender
 {
-  NSSavePanel	*sp;
-  int		result;
+  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+  NSSavePanel		*sp;
+  int			result;
 
   sp = [NSSavePanel savePanel];
 
-  [sp setRequiredFileType: @"nib"];
+  if ([defs boolForKey: @"SaveAsNib"] == YES)
+    {
+      [sp setRequiredFileType: @"nib"];
+    }
+  else
+    {
+      [sp setRequiredFileType: @"gorm"];
+    }
+
   result = [sp runModalForDirectory: NSHomeDirectory() file: @""];
 
   if (result == NSOKButton)
