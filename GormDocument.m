@@ -970,9 +970,12 @@ static NSImage	*classesImage = nil;
 		  BOOL removed = [self removeConnectionsWithLabel: name 
 				       forClassNamed: itemBeingEdited
 				       isAction: YES];
-		  [classManager removeAction: name
-				fromClassNamed: itemBeingEdited];
-		  [classesView removeItemAtRow: i];
+		  if(removed)
+		    {
+		      [classManager removeAction: name
+				    fromClassNamed: itemBeingEdited];
+		      [classesView removeItemAtRow: i];
+		    }
 		}
 	    }
 	  else if([classesView editType] == Outlets)
@@ -985,9 +988,12 @@ static NSImage	*classesImage = nil;
 		  BOOL removed = [self removeConnectionsWithLabel: name 
 				       forClassNamed: itemBeingEdited
 				       isAction: NO];
-		  [classManager removeOutlet: name
-				fromClassNamed: itemBeingEdited];
-		  [classesView removeItemAtRow: i];
+		  if(removed)
+		    {
+		      [classManager removeOutlet: name
+				    fromClassNamed: itemBeingEdited];
+		      [classesView removeItemAtRow: i];
+		    }
 		}
 	    }
 	}
@@ -1002,8 +1008,11 @@ static NSImage	*classesImage = nil;
 	  if([classManager isCustomClass: anitem])
 	    {
 	      BOOL removed = [self removeConnectionsForClassNamed: anitem];
-	      [classManager removeClassNamed: anitem];
-	      [classesView reloadData];
+	      if(removed)
+		{
+		  [classManager removeClassNamed: anitem];
+		  [classesView reloadData];
+		}
 	    }
 	}
       else
