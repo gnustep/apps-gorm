@@ -1,5 +1,16 @@
 2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.m: Added some debug logs.  And in
+	_replaceObjectsWithTemplates: modified the method to use the
+	customClassMap call instead of accessing the map directly.
+	* GormClassManager.m: renameClassNamed: and removeClassNamed: both
+	were failing to delete the custom class associations when a custom
+	class is renamed or removed.  Added the code to do this.
+	* GormCustomClassInspector.m: Added check for nil return from the
+	classManager.   Code will print a warning to stdout, if this happens.
+
+2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Corrected selection problem.  Moved code to
 	select item in classes view from GormInspectorManager.
 	* GormInspectorManager.m: Removed the code from here.

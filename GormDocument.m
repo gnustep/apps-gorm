@@ -1896,6 +1896,8 @@ static NSImage	*classesImage = nil;
       [[c nameTable] setObject: cc forKey: GSCustomClassMap];
     }
   [classManager setCustomClassMap: cc];
+  NSLog(@"cc = %@", cc);
+  NSLog(@"customClasses = %@", [classManager customClassMap]);
 
   // convert from old file format...
   if (isDir == NO)
@@ -2568,19 +2570,22 @@ static NSImage	*classesImage = nil;
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
   GormClassManager *cm = [self classManager];
-  NSDictionary *classMap = [cm customClassMap];
-  NSEnumerator *en = [classMap keyEnumerator];
+  NSEnumerator *en = [[cm customClassMap] keyEnumerator];
   id key = nil;
-  NSLog(@"Called");
+  NSDebugLog(@"Called ");
   while((key = [en nextObject]) != nil)
     {
-      id customClass = [classMap objectForKey: key];
+      id customClass = [cm customClassForName: key];
       id object = [self objectForName: key];
+
+      // put code here to repair old .gorm files if necessary.
+      
+      NSDebugLog(@"customClass = %@",customClass);
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
       id <GSTemplate> template = [GSTemplateFactory templateForObject: object
 						    withClassName: customClass
 						    withSuperClassName: superClass];
-      NSLog(@"object = %@, key = %@, className = %@", object, key, customClass);
+      NSDebugLog(@"object = %@, key = %@, className = %@", object, key, customClass);
       [archiver replaceObject: object withObject: template];
     }
 }
@@ -2640,7 +2645,10 @@ static NSImage	*classesImage = nil;
   [self _replaceObjectsWithTemplates: archiver];
 
   [archiver encodeRootObject: self];
-  NSDebugLog(@"nameTable = %@",nameTable);
+  NSLog(@"nameTable = %@",nameTable);
+
+  NSLog(@"customClasses = %@", [classManager customClassMap]);
+
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
   if (fileExists)
     {

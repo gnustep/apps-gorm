@@ -114,15 +114,20 @@
   NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
 
   /* add or remove the mapping as necessary. */
-  if (![stringValue isEqualToString: classForObject])
+  if(nameForObject != nil)
     {
-      [_classManager setCustomClass: stringValue
-		     forObject: nameForObject];
+      if (![stringValue isEqualToString: classForObject])
+	{
+	  [_classManager setCustomClass: stringValue
+			 forObject: nameForObject];
+	}
+      else
+	{
+	  [_classManager removeCustomClassForObject: nameForObject];
+	}
     }
   else
-    {
-      [_classManager removeCustomClassForObject: nameForObject];
-    }
+    NSLog(@"Name for object returned as nil");
 }
 
 // Browser delegate

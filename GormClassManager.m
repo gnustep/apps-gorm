@@ -146,12 +146,16 @@
   return new;
 }
 
-- (BOOL) addClassNamed: (NSString*)className
-   withSuperClassNamed: (NSString*)superClassName
-	   withActions: (NSArray*)actions
-	   withOutlets: (NSArray*)outlets
+- (BOOL) addClassNamed: (NSString*)class_name
+   withSuperClassNamed: (NSString*)super_class_name
+	   withActions: (NSArray*)_actions
+	   withOutlets: (NSArray*)_outlets
 {
   BOOL result = NO;
+  NSString *className = [class_name copy];
+  NSString *superClassName = [super_class_name copy];
+  NSArray  *actions = [_actions copy];
+  NSArray  *outlets = [_outlets copy];
 
   if ([superClassName isEqualToString: @"NSObject"]
     || [classInformation objectForKey: superClassName] != nil)
@@ -195,11 +199,12 @@
   return result;
 }
 
-- (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject
+- (void) addOutlet: (NSString*)outlet forObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSArray		*allOutlets = [self allOutletsForObject: anObject];
+  NSString              *anOutlet = [outlet copy];
 
   if ([allOutlets containsObject: anOutlet] == YES)
     {
@@ -215,11 +220,12 @@
   [[info objectForKey: @"AllOutlets"] addObject: anOutlet];
 }
 
-- (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className
+- (void) addAction: (NSString *)action forClassNamed: (NSString *)className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSArray *allActions = [self allActionsForClassNamed: className];
+  NSString *anAction = [action copy];
 
   if ([allActions containsObject: anAction])
     {
@@ -240,11 +246,12 @@
     }
 }
 
-- (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className
+- (void) addOutlet: (NSString *)outlet forClassNamed: (NSString *)className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSArray *allOutlets = [self allOutletsForClassNamed: className];
+  NSString              *anOutlet = [outlet copy];
 
   if ([allOutlets containsObject: anOutlet])
     {
@@ -263,13 +270,14 @@
 }
 
 - (void) replaceAction: (NSString *)oldAction
-	    withAction: (NSString *)newAction
+	    withAction: (NSString *)new_action
 	 forClassNamed: className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray *actions = [info objectForKey: @"Actions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
+  NSString *newAction = [new_action copy];
 
   if ([allActions containsObject: newAction]
     || [extraActions containsObject: newAction])
@@ -302,13 +310,14 @@
 }
 
 - (void) replaceOutlet: (NSString *)oldOutlet
-	    withOutlet: (NSString *)newOutlet
+	    withOutlet: (NSString *)new_outlet
 	 forClassNamed: className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
+  NSString *newOutlet = [new_outlet copy];
 
   if ([allOutlets containsObject: newOutlet]
     || [extraOutlets containsObject: newOutlet])
@@ -455,6 +464,11 @@
       return AUTORELEASE([allActions copy]);
     }
   return nil;
+}
+
+- (NSArray*) allCustomClassNames
+{
+  return [customClassMap allKeys];
 }
 
 - (NSArray*) allClassNames
@@ -898,8 +912,24 @@
 {
   if ([customClasses containsObject: className])
     {
+      NSEnumerator *en = [customClassMap keyEnumerator];
+      id object = nil;
+
       [self _touch];
       [customClasses removeObject: className];
+      
+      while((object = [en nextObject]) != nil)
+	{
+	  id customClassName = [customClassMap objectForKey: object];
+	  if(customClassName != nil)
+	    {
+	      if([className isEqualToString: customClassName])
+		{
+		  NSDebugLog(@"Deleting object -> customClass association %@ -> %@",object,customClassName);
+		  [customClassMap removeObjectForKey: object];
+		}
+	    }
+	}
     }
 
   [classInformation removeObjectForKey: className];
@@ -909,10 +939,13 @@
     object: self];
 }
 
-- (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name
+- (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)newName
 {
   id classInfo = [classInformation objectForKey: oldName];
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  NSString *name = [newName copy];
+
+  NSDebugLog(@"Old name %@, new name %@",oldName,name);
 
   if (classInfo != nil && [classInformation objectForKey: name] == nil)
     {
@@ -926,8 +959,31 @@
 
       if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
 	{
+	  NSEnumerator *en = [customClassMap keyEnumerator];
+	  id object = nil;
+
+	  NSDebugLog(@"replacing object with %@, %@",name, customClasses);
 	  [customClasses replaceObjectAtIndex: index withObject: name];
+	  NSDebugLog(@"replaced object with %@, %@",name, customClasses);
+
+	  // show the class map before...
+	  NSDebugLog(@"customClassMap = %@",customClassMap);
+	  while((object = [en nextObject]) != nil)
+	    {
+	      id customClassName = [customClassMap objectForKey: object];
+	      if(customClassName != nil)
+		{
+		  if([oldName isEqualToString: customClassName])
+		    {
+		      NSDebugLog(@"Replacing object -> customClass association %@ -> %@",object,customClassName);
+		      [customClassMap setObject: name forKey: object];
+		    }
+		}
+	    }
+	  NSDebugLog(@"New customClassMap = %@",customClassMap); // and after
 	}
+      else
+	NSLog(@"customClass not found %@",oldName);
 
       [nc postNotificationName: IBClassNameChangedNotification object: self];
       return YES;
@@ -1013,6 +1069,7 @@
    */
   RELEASE(classInformation);
   classInformation = [NSMutableDictionary new];
+  RETAIN(classInformation);
   enumerator = [dict keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -1305,7 +1362,8 @@
   NSString *name = [[(id<IB>)NSApp activeDocument] nameForObject: object];
   NSString *result = [self customClassForName: name];
   //  NSString *result = [customClassMap objectForKey: name];
-  NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",object, name, result, customClassMap);
+  NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",
+	     object, name, result, customClassMap);
   return result;
 }
 
@@ -1330,7 +1388,7 @@
 {
   // copy the dictionary..
   NSDebugLog(@"dictionary = %@",dict);
-  ASSIGN(customClassMap, dict);
+  ASSIGN(customClassMap, [dict mutableCopy]);
   RETAIN(customClassMap);
 }
 
@@ -1342,6 +1400,8 @@
 - (NSString *) nonCustomSuperClassOf: (NSString *)className
 {
   NSString *result = className;
+  
+  NSAssert([self isCustomClass: className],NSInvalidArgumentException);
 
   // iterate up the chain until a non-custom superclass is found...
   while ([self isCustomClass: result])
