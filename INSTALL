@@ -17,10 +17,11 @@ compile and use Gorm. The core packages are, at a minimum:
 Build and Install
 -----------------
 
-   To build Gorm, simply type 'make'
+   To build Gorm, simply type 'make'. To install, type 'make install'
 
 Trouble
 -------
 
-   Try to fix the problem.  Send patches to <richard@brainstorm.co.uk>.
+   Give us feedback!  Tell us what you like; tell us what you think
+could be better.  Send bug reports and patches to <bug-gnustep@gnu.org>.
 

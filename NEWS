@@ -1,3 +1,19 @@
+Noteworthy changes in version `0.0.3'
+=====================================
+
+   * Create stub .m and .h files from new classes
+
+   * Works better with ProjectCenter.
+
+   * Handle Ctrl-Drag and Alt-Drag of objects - automatic conversion to
+     matrices and/or increase decrease rows and cols.
+
+   * Edit NSForms titles in place.
+
+   * Edit NSBoxes and add subviews.
+
+   * Support for custom objects.
+
 Noteworthy changes in version `0.0.2'
 =====================================
 

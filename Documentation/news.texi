@@ -4,6 +4,18 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.0.3}
+
+@itemize @bullet
+@item Create stub .m and .h files from new classes
+@item Works better with ProjectCenter.
+@item Handle Ctrl-Drag and Alt-Drag of objects - automatic conversion to
+matrices and/or increase decrease rows and cols.
+@item Edit NSForms titles in place.
+@item Edit NSBoxes and add subviews.
+@item Support for custom objects.
+@end itemize
+
 @section Noteworthy changes in version @samp{0.0.2}
 
 @itemize @bullet

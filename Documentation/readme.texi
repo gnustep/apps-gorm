@@ -22,10 +22,11 @@ Foundation.
 
 Gorm is released under the GPL - see the file `COPYING' for details.
 
+Little documentation exists. There is a nice basic tutorial
+at @url{http://www.gnustep.it/pierre-yves/index.html}.
+
 
 @section Status
-
-25 Feb 2000
 
 At this point, Gorm is usable only for very simple stuff as it only supports
 the most commonly used gui elements.  However, the binary format in which
@@ -37,8 +38,6 @@ Known problems (things to do) -
 
 @enumerate
 @item Documentation - only a tiny start has been made on this!
-
-@item Support for custom objects needs to be added.
 
 @item Editors and inspectors need writing for most gui elements -
   popup menus
