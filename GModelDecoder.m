@@ -342,6 +342,12 @@ static BOOL gormFileOwnerDecoded;
     {
       if (obj != gormNibOwner)
 	[self setName: nil forObject: obj];
+
+      if([obj isKindOfClass: [GormObjectProxy class]])
+	{
+	  NSLog(@"processing... %@",[obj className]);
+	  [self defineClass: [obj className] inFile: path];
+	} 
     }
   if ([gormRealObject isKindOfClass: [GModelApplication class]])
     {
