@@ -1,3 +1,7 @@
+2000-11-06  Adam Fedor  <fedor@gnu.org>
+
+	* Documenation: Remove use of tmpl texi files
+
 Fri Feb 25 16:31:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Gorm.m: Fix a few window deallocation problems.
