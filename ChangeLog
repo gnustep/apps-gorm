@@ -1,3 +1,8 @@
+2004-12-11 18:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Correction for reparenting of a class in
+	-setSuperClassNamed:forClassNamed:
+
 2004-12-11 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Changed _refreshView to gray out the

@@ -1429,7 +1429,18 @@
       info = [classInformation objectForKey: subclass];
       if (info != nil)
 	{
+	  // remove actions/outlets inherited from superclasses...
+	  [info removeObjectForKey: @"AllActions"];
+	  [info removeObjectForKey: @"AllOutlets"];
+
+	  // change the parent of the class...
 	  [info setObject: superclass forKey: @"Super"];
+
+	  // recalculate the actions/outlets...
+	  [self allActionsForClassNamed: subclass];
+	  [self allOutletsForClassNamed: subclass];
+	  
+	  // return success.
 	  return YES;
 	}
       else
