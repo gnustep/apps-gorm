@@ -107,6 +107,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormOutlet.tiff \
 	Images/GormActionSelected.tiff \
 	Images/GormOutletSelected.tiff \
+	Images/FileIcon_gmodel.tiff \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \

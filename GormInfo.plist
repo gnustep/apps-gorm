@@ -5,6 +5,10 @@
       {
         NSUnixExtensions = ( "gorm" );
         NSIcon = "Gorm.tiff";
+      },
+      {
+        NSUnixExtensions = ( "gmodel" );
+        NSIcon = "FileIcon_gmodel.tiff";
       }
     );
     ApplicationDescription = "Gorm";

@@ -1,3 +1,10 @@
+2003-05-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	Applied patch submitted by Rob Burns
+	* GNUmakefile: Added FileIcon_gmodel.tiff.
+	* GormInfo.plist: Added FileIcon_gmodel.tiff as default
+	icon for gmodel files.
+	
 2003-04-30  Adam Fedor  <fedor@gnu.org>
 
 	* Palettes/*/GNUmakefile: Set *_STANDARD_INSTALL=no to not install
