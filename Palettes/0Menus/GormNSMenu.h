@@ -24,7 +24,10 @@
 
 #import <AppKit/AppKit.h>
 
+@class GormDocument;
 @interface GormNSMenu : NSMenu
 {
+  NSMenu *_menu;
 }
 @end
+

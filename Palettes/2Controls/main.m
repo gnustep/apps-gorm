@@ -26,6 +26,9 @@
 #include "../../Gorm.h"
 #include "../../GormCustomView.h"
 
+//  @class GormPopUpNSMenu;
+@class GormNSPopUpButton;
+
 @interface ControlsPalette: IBPalette
 {
 }
@@ -147,7 +150,7 @@
 /*******************/
 
   // Popup button
-  v = [[NSPopUpButton alloc] initWithFrame: NSMakeRect(172, 147, 89, 20)];
+  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(172, 147, 89, 20)];
   [v addItemWithTitle: @"Item 1"];
   [v addItemWithTitle: @"Item 2"];
   [v addItemWithTitle: @"Item 3"];

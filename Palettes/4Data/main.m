@@ -197,6 +197,7 @@ int defaultDateFormatIndex = 3;
   id		v;
   NSNumberFormatter *nf;
   NSDateFormatter *df;
+  NSRect rect;
   
 
   window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
@@ -214,22 +215,26 @@ int defaultDateFormatIndex = 3;
   v = [[NSScrollView alloc] initWithFrame: NSMakeRect(20, 22, 113,148)];
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
-//    [v setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-  contentSize = [v contentSize];
+  [v setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+  [[v contentView] setAutoresizingMask: NSViewHeightSizable 
+			    | NSViewWidthSizable];
+  [[v contentView] setAutoresizesSubviews:YES];
 
-  tv = [[NSTextView alloc] initWithFrame:
-      NSMakeRect(0,0,contentSize.width, contentSize.height)];
+  rect = [[v contentView] frame];
+
+  tv = [[NSTextView alloc] initWithFrame: rect];
   [tv setMinSize: NSMakeSize(0.0, 0.0)];
   [tv setMaxSize: NSMakeSize(1.0E7,1.0E7)];
-  [tv setVerticallyResizable:YES];
-  [tv setHorizontallyResizable:NO];
+  [tv setHorizontallyResizable: NO];
+  [tv setVerticallyResizable: YES];
   [tv setAutoresizingMask: NSViewWidthSizable];
   [tv setSelectable: YES];
   [tv setEditable: YES];
   [tv setRichText: YES];
   [tv setImportsGraphics: YES];
 
-  [[tv textContainer] setContainerSize:contentSize];
+  [[tv textContainer] setContainerSize:NSMakeSize(rect.size.width,
+						  1e7)];
   [[tv textContainer] setWidthTracksTextView:YES];
   
   [v setDocumentView:tv];

@@ -288,7 +288,7 @@ static BOOL currently_displaying = NO;
 
 
 - (GormPlacementInfo *) initializeResizingInFrame: (NSView *)view
-						    withKnob: (IBKnobPosition) knob
+					 withKnob: (IBKnobPosition) knob
 {
   GormPlacementInfo *gip;
   gip = [[GormPlacementInfo alloc] init];
@@ -802,9 +802,6 @@ static BOOL currently_displaying = NO;
     }
 }
 
-
-
-
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame
 		      andPlacementInfo: (GormPlacementInfo*)gpi
 {
@@ -1200,13 +1197,11 @@ static BOOL currently_displaying = NO;
 }
 
 
-
-
 - (NSWindow*) windowAndRect: (NSRect *)rect forObject: (id) anObject
 {
   if (anObject != _editedObject)
     {
-      NSLog(@"%@ windowAndRect: object unknown", self);
+//        NSLog(@"%@ windowAndRect: object unknown", self);
       return nil;
     }
   else
@@ -1216,7 +1211,6 @@ static BOOL currently_displaying = NO;
       return _window;
     }
 }
-
 
 
 - (void) startConnectingObject: (id) anObject
@@ -1248,7 +1242,7 @@ static BOOL currently_displaying = NO;
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-//    NSLog(@"I said why not !");
+  NSLog(@"I said why not !");
   return [types containsObject: GormLinkPboardType];
 }
 
@@ -1272,6 +1266,41 @@ static BOOL currently_displaying = NO;
     }
 }
 
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+//        [NSApp displayConnectionBetween: [NSApp connectSource] 
+//  	     and: _editedObject];
+      return NSDragOperationLink;
+    }
+  else
+    {
+//        NSLog(@"I said None !");
+      return NSDragOperationNone;
+    }
+}
+
+
+- (void)  draggingExited: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      [NSApp displayConnectionBetween: [NSApp connectSource] 
+	     and: nil];
+    }
+  
+}
 
 - (void) mouseDown: (NSEvent*)theEvent
 {

@@ -29,6 +29,8 @@
 #import "GormButtonEditor.h"
 
 #import "GormViewWithSubviewsEditor.h"
+#import "Gorm.h"
+
 
 #define _EO ((NSButton *)_editedObject)
 
@@ -297,36 +299,283 @@
 
 @end
 
+static BOOL done_editing;
+static NSRect oldFrame;
 
 @implementation GormButtonEditor
+
+- (void) handleNotification: (NSNotification*)aNotification
+{
+  NSString	*name = [aNotification name];
+  if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
+    {
+      done_editing = YES;
+    }
+}
+- (void) textDidChange: (NSNotification *)aNotification
+{
+  [_EO setTitle: [[aNotification object] string]];
+  [_EO setNeedsDisplay: NO];
+  [[(Gorm*)NSApp inspectorsManager] updateSelection];
+}
+
+- (void) textDidEndEditing: (NSNotification *)aNotification
+{
+  [[aNotification object] setDelegate: nil];
+
+  [_EO setTitle: [[aNotification object] string]];
+
+  [[aNotification object] removeFromSuperview];
+  {
+    NSSize suggestedSize;
+    NSRect newFrame = [_EO frame];
+    suggestedSize = [[_EO cell] cellSize];
+    if (suggestedSize.width > newFrame.size.width)
+      {
+	newFrame.origin.x = newFrame.origin.x
+	  - (int)((suggestedSize.width - newFrame.size.width) / 2);
+	newFrame.size.width = suggestedSize.width;
+	[_EO setFrame: newFrame];
+	[[self window] disableFlushWindow];
+	[[self window] display];
+	[[self window] enableFlushWindow];
+	[[self window] flushWindow];
+      }
+  }
+}
+
+
+/* Edit a textfield. If it's not already editable, make it so, then
+   edit it */
+- (NSEvent *) editTextField: view withEvent: (NSEvent *)theEvent
+{
+  unsigned eventMask;
+  BOOL wasEditable;
+  BOOL didDrawBackground;
+  NSTextField *editField;
+  NSRect                 frame;
+  NSRect originalFrame;
+  NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
+  NSDate		*future = [NSDate distantFuture];
+  NSEvent *e;
+      
+  editField = view;
+  originalFrame = frame = [editField frame];
+
+  wasEditable = [editField isEditable];
+  [editField setEditable: YES];
+  didDrawBackground = [editField drawsBackground];
+  [editField setDrawsBackground: YES];
+
+//    [editField display];
+
+  [nc addObserver: self
+         selector: @selector(handleNotification:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  /* Do some modal editing */
+  [editField selectText: self];
+  eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask |
+    NSKeyDownMask | NSKeyUpMask | NSFlagsChangedMask;
+
+
+  done_editing = NO;
+  while (!done_editing)
+    {
+      NSEventType eType;
+      e = [NSApp nextEventMatchingMask: eventMask
+		 untilDate: future
+		 inMode: NSEventTrackingRunLoopMode
+		 dequeue: YES];
+      eType = [e type];
+      switch (eType)
+	{
+	case NSLeftMouseDown:
+	  {
+	    NSPoint dp =  [self convertPoint: [e locationInWindow]
+				fromView: nil];
+	    if (NSMouseInRect(dp, frame, NO) == NO)
+	      {
+		done_editing = YES;
+		break;
+	      }
+	  }
+	  [[editField currentEditor] mouseDown: e];
+	  break;
+	case NSLeftMouseUp:
+	  [[editField currentEditor] mouseUp: e];
+	  break;
+	case NSLeftMouseDragged:
+	  [[editField currentEditor] mouseDragged: e];
+	  break;
+	case NSKeyDown:
+	  [[editField currentEditor] keyDown: e];
+//  	  {
+//  	    NSSize suggestedSize;
+//  	    suggestedSize = [[(NSTextView *)[editField currentEditor] textStorage] size];
+//  	    if (suggestedSize.width > originalFrame.size.width)
+//  	      {
+//  		frame.origin.x = originalFrame.origin.x
+//  		  - (int)((suggestedSize.width - originalFrame.size.width) / 2);
+//  		frame.size.width = suggestedSize.width;
+//  		[editField setFrame: frame];
+//  		[[(NSTextView*)[editField currentEditor] 
+//  			       layoutManager] invalidateLayoutForCharacterRange: NSMakeRange(0, [[[editField currentEditor] string] length])
+//  					      isSoft: NO
+//  					      actualCharacterRange: NULL];
+//  		NSLog(@"%@ %@ %@", 
+//  		      NSStringFromRect([[editField currentEditor] frame]),
+//  		      NSStringFromRect(frame),
+//  		      [[editField currentEditor] string]);
+//  		[[self window] disableFlushWindow];
+//  		[[self window] display];
+//  //  		[[editField currentEditor] 
+//  //  		  setString: [editField stringValue]];
+//  		[editField display];
+//  		[[self window] enableFlushWindow];
+//  		[[self window] flushWindow];
+//  	      }
+//  	  }
+	  break;
+	case NSKeyUp:
+	  [[editField currentEditor] keyUp: e];
+	  
+	  break;
+	case NSFlagsChanged:
+	  [[editField currentEditor] flagsChanged: e];
+	  break;
+	default:
+	  NSLog(@"Internal Error: Unhandled event during editing: %@", e);
+	  break;
+	}
+    }
+
+  [editField setEditable: wasEditable];
+  [editField setDrawsBackground: didDrawBackground];
+  [nc removeObserver: self
+                name: NSControlTextDidEndEditingNotification
+              object: nil];
+
+  [[editField currentEditor] resignFirstResponder];
+  [self setNeedsDisplay: YES];
+
+  return e;
+}
+
+- (NSTextView *) startEditingInFrame: (NSRect) frame
+{
+  NSTextView *textView = [[NSTextView alloc] initWithFrame: frame];
+  NSTextContainer *textContainer = [textView textContainer];
+  [textContainer setContainerSize: NSMakeSize(3000, NSHeight([textView frame]))];
+  [textContainer setWidthTracksTextView: NO];
+  [textContainer setHeightTracksTextView: NO];
+
+
+  [textView setMinSize: frame.size];
+  [textView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
+  [textView setSelectable: YES];
+  [textView setEditable: YES];
+  [textView setRichText: NO];
+  [textView setImportsGraphics: NO];
+  [textView setFieldEditor: YES];
+  [textView setHorizontallyResizable: YES];
+  [textView setDelegate: self];
+  [textView setPostsFrameChangedNotifications:YES];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+					selector: @selector(textViewFrameChanged:)
+					name: NSViewFrameDidChangeNotification
+					object: textView];
+  oldFrame = frame;
+  return textView;
+}
+
+- (void) textViewFrameChanged: (NSNotification *)aNot
+{
+  static BOOL inside = NO;
+  NSRect newFrame;
+
+  if (inside)
+    return;
+  inside = YES;
+
+  [[[self window] contentView] setNeedsDisplayInRect: oldFrame];
+
+  newFrame = [[aNot object] frame];
+
+  if ([[aNot object] alignment] == NSCenterTextAlignment)
+    {
+      NSRect frame = [[_EO cell] 
+		       gormTitleRectForFrame: [_EO frame]
+  		       inView: _EO];
+      int difference = newFrame.size.width - frame.size.width;
+      newFrame.origin.x = frame.origin.x - (int) (difference / 2);
+      [[aNot object] setFrame: newFrame];
+      oldFrame = newFrame;
+    }
+
+
+  [[[self window] contentView] setNeedsDisplayInRect: oldFrame];
+  inside = NO;
+}
+
 - (void) mouseDown:  (NSEvent*)theEvent
 {
   if (([theEvent clickCount] == 2) && [parent isOpened])
     // double-clicked -> let's edit
     {
-      NSTextField *tf = 
-	[[NSTextField alloc] initWithFrame: [self bounds]];
+//        NSTextField *tf = 
+//  	[[NSTextField alloc] initWithFrame: [self bounds]];
+//        NSRect frame = [[_EO cell] 
+//  		       gormTitleRectForFrame: [_EO frame]
+//  		       inView: _EO];
+//        frame.origin.y -= 2;
+//        frame.size.height += 4;
+//        [tf setFrame: frame];
+//        [tf setEditable: YES];
+//        [tf setBezeled: NO];
+//        [tf setBordered: YES];
+//        [tf setAlignment: [_EO alignment]];
+//        [tf setFont: [_EO font]];
+//        [[[self window] contentView] addSubview: tf];
+//        [tf setStringValue: [_EO stringValue]];
+//        [self editTextField: tf
+//  	    withEvent: theEvent];
+//        [_EO setStringValue: [tf stringValue]];
+//        {
+//  	NSSize suggestedSize;
+//  	NSRect newFrame = [_EO frame];
+//  	suggestedSize = [[_EO cell] cellSize];
+//  	if (suggestedSize.width > newFrame.size.width)
+//  	  {
+//  	    newFrame.origin.x = newFrame.origin.x
+//  	      - (int)((suggestedSize.width - newFrame.size.width) / 2);
+//  	    newFrame.size.width = suggestedSize.width;
+//  	    [_EO setFrame: newFrame];
+//  	    [[self window] disableFlushWindow];
+//  	    [[self window] display];
+//  	    [[self window] enableFlushWindow];
+//  	  }
+//        }
+//        [tf removeFromSuperview];
+//        RELEASE(tf);
+//        [[NSNotificationCenter defaultCenter]
+//  	postNotificationName: IBSelectionChangedNotification
+//  	object: parent];
       NSRect frame = [[_EO cell] 
 		       gormTitleRectForFrame: [_EO frame]
-		       inView: _EO];
-      frame.origin.y -= 2;
-      frame.size.height += 4;
-      [tf setFrame: frame];
-      [tf setEditable: YES];
-      [tf setBezeled: NO];
-      [tf setBordered: YES];
-      [tf setAlignment: [_EO alignment]];
-      [tf setFont: [_EO font]];
-      [self addSubview: tf];
-      [tf setStringValue: [_EO stringValue]];
-      [self editTextField: tf
-	    withEvent: theEvent];
-      [_EO setStringValue: [tf stringValue]];
-      [tf removeFromSuperview];
-      RELEASE(tf);
-      [[NSNotificationCenter defaultCenter]
-	postNotificationName: IBSelectionChangedNotification
-	object: parent];
+  		       inView: _EO];
+//        frame.origin.y -= 2;
+//        frame.size.height = 2;
+      NSTextView *tv = [self startEditingInFrame: frame];
+      [[[self window] contentView] addSubview: tv];
+      [tv setText: [_EO stringValue]];
+      [tv setAlignment: [_EO alignment]];
+      [tv setFont: [_EO font]];
+      [[self window] display];
+      [[self window] makeFirstResponder: tv];
+
+      [tv mouseDown: theEvent];
     }
   else
     {

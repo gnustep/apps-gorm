@@ -817,7 +817,11 @@
 {
   if (control == typeMatrix)
     {
+      id selectedItem;
       [object setPullsDown: [[control selectedCell] tag]];
+      selectedItem = [object selectedItem];
+      [object selectItem: nil];
+      [object selectItem: selectedItem];
     }
   else if (control == disabledSwitch)
     {

@@ -137,7 +137,7 @@
    */
   m = [GormNSMenu new];
   [m addItemWithTitle: @"Open..." 
-	       action: @selector(open:) 
+	       action: @selector(open:)
 	keyEquivalent: @"o"];
   [m addItemWithTitle: @"New" 
 	       action: @selector(new:)
@@ -185,13 +185,13 @@
    */
   m = [GormNSMenu new];
   [m addItemWithTitle: @"Align Left" 
-	       action: @selector(alignSelLeft:) 
+	       action: @selector(alignLeft:) 
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Center" 
-	       action: @selector(alignSelCenter:) 
+	       action: @selector(alignCenter:) 
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Align Right" 
-	       action: @selector(alignSelRight:) 
+	       action: @selector(alignRight:) 
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Show Ruler" 
 	       action: @selector(toggleRuler:) 
@@ -346,13 +346,13 @@
 	    keyEquivalent: @""];
   s = [GormNSMenu new];
   [s addItemWithTitle: @"Align Left" 
-	       action: @selector(alignSelLeft:) 
+	       action: @selector(alignLeft:) 
 	keyEquivalent: @""];
   [s addItemWithTitle: @"Center" 
-	       action: @selector(alignSelCenter:) 
+	       action: @selector(alignCenter:) 
 	keyEquivalent: @""];
   [s addItemWithTitle: @"Align Right" 
-	       action: @selector(alignSelRight:) 
+	       action: @selector(alignRight:) 
 	keyEquivalent: @""];
   [s addItemWithTitle: @"Show Ruler" 
 	       action: @selector(toggleRuler:) 

@@ -27,6 +27,8 @@
 #include <AppKit/NSGraphics.h>
 #include <AppKit/NSFont.h>
 
+#import <AppKit/NSNibLoading.h>
+
 @class GSCustomView;
 
 @implementation GormCustomView 
@@ -61,10 +63,10 @@
 }
 
 
-- (Class) classForCoder
-{
-  return [GSCustomView class];
-}
+//  - (Class) classForCoder
+//  {
+//    return [GSCustomView class];
+//  }
 
 /*
  * This needs to be coded like a GSNibItem. How do we make sure this
@@ -115,5 +117,53 @@
 }
 
 
+@end
+
+
+
+@interface GormTestCustomView : GSNibItem <NSCoding>
+{
+}
+@end
+
+@implementation	GormTestCustomView
+
+- (id) initWithCoder: (NSCoder*)aCoder
+{
+  id		obj;
+  Class		cls;
+  unsigned int      mask;
+  
+  [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+  theFrame = [aCoder decodeRect];
+  [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+	  at: &mask];
+  
+  cls = NSClassFromString(theClass);
+  if (cls == nil)
+    {
+      cls = [NSView class];
+    }
+  
+  obj = [cls allocWithZone: [self zone]];
+  if (theFrame.size.height > 0 && theFrame.size.width > 0)
+    obj = [obj initWithFrame: theFrame];
+  else
+    obj = [obj init];
+  
+  if ([obj respondsToSelector: @selector(setAutoresizingMask:)])
+    {
+      [obj setAutoresizingMask: mask];
+    }
+  
+  
+  if (![self isKindOfClass: [GSCustomView class]])
+    {
+      RETAIN(obj);
+    }
+  
+  RELEASE(self);
+  return obj;
+}
 @end
 

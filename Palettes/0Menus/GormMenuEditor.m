@@ -48,6 +48,11 @@
 }
 @end
 
+@interface NSButtonCell (GormObjectAdditions)
+- (NSRect) gormTitleRectForFrame: (NSRect) cellFrame
+			  inView: (NSView *)controlView;
+@end
+
 
 
 @interface	GormMenuEditor : NSMenuView <IBEditors, IBSelectionOwners>
@@ -134,6 +139,36 @@
       if (pos >= 0)
 	{
 	  NSMenuItem	*item = [edited itemAtIndex: pos];
+
+	  if ([theEvent clickCount] == 2)
+	    {
+	      [self makeSelectionVisible: NO];
+	      [self selectObjects: [NSArray array]];
+	      id cell = [rep menuItemCellForItemAtIndex: pos];
+	      NSTextField *tf = 
+		[[NSTextField alloc] initWithFrame: [self bounds]];
+	      NSRect frame = (NSRect)[cell titleRectForBounds:
+					     [rep rectOfItemAtIndex: pos]];
+	      NSLog(@"cell %@ (%@)", cell, [cell stringValue]);
+	      frame.origin.y += 3;
+  	      frame.size.height -= 5;
+	      frame.origin.x += 1;
+	      frame.size.width += 3;
+	      [tf setFrame: frame];
+	      [tf setEditable: YES];
+	      [tf setBezeled: NO];
+	      [tf setBordered: NO];
+//  	      [tf setAlignment: [_EO alignment]];
+//  	      [tf setFont: [_EO font]];
+	      [self addSubview: tf];
+	      [tf setStringValue: [[cell menuItem] title]];
+	      [self editTextField: tf
+		    withEvent: theEvent];
+	      [[cell menuItem] setTitle: [tf stringValue]];
+	      [tf removeFromSuperview];
+	      RELEASE(tf);
+	      return;
+	    }
 
 	  [self makeSelectionVisible: NO];
 	  if ([theEvent modifierFlags] & NSShiftKeyMask)
@@ -412,7 +447,6 @@
 
 - (void) deactivate
 {
-  NSLog(@"deactivate");
   if (original != nil)
     {
       NSEnumerator	*enumerator;
@@ -534,6 +568,16 @@
       return 0;
     }
 }
+
+- (void)  draggingExited: (id<NSDraggingInfo>)sender
+{
+  if (dragType == GormLinkPboardType)
+    {
+      [NSApp displayConnectionBetween: [NSApp connectSource] 
+	     and: nil];
+    }
+}
+
 
 - (void) drawSelection
 {
@@ -697,16 +741,16 @@
       enumerator = [items objectEnumerator];
       while ((item = [enumerator nextObject]) != nil)
 	{
-	  NSString	*title = [item title];
+//  	  NSString	*title = [item title];
 
-	  if ([edited indexOfItemWithTitle: title] > 0)
-	    {
-	      [document detachObject: item];	/* Already exists */
-	    }
-	  else
-	    {
+//  	  if ([edited indexOfItemWithTitle: title] > 0)
+//  	    {
+//  	      [document detachObject: item];	/* Already exists */
+//  	    }
+//  	  else
+//  	    {
 	      [edited insertItem: item atIndex: pos++];
-	    }
+//  	    }
 	}
       [edited sizeToFit];
       [edited display];
@@ -792,6 +836,7 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
       NSMenuItem	*item;
 
       [selection removeAllObjects];
+      NSLog(@"selectObjects %@ %@", selection, anArray);
       [selection addObjectsFromArray: anArray];
 
       count = [selection count];
@@ -887,5 +932,107 @@ NSLog(@"Link at index: %d (%@)", pos, NSStringFromPoint(loc));
 - (NSWindow*) window
 {
   return [super window];
+}
+@end
+
+static BOOL done_editing;
+
+@implementation GormMenuEditor (EditingAdditions)
+- (void) handleNotification: (NSNotification*)aNotification
+{
+  NSString	*name = [aNotification name];
+  if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
+    {
+      done_editing = YES;
+    }
+}
+
+/* Edit a textfield. If it's not already editable, make it so, then
+   edit it */
+- (NSEvent *) editTextField: view withEvent: (NSEvent *)theEvent
+{
+  unsigned eventMask;
+  BOOL wasEditable;
+  BOOL didDrawBackground;
+  NSTextField *editField;
+  NSRect                 frame;
+  NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
+  NSDate		*future = [NSDate distantFuture];
+  NSEvent *e;
+      
+  editField = view;
+  frame = [editField frame];
+
+  wasEditable = [editField isEditable];
+  [editField setEditable: YES];
+  didDrawBackground = [editField drawsBackground];
+  [editField setDrawsBackground: YES];
+
+//    [editField display];
+
+  [nc addObserver: self
+         selector: @selector(handleNotification:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  /* Do some modal editing */
+  [editField selectText: self];
+  eventMask = NSLeftMouseDownMask |  NSLeftMouseUpMask  |
+  NSKeyDownMask  |  NSKeyUpMask  | NSFlagsChangedMask;
+
+  done_editing = NO;
+  while (!done_editing)
+    {
+      NSEventType eType;
+      e = [NSApp nextEventMatchingMask: eventMask
+		 untilDate: future
+		 inMode: NSEventTrackingRunLoopMode
+		 dequeue: YES];
+      eType = [e type];
+      switch (eType)
+	{
+	case NSLeftMouseDown:
+	  {
+	    NSPoint dp =  [self convertPoint: [e locationInWindow]
+				fromView: nil];
+	    if (NSMouseInRect(dp, frame, NO) == NO)
+	      {
+		done_editing = YES;
+		break;
+	      }
+	  }
+	  [[editField currentEditor] mouseDown: e];
+	  break;
+	case NSLeftMouseUp:
+	  [[editField currentEditor] mouseUp: e];
+	  break;
+	case NSLeftMouseDragged:
+	  [[editField currentEditor] mouseDragged: e];
+	  break;
+	case NSKeyDown:
+	  [[editField currentEditor] keyDown: e];
+	  break;
+	case NSKeyUp:
+	  [[editField currentEditor] keyUp: e];
+	  break;
+	case NSFlagsChanged:
+	  [[editField currentEditor] flagsChanged: e];
+	  break;
+	default:
+	  NSLog(@"Internal Error: Unhandled event during editing: %@", e);
+	  break;
+	}
+    }
+
+  [editField setEditable: wasEditable];
+  [editField setDrawsBackground: didDrawBackground];
+  [nc removeObserver: self
+                name: NSControlTextDidEndEditingNotification
+              object: nil];
+
+  [[editField currentEditor] resignFirstResponder];
+  [self setNeedsDisplay: YES];
+
+  return e;
 }
 @end

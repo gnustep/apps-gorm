@@ -1514,7 +1514,6 @@
   if (activated == NO)
     {
       NSView *contentView = [_EO contentView];
-
 //        NSLog(@"contentView %@", contentView);
       contentViewEditor = [document editorForObject: contentView
 				    inEditor: self 
@@ -1751,8 +1750,11 @@
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  NSLog(@"********* TELL pyr *********** draggingEntered");
   return NSDragOperationNone;
+}
+
+//  - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+//  {
 //    NSArray	*types;
   
 //    dragPb = [sender draggingPasteboard];
@@ -1774,12 +1776,15 @@
 //        dragType = nil;
 //      }
 //    return [self draggingUpdated: sender];
-}
+//  }
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  NSLog(@"********* TELL pyr *********** draggingUpdated");
   return NSDragOperationNone;
+}
+
+//  - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+//  {
 //    if (dragType == IBViewPboardType)
 //      {
 //        return NSDragOperationCopy;
@@ -1811,7 +1816,7 @@
 //      {
 //        return NSDragOperationNone;
 //      }
-}
+//  }
 
 - (void) drawSelection
 {
@@ -2060,9 +2065,11 @@
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSLog(@"********* TELL pyr *********** prepareForDragOperation");
   return NO;
-  
+}
+
+//  - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+//  {
 //    /*
 //     * Tell the source that we will accept the drop if we can.
 //     */
@@ -2102,7 +2109,7 @@
 //      }
   
 //    return NO;
-}
+//  }
 
 - (void) resetObject: (id)anObject
 {

@@ -25,7 +25,11 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 2Controls
 2Controls_PALETTE_ICON = ControlsPalette
-2Controls_OBJC_FILES = main.m inspectors.m
+2Controls_OBJC_FILES = \
+	main.m \
+	inspectors.m \
+	GormPopUpButtonEditor.m
+
 2Controls_PRINCIPAL_CLASS = ControlsPalette
 
 2Controls_RESOURCE_FILES = ControlsPalette.tiff \

@@ -434,236 +434,248 @@
 
 
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  NSRect rect = [[_EO contentView] bounds];
-  NSPoint loc = [sender draggingLocation];
-  loc = [[_EO contentView] 
-	  convertPoint: loc fromView: nil];
+//  - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+//  {
+//    NSRect rect = [[_EO contentView] bounds];
+//    NSPoint loc = [sender draggingLocation];
+//    NSPasteboard	*dragPb;
+//    NSArray	*types;
+  
+//    dragPb = [sender draggingPasteboard];
+//    types = [dragPb types];
+//    loc = [[_EO contentView] 
+//  	  convertPoint: loc fromView: nil];
 
-  if (NSMouseInRect(loc, [[_EO contentView] bounds], NO) == NO)
-    {
-      return NSDragOperationNone;
-    }
-  else
-    {
-      rect.origin.x += 2;
-      rect.origin.y += 2;
-      rect.size.width -= 4;
-      rect.size.height -= 4;
+//    if ([types containsObject: GormLinkPboardType] == YES)
+//      {
+//        [NSApp displayConnectionBetween: [NSApp connectSource] 
+//  	     and: _editedObject];
+//        NSLog(@"I said Yes !");
+//        return NSDragOperationLink;
+//      }
+//    if (NSMouseInRect(loc, [[_EO contentView] bounds], NO) == NO)
+//      {
+//        return NSDragOperationNone;
+//      }
+//    else
+//      {
+//        rect.origin.x += 2;
+//        rect.origin.y += 2;
+//        rect.size.width -= 4;
+//        rect.size.height -= 4;
       
-      [[_EO contentView] lockFocus];
+//        [[_EO contentView] lockFocus];
       
-      [[NSColor darkGrayColor] set];
-      NSFrameRectWithWidth(rect, 2);
+//        [[NSColor darkGrayColor] set];
+//        NSFrameRectWithWidth(rect, 2);
       
-      [[_EO contentView] unlockFocus];
-      [[self window] flushWindow];
-      return NSDragOperationCopy;
-    }
-}
+//        [[_EO contentView] unlockFocus];
+//        [[self window] flushWindow];
+//        return NSDragOperationCopy;
+//      }
+//  }
 
-- (void) draggingExited: (id<NSDraggingInfo>)sender
-{
-  NSRect rect = [[_EO contentView] bounds];
-  rect.origin.x += 2;
-  rect.origin.y += 2;
-  rect.size.width -= 4;
-  rect.size.height -= 4;
+//  - (void) draggingExited: (id<NSDraggingInfo>)sender
+//  {
+//    NSRect rect = [[_EO contentView] bounds];
+//    rect.origin.x += 2;
+//    rect.origin.y += 2;
+//    rect.size.width -= 4;
+//    rect.size.height -= 4;
  
-  rect.origin.x --;
-  rect.size.width ++;
-  rect.size.height ++;
+//    rect.origin.x --;
+//    rect.size.width ++;
+//    rect.size.height ++;
 
-  [[self window] disableFlushWindow];
-  [self displayRect: 
-	  [[_EO contentView] convertRect: rect
-				       toView: self]];
-  [[self window] enableFlushWindow];
-  [[self window] flushWindow];
-}
+//    [[self window] disableFlushWindow];
+//    [self displayRect: 
+//  	  [[_EO contentView] convertRect: rect
+//  				       toView: self]];
+//    [[self window] enableFlushWindow];
+//    [[self window] flushWindow];
+//  }
 
-- (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender
-{
-  NSPoint loc = [sender draggingLocation];
-  NSRect rect = [[_EO contentView] bounds];
-  loc = [[_EO contentView] 
-	  convertPoint: loc fromView: nil];
+//  - (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender
+//  {
+//    NSPoint loc = [sender draggingLocation];
+//    NSRect rect = [[_EO contentView] bounds];
+//    loc = [[_EO contentView] 
+//  	  convertPoint: loc fromView: nil];
 
-  rect.origin.x += 2;
-  rect.origin.y += 2;
-  rect.size.width -= 4;
-  rect.size.height -= 4;
+//    rect.origin.x += 2;
+//    rect.origin.y += 2;
+//    rect.size.width -= 4;
+//    rect.size.height -= 4;
 
-  if (NSMouseInRect(loc, [[_EO contentView] bounds], NO) == NO)
-    {
-      [[self window] disableFlushWindow];
-      rect.origin.x --;
-      rect.size.width ++;
-      rect.size.height ++;
-      [self displayRect: 
-	      [[_EO contentView] convertRect: rect
-					   toView: self]];
-      [[self window] enableFlushWindow];
-      [[self window] flushWindow];
-      return NSDragOperationNone;
-    }
-  else
-    {
-      [[_EO contentView] lockFocus];
+//    if (NSMouseInRect(loc, [[_EO contentView] bounds], NO) == NO)
+//      {
+//        [[self window] disableFlushWindow];
+//        rect.origin.x --;
+//        rect.size.width ++;
+//        rect.size.height ++;
+//        [self displayRect: 
+//  	      [[_EO contentView] convertRect: rect
+//  					   toView: self]];
+//        [[self window] enableFlushWindow];
+//        [[self window] flushWindow];
+//        return NSDragOperationNone;
+//      }
+//    else
+//      {
+//        [[_EO contentView] lockFocus];
       
-      [[NSColor darkGrayColor] set];
-      NSFrameRectWithWidth(rect, 2);
+//        [[NSColor darkGrayColor] set];
+//        NSFrameRectWithWidth(rect, 2);
       
-      [[_EO contentView] unlockFocus];
-      [[self window] flushWindow];
-      return NSDragOperationCopy;
-    }
-}
+//        [[_EO contentView] unlockFocus];
+//        [[self window] flushWindow];
+//        return NSDragOperationCopy;
+//      }
+//  }
 
 
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  NSString		*dragType;
-  NSArray *types;
-  NSPasteboard		*dragPb;
+//  - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+//  {
+//    NSString		*dragType;
+//    NSArray *types;
+//    NSPasteboard		*dragPb;
 
-  NSLog(@"prepareForDragOperation called");
+//    NSLog(@"prepareForDragOperation called");
 
-  dragPb = [sender draggingPasteboard];
+//    dragPb = [sender draggingPasteboard];
 
-  types = [dragPb types];
+//    types = [dragPb types];
   
-  if ([types containsObject: IBViewPboardType] == YES)
-    {
-      dragType = IBViewPboardType;
-    }
-  else if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      dragType = GormLinkPboardType;
-    }
-  else if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      dragType = IBFormatterPboardType;
-    }
-  else
-    {
-      dragType = nil;
-    }
+//    if ([types containsObject: IBViewPboardType] == YES)
+//      {
+//        dragType = IBViewPboardType;
+//      }
+//    else if ([types containsObject: GormLinkPboardType] == YES)
+//      {
+//        dragType = GormLinkPboardType;
+//      }
+//    else if ([types containsObject: IBFormatterPboardType] == YES)
+//      {
+//        dragType = IBFormatterPboardType;
+//      }
+//    else
+//      {
+//        dragType = nil;
+//      }
 
-  if (dragType == IBViewPboardType)
-    {
-      /*
-       * We can accept views dropped anywhere.
-       */
-      NSPoint		loc = [sender draggingLocation];
-      loc = [[_EO contentView] 
-	      convertPoint: loc fromView: nil];
-      if (NSMouseInRect(loc, [_EO bounds], NO) == NO)
-	{
-	  return NO;
-	}
+//    if (dragType == IBViewPboardType)
+//      {
+//        /*
+//         * We can accept views dropped anywhere.
+//         */
+//        NSPoint		loc = [sender draggingLocation];
+//        loc = [[_EO contentView] 
+//  	      convertPoint: loc fromView: nil];
+//        if (NSMouseInRect(loc, [_EO bounds], NO) == NO)
+//  	{
+//  	  return NO;
+//  	}
       
-      return YES;
-    }
+//        return YES;
+//      }
   
-  return NO;
-}
+//    return NO;
+//  }
 
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  NSString		*dragType;
-  NSPasteboard		*dragPb;
-  NSArray *types;
+//  - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+//  {
+//    NSString		*dragType;
+//    NSPasteboard		*dragPb;
+//    NSArray *types;
 
-  dragPb = [sender draggingPasteboard];
+//    dragPb = [sender draggingPasteboard];
 
-  types = [dragPb types];
+//    types = [dragPb types];
   
-  if ([types containsObject: IBViewPboardType] == YES)
-    {
-      dragType = IBViewPboardType;
-    }
-  else if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      dragType = GormLinkPboardType;
-    }
-  else if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      dragType = IBFormatterPboardType;
-    }
-  else
-    {
-      dragType = nil;
-    }
+//    if ([types containsObject: IBViewPboardType] == YES)
+//      {
+//        dragType = IBViewPboardType;
+//      }
+//    else if ([types containsObject: GormLinkPboardType] == YES)
+//      {
+//        dragType = GormLinkPboardType;
+//      }
+//    else if ([types containsObject: IBFormatterPboardType] == YES)
+//      {
+//        dragType = IBFormatterPboardType;
+//      }
+//    else
+//      {
+//        dragType = nil;
+//      }
 
-  if (dragType == IBViewPboardType)
-    {
-      NSPoint		loc = [sender draggingLocation];
-      NSArray		*views;
-      //      NSArray           *array = [NSMutableArray array];
-      NSEnumerator	*enumerator;
-      NSView		*sub;
+//    if (dragType == IBViewPboardType)
+//      {
+//        NSPoint		loc = [sender draggingLocation];
+//        NSArray		*views;
+//        //      NSArray           *array = [NSMutableArray array];
+//        NSEnumerator	*enumerator;
+//        NSView		*sub;
 
-      /*
-      if (opened != YES)
-	{
-	  NSLog(@"make ourself the editor");
-	}
-      else if (openedSubeditor != nil)
-	{
-	  NSLog(@"close our subeditors");
-	}
-      */
+//        /*
+//        if (opened != YES)
+//  	{
+//  	  NSLog(@"make ourself the editor");
+//  	}
+//        else if (openedSubeditor != nil)
+//  	{
+//  	  NSLog(@"close our subeditors");
+//  	}
+//        */
 
-      /*
-       * Ask the document to get the dragged views from the pasteboard and add
-       * them to it's collection of known objects.
-       */
-      views = [document pasteType: IBViewPboardType
-		   fromPasteboard: dragPb
-			   parent: _EO];
-      /*
-       * Now make all the views subviews of ourself, setting their origin to
-       * be the point at which they were dropped (converted from window
-       * coordinates to our own coordinates).
-       */
-      loc = [[_EO contentView] 
-	      convertPoint: loc fromView: nil];
-      if (NSMouseInRect(loc, [_EO bounds], NO) == NO)
-	{
-	  // Dropped outside our view frame
-	  NSLog(@"Dropped outside current edit view");
-	  dragType = nil;
-	  return NO;
-	}
-      enumerator = [views objectEnumerator];
-      while ((sub = [enumerator nextObject]) != nil)
-	{
-	  NSRect	rect = [sub frame];
+//        /*
+//         * Ask the document to get the dragged views from the pasteboard and add
+//         * them to it's collection of known objects.
+//         */
+//        views = [document pasteType: IBViewPboardType
+//  		   fromPasteboard: dragPb
+//  			   parent: _EO];
+//        /*
+//         * Now make all the views subviews of ourself, setting their origin to
+//         * be the point at which they were dropped (converted from window
+//         * coordinates to our own coordinates).
+//         */
+//        loc = [[_EO contentView] 
+//  	      convertPoint: loc fromView: nil];
+//        if (NSMouseInRect(loc, [_EO bounds], NO) == NO)
+//  	{
+//  	  // Dropped outside our view frame
+//  	  NSLog(@"Dropped outside current edit view");
+//  	  dragType = nil;
+//  	  return NO;
+//  	}
+//        enumerator = [views objectEnumerator];
+//        while ((sub = [enumerator nextObject]) != nil)
+//  	{
+//  	  NSRect	rect = [sub frame];
 	  
-	  rect.origin = [[_EO contentView] 
-			  convertPoint: [sender draggedImageLocation]
-			  fromView: nil];
-	  rect.origin.x = (int) rect.origin.x;
-	  rect.origin.y = (int) rect.origin.y;
-	  rect.size.width = (int) rect.size.width;
-	  rect.size.height = (int) rect.size.height;
-	  [sub setFrame: rect];
+//  	  rect.origin = [[_EO contentView] 
+//  			  convertPoint: [sender draggedImageLocation]
+//  			  fromView: nil];
+//  	  rect.origin.x = (int) rect.origin.x;
+//  	  rect.origin.y = (int) rect.origin.y;
+//  	  rect.size.width = (int) rect.size.width;
+//  	  rect.size.height = (int) rect.size.height;
+//  	  [sub setFrame: rect];
 
-	  [[_EO contentView] addSubview: sub];
+//  	  [[_EO contentView] addSubview: sub];
 	  
-	  [self selectObjects: 
-		  [NSArray arrayWithObject: 
-			     [document editorForObject: sub 
-				       inEditor: self 
-				       create: YES]]];
-	}
-      // FIXME  we should maybe open ourself
-    }
+//  	  [self selectObjects: 
+//  		  [NSArray arrayWithObject: 
+//  			     [document editorForObject: sub 
+//  				       inEditor: self 
+//  				       create: YES]]];
+//  	}
+//        // FIXME  we should maybe open ourself
+//      }
 
-  return YES;
-}
+//    return YES;
+//  }
 
 
 //  - (void) pasteInSelection

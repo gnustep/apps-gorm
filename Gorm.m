@@ -206,6 +206,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   NSWindow	*win;
   BOOL		edited = NO;
 
+  if (isTesting == YES)
+    {
+      [self endTesting: sender];
+      return NO;
+    }
+
   while ((win = [enumerator nextObject]) != nil)
     {
       if ([win isDocumentEdited] == YES)
@@ -347,8 +353,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (void) displayConnectionBetween: (id)source and: (id)destination
 {
-  NSWindow	*w;
-  NSRect	r;
+  NSWindow	*w, *neww;
+  NSRect	r, newr;
+  
 
   if (source != connectSource)
     {
@@ -359,37 +366,20 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	  if (w != nil)
 	    {
 	      NSView	*wv = [[w contentView] superview];
+ 
+	      r.origin.x --;
+	      r.size.width ++;
+	      
+	      r.size.height ++;
 
-	      /*
-	       * Erase image from old location.
-	       */
-	      r.origin.y -= 1.0;
-	      r.origin.x += 1.0;
-	      r.size = [sourceImage size];
-	      r.size.width += 2.0;
-	      r.size.height += 2.0;
-
-	      [wv lockFocus];
+	      [w disableFlushWindow];
 	      [wv displayRect: r];
-	      [wv unlockFocus];
+	      
+	      [w enableFlushWindow];
 	      [w flushWindow];
 	    }
 	}
       connectSource = source;
-    }
-  if (connectSource != nil)
-    {
-      w = [[self activeDocument] windowAndRect: &r forObject: connectSource];
-      if (w != nil)
-	{
-	  NSView	*wv = [[w contentView] superview];
-
-	  [wv lockFocus];
-	  [sourceImage compositeToPoint: r.origin
-			      operation: NSCompositeCopy];
-	  [wv unlockFocus];
-	  [w flushWindow];
-	}
     }
   if (destination != connectDestination)
     {
@@ -404,11 +394,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	      /*
 	       * Erase image from old location.
 	       */
-	      r.origin.x -= 1.0;
-	      r.origin.y += 1.0;
-	      r.size = [targetImage size];
-	      r.size.width += 2.0;
-	      r.size.height += 2.0;
+	      r.origin.x --;
+	      r.size.width ++;
+	      r.size.height ++;
 
 	      [wv lockFocus];
 	      [wv displayRect: r];
@@ -418,7 +406,27 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	}
       connectDestination = destination;
     }
-  if (connectDestination != nil)
+  if (connectSource != nil)
+    {
+      w = [[self activeDocument] windowAndRect: &r forObject: connectSource];
+      if (w != nil)
+	{
+	  NSView	*wv = [[w contentView] superview];
+	  
+	  r.origin.x++;
+	  r.size.width--;
+	  r.size.height--;
+	  [wv lockFocus];
+	  [[NSColor greenColor] set];
+	  NSFrameRectWithWidth(r, 2);
+	  
+	  [sourceImage compositeToPoint: r.origin
+			      operation: NSCompositeSourceOver];
+	  [wv unlockFocus];
+	  [w flushWindow];
+	}
+    }
+  if (connectDestination != nil && connectDestination == connectSource)
     {
       w = [[self activeDocument] windowAndRect: &r
 				     forObject: connectDestination];
@@ -426,9 +434,38 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	{
 	  NSView	*wv = [[w contentView] superview];
 
+	  r.origin.x += 3;
+	  r.origin.y += 2;
+	  r.size.width -= 5;
+	  r.size.height -= 5;
 	  [wv lockFocus];
+	  [[NSColor purpleColor] set];
+	  NSFrameRectWithWidth(r, 2);
+	  
+	  r.origin.x += [targetImage size].width;
 	  [targetImage compositeToPoint: r.origin
-			      operation: NSCompositeCopy];
+			      operation: NSCompositeSourceOver];
+	  [wv unlockFocus];
+	  [w flushWindow];
+	}
+    }
+  else if (connectDestination != nil)
+    {
+      w = [[self activeDocument] windowAndRect: &r
+				     forObject: connectDestination];
+      if (w != nil)
+	{
+	  NSView	*wv = [[w contentView] superview];
+
+	  r.origin.x++;
+	  r.size.width--;
+	  r.size.height--;
+	  [wv lockFocus];
+	  [[NSColor purpleColor] set];
+	  NSFrameRectWithWidth(r, 2);
+	  
+	  [targetImage compositeToPoint: r.origin
+			      operation: NSCompositeSourceOver];
 	  [wv unlockFocus];
 	  [w flushWindow];
 	}
@@ -463,6 +500,19 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [(id)[self activeDocument] createClassFiles: sender];
 }
 
+
+- (id) deferredEndTesting: (id) sender
+{
+  [[NSRunLoop currentRunLoop]
+    performSelector: @selector(endTesting:)
+    target: self
+    argument: nil
+    order: 5000
+    modes: [NSArray arrayWithObjects:
+		      NSDefaultRunLoopMode,
+		    NSModalPanelRunLoopMode,
+		    NSEventTrackingRunLoopMode, nil]];
+}
 
 - (id) endTesting: (id)sender
 {
@@ -1136,6 +1186,12 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 		intoClassName: @"NSWindow"];
       [archiver encodeClassName: @"GormNSMenu" 
 		intoClassName: @"NSMenu"];
+      [archiver encodeClassName: @"GormNSPopUpButton" 
+		intoClassName: @"NSPopUpButton"];
+      [archiver encodeClassName: @"GormNSPopUpButtonCell" 
+		intoClassName: @"NSPopUpButtonCell"];
+      [archiver encodeClassName: @"GormCustomView" 
+		intoClassName: @"GormTestCustomView"];
       [archiver encodeRootObject: a];
       d = RETAIN([archiver archiverData]);
       [a endArchiving];
@@ -1172,7 +1228,7 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 
 	  testMenu = [[NSMenu alloc] initWithTitle: @"Test"];
 	  [testMenu addItemWithTitle: @"Quit" 
-			      action: @selector(endTesting:)
+			      action: @selector(deferredEndTesting:)
 		       keyEquivalent: @"q"];	
 	  [self setMainMenu: testMenu];
 	  RELEASE(testMenu);
@@ -1185,12 +1241,12 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 	  item = [testMenu itemWithTitle: @"Quit"];
 	  if (item != nil)
 	    {
-	      [item setAction: @selector(endTesting:)];
+	      [item setAction: @selector(deferredEndTesting:)];
 	    }
 	  else
 	    {
 	      [testMenu addItemWithTitle: @"Quit" 
-				  action: @selector(endTesting:)
+				  action: @selector(deferredEndTesting:)
 			   keyEquivalent: @"q"];	
 	    }
 	}

@@ -251,7 +251,7 @@ static NSMapTable	*docMap = 0;
 	}
       if (obj == [NSApp connectSource])
 	{
-	  return 0;	/* Can't drag an object onto itsself */
+	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
 	}
       [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
       if (obj != nil)
@@ -260,12 +260,12 @@ static NSMapTable	*docMap = 0;
 	}
       else
 	{
-	  return 0;
+	  return NSDragOperationNone;
 	}
     }
   else
     {
-      return 0;
+      return NSDragOperationNone;
     }
 }
 
@@ -545,7 +545,7 @@ static NSMapTable	*docMap = 0;
   /*
    * Adjust to image area.
    */
-  rect.size.width -= 15;
+//    rect.size.width -= 15;
   rect.size.height -= 15;
   rect = [self convertRect: rect toView: nil];
   return rect;

@@ -76,6 +76,8 @@
       [titleText setDelegate: self];
       [contents addSubview: titleText];
       RELEASE(titleText);
+
+
     }
   return self;
 }
@@ -101,6 +103,7 @@
 {
   NSTextField	*titleText;
   NSTextField	*shortCut;
+  NSTextField	*tagText;
 }
 @end
 
@@ -119,6 +122,10 @@
       NSString	*s = [[shortCut stringValue] stringByTrimmingSpaces];
 
       [object setKeyEquivalent: s];
+    }
+  if (o == tagText)
+    {
+      [object setTag: [tagText intValue]];
     }
   [[object menu] display];
 }
@@ -173,6 +180,12 @@
       [shortCut setDelegate: self];
       [contents addSubview: shortCut];
       RELEASE(shortCut);
+
+      tagText
+	= [[NSTextField alloc] initWithFrame: NSMakeRect(60,IVH-90,IVW-80,20)];
+      [tagText setDelegate: self];
+      [contents addSubview: tagText];
+      RELEASE(tagText);
     }
   return self;
 }
@@ -182,6 +195,8 @@
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
   [shortCut setStringValue: [object keyEquivalent]];
+  [tagText setIntValue: [object tag]];
+
 }
 
 @end

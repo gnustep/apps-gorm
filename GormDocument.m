@@ -274,7 +274,6 @@ static NSImage	*classesImage = nil;
       else
 	{
 	  NSString	*name;
-
 	  obj = [con source];
 	  name = [self nameForObject: obj];
 	  [con setSource: name];
@@ -989,7 +988,6 @@ static NSImage	*classesImage = nil;
   while ((con = [enumerator nextObject]) != nil)
     {
       NSString	*name;
-
       name = (NSString*)[con source];
       obj = [self objectForName: name];
       [con setSource: obj];
@@ -1005,7 +1003,8 @@ static NSImage	*classesImage = nil;
   enumerator = [savedEditors objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
-      [[con destination] activate];
+      if ([[con source] isKindOfClass: [NSView class]] == NO)
+	[[con destination] activate];
     }
   [savedEditors removeAllObjects];
 }
@@ -1465,6 +1464,8 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
   [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
   [u decodeClassName: @"NSOutlineView" asClassName: @"GormNSOutlineView"];
+  [u decodeClassName: @"NSPopUpButton" asClassName: @"GormNSPopUpButton"];
+  [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -2043,6 +2044,10 @@ static NSImage	*classesImage = nil;
 	      intoClassName: @"NSTableView"];
   [archiver encodeClassName: @"GormNSOutlineView" 
 	      intoClassName: @"NSOutlineView"];
+  [archiver encodeClassName: @"GormNSPopUpButton" 
+	      intoClassName: @"NSPopUpButton"];
+  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
+	      intoClassName: @"NSPopUpButtonCell"];
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
@@ -2180,7 +2185,7 @@ static NSImage	*classesImage = nil;
       else if ([editor respondsToSelector: 
 			 @selector(windowAndRect:forObject:)])
 	{
-	  NSLog(@"temp != nil");
+//  	  NSLog(@"temp != nil");
 	  return [editor windowAndRect: r forObject: object];
 	}
     }
@@ -2210,7 +2215,7 @@ static NSImage	*classesImage = nil;
       
       *r = [th convertRect: [th headerRectOfColumn: index]
 	       toView: nil];
-      NSLog(@"%@", NSStringFromRect(*r));
+//        NSLog(@"%@", NSStringFromRect(*r));
       return [th window];
     }
   else

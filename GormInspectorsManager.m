@@ -635,12 +635,30 @@
     }
 }
 
+- (void) _internalCall: (id) sender
+{
+  if (sender == newBrowser)
+    {
+      [self browser: newBrowser
+	    selectCellWithString: [[newBrowser selectedCell] stringValue]
+	    inColumn: [newBrowser selectedColumn]];
+      [newBrowser reloadColumn: 1];
+    }
+  else if (sender == oldBrowser)
+    {
+      [self browser: oldBrowser
+	    selectCellWithString: [[oldBrowser selectedCell] stringValue]
+	    inColumn: [oldBrowser selectedColumn]];
+    }
+}
+
 - (BOOL) browser: (NSBrowser*)sender
 selectCellWithString: (NSString*)title
 	inColumn: (int)col
 {
   unsigned		numConnectors = [connectors count];
   unsigned		index;
+
 
   if (sender == newBrowser)
     {
@@ -650,6 +668,7 @@ selectCellWithString: (NSString*)title
 	    {
 	      id	con = nil;
 	      NSString	*action;
+
 
 	      for (index = 0; index < numConnectors; index++)
 		{
@@ -676,17 +695,17 @@ selectCellWithString: (NSString*)title
 		      AUTORELEASE(con);
 		    }
 		}
-	      if (currentConnector != con)
-		{
-		  ASSIGN(currentConnector, con);
-		  [newBrowser setLastColumn: 0];
-		}
-	      action = [con label];
-	      if (action != nil)
-		{
-		  [newBrowser selectRow: [actions indexOfObject: action]
-			       inColumn: 1];
-		}
+  	      if (currentConnector != con)
+  		{
+  		  ASSIGN(currentConnector, con);
+//    		  [newBrowser setLastColumn: 0];
+  		}
+  	      action = [con label];
+  	      if (action != nil)
+  		{
+  		  [newBrowser selectRow: [actions indexOfObject: action]
+  			       inColumn: 1];
+  		}
 	    }
 	  else
 	    {
@@ -901,6 +920,8 @@ selectCellWithString: (NSString*)title
       [newBrowser setAllowsMultipleSelection: NO];
       [newBrowser setHasHorizontalScroller: NO];
       [newBrowser setDelegate: self];
+      [newBrowser setTarget: self];
+      [newBrowser setAction: @selector(_internalCall:)];
 
       [split addSubview: newBrowser];
       RELEASE(newBrowser);
@@ -912,6 +933,8 @@ selectCellWithString: (NSString*)title
       [oldBrowser setAllowsMultipleSelection: NO];
       [oldBrowser setHasHorizontalScroller: NO];
       [oldBrowser setDelegate: self];
+      [newBrowser setTarget: self];
+      [newBrowser setAction: @selector(_internalCall:)];
 
       [split addSubview: oldBrowser];
       RELEASE(oldBrowser);

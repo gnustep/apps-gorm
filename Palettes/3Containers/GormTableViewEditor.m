@@ -80,8 +80,6 @@ static NSText *_textObject;
  */
 - (BOOL) activate
 {
-  NSLog(@"activate");
-
   if ([super activate])
     {
       if ([_editedObject isKindOfClass: [NSScrollView class]])
@@ -401,6 +399,120 @@ static NSText *_textObject;
 //    else
 //      return [NSArray arrayWithObject: selected];
 //  }
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  return [self draggingUpdated: sender];
+}
+
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      id destination = nil;
+      NSView *hitView = 
+	[[tableView enclosingScrollView] 
+	  hitTest: 
+	    [[[tableView enclosingScrollView] superview]
+	      convertPoint: [sender draggingLocation]
+	      fromView: nil]];
+      
+      if (hitView == [tableView headerView])
+	{
+	  NSPoint p = [hitView convertPoint: [sender draggingLocation]
+			       fromView: nil];
+	  int columnNumber = 
+	    [(NSTableHeaderView*) hitView columnAtPoint: p];
+	  
+	  if (columnNumber != -1)
+	    destination = [[tableView tableColumns] 
+			    objectAtIndex: columnNumber];
+	}
+
+      if ([hitView isKindOfClass: [NSScroller class]]
+	  || [hitView isKindOfClass: [NSScrollView class]])
+	{
+	  destination = _editedObject;
+	}
+	  
+      if (destination == nil)
+	destination = tableView;
+
+      [NSApp displayConnectionBetween: [NSApp connectSource] 
+	     and: destination];
+      return NSDragOperationLink;
+    }
+  else
+    {
+      return NSDragOperationNone;
+    }
+}
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      id destination = nil;
+      NSView *hitView = 
+	[[tableView enclosingScrollView] 
+	  hitTest: 
+	    [[[tableView enclosingScrollView] superview]
+	      convertPoint: [sender draggingLocation]
+	      fromView: nil]];
+      
+      if (hitView == [tableView headerView])
+	{
+	  NSPoint p = [hitView convertPoint: [sender draggingLocation]
+			       fromView: nil];
+	  int columnNumber = 
+	    [(NSTableHeaderView*) hitView columnAtPoint: p];
+	  
+	  if (columnNumber != -1)
+	    destination = [[tableView tableColumns] 
+			    objectAtIndex: columnNumber];
+	}
+
+      if ([hitView isKindOfClass: [NSScroller class]]
+	  || [hitView isKindOfClass: [NSScrollView class]])
+	{
+	  destination = _editedObject;
+	}
+	  
+      if (destination == nil)
+	destination = tableView;
+
+      [NSApp displayConnectionBetween: [NSApp connectSource] 
+	     and: destination];
+      [NSApp startConnecting];
+      return YES;
+    }
+  return YES;
+}
+
+- (NSWindow *)windowAndRect: (NSRect *)prect
+		  forObject: (id) object
+{
+  if (object == tableView)
+    {
+      *prect = [tableView convertRect: [tableView visibleRect]
+			  toView :nil];
+      return _window;
+    }
+  else
+    {
+      return [super windowAndRect: prect forObject: object];
+    }
+}
 
 @end
 

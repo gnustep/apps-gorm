@@ -320,7 +320,7 @@
     if ([parent isOpened] == NO)
       {
 	NSDebugLog(@"md %@ calling my parent %@", self, parent);
-	[super mouseDown: theEvent];
+	[parent mouseDown: theEvent];
 	return;
       }
   }
@@ -534,7 +534,17 @@
 {
   NSRect rect = [_editedObject bounds];
   NSPoint loc = [sender draggingLocation];
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
   loc = [_editedObject convertPoint: loc fromView: nil];
+
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      return [parent draggingEntered: sender];
+    }
 
   if (NSMouseInRect(loc, [_editedObject bounds], NO) == NO)
     {
@@ -560,6 +570,18 @@
 
 - (void) draggingExited: (id<NSDraggingInfo>)sender
 {
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      [parent draggingExited: sender];
+      return;
+    }
+
+
   NSRect rect = [_editedObject bounds];
   rect.origin.x += 3;
   rect.origin.y += 2;
@@ -582,8 +604,18 @@
 {
   NSPoint loc = [sender draggingLocation];
   NSRect rect = [_editedObject bounds];
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
   loc = [_editedObject 
 	  convertPoint: loc fromView: nil];
+
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      return [parent draggingUpdated: sender];
+    }
 
   rect.origin.x += 3;
   rect.origin.y += 2;
@@ -636,6 +668,7 @@
   else if ([types containsObject: GormLinkPboardType] == YES)
     {
       dragType = GormLinkPboardType;
+      return [parent prepareForDragOperation: sender];
     }
   else if ([types containsObject: IBFormatterPboardType] == YES)
     {
