@@ -132,8 +132,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   NSEnumerator	*en;
   int		row = 0;
   
-  ASSIGN(selectedClass, className);
-
+  selectedClass = className;
   if(className != nil)
     {
       if([className isEqual: @"CustomView"] || 
@@ -216,24 +215,27 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       NSString *newClassName;
       NSString *itemSelected = [self selectedClassName];
       
-      if(![itemSelected isEqualToString: @"FirstResponder"])
+      if(itemSelected != nil)
 	{
-	  int i = 0;
-
-	  newClassName = [classManager addClassWithSuperClassName:
-					 itemSelected];
-	  [self reloadData];
-	  [self expandItem: itemSelected];
-	  i = [self rowForItem: newClassName]; 
-	  [self selectRow: i byExtendingSelection: NO];
-	  [self scrollRowToVisible: i];
-	}
-      else
-	{
-	  // inform the user of this error.
-	  NSRunAlertPanel(_(@"Cannot instantiate"), 
-			  _(@"FirstResponder cannot be instantiated."),
-			  nil, nil, nil);
+	  if(![itemSelected isEqualToString: @"FirstResponder"])
+	    {
+	      int i = 0;
+	      
+	      newClassName = [classManager addClassWithSuperClassName:
+					     itemSelected];
+	      [self reloadData];
+	      [self expandItem: itemSelected];
+	      i = [self rowForItem: newClassName]; 
+	      [self selectRow: i byExtendingSelection: NO];
+	      [self scrollRowToVisible: i];
+	    }
+	  else
+	    {
+	      // inform the user of this error.
+	      NSRunAlertPanel(_(@"Cannot instantiate"), 
+			      _(@"FirstResponder cannot be instantiated."),
+			      nil, nil, nil);
+	    }
 	}
     }
 }
@@ -360,6 +362,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
 		      object: classManager];
+		  selectedClass = nil; // don't keep the class we're pointing to.
 		}
 	    }
 	}
@@ -376,45 +379,51 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) copySelection
 {
-  NSPasteboard *pb = [NSPasteboard generalPasteboard];
-  NSMutableDictionary *dict = 
-    [NSMutableDictionary dictionaryWithObjectsAndKeys: [classManager dictionaryForClassNamed: selectedClass], 
-			 selectedClass, nil];
-  id classPlist = [[dict description] propertyList];
-
-  if(classPlist != nil)
+  if(selectedClass != nil)
     {
-      [pb declareTypes: [NSArray arrayWithObject: GormClassPboardType] owner: self];
-      [pb setPropertyList: classPlist forType: GormClassPboardType];
+      NSPasteboard *pb = [NSPasteboard generalPasteboard];
+      NSMutableDictionary *dict = 
+	[NSMutableDictionary dictionaryWithObjectsAndKeys: [classManager dictionaryForClassNamed: selectedClass], 
+			     selectedClass, nil];
+      id classPlist = [[dict description] propertyList];
+      
+      if(classPlist != nil)
+	{
+	  [pb declareTypes: [NSArray arrayWithObject: GormClassPboardType] owner: self];
+	  [pb setPropertyList: classPlist forType: GormClassPboardType];
+	}
     }
 }
 
 - (void) pasteInSelection
 {
-  NSPasteboard *pb = [NSPasteboard generalPasteboard];
-  NSArray *types = [pb types];
-
-  if([types containsObject: GormClassPboardType])
+  if(selectedClass != nil)
     {
-      id classPlist = [pb propertyListForType: GormClassPboardType];
-      NSDictionary *classesDict = [NSDictionary dictionaryWithDictionary: classPlist];
-      id name = nil;
-      NSEnumerator *en = [classesDict keyEnumerator];
-
-      while((name = [en nextObject]) != nil)
+      NSPasteboard *pb = [NSPasteboard generalPasteboard];
+      NSArray *types = [pb types];
+      
+      if([types containsObject: GormClassPboardType])
 	{
-	  NSDictionary *classDict = [classesDict objectForKey: name];
-	  NSString *className = [classManager uniqueClassNameFrom: name];
-	  BOOL added = [classManager addClassNamed: className
-				     withSuperClassNamed: selectedClass
-				     withActions: [classDict objectForKey: @"Actions"]
-				     withOutlets: [classDict objectForKey: @"Outlets"]];
-	  if(!added)
+	  id classPlist = [pb propertyListForType: GormClassPboardType];
+	  NSDictionary *classesDict = [NSDictionary dictionaryWithDictionary: classPlist];
+	  id name = nil;
+	  NSEnumerator *en = [classesDict keyEnumerator];
+	  
+	  while((name = [en nextObject]) != nil)
 	    {
-	      NSString *message = [NSString stringWithFormat: @"Addition of %@ with superclass %@ failed.", className,
-					    selectedClass];
-	      NSRunAlertPanel(_(@"Problem pasting class"),
-			      message, nil, nil, nil);
+	      NSDictionary *classDict = [classesDict objectForKey: name];
+	      NSString *className = [classManager uniqueClassNameFrom: name];
+	      BOOL added = [classManager addClassNamed: className
+					 withSuperClassNamed: selectedClass
+					 withActions: [classDict objectForKey: @"Actions"]
+					 withOutlets: [classDict objectForKey: @"Outlets"]];
+	      if(!added)
+		{
+		  NSString *message = [NSString stringWithFormat: @"Addition of %@ with superclass %@ failed.", className,
+						selectedClass];
+		  NSRunAlertPanel(_(@"Problem pasting class"),
+				  message, nil, nil, nil);
+		}
 	    }
 	}
     }
