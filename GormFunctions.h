@@ -61,4 +61,7 @@ NSArray *systemImagesList();
 
 // get the list of images...
 NSArray *systemSoundsList();
+
+// compute the gorm version
+int appVersion(long a, long b, long c);
 #endif

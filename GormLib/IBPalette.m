@@ -106,10 +106,10 @@ static NSMapTable	*viewToType = 0;
 
   fileName = [bundle pathForResource: @"palette" ofType: @"table"];
   paletteInfo = [[NSString stringWithContentsOfFile: fileName]
-    propertyListFromStringsFileFormat];
+		  propertyList];
 
   fileName = [paletteInfo objectForKey: @"Icon"];
-  fileName = [bundle  pathForImageResource: fileName];
+  fileName = [bundle pathForImageResource: fileName];
   if (fileName == nil)
     {
       NSRunAlertPanel(NULL, @"Icon for palette is missing",
@@ -122,7 +122,10 @@ static NSMapTable	*viewToType = 0;
   fileName = [paletteInfo objectForKey: @"NibFile"];
   if (fileName != nil && [fileName isEqual: @""] == NO)
     {
-      if ([NSBundle loadNibNamed: fileName owner: self] == NO)
+      NSDictionary *context = [NSDictionary dictionaryWithObjectsAndKeys: self, @"NSOwner",nil];
+      if ([bundle loadNibFile: fileName
+		  externalNameTable: context
+		  withZone: NSDefaultMallocZone()] == NO)
 	{
 	  NSRunAlertPanel(NULL, @"Nib for palette would not load",
 			   @"OK", NULL, NULL);
@@ -141,7 +144,7 @@ static NSMapTable	*viewToType = 0;
 
 - (NSWindow*) originalWindow
 {
-  return window;
+  return originalWindow;
 }
 
 - (id<IBDocuments>) paletteDocument

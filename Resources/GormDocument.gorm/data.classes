@@ -136,7 +136,8 @@
 	    "useStandardKerning:",
 	    "useStandardLigatures:",
 	    "yank:",
-	    "zoom:"
+	    "zoom:",
+	    "selectArchiveType:"
 	);
 	Super = NSObject;
     };
@@ -152,8 +153,26 @@
 	);
 	Outlets = (
 	    selectionBox,
-	    window
+	    window,
+	    filePrefsView,
+	    filePrefsManager
 	);
 	Super = GSNibContainer;
+    };
+    GormFilePrefsManager = {
+	Actions = (
+	    "showIncompatibilities:",
+	    "selectTargetVersion:",
+	    "selectArchiveType:"
+	);
+	Outlets = (
+	    showIncompatibilities,
+	    targetVersion,
+	    gormAppVersion,
+	    archiveType,
+	    iwindow,
+	    itable
+	);
+	Super = NSObject;
     };
 }

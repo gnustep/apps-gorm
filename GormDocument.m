@@ -28,13 +28,15 @@
 #include "GormClassManager.h"
 #include "GormCustomView.h"
 #include "GormOutlineView.h"
+#include "GormFunctions.h"
+#include "GormFilePrefsManager.h"
+#include <Foundation/NSUserDefaults.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
-#include <Foundation/NSUserDefaults.h>
 #include <AppKit/NSNibConnector.h>
-#include <GNUstepGUI/GSNibTemplates.h>
-#include "GormFunctions.h"
 #include <AppKit/NSNibLoading.h>
+#include <GNUstepGUI/GSNibTemplates.h>
+
 
 @interface	GormDisplayCell : NSButtonCell
 @end
@@ -139,6 +141,7 @@ static NSImage	*objectsImage = nil;
 static NSImage	*imagesImage = nil;
 static NSImage	*soundsImage = nil;
 static NSImage	*classesImage = nil;
+static NSImage  *fileImage = nil;
 
 + (void) initialize
 {
@@ -167,6 +170,11 @@ static NSImage	*classesImage = nil;
       if (path != nil)
 	{
 	  classesImage = [[NSImage alloc] initWithContentsOfFile: path];
+	}
+      path = [bundle pathForImageResource: @"Gorm"];
+      if (path != nil)
+	{
+	  fileImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
       
       [self setVersion: GNUSTEP_NIB_VERSION];
@@ -379,10 +387,12 @@ static NSImage	*classesImage = nil;
 	  /*
 	   * Set image for this miniwindow.
 	   */
-	  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];
-	  
+	  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];	  
 	  hidden = [NSMutableArray new];
 	  
+	  // retain the file prefs view...
+	  RETAIN(filePrefsView);
+
 	  // preload headers...
 	  if ([defaults boolForKey: @"PreloadHeaders"])
 	    {
@@ -398,7 +408,7 @@ static NSImage	*classesImage = nil;
 	    }
 
 	  // are we upgrading an archive?
-	  willUpgradeArchive = NO;
+	  isOlderArchive = NO;
 	}
       else
 	{
@@ -725,6 +735,12 @@ static NSImage	*classesImage = nil;
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
+
+  /*
+   * Set the appropriate profile so that we save the right versions of 
+   * the classes for older GNUstep releases.
+   */
+  [filePrefsManager setClassVersions];
 }
 
 - (void) changeCurrentClass: (id)sender
@@ -798,45 +814,50 @@ static NSImage	*classesImage = nil;
 
   switch (tag)
     {
-      case 0: // objects
-	{
-	  [selectionBox setContentView: scrollView];
-	}
-	break;
-      case 1: // images
-	{
-	  [selectionBox setContentView: imagesScrollView];
-	}
-	break;
-      case 2: // sounds
-	{
-	  [selectionBox setContentView: soundsScrollView];
-	}
-	break;
-      case 3: // classes
-	{
-	  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
-	  [selectionBox setContentView: classesScrollView];
-	  
-	  // if something is selected, in the object view.
-	  // show the equivalent class in the classes view.
-	  if ([selection count] > 0)
-	    {
-	      id obj = [selection objectAtIndex: 0];
-	      // if it's a scrollview focus on it's contents.
-	      if([obj isKindOfClass: [NSScrollView class]])
-		{
-		  id newobj = nil;
-		  newobj = [obj documentView];
-		  if(newobj != nil)
-		    {
-		      obj = newobj;
-		    }
-		}
-	      [self selectClassWithObject: obj];
-	    }
-	}
-	break;
+    case 0: // objects
+      {
+	[selectionBox setContentView: scrollView];
+      }
+      break;
+    case 1: // images
+      {
+	[selectionBox setContentView: imagesScrollView];
+      }
+      break;
+    case 2: // sounds
+      {
+	[selectionBox setContentView: soundsScrollView];
+      }
+      break;
+    case 3: // classes
+      {
+	NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+	[selectionBox setContentView: classesScrollView];
+	
+	// if something is selected, in the object view.
+	// show the equivalent class in the classes view.
+	if ([selection count] > 0)
+	  {
+	    id obj = [selection objectAtIndex: 0];
+	    // if it's a scrollview focus on it's contents.
+	    if([obj isKindOfClass: [NSScrollView class]])
+	      {
+		id newobj = nil;
+		newobj = [obj documentView];
+		if(newobj != nil)
+		  {
+		    obj = newobj;
+		  }
+	      }
+	    [self selectClassWithObject: obj];
+	  }
+      }
+      break;
+    case 4: // file prefs
+      {
+	[selectionBox setContentView: filePrefsView];
+      }
+      break;
     }
 }
 
@@ -1008,8 +1029,8 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
+//  For debugging ONLY.
 /*
-//  For debugging
 - (id) retain
 {
   NSLog(@"Document being retained... %d: %@", [self retainCount], self);
@@ -1021,9 +1042,9 @@ static NSImage	*classesImage = nil;
   NSLog(@"Document being released... %d: %@", [self retainCount], self);
   [super release];
 }
-*/ 
+*/
 
-- (void) pasteboardChangedOwner: (NSPasteboard*)sender
+- (void) pasteboardChangedOwner: (NSPasteboard *)sender
 {
   NSDebugLog(@"Owner changed for %@", sender);
 }
@@ -1032,6 +1053,7 @@ static NSImage	*classesImage = nil;
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   [window close];
+  // [toolbar setDelegate: nil];
   RELEASE(classManager);
   RELEASE(classEditor);
   RELEASE(hidden);
@@ -1047,6 +1069,7 @@ static NSImage	*classesImage = nil;
   RELEASE(scrollView);
   RELEASE(classesScrollView);
   RELEASE(toolbar);
+  RELEASE(filePrefsManager);
   RELEASE(openEditors);
   RELEASE(window);
   [super dealloc];
@@ -1460,6 +1483,11 @@ static NSImage	*classesImage = nil;
   id			obj;
 
   /*
+   * Restore class versions.
+   */
+  [filePrefsManager restoreClassVersions];
+
+  /*
    * Restore removed objects.
    */
   [nameTable setObject: filesOwner forKey: @"NSOwner"];
@@ -1575,6 +1603,9 @@ static NSImage	*classesImage = nil;
       [nc postNotificationName: IBWillCloseDocumentNotification
 	  object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
+      // [window setToolbar: nil]; // close the toolbar
+      // [toolbar setDelegate: nil]; // unset the delegate...
+      // RELEASE(self);
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
     {
@@ -1937,6 +1968,12 @@ static NSImage	*classesImage = nil;
 				      @"You won't be able to edit connections on custom classes"), 
 			      _(@"OK"), NULL, NULL);
 	    }
+
+	  s = [aFile stringByAppendingPathComponent: @"data.info"];
+	  if (![filePrefsManager loadFromFile: s])
+	    {
+	      NSLog(@"Loading gorm without data.info file.  Default settings will be assumed.");
+	    }
 	}
       
       [classesView reloadData];
@@ -1969,8 +2006,8 @@ static NSImage	*classesImage = nil;
 	}
       
       /*
-       * Now we merge the objects from the nib container into our own data
-       * structures, taking care not to overwrite our NSOwner and NSFirst.
+       * If the .gorm file is version 0, we need to add the top level objects
+       * to the list so that they can be properly processed.
        */
       if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
 	{
@@ -1986,10 +2023,13 @@ static NSImage	*classesImage = nil;
 		  [topLevelObjects addObject: obj];
 		}
 	    }
-
-	  willUpgradeArchive = YES;
+	  isOlderArchive = YES;
 	}
 
+      /*
+       * Now we merge the objects from the nib container into our own data
+       * structures, taking care not to overwrite our NSOwner and NSFirst.
+       */
       [nt removeObjectForKey: @"NSOwner"];
       [nt removeObjectForKey: @"NSFirst"];
       [topLevelObjects addObjectsFromArray: [[c topLevelObjects] allObjects]];
@@ -2306,13 +2346,13 @@ static NSImage	*classesImage = nil;
   // issue pre notification..
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
-      object: aConnector];
+      object: self];
   // mark the document as changed.
   [self touch];
   // issue port notification..
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
-      object: aConnector];
+      object: self];
 }
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
@@ -2751,6 +2791,7 @@ static NSImage	*classesImage = nil;
   NSMutableData         *archiverData;
   NSString              *gormPath;
   NSString              *classesPath;
+  NSString              *infoPath;
   NSFileManager         *mgr = [NSFileManager defaultManager];
   BOOL                  isDir;
   BOOL                  fileExists;
@@ -2758,12 +2799,13 @@ static NSImage	*classesImage = nil;
 
   if (documentPath == nil)
     {
-      if (! [self saveAsDocument: sender] ) 
-	  return NO;
+      // if no path has been defined... define one.
+      return ([self saveAsDocument: sender]);
     }
 
   // Warn the user about possible incompatibility.
-  if(willUpgradeArchive)
+  // TODO: Remove after the next release of GUI.
+  if(isOlderArchive && [filePrefsManager isLatest])
     {
       retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
 			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.3 Release or CVS prior to Jun 28 2004."),
@@ -2776,7 +2818,7 @@ static NSImage	*classesImage = nil;
       else
 	{
 	  // we're saving anyway... set to new value.
-	  willUpgradeArchive = NO;
+	  isOlderArchive = NO;
 	}
     }
 
@@ -2788,6 +2830,7 @@ static NSImage	*classesImage = nil;
   // set up the necessary paths...
   gormPath = [documentPath stringByAppendingPathComponent: @"objects.gorm"];
   classesPath = [documentPath stringByAppendingPathComponent: @"data.classes"];
+  infoPath = [documentPath stringByAppendingPathComponent: @"data.info"];
 
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
@@ -2863,6 +2906,12 @@ static NSImage	*classesImage = nil;
 	{
 	  // save the custom classes.. and we're done...
 	  archiveResult = [classManager saveToFile: classesPath];
+	  
+	  // save the file prefs metadata...
+	  if (archiveResult)
+	    {
+	      archiveResult = [filePrefsManager saveToFile: infoPath];
+	    }
 
 	  // copy sounds into the new folder...
 	  if (archiveResult)
@@ -3829,6 +3878,14 @@ willBeInsertedIntoToolbar: (BOOL)flag
       [toolbarItem setAction: @selector(changeView:)];     
       [toolbarItem setTag: 3];
     }
+  else if([itemIdentifier isEqual: @"FileItem"])
+    {
+      [toolbarItem setLabel: @"File"];
+      [toolbarItem setImage: fileImage];
+      [toolbarItem setTarget: self];
+      [toolbarItem setAction: @selector(changeView:)];     
+      [toolbarItem setTag: 4];
+    }
 
   return toolbarItem;
 }
@@ -3838,8 +3895,9 @@ willBeInsertedIntoToolbar: (BOOL)flag
   return [NSArray arrayWithObjects: @"ObjectsItem", 
 		  @"ImagesItem", 
 		  @"SoundsItem", 
-		  @"ClassesItem", nil];
-  
+		  @"ClassesItem", 
+		  @"FileItem", 
+		  nil];
 }
 
 - (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*)toolbar
@@ -3847,15 +3905,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
   return [NSArray arrayWithObjects: @"ObjectsItem", 
 		  @"ImagesItem", 
 		  @"SoundsItem", 
-		  @"ClassesItem", nil];
+		  @"ClassesItem", 
+		  @"FileItem",
+		  nil];
 }
 @end
-
-/*
-@implementation NSColor (Extensions)
-+ (NSColor *) toolbarBackgroundColor
-{
-  return RETAIN([NSColor colorWithCalibratedRed: 0.8 green: 0.8 blue: 0.8 alpha: 1.0]);
-}
-@end
-*/

@@ -51,11 +51,12 @@
   NSSize           contentSize;
   id		   v;
 
-  window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
+  originalWindow = [[NSWindow alloc] initWithContentRect: 
+				       NSMakeRect(0, 0, 272, 192)
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
-  contents = [window contentView];
+  contents = [originalWindow contentView];
 
 /*******************/
 /* First Column... */

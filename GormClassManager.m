@@ -26,7 +26,10 @@
 #include "GormPrivate.h"
 #include "GormCustomView.h"
 #include "GormDocument.h"
+#include "GormFilesOwner.h"
+#include "GormPalettesManager.h"
 #include <InterfaceBuilder/IBEditors.h>
+#include <InterfaceBuilder/IBPalette.h>
 
 @interface	GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;
@@ -128,6 +131,19 @@
 	   withActions: (NSArray*)_actions
 	   withOutlets: (NSArray*)_outlets
 {
+  return [self addClassNamed: class_name
+	       withSuperClassNamed: super_class_name
+	       withActions: _actions
+	       withOutlets: _outlets
+	       isCustom: YES];
+}
+
+- (BOOL) addClassNamed: (NSString*)class_name
+   withSuperClassNamed: (NSString*)super_class_name
+	   withActions: (NSArray*)_actions
+	   withOutlets: (NSArray*)_outlets
+	      isCustom: (BOOL) isCustom
+{
   BOOL result = NO;
   NSString *className = [class_name copy];
   NSString *superClassName = [super_class_name copy];
@@ -151,7 +167,12 @@
 	  [classInfo setObject: actions forKey: @"Actions"];
 	  [classInfo setObject: superClassName forKey: @"Super"];
 	  [classInformation setObject: classInfo forKey: className];
-	  [customClasses addObject: className];
+	  
+	  // if it's a custom class add it to the list.
+	  if(isCustom)
+	    {
+	      [customClasses addObject: className];
+	    }
 
 	  // copy all actions from the class imported to the first responder
 	  while((action = [e nextObject]))
@@ -818,6 +839,8 @@
 	}
       else
 	{
+	  GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
+
 	  // load the classes, initialize the custom class array and map..
 	  [self loadFromFile: path];
 	  customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
@@ -825,6 +848,9 @@
 	  
 	  // add first responder so that it may be edited.
 	  [customClasses addObject: @"FirstResponder"];
+	  
+	  // add the imported classes to the class information list...
+	  [classInformation addEntriesFromDictionary: [palettesManager importedClasses]];
 	}
     }
   
@@ -927,6 +953,7 @@
     {
       NSEnumerator *en = [customClassMap keyEnumerator];
       id object = nil;
+      id owner = nil;
 
       [customClasses removeObject: className];
       
@@ -941,6 +968,13 @@
 		  [customClassMap removeObjectForKey: object];
 		}
 	    }
+	}
+
+      // get the owner and reset the class name to NSApplication.
+      owner = [document objectForName: @"NSOwner"];
+      if([className isEqual: [owner className]])
+	{
+	  [owner setClassName: @"NSApplication"];
 	}
     }
 

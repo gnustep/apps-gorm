@@ -3,6 +3,7 @@
 #include "GormHeadersPref.h"
 #include "GormShelfPref.h"
 #include "GormColorsPref.h"
+#include "GormPalettesPref.h"
 
 #include <AppKit/NSBox.h>
 #include <AppKit/NSPopUpButton.h>
@@ -13,16 +14,16 @@
 
 - (void) awakeFromNib
 {
-  _generalView = [[GormGeneralPref alloc] init];
-  _headersView = [[GormHeadersPref alloc] init];
-  _shelfView   = [[GormShelfPref alloc] init];
-  _colorsView  = [[GormColorsPref alloc] init];
+  _generalView  = [[GormGeneralPref alloc] init];
+  _headersView  = [[GormHeadersPref alloc] init];
+  _shelfView    = [[GormShelfPref alloc] init];
+  _colorsView   = [[GormColorsPref alloc] init];
+  _palettesView = [[GormPalettesPref alloc] init];
   [prefBox setContentView:[_generalView view]];
 
   [[self window] setFrameUsingName: @"Preferences"];
   [[self window] setFrameAutosaveName: @"Preferences"];
 }
-
 
 - (void) popupAction: (id)sender
 {
@@ -45,8 +46,11 @@
       case 3:
 	[prefBox setContentView: [_colorsView view]];
 	break;
+      case 4:
+	[prefBox setContentView: [_palettesView view]];
+	break;
       default:
-	NSLog(@"Ouch Default : - (void) popupAction: (id)sender");
+	NSLog(@"Error Default (GormPrefController.m) : - (void) popupAction: (id)sender, no match for tag %d",tag);
 	break;
       }
   }
@@ -58,6 +62,7 @@
   RELEASE(_headersView);
   RELEASE(_shelfView);
   RELEASE(_colorsView);
+  RELEASE(_palettesView);
   [super dealloc];
 }
 @end

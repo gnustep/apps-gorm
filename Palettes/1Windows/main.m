@@ -107,12 +107,13 @@
   NSString	*path = [bundle pathForImageResource: @"WindowDrag"];
   NSImage	*dragImage = [[NSImage alloc] initWithContentsOfFile: path];
 
-  RELEASE(window);
-  window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
+  RELEASE(originalWindow);
+  originalWindow= [[NSWindow alloc] initWithContentRect: 
+				      NSMakeRect(0, 0, 272, 192)
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
-  contents = [window contentView];
+  contents = [originalWindow contentView];
 
   w = [GormWindowMaker new];
   v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 64)];

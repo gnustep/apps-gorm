@@ -860,7 +860,8 @@
 @interface GormPopUpButtonAttributesInspector : IBInspector
 {
   id typeMatrix;
-  id disabledSwitch;
+  id autoenableSwitch;
+  id enableSwitch;
   id tagForm;
   id defaultItemForm;
 }
@@ -878,9 +879,13 @@
       [object selectItem: nil];
       [object selectItem: selectedItem];
     }
-  else if (control == disabledSwitch)
+  else if (control == autoenableSwitch)
     {
-      [object setAutoenablesItems: ([control state] == NSOffState)];
+      [object setAutoenablesItems: ([control state] == NSOnState)];
+    }
+  else if (control == enableSwitch)
+    {
+      [object setEnabled: ([control state] == NSOnState)];
     }
   else if (control == tagForm)
     {
@@ -904,7 +909,8 @@
       return;
     }
   [typeMatrix selectCellWithTag: [anObject pullsDown]];
-  [disabledSwitch setState: ![anObject autoenablesItems]];
+  [autoenableSwitch setState: [anObject autoenablesItems]];
+  [enableSwitch setState: [anObject isEnabled]];
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
   [[defaultItemForm cellAtRow: 0 column: 0] setIntValue: [anObject indexOfSelectedItem]];
 }

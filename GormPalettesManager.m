@@ -264,10 +264,10 @@ static NSImage	*dragImage = nil;
   NSRect	 scrollRect = {{0, 192}, {272, 74}};
   NSRect	 dragRect = {{0, 0}, {272, 192}};
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
-  // NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
   // NSArray        *builtinPalettes = [defaults arrayForKey: BUILTIN_PALETTES];
-  // NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
-
+  
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained
@@ -277,6 +277,7 @@ static NSImage	*dragImage = nil;
 
   bundles = [NSMutableArray new];
   palettes = [NSMutableArray new];
+  importedClasses = [NSMutableDictionary new];
 
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasHorizontalScroller: YES];
@@ -315,16 +316,20 @@ static NSImage	*dragImage = nil;
 
       array = [array sortedArrayUsingSelector: @selector(compare:)];
 
-      /*
-      if(userPalettes != nil)
-	{
-	  [array addObjectFromArray: userPalettes];
-	}
-      */
-
       for (index = 0; index < [array count]; index++)
 	{
 	  [self loadPalette: [array objectAtIndex: index]];
+	}
+
+      // if we have any user palettes load them as well.
+      if(userPalettes != nil)
+	{
+	  NSEnumerator *en = [userPalettes objectEnumerator];
+	  id paletteName = nil;
+	  while((paletteName = [en nextObject]) != nil)
+	    {
+	      [self loadPalette: paletteName];
+	    }
 	}
     }
 
@@ -353,6 +358,9 @@ static NSImage	*dragImage = nil;
   Class		paletteClass;
   NSDictionary	*paletteInfo;
   NSString	*className;
+  NSArray       *exportClasses;
+  NSArray       *exportSounds;
+  NSArray       *exportImages;
   IBPalette	*palette;
   NSImageCell	*cell;
   int		col;
@@ -384,8 +392,7 @@ static NSImage	*dragImage = nil;
       return;
     }
 
-  paletteInfo = [[NSString stringWithContentsOfFile: path]
-    propertyListFromStringsFileFormat];
+  paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
   if (paletteInfo == nil)
     {
       NSRunAlertPanel(NULL, _(@"Failed to load 'palette.table'"),
@@ -418,6 +425,27 @@ static NSImage	*dragImage = nil;
       return;
     }
 
+  exportClasses = [paletteInfo objectForKey: @"ExportClasses"];
+  if(exportClasses != nil)
+    {
+      NSDictionary *classes = [self importClasses: exportClasses withDictionary: nil];
+      [importedClasses addEntriesFromDictionary: classes];
+    }
+
+  exportImages = [paletteInfo objectForKey: @"ExportImages"];
+  if(exportImages != nil)
+    {
+      // id classManager = [(Gorm *)NSApp classManager]; 
+      // [classManager importClasses: exportClasses fromPalette: palette];
+    }
+
+  exportSounds = [paletteInfo objectForKey: @"ExportSounds"];
+  if(exportSounds != nil)
+    {
+      // id classManager = [(Gorm *)NSApp classManager]; 
+      // [classManager importClasses: exportClasses fromPalette: palette];
+    }
+
   [palette finishInstantiate];
   window = [palette originalWindow];
   [window setExcludedFromWindowsMenu: YES];
@@ -437,9 +465,13 @@ static NSImage	*dragImage = nil;
 
 - (id) openPalette: (id) sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObject: @"palette"];
-  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
-  int		result;
+  NSArray	 *fileTypes = [NSArray arrayWithObject: @"palette"];
+  NSOpenPanel	 *oPanel = [NSOpenPanel openPanel];
+  int		 result;
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
+  NSMutableArray *newUserPalettes = 
+    (userPalettes == nil)?[NSMutableArray array]:[NSMutableArray arrayWithArray: userPalettes];
 
   [oPanel setAllowsMultipleSelection: YES];
   [oPanel setCanChooseFiles: YES];
@@ -458,8 +490,12 @@ static NSImage	*dragImage = nil;
 	{
 	  NSString	*aFile = [filesToOpen objectAtIndex: i];
 
+	  [newUserPalettes addObject: aFile];
 	  [self loadPalette: aFile];
 	}
+
+      // reset the defaults to include the new palette.
+      [defaults setObject: newUserPalettes forKey: USER_PALETTES];
       return self;
     }
   return nil;
@@ -520,4 +556,35 @@ static NSImage	*dragImage = nil;
   [dragView setNeedsDisplay: YES];
 }
 
+- (NSDictionary *) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict
+{
+  NSEnumerator *en = [classes objectEnumerator];
+  id className = nil;
+  NSMutableDictionary *masterDict = [NSMutableDictionary dictionary];
+
+  // import the classes.
+  while((className = [en nextObject]) != nil)
+    {
+      NSMutableDictionary *classDict = [NSMutableDictionary dictionary];      
+      Class cls = NSClassFromString(className);
+      Class supercls = [cls superclass];
+      NSString *superClassName = NSStringFromClass(supercls);
+      
+      [classDict setObject: superClassName forKey: @"Super"];
+      [masterDict setObject: classDict forKey: className];
+    }
+  
+  // override any elements needed, if it's present.
+  if(dict != nil)
+    {
+      [masterDict addEntriesFromDictionary: dict];
+    }
+  
+  return masterDict;
+}
+
+- (NSDictionary *)importedClasses
+{
+  return importedClasses;
+}
 @end

@@ -70,7 +70,9 @@
   NSMutableArray        *openEditors;
   NSToolbar             *toolbar;
   id                    lastEditor;
-  BOOL                  willUpgradeArchive;
+  BOOL                  isOlderArchive;
+  id                    filePrefsView;
+  id                    filePrefsManager;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

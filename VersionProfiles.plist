@@ -1,0 +1,11 @@
+{
+    "GNUstep gui-0.9.3" = {
+        GSNibContainer = {
+            comment = "Will not properly store any non-UI objects which have been dragged into the objects view."; 
+            version = 0; 
+        }; 
+    }; 
+    "Latest Version" = {
+        GSNibContainer = {comment = "Not compatible with GNUstep gui-0.9.3 or earlier."; version = 1; }; 
+    }; 
+}

@@ -1,3 +1,68 @@
+2004-07-11 23:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: saveGormDocument.m: Changes to prevent a
+	new gorm from being saved twice.  This was an innocuous problem
+	as it would simply overwrite the same .gorm with itself.
+	Added code to set isOlderArchive in loadDocument: method.
+	Added code to call [GormFilePrefsManager setClassVersions] and 
+	[GormFilePrefsManager restoreClassVersions] in beginArchiving and 
+	endArchiving respectively to set and reset the versions of classes
+	which need to be used for each .gorm file version to be saved.
+	Updated changeView: method to switch to the filePrefsView when clicking
+	on the button.
+	Added code to the toolbar delegate to add the "File" button to the 
+	document toolbar.
+	Added code to loadDocument to load the data.info file if it's present, if not
+	we simply use the defaults.
+	* GormDocument.h: Added new ivars for isOlderArchive, filePrefsView,
+	and filePrefsManager.
+	* GormFilePrefsManager.[hm]: New files.
+	* GormPalettesPref.[hm]: New files.
+	* GormPrefsPalette.gorm: new interface for palette loading.
+	* GormDocument.gorm: Updated with new window to view 
+	incompatibilities and controller for new "file" document
+	button.
+	* GormPreferences.gorm: Addition of palettes in pulldown.
+	* GormClassManager.[hm]: Added 
+	- (BOOL) addClassNamed: (NSString*)class_name
+	     withSuperClassNamed: (NSString*)super_class_name
+	        withActions: (NSArray*)_actions
+		withOutlets: (NSArray*)_outlets
+		isCustom: (BOOL) isCustom;
+	So that classes can be added with out adding them to the custom
+	list.
+	Added logic in "init" to get the list of classes imported by
+	the palettes manager and add them into the master list of classes.
+	This allows the user to work with the classes added by the palette.
+	* GormFunctions.[hm]: appVersion function to calculate a useful value
+	which can be used to compare against easily when reading.  This will
+	allow gorm to tell if this file was created with an older or newer
+	version of Gorm.app and take appropriate action.
+	* GormObjectEditor.m: Added capability to place non-UI instances in the
+	objects view directly.  This will allow the user to place arbitrary
+	non-ui objects in a Gorm file.  It will be useful for adding DB objects
+	or other things which a .gorm file might need.
+	* GormPalettesManager.[hm]: Added [GormPalettesManager importedClasses]
+	and [GormPalettesManager importClasses:withDictionary:] adds the classes
+	from the list in the palette.table.
+	* GormLib/IBPalette.h: Changed name of ivar.  This ivar wasn't properly
+	named.  It should have been originalWindow.  This issue was causing the
+	.gorm load to not make a needed connection.
+	* GormLib/IBPalette.m: Change to read palette.table as a property list
+	instead of strings file format.  This was needed to facilitate the
+	reading of all of the classes, sounds and images a palette might
+	import.  Also modified to correctly load the nib file.
+	* Palettes/0Menus/main.m: Corrected window to originalWindow as detailed
+	above.  It was referred to in a few places by the old name.
+	* Palettes/1Windows/main.m: same.
+	* Palettes/2Controls/main.m: same.
+	* Palettes/3Containers/main.m: same.
+	* Palettes/4Data/main.m: same.
+	* Palettes/2Controls/inspectors.m: Change to clarify the autoenable switch
+	on pulldown buttons.
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm: Corresponding .gorm file
+	change for the above.  Added new outlet and made new connection.
+	
 2004-07-09 16:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormNSTableViewInspector.gorm: Missing

@@ -988,7 +988,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   [[self palettesManager] openPalette: sender];
 }
 
-
 - (void) deferredEndTesting: (id) sender
 {
   [[NSRunLoop currentRunLoop]

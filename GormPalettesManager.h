@@ -10,11 +10,14 @@
   NSMutableArray	*palettes;
   int			current;
   BOOL			hiddenDuringTest;
+  NSMutableDictionary   *importedClasses;
 }
 - (void) loadPalette: (NSString*)path;
 - (id) openPalette: (id) sender;
 - (NSPanel*) panel;
 - (void) setCurrentPalette: (id)anObject;
+- (NSDictionary *) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict;
+- (NSDictionary *) importedClasses;
 @end
 
 #endif

@@ -1060,14 +1060,6 @@ selectCellWithString: (NSString*)title
       [revertButton setTarget: self];
       [revertButton setTitle: _(@"Revert")];
       [revertButton setEnabled: NO];
-
-      // catch notifications concerning connection deletions...
-      /*
-      [nc addObserver: self 
-	  selector: @selector(handleNotification:)
-	  name: IBDidRemoveConnectorNotification
-	  object: nil];
-      */
     }
   return self;
 }

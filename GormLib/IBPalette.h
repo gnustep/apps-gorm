@@ -59,7 +59,7 @@ extern NSString *GormLinkPboardType;
 
 @interface IBPalette : NSObject
 {
-  NSWindow	  *window;
+  NSWindow	  *originalWindow;
   NSImage	  *icon;
   id<IBDocuments> document;
 }

@@ -407,12 +407,13 @@ static NSMapTable	*docMap = 0;
        * Ask the document to get the dragged objects from the pasteboard and
        * add them to it's collection of known objects.
        */
-      array = [document pasteType: IBViewPboardType
+      array = [document pasteType: IBObjectPboardType
 		   fromPasteboard: dragPb
 			   parent: [objects objectAtIndex: 0]];
       enumerator = [array objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
+	  [[(GormDocument *)document topLevelObjects] addObject: obj];
 	  [self addObject: obj];
 	}
       return YES;
@@ -488,9 +489,13 @@ static NSMapTable	*docMap = 0;
   id	obj = [self changeSelection: sender];
   id	e;
 
-  e = [document editorForObject: obj create: YES];
-  [e orderFront];
-  [e resetObject: obj];
+  if(obj != nil)
+    {
+      e = [document editorForObject: obj create: YES];
+      [e orderFront];
+      [e resetObject: obj];
+    }
+
   return self;
 }
 

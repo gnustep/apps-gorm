@@ -267,3 +267,9 @@ NSArray *systemSoundsList()
 
   return result;
 }
+
+int appVersion(long a, long b, long c)
+{
+  return (((a) << 16)+((b) << 8) + (c));
+}
+

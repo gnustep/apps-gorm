@@ -49,6 +49,7 @@ Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
 	GormInfo.plist \
 	ClassInformation.plist \
+	VersionProfiles.plist \
 	Defaults.plist \
 	Palettes/0Menus/0Menus.palette \
 	Palettes/1Windows/1Windows.palette \
@@ -125,6 +126,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormPreferences.gorm \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
+	Resources/GormPrefPalettes.gorm \
 	Resources/GormShelfPref.gorm \
 	Resources/GormScrollViewAttributesInspector.gorm \
 	Resources/GormNSSplitViewInspector.gorm \
@@ -169,7 +171,9 @@ Gorm_HEADERS = \
 	GormFunctions.h \
 	GormShelfPref.h \
 	GormColorsPref.h \
-	GormSoundView.h
+	GormPalettesPref.h \
+	GormSoundView.h \
+	GormFilePrefsManager.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -214,7 +218,9 @@ Gorm_OBJC_FILES = \
 	GormFunctions.m \
 	GormShelfPref.m \
 	GormColorsPref.m \
-	GormSoundView.m
+	GormPalettesPref.m \
+	GormSoundView.m \
+	GormFilePrefsManager.m
 
 -include GNUmakefile.preamble
 

@@ -1,3 +1,5 @@
+#include <InterfaceBuilder/IBPalette.h>
+
 #ifndef INCLUDED_GormClassManager_h
 #define INCLUDED_GormClassManager_h
 
@@ -42,19 +44,29 @@
 - (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString*)name;
 - (void) removeClassNamed: (NSString *)className;
 - (NSString*) addClassWithSuperClassName: (NSString*)name;
+
 - (BOOL) addClassNamed: (NSString*)className
    withSuperClassNamed: (NSString*)superClassName
 	   withActions: (NSArray*)actions
            withOutlets: (NSArray*)outlets;
+
+- (BOOL) addClassNamed: (NSString*)class_name
+   withSuperClassNamed: (NSString*)super_class_name
+	   withActions: (NSArray*)_actions
+	   withOutlets: (NSArray*)_outlets
+              isCustom: (BOOL) isCustom;
+
 - (BOOL) setSuperClassNamed: (NSString*)superclass
 	      forClassNamed: (NSString*)subclass;
 
 - (NSString*) superClassNameForClassNamed: (NSString*)className;
 - (BOOL) isSuperclass: (NSString*)superclass
 	linkedToClass: (NSString*)subclass;
+
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className
 				 withName:(NSString*)sourcePath
 				      and:(NSString*)headerPath;
+
 - (BOOL) parseHeader: (NSString *)headerPath;
 - (BOOL) saveToFile: (NSString*)path;
 - (BOOL) loadFromFile: (NSString*)path;
@@ -69,15 +81,16 @@
 // custom class support...
 - (NSString *) customClassForObject: (id)object;
 - (NSString *) customClassForName: (NSString *)name;
+
 - (void) setCustomClass: (NSString *)className
               forObject: (id)object;
+
 - (void) removeCustomClassForObject: (id) object;
 - (NSMutableDictionary *) customClassMap;
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
 - (NSString *)parentOfClass: (NSString *)aClass;
-
 @end
 
 #endif
