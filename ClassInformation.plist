@@ -30,6 +30,9 @@
     );
     Super = NSObject;
   };
+  NSPanel = {
+    Super = NSWindow;
+  };
   NSSlider = {
     Super = NSControl;
   };

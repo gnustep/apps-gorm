@@ -356,9 +356,12 @@ static BOOL done_editing;
   if (([theEvent modifierFlags] & NSControlKeyMask) == NSControlKeyMask)
     {
       /* Keep the cell size the same but increase the intercell spacing. */
-      if ([view isKindOfClass: [NSForm class]] == NO)
-	intercellSpace.width = (NSWidth(frame)-cellSize.width*cols)/(cols-1);
-      intercellSpace.height = (NSHeight(frame)-cellSize.height*rows)/(rows-1);
+      if ([view isKindOfClass: [NSForm class]] == NO && cols > 1)
+	intercellSpace.width = (NSWidth(frame)-cellSize.width*cols)
+	  / (cols-1);
+      if (rows > 1)
+	intercellSpace.height = (NSHeight(frame)-cellSize.height*rows)
+	  / (rows-1);
       if (intercellSpace.width < 0)
 	return NO;
       if (intercellSpace.height < 0)

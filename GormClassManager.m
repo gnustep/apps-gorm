@@ -1188,7 +1188,7 @@ selectCellWithString: (NSString*)title
   GormClassManager *cm = [(id)[(id)NSApp activeDocument] classManager];
   NSLog(@"change superclass");
 
-  if ([cm setSuperClassNamed: [sender titleOfSelectedItem]
+  if ([cm setSuperClassNamed: [sender title]
     forClassNamed: [object className]] == NO)
     {
       NSRunAlertPanel(@"Error", @"Cyclic definition", @"OK", NULL, NULL);
