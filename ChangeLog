@@ -1,5 +1,13 @@
 2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* NOTE: Added a patch submitted by Fabien Vallon to 
+	add functionality to the combo box inspector.  Thanks.
+	* Palettes/4Data/GormNSComboBoxInspector.gorm: added.
+	* Palettes/4Data/inspectors.m: Patched.
+	
+	
+2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* Gorm.m: -[GormObjectProxy classInspectorClassName]
 	added code to return @"GormNotApplicableInspector".
 	

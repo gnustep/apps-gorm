@@ -49,11 +49,15 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 {
   id alignmentMatrix;
   id backgroundColorWell;
-  id itemBrowser;
   id itemField;
   id optionMatrix;
   id textColorWell;
   id visibleItemsForm;
+  id itemTableView;
+  id itemTxt;
+  id addButton;
+  id removeButton;
+  NSMutableArray *itemsArray;
 }
 @end
 
@@ -61,7 +65,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) _setValuesFromControl: control
 {
-
   if (control == backgroundColorWell)
     {
       [object setBackgroundColor: [control color]];
@@ -89,19 +92,35 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       [object setNumberOfVisibleItems: [[control cellAtIndex: 0] intValue]];
     }
-  else if (control == itemBrowser)
+  else if (control == itemField )
     {
       // To be done
     }
-  else if (control == itemField)
+  else if (control == addButton) 
     {
-      // To be done
+      if ( ! [[itemTxt stringValue] isEqualToString:@""] )
+	{
+	  [itemsArray addObject:[itemTxt stringValue]];
+	  [itemTableView reloadData];
+	  [object addItemWithObjectValue:[itemTxt stringValue]];
+	}
     }
-  
+  else if (control == removeButton) 
+    {
+      int selected = [itemTableView selectedRow];
+      if ( selected != -1 ) 
+	{
+	  [itemsArray removeObjectAtIndex: selected];
+	  [itemTxt setStringValue:@""];
+	  [itemTableView reloadData];
+	  [object removeItemAtIndex:selected];
+	}
+    }
 }
 
 - (void) _getValuesFromObject: anObject
 {
+  int i;
   if (anObject != object)
     {
       return;
@@ -119,10 +138,18 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     [optionMatrix selectCellAtRow: 1 column: 0];
   if ([anObject usesDataSource])
     [optionMatrix selectCellAtRow: 2 column: 0];
-
+  if ([anObject numberOfItems] > 0 ) 
+    {
+      for (i=0;i<[anObject numberOfItems];i++)
+	{
+	  NSLog(@"plop => %i",i);
+	  [itemsArray insertObject:[anObject itemObjectValueAtIndex:i] atIndex:i];
+	}
+      [itemTableView reloadData];
+    }
   [[visibleItemsForm cellAtIndex: 0]
     setIntValue: [anObject numberOfVisibleItems]];
-
+  
 }
 
 
@@ -132,11 +159,12 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormComboBoxInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNSComboBoxInspector" owner: self] == NO)
     {
-      NSLog(@"Could not gorm GormComboBoxInspector");
+      NSLog(@"Could not gorm GormNSComboBoxInspector");
       return nil;
     }
+  itemsArray=[[NSMutableArray alloc] initWithCapacity:1];
 
   return self;
 }
@@ -151,6 +179,32 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   [super setObject: anObject];
   [self _getValuesFromObject: anObject];
 }
+
+
+// TableView DataSource
+- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+  if (aTableView == itemTableView )
+    return [itemsArray count];
+  else
+    return 0;
+}
+
+- (id)tableView:(NSTableView *)aTableView 
+    objectValueForTableColumn:(NSTableColumn *)aTableColumn
+    row:(int)rowIndex
+{
+  if (aTableView == itemTableView )
+    return [itemsArray objectAtIndex:rowIndex];
+}
+
+//TableView delegate
+- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
+{
+  if ( aTableView == itemTableView ) 
+    [itemTxt setStringValue:[itemsArray objectAtIndex:rowIndex]];
+}
+
 
 @end
 
