@@ -1,3 +1,16 @@
+2005-01-31 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: In the -[GormDocument removeConnections:..]
+	methods corrected a problem with removing a connector while 
+	enumerating throught the list of connectors.  This was causing 
+	the process to miss some of the connections which should have 
+	been removed.  
+	* Gorm.m: -[Gorm stopConnecting]: Properly reset the 
+	connectionSource and connectionDestination with the connecting
+	process is stopped.  Correction for bug#11777.
+	* GormObjectEditor.m: -[GormObjectEditor removeAllInstancesOfClass:]
+	correct problem where all instances were not being removed.
+
 2005-01-30 14:34 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/GNUmakefile: Added new files.

@@ -176,17 +176,22 @@ static NSMapTable	*docMap = 0;
 - (void) removeAllInstancesOfClass: (NSString *)className
 {
   GormClassManager *classManager = [(GormDocument *)document classManager];
+  NSMutableArray *removedObjects = [NSMutableArray array];
   NSEnumerator *en = [objects objectEnumerator];
   id object = nil;
 
+  // locate objects for removal
   while((object = [en nextObject]) != nil)
     {
       NSString *clsForObj = [classManager classNameForObject: object];
       if([className isEqual: clsForObj])
 	{
-	  [self removeObject: object];
+	  [removedObjects addObject: object];
 	}
     }
+
+  // remove the objects
+  [document detachObjects: removedObjects];
 }
 
 /*

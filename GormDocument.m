@@ -979,7 +979,8 @@ static NSImage  *fileImage = nil;
     }
 
   if ([anObject isKindOfClass: [NSWindow class]] == YES
-    || [anObject isKindOfClass: [NSMenu class]] == YES)
+      || [anObject isKindOfClass: [NSMenu class]] == YES
+      || [topLevelObjects containsObject: anObject] == YES)
     {
       [objectsView removeObject: anObject];
     }
@@ -1400,7 +1401,6 @@ static NSImage  *fileImage = nil;
 
       // deactivate the document...
       [self setDocumentActive: NO];
-      [self setSelectionFromEditor: nil];
       [self closeAllEditors]; // shut down all of the editors..
       [nc postNotificationName: IBWillCloseDocumentNotification object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
@@ -1411,7 +1411,6 @@ static NSImage  *fileImage = nil;
     }
   else if ([name isEqual: NSWindowWillMiniaturizeNotification] == YES)
     {
-      [self setSelectionFromEditor: nil];
       [self setDocumentActive: NO];
     }
   else if ([name isEqual: NSWindowDidDeminiaturizeNotification] == YES)
@@ -2908,6 +2907,9 @@ static NSImage  *fileImage = nil;
       NSEnumerator	*enumerator;
       id		obj;
 
+      // stop all connection activities.
+      [(Gorm *)NSApp stopConnecting];
+
       enumerator = [nameTable objectEnumerator];
       if (flag == YES)
 	{
@@ -2955,6 +2957,7 @@ static NSImage  *fileImage = nil;
 		  [obj close];
 		}
 	    }
+	  [self setSelectionFromEditor: nil];
 	}
     }
 }
@@ -3129,50 +3132,81 @@ static NSImage  *fileImage = nil;
 			   isAction: (BOOL)action
 {
   NSEnumerator *en = [connections objectEnumerator];
+  NSMutableArray *removedConnections = [NSMutableArray array];
   id<IBConnectors> c = nil;
   BOOL removed = YES;
+  BOOL prompted = NO;
 
-  // remove all.
+  // find connectors to be removed.
   while ((c = [en nextObject]) != nil)
     {
       id proxy = nil;
+      NSString *proxyClass = nil;
       NSString *label = [c label];
+
+      if(label == nil)
+	continue;
 
       if (action)
 	{
 	  if (![label hasSuffix: @":"]) 
 	    continue;
+
+	  if (![classManager isAction: label ofClass: className])
+	    continue;
+
 	  proxy = [c destination];
 	}
       else
 	{
 	  if ([label hasSuffix: @":"]) 
 	    continue;
+
+	  if (![classManager isOutlet: label ofClass: className])
+	    continue;
+
 	  proxy = [c source];
 	}
       
-      if ([label isEqualToString: name] && 
-	 [[proxy className] isEqualToString: className])
+      // get the class for the current connectors object
+      proxyClass = [proxy className];
+
+      if ([label isEqualToString: name] && ([proxyClass isEqualToString: className] ||
+	  [classManager isSuperclass: className linkedToClass: proxyClass]))
 	{
 	  NSString *title;
 	  NSString *msg;
 	  int retval;
 
-	  title = [NSString stringWithFormat:
-	    @"Modifying %@",(action==YES?@"Action":@"Outlet")];
-	  msg = [NSString stringWithFormat:
-			    _(@"This will break all connections to '%@'.  Continue?"), name];
-	  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+	  if(prompted == NO)
+	    {
+	      title = [NSString stringWithFormat:
+				  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
+	      msg = [NSString stringWithFormat:
+				_(@"This will break all connections to '%@'.  Continue?"), name];
+	      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+	      prompted = YES;
+	    }
 
 	  if (retval == NSAlertDefaultReturn)
 	    {
 	      removed = YES;
-	      [self removeConnector: c];
+	      [removedConnections addObject: c];
 	    }
 	  else
 	    {
 	      removed = NO;
 	    }
+	}
+    }
+
+  // actually remove the connections.
+  if(removed)
+    {
+      en = [removedConnections objectEnumerator];
+      while((c = [en nextObject]) != nil)
+	{
+	  [self removeConnector: c];
 	}
     }
 
@@ -3183,7 +3217,7 @@ static NSImage  *fileImage = nil;
 
 - (BOOL) removeConnectionsForClassNamed: (NSString *)className
 {
-  NSEnumerator *en = [connections objectEnumerator];
+  NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   int retval = -1;
@@ -3191,7 +3225,7 @@ static NSImage  *fileImage = nil;
   NSString *msg;
 
   msg = [NSString stringWithFormat: _(@"This will break all connections to "
-    @"actions/outlets to instances of class '%@'.  Continue?"), className];
+    @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?"), className];
 
   // ask the user if he/she wants to continue...
   retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
@@ -3207,14 +3241,29 @@ static NSImage  *fileImage = nil;
   // remove all.
   if(removed)
     {
+      NSMutableArray *removedConnections = [NSMutableArray array];
+
+      // first find all of the connections...
+      en = [connections objectEnumerator];
       while ((c = [en nextObject]) != nil)
 	{
-	  // check both...
-	  if ([[[c source] className] isEqualToString: className]
-	      || [[[c destination] className] isEqualToString: className])
+	  NSString *srcClass = [[c source] className];
+	  NSString *dstClass = [[c destination] className];
+
+	  if ([srcClass isEqualToString: className] ||
+	      [classManager isSuperclass: className linkedToClass: srcClass] ||
+	      [dstClass isEqualToString: className] ||
+	      [classManager isSuperclass: className linkedToClass: dstClass])
 	    {
-	      [self removeConnector: c];
+	      [removedConnections addObject: c];
 	    }
+	}
+
+      // then remove them.
+      en = [removedConnections objectEnumerator];
+      while((c = [en nextObject]) != nil)
+	{
+	  [self removeConnector: c];
 	}
     }
   

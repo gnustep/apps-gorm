@@ -1251,6 +1251,8 @@ static NSImage *testingImage = nil;
 {
   [self displayConnectionBetween: nil and: nil];
   isConnecting = NO;
+  connectSource = nil;
+  connectDestination = nil;
 }
 
 - (BOOL) validateMenuItem: (NSMenuItem*)item
