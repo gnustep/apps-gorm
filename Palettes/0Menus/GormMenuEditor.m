@@ -24,6 +24,7 @@
 
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include "GormFunctions.h"
 
 @implementation NSMenu (IBObjectAdditions)
 - (NSString*) editorClassName
@@ -512,43 +513,6 @@
   [super dealloc];
 }
 
-// find all subitems for the given items...
-- (void) _findAll: (id)item withArray: (NSMutableArray *)array
-{
-  [array addObject: item];
-  if([item isKindOfClass: [NSMenuItem class]])
-    {
-      if([item hasSubmenu])
-	{
-	  NSMenu *submenu = [item submenu];
-	  NSArray *items = [submenu itemArray];
-	  NSEnumerator *e = [items objectEnumerator];
-	  id i = nil;
-
-	  [array addObject: submenu];
-	  while((i = [e nextObject]) != nil)
-	    {
-	      [self _findAll: i withArray: array];
-	    }
-	}
-    } 
-}
-
-// find all sub items for the selections...
-- (NSArray *) _findAllSubmenus: (NSArray *)array
-{
-  NSEnumerator *e = [array objectEnumerator];
-  id i = nil;
-  NSMutableArray *results = [[NSMutableArray alloc] init];
-
-  while((i = [e nextObject]) != nil)
-    {
-      [self _findAll: i withArray: results];
-    }
-
-  return results;
-}
-
 - (void) deleteSelection
 {
   if ([selection count] > 0)
@@ -562,7 +526,7 @@
       [self selectObjects: [NSArray array]];
 
       // find all relavent objects.  Remove them from the nameTable.
-      d = [self _findAllSubmenus: s];
+      d = findAllSubmenus( s );
       [document detachObjects: d];
 
       // remove the items from the menu...

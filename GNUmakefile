@@ -161,7 +161,8 @@ Gorm_HEADERS = \
 	GormClassInspector.h \
 	GormFontViewController.h \
 	GormSetNameController.h \
-	GormGeneralPref.h 
+	GormGeneralPref.h \
+	GormFunctions.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
@@ -204,8 +205,8 @@ Gorm_OBJC_FILES = \
 	GormClassInspector.m \
 	GormFontViewController.m \
 	GormSetNameController.m \
-	GormGeneralPref.m 
-
+	GormGeneralPref.m \
+	GormFunctions.m
 
 -include GNUmakefile.preamble
 

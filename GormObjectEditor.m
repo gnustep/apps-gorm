@@ -123,7 +123,6 @@ static NSMapTable	*docMap = 0;
     }
 }
 
-
 - (void) deleteSelection
 {
   if (selected != nil
@@ -140,6 +139,19 @@ static NSMapTable	*docMap = 0;
 	{
 	  [selected close];
 	}
+      
+      if ([selected isKindOfClass: [NSMenu class]] == YES)
+	{
+	  NSArray *items = findAll( selected );
+	  NSEnumerator *en = [items objectEnumerator];
+	  id obj = nil;
+
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      [document detachObject: obj];
+	    }
+	}
+
       [objects removeObjectIdenticalTo: selected];
       [self selectObjects: [NSArray array]];
       [self refreshCells];

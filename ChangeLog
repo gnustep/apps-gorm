@@ -1,3 +1,12 @@
+2004-01-29 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 0.6.0
+
+2004-01-29 23:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFunctions.[hm]: Factored out some common functions into
+	this file.
+	
 2004-01-29 01:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInternalViewEditor.m: Added code to -destroyAndListSubviews
@@ -11,10 +20,6 @@
 	added code in -groupSelectionInScrollView to add the view itself
 	if there is only one view selected.
 		
-2004-01-29 12:09 Gregory John Casamento <greg_casamento@yahoo.com>
-
-	* Version 0.6.0
-	
 2004-01-25 17:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInternalViewEditor.m: Change to remove dependency on internals
