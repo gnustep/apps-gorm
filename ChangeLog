@@ -1,3 +1,13 @@
+2004-06-04 23:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormImageEditor.m: Added some code to correct a problem found
+	by Riccardo Mattolla and Sujin Chun.   The code is as suggested
+	by Sujin, to return when the superview is not available.
+	* GormSoundEditor.m: same as above.
+	NOTE: This was due to a recent change to load all images for
+	easy access by the user.  Apparently, Linux is a little more
+	forgiving that some other OSes. :)
+	
 2004-06-03 00:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.h: Added "lastEditor" ivar to hold the last editor

@@ -508,6 +508,12 @@ static NSMapTable	*docMap = 0;
   int		rows;
   int		width;
 
+  // return if the superview is not available.
+  if(![self superview])
+    {
+      return;
+    }
+
   width = [[self superview] bounds].size.width;
   while (width >= 72)
     {
