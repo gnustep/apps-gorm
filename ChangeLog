@@ -1,3 +1,13 @@
+2001-09-27  Adam Fedor  <fedor@gnu.org>
+
+	* GormInspectorsManager.m (-setCurrentInspector:): Gracefully handle
+	an inspector creation error.
+	* GormWindowEditor.m (-editTextField:withEvent:): TextField value
+	editor method.
+
+	* Palettes/2Controls/inspectors.m: New NSBox, NSButtonCell, 
+	NSMatrix, and NSTextField inspectors.
+
 2001-09-17  Adam Fedor  <fedor@gnu.org>
 
 	* GormWindowEditor.m

@@ -29,9 +29,12 @@ PALETTE_NAME = 2Controls
 2Controls_PRINCIPAL_CLASS = ControlsPalette
 
 2Controls_RESOURCE_FILES = ControlsPalette.tiff \
+	GormBoxInspector.gorm \
 	GormButtonInspector.gorm \
+	GormMatrixInspector.gorm \
 	GormSliderInspector.gorm \
-	GormStepperInspector.gorm
+	GormStepperInspector.gorm \
+	GormTextFieldInspector.gorm
 
 -include GNUmakefile.preamble
 

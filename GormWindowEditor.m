@@ -200,6 +200,96 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   return nil;
 }
 
+static BOOL done_editing;
+
+- (void) handleNotification: (NSNotification*)aNotification
+{
+  NSString	*name = [aNotification name];
+  if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
+    {
+      done_editing = YES;
+    }
+}
+
+/* Edit a textfield. If it's not already editable, make it so, then
+   edit it */
+- (void) editTextField: view withEvent: (NSEvent *)theEvent
+{
+  int wasEditable;
+  unsigned eventMask;
+  NSTextField *editField;
+  NSRect                 frame;
+  NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
+  NSDate		*future = [NSDate distantFuture];
+
+  editField = view;
+  frame = [editField frame];
+  wasEditable = [editField isEditable];
+  [editField setEditable: YES];
+
+  [nc addObserver: self
+         selector: @selector(handleNotification:)
+             name: NSControlTextDidEndEditingNotification
+           object: nil];
+
+  /* Do some modal editing */
+  [editField selectText: self];
+  eventMask = NSLeftMouseDownMask |  NSLeftMouseUpMask  |
+  NSKeyDownMask  |  NSKeyUpMask  | NSFlagsChangedMask;
+
+  done_editing = NO;
+  while (!done_editing)
+    {
+      NSEvent *e;
+      NSEventType eType;
+      e = [NSApp nextEventMatchingMask: eventMask
+		 untilDate: future
+		 inMode: NSEventTrackingRunLoopMode
+		 dequeue: YES];
+      eType = [e type];
+      switch (eType)
+	{
+	case NSLeftMouseDown:
+	  {
+	    NSPoint dp =  [edit_view convertPoint: [e locationInWindow]
+				fromView: nil];
+	    if (NSMouseInRect(dp, frame, NO) == NO)
+	      {
+		done_editing = YES;
+		break;
+	      }
+	  }
+	  [[editField currentEditor] mouseDown: e];
+	  break;
+	case NSLeftMouseUp:
+	  [[editField currentEditor] mouseUp: e];
+	  break;
+	case NSLeftMouseDragged:
+	  [[editField currentEditor] mouseDragged: e];
+	  break;
+	case NSKeyDown:
+	  [[editField currentEditor] keyDown: e];
+	  break;
+	case NSKeyUp:
+	  [[editField currentEditor] keyUp: e];
+	  break;
+	case NSFlagsChanged:
+	  [[editField currentEditor] flagsChanged: e];
+	  break;
+	default:
+	  NSLog(@"Internal Error: Unhandled event during editing: %@", e);
+	  break;
+	}
+    }
+
+  if (wasEditable == NO)
+    [editField setEditable: NO];
+  [nc removeObserver: self
+                name: NSControlTextDidEndEditingNotification
+              object: nil];
+}
+
+
 /* Called when the frame of a view object is changed. Takes care of
    validating the frame and updating the object */
 - (BOOL) _validateFrame: (NSRect)frame 
@@ -608,6 +698,11 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
 	    }
 	  if ([subeditor editedObject] != view)
 	    [subeditor changeObject: view];
+	}
+      else if ([view isKindOfClass: [NSTextField class]])
+	{
+	  [self editTextField: view withEvent: (NSEvent *)theEvent];
+	  return;
 	}
       }
 

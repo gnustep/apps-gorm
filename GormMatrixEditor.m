@@ -293,7 +293,6 @@ static BOOL done_editing;
   if ([matrix getRow: &row column: &col forPoint: loc] == NO)
     return;
 
-  NSLog(@"Got hit in cell %d %d", row, col);
   obj = [matrix cellAtRow: row column: col];
   if (obj != nil && obj != selected)
     {
@@ -367,8 +366,6 @@ static BOOL done_editing;
 
 - (BOOL) activate
 {
-  NSLog(@"Ack - GormMatrix - activate");
-  //[[self window] makeKeyAndOrderFront: self];
   return YES;
 }
 
@@ -398,8 +395,7 @@ static BOOL done_editing;
 
 - (void) orderFront
 {
-  NSLog(@"Ack - GormMatrix - orderFront");
-  //[[self window] orderFront: self];
+  NSLog(@"Ack - GormMatrixEditor - orderFront");
 }
 
 - (void) pasteInSelection

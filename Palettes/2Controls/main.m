@@ -50,6 +50,7 @@
 
   // Editable text field
   v = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 127, 56, 21)];
+  [v setEditable: YES];
   [v setStringValue: @"Text"];
   [contents addSubview: v];
   RELEASE(v);

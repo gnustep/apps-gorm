@@ -1,16 +1,14 @@
 {
-    GormButtonInspector = {
+    GormTextFieldInspector = {
 	Actions = (
-	    "setButtonTypeFrom:"
 	);
 	Outlets = (
 	    alignMatrix,
-	    iconMatrix,
-	    keyField,
+	    backgroundColor,
+	    drawsBackground,
 	    optionMatrix,
 	    tagField,
-	    titleForm,
-	    typeButton
+	    textColor
 	);
 	Super = IBInspector;
     };

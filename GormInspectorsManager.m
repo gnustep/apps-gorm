@@ -404,6 +404,14 @@
 	  Class	c = NSClassFromString(newInspector);
 
 	  inspector = [c new];
+	  /* Try to gracefully handle an inspector creation error */
+	  while (inspector == nil && (obj = [obj superclass]) 
+		 && current == 0)
+	    {
+	      NSLog(@"Error loading %@ inspector", newInspector);
+	      newInspector = [obj inspectorClassName];
+	      inspector = [NSClassFromString(newInspector) new];
+	    }
 	  [cache setObject: inspector forKey: newInspector];
 	  RELEASE(inspector);
 	}
