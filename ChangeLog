@@ -1,3 +1,10 @@
+2005-03-07 22:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Added code to make the window of the widget 
+	selected, the key window.  This helps correct Bug#12224.
+	* Palettes/1Windows/GormNSWindow.m: Added method canBecomeKeyWindow
+	to guarantee that it returns YES.
+
 2005-03-06 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Documentation/Gorm.texi: Added FAQ concerning font modification.

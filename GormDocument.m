@@ -2964,6 +2964,7 @@ static NSImage  *fileImage = nil;
   [(Gorm *)NSApp stopConnecting]; // cease any connection
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
+      [[anEditor window] makeKeyWindow];
       [[anEditor window] makeFirstResponder: (id)anEditor];
     }
   [nc postNotificationName: IBSelectionChangedNotification
