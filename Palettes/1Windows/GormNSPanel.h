@@ -32,8 +32,8 @@
   unsigned _gormStyleMask;
   BOOL     _gormReleasedWhenClosed;
 }
-- (void) setStyleMask: (unsigned)newStyleMask;
-- (unsigned) styleMask;
+- (void) _setStyleMask: (unsigned int)newStyleMask;
+- (unsigned int) _styleMask;
 - (void) _setReleasedWhenClosed: (BOOL) flag;
 - (BOOL) _isReleasedWhenClosed;
 @end

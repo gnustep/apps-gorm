@@ -24,7 +24,22 @@
 
 #include "GormNSWindow.h"
 
+// the default style mask we start with.
+static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
+		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
+
 @implementation GormNSWindow
+/*
+- (void) setFrameForMask: (unsigned int)mask
+{
+  NSRect newFrame;
+
+  // Reset the frame with the style...
+  newFrame = [NSWindow frameRectForContentRect: contentRect styleMask: mask];
+  [window setFrame: newFrame display: NO];
+}
+*/
+
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;
@@ -47,21 +62,28 @@
 		    screen: (NSScreen*)aScreen
 {
   _gormStyleMask = aStyle;
-  [self setReleasedWhenClosed: NO];
-  return [super initWithContentRect: contentRect
-		styleMask: NSTitledWindowMask | NSClosableWindowMask
-		| NSResizableWindowMask | NSMiniaturizableWindowMask
-		backing: bufferingType
-		defer: flag
-		screen: aScreen];
+  // _originalContentRect = contentRect;
+  self = [super initWithContentRect: contentRect
+		  styleMask: defaultStyleMask
+		  backing: bufferingType
+		  defer: flag
+		  screen: aScreen];
+  if(self != nil)
+    {
+      // Don't release when the window is closed, a window being edited may
+      // be periodically opened and closed.
+      [self setReleasedWhenClosed: NO];
+    }
+
+  return self;
 }
 
-- (void) setStyleMask: (unsigned)newStyleMask
+- (void) _setStyleMask: (unsigned int)newStyleMask
 {
   _gormStyleMask = newStyleMask;
 }
 
-- (unsigned) styleMask
+- (unsigned int) _styleMask
 {
   return _gormStyleMask;
 }

@@ -26,6 +26,8 @@
 #include <AppKit/AppKit.h>
 #include "GormNSPanel.h"
 
+static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
+		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSPanel
 - (void)encodeWithCoder: (NSCoder*) aCoder
@@ -50,20 +52,27 @@
 		    screen: (NSScreen*)aScreen
 {
   _gormStyleMask = aStyle;
-  [self setReleasedWhenClosed: NO];
-  return [super initWithContentRect: contentRect
-		styleMask: NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask
-		backing: bufferingType
-		defer: flag
-		screen: aScreen];
+  self = [super initWithContentRect: contentRect
+		  styleMask: defaultStyleMask
+		  backing: bufferingType
+		  defer: flag
+		  screen: aScreen];
+  if(self != nil)
+    {
+      // Don't release when the window is closed, a window being edited may
+      // be periodically opened and closed.
+      [self setReleasedWhenClosed: NO];
+    }
+
+  return self;
 }
 
-- (void)setStyleMask: (unsigned) newStyleMask
+- (void) _setStyleMask: (unsigned int) newStyleMask
 {
   _gormStyleMask = newStyleMask;
 }
 
-- (unsigned)styleMask
+- (unsigned int) _styleMask
 {
   return _gormStyleMask;
 }

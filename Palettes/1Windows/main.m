@@ -233,7 +233,7 @@ NSwindow inspector
 
       [control getNumberOfRows:&rows columns:&cols];
 
-      newStyleMask = [object styleMask];
+      newStyleMask = [object _styleMask];
       for (i=0;i<rows;i++) {
         if ([[control cellAtRow: i column: 0] state] == NSOnState)
           newStyleMask |= [[control cellAtRow: i column: 0] tag];
@@ -241,7 +241,7 @@ NSwindow inspector
           newStyleMask &= ~[[control cellAtRow: i column: 0] tag];
       }
  
-      [object setStyleMask: newStyleMask];
+      [object _setStyleMask: newStyleMask];
       // FIXME: This doesn't refresh the window decoration. How to do that?
       // (currently needs manual hide/unhide to update decorations)
       [object display];
@@ -299,11 +299,11 @@ NSwindow inspector
 
  
   [controlMatrix deselectAllCells];
-  if ([anObject styleMask] & NSMiniaturizableWindowMask)
+  if ([anObject _styleMask] & NSMiniaturizableWindowMask)
     [controlMatrix selectCellAtRow: 0 column: 0];
-  if ([anObject styleMask] & NSClosableWindowMask)
+  if ([anObject _styleMask] & NSClosableWindowMask)
     [controlMatrix selectCellAtRow: 1 column: 0];
-  if ([anObject styleMask] & NSResizableWindowMask)
+  if ([anObject _styleMask] & NSResizableWindowMask)
     [controlMatrix selectCellAtRow: 2 column: 0];
 
   [optionMatrix deselectAllCells];

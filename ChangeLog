@@ -1,3 +1,16 @@
+2004-08-23 15:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormNSPanel.[hm]:
+	* Palettes/1Windows/GormNSWindow.[hm]: Changed the name
+	of the styleMask method to _styleMask.  Since this serves
+	as a "proxy" of the original value so that it can be edited
+	without effecting the window, it shouldn't have the same
+	name as the method in the parent class anyway.  The new 
+	window decoration code was calling this method. 
+	* Palettes/1Windows/main.m: [GormWindowAttributesInspector
+	_setValuesFromControl:] and [GormWindowAttributesInspector
+	_getValuesFromObject] changed to use new method name.
+	
 2004-08-21 00:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m:
