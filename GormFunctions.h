@@ -56,4 +56,6 @@ NSColor *colorFromDict(NSDictionary *colorString);
 // color to string
 NSDictionary *colorToDict(NSColor *color);
 
+// get the list of images...
+NSArray *systemImagesList();
 #endif

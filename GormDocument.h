@@ -67,8 +67,6 @@
   NSMenuItem		*quitItem;		/* Replaced during test */
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
-  NSMutableSet          *sounds;
-  NSMutableSet          *images;
   NSMutableArray        *openEditors;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
@@ -149,6 +147,7 @@
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
 - (BOOL) isTopLevelObject: (id)obj;
+- (void) closeAllEditors;
 
 // class loading
 - (id) loadClass: (id)sender;

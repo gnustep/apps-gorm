@@ -304,4 +304,9 @@
   [document setSelectionFromEditor: self];
   [self makeSelectionVisible: YES];
 }
+
+- (NSArray *) objects
+{
+  return objects;
+}
 @end

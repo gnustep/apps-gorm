@@ -1,3 +1,24 @@
+2004-05-15 11:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Add call to [GormDocument closeAllEditors] to 
+	avoid a crash when the user attempts to open a document, then
+	cancels.   The document wasn't properly released.
+	* GormDocument.h: Removed the images and sounds arrays.  This
+	information is kept in the editor and these arrays are redundant.
+	Also exposed the closeAllEditors method.
+	* GormDocument.m: Removed references to the images and sounds
+	array.  Changed load/save logic to use the list from the editors
+	themselves.
+	* GormFunctions.[hm]: Added function to retrieve the names of the
+	images from the system directory named systemImagesList().
+	* GormImageEditor.m: Modified to call the new function and add the
+	images to the editor when it is first instantiated.
+	* GormPrivate.h: Added objects method to GormGenericEditor's interface.
+	* GormSoundInspector.h: Changed _currentSound to id.
+	* GormSoundInspector.m: Uses _currentSound to make certain that the
+	same GormSound object isn't reinspected, thus wasting time loading
+	it over and over.
+	
 2004-05-14 22:11 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument _closeAllEditors] 

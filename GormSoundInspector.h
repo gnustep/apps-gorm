@@ -34,7 +34,7 @@
 
 @interface GormSoundInspector : IBInspector
 {
-  NSSound *_currentSound;
+  id *_currentSound;
   GormSoundView *soundView;
 }
 - (void) stop: (id)sender;

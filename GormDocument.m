@@ -1459,7 +1459,7 @@ static NSImage	*classesImage = nil;
   [savedEditors removeAllObjects];
 }
 
-- (void) _closeAllEditors
+- (void) closeAllEditors
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
@@ -1534,7 +1534,7 @@ static NSImage	*classesImage = nil;
       // deactivate the document...
       [self setDocumentActive: NO];
       [self setSelectionFromEditor: nil];
-      [self _closeAllEditors]; // shut down all of the editors..
+      [self closeAllEditors]; // shut down all of the editors..
       [nc postNotificationName: IBWillCloseDocumentNotification
 	  object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
@@ -1667,10 +1667,6 @@ static NSImage	*classesImage = nil;
       
       // for saving the editors when the gorm file is persisted.
       savedEditors = [NSMutableArray new];
-
-      // sounds & images
-      sounds = [NSMutableSet new];
-      images = [NSMutableSet new];
 
       style = NSTitledWindowMask | NSClosableWindowMask
 	| NSResizableWindowMask | NSMiniaturizableWindowMask;
@@ -2255,7 +2251,6 @@ static NSImage	*classesImage = nil;
 	      NSDebugLog(@"Add the sound %@", file);
 	      soundPath = [documentPath stringByAppendingPathComponent: file];
 	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
-	      [sounds addObject: soundPath];
 	    }
 	}
     }
@@ -2282,7 +2277,6 @@ static NSImage	*classesImage = nil;
 		{
 		  NSDebugLog(@"Add the image %@", file);
 		  [imagesView addObject: placeHolder];
-		  [images addObject: imagePath];
 		}
 	    }
 	}
@@ -3056,62 +3050,69 @@ static NSImage	*classesImage = nil;
 	  // copy sounds into the new folder...
 	  if (archiveResult)
 	    {
-	      NSEnumerator *en = [sounds objectEnumerator];
+	      NSArray *sounds = [soundsView objects];
+	      NSArray *images = [imagesView objects];
 	      id object = nil;
-
+	      NSEnumerator *en = [sounds objectEnumerator];
 	      while ((object = [en nextObject]) != nil)
 		{
-		  NSString *soundPath;
-		  BOOL copied = NO;
-
-		  soundPath = [documentPath stringByAppendingPathComponent:
-					      [object lastPathComponent]];
-		  if(![object isEqualToString: soundPath])
+		  if(![object isSystemSound])
 		    {
-		      copied = [mgr copyPath: object
-				    toPath: soundPath
-				    handler: nil];
-		    }
-		  else
-		    {
-		      // mark as copied if paths are equal...
-		      copied = YES;
-		    }
-
-		  if (!copied)
-		    {
-		      NSDebugLog(@"Could not find sound at path %@", object);
+		      NSString *soundPath;
+		      NSString *path = [object soundPath];
+		      BOOL copied = NO;
+		      
+		      soundPath = [documentPath stringByAppendingPathComponent:
+						  [path lastPathComponent]];
+		      if(![path isEqualToString: soundPath])
+			{
+			  copied = [mgr copyPath: path
+					toPath: soundPath
+					handler: nil];
+			}
+		      else
+			{
+			  // mark as copied if paths are equal...
+			  copied = YES;
+			}
+		      
+		      if (!copied)
+			{
+			  NSDebugLog(@"Could not find sound at path %@", object);
+			}
 		    }
 		}
 	      
 	      en = [images objectEnumerator];
-
 	      while ((object = [en nextObject]) != nil)
 		{
-		  NSString *imagePath;
-		  BOOL copied = NO;
-
-		  imagePath = [documentPath stringByAppendingPathComponent:
-		    [object lastPathComponent]];
-
-		  if(![object isEqualToString: imagePath])
+		  if(![object isSystemImage])
 		    {
-		      copied = [mgr copyPath: object
-				    toPath: imagePath
-				    handler: nil];
-		    }
-		  else
-		    {
-		      // mark it as copied if paths are equal.
-		      copied = YES;
-		    }
-
-		  if (!copied)
-		    {
-		      NSDebugLog(@"Could not find image at path %@", object);
+		      NSString *imagePath;
+		      NSString *path = [object imagePath];
+		      BOOL copied = NO;
+		      
+		      imagePath = [documentPath stringByAppendingPathComponent:
+						  [path lastPathComponent]];
+		      
+		      if(![path isEqualToString: imagePath])
+			{
+			  copied = [mgr copyPath: path
+					toPath: imagePath
+					handler: nil];
+			}
+		      else
+			{
+			  // mark it as copied if paths are equal.
+			  copied = YES;
+			}
+		      
+		      if (!copied)
+			{
+			  NSDebugLog(@"Could not find image at path %@", object);
+			}
 		    }
 		} 
-
 	    }
 	}
     }
@@ -3854,7 +3855,6 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
         filename = [filenames objectAtIndex:i];
         NSDebugLog(@"Loading sound file: %@",filenames);
         [soundsView addObject: [self _createSoundPlaceHolder: filename]];
-        [sounds addObject: filename];
       }
       return self;
     }
@@ -3886,17 +3886,11 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
         filename = [filenames objectAtIndex:i];
         NSDebugLog(@"Loading image file: %@",filename);
         [imagesView addObject: [self _createImagePlaceHolder: filename]];
-        [images addObject: filename];
       }
       return self;
     }
 
   return nil;
-}
-
-- (void) addImage: (NSString*) path
-{
-  [images addObject: path];
 }
 
 - (NSString *) description

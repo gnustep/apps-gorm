@@ -143,10 +143,7 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
  	    {
  	      NSLog(@"here %@", [data objectAtIndex: i]);
    	      [self addObject: placeHolder];
-   	      [(GormDocument *)document addImage: [data objectAtIndex: i]];
-
 	    }
-
 	}
       return YES;
     }
@@ -198,6 +195,9 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
   if (self != nil)
     {
       NSButtonCell	*proto;
+      NSArray           *list;
+      NSEnumerator      *en;
+      id                obj;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
 	NSFilenamesPboardType, nil]];
@@ -224,7 +224,23 @@ static int handled_mask= NSDragOperationCopy|NSDragOperationGeneric|NSDragOperat
       [self setPrototype: proto];
       RELEASE(proto);
       NSMapInsert(docMap, (void*)aDocument, (void*)self);
-      [self addObject: anObject];
+
+      // do not insert it if it's nil.
+      if(anObject != nil)
+	{
+	  [self addObject: anObject];
+	}
+
+      // add all of the system objects...
+      list = systemImagesList();
+      en = [list objectEnumerator];
+      while((obj = [en nextObject]) != nil)
+	{
+	  NSString *name = [[obj lastPathComponent] stringByDeletingPathExtension];
+	  GormImage *image = [[GormImage alloc] initWithName: name path: obj];
+	  [image setSystemImage: YES];
+	  [self addObject: image];
+	}
 
       // set up the notification...
       [[NSNotificationCenter defaultCenter]

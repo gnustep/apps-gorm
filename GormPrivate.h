@@ -204,6 +204,8 @@ extern NSString *GormResizeCellNotification;
 - (void) orderFront;
 - (void) pasteInSelection;
 - (NSRect) rectForObject: (id)anObject;
+
+- (NSArray *) objects;
 @end
 
 // private methods...

@@ -581,6 +581,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   [documents addObject: doc];
   if ([doc openDocument: sender] == nil)
     {
+      [doc closeAllEditors];
       [documents removeObjectIdenticalTo: doc];
       doc = nil;
     }

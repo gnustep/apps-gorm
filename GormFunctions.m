@@ -26,6 +26,10 @@
 #include "GormViewEditor.h"
 #include <AppKit/AppKit.h>
 #include <Foundation/NSDictionary.h>
+#include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSFileManager.h>
+#include <Foundation/NSPathUtilities.h>
+#include <Foundation/NSString.h>
 
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array)
@@ -216,4 +220,27 @@ NSDictionary *colorToDict(NSColor *color)
       return dict;
     }
   return nil;
+}
+
+NSArray *systemImagesList()
+{
+  NSString *system = [NSOpenStepRootDirectory() stringByAppendingPathComponent: @"System"];
+  NSString *lib = [system stringByAppendingPathComponent: @"Library"];
+  NSString *path = [lib stringByAppendingPathComponent: @"Images"];
+  NSArray *contents = [[NSFileManager defaultManager] directoryContentsAtPath: path];
+  NSEnumerator *en = [contents objectEnumerator];
+  NSMutableArray *result = [NSMutableArray array];
+  id obj;
+  NSArray *fileTypes = [NSImage imageFileTypes];
+
+  while((obj = [en nextObject]) != nil)
+    {
+      if([fileTypes containsObject: [obj pathExtension]])
+	{
+	  NSString *pathString = [path stringByAppendingPathComponent: obj];
+	  [result addObject: pathString];
+	}
+    }
+
+  return result;
 }
