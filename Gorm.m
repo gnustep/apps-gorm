@@ -1104,6 +1104,8 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   // set the menu...
   mainMenu = (NSMenu *)gormMenu;
+  //for cascadePoint
+  cascadePoint = NSZeroPoint;
 }
 
 - (id) inspector: (id) sender
@@ -1169,48 +1171,36 @@ static NSButtonType _buttonTypeForObject( id button )
   return nil;
 }
 
-- (id) newApplication: (id) sender
+- (void) newGormDocument : (id) sender 
 {
-  id		doc = [GormDocument new];
-
+  id doc = [GormDocument new];
   [documents addObject: doc];
   RELEASE(doc);
-  [doc setupDefaults: @"Application"];
+  switch ([sender tag]) 
+    {
+    case 0:
+      [doc setupDefaults: @"Application"];
+      break;
+    case 1:
+      [doc setupDefaults: @"Empty"];
+      break;
+    case 2:
+      [doc setupDefaults: @"Inspector"];
+      break;
+    case 3:
+      [doc setupDefaults: @"Palettes"];
+      break;
+
+    default: 
+      printf("unknow newGormDocument tag");
+    }
+  if (NSEqualPoints(cascadePoint, NSZeroPoint))
+    {	
+      NSRect frame = [[doc window] frame];
+      cascadePoint = NSMakePoint(frame.origin.x, NSMaxY(frame));
+    }
+  cascadePoint = [[doc window] cascadeTopLeftFromPoint:cascadePoint];
   [[doc window] makeKeyAndOrderFront: self];
-  return doc;
-}
-
-- (id) newEmpty: (id) sender
-{
-  id		doc = [GormDocument new];
-
-  [documents addObject: doc];
-  RELEASE(doc);
-  [doc setupDefaults: @"Empty"];
-  [[doc window] makeKeyAndOrderFront: self];
-  return doc;
-}
-
-- (id) newInspector: (id) sender
-{
-  id		doc = [GormDocument new];
-
-  [documents addObject: doc];
-  RELEASE(doc);
-  [doc setupDefaults: @"Inspector"];
-  [[doc window] makeKeyAndOrderFront: self];
-  return doc;
-}
-
-- (id) newPalette: (id) sender
-{
-  id		doc = [GormDocument new];
-
-  [documents addObject: doc];
-  RELEASE(doc);
-  [doc setupDefaults: @"Palette"];
-  [[doc window] makeKeyAndOrderFront: self];
-  return doc;
 }
 
 - (id) open: (id) sender
