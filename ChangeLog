@@ -1,3 +1,13 @@
+2004-06-06 21:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormNSOutlineView.h: added ivar
+	_savedColor.  This is used to save the color during selection.
+	* Palettes/3Containers/GormNSTableView.h: same as above.
+	* Palettes/3Containers/GormNSTableView.m: implemented select
+	and unselect methods to allow the color to be saved when the object
+	is selected.
+	* Palettes/3Containers/GormNSOutlineView.m: same as above.
+	
 2004-06-06 08:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormImageEditor.m: Corrected comments.

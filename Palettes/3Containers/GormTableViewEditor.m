@@ -63,11 +63,12 @@ static NSText *_textObject;
 - (void) setOpened: (BOOL) flag
 {
   if (flag)
-    [tableView setBackgroundColor: [NSColor whiteColor]];
+    {
+      [tableView select]; // setBackgroundColor: [NSColor whiteColor]];
+    }
   else
     {
-      [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
-      [tableView deselectAll: self];
+      [tableView unselect];
     }
   
   [super setOpened: flag];
@@ -111,7 +112,7 @@ static NSText *_textObject;
 {
   if (activated == YES)
     {
-      [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
+      [tableView unselect]; // [tableView setBackgroundColor: [NSColor controlBackgroundColor]];
       if ([tableView selectedColumn] != -1)
 	{
 	  [tableView deselectColumn: [tableView selectedColumn]];

@@ -95,6 +95,7 @@ static id _sharedDataSource = nil;
   self = [super initWithFrame: aRect];
   [super setDataSource: [GormNSTableView sharedDataSource]];
   _gormDataSource = nil;
+  ASSIGN(_savedColor, [NSColor controlBackgroundColor]);
   return self;
 }
 
@@ -160,10 +161,10 @@ static id _sharedDataSource = nil;
   _gormAllowsEmptySelection = _allowsEmptySelection;
   _gormDelegate = _delegate;
   _delegate = nil;
+  _savedColor = [self backgroundColor];
 
   return self;
 }
-
 
 - (void) setGormAllowsColumnReordering: (BOOL)flag
 {
@@ -218,5 +219,22 @@ static id _sharedDataSource = nil;
 - (NSString *) className
 {
   return @"NSTableView";
+}
+
+- (void) setBackgroundColor: (NSColor *)color
+{
+  [super setBackgroundColor: color];
+  ASSIGN(_savedColor, color);
+}
+
+- (void) select
+{
+  [super setBackgroundColor: [NSColor whiteColor]];
+}
+
+- (void) unselect
+{
+  [super setBackgroundColor: _savedColor]; 
+  [self deselectAll: self];
 }
 @end
