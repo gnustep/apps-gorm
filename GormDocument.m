@@ -2339,6 +2339,21 @@ static NSImage	*classesImage = nil;
 	  screenPoint.y -= 10;
 	}
     }
+  else 
+    {
+      NSEnumerator *enumerator = [objects objectEnumerator];
+      id	obj;
+      NSRect frame;
+      while ((obj = [enumerator nextObject]) != nil)
+	{
+	  frame = [obj frame];
+	  frame.origin.x -= 6;
+	  frame.origin.y -= 6;
+	  [obj setFrame: frame];
+	}
+      
+    }
+
   [self attachObjects: objects toParent: parent];
   [self touch];
   return objects;
