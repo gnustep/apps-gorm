@@ -1,4 +1,11 @@
-2004-11-03 10:07 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-11-04 01:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Corrected a memory leak in 
+	loadFromFile:.
+	* GormClassManager.h: Added FSF/GPL header and organized
+	the methods in the header according to function.
+	
+2004-11-03 22:07 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: modified addNewActionToClassNamed: and
 	addNewOutletToClassNamed: so that the initial names for outlets

@@ -31,19 +31,64 @@
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBPalette.h>
 
-@interface	GormClassManager (Private)
+/** Private methods not accesible from outside */
+@interface GormClassManager (Private)
 - (NSMutableDictionary*) classInfoForClassName: (NSString*)className;
 - (NSMutableDictionary*) classInfoForObject: (id)anObject;
+- (void) touch;
+- (void) convertDictionary: (NSMutableDictionary *)dict;
 @end
 
 @implementation GormClassManager
 
-- (void) _touch
+- (id) initWithDocument: (id)aDocument
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSBundle			*bundle = [NSBundle mainBundle];
+      NSString			*path;
+
+      document = aDocument;  // the document retains us, this is for convenience
+
+      path = [bundle pathForResource: @"ClassInformation" ofType: @"plist"];
+      if (path == nil)
+	{
+	  NSLog(@"ClassInformation.plist missing from resources");
+	}
+      else
+	{
+	  GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
+
+	  // load the classes, initialize the custom class array and map..
+	  [self loadFromFile: path];
+	  customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	  customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
+	  categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+
+	  // add first responder so that it may be edited.
+	  [customClasses addObject: @"FirstResponder"];
+	  
+	  // add the imported classes to the class information list...
+	  [classInformation addEntriesFromDictionary: [palettesManager importedClasses]];
+	}
+    }
+  
+  return self;
+}
+
+- (void) touch
 {
   [[NSNotificationCenter defaultCenter] 
     postNotificationName: GormDidModifyClassNotification
     object: self];
   [document touch];
+}
+
+- (void) convertDictionary: (NSMutableDictionary *)dict
+{
+  NSMutableArray *array = [classInformation allKeys];
+  [dict removeObjectsForKeys: array];
 }
 
 - (NSString*) addClassWithSuperClassName: (NSString*)name
@@ -76,7 +121,7 @@
       [classInformation setObject: classInfo forKey: newClassName];
       [customClasses addObject: newClassName];
 
-      [self _touch];
+      [self touch];
 
       [[NSNotificationCenter defaultCenter] 
 	postNotificationName: GormDidAddClassNotification
@@ -163,7 +208,7 @@
 	  NSEnumerator *e = [actions objectEnumerator];
 	  id action = nil;
 
-	  [self _touch];
+	  [self touch];
 	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
 	  
 	  [classInfo setObject: outlets forKey: @"Outlets"];
@@ -232,10 +277,7 @@
   [[info objectForKey: @"AllActions"] insertObject: anAction atIndex: 0];
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
-	{
-	  [self addAction: anAction forClassNamed: @"FirstResponder"];
-	}
+      [self addAction: anAction forClassNamed: @"FirstResponder"];
     }
 
   while((subclassName = [en nextObject]) != nil)
@@ -243,7 +285,7 @@
       [self addAction: anAction forClassNamed: subclassName];
     }
 
-  [self _touch];
+  [self touch];
 }
 
 - (void) addOutlet: (NSString*)outlet forObject: (id)anObject
@@ -279,7 +321,7 @@
       [self addOutlet: outlet forClassNamed: subclassName];
     }
 
-  [self _touch];
+  [self touch];
 }
 
 - (void) replaceAction: (NSString *)oldAction
@@ -317,7 +359,7 @@
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
 
-  [self _touch];
+  [self touch];
 
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
@@ -327,10 +369,7 @@
 
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
-	{
-	  [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
-	}
+      [self replaceAction: oldAction withAction: newAction forClassNamed: @"FirstResponder"];
     }
 }
 
@@ -369,7 +408,7 @@
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
 
-  [self _touch];
+  [self touch];
 
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
@@ -416,15 +455,12 @@
 	    }
 	}
       [extraActions removeObject: anAction];
-      [self _touch];
+      [self touch];
     }
 
   if(![className isEqualToString: @"FirstResponder"]) 
     {
-      // if([self isSuperclass: @"NSResponder" linkedToClass: className])
-	{
-	  [self removeAction: anAction fromClassNamed: @"FirstResponder"];
-	}
+      [self removeAction: anAction fromClassNamed: @"FirstResponder"];
     }
 
   while((subclassName = [en nextObject]) != nil)
@@ -466,7 +502,7 @@
 	    }
 	}
       [extraOutlets removeObject: anOutlet];
-      [self _touch];
+      [self touch];
     }
 
   while((subclassName = [en nextObject]) != nil)
@@ -825,41 +861,6 @@
   return [info objectForKey: @"ExtraOutlets"];
 }
 
-- (id) initWithDocument: (id)aDocument
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSBundle			*bundle = [NSBundle mainBundle];
-      NSString			*path;
-
-      document = aDocument;  // the document retains us, this is for convenience
-
-      path = [bundle pathForResource: @"ClassInformation" ofType: @"plist"];
-      if (path == nil)
-	{
-	  NSLog(@"ClassInformation.plist missing from resources");
-	}
-      else
-	{
-	  GormPalettesManager *palettesManager = [(Gorm *)NSApp palettesManager];
-
-	  // load the classes, initialize the custom class array and map..
-	  [self loadFromFile: path];
-	  customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
-	  customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
-	  
-	  // add first responder so that it may be edited.
-	  [customClasses addObject: @"FirstResponder"];
-	  
-	  // add the imported classes to the class information list...
-	  [classInformation addEntriesFromDictionary: [palettesManager importedClasses]];
-	}
-    }
-  
-  return self;
-}
-
 - (void) allSubclassesOf: (NSString *)superclass
       referenceClassList: (NSArray *)classList
 	       intoArray: (NSMutableArray *)array
@@ -982,7 +983,7 @@
     }
 
   [classInformation removeObjectForKey: className];
-  [self _touch];
+  [self touch];
 
   [[NSNotificationCenter defaultCenter] 
     postNotificationName: GormDidDeleteClassNotification
@@ -1042,7 +1043,7 @@
 		    forClassNamed: sc];
 	    }
 
-	  [self _touch];
+	  [self touch];
 	}
       else
 	NSLog(@"customClass not found %@",oldName);
@@ -1063,8 +1064,10 @@
 {
   NSMutableDictionary	*ci;
   NSEnumerator		*enumerator;
-  id			key;
-
+  id			 key;
+  NSMutableArray        *classesToSave;
+  
+  classesToSave = [customClasses arrayByAddingObjectsFromArray: categoryClasses];
   ci = AUTORELEASE([[NSMutableDictionary alloc] initWithCapacity: 0]);
   enumerator = [customClasses objectEnumerator];
   while ((key = [enumerator nextObject]) != nil)
@@ -1074,6 +1077,7 @@
       id			obj;
       id                        extraObj;
 
+      // superclass...
       classInfo = [classInformation objectForKey: key];
       newInfo = [NSMutableDictionary new];
       [ci setObject: newInfo forKey: key];
@@ -1083,6 +1087,8 @@
 	{
 	  [newInfo setObject: obj forKey: @"Super"];
 	}
+
+      // outlets...
       obj = [classInfo objectForKey: @"Outlets"];
       extraObj = [classInfo objectForKey: @"ExtraOutlets"];
       if (obj && extraObj)
@@ -1097,6 +1103,8 @@
 	{
 	  [newInfo setObject: obj forKey: @"Outlets"];
 	}
+
+      // actions...
       obj = [classInfo objectForKey: @"Actions"];
       extraObj = [classInfo objectForKey: @"ExtraActions"];
       if (obj && extraObj)
@@ -1125,31 +1133,31 @@
   NSDebugLog(@"Load from file %@",path);
 
   dict = [NSDictionary dictionaryWithContentsOfFile: path];
-  // customClasses = [NSMutableArray arrayWithCapacity: 1];
   if (dict == nil)
     {
       NSLog(@"Could not load classes dictionary");
       return NO;
     }
+
   /*
    * Convert property-list data into a mutable structure.
    */
   RELEASE(classInformation);
-  classInformation = [NSMutableDictionary new];
-  RETAIN(classInformation); // released in dealloc...
+  classInformation = [[NSMutableDictionary alloc] init];
   enumerator = [dict keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
-      NSDictionary		*classInfo = [dict objectForKey: key];
-      NSMutableDictionary	*newInfo;
-      NSMutableDictionary       *oldInfo;
-      id			obj;
-
+      NSDictionary	    *classInfo = [dict objectForKey: key];
+      NSMutableDictionary   *newInfo;
+      NSMutableDictionary   *oldInfo;
+      id		    obj;
+      
       newInfo = [NSMutableDictionary new];
       oldInfo = [classInformation objectForKey: key];
-    
+      
       [classInformation setObject: newInfo forKey: key];
       
+      // superclass
       obj = [classInfo objectForKey: @"Super"];
       if (obj != nil)
 	{
@@ -1163,8 +1171,9 @@
 	  obj = [obj mutableCopy];
 	  [obj sortUsingSelector: @selector(compare:)];
 	  [newInfo setObject: obj forKey: @"Outlets"];
+	  RELEASE(obj);
 	}
-
+      
       // actions
       obj = [classInfo objectForKey: @"Actions"];
       if (obj != nil)
@@ -1172,15 +1181,10 @@
 	  obj = [obj mutableCopy];
 	  [obj sortUsingSelector: @selector(compare:)];
 	  [newInfo setObject: obj forKey: @"Actions"];
+	  RELEASE(obj);
 	}
     }
   return YES;
-}
-
-- (void) _convertDictionary: (NSMutableDictionary *)dict
-{
-  NSMutableArray *array = [classInformation allKeys];
-  [dict removeObjectsForKeys: array];
 }
 
 // this method will load the custom classes and merge them with the
@@ -1188,6 +1192,8 @@
 - (BOOL) loadCustomClasses: (NSString *)path
 {
   NSMutableDictionary		*dict;
+  NSEnumerator                  *en;
+  id                            obj;
 
   NSDebugLog(@"Load custom classes from file %@",path);
 
@@ -1207,7 +1213,7 @@
   if ([[dict allKeys] containsObject: @"NSObject"])
     {
       NSLog(@"The file being loaded is in the old .classes format.  Updating..");
-      [self _convertDictionary: dict];
+      [self convertDictionary: dict];
     }
 
   [customClasses addObjectsFromArray: [dict allKeys]];
@@ -1218,8 +1224,17 @@
 
 - (BOOL) isCustomClass: (NSString *)className
 {
-  return ([customClasses indexOfObject: className] != NSNotFound); // && 
-  // ![className isEqualToString: @"FirstResponder"]);
+  return ([customClasses indexOfObject: className] != NSNotFound); 
+}
+
+- (BOOL) isNonCustomClass: (NSString *)className
+{
+  return !([self isCustomClass: className]); 
+}
+
+- (BOOL) isCategoryForClass: (NSString *)className
+{
+  return ([categoryClasses indexOfObject: className] != NSNotFound); 
 }
 
 - (BOOL) isKnownClass: (NSString *)className
@@ -1445,7 +1460,6 @@
 {
   NSString *name = [document nameForObject: object];
   NSString *result = [self customClassForName: name];
-  //  NSString *result = [customClassMap objectForKey: name];
   NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",
 	     object, name, result, customClassMap);
   return result;
