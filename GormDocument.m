@@ -281,33 +281,31 @@ static NSImage	*classesImage = nil;
 		{
 		  template = [[GormNSTextViewTemplate alloc] initWithObject: obj
 							     className: className];
-		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if([obj isKindOfClass: [NSText class]])
 		{
 		  template = [[GormNSTextTemplate alloc] initWithObject: obj
 							 className: className];
-		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if([obj isKindOfClass: [NSButton class]])
 		{
 		  template = [[GormNSButtonTemplate alloc] initWithObject: obj
 							   className: className];
-		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
-		  NSLog(@"window = %@",[template window]);
-		  [[template window] update];
+		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if([obj isKindOfClass: [NSControl class]])
 		{
 		  template = [[GormNSControlTemplate alloc] initWithObject: obj
 							    className: className];
-		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if([obj isKindOfClass: [NSView class]])
 		{
 		  template = [[GormNSViewTemplate alloc] initWithObject: obj
 							 className: className];
-		  [[obj superview] replaceSubview: RETAIN(obj) with: template];
+		  [[obj superview] replaceSubview: obj with: template];
 		}
 	      else if([obj isKindOfClass: [NSMenu class]])
 		{
@@ -1100,15 +1098,17 @@ static NSImage	*classesImage = nil;
   /*
    * Restore removed objects.
    */
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
+  // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
   [nameTable setObject: filesOwner forKey: @"NSOwner"];
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
+
+  // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
+
   if (fontManager != nil)
     {
-      NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
+      // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable setObject: fontManager forKey: @"NSFont"];
       NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
     }

@@ -1,3 +1,10 @@
+2002-10-25  Gregory John Casamento <greg_casamento@yahoo.com>
+
+        * GormDocument.m: Removed extraneous calls to eliminate entries in the
+        objToName map from the endArchiving method.  This has corrected the
+        problem w/ Gorm crashing when reloading a previously saved .gorm file
+        and saving again.
+
 2002-10-25  Adam Fedor  <fedor@gnu.org>
 
 	* GormDocument.m (-dealloc): Release tempNameTable.
