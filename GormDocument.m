@@ -836,6 +836,13 @@ static NSImage	*classesImage = nil;
 - (id) remove: (id)sender
 {
   int i = [classesView selectedRow];
+  
+  // if no selection, then return.
+  if(i == -1)
+    {
+      return self;
+    }
+
   id anitem = [classesView itemAtRow: i];
   if([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
