@@ -3123,55 +3123,6 @@ static NSImage  *fileImage = nil;
   return [self couldCloseDocument];
 }
 
-// convenience methods for formatting outlets/actions
-+ (NSString*) identifierString: (NSString*)str
-{
-  NSCharacterSet	*illegal = [[NSCharacterSet characterSetWithCharactersInString:
-						      @"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
-				     invertedSet];
-  NSCharacterSet	*numeric = [NSCharacterSet characterSetWithCharactersInString:
-						     @"0123456789"];
-  NSRange		r;
-  NSMutableString	*m;
-  
-  if (str == nil)
-    {
-      return nil;
-    }
-  m = [str mutableCopy];
-  r = [str rangeOfCharacterFromSet: illegal];
-  while (r.length > 0)
-    {
-      [m deleteCharactersInRange: r];
-      r = [m rangeOfCharacterFromSet: illegal];
-    }
-  r = [str rangeOfCharacterFromSet: numeric];
-  while (r.length > 0 && r.location == 0)
-    {
-      [m deleteCharactersInRange: r];
-      r = [m rangeOfCharacterFromSet: numeric];
-    }
-  str = [m copy];
-  RELEASE(m);
-  AUTORELEASE(str);
-
-  return str;
-}
-
-+ (NSString *)formatAction: (NSString *)action
-{
-  NSString *identifier;
-
-  identifier = [[self identifierString: action] stringByAppendingString: @":"];
-  return identifier;
-}
-
-+ (NSString *)formatOutlet: (NSString *)outlet
-{
-  NSString *identifier = [self identifierString: outlet];
-  return identifier;
-}
-
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
 		      forClassNamed: (NSString *)className
 			   isAction: (BOOL)action

@@ -161,11 +161,6 @@
 - (void) setWindowsMenu: (NSMenu *)menu;
 - (NSMenu *) windowsMenu;
 
-// utility methods...
-+ (NSString*) identifierString: (NSString*)str;
-+ (NSString *)formatAction: (NSString *)action;
-+ (NSString *)formatOutlet: (NSString *)outlet;
-
 // first responder/font manager
 - (id) fontManager;
 - (id) firstResponder;

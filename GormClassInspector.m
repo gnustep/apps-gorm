@@ -28,9 +28,10 @@
 
 #include <AppKit/AppKit.h>
 #include "GormClassInspector.h"
-#include "GormPrivate.h"
 #include "GormClassManager.h"
 #include "GormDocument.h"
+#include "GormFunctions.h"
+#include "GormPrivate.h"
 #include <InterfaceBuilder/IBApplicationAdditions.h>
 
 NSNotificationCenter *nc = nil;
@@ -108,7 +109,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allOutletsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
-  NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
+  NSString *formattedOutlet = formatOutlet( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
   
   if(![name isEqual: anObject])
@@ -163,7 +164,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allActionsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
-  NSString *formattedAction = [GormDocument formatAction: anObject];
+  NSString *formattedAction = formatAction( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   if(![name isEqual: anObject])

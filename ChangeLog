@@ -1,3 +1,15 @@
+2005-01-22 15:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Replaced use of the class methods
+	from GormDocument with the appropriate function call.
+	* GormClassInspector.m: Replaced use of the class methods
+	from GormDocument with the appropriate function call.
+	* GormDocument.[hm]: Removed the formatting class methods.
+	* GormFunctions.[hm]: Added indentifierString(), formatAction(), 
+	formatOutlet() functions.
+	NOTE: The correct way to apply this formatting is using NSFormatter
+	subclasses.  This will be done after the pending release.
+	
 2005-01-22 14:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Reorganized the files in the resources, hearders

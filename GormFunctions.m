@@ -279,3 +279,57 @@ NSString *promptForClassName(NSString *title, NSArray *classes)
   GormClassPanelController *cpc = AUTORELEASE([[GormClassPanelController alloc] initWithTitle: title classList: classes]);
   return [cpc runModal];
 }
+
+NSString *identifierString(NSString *str)
+{
+  NSCharacterSet  *illegal = [[NSCharacterSet 
+				characterSetWithCharactersInString: 
+				  @"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"] 
+			       invertedSet];
+  NSCharacterSet  *numeric = [NSCharacterSet 
+			       characterSetWithCharactersInString:
+				 @"0123456789"];
+  NSCharacterSet  *white = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+  NSRange	  r;
+  NSMutableString *result;
+  
+  if (str == nil)
+    {
+      return nil;
+    }
+
+  result = [NSMutableString stringWithString: str];
+  r = [result rangeOfCharacterFromSet: illegal];
+  while (r.length > 0)
+    {
+      [result deleteCharactersInRange: r];
+      r = [result rangeOfCharacterFromSet: illegal];
+    }
+  r = [result rangeOfCharacterFromSet: numeric];
+  while (r.length > 0 && r.location == 0)
+    {
+      [result deleteCharactersInRange: r];
+      r = [result rangeOfCharacterFromSet: numeric];
+    }
+  r = [result rangeOfCharacterFromSet: white];
+  while (r.length > 0 && r.location == 0)
+    {
+      [result deleteCharactersInRange: r];
+      r = [result rangeOfCharacterFromSet: white];
+    }
+
+  return result;
+}
+
+NSString *formatAction(NSString *action)
+{
+  NSString *temp = identifierString(action);
+  NSString *identifier = [temp stringByAppendingString: @":"];
+  return identifier;
+}
+
+NSString *formatOutlet(NSString *outlet)
+{
+  NSString *identifier = identifierString(outlet);
+  return identifier;
+}

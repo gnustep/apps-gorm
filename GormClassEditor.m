@@ -25,6 +25,7 @@
 
 #include "GormPrivate.h"
 #include "GormClassManager.h"
+#include "GormFunctions.h"
 #include <AppKit/NSPasteboard.h>
 
 NSString *GormClassPboardType = @"GormClassPboardType";
@@ -541,7 +542,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  // retain the name and add the action/outlet...
 	  if ([gov editType] == Actions)
 	    {
-	      NSString *formattedAction = [GormDocument formatAction: anObject];
+	      NSString *formattedAction = formatAction( (NSString *)anObject );
 	      if (![classManager isAction: formattedAction 
 				ofClass: [gov itemBeingEdited]])
 		{
@@ -572,7 +573,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	    }
 	  else if ([gov editType] == Outlets)
 	    {
-	      NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
+	      NSString *formattedOutlet = formatOutlet( (NSString *)anObject );
 	      
 	      if (![classManager isOutlet: formattedOutlet 
 				  ofClass: [gov itemBeingEdited]])

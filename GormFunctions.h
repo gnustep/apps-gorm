@@ -25,9 +25,8 @@
 #ifndef	INCLUDED_GormFunctions_h
 #define	INCLUDED_GormFunctions_h
 
+#include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-
-// @class NSDictionary;
 
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array);
@@ -67,4 +66,14 @@ int appVersion(long a, long b, long c);
 
 // prompt for a class name.  Used mainly for gmodel loading...
 NSString *promptForClassName(NSString *title, NSArray *classes);
+
+// format an identifier..
+NSString *identifierString(NSString *str);
+
+// format an action..
+NSString *formatAction(NSString *action);
+
+// format an outlet
+NSString *formatOutlet(NSString *outlet);
+
 #endif
