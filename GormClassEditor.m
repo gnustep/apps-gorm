@@ -390,6 +390,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 	      if (removed)
 		{
 		  [self copySelection];
+		  [document removeAllInstancesOfClass: anitem];
 		  [classManager removeClassNamed: anitem];
 		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification

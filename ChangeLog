@@ -1,3 +1,16 @@
+2004-12-16 05:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: added call to removeAllInstancesOfClass: in 
+	deleteSelection so that no objects in the objectView can refer to
+	a class that doesn't have a correstponding class in the 
+	class manager/class editor.
+	* GormClassManager.h: Added declaration for classNameForObject:.
+	* GormClassManager.m: Added implemented for classNameForObject:.
+	* GormDocument.h: Added declaration of removeAllInstancesOfClass:.
+	* GormDocument.m: Addition of method to remove all instances
+	from the objects view if a class is removed from the classes
+	view.
+
 2004-12-15 01:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Code from -changeView added to select

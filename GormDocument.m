@@ -1588,6 +1588,22 @@ static NSImage  *fileImage = nil;
   return [classesView currentSelectionIsClass];
 }
 
+- (void) removeAllInstancesOfClass: (NSString *)className
+{
+  NSArray *objects = [objectsView objects];
+  NSEnumerator *en = [objects objectEnumerator];
+  id object = nil;
+
+  while((object = [en nextObject]) != nil)
+    {
+      NSString *clsForObj = [classManager classNameForObject: object];
+      if([className isEqual: clsForObj])
+	{
+	  [objectsView removeObject: object];
+	}
+    }
+}
+
 - (void) selectClass: (NSString *)className
 {
   [classesView selectClass: className];
@@ -3202,13 +3218,16 @@ static NSImage  *fileImage = nil;
     }
 
   // remove all.
-  while ((c = [en nextObject]) != nil)
+  if(removed)
     {
-      // check both...
-      if ([[[c source] className] isEqualToString: className]
-	|| [[[c destination] className] isEqualToString: className])
+      while ((c = [en nextObject]) != nil)
 	{
-	  [self removeConnector: c];
+	  // check both...
+	  if ([[[c source] className] isEqualToString: className]
+	      || [[[c destination] className] isEqualToString: className])
+	    {
+	      [self removeConnector: c];
+	    }
 	}
     }
   
@@ -3242,27 +3261,27 @@ static NSImage  *fileImage = nil;
     }
 
   // remove all.
-  while ((c = [en nextObject]) != nil)
+  if(removed)
     {
-      id source = [c source];
-      id destination = [c destination];
-
-      // check both...
-      if ([[[c source] className] isEqualToString: className])
+      while ((c = [en nextObject]) != nil)
 	{
-	  [source setClassName: newName];
-	  NSDebugLog(@"Found matching source");
-	}
-      else if ([[[c destination] className] isEqualToString: className])
-	{
-	  [destination setClassName: newName];
-	  NSDebugLog(@"Found matching destination");
+	  id source = [c source];
+	  id destination = [c destination];
+	  
+	  // check both...
+	  if ([[[c source] className] isEqualToString: className])
+	    {
+	      [source setClassName: newName];
+	      NSDebugLog(@"Found matching source");
+	    }
+	  else if ([[[c destination] className] isEqualToString: className])
+	    {
+	      [destination setClassName: newName];
+	      NSDebugLog(@"Found matching destination");
+	    }
 	}
     }
 
-  // Get the object from the object editor so that we can change the name
-  // there too.
-  
   // done...
   NSDebugLog(@"Changed references to actions/outlets for objects of %@", className);
   return removed;

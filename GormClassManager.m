@@ -1729,6 +1729,16 @@
   return result;
 }
 
+- (NSString *) classNameForObject: (id)object
+{
+  NSString *className = [self customClassForObject: object];
+  if(className == nil)
+    {
+      className = [object className];
+    }
+  return className;
+}
+
 - (void) setCustomClass: (NSString *)className
                 forName: (NSString *)object
 {

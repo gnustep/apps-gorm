@@ -135,6 +135,7 @@
 - (id) instantiateClass: (id)sender;
 - (void) selectClass: (NSString *)className;
 - (BOOL) classIsSelected;
+- (void) removeAllInstancesOfClass: (NSString *)classNamed;
 
 // sound & image support
 - (id) openSound: (id)sender;
