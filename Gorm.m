@@ -35,13 +35,13 @@
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
 {
-  NSEnumerator	*enumerator = [documents objectEnumerator];
-  GormDocument	*doc;
+  NSEnumerator	*enumerator = [[self windows] objectEnumerator];
+  NSWindow	*win;
   BOOL		edited = NO;
 
-  while ((doc = [enumerator nextObject]) != nil)
+  while ((win = [enumerator nextObject]) != nil)
     {
-      if ([[[doc resourcesManager] window] isDocumentEdited] == YES)
+      if ([win isDocumentEdited] == YES)
 	{
 	  edited = YES;
 	}
@@ -58,11 +58,9 @@
 	}
       else if (result != NSAlertOtherReturn)
 	{
-	  enumerator = [documents objectEnumerator];
-	  while ((doc = [enumerator nextObject]) != nil)
+	  enumerator = [[self windows] objectEnumerator];
+	  while ((win = [enumerator nextObject]) != nil)
 	    {
-	      NSWindow	*win = [[doc resourcesManager] window];
-
 	      if ([win isDocumentEdited] == YES)
 		{
 		  [win performClose: self];

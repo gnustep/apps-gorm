@@ -21,13 +21,15 @@
 
 @interface GormDocument : GSNibContainer <IBDocuments>
 {
-  GormResourcesManager	*resourcesManager;
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
   GormFontManager	*fontManager;
   NSString		*documentPath;
   NSMapTable		*objToName;
-  id			owner;		/* Dummy object	*/
+  NSWindow		*window;
+  NSMatrix		*selectionView;
+  NSScrollView		*scrollView;
+  id			objectsView;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
@@ -50,8 +52,7 @@
 - (void) detachObject: (id)anObject;
 - (void) detachObjects: (NSArray*)anArray;
 - (NSString*) documentPath;
-- (BOOL) documentShouldClose;
-- (void) documentWillClose;
+- (void) handleNotification: (NSNotification*)aNotification;
 - (NSString*) nameForObject: (id)anObject;
 - (id) objectForName: (NSString*)aString;
 - (NSArray*) objects;
@@ -60,13 +61,13 @@
 - (NSArray*) pasteType: (NSString*)aType
 	fromPasteboard: (NSPasteboard*)aPasteboard
 		parent: (id)parent;
-- (GormResourcesManager*) resourcesManager;
 - (void) removeConnector: (id<IBConnectors>)aConnector;
 - (id) saveAsDocument: (id)sender;
 - (id) saveDocument: (id)sender;
 - (void) setDocumentActive: (BOOL)flag;
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) touch;		/* Mark document as having been changed.	*/
+- (BOOL) windowShouldClose;
 @end
 
 #endif

@@ -143,8 +143,6 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) detachObject: (id)anObject;
 - (void) detachObjects: (NSArray*)anArray;
 - (NSString*) documentPath;
-- (BOOL) documentShouldClose;
-- (void) documentWillClose;
 - (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject;
 - (id<IBEditors>) editorForObject: (id)anObject
 			   create: (BOOL)flag;

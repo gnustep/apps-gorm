@@ -4,14 +4,12 @@
 @class	GormDocument;
 @class	GormInspectorsManager;
 @class	GormPalettesManager;
-@class	GormResourcesManager;
 
 #include "Gorm.h"
 
 #include "GormDocument.h"
 #include "GormInspectorsManager.h"
 #include "GormPalettesManager.h"
-#include "GormResourcesManager.h"
 
 @interface Gorm : NSApplication <IB>
 {

@@ -69,8 +69,7 @@ Gorm_OBJC_FILES = \
 	GormObjectEditor.m \
 	GormWindowEditor.m \
 	GormInspectorsManager.m \
-	GormPalettesManager.m \
-	GormResourcesManager.m
+	GormPalettesManager.m
 
 -include GNUmakefile.preamble
 
