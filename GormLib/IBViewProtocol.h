@@ -32,11 +32,34 @@
 @class NSColor;
 
 @protocol IBViewProtocol
+/**
+ * Returns YES, if color can be set at the given point in the view.
+ */
 - (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point;
+
+/**
+ * Returns YES if receiver can be alt-dragged.
+ */
 - (BOOL) allowsAltDragging;
+
+/**
+ * Sets color at point in the receiver.
+ */
 - (void) depositColor: (NSColor*)color atPoint: (NSPoint)point;
+
+/**
+ * The maximum size for a knob surrounding the receiver.
+ */
 - (NSSize) maximumSizeFromKnobPosition: (IBKnobPosition)knobPosition;
+
+/**
+ * The minimum size for a knob surrounding the receiver.
+ */
 - (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position;
+
+/**
+ * Places and resizes the receiver using newFrame.
+ */
 - (void) placeView: (NSRect)newFrame;
 @end
 

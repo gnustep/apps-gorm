@@ -54,6 +54,9 @@
  */
 - (void) dealloc;
 
+/** 
+ * The first view to be selected in the inspector.
+ */
 - (NSView*) initialFirstResponder;
 
 /**

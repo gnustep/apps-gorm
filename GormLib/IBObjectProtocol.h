@@ -28,30 +28,68 @@
 #include <InterfaceBuilder/IBDocuments.h>
 
 @protocol IBObjectProtocol
-// custom class support
+/**
+ * Returns YES, if receiver can be displayed in 
+ * the custom custom class inspector as a potential
+ * class which can be switched to by the receiver.
+ */
 + (BOOL)canSubstituteForClass: (Class)origClass;
+
+/**
+ * Called immediate after loading the document into
+ * the interface editor application.
+ */
 - (void)awakeFromDocument: (id <IBDocuments>)doc;
 
-// editor
+/**
+ * Returns the NSImage to be used to represent an object
+ * of the receiver's class in the editor.
+ */
 - (NSImage *)imageForViewer;
 
-// object labels
+/**
+ * Name in nameTable for object.
+ */
 - (NSString *)nibLabel: (NSString *)objectName;
 
-// title to display in the inspector
+/**
+ * Title to display in the inspector.
+ */
 - (NSString *)objectNameForInspectorTitle;
 
-// names of inspectors for any given class...
+/**
+ * Name of attributes inspector class.
+ */
 - (NSString*) inspectorClassName;
+
+/**
+ * Name of connection inspector class.
+ */
 - (NSString*) connectInspectorClassName;
+
+/**
+ * Name of size inspector.
+ */
 - (NSString*) sizeInspectorClassName;
+
+/**
+ * Name of help inspector.
+ */ 
 - (NSString*) helpInspectorClassName;
+
+/**
+ * Name of class inspector.
+ */
 - (NSString*) classInspectorClassName;
 
-// name of the editor for the current class.
+/**
+ * Name of the editor for the receiver.
+ */
 - (NSString*) editorClassName;
 
-// list of properties not compatible with IB.
+/**
+ * List of properties not compatible with interface app.
+ */
 - (NSArray*) ibIncompatibleProperties;
 @end
 

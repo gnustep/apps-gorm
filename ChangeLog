@@ -1,3 +1,14 @@
+2005-01-01 09:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBApplicationAdditions.h
+	* GormLib/IBCellProtocol.h
+	* GormLib/IBConnectors.h
+	* GormLib/IBInspector.h
+	* GormLib/IBObjectProtocol.h
+	* GormLib/IBSystem.h
+	* GormLib/IBViewProtocol.h: Completed all documentation 
+	for existing IntefaceBuilder classes.
+
 2005-01-01 02:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/GNUmakefile: Added new headers and new .m file.

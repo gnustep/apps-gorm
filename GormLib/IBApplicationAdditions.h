@@ -35,14 +35,37 @@ IB_EXTERN NSString *IBWillEndTestingInterfaceNotification;
 IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
 
 @protocol IB <NSObject>
+/**
+ * Returns the document which is currently being edited.
+ */
 - (id<IBDocuments>) activeDocument;
+
+/**
+ * Returns YES, if the reciever is in testing mode.
+ */
 - (BOOL) isTestingInterface;
+
+/**
+ * Returns the current selection owner.
+ */
 - (id<IBSelectionOwners>) selectionOwner;
+
+/**
+ * Returns the current selection from the current selection
+ * owner.
+ */
 - (id) selectedObject;
 @end
 
 @interface NSApplication (GormSpecific)
+/**
+ * Image to be displayed with making a link.
+ */
 - (NSImage *) linkImage;
+
+/**
+ * Start the connection process.
+ */
 - (void) startConnecting;
 @end
 

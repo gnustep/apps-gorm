@@ -29,9 +29,20 @@
 #include <InterfaceBuilder/IBDefines.h>
 
 @protocol IBCellProtocol
+/**
+ * Called when the cell is about to be alt-dragged.
+ */
 - (void) cellWillAltDragWithSize: (NSSize)size;
+
+/**
+ * Maximum size for the cell.
+ */
 - (NSSize) maximumSizeForCellSize: (NSSize)size 
                      knobPosition: (IBKnobPosition)position;
+
+/**
+ * Minimum size for the cell.
+ */
 - (NSSize) minimumSizeForCellSize: (NSSize)size 
                      knobPosition: (IBKnobPosition)position;
 @end

@@ -42,14 +42,52 @@ IB_EXTERN NSString *IBDidRemoveConnectorNotification;
  * Connector objects are used to record connections between nib objects.
  */
 @protocol IBConnectors <NSObject>
+
+/**
+ * Destination for the receiver.
+ */
 - (id) destination;
+
+/**
+ * Establish the connection.
+ */
 - (void) establishConnection;
+
+/**
+ * The method to which the receiver will be connected.
+ */
 - (NSString*) label;
+
+/**
+ * Replace anObject with anotherObject.  This method looks at
+ * the receiver's source and destination and replaces whichever
+ * one matches anObject with anotherObject.
+ */
 - (void) replaceObject: (id)anObject withObject: (id)anotherObject;
+
+/**
+ * The source of the receiver.
+ */
 - (id) source;
+
+/**
+ * Set the receiver's destination to anObject.
+ */
 - (void) setDestination: (id)anObject;
+
+/**
+ * Set the receiver's label.
+ */
 - (void) setLabel: (NSString*)label;
+
+/**
+ * Set the receiver's source to anObject.
+ */
 - (void) setSource: (id)anObject;
+
+/**
+ * Called after the document is loaded on connections.
+ */
 - (id) nibInstantiate;
 @end
 
@@ -57,6 +95,9 @@ IB_EXTERN NSString *IBDidRemoveConnectorNotification;
 @end
 
 @interface NSObject (IBNibInstantiation)
+/**
+ * Invoked after loading.
+ */
 - (id) nibInstantiate;
 @end
 
