@@ -165,6 +165,15 @@ extern NSString *GormLinkPboardType;
 - (void) changeObject: anObject;
 @end
 
+@interface GormFilesOwnerInspector : IBInspector
+{
+  NSBrowser	*browser;
+  NSArray	*classes;
+  BOOL		hasConnections;
+}
+- (void) takeClassFrom: (id)sender;
+@end
+
 /*
  * Functions for drawing knobs etc.
  */

@@ -1,3 +1,16 @@
+2001-10-03  Adam Fedor  <fedor@gnu.org>
+
+	* Add support for custom views
+	* GormClassManager.m (-allActionsForObject:): Add support for
+	GormCustomView
+	(-allOutletsForObject:): Likewise.
+	(-classInfoForObject:): Likewise.
+	* GormDocument.m (-loadDocument:): Decode GSCustomView
+	as GormCustomView.
+	(-saveDocument:): likewise for encoding.
+	* GormCustomView.m: New class.
+	* Palettes/2Controls/main.m: Add customview item.
+
 2001-10-02  Adam Fedor  <fedor@gnu.org>
 
 	* Palettes/2Controls/inspectors.m: Fix NSButton and popup button

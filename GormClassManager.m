@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormCustomView.h"
 
 NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
@@ -137,6 +138,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       // this adds support for class proxies
       className = [(id)obj className];
     }
+  else if ([obj isKindOfClass: [GormCustomView class]] == YES)
+    {
+      // this adds support for custom views
+      className = [(id)obj className];
+    }
   else
     {
       className = NSStringFromClass(theClass);
@@ -247,6 +253,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   else if ([obj isKindOfClass: [GormClassProxy class]] == YES)
     {
       // this adds support for class proxies
+      className = [(id)obj className];
+    }
+  else if ([obj isKindOfClass: [GormCustomView class]] == YES)
+    {
+      // this adds support for custom views
       className = [(id)obj className];
     }
   else
@@ -385,6 +396,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   else if ([obj isKindOfClass: [GormClassProxy class]] == YES)
     {
       // this adds support for class proxies
+      className = [(id)obj className];
+    }
+  else if ([obj isKindOfClass: [GormCustomView class]] == YES)
+    {
+      // this adds support for custom views
       className = [(id)obj className];
     }
   else

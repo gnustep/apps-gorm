@@ -76,13 +76,15 @@ Gorm_RESOURCE_FILES = \
 
 Gorm_HEADERS = \
 	Gorm.h \
-	GormPrivate.h
+	GormPrivate.h \
+	GormCustomView.h
 
 Gorm_OBJC_FILES = \
         Gorm.m \
 	GormDocument.m \
 	IBInspector.m \
 	IBPalette.m \
+	GormCustomView.m \
 	GormViewKnobs.m \
 	GormFilesOwner.m \
 	GormClassEditor.m \

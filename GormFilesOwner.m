@@ -68,17 +68,6 @@
 
 @end
 
-
-
-@interface GormFilesOwnerInspector : IBInspector
-{
-  NSBrowser	*browser;
-  NSArray	*classes;
-  BOOL		hasConnections;
-}
-- (void) takeClassFrom: (id)sender;
-@end
-
 @implementation GormFilesOwnerInspector
 
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column

@@ -1151,6 +1151,7 @@ static NSImage	*classesImage = nil;
   u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
   [u decodeClassName: @"GSNibContainer" asClassName: @"GormDocument"];
   [u decodeClassName: @"GSNibItem" asClassName: @"GormObjectProxy"];
+  [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -1235,7 +1236,8 @@ static NSImage	*classesImage = nil;
 	  [objectsView addObject: obj];
 	  [[self openEditorForObject: obj] activate];
 	}
-      else if ([obj isKindOfClass: [GSNibItem class]] == YES)
+      else if ([obj isKindOfClass: [GSNibItem class]] == YES
+	       && [obj isKindOfClass: [GSCustomView class]] == NO)
 	{
 	  [objectsView addObject: obj];
 	  //[[self openEditorForObject: obj] activate];
@@ -1684,6 +1686,8 @@ static NSImage	*classesImage = nil;
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
   [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
+  [archiver encodeClassName: @"GormCustomView" 
+	      intoClassName: @"GSCustomView"];
   [archiver encodeRootObject: self];
   archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
   //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];

@@ -24,6 +24,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include "../../Gorm.h"
+#include "../../GormCustomView.h"
 
 @interface ControlsPalette: IBPalette
 {
@@ -158,6 +159,9 @@
   [contents addSubview: v];
   RELEASE(v);
 
-  // TODO: Add CustomView as soon as I figure out how it works.
+  // CustomView
+  v = [[GormCustomView alloc] initWithFrame: NSMakeRect(172, 9, 89, 40)];
+  [contents addSubview: v];
+  RELEASE(v);
 }
 @end
