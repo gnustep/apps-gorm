@@ -1,7 +1,8 @@
 2001-10-05  Adam Fedor  <fedor@gnu.org>
 
 	* GormDocument.m (-loadDocument:): Typo fix - don't include
-	GormCustomView in object proxies list.
+	GormCustomView in object proxies list (fix suggested by
+	fvallon@fr.alcove.com).
 
 2001-10-04  Adam Fedor  <fedor@gnu.org>
 
