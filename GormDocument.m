@@ -1876,30 +1876,46 @@ static NSImage	*classesImage = nil;
    * by the gui library are converted to their Gorm internal equivalents.
    */
   u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
-  [u decodeClassName: @"GSNibContainer" asClassName: @"GormDocument"];
-  [u decodeClassName: @"GSNibItem" asClassName: @"GormObjectProxy"];
-  [u decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
-  [u decodeClassName: @"NSMenu" asClassName: @"GormNSMenu"];
-  [u decodeClassName: @"NSWindow" asClassName: @"GormNSWindow"];
-  [u decodeClassName: @"NSPanel" asClassName: @"GormNSPanel"];
-  [u decodeClassName: @"NSBrowser" asClassName: @"GormNSBrowser"];
-  [u decodeClassName: @"NSTableView" asClassName: @"GormNSTableView"];
-  [u decodeClassName: @"NSOutlineView" asClassName: @"GormNSOutlineView"];
-  [u decodeClassName: @"NSPopUpButton" asClassName: @"GormNSPopUpButton"];
+  [u decodeClassName: @"GSNibContainer" 
+     asClassName: @"GormDocument"];
+  [u decodeClassName: @"GSNibItem" 
+     asClassName: @"GormObjectProxy"];
+  [u decodeClassName: @"GSCustomView" 
+     asClassName: @"GormCustomView"];
+  [u decodeClassName: @"NSMenu" 
+     asClassName: @"GormNSMenu"];
+  [u decodeClassName: @"NSWindow" 
+     asClassName: @"GormNSWindow"];
+  [u decodeClassName: @"NSPanel" 
+     asClassName: @"GormNSPanel"];
+  [u decodeClassName: @"NSBrowser" 
+     asClassName: @"GormNSBrowser"];
+  [u decodeClassName: @"NSTableView" 
+     asClassName: @"GormNSTableView"];
+  [u decodeClassName: @"NSOutlineView" 
+     asClassName: @"GormNSOutlineView"];
+  [u decodeClassName: @"NSPopUpButton" 
+     asClassName: @"GormNSPopUpButton"];
   [u decodeClassName: @"NSPopUpButtonCell"
-	 asClassName: @"GormNSPopUpButtonCell"];
+     asClassName: @"GormNSPopUpButtonCell"];
 
   // templates
-  [u decodeClassName: @"NSWindowTemplate" asClassName: @"GormNSWindowTemplate"];
-  [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
-  [u decodeClassName: @"NSTextTemplate" asClassName: @"GormNSTextTemplate"];
+  [u decodeClassName: @"NSWindowTemplate" 
+     asClassName: @"GormNSWindowTemplate"];
+  [u decodeClassName: @"NSViewTemplate" 
+     asClassName: @"GormNSViewTemplate"];
+  [u decodeClassName: @"NSTextTemplate" 
+     asClassName: @"GormNSTextTemplate"];
   [u decodeClassName: @"NSControlTemplate"
-	 asClassName: @"GormNSControlTemplate"];
-  [u decodeClassName: @"NSButtonTemplate" asClassName: @"GormNSButtonTemplate"];
+     asClassName: @"GormNSControlTemplate"];
+  [u decodeClassName: @"NSButtonTemplate" 
+     asClassName: @"GormNSButtonTemplate"];
   [u decodeClassName: @"NSTextViewTemplate"
-	 asClassName: @"GormNSTextViewTemplate"];
-  [u decodeClassName: @"NSViewTemplate" asClassName: @"GormNSViewTemplate"];
-  [u decodeClassName: @"NSMenuTemplate" asClassName: @"GormNSMenuTemplate"];
+     asClassName: @"GormNSTextViewTemplate"];
+  [u decodeClassName: @"NSViewTemplate" 
+     asClassName: @"GormNSViewTemplate"];
+  [u decodeClassName: @"NSMenuTemplate" 
+     asClassName: @"GormNSMenuTemplate"];
 
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)

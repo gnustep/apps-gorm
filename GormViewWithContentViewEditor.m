@@ -1028,6 +1028,22 @@
 
 }
 
+- (void) _addViewToDocument: (NSView *)view
+{
+  NSEnumerator *en = nil;
+  NSView *sub = nil;
+
+  if([sub isKindOfClass: [GormViewEditor class]])
+    return;
+
+  [document attachObject: view toParent: nil];
+  en = [[view subviews] objectEnumerator];
+  while((sub = [en nextObject]) != nil)
+    {
+      [self _addViewToDocument: sub];
+    }
+}
+
 - (void) pasteInView: (NSView *)view
 {
   NSPasteboard	 *pb = [NSPasteboard generalPasteboard];
@@ -1035,12 +1051,6 @@
   NSArray	 *views;
   NSEnumerator	 *enumerator;
   NSView         *sub;
-  /*
-  NSView	 *subs = [view subviews];
-  int            i;
-  int            count;
-  BOOL           alreadyThere = YES;
-  */
 
   /*
    * Ask the document to get the copied views from the pasteboard and add
@@ -1057,17 +1067,8 @@
     {
       if ([sub isKindOfClass: [NSView class]] == YES)
 	{
-	  /*
-	  for( i = 0; i < count; i++ )
-	    {
-	      if (NSEqualRects([sub frame], 
-			       [[subs objectAtIndex: i] frame]))
-		break;
-	    }
-	  if (i >= count)
-	    alreadyThere = NO;
-	  */
 	  [view addSubview: sub];
+	  [self _addViewToDocument: sub];
 	  [array addObject:
 		   [document editorForObject: sub 
 			     inEditor: self 

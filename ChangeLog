@@ -1,4 +1,10 @@
 2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewWithContentViewEditor.m: The copyInView method was
+	not adding views to the document.   Added a method which adds 
+	the view and it's subviews.  This fix corrects bug#3490.   
+	
+2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* GNUmakefile.preamble: Added to provide the -Werror parameter to 
 	prevent any more warnings in the future.
