@@ -1,3 +1,16 @@
+2003-12-30 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Removed uneeded method which was overriding
+	awakeWithContext:.   This method is called from loadNibNamed: and, since
+	the GormDocument is a subclass, but is never loaded by that method
+	overriding the other implementation is uncessary.
+	* ClassInformation.plist: Some of the parent information was wrong, this
+	was corrected.
+	* Gorm.m: Added code in -validateMenuItem: to grey out certain menu
+	items under given conditions.   This improves usability and prevents
+	the user from corrupting the .gorm file by doing something that's
+	not supported.	
+	
 2003-12-25 00:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: -validateMenuItem: added code to grey out 

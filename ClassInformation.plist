@@ -335,7 +335,7 @@
     Outlets = (
         menu
     );
-    Super = NSResponder;
+    Super = NSObject;
   };
 
   NSForm = {
@@ -355,7 +355,7 @@
       activateContextHelpMode:,
       showHelp:
     );
-    Super = NSResponder;
+    Super = NSObject;
   };
 
   NSImage = {
@@ -418,7 +418,7 @@
       startAnimation:,
       stopAnimation:
     );
-    Super = NSObject;
+    Super = NSView;
   };
 
   NSResponder = {

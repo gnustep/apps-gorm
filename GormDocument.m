@@ -175,12 +175,13 @@ static NSImage	*classesImage = nil;
     }
 }
 
+/*
 - (void) awakeWithContext: (NSDictionary *)context
 {
   // do nothing..  This is defined to override the one in GSNibContainer.
-  RETAIN(self);
   NSLog(@"In awakeWithContext");
 }
+*/
 
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
@@ -239,7 +240,6 @@ static NSImage	*classesImage = nil;
    * Add top-level objects to objectsView and open their editors.
    */
   if ([anObject isKindOfClass: [NSWindow class]] == YES
-      //      || [anObject isKindOfClass: [NSMenu class]] == YES
     || [anObject isKindOfClass: [GSNibItem class]] == YES)
     {
       [objectsView addObject: anObject];
@@ -1892,14 +1892,14 @@ static NSImage	*classesImage = nil;
    * by the gui library are converted to their Gorm internal equivalents.
    */
   u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
+
+  // classes
   [u decodeClassName: @"GSNibContainer" 
      asClassName: @"GormDocument"];
   [u decodeClassName: @"GSNibItem" 
      asClassName: @"GormObjectProxy"];
   [u decodeClassName: @"GSCustomView" 
      asClassName: @"GormCustomView"];
-
-  // classes
   [u decodeClassName: @"NSMenu" 
      asClassName: @"GormNSMenu"];
   [u decodeClassName: @"NSWindow" 
