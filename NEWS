@@ -1,7 +1,18 @@
+Noteworthy changes in version `0.2.5'.
+======================================
+
+Many fixes and improvements to make the app work better.
+
+   * Better parsing of headers
+
+   * Interface code redone as gorm files.
+
+   * Re-add multiple selection via mouse drag.
+
 Noteworthy changes in version `0.2.0' snapshot.
 ===============================================
 
-Gobs of improvements, mostly due to the hard work of Gregory John
+   Gobs of improvements, mostly due to the hard work of Gregory John
 Casamento and Pierre-Yves Rivaille. Thanks guys!
 
    * Custom class support/translations implemented.

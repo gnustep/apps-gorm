@@ -4,6 +4,20 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.2.5}.
+
+Many fixes and improvements to make the app work better.
+
+@itemize @bullet
+@item Better parsing of headers
+@item Interface code redone as gorm files.
+@item Re-add multiple selection via mouse drag.
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.2.0} snapshot.
 
 Gobs of improvements, mostly due to the hard work of
@@ -20,10 +34,6 @@ Gregory John Casamento and Pierre-Yves Rivaille. Thanks guys!
 @item Sound and Image support.
 @item gorm files were changed to directory wrappers for more flexibility.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.1.0}
 

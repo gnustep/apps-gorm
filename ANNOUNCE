@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.2.0 of Gorm.
+This is version 0.2.5 of Gorm.
 
 What is Gorm?
 =============
@@ -15,30 +15,16 @@ GNUstep.
    Gorm is not `gormless' (a Yorkshire dialect word that my parents
 used when they spotted me staring, slack-jawed, at the TV).
 
-Noteworthy changes in version `0.2.0' snapshot.
-===============================================
+Noteworthy changes in version `0.2.5'.
+======================================
 
-   Gobs of improvements, mostly due to the hard work of Gregory John
-Casamento and Pierre-Yves Rivaille. Thanks guys!
+   Many fixes and improvements to make the app work better.
 
-   * Custom class support/translations implemented.
+   * Better parsing of headers
 
-   * Added NSScrollView, NSPopupButton, NSOutlineView, NSTableView
-     editing.
+   * Interface code redone as gorm files.
 
-   * Improved test mode support.
-
-   * Improved drag n' drop support on many items.
-
-   * Intelligent placement hints.
-
-   * Read gmodel files.
-
-   * More inspectors.
-
-   * Sound and Image support.
-
-   * gorm files were changed to directory wrappers for more flexibility.
+   * Re-add multiple selection via mouse drag.
 
 How can I get support for this software?
 ========================================
