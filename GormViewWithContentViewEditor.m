@@ -31,7 +31,6 @@
 #import "GormPlacementInfo.h"
 
 #import "GormSplitViewEditor.h"
-@class GormPlacementInfo;
 
 
 @interface GormViewEditor (Private)

@@ -1,3 +1,44 @@
+2002-09-21  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* Gorm.m: fixes segfault when leaving test mode.
+	* GormDocument.m: fixes bad reactivating of editors.
+	* GormBoxEditor.m: commented unused drag'n'drop code.
+	* GormCustomView.m: added GormTestCustomView class to deal with unknown
+	class name without raising an exception.
+	* GormInspectorsManager.m: fix to deal with new NSBrowser behaviour.
+	* GormObjectEditor.m: ([GormObjectEditor -rectForObject:]): 
+	Corrected returned rect.
+	* GormInternalViewEditor.m: 
+	* GormViewEditor.m: 
+	updated drag'n'drop support.
+	* GormWindowEditor.m: commented unused code.
+	* GormButtonEditor.m: 
+	inline editing of button's title.
+	* GormViewWithContentViewEditor.m: removed unused clas declaration.
+	
+	
+	* Palettes/0Menus/GormMenuEditor.m
+	* Palettes/0Menus/GormMenuInspectors.m
+	* Palettes/0Menus/GormNSMenu.h
+	* Palettes/0Menus/GormNSMenu.m
+	* Palettes/0Menus/main.m
+	Updated menu editing to support NSPopUpButton.
+	Basic tag editing added.
+	
+	* Palettes/2Controls/GormPopUpButtonEditor.m
+	* Palettes/2Controls/GNUmakefile
+	* Palettes/2Controls/inspectors.m
+	* Palettes/2Controls/main.m
+	* GormDocument.m
+	* Gorm.m
+	Added support for NSPopUpButton.
+
+	* Palettes/3Containers/GormTableViewEditor.m
+	Updated drag'n'drop for object connectiion.
+
+	* Palettes/4Data/main.m
+	updated NSTextView initialization so that it resizes properly.
+	
 2002-09-11  Gregory John Casamento
 
 	* GormOutlineView.m: Corrected minor compilation problem due to
