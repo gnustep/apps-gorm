@@ -1,5 +1,12 @@
 2003-09-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormInspectorsManager.m: Similar to the previous check.  Modified
+	-[ok:] such that if a connection is established and for any reason
+	causes an exception, the connection is removed and an error message
+	is displayed describing what caused the connection to fail.
+	
+2003-09-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormInspectorsManager.m: Added check in -[ok:] to determine if
 	selected destination is valid.  If it is nil an alert panel is shown.
 	This will help prevent the creation of invalid connections.

@@ -1054,7 +1054,7 @@ selectCellWithString: (NSString*)title
   if([currentConnector destination] == nil)
     {
       NSRunAlertPanel(_(@"Problem making connection"),
-		      _(@"You must select a valid destination"), 
+		      _(@"Please select a valid destination."), 
 		      _(@"OK"), nil, nil, nil);
     }
   else if ([connectors containsObject: currentConnector] == YES)
@@ -1117,7 +1117,16 @@ selectCellWithString: (NSString*)title
 	&& [[currentConnector destination]
 	isKindOfClass: [GormObjectProxy class]] == NO)
 	{
-	  [currentConnector establishConnection];
+	  NS_DURING
+	    [currentConnector establishConnection];
+	  NS_HANDLER
+	    NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
+				      [localException reason]];
+	    // get rid of the bad connector and recover.
+	    [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
+	    NSRunAlertPanel(_(@"Problem making connection"), msg,
+			    _(@"OK"),nil,nil,nil);
+	  NS_ENDHANDLER
 	}
 
       /*
