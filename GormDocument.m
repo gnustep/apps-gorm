@@ -255,8 +255,6 @@ static NSImage	*classesImage = nil;
       NSEnumerator *en = [nameTable keyEnumerator];
       NSString *key = nil;
       
-      // initialize the holding space for the objects to be replaced...
-      // tempNameTable = [NSMutableDictionary dictionary];
       while((key = [en nextObject]) != nil)
 	{
 	  id obj = [nameTable objectForKey: key];
@@ -362,7 +360,7 @@ static NSImage	*classesImage = nil;
    * Method to replace custom objects with templates for archiving.
    */
   [self _replaceObjectsWithTemplates];
-  NSLog(@"*** customClassMap = %@",[classManager customClassMap]);
+  NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
   [nameTable setObject: [classManager customClassMap] forKey: @"GSCustomClassMap"];
 
   /*
@@ -591,6 +589,7 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
+  RELEASE(tempNameTable);
   [super dealloc];
 }
 
@@ -1279,21 +1278,6 @@ static NSImage	*classesImage = nil;
 		 green: 0.737255
 		 blue: 0.576471
 		 alpha: 1.0 ];
-      NSColor *darkSalmonColor = 
-	[NSColor colorWithCalibratedRed: 0.568627 
-		 green: 0.494118
-		 blue: 0.384314
-		 alpha: 1.0 ];
-      NSColor *lightGreyBlueColor = 
-	[NSColor colorWithCalibratedRed: 0.450980 
-		 green: 0.450980
-		 blue: 0.521569
-		 alpha: 1.0 ];
-      NSColor *darkGreyBlueColor = 
-	[NSColor colorWithCalibratedRed: 0.333333 
-		 green: 0.333333
-		 blue: 0.384314
-		 alpha: 1.0 ];
 
       classManager = [[GormClassManager alloc] init]; 
       classEditor = [[GormClassEditor alloc] initWithDocument: self];
@@ -1518,7 +1502,7 @@ static NSImage	*classesImage = nil;
 
 - (id) instantiateClass: (id)sender
 {
-  NSLog(@"document -> instantiateClass: ");
+  NSDebugLog(@"document -> instantiateClass: ");
 
   if ([[selectionView selectedCell] tag] == 3)
     {
@@ -1723,10 +1707,10 @@ static NSImage	*classesImage = nil;
 		    object: self];
 
   // get the custom class map and set it into the class manager...
-  NSLog(@"GSCustomClassMap = %@",[[c nameTable] objectForKey: @"GSCustomClassMap"]);
+  NSDebugLog(@"GSCustomClassMap = %@",[[c nameTable] objectForKey: @"GSCustomClassMap"]);
   [classManager setCustomClassMap: [[c nameTable] objectForKey: @"GSCustomClassMap"]];
 
-  NSLog(@"nameTable = %@",[c nameTable]);
+  NSDebugLog(@"nameTable = %@",[c nameTable]);
 
   return self;
 }
@@ -2209,8 +2193,8 @@ static NSImage	*classesImage = nil;
 
   [self beginArchiving];
 
-  NSLog(@"nametable : %@", nameTable);
-  NSLog(@"connections : %@", connections);
+  NSDebugLog(@"nametable : %@", nameTable);
+  NSDebugLog(@"connections : %@", connections);
 
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
