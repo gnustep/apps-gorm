@@ -85,7 +85,6 @@ main (void)
    Controller		*appController;
 
    pool = [NSAutoreleasePool new];
-   initialize_gnustep_backend ();
    app = [NSApplication sharedApplication];
 
    mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm Test"];
