@@ -1,6 +1,8 @@
 #ifndef GORMDOCUMENT_H
 #define GORMDOCUMENT_H
 
+@class GormClassManager, GormClassEditor;
+
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder
  * for the first responder at any instant.
@@ -21,14 +23,19 @@
 
 @interface GormDocument : GSNibContainer <IBDocuments>
 {
+  GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
   GormFontManager	*fontManager;
+  GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
   NSWindow		*window;
   NSMatrix		*selectionView;
+  NSBox                 *selectionBox;
   NSScrollView		*scrollView;
+  NSScrollView          *classesScrollView;
+  id                    classesView;
   id			objectsView;
   BOOL			hasSetDefaults;
   BOOL			isActive;
@@ -42,6 +49,7 @@
 - (void) attachObject: (id)anObject toParent: (id)aParent;
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent;
 - (void) beginArchiving;
+- (GormClassManager*) classManager;
 - (NSArray*) connectorsForDestination: (id)destination;
 - (NSArray*) connectorsForDestination: (id)destination
 			      ofClass: (Class)aConnectorClass;
@@ -83,6 +91,12 @@
 - (void) touch;		/* Mark document as having been changed.	*/
 - (NSWindow*) window;
 - (BOOL) windowShouldClose: (id)sender;
+
+// classes support 
+- (id) createSubclass: (id)sender;
+- (id) instantiateClass: (id)sender;
+- (id) editClass: (id)sender;
+- (void) changeCurrentClass: (id)sender;
 @end
 
 #endif

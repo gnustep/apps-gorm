@@ -15,6 +15,34 @@
 
 extern NSString *GormLinkPboardType;
 
+
+@interface GSNibItem (GormAdditions)
+- initWithClassName: (NSString*)className frame: (NSRect)frame;
+- (NSString*) className;
+@end
+
+@interface GormObjectProxy : GSNibItem 
+/*
+ * Use a GormObjectProxy in Gorm, but encode a GSNibItem in the archive.
+ * This is done so that we can provide our own decoding method
+ * (GSNibItem tries to morph into the actual class)
+ */
+@end
+
+@interface GormClassProxy : NSObject
+{
+  NSString *name;
+  int t;
+}
+
+- initWithClassName: (NSString*)n;
+- (NSString*) className;
+
+- (NSString*) inspectorClassName;
+- (NSString*) connectInspectorClassName;
+- (NSString*) sizeInspectorClassName;
+@end
+
 @interface NSApplication (Gorm)
 - (GormClassManager*) classManager;
 - (NSImage*) linkImage;
@@ -33,6 +61,7 @@ extern NSString *GormLinkPboardType;
   BOOL			isTesting;
   id			testContainer;
   NSMenu		*mainMenu;
+  NSMenu                *classMenu; // so we can set it for the class view
   NSDictionary		*menuLocations;
   NSImage		*linkImage;
   NSImage		*sourceImage;
@@ -69,9 +98,25 @@ extern NSString *GormLinkPboardType;
 - (id) save: (id)sender;
 - (id) saveAll: (id)sender;
 - (id) saveAs: (id)sender;
-- (id) selectAll: (id)sender;
+- (id) selectAllItems: (id)sender;
 - (id) setName: (id)sender;
 - (id) testInterface: (id)sender;
+
+// added for classes support
+- (id) createSubclass: (id)sender;
+- (id) instantiateClass: (id)sender;
+- (id) editClass: (id)sender;
+- (NSMenu*) classMenu;
+@end
+
+@interface GormClassEditor : NSObject <IBSelectionOwners>
+{
+  GormDocument          *document;
+  NSString              *selectedClassName;
+}
+- (GormClassEditor*) initWithDocument: (GormDocument*)doc;
++ (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
+- (void) setSelectedClassName: (NSString*)cn;
 @end
 
 @interface	GormObjectEditor : NSMatrix <IBEditors>

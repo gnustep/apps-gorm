@@ -1,3 +1,20 @@
+2001-05-08  Richard Frith-Macdonald <rfm@gnu.org>
+
+	Applied patch by Raphael Sebbe to add support for custom objects.
+	Went through the code and tried to make it conform to GNUstep
+	coding standards.
+	* GNUmakefile: Custom class modifications
+	* Gorm.h: ditto
+	* Gorm.m: ditto
+	* GormClassManager.h: ditto
+	* GormClassManager.m: ditto
+	* GormDocument.h: ditto
+	* GormDocument.m: ditto
+	* GormInspectorsManager.m: ditto
+	* GormObjectEditor.m: ditto
+	* GormPrivate.h: ditto
+	* GormWindowEditor.m: ditto
+
 2001-04-24  Adam Fedor  <fedor@gnu.org>
 
 	* Version: 0.0.2 snapshot

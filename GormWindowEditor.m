@@ -1138,7 +1138,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   [[self window] makeKeyAndOrderFront: self];
 }
 
-- (id) selectAll: (id)sender
+- (id) selectAllItems: (id)sender
 {
   [self selectObjects: [self subviews]];
   return self;

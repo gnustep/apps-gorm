@@ -16,6 +16,18 @@
 - (NSArray*) extraOutletsForObject: (NSObject*)anObject;
 - (void) removeAction: (NSString*)anAction forObject: (NSObject*)anObject;
 - (void) removeOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
+
+- (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)name;
+- (NSString*) addClassWithSuperClassName: (NSString*)name;
+- (BOOL) setSuperClassNamed: (NSString*)superclass
+	      forClassNamed: (NSString*)subclass;
+
+- (NSString*) superClassNameForClassNamed: (NSString*)className;
+- (BOOL) isSuperclass: (NSString*)superclass
+	linkedToClass: (NSString*)subclass;
+
+- (BOOL) saveToFile: (NSString*)path;
+- (BOOL) loadFromFile: (NSString*)path;
 @end
 
 #endif

@@ -71,6 +71,7 @@ extern NSString *IBWillBeginTestingInterfaceNotification;
 extern NSString *IBDidBeginTestingInterfaceNotification;
 extern NSString *IBWillEndTestingInterfaceNotification;
 extern NSString *IBDidEndTestingInterfaceNotification;
+extern NSString *IBClassNameChangedNotification;
 
 
 

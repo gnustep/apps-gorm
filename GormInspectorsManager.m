@@ -4,19 +4,19 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * 
+ *
  * This file is part of GNUstep.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -46,7 +46,7 @@
       NSButton	*button;
 
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
+					   styleMask: NSBorderlessWindowMask
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
@@ -87,7 +87,7 @@
       NSButton	*button;
 
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
+					   styleMask: NSBorderlessWindowMask
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
@@ -126,7 +126,7 @@
       NSButton	*button;
 
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask 
+					   styleMask: NSBorderlessWindowMask
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
@@ -222,7 +222,7 @@
   selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
   [selectionView setAutoresizingMask:
     NSViewMinYMargin | NSViewWidthSizable];
-  [[panel contentView] addSubview: selectionView]; 
+  [[panel contentView] addSubview: selectionView];
   RELEASE(selectionView);
 
   /*
@@ -275,7 +275,7 @@
   inspectorView = [[NSView alloc] initWithFrame: inspectorRect];
   [inspectorView setAutoresizingMask:
     NSViewHeightSizable | NSViewWidthSizable];
-  [[panel contentView] addSubview: inspectorView]; 
+  [[panel contentView] addSubview: inspectorView];
   RELEASE(inspectorView);
 
   [panel setFrameUsingName: @"Inspector"];
@@ -355,6 +355,11 @@
     {
       [panel setTitle: @"Inspector"];
     }
+  else if ([obj isKindOfClass: [GormClassProxy class]])
+    {
+      [panel setTitle: [NSString stringWithFormat: @"Custom Class Inspector:%@",
+	[obj className]]];
+    }
   else
     {
       [panel setTitle: [NSString stringWithFormat: @"%@ Inspector",
@@ -382,7 +387,7 @@
     }
 
   if ([oldInspector isEqual: newInspector] == NO)
-    { 
+    {
       /*
        * Return the inspector view to its original window and release the old
        * inspector.
@@ -391,7 +396,7 @@
       [[inspector revertButton] removeFromSuperview];
       [[inspector window] setContentView:
 	[[inspectorView subviews] lastObject]];
-  
+
       ASSIGN(oldInspector, newInspector);
       inspector = [cache objectForKey: newInspector];
       if (inspector == nil)
@@ -683,7 +688,7 @@ selectCellWithString: (NSString*)title
 	      label = [con label];
 	      dest = [con destination];
 	      name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
-	      name = [label stringByAppendingFormat: @" (%@)", name]; 
+	      name = [label stringByAppendingFormat: @" (%@)", name];
 	      if ([title isEqual: name] == YES)
 		{
 		  ASSIGN(currentConnector, con);
@@ -761,7 +766,7 @@ selectCellWithString: (NSString*)title
 	  label = [[connectors objectAtIndex: row] label];
 	  dest = [[connectors objectAtIndex: row] destination];
 	  name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
-	  name = [label stringByAppendingFormat: @" (%@)", name]; 
+	  name = [label stringByAppendingFormat: @" (%@)", name];
 
 	  [aCell setStringValue: name];
 	  [aCell setEnabled: YES];
@@ -798,7 +803,7 @@ selectCellWithString: (NSString*)title
 
       rect = NSMakeRect(0, 0, IVW, IVH);
       window = [[NSWindow alloc] initWithContentRect: rect
-					   styleMask: NSBorderlessWindowMask 
+					   styleMask: NSBorderlessWindowMask
 					     backing: NSBackingStoreRetained
 					       defer: NO];
       contents = [window contentView];
@@ -854,7 +859,12 @@ selectCellWithString: (NSString*)title
       if ([currentConnector isKindOfClass: [NSNibOutletConnector class]])
 	{
 	  [currentConnector setDestination: nil];
-	  [currentConnector establishConnection];
+
+	  if ([[currentConnector source] isKindOfClass:
+	    [GormObjectProxy class]] == NO)
+	    {
+	      [currentConnector establishConnection];
+	    }
 	}
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]])
 	{
@@ -890,7 +900,18 @@ selectCellWithString: (NSString*)title
 	}
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
-      [currentConnector establishConnection];
+
+      if ([[currentConnector source]
+	isKindOfClass: [GormObjectProxy class]] == NO
+	&& [[currentConnector destination]
+	isKindOfClass: [GormObjectProxy class]] == NO)
+	{
+	  [currentConnector establishConnection];
+	}
+      /*
+       * We don't want to establish connections on proxy object as their
+       * class are unknown to IB
+       */
     }
   [[(id<IB>)NSApp activeDocument] touch];	/* mark as edited.	*/
   [oldBrowser loadColumnZero];

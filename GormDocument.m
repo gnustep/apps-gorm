@@ -23,11 +23,14 @@
  */
 
 #include "GormPrivate.h"
+#import "GormClassManager.h"
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
+
+
 
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
@@ -181,7 +184,8 @@ static NSImage	*classesImage = nil;
    * Add top-level objects to objectsView and open their editors.
    */
   if ([anObject isKindOfClass: [NSWindow class]] == YES
-    || [anObject isKindOfClass: [NSMenu class]] == YES)
+    || [anObject isKindOfClass: [NSMenu class]] == YES
+    || [anObject isKindOfClass: [GSNibItem class]] == YES)
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
@@ -251,6 +255,42 @@ static NSImage	*classesImage = nil;
       NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable removeObjectForKey: @"NSFont"];
     }
+}
+
+- (void) changeCurrentClass: (id)sender
+{
+  int	row = [classesView selectedRow];
+  id	classes = [classManager allClassNames];
+
+  NSLog(@"Double Action");
+
+  if (row >= 0 && row < [classes count])
+    {
+      [classEditor setSelectedClassName: [classes objectAtIndex: row]];
+      [self setSelectionFromEditor: (id)classEditor];
+    }
+  
+}
+
+- (void) changeView: (id)sender
+{
+  int tag = [[sender selectedCell] tag];
+
+  switch (tag)
+    {
+      case 0: // objects
+	[selectionBox setContentView: scrollView];
+	break;
+
+      case 3: // classes
+	[selectionBox setContentView: classesScrollView];
+	break;
+    }
+}
+
+- (GormClassManager*) classManager
+{
+  return classManager;
 }
 
 /*
@@ -375,6 +415,26 @@ static NSImage	*classesImage = nil;
   return [aPasteboard setData: data forType: aType];
 }
 
+- (id) createSubclass: (id)sender
+{
+  int		i = [classesView selectedRow];
+  NSArray	*classNames = [classManager allClassNames];
+
+  if (i >= 0 && i < [classNames count])
+    {
+      NSString	*newClassName;
+
+      newClassName = [classManager addClassWithSuperClassName:
+	[classNames objectAtIndex: i]];
+      [classesView reloadData];
+      classNames = [classManager allClassNames];
+      i = [classNames indexOfObject: newClassName];
+      [classesView selectRow: i byExtendingSelection: NO];
+      [self editClass: self];
+    }
+  
+}
+
 - (void) pasteboardChangedOwner: (NSPasteboard*)sender
 {
   NSDebugLog(@"Owner changed for %@", sender);
@@ -385,6 +445,8 @@ static NSImage	*classesImage = nil;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   [window setDelegate: nil];
   [window performClose: self];
+  RELEASE(classManager);
+  RELEASE(classEditor);
   RELEASE(hidden);
   RELEASE(window);
   RELEASE(filesOwner);
@@ -393,6 +455,10 @@ static NSImage	*classesImage = nil;
   NSFreeMapTable(objToName);
   RELEASE(documentPath);
   RELEASE(savedEditors);
+
+  RELEASE(selectionBox);
+  RELEASE(scrollView);
+  RELEASE(classesScrollView);
   [super dealloc];
 }
 
@@ -442,6 +508,13 @@ static NSImage	*classesImage = nil;
 - (NSString*) documentPath
 {
   return documentPath;
+}
+
+- (id) editClass: (id)sender
+{
+  [self changeCurrentClass: sender];
+
+  return self;
 }
 
 - (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
@@ -704,6 +777,10 @@ static NSImage	*classesImage = nil;
 	  [window setExcludedFromWindowsMenu: NO];
 	}
     }
+  else if ([name isEqual: IBClassNameChangedNotification] == YES)
+    {
+      if ([aNotification object] == classManager) [classesView reloadData];
+    }
 }
 
 - (id) init 
@@ -718,8 +795,12 @@ static NSImage	*classesImage = nil;
       NSRect			mainRect = {{20, 0}, {320, 188}};
       NSImage			*image;
       NSButtonCell		*cell;
+      NSTableColumn             *tableColumn;
       unsigned			style;
 
+
+      classManager = [[GormClassManager alloc] init]; 
+      classEditor = [[GormClassEditor alloc] initWithDocument: self];
       /*
        * NB. We must retain the map values (object names) as the nameTable
        * may not hold identical name objects, but merely equal strings.
@@ -756,6 +837,10 @@ static NSImage	*classesImage = nil;
 	     selector: @selector(handleNotification:)
 		 name: NSWindowDidDeminiaturizeNotification
 	       object: window];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBClassNameChangedNotification
+	       object: nil];
 
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 						 mode: NSRadioModeMatrix
@@ -772,6 +857,7 @@ static NSImage	*classesImage = nil;
       if ((image = objectsImage) != nil)
 	{
 	  cell = [selectionView cellAtRow: 0 column: 0];
+	  [cell setTag: 0];
 	  [cell setImage: image];
 	  [cell setTitle: @"Objects"];
 	  [cell setBordered: NO];
@@ -782,6 +868,7 @@ static NSImage	*classesImage = nil;
       if ((image = imagesImage) != nil)
 	{
 	  cell = [selectionView cellAtRow: 0 column: 1];
+	  [cell setTag: 1];
 	  [cell setImage: image];
 	  [cell setTitle: @"Images"];
 	  [cell setBordered: NO];
@@ -792,6 +879,7 @@ static NSImage	*classesImage = nil;
       if ((image = soundsImage) != nil)
 	{
 	  cell = [selectionView cellAtRow: 0 column: 2];
+	  [cell setTag: 2];
 	  [cell setImage: image];
 	  [cell setTitle: @"Sounds"];
 	  [cell setBordered: NO];
@@ -802,6 +890,7 @@ static NSImage	*classesImage = nil;
       if ((image = classesImage) != nil)
 	{
 	  cell = [selectionView cellAtRow: 0 column: 3];
+	  [cell setTag: 3];
 	  [cell setImage: image];
 	  [cell setTitle: @"Classes"];
 	  [cell setBordered: NO];
@@ -812,12 +901,20 @@ static NSImage	*classesImage = nil;
       [[window contentView] addSubview: selectionView];
       RELEASE(selectionView);
 
+      selectionBox = [[NSBox alloc] initWithFrame: scrollRect];
+      [selectionBox setTitlePosition: NSNoTitle];
+      [selectionBox setBorderType: NSNoBorder];
+      [selectionBox setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      [[window contentView] addSubview: selectionBox];
+      RELEASE(selectionBox);
+
       scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
       [scrollView setHasVerticalScroller: YES];
       [scrollView setHasHorizontalScroller: NO];
       [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [[window contentView] addSubview: scrollView];
-      RELEASE(scrollView);
+      //[[window contentView] addSubview: scrollView];
+      //RELEASE(scrollView);
 
       mainRect.origin = NSMakePoint(0,0);
       objectsView = [[GormObjectEditor alloc] initWithObject: nil
@@ -826,6 +923,51 @@ static NSImage	*classesImage = nil;
       [objectsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];
       RELEASE(objectsView);
+
+      classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [classesScrollView setHasVerticalScroller: YES];
+      [classesScrollView setHasHorizontalScroller: NO];
+      [classesScrollView setAutoresizingMask:
+	NSViewHeightSizable|NSViewWidthSizable];
+      //[[window contentView] addSubview: scrollView];
+      //RELEASE(scrollView);
+
+      mainRect.origin = NSMakePoint(0,0);
+      classesView = [[NSTableView alloc] initWithFrame: mainRect];
+      [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
+      [classesView setDataSource: self];
+      //[classesView setAction: @selector(changeCurrentClass:)];
+      //[classesView setTarget: self];
+      [classesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [classesView setAutoresizesAllColumnsToFit: YES];
+      [classesScrollView setDocumentView: classesView];
+      RELEASE(classesView);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
+      [[tableColumn headerCell] setStringValue: @"Classes"];
+      [tableColumn setMinWidth: 260];
+      [tableColumn setResizable: YES];
+      [tableColumn setEditable: YES];
+      [classesView addTableColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+      [[tableColumn headerCell] setStringValue: @"O"];
+      [tableColumn setMinWidth: 25];
+      [tableColumn setResizable: NO];
+      [classesView addTableColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"actions"];
+      [[tableColumn headerCell] setStringValue: @"A"];
+      [tableColumn setMinWidth: 25];
+      [tableColumn setResizable: NO];
+      [classesView addTableColumn: tableColumn];
+      RELEASE(tableColumn);
+
+      [classesView setFrame: mainRect];
+
+      [selectionBox setContentView: scrollView];
 
       /*
        * Set up special-case dummy objects and add them to the objects view.
@@ -858,6 +1000,36 @@ static NSImage	*classesImage = nil;
 	       object: nil];
     }
   return self;
+}
+
+- (id) instantiateClass: (id)sender
+{
+  NSLog(@"document -> instantiateClass: ");
+
+  if ([[selectionView selectedCell] tag] == 3)
+    {
+      int i = [classesView selectedRow];
+      id classNames = [classManager allClassNames];
+
+      if (i >= 0 && i < [classNames count])
+	{
+	  id className = [classNames objectAtIndex: i];
+	  GSNibItem *item = 
+	    [[GormObjectProxy alloc] initWithClassName: className
+						 frame: NSMakeRect(0,0,0,0)];
+
+	  [self setName: nil forObject: item];
+	  [self attachObject: item toParent: nil];
+	  //[self setObject: item isVisibleAtLaunch: NO];
+	  RELEASE(item);
+
+	  [selectionView selectCellWithTag: 0];
+	  [selectionBox setContentView: scrollView];
+	}
+
+    }
+
+  return nil;
 }
 
 - (BOOL) isActive
@@ -915,8 +1087,9 @@ static NSImage	*classesImage = nil;
    * by the gui library are converted to their Gorm internal equivalents.
    */
   u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
-  [u decodeClassName: @"GSNibContainer"
-	 asClassName: @"GormDocument"];
+  [u decodeClassName: @"GSNibContainer" asClassName: @"GormDocument"];
+  [u decodeClassName: @"GSNibItem" asClassName: @"GormObjectProxy"];
+
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
     {
@@ -924,6 +1097,14 @@ static NSImage	*classesImage = nil;
 		       @"OK", NULL, NULL);
       return nil;
     }
+  if (![classManager loadFromFile: [[aFile stringByDeletingPathExtension] 
+				   stringByAppendingPathExtension: @"classes"]])
+    {
+      NSRunAlertPanel(NULL, @"Could not open the associated classes file.\n"
+	@"You won't be able to edit connections on custom classes", 
+	@"OK", NULL, NULL);
+    }
+  [classesView reloadData];
 
   /*
    * In the newly loaded nib container, we change all the connectors
@@ -934,6 +1115,9 @@ static NSImage	*classesImage = nil;
   [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
 
   nt = [c nameTable];
+  //NSLog(@"nt : %@", nt);
+  //NSLog(@"--------------");
+  //NSLog(@"con : %@", [c connections]);
   enumerator = [[c connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
@@ -986,6 +1170,11 @@ static NSImage	*classesImage = nil;
 	{
 	  [objectsView addObject: obj];
 	  [[self openEditorForObject: obj] activate];
+	}
+      else if ([obj isKindOfClass: [GSNibItem class]] == YES)
+	{
+	  [objectsView addObject: obj];
+	  //[[self openEditorForObject: obj] activate];
 	}
     }
 
@@ -1247,7 +1436,15 @@ static NSImage	*classesImage = nil;
 	  /*
 	   * Generate a sensible name for the object based on its class.
 	   */
-	  base = NSStringFromClass([object class]);
+	  if ([object isKindOfClass: [GSNibItem class]])
+	    {
+	      // use the actual class name for proxies
+	      base = [(id)object className];
+	    }
+	  else
+	    {
+	      base = NSStringFromClass([object class]);
+	    }
 	  if ([base hasPrefix: @"NS"] || [base hasPrefix: @"GS"])
 	    {
 	      base = [base substringFromIndex: 2];
@@ -1404,6 +1601,8 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   BOOL			archiveResult;
+  NSArchiver            *archiver;
+  NSMutableData         *archiverData;
 
   if (documentPath == nil)
     {
@@ -1415,7 +1614,20 @@ static NSImage	*classesImage = nil;
 
   [self beginArchiving];
 
-  archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
+  //NSLog(@"nametable : %@", nameTable);
+  //NSLog(@"connections : %@", connections);
+
+  archiverData = [NSMutableData dataWithCapacity: 0];
+  archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
+  [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
+  [archiver encodeRootObject: self];
+  archiveResult = [archiverData writeToFile: documentPath atomically: YES]; 
+  //archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
+  RELEASE(archiver);
+  if (archiveResult) 
+    archiveResult = [classManager saveToFile:
+      [[documentPath stringByDeletingPathExtension] 
+      stringByAppendingPathExtension: @"classes"]];
 
   [self endArchiving];
 
@@ -1569,5 +1781,55 @@ static NSImage	*classesImage = nil;
   return YES;
 }
 
+//--- NSTableView dataSource ---
+- (int) numberOfRowsInTableView: (NSTableView *)aTableView
+{
+  if (aTableView == classesView)
+    {
+      return [[classManager allClassNames] count];
+    }
+  return 0;
+}
+
+- (id) tableView: (NSTableView *)aTableView 
+objectValueForTableColumn: (NSTableColumn *)aTableColumn 
+	     row: (int)rowIndex
+{
+  if (aTableView == classesView)
+    {
+      id identifier = [aTableColumn identifier];
+      id className = @"";
+      id classNames = [classManager allClassNames];
+      
+      if (rowIndex >= 0 && rowIndex < [classNames count])
+	{
+	  className = [classNames objectAtIndex: rowIndex];
+	}
+
+      if ([identifier isEqualToString: @"classes"])
+	{
+	  return className;
+	}
+      else if ([identifier isEqualToString: @"outlets"])
+	{
+	  return [NSString stringWithFormat: @"%d",
+	    [[classManager allOutletsForClassNamed: className] count]];
+	}
+      else if ([identifier isEqualToString: @"actions"])
+	{
+	  return [NSString stringWithFormat: @"%d",
+	    [[classManager allActionsForClassNamed: className] count]];
+	}
+    }
+  return @"";
+}
+
+- (void) tableView: (NSTableView *)aTableView 
+    setObjectValue: (id)anObject 
+    forTableColumn: (NSTableColumn *)aTableColumn
+	       row: (int)rowIndex
+{
+
+}
 @end
 

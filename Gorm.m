@@ -38,6 +38,78 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 @class	InfoPanel;
 
+@implementation GSNibItem (GormAdditions)
+- initWithClassName: (NSString*)className frame: (NSRect)frame
+{
+  self = [super init];
+
+  theClass = [className copy];
+  theFrame = frame;
+
+  return self;
+}
+- (NSString*) className
+{
+  return theClass;
+}
+@end
+
+@implementation GormObjectProxy
+/*
+ * Perhaps this would be better to have a dummy initProxyWithCoder
+ * in GSNibItem class, so that we are not dependent on actual coding
+ * order of the ivars ?
+ */
+- (id) initWithCoder: (NSCoder*)aCoder
+{
+  // do not decode super (it would try to morph into theClass ! )
+  [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+  theFrame = [aCoder decodeRect];
+  //NSLog(@"Decoding proxy : %@", theClass);
+  RETAIN(theClass); 
+
+  return self; 
+}
+@end
+@implementation GormClassProxy
+
+- (id) initWithClassName: (NSString*)n
+{
+  self = [super init];
+  if (self != nil)
+    {
+      ASSIGN(name, n);
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(name);
+
+  [super dealloc];
+}
+
+- (NSString*) className
+{
+  return name;
+}
+
+- (NSString*) inspectorClassName
+{
+  return [self classInspectorClassName];
+}
+
+- (NSString*) connectInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+@end
 @implementation Gorm
 
 - (id<IBDocuments>) activeDocument
@@ -99,11 +171,17 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (GormClassManager*) classManager
 {
-  if (classManager == nil)
+  id document = [self activeDocument];
+
+  if (document != nil) return [document classManager];
+  
+  /* kept in the case one want access to the classManager without document */
+  else if (classManager == nil)
     {
       classManager = [GormClassManager new];
     }
   return classManager;
+  
 }
 
 - (id) close: (id)sender
@@ -132,6 +210,11 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 - (id) connectSource
 {
   return connectSource;
+}
+
+- (id) createSubclass: (id)sender
+{
+  return [(id)[self activeDocument] createSubclass: sender];
 }
 
 - (id) cut: (id)sender
@@ -255,6 +338,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	  [w flushWindow];
 	}
     }
+}
+
+- (id) editClass: (id)sender
+{
+  [self inspector: self];
+  return [(id)[self activeDocument] editClass: sender];
 }
 
 - (id) endTesting: (id)sender
@@ -423,7 +512,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 		   action: @selector(delete:) 
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Select All" 
-		   action: @selector(selectAll:) 
+		   action: @selector(selectAllItems:) 
 	    keyEquivalent: @"a"];
   [aMenu addItemWithTitle: @"Set Name..." 
 		   action: @selector(setName:) 
@@ -432,6 +521,30 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 				 action: NULL 
 			  keyEquivalent: @""];
   [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up classes menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Create Subclass..." 
+	 action: @selector(createSubclass:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Load Class..." 
+		   action: @selector(loadClass:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Edit Class..." 
+		   action: @selector(editClass:) 
+	    keyEquivalent: @""];  
+  [aMenu addItemWithTitle: @"Instantiate" 
+		   action: @selector(instantiateClass:) 
+	    keyEquivalent: @""];
+
+  menuItem = [mainMenu addItemWithTitle: @"Classes" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  classMenu = aMenu;
   RELEASE(aMenu);
 
   /*
@@ -452,6 +565,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 			  keyEquivalent: @""];
   [mainMenu setSubmenu: aMenu forItem: menuItem];
   RELEASE(aMenu);
+
 
   /*
    * Set up Windows menu
@@ -595,6 +709,11 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       inspectorsManager = [GormInspectorsManager new];
     }
   return inspectorsManager;
+}
+
+- (id) instantiateClass: (id)sender
+{
+  return [(id)[self activeDocument] instantiateClass: sender];
 }
 
 - (BOOL) isConnecting
@@ -747,7 +866,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [(id)[self activeDocument] saveAsDocument: sender];
 }
 
-- (id) selectAll: (id)sender
+- (id) selectAllItems: (id)sender
 {
   /* FIXME */
   return nil;
@@ -981,6 +1100,11 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
 
   return YES;
+}
+
+- (NSMenu*) classMenu
+{
+  return classMenu;
 }
 @end
 
