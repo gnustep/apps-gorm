@@ -16,24 +16,34 @@
   id			infoPanel;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
-  id<IBSelectionOwners>	selectionOwner;
-  id<IBDocuments>	activeDocument;
+  id			selectionOwner;
+  id			activeDocument;
   NSMutableArray	*documents;
-  NSMenu		*gormMenu;
   BOOL			isTesting;
 }
 - (id<IBDocuments>) activeDocument;
-- (id) beginTesting: (id)sender;
-- (id) endTesting: (id)sender;
-- (NSMenu*) gormMenu;
 - (void) handleNotification: (NSNotification*)aNotification;
 - (GormInspectorsManager*) inspectorsManager;
-- (id) makeNewDocument: (id) sender;
-- (id) openPalette: (id) sender;
 - (GormPalettesManager*) palettesManager;
-- (id) runInfoPanel: (id) sender;
-- (id) runGormInspectors: (id) sender;
-- (id) runGormPalettes: (id) sender;
+
+- (id) copy: (id)sender;
+- (id) cut: (id)sender;
+- (id) delete: (id)sender;
+- (id) endTesting: (id)sender;
+- (id) infoPanel: (id) sender;
+- (id) inspector: (id) sender;
+- (id) newApplication: (id) sender;
+- (id) loadPalette: (id) sender;
+- (id) open: (id)sender;
+- (id) palettes: (id) sender;
+- (id) paste: (id)sender;
+- (id) revertToSaved: (id)sender;
+- (id) save: (id)sender;
+- (id) saveAll: (id)sender;
+- (id) saveAs: (id)sender;
+- (id) selectAll: (id)sender;
+- (id) setName: (id)sender;
+- (id) testInterface: (id)sender;
 @end
 
 /*
@@ -43,5 +53,6 @@ void GormDrawKnobsForRect(NSRect aFrame);
 NSRect GormExtBoundsForRect(NSRect aFrame);
 IBKnobPosition GormKnobHitInRect(NSRect aFrame, NSPoint p);
 void GormShowFastKnobFills(void);
+void GormShowFrameWithKnob(NSRect aRect, IBKnobPosition aKnob);
 
 #endif

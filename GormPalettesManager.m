@@ -1,4 +1,4 @@
-/* GormPalettesPanager.m
+/* GormPalettesManager.m
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
@@ -23,6 +23,16 @@
  */
 
 #include "GormPrivate.h"
+
+@interface	GormPalettePanel : NSPanel
+@end
+
+@implementation	GormPalettePanel
+- (BOOL) canBecomeKey
+{
+  return NO;
+}
+@end
 
 @interface	GormPaletteView : NSView
 {

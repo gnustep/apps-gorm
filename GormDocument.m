@@ -459,6 +459,7 @@ static NSImage	*classesImage = nil;
 	      [testMenu addItemWithTitle: @"Quit" 
 				  action: @selector(endTesting:)
 			   keyEquivalent: @"q"];	
+	      savedMenu = RETAIN([NSApp mainMenu]);
 	      [NSApp setMainMenu: testMenu];
 	      [keyWindow makeKeyAndOrderFront: self];
 	      RELEASE(testMenu);
@@ -489,7 +490,8 @@ static NSImage	*classesImage = nil;
 	      /*
 	       * restore the main menu.
 	       */
-	      [NSApp setMainMenu: [(Gorm*)NSApp gormMenu]];
+	      [NSApp setMainMenu: savedMenu];
+	      DESTROY(savedMenu);
 	    }
 	  [window orderFront: self];
 	  [window setExcludedFromWindowsMenu: NO];

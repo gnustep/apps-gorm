@@ -80,27 +80,24 @@ NSString *IBDidEndTestingInterfaceNotification
   return YES;
 }
 
-- (id) beginTesting: (id)sender
+- (id) copy: (id)sender
 {
-  if (isTesting == YES)
-    {
-      return nil;
-    }
-  else
-    {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
+    return nil;
+  [selectionOwner copySelection];
+  return self;
+}
 
-      [nc postNotificationName: IBWillBeginTestingInterfaceNotification
-			object: self];
-      isTesting = YES;
-      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
-	{
-	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
-	}
-      [nc postNotificationName: IBDidBeginTestingInterfaceNotification
-			object: self];
-      return self;
-    }
+- (id) cut: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return nil;
+  [selectionOwner copySelection];
+  [selectionOwner deleteSelection];
+  return self;
 }
 
 - (void) dealloc
@@ -108,12 +105,20 @@ NSString *IBDidEndTestingInterfaceNotification
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
-  RELEASE(gormMenu);
   RELEASE(infoPanel);
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
   RELEASE(documents);
   [super dealloc];
+}
+
+- (id) delete: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return nil;
+  [selectionOwner deleteSelection];
+  return self;
 }
 
 - (id) endTesting: (id)sender
@@ -139,11 +144,6 @@ NSString *IBDidEndTestingInterfaceNotification
     }
 }
 
-- (NSMenu*) gormMenu
-{
-  return gormMenu;
-}
-
 - (void) handleNotification: (NSNotification*)notification
 {
   NSString	*name = [notification name];
@@ -166,6 +166,16 @@ NSString *IBDidEndTestingInterfaceNotification
     }
 }
 
+- (id) infoPanel: (id) sender
+{
+  if (infoPanel == nil)
+    {
+      infoPanel = [InfoPanel new];
+    }
+  [infoPanel orderFront: nil];
+  return self;
+}
+
 - (id) init 
 {
   self = [super init];
@@ -183,14 +193,18 @@ NSString *IBDidEndTestingInterfaceNotification
 		 name: IBWillCloseDocumentNotification
 	       object: nil];
 
-      gormMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
-
       /*
        * Make sure the palettes manager exists, so that the editors and
        * inspectors provided in the standard palettes are available.
        */
       [self palettesManager];
     }
+  return self;
+}
+
+- (id) inspector: (id) sender
+{
+  [[[self inspectorsManager] panel] orderFront: nil];
   return self;
 }
 
@@ -208,7 +222,12 @@ NSString *IBDidEndTestingInterfaceNotification
   return isTesting;
 }
 
-- (id) makeNewDocument: (id) sender
+- (id) loadPalette: (id) sender
+{
+  return [[self palettesManager] openPalette: sender];
+}
+
+- (id) newApplication: (id) sender
 {
   id	doc = [GormDocument new];
 
@@ -219,7 +238,7 @@ NSString *IBDidEndTestingInterfaceNotification
   return doc;
 }
 
-- (id) openDocument: (id) sender
+- (id) open: (id) sender
 {
   GormDocument	*doc = [GormDocument new];
 
@@ -238,11 +257,6 @@ NSString *IBDidEndTestingInterfaceNotification
   return doc;
 }
 
-- (id) openPalette: (id) sender
-{
-  return [[self palettesManager] openPalette: sender];
-}
-
 - (GormPalettesManager*) palettesManager
 {
   if (palettesManager == nil)
@@ -252,25 +266,17 @@ NSString *IBDidEndTestingInterfaceNotification
   return palettesManager;
 }
 
-- (id) runInfoPanel: (id) sender
-{
-  if (infoPanel == nil)
-    {
-      infoPanel = [InfoPanel new];
-    }
-  [infoPanel orderFront: nil];
-  return self;
-}
-
-- (id) runGormInspectors: (id) sender
-{
-  [[[self inspectorsManager] panel] orderFront: nil];
-  return self;
-}
-
-- (id) runGormPalettes: (id) sender
+- (id) palettes: (id) sender
 {
   [[[self palettesManager] panel] orderFront: self];
+  return self;
+}
+
+- (id) paste: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
+    return nil;
+  [selectionOwner pasteInSelection];
   return self;
 }
 
@@ -278,6 +284,11 @@ NSString *IBDidEndTestingInterfaceNotification
 {
   NSLog(@"Revert to save not yet implemented");
   return nil;
+}
+
+- (id) save: (id)sender
+{
+  return [(id)activeDocument save: sender];
 }
 
 - (id) saveAll: (id)sender
@@ -289,20 +300,21 @@ NSString *IBDidEndTestingInterfaceNotification
     {
       if ([[doc window] isDocumentEdited] == YES)
 	{
-	  [doc saveDocument: sender];
+	  [doc save: sender];
 	}
     }
   return self;
 }
 
-- (id) saveAsDocument: (id)sender
+- (id) saveAs: (id)sender
 {
-  return [(id)activeDocument saveAsDocument: sender];
+  return [(id)activeDocument saveAs: sender];
 }
 
-- (id) saveDocument: (id)sender
+- (id) selectAll: (id)sender
 {
-  return [(id)activeDocument saveDocument: sender];
+  /* FIXME */
+  return nil;
 }
 
 - (id<IBSelectionOwners>) selectionOwner
@@ -314,6 +326,95 @@ NSString *IBDidEndTestingInterfaceNotification
 {
   return [[selectionOwner selection] lastObject];
 } 
+
+- (id) setName: (id)sender
+{
+  /* FIXME */
+  return nil;
+}
+
+- (id) testInterface: (id)sender
+{
+  if (isTesting == YES)
+    {
+      return nil;
+    }
+  else
+    {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+      [nc postNotificationName: IBWillBeginTestingInterfaceNotification
+			object: self];
+      isTesting = YES;
+      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+	{
+	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
+	}
+      [nc postNotificationName: IBDidBeginTestingInterfaceNotification
+			object: self];
+      return self;
+    }
+}
+
+- (BOOL) validateMenuItem: (NSMenuItem*)item
+{
+  SEL	action = [item action];
+
+  if (sel_eq(action, @selector(save:))
+    || sel_eq(action, @selector(saveAs:))
+    || sel_eq(action, @selector(saveAll:)))
+    {
+      if (activeDocument == nil)
+	return NO;
+    }
+
+  if (sel_eq(action, @selector(revertToSaved:)))
+    {
+      if (activeDocument == nil)
+	return NO;
+    }
+
+  if (sel_eq(action, @selector(testInterface:)))
+    {
+      if (activeDocument == nil)
+	return NO;
+    }
+
+  if (sel_eq(action, @selector(copy:)))
+    {
+      if ([[selectionOwner selection] count] == 0)
+	return NO;
+      return [selectionOwner respondsToSelector: @selector(copySelection)];
+    }
+
+  if (sel_eq(action, @selector(cut:)))
+    {
+      if ([[selectionOwner selection] count] == 0)
+	return NO;
+      return ([selectionOwner respondsToSelector: @selector(copySelection)]
+	&& [selectionOwner respondsToSelector: @selector(deleteSelection)]);
+    }
+
+  if (sel_eq(action, @selector(delete:)))
+    {
+      if ([[selectionOwner selection] count] == 0)
+	return NO;
+      return [selectionOwner respondsToSelector: @selector(deleteSelection)];
+    }
+
+  if (sel_eq(action, @selector(paste:)))
+    {
+      return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
+    }
+
+  if (sel_eq(action, @selector(setName:)))
+    {
+      if ([[selectionOwner selection] count] != 1)
+	return NO;
+    }
+
+  return YES;
+}
 @end
 
 int 
@@ -335,14 +436,14 @@ main(void)
    */
   NSApp = theApp = [Gorm new];
 
-  mainMenu = [theApp gormMenu];
+  mainMenu = [[NSMenu alloc] initWithTitle: @"Gorm"];
 
   /*
    * Set up info menu.
    */
   aMenu = [NSMenu new];
   [aMenu addItemWithTitle: @"Info Panel..." 
-		   action: @selector(runInfoPanel:) 
+		   action: @selector(infoPanel:) 
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Help..." 
 		   action: NULL 
@@ -358,16 +459,16 @@ main(void)
    */
   aMenu = [NSMenu new];
   [aMenu addItemWithTitle: @"Open..." 
-		   action: @selector(openDocument:) 
+		   action: @selector(open:) 
 	    keyEquivalent: @"o"];
   [aMenu addItemWithTitle: @"New Application" 
-		   action: @selector(makeNewDocument:)
+		   action: @selector(newApplication:)
 	    keyEquivalent: @"n"];
   [aMenu addItemWithTitle: @"Save" 
-		   action: @selector(saveDocument:) 
+		   action: @selector(save:) 
 	    keyEquivalent: @"s"];
   [aMenu addItemWithTitle: @"Save As..." 
-		   action: @selector(saveAsDocument:) 
+		   action: @selector(saveAs:) 
 	    keyEquivalent: @"S"];
   [aMenu addItemWithTitle: @"Save All" 
 		   action: @selector(saveAll:) 
@@ -376,9 +477,37 @@ main(void)
 		   action: @selector(revertToSaved:) 
 	    keyEquivalent: @"u"];
   [aMenu addItemWithTitle: @"Test Interface"
-		   action: @selector(beginTesting:) 
+		   action: @selector(testInterface:) 
 	    keyEquivalent: @"r"];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  /*
+   * Set up edit menu.
+   */
+  aMenu = [NSMenu new];
+  [aMenu addItemWithTitle: @"Cut" 
+		   action: @selector(cut:) 
+	    keyEquivalent: @"x"];
+  [aMenu addItemWithTitle: @"Copy" 
+		   action: @selector(copy:) 
+	    keyEquivalent: @"c"];
+  [aMenu addItemWithTitle: @"Paste" 
+		   action: @selector(paste:) 
+	    keyEquivalent: @"v"];
+  [aMenu addItemWithTitle: @"Delete" 
+		   action: @selector(delete:) 
+	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Select All" 
+		   action: @selector(selectAll:) 
+	    keyEquivalent: @"a"];
+  [aMenu addItemWithTitle: @"Set Name..." 
+		   action: @selector(setName:) 
+	    keyEquivalent: @""];
+  menuItem = [mainMenu addItemWithTitle: @"Edit" 
 				 action: NULL 
 			  keyEquivalent: @""];
   [mainMenu setSubmenu: aMenu forItem: menuItem];
@@ -389,13 +518,13 @@ main(void)
    */
   aMenu = [NSMenu new];
   [aMenu addItemWithTitle: @"Inspector..." 
-		   action: @selector(runGormInspectors:) 
+		   action: @selector(inspector:) 
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Palettes..." 
-		   action: @selector(runGormPalettes:) 
+		   action: @selector(palettes:) 
 	    keyEquivalent: @""];
   [aMenu addItemWithTitle: @"Load Palette..." 
-		   action: @selector(openPalette:) 
+		   action: @selector(loadPalette:) 
 	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Tools" 
 				 action: NULL 
@@ -421,6 +550,20 @@ main(void)
 			  keyEquivalent: @""];
   [mainMenu setSubmenu: windowsMenu forItem: menuItem];
   RELEASE(windowsMenu);
+
+  /*
+   * Set up Services menu
+   */
+  aMenu = [NSMenu new];
+  menuItem = [mainMenu addItemWithTitle: @"Services" 
+				 action: NULL 
+			  keyEquivalent: @""];
+  [mainMenu setSubmenu: aMenu forItem: menuItem];
+  RELEASE(aMenu);
+
+  [mainMenu addItemWithTitle: @"Hide" 
+		      action: @selector(hide:)
+	       keyEquivalent: @"h"];	
 
   [mainMenu addItemWithTitle: @"Quit" 
 		      action: @selector(terminate:)

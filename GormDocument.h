@@ -31,6 +31,7 @@
   NSScrollView		*scrollView;
   id			objectsView;
   BOOL			hiddenDuringTest;
+  NSMenu		*savedMenu;
   NSMenuItem		*quitItem;		/* Replaced during test */
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;

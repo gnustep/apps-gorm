@@ -5,6 +5,7 @@
 
    Author:  Gerrit van Dyk <gerritvd@decimax.com>
    Date: 1999
+   Modified and extended by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
    
    This file is part of the GNUstep Interface Modeller Application.
 
@@ -80,6 +81,104 @@ GormShowFastKnobFills(void)
     }
   blackRectCount = 0;
   dkgrayRectCount = 0;
+}
+
+static void
+_showLitKnobForRect(NSGraphicsContext *ctxt, NSRect frame, IBKnobPosition aKnob)
+{
+  float		dx, dy;
+  BOOL		oddx, oddy;
+  NSRect	r;
+
+  if (!KNOB_WIDTH)
+    {
+      calcKnobSize();
+    }
+  dx = NSWidth(frame) / 2.0;
+  dy = NSHeight(frame) / 2.0;
+  oddx = (floor(dx) != dx);
+  oddy = (floor(dy) != dy);
+  frame.size.width = KNOB_WIDTH;
+  frame.size.height = KNOB_HEIGHT;
+  frame.origin.x -= ((KNOB_WIDTH - 1.0) / 2.0);
+  frame.origin.y -= ((KNOB_HEIGHT - 1.0) / 2.0);
+
+  if (aKnob == IBBottomLeftKnobPosition)
+    r = frame;
+  frame.origin.y += dy;
+  if (oddy)
+    frame.origin.y -= 0.5;
+  if (aKnob == IBMiddleLeftKnobPosition)
+    r = frame;
+  frame.origin.y += dy;
+  if (oddy)
+    frame.origin.y += 0.5;
+  if (aKnob == IBTopLeftKnobPosition)
+    r = frame;
+  frame.origin.x += dx;
+  if (oddx)
+   frame.origin.x -= 0.5;
+  if (aKnob == IBTopMiddleKnobPosition)
+    r = frame;
+  frame.origin.x += dx;
+  if (oddx)
+    frame.origin.x += 0.5;
+  if (aKnob == IBTopRightKnobPosition)
+    r = frame;
+  frame.origin.y -= dy;
+  if (oddy)
+    frame.origin.y -= 0.5;
+  if (aKnob == IBMiddleRightKnobPosition)
+    r = frame;
+  frame.origin.y -= dy;
+  if (oddy)
+    frame.origin.y += 0.5;
+  if (aKnob == IBBottomRightKnobPosition)
+    r = frame;
+  frame.origin.x -= dx;
+  if (oddx)
+    frame.origin.x += 0.5;
+  if (aKnob == IBBottomMiddleKnobPosition)
+    r = frame;
+
+  r.origin.x += 1.0;
+  r.origin.y -= 1.0;
+  DPSsetgray(ctxt, NSBlack);
+  DPSrectfill(ctxt, NSMinX(r), NSMinY(r), NSWidth(r), NSHeight(r));
+  r.origin.x -= 1.0;
+  r.origin.y += 1.0;
+  DPSsetgray(ctxt, NSWhite);
+  DPSrectfill(ctxt, NSMinX(r), NSMinY(r), NSWidth(r), NSHeight(r));
+}
+
+void
+GormShowFrameWithKnob(NSRect aRect, IBKnobPosition aKnob)
+{
+  NSGraphicsContext	*ctxt = [NSGraphicsContext currentContext];
+  NSRect		 r = aRect;
+
+  /*
+   * We draw a wire-frame around the rectangle.
+   */
+  r.origin.x -= 0.5;
+  r.origin.y -= 0.5;
+  r.size.width += 1.0;
+  r.size.height += 1.0;
+  DPSsetgray(ctxt, NSBlack);
+  DPSmoveto(ctxt, NSMinX(r), NSMinY(r));
+  DPSlineto(ctxt, NSMinX(r), NSMaxY(r));
+  DPSlineto(ctxt, NSMaxX(r), NSMaxY(r));
+  DPSlineto(ctxt, NSMaxX(r), NSMinY(r));
+  DPSlineto(ctxt, NSMinX(r), NSMinY(r));
+  DPSstroke(ctxt);
+
+  if (aKnob != IBNoneKnobPosition)
+    {
+      /*
+       * NB. we use the internal rectangle for calculating the knob position.
+       */
+      _showLitKnobForRect(ctxt, aRect, aKnob);
+    }
 }
 
 void
