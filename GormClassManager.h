@@ -25,6 +25,9 @@
 - (NSString*) superClassNameForClassNamed: (NSString*)className;
 - (BOOL) isSuperclass: (NSString*)superclass
 	linkedToClass: (NSString*)subclass;
+- (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className
+				 withName:(NSString*)sourcePath
+				      and:(NSString*)headerPath;
 
 - (BOOL) saveToFile: (NSString*)path;
 - (BOOL) loadFromFile: (NSString*)path;

@@ -1,0 +1,18 @@
+{
+    NSIcon = "Images/Gorm.tiff";
+    NSRole = "Editor";
+    NSTypes = (
+      {
+        NSUnixExtensions = ( "gorm" );
+        NSIcon = "Images/Gorm.tiff";
+      }
+    );
+    ApplicationDescription = "Gorm";
+    ApplicationIcon = "Images/Gorm.tiff";
+    ApplicationName = "Gorm";
+    ApplicationRelease = "0.2";
+    Authors = ();
+    Copyright = "Copyright (C) 2000-2001 FSF";
+    CopyrightDescription = "Released under the GNU GPL";
+    FullVersionID = "0.2";
+}

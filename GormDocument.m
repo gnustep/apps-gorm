@@ -521,6 +521,62 @@ static NSImage	*classesImage = nil;
   return self;
 }
 
+- (id) createClassFiles: (id)sender
+{
+  NSSavePanel		*sp;
+  int	row = [classesView selectedRow];
+  id	classes = [classManager allClassNames];
+  int			result;
+
+  sp = [NSSavePanel savePanel];
+  [sp setRequiredFileType: @"m"];
+  [sp setTitle: @"Save source file as..."];
+  if (documentPath == nil)
+    result = [sp runModalForDirectory: NSHomeDirectory() file: @""];
+  else
+    result = [sp runModalForDirectory: 
+		   [documentPath stringByDeletingLastPathComponent]
+		 file: @""];
+
+  if (result == NSOKButton)
+    {
+      NSString *sourceName = [sp filename];
+      NSString *headerName;
+
+      [sp setRequiredFileType: @"h"];
+      [sp setTitle: @"Save header file as..."];
+      result = [sp runModalForDirectory: 
+		     [sourceName stringByDeletingLastPathComponent]
+		   file: 
+		     [[[sourceName lastPathComponent]
+			stringByDeletingPathExtension] 
+		       stringByAppendingString: @".h"]];
+      if (result == NSOKButton)
+	{
+	  headerName = [sp filename];
+	  
+	  NSLog(@"createClassFiles");
+	  if (row >= 0 && row < [classes count])
+	    {
+	      NSLog([classes objectAtIndex: row]);
+	      if (![classManager 
+		     makeSourceAndHeaderFilesForClass: 
+		       [classes objectAtIndex: row]
+		     withName: sourceName
+		     and: headerName])
+		{
+		  NSRunAlertPanel(@"Alert", 
+				  @"Could not create the class's file",
+				  nil, nil, nil);
+		}
+	      
+	      return self;
+	    }
+	}
+    }
+  return nil;
+}
+
 - (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
 {
   NSArray		*links;

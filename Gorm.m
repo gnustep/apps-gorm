@@ -346,6 +346,12 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   return [(id)[self activeDocument] editClass: sender];
 }
 
+- (id) createClassFiles: (id)sender
+{
+  return [(id)[self activeDocument] createClassFiles: sender];
+}
+
+
 - (id) endTesting: (id)sender
 {
   if (isTesting == NO)
@@ -536,6 +542,9 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   [aMenu addItemWithTitle: @"Edit Class..." 
 		   action: @selector(editClass:) 
 	    keyEquivalent: @""];  
+  [aMenu addItemWithTitle: @"Create Class's Files..." 
+		   action: @selector(createClassFiles:) 
+	    keyEquivalent: @""];  
   [aMenu addItemWithTitle: @"Instantiate" 
 		   action: @selector(instantiateClass:) 
 	    keyEquivalent: @""];
@@ -553,7 +562,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   aMenu = [NSMenu new];
   [aMenu addItemWithTitle: @"Inspector..." 
 		   action: @selector(inspector:) 
-	    keyEquivalent: @""];
+	    keyEquivalent: @"i"];
   [aMenu addItemWithTitle: @"Palettes..." 
 		   action: @selector(palettes:) 
 	    keyEquivalent: @""];
@@ -607,7 +616,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
   [self setMainMenu: mainMenu];
   [self setWindowsMenu: windowsMenu];
-  [mainMenu display];
+  //  [mainMenu display];
   [self setDelegate: self];
   [super finishLaunching];
 }
@@ -804,6 +813,25 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       [[doc window] makeKeyAndOrderFront: self];
     }
   return doc;
+}
+
+- (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
+{
+  GormDocument	*doc = [GormDocument new];
+
+  [documents addObject: doc];
+  RELEASE(doc);
+  if ([doc loadDocument: fileName] == nil)
+    {
+      [documents removeObjectIdenticalTo: doc];
+      doc = nil;
+    }
+  else
+    {
+      [[doc window] makeKeyAndOrderFront: self];
+    }
+  
+  return (doc != nil);
 }
 
 - (GormPalettesManager*) palettesManager

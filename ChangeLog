@@ -1,3 +1,18 @@
+2001-07-04 Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	Added the ability to create the .m and .h files of a class created
+	within Gorm (it's a basic implementation but it works)
+
+	Added an "application: openFile:" method in the class Gorm and a
+	GormInfo.plist file, it is now possible to open a Gorm document from
+	ProjectCenter (and I suppose GWorkspace but I have not checked yet)
+
+	a keyEquivalent for the inspector (i was really missing this ...)
+
+	no more [menu display] in the initialization of Gorm, I found out that
+	it prevented a proper docking within WindowMaker's dock, and it does
+	not seem to have any side effect.
+
 2001-06-24  Mirko Viviani  <mirko.viviani@rccr.cremona.it>
 
 	* GormWindowEditor.m ([GormWindowEditor -_validateFrame:forViewPtr:

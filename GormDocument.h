@@ -96,6 +96,7 @@
 - (id) createSubclass: (id)sender;
 - (id) instantiateClass: (id)sender;
 - (id) editClass: (id)sender;
+- (id) createClassFiles: (id)sender;
 - (void) changeCurrentClass: (id)sender;
 @end
 
