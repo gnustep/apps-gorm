@@ -190,7 +190,7 @@
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSArray *allActions = [self allActionsForClassNamed: className];
   NSString *anAction = [action copy];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
   NSString *subclassName = nil;
 
   if ([allActions containsObject: anAction])
@@ -214,14 +214,10 @@
 	}
     }
 
-  // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
     {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassActions = [subInfo objectForKey: @"AllActions"]; 
-      [subclassActions addObject: anAction];
+      [self addAction: anAction forClassNamed: subclassName];
     }
-
 }
 
 - (void) addOutlet: (NSString*)outlet forObject: (id)anObject
@@ -235,7 +231,7 @@
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSArray *allOutlets = [self allOutletsForClassNamed: className];
   NSString *anOutlet = [outlet copy];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
   NSString *subclassName = nil;
 
   if ([allOutlets containsObject: anOutlet])
@@ -253,13 +249,11 @@
   [extraOutlets addObject: anOutlet];
   [[info objectForKey: @"AllOutlets"] insertObject: anOutlet atIndex: 0];
 
-  // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
     {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassOutlets = [subInfo objectForKey: @"AllOutlets"]; 
-      [subclassOutlets addObject: anOutlet];
+      [self addOutlet: outlet forClassNamed: subclassName];
     }
+
 }
 
 - (void) replaceAction: (NSString *)oldAction
@@ -271,7 +265,7 @@
   NSMutableArray *actions = [info objectForKey: @"Actions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
   NSString *newAction = [new_action copy];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
   NSString *subclassName = nil;
 
   if ([allActions containsObject: newAction]
@@ -302,10 +296,7 @@
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
     {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassActions = [subInfo objectForKey: @"AllActions"]; 
-      int index = [subclassActions indexOfObject: oldAction];
-      [subclassActions replaceObjectAtIndex: index withObject: new_action];
+      [self replaceOutlet: oldAction withOutlet: new_action forClassNamed: subclassName];
     }
 
   if(![className isEqualToString: @"FirstResponder"]) 
@@ -326,7 +317,7 @@
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
   NSString *newOutlet = [new_outlet copy];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
   NSString *subclassName = nil;
 
   if ([allOutlets containsObject: newOutlet]
@@ -357,12 +348,107 @@
   // add the action to all of the subclasses, in the "AllActions" section...
   while((subclassName = [en nextObject]) != nil)
     {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassOutlets = [subInfo objectForKey: @"AllOutlets"]; 
-      int index = [subclassOutlets indexOfObject: oldOutlet];
-      [subclassOutlets replaceObjectAtIndex: index withObject: new_outlet];
+      [self replaceOutlet: oldOutlet withOutlet: new_outlet forClassNamed: subclassName];
     }
 }
+
+- (void) removeAction: (NSString*)anAction forObject: (id)anObject
+{
+  [self removeAction: anAction fromClassNamed: [anObject className]];
+}
+
+- (void) removeAction: (NSString*)anAction
+       fromClassNamed: (NSString *)className
+{
+  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
+  NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
+  NSString *subclassName = nil;
+
+  if ([extraActions containsObject: anAction] == YES
+    || [allActions containsObject: anAction] == YES)
+    {
+      NSString	*superName = [info objectForKey: @"Super"];
+
+      [self _touch];
+      if (superName != nil)
+	{
+	  NSArray	*superActions;
+
+	  /*
+	   * If this action is new in this class (ie not overriding an
+	   * action in a parent) then we remove it from the list of all
+	   * actions that the object responds to.
+	   */
+	  superActions = [self allActionsForClassNamed: superName];
+	  if ([superActions containsObject: anAction] == NO)
+	    {
+	      NSMutableArray	*array = [info objectForKey: @"AllActions"];
+	      NSMutableArray    *actions = [info objectForKey: @"Actions"];
+	      [array removeObject: anAction];
+	      [actions removeObject: anAction];
+	    }
+	}
+      [extraActions removeObject: anAction];
+    }
+
+  if(![className isEqualToString: @"FirstResponder"]) 
+    {
+      if([self isSuperclass: @"NSResponder" linkedToClass: className])
+	{
+	  [self removeAction: anAction fromClassNamed: @"FirstResponder"];
+	}
+    }
+
+  while((subclassName = [en nextObject]) != nil)
+    {
+      [self removeAction: anAction fromClassNamed: subclassName];
+    }
+}
+
+- (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject
+{
+  [self removeOutlet: anOutlet fromClassNamed: [anObject className]];
+}
+
+- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString *)className
+{
+  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
+  NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
+  NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
+  NSString *subclassName = nil;
+
+  if ([extraOutlets containsObject: anOutlet] == YES
+    || [allOutlets containsObject: anOutlet] == YES)
+    {
+      NSString	*superName = [info objectForKey: @"Super"];
+
+      [self _touch];
+      if (superName != nil)
+	{
+	  NSArray	*superOutlets;
+
+	  // remove the outlet from the other arrays...
+	  superOutlets = [self allOutletsForClassNamed: superName];
+	  if ([superOutlets containsObject: anOutlet] == NO)
+	    {
+	      NSMutableArray	*array = [info objectForKey: @"AllOutlets"];
+	      NSMutableArray    *actions = [info objectForKey: @"Outlets"];
+	      [array removeObject: anOutlet];
+	      [actions removeObject: anOutlet];
+	    }
+	}
+      [extraOutlets removeObject: anOutlet];
+    }
+
+  while((subclassName = [en nextObject]) != nil)
+    {
+      [self removeOutlet: anOutlet fromClassNamed: subclassName];
+    }
+}
+
 
 - (NSArray*) allActionsForObject: (id)obj
 {
@@ -828,109 +914,6 @@
     }
       
   return subclasses;
-}
-
-- (void) removeAction: (NSString*)anAction forObject: (id)anObject
-{
-  [self removeAction: anAction fromClassNamed: [anObject className]];
-}
-
-- (void) removeAction: (NSString*)anAction
-       fromClassNamed: (NSString *)className
-{
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
-  NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
-  NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
-  NSString *subclassName = nil;
-
-  if ([extraActions containsObject: anAction] == YES
-    || [allActions containsObject: anAction] == YES)
-    {
-      NSString	*superName = [info objectForKey: @"Super"];
-
-      [self _touch];
-      if (superName != nil)
-	{
-	  NSArray	*superActions;
-
-	  /*
-	   * If this action is new in this class (ie not overriding an
-	   * action in a parent) then we remove it from the list of all
-	   * actions that the object responds to.
-	   */
-	  superActions = [self allActionsForClassNamed: superName];
-	  if ([superActions containsObject: anAction] == NO)
-	    {
-	      NSMutableArray	*array = [info objectForKey: @"AllActions"];
-	      NSMutableArray    *actions = [info objectForKey: @"Actions"];
-	      [array removeObject: anAction];
-	      [actions removeObject: anAction];
-	    }
-	}
-      [extraActions removeObject: anAction];
-    }
-
-  if(![className isEqualToString: @"FirstResponder"]) 
-    {
-      if([self isSuperclass: @"NSResponder" linkedToClass: className])
-	{
-	  [self removeAction: anAction fromClassNamed: @"FirstResponder"];
-	}
-    }
-
-  // add the action to all of the subclasses, in the "AllActions" section...
-  while((subclassName = [en nextObject]) != nil)
-    {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassActions = [subInfo objectForKey: @"AllActions"]; 
-      [subclassActions removeObject: anAction];
-    }
-}
-
-- (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject
-{
-  [self removeOutlet: anOutlet fromClassNamed: [anObject className]];
-}
-
-- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString *)className
-{
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
-  NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
-  NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
-  NSEnumerator *en = [[self allSubclassesOf: className] objectEnumerator];
-  NSString *subclassName = nil;
-
-  if ([extraOutlets containsObject: anOutlet] == YES
-    || [allOutlets containsObject: anOutlet] == YES)
-    {
-      NSString	*superName = [info objectForKey: @"Super"];
-
-      [self _touch];
-      if (superName != nil)
-	{
-	  NSArray	*superOutlets;
-
-	  // remove the outlet from the other arrays...
-	  superOutlets = [self allOutletsForClassNamed: superName];
-	  if ([superOutlets containsObject: anOutlet] == NO)
-	    {
-	      NSMutableArray	*array = [info objectForKey: @"AllOutlets"];
-	      NSMutableArray    *actions = [info objectForKey: @"Outlets"];
-	      [array removeObject: anOutlet];
-	      [actions removeObject: anOutlet];
-	    }
-	}
-      [extraOutlets removeObject: anOutlet];
-    }
-
-  // add the action to all of the subclasses, in the "AllActions" section...
-  while((subclassName = [en nextObject]) != nil)
-    {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
-      NSMutableArray *subclassOutlets = [subInfo objectForKey: @"AllOutlets"]; 
-      [subclassOutlets removeObject: anOutlet];
-    }
 }
 
 - (void) removeClassNamed: (NSString *)className
