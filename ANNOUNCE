@@ -1,0 +1,60 @@
+ANNOUNCE
+********
+
+This is version 0.1.0 of Gorm.
+
+What is Gorm?
+=============
+
+   Gorm is an acronym for Graphic Object Relationship modeler (or
+perhaps GNUstep Object Relationship Modeler).
+
+   Gorm is a clone of the NeXTstep `Interface Builder' application for
+GNUstep.
+
+   Gorm is not `gormless' (a Yorkshire dialect word that my parents
+used when they spotted me staring, slack-jawed, at the TV).
+
+Noteworthy changes in version `0.1.0'
+=====================================
+
+   * load/parses class files for entry into class list.
+
+   * Pallete/inspectors for date and number formatters
+
+   * Pallete/Inspectors for browsers and tableViews
+
+   * NSStepper, NSForm, NSPopupButton  pallete item and inspector
+
+   * Most inspectors greatly improved and fleshed out.
+
+   * Custom views added.
+
+   * Ability to edit cells in a matrix.
+
+   * Ability to change the font of some objects.
+
+How can I get support for this software?
+========================================
+
+   You may wish to use the GNUstep discussion mailing list for general
+questions and discussion.  Look at the GNUstep Web Pages for more
+information regarding GNUstep resources <http://www.gnustep.org/>
+
+Where can you get it?  How can you compile it?
+==============================================
+
+   You can download sources and rpms (for some machines) from
+<ftp://ftp.gnustep.org/pub/gnustep/dev-apps>.
+
+Where do I send bug reports?
+============================
+
+   Bug reports can be sent to <bug-gnustep@gnu.org>.
+
+Obtaining GNU Software
+======================
+
+   Check out the GNUstep web site. (<http://www.gnustep.org/>), and the
+GNU web site. (<http://www.gnu.org/>)
+

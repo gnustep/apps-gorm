@@ -17,6 +17,10 @@
 @item Ability to change the font of some objects.
 @end itemize
 
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.0.3}
 
 @itemize @bullet
@@ -171,3 +175,4 @@ numeric values to enter to achieve a desired result.
 
 @end itemize
 
+@end ifclear

@@ -1,3 +1,22 @@
+Noteworthy changes in version `0.1.0'
+=====================================
+
+   * load/parses class files for entry into class list.
+
+   * Pallete/inspectors for date and number formatters
+
+   * Pallete/Inspectors for browsers and tableViews
+
+   * NSStepper, NSForm, NSPopupButton  pallete item and inspector
+
+   * Most inspectors greatly improved and fleshed out.
+
+   * Custom views added.
+
+   * Ability to edit cells in a matrix.
+
+   * Ability to change the font of some objects.
+
 Noteworthy changes in version `0.0.3'
 =====================================
 

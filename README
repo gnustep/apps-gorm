@@ -35,7 +35,7 @@ nicely - you really can see things working.
   1. Documentation - only a tiny start has been made on this!
 
   2. Editors and inspectors need writing for most gui elements -
-     popup menus   boxes   browsers   scrollviews   splitviews   etc etc
+     scrollviews   splitviews   etc etc
 
   3. Support for color and images on buttons etc.    This requires
      improved image and color support in the gui library

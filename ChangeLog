@@ -1,3 +1,8 @@
+2002-01-30  Adam Fedor  <fedor@gnu.org>
+
+	* Version: 0.1.0
+	* Documentation/news.texi: Update.
+
 2002-01-29  Adam Fedor  <fedor@gnu.org>
 
 	* GormClassManager.m (-allActionsForObject:): Get actions for

@@ -58,6 +58,6 @@ version.texi: ../Version
 		>> version.texi
 
 regenerate:
-	mv README INSTALL NEWS ..
+	mv ANNOUNCE README INSTALL NEWS ..
 
 
