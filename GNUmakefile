@@ -51,6 +51,7 @@ Gorm_RESOURCE_FILES = \
 	Palettes/1Windows/1Windows.palette \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
+	Palettes/4Data/4Data.palette \
 	Images/GormClass.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \
@@ -87,7 +88,21 @@ Gorm_RESOURCE_FILES = \
 	Images/line_nib.tiff \
 	Images/bezel_nib.tiff \
 	Images/noBorder_nib.tiff \
-	Images/ridge_nib.tiff
+	Images/ridge_nib.tiff \
+	Images/button_nib.tiff \
+	Images/photoframe_nib.tiff \
+	Images/date_formatter.tiff \
+	Images/number_formatter.tiff \
+	Images/Sunday_seurat.tiff \
+	Images/iconBottomLeft_nib.tiff \
+	Images/iconBottomRight_nib.tiff \
+	Images/iconBottom_nib.tiff \
+	Images/iconCenterLeft_nib.tiff \
+	Images/iconCenterRight_nib.tiff \
+	Images/iconCenter_nib.tiff \
+	Images/iconTopLeft_nib.tiff \
+	Images/iconTopRight_nib.tiff \
+	Images/iconTop_nib.tiff \
 
 Gorm_HEADERS = \
 	Gorm.h \
