@@ -1,3 +1,8 @@
+2005-01-22 14:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Reorganized the files in the resources, hearders
+	and source lists.
+
 2005-01-22 12:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: In [GormDocument detachObject:] made 
