@@ -1,3 +1,9 @@
+2003-11-11 17:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormNSSplitViewInspector.[hm]: Added implementation
+	* GormNSSplitViewInspector.gorm: Added interface.
+	* Gorm.m: Updated application:openFile: method.
+	
 2003-11-08 17:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [_identifierString:] corrected issue which

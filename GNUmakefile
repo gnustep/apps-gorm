@@ -123,6 +123,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
 	Resources/GormScrollViewAttributesInspector.gorm \
+	Resources/GormNSSplitViewInspector.gorm \
 	Resources/GormClassInspector.gorm \
 	Resources/GormFontView.gorm \
 	Resources/GormSetName.gorm \
@@ -135,6 +136,7 @@ Gorm_HEADERS = \
 	GormOutlineView.h \
 	GormCustomClassInspector.h \
 	GormScrollViewAttributesInspector.h \
+	GormNSSplitViewInspector.h \
 	GormSoundInspector.h \
 	GormImageInspector.h \
 	GormMatrixEditor.h \
@@ -176,6 +178,7 @@ Gorm_OBJC_FILES = \
 	GormObjectInspector.m \
 	GormViewSizeInspector.m \
 	GormScrollViewAttributesInspector.m \
+	GormNSSplitViewInspector.m \
 	GormWindowEditor.m \
 	GormClassManager.m \
 	GormInspectorsManager.m \
@@ -213,4 +216,3 @@ include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/application.make
 
 -include GNUmakefile.postamble
-
