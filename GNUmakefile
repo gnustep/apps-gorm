@@ -93,6 +93,7 @@ Gorm_RESOURCE_FILES = \
 	Images/noBorder_nib.tiff \
 	Images/ridge_nib.tiff \
 	Images/button_nib.tiff \
+	Images/shortbutton_nib.tiff \
 	Images/photoframe_nib.tiff \
 	Images/date_formatter.tiff \
 	Images/number_formatter.tiff \
