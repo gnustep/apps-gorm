@@ -1361,6 +1361,11 @@ static BOOL currently_displaying = NO;
   return YES;
 }
 
+- (void) deleteSelection
+{
+  // does nothing...
+}
+
 - (void) resetObject: (id)anObject
 {
   NS_DURING
