@@ -691,7 +691,7 @@ static NSImage	*classesImage = nil;
 	  [connections removeObjectAtIndex: count];
 	}
     }
-  NSMapRemove(objToName, (void*)anObject);
+
   if ([anObject isKindOfClass: [NSWindow class]] == YES
     || [anObject isKindOfClass: [NSMenu class]] == YES)
     {
@@ -703,22 +703,28 @@ static NSImage	*classesImage = nil;
    */
   [self setObject: anObject isVisibleAtLaunch: NO];
 
-  // remove from custom class map...
-  NSDebugLog(@"Delete from custom class map -> %@",name);
-  [cm removeCustomClassForObject: name];
-  if([anObject isKindOfClass: [NSScrollView class]] == YES)
+  // some objects are given a name, some are not.  The only ones we need
+  // to worry about are those that have names.
+  if(name != nil)
     {
-      NSView *subview = [anObject documentView];
-      NSString *objName = [self nameForObject: subview];
-      NSDebugLog(@"Delete from custom class map -> %@",objName);
-      [cm removeCustomClassForObject: objName];
+      // remove from custom class map...
+      NSDebugLog(@"Delete from custom class map -> %@",name);
+      [cm removeCustomClassForObject: name];
+      if([anObject isKindOfClass: [NSScrollView class]] == YES)
+	{
+	  NSView *subview = [anObject documentView];
+	  NSString *objName = [self nameForObject: subview];
+	  NSDebugLog(@"Delete from custom class map -> %@",objName);
+	  [cm removeCustomClassForObject: objName];
+	}
+      
+      // remove from name table...
+      [nameTable removeObjectForKey: name];
+      
+      // free...
+      NSMapRemove(objToName, (void*)anObject);
+      RELEASE(name);
     }
-
-  // remove from name table...
-  [nameTable removeObjectForKey: name];
-
-  // free...
-  RELEASE(name);
 }
 
 - (void) detachObjects: (NSArray*)anArray
@@ -3590,6 +3596,14 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 - (void) addImage: (NSString*) path
 {
   [images addObject: path];
+}
+
+- (NSString *) description
+{
+  return [NSString stringWithFormat: @"<%s: %lx> = %@",
+		   GSClassNameFromObject(self), 
+		   (unsigned long)self,
+		   nameTable];
 }
 @end
 

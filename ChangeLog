@@ -1,3 +1,17 @@
+2003-10-18 02:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ClassInformation.plist: Added information for NSBox.
+	* Gorm.m: Updated patch level.
+	* GormClassManager.m: Added description method to aid in future
+	debugging.
+	* GormDocument.m: Added code to skip a section of the 
+	detachObject method if the object being detached doesn't
+	have a name.  Added a description method.
+	* GormViewEditor.m: Added _allsubviews and _subviewsForView:withArray:
+	to collect all of the views which need to be detached when a
+	parent view is removed from the GUI.  This is used the in implementation
+	of detachSubviews.
+
 2003-10-12 23:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: Corrected method of disassociating

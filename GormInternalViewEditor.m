@@ -323,8 +323,6 @@ static NSImage *horizontalImage;
   return result;
 }
 
-
-
 - (void) deleteSelection
 {
   int i;

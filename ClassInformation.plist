@@ -163,9 +163,11 @@
     );
     Super = NSObject;
   };
+
   NSActionCell = {
     Super = NSCell;
   };
+
   NSApplication = {
     Actions = (
       arrangeInFront:,
@@ -191,6 +193,10 @@
 
   NSArray = {
     Super = NSObject;
+  };
+
+  NSBox = {
+    Super = NSView;
   };
 
   NSBrowser = {
@@ -623,6 +629,7 @@
     );
     Super = NSResponder;
   };
+
   NSWindowController = {
     Actions = (
       showWindow:

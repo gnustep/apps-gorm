@@ -1499,4 +1499,11 @@
     }
 }
 
+- (NSString *) description
+{
+  return [NSString stringWithFormat: @"<%s: %lx> = %@",
+ 		   GSClassNameFromObject(self), 
+		   (unsigned long)self,
+ 		   customClassMap];
+}
 @end
