@@ -1,3 +1,9 @@
+2005-01-11 22:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: Default NSWindows being imported from the
+	.gmodel to the default window background color in the method
+	[GModelApplication initWithModelUnarchiver:].
+
 2005-01-09 01:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Added missing changeFont: method.

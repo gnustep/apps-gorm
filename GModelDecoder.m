@@ -93,6 +93,9 @@ static BOOL gormFileOwnerDecoded;
 	  NSLog(@"Fixing borderless window %@", win);
 	  [win gmSetStyleMask: NSTitledWindowMask];
 	}
+
+      /* Fix up the background color */
+      [win setBackgroundColor: [NSColor windowBackgroundColor]];
     }
 
   delegate = [unarchiver decodeObjectWithName:@"delegate"];
