@@ -1,3 +1,9 @@
+2004-04-04 22:09 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument rebuildObjToNameMapping]
+	use [[nameTable allKeys] objectEnumerator] instead of keyEnumerator.
+	(slightly more efficient).
+	
 2004-04-04 12:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: Corrected some warnings and 
