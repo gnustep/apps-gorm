@@ -167,7 +167,7 @@
   return obj;
 }
 
-- (void) encodeWithCoder: (NSCoder)coder
+- (void) encodeWithCoder: (NSCoder *)coder
 {
   // nothing to do.  This is a class for testing custom views only. GJC
 }
