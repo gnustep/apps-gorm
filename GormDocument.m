@@ -3032,19 +3032,14 @@ static NSImage	*classesImage = nil;
 // convenience methods for formatting outlets/actions
 - (NSString*) _identifierString: (NSString*)str
 {
-  static NSCharacterSet	*illegal = nil;
-  static NSCharacterSet	*numeric = nil;
+  NSCharacterSet	*illegal = [[NSCharacterSet characterSetWithCharactersInString:
+						      @"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
+				     invertedSet];
+  NSCharacterSet	*numeric = [NSCharacterSet characterSetWithCharactersInString:
+						     @"0123456789"];
   NSRange		r;
   NSMutableString	*m;
-
-  if (illegal == nil)
-    {
-      illegal = [[NSCharacterSet characterSetWithCharactersInString:
-	@"_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
-	invertedSet];
-      numeric = [NSCharacterSet characterSetWithCharactersInString:
-	@"0123456789"];
-    }
+  
   if (str == nil)
     {
       return nil;

@@ -1,3 +1,8 @@
+2003-11-08 17:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [_identifierString:] corrected issue which
+	was causing a segmentation fault.
+
 2003-11-01 20:35 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInspectorsManager.m: -ok: method.  Removed check which was
