@@ -122,9 +122,10 @@
 		   styleMask: NSBorderlessWindowMask
 		   backing: NSBackingStoreBuffered
 		   defer: YES];
+
   [win setMenu: self];
   [win setLevel: NSSubmenuWindowLevel];
-  
+
   return win;
 }
 @end
