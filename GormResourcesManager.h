@@ -11,7 +11,6 @@
 }
 + (GormResourcesManager*) newManagerForDocument: (id<IBDocuments>)doc;
 - (void) addObject: (id)anObject;
-- (void) changeView: (id)sender;
 - (id<IBDocuments>) document;
 - (void) removeObject: (id)anObject;
 - (NSWindow*) window;

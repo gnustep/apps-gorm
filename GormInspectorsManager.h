@@ -5,15 +5,17 @@
 {
   NSPanel		*panel;
   NSMatrix		*selectionView;
+  NSBox			*divider;
   NSView		*inspectorView;
-  NSArray		*selection;
-  NSButton		*emptyView;
-  NSButton		*multipleView;
+  NSView		*buttonView;
+  IBInspector		*emptyInspector;
+  IBInspector		*multipleInspector;
   IBInspector		*inspector;
   int			current;
 }
 - (NSPanel*) panel;
 - (void) setCurrentInspector: (id)anObject;
+- (void) updateSelection;
 @end
 
 #endif

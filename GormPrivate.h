@@ -19,9 +19,11 @@
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
   id<IBSelectionOwners>	selectionOwner;
+  id<IBDocuments>	activeDocument;
   NSMutableArray	*documents;
 }
 - (id<IBDocuments>) activeDocument;
+- (void) handleNotification: (NSNotification*)aNotification;
 - (GormInspectorsManager*) inspectorsManager;
 - (id) makeNewDocument: (id) sender;
 - (id) openPalette: (id) sender;

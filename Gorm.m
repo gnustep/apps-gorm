@@ -30,7 +30,7 @@
 
 - (id<IBDocuments>) activeDocument
 {
-  return (id<IBDocuments>)[documents lastObject];
+  return activeDocument;
 }
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
@@ -85,6 +85,28 @@
   [super dealloc];
 }
 
+- (void) handleNotification: (NSNotification*)notification
+{
+  NSString	*name = [notification name];
+  id		obj = [notification object];
+
+  if ([name isEqual: IBSelectionChangedNotification])
+    {
+      selectionOwner = [notification object];
+      [[self inspectorsManager] updateSelection];
+    }
+  else if ([name isEqual: IBWillCloseDocumentNotification])
+    {
+      RETAIN(obj);
+      [documents removeObjectIdenticalTo: obj];
+      AUTORELEASE(obj);
+      if (obj == (id)activeDocument)
+	{
+	  activeDocument = nil;
+	}
+    }
+}
+
 - (id) init 
 {
   self = [super init];
@@ -94,8 +116,12 @@
 
       documents = [NSMutableArray new];
       [nc addObserver: self
-	     selector: @selector(selectionChanged:)
+	     selector: @selector(handleNotification:)
 		 name: IBSelectionChangedNotification
+	       object: nil];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBWillCloseDocumentNotification
 	       object: nil];
     }
   return self;
@@ -116,6 +142,7 @@
 
   [documents addObject: doc];
   [doc setDocumentActive: YES];
+  activeDocument = doc;
   RELEASE(doc);
   return doc;
 }
@@ -134,6 +161,7 @@
   else
     {
       [doc setDocumentActive: YES];
+      activeDocument = doc;
     }
   return doc;
 }
@@ -176,17 +204,12 @@
 
 - (id) saveAsDocument: (id)sender
 {
-  return [[documents lastObject] saveAsDocument: sender];
+  return [(id)activeDocument saveAsDocument: sender];
 }
 
 - (id) saveDocument: (id)sender
 {
-  return [[documents lastObject] saveDocument: sender];
-}
-
-- (void) selectionChanged: (NSNotification*)notification
-{
-  selectionOwner = [notification object];
+  return [(id)activeDocument saveDocument: sender];
 }
 
 - (id<IBSelectionOwners>) selectionOwner

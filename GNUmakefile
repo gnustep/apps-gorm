@@ -62,10 +62,10 @@ Gorm_HEADERS = \
 Gorm_OBJC_FILES = \
         Gorm.m \
 	GormDocument.m \
-	GormEditors.m \
 	IBInspector.m \
 	IBPalette.m \
 	InfoPanel.m \
+	GormObjectEditor.m \
 	GormInspectorsManager.m \
 	GormPalettesManager.m \
 	GormResourcesManager.m

@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Gorm.h"
+#include "GormPrivate.h"
 
 
 NSString *IBInspectorDidModifyObjectNotification
@@ -34,11 +34,20 @@ NSString *IBSelectionChangedNotification
 
 - (void) dealloc
 {
+  RELEASE(object);
   [super dealloc];
 }
 
 - (id) init
 {
+  self = [super init];
+  if (self != nil)
+    {
+      /*
+       * Ask our manager for the selection for which we have been created.
+       */
+      object = RETAIN([(id<IB>)NSApp selectedObject]);
+    }
   return self;
 }
 
@@ -67,7 +76,7 @@ NSString *IBSelectionChangedNotification
 
 - (void) touch: (id)sender
 {
-  [window setDocumentEdited];
+  [window setDocumentEdited: YES];
 }
 
 - (BOOL) wantsButtons

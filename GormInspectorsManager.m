@@ -27,52 +27,166 @@
 @implementation NSObject (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {
-  return @"GormObjectAttributesInspector";
+  return @"GormObjectInspector";
 }
-
 - (NSString*) connectInspectorClassName
 {
-  return @"GormObjectConnectionsInspector";
+  return @"GormObjectInspector";
 }
-
 - (NSString*) sizeInspectorClassName
 {
-  return @"GormObjectSizeInspector";
+  return @"GormObjectInspector";
 }
-
 - (NSString*) helpInspectorClassName
 {
-  return @"GormObjectHelpInspector";
+  return @"GormObjectInspector";
 }
-
 - (NSString*) classInspectorClassName
 {
-  return @"GormObjectClassInspector";
+  return @"GormObjectInspector";
+}
+@end
+
+
+
+/*
+ *	The GormEmptyInspector is a placeholder for an empty selection.
+ */
+@interface GormEmptyInspector : IBInspector
+@end
+
+@implementation GormEmptyInspector
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
 }
 
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView	*contents;
+      NSButton	*button;
+
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      button = [[NSButton alloc] initWithFrame: [contents bounds]];
+      [button setAutoresizingMask:
+	NSViewHeightSizable | NSViewWidthSizable];
+      [button setStringValue: @"Empty Selection"];
+      [button setBordered: NO];
+      [contents addSubview: button];
+      RELEASE(button);
+    }
+  return self;
+}
 @end
+
+
+
+/*
+ *	The GormObjectInspector is a placeholder for any object without a
+ *	suitable inspector.
+ */
+@interface GormObjectInspector : IBInspector
+@end
+
+@implementation GormObjectInspector
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView	*contents;
+      NSButton	*button;
+
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      button = [[NSButton alloc] initWithFrame: [contents bounds]];
+      [button setAutoresizingMask:
+	NSViewHeightSizable | NSViewWidthSizable];
+      [button setStringValue: @"Unknown object"];
+      [button setBordered: NO];
+      [contents addSubview: button];
+      RELEASE(button);
+    }
+  return self;
+}
+@end
+
+
+
+/*
+ *	The GormMultipleInspector is a placeholder for a multiple selection.
+ */
+@interface GormMultipleInspector : IBInspector
+@end
+
+@implementation GormMultipleInspector
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView	*contents;
+      NSButton	*button;
+
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      button = [[NSButton alloc] initWithFrame: [contents bounds]];
+      [button setAutoresizingMask:
+	NSViewHeightSizable | NSViewWidthSizable];
+      [button setStringValue: @"Multiple Selection"];
+      [button setBordered: NO];
+      [contents addSubview: button];
+      RELEASE(button);
+    }
+  return self;
+}
+@end
+
+
 
 @implementation GormInspectorsManager
 
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(selectionView);
-  RELEASE(inspectorView);
-  RELEASE(emptyView);
-  RELEASE(multipleView);
+  RELEASE(emptyInspector);
+  RELEASE(multipleInspector);
   RELEASE(panel);
   [super dealloc];
 }
 
 - (id) init
 {
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSBox		*box;
   NSCell	*cell;
   NSRect	contentRect = {{0, 0}, {272, 420}};
   NSRect	selectionRect = {{0, 378}, {272, 52}};
-  NSRect	boxRect = {{0, 361}, {272, 2}};
+  NSRect	dividerRect = {{0, 361}, {272, 2}};
   NSRect	inspectorRect = {{0, 0}, {272, 360}};
   unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
 
@@ -80,12 +194,12 @@
 				     styleMask: style
 				       backing: NSBackingStoreRetained
 					 defer: NO];
-  box = [[NSBox alloc] initWithFrame: boxRect];
-  [box setBorderType: NSLineBorder];
-  [box setTitlePosition: NSNoTitle];
-  [box setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
-  [[panel contentView] addSubview: box]; 
-  RELEASE(box);
+  divider = [[NSBox alloc] initWithFrame: dividerRect];
+  [divider setBorderType: NSLineBorder];
+  [divider setTitlePosition: NSNoTitle];
+  [divider setAutoresizingMask: NSViewWidthSizable|NSViewMinYMargin];
+  [[panel contentView] addSubview: divider]; 
+  RELEASE(divider);
 
   [panel setTitle: @"Inspector"];
   [panel setMinSize: [panel frame].size];
@@ -122,22 +236,9 @@
 
   current = -1;
 
-  emptyView = [[NSButton alloc] initWithFrame: inspectorRect];
-  [emptyView setAutoresizingMask:
-    NSViewHeightSizable | NSViewWidthSizable];
-  [emptyView setStringValue: @"Empty Selection"];
-  [emptyView setBordered: NO];
+  emptyInspector = [GormEmptyInspector new];
+  multipleInspector = [GormMultipleInspector new];
 
-  multipleView = [[NSButton alloc] initWithFrame: inspectorRect];
-  [multipleView setAutoresizingMask:
-    NSViewHeightSizable | NSViewWidthSizable];
-  [multipleView setStringValue: @"Multiple Selection"];
-  [multipleView setBordered: NO];
-
-  [nc addObserver: self
-	 selector: @selector(selectionChanged:)
-	     name: IBSelectionChangedNotification
-	   object: nil];
   [self setCurrentInspector: 0];
   return self;
 }
@@ -147,35 +248,54 @@
   return panel;
 }
 
-- (void) selectionChanged: (NSNotification*)notification
+- (void) updateSelection
 {
   [self setCurrentInspector: self];
 }
 
 - (void) setCurrentInspector: (id)anObj
 {
-  id<IBSelectionOwners>	owner = [(id<IB>)NSApp selectionOwner];
-  unsigned		count = [owner selectionCount];
-  NSArray		*sub = [inspectorView subviews];
-  IBInspector		*newInspector = nil;
-  NSView		*newView = nil;
+  NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
+  unsigned	count = [selection count];
+  id		obj = [selection lastObject];
+  NSView	*newView = nil;
 
   if (anObj != self)
     {
       current = [anObj selectedColumn];
     }
+NSLog(@"SetCurrentInspector: %d", current);
 
-  if (count == 0)
+  /*
+   * Set panel title for the type of object being inspected.
+   */
+  if (obj == nil)
     {
-      newView = emptyView;
-    }
-  else if (count > 1)
-    {
-      newView = multipleView;
+      [panel setTitle: @"Inspector"];
     }
   else
     {
-      id	obj = [[owner selection] lastObject];
+      [panel setTitle: [NSString stringWithFormat: @"%@ Inspector",
+	NSStringFromClass([obj class])]];
+    }
+
+  /*
+   * Return the inspector view to its original window and release the old
+   * inspector.
+   */
+  [[inspector window] setContentView: [[inspectorView subviews] lastObject]];
+  DESTROY(inspector);
+  
+  if (count == 0 || count > 1)
+    {
+      inspector = RETAIN(emptyInspector);
+    }
+  else if (count > 1)
+    {
+      inspector = RETAIN(multipleInspector);
+    }
+  else
+    {
       NSString	*name;
       Class	c;
 
@@ -188,37 +308,86 @@
 	  default: name = [obj classInspectorClassName]; break;
 	}
       c = NSClassFromString(name);
-      if (inspector == nil || [inspector class] != c)
-	{
-	  newInspector = [c new];
-	  newView = [[newInspector window] contentView];
-	}
-      else
-	{
-	  newInspector = inspector;
-	}
+      inspector = [c new];
     }
 
-  if (newInspector != inspector)
-    {
-      if (inspector != nil)
-	{
-	  [[inspector window] setContentView: [sub lastObject]];
-	  RELEASE((id)inspector);
-	  sub = [inspectorView subviews];
-	}
-      inspector = newInspector;
-    }
+  newView = [[inspector window] contentView];
+NSLog(@"NewView %@", newView);
   if (newView != nil)
     {
-      if ([sub count] > 0)
+      NSView	*outer = [panel contentView];
+      NSRect	rect = [outer bounds];
+
+      if (buttonView != nil)
 	{
-	  [inspectorView replaceSubview: [sub lastObject] with: newView];
+	  [buttonView removeFromSuperview];
+	  buttonView = nil;
+	}
+
+      rect.size.height = [divider frame].origin.y;
+      if ([inspector wantsButtons] == YES)
+	{
+	  NSRect	buttonsRect;
+	  NSRect	bRect = NSMakeRect(0, 0, 60, 20);
+	  NSButton	*ok;
+	  NSButton	*revert;
+
+	  buttonsRect = rect;
+	  buttonsRect.size.height = 40;
+	  rect.origin.y += 40;
+	  rect.size.height -= 40;
+
+	  buttonView = [[NSView alloc] initWithFrame: buttonsRect];
+	  [buttonView setAutoresizingMask:
+	    NSViewHeightSizable | NSViewWidthSizable];
+	  [outer addSubview: buttonView];
+	  RELEASE(buttonView);
+
+	  ok = [inspector okButton];
+	  if (ok == nil)
+	    {
+	      ok = AUTORELEASE([[NSButton alloc] initWithFrame: bRect]);
+	      [ok setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+	      [ok setTitle: @"Ok"];
+	      [ok setAction: @selector(ok:)];
+	      [ok setTarget: inspector];
+	    }
+	  revert = [inspector revertButton];
+	  if (revert == nil)
+	    {
+	      revert = AUTORELEASE([[NSButton alloc] initWithFrame: bRect]);
+	      [revert setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+	      [revert setTitle: @"Revert"];
+	      [revert setAction: @selector(revert:)];
+	      [revert setTarget: inspector];
+	    }
+
+	  bRect = [ok frame];
+	  bRect.origin.y = 10;
+	  bRect.origin.x = buttonsRect.size.width - 10 - bRect.size.width;
+	  [ok setFrame: bRect];
+
+	  bRect = [revert frame];
+	  bRect.origin.y = 10;
+	  bRect.origin.x = 10;
+	  [revert setFrame: bRect];
+
+	  [buttonView addSubview: ok];
+	  [buttonView addSubview: revert];
 	}
       else
 	{
-	  [inspectorView addSubview: newView];
+	  [buttonView removeFromSuperview];
 	}
+
+      /*
+       * Make the inspector view the correct size for the viewable panel,
+       * and set the frame size for the new contents before adding them.
+       */
+      [inspectorView setFrame: rect];
+      rect.origin = NSZeroPoint;
+      [newView setFrame: rect];
+      [inspectorView addSubview: newView];
     }
 }
 

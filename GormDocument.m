@@ -24,6 +24,11 @@
 
 #include "GormPrivate.h"
 
+NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
+NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
+NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
+NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
+
 /*
  * A private connector for child->parent relationships.
  */
@@ -268,13 +273,17 @@
 
 - (void) documentWillClose
 {
-  NSEnumerator	*enumerator = [nameTable objectEnumerator];
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   Class		winClass = [NSWindow class];
+  NSEnumerator	*enumerator;
   id		obj;
 
+  [nc postNotificationName: IBWillCloseDocumentNotification
+		    object: self];
   /*
    * Close all open windows in this document befoew we go away.
    */
+  enumerator = [nameTable objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {
       if ([obj isKindOfClass: winClass] == YES)
@@ -284,6 +293,27 @@
 	}
     }
   [self setDocumentActive: NO];
+}
+
+- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+                           create: (BOOL)flag
+{
+  return [self editorForObject: anObject inEditor: nil create: flag];
+}
+
+- (id<IBEditors>) editorForObject: (id)anObject
+                         inEditor: (id<IBEditors>)anEditor
+                           create: (BOOL)flag
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
+  return nil;
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
@@ -398,6 +428,7 @@
 				  types: fileTypes];
   if (result == NSOKButton)
     {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSString		*aFile = [oPanel filename];
       NSData		*data;
       NSUnarchiver	*u;
@@ -480,9 +511,25 @@
        */
       ASSIGN(documentPath, aFile);
       [[resourcesManager window] setTitleWithRepresentedFilename: documentPath];
+      [nc postNotificationName: IBDidOpenDocumentNotification
+			object: self];
       return self;
     }
   return nil;		/* Failed	*/
+}
+
+- (id<IBEditors>) openEditorForObject: (id)anObject
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
+  return nil;
+}
+
+- (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
+  return nil;
 }
 
 - (id) parentOfObject: (id)anObject
@@ -537,6 +584,12 @@
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
   [connections removeObjectIdenticalTo: aConnector];
+}
+
+- (void) resignSelectionForEditor: (id<IBEditors>)editor
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
 }
 
 - (GormResourcesManager*) resourcesManager
@@ -668,10 +721,16 @@
 
 - (id) saveDocument: (id)sender
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
   if (documentPath == nil || [documentPath isEqualToString: @""])
     {
       return [self saveAsDocument: sender];
     }
+
+  [nc postNotificationName: IBWillSaveDocumentNotification
+		    object: self];
+
   if ([NSArchiver archiveRootObject: self toFile: documentPath] == NO)
     {
       NSRunAlertPanel(NULL, @"Could not save document", 
@@ -680,6 +739,9 @@
     }
   [[resourcesManager window] setDocumentEdited: NO];
   [[resourcesManager window] setTitleWithRepresentedFilename: documentPath];
+
+  [nc postNotificationName: IBWillSaveDocumentNotification
+		    object: self];
   return self;
 }
 
@@ -711,6 +773,12 @@
 	}
       [[resourcesManager window] orderOut: self];
     }
+}
+
+- (void) setSelectionFromEditor: (id<IBEditors>)anEditor
+{
+  /* FIXME */
+  [self notImplemented: _cmd];
 }
 
 - (void) touch

@@ -129,3 +129,93 @@
 }
 @end
 
+@implementation	NSWindow (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormWindowAttributesInspector";
+}
+- (NSString*) connectInspectorClassName
+{
+  return @"GormWindowConnectionsInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormWindowSizeInspector";
+}
+- (NSString*) helpInspectorClassName
+{
+  return @"GormWindowHelpInspector";
+}
+- (NSString*) classInspectorClassName
+{
+  return @"GormWindowClassInspector";
+}
+@end
+
+
+
+@interface GormWindowAttributesInspector : IBInspector
+@end
+
+@implementation GormWindowAttributesInspector
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView	*contents;
+      NSBox	*box;
+
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 360)
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      box = [[NSBox alloc] initWithFrame: NSMakeRect(10, 300, 100, 50)];
+      [box setTitle: @"Backing"];
+      [box setBorderType: NSGrooveBorder];
+      [contents addSubview: box];
+      RELEASE(box);
+    }
+  return self;
+}
+@end
+
+
+
+@interface GormWindowConnectionsInspector : IBInspector
+@end
+
+@implementation GormWindowConnectionsInspector
+@end
+
+
+
+@interface GormWindowSizeInspector : IBInspector
+@end
+
+@implementation GormWindowSizeInspector
+@end
+
+
+
+@interface GormWindowHelpInspector : IBInspector
+@end
+
+@implementation GormWindowHelpInspector
+@end
+
+
+
+@interface GormWindowClassInspector : IBInspector
+@end
+
+@implementation GormWindowClassInspector
+@end
+

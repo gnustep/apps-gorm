@@ -1,3 +1,27 @@
+/* Gorm.h
+ *
+ * Copyright (C) 1999 Free Software Foundation, Inc.
+ *
+ * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
+ * Date:	1999
+ * 
+ * This file is part of GNUstep.
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #ifndef GORM_H
 #define GORM_H
 
@@ -38,6 +62,10 @@ extern NSString	*IBWindowPboardType;
 extern NSString *IBAttributesChangedNotification;
 extern NSString *IBInspectorDidModifyObjectNotification;
 extern NSString *IBSelectionChangedNotification;
+extern NSString *IBDidOpenDocumentNotification;
+extern NSString *IBWillSaveDocumentNotification;
+extern NSString *IBDidSaveDocumentNotification;
+extern NSString *IBWillCloseDocumentNotification;
 extern NSString *IBWillBeginTestingInterfaceNotification;
 extern NSString *IBDidBeginTestingInterfaceNotification;
 extern NSString *IBWillEndTestingInterfaceNotification;
@@ -59,6 +87,37 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) setDestination: (id)anObject;
 - (void) setLabel: (NSString*)label;
 - (void) setSource: (id)anObject;
+@end
+
+@interface NSObject (IBEditorSpecification)
+- (NSString*) editorClassName;
+@end
+
+@protocol IBSelectionOwners <NSObject>
+- (unsigned) selectionCount;
+- (NSArray*) selection;
+- (void) drawSelection;
+@end
+
+@protocol IBEditors <IBSelectionOwners>
+- (BOOL) acceptsTypeFromArray: (NSArray*)types;
+- (BOOL) activate;
+- (id) initWithObject: (id)anObject inDocument: (id/*<IBDocuments>*/)aDocument;
+- (void) close;
+- (void) closeSubeditors;
+- (void) copySelection;
+- (void) deleteSelection;
+- (id /*<IBDocuments>*/) document;
+- (id) editedObject;
+- (void) makeSelectionVisible: (BOOL)flag;
+- (id<IBEditors>) openSubeditorForObject: (id)anObject;
+- (void) orderFront;
+- (void) pasteInSelection;
+- (void) resetObject: (id)anObject;
+- (void) selectObjects: (NSArray*)objects;
+- (void) validateEditing;
+- (BOOL) wantsSelection;
+- (NSWindow*) window;
 @end
 
 @protocol IBDocuments <NSObject>
@@ -85,21 +144,25 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (NSString*) documentPath;
 - (BOOL) documentShouldClose;
 - (void) documentWillClose;
+- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject;
+- (id<IBEditors>) editorForObject: (id)anObject
+			   create: (BOOL)flag;
+- (id<IBEditors>) editorForObject: (id)anObject
+			 inEditor: (id<IBEditors>)anEditor
+			   create: (BOOL)flag;
 - (NSString*) nameForObject: (id)anObject;
 - (NSArray*) objects;
+- (id<IBEditors>) openEditorForObject: (id)anObject;
+- (id<IBEditors>) parentEditorForEditor: (id<IBEditors>)anEditor;
 - (id) parentOfObject: (id)anObject;
 - (NSArray*) pasteType: (NSString*)aType
 	fromPasteboard: (NSPasteboard*)aPasteboard
 		parent: (id)parent;
 - (void) removeConnector: (id<IBConnectors>)aConnector;
+- (void) resignSelectionForEditor: (id<IBEditors>)editor;
 - (void) setName: (NSString*)aName forObject: (id)object;
+- (void) setSelectionFromEditor: (id<IBEditors>)anEditor;
 - (void) touch;		/* Mark document as having been changed.	*/
-@end
-
-@protocol IBSelectionOwners <NSObject>
-- (unsigned) selectionCount;
-- (NSArray*) selection;
-- (void) drawSelection;
 @end
 
 @protocol IB <NSObject>
@@ -174,31 +237,6 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (NSButton*) revertButton;
 - (void) touch: (id)sender;
 - (BOOL) wantsButtons;
-- (NSWindow*) window;
-@end
-
-@interface NSObject (IBEditorSpecification)
-- (NSString*) editorClassName;
-@end
-
-@protocol IBEditors <IBSelectionOwners>
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
-- (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
-- (void) close;
-- (void) closeSubeditors;
-- (void) copySelection;
-- (void) deleteSelection;
-- (id<IBDocuments>) document;
-- (id) editedObject;
-- (void) makeSelectionVisible: (BOOL)flag;
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
-- (void) orderFront;
-- (void) pasteInSelection;
-- (void) resetObject: (id)anObject;
-- (void) selectObjects: (NSArray*)objects;
-- (void) validateEditing;
-- (BOOL) wantsSelection;
 - (NSWindow*) window;
 @end
 
