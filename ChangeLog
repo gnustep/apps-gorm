@@ -1,3 +1,10 @@
+2002-04-08  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormNSMenu.m
+	[GormNSMenu -_createWindow]: removed NSLog statement before
+	NSPanel *win declaration which was causing Gorm not to build on
+	compilers gcc < 3.0.
+	
 2002-07-01  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* ClassInformation.plist: new outlet for NSWindowController

@@ -68,13 +68,13 @@
 
 - (NSPanel*) _createWindow
 {
-  NSLog(@"called _cre");
   NSPanel *win = [[GormNSMenuWindow alloc] 
                      initWithContentRect: NSZeroRect
 		   styleMask: /*NSTitledWindowMask/*/NSBorderlessWindowMask
                      backing: NSBackingStoreBuffered
                      defer: YES];
   [win setLevel: NSSubmenuWindowLevel];
+
   //  [win setWorksWhenModal: YES];
   //  [win setBecomesKeyOnlyIfNeeded: YES];
 
