@@ -24,6 +24,24 @@
 
 #include "GormNSMenu.h"
 
+// this must be done here, since Gorm must access this variable..
+@interface NSResponder (GormNSMenuPrivate)
+- (NSMenu *) _menu;
+- (void) _setMenu: (NSMenu *)m;
+@end
+
+@implementation	NSResponder (GormNSMenuPrivate)
+- (NSMenu *) _menu
+{
+  return _menu;
+}
+
+- (void) _setMenu: (NSMenu *)m
+{
+  _menu = m;
+}
+@end
+
 @interface GormNSMenuWindow : NSWindow
 {
   GormDocument *_document;
@@ -42,7 +60,7 @@
 
 - (void)setMenu: (NSMenu*)menu;
 {
-  _menu = menu;
+  [self _setMenu: menu];
 }
 
 - (void)setDocument: (GormDocument *)document
@@ -53,11 +71,11 @@
 - (void)resignMainWindow
 {
   [super resignMainWindow];
-  if ([_menu _ownedByPopUp])
+  if ([[self _menu] _ownedByPopUp])
     {
       [[NSRunLoop currentRunLoop]
 	performSelector: @selector(close)
-	target: _menu
+	target: [self _menu]
 	argument: nil
 	order: 500000
 	modes: [NSArray arrayWithObjects:
@@ -70,7 +88,7 @@
 - (void)becomeMainWindow
 {
   [super becomeMainWindow];
-  if ([_menu _ownedByPopUp] )
+  if ([[self _menu] _ownedByPopUp] )
     {
 
     }

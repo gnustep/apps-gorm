@@ -99,6 +99,17 @@
 - (NSWindow*) window;
 @end
 
+@interface NSResponder (GormMenuEditorPrivate)
+- (NSMenu *) _menu;
+@end
+
+@implementation	NSResponder (GormMenuEditorPrivate)
+- (NSMenu *) _menu
+{
+  return _menu;
+}
+@end
+
 @interface      GormMenuEditor (Private)
 - (NSEvent *) editTextField: view withEvent: (NSEvent *)theEvent;
 @end
@@ -712,7 +723,7 @@
 	}
       else
 	{
-	  if ([_menu _ownedByPopUp])
+	  if ([[self _menu] _ownedByPopUp])
 	    {
 	      [item setOnStateImage: nil];
 	      [item setMixedStateImage: nil];
