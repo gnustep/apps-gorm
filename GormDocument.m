@@ -378,6 +378,7 @@ static NSImage	*classesImage = nil;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   [window setDelegate: nil];
   [window performClose: self];
+  RELEASE(hidden);
   RELEASE(window);
   RELEASE(filesOwner);
   RELEASE(firstResponder);
@@ -637,96 +638,57 @@ static NSImage	*classesImage = nil;
     {
       if ([window isVisible] == YES)
 	{
-	  hiddenDuringTest = YES;
+	  [hidden addObject: window];
 	  [window setExcludedFromWindowsMenu: YES];
 	  [window orderOut: self];
-	  /*
-	   * If this is the active document, we must replace the main menu with
-	   * our own version using a modified 'Quit' item (to end testing).
-	   * and we should try to make one of our windows key.
-	   */
-	  if ([(id<IB>)NSApp activeDocument] == self)
+	}
+      if ([(id<IB>)NSApp activeDocument] == self)
+	{
+	  NSEnumerator	*enumerator;
+	  id		obj;
+
+	  enumerator = [nameTable objectEnumerator];
+	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      NSWindow		*keyWindow = nil;
-	      NSMenu		*testMenu = nil;
-	      NSMenuItem	*item;
-	      NSArray		*links;
-	      NSEnumerator	*e;
-	      NSNibConnector	*con;
-
-	      [connections makeObjectsPerform: @selector(establishConnection)];
-	      /*
-	       * Get links for all the top-level objects
-	       */
-	      links = [self connectorsForDestination: filesOwner
-					     ofClass: [NSNibConnector class]];
-	      e = [links objectEnumerator];
-	      while ((con = [e nextObject]) != nil)
+	      if ([obj isKindOfClass: [NSMenu class]] == YES)
 		{
-		  id	obj = [con source];
-
-		  if ([obj isKindOfClass: [NSMenu class]] == YES)
+		  if ([[obj window] isVisible] == YES)
 		    {
-		      testMenu = obj;
-		    }
-		  else if ([obj isKindOfClass: [NSWindow class]] == YES)
-		    {
-		      if (keyWindow == nil || [keyWindow isVisible] == NO)
-			{
-			  keyWindow = obj;
-			}
+		      [hidden addObject: obj];
+		      [obj close];
 		    }
 		}
-
-	      if (testMenu == nil)
+	      else if ([obj isKindOfClass: [NSWindow class]] == YES)
 		{
-		  testMenu = [[NSMenu alloc] initWithTitle: @"Test"];
-		  AUTORELEASE(testMenu);
+		  if ([obj isVisible] == YES)
+		    {
+		      [hidden addObject: obj];
+		      [obj orderOut: self];
+		    }
 		}
-	      item = [testMenu itemWithTitle: @"Quit"];
-	      if (item != nil)
-		{
-		  quitItem = RETAIN(item);
-		  [testMenu removeItem: item];
-		}
-	      [testMenu addItemWithTitle: @"Quit" 
-				  action: @selector(endTesting:)
-			   keyEquivalent: @"q"];	
-	      savedMenu = RETAIN([NSApp mainMenu]);
-	      [NSApp setMainMenu: testMenu];
-	      [keyWindow makeKeyAndOrderFront: self];
-	      RELEASE(testMenu);
 	    }
 	}
     }
   else if ([name isEqual: IBWillEndTestingInterfaceNotification] == YES)
     {
-      if (hiddenDuringTest == YES)
+      if ([hidden count] > 0)
 	{
-	  hiddenDuringTest = NO;
-	  /*
-	   * If this is the active document, we must restore the main menu
-	   * and restore the 'Quit' menu item (which was used to end testing)
-	   * to its original value.
-	   */
-	  if ([(id<IB>)NSApp activeDocument] == self)
-	    {
-	      NSMenu		*testMenu = [NSApp mainMenu];
-	      NSMenuItem	*item = [testMenu itemWithTitle: @"Quit"];
+	  NSEnumerator	*enumerator;
+	  id		obj;
 
-	      [testMenu removeItem: item];
-	      if (quitItem != nil)
+	  enumerator = [hidden objectEnumerator];
+	  while ((obj = [enumerator nextObject]) != nil)
+	    {
+	      if ([obj isKindOfClass: [NSMenu class]] == YES)
 		{
-		  [testMenu addItem: quitItem];
-		  DESTROY(quitItem);
+		  [obj display];
 		}
-	      /*
-	       * restore the main menu.
-	       */
-	      [NSApp setMainMenu: savedMenu];
-	      DESTROY(savedMenu);
+	      else if ([obj isKindOfClass: [NSWindow class]] == YES)
+		{
+		  [obj orderFront: self];
+		}
 	    }
-	  [window orderFront: self];
+	  [hidden removeAllObjects];
 	  [window setExcludedFromWindowsMenu: NO];
 	}
     }
@@ -861,6 +823,7 @@ static NSImage	*classesImage = nil;
       fontManager = [GormFontManager new];
       [self setName: @"NSFont" forObject: fontManager];
 
+      hidden = [NSMutableArray new];
       /*
        * Watch to see when we are starting/ending testing.
        */

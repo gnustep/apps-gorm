@@ -153,7 +153,6 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   RELEASE(infoPanel);
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
-  RELEASE(hiddenDuringTest);
   RELEASE(documents);
   RELEASE(classManager);
   [super dealloc];
@@ -267,8 +266,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   else
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSUserDefaults		*defs;
       NSEnumerator		*e;
-      NSWindow			*w;
       id			val;
 
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
@@ -288,15 +287,14 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	}
       DESTROY(testContainer);
 
-      /*
-       * Restore old windows.
-       */
-      e = [hiddenDuringTest objectEnumerator];
-      while ((w = [e nextObject]) != nil)
-	{
-	  [w orderFront: self];
-	}
-      [hiddenDuringTest removeAllObjects];
+{
+NSAutoreleasePool *p = [NSAutoreleasePool new];
+      defs = [NSUserDefaults standardUserDefaults];
+      [defs setObject: menuLocations forKey: @"NSMenuLocations"];
+      DESTROY(menuLocations);
+[p release];
+}
+      [self setMainMenu: mainMenu];
 
       isTesting = NO;
 
@@ -313,7 +311,6 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 - (void) finishLaunching
 {
   NSMenu		*aMenu;
-  NSMenu		*mainMenu;
   NSMenu		*modulesMenu;
   NSMenu		*windowsMenu;
   NSMenuItem		*menuItem;
@@ -556,7 +553,6 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 
       documents = [NSMutableArray new];
-      hiddenDuringTest = [NSMutableArray new];
       [nc addObserver: self
 	     selector: @selector(handleNotification:)
 		 name: IBSelectionChangedNotification
@@ -824,42 +820,67 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
     }
   else
     {
+      NSUserDefaults		*defs;
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       GormDocument		*a = (GormDocument*)[self activeDocument];
-      NSEnumerator		*e;
-      NSWindow			*w;
       NSData			*d;
+
+      [a beginArchiving];
+      d = [NSArchiver archivedDataWithRootObject: a];
+      [a endArchiving];
 
       [nc postNotificationName: IBWillBeginTestingInterfaceNotification
 			object: self];
 
       isTesting = YES;
 
-      [a beginArchiving];
-      d = [NSArchiver archivedDataWithRootObject: a];
-      [a endArchiving];
-
-      e = [[self windows] objectEnumerator];
-      while ((w = [e nextObject]) != nil)
-	{
-	  if ([w isVisible] == YES
-	    && [w isKindOfClass: [NSMenuWindow class]] == NO)
-	    {
-	      [hiddenDuringTest addObject: w];
-	      [w orderOut: self];
-	    }
-	}
-
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{
 	  [(id<IBEditors>)selectionOwner makeSelectionVisible: NO];
 	}
+
+      defs = [NSUserDefaults standardUserDefaults];
+      menuLocations = [[defs objectForKey: @"NSMenuLocations"] copy];
+      [defs removeObjectForKey: @"NSMenuLocations"];
 
       testContainer = [NSUnarchiver unarchiveObjectWithData: d];
       if (testContainer != nil)
 	{
 	  [testContainer awakeWithContext: nil];
 	  RETAIN(testContainer);
+	}
+
+      /*
+       * If the NIB didn't have a main menu, create one,
+       * otherwise, ensure that 'quit' ends testing mode.
+       */
+      if ([self mainMenu] == mainMenu)
+	{
+          NSMenu	*testMenu;
+
+	  testMenu = [[NSMenu alloc] initWithTitle: @"Test"];
+	  [testMenu addItemWithTitle: @"Quit" 
+			      action: @selector(endTesting:)
+		       keyEquivalent: @"q"];	
+	  [self setMainMenu: testMenu];
+	  RELEASE(testMenu);
+	}
+      else
+	{
+          NSMenu	*testMenu = [self mainMenu];
+	  NSMenuItem	*item;
+
+	  item = [testMenu itemWithTitle: @"Quit"];
+	  if (item != nil)
+	    {
+	      [item setAction: @selector(endTesting:)];
+	    }
+	  else
+	    {
+	      [testMenu addItemWithTitle: @"Quit" 
+				  action: @selector(endTesting:)
+			   keyEquivalent: @"q"];	
+	    }
 	}
 
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
