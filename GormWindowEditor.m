@@ -103,6 +103,18 @@
 
 
 
+@interface	GormSelectedView : NSObject
+{
+  NSView	*object;
+  NSView	*handles[8];
+}
+@end
+
+@implementation	GormSelection
+@end
+
+
+
 @interface	GormWindowEditor : NSView <IBEditors>
 {
   id<IBDocuments>	document;

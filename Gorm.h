@@ -34,14 +34,15 @@
  * Positions of handles for resizing items.
  */
 typedef enum {
-  IBBottomLeftKnobPosition,
-  IBMiddleLeftKnobPosition,
-  IBTopLeftKnobPosition,
-  IBTopMiddleKnobPosition,
-  IBTopRightKnobPosition,
-  IBMiddleRightKnobPosition,
-  IBBottomRightKnobPosition,
-  IBBottomMiddleKnobPosition
+  IBBottomLeftKnobPosition = 0,
+  IBMiddleLeftKnobPosition = 1,
+  IBTopLeftKnobPosition = 2,
+  IBTopMiddleKnobPosition = 3,
+  IBTopRightKnobPosition = 4,
+  IBMiddleRightKnobPosition = 5,
+  IBBottomRightKnobPosition = 6,
+  IBBottomMiddleKnobPosition = 7,
+  IBNoneKnobPosition = -1
 } IBKnobPosition;
 
 /*
