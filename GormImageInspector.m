@@ -57,7 +57,7 @@
   [imageView setImageAlignment: NSImageAlignCenter];
   [imageView setImageFrameStyle: NSImageFrameGrayBezel];
   [imageView setImageScaling: NSScaleNone];
-  [imageView setImage: [aobject normalImage]];
+  [imageView setImage: [aobject image]];
   [name setStringValue: [image name]];
   [width setDoubleValue: size.width];
   [height setDoubleValue: size.height];
