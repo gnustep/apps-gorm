@@ -81,13 +81,10 @@ static NSMapTable	*docMap = 0;
       docMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
 				NSObjectMapValueCallBacks, 
 				2);
-
-      // docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
-      //	NSObjectMapValueCallBacks, 2);
     }
 }
 
-+ (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument
++ (id) editorForDocument: (id<IBDocuments>)aDocument
 {
   id	editor = NSMapGet(docMap, (void*)aDocument);
 
@@ -99,10 +96,12 @@ static NSMapTable	*docMap = 0;
   return editor;
 }
 
-- (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
++ (void) setEditor: (id)editor
+       forDocument: (id<IBDocuments>)aDocument
 {
-  return YES;   /* Ensure we get initial mouse down event.      */
+  NSMapInsert(docMap, (void*)aDocument, (void*)self);
 }
+
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
@@ -111,57 +110,8 @@ static NSMapTable	*docMap = 0;
   return NO;
 }
 
-- (BOOL) activate
-{
-  [[self window] makeKeyAndOrderFront: self];
-  return YES;
-}
 
-- (void) addObject: (id)anObject
-{
-  if (anObject != nil
-    && [objects indexOfObjectIdenticalTo: anObject] == NSNotFound)
-    {
-      NSNotificationCenter	*nc;
 
-      nc = [NSNotificationCenter defaultCenter];
-
-      [objects addObject: anObject];
-      [self refreshCells];
-    }
-}
-
-- (id) changeSelection: (id)sender
-{
-  int	row = [self selectedRow];
-  int	col = [self selectedColumn];
-  int	index = row * [self numberOfColumns] + col;
-  id	obj = nil;
-
-  if (index >= 0 && index < [objects count])
-    {
-      obj = [objects objectAtIndex: index];
-      [self selectObjects: [NSArray arrayWithObject: obj]];
-    }
-  return obj;
-}
-
-- (void) close
-{
-  [self deactivate];
-  [self closeSubeditors];
-}
-
-- (void) closeSubeditors
-{
-}
-
-- (BOOL) containsObject: (id)object
-{
-  if ([objects indexOfObjectIdenticalTo: object] == NSNotFound)
-    return NO;
-  return YES;
-}
 
 - (void) copySelection
 {
@@ -173,15 +123,6 @@ static NSMapTable	*docMap = 0;
     }
 }
 
-- (void) deactivate
-{
-}
-
-- (void) dealloc
-{
-  RELEASE(objects);
-  [super dealloc];
-}
 
 - (void) deleteSelection
 {
@@ -282,10 +223,6 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-- (id<IBDocuments>) document
-{
-  return document;
-}
 
 - (void) handleNotification: (NSNotification*)aNotification
 {
@@ -294,10 +231,6 @@ static NSMapTable	*docMap = 0;
 
 }
 
-- (id) editedObject
-{
-  return selected;
-}
 
 /*
  *	Initialisation - register to receive DnD with our own types.
@@ -345,7 +278,8 @@ static NSMapTable	*docMap = 0;
       [proto setEditable: NO];
       [self setPrototype: proto];
       RELEASE(proto);
-      NSMapInsert(docMap, (void*)aDocument, (void*)self);
+      [self setEditor: self
+	    forDocument: aDocument];
       [self addObject: anObject];
     }
   return self;
@@ -417,15 +351,6 @@ static NSMapTable	*docMap = 0;
   [super mouseDown: theEvent];
 }
 
-- (id<IBEditors>) openSubeditorForObject: (id)anObject
-{
-  return nil;
-}
-
-- (void) orderFront
-{
-  [[self window] orderFront: self];
-}
 
 - (void) pasteInSelection
 {
@@ -530,93 +455,8 @@ static NSMapTable	*docMap = 0;
   return self;
 }
 
-/*
- * Return the rectangle in which an objects image will be displayed.
- * (use window coordinates)
- */
-- (NSRect) rectForObject: (id)anObject
-{
-  unsigned	pos = [objects indexOfObjectIdenticalTo: anObject];
-  NSRect	rect;
-  int		r;
-  int		c;
 
-  if (pos == NSNotFound)
-    return NSZeroRect;
-  r = pos / [self numberOfColumns];
-  c = pos % [self numberOfColumns];
-  rect = [self cellFrameAtRow: r column: c];
-  /*
-   * Adjust to image area.
-   */
-//    rect.size.width -= 15;
-  rect.size.height -= 15;
-  rect = [self convertRect: rect toView: nil];
-  return rect;
-}
 
-- (void) refreshCells
-{
-  unsigned	count = [objects count];
-  unsigned	index;
-  int		cols = 0;
-  int		rows;
-  int		width;
-
-  width = [[self superview] bounds].size.width;
-  while (width >= 72)
-    {
-      width -= (72 + 8);
-      cols++;
-    }
-  if (cols == 0)
-    {
-      cols = 1;
-    }
-  rows = count / cols;
-  if (rows == 0 || rows * cols != count)
-    {
-      rows++;
-    }
-  [self renewRows: rows columns: cols];
-
-  for (index = 0; index < count; index++)
-    {
-      id		obj = [objects objectAtIndex: index];
-      NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-
-      [but setImage: [obj imageForViewer]];
-      [but setTitle: [document nameForObject: obj]];
-      [but setShowsStateBy: NSChangeGrayCellMask];
-      [but setHighlightsBy: NSChangeGrayCellMask];
-    }
-  while (index < rows * cols)
-    {
-      NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-
-      [but setImage: nil];
-      [but setTitle: @""];
-      [but setShowsStateBy: NSNoCellMask];
-      [but setHighlightsBy: NSNoCellMask];
-      index++;
-    }
-  [self setIntercellSpacing: NSMakeSize(8,8)];
-  [self sizeToCells];
-  [self setNeedsDisplay: YES];
-}
-
-- (void) removeObject: (id)anObject
-{
-  unsigned	pos;
-
-  pos = [objects indexOfObjectIdenticalTo: anObject];
-  if (pos == NSNotFound)
-    {
-      return;
-    }
-  [objects removeObjectAtIndex: pos];
-  [self refreshCells];
-}
 
 - (void) resetObject: (id)anObject
 {
@@ -633,280 +473,8 @@ static NSMapTable	*docMap = 0;
     }
 }
 
-- (void) resizeWithOldSuperviewSize: (NSSize)oldSize
-{
-  [self refreshCells];
-}
-
-- (void) selectObjects: (NSArray*)anArray
-{
-  id	obj = [anArray lastObject];
-
-  selected = obj;
-  [document setSelectionFromEditor: self];
-  [self makeSelectionVisible: YES];
-}
-
-- (NSArray*) selection
-{
-  if (selected == nil)
-    return [NSArray array];
-  else
-    return [NSArray arrayWithObject: selected];
-}
-
-- (unsigned) selectionCount
-{
-  return (selected == nil) ? 0 : 1;
-}
 
 
-- (BOOL) wantsSelection
-{
-  return NO;
-}
-
-- (NSWindow*) window
-{
-  return [super window];
-}
 @end
 
 
-@implementation	NSView (GormInspectors)
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormViewSizeInspector";
-}
-
-- (NSString*) customClassInspector
-{
-  return @"GormCustomClassInspector";
-}
-@end
-
-@interface GormViewSizeInspector : IBInspector
-{
-  NSButton	*top;
-  NSButton	*bottom;
-  NSButton	*left;
-  NSButton	*right;
-  NSButton	*width;
-  NSButton	*height;
-  NSForm        *sizeForm;
-}
-@end
-
-@implementation GormViewSizeInspector
-
-NSImage	*eHCoil = nil;
-NSImage	*eVCoil = nil;
-NSImage	*eHLine = nil;
-NSImage	*eVLine = nil;
-NSImage	*mHCoil = nil;
-NSImage	*mVCoil = nil;
-NSImage	*mHLine = nil;
-NSImage	*mVLine = nil;
-
-+ (void) initialize
-{
-  if (self == [GormViewSizeInspector class])
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path;
-
-      path = [bundle pathForImageResource: @"GormEHCoil"];
-      eHCoil = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormEVCoil"];
-      eVCoil = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormEHLine"];
-      eHLine = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormEVLine"];
-      eVLine = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormMHCoil"];
-      mHCoil = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormMVCoil"];
-      mVCoil = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormMHLine"];
-      mHLine = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormMVLine"];
-      mVLine = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-}
-
-- (void) dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(window);
-  [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" 
-		    owner: self] == NO)
-	{
-
-	  NSDictionary	*table;
-	  NSBundle	*bundle;
-	  
-	  table = [NSDictionary dictionaryWithObject: self
-				forKey: @"NSOwner"];
-	  bundle = [NSBundle mainBundle];
-
-	  if ( [bundle loadNibFile: @"GormViewSizeInspector"
-		       externalNameTable: table
-		       withZone: [self zone]] == NO)
-	    {
-	      NSLog(@"Could not open gorm GormViewSizeInspector");
-	      NSLog(@"self %@", self);
-	      return nil;
-	    }
-	}
-
-      [top setTag: NSViewMaxYMargin];  
-      [bottom setTag: NSViewMinYMargin];
-      [right setTag: NSViewMaxXMargin];
-      [left setTag: NSViewMinXMargin];
-      [width setTag: NSViewWidthSizable];
-      [height setTag: NSViewHeightSizable];
-
-      [[NSNotificationCenter defaultCenter] 
-        addObserver: self
-           selector: @selector(viewFrameChangeNotification:)
-               name: NSViewFrameDidChangeNotification
-             object: nil];
-      [[NSNotificationCenter defaultCenter] 
-	addObserver: self
-	   selector: @selector(controlTextDidEndEditing:)
-	       name: NSControlTextDidEndEditingNotification
-	     object: nil];
-
-    }
-  return self;
-}
-
-- (void) _setValuesFromControl: control
-{
-  if (control == sizeForm)
-    {
-      NSRect rect;
-      rect = NSMakeRect([[control cellAtIndex: 0] floatValue],
-                        [[control cellAtIndex: 1] floatValue],
-                        [[control cellAtIndex: 2] floatValue],
-                        [[control cellAtIndex: 3] floatValue]);
-
-      if (NSEqualRects(rect, [object frame]) == NO)
-	{
-	  NSRect oldFrame = [object frame];
-
-	  [object setFrame: rect];
-	  [object display];
-
-	  if ([object superview])
-	    [[object superview] displayRect:
-				  GormExtBoundsForRect(oldFrame)];
-	  [[object superview] lockFocus];
-	  GormDrawKnobsForRect([object frame]);
-	  GormShowFastKnobFills();
-	  [[object superview] unlockFocus];
-	  [[object window] flushWindow];
-	}
-    }
-}
-
-- (void) _getValuesFromObject: anObject
-{
-  NSRect frame;
-
-  if (anObject != object)
-    return;
-
-  frame = [anObject frame];
-  [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
-  [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
-  [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
-  [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
-}
-
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-  [self _setValuesFromControl: notifier];
-}
-
-- (void) viewFrameChangeNotification: (NSNotification*)aNotification
-{
-  id notifier = [aNotification object];
-  
-  [self _getValuesFromObject: notifier];
-}
-
-- (void) setAutosize: (id)sender
-{
-  unsigned	mask = [sender tag];
-
-  if ([sender state] == NSOnState)
-    {
-      mask = [object autoresizingMask] | mask;
-    }
-  else
-    {
-      mask = [object autoresizingMask] & ~mask;
-    }
-  [object setAutoresizingMask: mask];
-}
-
-- (void) setObject: (id)anObject
-{
-  if ((object != nil) && (anObject != object))
-    [object setPostsFrameChangedNotifications: NO];
-
-  if (anObject != nil && anObject != object)
-    {
-      NSRect frame;
-      unsigned	mask = [anObject autoresizingMask];
-
-      ASSIGN(object, anObject);
-      if (mask & NSViewMaxYMargin)
-	[top setState: NSOnState];
-      else
-	[top setState: NSOffState];
-
-      if (mask & NSViewMinYMargin)
-	[bottom setState: NSOnState];
-      else
-	[bottom setState: NSOffState];
-
-      if (mask & NSViewMaxXMargin)
-	[right setState: NSOnState];
-      else
-	[right setState: NSOffState];
-
-      if (mask & NSViewMinXMargin)
-	[left setState: NSOnState];
-      else
-	[left setState: NSOffState];
-
-      if (mask & NSViewWidthSizable)
-	[width setState: NSOnState];
-      else
-	[width setState: NSOffState];
-
-      if (mask & NSViewHeightSizable)
-	[height setState: NSOnState];
-      else
-	[height setState: NSOffState];
-
-      frame = [anObject frame];
-      [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
-      [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
-      [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
-      [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
-      [anObject setPostsFrameChangedNotifications: YES];
-    }
-}
-@end

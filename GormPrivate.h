@@ -171,13 +171,23 @@ extern NSString *GormLinkPboardType;
 - (void) setSelectedClassName: (NSString*)cn;
 @end
 
-@interface	GormObjectEditor : NSMatrix <IBEditors, IBSelectionOwners>
+@interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
 {
   NSMutableArray	*objects;
   id<IBDocuments>	document;
   id			selected;
   NSPasteboard		*dragPb;
   NSString		*dragType;
+}
+@end
+
+@interface	GormObjectEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
+{
+//    NSMutableArray	*objects;
+//    id<IBDocuments>	document;
+//    id			selected;
+//    NSPasteboard		*dragPb;
+//    NSString		*dragType;
 }
 // + (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
 - (void) addObject: (id)anObject;
@@ -206,13 +216,13 @@ extern NSString *GormLinkPboardType;
 - (NSWindow*) window;
 @end
 
-@interface	GormSoundEditor : NSMatrix <IBEditors, IBSelectionOwners>
+@interface	GormSoundEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
 {
-  NSMutableArray        *objects;
-  id<IBDocuments>       document;
-  id			selected;
-  NSPasteboard		*dragPb;
-  NSString		*dragType;
+//    NSMutableArray        *objects;
+//    id<IBDocuments>       document;
+//    id			selected;
+//    NSPasteboard		*dragPb;
+//    NSString		*dragType;
 }
 // don't redeclare methods already declared in protocols.
 + (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
@@ -228,6 +238,18 @@ extern NSString *GormLinkPboardType;
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
 - (void) pasteInSelection;
 - (NSRect) rectForObject: (id)anObject;
+@end
+
+@interface	GormImageEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
+{
+}
+// don't redeclare methods already declared in protocols.
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (void) refreshCells;
+- (void) copySelection;
+- (void) deleteSelection;
+- (void) pasteInSelection;
 @end
 
 
@@ -294,6 +316,28 @@ extern NSString *GormLinkPboardType;
 - (NSString *) soundPath;
 - (void) setSystemSound: (BOOL)flag;
 - (BOOL) isSystemSound;
+- (void) setInWrapper: (BOOL)flag;
+- (BOOL) isInWrapper;
+- (NSString *)inspectorClassName;
+@end
+
+@interface GormImage : NSObject
+{
+  NSString *name;
+  NSString *path;
+  NSImage  *image;
+  NSImage  *smallImage;
+  BOOL     isSystemImage;
+  BOOL     isInWrapper; 
+}
+- (id) initWithName: (NSString *)aName
+               path: (NSString *)aPath;
+- (void) setImageName: (NSString *)aName;
+- (NSString *) imageName;
+- (void) setImagePath: (NSString *)aPath;
+- (NSString *) imagePath;
+- (void) setSystemImage: (BOOL)flag;
+- (BOOL) isSystemImage;
 - (void) setInWrapper: (BOOL)flag;
 - (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;

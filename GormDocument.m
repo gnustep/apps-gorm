@@ -26,6 +26,7 @@
 #include "GormClassManager.h"
 #include "GormCustomView.h"
 #include "GormOutlineView.h"
+#include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
@@ -262,6 +263,16 @@ static NSImage	*classesImage = nil;
   return AUTORELEASE([[GormSound alloc] initWithName: name path: path]);
 }
 
+// image support
+- (GormImage *)_createImagePlaceHolder: (NSString *)path
+{
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
+  // [dict setObject: path forKey: @"Path"];
+  // [dict setObject: name forKey: @"Name"];
+  return TEST_AUTORELEASE([[GormImage alloc] initWithName: name path: path]);
+}
+
 // template support
 - (void) _replaceObjectsWithTemplates
 {
@@ -422,11 +433,9 @@ static NSImage	*classesImage = nil;
     case 0: // objects
       [selectionBox setContentView: scrollView];
       break;
-      /*
     case 1: // images
       [selectionBox setContentView: imagesScrollView];
       break;
-      */
     case 2: // sounds
       [selectionBox setContentView: soundsScrollView];
       break;
@@ -1331,8 +1340,9 @@ static NSImage	*classesImage = nil;
       // defferred windows for this document...
       deferredWindows = [NSMutableArray new];
 
-      // defferred windows for this document...
+      // sounds & images
       sounds = [NSMutableSet new];
+      images = [NSMutableSet new];
 
       style = NSTitledWindowMask | NSClosableWindowMask
 	| NSResizableWindowMask | NSMiniaturizableWindowMask;
@@ -1446,6 +1456,20 @@ static NSImage	*classesImage = nil;
       [objectsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [scrollView setDocumentView: objectsView];
       RELEASE(objectsView);
+
+      // images...
+      mainRect.origin = NSMakePoint(0,0);
+      imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [imagesScrollView setHasVerticalScroller: YES];
+      [imagesScrollView setHasHorizontalScroller: NO];
+      [imagesScrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      imagesView = [[GormImageEditor alloc] initWithObject: nil
+					    inDocument: self];
+      AUTORELEASE(imagesView);
+      [imagesView setFrame: mainRect];
+      [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [imagesScrollView setDocumentView: imagesView];
+      RELEASE(imagesView);
 
       // sounds...
       mainRect.origin = NSMakePoint(0,0);
@@ -1777,6 +1801,31 @@ static NSImage	*classesImage = nil;
 	      NSLog(@"Add the sound %@",file);
 	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
 	      [sounds addObject: soundPath];
+	    }
+	}
+    }
+
+  /*
+   * read in all of the images in the .gorm wrapper and load them into the editor.
+   */
+  dirEnumerator = [mgr enumeratorAtPath: documentPath];
+  if(dirEnumerator)
+    {
+      NSString *file = nil;
+      NSArray  *fileTypes = [NSImage imageFileTypes];
+      while(file = [dirEnumerator nextObject])
+	{
+	  if([fileTypes containsObject: [file pathExtension]])
+	    {
+	      NSString *imagePath = [documentPath stringByAppendingPathComponent: file];
+	      // add the image...
+	      id placeHolder = [self _createImagePlaceHolder: imagePath];
+	      if (placeHolder)
+		{
+		  NSLog(@"Add the image %@",file);
+		  [imagesView addObject: placeHolder];
+		  [images addObject: imagePath];
+		}
 	    }
 	}
     }
@@ -2420,6 +2469,20 @@ static NSImage	*classesImage = nil;
 		      NSLog(@"Could not find sound at path %@", object);
 		    }
 		}
+	      
+	      en = [images objectEnumerator];
+
+	      while((object = [en nextObject]) != nil)
+		{
+		  NSString *imagePath = [documentPath stringByAppendingPathComponent: [object lastPathComponent]];
+		  BOOL copied = [mgr copyPath: object toPath: imagePath handler: nil];
+
+		  if(!copied)
+		    {
+		      NSLog(@"Could not find image at path %@", object);
+		    }
+		} 
+
 	    }
 	}
     }
@@ -2940,4 +3003,32 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   return nil;
 }
 
+// sound support...
+- (id) openImage: (id)sender
+{
+  NSArray	*fileTypes = [NSImage imageFileTypes]; 
+  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  int		result;
+
+  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setCanChooseFiles: YES];
+  [oPanel setCanChooseDirectories: NO];
+  result = [oPanel runModalForDirectory: nil
+				   file: nil
+				  types: fileTypes];
+  if (result == NSOKButton)
+    {
+      NSLog(@"Loading image file: %@",[oPanel filename]);
+      [imagesView addObject: [self _createImagePlaceHolder: [oPanel filename]]];
+      [images addObject: [oPanel filename]];
+      return self;
+    }
+
+  return nil;
+}
+
+- (void) addImage: (NSString*) path
+{
+  [images addObject: path];
+}
 @end

@@ -61,40 +61,43 @@
 	  NSLog(@"Could not open gorm GormCustomClassInspector");
 	  return nil;
 	}
-      else
-	{
-	  [[NSNotificationCenter defaultCenter] 
-	    addObserver: self
-	    selector: @selector(handleNotification:)
-	    name: IBSelectionChangedNotification
-	    object: nil];
-	}
     }
   return self;
 }
 
-- (void) dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-}
 
 - (NSString *)_correctClassName: (NSString *)className
 {
-  NSString *prefix = nil, *substring = nil, *result = nil;
+  if ([className isEqualToString: @"GormNSMenu"])
+    {
+      return @"NSMenu";
+    }
+  if ([className isEqualToString: @"GormNSWindow"])
+    {
+      return @"NSWindow";
+    }
+  if ([className isEqualToString: @"GormNSBrowser"])
+    {
+      return @"NSBrowser";
+    }
+  if ([className isEqualToString: @"GormNSTableView"])
+    {
+      return @"NSTableView";
+    }
+  if ([className isEqualToString: @"GormNSOutlineView"])
+    {
+      return @"NSOutlineView";
+    }
+  if ([className isEqualToString: @"GormNSPopUpButton"])
+    {
+      return @"NSPopUpButton";
+    }
+  if ([className isEqualToString: @"GormNSPopUpButtonCell"])
+    {
+      return @"NSPopUpButtonCell";
+    }
 
-  // based on the name of the class set the class name...
-  prefix = [className substringToIndex: 4];
-  if([prefix isEqualToString: @"Gorm"])
-    {
-      substring = [className substringFromIndex: 4];
-      ASSIGN(result, substring);
-    }
-  else
-    {
-      ASSIGN(result, className);
-    }
-  
-  return result;
+  return className;
 }
 
 - (void) _setCurrentSelectionClassName: (id)anobject
@@ -114,31 +117,22 @@
   ASSIGN(_parentClassName, [self _correctClassName: NSStringFromClass([anobject class])]);
 }
 
-- (void) handleNotification: (NSNotification*)aNotification
+- (void) setObject: (id)anObject
 {
-  id editor = [aNotification object];
-  NSArray *selections = [editor selection];
-      
-  if([selections count] == 1)
-    {
-      _document = [(Gorm *)NSApp activeDocument];
-      _classManager = [(Gorm *)NSApp classManager];
-      _currentSelection = [selections objectAtIndex: 0];
-
-      NSDebugLog(@"Current selection %@", _currentSelection);
-      [self _setCurrentSelectionClassName: _currentSelection];
-      [browser reloadColumn: 0];
-
-      // select the class...
-      [browser selectRow: _rowToSelect inColumn: 0];
-      [browser setNeedsDisplay: YES];
-    }
-  else
-    {
-      _currentSelection = nil;
-      NSDebugLog(@"Invalid selection");
-    }
+  [super setObject: anObject];
+  _document = [(Gorm *)NSApp activeDocument];
+  _classManager = [(Gorm *)NSApp classManager];
+  _currentSelection = anObject;
+  
+  NSDebugLog(@"Current selection %@", _currentSelection);
+  [self _setCurrentSelectionClassName: _currentSelection];
+  [browser reloadColumn: 0];
+  
+  // select the class...
+  [browser selectRow: _rowToSelect inColumn: 0];
+  [browser setNeedsDisplay: YES];
 }
+
 
 - (void) awakeFromNib
 {

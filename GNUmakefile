@@ -146,8 +146,10 @@ Gorm_OBJC_FILES = \
 	GormFilesOwner.m \
 	GormClassEditor.m \
 	GormMatrixEditor.m \
+	GormGenericEditor.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
+	GormViewSizeInspector.m \
 	GormWindowEditor.m \
 	GormClassManager.m \
 	GormInspectorsManager.m \
@@ -165,6 +167,7 @@ Gorm_OBJC_FILES = \
 	GormCustomClassInspector.m \
 	GormSoundInspector.m \
 	GormScrollViewEditor.m \
+	GormImageEditor.m \
 	GormSoundEditor.m
 
 -include GNUmakefile.preamble

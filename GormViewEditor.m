@@ -254,6 +254,7 @@ static BOOL currently_displaying = NO;
 - (id) initWithObject: (id)anObject 
 	   inDocument: (id<IBDocuments>)aDocument
 {
+  NSMutableArray *draggedTypes;
   _editedObject = (NSView*)anObject;
 
   if ((self = [super initWithFrame: [_editedObject frame]]) == nil)
@@ -263,8 +264,20 @@ static BOOL currently_displaying = NO;
 
   document = aDocument;
 
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    GormLinkPboardType, nil]];
+  draggedTypes = [NSMutableArray arrayWithObject: GormLinkPboardType];
+  
+
+  if ([_editedObject respondsToSelector: @selector(setImage:)])
+    {
+      [draggedTypes addObject: GormImagePboardType];
+    }
+  if ([_editedObject respondsToSelector: @selector(setSound:)])
+    {
+      [draggedTypes addObject: GormSoundPboardType];
+    }
+
+  [self registerForDraggedTypes: draggedTypes];
+
 
   activated = NO;
   closed = NO;
@@ -1240,11 +1253,11 @@ static BOOL currently_displaying = NO;
   return;  
 }
 
-- (BOOL) acceptsTypeFromArray: (NSArray*)types
-{
-  NSLog(@"I said why not !");
-  return [types containsObject: GormLinkPboardType];
-}
+//  - (BOOL) acceptsTypeFromArray: (NSArray*)types
+//  {
+//    NSLog(@"I said why not !");
+//    return [types containsObject: GormLinkPboardType];
+//  }
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
@@ -1259,31 +1272,23 @@ static BOOL currently_displaying = NO;
 	     and: _editedObject];
       return NSDragOperationLink;
     }
+  else if ([types containsObject: GormImagePboardType] == YES)
+    {
+      return NSDragOperationCopy;
+    }
+  else if ([types containsObject: GormSoundPboardType] == YES)
+    {
+      return NSDragOperationCopy;
+    }
   else
     {
-//        NSLog(@"I said None !");
       return NSDragOperationNone;
     }
 }
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: GormLinkPboardType] == YES)
-    {
-//        [NSApp displayConnectionBetween: [NSApp connectSource] 
-//  	     and: _editedObject];
-      return NSDragOperationLink;
-    }
-  else
-    {
-//        NSLog(@"I said None !");
-      return NSDragOperationNone;
-    }
+  return [self draggingEntered: sender];
 }
 
 
@@ -1359,6 +1364,14 @@ static BOOL currently_displaying = NO;
     {
       return YES;
     }
+  else if ([types containsObject: GormImagePboardType] == YES)
+    {
+      return YES;
+    }
+  else if ([types containsObject: GormSoundPboardType] == YES)
+    {
+      return YES;
+    }
   else
     {
       return NO;
@@ -1379,7 +1392,24 @@ static BOOL currently_displaying = NO;
 	     and: _editedObject];
       [NSApp startConnecting];
     }
-  return YES;
+  else if ([types containsObject: GormImagePboardType] == YES)
+    {
+      NSData	*data;
+      NSString *name;
+      name = [dragPb stringForType: GormImagePboardType];
+      [(id)_editedObject setImage: [NSImage imageNamed: name]];
+      return YES;
+    }
+  else   if ([types containsObject: GormSoundPboardType] == YES)
+    {
+      NSData	*data;
+      NSString *name;
+      name = [dragPb stringForType: GormSoundPboardType];
+      NSLog(@"sound drag'n'dropping is not currently working, please fix it");
+      //      [(id)_editedObject setSound: [NSSound soundNamed: name]];
+      return YES;
+    }
+  return NO;
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag

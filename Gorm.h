@@ -59,6 +59,15 @@ extern NSString	*IBViewPboardType;
 extern NSString	*IBWindowPboardType;
 extern NSString	*IBFormatterPboardType;
 
+
+/*
+ * Pasteboard types used for DnD from images or sounds tab
+ * to views or inspector's textfield
+ * onto the desktop).
+ */
+extern NSString	*GormImagePboardType;
+extern NSString	*GormSoundPboardType;
+
 /*
  * Notification for editing and inspecting the objects etc.
  */

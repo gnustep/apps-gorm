@@ -37,9 +37,11 @@
   NSScrollView		*scrollView;
   NSScrollView          *classesScrollView;
   NSScrollView          *soundsScrollView;
+  NSScrollView          *imagesScrollView;
   id                    classesView;
   id			objectsView;
   id			soundsView;
+  id			imagesView;
   BOOL			hasSetDefaults;
   BOOL			isActive;
   NSMenu		*savedMenu;
@@ -48,6 +50,7 @@
   NSMutableArray	*hidden;
   NSMutableArray	*deferredWindows;
   NSMutableSet          *sounds;
+  NSMutableSet          *images;
   // NSFileWrapper         *wrapper;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;

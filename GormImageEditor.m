@@ -24,49 +24,36 @@
 
 #include "GormPrivate.h"
 
-NSString *GormSoundPboardType = @"GormSoundPboardType";
+NSString *GormImagePboardType = @"GormImagePboardType";
 
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSObject (GormSoundAdditions)
-- (NSString*) soundInspectorClassName
+@implementation NSObject (GormImageAdditions)
+- (NSString*) imageInspectorClassName
 {
-  return @"GormSoundInspector";
+  return @"GormImageInspector";
 }
 
-- (NSImage*) soundImageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormSound"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
 @end
 
 
 
-@implementation	GormSoundEditor
+@implementation	GormImageEditor
 
 static NSMapTable	*docMap = 0;
 
 + (void) initialize
 {
-  if (self == [GormSoundEditor class])
+  if (self == [GormImageEditor class])
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
 	NSObjectMapValueCallBacks, 2);
     }
 }
 
-+ (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument
++ (GormImageEditor*) editorForDocument: (id<IBDocuments>)aDocument
 {
   id	editor = NSMapGet(docMap, (void*)aDocument);
 
@@ -80,21 +67,21 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  if ([types containsObject: IBObjectPboardType] == YES)
-    return YES;
+//    if ([types containsObject: IBObjectPboardType] == YES)
+//      return YES;
   return NO;
 }
 
 
-- (void) copySelection
-{
-  if (selected != nil)
-    {
-      [document copyObjects: [self selection]
-		       type: IBViewPboardType
-	       toPasteboard: [NSPasteboard generalPasteboard]];
-    }
-}
+//  - (void) copySelection
+//  {
+//    if (selected != nil)
+//      {
+//        [document copyObjects: [self selection]
+//  		       type: IBViewPboardType
+//  	       toPasteboard: [NSPasteboard generalPasteboard]];
+//      }
+//  }
 
 /*
  *	Dragging source protocol implementation
@@ -105,6 +92,8 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
+  return NSDragOperationCopy;
+
   NSArray	*types;
 
   dragPb = [sender draggingPasteboard];
@@ -126,6 +115,8 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
+  return NSDragOperationCopy;
+
   if (dragType == IBObjectPboardType)
     {
       return NSDragOperationCopy;
@@ -164,8 +155,18 @@ static NSMapTable	*docMap = 0;
     }
 }
 
+//  - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+//  {
+//    return NSDragOperationCopy;
+//  }
+
 - (void) drawSelection
 {
+}
+
+- (id<IBDocuments>) document
+{
+  return document;
 }
 
 - (void) handleNotification: (NSNotification*)aNotification
@@ -197,7 +198,7 @@ static NSMapTable	*docMap = 0;
       document = aDocument;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	IBObjectPboardType, GormLinkPboardType, nil]];
+	NSFilenamesPboardType, nil]];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];
@@ -243,57 +244,6 @@ static NSMapTable	*docMap = 0;
   [self displayIfNeeded];
   [[self window] flushWindow];
 }
-
-//  - (void) mouseDown: (NSEvent*)theEvent
-//  {
-//    if ([theEvent modifierFlags] & NSControlKeyMask)
-//      {
-//        NSPoint	loc = [theEvent locationInWindow];
-//        NSString	*name;
-//        int	r, c;
-//        int	pos;
-//        id	obj;
-
-//        loc = [self convertPoint: loc fromView: nil];
-//        [self getRow: &r column: &c forPoint: loc];
-//        pos = r * [self numberOfColumns] + c;
-//        if (pos >= 0 && pos < [objects count])
-//  	{
-//  	  obj = [objects objectAtIndex: pos];
-//  	}
-//        if (obj != nil && obj != selected)
-//  	{
-//  	  [self selectObjects: [NSArray arrayWithObject: obj]];
-//  	  [self makeSelectionVisible: YES];
-//  	}
-      
-//        /*
-//        name = [document nameForObject: obj];
-//        if ([name isEqualToString: @"NSFirst"] == NO)
-//  	{
-//  	  NSPasteboard	*pb;
-
-//  	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-//  	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
-//  		     owner: self];
-//  	  [pb setString: name forType: GormLinkPboardType];
-//  	  [NSApp displayConnectionBetween: obj and: nil];
-
-//  	  [self dragImage: [NSApp linkImage]
-//  		       at: loc
-//  		   offset: NSZeroSize
-//  		    event: theEvent
-//  	       pasteboard: pb
-//  		   source: self
-//  		slideBack: YES];
-//  	  [self makeSelectionVisible: YES];
-//  	  return;
-//  	}
-//        */
-//      }
-
-//    [super mouseDown: theEvent];
-//  }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
@@ -382,11 +332,11 @@ static NSMapTable	*docMap = 0;
 	  pos = row * [self numberOfColumns] + column;
 
   	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-  	  [pb declareTypes: [NSArray arrayWithObject: GormSoundPboardType]
+  	  [pb declareTypes: [NSArray arrayWithObject: GormImagePboardType]
   		     owner: self];
-  	  [pb setString: [[objects objectAtIndex: pos] soundName] 
-	      forType: GormSoundPboardType];
-  	  [self dragImage: [[objects objectAtIndex: pos] soundImageForViewer]
+  	  [pb setString: [[objects objectAtIndex: pos] imageName] 
+	      forType: GormImagePboardType];
+  	  [self dragImage: [[objects objectAtIndex: pos] image]
   		       at: lastLocation
   		   offset: NSZeroSize
   		    event: theEvent
@@ -411,103 +361,91 @@ static NSMapTable	*docMap = 0;
 
 }
 
+
 - (void) pasteInSelection
 {
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  if (dragType == IBObjectPboardType)
-    {
-      NSArray		*array;
-      NSEnumerator	*enumerator;
-      id		obj;
+  id filesArray;
+  id data;
+  id unarchiver;
 
-      /*
-       * Ask the document to get the dragged objects from the pasteboard and
-       * add them to it's collection of known objects.
-       */
-      array = [document pasteType: IBViewPboardType
-		   fromPasteboard: dragPb
-			   parent: [objects objectAtIndex: 0]];
-      enumerator = [array objectEnumerator];
-      while ((obj = [enumerator nextObject]) != nil)
-	{
-	  [self addObject: obj];
-	}
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
+  if ( [[[NSPasteboard pasteboardWithName: NSDragPboard] types]
+	 containsObject: NSFilenamesPboardType])
     {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
+      int i, count;
+      data = [[NSPasteboard pasteboardWithName: NSDragPboard]
+	       dataForType: NSFilenamesPboardType];
+      filesArray = [NSUnarchiver unarchiveObjectWithData: data];
+      
+      count = [filesArray count];
 
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
+      NSLog(@"filesArray %@", filesArray);
+      for (i = 0; i < count; i ++ )
 	{
-	  obj = [objects objectAtIndex: pos];
+	  id placeHolder = 
+	    [document _createImagePlaceHolder: [filesArray objectAtIndex: i]];
+	  NSLog(@"here1 %@", [filesArray objectAtIndex: i]);
+	  if (placeHolder)
+	    {
+	      NSLog(@"here %@", [filesArray objectAtIndex: i]);
+	      [self addObject: placeHolder];
+	      [document addImage: 
+			  [[[filesArray objectAtIndex: i] 
+			     lastPathComponent] 
+			    stringByDeletingPathExtension]];
+	    }
+
 	}
-      if (obj == nil)
-	{
-	  return NO;
-	}
-      else
-	{
-	  [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-	  [NSApp startConnecting];
-	  return YES;
-	}
-    }
-  else
-    {
-      NSLog(@"Drop with unrecognized type!");
-      return NO;
-    }
+//        NSLog(@"filesArray %@", filesArray);
+//        NSLog(@"filesArray %@", [filesArray class]);
+    }  
+
 }
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
-  /*
-   * Tell the source that we will accept the drop if we can.
-   */
-  if (dragType == IBObjectPboardType)
-    {
-      /*
-       * We can accept objects dropped anywhere.
-       */
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
-    {
-      NSPoint	loc = [sender draggingLocation];
-      int	r, c;
-      int	pos;
-      id	obj = nil;
+  return YES;
 
-      loc = [self convertPoint: loc fromView: nil];
-      [self getRow: &r column: &c forPoint: loc];
-      pos = r * [self numberOfColumns] + c;
-      if (pos >= 0 && pos < [objects count])
-	{
-	  obj = [objects objectAtIndex: pos];
-	}
-      if (obj != nil)
-	{
-	  return YES;
-	}
-    }
-  return NO;
+//    /*
+//     * Tell the source that we will accept the drop if we can.
+//     */
+//    if (dragType == IBObjectPboardType)
+//      {
+//        /*
+//         * We can accept objects dropped anywhere.
+//         */
+//        return YES;
+//      }
+//    else if (dragType == GormLinkPboardType)
+//      {
+//        NSPoint	loc = [sender draggingLocation];
+//        int	r, c;
+//        int	pos;
+//        id	obj = nil;
+
+//        loc = [self convertPoint: loc fromView: nil];
+//        [self getRow: &r column: &c forPoint: loc];
+//        pos = r * [self numberOfColumns] + c;
+//        if (pos >= 0 && pos < [objects count])
+//  	{
+//  	  obj = [objects objectAtIndex: pos];
+//  	}
+//        if (obj != nil)
+//  	{
+//  	  return YES;
+//  	}
+//      }
+//    return NO;
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag
+
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   return NSDragOperationCopy;
 }
-
 
 - (id) raiseSelection: (id)sender
 {
@@ -549,10 +487,9 @@ static NSMapTable	*docMap = 0;
     {
       id		obj = [objects objectAtIndex: index];
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
-      NSString          *name = [obj soundName];
-
-      NSLog(@"sound name = %@",name);
-      [but setImage: [obj soundImageForViewer]];
+      NSString          *name = [obj imageName];
+      
+      [but setImage: [obj image]];
       [but setTitle: name];
       [but setShowsStateBy: NSChangeGrayCellMask];
       [but setHighlightsBy: NSChangeGrayCellMask];
@@ -572,64 +509,92 @@ static NSMapTable	*docMap = 0;
   [self setNeedsDisplay: YES];
 }
 
-//  - (void) removeObject: (id)anObject
-//  {
-//    [objects removeObject: anObject];
-//    [self refreshCells];
-//  }
-
-- (void) resetObject: (id)anObject
-{
-  NSString		*name = nil; // [document nameForObject: anObject];
-  GormInspectorsManager	*mgr = [(Gorm*)NSApp inspectorsManager];
-}
-
 @end
 
 // sound proxy object...
-@implementation GormSound
+@implementation GormImage
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 {
+  NSSize originalSize;
+  float ratioH;
+  float ratioW;
   [super init];
   ASSIGN(name, aName);
   ASSIGN(path, aPath);
-#warning "we want to store the sound somewhere"
-  [[[NSSound alloc] initWithContentsOfFile: aPath
-		   byReference: YES] setName: aName];
-  isSystemSound = NO;
+  image = [[NSImage alloc] initByReferencingFile: aPath];
+  smallImage = [[NSImage alloc] initWithContentsOfFile: aPath];
+  [image setName: aName];
+
+  if (smallImage == nil)
+    {
+      RELEASE(name);
+      RELEASE(path);
+      return nil;
+    }
+
+  originalSize = [smallImage size];
+  ratioW = originalSize.width / 70;
+  ratioH = originalSize.height / 55;
+  
+  if (ratioH > 1 || ratioW > 1)
+    {
+      [smallImage setScalesWhenResized: YES];
+      if (ratioH > ratioW)
+	{
+	  [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
+	}
+      else 
+	{
+	  [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
+	}
+    }
+
+  isSystemImage = NO;
   isInWrapper = NO;
   return self;
 }
 
-- (void) setSoundName: (NSString *)aName
+- (void) dealloc
+{
+  RELEASE(name);
+  RELEASE(path);
+  RELEASE(image);
+}
+
+- (void) setImageName: (NSString *)aName
 {
   ASSIGN(name, aName);
 }
 
-- (NSString *) soundName
+- (NSString *) imageName
 {
   return name;
 }
 
-- (void) setSoundPath: (NSString *)aPath
+- (void) setImagePath: (NSString *)aPath
 {
   ASSIGN(path, aPath);
 }
 
-- (NSString *) soundPath
+- (NSString *) imagePath
 {
   return path;
 }
 
-- (void) setSystemSound: (BOOL)flag
+- (NSImage *) image
 {
-  isSystemSound = flag;
+  return smallImage;
 }
 
-- (BOOL) isSystemSound
+- (void) setSystemImage: (BOOL)flag
 {
-  return isSystemSound;
+  isSystemImage = flag;
+}
+
+- (BOOL) isSystemImage
+{
+  return isSystemImage;
 }
 
 - (void) setInWrapper: (BOOL)flag
@@ -644,6 +609,6 @@ static NSMapTable	*docMap = 0;
 
 - (NSString *)inspectorClassName
 {
-  return @"GormSoundInspector"; //[self soundInspectorClassName];
+  return @"GormImageInspector"; //[self soundInspectorClassName];
 }
 @end

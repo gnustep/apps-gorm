@@ -1030,6 +1030,9 @@ static NSButtonType _buttonTypeForObject( id button )
   [aMenu addItemWithTitle: @"Load Sound"
 		   action: @selector(loadSound:) 
 	    keyEquivalent: @""];
+  [aMenu addItemWithTitle: @"Load Image"
+		   action: @selector(loadImage:) 
+	    keyEquivalent: @""];
   menuItem = [mainMenu addItemWithTitle: @"Document" 
 				 action: NULL 
 			  keyEquivalent: @""];
@@ -1318,6 +1321,11 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 - (void) loadSound: (id) sender
 {
   [[self activeDocument] openSound: sender];
+}
+
+- (void) loadImage: (id) sender
+{
+  [[self activeDocument] openImage: sender];
 }
 
 - (id) miniaturize: (id)sender
