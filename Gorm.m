@@ -584,7 +584,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) inspector: (id) sender
 {
-  [[[self inspectorsManager] panel] orderFront: nil];
+  [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
   return self;
 }
 
@@ -698,7 +698,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (id) palettes: (id) sender
 {
-  [[[self palettesManager] panel] orderFront: self];
+  [[[self palettesManager] panel] makeKeyAndOrderFront: self];
   return self;
 }
 
