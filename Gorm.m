@@ -596,48 +596,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
       testContainer = [NSUnarchiver unarchiveObjectWithData: d];
       if (testContainer != nil)
 	{
-	  NSDictionary		*nameTable = [testContainer nameTable];
-	  NSEnumerator		*enumerator;
-	  id<IBConnectors>	connection;
-	  id			val;
-
+	  [testContainer awakeWithContext: nil];
 	  RETAIN(testContainer);
-	  /*
-           * establish connections
-	   */
-	  enumerator = [[testContainer connections] objectEnumerator];
-	  while ((connection = [enumerator nextObject]) != nil)
-	    {
-	      val = [nameTable objectForKey: [connection source]];
-	      [connection setSource: val];
-	      val = [nameTable objectForKey: [connection destination]];
-	      [connection setDestination: val];
-	      [connection establishConnection];
-	    }
-	  /*
-	   * wake loaded objects.
-           */
-	  enumerator = [nameTable objectEnumerator];
-	  while ((val = [enumerator nextObject]) != nil)
-	    {
-	      if ([val respondsToSelector: @selector(awakeFromNib)])
-		{
-		  [val awakeFromNib];
-		}
-	    }
-	  /*
-	   * See if there are objects that should be made visible.
-	   */
-	  val = [nameTable objectForKey: @"NSVisible"];
-	  if (val != nil && [val isKindOfClass: [NSArray class]] == YES)
-	    {
-	      unsigned	pos = [val count];
-
-	      while (pos-- > 0)
-		{
-		  [[val objectAtIndex: pos] orderFront: self];
-		}
-	    }
 	}
 
       [nc postNotificationName: IBDidBeginTestingInterfaceNotification
