@@ -30,6 +30,7 @@
 #include "GormOutlineView.h"
 #include "GormFunctions.h"
 #include "GormFilePrefsManager.h"
+#include "GormViewWindow.h"
 #include <Foundation/NSUserDefaults.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
@@ -38,7 +39,7 @@
 #include <GNUstepGUI/GSNibTemplates.h>
 
 
-@interface	GormDisplayCell : NSButtonCell
+@interface GormDisplayCell : NSButtonCell
 @end
 
 @implementation	GormDisplayCell
@@ -1437,11 +1438,10 @@ static NSImage  *fileImage = nil;
 			    ofClass: [GormObjectToEditor class]];
   if ([links count] == 0 && flag == YES)
     {
-      Class		eClass;
+      Class		eClass = NSClassFromString([anObject editorClassName]);
       id<IBEditors>	editor;
       id<IBConnectors>	link;
 
-      eClass = NSClassFromString([anObject editorClassName]);
       editor = [[eClass alloc] initWithObject: anObject inDocument: self];
       link = [GormObjectToEditor new];
       [link setSource: anObject];
@@ -1726,15 +1726,67 @@ static NSImage  *fileImage = nil;
 	{
 	  if([object isEqualToString: @"FirstResponder"])
 	    return nil;
-	  
-	  item = [[GormObjectProxy alloc] initWithClassName: object
-					  frame: NSMakeRect(0,0,0,0)];
-	  
-	  [self setName: nil forObject: item];
-	  [self attachObject: item toParent: nil];
-	  
-	  // [selectionView selectCellWithTag: 0];
-	  [selectionBox setContentView: scrollView];
+
+	  if([classManager isSuperclass: @"NSView" linkedToClass: object])
+	    {
+	      Class cls;
+	      NSString *className = object;
+	      BOOL isCustom = [classManager isCustomClass: object];
+	      id instance;
+
+	      if(isCustom)
+		{
+		  className = [classManager nonCustomSuperClassOf: object];
+		}
+
+	      // instantiate the object or it's substitute...
+	      cls = NSClassFromString(className);
+	      if([cls respondsToSelector: @selector(allocSubstitute)])
+		{
+		  instance = [cls allocSubstitute];
+		}
+	      else
+		{
+		  instance = [cls alloc];
+		}
+
+	      // give it some initial dimensions...
+	      if([instance respondsToSelector: @selector(initWithFrame:)])
+		{
+		  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
+		}
+	      else
+		{
+		  instance = [instance init];
+		}
+
+	      // add it to the top level objects...
+	      [self setName: nil forObject: instance];
+	      [self attachObject: instance toParent: nil];
+	      [topLevelObjects addObject: instance];
+	      [objectsView addObject: instance];
+
+	      // we want to record if it's custom or not and act appropriately...
+	      if(isCustom)
+		{
+		  NSString *name = [self nameForObject: instance];
+		  [classManager setCustomClass: object
+				forObject: name];
+		}
+
+	      [selectionBox setContentView: scrollView];
+	      NSLog(@"Instantiate NSView subclass %@",object);	      
+	    }
+	  else
+	    {
+	      item = [[GormObjectProxy alloc] initWithClassName: object
+					      frame: NSMakeRect(0,0,0,0)];
+	      
+	      [self setName: nil forObject: item];
+	      [self attachObject: item toParent: nil];
+	      
+	      [selectionBox setContentView: scrollView];
+	    }
 	}
     }
 
@@ -2530,7 +2582,7 @@ static NSImage  *fileImage = nil;
   NSString	      *oldName;
   NSMutableDictionary *cc = [classManager customClassMap];
   NSString            *className;
-  NSString            *nameCopy;
+  // NSString            *nameCopy;
 
   if (object == nil)
     {
@@ -2591,15 +2643,15 @@ static NSImage  *fileImage = nil;
 	    {
 	      return;	/* Already have this name ... nothing to do */
 	    }
-	  RETAIN(object); // the next operation will attempt to release the object, we need to retain it.
+	  // RETAIN(object); // the next operation will attempt to release the object, we need to retain it.
 	  [nameTable removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
-  nameCopy = [aName copy];	/* Make sure it's immutable */
-  [nameTable setObject: object forKey: nameCopy];
+  // nameCopy = [aName copy];	/* Make sure it's immutable */
+  [nameTable setObject: object forKey: aName];
   RELEASE(object); // make sure that when it's removed from the table, it's released.
-  NSMapInsert(objToName, (void*)object, (void*)nameCopy);
+  NSMapInsert(objToName, (void*)object, (void*) aName); //nameCopy);
   if (oldName != nil)
     {
       [nameTable removeObjectForKey: oldName];
@@ -2617,10 +2669,10 @@ static NSImage  *fileImage = nil;
       if(className != nil)
 	{
 	  [cc removeObjectForKey: oldName];
-	  [cc setObject: className forKey: nameCopy];
+	  [cc setObject: className forKey: aName]; //nameCopy];
 	}
     }
-  RELEASE(nameCopy); // release the copy of the name which we made...
+  // RELEASE(nameCopy); // release the copy of the name which we made...
 }
 
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag

@@ -930,17 +930,12 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   [(GormGenericEditor *)selectionOwner ungroup];
 }
 
-
-
-/***********************************************************************/
-/***********************   Classes Action  *******************************/
-/***********************************************************************/
+/// Classes actions...
 
 - (void) createSubclass: (id)sender
 {
   [(GormDocument *)[self activeDocument] createSubclass: sender];
 }
-
 
 - (void) loadClass: (id)sender
 {
@@ -969,18 +964,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   [(GormDocument *)[self activeDocument] remove: sender];
 }
 
-/*
-- (id) editClass: (id)sender
-{
-  [self inspector: self];
-  return [(id)[self activeDocument] editClass: sender];
-}
-*/
-
-
-/***********************************************************************/
-/***********************   Classes Action  *******************************/
-/***********************************************************************/
+/// Palettes Actions...
 
 - (void) inspector: (id) sender
 {
@@ -996,6 +980,8 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 {
   [[self palettesManager] openPalette: sender];
 }
+
+/// Testing methods...
 
 - (void) deferredEndTesting: (id) sender
 {

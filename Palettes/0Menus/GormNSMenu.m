@@ -25,6 +25,7 @@
 #include "GormNSMenu.h"
 
 // this must be done here, since Gorm must access this variable..
+/*
 @interface NSResponder (GormNSMenuPrivate)
 - (NSMenu *) _menu;
 - (void) _setMenu: (NSMenu *)m;
@@ -41,8 +42,9 @@
   _menu = m;
 }
 @end
+*/
 
-@interface GormNSMenuWindow : NSWindow // NSPanel
+@interface GormNSMenuWindow : NSWindow
 {
   GormDocument *_document;
 }
@@ -58,10 +60,12 @@
   return YES;
 }
 
+/*
 - (void)setMenu: (NSMenu*)menu;
 {
   [self _setMenu: menu];
 }
+*/
 
 - (void)setDocument: (GormDocument *)document
 {
@@ -71,11 +75,11 @@
 - (void)resignMainWindow
 {
   [super resignMainWindow];
-  if ([[self _menu] _ownedByPopUp])
+  if ([[self menu] _ownedByPopUp])
     {
       [[NSRunLoop currentRunLoop]
 	performSelector: @selector(close)
-	target: [self _menu]
+	target: [self menu]
 	argument: nil
 	order: 500000
 	modes: [NSArray arrayWithObjects: NSDefaultRunLoopMode, 
@@ -88,7 +92,7 @@
 - (void)becomeMainWindow
 {
   [super becomeMainWindow];
-  if ([[self _menu] _ownedByPopUp] )
+  if ([[self menu] _ownedByPopUp] )
     {
       // do nothing...
     }
@@ -111,8 +115,8 @@
 
 - (void) dealloc
 {
-  // FIXME: This prevents a leak and a crash.
-  [self _setMenu: nil];
+  [self setMenu: nil];
+  [super dealloc];
 }
 @end
 
@@ -133,6 +137,7 @@
   [win setMenu: self];
   [win setLevel: NSSubmenuWindowLevel];
   [win setExcludedFromWindowsMenu: YES];
+  RETAIN(win); // FIXME: Argh..  this may leak.. temporary fix.
 
   return win;
 }

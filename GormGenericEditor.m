@@ -89,6 +89,7 @@
 - (void) close
 {
   closed = YES;
+  [document editor: self didCloseForObject: [self editedObject]];
   [self deactivate];
   [self closeSubeditors];
 }
@@ -308,5 +309,10 @@
 - (NSArray *) objects
 {
   return objects;
+}
+
+- (BOOL) isOpened
+{
+  return (closed == NO);
 }
 @end

@@ -1,3 +1,36 @@
+2004-07-27 02:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Cleaned up some commented out code.
+	* GormDocument.m: Added code in [GormDocument instantiateClass] 
+	to add the appropriate information to the document when an
+	NSView subclass is instantiated in the classes view.  
+	This is for "standalone view" support.  Some additional cleanup.
+	* GormGenericEditor.m: The editor wasn't calling 
+	[GormDocument editor:didCloseForObject:] as it should when the
+	editor is closed. Added implementation for isOpened to give
+	any subeditors the correct response when the editor is opened.
+	* GormInternalViewEditor.m: Added code to show the appropriate
+	image when we have a standalone view in the document.
+	* GormPrivate.h: Added declaration for isOpened to 
+	GormGenericEditor class declaration.
+	* GormViewEditor.h: Added ivar for GormViewWindow.
+	* GormViewEditor.m: Added code in activate, deactivate, and
+	resetObject to properly show the standalone view.  This allows
+	the user to see and edit the view.
+	* GormViewWindow.[hm]: completed implementation of this class
+	for use by the GormViewEditor.  
+	* GormLib/IBEditors.h: Properly documented resetObject.
+	* GormLib/IBInspector.m: Added code which releases objects held
+	by the inspector after the document has been released.  This
+	prevents problems with old objects being retained in memory
+	by the inspectors until another object is selected.
+	* Palettes/0Menu/GormNSMenu.m: corrected a crash caused by a
+	recent change.
+	* Palettes/3Containers/GormNSOutlineView.m: Added
+	allocSubstitute method.
+	* Palettes/3Containers/GormNSTableView.m: Added
+	allocSubstitute method.
+	
 2004-07-20 20:04 Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* GormDocument.m: Leak fixes and general clean up.

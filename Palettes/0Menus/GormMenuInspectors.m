@@ -62,9 +62,8 @@
 - (void) setObject: (id)anObject
 {
   GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
-  // BOOL flag = NO;
 
-  object = nil; // remove reference to old object...
+  ASSIGN(object, nil); // remove reference to old object...
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
   [autoenable setState: ([object autoenablesItems]?NSOnState:NSOffState)];

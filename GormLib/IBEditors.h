@@ -132,21 +132,19 @@ extern NSString *IBClassNameChangedNotification;
  */
 //  - (void) pasteInSelection;
 
-/*
- * FIXME - I don't think we use this.
+/**
+ * Redraws the edited object
  */
 - (void) resetObject: (id)anObject;
 
-
-
-/*
+/**
  * When an editor resigns the selection ownership, all editors are asked if
  * they want selection ownership, and the first one to return YES gets made
  * into the current selection owner.
  */
 - (BOOL) wantsSelection;
 
-/*
+/**
  * This returns the window in which the editor is drawn.
  */
 - (NSWindow*) window;

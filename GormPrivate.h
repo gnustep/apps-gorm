@@ -206,6 +206,7 @@ extern NSString *GormResizeCellNotification;
 - (NSRect) rectForObject: (id)anObject;
 
 - (NSArray *) objects;
+- (BOOL) isOpened;
 @end
 
 // private methods...

@@ -80,6 +80,13 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
 
 static id _sharedDataSource = nil;
 
+@implementation NSTableView (GormPrivate)
++ (id) allocSubstitute
+{
+  return [GormNSTableView alloc];
+}
+@end
+
 @implementation GormNSTableView
 + (id) sharedDataSource
 {

@@ -62,6 +62,20 @@ static NSImage *horizontalImage;
       return @"GormViewEditor";
     }
 }
+
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString *path = [bundle pathForImageResource: @"GormView"]; 
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+
+  return image;
+}
 @end
 
 

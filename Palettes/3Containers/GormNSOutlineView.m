@@ -169,6 +169,13 @@
 
 static id _sharedDataSource = nil;
 
+@implementation NSOutlineView (GormPrivate)
++ (id) allocSubstitute
+{
+  return [GormNSOutlineView alloc];
+}
+@end
+
 @implementation GormNSOutlineView
 + (id) sharedDataSource
 {

@@ -23,17 +23,50 @@
  */
 
 #include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBDocuments.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSNotification.h>
 #include <AppKit/NSWindow.h>
 
+static NSNotificationCenter *nc = nil;
+
 @implementation	IBInspector
+
++ (void) initialize
+{
+  if(self == [IBInspector class])
+    {
+      nc = [NSNotificationCenter defaultCenter];
+    }
+}
+
+- (id) init
+{
+  if((self = [super init]) != nil)
+    {
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillCloseDocumentNotification
+	  object: nil];
+    }
+
+  return self;
+}
 
 - (void) dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [nc removeObserver: self];
   RELEASE(object);
   [super dealloc];
+}
+
+- (void) handleNotification: (NSNotification *)notification
+{
+  id<IBDocuments> doc = [notification object];
+  if([doc nameForObject: object] != nil)
+    {
+      [self setObject: nil];
+    }
 }
 
 - (NSView*) initialFirstResponder
@@ -88,4 +121,3 @@
   return window;
 }
 @end
-

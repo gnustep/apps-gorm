@@ -29,6 +29,7 @@
 
 @class GormViewWithSubviewsEditor;
 @class GormPlacementInfo;
+@class GormViewWindow;
 
 @interface GormViewEditor : NSView <IBEditors>
 {
@@ -37,6 +38,7 @@
   BOOL                              activated;
   BOOL                              closed;
   GormViewWithSubviewsEditor        *parent;
+  GormViewWindow                    *viewWindow;
 }
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject 

@@ -30,17 +30,13 @@
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
 #include "GormFunctions.h"
+#include "GormViewWindow.h"
 
 #include <math.h>
 #include <stdlib.h>
 
-
-
-
 @implementation GormPlacementInfo
 @end
-
-
 
 @implementation GormPlacementHint
 - (float) position { return _position; }
@@ -140,7 +136,7 @@ static BOOL currently_displaying = NO;
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   [NSException raise: NSInternalInconsistencyException
-	      format: @"Argh - encoding view editor"];
+	      format: @"Cannot encode a GormViewEditor"];
 }
 
 - (id<IBDocuments>) document
@@ -159,7 +155,22 @@ static BOOL currently_displaying = NO;
 {
   if (activated == NO)
     {
-      NSView *superview = [_editedObject superview];
+      NSView *superview;
+
+      // put the view into a "view window" if it's a standalone view...
+      if([_editedObject window] == nil)
+	{
+	  if(viewWindow == nil)
+	    {
+	      viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
+	    }
+	  else
+	    {
+	      [viewWindow setView: _editedObject];
+	    }
+	}
+
+      superview = [_editedObject superview];
 
       [self setFrame: [_editedObject frame]];
       [self setBounds: [self frame]];
@@ -168,8 +179,16 @@ static BOOL currently_displaying = NO;
 		 with: self];
       [self setAutoresizingMask: NSViewMaxXMargin | NSViewMinYMargin];
 
-      [self setAutoresizesSubviews: NO];
-
+      // we want autoresizing for standalone views...
+      if(viewWindow == nil)
+	{
+	  [self setAutoresizesSubviews: NO];
+	}
+      else
+	{
+	  [self setAutoresizesSubviews: YES];
+	}
+      
       [self addSubview: _editedObject];
       
       [_editedObject setPostsFrameChangedNotifications: YES];
@@ -187,13 +206,18 @@ static BOOL currently_displaying = NO;
 	object: self];
 
       parent = (GormViewWithSubviewsEditor *)[document parentEditorForEditor: self];
-
       if ([parent isKindOfClass: [GormViewEditor class]])
-	[parent setNeedsDisplay: YES];
+	{
+	  [parent setNeedsDisplay: YES];
+	}
       else
-	[self setNeedsDisplay: YES];
+	{
+	  [self setNeedsDisplay: YES];
+	}
+
       activated = YES;
-      return YES;
+
+      return activated;
     }
   
   return NO;
@@ -216,7 +240,12 @@ static BOOL currently_displaying = NO;
   if (closed == NO)
     {
       [self deactivate];
-      
+
+      if(viewWindow != nil)
+	{
+	  [viewWindow close];
+	}
+
       [document editor: self didCloseForObject: _editedObject];
       closed = YES;
     }
@@ -237,6 +266,13 @@ static BOOL currently_displaying = NO;
 		 with: _editedObject];
 
       [[NSNotificationCenter defaultCenter] removeObserver: self];
+
+      // make sure the view isn't in the window after deactivation.
+      if(viewWindow != nil)
+	{
+	  [_editedObject removeFromSuperview]; // WithoutNeedingDisplay];
+	  [viewWindow orderOut: self];
+	}
 
       activated = NO;
     }
@@ -1236,7 +1272,12 @@ static BOOL currently_displaying = NO;
     {
       if (parent)
 	{
-	  [parent mouseDown: theEvent];
+	  // TODO: We should find a better test than this, but it will do
+	  // for now...
+	  if([parent isKindOfClass: [GormGenericEditor class]] == NO)
+	    {
+	      [parent mouseDown: theEvent];
+	    }
 	}
       else
 	return [self noResponderFor: @selector(mouseDown:)];
@@ -1316,7 +1357,11 @@ static BOOL currently_displaying = NO;
 
 - (void) resetObject: (id)anObject
 {
-  NSLog(@"resetObject should not be called on GormViewEditor !");
+  /// NSLog(@"resetObject should not be called on GormViewEditor !");
+  if(viewWindow != nil)
+    {
+      [viewWindow orderFront: self];
+    }
 }
 
 - (void) orderFront
