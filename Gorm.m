@@ -372,8 +372,11 @@ static NSImage *testingImage = nil;
    if (edited == YES)
      {
        int	result;
-       result = NSRunAlertPanel(nil, _(@"There are edited windows"),
-				_(@"Review Unsaved"),_( @"Quit Anyway"), _(@"Cancel"));
+       result = NSRunAlertPanel(_(@"Quit"), 
+				_(@"There are edited windows"),
+				_(@"Review Unsaved"),
+				_( @"Quit Anyway"),
+				_(@"Cancel"));
       if (result == NSAlertDefaultReturn) 
 	{ 	  
 	  enumerator = [ documents objectEnumerator];
@@ -678,15 +681,27 @@ static NSImage *testingImage = nil;
 	{
 	  NSUserDefaults	*defaults;
 	  NSNotificationCenter	*notifCenter = [NSNotificationCenter defaultCenter];
-	  GormDocument		*activDoc = (GormDocument*)[self activeDocument];
+	  GormDocument		*activeDoc = (GormDocument*)[self activeDocument];
 	  NSData		*data;
 	  NSArchiver            *archiver;
-	  
-	  
+	  NSEnumerator          *en;
+	  id                    obj;
+
+	  // which windows were open when testing started...
+	  testingWindows = [[NSMutableArray alloc] init]; 
+	  en = [[self windows] objectEnumerator];
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      if([obj isVisible])
+		{
+		  [testingWindows addObject: obj];
+		}
+	    }
+
 	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
 	  [self setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
-	  [activDoc beginArchiving];
+	  [activeDoc beginArchiving];
 	  [archiver encodeClassName: @"GormCustomView" 
 		    intoClassName: @"GormTestCustomView"];
 	  [archiver encodeClassName: @"GormNSMenu"
@@ -708,9 +723,9 @@ static NSImage *testingImage = nil;
 		    intoClassName: @"NSOutlineView"];
 	  */
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; // do not allow custom classes during testing.
-	  [archiver encodeRootObject: activDoc];
+	  [archiver encodeRootObject: activeDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
-	  [activDoc endArchiving];
+	  [activeDoc endArchiving];
 	  RELEASE(archiver);
 	  [GSClassSwapper setIsInInterfaceBuilder: NO]; // beginal allowing custom classes...
 	  
@@ -778,7 +793,7 @@ static NSImage *testingImage = nil;
 
 	  // display the current main menu...
 	  [[self mainMenu] display];
-	  
+
 	  [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
 		       object: self];
 	  
@@ -1032,6 +1047,7 @@ static NSImage *testingImage = nil;
       NSUserDefaults		*defaults;
       NSEnumerator		*e;
       id			val;
+
       CREATE_AUTORELEASE_POOL(pool);
 
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
@@ -1046,6 +1062,21 @@ static NSImage *testingImage = nil;
 	  if ([val isKindOfClass: [NSWindow class]] == YES)
 	    {
 	      [val close];
+	    }
+	}
+
+      /*
+       * Make sure any peripheral windows: font panels, etc. which are brought
+       * up by the interface being tested are also closed.
+       */
+      e = [[self windows] objectEnumerator];
+      while ((val = [e nextObject]) != nil)
+	{
+	  if ([testingWindows containsObject: val] == NO && 
+	      [val isKindOfClass: [NSWindow class]] &&
+	      [val isVisible])
+	    {
+	      [val orderOut: self];
 	    }
 	}
 
@@ -1081,6 +1112,9 @@ static NSImage *testingImage = nil;
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
       
+
+      DESTROY(testingWindows);
+
       RELEASE(pool);
 
       return self;

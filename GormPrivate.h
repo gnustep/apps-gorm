@@ -113,6 +113,7 @@ extern NSString *GormResizeCellNotification;
   NSWindow		*connectDWindow;
   NSRect		connectDRect;
   NSPoint               cascadePoint;
+  NSMutableArray        *testingWindows;
 }
 - (id<IBDocuments>) activeDocument;
 - (id) connectSource;

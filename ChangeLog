@@ -1,3 +1,14 @@
+2005-02-05 09:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Improved some of the panel messages when 
+	gorm has a problem loading/saving.  Added titles.
+	* Gorm.m: Made some of the warning panels have a title.  Added code
+	to -testInterface: and -endTesting: to close extra windows opened
+	during testing.
+	* GormPrivate.h: testingWindows ivar to hold windows which were open
+	before testing, so that we know which ones to orderOut when testing
+	ends.
+
 2005-02-02 22:44 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -[GormDocument removeConnectionsWithLabel:..] added

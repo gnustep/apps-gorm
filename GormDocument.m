@@ -1729,9 +1729,9 @@ static NSImage  *fileImage = nil;
 	      if([lastComponent isEqual: @"objects.gorm"] && 
 		 [parentExt isEqual: @"gorm"])
 		{
-		  NSRunAlertPanel(nil,
+		  NSRunAlertPanel(_(@"Problem Loading"),
 				  _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
-				  @"OK", nil, nil);
+				  _(@"OK"), nil, nil);
 		  return nil;
 		}
 	      
@@ -1756,9 +1756,9 @@ static NSImage  *fileImage = nil;
       // check the data...
       if (data == nil)
 	{
-	  NSRunAlertPanel(nil,
+	  NSRunAlertPanel(_(@"Problem Loading"),
 			  [NSString stringWithFormat: @"Could not read '%@' data", aFile],
-			  @"OK", nil, nil);
+			  _(@"OK"), nil, nil);
 	  return nil;
 	}
       
@@ -1797,7 +1797,8 @@ static NSImage  *fileImage = nil;
       c = [u decodeObject];
       if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
 	{
-	  NSRunAlertPanel(nil, _(@"Could not unarchive document data"), 
+	  NSRunAlertPanel(_(@"Problem Loading"), 
+			  _(@"Could not unarchive document data"), 
 			  _(@"OK"), nil, nil);
 	  return nil;
 	}
@@ -1823,8 +1824,9 @@ static NSImage  *fileImage = nil;
 	  s = [s stringByAppendingPathExtension: @"classes"];
 	  if (![classManager loadCustomClasses: s])
 	    {
-	      NSRunAlertPanel(nil, _(@"Could not open the associated classes file.\n"
-				      @"You won't be able to edit connections on custom classes"), 
+	      NSRunAlertPanel(_(@"Problem Loading"), 
+			      _(@"Could not open the associated classes file.\n"
+				@"You won't be able to edit connections on custom classes"), 
 			      _(@"OK"), nil, nil);
 	    }
 	}
@@ -1835,8 +1837,9 @@ static NSImage  *fileImage = nil;
 	  s = [aFile stringByAppendingPathComponent: @"data.classes"];
 	  if (![classManager loadCustomClasses: s]) 
 	    {
-	      NSRunAlertPanel(nil, _(@"Could not open the associated classes file.\n"
-				      @"You won't be able to edit connections on custom classes"), 
+	      NSRunAlertPanel(_(@"Problem Loading"), 
+			      _(@"Could not open the associated classes file.\n"
+				@"You won't be able to edit connections on custom classes"), 
 			      _(@"OK"), nil, nil);
 	    }
 
@@ -2025,7 +2028,8 @@ static NSImage  *fileImage = nil;
     }
   NS_HANDLER
     {
-      NSRunAlertPanel(nil, [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
+      NSRunAlertPanel(_(@"Problem Loading"), 
+		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
 		      _(@"OK"), nil, nil);
       return nil; // This will cause the calling method to release the document.
     }
@@ -2111,7 +2115,8 @@ static NSImage  *fileImage = nil;
       else
 	{
 	  // if we get this far, we didn't succeed..
-	  NSRunAlertPanel(nil,_( @"Attempted to load a model which is already opened."), 
+	  NSRunAlertPanel(_(@"Problem Loading"),
+			  _(@"Attempted to load a model which is already opened."), 
 			  _(@"OK"), nil, nil);
 	}
     }
@@ -2886,7 +2891,8 @@ static NSImage  *fileImage = nil;
 
   if (archiveResult == NO)
     {
-      NSRunAlertPanel(nil,_( @"Could not save document"), 
+      NSRunAlertPanel(_(@"Problem Saving"),
+		      _(@"Could not save document"), 
 		      _(@"OK"), nil, nil);
     }
   else
@@ -3094,7 +3100,11 @@ static NSImage  *fileImage = nil;
 	  msg = [NSString stringWithFormat: _(@"Document '%@' has been modified"),
 	    [documentPath lastPathComponent]];
 	}
-      result = NSRunAlertPanel(nil, msg, _(@"Save"), _(@"Don't Save"), _(@"Cancel"));
+      result = NSRunAlertPanel(_(@"Close Document"), 
+			       msg, 
+			       _(@"Save"), 
+			       _(@"Don't Save"), 
+			       _(@"Cancel"));
 
       if (result == NSAlertDefaultReturn) 
 	{ 	  
