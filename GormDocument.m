@@ -509,6 +509,17 @@ static NSImage	*classesImage = nil;
 	  [self setName: @"NSMenu" forObject: anObject];
 	  [objectsView addObject: anObject];
 	}
+      else
+	{
+	  if([[anObject title] isEqual: @"Services"])
+	    {
+	      [self setServicesMenu: anObject];
+	    }
+	  else if([[anObject title] isEqual: @"Windows"])
+	    {
+	      [self setWindowsMenu: anObject];
+	    }
+	}
 
       [[self openEditorForObject: anObject] activate];
     }
@@ -1046,6 +1057,20 @@ static NSImage	*classesImage = nil;
     {
       [objectsView removeObject: anObject];
     }
+
+  // eliminate it from being the windows/services menu, if it's being detached.
+  if ([anObject isKindOfClass: [NSMenu class]])
+    {
+      if([self windowsMenu] == anObject)
+	{
+	  [self setWindowsMenu: nil];
+	}
+      else if([self servicesMenu] == anObject)
+	{
+	  [self setServicesMenu: nil];
+	}
+    }
+
   /*
    * Make sure this object isn't in the list of objects to be made visible
    * on nib loading.

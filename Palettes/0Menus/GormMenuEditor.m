@@ -188,6 +188,7 @@
   	      frame.size.height -= 5;
 	      frame.origin.x += 1;
 	      frame.size.width += 3;
+
 	      [tf setFrame: frame];
 	      [tf setEditable: YES];
 	      [tf setBezeled: NO];
@@ -452,8 +453,13 @@
 
   [self closeSubeditors];
   [self deactivate];
+
+  // if it's visible, close it.
   if([edited isVisible])
-    [edited close];
+    {
+      [edited close];
+    }
+
   [document editor: self didCloseForObject: edited];
 }
 
