@@ -1,3 +1,17 @@
+2004-12-18 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/GNUmakefile: Added new header
+	* GormLib/GNUmakefile.preamble: Added comment.
+	* GormLib/IBApplicationAdditions.h: Add include, change extern to 
+	IB_EXPORT
+	* GormLib/IBConnectors.h: Same
+	* GormLib/IBDocuments.h: Same
+	* GormLib/IBEditors.h: Same
+	* GormLib/IBPalette.h: Same
+	* GormLib/IBSystem.h: New file containing declarations for
+	IB_EXPORT for different Operating Systems.
+	* GormLib/InterfaceBuilder.h: Include IBSystem.h.
+
 2004-12-17 21:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: Set the double action and target

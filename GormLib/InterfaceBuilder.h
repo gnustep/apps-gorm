@@ -33,6 +33,7 @@
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBSystem.h>
 #include <InterfaceBuilder/IBViewAdditions.h>
 
 #endif

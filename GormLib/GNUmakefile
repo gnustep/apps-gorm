@@ -52,6 +52,7 @@ IBInspector.h \
 IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
+IBSystem.h \
 IBViewAdditions.h \
 IBViewProtocol.h \
 InterfaceBuilder.h

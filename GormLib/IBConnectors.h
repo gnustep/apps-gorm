@@ -28,14 +28,15 @@
 #include <Foundation/NSObject.h>
 #include <AppKit/NSApplication.h>
 #include <AppKit/NSNibConnector.h>
+#include <InterfaceBuilder/IBSystem.h>
 
 // forward declarations
 @class NSString;
 
-extern NSString *IBWillAddConnectorNotification;
-extern NSString *IBDidAddConnectorNotification;
-extern NSString *IBWillRemoveConnectorNotification;
-extern NSString *IBDidRemoveConnectorNotification;
+IB_EXPORT NSString *IBWillAddConnectorNotification;
+IB_EXPORT NSString *IBDidAddConnectorNotification;
+IB_EXPORT NSString *IBWillRemoveConnectorNotification;
+IB_EXPORT NSString *IBDidRemoveConnectorNotification;
 
 /*
  * Connector objects are used to record connections between nib objects.

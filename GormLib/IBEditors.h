@@ -26,6 +26,7 @@
 #define INCLUDED_IBEDITORS_H
 
 #include <Foundation/NSObject.h>
+#include <InterfaceBuilder/IBSystem.h>
 
 // forward references
 @class NSString;
@@ -35,10 +36,10 @@
 /*
  * Notification for editing and inspecting the objects etc.
  */
-extern NSString *IBAttributesChangedNotification;
-extern NSString *IBInspectorDidModifyObjectNotification;
-extern NSString *IBSelectionChangedNotification;
-extern NSString *IBClassNameChangedNotification;
+IB_EXPORT NSString *IBAttributesChangedNotification;
+IB_EXPORT NSString *IBInspectorDidModifyObjectNotification;
+IB_EXPORT NSString *IBSelectionChangedNotification;
+IB_EXPORT NSString *IBClassNameChangedNotification;
 
 /**
  * The IBSelectionOwners protocol defines the methods that a selection owner

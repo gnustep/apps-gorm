@@ -28,6 +28,7 @@
 #include <Foundation/NSMapTable.h>
 #include <Foundation/NSObject.h>
 #include <InterfaceBuilder/IBDocuments.h>
+#include <InterfaceBuilder/IBSystem.h>
 
 // forward references
 @class NSString;
@@ -40,22 +41,22 @@
  * window into another window in Gorm (or, in the case of IBWindowPboardType
  * onto the desktop).
  */
-extern NSString	*IBCellPboardType;
-extern NSString	*IBMenuPboardType;
-extern NSString	*IBMenuCellPboardType;
-extern NSString	*IBObjectPboardType;
-extern NSString	*IBViewPboardType;
-extern NSString	*IBWindowPboardType;
-extern NSString	*IBFormatterPboardType;
+IB_EXPORT NSString	*IBCellPboardType;
+IB_EXPORT NSString	*IBMenuPboardType;
+IB_EXPORT NSString	*IBMenuCellPboardType;
+IB_EXPORT NSString	*IBObjectPboardType;
+IB_EXPORT NSString	*IBViewPboardType;
+IB_EXPORT NSString	*IBWindowPboardType;
+IB_EXPORT NSString	*IBFormatterPboardType;
 
 /*
  * Pasteboard types used for DnD from images or sounds tab
- * to views or inspector's textfield
- * onto the desktop).
- * NOTE: These are specific to Gorm... */
-extern NSString	*GormImagePboardType;
-extern NSString	*GormSoundPboardType;
-extern NSString *GormLinkPboardType;
+ * to views or inspector's textfield onto the desktop).
+ * NOTE: These are specific to Gorm... 
+ */
+IB_EXPORT NSString	*GormImagePboardType;
+IB_EXPORT NSString	*GormSoundPboardType;
+IB_EXPORT NSString      *GormLinkPboardType;
 
 @interface IBPalette : NSObject
 {

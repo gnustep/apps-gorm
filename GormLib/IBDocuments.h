@@ -28,11 +28,12 @@
 #include <Foundation/NSGeometry.h>
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBConnectors.h>
+#include <InterfaceBuilder/IBSystem.h>
 
-extern NSString *IBDidOpenDocumentNotification;
-extern NSString *IBWillSaveDocumentNotification;
-extern NSString *IBDidSaveDocumentNotification;
-extern NSString *IBWillCloseDocumentNotification;
+IB_EXPORT NSString *IBDidOpenDocumentNotification;
+IB_EXPORT NSString *IBWillSaveDocumentNotification;
+IB_EXPORT NSString *IBDidSaveDocumentNotification;
+IB_EXPORT NSString *IBWillCloseDocumentNotification;
 
 @protocol IBDocuments <NSObject>
 - (void) addConnector: (id<IBConnectors>)aConnector;
