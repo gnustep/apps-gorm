@@ -127,11 +127,13 @@ static NSMapTable	*docMap = 0;
 - (void) deleteSelection
 {
   if (selected != nil
-    && [[document nameForObject: selected] isEqualToString: @"NSOwner"] == NO
-    && [[document nameForObject: selected] isEqualToString: @"NSFirst"] == NO
-    && [[document nameForObject: selected] isEqualToString: @"NSFont"] == NO)
+      && [[document nameForObject: selected] isEqualToString: @"NSOwner"] == NO
+      && [[document nameForObject: selected] isEqualToString: @"NSFirst"] == NO)
     {
       NSNotificationCenter	*nc;
+
+      //    && [[document nameForObject: selected] isEqualToString: @"NSFont"] == NO)
+      // we need to check to see if the NSFont object has any connections...
 
       nc = [NSNotificationCenter defaultCenter];
 

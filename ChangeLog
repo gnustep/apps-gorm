@@ -1,3 +1,17 @@
+2004-03-21 10:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.[hm]: Initial code changes for new FontManager.
+	Added code in [GormDocument attachObject:] to update the connection
+	correctly.   Previously the connection were not being created correctly
+	which require the user to disconnect the existing connection and 
+	reconnect.
+	* GormObjectEditor.m: Removed the check for NSFont as an object which
+	can't be removed.   It will be possible to remove it once it has no
+	connections.
+	* Palettes/0Menus/main.m: Updated some of the connections here so
+	that they are made properly when added to the document.  More work
+	to come for the new FontManager implementation in Gorm.
+	
 2004-03-20 12:07 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ClassInformation.plist: Removed some methods which should

@@ -45,17 +45,20 @@
  * Each document may have a GormFontManager object that is used as a
  * placeholder for the current font manager.
  */
+
+/*
 @interface	GormFontManager : NSObject
 {
 }
 @end
+*/
 
 @interface GormDocument : GSNibContainer <IBDocuments>
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
-  GormFontManager	*fontManager;
+  id	                *fontManager;
   GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
@@ -171,6 +174,10 @@
 + (NSString*) identifierString: (NSString*)str;
 + (NSString *)formatAction: (NSString *)action;
 + (NSString *)formatOutlet: (NSString *)outlet;
+
+// first responder/font manager
+- (id) fontManager;
+- (id) firstResponder;
 @end
 
 @interface GormDocument (MenuValidation)

@@ -202,6 +202,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   return @"GormNotApplicableInspector";
 }
 @end
+
 @implementation Gorm
 
 - (id<IBDocuments>) activeDocument
@@ -530,9 +531,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.7.0 (Beta)" 
+  [dict setObject: @"Gorm 0.7.5 (Beta)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.7.0 Feb 09 2004" 
+  [dict setObject: @"0.7.5 Mar 21 2004" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",

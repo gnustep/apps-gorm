@@ -53,14 +53,14 @@
    */
   m = [GormNSMenu new];
   [m addItemWithTitle: @"Info Panel..." 
-	       action: @selector(orderFrontStandardInfoPanel:) 
-	keyEquivalent: @""];
+     action: @selector(orderFrontStandardInfoPanel:) 
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Preferences..." 
-	       action: NULL
-	keyEquivalent: @""];
+     action: NULL
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Help..." 
-	       action: NULL 
-	keyEquivalent: @"?"];
+     action: @selector(orderFrontHelpPanel:) 
+     keyEquivalent: @"?"];
   [m setTitle: @"Info"];
   i = [[NSMenuItem alloc] initWithTitle: @"Info" 
 				 action: @selector(submenuAction:)

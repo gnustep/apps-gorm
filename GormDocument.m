@@ -33,6 +33,7 @@
 #include <Foundation/NSUserDefaults.h>
 #include <AppKit/NSNibConnector.h>
 #include <GNUstepGUI/GSNibTemplates.h>
+#include "GormFunctions.h"
 
 @interface	GormDisplayCell : NSButtonCell
 @end
@@ -106,6 +107,7 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 }
 @end
 
+/*
 @implementation	GormFontManager
 - (NSImage*) imageForViewer
 {
@@ -136,7 +138,12 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 {
   return @"GormNotApplicableInspector";
 }
+- (NSString *)className
+{
+  return @"NSFontManager";
+}
 @end
+*/
 
 
 
@@ -338,12 +345,24 @@ static NSImage	*classesImage = nil;
 	  id destination = [anObject target];
 	  NSArray *sourceConnections = [self connectorsForSource: source];
 
+	  /*
 	  if(destination == nil)
 	    {
-	      if(aParent == nil)
-		destination = firstResponder;
-	      else
+	      if(aParent != nil)
 		destination = aParent;
+	    }
+	  */
+	  // if it's a menu item we want to connect it to it's parent...
+	  if([anObject isKindOfClass: [NSMenuItem class]] && 
+	     [label isEqual: @"submenuAction:"])
+	    {
+	      destination = aParent;
+	    }
+	  
+	  // if the destination is still nil, back off to the first responder.
+	  if(destination == nil)
+	    {
+	      destination = firstResponder;
 	    }
 
 	  // build the connection
@@ -442,11 +461,13 @@ static NSImage	*classesImage = nil;
   [nameTable removeObjectForKey: @"NSOwner"];
   NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable removeObjectForKey: @"NSFirst"];
+  /*
   if (fontManager != nil)
     {
       NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable removeObjectForKey: @"NSFont"];
     }
+  */
 
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
@@ -743,7 +764,7 @@ static NSImage	*classesImage = nil;
   RELEASE(hidden);
   RELEASE(filesOwner);
   RELEASE(firstResponder);
-  RELEASE(fontManager);
+  // RELEASE(fontManager);
   if (objToName != 0)
     {
       NSFreeMapTable(objToName);
@@ -1400,11 +1421,13 @@ static NSImage	*classesImage = nil;
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
 
+  /*
   if (fontManager != nil)
     {
       [nameTable setObject: fontManager forKey: @"NSFont"];
       NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
     }
+  */
 
   /*
    * Map all connector source and destination names to their objects.
@@ -1826,8 +1849,8 @@ static NSImage	*classesImage = nil;
       firstResponder = [GormFirstResponder new];
       [self setName: @"NSFirst" forObject: firstResponder];
       [objectsView addObject: firstResponder];
-      fontManager = [GormFontManager new];
-      [self setName: @"NSFont" forObject: fontManager];
+      // fontManager = [GormFontManager new];
+      // [self setName: @"NSFont" forObject: fontManager];
       // [objectsView addObject: fontManager];
 
       /*
@@ -3780,6 +3803,16 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
     }
 
   return result;
+}
+
+- (id) firstResponder
+{
+  return firstResponder;
+}
+
+- (id) fontManager
+{
+  return fontManager;
 }
 @end
 
