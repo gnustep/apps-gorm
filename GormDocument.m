@@ -136,6 +136,8 @@ static NSImage	*classesImage = nil;
 	{
 	  classesImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
+      
+      [self setVersion: GNUSTEP_NIB_VERSION];
     }
 }
 
@@ -256,10 +258,7 @@ static NSImage	*classesImage = nil;
 // sound support
 - (GormSound *)_createSoundPlaceHolder: (NSString *)path
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
   NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
-  // [dict setObject: path forKey: @"Path"];
-  // [dict setObject: name forKey: @"Name"];
   return AUTORELEASE([[GormSound alloc] initWithName: name path: path]);
 }
 
@@ -329,7 +328,6 @@ static NSImage	*classesImage = nil;
 							 className: className];
 		}
 
-	      RETAIN(template);
 	      [nameTable setObject: template forKey: key];
 	    }
 	}
@@ -375,8 +373,15 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom objects with templates for archiving.
    */
-  [self _replaceObjectsWithTemplates];
-  NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
+  // ASSIGN(customClasses, [classManager customClassMap]); // assign the custom classes in the class manager
+  // RETAIN(customClasses);
+  if(![(Gorm *)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
+    {
+      [self _replaceObjectsWithTemplates];
+    }
+
+  // [customClasses setObject: @"TestValue" forKey: @"TestKey"]; // temporary
+  NSLog(@"*** customClassMap = %@",[classManager customClassMap]);
   [nameTable setObject: [classManager customClassMap] forKey: @"GSCustomClassMap"];
 
   /*
@@ -1128,17 +1133,14 @@ static NSImage	*classesImage = nil;
   /*
    * Restore removed objects.
    */
-  // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
   [nameTable setObject: filesOwner forKey: @"NSOwner"];
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
 
-  // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
 
   if (fontManager != nil)
     {
-      // NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable setObject: fontManager forKey: @"NSFont"];
       NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
     }
@@ -1146,8 +1148,10 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom templates with objects for archiving.
    */
-  [self _replaceTemplatesWithObjects];
-  [nameTable removeObjectForKey: @"GSCustomClassMap"];
+  if(![(Gorm *)NSApp isTestingInterface]) // do not use templates if we are testing.
+    {
+      [self _replaceTemplatesWithObjects];
+    }
 
   /*
    * Map all connector source and destination names to their objects.
@@ -1684,7 +1688,10 @@ static NSImage	*classesImage = nil;
 		       @"OK", NULL, NULL);
       return nil;
     }
-  
+
+  // retrieve the custom class data...
+  [classManager setCustomClassMap: [[c nameTable] objectForKey: @"GSCustomClassMap"]];
+
   if(isDir == NO)
     {
       if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
@@ -1718,10 +1725,8 @@ static NSImage	*classesImage = nil;
   [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
   [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
 
+  /* Iterate over the contents of nameTable and create the connections */
   nt = [c nameTable];
-  //NSLog(@"nt : %@", nt);
-  //NSLog(@"--------------");
-  //NSLog(@"con : %@", [c connections]);
   enumerator = [[c connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
@@ -1777,10 +1782,10 @@ static NSImage	*classesImage = nil;
     }
 
   // get the custom class map and set it into the class manager...
-  NSDebugLog(@"GSCustomClassMap = %@",[[c nameTable] objectForKey: @"GSCustomClassMap"]);
-  [classManager setCustomClassMap: [[c nameTable] objectForKey: @"GSCustomClassMap"]];
-
-  NSDebugLog(@"nameTable = %@",[c nameTable]);
+  // NSLog(@"customClasses = %@",customClasses);
+  // [classManager setCustomClassMap: customClasses];
+  
+  NSLog(@"nameTable = %@",[c nameTable]);
 
   return self;
 }
@@ -2036,7 +2041,7 @@ static NSImage	*classesImage = nil;
 	}
       [aWindow setFrameTopLeftPoint:
 	NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: @"My Window"];
+      [aWindow setTitle: @"My Window"]; 
       [self setName: @"My Window" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
       [self setObject: aWindow isVisibleAtLaunch: YES];
@@ -2314,33 +2319,34 @@ static NSImage	*classesImage = nil;
 
   [self beginArchiving];
 
-  NSDebugLog(@"nametable : %@", nameTable);
-  
   // set up the necessary paths...
   gormPath = [documentPath stringByAppendingPathComponent: @"objects.gorm"];
-  classesPath = [documentPath stringByAppendingPathComponent: @"data.classes"];  
+  classesPath = [documentPath stringByAppendingPathComponent: @"data.classes"];
 
   archiverData = [NSMutableData dataWithCapacity: 0];
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
-  [archiver encodeClassName: @"GormObjectProxy" intoClassName: @"GSNibItem"];
-  [archiver encodeClassName: @"GormCustomView"
-	      intoClassName: @"GSCustomView"];
-  [archiver encodeClassName: @"GormNSMenu"
-	      intoClassName: @"NSMenu"];
-  [archiver encodeClassName: @"GormNSWindow"
-	      intoClassName: @"NSWindow"];
-  [archiver encodeClassName: @"GormNSBrowser"
-	      intoClassName: @"NSBrowser"];
-  [archiver encodeClassName: @"GormNSTableView"
-	      intoClassName: @"NSTableView"];
-  [archiver encodeClassName: @"GormNSOutlineView" 
-	      intoClassName: @"NSOutlineView"];
-  [archiver encodeClassName: @"GormNSPopUpButton" 
-	      intoClassName: @"NSPopUpButton"];
-  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
-	      intoClassName: @"NSPopUpButtonCell"];
 
-  // templates
+  /* Special gorm classes to their archive equivalents. */
+  [archiver encodeClassName: @"GormObjectProxy" 
+	    intoClassName: @"GSNibItem"];
+  [archiver encodeClassName: @"GormCustomView"
+	    intoClassName: @"GSCustomView"];
+  [archiver encodeClassName: @"GormNSMenu"
+	    intoClassName: @"NSMenu"];
+  [archiver encodeClassName: @"GormNSWindow"
+	    intoClassName: @"NSWindow"];
+  [archiver encodeClassName: @"GormNSBrowser"
+	    intoClassName: @"NSBrowser"];
+  [archiver encodeClassName: @"GormNSTableView"
+	    intoClassName: @"NSTableView"];
+  [archiver encodeClassName: @"GormNSOutlineView" 
+	    intoClassName: @"NSOutlineView"];
+  [archiver encodeClassName: @"GormNSPopUpButton" 
+	    intoClassName: @"NSPopUpButton"];
+  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
+	    intoClassName: @"NSPopUpButtonCell"];
+
+  /* Templates */
   [archiver encodeClassName: @"GormNSWindowTemplate" 
 	    intoClassName: @"NSWindowTemplate"];
   [archiver encodeClassName: @"GormNSViewTemplate" 
@@ -2546,15 +2552,12 @@ static NSImage	*classesImage = nil;
       else if ([editor respondsToSelector: 
 			 @selector(windowAndRect:forObject:)])
 	{
-//  	  NSLog(@"temp != nil");
 	  return [editor windowAndRect: r forObject: object];
 	}
     }
   else if ([object isKindOfClass: [NSTableColumn class]] == YES)
     {
-      // dirty hack
       NSTableView *tv = [[(NSTableColumn*)object dataCell] controlView];
-
       NSTableHeaderView *th =  [tv headerView];
       int index;
 
@@ -2576,7 +2579,6 @@ static NSImage	*classesImage = nil;
       
       *r = [th convertRect: [th headerRectOfColumn: index]
 	       toView: nil];
-//        NSLog(@"%@", NSStringFromRect(*r));
       return [th window];
     }
   else

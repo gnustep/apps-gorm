@@ -48,6 +48,7 @@
   NSMutableArray	*hidden;
   NSMutableArray	*deferredWindows;
   NSMutableSet          *sounds;
+  // NSFileWrapper         *wrapper;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

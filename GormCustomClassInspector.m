@@ -149,12 +149,22 @@
 - (void) select: (id)sender
 {
   NSCell *cell = [browser selectedCellInColumn: 0];
-  NSString *stringValue = RETAIN([cell stringValue]);
+  NSString *stringValue = [NSString stringWithString: [cell stringValue]];
   NSString *nameForObject = [_document nameForObject: _currentSelection];
-  
-  /* insert your code here */
-  [_classManager setCustomClass: stringValue
-		 forObject: nameForObject];
+  NSString *classForObject = NSStringFromClass([_currentSelection class]);
+
+  NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
+
+  /* add or remove the mapping as necessary. */
+  if(![stringValue isEqualToString: classForObject])
+    {
+      [_classManager setCustomClass: stringValue
+		     forObject: nameForObject];
+    }
+  else
+    {
+      [_classManager removeCustomClassForObject: nameForObject];
+    }
 }
 
 // Browser delegate

@@ -490,7 +490,6 @@ static NSButtonType _buttonTypeForObject( id button )
 - (void) dealloc
 {
   RELEASE(name);
-
   [super dealloc];
 }
 
@@ -1560,6 +1559,8 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
       NSData			*d;
       NSArchiver                *archiver;
 
+
+      isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
       archiver = [[NSArchiver alloc] init];
       [a beginArchiving];
       [archiver encodeClassName: @"GormNSWindow" 
@@ -1579,8 +1580,6 @@ NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
       
       [nc postNotificationName: IBWillBeginTestingInterfaceNotification
 			object: self];
-
-      isTesting = YES;
 
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{

@@ -1228,6 +1228,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 - (void) setCustomClass: (NSString *)className
               forObject: (id)object
 {
+  // NSString *name = [NSString stringWithString: className];
   [customClassMap setObject: className forKey: object];
 }
 
@@ -1236,17 +1237,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [customClassMap removeObjectForKey: object];
 }
 
-- (NSDictionary *)customClassMap
+- (NSMutableDictionary *)customClassMap
 {
   return customClassMap;
 }
 
-- (void)setCustomClassMap: (NSDictionary *)dict
+- (void)setCustomClassMap: (NSMutableDictionary *)dict
 {
   // copy the dictionary..
   NSLog(@"dictionary = %@",dict);
-  [customClassMap removeAllObjects];
-  [customClassMap addEntriesFromDictionary: dict];
+  ASSIGN(customClassMap, dict);
+  RETAIN(customClassMap);
 }
 
 - (BOOL)isCustomClassMapEmpty

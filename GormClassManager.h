@@ -63,8 +63,8 @@
 - (void) setCustomClass: (NSString *)className
               forObject: (id)object;
 - (void) removeCustomClassForObject: (id) object;
-- (NSDictionary *) customClassMap;
-- (void) setCustomClassMap: (NSDictionary *)dict;
+- (NSMutableDictionary *) customClassMap;
+- (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
 @end
