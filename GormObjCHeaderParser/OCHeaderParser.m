@@ -68,16 +68,18 @@
   NSString *finalString = [NSString stringWithString: @""];
 
   // strip all of the one line comments out...
+  [scanner setCharactersToBeSkipped: nil];
   while(![scanner isAtEnd])
     {
       NSString *tempString = nil;
       [scanner scanUpToString: @"//" intoString: &tempString];
-      [scanner scanUpToAndIncludingString: @"\n" intoString: NULL];
+      [scanner scanUpToString: @"\n" intoString: NULL];
       resultString = [resultString stringByAppendingString: tempString];
     }
 
   // strip all of the multiline comments out...
   scanner = [NSScanner scannerWithString: resultString];
+  [scanner setCharactersToBeSkipped: nil];
   while(![scanner isAtEnd])
     {
       NSString *tempString = nil;
@@ -96,6 +98,7 @@
   NSString *resultString = [NSString stringWithString: @""];
 
   // strip all of the one line comments out...
+  [scanner setCharactersToBeSkipped: nil];
   while(![scanner isAtEnd])
     {
       NSString *tempString = nil;

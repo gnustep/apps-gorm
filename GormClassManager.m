@@ -32,6 +32,7 @@
 #include <InterfaceBuilder/IBPalette.h>
 #include <GNUstepBase/GSCategories.h>
 #include <Foundation/NSValue.h>
+#include <Foundation/NSException.h>
 
 #include <GormObjCHeaderParser/OCHeaderParser.h>
 #include <GormObjCHeaderParser/OCClass.h>
@@ -1594,6 +1595,10 @@
 	      NSMutableArray *actions = [NSMutableArray array];
 	      NSMutableArray *outlets = [NSMutableArray array];
 	      
+	      // skip it, if it's category...  for now.  TODO: make categories work...
+	      if([cls isCategory])
+		continue;
+
 	      while((method = (OCMethod *)[men nextObject]) != nil)
 		{
 		  if([method isAction])
@@ -1610,10 +1615,20 @@
 		    }
 		}
 	      
-	      [self addClassNamed: className
-		    withSuperClassNamed: superClass
-		    withActions: actions
-		    withOutlets: outlets];	 
+	      if([self isKnownClass: superClass])
+		{
+		  [self addClassNamed: className
+			withSuperClassNamed: superClass
+			withActions: actions
+			withOutlets: outlets];	 
+		}
+	      else
+		{
+		  result = NO;
+		  [NSException raise: @"UnknownParentClass"
+			       format: @"The superclass %@ of class %@ is not known, please parse it.",
+			       superClass, className];
+		}
 	    }
 	}
     }

@@ -32,6 +32,7 @@
 #include "GormFilePrefsManager.h"
 #include "GormViewWindow.h"
 #include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSException.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
 #include <AppKit/NSNibConnector.h>
@@ -1259,18 +1260,30 @@ static NSImage  *fileImage = nil;
   if (result == NSOKButton)
     {
       NSString *fileName = [oPanel filename];
-      if(![classManager parseHeader: fileName])
+
+      NS_DURING
 	{
-	  NSString *message = [NSString stringWithFormat: 
-	     _(@"An error occurred while parsing %@"),fileName];
+	  if(![classManager parseHeader: fileName])
+	    {
+	      NSString *message = [NSString stringWithFormat: 
+					      _(@"An error occurred while parsing %@"),fileName];
+	      NSRunAlertPanel(_(@"Problem parsing class"), 
+			      message,
+			      nil, nil, nil);
+	    }
+	  else
+	    {
+	      return self;
+	    }
+	}
+      NS_HANDLER
+	{
+	  NSString *message = [localException reason];
 	  NSRunAlertPanel(_(@"Problem parsing class"), 
 			  message,
 			  nil, nil, nil);
 	}
-      else
-	{
-	  return self;
-	}
+      NS_ENDHANDLER
     }
 
   return nil;
