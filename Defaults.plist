@@ -1,22 +1,25 @@
 {
-  PreloadHeaders = NO;
-  ShowPalettes = YES;
-  ShowInspectors = YES;	
-  HeaderList = ();
-  CellSizeWidth = 72;
-  ArchiveType = Typed;
-  GuideColor = {
-    alpha = 1;
-    blue = 0;
-    green = 0;
-    red = 1;
-  };	
-  BuiltinPalettes = (
-    "0Menus.palette",
-    "1Windows.palette",
-    "2Controls.palette",
-    "3Containers.palette",
-    "4Data.palette"
-  );
-  UserPalettes = ();
+    AllowUserBundles = NO;
+    ArchiveType = Typed;
+    BuiltinPalettes = (
+	0Menus.palette,
+	1Windows.palette,
+	2Controls.palette,
+	3Containers.palette,
+	4Data.palette
+    );
+    CellSizeWidth = 72;
+    GuideColor = {
+	alpha = 1;
+	blue = 0;
+	green = 0;
+	red = 1;
+    };
+    HeaderList = (
+    );
+    PreloadHeaders = NO;
+    ShowInspectors = YES;
+    ShowPalettes = YES;
+    UserPalettes = (
+    );
 }

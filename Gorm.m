@@ -44,6 +44,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 // Define this as "NO" initially.   We only want to turn this on while loading or testing.
 static BOOL _isInInterfaceBuilder = NO;
 
+// Has poseAs: been called?
+static BOOL _illegalClassSubstitution = NO;
+
 static NSImage *gormImage = nil;
 static NSImage *testingImage = nil;
 
@@ -107,8 +110,14 @@ static NSImage *testingImage = nil;
 @implementation NSObject (GormPrivate)
 + (void) poseAsClass: (Class)aClassObject
 {
+  BOOL allow = [[NSUserDefaults standardUserDefaults] boolForKey: @"AllowUserBundles"];
+
   // disable poseAs: while in Gorm.
-  // class_pose_as(self, aClassObject);
+  class_pose_as(self, aClassObject);
+  if(!allow)
+    {
+      _illegalClassSubstitution = YES;
+    }
 }
 @end
 
@@ -331,12 +340,25 @@ static NSImage *testingImage = nil;
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
     }
-  if((a = [defaults arrayForKey: @"GSAppKitUserBundles"]) != nil)
+  if((a = [defaults arrayForKey: @"GSAppKitUserBundles"]) != nil ||
+     _illegalClassSubstitution == YES)
     {
       if([a count] > 0)
 	{
-	  NSLog(@"WARNING: Gorm has detected that you are using user bundles.  Please make certain that these are compatible with Gorm as some bundles can cause issues which may corrupt your .gorm files.");
+	  NSRunAlertPanel(_(@"User Bundle Warning"), 
+			  _(@"Gorm has detected that you are using user bundles.  Please make certain that these are compatible with Gorm as some bundles can cause issues which may corrupt your .gorm files."),
+			  _(@"OK"), nil, nil);
 	}
+
+      if(_illegalClassSubstitution == YES)
+	{
+	  NSRunAlertPanel(_(@"Illegal Class Substitution"), 
+			  _(@"A bundle has invoked 'poseAsClass:', this could corrupt .gorm files.  Quitting."),
+			  _(@"OK"), nil, nil);
+	  NSBeep();
+	  [self terminate: self];
+	}
+
     }
   if(GSGetMethod([GSNibContainer class],@selector(awakeWithContext:),YES,YES) == NULL)
     {

@@ -1,3 +1,13 @@
+2005-02-19 02:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Defaults.plist: Added new default "AllowUserBundles" to 
+	disable new code which prevents Gorm from running if a 
+	user bundle is present.
+	* Gorm.m: Added code in [Gorm applicationDidFinishLaunching:]
+	to warn the user and quit, unless the above default is set,
+	if there is a user bundle loaded.  It will give the user
+	a few panels explaining what's going on.
+
 2005-02-15 23:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPosingView.[hm]: Removed.
