@@ -117,8 +117,18 @@
 }
 @end
 
+// to allow us to load the image by name, but save it within the archive.
+// this is a bit of a cheat.
+@interface NSImage (GormAddition)
+- (void) setArchiveByName: (BOOL) archiveByName;
+@end
 
-
+@implementation NSImage (GormAddition)
+- (void) setArchiveByName: (BOOL) archiveByName
+{
+  _flags.archiveByName = archiveByName;
+}
+@end
 
 static BOOL currently_displaying = NO;
 
@@ -1409,17 +1419,30 @@ static BOOL currently_displaying = NO;
     }
   else if ([types containsObject: GormImagePboardType] == YES)
     {
-      NSString  *name;
-      name = [dragPb stringForType: GormImagePboardType];
-      [(id)_editedObject setImage: [NSImage imageNamed: name]];
+      NSString *name = [dragPb stringForType: GormImagePboardType];
+      NSImage *image = [NSImage imageNamed: name];
+      [image setArchiveByName: NO];
+      [(id)_editedObject setImage: image];
       return YES;
     }
   else   if ([types containsObject: GormSoundPboardType] == YES)
     {
       NSString *name;
       name = [dragPb stringForType: GormSoundPboardType];
-      NSLog(@"sound drag'n'dropping is not currently working, please fix it");
-      //      [(id)_editedObject setSound: [NSSound soundNamed: name]];
+      // NSLog(@"sound drag'n'dropping is not currently working, please fix it");
+      if([(id)_editedObject respondsToSelector: @selector(setSound:)])
+	{
+	  [(id)_editedObject setSound: [NSSound soundNamed: name]];
+	}
+
+      /*
+      else
+	{
+	  int result = NSRunAlertPanel(NULL, 
+				       _(@"The edited object does not accept sounds."),
+				       _(@"Cancel"));
+	}
+      */
       return YES;
     }
   return NO;
