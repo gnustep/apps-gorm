@@ -36,7 +36,10 @@
   if ([self documentView]
       && [[self documentView] isKindOfClass: [NSTableView class]])
     return @"GormTableViewEditor";
-  else
+  else if ([self documentView]
+      && [[self documentView] isKindOfClass: [NSTextView class]])
+    return @"GormTextViewEditor";
+  else 
     return @"GormScrollViewEditor";
 }
 @end
@@ -49,6 +52,15 @@
 @end
 
 @implementation GormScrollViewEditor
+
+- (void) setOpened: (BOOL) flag
+{
+  [super setOpened: flag];
+  if (flag == YES)
+    {  
+      [document setSelectionFromEditor: documentViewEditor];
+    }
+}
 
 - (BOOL) activate
 {
@@ -118,9 +130,10 @@
 	isDescendantOf: documentViewEditor])
     {
 //        NSLog(@"md %@ descendant of", self);
-      if ([documentViewEditor isOpened] == NO)
+      if (([self isOpened] == YES) && ([documentViewEditor isOpened] == NO))
 	[documentViewEditor setOpened: YES];
-      [documentViewEditor mouseDown: theEvent];
+      if ([documentViewEditor isOpened])
+	[documentViewEditor mouseDown: theEvent];
     }
   else
     {
@@ -128,6 +141,33 @@
       if (v && [v isKindOfClass: [NSScroller class]])
 	[v mouseDown: theEvent];
     }
+}
+
+- (void) dealloc
+{
+  RELEASE(selection);
+  [super dealloc];
+}
+
+- (id) initWithObject: (id)anObject 
+	   inDocument: (id<IBDocuments>)aDocument
+{
+  opened = NO;
+  openedSubeditor = nil;
+
+  if ((self = [super initWithObject: anObject
+		     inDocument: aDocument]) == nil)
+    return nil;
+
+  selection = [[NSMutableArray alloc] initWithCapacity: 5];
+
+
+  
+  [self registerForDraggedTypes: [NSArray arrayWithObjects:
+    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
+
+  
+  return self;
 }
 
 @end

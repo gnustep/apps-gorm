@@ -368,7 +368,11 @@
 
   // Operate on the document view if the selected object is a NSScrollView
   if ([obj isKindOfClass: [NSScrollView class]] && 
-      ([(NSScrollView *)obj documentView] != nil) )
+      ([(NSScrollView *)obj documentView] != nil) &&
+      ([[(NSScrollView *)obj documentView] isKindOfClass: [NSTableView class]]
+       || [[(NSScrollView *)obj documentView] isKindOfClass: [NSTextView class]])
+       
+      )
     {
       obj = [(NSScrollView *)obj documentView];
     }

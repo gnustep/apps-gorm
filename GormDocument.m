@@ -1285,7 +1285,7 @@ static NSImage	*classesImage = nil;
        * NB. We must retain the map values (object names) as the nameTable
        * may not hold identical name objects, but merely equal strings.
        */
-      objToName = NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
+      objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
 	NSObjectMapValueCallBacks, 128, [self zone]);
 
       // for saving objects when the gorm file is persisted.  Used for templates.

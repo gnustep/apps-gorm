@@ -1,3 +1,18 @@
+2002-10-29  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+
+	* GormDocument.m: change nameTable retaining policy from 
+	NSNonRetainedObjectMapKeyCallBacks to NSObjectMapKeyCallBacks.
+	This eliminates segfaults that happened when saving/testing multiple
+	times. Note: this might not be the best solution, but it does work.
+
+	* GormInspectorsManager.m
+	* GormScrollViewEditor.m
+	* Palettes/3Containers/inspectors.m
+	* Palettes/4Data/inspectors.m
+	Various updates to GormScrollViewEditor and to NSTextView support.
+	(addition of GormTextViewEditor)
+	
+
 2002-10-25  Gregory John Casamento <greg_casamento@yahoo.com>
 
         * GormDocument.m: Removed extraneous calls to eliminate entries in the
