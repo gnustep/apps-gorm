@@ -314,15 +314,15 @@ static NSImage	*classesImage = nil;
    */
   if ([anObject isKindOfClass: [NSMenu class]] == YES)
     {
-      // NSArray *menus = findAllMenus(anObject);
-      // NSEnumerator *en = [menus objectEnumerator];
-      // id obj = nil;
+      // if there is no main menu and a menu gets added, it
+      // will become the main menu.
+      if([self objectForName: @"NSMenu"] == nil)
+	{
+	  [self setName: @"NSMenu" forObject: anObject];
+	  [objectsView addObject: anObject];
+	}
 
       [[self openEditorForObject: anObject] activate];
-      // while((obj = [en nextObject]) != nil)
-      //  {
-      //    [[self openEditorForObject: obj] activate];
-      //  }
     }
 
   /*

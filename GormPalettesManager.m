@@ -91,16 +91,21 @@ static NSImage	*dragImage = nil;
   NSString	*type = [[dragPb types] lastObject];
 
   /*
-   * Windows are an exception to the normal DnD mechanism - we create them
-   * if they are dropped anywhere except back in the pallettes view -
-   * ie. if they are dragged, but the drop fails.
+   * Windows and Menus are an exception to the normal DnD mechanism - 
+   * we create them if they are dropped anywhere except back in the \
+   * pallettes view ie. if they are dragged, but the drop fails.
    */
-  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
+  if (f == NO && ([type isEqual: IBWindowPboardType] == YES || 
+		  [type isEqual: IBMenuPboardType] == YES))
     {
       id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
 
       if (active != nil)
 	{
+	  if([active objectForName: @"NSMenu"] != nil && 
+	     [type isEqual: IBMenuPboardType] == YES)
+	    return;
+
 	  [active pasteType: type fromPasteboard: dragPb parent: nil];
 	}
     }
