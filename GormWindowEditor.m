@@ -142,7 +142,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   NSView		*original;
   NSMutableArray	*selection;
   NSMutableArray	*subeditors;
-  BOOL			shouldBeginDrag;
+  BOOL			isLinkSource;
   BOOL			isClosed;
   NSPasteboard		*dragPb;
   NSString		*dragType;
@@ -344,6 +344,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [pb setString: name forType: GormLinkPboardType];
 	  [NSApp displayConnectionBetween: view and: nil];
 
+	  isLinkSource = YES;
 	  [self dragImage: [NSApp linkImage]
 		       at: dragPoint
 		   offset: NSZeroSize
@@ -351,6 +352,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	       pasteboard: pb
 		   source: self
 		slideBack: YES];
+	  isLinkSource = NO;
 	  [self makeSelectionVisible: YES];
 	  return;
 	}
@@ -818,7 +820,10 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
-  return NSDragOperationCopy;
+  if (isLinkSource == YES)
+    return NSDragOperationLink;
+  else
+    return NSDragOperationCopy;
 }
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender

@@ -74,8 +74,8 @@ extern NSString *GormLinkPboardType;
   id<IBDocuments>	document;
   id			selected;
   NSPoint		mouseDownPoint;
-  BOOL			shouldBeginDrag;
   NSPasteboard		*dragPb;
+  NSString		*dragType;
 }
 - (void) addObject: (id)anObject;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;

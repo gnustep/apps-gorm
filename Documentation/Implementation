@@ -21,3 +21,19 @@ the selection owner (normally the editor itsself) as the notification owner.
 The main application watches for these notifications in order to keep track
 of who has the selection.
 
+
+
+Connections
+===========
+The connection API is the same as that for IB, but with the extension that the
+document object must implement [-windowAndRect:forObject:] to return the
+window in which the object is being displayed, and the rectangle enclosing
+the object (in window base coordinates).
+
+This information is neede by Gorm so that it can mark the connection.
+
+The editors mananging the drag-and-drop operation for a connection must call
+[NSApp -displayConnectionBetween:and:] to tell Gorm to update its display.
+This method sets the values currently returned by
+[BSApp -connectSource] and [NSApp -connectDestination]
+

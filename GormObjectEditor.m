@@ -83,6 +83,17 @@ static NSMapTable	*docMap = 0;
     }
 }
 
+- (BOOL) acceptsTypeFromArray: (NSArray*)types
+{
+  return NO;
+}
+
+- (BOOL) activate
+{
+  [window makeKeyAndOrderFront: self];
+  return YES;
+}
+
 - (void) addObject: (id)anObject
 {
   if (anObject != nil
@@ -93,10 +104,148 @@ static NSMapTable	*docMap = 0;
     }
 }
 
+- (id) changeSelection: (id)sender
+{
+  int	row = [self selectedRow];
+  int	col = [self selectedColumn];
+  int	index = row * [self numberOfColumns] + col;
+  id	obj = nil;
+
+  if (index >= 0 && index < [objects count])
+    {
+      obj = [objects objectAtIndex: index];
+      if (obj != selected)
+	{
+	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
+	  selected = obj;
+	  [nc postNotificationName: IBSelectionChangedNotification
+			    object: self];
+	}
+    }
+  return obj;
+}
+
+- (void) close
+{
+  [self closeSubeditors];
+}
+
+- (void) closeSubeditors
+{
+}
+
+- (BOOL) containsObject: (id)object
+{
+  if ([objects indexOfObjectIdenticalTo: object] == NSNotFound)
+    return NO;
+  return YES;
+}
+
+- (void) copySelection
+{
+}
+
 - (void) dealloc
 {
   RELEASE(objects);
   [super dealloc];
+}
+
+- (void) deleteSelection
+{
+}
+
+/*
+ *	Dragging source protocol implementation
+ */
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
+{
+  NSString	*type = [[dragPb types] lastObject];
+
+  /*
+   * Windows are an exception to the normal DnD mechanism - we create them
+   * if they are dropped anywhere except back in the pallettes view -
+   * ie. if they are dragged, but the drop fails.
+   */
+  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
+    {
+      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
+
+      if (active != nil)
+	{
+	  [active pasteType: type fromPasteboard: dragPb parent: nil];
+	}
+    }
+}
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  NSArray	*types;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: IBObjectPboardType] == YES)
+    {
+      dragType = IBObjectPboardType;
+    }
+  else if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      dragType = GormLinkPboardType;
+    }
+  else
+    {
+      dragType = nil;
+    }
+  return [self draggingUpdated: sender];
+}
+
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+{
+  if (dragType == IBObjectPboardType)
+    {
+      return NSDragOperationCopy;
+    }
+  else if (dragType == GormLinkPboardType)
+    {
+      NSPoint	loc = [sender draggingLocation];
+      int	r, c;
+      int	pos;
+      id	obj = nil;
+
+      loc = [self convertPoint: loc fromView: nil];
+      [self getRow: &r column: &c forPoint: loc];
+      pos = r * [self numberOfColumns] + c;
+      if (pos >= 0 && pos < [objects count])
+	{
+	  obj = [objects objectAtIndex: pos];
+	}
+      [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
+      return NSDragOperationLink;
+    }
+  else
+    {
+      return 0;
+    }
+}
+
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+{
+  return NSDragOperationLink;
+}
+
+- (void) drawSelection
+{
+}
+
+- (id<IBDocuments>) document
+{
+  return document;
+}
+
+- (id) editedObject
+{
+  return selected;
 }
 
 /*
@@ -122,8 +271,7 @@ static NSMapTable	*docMap = 0;
       document = aDocument;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	IBCellPboardType, IBMenuPboardType, IBMenuCellPboardType,
-	IBObjectPboardType, IBViewPboardType, IBWindowPboardType, nil]];
+	IBObjectPboardType, GormLinkPboardType, nil]];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];
@@ -152,69 +300,20 @@ static NSMapTable	*docMap = 0;
   return self;
 }
 
-/*
- *	Dragging source protocol implementation
- */
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
+- (void) makeSelectionVisible: (BOOL)flag
 {
-  NSString	*type = [[dragPb types] lastObject];
-
-  /*
-   * Windows are an exception to the normal DnD mechanism - we create them
-   * if they are dropped anywhere except back in the pallettes view -
-   * ie. if they are dragged, but the drop fails.
-   */
-  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
+  if (flag == YES && selected != nil)
     {
-      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
+      unsigned	pos = [objects indexOfObjectIdenticalTo: selected];
+      int	r = pos / [self numberOfColumns];
+      int	c = pos % [self numberOfColumns];
 
-      if (active != nil)
-	{
-	  [active pasteType: type fromPasteboard: dragPb parent: nil];
-	}
+      [self selectCellAtRow: r column: c];
     }
-}
-
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
-{
-  return NSDragOperationCopy;
-}
-
-/*
- *	Dragging destination protocol implementation
- *
- *	We actually don't handle anything being dropped on the palette,
- *	but we pretend to accept drops from ourself, so that the drag
- *	session quietly terminates - and it looks like the drop has
- *	been successful - this stops windows being created when they are
- *	dropped back on the palette (a window is normally created if the
- *	dnd drop is refused).
- */
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  return NSDragOperationCopy;;
-}
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
-}
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
-}
-
-
-/*
- *	Intercepting events in the view and handling them
- */
-- (NSView*) hitTest: (NSPoint)loc
-{
-  /*
-   * Stop the subviews receiving events - we grab them all.
-   */
-  if ([super hitTest: loc] != nil)
-    return self;
-  return nil;
+  else
+    {
+      [self deselectAllCells];
+    }
 }
 
 - (void) mouseDown: (NSEvent*)theEvent
@@ -222,81 +321,31 @@ static NSMapTable	*docMap = 0;
   NSView	*view;
 
   mouseDownPoint = [theEvent locationInWindow];
-  view = [super hitTest: mouseDownPoint];
-  if (view == self)
-    {
-      shouldBeginDrag = NO;
-    }
-  else
-    {
-      shouldBeginDrag = YES;
-    }
   [super mouseDown: theEvent];
 }
 
-- (void) mouseDragged: (NSEvent*)theEvent
+- (id<IBEditors>) openSubeditorForObject: (id)anObject
 {
-  if (shouldBeginDrag == YES)
-    {
-      NSPoint		dragPoint = [theEvent locationInWindow];
-      NSView		*view = [super hitTest: mouseDownPoint];
-      GormDocument	*active = [(id<IB>)NSApp activeDocument];
-      NSRect		rect = [view frame];
-      NSString		*type;
-      id		obj;
-      NSPasteboard	*pb;
-      NSImageRep	*rep;
-      NSSize		offset;
-
-      offset.width = mouseDownPoint.x - dragPoint.x;
-      offset.height = mouseDownPoint.y - dragPoint.y;
-
-#if 1
-NSLog(@"Could do dragging");
-#else
-      dragImage = [NSImage new];
-      rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
-						rect: rect];
-      [dragImage setSize: rect.size];
-      [dragImage addRepresentation: rep];
-
-      type = [IBPalette typeForView: view];
-      obj = [IBPalette objectForView: view];
-      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-      ASSIGN(dragPb, pb);
-      [active copyObject: obj type: type toPasteboard: pb];
-
-      [self dragImage: dragImage
-		   at: rect.origin
-	       offset: offset
-		event: theEvent
-	   pasteboard: pb
-	       source: self
-	    slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
-#endif
-    }
+  return nil;
 }
 
-- (id) changeSelection: (id)sender
+- (void) orderFront
 {
-  int	row = [self selectedRow];
-  int	col = [self selectedColumn];
-  int	index = row * [self numberOfColumns] + col;
-  id	obj = nil;
+  [window orderFront: self];
+}
 
-  if (index >= 0 && index < [objects count])
-    {
-      obj = [objects objectAtIndex: index];
-      if (obj != selected)
-	{
-	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+- (void) pasteInSelection
+{
+}
 
-	  selected = obj;
-	  [nc postNotificationName: IBSelectionChangedNotification
-			    object: self];
-	}
-    }
-  return obj;
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  return YES;
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  return YES;
 }
 
 - (id) raiseSelection: (id)sender
@@ -312,6 +361,29 @@ NSLog(@"Could do dragging");
       NSLog(@"Menu needs raising"); /* FIXME */
     }
   return self;
+}
+
+/*
+ * Return the rectangle in which an objects image will be displayed.
+ */
+- (NSRect) rectForObject: (id)anObject
+{
+  unsigned	pos = [objects indexOfObjectIdenticalTo: anObject];
+  NSRect	rect;
+  int		r;
+  int		c;
+
+  if (pos == NSNotFound)
+    return NSZeroRect;
+  r = pos / [self numberOfColumns];
+  c = pos % [self numberOfColumns];
+  rect = [self cellFrameAtRow: r column: c];
+  /*
+   * Adjust to image area.
+   */
+  rect.size.width -= 15;
+  rect.size.height -= 15;
+  return rect;
 }
 
 - (void) refreshCells
@@ -377,110 +449,13 @@ NSLog(@"Could do dragging");
   [self refreshCells];
 }
 
+- (void) resetObject: (id)anObject
+{
+}
+
 - (void) resizeWithOldSuperviewSize: (NSSize)oldSize
 {
   [self refreshCells];
-}
-
-- (BOOL) acceptsTypeFromArray: (NSArray*)types
-{
-  return NO;
-}
-
-- (BOOL) activate
-{
-  [window makeKeyAndOrderFront: self];
-  return YES;
-}
-
-- (void) close
-{
-  [self closeSubeditors];
-}
-
-- (void) closeSubeditors
-{
-}
-
-- (BOOL) containsObject: (id)object
-{
-  if ([objects indexOfObjectIdenticalTo: object] == NSNotFound)
-    return NO;
-  return YES;
-}
-
-- (void) copySelection
-{
-}
-
-- (void) deleteSelection
-{
-}
-
-- (void) drawSelection
-{
-}
-
-- (id<IBDocuments>) document
-{
-  return document;
-}
-
-- (id) editedObject
-{
-  return selected;
-}
-
-- (void) makeSelectionVisible: (BOOL)flag
-{
-  if (flag == YES && selected != nil)
-    {
-      unsigned	pos = [objects indexOfObjectIdenticalTo: selected];
-      int	r = pos / [self numberOfColumns];
-      int	c = pos % [self numberOfColumns];
-
-      [self selectCellAtRow: r column: c];
-    }
-  else
-    {
-      [self deselectAllCells];
-    }
-}
-
-- (id<IBEditors>) openSubeditorForObject: (id)anObject
-{
-  return nil;
-}
-
-- (void) orderFront
-{
-  [window orderFront: self];
-}
-
-- (void) pasteInSelection
-{
-}
-
-/*
- * Return the rectangle in which an objects image will be displayed.
- */
-- (NSRect) rectForObject: (id)anObject
-{
-  unsigned	pos = [objects indexOfObjectIdenticalTo: anObject];
-  NSRect	rect;
-  int		r;
-  int		c;
-
-  if (pos == NSNotFound)
-    return NSZeroRect;
-  r = pos / [self numberOfColumns];
-  c = pos % [self numberOfColumns];
-  rect = [self cellFrameAtRow: r column: c];
-  return rect;
-}
-
-- (void) resetObject: (id)anObject
-{
 }
 
 - (void) selectObjects: (NSArray*)anArray
@@ -518,6 +493,6 @@ NSLog(@"Could do dragging");
 
 - (NSWindow*) window
 {
-  return [self window];
+  return [super window];
 }
 @end

@@ -89,10 +89,36 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 @end
 
 @interface NSApplication (IBConnections)
+/*
+ * [NSApp -connectSource] returns the source object as set by the most recent
+ * [NSApp -displayConnectionBetween:and:]
+ */
 - (id) connectSource;
+
+/*
+ * [NSApp -connectDestination] returns the target object as set by the most
+ * recent [NSApp -displayConnectionBetween:and:]
+ */
 - (id) connectDestination;
+
+/*
+ * [NSApp -isConnecting] simply lets you know if a connection is in progress.
+ */
 - (BOOL) isConnecting;
+
+/*
+ * [NSApp -stopConnecting] terminates the current connection process and
+ * removes the connection marks from the display.
+ */
 - (void) stopConnecting;
+
+/*
+ * [NSApp -displayConnectionBetween:and:] is used to set the source and target
+ * objects and mark the display appropriately.  Setting either source or
+ * target to 'nil' will remove markup from any previous source or target.
+ * NB. This method expects to be able to call the active document to ask it
+ * for the window adn rectangle in which to perform markup.
+ */
 - (void) displayConnectionBetween: (id)source and: (id)destination;
 @end
 
@@ -168,6 +194,11 @@ extern NSString *IBDidEndTestingInterfaceNotification;
 - (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor;
 - (void) touch;		/* Mark document as having been changed.	*/
+
+/*
+ * windowAndRect:forObject: is called by Gorm to determine where it should
+ * draw selection markup
+ */
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 @end
 
