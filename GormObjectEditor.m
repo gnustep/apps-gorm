@@ -104,7 +104,7 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) activate
 {
-  [window makeKeyAndOrderFront: self];
+  [[self window] makeKeyAndOrderFront: self];
   return YES;
 }
 
@@ -430,7 +430,7 @@ static NSMapTable	*docMap = 0;
 
 - (void) orderFront
 {
-  [window orderFront: self];
+  [[self window] orderFront: self];
 }
 
 - (void) pasteInSelection
