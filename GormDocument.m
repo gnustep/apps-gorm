@@ -2062,7 +2062,7 @@ static NSImage	*classesImage = nil;
    * handling class replacement so that standard objects understood
    * by the gui library are converted to their Gorm internal equivalents.
    */
-  u = AUTORELEASE([[NSUnarchiver alloc] initForReadingWithData: data]);
+  u = [[NSUnarchiver alloc] initForReadingWithData: data];
 
   // classes
   [u decodeClassName: @"GSNibContainer" 
@@ -2255,6 +2255,9 @@ static NSImage	*classesImage = nil;
   [nc postNotificationName: IBDidOpenDocumentNotification
 		    object: self];
 
+  // release the unarchiver.. now that we're all done...
+  RELEASE(u);
+  
   return self;
 }
 
@@ -2266,7 +2269,7 @@ static NSImage	*classesImage = nil;
   NSEnumerator  *enumerator;
   NSString	*name;
 
-  NSLog(@"------ Rebuilding object to name mapping...");
+  NSDebugLog(@"------ Rebuilding object to name mapping...");
   NSResetMapTable(objToName);
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
@@ -2275,7 +2278,7 @@ static NSImage	*classesImage = nil;
     {
       id	obj = [nameTable objectForKey: name];
       
-      NSLog(@"%@ --> %@",name, obj);
+      NSDebugLog(@"%@ --> %@",name, obj);
       NSMapInsert(objToName, (void*)obj, (void*)name);
       if ([obj isKindOfClass: [NSMenu class]] == YES)
 	{
