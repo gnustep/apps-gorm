@@ -242,10 +242,13 @@ static NSImage	*classesImage = nil;
   /*
    * Remove objects and connections that shouldn't be archived.
    */
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
   [nameTable removeObjectForKey: @"NSOwner"];
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable removeObjectForKey: @"NSFirst"];
   if (fontManager != nil)
     {
+      NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable removeObjectForKey: @"NSFont"];
     }
 }
@@ -542,11 +545,17 @@ static NSImage	*classesImage = nil;
   /*
    * Restore removed objects.
    */
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
   [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
+  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
   if (fontManager != nil)
     {
+      NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
       [nameTable setObject: fontManager forKey: @"NSFont"];
+      NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
     }
 
   /*
@@ -711,8 +720,12 @@ static NSImage	*classesImage = nil;
       NSButtonCell		*cell;
       unsigned			style;
 
+      /*
+       * NB. We must retain the map values (object names) as the nameTable
+       * may not hold identical name objects, but merely equal strings.
+       */
       objToName = NSCreateMapTableWithZone(NSNonRetainedObjectMapKeyCallBacks,
-	NSNonRetainedObjectMapValueCallBacks, 128, [self zone]);
+	NSObjectMapValueCallBacks, 128, [self zone]);
 
       savedEditors = [NSMutableArray new];
 
@@ -914,6 +927,7 @@ static NSImage	*classesImage = nil;
    */
   [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
   [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
+
   nt = [c nameTable];
   enumerator = [[c connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
@@ -1265,8 +1279,10 @@ static NSImage	*classesImage = nil;
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
+  aName = [aName copy];	/* Make sure it's immutable	*/
   [nameTable setObject: object forKey: aName];
   NSMapInsert(objToName, (void*)object, (void*)aName);
+  RELEASE(aName);
   if (oldName != nil)
     {
       [nameTable removeObjectForKey: oldName];
