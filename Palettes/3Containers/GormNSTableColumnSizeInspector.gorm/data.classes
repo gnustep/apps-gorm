@@ -2,38 +2,22 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "alignLeft:",
 	    "capitalizeWord:",
 	    "changeFont:",
-	    "copy:",
 	    "delete:",
-	    "deleteToBeginningOfParagraph:",
 	    "deleteWordBackward:",
-	    "fax:",
 	    "loosenKerning:",
-	    "miniaturize:",
 	    "moveDown:",
-	    "moveLeft:",
 	    "moveToBeginningOfParagraph:",
-	    "moveUp:",
 	    "moveWordForward:",
-	    "orderBack:",
 	    "orderFrontHelpPanel:",
-	    "pageDown:",
 	    "pasteAsRichText:",
-	    "performMiniaturize:",
 	    "runPageLayout:",
-	    "scrollPageDown:",
 	    "selectLine:",
-	    "selectToMark:",
 	    "showGuessPanel:",
-	    "subscript:",
 	    "takeFloatValueFrom:",
-	    "terminate:",
 	    "toggleRuler:",
-	    "transposeWords:",
 	    "unhide:",
-	    "useAllLigatures:",
 	    "zoom:"
 	);
 	Super = NSObject;
@@ -48,75 +32,28 @@
     };
     NSApplication = {
 	Actions = (
-	    "miniaturizeAll:",
-	    "orderFrontStandardAboutPanel:",
-	    "terminate:"
+	    "orderFrontStandardAboutPanel:"
 	);
 	Super = NSResponder;
     };
-    NSCell = {
-	Actions = (
-	    "takeStringValueFrom:"
-	);
-	Super = NSObject;
-    };
-    NSControl = {
-	Actions = (
-	    "takeObjectValueFrom:"
-	);
-	Super = NSView;
-    };
-    NSDocument = {
-	Actions = (
-	    "saveDocument:"
-	);
-	Super = NSObject;
-    };
-    NSDocumentController = {
-	Actions = (
-	    "saveAllDocuments:"
-	);
-	Super = NSObject;
-    };
-    NSFontManager = {
-	Actions = (
-	    "orderFrontFontPanel:"
-	);
-	Super = NSObject;
-    };
-    NSTabView = {
-	Actions = (
-	    "selectPreviousTabViewItem:"
-	);
-	Super = NSView;
-    };
     NSText = {
 	Actions = (
-	    "changeFont:",
 	    "copyFont:",
-	    "ignoreSpelling:",
-	    "selectAll:",
-	    "toggleRuler:"
+	    "selectAll:"
 	);
 	Super = NSView;
     };
     NSTextView = {
 	Actions = (
-	    "insertBacktab:",
 	    "loosenKerning:",
-	    "moveForward:",
 	    "pasteAsPlainText:",
-	    "toggleContinuousSpellChecking:",
-	    "useAllLigatures:",
-	    "useStandardBaseline:"
+	    "useAllLigatures:"
 	);
 	Super = NSText;
     };
     NSWindow = {
 	Actions = (
-	    "miniaturize:",
 	    "performClose:",
-	    "runToolbarCustomizationPalette:",
 	    "zoom:"
 	);
 	Super = NSResponder;

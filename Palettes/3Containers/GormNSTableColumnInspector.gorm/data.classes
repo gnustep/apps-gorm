@@ -2,70 +2,38 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "alignCenter:",
 	    "alignLeft:",
-	    "arrangeInFront:",
 	    "capitalizeWord:",
 	    "changeFont:",
-	    "close:",
 	    "copy:",
-	    "copyRuler:",
 	    "delete:",
-	    "deleteForward:",
 	    "deleteToBeginningOfParagraph:",
-	    "deleteToEndOfParagraph:",
 	    "deleteWordBackward:",
-	    "deminiaturize:",
 	    "fax:",
-	    "hideOtherApplications:",
 	    "loosenKerning:",
-	    "lowercaseWord:",
 	    "miniaturize:",
-	    "moveBackward:",
 	    "moveDown:",
-	    "moveForward:",
 	    "moveLeft:",
-	    "moveToBeginningOfDocument:",
 	    "moveToBeginningOfParagraph:",
-	    "moveToEndOfLine:",
 	    "moveUp:",
-	    "moveWordBackward:",
 	    "moveWordForward:",
-	    "ok:",
 	    "orderBack:",
-	    "orderFrontColorPanel:",
 	    "orderFrontHelpPanel:",
-	    "orderFrontStandardInfoPanel:",
 	    "pageDown:",
-	    "paste:",
 	    "pasteAsRichText:",
-	    "pasteRuler:",
 	    "performMiniaturize:",
-	    "print:",
 	    "runPageLayout:",
-	    "scrollLineDown:",
 	    "scrollPageDown:",
-	    "scrollViaScroller:",
 	    "selectLine:",
-	    "selectParagraph:",
 	    "selectToMark:",
-	    "selectWord:",
 	    "showGuessPanel:",
-	    "showWindow:",
 	    "subscript:",
-	    "swapWithMark:",
 	    "takeFloatValueFrom:",
-	    "takeObjectValueFrom:",
 	    "terminate:",
-	    "toggle:",
 	    "toggleRuler:",
-	    "toggleTraditionalCharacterShape:",
 	    "transposeWords:",
-	    "turnOffLigatures:",
 	    "unhide:",
-	    "unscript:",
 	    "useAllLigatures:",
-	    "useStandardLigatures:",
 	    "zoom:"
 	);
 	Super = NSObject;
@@ -85,160 +53,77 @@
 	);
 	Super = IBInspector;
     };
-    IBInspector = {
-	Actions = (
-	    "revert:"
-	);
-	Super = NSObject;
-    };
     NSApplication = {
 	Actions = (
-	    "hide:",
 	    "miniaturizeAll:",
-	    "orderFrontDataLinkPanel:",
 	    "orderFrontStandardAboutPanel:",
-	    "runPageLayout:",
-	    "terminate:",
-	    "unhideAllApplications:"
+	    "terminate:"
 	);
 	Super = NSResponder;
     };
-    NSBrowser = {
-	Actions = (
-	    "doDoubleClick:"
-	);
-	Super = NSControl;
-    };
-    NSCStringText = {
-	Actions = (
-	    "selectText:"
-	);
-	Super = NSText;
-    };
     NSCell = {
 	Actions = (
-	    "takeFloatValueFrom:",
 	    "takeStringValueFrom:"
 	);
 	Super = NSObject;
     };
     NSControl = {
 	Actions = (
-	    "takeFloatValueFrom:",
 	    "takeObjectValueFrom:"
 	);
 	Super = NSView;
     };
     NSDocument = {
 	Actions = (
-	    "revertDocumentToSaved:",
-	    "saveDocument:",
-	    "saveDocumentTo:"
+	    "saveDocument:"
 	);
 	Super = NSObject;
     };
     NSDocumentController = {
 	Actions = (
-	    "newDocument:",
 	    "saveAllDocuments:"
 	);
 	Super = NSObject;
     };
-    NSDrawer = {
-	Actions = (
-	    "open:"
-	);
-	Super = NSResponder;
-    };
     NSFontManager = {
 	Actions = (
-	    "modifyFont:",
 	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
     };
-    NSHelpManager = {
-	Actions = (
-	    "showHelp:"
-	);
-	Super = NSObject;
-    };
-    NSMatrix = {
-	Actions = (
-	    "selectText:"
-	);
-	Super = NSControl;
-    };
-    NSProgressIndicator = {
-	Actions = (
-	    "startAnimation:"
-	);
-	Super = NSView;
-    };
     NSTabView = {
 	Actions = (
-	    "selectLastTabViewItem:",
 	    "selectPreviousTabViewItem:"
 	);
 	Super = NSView;
     };
-    NSTableView = {
-	Actions = (
-	    "selectAll:"
-	);
-	Super = NSControl;
-    };
     NSText = {
 	Actions = (
-	    "alignLeft:",
 	    "changeFont:",
-	    "checkSpelling:",
 	    "copyFont:",
-	    "cut:",
 	    "ignoreSpelling:",
-	    "pasteFont:",
 	    "selectAll:",
-	    "subscript:",
-	    "toggleRuler:",
-	    "unscript:"
+	    "toggleRuler:"
 	);
 	Super = NSView;
     };
     NSTextView = {
 	Actions = (
-	    "changeColor:",
 	    "insertBacktab:",
-	    "insertParagraphSeparator:",
 	    "loosenKerning:",
-	    "moveBackward:",
 	    "moveForward:",
-	    "moveRight:",
 	    "pasteAsPlainText:",
-	    "raiseBaseline:",
 	    "toggleContinuousSpellChecking:",
-	    "turnOffKerning:",
 	    "useAllLigatures:",
-	    "useDefaultKerning:",
-	    "useStandardBaseline:",
-	    "useStandardLigatures:"
+	    "useStandardBaseline:"
 	);
 	Super = NSText;
     };
-    NSView = {
-	Actions = (
-	    "print:"
-	);
-	Super = NSResponder;
-    };
     NSWindow = {
 	Actions = (
-	    "fax:",
 	    "miniaturize:",
-	    "orderFront:",
 	    "performClose:",
-	    "performZoom:",
 	    "runToolbarCustomizationPalette:",
-	    "selectPreviousKeyView:",
 	    "zoom:"
 	);
 	Super = NSResponder;

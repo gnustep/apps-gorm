@@ -2797,7 +2797,6 @@ static NSImage  *fileImage = nil;
       NSRect	frame = [window frame];
 
       [window close];
-      RELEASE(window);
       [[reverted window] setFrame: frame display: YES];
       return reverted;
     }

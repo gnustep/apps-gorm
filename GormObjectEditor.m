@@ -31,6 +31,40 @@
  * the matrix containing the objects in a document.
  */
 @implementation NSObject (IBObjectAdditions)
++ (BOOL)canSubstituteForClass: (Class)origClass
+{
+  return NO;
+}
+
+- (void)awakeFromDocument: (id <IBDocuments>)doc
+{
+  // does nothing...
+}
+
+- (NSString *)nibLabel: (NSString *)objectName
+{
+  return nil;
+}
+
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+
+  return image;
+}
+
+- (NSString *)objectNameForInspectorTitle
+{
+  return [self className];
+}
+
 - (NSString*) inspectorClassName
 {
   return @"GormObjectInspector";
@@ -55,18 +89,10 @@
 {
   return @"GormObjectEditor";
 }
-- (NSImage*) imageForViewer
+
+- (NSArray*) ibIncompatibleProperties
 {
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-
-  return image;
+  return nil;
 }
 @end
 

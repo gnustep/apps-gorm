@@ -77,9 +77,9 @@
       [object setTitled: flag];
 
       flag = ([[control cellAtRow: 5 column: 0] state] == NSOnState) ? YES : NO;
-      [object setHasHorizontalScroller: flag];
+      [object setHasHorizontalScroller: flag]; 
     }
-  else if( control == tagField )
+  else if(control == tagField)
     {
       [object setTag:[[tagField cellAtIndex:0] intValue]];
     }

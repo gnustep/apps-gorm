@@ -114,6 +114,7 @@
 {
   [browser setTarget: self];
   [browser setAction: @selector(select:)];
+  [browser setMaxVisibleColumns: 1];
 }
 
 - (void) _replaceCellClassForObject: (id)obj

@@ -1,3 +1,45 @@
+2004-12-05 07:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomClassInspector.m: Set the max visible columns to 1 in 
+	awakeFromNib.
+	* GormDocument.m: Corrected a segfault when reverting to the saved 
+	document.
+	* GormObjectEditor.m: Fully implemented IBObjectAdditions.m
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm
+	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm
+	* Palettes/1Windows/GormNSWindowInspector.gorm
+	* Palettes/2Controls/GormNSBoxInspector.gorm
+	* Palettes/2Controls/GormNSButtonInspector.gorm
+	* Palettes/2Controls/GormNSCellInspector.gorm
+	* Palettes/2Controls/GormNSColorWellInspector.gorm
+	* Palettes/2Controls/GormNSFormInspector.gorm
+	* Palettes/2Controls/GormNSMatrixInspector.gorm
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm
+	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm
+	* Palettes/2Controls/GormNSSliderInspector.gorm
+	* Palettes/2Controls/GormNSStepperInspector.gorm
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm
+	* Palettes/3Containers/GormNSBrowserInspector.gorm
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm
+	* Palettes/3Containers/GormNSTableColumnSizeInspector.gorm
+	* Palettes/3Containers/GormNSTableViewInspector.gorm
+	* Palettes/3Containers/GormTabViewInspector.gorm
+	* Palettes/3Containers/inspectors.m
+	* Palettes/4Data/GormNSComboBoxInspector.gorm
+	* Palettes/4Data/GormNSDateFormatterInspector.gorm
+	* Palettes/4Data/GormNSImageViewInspector.gorm
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm
+	* Palettes/4Data/GormNSTextViewInspector.gorm
+	* Resources/GormClassInspector.gorm
+	* Resources/GormCustomClassInspector.gorm
+	* Resources/GormImageInspector.gorm
+	* Resources/GormNSSplitViewInspector.gorm
+	* Resources/GormScrollViewAttributesInspector.gorm
+	* Resources/GormSoundInspector.gorm
+	* Resources/GormViewSizeInspector.gorm: Modified the inspectors
+	to resize properly.  Corrects bug#11216.
+
+	
 2004-12-04 17:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormBoxEditor.m
