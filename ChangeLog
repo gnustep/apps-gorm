@@ -1,3 +1,10 @@
+2003-03-04  Adam Fedor  <fedor@gnu.org>
+
+	* Gorm.m ([Gorm -infoPanel:sender]): Update application name.
+
+	* Palettes/0Menus/main.m ([MenusPalette -finishInstantiate]): Use
+	orderFrontStandardInfoPanel for Info menu item.
+
 2003-03-03  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Gorm.h:

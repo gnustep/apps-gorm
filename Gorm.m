@@ -1022,7 +1022,7 @@ static NSButtonType _buttonTypeForObject( id button )
   d = [NSMutableDictionary dictionaryWithCapacity: 8];
   [d setObject: @"Gorm" 
      forKey: @"ApplicationName"];
-  [d setObject: @"GNUstep Graphical Object Relationship Modeller"
+  [d setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
   [d setObject: @"Gorm 0.2.5" 
      forKey: @"ApplicationRelease"];

@@ -53,7 +53,7 @@
    */
   m = [GormNSMenu new];
   [m addItemWithTitle: @"Info Panel..." 
-	       action: @selector(infoPanel:) 
+	       action: @selector(orderFrontStandardInfoPanel:) 
 	keyEquivalent: @""];
   [m addItemWithTitle: @"Preferences..." 
 	       action: NULL
