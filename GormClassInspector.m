@@ -330,7 +330,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [parentClass setEnabled: (isEditable && !isFirstResponder)];
   [searchCell setEnabled: (isEditable && !isFirstResponder)];
   [classField setEditable: (isEditable && !isFirstResponder)];
-  [classField setBackgroundColor: (isEditable?[NSColor whiteColor]:[NSColor lightGrayColor])];
+  [classField setBackgroundColor: ((isEditable && !isFirstResponder)?[NSColor whiteColor]:[NSColor lightGrayColor])];
 
   // select the parent class
   if(index != NSNotFound)
