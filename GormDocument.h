@@ -79,10 +79,6 @@
   NSMutableSet          *sounds;
   NSMutableSet          *images;
   // NSFileWrapper         *wrapper;
-
-  // working copies of objects in the container...
-  NSMutableArray        *workingConnections;
-  NSMutableDictionary   *workingNameTable;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;
@@ -163,6 +159,11 @@
 // class loading
 - (id) loadClass: (id)sender;
 
+// services/windows menus...
+- (void) setServicesMenu: (NSMenu *)menu;
+- (NSMenu *) servicesMenu;
+- (void) setWindowsMenu: (NSMenu *)menu;
+- (NSMenu *) windowsMenu;
 @end
 
 @interface GormDocument (MenuValidation)

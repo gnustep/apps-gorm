@@ -155,6 +155,30 @@ NSwindow inspector
 }
 @end
 
+// the normal classes...
+@implementation	NSWindow (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormWindowAttributesInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormWindowSizeInspector";
+}
+@end
+
+@implementation	NSPanel (IBInspectorClassNames)
+- (NSString*) inspectorClassName
+{
+  return @"GormWindowAttributesInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormWindowSizeInspector";
+}
+@end
+
+// special subclasses...
 @implementation	GormNSWindow (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {

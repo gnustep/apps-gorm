@@ -24,12 +24,15 @@
 
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include "GormPrivate.h"
+#include "GormDocument.h"
 
 @interface GormMenuAttributesInspector : IBInspector
 {
   NSTextField	*titleText;
   NSMatrix      *menuType;
 }
+- (void) updateMenuType: (id)sender;
 @end
 
 @implementation GormMenuAttributesInspector
@@ -54,10 +57,59 @@
 
 - (void) setObject: (id)anObject
 {
+  BOOL flag = NO;
+  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
+  
+  // set up the menu type matrix...
+  if([doc windowsMenu] == anObject)
+    {
+      [menuType selectCellAtRow: 0 column: 0];
+    }
+  else if([doc servicesMenu] == anObject)
+    {
+      [menuType selectCellAtRow: 1 column: 0];
+    }
+  else // normal menu without any special function
+    {
+      [menuType selectCellAtRow: 2 column: 0];
+    }
 }
 
+- (void) updateMenuType: (id)sender
+{
+  BOOL flag;
+  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+
+  // look at the values passed back in the matrix.
+  flag = ([[menuType cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO; // windows menu...
+  if(flag) 
+    { 
+      [doc setWindowsMenu: [self object]]; 
+      if([doc servicesMenu] == [self object])
+	{
+	  [doc setServicesObject: nil];
+	}
+    }
+
+  flag = ([[menuType cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO; // services menu...
+  if(flag) 
+    { 
+      [doc setServicesMenu: [self object]];
+      if([doc windowsMenu] == [self object])
+	{
+	  [doc setWindowsObject: nil];
+	}
+    }
+
+  flag = ([[menuType cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO; // normal menu...
+  if(flag) 
+    {
+      [doc setWindowsMenu: nil]; 
+      [doc setServicesMenu: nil]; 
+    }
+}
 @end
 
 
@@ -122,4 +174,3 @@
 }
 
 @end
-

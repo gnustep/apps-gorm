@@ -139,13 +139,15 @@
 	    "useStandardLigatures:",
 	    "yank:",
 	    "zoom:",
-	    "setObject:"
+	    "setObject:",
+	    "updateMenuType:"
 	);
 	Super = NSObject;
     };
     GormMenuAttributesInspector = {
 	Actions = (
-	    "setObject:"
+	    "setObject:",
+	    "updateMenuType:"
 	);
 	Outlets = (
 	    titleText,

@@ -659,7 +659,6 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
-  // RELEASE(workingNameTable);
   [super dealloc];
 }
 
@@ -2520,8 +2519,42 @@ static NSImage	*classesImage = nil;
 
 - (BOOL) objectIsDeferred: (id)anObject
 {
-  // NSLog(@"%@, %@", nameTable, anObject);
   return [[nameTable objectForKey: @"NSDeferred"] containsObject: anObject];
+}
+
+// windows / services menus...
+- (void) setWindowsMenu: (NSMenu *)anObject 
+{
+  if(anObject != nil)
+    {
+      [nameTable setObject: anObject forKey: @"NSWindowsMenu"];
+    }
+  else
+    {
+      [nameTable removeObjectForKey: @"NSWindowsMenu"];
+    }
+}
+
+- (NSMenu *) windowsMenu
+{
+  return [nameTable objectForKey: @"NSWindowsMenu"];
+}
+
+- (void) setServicesMenu: (NSMenu *)anObject
+{
+  if(anObject != nil)
+    {
+      [nameTable setObject: anObject forKey: @"NSServicesMenu"];
+    }
+  else
+    {
+      [nameTable removeObjectForKey: @"NSServicesMenu"];
+    }
+}
+
+- (NSMenu *) servicesMenu
+{
+  return [nameTable objectForKey: @"NSServicesMenu"];
 }
 
 /*
