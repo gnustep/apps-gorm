@@ -69,6 +69,7 @@
   NSMutableArray	*hidden;
   NSMutableArray        *openEditors;
   NSToolbar             *toolbar;
+  id                    lastEditor;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

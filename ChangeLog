@@ -1,5 +1,14 @@
 2004-06-03 00:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormDocument.h: Added "lastEditor" ivar to hold the last editor
+	selected by the document.
+	* GormDocument.m: In [GormDocument setDocumentActive:] used 
+	lastEditor to reset the selection to the current one for the document
+	selected.  This causes the inspector to switch to the appropriate
+	inspector for the object currently being edited in that document.
+	
+2004-06-03 00:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Gorm.m: Removed code in the testInterface: method to allow
 	NSBrowser, NSTableView, and NSOutlineView display correctly in 
 	testing mode.

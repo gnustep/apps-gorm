@@ -2896,6 +2896,14 @@ static NSImage	*classesImage = nil;
 		  [obj display];
 		}
 	    }
+
+	  //
+	  // Reset the selection to the current selection held by the current
+	  // selection owner of this document when the document becomes active.
+	  // This allows the app to switch to the correct inspector when the new
+	  // document is selected.
+	  //
+	  [self setSelectionFromEditor: lastEditor];
 	}
       else
 	{
@@ -2920,6 +2928,7 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
+  lastEditor = anEditor;
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeFirstResponder: (id)anEditor];
