@@ -224,6 +224,16 @@ static NSImage	*classesImage = nil;
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
   NSArray	*old;
+  BOOL           newObject = NO;
+
+  // if the object is already attached, don't bother attaching it again.
+  /*
+  if([self nameForObject: anObject] != nil)
+    {
+      // object already attached.
+      return;
+    }
+  */
 
   /*
    * Create a connector that links this object to its parent.
@@ -252,6 +262,7 @@ static NSImage	*classesImage = nil;
    */
   if ([self nameForObject: anObject] == nil)
     {
+      newObject = YES;
       [self setName: nil forObject: anObject];
     }
 
@@ -310,7 +321,8 @@ static NSImage	*classesImage = nil;
   // This is done so that any palette items which have predefined connections will be
   // shown in the connections list.
   if([anObject respondsToSelector: @selector(action)] == YES &&
-     [anObject respondsToSelector: @selector(target)] == YES)
+     [anObject respondsToSelector: @selector(target)] == YES &&
+     newObject == YES)
     {
       SEL sel = [anObject action];
 
