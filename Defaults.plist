@@ -11,4 +11,12 @@
     green = 0;
     red = 1;
   };	
+  BuiltinPalettes = (
+    "0Menus.palette",
+    "1Windows.palette",
+    "2Controls.palette",
+    "3Containers.palette",
+    "4Data.palette"
+  );
+  UserPalettes = ();
 }

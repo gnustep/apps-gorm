@@ -1,3 +1,15 @@
+2004-06-25 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument(GormOutlineDataSource)
+	outlineView:setObjectValue:forTableColumn:byItem:] added
+	code to ignore the value which comes if it is nil.  This 
+	corrects a recent problem caused by a "fix" in gui's
+	NSTableView.
+	* GormClassInspector.m: Changes to allow the user to change
+	the class name when it's a custom class that's being edited.
+	* GormClassInspector.gorm: Changes to facilitate the above
+	modification.
+	
 2004-06-24 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: [Gorm close:] the window is already released when

@@ -568,7 +568,7 @@
 	    }
 	  [info setObject: allActions forKey: @"AllActions"];
 	}
-      return AUTORELEASE([allActions copy]);
+      return [allActions copy];
     }
   return nil;
 }

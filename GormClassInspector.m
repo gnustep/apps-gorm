@@ -307,6 +307,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [selectClassCell setEnabled: (isCustom && !isFirstResponder)];
   [parentClass setEnabled: (isCustom && !isFirstResponder)];
   [searchCell setEnabled: (isCustom && !isFirstResponder)];
+  [classField setEditable: (isCustom && !isFirstResponder)];
   
   // select the parent class
   if(index != NSNotFound)
@@ -453,6 +454,19 @@ objectValueForTableColumn: (NSTableColumn *)tc
       [document reloadClasses];
       [document selectClass: name];
     }
+}
+
+- (void) changeClassName: (id)sender
+{
+  NSString *name = [self _currentClass];
+  NSString *newName = [sender stringValue];
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+
+  [document collapseClass: name];
+  [classManager renameClassNamed: name
+		newName: newName];
+  [document reloadClasses];
+  [document selectClass: newName];
 }
 
 - (void) clickOnClass: (id)sender

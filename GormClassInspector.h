@@ -67,4 +67,5 @@
 - (NSString *) _currentClass;
 - (void) _refreshView;
 - (void) handleNotification: (NSNotification *)notification;
+- (void) changeClassName: (id)sender;
 @end

@@ -253,14 +253,17 @@ static NSImage	*dragImage = nil;
 - (id) init
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSScrollView	*scrollView;
-  NSArray	*array;
-  NSRect	contentRect = {{0, 0}, {272, 266}};
-  NSRect	selectionRect = {{0, 0}, {52, 52}};
-  NSRect	scrollRect = {{0, 192}, {272, 74}};
-  NSRect	dragRect = {{0, 0}, {272, 192}};
-  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
-
+  NSScrollView	 *scrollView;
+  NSArray	 *array;
+  NSRect	 contentRect = {{0, 0}, {272, 266}};
+  NSRect	 selectionRect = {{0, 0}, {52, 52}};
+  NSRect	 scrollRect = {{0, 192}, {272, 74}};
+  NSRect	 dragRect = {{0, 0}, {272, 192}};
+  unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSArray        *builtinPalettes = [defaults arrayForKey: @"BuiltinPalettes"];
+  
+  NSLog(@"builtin = %@",builtinPalettes);
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained

@@ -156,7 +156,8 @@
 	    "addOutlet:",
 	    "selectClass:",
 	    "searchForClass:",
-	    "clickOnClass:"
+	    "clickOnClass:",
+	    "changeClassName:"
 	);
 	Outlets = (
 	    classField,

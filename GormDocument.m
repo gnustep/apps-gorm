@@ -3342,6 +3342,10 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 {
   GormOutlineView *gov = (GormOutlineView *)anOutlineView;
 
+  // ignore object values which come in as nil...
+  if(anObject == nil)
+    return;
+
   if ([item isKindOfClass: [GormOutletActionHolder class]])
     {
       if (![anObject isEqualToString: @""])
