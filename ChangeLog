@@ -1,5 +1,10 @@
 2003-07-20  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormImageInspector.[hm]: Added.  Implements image inspector.
+	* Resources/GormImageInspector.gorm: Added interface file.
+
+2003-07-20  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: (-[GormDocument saveGormDocument:]) added
 	code to prevent copying of images/sounds if the source path
 	is the same as the destination.  This was causing the file

@@ -117,6 +117,7 @@ Gorm_RESOURCE_FILES = \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
 	Resources/GormSoundInspector.gorm \
+	Resources/GormImageInspector.gorm \
 	Resources/GormPreferences.gorm \
 	Resources/GormPrefHeaders.gorm \
 	Resources/GormPrefGeneral.gorm \
@@ -133,6 +134,7 @@ Gorm_HEADERS = \
 	GormCustomClassInspector.h \
 	GormScrollViewAttributesInspector.h \
 	GormSoundInspector.h \
+	GormImageInspector.h \
 	GormMatrixEditor.h \
 	GormPalettesManager.h \
 	GormViewEditor.h \
@@ -186,6 +188,7 @@ Gorm_OBJC_FILES = \
 	GormOutlineView.m \
 	GormCustomClassInspector.m \
 	GormSoundInspector.m \
+	GormImageInspector.m \
 	GormScrollViewEditor.m \
 	GormImageEditor.m \
 	GormSoundEditor.m \

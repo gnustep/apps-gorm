@@ -382,6 +382,8 @@ extern NSString *GormDidDeleteClassNotification;
 - (void) setInWrapper: (BOOL)flag;
 - (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;
+- (NSImage *)image;
+- (NSImage *)normalImage;
 @end
 
 @interface GormDocument (PrivateMethodsForImagesAndSounds)
