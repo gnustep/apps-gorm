@@ -1,3 +1,7 @@
+2003-05-25  Fabien Vallon  <fabien@tuxfamily>
+
+	* Gorm.m : fix typo
+
 2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
 
 	* Gorm.m : Add Localization

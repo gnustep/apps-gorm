@@ -1188,7 +1188,7 @@ static NSButtonType _buttonTypeForObject( id button )
       [doc setupDefaults: @"Inspector"];
       break;
     case 3:
-      [doc setupDefaults: @"Palettes"];
+      [doc setupDefaults: @"Palette"];
       break;
 
     default: 
