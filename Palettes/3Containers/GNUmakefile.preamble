@@ -1,2 +1,9 @@
 # Additional include directories the compiler should search
 ADDITIONAL_INCLUDE_DIRS += -I../..
+
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
+3Containers_LIBRARIES_DEPEND_UPON += -lGorm     
+endif
+ifeq ($(GNUSTEP_TARGET_OS),cygwin)
+3Containers_LIBRARIES_DEPEND_UPON += -lGorm
+endif
