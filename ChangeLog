@@ -1,3 +1,9 @@
+2003-12-23  Adam Fedor  <fedor@gnu.org>
+
+	* GormLib/GNUmakefile (libGorm_LIBRARIES_DEPEND_UPON): Add 
+	FOUNDATION_LIBRARY depend.
+	* GormLib/GNUmakefile.preamble: Idem for libobjc on mingw and cygwin.
+
 2003-11-29 00:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: -detachObject: extra RELEASE was causing

@@ -37,7 +37,7 @@ PROJECTCENTER_INSTALL_PREFIX=$(GNUSTEP_INSTALLATION_DIR)
 # Additional libraries
 #
 
-libGorm_LIBRARIES_DEPEND_UPON += -lgnustep-gui 
+libGorm_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 
 #
 # Header files
