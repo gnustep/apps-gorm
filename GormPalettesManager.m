@@ -40,9 +40,6 @@
 
 @interface	GormPaletteView : NSView
 {
-  NSPoint	mouseDownPoint;
-  NSEvent	*mouseDownEvent;
-  BOOL		shouldBeginDrag;
   NSPasteboard	*dragPb;
 }
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
@@ -82,7 +79,6 @@ static NSImage	*dragImage = nil;
 - (void) dealloc
 {
   DESTROY(dragPb);
-  DESTROY(mouseDownEvent);
   [super dealloc];
 }
 
@@ -153,68 +149,47 @@ static NSImage	*dragImage = nil;
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  NSView	*view;
+  NSPoint	dragPoint = [theEvent locationInWindow];
+  NSView	*view = [super hitTest: dragPoint];
+  GormDocument	*active = [(id<IB>)NSApp activeDocument];
+  NSRect	rect = [view frame];
+  NSString	*type;
+  id		obj;
+  NSPasteboard	*pb;
+  NSImageRep	*rep;
 
-  ASSIGN(mouseDownEvent, theEvent);
-  mouseDownPoint = [mouseDownEvent locationInWindow];
-  view = [super hitTest: mouseDownPoint];
-  if (view == self)
+  if (view == self || view == nil)
     {
-      shouldBeginDrag = NO;
+      return;		// No subview to drag.
     }
-  else
+  if (active == nil)
     {
-      shouldBeginDrag = YES;
+      NSRunAlertPanel (NULL, @"No document is currently active", 
+	@"OK", NULL, NULL);
+      return;
     }
-}
 
-- (void) mouseDragged: (NSEvent*)theEvent
-{
-  if (shouldBeginDrag == YES)
-    {
-      NSPoint		dragPoint = [theEvent locationInWindow];
-      NSView		*view = [super hitTest: mouseDownPoint];
-      GormDocument	*active = [(id<IB>)NSApp activeDocument];
-      NSRect		rect = [view frame];
-      NSString		*type;
-      id		obj;
-      NSPasteboard	*pb;
-      NSImageRep	*rep;
-      NSSize		offset;
+  RELEASE(dragImage);
+  dragImage = [NSImage new];
+  rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
+					    rect: rect];
+  [dragImage setSize: rect.size];
+  [dragImage addRepresentation: rep];
+  RELEASE(rep);
 
-      if (active == nil)
-	{
-	  NSRunAlertPanel (NULL, @"No document is currently active", 
-	    @"OK", NULL, NULL);
-	  return;
-	}
+  type = [IBPalette typeForView: view];
+  obj = [IBPalette objectForView: view];
+  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+  ASSIGN(dragPb, pb);
+  [active copyObject: obj type: type toPasteboard: pb];
 
-      offset.width = dragPoint.x - mouseDownPoint.x;
-      offset.height = dragPoint.x - mouseDownPoint.y;
-
-NSLog(@"Drag start with offset %@", NSStringFromSize(offset));
-      RELEASE(dragImage);
-      dragImage = [NSImage new];
-      rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
-						rect: rect];
-      [dragImage setSize: rect.size];
-      [dragImage addRepresentation: rep];
-      RELEASE(rep);
-
-      type = [IBPalette typeForView: view];
-      obj = [IBPalette objectForView: view];
-      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-      ASSIGN(dragPb, pb);
-      [active copyObject: obj type: type toPasteboard: pb];
-
-      [self dragImage: dragImage
-		   at: rect.origin
-	       offset: offset
-		event: mouseDownEvent
-	   pasteboard: pb
-	       source: self
-	    slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
-    }
+  [self dragImage: dragImage
+	       at: rect.origin
+	   offset: NSMakeSize(0,0)
+	    event: theEvent
+       pasteboard: pb
+	   source: self
+	slideBack: [type isEqual: IBWindowPboardType] ? NO : YES];
 }
 @end
 
