@@ -25,4 +25,10 @@ table which seem intersting:
 * Add Feature for creating more inteligent [mh] file  (for ex. 
   delegate/dataSource method if needs ...)
 
+Features Scheduled for 1.0:
+
+Usability features:
+1) Add outlet/action editing feature to advance the cursor to the next
+outlet/action automatically after the user finishes editing the current
+one. 
 
