@@ -721,6 +721,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
 	    {
+	      NSMutableDictionary *nameTable = [testContainer nameTable];
+	      [nameTable removeObjectForKey: @"NSServicesMenu"];
+	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
 	      [testContainer awakeWithContext: nil
 			     topLevelItems: nil]; // FIXME: Top level items will leak...
 	      RETAIN(testContainer); // released in endTesting:

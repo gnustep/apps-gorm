@@ -23,6 +23,10 @@
  */
 
 #include "GormPrivate.h"
+#include <Foundation/NSArray.h>
+
+#define BUILTIN_PALETTES @"BuiltinPalettes"
+#define USER_PALETTES    @"UserPalettes"
 
 @interface	GormPalettePanel : NSPanel
 @end
@@ -261,8 +265,20 @@ static NSImage	*dragImage = nil;
   NSRect	 dragRect = {{0, 0}, {272, 192}};
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSArray        *builtinPalettes = [defaults arrayForKey: @"BuiltinPalettes"];
-  
+  NSArray        *builtinPalettes = [defaults arrayForKey: BUILTIN_PALETTES];
+  NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
+
+  // set the default, if not already set...
+  if(builtinPalettes == nil)
+    {
+      builtinPalettes = [NSArray arrayWithObjects: @"0Menus.palette",
+				 @"1Windows.palette",
+				 @"2Controls.palette",
+				 @"3Containers.palette",
+				 @"4Data.palette", nil];
+      [defaults setObject: builtinPalettes forKey: BUILTIN_PALETTES];
+    }
+
   NSLog(@"builtin = %@",builtinPalettes);
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style

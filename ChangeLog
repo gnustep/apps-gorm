@@ -1,3 +1,14 @@
+2004-06-27 08:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: -[Gorm testInterface:] removed NSWindowsMenu and
+	NSServicesMenu from the nameTable of the .gorm being tested.
+	This prevents an exception because of problems re-setting
+	these on the fly.
+	* GormPalettesManager.m: The beginnings of getting the 
+	palettes from a default rather than being hardcoded.  This
+	allows greater flexibility in adding custom palettes to 
+	Gorm later on.
+
 2004-06-26 18:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.m: Removed line in -init which observes 
