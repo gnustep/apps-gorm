@@ -1,3 +1,9 @@
+2003-10-19 23:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormOutlineView.m: Corrected issue in addAttributeToClass which
+	was adding to the total line count before validating that the item
+	was added successfully.
+	
 2003-10-19 01:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormMenuInspectors.m: setObject fix for 

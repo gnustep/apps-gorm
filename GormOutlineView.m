@@ -182,10 +182,10 @@ static NSColor *darkGreyBlueColor = nil;
   NSString *name = nil;
 
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
-  _numberOfRows += 1;
   name = [_dataSource outlineView: self addNewActionForClass: _itemBeingEdited];
   if (name != nil)
     {
+      _numberOfRows += 1;
       [holder setName: name];
       insertionPoint = [_items indexOfObject: item];
       [_items insertObject: holder atIndex: insertionPoint + 1];
