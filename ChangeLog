@@ -1,3 +1,12 @@
+2004-08-12 21:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm validateMenuItem:] deselect the cut, delete,
+	paste, etc. items for top level objects which cannot be
+	removed.
+	* GormDocument.m: Simplified implementation of
+	[GormDocument isTopLevelObject:] to simply check in the
+	set of top level objects.
+	
 2004-08-11 22:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.[hm]: Added back isTopLevelObject:.

@@ -1234,6 +1234,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   GormDocument	*active = (GormDocument*)[self activeDocument];
   SEL		action = [item action];
   GormClassManager *cm = [active classManager];
+  NSArray	*s = [selectionOwner selection];
 
   if (sel_eq(action, @selector(close:))
     || sel_eq(action, @selector(miniaturize:))
@@ -1257,30 +1258,66 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
     }
   else if (sel_eq(action, @selector(copy:)))
     {
-      if ([[selectionOwner selection] count] == 0)
+      if ([s count] == 0)
 	return NO;
+      else
+	{
+	  id	    o = [s objectAtIndex: 0];
+	  NSString *n = [active nameForObject: o];
+	  if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+	    {
+	      return NO;
+	    }
+	}
+
       return [selectionOwner respondsToSelector: @selector(copySelection)];
     }
   else if (sel_eq(action, @selector(cut:)))
     {
-      if ([[selectionOwner selection] count] == 0)
+      if ([s count] == 0)
 	return NO;
+      else
+	{
+	  id	    o = [s objectAtIndex: 0];
+	  NSString *n = [active nameForObject: o];
+	  if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+	    {
+	      return NO;
+	    }
+	}
+
       return ([selectionOwner respondsToSelector: @selector(copySelection)]
 	&& [selectionOwner respondsToSelector: @selector(deleteSelection)]);
     }
   else if (sel_eq(action, @selector(delete:)))
     {
-      if ([[selectionOwner selection] count] == 0)
+      if ([s count] == 0)
 	return NO;
+      else
+	{
+	  id	    o = [s objectAtIndex: 0];
+	  NSString *n = [active nameForObject: o];
+	  if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+	    {
+	      return NO;
+	    }
+	}
+
       return [selectionOwner respondsToSelector: @selector(deleteSelection)];
     }
   else if (sel_eq(action, @selector(paste:)))
     {
+      id	o = [s objectAtIndex: 0];
+      NSString *n = [active nameForObject: o];
+      if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
+	{
+	  return NO;
+	}
+
       return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
     }
   else if (sel_eq(action, @selector(setName:)))
     {
-      NSArray	*s = [selectionOwner selection];
       NSString	*n;
       id	o;
 
@@ -1347,7 +1384,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	 sel_eq(action, @selector(createClassFiles:)) || 
 	 sel_eq(action, @selector(remove:)))
 	{
-	  NSArray *s = [selectionOwner selection];
 	  id o = nil;
 	  NSString *name = nil;
 
@@ -1373,7 +1409,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
       if(sel_eq(action, @selector(instantiateClass:)))
 	{
-	  NSArray *s = [selectionOwner selection];
 	  id o = nil;
 	  NSString *name = nil;
 

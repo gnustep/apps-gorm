@@ -3523,26 +3523,7 @@ static NSImage  *fileImage = nil;
 
 - (BOOL) isTopLevelObject: (id)obj
 {
-  BOOL result = NO;
-
-  if ([obj isKindOfClass: [NSMenu class]] == YES)
-    {
-      if ([self objectForName: @"NSMenu"] == obj)
-	{
-	  result = YES;
-	}
-    }
-  else if ([obj isKindOfClass: [NSWindow class]] == YES)
-    {
-      result = YES;
-    }
-  else if ([obj isKindOfClass: [GSNibItem class]] == YES &&
-	   [obj isKindOfClass: [GormCustomView class]] == NO)
-    {
-      result = YES;
-    }
-
-  return result;
+  return [topLevelObjects containsObject: obj];
 }
 
 - (id) firstResponder
