@@ -92,7 +92,7 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 }
 - (NSString*) connectInspectorClassName
 {
-  return @"GormConnectionInspector";
+  return @"GormNotApplicableInspector";
 }
 - (NSString*) sizeInspectorClassName
 {
