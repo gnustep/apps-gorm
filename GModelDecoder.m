@@ -439,6 +439,7 @@ static BOOL gormFileOwnerDecoded;
   [u decodeClassName: @"NSPopUpButtonCell" asClassName: @"GormNSPopUpButtonCell"];
   [u decodeClassName: @"NSOutlineView"     asClassName: @"GormNSOutlineView"];
   [u decodeClassName: @"NSMenuTemplate"    asClassName: @"GModelMenuTemplate"];
+  [u decodeClassName: @"NSCStringText"     asClassName: @"NSText"];
 
   // process the model to take care of any custom classes...
   model = [NSMutableDictionary dictionaryWithContentsOfFile: path];
