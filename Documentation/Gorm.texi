@@ -53,8 +53,6 @@ Free Software Foundation instead of in the original English.
 @c @cropmarks
 @end iftex
 
-@setchapternewpage odd
-
 @titlepage
 @title Guide to the
 @title Gorm application
@@ -190,6 +188,11 @@ very similar to that of Apple/NeXTs interface Builder palette API.
 @item Interactive test mode for interfaces/object-networks under development.
 @item Saving data in a format loadable by GNUstep applications.
 @end itemize
+
+@section About this Manual
+
+This manual is ment to cover basic operation of the Gorm application.  It is not
+meant to be a complete tutorial on GNUstep programming. 
 
 @node Usage, Implementation, Overview, Top
 @chapter Usage
@@ -446,9 +449,13 @@ The object which this message will be called on is determined in the method [NSA
 
 If all of the options in this list are exhausted, it then gives up and returns nil for the object which is to respond.
 
-@section What is NSFont
+@section What is NSFont?
 
 NSFont represents the NSFontManager object for the application.  This object is a shared singleton.   This means that, for any given app, there should be only one instance of the object.   This object is generally added to the document window when another objec, such as a Font menu item, is added to the interface, which, in turn, requires that this object be added to the document.
+
+@section The awakeFromNib method
+
+This method is called on any custom object which is unarchived from a nib/gorm file.   This method is called on all objects after the entire archive has been loaded into memory and all connections have been made.   Given all of this, you should not make any assumptions at all about which objects have been called and which have not.  You should not release any objects in this method.
 
 @chapter Creating an Application
 
@@ -533,9 +540,14 @@ This is different than saving, some people have gotten this confused with the id
 
 Go to the Classes section in the Document window and select the MyController class yet again.  Now go to the Gorm menu and select Classes and the select ``Create Class Files''.  This will bring up a file panel and it allow you to select the directory in which to put the files.   It will first create the MyController.m file and then the MyController.h file.  Simply select the directory in which your app will reside and hit okay for both.  You can change the names, but the default ones, which are based on the class name, should be sufficient.  When you look at the .m for this class, you should see the @samp{buttonPressed:} method with the commecnt @samp{/* insert your code here */} in it.  Delete this comment and add @samp{[value setStringValue: @@``Hello''];}.   The class should look like this after you're done:
 
+
+
 /* All Rights reserved */
 
+
+
 #include <AppKit/AppKit.h>
+
 #include "MyController.h"
 
 @@implementation MyController
@@ -551,6 +563,8 @@ Go to the Classes section in the Document window and select the MyController cla
 
 @@end
 
+
+
 You recall, we connected the textfield to the ``value'' variable.  The call above causes the method setStringValue to be invoked on the textfield you added to the window.  
 
 Also, note that the name of the method is ``buttonPressed:''.  This is the action which is bound to the button.  When it is pressed the text in the textfield should change to ``Hello''.
@@ -561,9 +575,100 @@ This app is available as ``SimpleApp'' in the Examples directory under the Docum
 
 @chapter Another Simple Application
 
-This chapter will describe an application, very much like the previous one, but using a slightly different structure.  This application uses MyController as the NSOwner of the app instead of making it the delegate of NSApplication.
+This chapter will describe an application, very much like the previous one, but using a slightly different structure.  This application builds on the previous application and uses WinController as the NSOwner of the app instead of making it the delegate of NSApplication.
 
-This application can be viewed as a slight modification of the previous one. 
+@section Adding Menu Items
+
+Select the first palette in the palette window, this should be the MenusPalette.   The palette will have a bunch of pre-made menu items on it that you can add.  We want to keep this simple, so grab the one called ``Item'' and drag it over to the menu in main menu nib (the menu on the screen, not the one in the objects view).  As you have this object over the menu, the copy/paste mouse cursor should appear (it looks something like one box over another box at a 45 degree angle).   Where you drop the menu determines it's position in the menu.  You can always drag it to a new position after you've placed it by simply selecting and dragging up or down.  Once you've placed the menu item, double click on the title and change it to ``Open''
+
+You can also change the name in the NSMenuItem attributes inspector.  Now you must add openWindow: to MyController and make the connection from the ``Open'' menu item to NSFirst.   In the connections inspector, find the ``openWindow:'' action.   You could simply make the connection directly, but this is an exaple to show you that this connection will work as well.   Whichever object has First Responder status will be tested to see if it responds to this method.
+
+The implementation for openWindow: in MyController should simply be:
+
+- (void) openWindow: (id) sender
+
+@{
+
+    winController = [[WinController alloc] init];
+
+@}
+
+Also add the winController attribute and an include to allow WinController to be referenced in the MyController.m file.
+
+@section Making a Controller-based .gorm file
+
+Create a new .gorm file as described in the previous section using the ``New Module'' menu item.  Under ``New Module'' select ``New Empty''.  This should produce a .gorm file with only NSOwner and NSFirst.   From the WindowsPalette (which should be the second palette in the palette window) drag a window to the location where you want it to appear on the screen.   In the window add a button called ``Close''.
+
+Go through the same steps you went through previously to create MyController, except for adding the outlets/actions, but this time with the name WinController.   Add an outlet called window and an action called ``closeWindow:''.   
+
+@cindex Setting the NSOwner
+Now, instead of instantiating the class go back to the objects view and select the NSOwner object.   After that select the ``Custom Class'' inspector.   Look for the entry for WinController and select it.   You now must connect the ``window'' outlet to the Window you added previously.
+
+@cindex Connecting to a Window
+Switch back to the objects view, then Control-Drag not to the window on the screen, but to the window's representation in the objects view.  In the connection inspector select the window outlet and click Ok.
+
+Save the .gorm as using the name Controller.gorm in the project directory. 
+
+Generate the Controller.h and Controller.h files as described in the previous section.
+
+@subsection Add the init method to WinController
+
+Add an implementation of the action ``closeWindow:'' to WinController and also an init which loads the gorm/nib file and declares itself as the owner.  Here's how:
+
+/* All Rights reserved */
+
+#include <AppKit/AppKit.h>
+
+#include "WinController.h"
+
+@@implementation WinController
+
+- (id) init
+
+@{
+
+  if((self = [super init]) != nil)
+
+    @{
+
+        if([NSBundle loadNibNamed: @@"Controller" owner: self] == NO)
+
+        @{
+
+                NSLog(@@"Problem loading interface");
+
+                return nil;
+
+        @}
+
+        [window makeKeyAndOrderFront: self];
+
+    @}
+
+  return self;
+
+@}
+
+- (void) closeWindow: (id) sender
+@{
+
+  [window close];
+
+@}
+
+- (void) dealloc
+{
+  [super dealloc];
+  RELEASE(window);
+}
+
+@@end 
+
+The Controller gorm will be loaded and the connections will be made to the current instance, i.e. window will point to the window object instantianted in the .gorm file and all actions declared in the .gorm file which are attached to the object NSOwner will be resolved on self.
+
+@section Running the App
+
+Type the command @samp{open Controller.app} on the command line in the project directory.   Once the application has started it should look very much like the first application.  Select the ``Open'' button from the Menu and you should see the second window pop up, now choose close, this will call the method ``closeWindow:'' which should cause the window to disappear.
 
 
 @chapter Advanced Topics
@@ -576,6 +681,7 @@ The current Gorm file format is basically just a set of objects, encoded one aft
 
 @subsection The Name Table
 
+@cindex Name Table
 Each object in the .gorm file has a name assigned to it by the application.  This allows Gorm to refer to the objects by a name once they are loaded rather than an address.  Each name is associated with it's object in a dictionary which preserves the overall structure of the GUI which has been created.   
 
 @subsection The Custom Class Table
