@@ -724,8 +724,6 @@ static NSImage	*classesImage = nil;
       NSMapRemove(objToName, (void*)anObject);
       RELEASE(name);
     }
-
-  RELEASE(anObject);
 }
 
 - (void) detachObjects: (NSArray*)anArray

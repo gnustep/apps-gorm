@@ -1,3 +1,10 @@
+2003-11-29 00:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: -detachObject: extra RELEASE was causing
+	a double release when the editor for an object was deallocating
+	itself.  This was (intermittently) causing a segfault when 
+	deleting an element from the gui.
+	
 2003-11-28 18:26 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.[hm]: Slight modification allCustomSubclassesOf: 
