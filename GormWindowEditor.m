@@ -1098,7 +1098,6 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
   else if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      NSString	*name = [dragPb stringForType: GormLinkPboardType];
       NSView	*sub = [super hitTest: loc];
 
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];

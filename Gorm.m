@@ -785,7 +785,6 @@ main(void)
 
 {
   extern BOOL NSImageDoesCaching;
-  extern BOOL NSImageForceCaching;
 
   NSImageDoesCaching = YES;
 //[NSObject enableDoubleReleaseCheck: YES];
