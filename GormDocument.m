@@ -254,15 +254,6 @@ static NSImage	*classesImage = nil;
   NSArray	*old;
   BOOL           newObject = NO;
 
-  // if the object is already attached, don't bother attaching it again.
-  /*
-  if([self nameForObject: anObject] != nil)
-    {
-      // object already attached.
-      return;
-    }
-  */
-
   /*
    * Create a connector that links this object to its parent.
    * A nil parent is the root of the hierarchy so we use a dummy object for it.
@@ -297,8 +288,8 @@ static NSImage	*classesImage = nil;
   /*
    * Add top-level objects to objectsView and open their editors.
    */
-  if ([anObject isKindOfClass: [NSWindow class]] == YES
-    || [anObject isKindOfClass: [GSNibItem class]] == YES)
+  if ([anObject isKindOfClass: [NSWindow class]] == YES ||
+      [anObject isKindOfClass: [GSNibItem class]] == YES)
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
@@ -2275,14 +2266,16 @@ static NSImage	*classesImage = nil;
   NSEnumerator  *enumerator;
   NSString	*name;
 
+  NSLog(@"------ Rebuilding object to name mapping...");
   NSResetMapTable(objToName);
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-  enumerator = [nameTable keyEnumerator];
+  enumerator = [[nameTable allKeys] objectEnumerator];
   while ((name = [enumerator nextObject]) != nil)
     {
       id	obj = [nameTable objectForKey: name];
-
+      
+      NSLog(@"%@ --> %@",name, obj);
       NSMapInsert(objToName, (void*)obj, (void*)name);
       if ([obj isKindOfClass: [NSMenu class]] == YES)
 	{
@@ -2305,7 +2298,6 @@ static NSImage	*classesImage = nil;
 	&& [obj isKindOfClass: [GormCustomView class]] == NO)
 	{
 	  [objectsView addObject: obj];
-	  //[[self openEditorForObject: obj] activate];
 	}
     }
 }
