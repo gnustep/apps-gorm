@@ -28,7 +28,7 @@
 #ifndef INCLUDED_GormClassManager_h
 #define INCLUDED_GormClassManager_h
 
-// the custom classes and category arrays will hold only those things which 
+// The custom classes and category arrays will hold only those things which 
 // will be persisted to the .classes file.   Since the overall list of classes will 
 // not change it seems that the only thing that we should save is the "delta" 
 // that being the custom classes.   Once loaded they can be "merged" in with the 
@@ -44,59 +44,57 @@
 
 - (id) initWithDocument: (id)aDocument;
 
-/** Managing actions and outlets */
-- (void) addAction: (NSString*)anAction forObject: (id)anObject;
-- (void) addOutlet: (NSString*)anOutlet forObject: (id)anObject;
-- (NSArray*) allActionsForClassNamed: (NSString*)className;
-- (NSArray*) allActionsForObject: (id)anObject;
-- (NSArray*) extraActionsForObject: (id)anObject;
-- (NSArray*) allOutletsForClassNamed: (NSString*)className;
-- (NSArray*) allOutletsForObject: (id)anObject;
-- (NSArray*) extraOutletsForObject: (id)anObject;
-- (NSArray*) allClassNames;
-- (void) removeAction: (NSString*)anAction forObject: (id)anObject;
-- (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject;
-- (void) removeAction: (NSString*)anAction fromClassNamed: (NSString*)anObject;
-- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString*)anObject;
+/* Managing actions and outlets */
+- (void) addAction: (NSString *)anAction forObject: (id)anObject;
+- (void) addOutlet: (NSString *)anOutlet forObject: (id)anObject;
+- (NSArray *) allActionsForClassNamed: (NSString *)className;
+- (NSArray *) allActionsForObject: (id)anObject;
+- (NSArray *) extraActionsForObject: (id)anObject;
+- (NSArray *) allOutletsForClassNamed: (NSString *)className;
+- (NSArray *) allOutletsForObject: (id)anObject;
+- (NSArray *) extraOutletsForObject: (id)anObject;
+- (NSArray *) allClassNames;
+- (void) removeAction: (NSString *)anAction forObject: (id)anObject;
+- (void) removeOutlet: (NSString *)anOutlet forObject: (id)anObject;
+- (void) removeAction: (NSString *)anAction fromClassNamed: (NSString *)anObject;
+- (void) removeOutlet: (NSString *)anOutlet fromClassNamed: (NSString *)anObject;
 - (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className;
 - (void) addAction: (NSString *)anAction forClassNamed: (NSString *)className;
 - (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className;
 - (void) addOutlets: (NSArray *)outlets forClassNamed: (NSString *)className;
 - (NSString *) addNewActionToClassNamed: (NSString *)name;
 - (NSString *) addNewOutletToClassNamed: (NSString *)name;
-- (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className;
-- (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: className;
+- (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: (NSString *)className;
+- (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: (NSString *)className;
 
-/** Managing classes and subclasses */
-- (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString*)name;
+/* Managing classes and subclasses */
+- (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString *)name;
 - (void) removeClassNamed: (NSString *)className;
-- (NSString*) addClassWithSuperClassName: (NSString*)name;
-- (NSArray*) subClassesOf: (NSString *)superclass;
-- (NSArray*) allSubclassesOf: (NSString *)superClass;
-- (NSArray*) customSubClassesOf: (NSString *)superclass;
-- (NSArray*) allCustomSubclassesOf: (NSString *)superclass;
-- (NSArray*) allCustomClassNames;
-
-- (BOOL) addClassNamed: (NSString*)className
-   withSuperClassNamed: (NSString*)superClassName
-	   withActions: (NSArray*)actions
-           withOutlets: (NSArray*)outlets;
-
-- (BOOL) addClassNamed: (NSString*)class_name
-   withSuperClassNamed: (NSString*)super_class_name
-	   withActions: (NSArray*)_actions
-	   withOutlets: (NSArray*)_outlets
+- (NSString *) addClassWithSuperClassName: (NSString *)name;
+- (NSArray *) subClassesOf: (NSString *)superclass;
+- (NSArray *) allSubclassesOf: (NSString *)superClass;
+- (NSArray *) customSubClassesOf: (NSString *)superclass;
+- (NSArray *) allCustomSubclassesOf: (NSString *)superclass;
+- (NSArray *) allCustomClassNames;
+- (BOOL) addClassNamed: (NSString *)className
+   withSuperClassNamed: (NSString *)superClassName
+	   withActions: (NSArray *)actions
+           withOutlets: (NSArray *)outlets;
+- (BOOL) addClassNamed: (NSString *)class_name
+   withSuperClassNamed: (NSString *)super_class_name
+	   withActions: (NSArray *)_actions
+	   withOutlets: (NSArray *)_outlets
               isCustom: (BOOL) isCustom;
-
-- (BOOL) setSuperClassNamed: (NSString*)superclass
-	      forClassNamed: (NSString*)subclass;
-
+- (BOOL) setSuperClassNamed: (NSString *)superclass
+	      forClassNamed: (NSString *)subclass;
 - (NSString *)parentOfClass: (NSString *)aClass;
-- (NSString*) superClassNameForClassNamed: (NSString*)className;
-- (BOOL) isSuperclass: (NSString*)superclass
-	linkedToClass: (NSString*)subclass;
+- (NSString *) superClassNameForClassNamed: (NSString *)className;
+- (BOOL) isSuperclass: (NSString *)superclass
+	linkedToClass: (NSString *)subclass;
+- (NSDictionary *) dictionaryForClassNamed: (NSString *)className;
+- (NSString *) uniqueClassNameFrom: (NSString *)name;
 
-/** Managing custom classes */
+/* Managing custom classes */
 - (BOOL) isCustomClass: (NSString *)className;
 - (BOOL) isNonCustomClass: (NSString *)className;
 - (BOOL) isCategoryForClass: (NSString *)className;
@@ -105,13 +103,10 @@
 - (BOOL) isOutlet: (NSString *)outletName ofClass: (NSString *)className;
 - (NSArray *) allSuperClassesOf: (NSString *)className;
 - (BOOL) canInstantiateClassNamed: (NSString *)className;
-
 - (NSString *) customClassForObject: (id)object;
 - (NSString *) customClassForName: (NSString *)name;
-
 - (void) setCustomClass: (NSString *)className
                 forName: (NSString *)object;
-
 - (void) removeCustomClassForName: (NSString *) object;
 - (NSMutableDictionary *) customClassMap;
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
@@ -119,18 +114,16 @@
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
 - (BOOL) isAction: (NSString *)actionName  onCategoryForClassNamed: (NSString *)className;
 
-/** Parsing and creating classes */
-- (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className
-				 withName:(NSString*)sourcePath
-				      and:(NSString*)headerPath;
-
+/* Parsing and creating classes */
+- (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className
+				 withName: (NSString *)sourcePath
+				      and: (NSString *)headerPath;
 - (BOOL) parseHeader: (NSString *)headerPath;
 
-/** loading and saving */
-- (BOOL) saveToFile: (NSString*)path;
-- (BOOL) loadFromFile: (NSString*)path;
-- (BOOL) loadCustomClasses: (NSString*)path;
-
+/* Loading and saving */
+- (BOOL) saveToFile: (NSString *)path;
+- (BOOL) loadFromFile: (NSString *)path;
+- (BOOL) loadCustomClasses: (NSString *)path;
 @end
 
 #endif

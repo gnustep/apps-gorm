@@ -821,7 +821,7 @@ static NSImage *testingImage = nil;
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
     return;
   
-  [(GormGenericEditor *)selectionOwner copySelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
 }
 
 
@@ -831,8 +831,8 @@ static NSImage *testingImage = nil;
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
       || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner copySelection];
-  [(GormGenericEditor *)selectionOwner deleteSelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
 - (void) paste: (id)sender
@@ -840,7 +840,7 @@ static NSImage *testingImage = nil;
   if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
     return;
 
-  [(GormGenericEditor *)selectionOwner pasteInSelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner pasteInSelection];
 }
 
 
@@ -849,7 +849,7 @@ static NSImage *testingImage = nil;
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner deleteSelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
 - (void) selectAllItems: (id)sender

@@ -1,3 +1,18 @@
+2004-12-14 06:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Added code in -deleteSelection to copy the 
+	selection, if it's a class, added code in copySelection and 
+	pasteInSelection to handle copy/paste.
+	* GormClassManager.h: Made variable names conform a little more to 
+	standard practice.  Also changed the declarations of "NSArray*" to 
+	"NSArray *".
+	* GormClassManager.m: Corrected addClass:withSuperClassNamed:actions:
+	outlets: to eliminate duplicate actions, outlets from the class being
+	added if they exist on the superclass.
+	* Gorm.m: Changed coercion to id<IBSelectionEditors,IBEditors) in
+	the methods which handle copy, paste, delete, etc.
+	* TODO: Added more items scheduled for 1.0 release.
+
 2004-12-12 20:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.h: Added declaration for windowAndRect:forObject:

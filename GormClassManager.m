@@ -129,7 +129,20 @@
   [dict removeObjectsForKeys: array];
 }
 
-- (NSString*) addClassWithSuperClassName: (NSString*)name
+- (NSString *) uniqueClassNameFrom: (NSString *)name
+{
+  NSString *search = [NSString stringWithString: name];
+  int i = 1;
+
+  while([classInformation objectForKey: search])
+    {
+      search = [name stringByAppendingString: [NSString stringWithFormat: @"%d",i++]];
+    }
+
+  return search;
+}
+
+- (NSString *) addClassWithSuperClassName: (NSString*)name
 {
   if ([name isEqualToString: @"NSObject"]
     || [classInformation objectForKey: name] != nil)
@@ -137,27 +150,18 @@
       NSMutableDictionary	*classInfo;
       NSMutableArray		*outlets;
       NSMutableArray		*actions;
-      NSString			*newClassName;
-      int			i;
+      NSString			*className = [self uniqueClassNameFrom: @"NewClass"];
 
       classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
       outlets = [[NSMutableArray alloc] initWithCapacity: 0];
       actions = [[NSMutableArray alloc] initWithCapacity: 0];
-      newClassName = @"NewClass";
-      i = 1;
 
       [classInfo setObject: outlets forKey: @"Outlets"];
       [classInfo setObject: actions forKey: @"Actions"];
       [classInfo setObject: name forKey: @"Super"];
 
-      while ([classInformation objectForKey: newClassName] != nil)
-	{
-	  newClassName = [newClassName stringByAppendingString:
-	    [NSString stringWithFormat: @"%d", i++]];
-
-	}
-      [classInformation setObject: classInfo forKey: newClassName];
-      [customClasses addObject: newClassName];
+      [classInformation setObject: classInfo forKey: className];
+      [customClasses addObject: className];
 
       [self touch];
 
@@ -165,9 +169,10 @@
 	postNotificationName: GormDidAddClassNotification
 	object: self];
 
-      return newClassName;
+      return className;
     }
-  return @"";
+
+  return nil;
 }
 
 - (NSString *) addNewActionToClassNamed: (NSString *)name
@@ -204,52 +209,62 @@
   return new;
 }
 
-- (BOOL) addClassNamed: (NSString*)class_name
-   withSuperClassNamed: (NSString*)super_class_name
-	   withActions: (NSArray*)_actions
-	   withOutlets: (NSArray*)_outlets
+- (BOOL) addClassNamed: (NSString *)className
+   withSuperClassNamed: (NSString *)superClassName
+	   withActions: (NSArray *)actions
+	   withOutlets: (NSArray *)outlets
 {
-  return [self addClassNamed: class_name
-	       withSuperClassNamed: super_class_name
-	       withActions: _actions
-	       withOutlets: _outlets
+  return [self addClassNamed: className
+	       withSuperClassNamed: superClassName
+	       withActions: actions
+	       withOutlets: outlets
 	       isCustom: YES];
 }
 
-- (BOOL) addClassNamed: (NSString*)class_name
-   withSuperClassNamed: (NSString*)super_class_name
-	   withActions: (NSArray*)_actions
-	   withOutlets: (NSArray*)_outlets
+- (BOOL) addClassNamed: (NSString *)className
+   withSuperClassNamed: (NSString *)superClassName
+	   withActions: (NSArray *)actions
+	   withOutlets: (NSArray *)outlets
 	      isCustom: (BOOL) isCustom
 {
   BOOL result = NO;
-  NSString *className = [class_name copy];
-  NSString *superClassName = [super_class_name copy];
-  NSArray  *actions = [_actions copy];
-  NSArray  *outlets = [_outlets copy];
+  NSString *classNameCopy = [NSString stringWithString: className];
+  NSString *superClassNameCopy = [NSString stringWithString: superClassName];
+  NSMutableArray *actionsCopy = [NSMutableArray arrayWithArray: actions];
+  NSMutableArray *outletsCopy = [NSMutableArray arrayWithArray: outlets];
 
-  if ([superClassName isEqualToString: @"NSObject"]
-    || [classInformation objectForKey: superClassName] != nil)
+  // We make an autoreleased copy of all of the inputs.  This prevents changes
+  // to the original objects from reflecting here. GJC
+
+  if ([superClassNameCopy isEqualToString: @"NSObject"]
+    || [classInformation objectForKey: superClassNameCopy] != nil)
     {
       NSMutableDictionary	*classInfo;
 
-      if (![classInformation objectForKey: className])
+      if (![classInformation objectForKey: classNameCopy])
 	{
-	  NSEnumerator *e = [actions objectEnumerator];
+	  NSEnumerator *e = [actionsCopy objectEnumerator];
 	  id action = nil;
+	  NSArray *superActions = [self allActionsForClassNamed: superClassNameCopy];
+	  NSArray *superOutlets = [self allOutletsForClassNamed: superClassNameCopy];
 
 	  [self touch];
 	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
+
+	  // if an outlet/action is defined on the superclass before this
+	  // class is added, the superclass' entry takes precedence.
+	  [actionsCopy removeObjectsInArray: superActions];
+	  [outletsCopy removeObjectsInArray: superOutlets];
 	  
-	  [classInfo setObject: outlets forKey: @"Outlets"];
-	  [classInfo setObject: actions forKey: @"Actions"];
-	  [classInfo setObject: superClassName forKey: @"Super"];
-	  [classInformation setObject: classInfo forKey: className];
+	  [classInfo setObject: outletsCopy forKey: @"Outlets"];
+	  [classInfo setObject: actionsCopy forKey: @"Actions"];
+	  [classInfo setObject: superClassNameCopy forKey: @"Super"];
+	  [classInformation setObject: classInfo forKey: classNameCopy];
 	  
 	  // if it's a custom class add it to the list.
 	  if(isCustom)
 	    {
-	      [customClasses addObject: className];
+	      [customClasses addObject: classNameCopy];
 	    }
 
 	  // copy all actions from the class imported to the first responder
@@ -275,7 +290,7 @@
   return result;
 }
 
-- (void) addAction: (NSString*)anAction forObject: (id)anObject
+- (void) addAction: (NSString *)anAction forObject: (id)anObject
 {
   [self addAction: anAction forClassNamed: [anObject className]];
 }
@@ -328,7 +343,7 @@
   [self touch];
 }
 
-- (void) addOutlet: (NSString*)outlet forObject: (id)anObject
+- (void) addOutlet: (NSString *)outlet forObject: (id)anObject
 {
   [self addOutlet: outlet forClassNamed: [anObject className]];
 }
@@ -465,12 +480,12 @@
     }
 }
 
-- (void) removeAction: (NSString*)anAction forObject: (id)anObject
+- (void) removeAction: (NSString *)anAction forObject: (id)anObject
 {
   [self removeAction: anAction fromClassNamed: [anObject className]];
 }
 
-- (void) removeAction: (NSString*)anAction
+- (void) removeAction: (NSString *)anAction
        fromClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
@@ -530,12 +545,12 @@
     }
 }
 
-- (void) removeOutlet: (NSString*)anOutlet forObject: (id)anObject
+- (void) removeOutlet: (NSString *)anOutlet forObject: (id)anObject
 {
   [self removeOutlet: anOutlet fromClassNamed: [anObject className]];
 }
 
-- (void) removeOutlet: (NSString*)anOutlet fromClassNamed: (NSString *)className
+- (void) removeOutlet: (NSString *)anOutlet fromClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
@@ -581,7 +596,7 @@
 }
 
 
-- (NSArray*) allActionsForObject: (id)obj
+- (NSArray *) allActionsForObject: (id)obj
 {
   NSString	*className;
   NSArray	*actions;
@@ -643,7 +658,7 @@
   return actions;
 }
 
-- (NSArray*) allActionsForClassNamed: (NSString*)className
+- (NSArray *) allActionsForClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
 
@@ -695,18 +710,18 @@
   return nil;
 }
 
-- (NSArray*) allCustomClassNames
+- (NSArray *) allCustomClassNames
 {
   // return [customClassMap allKeys];
   return customClasses;
 }
 
-- (NSArray*) allClassNames
+- (NSArray *) allClassNames
 {
   return [[classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)];
 }
 
-- (NSArray*) allOutletsForObject: (id)obj
+- (NSArray *) allOutletsForObject: (id)obj
 {
   NSString	*className;
   NSArray	*outlets;
@@ -764,7 +779,7 @@
   return outlets;
 }
 
-- (NSArray*) allOutletsForClassNamed: (NSString*)className;
+- (NSArray *) allOutletsForClassNamed: (NSString *)className;
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
 
@@ -816,7 +831,7 @@
   return nil;
 }
 
-- (NSMutableDictionary*) classInfoForClassName: (NSString*)className
+- (NSMutableDictionary*) classInfoForClassName: (NSString *)className
 {
   NSMutableDictionary	*info;
 
@@ -898,14 +913,14 @@
   [super dealloc];
 }
 
-- (NSArray*) extraActionsForObject: (id)anObject
+- (NSArray *) extraActionsForObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
 
   return [info objectForKey: @"ExtraActions"];
 }
 
-- (NSArray*) extraOutletsForObject: (id)anObject
+- (NSArray *) extraOutletsForObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];
 
@@ -1041,7 +1056,7 @@
     object: self];
 }
 
-- (BOOL) renameClassNamed: (NSString*)oldName newName: (NSString*)newName
+- (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString *)newName
 {
   id classInfo = [classInformation objectForKey: oldName];
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -1111,7 +1126,7 @@
   return [dictForClass objectForKey: @"Super"];
 }
 
-- (BOOL) saveToFile: (NSString*)path
+- (BOOL) saveToFile: (NSString *)path
 {
   NSMutableDictionary	*ci;
   NSEnumerator		*enumerator;
@@ -1212,7 +1227,7 @@
   return [ci writeToFile: path atomically: YES];
 }
 
-- (BOOL) loadFromFile: (NSString*)path
+- (BOOL) loadFromFile: (NSString *)path
 {
   NSDictionary 	        *dict;
   NSEnumerator		*enumerator;
@@ -1335,23 +1350,23 @@
 	  else
 	    {
 	      NSMutableArray *actions = [classDict objectForKey: @"Actions"];
-	      NSMutableArray *orig_actions = [info objectForKey: @"Actions"];
-	      NSMutableArray *all_actions = nil;
+	      NSMutableArray *origActions = [info objectForKey: @"Actions"];
+	      NSMutableArray *allActions = nil;
 	      
 	      // remove any duplicate actions...
-	      if(orig_actions != nil)
+	      if(origActions != nil)
 		{
 		  NSEnumerator *en = [actions objectEnumerator];
 		  id action = nil;
 		  
-		  all_actions = [NSMutableArray arrayWithArray: orig_actions];
-		  [all_actions addObjectsFromArray: actions];
-		  [info setObject: all_actions forKey: @"AllActions"];
+		  allActions = [NSMutableArray arrayWithArray: origActions];
+		  [allActions addObjectsFromArray: actions];
+		  [info setObject: allActions forKey: @"AllActions"];
 		  
 		  // take out any duplicates which might be present.
 		  while((action = [en nextObject]) != nil)
 		    {
-		      if([orig_actions containsObject: action])
+		      if([origActions containsObject: action])
 			{
 			  [actions removeObject: action];
 			}
@@ -1412,8 +1427,8 @@
   return ([classInformation objectForKey: className] != nil);
 }
 
-- (BOOL) setSuperClassNamed: (NSString*)superclass
-	      forClassNamed: (NSString*)subclass
+- (BOOL) setSuperClassNamed: (NSString *)superclass
+	      forClassNamed: (NSString *)subclass
 {
   NSArray *cn = [self allClassNames];
 
@@ -1452,7 +1467,7 @@
   return NO;
 }
 
-- (NSString*) superClassNameForClassNamed: (NSString*)className
+- (NSString *) superClassNameForClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
   NSString		*superName = nil;
@@ -1469,7 +1484,7 @@
   return superName;
 }
 
-- (BOOL) isSuperclass: (NSString*)superclass linkedToClass: (NSString*)subclass
+- (BOOL) isSuperclass: (NSString *)superclass linkedToClass: (NSString *)subclass
 {
   NSString *ssclass;
 
@@ -1495,13 +1510,26 @@
   return [self isSuperclass: superclass linkedToClass: ssclass];
 }
 
+- (NSDictionary *) dictionaryForClassNamed: (NSString *)className
+{
+  NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: [classInformation objectForKey: className]];
+
+  if(info != nil)
+    {
+      [info removeObjectForKey: @"AllActions"];
+      [info removeObjectForKey: @"AllOutlets"];
+    }
+
+  return info;
+}
+
 
 /*
  *  create .m & .h files for a class
  */
-- (BOOL) makeSourceAndHeaderFilesForClass: (NSString*)className 
-				 withName: (NSString*)sourcePath
-				      and: (NSString*)headerPath
+- (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className 
+				 withName: (NSString *)sourcePath
+				      and: (NSString *)headerPath
 {
   NSMutableString	*headerFile;
   NSMutableString	*sourceFile;

@@ -32,3 +32,5 @@ Usability features:
 outlet/action automatically after the user finishes editing the current
 one. 
 
+2) Make GormClassEditor return a dictionary instead of a proxy object as it's
+selection.

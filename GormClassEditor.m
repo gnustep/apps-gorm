@@ -27,6 +27,8 @@
 #include "GormClassManager.h"
 #include <AppKit/NSPasteboard.h>
 
+NSString *GormClassPboardType = @"GormClassPboardType";
+
 @implementation	GormClassEditor
 
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc
@@ -98,7 +100,9 @@
 
 - (void) dealloc
 {
-  RELEASE(selectedClass);
+  // selectedClass is one of the items in the items in the outlineView.
+  // it will be deallocated there.
+  // RELEASE(selectedClass);
   [super dealloc];
 }
 
@@ -351,6 +355,7 @@
 	      BOOL removed = [document removeConnectionsForClassNamed: anitem];
 	      if (removed)
 		{
+		  [self copySelection];
 		  [classManager removeClassNamed: anitem];
 		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
@@ -371,7 +376,48 @@
 
 - (void) copySelection
 {
-  // does nothing.
+  NSPasteboard *pb = [NSPasteboard generalPasteboard];
+  NSMutableDictionary *dict = 
+    [NSMutableDictionary dictionaryWithObjectsAndKeys: [classManager dictionaryForClassNamed: selectedClass], 
+			 selectedClass, nil];
+  id classPlist = [[dict description] propertyList];
+
+  if(classPlist != nil)
+    {
+      [pb declareTypes: [NSArray arrayWithObject: GormClassPboardType] owner: self];
+      [pb setPropertyList: classPlist forType: GormClassPboardType];
+    }
+}
+
+- (void) pasteInSelection
+{
+  NSPasteboard *pb = [NSPasteboard generalPasteboard];
+  NSArray *types = [pb types];
+
+  if([types containsObject: GormClassPboardType])
+    {
+      id classPlist = [pb propertyListForType: GormClassPboardType];
+      NSDictionary *classesDict = [NSDictionary dictionaryWithDictionary: classPlist];
+      id name = nil;
+      NSEnumerator *en = [classesDict keyEnumerator];
+
+      while((name = [en nextObject]) != nil)
+	{
+	  NSDictionary *classDict = [classesDict objectForKey: name];
+	  NSString *className = [classManager uniqueClassNameFrom: name];
+	  BOOL added = [classManager addClassNamed: className
+				     withSuperClassNamed: selectedClass
+				     withActions: [classDict objectForKey: @"Actions"]
+				     withOutlets: [classDict objectForKey: @"Outlets"]];
+	  if(!added)
+	    {
+	      NSString *message = [NSString stringWithFormat: @"Addition of %@ with superclass %@ failed.", className,
+					    selectedClass];
+	      NSRunAlertPanel(_(@"Problem pasting class"),
+			      message, nil, nil, nil);
+	    }
+	}
+    }
 }
 @end
 
