@@ -591,7 +591,7 @@ static NSMapTable	*docMap = 0;
       NSButtonCell	*but = [self cellAtRow: index/cols column: index%cols];
 
       [but setImage: nil];
-      [but setTitle: nil];
+      [but setTitle: @""];
       [but setShowsStateBy: NSNoCellMask];
       [but setHighlightsBy: NSNoCellMask];
       index++;
