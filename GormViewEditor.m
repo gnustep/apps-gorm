@@ -1344,6 +1344,7 @@ static BOOL currently_displaying = NO;
 	  NSImage *image = [NSImage imageNamed: name];
 	  // [image setArchiveByName: NO];
 	  [(id)_editedObject setImage: AUTORELEASE([image copy])];
+	  [document setSelectionFromEditor: self];
 	}
       return YES;
     }
@@ -1355,6 +1356,7 @@ static BOOL currently_displaying = NO;
 	{
 	  NSSound *sound = [NSSound soundNamed: name];
 	  [(id)_editedObject setSound: AUTORELEASE([sound copy])];
+	  [document setSelectionFromEditor: self];
 	}
       return YES;
     }

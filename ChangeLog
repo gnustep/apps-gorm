@@ -1,3 +1,9 @@
+2005-03-20 10:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: [GormViewEditor performDragOperation:]
+	call [GormDocument setSelectionFromEditor:] with self in order
+	to force the inspector to show the newly added image name.
+	
 2005-03-19 16:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/InterfaceBuilder.h: Added new header
