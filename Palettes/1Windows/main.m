@@ -213,6 +213,8 @@ NSwindow inspector
   id backingMatrix;
   id optionMatrix;
   id controlMatrix;
+  id iconNameForm;
+  id clearButton;
 }
 @end
 
@@ -220,10 +222,30 @@ NSwindow inspector
 
 - (void) _setValuesFromControl: control
 {
-
   if (control == titleForm)
     {
       [object setTitle: [[control cellAtIndex: 0] stringValue] ]; 
+    }
+  else if (control == iconNameForm)
+    {
+      NSString *string = [[control cellAtIndex: 0] stringValue];
+      NSImage *image;
+
+      if ([string length] > 0)
+	{
+	  image = [NSImage imageNamed: string];
+	  [object setMiniwindowImage: image];
+	}
+      else
+	{
+	  // use the default, if the string is empty.
+	  [object setMiniwindowImage: nil];
+	}
+    }
+  else if (control == clearButton)
+    {
+      [[iconNameForm cellAtIndex: 0] setStringValue: nil];
+      [object setMiniwindowImage: nil];
     }
   else if (control == backingMatrix)
     {
@@ -252,7 +274,8 @@ NSwindow inspector
   else if (control == optionMatrix)
     {
       BOOL flag;
-
+      GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+	
       // Release When Closed
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
       [object _setReleasedWhenClosed: flag];
@@ -261,19 +284,13 @@ NSwindow inspector
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
       [object setHidesOnDeactivate: flag];
 
-      // Visible at launch time. (not an object property. Stored in a Gorm dictionnary)
+      // Visible at launch time. (not an object property. Stored in a Gorm dictionary)
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      {
-        GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-        [doc setObject: object isVisibleAtLaunch: flag];
-      }
+      [doc setObject: object isVisibleAtLaunch: flag];
 
       // Deferred
       flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
-      {
-        GormDocument	*doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-        [doc setObject: object isDeferred: flag];
-      }
+      [doc setObject: object isDeferred: flag];
 
       // One shot
       flag = ([[control cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
@@ -285,7 +302,7 @@ NSwindow inspector
 
       // wants to be color
       // FIXME:  probably means window depth > 2 bits per pixel but don't know
-      // exactly what NSWindow method to use to enforce  that.
+      // exactly what NSWindow method to use to enforce that.
       flag = ([[control cellAtRow: 6 column: 0] state] == NSOnState) ? YES : NO;
     }
 }
@@ -293,6 +310,7 @@ NSwindow inspector
 
 - (void) _getValuesFromObject: anObject
 {
+  GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
   if (anObject != object)
     return;
 
@@ -316,22 +334,16 @@ NSwindow inspector
     [optionMatrix selectCellAtRow: 1 column: 0];
   
   // visible at launch time.
-  {
-    GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-    if ([doc objectIsVisibleAtLaunch: anObject])
-      {
-	[optionMatrix selectCellAtRow: 2 column: 0];
-      }
-  }
+  if ([doc objectIsVisibleAtLaunch: anObject])
+    {
+      [optionMatrix selectCellAtRow: 2 column: 0];
+    }
   
   // defer comes here.
-  {
-    GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
-    if ([doc objectIsDeferred: anObject])
-      {
-	[optionMatrix selectCellAtRow: 3 column: 0];
-      }
-  }
+  if ([doc objectIsDeferred: anObject])
+    {
+      [optionMatrix selectCellAtRow: 3 column: 0];
+    }
 
   if ([anObject isOneShot])
     [optionMatrix selectCellAtRow: 4 column: 0];
@@ -340,7 +352,9 @@ NSwindow inspector
     [optionMatrix selectCellAtRow: 5 column: 0];
   
   // FIXME: wants to be color comes here
-  
+
+  // icon name
+  [[iconNameForm cellAtIndex: 0] setStringValue: [[object miniwindowImage] name]];
 }
 
 - (void) _validate: (id)anObject
