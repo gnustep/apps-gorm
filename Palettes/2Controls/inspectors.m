@@ -144,7 +144,8 @@
   id typeButton;
   id keyEquiv;
 }
-
+- (void) setButtonType: (NSButtonType)type forObject: (id)button;
+- (void) _setValuesFromControl: (id)control;
 - (void) _getValuesFromObject: (id)anObject;
 @end
 
@@ -243,15 +244,13 @@
       NSString *string;
       NSImage *image;
       
-      if([object isKindOfClass: [NSForm class]])
-	{
-	  [object setTitle: [[control cellAtIndex: 0] stringValue]];
-	  [object setAlternateTitle: [[control cellAtIndex: 1] stringValue]];
-	}
+      [object setTitle: [[control cellAtIndex: 0] stringValue]];
+      [object setAlternateTitle: [[control cellAtIndex: 1] stringValue]];
+
       string = [[control cellAtIndex: 2] stringValue];
       if ([string length] > 0)
 	{   
-          image = [NSImage imageNamed: string];
+	  image = [NSImage imageNamed: string];
 	  [object setImage: image];
 	}
       string = [[control cellAtIndex: 3] stringValue];
@@ -381,25 +380,17 @@
   /* Doesn't work yet? */
   //  [typeButton setAction: @selector(setButtonTypeFrom:)];
   //  [typeButton setTarget: self];
-
+ 
   return self;
 }
 
 - (void) ok: (id)sender
 {
-  NSDebugLog(@"ok: sender = %@",sender);
   [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
 {
-  if ([self object] != anObject)
-    {
-      /*
-       * Ensure textfields in title form are written to old object.
-       */
-      [self _setValuesFromControl: titleForm];
-    }
   [super setObject: anObject];
   [self _getValuesFromObject: anObject];
 }
