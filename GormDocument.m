@@ -45,7 +45,15 @@ NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 }
 - (NSString*) inspectorClassName
 {
-  return @"GormClassInspector";
+  return @"GormNotApplicableInspector";
+}
+- (NSString*) connectInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
 }
 @end
 

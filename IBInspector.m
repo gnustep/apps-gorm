@@ -68,7 +68,6 @@ NSString *IBSelectionChangedNotification
 
 - (void) setObject: (id)anObject
 {
-  ASSIGN(object, anObject);
 }
 
 - (void) textDidBeginEditing: (NSNotification*)aNotification

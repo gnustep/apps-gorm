@@ -4,12 +4,12 @@
 @interface GormInspectorsManager : NSObject
 {
   NSPanel		*panel;
+  NSMutableDictionary	*cache;
   NSPopUpButton		*popup;
   NSView		*selectionView;
   NSView		*inspectorView;
   NSView		*buttonView;
-  IBInspector		*emptyInspector;
-  IBInspector		*multipleInspector;
+  NSString		*oldInspector;
   IBInspector		*inspector;
   int			current;
   BOOL			hiddenDuringTest;

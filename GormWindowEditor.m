@@ -688,31 +688,41 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		  [self selectObjects: array];
 		}
 	    }
-	  else if (knob != IBNoneKnobPosition)
+	  else
 	    {
-	      NSRect	redrawRect;
+	      if (knob != IBNoneKnobPosition)
+		{
+		  NSRect	redrawRect;
 
-	      /*
-	       * This was a subview resize, so we must clean up by removing
-	       * the highlighted knob and the wireframe around the view.
-	       */
-	      r = GormExtBoundsForRect([view frame]);
-	      r.origin.x--;
-	      r.origin.y--;
-	      r.size.width += 2;
-	      r.size.height += 2;
-	      redrawRect = r;
-	      [view setFrame: lastRect];
-	      r = GormExtBoundsForRect([view frame]);
-	      r.origin.x--;
-	      r.origin.y--;
-	      r.size.width += 2;
-	      r.size.height += 2;
-	      redrawRect = NSUnionRect(r, redrawRect);
-	      [self displayRect: redrawRect];
-	      [self makeSelectionVisible: YES];
+		  /*
+		   * This was a subview resize, so we must clean up by removing
+		   * the highlighted knob and the wireframe around the view.
+		   */
+		  r = GormExtBoundsForRect([view frame]);
+		  r.origin.x--;
+		  r.origin.y--;
+		  r.size.width += 2;
+		  r.size.height += 2;
+		  redrawRect = r;
+		  [view setFrame: lastRect];
+		  r = GormExtBoundsForRect([view frame]);
+		  r.origin.x--;
+		  r.origin.y--;
+		  r.size.width += 2;
+		  r.size.height += 2;
+		  redrawRect = NSUnionRect(r, redrawRect);
+		  [self displayRect: redrawRect];
+		  [self makeSelectionVisible: YES];
+		}
+	      if (NSEqualPoints(point, mouseDownPoint) == NO)
+		{
+		  /*
+		   * A subview was moved or resized, so we must mark the
+		   * doucment as edited.
+		   */
+		  [document touch];
+		}
 	    }
-
 	  [self unlockFocus];
 	  /*
 	   * Restore state to what it was on entry.
@@ -1091,7 +1101,6 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
       NSString	*name = [dragPb stringForType: GormLinkPboardType];
       NSView	*sub = [super hitTest: loc];
 
-NSLog(@"Got link from %@", name);
       [NSApp displayConnectionBetween: [NSApp connectSource] and: sub];
       [NSApp startConnecting];
     }

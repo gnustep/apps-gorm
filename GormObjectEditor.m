@@ -411,12 +411,10 @@ static NSMapTable	*docMap = 0;
   else if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      NSString	*name = [dragPb stringForType: GormLinkPboardType];
       int	r, c;
       int	pos;
       id	obj = nil;
 
-NSLog(@"Got link from %@", name);
       loc = [self convertPoint: loc fromView: nil];
       [self getRow: &r column: &c forPoint: loc];
       pos = r * [self numberOfColumns] + c;

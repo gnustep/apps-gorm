@@ -146,6 +146,47 @@
 }
 @end
 
+/*
+ *	The GormNotApplicableInspector is a uitility for odd objects.
+ */
+@interface GormNotApplicableInspector : IBInspector
+@end
+
+@implementation GormNotApplicableInspector
+- (void) dealloc
+{
+  RELEASE(window);
+  [super dealloc];
+}
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      NSView	*contents;
+      NSButton	*button;
+
+      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, 360)
+					   styleMask: NSBorderlessWindowMask 
+					     backing: NSBackingStoreRetained
+					       defer: NO];
+      contents = [window contentView];
+      button = [[NSButton alloc] initWithFrame: [contents bounds]];
+      [button setAutoresizingMask:
+	NSViewHeightSizable | NSViewWidthSizable];
+      [button setStringValue: @"Not Applicable"];
+      [button setBordered: NO];
+      [button setEnabled: NO];
+      [contents addSubview: button];
+      RELEASE(button);
+    }
+  return self;
+}
+@end
+
+
+
 @interface GormISelectionView : NSView
 {
 }
@@ -161,8 +202,8 @@
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(emptyInspector);
-  RELEASE(multipleInspector);
+  RELEASE(oldInspector);
+  RELEASE(cache);
   RELEASE(panel);
   [super dealloc];
 }
@@ -208,6 +249,7 @@
   NSRect	inspectorRect = {{0, 0}, {IVW, IVH}};
   unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
 
+  cache = [NSMutableDictionary new];
   panel = [[NSPanel alloc] initWithContentRect: contentRect
 				     styleMask: style
 				       backing: NSBackingStoreRetained
@@ -283,8 +325,12 @@
 
   current = -1;
 
-  emptyInspector = [GormEmptyInspector new];
-  multipleInspector = [GormMultipleInspector new];
+  inspector = [GormEmptyInspector new];
+  [cache setObject: inspector forKey: @"GormEmptyInspector"];
+  RELEASE(inspector);
+  inspector = [GormMultipleInspector new];
+  [cache setObject: inspector forKey: @"GormMultipleInspector"];
+  DESTROY(inspector);
 
   [self setCurrentInspector: 0];
 
@@ -327,6 +373,7 @@
   unsigned	count = [selection count];
   id		obj = [selection lastObject];
   NSView	*newView = nil;
+  NSString	*newInspector = nil;
 
   if (anObj != self)
     {
@@ -346,104 +393,113 @@
 	NSStringFromClass([obj class])]];
     }
 
-  /*
-   * Return the inspector view to its original window and release the old
-   * inspector.
-   */
-  [[inspector okButton] removeFromSuperview];
-  [[inspector revertButton] removeFromSuperview];
-  [[inspector window] setContentView: [[inspectorView subviews] lastObject]];
-  DESTROY(inspector);
-  
   if (count == 0 || count > 1)
     {
-      inspector = RETAIN(emptyInspector);
+      newInspector = @"GormEmptyInspector";
     }
   else if (count > 1)
     {
-      inspector = RETAIN(multipleInspector);
+      newInspector = @"GormMultipleInspector";
     }
   else
     {
-      NSString	*name;
-      Class	c;
-
       switch (current)
 	{
-	  case 0: name = [obj inspectorClassName]; break;
-	  case 1: name = [obj connectInspectorClassName]; break;
-	  case 2: name = [obj sizeInspectorClassName]; break;
-	  case 3: name = [obj helpInspectorClassName]; break;
-	  default: name = [obj classInspectorClassName]; break;
+	  case 0: newInspector = [obj inspectorClassName]; break;
+	  case 1: newInspector = [obj connectInspectorClassName]; break;
+	  case 2: newInspector = [obj sizeInspectorClassName]; break;
+	  case 3: newInspector = [obj helpInspectorClassName]; break;
+	  default: newInspector = [obj classInspectorClassName]; break;
 	}
-      c = NSClassFromString(name);
-      inspector = [c new];
     }
 
-  newView = [[inspector window] contentView];
-  if (newView != nil)
-    {
-      NSView	*outer = [panel contentView];
-      NSRect	rect = [outer bounds];
-
-      if (buttonView != nil)
-	{
-	  [buttonView removeFromSuperview];
-	  buttonView = nil;
-	}
-
-      rect.size.height = [selectionView frame].origin.y;
-      if ([inspector wantsButtons] == YES)
-	{
-	  NSRect	buttonsRect;
-	  NSRect	bRect = NSMakeRect(0, 0, 60, 20);
-	  NSButton	*ok;
-	  NSButton	*revert;
-
-	  buttonsRect = rect;
-	  buttonsRect.size.height = IVB;
-	  rect.origin.y += IVB;
-	  rect.size.height -= IVB;
-
-	  buttonView = [[NSView alloc] initWithFrame: buttonsRect];
-	  [buttonView setAutoresizingMask:
-	    NSViewHeightSizable | NSViewWidthSizable];
-	  [outer addSubview: buttonView];
-	  RELEASE(buttonView);
-
-	  ok = [inspector okButton];
-	  if (ok != nil)
-	    {
-	      bRect = [ok frame];
-	      bRect.origin.y = 10;
-	      bRect.origin.x = buttonsRect.size.width - 10 - bRect.size.width;
-	      [ok setFrame: bRect];
-	      [buttonView addSubview: ok];
-	    }
-
-	  revert = [inspector revertButton];
-	  if (revert != nil)
-	    {
-	      bRect = [revert frame];
-	      bRect.origin.y = 10;
-	      bRect.origin.x = 10;
-	      [revert setFrame: bRect];
-	      [buttonView addSubview: revert];
-	    }
-	}
-      else
-	{
-	  [buttonView removeFromSuperview];
-	}
-
+  if ([oldInspector isEqual: newInspector] == NO)
+    { 
       /*
-       * Make the inspector view the correct size for the viewable panel,
-       * and set the frame size for the new contents before adding them.
+       * Return the inspector view to its original window and release the old
+       * inspector.
        */
-      [inspectorView setFrame: rect];
-      rect.origin = NSZeroPoint;
-      [newView setFrame: rect];
-      [inspectorView addSubview: newView];
+      [[inspector okButton] removeFromSuperview];
+      [[inspector revertButton] removeFromSuperview];
+      [[inspector window] setContentView:
+	[[inspectorView subviews] lastObject]];
+  
+      ASSIGN(oldInspector, newInspector);
+      inspector = [cache objectForKey: newInspector];
+      if (inspector == nil)
+	{
+	  Class	c = NSClassFromString(newInspector);
+
+	  inspector = [c new];
+	  [cache setObject: inspector forKey: newInspector];
+	  RELEASE(inspector);
+	}
+
+      newView = [[inspector window] contentView];
+      if (newView != nil)
+	{
+	  NSView	*outer = [panel contentView];
+	  NSRect	rect = [outer bounds];
+
+	  if (buttonView != nil)
+	    {
+	      [buttonView removeFromSuperview];
+	      buttonView = nil;
+	    }
+
+	  rect.size.height = [selectionView frame].origin.y;
+	  if ([inspector wantsButtons] == YES)
+	    {
+	      NSRect	buttonsRect;
+	      NSRect	bRect = NSMakeRect(0, 0, 60, 20);
+	      NSButton	*ok;
+	      NSButton	*revert;
+
+	      buttonsRect = rect;
+	      buttonsRect.size.height = IVB;
+	      rect.origin.y += IVB;
+	      rect.size.height -= IVB;
+
+	      buttonView = [[NSView alloc] initWithFrame: buttonsRect];
+	      [buttonView setAutoresizingMask:
+		NSViewHeightSizable | NSViewWidthSizable];
+	      [outer addSubview: buttonView];
+	      RELEASE(buttonView);
+
+	      ok = [inspector okButton];
+	      if (ok != nil)
+		{
+		  bRect = [ok frame];
+		  bRect.origin.y = 10;
+		  bRect.origin.x = buttonsRect.size.width-10-bRect.size.width;
+		  [ok setFrame: bRect];
+		  [buttonView addSubview: ok];
+		}
+
+	      revert = [inspector revertButton];
+	      if (revert != nil)
+		{
+		  bRect = [revert frame];
+		  bRect.origin.y = 10;
+		  bRect.origin.x = 10;
+		  [revert setFrame: bRect];
+		  [buttonView addSubview: revert];
+		}
+	    }
+	  else
+	    {
+	      [buttonView removeFromSuperview];
+	    }
+
+	  /*
+	   * Make the inspector view the correct size for the viewable panel,
+	   * and set the frame size for the new contents before adding them.
+	   */
+	  [inspectorView setFrame: rect];
+	  rect.origin = NSZeroPoint;
+	  [newView setFrame: rect];
+	  [inspectorView addSubview: newView];
+	}
     }
   [inspector setObject: obj];
 }
@@ -816,6 +872,7 @@ selectCellWithString: (NSString*)title
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
     }
+  [[(id<IB>)NSApp activeDocument] touch];	/* mark as edited.	*/
   [oldBrowser loadColumnZero];
   [self updateButtons];
 }
