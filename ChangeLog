@@ -1,5 +1,13 @@
 2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
 
+	* Gorm.m: -[GormClassProxy classInspectorClassName]:
+	changed to return @"GormNotApplicationInspector" so that
+	when a user creates a new subclass in the class editor an
+	inspector no longer appears which contains "GormClassProxy"
+	which is an internal class.
+	
+2002-11-23  Gregory John Casamento  <greg_casamento@yahoo.com>
+
 	* Palettes/0Menus/main.m: removed -[NSWindow setLevel:]
 	which sets the menu window being dragged to NSSubmenuLevel.
 	This makes it easier to place the menu item. 
