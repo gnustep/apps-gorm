@@ -1,5 +1,11 @@
 2004-11-07 22:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassManager.m: Added code to [GormClassManager 
+	loadCustomClasses:] to ignore any entry in the data.classes file
+	which is not a dictionary.
+	
+2004-11-07 22:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormClassManager.m: Added code to [GormClassManager saveToFile:]
 	and [GormClassManager loadCustomClasses:] to handle adding (and
 	subsequently removing before processing) of a comment which warns

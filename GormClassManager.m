@@ -1287,51 +1287,58 @@
       return NO;
     }
 
-  // iterate over the set of classes, if it's in the classInformation 
+  // Iterate over the set of classes, if it's in the classInformation 
   // list, it's a category, if it's not it's a custom class.
   [dict removeObjectForKey: @"##Comment"]; // remove the comment...
   en = [dict keyEnumerator];
   while((key = [en nextObject]) != nil)
     {
-      NSMutableDictionary *class_dict = [dict objectForKey: key];
-      NSMutableDictionary *info = [classInformation objectForKey: key]; 
-      if(info == nil)
-	{
-	  [customClasses addObject: key];
-	  [classInformation setObject: class_dict forKey: key];
-	}
-      else
-	{
-	  NSMutableArray *actions = [class_dict objectForKey: @"Actions"];
-	  NSMutableArray *orig_actions = [info objectForKey: @"Actions"];
-	  NSMutableArray *all_actions = nil;
+      id class_dict = [dict objectForKey: key];
 
-	  // remove any duplicate actions...
-	  if(orig_actions != nil)
+      // Class information is always a dictionary, other information, such as 
+      // comments or version numbers, will appear as strings.
+      if([class_dict isKindOfClass: [NSDictionary class]])
+	{
+	  NSMutableDictionary *classDict = (NSMutableDictionary *)class_dict;
+	  NSMutableDictionary *info = [classInformation objectForKey: key]; 
+	  if(info == nil)
 	    {
-	      NSEnumerator *en = [actions objectEnumerator];
-	      id action = nil;
-
-	      all_actions = [NSMutableArray arrayWithArray: orig_actions];
-	      [all_actions addObjectsFromArray: actions];
-	      [info setObject: all_actions forKey: @"AllActions"];
-
-	      // take out any duplicates which might be present.
-	      while((action = [en nextObject]) != nil)
+	      [customClasses addObject: key];
+	      [classInformation setObject: classDict forKey: key];
+	    }
+	  else
+	    {
+	      NSMutableArray *actions = [classDict objectForKey: @"Actions"];
+	      NSMutableArray *orig_actions = [info objectForKey: @"Actions"];
+	      NSMutableArray *all_actions = nil;
+	      
+	      // remove any duplicate actions...
+	      if(orig_actions != nil)
 		{
-		  if([orig_actions containsObject: action])
+		  NSEnumerator *en = [actions objectEnumerator];
+		  id action = nil;
+		  
+		  all_actions = [NSMutableArray arrayWithArray: orig_actions];
+		  [all_actions addObjectsFromArray: actions];
+		  [info setObject: all_actions forKey: @"AllActions"];
+		  
+		  // take out any duplicates which might be present.
+		  while((action = [en nextObject]) != nil)
 		    {
-		      [actions removeObject: action];
+		      if([orig_actions containsObject: action])
+			{
+			  [actions removeObject: action];
+			}
 		    }
 		}
-	    }
-
-	  // if there are any action methods left after the process above,
-	  // add it, otherwise don't.
-	  if([actions count] > 0)
-	    {
-	      [categoryClasses addObject: key];
-	      [info setObject: actions forKey: @"ExtraActions"];
+	      
+	      // if there are any action methods left after the process above,
+	      // add it, otherwise don't.
+	      if([actions count] > 0)
+		{
+		  [categoryClasses addObject: key];
+		  [info setObject: actions forKey: @"ExtraActions"];
+		}
 	    }
 	}
     }
