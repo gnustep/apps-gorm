@@ -11,12 +11,12 @@
         NSIcon = "FileIcon_gmodel.tiff";
       }
     );
-    ApplicationDescription = "Gorm";
+    ApplicationDescription = "[GNUstep | Graphica] Object Relationship Modeller";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "0.3.1";
-    Authors = ();
-    Copyright = "Copyright (C) 1999-2001 FSF";
-    CopyrightDescription = "Released under the GNU GPL";
-    FullVersionID = "0.3.1";
+    ApplicationRelease = "Gorm 0.7.7 (Alpha)";
+    Authors = ("Gregory John Casamento <greg_casamento@yahoo.com>","Richard Frith-Macdonald <rfm@gnu.org>","Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
+    Copyright = "Copyright (C) 1999, 2000, 2001, 2002, 2003 FSF";
+    CopyrightDescription = "Released under the GNU General Public License 2.0";
+    NSBuildVersion = "0.7.7 May 10 2004";
 }

@@ -534,33 +534,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 /*********************** Info Menu Actions  ****************************/
 /***********************************************************************/
 
-- (void) infoPanel: (id) sender
-{
-  NSMutableDictionary *dict;
-  
-  dict = [NSMutableDictionary dictionaryWithCapacity: 8];
-  [dict setObject: @"Gorm" 
-     forKey: @"ApplicationName"];
-  [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
-     forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.7.7 (Alpha)" 
-     forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.7.7 May 10 2004" 
-     forKey: @"FullVersionID"];
-  [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
-			 @"Richard Frith-Macdonald <rfm@gnu.org>",
-			 @"Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>",
-			 nil]
-     forKey: @"Authors"];
-  [dict setObject: @"Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc."
-     forKey: @"Copyright"];
-  [dict setObject: @"Released under the GNU General Public License 2.0"
-     forKey: @"CopyrightDescription"];
-  
-  [self orderFrontStandardInfoPanelWithOptions: dict];
-}
-
-
 - (void) preferencesPanel: (id) sender
 {
   if(! preferencesController)

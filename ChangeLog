@@ -1,3 +1,11 @@
+2004-05-21 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed the infoPanel method.
+	* GormInfo.plist: Added all of the information to this file to 
+	produce an identical info panel as before.
+	* Gorm.gorm: Changed info menu so that "orderFrontStandardInfoPanel:"
+	is called.
+	
 2004-05-19 07:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.gorm: Added.  This replaces much of the code which
