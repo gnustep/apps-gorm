@@ -495,12 +495,8 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 
 - (void) stopConnecting
 {
-  if ([self isConnecting])
-    {
-      [self displayConnectionBetween: nil and: nil];
-    }
-  connectDestination = nil;
-  connectSource = nil;
+  [self setConnectDestination: nil window: nil rect: NSZeroRect];
+  [self setConnectSource: nil window: nil rect: NSZeroRect];
   isConnecting = NO;
 }
 

@@ -212,6 +212,14 @@
 	  [panel orderFront: self];
 	}
     }
+  else if ([name isEqual: NSWindowDidResignKeyNotification] == YES)
+    {
+      if (current == 1)
+	{
+	  /* FIXME - need to fix window focus handling for this to work */
+	  // [NSApp stopConnecting];
+	}
+    }
 }
 
 - (id) init
@@ -305,6 +313,10 @@
 	 selector: @selector(handleNotification:)
 	     name: IBWillEndTestingInterfaceNotification
 	   object: nil];
+  [nc addObserver: self
+	 selector: @selector(handleNotification:)
+	     name: NSWindowDidResignKeyNotification
+	   object: panel];
 
   return self;
 }
@@ -322,10 +334,7 @@
       [popup setNeedsDisplay: YES];
       [panel makeKeyAndOrderFront: self];
     }
-  else
-    {
-      [self setCurrentInspector: self];
-    }
+  [self setCurrentInspector: self];
 }
 
 - (void) setCurrentInspector: (id)anObj
