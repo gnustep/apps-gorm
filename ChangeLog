@@ -1,3 +1,10 @@
+2004-11-03 10:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: modified addNewActionToClassNamed: and
+	addNewOutletToClassNamed: so that the initial names for outlets
+	and actions are newOutet1, newOutlet2, and similar for actions
+	newAction1:, newAction2:, etc.
+	
 2004-11-03 21:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added alert panel to loadDocument: so that

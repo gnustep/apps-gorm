@@ -93,13 +93,15 @@
   NSArray *array = [classInfo objectForKey: @"Actions"];
   NSArray *extra = [classInfo objectForKey: @"ExtraActions"];
   NSMutableArray *combined = [NSMutableArray arrayWithArray: array];
-  NSString *new = @"newAction", *search = [new stringByAppendingString: @":"];
+  NSString *newAction = @"newAction";
+  NSString *search = [newAction stringByAppendingString: @":"];
+  NSString *new = nil; 
   int i = 1;
 
   [combined addObjectsFromArray: extra];
   while ([combined containsObject: search])
     {
-      new = [new stringByAppendingFormat: @"%d", i++];
+      new = [newAction stringByAppendingFormat: @"%d", i++];
       search = [new stringByAppendingString: @":"];
     }
 
@@ -113,13 +115,14 @@
   NSArray *array = [classInfo objectForKey: @"Outlets"];
   NSArray *extra = [classInfo objectForKey: @"ExtraOutlets"];
   NSMutableArray *combined = [NSMutableArray arrayWithArray: array];
-  NSString *new = @"newOutlet";
+  NSString *newOutlet = @"newOutlet";
+  NSString *new = newOutlet;
   int i = 1;
 
   [combined addObjectsFromArray: extra];
   while ([combined containsObject: new])
     {
-      new = [new stringByAppendingFormat: @"%d", i++];
+      new = [newOutlet stringByAppendingFormat: @"%d", i++];
     }
 
   [self addOutlet: new forClassNamed: name];
