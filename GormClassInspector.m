@@ -70,6 +70,7 @@ NSNotificationCenter *nc = nil;
   NSDebugLog(@"%@",className);
   [classesView expandItem: className];
   [classesView collapseItem: className];
+  [classesView reset];
 }
 
 - (void) reloadClasses
@@ -106,11 +107,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedOutlet = [GormDocument formatOutlet: anObject];
+  id classManager = [(Gorm *)NSApp classManager];
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
-  // RETAIN(anObject);
-  [[(Gorm *)NSApp classManager] replaceOutlet: name
-				withOutlet: formattedOutlet
-				forClassNamed: [inspector _currentClass]];
+  [classManager replaceOutlet: name
+		withOutlet: formattedOutlet
+		forClassNamed: [inspector _currentClass]];
+
+  // collapse the class in question if it's being edited and make
+  // certain that names in the list are kept in sync.
+  [document collapseClass: name];
+  [document reloadClasses];
+  [document selectClass: name];
 }
 
 // set methods
@@ -143,11 +151,18 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedAction = [GormDocument formatAction: anObject];
+  id classManager = [(Gorm *)NSApp classManager];
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
-  // RETAIN(anObject);
-  [[(Gorm *)NSApp classManager] replaceAction: name
+  [classManager replaceAction: name
 				withAction: formattedAction
 				forClassNamed: [inspector _currentClass]];
+
+  // collapse the class in question if it's being edited and make
+  // certain that names in the list are kept in sync.
+  [document collapseClass: name];
+  [document reloadClasses];
+  [document selectClass: name];
 }
 
 // set method
@@ -303,18 +318,30 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addAction: (id)sender
 {
-  [classManager addNewActionToClassNamed: [self _currentClass]];
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  NSString *className = [self _currentClass];
+
+  [classManager addNewActionToClassNamed: className];
+  [document collapseClass: className];
+  [document reloadClasses];
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [actionTable reloadData];
+  [document selectClass: className];
 }
 
 - (void) addOutlet: (id)sender
 {
-  [classManager addNewOutletToClassNamed: [self _currentClass]];  
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  NSString *className = [self _currentClass];
+
+  [classManager addNewOutletToClassNamed: className];  
+  [document collapseClass: className];
+  [document reloadClasses];
   [nc postNotificationName: IBInspectorDidModifyObjectNotification
 		    object: classManager];
   [outletTable reloadData];
+  [document selectClass: className];
 }
 
 - (void) removeAction: (id)sender
@@ -324,24 +351,28 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [classManager allActionsForClassNamed: className];
   BOOL removed = NO;
   NSString *name = nil;
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   // check the count...
   if([list count] > 0 && i >= 0 && i < [list count])
     {
       [actionTable deselectAll: self];
       name = [list objectAtIndex: i];
-      removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-				 removeConnectionsWithLabel: name 
-				 forClassNamed: currentClass
-				 isAction: YES];
+      removed = [document 
+		  removeConnectionsWithLabel: name 
+		  forClassNamed: currentClass
+		  isAction: YES];
     }
 
   if(removed)
     {
+      [document collapseClass: className];
+      [document reloadClasses];
       [classManager removeAction: name fromClassNamed: className];
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
       [actionTable reloadData];
+      [document selectClass: className];
     }
 }
 
@@ -352,24 +383,28 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [classManager allOutletsForClassNamed: className];
   BOOL removed = NO;
   NSString *name = nil;
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   // check the count...
   if([list count] > 0 && i >= 0 && i < [list count])
     {
       [outletTable deselectAll: self];
       name = [list objectAtIndex: i];
-      removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-				 removeConnectionsWithLabel: name 
-				 forClassNamed: currentClass
-				 isAction: NO];
+      removed = [document 
+		  removeConnectionsWithLabel: name 
+		  forClassNamed: currentClass
+		  isAction: NO];
     }
 
   if(removed)
     {
+      [document collapseClass: className];
+      [document reloadClasses];
       [classManager removeOutlet: name fromClassNamed: className];
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
       [outletTable reloadData];
+      [document selectClass: className];
     }
 }
 
@@ -400,10 +435,10 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *newParent = [list objectAtIndex: row];
   NSString *name = [self _currentClass];
   BOOL removed = NO;
+  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
   // check to see if the user wants to do this and remove the connections.
-  removed = [(GormDocument *)[(id <IB>)NSApp activeDocument] 
-			     removeConnectionsForClassNamed: name]; 
+  removed = [document removeConnectionsForClassNamed: name]; 
 
   // if removed, move the class and notify... 
   if(removed)
@@ -413,9 +448,10 @@ objectValueForTableColumn: (NSTableColumn *)tc
       [classManager setSuperClassNamed: newParent forClassNamed: name];
       [nc postNotificationName: IBInspectorDidModifyObjectNotification
 	  object: classManager];
-      [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: oldSuper];
-      [(GormDocument *)[(id <IB>)NSApp activeDocument] collapseClass: name];
-      [(GormDocument *)[(id <IB>)NSApp activeDocument] reloadClasses];
+      [document collapseClass: oldSuper];
+      [document collapseClass: name];
+      [document reloadClasses];
+      [document selectClass: name];
     }
 }
 
@@ -426,15 +462,16 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) setObject: (id)anObject
 {
-  ASSIGN(theobject,anObject);
+  [super setObject: anObject];
   ASSIGN(classManager, [(Gorm *)NSApp classManager]);
-  RETAIN(theobject);
+  ASSIGN(currentClass, [object className]);
+  RETAIN(object);
   [self _refreshView];
 }
 
 - (NSString *) _currentClass
 {
-  return [theobject className];
+  return [object className];
 }
 
 - (void) handleNotification: (NSNotification *)notification

@@ -133,6 +133,7 @@
 - (id) createClassFiles: (id)sender;
 - (id) instantiateClass: (id)sender;
 - (void) selectClassWithObject: (id)obj;
+- (void) selectClass: (NSString *)className;
 
 // sound & image support
 - (id) openSound: (id)sender;

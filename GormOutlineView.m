@@ -499,6 +499,14 @@ static NSColor *darkGreyBlueColor = nil;
     }
 }
 
+- (void) reset
+{
+  [self setItemBeingEdited: nil];
+  [self setIsEditing: NO];
+  [self setBackgroundColor: salmonColor];
+  [self reloadData];
+}
+
 - (void) mouseDown: (NSEvent *)theEvent
 {
   NSPoint location = [theEvent locationInWindow];
@@ -551,19 +559,13 @@ static NSColor *darkGreyBlueColor = nil;
     {
       if (_clickedItem != [self itemBeingEdited] && !isActionOrOutlet)
 	{
-	  [self setItemBeingEdited: nil];
-	  [self setIsEditing: NO];
-	  [self setBackgroundColor: salmonColor];
-	  [self reloadData];
+	  [self reset];
 	}
       else if (tb == _actionColumn)
 	{
 	  if (_edittype != Actions)
 	    {
-	      [self setItemBeingEdited: nil];
-	      [self setIsEditing: NO];
-	      [self setBackgroundColor: salmonColor];
-	      [self reloadData];
+	      [self reset];
 	      _edittype = Actions;
 	      [self _openActions: _clickedItem];
 	    }
@@ -572,18 +574,11 @@ static NSColor *darkGreyBlueColor = nil;
 	{
 	  if (_edittype != Outlets)
 	    {
-	      [self setItemBeingEdited: nil];
-	      [self setIsEditing: NO];
-	      [self setBackgroundColor: salmonColor];
-	      [self reloadData];
+	      [self reset];
 	      _edittype = Outlets;
 	      [self _openOutlets: _clickedItem];
 	    }
 	}
-    }
-  else
-    {
-//        NSString *name = [_clickedItem getName];
     }
 
   [super mouseDown: theEvent];

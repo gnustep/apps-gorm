@@ -64,6 +64,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
 - (void) addAttributeToClass;
 - (GSAttributeType)editType;
 - (void) removeItemAtRow: (int)row;
+- (void) reset;
 @end /* interface of GormOutlineView */
 
 // informal protocol to define necessary methods on

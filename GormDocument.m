@@ -505,7 +505,7 @@ static NSImage	*classesImage = nil;
 }
 
 // class selection...
-- (void) _selectClass: (NSString *)className
+- (void) selectClass: (NSString *)className
 {
   NSString	*currentClass = nil;
   NSArray	*classes;
@@ -546,11 +546,11 @@ static NSImage	*classesImage = nil;
 
   if(customClass != nil)
     {
-      [self _selectClass: customClass];
+      [self selectClass: customClass];
     }
   else if ([obj respondsToSelector: @selector(className)])
     { 
-      [self _selectClass: [obj className]];
+      [self selectClass: [obj className]];
     }
 }
 
@@ -1133,7 +1133,7 @@ static NSImage	*classesImage = nil;
 	    {
 	      // go to the class which was just loaded in the classes view...
 	      [selectionBox setContentView: classesScrollView];
-	      [self _selectClass: className];
+	      [self selectClass: className];
 	    }
 	} // if we found a class
     }

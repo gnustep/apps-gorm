@@ -1,3 +1,12 @@
+2004-04-26 01:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Modifications to addAction: removeAction:
+	addOutlet: & removeOutlet to syncronize with the classes outline
+	view.
+	* GormDocument.[hm]: exposed selectClass: method.
+	* GormOutlineView.[hm]: Simplified some code and added a method
+	called "reset" which stops the editing process on a class.
+	
 2004-04-25 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassInspector.m: removeOutlet: and removeAction: check for
