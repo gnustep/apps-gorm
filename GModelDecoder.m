@@ -270,24 +270,27 @@ static BOOL gormFileOwnerDecoded;
       NSString *superClass = promptForClassName([NSString stringWithFormat: @"Superclass: %@",className],
 						[classManager allClassNames]);
       BOOL added = NO;
-
-      RETAIN(superClass);
+      
+      // RETAIN(superClass);
       // cheesy attempt to determine superclass..
-      if(superClass == nil && [className isEqual: @"GormCustomView"])
+      if(superClass == nil)
 	{
-	  superClass = @"NSView";
-	}
-      else if(NSEqualRanges(notFound,[className rangeOfString: @"Window"]) == NO)
-	{
-	  superClass = @"NSWindow"; 
-	}
-      else if(NSEqualRanges(notFound,[className rangeOfString: @"Panel"]) == NO)
-	{
-	  superClass = @"NSPanel";
-	}
-      else
-	{
-	  superClass = @"NSObject";
+	  if([className isEqual: @"GormCustomView"])
+	    {
+	      superClass = @"NSView";
+	    }
+	  else if(NSEqualRanges(notFound,[className rangeOfString: @"Window"]) == NO)
+	    {
+	      superClass = @"NSWindow"; 
+	    }
+	  else if(NSEqualRanges(notFound,[className rangeOfString: @"Panel"]) == NO)
+	    {
+	      superClass = @"NSPanel";
+	    }
+	  else
+	    {
+	      superClass = @"NSObject";
+	    }
 	}
 
       added = [classManager addClassNamed: className

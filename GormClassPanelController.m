@@ -45,6 +45,7 @@
   ASSIGN(allClasses, [classes mutableCopy]);
   [allClasses removeObject: @"FirstResponder"];
   [panel setTitle: title];
+  [classBrowser loadColumnZero];
 
   return self;
 }
