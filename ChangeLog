@@ -1,3 +1,9 @@
+2003-08-04  Fabien Vallon  <fabien@tuxfamily.org>
+
+	* GormImageEditor.m : Fix dnd (Todo : accept NSTIFFPboardType)
+	(code borrow from Terminal.app by Alexander Malmberg)
+	
+
 2003-08-01  Fabien Vallon  <fabien@uxfamily.org>
 
 	* GormDocument.m : Add offset when pasting
