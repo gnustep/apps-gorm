@@ -472,10 +472,10 @@
   float topEnd;
   float bottomEnd;
   NSSize minSize;
+  NSMutableArray *bests;
 
   minSize = [[_EO cell] cellSize];
 
-  NSMutableArray *bests;
   if (gpi->hintInitialized == NO)
     {
       [self _initializeHintWithInfo: gpi];
