@@ -300,7 +300,7 @@ static BOOL gormFileOwnerDecoded;
   NSArray          *gmobjects;
   NSArray          *gmconnections;
   Class             u = gmodel_class(@"GMUnarchiver");
-  NSString         *delegateClass;
+  NSString         *delegateClass = nil;
 
   NSLog (@"Loading gmodel file %@...", path);
   gormNibOwner = nil;
