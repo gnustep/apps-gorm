@@ -154,7 +154,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	  [classInfo setObject: actions forKey: @"Actions"];
 	  [classInfo setObject: superClassName forKey: @"Super"];
 	  [classInformation setObject: classInfo forKey: className];
-	  [customClasses addObject: classInfo];
+	  [customClasses addObject: className];
 	  RELEASE(classInfo);
 	  result = YES;
 	}

@@ -425,10 +425,6 @@ static NSImage	*classesImage = nil;
 - (void) changeCurrentClass: (id)sender
 {
   int	row = [classesView selectedRow];
-  id	classes = [classManager allClassNames];
-
-  NSLog(@"Double Action");
-
   if(row >= 0)
     {
       [classEditor setSelectedClassName: [classesView itemAtRow: row]];
@@ -690,10 +686,9 @@ static NSImage	*classesImage = nil;
 
   while(![headerScanner isAtEnd])
     {
-      NSScanner *classScanner = nil;
       NSString *classString = nil;
       BOOL classfound = NO, result = NO;
-      NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet", nil];
+      NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
       NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", nil];
       NSEnumerator *outletEnum = [outletTokens objectEnumerator];
       NSEnumerator *actionEnum = [actionTokens objectEnumerator];
@@ -756,7 +751,8 @@ static NSImage	*classesImage = nil;
 			       intoString: NULL];
 		  [ivarScanner scanUpToString: @";"
 			       intoString: &outlet];
-		  if(![ivarScanner isAtEnd])
+		  if([ivarScanner isAtEnd] == NO
+		     && [outlets indexOfObject: outlet] == NSNotFound)
 		    {
 		      NSDebugLog(@"outlet = %@",outlet);
 		      [outlets addObject: outlet];
@@ -800,6 +796,8 @@ static NSImage	*classesImage = nil;
 			{
 			  if(isAction)
 			    {
+			      /* Add the ':' back */
+			      action = [action stringByAppendingString: @":"];
 			      NSDebugLog(@"action = %@",action);
 			      [actions addObject: action];
 			    }
@@ -837,6 +835,7 @@ static NSImage	*classesImage = nil;
 
 - (id) remove: (id)sender
 {
+  id anitem;
   int i = [classesView selectedRow];
   
   // if no selection, then return.
@@ -845,7 +844,7 @@ static NSImage	*classesImage = nil;
       return self;
     }
 
-  id anitem = [classesView itemAtRow: i];
+  anitem = [classesView itemAtRow: i];
   if([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
@@ -936,8 +935,7 @@ static NSImage	*classesImage = nil;
 {
   NSSavePanel		*sp;
   NSString              *className;
-  int	row = [classesView selectedRow];
-  id	classes = [classManager allClassNames];
+  int	                row = [classesView selectedRow];
   int			result;
 
   // if no selection, just return.
@@ -1580,7 +1578,6 @@ static NSImage	*classesImage = nil;
   if ([[selectionView selectedCell] tag] == 3)
     {
       int i = [classesView selectedRow];
-      id classNames = [classManager allClassNames];
 
       if (i >= 0)
 	{
@@ -1825,7 +1822,7 @@ static NSImage	*classesImage = nil;
     {
       NSString *file = nil;
       NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
-      while(file = [dirEnumerator nextObject])
+      while((file = [dirEnumerator nextObject]))
 	{
 	  if([fileTypes containsObject: [file pathExtension]])
 	    {
@@ -2288,18 +2285,11 @@ static NSImage	*classesImage = nil;
       if ([path isEqual: documentPath] == NO
 	&& [mgr fileExistsAtPath: path] == YES)
 	{
-	  if (NSRunAlertPanel(NULL, @"A document with that name exists", 
-	    @"Replace", @"Cancel", NULL) != NSAlertDefaultReturn)
-	    {
-	      return nil;
-	    }
-	  else
-	    {
-	      NSString	*bPath = [path stringByAppendingString: @"~"];
-
-	      [mgr removeFileAtPath: bPath handler: nil];
-	      [mgr movePath: path toPath: bPath handler: nil];
-	    }
+	  /* NSSavePanel has already asked if it's ok to replace */
+	  NSString	*bPath = [path stringByAppendingString: @"~"];
+	  
+	  [mgr removeFileAtPath: bPath handler: nil];
+	  [mgr movePath: path toPath: bPath handler: nil];
 	}
       documentPath = RETAIN(path);
       retval = [self saveDocument: sender];
@@ -2341,7 +2331,6 @@ static NSImage	*classesImage = nil;
   [self beginArchiving];
 
   NSDebugLog(@"nametable : %@", nameTable);
-  NSDebugLog(@"connections : %@", connections);
   
   // set up the necessary paths...
   gormPath = [documentPath stringByAppendingPathComponent: @"objects.gorm"];
@@ -2713,7 +2702,6 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     {
       id identifier = [aTableColumn identifier];
       id className = item;
-      id classNames = [classManager allClassNames];
       
       if ([identifier isEqualToString: @"classes"])
 	{
@@ -2988,7 +2976,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   [decoded _makeConnections];
   
   NSLog(@"testing...");
-  // NSLog(@"objects = %@, connections = %@",[decoded objects], [decoded connections]);
+  //NSLog(@"objects = %@, connections = %@",[decoded objects], [decoded connections]);
   
   return self;
 }

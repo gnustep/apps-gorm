@@ -1,3 +1,11 @@
+2002-11-12  Adam Fedor  <fedor@gnu.org>
+
+	* ClassInformation.plist (NSDocument): Add _window outlet.
+	* GormClassManager.m
+	(-addClassNamed:withSuperClassNamed:withActions:withOutlets:):
+	Fix typo - add class name not info to customClasses.
+	* GormDocument.m ([GormDocument -parseHeader:]): Add ': back to
+	action name.	
 
 2002-11-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
