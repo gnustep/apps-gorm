@@ -1,3 +1,9 @@
+2004-04-27 21:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Added code to properly collapse the item
+	if the class is being edited in the class inspector.
+	* GormClassManager.m: some improvements on the previous fix.
+	
 2004-04-27 01:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Modified 
