@@ -211,7 +211,17 @@ You use this if you want to use Gorm to edit an exisiting document.
 This creates a new application document within Gorm, you may then use the
 Palettes panel to drag new objects into the document.
 @item New Module @*
-Contains a submenu, which also contains @samp{New Empty}, @samp{New Inspector} and @samp{New Palette}.   @samp{New Empty} produces an empty document with only NSFirst and NSOwner, @samp{New Inspector} produces a document with NSOwner, NSFirst and a window which is the correct size for an inspector, @samp{New Palette} produces a document which is like the one by @samp{New Inspector}, but it's window is the right size for a Palette. 
+Contains a submenu, which also contains:
+
+@itemize @bullet
+@item New Empty @* 
+produces an empty document with only NSFirst and NSOwner.
+@item New Inspector @* 
+produces a document with NSOwner, NSFirst and a window which is the correct size for an Inspector.
+@item New Palette @* 
+produces a document which is like the one by @samp{New Inspector}, but it's window is the right size for a Palette. 
+@end itemize
+
 @item Save @*
 This saves the current document
 @item Save As @*
@@ -236,6 +246,43 @@ Loads a sound into the .gorm file.
 @item Image @*
 Loads an image into the .gorm file.
 @end itemize
+
+@item Edit @*
+In addition to the usual Cut, Copy, Paste, Delete Select All, this menu also contains:
+
+@itemize @bullet
+@item Group @*
+Which produces a submenu
+@itemize @bullet
+@item In Splitview @*
+Groups views into an NSSplitView.   Gorm does this based on the relative positions of the views being grouped.  It determines the orientation and the order of th views and then groups them either vertically or horizontally in the order they appear on the screen.
+@item In Box @*
+Simply groups all of the views into one NSBox.
+@item In ScrollView @*
+Simply groups all of the views into one NSScrollView.
+@item Ungroup @*
+Ungroups the contained views.
+@end itemize
+
+@item Set Name @*
+This allows the user to set a name for a given object in the Objects view in the main document window.
+
+@item Disable Guideline @*
+This item toggles between Enable Guideline and Disable Guideline.  This allows the user to turn on or off the guides which appear when placing views in a window or view in Gorm.
+
+@end itemize
+
+@item Classes
+
+@item Tools
+
+@item Windows
+
+@item Services
+
+@item Hide
+
+@item Quit
 
 @end itemize
 
