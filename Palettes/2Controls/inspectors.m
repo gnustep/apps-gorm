@@ -46,9 +46,78 @@
   id titleForm;
   id typeButton;
 }
+
+- (void) _getValuesFromObject: anObject;
 @end
 
 @implementation GormButtonAttributesInspector
+
+/* The button type isn't stored in the button, so reverse-engineer it */
+- (NSButtonType) buttonTypeForObject: button
+{
+  NSButtonType type;
+  int highlight, stateby;
+  highlight = [[button cell] highlightsBy];
+  stateby = [[button cell] showsStateBy];
+  type = NSMomentaryPushButton;
+  if (highlight == NSChangeBackgroundCellMask)
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryLight;
+      else if (stateby == NSChangeBackgroundCellMask)
+	type = NSOnOffButton;
+      else 
+	type = NSToggleButton;
+    }
+  else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask) )
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryPushButton;
+      else
+	type = NSPushOnPushOffButton;
+    }
+  else if (highlight == NSContentsCellMask)
+    {
+      if (stateby == NSNoCellMask)
+	type = NSMomentaryChangeButton;
+      else if ([ [[button image] name] isEqual: @"common_SwitchOff" ])
+	type = NSSwitchButton;
+      else
+	type = NSRadioButton;
+    }
+  else
+    NSDebugLog(@"Ack! no button type");
+
+  return type;
+}
+
+/* We may need to reset some parameters based on the previous type */
+- (void) setButtonType: (NSButtonType)type forObject: button
+{
+  NSButtonType oldType = [self buttonTypeForObject: object];
+
+  if (type == oldType)
+    return;
+
+  if (oldType == NSSwitchButton || oldType == NSRadioButton)
+    {
+      [object setImage: nil];
+      [object setAlternateImage: nil];
+      [object setImagePosition: NSNoImage];
+      [object setBordered: YES];
+      [[object cell] setBezeled: YES];
+      [object setAlignment: NSCenterTextAlignment];
+    }
+
+  [object setButtonType: type ];
+  [self _getValuesFromObject: object];
+}
+
+- (void) setButtonTypeFrom: sender
+{
+  [self setButtonType: NSMomentaryPushButton + [sender indexOfSelectedItem]
+ 	    forObject: object];
+}
 
 - (void) _setValuesFromControl: control
 {
@@ -104,6 +173,8 @@
     }
   else if (control == typeButton)
     {
+      [self setButtonType: NSMomentaryPushButton + [control indexOfSelectedItem]
+ 	        forObject: object];
     }
 }
 
@@ -144,6 +215,8 @@
   else
     [[titleForm cellAtIndex: 3] setStringValue: @"" ];
 
+  [typeButton selectItemAtIndex: [self buttonTypeForObject: anObject ] ];
+
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
@@ -175,6 +248,21 @@
          selector: @selector(controlTextDidEndEditing:)
              name: NSControlTextDidEndEditingNotification
            object: nil];
+
+  /* Need to set up popup button */
+  [typeButton removeAllItems];
+  [typeButton addItemWithTitle: @"Momentary Push"];
+  [typeButton addItemWithTitle: @"Push On/Off"];
+  [typeButton addItemWithTitle: @"Toggle"];
+  [typeButton addItemWithTitle: @"Switch"];
+  [typeButton addItemWithTitle: @"Radio"];
+  [typeButton addItemWithTitle: @"Momentary Change"];
+  [typeButton addItemWithTitle: @"On/Off"];
+  [typeButton addItemWithTitle: @"Momentary Light"];
+  /* Doesn't work yet? */
+  [typeButton setAction: @selector(setButtonTypeFrom:)];
+  [typeButton setTarget: self];
+
   return self;
 }
 

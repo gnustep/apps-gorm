@@ -236,10 +236,17 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
   
   if (!isMatrix)
     {
+      NSRect oldFrame = [view frame];
       /* Check if it is too small*/
       if (NSWidth(frame) < minSize.width
 	  || NSHeight(frame) < minSize.height)
-	return NO;
+	{
+	  /* Check if it is already too small and we're just 
+	     making it bigger */
+	  if (NSWidth(frame) < NSWidth(oldFrame) 
+	      && NSHeight(frame) < NSHeight(oldFrame))
+	    return NO;
+	}
 
       if (([theEvent modifierFlags] & NSAlternateKeyMask) 
 	  != NSAlternateKeyMask || isControl == NO)
