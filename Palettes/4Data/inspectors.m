@@ -619,9 +619,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if (control == detachButton)
     {
       [[object cell] setFormatter: nil];
-      // FIXME: Should empty the inspector window or show
-      // the default inspector. How do we do that?
-      //[ (GormInspectorManager *)[window view] setCurrentInspector: 0] ??
+      [[(Gorm *)NSApp activeDocument] setSelectionFromEditor: nil];
     }
   else
     {
@@ -710,48 +708,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       NSLog(@"Could not gorm GormDateFormatterInspector");
       return nil;
     }
-
-  // Add format/date table view by hand for now...
-  {
-    NSScrollView *v;
-    NSTableColumn  *tc;
-    NSSize contentSize;
-
-    v = [[NSScrollView alloc] initWithFrame: NSMakeRect(5,170,IVW-10,200)];
-    [v setHasVerticalScroller: YES];
-    [v setHasHorizontalScroller: NO];
-    contentSize = [v contentSize];
-
-    formatTable = [[NSTableView alloc] initWithFrame:
-             NSMakeRect(0,0,contentSize.width, contentSize.height)];
-    
-    [formatTable setDataSource: self];
-    [formatTable setDelegate: self];
-    [formatTable setAutoresizesAllColumnsToFit: YES];
-    [formatTable setAllowsEmptySelection: YES];
-    [formatTable setAllowsMultipleSelection: NO];
-    [v setDocumentView: formatTable];
-
-    tc = [[NSTableColumn alloc] initWithIdentifier: @"format"];
-    [[tc headerCell] setStringValue: @"Format"];
-    [tc setWidth: contentSize.width*4/9];
-    [tc setResizable: NO];
-    [tc setEditable: NO];
-    [formatTable addTableColumn: tc];
-    RELEASE(tc);
-    
-    tc = [[NSTableColumn alloc] initWithIdentifier: @"date"];
-    [[tc headerCell] setStringValue: @"Date"];
-    [tc setMinWidth: contentSize.width*5/9];
-    [tc setResizable: NO];
-    [tc setEditable: NO];
-    [formatTable addTableColumn: tc];
-    RELEASE(tc);
-  
-    [v setDocumentView: formatTable];
-    [[window contentView] addSubview: v];
-    RELEASE(v);
-  }
 
   return self;
 }
@@ -863,9 +819,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if (control == detachButton)
     { 
       [cell setFormatter: nil];
-      // FIXME: Should empty the inspector window or show
-      // the default inspector. How do we do that?
-      //[ (GormInspectorManager *)[window view] setCurrentInspector: 0] ??
+      [[(Gorm *)NSApp activeDocument] setSelectionFromEditor: nil];
     }
   else
     {
@@ -1019,47 +973,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       NSLog(@"Could not gorm GormNumberFormatterInspector");
       return nil;
     }
-
-  // Add positive/negative format table view by hand for now...
-  {
-    NSScrollView *v;
-    NSTableColumn  *tc;
-    NSSize contentSize;
-
-    v = [[NSScrollView alloc] initWithFrame: NSMakeRect(12,268,245,118)];
-    [v setHasVerticalScroller: YES];
-    [v setHasHorizontalScroller: NO];
-    contentSize = [v contentSize];
-
-    formatTable = [[NSTableView alloc] initWithFrame:
-             NSMakeRect(0,0,contentSize.width, contentSize.height)];
-    
-    [formatTable setDataSource: self];
-    [formatTable setDelegate: self];
-    [formatTable setAutoresizesAllColumnsToFit: YES];
-    [formatTable setAllowsEmptySelection: YES];
-    [formatTable setAllowsMultipleSelection: NO];
-
-    tc = [[NSTableColumn alloc] initWithIdentifier: @"positive"];
-    [[tc headerCell] setStringValue: @"Positive"];
-    [tc setWidth: contentSize.width/2];
-    [tc setResizable: NO];
-    [tc setEditable: NO];
-    [formatTable addTableColumn: tc];
-    RELEASE(tc);
-    
-    tc = [[NSTableColumn alloc] initWithIdentifier: @"negative"];
-    [[tc headerCell] setStringValue: @"Negative"];
-    [tc setMinWidth: contentSize.width/2];
-    [tc setResizable: NO];
-    [tc setEditable: NO];
-    [formatTable addTableColumn: tc];
-    RELEASE(tc);
-  
-    [v setDocumentView: formatTable];
-    [[window contentView] addSubview: v];
-    RELEASE(v);
-  }
 
   // Initialize Positive/Negative appearance fields formatter
   {

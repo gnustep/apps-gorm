@@ -1,3 +1,19 @@
+2004-10-17 12:51 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormControlEditor.m: Added necessary methods for dragging
+	of the formatter to the view.
+	* GormInternalViewEditor.m: Changed initWithObject:inDocument:
+	so that the view doesn't attempt to accept an IBFormatterPboardType
+	object from the drag when it shouldn't.
+	* GormViewEditor.m: Made similar changes here.
+	* Palettes/4Data/inspectors.m: Removed hard coded implementations
+	of tables.  Added code to blank inspector when the formatter is
+	detached.
+	* Palette/4Data/GormNSDateFormatterInspector.gorm: Updated with
+	new table.
+	* Palette/4Data/GormNSNumberFormatterInspector.gorm: Updated with
+	new table.
+	
 2004-10-03 12:51 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormMatrixEditor.m: Added performDragOperation implementation

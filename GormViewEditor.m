@@ -308,6 +308,10 @@ static BOOL currently_displaying = NO;
 	{
 	  [draggedTypes addObject: GormSoundPboardType];
 	}
+      if ([_editedObject respondsToSelector: @selector(setFormatter:)])
+	{
+	  [draggedTypes addObject: IBFormatterPboardType];
+	} 
       
       [self registerForDraggedTypes: draggedTypes];
       

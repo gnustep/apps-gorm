@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
+#include <Foundation/NSArchiver.h>
 
 #include "GormPrivate.h"
 
@@ -634,6 +635,85 @@
     {
       [super mouseDown: theEvent];
     }
+}
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  unsigned       result = NSDragOperationNone;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: IBFormatterPboardType] == YES)
+    {
+      result = NSDragOperationCopy;
+    }
+
+  return result;
+}
+
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  BOOL           result = NO;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  
+  if ([types containsObject: IBFormatterPboardType] == YES)
+    {
+      NSData *data = [dragPb dataForType: IBFormatterPboardType];
+      id array = RETAIN([NSUnarchiver unarchiveObjectWithData: data]);
+      
+      if(array != nil)
+	{
+	  if([array count] > 0)
+	    {
+	      id object = [array objectAtIndex: 0];
+
+	      if([_editedObject respondsToSelector: @selector(setFormatter:)])
+		{
+		  id fieldValue = nil;
+
+		  [_editedObject setFormatter: object];	      
+		  if ([object isMemberOfClass: [NSNumberFormatter class]])
+		    {
+		      fieldValue = [NSNumber numberWithFloat: 1.123456789];
+		      [_editedObject setStringValue: [fieldValue stringValue]];
+		      [_editedObject setObjectValue: fieldValue];
+		    }
+		  else if ([object isMemberOfClass: [NSDateFormatter class]])
+		    {
+		      fieldValue = [NSDate date];
+		      [_editedObject setStringValue: [fieldValue description]];
+		      [_editedObject setObjectValue: fieldValue];
+		    }
+		  
+		  result = YES;
+		}
+	    }
+	}
+    }
+
+  return result;
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard	*dragPb;
+  NSArray	*types;
+  BOOL           result = NO;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: IBFormatterPboardType] == YES)
+    {
+      result = YES;
+    }
+
+  return result;
 }
 @end
 

@@ -220,6 +220,16 @@ static NSImage *horizontalImage;
 - (id) initWithObject: (id)anObject 
 	   inDocument: (id<IBDocuments>)aDocument
 {
+  NSMutableArray *types = 
+    [NSMutableArray arrayWithObjects: IBViewPboardType, 
+		    GormLinkPboardType, nil];
+
+  // if the object can take a formatter, add it to the list.
+  if([anObject respondsToSelector: @selector(setFormatter:)])
+    {
+      [types addObject: IBFormatterPboardType];
+    }
+
   opened = NO;
   openedSubeditor = nil;
 
@@ -230,8 +240,7 @@ static NSImage *horizontalImage;
   selection = [[NSMutableArray alloc] initWithCapacity: 5];
   
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
-  
+    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];  
 
   if (horizontalImage == nil)
     {
