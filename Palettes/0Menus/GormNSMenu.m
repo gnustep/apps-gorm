@@ -42,7 +42,7 @@
 }
 @end
 
-@interface GormNSMenuWindow : NSWindow
+@interface GormNSMenuWindow : NSWindow // NSPanel
 {
   GormDocument *_document;
 }
@@ -125,8 +125,18 @@
 
   [win setMenu: self];
   [win setLevel: NSSubmenuWindowLevel];
+  // [win setWorksWhenModal: NO];
+  // [win setBecomesKeyOnlyIfNeeded: YES];
 
   return win;
+}
+
+- (void) awakeFromDocument: (id)document
+{
+  if([self supermenu] == nil)
+    {
+      // bring main menu to front.
+    }
 }
 @end
 

@@ -57,8 +57,9 @@
 
 - (void) setObject: (id)anObject
 {
-  BOOL flag = NO;
   GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  // BOOL flag = NO;
+
   [super setObject: anObject];
   [titleText setStringValue: [object title]];
   
@@ -89,7 +90,7 @@
       [doc setWindowsMenu: [self object]]; 
       if([doc servicesMenu] == [self object])
 	{
-	  [doc setServicesObject: nil];
+	  [doc setServicesMenu: nil];
 	}
     }
 
@@ -99,7 +100,7 @@
       [doc setServicesMenu: [self object]];
       if([doc windowsMenu] == [self object])
 	{
-	  [doc setWindowsObject: nil];
+	  [doc setWindowsMenu: nil];
 	}
     }
 

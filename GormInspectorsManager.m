@@ -1074,8 +1074,8 @@ selectCellWithString: (NSString*)title
 	      NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
 					[localException reason]];
 	      // get rid of the bad connector and recover.
-	      [[currentConnector source] setTarget: nil]; // unset these values on the source.
-	      [[currentConnector source] setAction: nil]; // ibid.
+	      [currentConnector setDestination: nil]; 
+	      [currentConnector establishConnection]; 
 	      [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
 	      NSRunAlertPanel(_(@"Problem making connection"), msg,
 			      _(@"OK"),nil,nil,nil);
@@ -1135,8 +1135,8 @@ selectCellWithString: (NSString*)title
 	    NSString *msg = [NSString stringWithFormat: @"Cannot establish connection: %@", 
 				      [localException reason]];
 	    // get rid of the bad connector and recover.
-	    [[currentConnector source] setTarget: nil]; // unset these values on the source.
-	    [[currentConnector source] setAction: nil]; // ibid.
+	    [currentConnector setDestination: nil]; 
+	    [currentConnector establishConnection]; 
 	    [[(id<IB>)NSApp activeDocument] removeConnector: currentConnector];	    
 	    NSRunAlertPanel(_(@"Problem making connection"), msg,
 			    _(@"OK"),nil,nil,nil);

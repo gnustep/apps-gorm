@@ -1,3 +1,16 @@
+2003-10-12 23:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.m: Corrected method of disassociating
+	connection after exception.
+	* GormMenuEditor.m: Added _findAll:withArray: and _findAllSubmenus:
+	to recursively collect all objects which should be deleted from the
+	nameTable when the user deletes a menu item.
+	* Palettes/0Menus/GormMenuInspectors.m: Eliminated uneeded variable
+	and corrected method being called to eliminate previous setting
+	of services/window menu.
+	* Palettes/0Menus/GormNSMenu.m: Beginnings of fix to prevent Gorm
+	from loading all menus at once.
+
 2003-10-12 01:49 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Added code to help with copy/paste issue.
