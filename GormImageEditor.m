@@ -255,11 +255,6 @@ static NSMapTable	*docMap = 0;
   NSPoint lastLocation = [theEvent locationInWindow];
   NSEvent* lastEvent = theEvent;
   NSPoint initialLocation;
-  BOOL done = NO;
-  NSRect rect;
-  id aCell, previousCell = nil;
-  NSRect previousRect;
-  BOOL mouseUpInCell = NO, onCell;
 
   /*
    * Pathological case -- ignore mouse down
@@ -370,7 +365,6 @@ static NSMapTable	*docMap = 0;
 {
   id filesArray;
   id data;
-  id unarchiver;
 
   if ( [[[NSPasteboard pasteboardWithName: NSDragPboard] types]
 	 containsObject: NSFilenamesPboardType])
@@ -386,13 +380,13 @@ static NSMapTable	*docMap = 0;
       for (i = 0; i < count; i ++ )
 	{
 	  id placeHolder = 
-	    [document _createImagePlaceHolder: [filesArray objectAtIndex: i]];
+	    [(GormDocument *)document _createImagePlaceHolder: [filesArray objectAtIndex: i]];
 	  NSLog(@"here1 %@", [filesArray objectAtIndex: i]);
 	  if (placeHolder)
 	    {
 	      NSLog(@"here %@", [filesArray objectAtIndex: i]);
 	      [self addObject: placeHolder];
-	      [document addImage: 
+	      [(GormDocument *)document addImage: 
 			  [[[filesArray objectAtIndex: i] 
 			     lastPathComponent] 
 			    stringByDeletingPathExtension]];
@@ -401,8 +395,9 @@ static NSMapTable	*docMap = 0;
 	}
 //        NSLog(@"filesArray %@", filesArray);
 //        NSLog(@"filesArray %@", [filesArray class]);
+      return YES;
     }  
-
+  return NO;
 }
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender

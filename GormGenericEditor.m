@@ -43,10 +43,9 @@
   if ([theEvent modifierFlags] & NSControlKeyMask)
     {
       NSPoint	loc = [theEvent locationInWindow];
-      NSString	*name;
-      int	r, c;
-      int	pos;
-      id	obj;
+      int	r = 0, c = 0;
+      int	pos = 0;
+      id	obj = nil;
 
       loc = [self convertPoint: loc fromView: nil];
       [self getRow: &r column: &c forPoint: loc];
@@ -94,13 +93,42 @@
   [self closeSubeditors];
 }
 
+// Stubbed out methods...  Since this is an abstract class, some methods need to be
+// provided so that compilation will occur cleanly and to give a warning if called.
 - (void) closeSubeditors
+{
+}
+
+- (void) resetObject: (id)object
+{
+}
+
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
+{
+  return self;
+}
+
+- (BOOL) acceptsTypeFromArray: (NSArray*)types
+{
+  return NO;
+}
+
+- (void) makeSelectionVisible: (BOOL)flag
 {
 }
 
 - (void) deactivate
 {
 }
+
+- (void) copySelection
+{
+}
+
+- (void) pasteInSelection
+{
+}
+// end of stubbed methods...
 
 - (void) dealloc
 {

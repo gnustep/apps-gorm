@@ -309,9 +309,9 @@ static NSMapTable	*docMap = 0;
     {
       NSPoint	loc = [theEvent locationInWindow];
       NSString	*name;
-      int	r, c;
-      int	pos;
-      id	obj;
+      int	r = 0, c = 0;
+      int	pos = 0;
+      id	obj = nil;
 
       loc = [self convertPoint: loc fromView: nil];
       [self getRow: &r column: &c forPoint: loc];

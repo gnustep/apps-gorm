@@ -383,7 +383,7 @@
   NSEnumerator		*enumerator;
   NSRect        oldMovingFrame;
   NSRect        suggestedFrame;
-  GormPlacementInfo *gpi;
+  GormPlacementInfo *gpi = nil;
   BOOL shouldUpdateSelection = YES;
   BOOL mouseDidMove = NO;
 
@@ -828,12 +828,12 @@
 
 - (void) groupSelectionInSplitView
 {
-  NSEnumerator *enumerator;
-  GormViewEditor *subview;
-  NSSplitView *splitView;
+  NSEnumerator *enumerator = nil;
+  GormViewEditor *subview = nil;
+  NSSplitView *splitView = nil;
   NSRect rect = NSZeroRect;
-  GormViewEditor *editor;
-  NSView *superview;
+  GormViewEditor *editor = nil;
+  NSView *superview = nil;
 
   if ([selection count] < 2)
     {
@@ -881,12 +881,12 @@
 
 - (void) groupSelectionInBox
 {
-  NSEnumerator *enumerator;
-  GormViewEditor *subview;
-  NSBox *box;
+  NSEnumerator *enumerator = nil;
+  GormViewEditor *subview = nil;
+  NSBox *box = nil;
   NSRect rect = NSZeroRect;
-  GormViewEditor *editor;
-  NSView *superview;
+  GormViewEditor *editor = nil;
+  NSView *superview = nil;
 
   if ([selection count] < 1)
     {
@@ -933,13 +933,13 @@
 
 - (void) groupSelectionInScrollView
 {
-  NSEnumerator *enumerator;
-  GormViewEditor *subview;
-  NSView *view;
-  NSScrollView *scrollView;
+  NSEnumerator *enumerator = nil;
+  GormViewEditor *subview = nil;
+  NSView *view = nil;
+  NSScrollView *scrollView = nil;
   NSRect rect = NSZeroRect;
-  GormViewEditor *editor;
-  NSView *superview;
+  GormViewEditor *editor = nil;
+  NSView *superview = nil;
 
   if ([selection count] < 1)
     {

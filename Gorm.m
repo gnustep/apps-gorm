@@ -644,7 +644,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) close: (id)sender
 {
-  NSWindow	*window = [(id)[self activeDocument] window];
+  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
 
   [window setReleasedWhenClosed: YES];
   [window performClose: self];
@@ -656,7 +656,7 @@ static NSButtonType _buttonTypeForObject( id button )
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
     return nil;
-  [selectionOwner copySelection];
+  [(GormGenericEditor *)selectionOwner copySelection];
   return self;
 }
 
@@ -672,7 +672,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) createSubclass: (id)sender
 {
-  return [(id)[self activeDocument] createSubclass: sender];
+  return [(GormDocument *)[self activeDocument] createSubclass: sender];
 }
 
 - (id) cut: (id)sender
@@ -681,8 +681,8 @@ static NSButtonType _buttonTypeForObject( id button )
     || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return nil;
-  [selectionOwner copySelection];
-  [selectionOwner deleteSelection];
+  [(GormGenericEditor *)selectionOwner copySelection];
+  [(GormGenericEditor *)selectionOwner deleteSelection];
   return self;
 }
 
@@ -691,7 +691,7 @@ static NSButtonType _buttonTypeForObject( id button )
   if ([[selectionOwner selection] count] < 2
       || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
     return nil;
-  [(id)selectionOwner groupSelectionInSplitView];
+  [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
   return self;
 }
 
@@ -699,7 +699,7 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
     return nil;
-  [(id)selectionOwner groupSelectionInBox];
+  [(GormGenericEditor *)selectionOwner groupSelectionInBox];
   return self;
 }
 
@@ -707,7 +707,7 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
     return nil;
-  [(id)selectionOwner groupSelectionInScrollView];
+  [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
   return self;
 }
 
@@ -716,7 +716,7 @@ static NSButtonType _buttonTypeForObject( id button )
   NSLog(@"ungroup: selectionOwner %@", selectionOwner);
   if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
     return nil;
-  [(id)selectionOwner ungroup];
+  [(GormGenericEditor *)selectionOwner ungroup];
   return self;
 }
 
@@ -738,7 +738,7 @@ static NSButtonType _buttonTypeForObject( id button )
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return nil;
-  [selectionOwner deleteSelection];
+  [(GormGenericEditor *)selectionOwner deleteSelection];
   return self;
 }
 
@@ -867,17 +867,17 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   // Call the current document and create the class 
   // descibed by the header
-  return [(id)[self activeDocument] loadClass: sender];
+  return [(GormDocument *)[self activeDocument] loadClass: sender];
 }
 
 - (id) addAttributeToClass: (id)sender
 {  
-  return [(id)[self activeDocument] addAttributeToClass: sender];
+  return [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
 }
 
 - (id) remove: (id)sender
 {  
-  return [(id)[self activeDocument] remove: sender];
+  return [(GormDocument *)[self activeDocument] remove: sender];
 }
 
 /*
@@ -890,7 +890,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) createClassFiles: (id)sender
 {
-  return [(id)[self activeDocument] createClassFiles: sender];
+  return [(GormDocument *)[self activeDocument] createClassFiles: sender];
 }
 
 
@@ -958,10 +958,6 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) finishLaunching
 {
-  NSMenu		*aMenu;
-  NSMenu		*modulesMenu;
-  NSMenu		*windowsMenu;
-  NSMenuItem		*menuItem;
   NSBundle		*bundle;
   NSString		*path;
 
@@ -1124,7 +1120,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) instantiateClass: (id)sender
 {
-  return [(id)[self activeDocument] instantiateClass: sender];
+  return [(GormDocument *)[self activeDocument] instantiateClass: sender];
 }
 
 - (BOOL) isConnecting
@@ -1154,17 +1150,17 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (void) loadSound: (id) sender
 {
-  [(id)[self activeDocument] openSound: sender];
+  [(GormDocument *)[self activeDocument] openSound: sender];
 }
 
 - (void) loadImage: (id) sender
 {
-  [(id)[self activeDocument] openImage: sender];
+  [(GormDocument *)[self activeDocument] openImage: sender];
 }
 
 - (id) miniaturize: (id)sender
 {
-  NSWindow	*window = [(id)[self activeDocument] window];
+  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
 
   [window miniaturize: self];
   return nil;
@@ -1270,13 +1266,13 @@ static NSButtonType _buttonTypeForObject( id button )
 {
   if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
     return nil;
-  [selectionOwner pasteInSelection];
+  [(GormGenericEditor *)selectionOwner pasteInSelection];
   return self;
 }
 
 - (id) revertToSaved: (id)sender
 {
-  id	doc = [(id)[self activeDocument] revertDocument: sender];
+  id	doc = [(GormDocument *)[self activeDocument] revertDocument: sender];
 
   if (doc != nil)
     {
@@ -1288,7 +1284,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) save: (id)sender
 {
-  [(id)[self activeDocument] saveDocument: sender];
+  [(GormDocument *)[self activeDocument] saveDocument: sender];
   return self;
 }
 
@@ -1309,7 +1305,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) saveAs: (id)sender
 {
-  [(id)[self activeDocument] saveAsDocument: sender];
+  [(GormDocument *)[self activeDocument] saveAsDocument: sender];
   return self;
 }
 
@@ -1321,7 +1317,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id<IBSelectionOwners>) selectionOwner
 {
-  return selectionOwner;
+  return (id<IBSelectionOwners>)selectionOwner;
 }
 
 - (id) selectedObject

@@ -532,18 +532,18 @@ static BOOL currently_displaying = NO;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;
   BOOL bottomEmpty = YES;
-  float bestLeftPosition;
-  float bestRightPosition;
-  float bestTopPosition;
-  float bestBottomPosition;
-  float leftStart;
-  float rightStart;
-  float topStart;
-  float bottomStart;
-  float leftEnd;
-  float rightEnd;
-  float topEnd;
-  float bottomEnd;
+  float bestLeftPosition = 0;
+  float bestRightPosition = 0;
+  float bestTopPosition = 0;
+  float bestBottomPosition = 0;
+  float leftStart = 0;
+  float rightStart = 0;
+  float topStart = 0;
+  float bottomStart = 0;
+  float leftEnd = 0;
+  float rightEnd = 0;
+  float topEnd = 0;
+  float bottomEnd = 0;
 
   NSMutableArray *bests;
   if (gpi->hintInitialized == NO)
@@ -832,14 +832,14 @@ static BOOL currently_displaying = NO;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;
   BOOL bottomEmpty = YES;
-  float leftStart;
-  float rightStart;
-  float topStart;
-  float bottomStart;
-  float leftEnd;
-  float rightEnd;
-  float topEnd;
-  float bottomEnd;
+  float leftStart = 0;
+  float rightStart = 0;
+  float topStart = 0;
+  float bottomStart = 0;
+  float leftEnd = 0;
+  float rightEnd = 0;
+  float topEnd = 0;
+  float bottomEnd = 0;
 
   if (gpi->hintInitialized == NO)
     {
@@ -870,7 +870,7 @@ static BOOL currently_displaying = NO;
 
   {
     BOOL empty = YES;
-    float bestPosition;
+    float bestPosition = 0;
     NSMutableArray *leftBests;
     NSMutableArray *rightBests;
     minimum = 6;
@@ -957,7 +957,7 @@ static BOOL currently_displaying = NO;
 
   {
     BOOL empty = YES;
-    float bestPosition;
+    float bestPosition = 0;
     NSMutableArray *bottomBests;
     NSMutableArray *topBests;
     minimum = 6;
@@ -1409,15 +1409,13 @@ static BOOL currently_displaying = NO;
     }
   else if ([types containsObject: GormImagePboardType] == YES)
     {
-      NSData	*data;
-      NSString *name;
+      NSString  *name;
       name = [dragPb stringForType: GormImagePboardType];
       [(id)_editedObject setImage: [NSImage imageNamed: name]];
       return YES;
     }
   else   if ([types containsObject: GormSoundPboardType] == YES)
     {
-      NSData	*data;
       NSString *name;
       name = [dragPb stringForType: GormSoundPboardType];
       NSLog(@"sound drag'n'dropping is not currently working, please fix it");
@@ -1510,6 +1508,11 @@ static BOOL currently_displaying = NO;
       [self postDraw: rect];
       [self unlockFocus];
     }
+}
+
+- (BOOL) acceptsTypeFromArray: (NSArray*)types
+{
+  return NO;
 }
 @end
 

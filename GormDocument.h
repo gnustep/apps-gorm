@@ -108,6 +108,10 @@
 - (id) editClass: (id)sender;
 - (id) createClassFiles: (id)sender;
 - (void) changeCurrentClass: (id)sender;
+- (id) addAttributeToClass: (id)sender;
+- (id) remove: (id)sender;
+- (id) createClassFiles: (id)sender;
+- (id) instantiateClass: (id)sender;
 
 // sound & image support
 - (id) openSound: (id)sender;
@@ -122,6 +126,9 @@
 - (BOOL) removeConnectionsForClassNamed: (NSString *)name;
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
+// class loading
+- (id) loadClass: (id)sender;
+
 @end
 
 @interface GormDocument (MenuValidation)

@@ -1,7 +1,9 @@
 #   GNUmakefile: main makefile for GNUstep Object Relationship Modeller
 #
-#   Copyright (C) 1999 Free Software Foundation, Inc.
+#   Copyright (C) 1999,2002,2003 Free Software Foundation, Inc.
 #
+#   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+#   Date: 2003
 #   Author:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 #   Date: 1999
 #   

@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include <AppKit/NSSound.h>
 
 NSString *GormSoundPboardType = @"GormSoundPboardType";
 
@@ -305,11 +306,6 @@ static NSMapTable	*docMap = 0;
   NSPoint lastLocation = [theEvent locationInWindow];
   NSEvent* lastEvent = theEvent;
   NSPoint initialLocation;
-  BOOL done = NO;
-  NSRect rect;
-  id aCell, previousCell = nil;
-  NSRect previousRect;
-  BOOL mouseUpInCell = NO, onCell;
 
   /*
    * Pathological case -- ignore mouse down
@@ -580,8 +576,8 @@ static NSMapTable	*docMap = 0;
 
 - (void) resetObject: (id)anObject
 {
-  NSString		*name = nil; // [document nameForObject: anObject];
-  GormInspectorsManager	*mgr = [(Gorm*)NSApp inspectorsManager];
+  // NSString		*name = nil; // [document nameForObject: anObject];
+  // GormInspectorsManager	*mgr = [(Gorm*)NSApp inspectorsManager];
 }
 
 @end
@@ -591,12 +587,14 @@ static NSMapTable	*docMap = 0;
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 {
+  NSSound *sound = [[NSSound alloc] initWithContentsOfFile: aPath
+		   byReference: YES];
   [super init];
   ASSIGN(name, aName);
   ASSIGN(path, aPath);
-#warning "we want to store the sound somewhere"
-  [[[NSSound alloc] initWithContentsOfFile: aPath
-		   byReference: YES] setName: aName];
+
+  //#warning "we want to store the sound somewhere"
+  [(NSSound *)sound setName: aName];
   isSystemSound = NO;
   isInWrapper = NO;
   return self;

@@ -131,7 +131,6 @@ static BOOL gormFileOwnerDecoded;
 {
   id extension;
   id realObject;
-  id label;
 
   theClass = RETAIN([unarchiver decodeStringWithName: @"className"]);
   extension = [unarchiver decodeObjectWithName: @"extension"];

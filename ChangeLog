@@ -1,4 +1,24 @@
-2003-05-09  Gregory John Casamento <greg_casamento@yahoo.com>
+2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* GNUmakefile.preamble: Added to provide the -Werror parameter to 
+	prevent any more warnings in the future.
+	* GModelDecoder.m: Corrected code to eliminate warnings.
+	* Gorm.m: Corrected code to eliminate warnings.
+	* GormControlEditor.m: Corrected code to eliminate warnings.
+	* GormDocument.h: Added some of the methods which were being
+	used from outside of the class, but were never actually declared.
+	* GormDocument.m: Corrected code to eliminate warnings.
+	* GormGenericEditor.m: Corrected code to eliminate warnings.
+	* GormImageEditor.m: Corrected code to eliminate warnings.
+	* GormInternalViewEditor.m: Corrected code to eliminate warnings.
+	* GormObjectEditor.m: Corrected code to eliminate warnings.
+	* GormPrivate.h: Moved declarations of editor class methods around
+	to prevent warnings.
+	* GormSoundEditor.m: Corrected code to eliminate warnings.
+	* GormViewEditor.m: Corrected code to eliminate warnings.
+	* GormViewWithContentViewEditor.m: Corrected code to eliminate warnings.
+
+2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Further improved the fix to the problem found
 	yesterday.  The custom class code was issuing a RELEASE call to 

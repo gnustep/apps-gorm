@@ -108,7 +108,7 @@ extern NSString *GormLinkPboardType;
   GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
-  id			selectionOwner;
+  id<IBSelectionOwners>	selectionOwner;
   NSMutableArray	*documents;
   BOOL			isConnecting;
   BOOL			isTesting;
@@ -191,28 +191,19 @@ extern NSString *GormLinkPboardType;
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }
-@end
+// selection methods...
+- (void) selectObjects: (NSArray*)objects;
+- (BOOL) wantsSelection;
+- (void) copySelection;
+- (void) deleteSelection;
+- (void) pasteInSelection;
+- (void) refreshCells;
+- (void) closeSubeditors;
 
-// private methods...
-@interface GormGenericEditor (PrivateMethods)
-- (void) groupSelectionInScrollView;
-@end
-
-@interface	GormObjectEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
-{
-//    NSMutableArray	*objects;
-//    id<IBDocuments>	document;
-//    id			selected;
-//    NSPasteboard		*dragPb;
-//    NSString		*dragType;
-}
-// + (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
+- (NSWindow*) window;
 - (void) addObject: (id)anObject;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;
 - (void) removeObject: (id)anObject;
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
 - (void) close;
@@ -222,18 +213,39 @@ extern NSString *GormLinkPboardType;
 - (void) deleteSelection;
 - (id<IBDocuments>) document;
 - (id) editedObject;
-- (void) makeSelectionVisible: (BOOL)flag;
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
 - (void) orderFront;
 - (void) pasteInSelection;
 - (NSRect) rectForObject: (id)anObject;
-- (void) resetObject: (id)anObject;
-- (void) selectObjects: (NSArray*)objects;
-- (BOOL) wantsSelection;
-- (NSWindow*) window;
 @end
 
-@interface	GormSoundEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
+// private methods...
+@interface GormGenericEditor (PrivateMethods)
+- (void) groupSelectionInScrollView;
+- (void) groupSelectionInSplitView;
+- (void) groupSelectionInBox;
+- (void) ungroup;
+- (void) setEditor: (id)anEditor forDocument: (id<IBDocuments>)doc;
+- (id) changeSelection: (id)sender;
+@end
+
+@interface	GormObjectEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
+{
+//    NSMutableArray	*objects;
+//    id<IBDocuments>	document;
+//    id			selected;
+//    NSPasteboard		*dragPb;
+//    NSString		*dragType;
+}
+// + (GormObjectEditor*) editorForDocument: (id<IBDocuments>)aDocument;
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (BOOL) acceptsTypeFromArray: (NSArray*)types;
+- (void) makeSelectionVisible: (BOOL)flag;
+- (void) resetObject: (id)anObject;
+@end
+
+@interface	GormSoundEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
 {
 //    NSMutableArray        *objects;
 //    id<IBDocuments>       document;
@@ -243,30 +255,17 @@ extern NSString *GormLinkPboardType;
 }
 // don't redeclare methods already declared in protocols.
 + (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
-- (void) addObject: (id)anObject;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (void) refreshCells;
-- (void) removeObject: (id)anObject;
-- (void) closeSubeditors;
-- (BOOL) containsObject: (id)anObject;
-- (void) copySelection;
-- (void) deleteSelection;
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
-- (void) pasteInSelection;
-- (NSRect) rectForObject: (id)anObject;
 @end
 
-@interface	GormImageEditor : GormGenericEditor <IBEditors, IBSelectionOwners>
+@interface	GormImageEditor : GormGenericEditor // <IBEditors, IBSelectionOwners>
 {
 }
 // don't redeclare methods already declared in protocols.
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;
-- (void) copySelection;
-- (void) deleteSelection;
-- (void) pasteInSelection;
 @end
 
 
@@ -314,6 +313,7 @@ extern NSString *GormLinkPboardType;
 
 @interface NSObject (GormAdditions)
 - (id) allocSubstitute;
+- (NSImage *) imageForViewer;
 @end
 
 // we don't use the actual sound since we don't want to read the entire sound into
@@ -358,6 +358,12 @@ extern NSString *GormLinkPboardType;
 - (void) setInWrapper: (BOOL)flag;
 - (BOOL) isInWrapper;
 - (NSString *)inspectorClassName;
+@end
+
+@interface GormDocument (PrivateMethodsForImagesAndSounds)
+- (GormImage *)_createImagePlaceHolder: (NSString *)path;
+- (GormSound *)_createSoundPlaceHolder: (NSString *)path;
+- (void) addImage: (NSString*) path;
 @end
 
 /*

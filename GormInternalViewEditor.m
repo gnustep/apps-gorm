@@ -89,7 +89,8 @@ static NSImage *horizontalImage;
     {
       NSEnumerator	*enumerator;
       NSView		*sub;
-      NSView *superview = [_editedObject superview];
+      id  superview = [_editedObject superview];
+      // NSView *superview = [_editedObject superview];
 
 //        NSLog(@"ac %@ %@ %@", self, _editedObject, superview);
 
@@ -198,7 +199,8 @@ static NSImage *horizontalImage;
 {
   if (activated == YES)
     {
-      NSView *superview = [self superview];
+      id superview = [self superview];
+      // NSView *superview = [self superview];
       
       [self deactivateSubeditors];
       
@@ -447,8 +449,8 @@ static NSImage *horizontalImage;
     // get the view we are on
     {
       NSPoint mouseDownPoint;
-      NSView *result;
-      GormViewEditor *theParent;
+      NSView *result = nil;
+      GormViewEditor *theParent = nil;
       
       mouseDownPoint = [self
 			 convertPoint: [theEvent locationInWindow]
@@ -532,7 +534,7 @@ static NSImage *horizontalImage;
 	NSEvent *e;
 	unsigned eventMask;
 	NSDate *future = [NSDate distantFuture];
-	BOOL first = YES;
+	// BOOL first = YES;
 	NSRect oldRect = NSZeroRect;
 	NSPoint p, oldp;
 	NSRect r;
@@ -592,8 +594,8 @@ static NSImage *horizontalImage;
 
 	    {
 	      NSRect wr;
-	      NSCachedImageRep *tableRep = 
-		[[verticalImage representations]objectAtIndex:0];
+	      //NSCachedImageRep *tableRep = 
+	      //  [[verticalImage representations]objectAtIndex:0];
 	      wr = [self convertRect: r
 			 toView: nil];
 	      

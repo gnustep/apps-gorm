@@ -299,7 +299,6 @@ static NSImage	*classesImage = nil;
 // image support
 - (GormImage *)_createImagePlaceHolder: (NSString *)path
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
   NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
   return TEST_AUTORELEASE([[GormImage alloc] initWithName: name path: path]);
 }
@@ -486,8 +485,6 @@ static NSImage	*classesImage = nil;
 
 - (void) _selectClassWithObject: (id)obj 
 {
-  GormClassManager *cm = [self classManager];
-  
   if ([obj respondsToSelector: @selector(className)])
     {
       [self _selectClass: [obj className]];
@@ -1137,7 +1134,7 @@ static NSImage	*classesImage = nil;
   return nil;
 }
 
-- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
+- (void) editor: (id<IBEditors,IBSelectionOwners>)anEditor didCloseForObject: (id)anObject
 {
   NSArray		*links;
 
@@ -1166,8 +1163,8 @@ static NSImage	*classesImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
-  // if ([(id)NSApp selectionOwner] == anEditor)
-  if ([(id<IBSelectionOwners>)NSApp selectionOwner] == anEditor)
+  if ([(Gorm *)NSApp selectionOwner] == 
+      anEditor)
     {
       [self resignSelectionForEditor: anEditor];
     }
@@ -1229,7 +1226,7 @@ static NSImage	*classesImage = nil;
 	  NSDebugLog(@"WARNING anEditor = editor");
 	}
       [editor activate];
-      RELEASE((id)editor);
+      RELEASE((NSObject *)editor);
       return editor;
     }
   else if ([links count] == 0)
@@ -2515,7 +2512,6 @@ static NSImage	*classesImage = nil;
 
 - (void) saveAsDocument: (id)sender
 {
-  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
   NSSavePanel		*sp;
   int			result;
 
@@ -2765,7 +2761,7 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
-  if ([(id)anEditor respondsToSelector: @selector(window)])
+  if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeFirstResponder: anEditor];
     }
