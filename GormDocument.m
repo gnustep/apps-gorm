@@ -221,7 +221,7 @@ static NSImage	*classesImage = nil;
    */
   if ([anObject isKindOfClass: [NSWindow class]] == YES
       //      || [anObject isKindOfClass: [NSMenu class]] == YES
-      || [anObject isKindOfClass: [GSNibItem class]] == YES)
+    || [anObject isKindOfClass: [GSNibItem class]] == YES)
     {
       [objectsView addObject: anObject];
       [[self openEditorForObject: anObject] activate];
@@ -242,7 +242,7 @@ static NSImage	*classesImage = nil;
    * if it is a tableview or a textview
    */
   if (([anObject isKindOfClass: [NSScrollView class]] == YES)
-      && ([(NSScrollView *)anObject documentView] != nil))
+    && ([(NSScrollView *)anObject documentView] != nil))
     {
       if ([[anObject documentView] isKindOfClass: 
 				    [NSTableView class]] == YES)
@@ -253,20 +253,18 @@ static NSImage	*classesImage = nil;
 	  id tv = [anObject documentView];
 	  tc = [tv tableColumns];
 	  count = [tc count];
-	  [self attachObject: tv
-		toParent: aParent];
+	  [self attachObject: tv toParent: aParent];
 	  
 	  for (i = 0; i < count; i++)
 	    {
 	      [self attachObject: [tc objectAtIndex: i]
-		    toParent: aParent];
+			toParent: aParent];
 	    }
 	}
       else if ([[anObject documentView] isKindOfClass: 
 					  [NSTextView class]] == YES)
 	{
-	  [self attachObject: [anObject documentView]
-		toParent: aParent];
+	  [self attachObject: [anObject documentView] toParent: aParent];
 	}
     }
 }
@@ -300,69 +298,71 @@ static NSImage	*classesImage = nil;
 // template support
 - (void) _replaceObjectsWithTemplates
 {
-  if(![classManager isCustomClassMapEmpty])
+  if (![classManager isCustomClassMapEmpty])
     {
       NSEnumerator *en = [nameTable keyEnumerator];
       NSString *key = nil;
       
-      while((key = [en nextObject]) != nil)
+      while ((key = [en nextObject]) != nil)
 	{
 	  id obj = [nameTable objectForKey: key];
 	  id template = nil;
 	  NSString *className = [classManager customClassForName: key];
 	  
 	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)",className,obj,key);
-	  if(className != nil)
+	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
+	  if (className != nil)
 	    {
-	      // The order in which these are handled is important.  The mutually
-	      // exclusive conditions below need to be evaluated in sequence to determine
-	      // which template class should be used.
-
-	      if([obj isKindOfClass: [NSWindow class]])
+	      /*
+	       * The order in which these are handled is important.
+	       * The mutually exclusive conditions below need to be
+	       * evaluated in sequence to determine
+	       * which template class should be used.
+	       */
+	      if ([obj isKindOfClass: [NSWindow class]])
 		{
 		  BOOL isVisible = [self objectIsVisibleAtLaunch: obj];
 
 		  NSDebugLog(@"In the window template if...");
 		  template = [[GormNSWindowTemplate alloc] initWithObject: obj
-							   className: className];
+		    className: className];
 		  [self setObject: obj isVisibleAtLaunch: NO];
 		  [self setObject: template isVisibleAtLaunch: isVisible];
 		}
-	      else if([obj isKindOfClass: [NSTextView class]])
+	      else if ([obj isKindOfClass: [NSTextView class]])
 		{
 		  template = [[GormNSTextViewTemplate alloc] initWithObject: obj
-							     className: className];
+		    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
-	      else if([obj isKindOfClass: [NSText class]])
+	      else if ([obj isKindOfClass: [NSText class]])
 		{
 		  template = [[GormNSTextTemplate alloc] initWithObject: obj
-							 className: className];
+		    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
-	      else if([obj isKindOfClass: [NSButton class]])
+	      else if ([obj isKindOfClass: [NSButton class]])
 		{
 		  template = [[GormNSButtonTemplate alloc] initWithObject: obj
-							   className: className];
+		    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
-	      else if([obj isKindOfClass: [NSControl class]])
+	      else if ([obj isKindOfClass: [NSControl class]])
 		{
 		  template = [[GormNSControlTemplate alloc] initWithObject: obj
-							    className: className];
+		    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
-	      else if([obj isKindOfClass: [NSView class]])
+	      else if ([obj isKindOfClass: [NSView class]])
 		{
 		  template = [[GormNSViewTemplate alloc] initWithObject: obj
-							 className: className];
+		    className: className];
 		  [[obj superview] replaceSubview: obj with: template];
 		}
-	      else if([obj isKindOfClass: [NSMenu class]])
+	      else if ([obj isKindOfClass: [NSMenu class]])
 		{
 		  template = [[GormNSMenuTemplate alloc] initWithObject: obj
-							 className: className];
+		    className: className];
 		}
 
 	      [nameTable setObject: template forKey: key];
@@ -410,7 +410,7 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom objects with templates for archiving.
    */
-  if(![(Gorm *)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
+  if (![(Gorm *)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
     {
       [self _replaceObjectsWithTemplates];
     }
@@ -440,7 +440,7 @@ static NSImage	*classesImage = nil;
 - (void) changeCurrentClass: (id)sender
 {
   int	row = [classesView selectedRow];
-  if(row >= 0)
+  if (row >= 0)
     {
       [classEditor setSelectedClassName: [classesView itemAtRow: row]];
       [self setSelectionFromEditor: (id)classEditor];
@@ -450,20 +450,25 @@ static NSImage	*classesImage = nil;
 // class selection...
 - (void) _selectClass: (NSString *)className
 {
-  NSString *newClassName = [GormClassManager correctClassName: className], *currentClass = nil;
-  NSArray *classes = [[self classManager] allSuperClassesOf: newClassName];
-  NSEnumerator *en = [classes objectEnumerator];
-  int row = 0;
+  NSString	*newClassName;
+  NSString	*currentClass = nil;
+  NSArray	*classes;
+  NSEnumerator	*en;
+  int		row = 0;
   
+  newClassName = [GormClassManager correctClassName: className];
+  classes = [[self classManager] allSuperClassesOf: newClassName];
+  en = [classes objectEnumerator];
+
   // open the items...
-  while((currentClass = [en nextObject]) != nil)
+  while ((currentClass = [en nextObject]) != nil)
     {
       [classesView expandItem: currentClass];
     }
   
   // select the item...
   row = [classesView rowForItem: newClassName];
-  if(row != NSNotFound)
+  if (row != NSNotFound)
     {
       [classesView selectRow: row byExtendingSelection: NO];
       [classesView scrollRowToVisible: row];
@@ -474,7 +479,7 @@ static NSImage	*classesImage = nil;
 {
   GormClassManager *cm = [self classManager];
   
-  if([obj respondsToSelector: @selector(className)])
+  if ([obj respondsToSelector: @selector(className)])
     {
       [self _selectClass: [obj className]];
     }
@@ -487,35 +492,35 @@ static NSImage	*classesImage = nil;
 
   switch (tag)
     {
-    case 0: // objects
-      {
-	[selectionBox setContentView: scrollView];
-      }
-      break;
-    case 1: // images
-      {
-	[selectionBox setContentView: imagesScrollView];
-      }
-      break;
-    case 2: // sounds
-      {
-	[selectionBox setContentView: soundsScrollView];
-      }
-      break;
-    case 3: // classes
-      {
-	NSArray *selection = [objectsView selection];
-	[selectionBox setContentView: classesScrollView];
-	
-	// if something is selected, in the object view.
-	// show the equivalent class in the classes view.
-	if([selection count] > 0)
-	  {
-	    id obj = [[objectsView selection] objectAtIndex: 0];
-	    [self _selectClassWithObject: obj];
-	  }
-      }
-      break;
+      case 0: // objects
+	{
+	  [selectionBox setContentView: scrollView];
+	}
+	break;
+      case 1: // images
+	{
+	  [selectionBox setContentView: imagesScrollView];
+	}
+	break;
+      case 2: // sounds
+	{
+	  [selectionBox setContentView: soundsScrollView];
+	}
+	break;
+      case 3: // classes
+	{
+	  NSArray *selection = [objectsView selection];
+	  [selectionBox setContentView: classesScrollView];
+	  
+	  // if something is selected, in the object view.
+	  // show the equivalent class in the classes view.
+	  if ([selection count] > 0)
+	    {
+	      id obj = [[objectsView selection] objectAtIndex: 0];
+	      [self _selectClassWithObject: obj];
+	    }
+	}
+	break;
     }
 }
 
@@ -650,7 +655,7 @@ static NSImage	*classesImage = nil;
 {
   int		i = [classesView selectedRow];
 
-  if(i >= 0 && ![classesView isEditing])
+  if (i >= 0 && ![classesView isEditing])
     {
       NSString	   *newClassName;
       id            itemSelected = [classesView itemAtRow: i];
@@ -753,9 +758,9 @@ static NSImage	*classesImage = nil;
   NSCharacterSet *actionStopSet = [NSCharacterSet characterSetWithCharactersInString: @";:"];
   NSCharacterSet *outletStopSet = [NSCharacterSet characterSetWithCharactersInString: @";,"];
   NSArray *outletTokens = [NSArray arrayWithObjects: @"id", @"IBOutlet id", nil];
-  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)",nil];
+  NSArray *actionTokens = [NSArray arrayWithObjects: @"(void)", @"(IBAction)", @"(id)", nil];
 
-  while(![headerScanner isAtEnd])
+  while (![headerScanner isAtEnd])
     {
       NSString *classString = nil;
       BOOL classfound = NO, result = NO;
@@ -770,7 +775,7 @@ static NSImage	*classesImage = nil;
       [headerScanner scanUpToString: @"@end"
 		     intoString: &classString];
       
-      if(classfound && ![headerScanner isAtEnd])
+      if (classfound && ![headerScanner isAtEnd])
 	{
 	  NSString 
 	    *className = nil,
@@ -804,17 +809,17 @@ static NSImage	*classesImage = nil;
 
 	  // Interate over the possible tokens which can make an
 	  // ivar an outlet.
-	  while((outletToken = [outletEnum nextObject]) != nil)
+	  while ((outletToken = [outletEnum nextObject]) != nil)
 	    {
 	      NSString *delimiter = nil;
-	      NSDebugLog(@"outlet Token = %@",outletToken);
+	      NSDebugLog(@"outlet Token = %@", outletToken);
 	      // Scan the variables of the class...
 	      ivarScanner = [NSScanner scannerWithString: ivarString];
-	      while(![ivarScanner isAtEnd])
+	      while (![ivarScanner isAtEnd])
 		{
 		  NSString *outlet = nil;
 
-		  if(delimiter == nil || [delimiter isEqualToString: @";"])
+		  if (delimiter == nil || [delimiter isEqualToString: @";"])
 		    {
 		      [ivarScanner scanUpToString: outletToken
 				   intoString: NULL];
@@ -825,20 +830,20 @@ static NSImage	*classesImage = nil;
 			       intoString: &outlet];
 		  [ivarScanner scanCharactersFromSet: outletStopSet
 			       intoString: &delimiter];
-		  if([ivarScanner isAtEnd] == NO
+		  if ([ivarScanner isAtEnd] == NO
 		     && [outlets indexOfObject: outlet] == NSNotFound)
 		    {
-		      NSDebugLog(@"outlet = %@",outlet);
+		      NSDebugLog(@"outlet = %@", outlet);
 		      [outlets addObject: outlet];
 		    }
 		}
 	    }
 	  
-	  while((actionToken = [actionEnum nextObject]) != nil)
+	  while ((actionToken = [actionEnum nextObject]) != nil)
 	    {
-	      NSDebugLog(@"Action token %@",actionToken);
+	      NSDebugLog(@"Action token %@", actionToken);
 	      methodScanner = [NSScanner scannerWithString: methodString];
-	      while(![methodScanner isAtEnd])
+	      while (![methodScanner isAtEnd])
 		{
 		  NSString *action = nil;
 		  BOOL hasArguments = NO;
@@ -855,7 +860,7 @@ static NSImage	*classesImage = nil;
 		  hasArguments = [methodScanner scanString: @":"
 						intoString: NULL];
 		  
-		  if(hasArguments)
+		  if (hasArguments)
 		    {
 		      BOOL isAction = NO;
 		      NSString *argType = nil;
@@ -865,13 +870,13 @@ static NSImage	*classesImage = nil;
 		      isAction = [methodScanner scanString: @"(id)"
 						intoString: &argType];
 		      
-		      if(![methodScanner isAtEnd])
+		      if (![methodScanner isAtEnd])
 			{
-			  if(isAction)
+			  if (isAction)
 			    {
 			      /* Add the ':' back */
 			      action = [action stringByAppendingString: @":"];
-			      NSDebugLog(@"action = %@",action);
+			      NSDebugLog(@"action = %@", action);
 			      [actions addObject: action];
 			    }
 			  else
@@ -887,7 +892,7 @@ static NSImage	*classesImage = nil;
 		       withSuperClassNamed: superClassName
 		       withActions: actions
 		       withOutlets: outlets];
-	  if(result)
+	  if (result)
 	    {
 	      NSDebugLog(@"Class %@ added", className);
 	      [classesView reloadData]; 
@@ -895,8 +900,7 @@ static NSImage	*classesImage = nil;
 	  else
 	    {
 	      NSString *message = [NSString stringWithFormat: 
-					      @"The class %@ already exists. Replace it?", 
-					    className];	      
+		@"The class %@ already exists. Replace it?", className];	      
 	      int alert = NSRunAlertPanel(@"Problem adding class from header", 
 					  message,
 					  @"Yes", 
@@ -910,11 +914,10 @@ static NSImage	*classesImage = nil;
 			       withSuperClassNamed: superClassName
 			       withActions: actions
 			       withOutlets: outlets];
-		  if(!result)
+		  if (!result)
 		    {
 		      NSString *message = [NSString stringWithFormat: 
-						      @"Could not replace class %@.", 
-						    className];	      
+			@"Could not replace class %@.", className];	      
 		      NSRunAlertPanel(@"Problem adding class from header", 
 				      message,
 				      nil, 
@@ -931,7 +934,7 @@ static NSImage	*classesImage = nil;
 
 	    }
 
-	  if(result)
+	  if (result)
 	    {
 	      // go to the class which was just loaded in the classes view...
 	      [selectionBox setContentView: classesScrollView];
@@ -954,32 +957,32 @@ static NSImage	*classesImage = nil;
   int i = [classesView selectedRow];
   
   // if no selection, then return.
-  if(i == -1)
+  if (i == -1)
     {
       return self;
     }
 
   anitem = [classesView itemAtRow: i];
-  if([anitem isKindOfClass: [GormOutletActionHolder class]])
+  if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [classesView itemBeingEdited];
      
       // if the class being edited is a custom class, then allow the deletion...
-      if([classManager isCustomClass: itemBeingEdited])
+      if ([classManager isCustomClass: itemBeingEdited])
 	{
 	  NSString *name = [anitem getName];
 
-	  if([classesView editType] == Actions)
+	  if ([classesView editType] == Actions)
 	    {
 	      // if this action is an action on the class, not it's superclass
 	      // allow the deletion...
-	      if([classManager isAction: name
+	      if ([classManager isAction: name
 			       ofClass: itemBeingEdited])
 		{
 		  BOOL removed = [self removeConnectionsWithLabel: name 
 				       forClassNamed: itemBeingEdited
 				       isAction: YES];
-		  if(removed)
+		  if (removed)
 		    {
 		      [classManager removeAction: name
 				    fromClassNamed: itemBeingEdited];
@@ -987,17 +990,17 @@ static NSImage	*classesImage = nil;
 		    }
 		}
 	    }
-	  else if([classesView editType] == Outlets)
+	  else if ([classesView editType] == Outlets)
 	    {
 	      // if this outlet is an outlet on the class, not it's superclass
 	      // allow the deletion...
-	      if([classManager isOutlet: name
+	      if ([classManager isOutlet: name
 			       ofClass: itemBeingEdited])
 		{
 		  BOOL removed = [self removeConnectionsWithLabel: name 
 				       forClassNamed: itemBeingEdited
 				       isAction: NO];
-		  if(removed)
+		  if (removed)
 		    {
 		      [classManager removeOutlet: name
 				    fromClassNamed: itemBeingEdited];
@@ -1011,13 +1014,13 @@ static NSImage	*classesImage = nil;
     {
       NSArray *subclasses = [classManager subClassesOf: anitem];
       // if the class has no subclasses, then delete.
-      if([subclasses count] == 0)
+      if ([subclasses count] == 0)
 	{
 	  // if the class being edited is a custom class, then allow the deletion...
-	  if([classManager isCustomClass: anitem])
+	  if ([classManager isCustomClass: anitem])
 	    {
 	      BOOL removed = [self removeConnectionsForClassNamed: anitem];
-	      if(removed)
+	      if (removed)
 		{
 		  [classManager removeClassNamed: anitem];
 		  [classesView reloadData];
@@ -1027,8 +1030,7 @@ static NSImage	*classesImage = nil;
       else
 	{
 	  NSString *message = [NSString stringWithFormat: 
-					  @"The class %@ has subclasses which must be removed", 
-					anitem];
+	    @"The class %@ has subclasses which must be removed", anitem];
 	  NSRunAlertPanel(@"Problem removing class", 
 			  message,
 			  nil, nil, nil);
@@ -1071,7 +1073,7 @@ static NSImage	*classesImage = nil;
   id                    className = [classesView itemAtRow: row];
   int			result;
 
-  if([className isKindOfClass: [GormOutletActionHolder class]])
+  if ([className isKindOfClass: [GormOutletActionHolder class]])
     {
       className = [classesView itemBeingEdited];
     }
@@ -1107,7 +1109,7 @@ static NSImage	*classesImage = nil;
       if (result == NSOKButton)
 	{
 	  headerName = [sp filename];
-	  NSDebugLog(@"Saving %@",className);
+	  NSDebugLog(@"Saving %@", className);
 	  if (![classManager makeSourceAndHeaderFilesForClass: className
 			     withName: sourceName
 			     and: headerName])
@@ -1234,39 +1236,39 @@ static NSImage	*classesImage = nil;
   NSEnumerator *en = [tempNameTable keyEnumerator];
   NSString *key = nil;
   
-  while((key = [en nextObject]) != nil)
+  while ((key = [en nextObject]) != nil)
     {
       id obj = [tempNameTable objectForKey: key];
       id template = [nameTable objectForKey: key];
       
-      if([template isKindOfClass: [GormNSWindowTemplate class]])
+      if ([template isKindOfClass: [GormNSWindowTemplate class]])
 	{
 	  BOOL isVisible = [self objectIsVisibleAtLaunch: template];
 	  [(NSWindow *)obj setContentView: [template contentView]];
 	  [self setObject: template isVisibleAtLaunch: NO];
 	  [self setObject: obj isVisibleAtLaunch: isVisible];
 	}
-      else if([template isKindOfClass: [GormNSTextViewTemplate class]])
+      else if ([template isKindOfClass: [GormNSTextViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
-      else if([template isKindOfClass: [GormNSTextTemplate class]])
+      else if ([template isKindOfClass: [GormNSTextTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
-      else if([template isKindOfClass: [GormNSButtonTemplate class]])
+      else if ([template isKindOfClass: [GormNSButtonTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
-      else if([template isKindOfClass: [GormNSControlTemplate class]])
+      else if ([template isKindOfClass: [GormNSControlTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
-      else if([template isKindOfClass: [GormNSViewTemplate class]])
+      else if ([template isKindOfClass: [GormNSViewTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
-      else if([template isKindOfClass: [GormNSMenuTemplate class]])
+      else if ([template isKindOfClass: [GormNSMenuTemplate class]])
 	{
 	  [[template superview] replaceSubview: template with: obj];
 	}
@@ -1300,7 +1302,8 @@ static NSImage	*classesImage = nil;
   /*
    * Method to replace custom templates with objects for archiving.
    */
-  if(![(Gorm *)NSApp isTestingInterface]) // do not use templates if we are testing.
+  if (![(Gorm *)NSApp isTestingInterface])
+  // do not use templates if we are testing.
     {
       [self _replaceTemplatesWithObjects];
     }
@@ -1716,15 +1719,15 @@ static NSImage	*classesImage = nil;
 	       object: nil];
       
       // preload headers...
-      if([defaults boolForKey: @"PreloadHeaders"])
+      if ([defaults boolForKey: @"PreloadHeaders"])
 	{
 	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
 	  NSEnumerator *en = [headerList objectEnumerator];
 	  id obj = nil;
 
-	  while((obj = [en nextObject]) != nil)
+	  while ((obj = [en nextObject]) != nil)
 	    {
-	      NSLog(@"Preloading %@",obj);
+	      NSLog(@"Preloading %@", obj);
 	      [self parseHeader: (NSString *)obj];
 	    }
 	}
@@ -1805,10 +1808,10 @@ static NSImage	*classesImage = nil;
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
   
-  if([mgr fileExistsAtPath: aFile isDirectory: &isDir])
+  if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
     {
       // if the data is in a directory, then load from objects.gorm in the directory
-      if(isDir == NO)
+      if (isDir == NO)
 	{
 	  data = [NSData dataWithContentsOfFile: aFile];
 	  NSDebugLog(@"Loaded data from file...");
@@ -1817,7 +1820,7 @@ static NSImage	*classesImage = nil;
 	{
 	  NSString *newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
 	  data = [NSData dataWithContentsOfFile: newFileName];
-	  NSDebugLog(@"Loaded data from %@...",newFileName);
+	  NSDebugLog(@"Loaded data from %@...", newFileName);
 	}
     }
   else
@@ -1873,7 +1876,7 @@ static NSImage	*classesImage = nil;
 
   // retrieve the custom class data...
   cc = [[c nameTable] objectForKey: GSCustomClassMap];
-  if(cc == nil)
+  if (cc == nil)
     {
       cc = [NSMutableDictionary dictionary]; // create an empty one.
       [[c nameTable] setObject: cc forKey: GSCustomClassMap];
@@ -1881,7 +1884,7 @@ static NSImage	*classesImage = nil;
   [classManager setCustomClassMap: cc];
 
   // convert from old file format...
-  if(isDir == NO)
+  if (isDir == NO)
     {
       if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
 					      stringByAppendingPathExtension: @"classes"]])
@@ -1950,20 +1953,22 @@ static NSImage	*classesImage = nil;
 		    object: self];
 
   /*
-   * read in all of the sounds in the .gorm wrapper and load them into the editor.
+   * read in all of the sounds in the .gorm wrapper and
+   * load them into the editor.
    */
   dirEnumerator = [mgr enumeratorAtPath: documentPath];
-  if(dirEnumerator)
+  if (dirEnumerator)
     {
       NSString *file = nil;
       NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
-      while((file = [dirEnumerator nextObject]))
+      while ((file = [dirEnumerator nextObject]))
 	{
-	  if([fileTypes containsObject: [file pathExtension]])
+	  if ([fileTypes containsObject: [file pathExtension]])
 	    {
-	      NSString *soundPath = [documentPath stringByAppendingPathComponent: file];
-	      // add the sound...
-	      NSDebugLog(@"Add the sound %@",file);
+	      NSString *soundPath;
+
+	      NSDebugLog(@"Add the sound %@", file);
+	      soundPath = [documentPath stringByAppendingPathComponent: file];
 	      [soundsView addObject: [self _createSoundPlaceHolder: soundPath]];
 	      [sounds addObject: soundPath];
 	    }
@@ -1971,23 +1976,26 @@ static NSImage	*classesImage = nil;
     }
 
   /*
-   * read in all of the images in the .gorm wrapper and load them into the editor.
+   * read in all of the images in the .gorm wrapper and
+   * load them into the editor.
    */
   dirEnumerator = [mgr enumeratorAtPath: documentPath];
-  if(dirEnumerator)
+  if (dirEnumerator)
     {
       NSString *file = nil;
       NSArray  *fileTypes = [NSImage imageFileTypes];
-      while((file = [dirEnumerator nextObject]))
+      while ((file = [dirEnumerator nextObject]))
 	{
-	  if([fileTypes containsObject: [file pathExtension]])
+	  if ([fileTypes containsObject: [file pathExtension]])
 	    {
-	      NSString *imagePath = [documentPath stringByAppendingPathComponent: file];
-	      // add the image...
-	      id placeHolder = [self _createImagePlaceHolder: imagePath];
+	      NSString	*imagePath;
+	      id	placeHolder;
+
+	      imagePath = [documentPath stringByAppendingPathComponent: file];
+	      placeHolder = [self _createImagePlaceHolder: imagePath];
 	      if (placeHolder)
 		{
-		  NSDebugLog(@"Add the image %@",file);
+		  NSDebugLog(@"Add the image %@", file);
 		  [imagesView addObject: placeHolder];
 		  [images addObject: imagePath];
 		}
@@ -1996,7 +2004,7 @@ static NSImage	*classesImage = nil;
     }
 
   // get the custom class map and set it into the class manager...
-  // NSLog(@"customClasses = %@",customClasses);
+  // NSLog(@"customClasses = %@", customClasses);
   // [classManager setCustomClassMap: customClasses];
   
   NSDebugLog(@"nameTable = %@",[c nameTable]);
@@ -2039,7 +2047,7 @@ static NSImage	*classesImage = nil;
 	  [[self openEditorForObject: obj] activate];
 	}
       else if ([obj isKindOfClass: [GSNibItem class]] == YES
-	       && [obj isKindOfClass: [GormCustomView class]] == NO)
+	&& [obj isKindOfClass: [GormCustomView class]] == NO)
 	{
 	  [objectsView addObject: obj];
 	  //[[self openEditorForObject: obj] activate];
@@ -2073,11 +2081,11 @@ static NSImage	*classesImage = nil;
 
       [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
 					     forKey:@"OpenDir"];
-      if([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
+      if ([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
 	{
 	  return [self loadDocument: filename];
 	}
-      else if([ext isEqualToString:@"gmodel"])
+      else if ([ext isEqualToString:@"gmodel"])
 	{
 	  return [self openGModel: filename];
 	}
@@ -2276,7 +2284,7 @@ static NSImage	*classesImage = nil;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0,IVW,IVH)
+      aWindow = [[NSWindow alloc] initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 					    styleMask: style
 					      backing: NSBackingStoreRetained
 					        defer: NO];
@@ -2575,20 +2583,23 @@ static NSImage	*classesImage = nil;
   [archiver encodeRootObject: self];
 
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
-  if(fileExists)
+  if (fileExists)
     {
-      if(isDir == NO)
+      if (isDir == NO)
 	{
-	  NSString *saveFilePath = [documentPath stringByAppendingPathExtension: @"save"];
+	  NSString *saveFilePath;
 
+	  saveFilePath = [documentPath stringByAppendingPathExtension: @"save"];
 	  // move the old file to something...
-	  if(![mgr movePath: documentPath toPath: saveFilePath handler: nil])
+	  if (![mgr movePath: documentPath toPath: saveFilePath handler: nil])
 	    {
-	      NSLog(@"Error moving old %@ file to %@",documentPath,saveFilePath);
+	      NSLog(@"Error moving old %@ file to %@",
+	      	documentPath, saveFilePath);
 	    }
 	  
 	  // create the new directory..
-	  archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
+	  archiveResult = [mgr createDirectoryAtPath: documentPath
+	 				  attributes: nil];
 	}
       else
 	{
@@ -2602,7 +2613,7 @@ static NSImage	*classesImage = nil;
       archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
     }
 
-  if(archiveResult)
+  if (archiveResult)
     {
       // save the data...
       archiveResult = [archiverData writeToFile: gormPath atomically: YES]; 
@@ -2613,17 +2624,23 @@ static NSImage	*classesImage = nil;
 	  archiveResult = [classManager saveToFile: classesPath];
 
 	  // copy sounds into the new folder...
-	  if(archiveResult)
+	  if (archiveResult)
 	    {
 	      NSEnumerator *en = [sounds objectEnumerator];
 	      id object = nil;
 
-	      while((object = [en nextObject]) != nil)
+	      while ((object = [en nextObject]) != nil)
 		{
-		  NSString *soundPath = [documentPath stringByAppendingPathComponent: [object lastPathComponent]];
-		  BOOL copied = [mgr copyPath: object toPath: soundPath handler: nil];
+		  NSString *soundPath;
+		  BOOL copied;
 
-		  if(!copied)
+		  soundPath = [documentPath stringByAppendingPathComponent:
+		    [object lastPathComponent]];
+		  copied = [mgr copyPath: object
+		 		  toPath: soundPath
+				 handler: nil];
+
+		  if (!copied)
 		    {
 		      NSLog(@"Could not find sound at path %@", object);
 		    }
@@ -2631,12 +2648,18 @@ static NSImage	*classesImage = nil;
 	      
 	      en = [images objectEnumerator];
 
-	      while((object = [en nextObject]) != nil)
+	      while ((object = [en nextObject]) != nil)
 		{
-		  NSString *imagePath = [documentPath stringByAppendingPathComponent: [object lastPathComponent]];
-		  BOOL copied = [mgr copyPath: object toPath: imagePath handler: nil];
+		  NSString *imagePath;
+		  BOOL copied;
 
-		  if(!copied)
+		  imagePath = [documentPath stringByAppendingPathComponent:
+		    [object lastPathComponent]];
+		  copied = [mgr copyPath: object
+		 		  toPath: imagePath
+				 handler: nil];
+
+		  if (!copied)
 		    {
 		      NSLog(@"Could not find image at path %@", object);
 		    }
@@ -2709,7 +2732,7 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
-  if([(id)anEditor respondsToSelector: @selector(window)])
+  if ([(id)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeFirstResponder: anEditor];
     }
@@ -2761,7 +2784,7 @@ static NSImage	*classesImage = nil;
       id temp = object;
       id editor = [self editorForObject: temp create: NO];
       
-      while((temp != nil) && (editor == nil))
+      while ((temp != nil) && (editor == nil))
 	{
 	  temp = [temp superview];
 	  editor = [self editorForObject: temp create: NO];
@@ -2891,7 +2914,9 @@ static NSImage	*classesImage = nil;
 
 - (NSString *)_formatAction: (NSString *)action
 {
-  NSString *identifier = [[self _identifierString: action] stringByAppendingString: @":"];
+  NSString *identifier;
+
+  identifier = [[self _identifierString: action] stringByAppendingString: @":"];
   return identifier;
 }
 
@@ -2910,32 +2935,38 @@ static NSImage	*classesImage = nil;
   BOOL removed = YES;
 
   // remove all.
-  while((c = [en nextObject]) != nil)
+  while ((c = [en nextObject]) != nil)
     {
       id proxy = nil;
       NSString *label = [c label];
 
-      if(action)
+      if (action)
 	{
-	  if(![label hasSuffix: @":"]) 
+	  if (![label hasSuffix: @":"]) 
 	    continue;
 	  proxy = [c destination];
 	}
       else
 	{
-	  if([label hasSuffix: @":"]) 
+	  if ([label hasSuffix: @":"]) 
 	    continue;
 	  proxy = [c source];
 	}
       
-      if([label isEqualToString: name] && 
+      if ([label isEqualToString: name] && 
 	 [[proxy className] isEqualToString: className])
 	{
-	  NSString *title = [NSString stringWithFormat: @"Modifying %@",(action==YES?@"Action":@"Outlet")];
-	  NSString *msg = [NSString stringWithFormat: @"This will break all connections to '%@'.  Continue?",
-				    name];
-	  int retval = NSRunAlertPanel(title,msg,@"OK",@"Cancel",nil,nil);
-	  if(retval == NSAlertDefaultReturn)
+	  NSString *title;
+	  NSString *msg;
+	  int retval;
+
+	  title = [NSString stringWithFormat:
+	    @"Modifying %@",(action==YES?@"Action":@"Outlet")];
+	  msg = [NSString stringWithFormat:
+	    @"This will break all connections to '%@'.  Continue?", name];
+	  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+
+	  if (retval == NSAlertDefaultReturn)
 	    {
 	      removed = YES;
 	      [self removeConnector: c];
@@ -2948,7 +2979,7 @@ static NSImage	*classesImage = nil;
     }
 
   // done...
-  NSDebugLog(@"Removed references to %@ on %@",name, className);
+  NSDebugLog(@"Removed references to %@ on %@", name, className);
   return removed;
 }
 
@@ -2959,13 +2990,14 @@ static NSImage	*classesImage = nil;
   BOOL removed = YES;
   int retval = -1;
   NSString *title = [NSString stringWithFormat: @"Modifying Class"];
-  NSString *msg = [NSString stringWithFormat: 
-			      @"This will break all connections to actions/outlets to instances of class '%@'.  Continue?",
-			    className];
+  NSString *msg;
+
+  msg = [NSString stringWithFormat: @"This will break all connections to "
+    @"actions/outlets to instances of class '%@'.  Continue?", className];
 
   // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title,msg,@"OK",@"Cancel",nil,nil);
-  if(retval == NSAlertDefaultReturn)
+  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+  if (retval == NSAlertDefaultReturn)
     {
       removed = YES;
     }
@@ -2975,18 +3007,19 @@ static NSImage	*classesImage = nil;
     }
 
   // remove all.
-  while((c = [en nextObject]) != nil)
+  while ((c = [en nextObject]) != nil)
     {
       // check both...
-      if([[[c source] className] isEqualToString: className] ||
-	 [[[c destination] className] isEqualToString: className])
+      if ([[[c source] className] isEqualToString: className]
+	|| [[[c destination] className] isEqualToString: className])
 	{
 	  [self removeConnector: c];
 	}
     }
   
   // done...
-  NSDebugLog(@"Removed references to actions/outlets for objects of %@", className);
+  NSDebugLog(@"Removed references to actions/outlets for objects of %@",
+    className);
   return removed;
 }
 
@@ -3003,8 +3036,8 @@ static NSImage	*classesImage = nil;
 			    className, newName];
 
   // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title,msg,@"OK",@"Cancel",nil,nil);
-  if(retval == NSAlertDefaultReturn)
+  retval = NSRunAlertPanel(title, msg,@"OK",@"Cancel", nil, nil);
+  if (retval == NSAlertDefaultReturn)
     {
       removed = YES;
     }
@@ -3014,18 +3047,18 @@ static NSImage	*classesImage = nil;
     }
 
   // remove all.
-  while((c = [en nextObject]) != nil)
+  while ((c = [en nextObject]) != nil)
     {
       id source = [c source];
       id destination = [c destination];
 
       // check both...
-      if([[[c source] className] isEqualToString: className])
+      if ([[[c source] className] isEqualToString: className])
 	{
 	  [source setClassName: newName];
 	  NSDebugLog(@"Found matching source");
 	}
-      else if([[[c destination] className] isEqualToString: className])
+      else if ([[[c destination] className] isEqualToString: className])
 	{
 	  [destination setClassName: newName];
 	  NSDebugLog(@"Found matching destination");
@@ -3076,19 +3109,22 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 {
   GormOutlineView *gov = (GormOutlineView *)anOutlineView;
 
-  if([item isKindOfClass: [GormOutletActionHolder class]])
+  if ([item isKindOfClass: [GormOutletActionHolder class]])
     {
-      if(![anObject isEqualToString: @""])
+      if (![anObject isEqualToString: @""])
 	{
 	  NSString *name = [item getName];
-	  if([gov editType] == Actions)
+	  if ([gov editType] == Actions)
 	    {
 	      NSString *formattedAction = [self _formatAction: anObject];
-	      if(![classManager isAction: formattedAction 
+	      if (![classManager isAction: formattedAction 
 				ofClass: [gov itemBeingEdited]])
 		{
-		  BOOL removed = [self removeConnectionsWithLabel: name forClassNamed: [gov itemBeingEdited] isAction: YES];
-		  if(removed)
+		  BOOL removed;
+
+		  removed = [self removeConnectionsWithLabel: name
+		    forClassNamed: [gov itemBeingEdited] isAction: YES];
+		  if (removed)
 		    {
 		      [classManager replaceAction: name 
 				    withAction: formattedAction 
@@ -3098,23 +3134,29 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		}
 	      else
 		{
-		  NSString *message = [NSString stringWithFormat: 
-						  @"The class %@ already has an action named %@",
-						[gov itemBeingEdited],formattedAction];
+		  NSString *message;
+
+		  message = [NSString stringWithFormat: 
+		    @"The class %@ already has an action named %@",
+		    [gov itemBeingEdited], formattedAction];
+
 		  NSRunAlertPanel(@"Problem Adding Action",
-				  message,nil,nil,nil);
+				  message, nil, nil, nil);
 				  
 		}
 	    }
-	  else if([gov editType] == Outlets)
+	  else if ([gov editType] == Outlets)
 	    {
 	      NSString *formattedOutlet = [self _formatOutlet: anObject];
 	      
-	      if(![classManager isOutlet: formattedOutlet 
-				ofClass: [gov itemBeingEdited]])
+	      if (![classManager isOutlet: formattedOutlet 
+				  ofClass: [gov itemBeingEdited]])
 		{
-		  BOOL removed = [self removeConnectionsWithLabel: name forClassNamed: [gov itemBeingEdited] isAction: NO];
-		  if(removed)
+		  BOOL removed;
+
+		  removed = [self removeConnectionsWithLabel: name
+		    forClassNamed: [gov itemBeingEdited] isAction: NO];
+		  if (removed)
 		    {
 		      [classManager replaceOutlet: name 
 				    withOutlet: formattedOutlet 
@@ -3124,11 +3166,13 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 		}
 	      else
 		{
-		  NSString *message = [NSString stringWithFormat: 
-						  @"The class %@ already has an outlet named %@",
-						[gov itemBeingEdited],formattedOutlet];
+		  NSString *message;
+
+		  message = [NSString stringWithFormat: 
+		    @"The class %@ already has an outlet named %@",
+		    [gov itemBeingEdited], formattedOutlet];
 		  NSRunAlertPanel(@"Problem Adding Outlet",
-				  message,nil,nil,nil);
+				  message, nil, nil, nil);
 				  
 		}
 	    }
@@ -3136,10 +3180,12 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     }
   else
     {
-      if(![anObject isEqualToString: @""])
+      if (![anObject isEqualToString: @""])
 	{
-	  BOOL rename = [self renameConnectionsForClassNamed: item toName: anObject];
-	  if(rename)
+	  BOOL rename;
+
+	  rename = [self renameConnectionsForClassNamed: item toName: anObject];
+	  if (rename)
 	    {
 	      int row = 0;
 	      [classManager renameClassNamed: item newName: anObject];
@@ -3156,7 +3202,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (int) outlineView: (NSOutlineView *)anOutlineView 
 numberOfChildrenOfItem: (id)item
 {
-  if(item == nil) 
+  if (item == nil) 
     {
       return 1;
     }
@@ -3173,11 +3219,11 @@ numberOfChildrenOfItem: (id)item
     isItemExpandable: (id)item
 {
   NSArray *subclasses = nil;
-  if(item == nil)
+  if (item == nil)
     return YES;
 
   subclasses = [classManager subClassesOf: item];
-  if([subclasses count] > 0)
+  if ([subclasses count] > 0)
     return YES;
 
   return NO;
@@ -3187,7 +3233,7 @@ numberOfChildrenOfItem: (id)item
 	     child: (int)index
 	    ofItem: (id)item
 {
-  if(item == nil && index == 0)
+  if (item == nil && index == 0)
     {
       return @"NSObject";
     }
@@ -3219,7 +3265,7 @@ numberOfChildrenOfItem: (id)item
      addNewActionForClass: (id)item
 {
   GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-  if(![classManager isCustomClass: [gov itemBeingEdited]])
+  if (![classManager isCustomClass: [gov itemBeingEdited]])
     {
       return nil;
     }
@@ -3230,7 +3276,7 @@ numberOfChildrenOfItem: (id)item
      addNewOutletForClass: (id)item		 
 {
   GormOutlineView *gov = (GormOutlineView *)anOutlineView;
-  if(![classManager isCustomClass: [gov itemBeingEdited]])
+  if (![classManager isCustomClass: [gov itemBeingEdited]])
     {
       return nil;
     }
@@ -3246,24 +3292,24 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   GormOutlineView *gov = (GormOutlineView *)outlineView;
 
   NSDebugLog(@"in the delegate %@", [tableColumn identifier]);
-  if(tableColumn == [gov outlineTableColumn])
+  if (tableColumn == [gov outlineTableColumn])
     {
       NSDebugLog(@"outline table col");
-      if(![item isKindOfClass: [GormOutletActionHolder class]])
+      if (![item isKindOfClass: [GormOutletActionHolder class]])
 	{
 	  result = [classManager isCustomClass: item];
 	}
       else
 	{
 	  id itemBeingEdited = [gov itemBeingEdited];
-	  if([classManager isCustomClass: itemBeingEdited])
+	  if ([classManager isCustomClass: itemBeingEdited])
 	    {
-	      if([gov editType] == Actions)
+	      if ([gov editType] == Actions)
 		{
 		  result = [classManager isAction: [item getName]
 					 ofClass: itemBeingEdited];
 		}
-	      else if([gov editType] == Outlets)
+	      else if ([gov editType] == Outlets)
 		{
 		  result = [classManager isOutlet: [item getName]
 					 ofClass: itemBeingEdited];

@@ -1,3 +1,8 @@
+2003-02-13  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormOutlineView.m: Fix code to update view when outlet/action
+	images are clicked on.
+
 2003-02-10  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* GormInspectorsManager.m: in browser delegate re-ordered mechanism

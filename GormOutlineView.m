@@ -145,39 +145,38 @@ static NSColor *darkGreyBlueColor = nil;
 {
 }
 
-- (void)collapseItem: (id)item collapseChildren: (BOOL)collapseChildren;
+- (void) collapseItem: (id)item collapseChildren: (BOOL)collapseChildren;
 {
-  if(!_isEditing)
+  if (!_isEditing)
     {
       [super collapseItem: item
-	     collapseChildren: collapseChildren];
+	 collapseChildren: collapseChildren];
     }
 }
 
-- (void)expandItem:(id)item expandChildren:(BOOL)expandChildren
+- (void) expandItem: (id)item expandChildren: (BOOL)expandChildren
 {
-  if(!_isEditing)
+  if (!_isEditing)
     {
       [super expandItem: item
-	     expandChildren: expandChildren];
+	 expandChildren: expandChildren];
     } 
 }
 
-- (BOOL)_isOutletOrActionOfItemBeingEdited: (NSString *)name
+- (BOOL) _isOutletOrActionOfItemBeingEdited: (NSString *)name
 {
   NSArray *array = nil;
   array = [_dataSource outlineView: self
 		       actionsForItem: _itemBeingEdited];
-  if([array containsObject: name])
+  if ([array containsObject: name])
     return YES;
-  array = [_dataSource outlineView: self
-		       outletsForItem: _itemBeingEdited];
-  if([array containsObject: name])
+  array = [_dataSource outlineView: self outletsForItem: _itemBeingEdited];
+  if ([array containsObject: name])
     return YES;
   return NO;
 }
 
-- (void)_addNewActionToObject: (id)item
+- (void) _addNewActionToObject: (id)item
 {
   int insertionPoint = 0;
   NSString *name = nil;
@@ -185,7 +184,7 @@ static NSColor *darkGreyBlueColor = nil;
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
   _numberOfRows += 1;
   name = [_dataSource outlineView: self addNewActionForClass: _itemBeingEdited];
-  if(name != nil)
+  if (name != nil)
     {
       [holder setName: name];
       insertionPoint = [_items indexOfObject: item];
@@ -195,7 +194,7 @@ static NSColor *darkGreyBlueColor = nil;
     }
 }
 
-- (void)_addNewOutletToObject: (id)item
+- (void) _addNewOutletToObject: (id)item
 {
   int insertionPoint = 0;
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
@@ -203,7 +202,7 @@ static NSColor *darkGreyBlueColor = nil;
 
   _numberOfRows += 1;
   name = [_dataSource outlineView: self addNewOutletForClass: _itemBeingEdited];
-  if(name != nil)
+  if (name != nil)
     {
       [holder setName: name];
       insertionPoint = [_items indexOfObject: item];
@@ -230,19 +229,19 @@ static NSColor *darkGreyBlueColor = nil;
   id sitem = (item == nil)?[NSNull null]:item;
 
   object = [_dataSource outlineView: self
-			actionsForItem: sitem];
+		     actionsForItem: sitem];
   numchildren = [object count];
   
   _numberOfRows += numchildren;
   // open the item...
-  if(item != nil)
+  if (item != nil)
     {
       [self setItemBeingEdited: item];
       [self setIsEditing: YES];
     }
 
   insertionPoint = [_items indexOfObject: item];
-  if(insertionPoint == NSNotFound)
+  if (insertionPoint == NSNotFound)
     {
       insertionPoint = 0;
     }
@@ -252,16 +251,18 @@ static NSColor *darkGreyBlueColor = nil;
     }
   
   [self setNeedsDisplay: YES];  
-  for(i=numchildren-1; i >= 0; i--)
+  for (i = numchildren - 1; i >= 0; i--)
     {
       id child = [object objectAtIndex: i];       // Add all of the children...
-      GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: child];
+      GormOutletActionHolder *holder;
+
+      holder = [[GormOutletActionHolder alloc] initWithName: child];
       [_items insertObject: holder atIndex: insertionPoint];
     }
   [self noteNumberOfRowsChanged];
 }
 
-- (void)_openOutlets: (id)item
+- (void) _openOutlets: (id)item
 {
   int numchildren = 0;
   int i = 0;
@@ -270,19 +271,19 @@ static NSColor *darkGreyBlueColor = nil;
   id sitem = (item == nil)?[NSNull null]:item;
 
   object = [_dataSource outlineView: self
-			outletsForItem: sitem];
+		     outletsForItem: sitem];
   numchildren = [object count];
   
   _numberOfRows += numchildren;
   // open the item...
-  if(item != nil)
+  if (item != nil)
     {
       [self setItemBeingEdited: item];
       [self setIsEditing: YES];
     }
 
   insertionPoint = [_items indexOfObject: item];
-  if(insertionPoint == NSNotFound)
+  if (insertionPoint == NSNotFound)
     {
       insertionPoint = 0;
     }
@@ -292,16 +293,18 @@ static NSColor *darkGreyBlueColor = nil;
     }
   
   [self setNeedsDisplay: YES];  
-  for(i=numchildren-1; i >= 0; i--)
+  for (i = numchildren - 1; i >= 0; i--)
     {
       id child = [object objectAtIndex: i];       // Add all of the children...
-      GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] initWithName: child];
+      GormOutletActionHolder *holder;
+
+      holder = [[GormOutletActionHolder alloc] initWithName: child];
       [_items insertObject: holder atIndex: insertionPoint];
     }
   [self noteNumberOfRowsChanged];
 }
 
-- (void)drawRow: (int)rowIndex clipRect: (NSRect)aRect
+- (void) drawRow: (int)rowIndex clipRect: (NSRect)aRect
 {
   int startingColumn; 
   int endingColumn;
@@ -322,7 +325,7 @@ static NSColor *darkGreyBlueColor = nil;
   /* Using columnAtPoint: here would make it called twice per row per drawn 
      rect - so we avoid it and do it natively */
   
-  if(rowIndex >= _numberOfRows)
+  if (rowIndex >= _numberOfRows)
     {
       return;
     }
@@ -366,7 +369,7 @@ static NSColor *darkGreyBlueColor = nil;
 			       objectValueForTableColumn: tb
 			       byItem: item];
 
-	  if([value isKindOfClass: [GormOutletActionHolder class]])
+	  if ([value isKindOfClass: [GormOutletActionHolder class]])
 	    {
 	      valueforcell = [value getName];
 	      isOutletAction = YES;
@@ -391,7 +394,7 @@ static NSColor *darkGreyBlueColor = nil;
 			      row: rowIndex];	      
 	  
 
-	  if(isOutletAction)
+	  if (isOutletAction)
 	    {
 	      drawingRect.origin.x += _attributeOffset;
 	      drawingRect.size.width -= _attributeOffset;
@@ -399,18 +402,18 @@ static NSColor *darkGreyBlueColor = nil;
 
 
 	  /* For later...
-	  if(drawingEditedObject)
+	  if (drawingEditedObject)
 	    {
 	      [self setBackgroundColor: salmonColor];
 	    }
 	  else
-	    if(_isEditing)
+	    if (_isEditing)
 	      {
 		[self setBackgroundColor: darkSalmonColor]; 
 	      }
 	  */
 
-	  if(tb == _outlineTableColumn && !isOutletAction)
+	  if (tb == _outlineTableColumn && !isOutletAction)
 	    {
 	      NSImage *image = nil;
 	      int level = 0;
@@ -419,7 +422,7 @@ static NSColor *darkGreyBlueColor = nil;
 
 	      drawingEditedObject = NO;
 	      // display the correct arrow...
-	      if([self isItemExpanded: item])
+	      if ([self isItemExpanded: item])
 		{
 		  image = expanded;
 		}
@@ -428,7 +431,7 @@ static NSColor *darkGreyBlueColor = nil;
 		  image = collapsed;
 		}
 	      
-	      if(![self isExpandable: item])
+	      if (![self isExpandable: item])
 		{
 		  image = unexpandable;
 		}
@@ -437,7 +440,7 @@ static NSColor *darkGreyBlueColor = nil;
 	      indentationFactor = _indentationPerLevel * level;
 	      imageCell = [[NSCell alloc] initImageCell: image];
 	      
-	      if(_indentationMarkerFollowsCell)
+	      if (_indentationMarkerFollowsCell)
 		{
 		  imageRect.origin.x = drawingRect.origin.x + indentationFactor;
 		  imageRect.origin.y = drawingRect.origin.y;
@@ -453,21 +456,24 @@ static NSColor *darkGreyBlueColor = nil;
 	      
 	      [imageCell drawWithFrame: imageRect inView: self];
 	      
-	      drawingRect.origin.x += indentationFactor + [image size].width + 5;
-	      drawingRect.size.width -= indentationFactor + [image size].width + 5;
-	      
+	      drawingRect.origin.x
+	     	+= indentationFactor + [image size].width + 5;
+	      drawingRect.size.width
+	        -= indentationFactor + [image size].width + 5;
 	    }
 	  
 	  
-	  if((tb == _actionColumn || tb == _outletColumn) && !drawingEditedObject)
+	  if ((tb == _actionColumn || tb == _outletColumn)
+	    && !drawingEditedObject)
 	    {
 	      NSImage *image = nil;
 
-	      if(item == _itemBeingEdited && tb == _actionColumn && _edittype == Actions)
+	      if (item == _itemBeingEdited && tb == _actionColumn
+		&& _edittype == Actions)
 		image = actionSelected;
-	      else
-		if(item == _itemBeingEdited && tb == _outletColumn && _edittype == Outlets)
-		  image = outletSelected;
+	      else if (item == _itemBeingEdited && tb == _outletColumn
+		&& _edittype == Outlets)
+		image = outletSelected;
 	      else
 		image = (tb == _actionColumn)?action:outlet;
 	      
@@ -484,8 +490,8 @@ static NSColor *darkGreyBlueColor = nil;
 	      drawingRect.size.width -= [image size].width + 5;
 	    }
 	  
-	  if(((tb != _outletColumn || tb != _actionColumn) && !drawingEditedObject) ||
-	     (tb == _outlineTableColumn))
+	  if (((tb != _outletColumn || tb != _actionColumn)
+	    && !drawingEditedObject) || (tb == _outlineTableColumn))
 	    {
 	      [cell drawWithFrame: drawingRect inView: self];
 	    }
@@ -505,10 +511,11 @@ static NSColor *darkGreyBlueColor = nil;
   _clickedRow = [self rowAtPoint: location];
   _clickedColumn = [self columnAtPoint: location];
   _clickedItem = [self itemAtRow: _clickedRow];
-  isActionOrOutlet = [_clickedItem isKindOfClass: [GormOutletActionHolder class]];
+  isActionOrOutlet
+    = [_clickedItem isKindOfClass: [GormOutletActionHolder class]];
 
   tb = [_tableColumns objectAtIndex: _clickedColumn];
-  if(tb == _actionColumn)
+  if (tb == _actionColumn)
     {
       image = action;
     }
@@ -517,41 +524,64 @@ static NSColor *darkGreyBlueColor = nil;
       image = outlet;
     }
 
-  if((tb == _actionColumn || tb == _outletColumn) && !_isEditing)
+  if ((tb == _actionColumn || tb == _outletColumn) && !_isEditing)
     {
       int position = 0;      
       position += _columnOrigins[_clickedColumn] + 5;
 
-      if(location.x >= position && location.x <= position + [image size].width + 5)
+      if (location.x >= position
+	&& location.x <= position + [image size].width + 5)
 	{
 	  [self setItemBeingEdited: _clickedItem];
 	  [self setIsEditing: YES];
 	  // [self setBackgroundColor: darkSalmonColor]; // for later
-	  if(tb == _actionColumn)
+	  if (tb == _actionColumn)
 	    {
 	      _edittype = Actions;
 	      [self _openActions: _clickedItem];
 	    }
-	  else if(tb == _outletColumn)
+	  else if (tb == _outletColumn)
 	    {
 	      _edittype = Outlets;
 	      [self _openOutlets: _clickedItem];
 	    }
 	}
     }
-  else if(_isEditing && !isActionOrOutlet)
+  else if (_isEditing && !isActionOrOutlet)
     {
-      //id clickedItem = [self itemAtRow: _clickedRow];
-      if(_clickedItem != [self itemBeingEdited] &&
-	 !isActionOrOutlet)
+      if (_clickedItem != [self itemBeingEdited] && !isActionOrOutlet)
 	{
 	  [self setItemBeingEdited: nil];
 	  [self setIsEditing: NO];
 	  [self setBackgroundColor: salmonColor];
 	  [self reloadData];
 	}
+      else if (tb == _actionColumn)
+	{
+	  if (_edittype != Actions)
+	    {
+	      [self setItemBeingEdited: nil];
+	      [self setIsEditing: NO];
+	      [self setBackgroundColor: salmonColor];
+	      [self reloadData];
+	      _edittype = Actions;
+	      [self _openActions: _clickedItem];
+	    }
+	}
+      else /* tb == _outletColumn */
+	{
+	  if (_edittype != Outlets)
+	    {
+	      [self setItemBeingEdited: nil];
+	      [self setIsEditing: NO];
+	      [self setBackgroundColor: salmonColor];
+	      [self reloadData];
+	      _edittype = Outlets;
+	      [self _openOutlets: _clickedItem];
+	    }
+	}
     }
-  else if(isActionOrOutlet)
+  else
     {
 //        NSString *name = [_clickedItem getName];
     }
@@ -625,15 +655,15 @@ static NSColor *darkGreyBlueColor = nil;
   return _edittype;
 }
 
-- (void)addAttributeToClass
+- (void) addAttributeToClass
 {
-  if(_isEditing == YES)
+  if (_isEditing == YES)
     {
-      if(_edittype == Actions)
+      if (_edittype == Actions)
 	{
 	  [self _addNewActionToObject: _itemBeingEdited];
 	}
-      if(_edittype == Outlets)
+      if (_edittype == Outlets)
 	{
 	  [self _addNewOutletToObject: _itemBeingEdited];
 	}
@@ -668,7 +698,7 @@ static NSColor *darkGreyBlueColor = nil;
   [self scrollColumnToVisible: columnIndex];
 
   if (rowIndex < 0 || rowIndex >= _numberOfRows 
-      || columnIndex < 0 || columnIndex >= _numberOfColumns)
+    || columnIndex < 0 || columnIndex >= _numberOfColumns)
     {
       [NSException raise: NSInvalidArgumentException
 		   format: @"Row/column out of index in edit"];
@@ -703,7 +733,7 @@ static NSColor *darkGreyBlueColor = nil;
   value =  [_dataSource outlineView: self 
 			objectValueForTableColumn: tb
 			byItem: item];
-  if([value isKindOfClass: [GormOutletActionHolder class]])
+  if ([value isKindOfClass: [GormOutletActionHolder class]])
     {
       isOutletOrAction = YES;
       value = [value getName];
@@ -748,7 +778,7 @@ static NSColor *darkGreyBlueColor = nil;
   _textObject = [_editedCell setUpFieldEditorAttributes: t];
 
   // determine which image to use...
-  if([self isItemExpanded: item])
+  if ([self isItemExpanded: item])
     {
       image = expanded;
     }
@@ -757,7 +787,7 @@ static NSColor *darkGreyBlueColor = nil;
       image = collapsed;
     }
 
-  if(![self isExpandable: item])
+  if (![self isExpandable: item])
     {
       image = unexpandable;
     }
@@ -765,7 +795,7 @@ static NSColor *darkGreyBlueColor = nil;
   level = [self levelForItem: item];
   indentationFactor = _indentationPerLevel * level;
   drawingRect = [self frameOfCellAtColumn: columnIndex  row: rowIndex];
-  if(isOutletOrAction)
+  if (isOutletOrAction)
     {
       drawingRect.origin.x += _attributeOffset;
       drawingRect.size.width -= _attributeOffset;
@@ -778,7 +808,7 @@ static NSColor *darkGreyBlueColor = nil;
   
   // create the image cell..
   imageCell = [[NSCell alloc] initImageCell: image];
-  if(_indentationMarkerFollowsCell)
+  if (_indentationMarkerFollowsCell)
     {
       imageRect.origin.x = drawingRect.origin.x + indentationFactor;
       imageRect.origin.y = drawingRect.origin.y;

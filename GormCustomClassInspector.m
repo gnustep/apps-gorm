@@ -56,7 +56,7 @@
       
       // load the gui...
       if (![NSBundle loadNibNamed: @"GormCustomClassInspector"
-		     owner: self])
+			    owner: self])
 	{
 	  NSLog(@"Could not open gorm GormCustomClassInspector");
 	  return nil;
@@ -67,16 +67,19 @@
 
 - (void) _setCurrentSelectionClassName: (id)anobject
 {
-  NSString *className = [_classManager customClassForObject: anobject]; // nameForObject];
+  NSString	*className;
 
-  if([className isEqualToString: @""] ||
-     className == nil)
+  className = [_classManager customClassForObject: anobject]; // nameForObject];
+  if ([className isEqualToString: @""]
+    || className == nil)
     {
       className = NSStringFromClass([anobject class]);
     }
 
-  ASSIGN(_currentSelectionClassName, [GormClassManager correctClassName: className]);
-  ASSIGN(_parentClassName, [GormClassManager correctClassName: NSStringFromClass([anobject class])]);
+  ASSIGN(_currentSelectionClassName,
+    [GormClassManager correctClassName: className]);
+  ASSIGN(_parentClassName,
+    [GormClassManager correctClassName: NSStringFromClass([anobject class])]);
 }
 
 - (void) setObject: (id)anObject
@@ -112,7 +115,7 @@
   NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
 
   /* add or remove the mapping as necessary. */
-  if(![stringValue isEqualToString: classForObject])
+  if (![stringValue isEqualToString: classForObject])
     {
       [_classManager setCustomClass: stringValue
 		     forObject: nameForObject];
@@ -128,22 +131,24 @@
 createRowsForColumn: (int)column
 	   inMatrix: (NSMatrix *)matrix
 {
-  if(_parentClassName != nil)
+  if (_parentClassName != nil)
     {
-      NSMutableArray  *classes = [NSMutableArray arrayWithObject: _parentClassName];
-      NSEnumerator          *e = nil;
-      NSString          *class = nil;
-      NSBrowserCell      *cell = nil;
-      int i = 0;
+      NSMutableArray	*classes;
+      NSEnumerator	*e = nil;
+      NSString		*class = nil;
+      NSBrowserCell	*cell = nil;
+      int		i = 0;
       
+      classes = [NSMutableArray arrayWithObject: _parentClassName];
       // get a list of all of the classes allowed and the class to be shown.
-      [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
+      [classes addObjectsFromArray:
+	[_classManager allCustomSubclassesOf: _parentClassName]];
       
       // enumerate through the classes...
       e = [classes objectEnumerator];
-      while((class = [e nextObject]) != nil)
+      while ((class = [e nextObject]) != nil)
 	{
-	  if([class isEqualToString: _currentSelectionClassName])
+	  if ([class isEqualToString: _currentSelectionClassName])
 	    {
 	      _rowToSelect = i;
 	    }

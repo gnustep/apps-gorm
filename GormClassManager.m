@@ -81,7 +81,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       RELEASE(actions);
       [classInfo setObject: name forKey: @"Super"];
 
-      while([classInformation objectForKey: newClassName] != nil)
+      while ([classInformation objectForKey: newClassName] != nil)
 	{
 	  newClassName = [newClassName stringByAppendingString:
 	    [NSString stringWithFormat: @"%d", i++]];
@@ -105,9 +105,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSString *new = @"newAction", *search = [new stringByAppendingString: @":"];
   int i = 1;
   [combined addObjectsFromArray: extra];
-  while([combined containsObject: search])
+  while ([combined containsObject: search])
     {
-      new = [new stringByAppendingString: [NSString stringWithFormat: @"%d", i++]];
+      new = [new stringByAppendingFormat: @"%d", i++];
       search = [new stringByAppendingString: @":"];
     }
 
@@ -125,9 +125,9 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   int i = 1;
 
   [combined addObjectsFromArray: extra];
-  while([combined containsObject: new])
+  while ([combined containsObject: new])
     {
-      new = [new stringByAppendingString: [NSString stringWithFormat: @"%d", i++]];
+      new = [new stringByAppendingFormat: @"%d", i++];
     }
 
   [self addOutlet: new forClassNamed: name];
@@ -146,7 +146,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     {
       NSMutableDictionary	*classInfo;
 
-      if(![classInformation objectForKey: className])
+      if (![classInformation objectForKey: className])
 	{
 	  classInfo = [[NSMutableDictionary alloc] initWithCapacity: 3];
 	  
@@ -194,11 +194,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSArray *allActions = [self allActionsForClassNamed: className];
 
-  if([allActions containsObject: anAction])
+  if ([allActions containsObject: anAction])
     {
       return;
     }
-  if(extraActions == nil)
+  if (extraActions == nil)
     {
       extraActions = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraActions forKey: @"ExtraActions"];
@@ -215,11 +215,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSArray *allOutlets = [self allOutletsForClassNamed: className];
 
-  if([allOutlets containsObject: anOutlet])
+  if ([allOutlets containsObject: anOutlet])
     {
       return;
     }
-  if(extraOutlets == nil)
+  if (extraOutlets == nil)
     {
       extraOutlets = [[NSMutableArray alloc] initWithCapacity: 1];
       [info setObject: extraOutlets forKey: @"ExtraOutlets"];
@@ -230,20 +230,22 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [[info objectForKey: @"AllOutlets"] insertObject: anOutlet atIndex: 0];
 }
 
-- (void) replaceAction: (NSString *)oldAction withAction: (NSString *)newAction forClassNamed: className
+- (void) replaceAction: (NSString *)oldAction
+	    withAction: (NSString *)newAction
+	 forClassNamed: className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray *actions = [info objectForKey: @"Actions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
 
-  if([allActions containsObject: newAction] || 
-     [extraActions containsObject: newAction])
+  if ([allActions containsObject: newAction]
+    || [extraActions containsObject: newAction])
     {
       return;
     }
 
-  if([extraActions containsObject: oldAction])
+  if ([extraActions containsObject: oldAction])
     {
       int all_index = [allActions indexOfObject: oldAction];
       int extra_index = [extraActions indexOfObject: oldAction];
@@ -251,7 +253,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
-  else if([actions containsObject: oldAction])
+  else if ([actions containsObject: oldAction])
     {
       int all_index = [allActions indexOfObject: oldAction];
       int actions_index = [actions indexOfObject: oldAction];
@@ -261,20 +263,22 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     }
 }
 
-- (void) replaceOutlet: (NSString *)oldOutlet withOutlet: (NSString *)newOutlet forClassNamed: className
+- (void) replaceOutlet: (NSString *)oldOutlet
+	    withOutlet: (NSString *)newOutlet
+	 forClassNamed: className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
 
-  if([allOutlets containsObject: newOutlet] || 
-     [extraOutlets containsObject: newOutlet])
+  if ([allOutlets containsObject: newOutlet]
+    || [extraOutlets containsObject: newOutlet])
     {
       return;
     }
 
-  if([extraOutlets containsObject: oldOutlet])
+  if ([extraOutlets containsObject: oldOutlet])
     {
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int extra_index = [extraOutlets indexOfObject: oldOutlet];
@@ -282,7 +286,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       [extraOutlets replaceObjectAtIndex: extra_index withObject: newOutlet];
       [allOutlets replaceObjectAtIndex: all_index withObject: newOutlet];
     }
-  else if([outlets containsObject: oldOutlet])
+  else if ([outlets containsObject: oldOutlet])
     {
       int all_index = [allOutlets indexOfObject: oldOutlet];
       int outlets_index = [outlets indexOfObject: oldOutlet];
@@ -302,7 +306,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSDebugLog(@"** ACTIONS");
   NSDebugLog(@"Object: %@",obj);
   NSDebugLog(@"Custom class: %@",customClassName);
-  if(customClassName != nil)
+  if (customClassName != nil)
     {
       // if the object has been mapped to a custom class, then
       // get the information for it.
@@ -431,7 +435,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSDebugLog(@"** OUTLETS");
   NSDebugLog(@"Object: %@",obj);
   NSDebugLog(@"Custom class: %@",customClassName);
-  if(customClassName != nil)
+  if (customClassName != nil)
     {
       // if the object has been mapped to a custom class, then
       // get the information for it.
@@ -655,8 +659,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 	{
 	  // load the classes, initialize the custom class array and map..
 	  [self loadFromFile: path];
-	  customClasses = RETAIN([NSMutableArray arrayWithCapacity: 1]);
-	  customClassMap = RETAIN([NSMutableDictionary dictionaryWithCapacity: 10]); 
+	  customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	  customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
 	  
 	  // add first responder so that it may be edited.
 	  [customClasses addObject: @"FirstResponder"];
@@ -673,15 +677,15 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSEnumerator *cen   = [classList objectEnumerator];
   id object = nil;
 
-  while((object = [cen nextObject]))
+  while ((object = [cen nextObject]))
     {
       NSDictionary *dictForClass = [classInformation objectForKey: object];
-      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+      if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
 	{
 	  [array addObject: object];
 	  [self allSubclassesOf: object
-		referenceClassList: classList
-		intoArray: array];
+	     referenceClassList: classList
+		      intoArray: array];
 	}
     }
 }
@@ -689,16 +693,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 - (NSArray *) allCustomSubclassesOf: (NSString *)superClass
 {
   NSMutableArray *array = [NSMutableArray array];
+
   [self allSubclassesOf: superClass
-	referenceClassList: customClasses
-	intoArray: array];
+     referenceClassList: customClasses
+	      intoArray: array];
 
   // add known allowable subclasses to the list.
-  if([superClass isEqualToString: @"NSWindow"])
+  if ([superClass isEqualToString: @"NSWindow"])
     {
       [array addObject: @"NSPanel"];
     }
-  else if([superClass isEqualToString: @"NSTextField"])
+  else if ([superClass isEqualToString: @"NSTextField"])
     {
       [array addObject: @"NSSecureTextField"];
     }
@@ -712,10 +717,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   id object = nil;
   NSMutableArray *subclasses = [NSMutableArray array];
 
-  while((object = [cen nextObject]))
+  while ((object = [cen nextObject]))
     {
       NSDictionary *dictForClass = [classInformation objectForKey: object];
-      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+
+      if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
 	{
 	  [subclasses addObject: object];
 	}
@@ -731,10 +737,11 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   id object = nil;
   NSMutableArray *subclasses = [NSMutableArray array];
 
-  while((object = [cen nextObject]))
+  while ((object = [cen nextObject]))
     {
       NSDictionary *dictForClass = [classInformation objectForKey: object];
-      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+
+      if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
 	{
 	  [subclasses addObject: object];
 	}
@@ -749,8 +756,8 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
 
-  if ([extraActions containsObject: anAction] == YES ||
-      [allActions containsObject: anAction] == YES)
+  if ([extraActions containsObject: anAction] == YES
+    || [allActions containsObject: anAction] == YES)
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
@@ -775,14 +782,15 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     }
 }
 
-- (void) removeAction: (NSString*)anAction fromClassNamed: (NSString *)className
+- (void) removeAction: (NSString*)anAction
+       fromClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [classInformation objectForKey: className];
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
 
-  if ([extraActions containsObject: anAction] == YES || 
-      [allActions containsObject: anAction] == YES)
+  if ([extraActions containsObject: anAction] == YES
+    || [allActions containsObject: anAction] == YES)
     {
       NSString	*superName = [info objectForKey: @"Super"];
 
@@ -841,7 +849,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
 - (void) removeClassNamed: (NSString *)className
 {
-  if([customClasses containsObject: className])
+  if ([customClasses containsObject: className])
     {
       [customClasses removeObject: className];
     }
@@ -864,7 +872,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
       RELEASE(classInfo);
 
-      if((index = [customClasses indexOfObject: oldName]) != NSNotFound)
+      if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
 	{
 	  [customClasses replaceObjectAtIndex: index withObject: name];
 	}
@@ -876,6 +884,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   else return NO;
 
 }
+
 - (BOOL) saveToFile: (NSString*)path
 {
   NSMutableDictionary	*ci;
@@ -1005,7 +1014,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
 
 // this method will load the custom classes and merge them with the
 // Class information loaded at initialization time.
-- (BOOL)loadCustomClasses: (NSString *)path
+- (BOOL) loadCustomClasses: (NSString *)path
 {
   NSMutableDictionary		*dict;
 
@@ -1018,13 +1027,13 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
       return NO;
     }
   
-  if(classInformation == nil)
+  if (classInformation == nil)
     {
       NSLog(@"Default classes file not loaded");
       return NO;
     }
 
-  if([[dict allKeys] containsObject: @"NSObject"])
+  if ([[dict allKeys] containsObject: @"NSObject"])
     {
       NSLog(@"The file being loaded is in the old .classes format.  Updating..");
       [self _convertDictionary: dict];
@@ -1203,7 +1212,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   BOOL result = NO;
   NSDictionary *classInfo = [classInformation objectForKey: className];
   
-  if(classInfo != nil)
+  if (classInfo != nil)
     {
       NSArray *array = [classInfo objectForKey: @"Actions"];
       NSArray *extra_array = [classInfo objectForKey: @"ExtraActions"];
@@ -1222,7 +1231,7 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   BOOL result = NO;
   NSDictionary *classInfo = [classInformation objectForKey: className];
   
-  if(classInfo != nil)
+  if (classInfo != nil)
     {
       NSArray *array = [classInfo objectForKey: @"Outlets"];
       NSArray *extra_array = [classInfo objectForKey: @"ExtraOutlets"];
@@ -1264,12 +1273,12 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [customClassMap removeObjectForKey: object];
 }
 
-- (NSMutableDictionary *)customClassMap
+- (NSMutableDictionary *) customClassMap
 {
   return customClassMap;
 }
 
-- (void)setCustomClassMap: (NSMutableDictionary *)dict
+- (void) setCustomClassMap: (NSMutableDictionary *)dict
 {
   // copy the dictionary..
   NSDebugLog(@"dictionary = %@",dict);
@@ -1277,17 +1286,17 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   RETAIN(customClassMap);
 }
 
-- (BOOL)isCustomClassMapEmpty
+- (BOOL) isCustomClassMapEmpty
 {
   return ([customClassMap count] == 0);
 }
 
-- (NSString *)nonCustomSuperClassOf: (NSString *)className
+- (NSString *) nonCustomSuperClassOf: (NSString *)className
 {
   NSString *result = className;
 
   // iterate up the chain until a non-custom superclass is found...
-  while([self isCustomClass: result])
+  while ([self isCustomClass: result])
     {
       NSDebugLog(@"result = %@",result);
       result = [self superClassNameForClassNamed: result];
@@ -1296,10 +1305,10 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return result;
 }
 
-- (NSArray *)allSuperClassesOf: (NSString *)className
+- (NSArray *) allSuperClassesOf: (NSString *)className
 {
   NSMutableArray *classes = [NSMutableArray array];
-  while(![className isEqualToString: @"NSObject"])
+  while (![className isEqualToString: @"NSObject"])
     {
       NSDictionary *dict = [self classInfoForClassName: className];
       className = [dict objectForKey: @"Super"];
@@ -1307,7 +1316,6 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
     }
   return classes;
 }
-
 
 + (NSString *) correctClassName: (NSString *)className
 {
