@@ -657,10 +657,10 @@ Add an implementation of the action ``closeWindow:'' to WinController and also a
 @}
 
 - (void) dealloc
-{
+@{
   [super dealloc];
   RELEASE(window);
-}
+@}
 
 @@end 
 
