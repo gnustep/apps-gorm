@@ -284,13 +284,28 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
-  if ( [[NSUserDefaults standardUserDefaults] boolForKey: @"ShowInspectors"] )
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSArray *a = nil;
+
+  if ( [defaults boolForKey: @"ShowInspectors"] )
     {
       [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
     }
-  if ( [[NSUserDefaults standardUserDefaults] boolForKey: @"ShowPalettes"] )
+  if ( [defaults boolForKey: @"ShowPalettes"] )
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
+    }
+  if((a = [defaults arrayForKey: @"GSAppKitUserBundles"]) != nil)
+    {
+      if([a count] > 0)
+	{
+	  BOOL result = NSRunAlertPanel(NULL, _(@"Please deactivate any user bundles before starting Gorm."),
+					_(@"Continue"),_( @"Quit"), nil);
+	  if(result != NSAlertDefaultReturn)
+	    {
+	      [self terminate: self];
+	    }
+	}
     }
 }
 
@@ -721,8 +736,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
 	    {
-	      [testContainer awakeWithContext: nil];
-	      // RETAIN(testContainer);
+	      [testContainer awakeWithContext: nil
+			     topLevelItems: nil];
+	      RETAIN(testContainer);
 	    }
 	  
 	  /*
@@ -1504,7 +1520,6 @@ int
 main(int argc, const char **argv)
 { 
   startDate = [[NSDate alloc] init];
-  // [NSObject enableDoubleReleaseCheck: YES];
   return NSApplicationMain(argc, argv);
 }
 

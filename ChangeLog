@@ -1,11 +1,19 @@
+2003-12-31 20:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Corrected an issue with testInterface because of the new
+	signature for awakeWithContext:.   Also added an alert to anyone
+	loading bundles using GSAppKitUserBundles.   Bundles that replace
+	classes of AppKit can cause issues in Gorm since they might interfere
+	with encoding. 
+	
 2003-12-30 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Removed uneeded method which was overriding
-	awakeWithContext:.   This method is called from loadNibNamed: and, since
-	the GormDocument is a subclass, but is never loaded by that method
-	overriding the other implementation is uncessary.
-	* ClassInformation.plist: Some of the parent information was wrong, this
-	was corrected.
+	awakeWithContext:.   This method is called from loadNibNamed: and, 
+	since the GormDocument is a subclass, but is never loaded by that 
+	method overriding the other implementation is uncessary.
+	* ClassInformation.plist: Some of the parent information was wrong, 
+	this was corrected.
 	* Gorm.m: Added code in -validateMenuItem: to grey out certain menu
 	items under given conditions.   This improves usability and prevents
 	the user from corrupting the .gorm file by doing something that's
@@ -21,7 +29,8 @@
 
 	* Gorm.m: Added a NS_DURING block around the main portions of the
 	testInterface method and also added some of the classes to the list
-	of classes which need to be translated from their "GormNS*" equivalents.
+	of classes which need to be translated from their "GormNS*" 
+	equivalents.
 
 2003-12-23 23:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
