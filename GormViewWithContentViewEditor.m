@@ -46,11 +46,24 @@
   	   inDocument: (id<IBDocuments>)aDocument
 {
   _displaySelection = YES;
+  //GuideLine
+  [[NSNotificationCenter defaultCenter] addObserver:self 
+					selector:@selector(guideline:)
+					name: GormToggleGuidelineNotification
+					object:nil];
+  _followGuideLine = YES;
   self = [super initWithObject: anObject
 		inDocument: aDocument];
   return self;
 }
 
+-(void) guideline:(NSNotification *)notification
+{
+  if ( _followGuideLine )
+    _followGuideLine = NO;
+  else 
+    _followGuideLine = YES;
+}
 
 - (void) handleMouseOnKnob: (IBKnobPosition) knob
 		    ofView: (GormViewEditor *) view
@@ -566,9 +579,20 @@
 		r.size.width = (int) r.size.width;
 		r.size.height = (int) r.size.height;
 		oldMovingFrame = r;
-		suggestedFrame = [[selection objectAtIndex: 0]
-				   _displayMovingFrameWithHint: r
-				   andPlacementInfo: gpi];
+		
+		//case guideLine
+		if ( _followGuideLine )
+		  suggestedFrame = [[selection objectAtIndex: 0]
+ 				   _displayMovingFrameWithHint: r
+ 				   andPlacementInfo: gpi];
+		else 
+		  {
+		    suggestedFrame = NSMakeRect (NSMinX(r), 
+						 NSMinY(r),
+						 NSMaxX(r) - NSMinX(r),
+						 NSMaxY(r) - NSMinY(r));
+		  }
+
 		[[selection objectAtIndex: 0] setFrame:
 						suggestedFrame];
 		[[selection objectAtIndex: 0] setNeedsDisplay: YES];

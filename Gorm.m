@@ -41,6 +41,7 @@ NSString *IBDidEndTestingInterfaceNotification
 NSDate	*startDate;
 
 NSString *GormLinkPboardType = @"GormLinkPboardType";
+NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 
 @class	InfoPanel;
 
@@ -585,48 +586,50 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
 {
-  NSEnumerator	*enumerator = [[self windows] objectEnumerator];
-  NSWindow	*win;
-  BOOL		edited = NO;
+  id doc;
+  BOOL edited = NO;
+  NSEnumerator *enumerator = [documents objectEnumerator];
 
+  
   if (isTesting == YES)
     {
-      [self endTesting: sender];
-      return NO;
+       [self endTesting: sender];
+       return NO;
+    }
+  
+  
+  while (( doc = [enumerator nextObject] ) != nil )
+    {
+    if ([[doc window]  isDocumentEdited] == YES)
+      {
+	edited = YES;
+	break;
+      }
     }
 
-  while ((win = [enumerator nextObject]) != nil)
-    {
-      if ([win isDocumentEdited] == YES)
-	{
-	  edited = YES;
+   if (edited == YES)
+     {
+       int	result;
+       result = NSRunAlertPanel(NULL, @"There are edited windows",
+ 	@"Review Unsaved", @"Quit Anyway", @"Cancel");
+      if (result == NSAlertDefaultReturn) 
+	{ 	  
+	  enumerator = [ documents objectEnumerator];
+ 	  while ((doc = [enumerator nextObject]) != nil)
+ 	    {
+ 	      if ( [[doc window]  isDocumentEdited] == YES)
+ 		{
+		  if ( ! [doc couldCloseDocument] )
+		    return NO;
+ 		}
+ 	    }	
 	}
-    }
-  if (edited == YES)
-    {
-      int	result;
-
-      result = NSRunAlertPanel(NULL, @"There are edited windows",
-	@"Review Unsaved", @"Cancel", @"Quit Anyway");
-      if (result == NSAlertAlternateReturn)
-	{
-	  return NO;
-	}
-      else if (result != NSAlertOtherReturn)
-	{
-	  enumerator = [[self windows] objectEnumerator];
-	  while ((win = [enumerator nextObject]) != nil)
-	    {
-	      if ([win isDocumentEdited] == YES)
-		{
-		  [win performClose: self];
-		}
-	    }
-	}
-    }
-  return YES;
+      else if (result == NSAlertOtherReturn) 
+	return NO; 
+     }
+   return YES;
 }
-
+  
 - (GormClassManager*) classManager
 {
   id document = [self activeDocument];
@@ -719,6 +722,25 @@ static NSButtonType _buttonTypeForObject( id button )
   [(GormGenericEditor *)selectionOwner ungroup];
   return self;
 }
+
+- (void) guideline: (id) sender
+{
+  [[NSNotificationCenter defaultCenter] postNotificationName: GormToggleGuidelineNotification
+ 					object:nil];
+  if ( [guideLineMenuItem tag] == 0 ) 
+    {
+      [guideLineMenuItem setTitle:@"Enable GuideLine"];
+      [guideLineMenuItem setTag:1];
+    }
+  else if ( [guideLineMenuItem tag] == 1)
+    {
+      [guideLineMenuItem setTitle:@"Disable GuideLine"];
+      [guideLineMenuItem setTag:0];
+    }
+  
+}
+
+
 
 - (void) dealloc
 {
@@ -1282,7 +1304,7 @@ static NSButtonType _buttonTypeForObject( id button )
 
 - (id) save: (id)sender
 {
-  [(GormDocument *)[self activeDocument] saveDocument: sender];
+  [(GormDocument *)[self activeDocument] saveGormDocument: sender];
   return self;
 }
 
@@ -1295,7 +1317,8 @@ static NSButtonType _buttonTypeForObject( id button )
     {
       if ([[doc window] isDocumentEdited] == YES)
 	{
-	  [doc saveDocument: sender];
+	  if (! [doc saveGormDocument: sender] )
+	    NSLog(@"can not save %@",doc);
 	}
     }
   return self;

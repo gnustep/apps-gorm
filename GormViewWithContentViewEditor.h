@@ -31,6 +31,7 @@
 @interface GormViewWithContentViewEditor : GormViewWithSubviewsEditor
 {
   GormInternalViewEditor *contentViewEditor;
+  BOOL _followGuideLine;
 }
 
 - (void) handleMouseOnKnob: (IBKnobPosition) knob

@@ -91,8 +91,8 @@
 		parent: (id)parent;
 - (void) removeConnector: (id<IBConnectors>)aConnector;
 - (id) revertDocument: (id)sender;
-- (void) saveAsDocument: (id)sender;
-- (void) saveDocument: (id)sender;
+- (BOOL) saveAsDocument: (id)sender;
+- (BOOL) saveGormDocument: (id)sender;
 - (void) setupDefaults: (NSString*)type;
 - (void) setDocumentActive: (BOOL)flag;
 - (void) setName: (NSString*)aName forObject: (id)object;
@@ -100,6 +100,7 @@
 - (void) setObject: (id)anObject isDeferred: (BOOL)flag;
 - (void) touch;		/* Mark document as having been changed.	*/
 - (NSWindow*) window;
+- (BOOL) couldCloseDocument;
 - (BOOL) windowShouldClose: (id)sender;
 
 // classes support..

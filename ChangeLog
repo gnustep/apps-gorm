@@ -1,3 +1,20 @@
+2003-05-19  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	Applied patch submitted by Fabien Vallon <fabien@tuxfamily.org>
+	* Gorm.m: Cleaned up NSRunAlertPanel call.  Added methods to allow
+	toggling of guidlines.  Changed call from saveDocument to
+	saveGormDocument.
+	* GormDocument.[hm]: changed saveAsDocument to return BOOL.
+	renamed saveDocument to saveGormDocument.
+	* GormPrivate.h: Added menu item to enable/disable guidlines
+	Added notification to indicate when the guideline is being
+	disabled.
+	* GormViewWithContentViewEditor.m: Added code to cause editor
+	to force objects to follow guidelines or not based on a boolean
+	which is set by the menu item.
+	* Gorm.gorm: Added menu item to enable/disable guidelines
+	NOTE: Did some minor cleanup. Thanks Fabien. 
+	
 2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Corrected bug#3663.  There was an

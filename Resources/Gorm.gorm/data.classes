@@ -183,10 +183,12 @@
 	    "instantiateClass:",
 	    "createClassFiles:",
 	    "loadClass:",
-	    "preferencesPanel:"
+	    "preferencesPanel:",
+	    "guideline:"
 	);
 	Outlets = (
-	    gormMenu
+	    gormMenu,
+	    guideLineMenuItem
 	);
 	Super = NSApplication;
     };

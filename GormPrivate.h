@@ -13,6 +13,7 @@
 #include "GormPalettesManager.h"
 
 extern NSString *GormLinkPboardType;
+extern NSString *GormToggleGuidelineNotification;
 
 // templates
 @interface GSNibItem (GormAdditions)
@@ -116,6 +117,7 @@ extern NSString *GormLinkPboardType;
   id                    gormMenu;
   NSMenu		*mainMenu;
   NSMenu                *classMenu; // so we can set it for the class view
+  NSMenuItem            *guideLineMenuItem; 
   NSDictionary		*menuLocations;
   NSImage		*linkImage;
   NSImage		*sourceImage;

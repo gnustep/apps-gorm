@@ -2526,7 +2526,7 @@ static NSImage	*classesImage = nil;
   return nil;
 }
 
-- (void) saveAsDocument: (id)sender
+- (BOOL) saveAsDocument: (id)sender
 {
   NSSavePanel		*sp;
   int			result;
@@ -2550,13 +2550,16 @@ static NSImage	*classesImage = nil;
 	  [mgr movePath: path toPath: bPath handler: nil];
 	}
       documentPath = RETAIN(path);
-      [self saveDocument: sender];
+      [self saveGormDocument: sender];
       RELEASE(old);
+      
+      return YES;
       /* FIXME - need to update files window title etc */
     }
+  return NO;
 }
 
-- (void) saveDocument: (id)sender
+- (BOOL) saveGormDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   BOOL			archiveResult;
@@ -2570,8 +2573,8 @@ static NSImage	*classesImage = nil;
 
   if (documentPath == nil)
     {
-      [self saveAsDocument: sender];
-      if(documentPath == nil) return; // if the user canceled or didn't set a filename, quit.
+      if (! [self saveAsDocument: sender] ) 
+	  return NO;
     }
 
   [nc postNotificationName: IBWillSaveDocumentNotification
@@ -2730,6 +2733,7 @@ static NSImage	*classesImage = nil;
       [nc postNotificationName: IBDidSaveDocumentNotification
 			object: self];
     }
+  return YES;
 }
 
 - (void) setDocumentActive: (BOOL)flag
@@ -2887,7 +2891,7 @@ static NSImage	*classesImage = nil;
   return window;
 }
 
-- (BOOL) windowShouldClose: (id)sender
+- (BOOL) couldCloseDocument
 {
   if ([window isDocumentEdited] == YES)
     {
@@ -2903,17 +2907,26 @@ static NSImage	*classesImage = nil;
 	  msg = [NSString stringWithFormat: @"Document '%@' has been modified",
 	    [documentPath lastPathComponent]];
 	}
-      result = NSRunAlertPanel(NULL, msg, @"Save", @"Cancel", @"Don't Save");
-      if (result == NSAlertAlternateReturn)
-	{
-	  return NO;
+      result = NSRunAlertPanel(NULL, msg, @"Save", @"Don't Save", @"Cancel");
+
+      if (result == NSAlertDefaultReturn) 
+	{ 	  
+	  //Save
+	  if (! [self saveGormDocument: self] )
+	    return NO;
 	}
-      else if (result != NSAlertOtherReturn)
-	{
-	  [self saveDocument: self];
-	}
-    }
+      
+      //Cancel
+      else if (result == NSAlertOtherReturn)
+	return NO; 
+    }      
+  
   return YES;
+
+}
+- (BOOL) windowShouldClose: (id)sender
+{
+  return [self couldCloseDocument];
 }
 
 // convenience methods for formatting outlets/actions
@@ -3226,7 +3239,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     }
   else
     {
-      if (![anObject isEqualToString: @""])
+      if  ( ( ![anObject isEqualToString: @""] ) && ( ! [anObject isEqualToString:item]  ) )
 	{
 	  BOOL rename;
 
