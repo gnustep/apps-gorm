@@ -1073,23 +1073,19 @@ static NSImage  *fileImage = nil;
   // hidden objects...
   RELEASE(hidden);
 
-  // release special objects...
-  // RELEASE(filesOwner);
-  // RELEASE(firstResponder);
-  // RELEASE(fontManager);
-
   if (objToName != 0)
     {
       NSFreeMapTable(objToName);
     }
 
+  // editor views...
   RELEASE(documentPath);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
 
-  // NSLog(@"window = %@",window);
+  // windows...
   RELEASE(window);
   RELEASE(filePrefsWindow);
   [super dealloc];
