@@ -175,8 +175,8 @@
 	    imageRect.origin.y += 1;
 	  }
 	titleRect = imageRect;
-	titleRect.origin.x += imageSize.width + xDist;
-	titleRect.size.width = cellFrame.size.width - imageSize.width - xDist;
+	titleRect.origin.x += imageSize.width + GSCellTextImageXDist;
+	titleRect.size.width = cellFrame.size.width - imageSize.width - GSCellTextImageXDist;
 	if (_cell.is_bordered || _cell.is_bezeled) 
 	  {
 	    titleRect.size.width -= 3;
@@ -200,7 +200,7 @@
 	    imageRect.origin.y += 1;
 	  }
 	titleRect.origin = cellFrame.origin;
-	titleRect.size.width = cellFrame.size.width - imageSize.width - xDist;
+	titleRect.size.width = cellFrame.size.width - imageSize.width - GSCellTextImageXDist;
 	titleRect.size.height = cellFrame.size.height;
 	if (_cell.is_bordered || _cell.is_bezeled) 
 	  {
@@ -227,10 +227,10 @@
 
 	imageRect.origin.x = cellFrame.origin.x;
 	imageRect.origin.y = cellFrame.origin.y;
-	imageRect.origin.y += titleRect.size.height + yDist;
+	imageRect.origin.y += titleRect.size.height + GSCellTextImageYDist;
 	imageRect.size.width = cellFrame.size.width;
 	imageRect.size.height = cellFrame.size.height;
-	imageRect.size.height -= titleSize.height + yDist;
+	imageRect.size.height -= titleSize.height + GSCellTextImageYDist;
 
 	if (_cell.is_bordered || _cell.is_bezeled) 
 	  {
@@ -259,7 +259,7 @@
 	imageRect.origin.y = cellFrame.origin.y;
 	imageRect.size.width = cellFrame.size.width;
 	imageRect.size.height = cellFrame.size.height;
-	imageRect.size.height -= titleSize.height + yDist;
+	imageRect.size.height -= titleSize.height + GSCellTextImageYDist;
 
 	if (_cell.is_bordered || _cell.is_bezeled) 
 	  {

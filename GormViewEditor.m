@@ -136,7 +136,14 @@ static BOOL currently_displaying = NO;
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   [NSException raise: NSInternalInconsistencyException
-	      format: @"Cannot encode a GormViewEditor"];
+	      format: @"Cannot encode a GormViewEditor."];
+}
+
+- (id) initWithCoder: (NSCoder*)aCoder
+{
+  [NSException raise: NSInternalInconsistencyException
+	      format: @"Cannot decode a GormViewEditor."];
+  return nil;
 }
 
 - (id<IBDocuments>) document

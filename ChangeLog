@@ -1,3 +1,10 @@
+2004-08-02 23 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormViewEditor.m: Added stub for initWithCoder just for
+	completeness.
+	* Palettes/2Controls/GormButtonEditor.m: Change references
+	to xDist and yDist to new names from NSCell.h
+	
 2004-08-02 08:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.m: Clarified error message when
