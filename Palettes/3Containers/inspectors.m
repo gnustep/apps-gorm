@@ -710,6 +710,12 @@ static NSString *ITEM=@"item";
     {
       return nil;
     }
+ 
+  if ([NSBundle loadNibNamed: @"GormTabViewInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormTabViewInspector");
+      return nil;
+    }
 
   return self;
 }
