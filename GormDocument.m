@@ -1000,14 +1000,15 @@ static NSImage	*classesImage = nil;
       [classesView setDataSource: self];
       //[classesView setAction: @selector(changeCurrentClass:)];
       //[classesView setTarget: self];
-      [classesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      //[classesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
       [classesView setAutoresizesAllColumnsToFit: YES];
+      [classesView setAllowsColumnResizing: NO];
       [classesScrollView setDocumentView: classesView];
       RELEASE(classesView);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"classes"];
       [[tableColumn headerCell] setStringValue: @"Classes"];
-      [tableColumn setMinWidth: 260];
+      [tableColumn setMinWidth: 250];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
       [classesView addTableColumn: tableColumn];
