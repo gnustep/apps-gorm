@@ -140,6 +140,7 @@ Gorm_OBJC_FILES = \
 	GormDocument.m \
 	IBInspector.m \
 	IBPalette.m \
+	GModelDecoder.m \
 	GormCustomView.m \
 	GormViewKnobs.m \
 	GormFilesOwner.m \

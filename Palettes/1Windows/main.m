@@ -138,21 +138,7 @@ NSwindow inspector
   return [GormNSWindow alloc];
 }
 @end
-/*
-@interface NSWindow (GormPrivate)
-- (void) _setStyleMask: (unsigned int)mask;
-@end
-*/
-/*
-@implementation GormWindow (GormPrivate)
-// private method to change the Window style mask on the fly
-- (void) _setStyleMask: (unsigned int)mask
-{
-   _styleMask = mask;
-   DPSstylewindow(GSCurrentContext(), mask, [self windowNumber]);
-}
-@end
-*/
+
 @implementation	GormNSWindow (IBInspectorClassNames)
 - (NSString*) inspectorClassName
 {

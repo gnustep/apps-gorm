@@ -107,8 +107,8 @@
 // sound support
 - (id) openSound: (id)sender;
 
-// import gmodel
-- (id) openGModel: (id)sender;
+// Internals support
+- (void) rebuildObjToNameMapping;
 @end
 
 #endif

@@ -28,38 +28,14 @@
 #include "GormOutlineView.h"
 #include <AppKit/NSSound.h>
 
-// gmodel compatibility headers...
-#include <AppKit/GMArchiver.h>
-#include <AppKit/IMLoading.h>
-#include <AppKit/IMCustomObject.h>
-
-// forward declaration...
-static Class gmodel_class(NSString *className);
-
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
-// category to allow extraction of information from a gmodel file..
-/*
-@interface GMModel (GormAdditions)
-- (NSArray *) objects;
-- (NSArray *) connections;
+@interface GormDocument (GModel)
+- (id) openGModel: (NSString *)path;
 @end
-
-@implementation GMModel (GormAdditions)
-- (NSArray *) objects
-{
-  return objects;
-}
-
-- (NSArray *) connections
-{
-  return connections;
-}
-@end
-*/
 
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
@@ -1638,7 +1614,6 @@ static NSImage	*classesImage = nil;
   GSNibContainer	*c;
   NSEnumerator		*enumerator;
   id <IBConnectors>	con;
-  NSString		*name;
   NSString              *ownerClass;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
@@ -1769,43 +1744,8 @@ static NSImage	*classesImage = nil;
   [connections addObjectsFromArray: [c connections]];
   [nameTable addEntriesFromDictionary: nt];
 
-  /*
-   * Now we build our reverse mapping information and other initialisation
-   */
-  NSResetMapTable(objToName);
-  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
-  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-  enumerator = [nameTable keyEnumerator];
-  while ((name = [enumerator nextObject]) != nil)
-    {
-      id	obj = [nameTable objectForKey: name];
+  [self rebuildObjToNameMapping];
 
-      NSMapInsert(objToName, (void*)obj, (void*)name);
-      if ([obj isKindOfClass: [NSMenu class]] == YES)
-	{
-	  if ([name isEqual: @"NSMenu"] == YES)
-	    {
-	      NSRect	frame = [[NSScreen mainScreen] frame];
-
-	      [[obj window] setFrameTopLeftPoint:
-		NSMakePoint(1, frame.size.height-200)];
-	      [[self openEditorForObject: obj] activate];
-	      [objectsView addObject: obj];
-	    }
-	}
-      else if ([obj isKindOfClass: [NSWindow class]] == YES)
-	{
-	  [objectsView addObject: obj];
-	  [[self openEditorForObject: obj] activate];
-	}
-      else if ([obj isKindOfClass: [GSNibItem class]] == YES
-	       && [obj isKindOfClass: [GormCustomView class]] == NO)
-	{
-	  [objectsView addObject: obj];
-	  //[[self openEditorForObject: obj] activate];
-	}
-    }
-  
   /*
    * set our new file name
    */
@@ -1842,6 +1782,49 @@ static NSImage	*classesImage = nil;
   NSDebugLog(@"nameTable = %@",[c nameTable]);
 
   return self;
+}
+
+/*
+ * Build our reverse mapping information and other initialisation
+ */
+- (void) rebuildObjToNameMapping
+{
+  NSEnumerator  *enumerator;
+  NSString	*name;
+
+  NSResetMapTable(objToName);
+  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
+  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
+  enumerator = [nameTable keyEnumerator];
+  while ((name = [enumerator nextObject]) != nil)
+    {
+      id	obj = [nameTable objectForKey: name];
+
+      NSMapInsert(objToName, (void*)obj, (void*)name);
+      if ([obj isKindOfClass: [NSMenu class]] == YES)
+	{
+	  if ([name isEqual: @"NSMenu"] == YES)
+	    {
+	      NSRect	frame = [[NSScreen mainScreen] frame];
+
+	      [[obj window] setFrameTopLeftPoint:
+		NSMakePoint(1, frame.size.height-200)];
+	      [[self openEditorForObject: obj] activate];
+	      [objectsView addObject: obj];
+	    }
+	}
+      else if ([obj isKindOfClass: [NSWindow class]] == YES)
+	{
+	  [objectsView addObject: obj];
+	  [[self openEditorForObject: obj] activate];
+	}
+      else if ([obj isKindOfClass: [GSNibItem class]] == YES
+	       && [obj isKindOfClass: [GormCustomView class]] == NO)
+	{
+	  [objectsView addObject: obj];
+	  //[[self openEditorForObject: obj] activate];
+	}
+    }
 }
 
 /*
@@ -2954,63 +2937,4 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   return nil;
 }
 
-// importing of legacy gmodel files.
-- (id) openGModel: (NSString *)path
-{
-  id       unarchiver = nil;
-  id       decoded = nil;
-  Class    unarchiverClass = gmodel_class(@"GMUnarchiver");
-  
-  NSLog (@"loading gmodel file %@...", path);
-  unarchiver = [unarchiverClass unarchiverWithContentsOfFile: path];
-  [unarchiver decodeClassName: @"IMCustomView" asClassName: @"GormCustomView"];
-  [unarchiver decodeClassName: @"IMCustomObject" asClassName: @"GormProxyObject"];
-
-  if (!unarchiver)
-    {
-      NSLog(@"Failed to load gmodel file %@!!",path);
-      return nil;
-    }
-  
-  decoded = [unarchiver decodeObjectWithName:@"RootObject"];
-  [decoded _makeConnections];
-  
-  NSLog(@"testing...");
-  //NSLog(@"objects = %@, connections = %@",[decoded objects], [decoded connections]);
-  
-  return self;
-}
 @end
-
-static 
-Class gmodel_class(NSString *className)
-{
-  static Class gmclass = Nil;
-
-  if (gmclass == Nil)
-    {
-      NSBundle	*theBundle;
-      NSEnumerator *benum;
-      NSString	*path;
-
-      /* Find the bundle */
-      benum = [NSStandardLibraryPaths() objectEnumerator];
-      while ((path = [benum nextObject]))
-	{
-	  path = [path stringByAppendingPathComponent: @"Bundles"];
-	  path = [path stringByAppendingPathComponent: @"libgmodel.bundle"];
-	  if ([[NSFileManager defaultManager] fileExistsAtPath: path])
-	    break;
-	  path = nil;
-	}
-      NSCAssert(path != nil, @"Unable to load gmodel bundle");
-      NSDebugLog(@"Loading gmodel from %@", path);
-
-      theBundle = [NSBundle bundleWithPath: path];
-      NSCAssert(theBundle != nil, @"Can't init gmodel bundle");
-      gmclass = [theBundle classNamed: className];
-      NSCAssert(gmclass, @"Can't load gmodel bundle");
-    }
-  return gmclass;
-}
-

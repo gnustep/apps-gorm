@@ -1,3 +1,11 @@
+2002-11-13  Adam Fedor  <fedor@gnu.org>
+
+	* Some preliminary work on loading gmodels (not working yet).
+	* GormDocument.m ([GormDocument -rebuildObjToNameMapping]): New.
+	(loadDocument:): Use it.
+	* GModelDecoder.m: New file for translating gmodel files.
+	(openGModel:): Moved from GormDocument.
+
 2002-11-12  Adam Fedor  <fedor@gnu.org>
 
 	* ClassInformation.plist (NSDocument): Add _window outlet.
