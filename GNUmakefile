@@ -38,8 +38,7 @@ include ./Version
 SUBPROJECTS = \
 	GormLib \
 	GormObjCHeaderParser \
-	Palettes \
-	Testing
+	Palettes 
 
 #
 # MAIN APP

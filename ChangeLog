@@ -1,6 +1,10 @@
+2005-03-11 21:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Remove Testing directory from makefile.
+
 2005-03-11 21:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormTest: Removed the "GormTest" application.  Since most
+	* Testing: Removed the "GormTest" application.  Since most
 	.gorm files use classes which will never be linked into that
 	application and since the "test interface" functionality in
 	Gorm itself provides the same functionality, this app is being
