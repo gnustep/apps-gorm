@@ -14,6 +14,7 @@
 - (NSArray*) allOutletsForObject: (NSObject*)anObject;
 - (NSArray*) extraActionsForObject: (NSObject*)anObject;
 - (NSArray*) extraOutletsForObject: (NSObject*)anObject;
+- (NSArray*) subClassesOf: (NSString *)superclass;
 - (void) removeAction: (NSString*)anAction forObject: (NSObject*)anObject;
 - (void) removeOutlet: (NSString*)anOutlet forObject: (NSObject*)anObject;
 

@@ -1,3 +1,12 @@
+2002-03-24  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Made necessary modifications to change the
+	classesView from an NSTableView to an NSOutlineView.
+	* GormClassManager.m: Added method to return all subclasses for
+	a given superclass.
+	* GormClassManager.h: Added declaration for the method described
+	above.
+		
 2002-03-08  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* IBInspector.m: Don't release window on dealloc ... assume it

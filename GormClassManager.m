@@ -490,6 +490,25 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   return self;
 }
 
+- (NSArray *) subClassesOf: (NSString *)superclass
+{
+  NSArray *allClasses = [classInformation allKeys];
+  NSEnumerator *cen   = [allClasses objectEnumerator];
+  id object = nil;
+  NSMutableArray *subclasses = [NSMutableArray array];
+
+  while((object = [cen nextObject]))
+    {
+      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      if([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+	{
+	  [subclasses addObject: object];
+	}
+    }
+      
+  return subclasses;
+}
+
 - (void) removeAction: (NSString*)anAction forObject: (id)anObject
 {
   NSMutableDictionary	*info = [self classInfoForObject: anObject];

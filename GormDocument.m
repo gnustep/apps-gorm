@@ -31,8 +31,6 @@ NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
 NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
 NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
 
-
-
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
 {
@@ -292,12 +290,11 @@ static NSImage	*classesImage = nil;
 
   NSLog(@"Double Action");
 
-  if (row >= 0 && row < [classes count])
+  if(row >= 0)
     {
-      [classEditor setSelectedClassName: [classes objectAtIndex: row]];
+      [classEditor setSelectedClassName: [classesView itemAtRow: row]];
       [self setSelectionFromEditor: (id)classEditor];
     }
-  
 }
 
 - (void) changeView: (id)sender
@@ -446,20 +443,21 @@ static NSImage	*classesImage = nil;
 - (id) createSubclass: (id)sender
 {
   int		i = [classesView selectedRow];
-  NSArray	*classNames = [classManager allClassNames];
 
-  if (i >= 0 && i < [classNames count])
+  if(i >= 0)
     {
-      NSString	*newClassName;
-
+      NSString	   *newClassName;
+      id            itemSelected = [classesView itemAtRow: i];
+      
       newClassName = [classManager addClassWithSuperClassName:
-	[classNames objectAtIndex: i]];
+				     itemSelected];
       [classesView reloadData];
-      classNames = [classManager allClassNames];
-      i = [classNames indexOfObject: newClassName];
+      [classesView expandItem: itemSelected];
+      i = [classesView rowForItem: newClassName]; 
       [classesView selectRow: i byExtendingSelection: NO];
       [self editClass: self];
     }
+
   return self;
 }
 
@@ -745,12 +743,12 @@ static NSImage	*classesImage = nil;
 	  headerName = [sp filename];
 	  
 	  NSLog(@"createClassFiles");
-	  if (row >= 0 && row < [classes count])
+	  if (row >= 0)
 	    {
-	      NSLog([classes objectAtIndex: row]);
+	      NSLog([classesView itemAtRow: row]);
 	      if (![classManager 
 		     makeSourceAndHeaderFilesForClass: 
-		       [classes objectAtIndex: row]
+		       [classesView itemAtRow: row]
 		     withName: sourceName
 		     and: headerName])
 		{
@@ -1166,11 +1164,15 @@ static NSImage	*classesImage = nil;
 	NSViewHeightSizable|NSViewWidthSizable];
 
       mainRect.origin = NSMakePoint(0,0);
-      classesView = [[NSTableView alloc] initWithFrame: mainRect];
+      classesView = [[NSOutlineView alloc] initWithFrame: mainRect];
       [classesView setMenu: [(Gorm*)NSApp classMenu]]; 
       [classesView setDataSource: self];
       [classesView setAutoresizesAllColumnsToFit: YES];
       [classesView setAllowsColumnResizing: NO];
+      [classesView setDrawsGrid: NO];
+      [classesView setIndentationMarkerFollowsCell: YES];
+      [classesView setAutoresizesOutlineColumn: YES];
+      [classesView setIndentationPerLevel: 10];
       [classesScrollView setDocumentView: classesView];
       RELEASE(classesView);
 
@@ -1179,7 +1181,8 @@ static NSImage	*classesImage = nil;
       [tableColumn setMinWidth: 250];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
-      [classesView addTableColumn: tableColumn];
+      [classesView addTableColumn: tableColumn];     
+      [classesView setOutlineTableColumn: tableColumn];
       RELEASE(tableColumn);
 
       tableColumn = [[NSTableColumn alloc] initWithIdentifier: @"outlets"];
@@ -1196,7 +1199,8 @@ static NSImage	*classesImage = nil;
       [classesView addTableColumn: tableColumn];
       RELEASE(tableColumn);
 
-      [classesView setFrame: mainRect];
+      // expand all of the items in the classesView...
+      [classesView expandItem: @"NSObject"];
 
       [selectionBox setContentView: scrollView];
 
@@ -1242,9 +1246,9 @@ static NSImage	*classesImage = nil;
       int i = [classesView selectedRow];
       id classNames = [classManager allClassNames];
 
-      if (i >= 0 && i < [classNames count])
+      if (i >= 0)
 	{
-	  id className = [classNames objectAtIndex: i];
+	  id className = [classesView itemAtRow: i];
 	  GSNibItem *item = 
 	    [[GormObjectProxy alloc] initWithClassName: className
 						 frame: NSMakeRect(0,0,0,0)];
@@ -2030,31 +2034,18 @@ static NSImage	*classesImage = nil;
   return YES;
 }
 
-//--- NSTableView dataSource ---
-- (int) numberOfRowsInTableView: (NSTableView *)aTableView
-{
-  if (aTableView == classesView)
-    {
-      return [[classManager allClassNames] count];
-    }
-  return 0;
-}
-
-- (id) tableView: (NSTableView *)aTableView 
+// --- NSOutlineView dataSource ---
+- (id) outlineView: (NSOutlineView *)anOutlineView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	     row: (int)rowIndex
+	    byItem: item
 {
-  if (aTableView == classesView)
+  NSLog(@"outlineView:objectValue... item = %@", item);
+  if (anOutlineView == classesView)
     {
       id identifier = [aTableColumn identifier];
-      id className = @"";
+      id className = item;
       id classNames = [classManager allClassNames];
       
-      if (rowIndex >= 0 && rowIndex < [classNames count])
-	{
-	  className = [classNames objectAtIndex: rowIndex];
-	}
-
       if ([identifier isEqualToString: @"classes"])
 	{
 	  return className;
@@ -2073,12 +2064,63 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
   return @"";
 }
 
-- (void) tableView: (NSTableView *)aTableView 
-    setObjectValue: (id)anObject 
-    forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (int)rowIndex
+- (void) outlineView: (NSOutlineView *)anOutlineView 
+      setObjectValue: (id)anObject 
+      forTableColumn: (NSTableColumn *)aTableColumn
+		 row: (int)rowIndex
 {
+}
 
+- (int) outlineView: (NSOutlineView *)anOutlineView 
+numberOfChildrenOfItem: (id)item
+{
+  NSLog(@"numchild");
+  if(item == nil) 
+    {
+      return 1;
+    }
+  else
+    {
+      NSArray *subclasses = [classManager subClassesOf: item];
+      return [subclasses count];
+    }
+
+  return 0;
+}
+
+- (BOOL) outlineView: (NSOutlineView *)anOutlineView 
+    isItemExpandable: (id)item
+{
+  NSArray *subclasses = nil;
+  NSLog(@"isExpandable");
+  if(item == nil)
+    return YES;
+
+  subclasses = [classManager subClassesOf: item];
+  if([subclasses count] > 0)
+    return YES;
+
+  return NO;
+}
+
+- (id) outlineView: (NSOutlineView *)anOutlineView 
+	     child: (int)index
+	    ofItem: (id)item
+{
+  NSLog(@"child:ofItem");
+  if(item == nil && index == 0)
+    {
+      NSLog(@"return default");
+      return @"NSObject";
+    }
+  else
+    {
+      NSArray *subclasses = [classManager subClassesOf: item];
+      NSLog(@"child:ofItem = %@",[subclasses objectAtIndex: index]);
+      return [subclasses objectAtIndex: index];
+    }
+
+  return nil;
 }
 @end
 
