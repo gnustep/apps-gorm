@@ -25,6 +25,8 @@
 #include <AppKit/NSNibConnector.h>
 #include "GormPrivate.h"
 
+@class GormCustomView;
+
 @implementation	GormFilesOwner
 - (NSString*) className
 {
@@ -167,7 +169,16 @@
 
 - (void) setObject: (id)anObject
 {
-  ASSIGN(classes, [[NSApp classManager] allClassNames]);
+  // filter the classes to view only when a custom view is selected.
+  if([anObject isKindOfClass: [GormCustomView class]])
+    {
+      ASSIGN(classes, [[NSApp classManager] allSubclassesOf: @"NSView"]);
+    }
+  else
+    {
+      ASSIGN(classes, [[NSApp classManager] allClassNames]);
+    }
+
   if (anObject != nil)
     {
       NSArray	*array;

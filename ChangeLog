@@ -1,3 +1,15 @@
+2004-03-13 07:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: [GormDocument loadDocument:] added call to 
+	[GormDocument _repairFile] if a given default is true.  This gives
+	the user the ability to repair older files which might have 
+	issues.
+	* GormFilesOwner.m: [GormFilesOwnerInspector setObject:] only
+	return NSView subclasses if the object passed in is a
+	GormCustomView.   This was causing an issue when users were simply
+	arbitrarily setting the object without regard to this.
+	* GormPalettesManager.m: Minor cleanup.
+	
 2004-03-05 01:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewWithSubviewsEditor.m: Removed call in

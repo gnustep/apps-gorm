@@ -244,7 +244,7 @@ static NSImage	*dragImage = nil;
   NSRect	selectionRect = {{0, 0}, {52, 52}};
   NSRect	scrollRect = {{0, 192}, {272, 74}};
   NSRect	dragRect = {{0, 0}, {272, 192}};
-  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask				| NSResizableWindowMask;
+  unsigned int	style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
 
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style

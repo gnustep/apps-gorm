@@ -1923,6 +1923,51 @@ static NSImage	*classesImage = nil;
   return [nameTable allValues];
 }
 
+// The sole purpose of this method is to clean up .gorm files from older
+// versions of Gorm which might have some dangling references.   This method
+// should possibly added to as time goes on to make sure that it's possible 
+// to repair old .gorm files.
+- (void) _repairFile
+{
+  NSEnumerator *en = [nameTable keyEnumerator];
+  NSString *key = nil;
+
+  while((key = [en nextObject]) != nil)
+  {
+    id obj = [nameTable objectForKey: key];
+    if([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
+      {
+	id sm = [obj supermenu];
+	if(sm == nil)
+	  {
+	    NSArray *menus = findAll(obj);
+	    [self detachObjects: menus];
+	    NSLog(@"Found and removed a dangling menu %@, %@.",obj,[self nameForObject: obj]);
+	  }
+      }
+
+    if([obj isKindOfClass: [NSMenuItem class]])
+      {
+	id m = [obj menu];
+	if(m == nil)
+	  {
+	    NSArray *menus = findAll(obj);
+	    [self detachObjects: menus];
+	    NSLog(@"Found and removed a dangling menu item %@, %@.",obj,[self nameForObject: obj]);
+	  }
+      }
+
+    if([obj isKindOfClass: [NSView class]])
+      {
+	id sv = [obj superview];
+	if(sv == nil)
+	  {
+	    NSLog(@"Found a dangling view %@, %@.",obj,[self nameForObject: obj]);
+	  }
+      }
+  }
+}
+
 /*
  * NB. This assumes we have an empty document to start with - the loaded
  * document is merged in to it.
@@ -1941,7 +1986,8 @@ static NSImage	*classesImage = nil;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
-  
+  BOOL                  repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
+
   if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
     {
       // if the data is in a directory, then load from objects.gorm 
@@ -2161,6 +2207,12 @@ static NSImage	*classesImage = nil;
 	}
     }
   */
+
+  // repair the .gorm file, if needed.
+  if(repairFile == YES)
+    {
+      [self _repairFile];
+    }
 
   // this is the last thing we should do...
   [nc postNotificationName: IBDidOpenDocumentNotification
