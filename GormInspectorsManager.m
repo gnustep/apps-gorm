@@ -699,6 +699,20 @@
     }
 }
 
+- (void) _selectAction: (NSString *)action
+{
+  /*
+   * Ensure that the actions are displayed in column one,
+   * and select the action for the current connection (if any).
+   */
+  [newBrowser reloadColumn: 1];
+  if (action != nil)
+    {
+      [newBrowser selectRow: [actions indexOfObject: action]
+		  inColumn: 1];
+    }
+}
+
 - (void) _internalCall: (NSBrowser*)sender
 {
   unsigned	numConnectors = [connectors count];
@@ -714,7 +728,6 @@
 	  if ([title isEqual: @"target"])
 	    {
 	      id	con = nil;
-	      NSString	*action;
 
 	      for (index = 0; index < numConnectors; index++)
 		{
@@ -732,7 +745,7 @@
 		    }
 		}
 
-	      if (con == nil)
+	      if (con == nil) // && [actions containsObject: [currentConnector label]] == NO) 
 		{
 		  RELEASE(actions);
 		  actions = RETAIN([[NSApp classManager]
@@ -747,21 +760,17 @@
 		    }
 		}
 
+	      // if we changed the current connector, update to the new one...
   	      if (currentConnector != con)
   		{
   		  ASSIGN(currentConnector, con);
   		}
+
 	      /*
 	       * Ensure that the actions are displayed in column one,
 	       * and select the action for the current connection (if any).
 	       */
-	      [newBrowser reloadColumn: 1];
-  	      action = [con label];
-  	      if (action != nil)
-  		{
-  		  [newBrowser selectRow: [actions indexOfObject: action]
-  			       inColumn: 1];
-  		}
+	      [self _selectAction: [con label]];
 	    }
 	  else
 	    {
@@ -989,8 +998,7 @@ selectCellWithString: (NSString*)title
 {
   // got the notification...  since we only subscribe to one, just do what
   // needs to be done.
-  [self setObject: object];
-  [self _internalCall: newBrowser]; // reload the connections browser..  
+  [self setObject: object]; // resets the browser...
 }
 
 - (id) init
@@ -1055,10 +1063,12 @@ selectCellWithString: (NSString*)title
       [revertButton setEnabled: NO];
 
       // catch notifications concerning connection deletions...
+      /*
       [nc addObserver: self 
 	  selector: @selector(handleNotification:)
 	  name: IBDidRemoveConnectorNotification
 	  object: nil];
+      */
     }
   return self;
 }
@@ -1109,16 +1119,17 @@ selectCellWithString: (NSString*)title
 	      if ([con isKindOfClass: [NSNibControlConnector class]])
 		{
 		  [[(id<IB>)NSApp activeDocument] removeConnector: con];
-		  [con setDestination: nil];
-		  [con setLabel: nil];
 		  [connectors removeObjectIdenticalTo: con];
 		  break;
 		}
 	    }
+
+	  // select the new action from the list...
+	  [self _selectAction: [currentConnector label]];
 	}
       [connectors addObject: currentConnector];
       [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
-
+      
       /*
        * When we establish a connection, we want to highlight it in
        * the browser so the user can see it has been done.
@@ -1141,7 +1152,7 @@ selectCellWithString: (NSString*)title
       NSArray		*array;
 
       [super setObject: anObject];
-      DESTROY(currentConnector);
+      // DESTROY(currentConnector);
       RELEASE(connectors);
 
       /*

@@ -54,7 +54,12 @@
 - (BOOL) isEqual: (id)object
 {
   BOOL result = NO;
-  if([[self source] isEqual: [object source]] &&
+
+  if(self == object)
+    {
+      result = YES;
+    }
+  else if([[self source] isEqual: [object source]] &&
      [[self destination] isEqual: [object destination]] &&
      [[self label] isEqual: [object label]] &&
      ([self class] == [object class]))
@@ -2275,13 +2280,13 @@ static NSImage	*classesImage = nil;
   // issue pre notification..
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
-      object: self];
+      object: aConnector];
   // mark the document as changed.
   [self touch];
   // issue port notification..
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
-      object: self];
+      object: aConnector];
 }
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor

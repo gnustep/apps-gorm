@@ -1,3 +1,18 @@
+2004-06-26 18:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPalettesManager.m: Removed line in -init which observes 
+	IBDidDeleteConnectionNotification in GormConnectionInspector.
+	It was causing a number of bugs since it could potentially modify 
+	the connection prior to adding it to the connections list.  Added
+	method _selectAction: which is used to select the action without
+	going through all of the other code in _internalCall:.
+	* GormDocument.m: Added code in NSNibConnector category to let
+	isEqual immediately return true if the object and self are precisely
+	the same object.
+	* GormClassInspector.m: Added code to change the color
+	of the textfield to grey if the class isn't editable and to white
+	if the class name is editable.
+	
 2004-06-26 08:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPalettesManager.m: There was problem which crops up when the

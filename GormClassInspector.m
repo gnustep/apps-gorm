@@ -308,7 +308,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [parentClass setEnabled: (isCustom && !isFirstResponder)];
   [searchCell setEnabled: (isCustom && !isFirstResponder)];
   [classField setEditable: (isCustom && !isFirstResponder)];
-  
+  [classField setBackgroundColor: (isCustom?[NSColor whiteColor]:[NSColor lightGrayColor])];
+
   // select the parent class
   if(index != NSNotFound)
     {
@@ -461,12 +462,21 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *name = [self _currentClass];
   NSString *newName = [sender stringValue];
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  BOOL removed = NO;
 
-  [document collapseClass: name];
-  [classManager renameClassNamed: name
-		newName: newName];
-  [document reloadClasses];
-  [document selectClass: newName];
+  // check to see if the user wants to do this and remove the connections.
+  removed = [document removeConnectionsForClassNamed: name]; 
+
+  if(removed)
+    {
+      [document collapseClass: name];
+      [classManager renameClassNamed: name
+		    newName: newName];
+      [nc postNotificationName: IBInspectorDidModifyObjectNotification
+	  object: classManager];
+      [document reloadClasses];
+      [document selectClass: newName];
+    }
 }
 
 - (void) clickOnClass: (id)sender
