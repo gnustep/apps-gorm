@@ -30,35 +30,23 @@
 #include <Foundation/Foundation.h>
 #include <GNUstepGUI/GSNibTemplates.h>
 
-@class GormClassManager, GormClassEditor;
+@class GormClassManager, GormClassEditor, GormProxyObject;
 
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder
  * for the first responder at any instant.
  */
-@interface	GormFirstResponder : NSObject
+@interface GormFirstResponder : NSObject
 {
 }
 @end
-
-/*
- * Each document may have a GormFontManager object that is used as a
- * placeholder for the current font manager.
- */
-
-/*
-@interface	GormFontManager : NSObject
-{
-}
-@end
-*/
 
 @interface GormDocument : GSNibContainer <IBDocuments>
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
   GormFirstResponder	*firstResponder;
-  id	                *fontManager;
+  GormProxyObject       *fontManager;
   GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;

@@ -231,6 +231,23 @@ static NSImage	*classesImage = nil;
   return [NSArray arrayWithArray: connections];
 }
 
+- (void) _instantiateFontManager
+{
+  GSNibItem *item = nil;
+  
+  item = [[GormObjectProxy alloc] initWithClassName: @"NSFontManager"
+				  frame: NSMakeRect(0,0,0,0)];
+  
+  [self setName: @"NSFont" forObject: item];
+  [self attachObject: item toParent: nil];
+  RELEASE(item);
+
+  // set the holder in the document.
+  fontManager = (GormProxyObject *)item;
+  
+  [selectionView selectCellWithTag: 0];
+  [selectionBox setContentView: scrollView];
+}
 
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
@@ -345,13 +362,6 @@ static NSImage	*classesImage = nil;
 	  id destination = [anObject target];
 	  NSArray *sourceConnections = [self connectorsForSource: source];
 
-	  /*
-	  if(destination == nil)
-	    {
-	      if(aParent != nil)
-		destination = aParent;
-	    }
-	  */
 	  // if it's a menu item we want to connect it to it's parent...
 	  if([anObject isKindOfClass: [NSMenuItem class]] && 
 	     [label isEqual: @"submenuAction:"])
@@ -359,6 +369,21 @@ static NSImage	*classesImage = nil;
 	      destination = aParent;
 	    }
 	  
+	  // if the connection needs to be made with the font manager, replace
+	  // it with our proxy object and proceed with creating the connection.
+	  if(destination == nil && 
+	     [classManager isAction: label ofClass: @"NSFontManager"])
+	    {
+	      if(!fontManager)
+		{
+		  // initialize font manager...
+		  [self _instantiateFontManager];
+		}
+	      
+	      // set the destination...
+	      destination = fontManager;
+	    }
+
 	  // if the destination is still nil, back off to the first responder.
 	  if(destination == nil)
 	    {
@@ -461,13 +486,6 @@ static NSImage	*classesImage = nil;
   [nameTable removeObjectForKey: @"NSOwner"];
   NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
   [nameTable removeObjectForKey: @"NSFirst"];
-  /*
-  if (fontManager != nil)
-    {
-      NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFont"]);
-      [nameTable removeObjectForKey: @"NSFont"];
-    }
-  */
 
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
@@ -793,6 +811,12 @@ static NSImage	*classesImage = nil;
 	{
 	  [connections removeObjectAtIndex: count];
 	}
+    }
+
+  // if the font manager is being reset, zero out the instance variable.
+  if([name isEqual: @"NSFont"])
+    {
+      fontManager = nil;
     }
 
   if ([anObject isKindOfClass: [NSWindow class]] == YES
@@ -1422,14 +1446,6 @@ static NSImage	*classesImage = nil;
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
 
   /*
-  if (fontManager != nil)
-    {
-      [nameTable setObject: fontManager forKey: @"NSFont"];
-      NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
-    }
-  */
-
-  /*
    * Map all connector source and destination names to their objects.
    */
   enumerator = [connections objectEnumerator];
@@ -1849,9 +1865,6 @@ static NSImage	*classesImage = nil;
       firstResponder = [GormFirstResponder new];
       [self setName: @"NSFirst" forObject: firstResponder];
       [objectsView addObject: firstResponder];
-      // fontManager = [GormFontManager new];
-      // [self setName: @"NSFont" forObject: fontManager];
-      // [objectsView addObject: fontManager];
 
       /*
        * Set image for this miniwindow.

@@ -157,6 +157,19 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   RELEASE(theClass);
   theClass = [className copy];
 }
+
+- (NSImage *) imageForViewer
+{
+  NSImage *image = [super imageForViewer];
+  if([theClass isEqual: @"NSFontManager"])
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString *path = [bundle pathForImageResource: @"GormFontManager"]; 
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
+
 @end
 
 // define the class proxy...
@@ -1404,12 +1417,10 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 		{
 		  return NO;
 		}
-	      /*
 	      else if([name isEqualToString: @"NSFontManager"])
 		{
 		  return NO;
 		}
-	      */
 	      else if([name isEqualToString: @"NSHelpManager"])
 		{
 		  return NO;

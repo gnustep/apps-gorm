@@ -1,3 +1,16 @@
+2004-03-21 23:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.[hm]: added [GormDocument _instantiateFontManager] 
+	method to create the font manager when something requiring one 
+	is added.  Other additions to the header to add the font manager
+	functionality.   Removed declaration and references to old 
+	GormFontManager class.  Modified attachObject:toParent: to properly
+	detect when a menu item is being added which needs the font manager.
+	* GormObjectProxy.m: Added implementation of imageForViewer
+	to show a font manager icon, if the object is a NSFontManager or
+	some subclass.
+	* GormObjectEditor.m: Minor cleanup.
+	
 2004-03-21 10:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.[hm]: Initial code changes for new FontManager.

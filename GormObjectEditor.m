@@ -61,10 +61,10 @@
   if (image == nil)
     {
       NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormUnknown"];
-
+      NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
+
   return image;
 }
 @end
