@@ -1,3 +1,9 @@
+2005-01-23 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormFunctions.m: identifierString() added code which tests
+	the result to see if it's zero length.  If it is, it's 
+	replaced with "dummyIdentifier".  
+
 2005-01-22 15:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassEditor.m: Replaced use of the class methods

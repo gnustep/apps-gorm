@@ -318,6 +318,12 @@ NSString *identifierString(NSString *str)
       r = [result rangeOfCharacterFromSet: white];
     }
 
+  // check the result's length.
+  if([result length] == 0)
+    {
+      result = [NSString stringWithString: @"dummyIdentifier"];
+    }
+
   return result;
 }
 
