@@ -1,5 +1,10 @@
 2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Palettes/Containers/main.m: added height resize flag
+	to TextView prototype to correct bug #3270
+
+2003-08-23  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.[hm]: Made selectClassWithObject public.
 	* GormInspectorManager.m: Added logic to call selectClassWithObject
 	so that when an object is selected, the classes view focuses on it.
