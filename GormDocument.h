@@ -59,7 +59,6 @@
   GormClassEditor       *classEditor; // perhaps should not be here...
   NSString		*documentPath;
   NSMapTable		*objToName;
-  NSMutableDictionary   *tempNameTable;
   NSWindow		*window;
   NSMatrix		*selectionView;
   NSBox                 *selectionBox;
@@ -80,6 +79,10 @@
   NSMutableSet          *sounds;
   NSMutableSet          *images;
   // NSFileWrapper         *wrapper;
+
+  // working copies of objects in the container...
+  NSMutableArray        *workingConnections;
+  NSMutableDictionary   *workingNameTable;
 }
 - (void) addConnector: (id<IBConnectors>)aConnector;
 - (NSArray*) allConnectors;

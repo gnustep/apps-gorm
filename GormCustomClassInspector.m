@@ -109,7 +109,7 @@
   NSCell *cell = [browser selectedCellInColumn: 0];
   NSString *stringValue = [NSString stringWithString: [cell stringValue]];
   NSString *nameForObject = [_document nameForObject: _currentSelection];
-  NSString *classForObject = NSStringFromClass([_currentSelection class]);
+  NSString *classForObject = [GormClassManager correctClassName: NSStringFromClass([_currentSelection class])];
 
   NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
 
@@ -180,4 +180,3 @@ createRowsForColumn: (int)column
   return YES;
 }
 @end
-

@@ -27,6 +27,7 @@
 
 #include <Foundation/NSObject.h>
 #include <AppKit/NSApplication.h>
+#include <AppKit/NSNibConnector.h>
 
 // forward declarations
 @class NSString;
@@ -48,6 +49,14 @@ extern NSString *IBDidRemoveConnectorNotification;
 - (void) setDestination: (id)anObject;
 - (void) setLabel: (NSString*)label;
 - (void) setSource: (id)anObject;
+- (id) nibInstantiate;
+@end
+
+@interface NSNibConnector (IBConnectorsProtocol) <IBConnectors>
+@end
+
+@interface NSObject (IBNibInstantiation)
+- (id) nibInstantiate;
 @end
 
 @interface NSApplication (IBConnections)

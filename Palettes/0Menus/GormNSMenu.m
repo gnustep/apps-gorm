@@ -49,6 +49,18 @@
 @end
 
 @implementation GormNSMenuWindow
+- initWithCoder: (NSCoder *)coder
+{
+  NSLog(@"initWithCoder");
+  return [super initWithCoder: coder];
+}
+
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  NSLog(@"encode");
+  [super encodeWithCoder: coder];
+}
+
 - (BOOL)canBecomeMainWindow
 {
   return YES;
@@ -103,7 +115,7 @@
     {
       if (_f.is_main == YES)
 	{
-//  	  NSLog(@"already main %@", [NSApp mainWindow]);
+  	  NSLog(@"already main %@", [NSApp mainWindow]);
 	}
       [self makeMainWindow];
       [self makeKeyWindow];
@@ -111,7 +123,6 @@
 
   [super sendEvent: theEvent];
 }
-
 @end
 
 @implementation GormNSMenu

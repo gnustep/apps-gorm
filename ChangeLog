@@ -1,3 +1,12 @@
+2003-08-22  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: Removed refrences to old template classes.
+	Added code to use new template classes and fixed several 
+	bugs.
+	* Gorm.m: Removed old subclasses for deprecated template classes.
+	* GormPrivate.h: Removed subclasses for deprecated template classes.
+	* GormLib/IBConnectors.[hm]: added nibInstantiate method.
+	
 2003-08-16  Adam Fedor  <fedor@gnu.org>
 
 	* GNUmakefile.preamble (ADDITIONAL_GUI_LIBS): Add -lGormLib

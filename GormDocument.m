@@ -304,82 +304,6 @@ static NSImage	*classesImage = nil;
   return TEST_AUTORELEASE([[GormImage alloc] initWithName: name path: path]);
 }
 
-// template support
-- (void) _replaceObjectsWithTemplates
-{
-  if (![classManager isCustomClassMapEmpty])
-    {
-      NSEnumerator *en = [nameTable keyEnumerator];
-      NSString *key = nil;
-      
-      while ((key = [en nextObject]) != nil)
-	{
-	  id obj = [nameTable objectForKey: key];
-	  id template = nil;
-	  NSString *className = [classManager customClassForName: key];
-	  
-	  [tempNameTable setObject: obj forKey: key]; // save the old object
-	  NSDebugLog(@"className = (%@), obj = (%@), key = (%@)", className, obj, key);
-	  if (className != nil)
-	    {
-	      /*
-	       * The order in which these are handled is important.
-	       * The mutually exclusive conditions below need to be
-	       * evaluated in sequence to determine
-	       * which template class should be used.
-	       */
-	      if ([obj isKindOfClass: [NSWindow class]])
-		{
-		  BOOL isVisible = [self objectIsVisibleAtLaunch: obj];
-
-		  NSDebugLog(@"In the window template if...");
-		  template = [[GormNSWindowTemplate alloc] initWithObject: obj
-							   className: className];
-		  [self setObject: obj isVisibleAtLaunch: NO];
-		  [self setObject: template isVisibleAtLaunch: isVisible];
-		}
-	      else if ([obj isKindOfClass: [NSTextView class]])
-		{
-		  template = [[GormNSTextViewTemplate alloc] initWithObject: obj
-							     className: className];
-		  [[obj superview] replaceSubview: obj with: template];
-		}
-	      else if ([obj isKindOfClass: [NSText class]])
-		{
-		  template = [[GormNSTextTemplate alloc] initWithObject: obj
-							 className: className];
-		  [[obj superview] replaceSubview: obj with: template];
-		}
-	      else if ([obj isKindOfClass: [NSButton class]])
-		{
-		  template = [[GormNSButtonTemplate alloc] initWithObject: obj
-							   className: className];
-		  [[obj superview] replaceSubview: obj with: template];
-		}
-	      else if ([obj isKindOfClass: [NSControl class]])
-		{
-		  template = [[GormNSControlTemplate alloc] initWithObject: obj
-							    className: className];
-		  [[obj superview] replaceSubview: obj with: template];
-		}
-	      else if ([obj isKindOfClass: [NSView class]])
-		{
-		  template = [[GormNSViewTemplate alloc] initWithObject: obj
-							 className: className];
-		  [[obj superview] replaceSubview: obj with: template];
-		}
-	      else if ([obj isKindOfClass: [NSMenu class]])
-		{
-		  template = [[GormNSMenuTemplate alloc] initWithObject: obj
-							 className: className];
-		}
-
-	      [nameTable setObject: template forKey: key];
-	    }
-	}
-    }
-}
-
 - (void) beginArchiving
 {
   NSEnumerator		*enumerator;
@@ -416,14 +340,6 @@ static NSImage	*classesImage = nil;
     }
   [connections removeObjectsInArray: savedEditors];
 
-  /*
-   * Method to replace custom objects with templates for archiving.
-   */
-  if (![(id<IB>)NSApp isTestingInterface]) // if we arent testing the interface, substitute the templates when appropriate.
-    {
-      [self _replaceObjectsWithTemplates];
-    }
-
   NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
   [nameTable setObject: [classManager customClassMap] forKey: GSCustomClassMap];
 
@@ -443,7 +359,6 @@ static NSImage	*classesImage = nil;
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
-
 }
 
 - (void) changeCurrentClass: (id)sender
@@ -713,13 +628,14 @@ static NSImage	*classesImage = nil;
   RELEASE(savedEditors);
   RELEASE(scrollView);
   RELEASE(classesScrollView);
-  RELEASE(tempNameTable);
+  // RELEASE(workingNameTable);
   [super dealloc];
 }
 
 - (void) detachObject: (id)anObject
 {
   NSString	*name = RETAIN([self nameForObject: anObject]);
+  GormClassManager *cm = [self classManager];
   unsigned	count;
 
   [[self editorForObject: anObject create: NO] close];
@@ -746,7 +662,13 @@ static NSImage	*classesImage = nil;
    */
   [self setObject: anObject isVisibleAtLaunch: NO];
 
+  // remove from custom class map...
+  [cm removeCustomClassForObject: name];
+
+  // remove from name table...
   [nameTable removeObjectForKey: name];
+
+  // free...
   RELEASE(name);
 }
 
@@ -1321,59 +1243,6 @@ static NSImage	*classesImage = nil;
     }
 }
 
-- (void) _replaceTemplatesWithObjects
-{
-  NSEnumerator *en = [tempNameTable keyEnumerator];
-  NSString *key = nil;
-  
-  while ((key = [en nextObject]) != nil)
-    {
-      id obj = [tempNameTable objectForKey: key];
-      id template = [nameTable objectForKey: key];
-      
-      if ([template isKindOfClass: [GormNSWindowTemplate class]])
-	{
-	  BOOL isVisible = [self objectIsVisibleAtLaunch: template];
-	  [(NSWindow *)obj setContentView: [template contentView]];
-	  [self setObject: template isVisibleAtLaunch: NO];
-	  [self setObject: obj isVisibleAtLaunch: isVisible];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSTextViewTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSTextTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSButtonTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSControlTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSViewTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      else if ([template isKindOfClass: [GormNSMenuTemplate class]])
-	{
-	  [[template superview] replaceSubview: template with: obj];
-	  // RELEASE(template); // get rid of the template...
-	}
-      [nameTable setObject: obj forKey: key];
-    }
-  [tempNameTable removeAllObjects];
-}
-
 - (void) endArchiving
 {
   NSEnumerator		*enumerator;
@@ -1393,15 +1262,6 @@ static NSImage	*classesImage = nil;
     {
       [nameTable setObject: fontManager forKey: @"NSFont"];
       NSMapInsert(objToName, (void*)fontManager, (void*)@"NSFont");
-    }
-
-  /*
-   * Method to replace custom templates with objects for archiving.
-   */
-  if (![(id<IB>)NSApp isTestingInterface])
-  // do not use templates if we are testing.
-    {
-      [self _replaceTemplatesWithObjects];
     }
 
   /*
@@ -1577,10 +1437,7 @@ static NSImage	*classesImage = nil;
        */
       objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
 	NSObjectMapValueCallBacks, 128, [self zone]);
-
-      // saving objects when the gorm file is persisted.  Used for templates.
-      tempNameTable = [[NSMutableDictionary alloc] initWithCapacity: 8];
-
+      
       // for saving the editors when the gorm file is persisted.
       savedEditors = [NSMutableArray new];
 
@@ -1999,24 +1856,6 @@ static NSImage	*classesImage = nil;
   [u decodeClassName: @"NSOutlineView" 
      asClassName: @"GormNSOutlineView"];
 
-  // templates
-  [u decodeClassName: @"NSWindowTemplate" 
-     asClassName: @"GormNSWindowTemplate"];
-  [u decodeClassName: @"NSViewTemplate" 
-     asClassName: @"GormNSViewTemplate"];
-  [u decodeClassName: @"NSTextTemplate" 
-     asClassName: @"GormNSTextTemplate"];
-  [u decodeClassName: @"NSControlTemplate"
-     asClassName: @"GormNSControlTemplate"];
-  [u decodeClassName: @"NSButtonTemplate" 
-     asClassName: @"GormNSButtonTemplate"];
-  [u decodeClassName: @"NSTextViewTemplate"
-     asClassName: @"GormNSTextViewTemplate"];
-  [u decodeClassName: @"NSViewTemplate" 
-     asClassName: @"GormNSViewTemplate"];
-  [u decodeClassName: @"NSMenuTemplate" 
-     asClassName: @"GormNSMenuTemplate"];
-
   c = [u decodeObject];
   if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
     {
@@ -2346,14 +2185,14 @@ static NSImage	*classesImage = nil;
       NSRect frame;
       while ((obj = [enumerator nextObject]) != nil)
       {
-	  // check to see if the object has a frame.  If so, then
-	  // modify it.  If not, simply iterate to the next object
-	  if([obj respondsToSelector: @selector(frame)])
+	// check to see if the object has a frame.  If so, then
+	// modify it.  If not, simply iterate to the next object
+	if([obj respondsToSelector: @selector(frame)])
 	  {
-	      frame = [obj frame];
-	      frame.origin.x -= 6;
-	      frame.origin.y -= 6;
-	      [obj setFrame: frame];
+	    frame = [obj frame];
+	    frame.origin.x -= 6;
+	    frame.origin.y -= 6;
+	    [obj setFrame: frame];
 	  }
       } 
     }
@@ -2697,6 +2536,31 @@ static NSImage	*classesImage = nil;
   return NO;
 }
 
+//
+// Private method which iterates through the list of custom classes and instructs 
+// the archiver to replace the actual object with template during the archiving 
+// process.
+//
+- (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
+{
+  GormClassManager *cm = [self classManager];
+  NSDictionary *classMap = [cm customClassMap];
+  NSEnumerator *en = [classMap keyEnumerator];
+  id key = nil;
+  NSLog(@"Called");
+  while((key = [en nextObject]) != nil)
+    {
+      id customClass = [classMap objectForKey: key];
+      id object = [self objectForName: key];
+      NSString *superClass = [cm nonCustomSuperClassOf: customClass];
+      id <GSTemplate> template = [GSTemplateFactory templateForObject: object
+						    withClassName: customClass
+						    withSuperClassName: superClass];
+      NSLog(@"object = %@, key = %@, className = %@", object, key, customClass);
+      [archiver replaceObject: object withObject: template];
+    }
+}
+
 - (BOOL) saveGormDocument: (id)sender
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
@@ -2749,24 +2613,7 @@ static NSImage	*classesImage = nil;
   [archiver encodeClassName: @"GormNSOutlineView" 
 	    intoClassName: @"NSOutlineView"];
 
-  /* Templates */
-  [archiver encodeClassName: @"GormNSWindowTemplate" 
-	    intoClassName: @"NSWindowTemplate"];
-  [archiver encodeClassName: @"GormNSViewTemplate" 
-	    intoClassName: @"NSViewTemplate"];
-  [archiver encodeClassName: @"GormNSTextTemplate" 
-	    intoClassName: @"NSTextTemplate"];
-  [archiver encodeClassName: @"GormNSControlTemplate" 
-	    intoClassName: @"NSControlTemplate"];
-  [archiver encodeClassName: @"GormNSButtonTemplate" 
-	    intoClassName: @"NSButtonTemplate"];
-  [archiver encodeClassName: @"GormNSTextViewTemplate" 
-	    intoClassName: @"NSTextViewTemplate"];
-  [archiver encodeClassName: @"GormNSViewTemplate" 
-	    intoClassName: @"NSViewTemplate"];
-  [archiver encodeClassName: @"GormNSMenuTemplate" 
-	    intoClassName: @"NSMenuTemplate"];
-
+  [self _replaceObjectsWithTemplates: archiver];
 
   [archiver encodeRootObject: self];
   NSDebugLog(@"nameTable = %@",nameTable);

@@ -58,54 +58,6 @@ extern NSString *GormDidDeleteClassNotification;
 - (void) setClassName: (NSString *)className;
 @end
 
-// Additions to template classes within gorm.
-@protocol GormTemplate
-- (id) initWithObject: (id)object className: (NSString *)name;
-@end
-
-@interface NSWindowTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSViewTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSTextTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSControlTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSButtonTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSTextViewTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-@interface NSMenuTemplate (GormCustomClassAdditions) <GormTemplate>
-@end
-
-// gorm template subclasses
-@interface GormNSWindowTemplate : NSWindowTemplate
-@end
-
-@interface GormNSViewTemplate : NSViewTemplate
-@end
-
-@interface GormNSTextTemplate : NSTextTemplate
-@end
-
-@interface GormNSControlTemplate : NSControlTemplate
-@end
-
-@interface GormNSButtonTemplate : NSButtonTemplate
-@end
-
-@interface GormNSTextViewTemplate : NSTextViewTemplate
-@end
-
-@interface GormNSMenuTemplate : NSMenuTemplate
-@end
-
 @interface GormClassProxy : NSObject
 {
   NSString *name;

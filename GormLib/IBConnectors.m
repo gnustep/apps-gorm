@@ -1,4 +1,4 @@
-/* IBApplicationAdditions.m
+/* IBConnectors.m
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
@@ -23,6 +23,7 @@
  */
 
 #include <Foundation/NSString.h>
+#include <AppKit/NSNibConnector.h>
 
 NSString *IBWillAddConnectorNotification
   = @"IBWillAddConnectorNotification";
@@ -32,3 +33,4 @@ NSString *IBWillRemoveConnectorNotification
   = @"IBWillRemoveConnectorNotification";
 NSString *IBDidRemoveConnectorNotification
   = @"IBDidRemoveConnectorNotification";
+

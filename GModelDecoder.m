@@ -404,4 +404,3 @@ Class gmodel_class(NSString *className)
     }
   return gmclass;
 }
-
