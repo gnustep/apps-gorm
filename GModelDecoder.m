@@ -191,8 +191,9 @@ static BOOL gormFileOwnerDecoded;
    is, and at best, we could search the connections to see what
    outlets and actions are used.
 */
-- (void) defineClass: (NSString *)classname inFile: (NSString *)path
+- (void) defineClass: (id)object inFile: (NSString *)path
 {
+  NSString *classname = [object className];
   int result;
   NSString *header;
   NSFileManager *mgr;
@@ -237,9 +238,36 @@ static BOOL gormFileOwnerDecoded;
 	}
     }
 
-  /* For now, just punt if we have no header. */
+  // make a guess and warn the user
   if (result != NSAlertDefaultReturn)
-    return;
+    {
+      NSString *superClass = nil;
+      BOOL added = NO;
+
+      if([object isKindOfClass: [GormCustomView class]])
+	{
+	  superClass = @"NSView";
+	}
+      else
+	{
+	  superClass = @"NSObject";
+	}
+
+      added = [classManager addClassNamed: classname
+			    withSuperClassNamed: superClass
+			    withActions: [NSMutableArray array]
+			    withOutlets: [NSMutableArray array]];
+
+      // inform the user...
+      if(added)
+	{
+	  NSLog(@"Added class %@ with superclass of %@.", classname, superClass);
+	}
+      else
+	{
+	  NSLog(@"Failed to add class %@ with superclass of %@.", classname, superClass);
+	}
+    }
 
   [self parseHeader: header];
 }
@@ -268,7 +296,6 @@ static BOOL gormFileOwnerDecoded;
   NSArray          *gmobjects;
   NSArray          *gmconnections;
   Class             u = gmodel_class(@"GMUnarchiver");
-  GormClassManager *classManager = [(Gorm *)NSApp classManager];
 
   NSLog (@"Loading gmodel file %@...", path);
   gormNibOwner = nil;
@@ -312,27 +339,8 @@ static BOOL gormFileOwnerDecoded;
 
   if (gormNibOwner)
     {
-      [self defineClass: [gormNibOwner className] inFile: path];
+      [self defineClass: gormNibOwner inFile: path];
       [filesOwner setClassName: [gormNibOwner className]];
-    }
-
-  enumerator = [gmconnections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSNibConnector *newcon;
-      id source, dest;
-
-      source = [self connectionObjectForObject: [con source]];
-      dest   = [self connectionObjectForObject: [con destination]];
-      if ([con isKindOfClass: NSClassFromString(@"NSIBOutletConnector")])
-	newcon = AUTORELEASE([[NSNibOutletConnector alloc] init]);
-      else
-	newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
-      
-      [newcon setSource: source];
-      [newcon setDestination: dest];
-      [newcon setLabel: [con label]];
-      [connections addObject: newcon];
     }
 
   /*
@@ -348,9 +356,49 @@ static BOOL gormFileOwnerDecoded;
       if([obj isKindOfClass: [GormObjectProxy class]])
 	{
 	  NSLog(@"processing... %@",[obj className]);
-	  [self defineClass: [obj className] inFile: path];
+	  [self defineClass: obj inFile: path];
 	} 
     }
+
+  // build connections...
+  enumerator = [gmconnections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSNibConnector *newcon;
+      id source, dest;
+
+      source = [self connectionObjectForObject: [con source]];
+      dest   = [self connectionObjectForObject: [con destination]];
+      NSLog(@"connector = %@",con);
+      if ([[con className] isEqual: @"IMOutletConnector"]) // We don't link the gmodel library at compile time...
+	{
+	  newcon = AUTORELEASE([[NSNibOutletConnector alloc] init]);
+	  if(![classManager isOutlet: [con label] 
+			    ofClass: [source className]])
+	    {
+	      [classManager addOutlet: [con label] 
+			    forClassNamed: [source className]];
+	    }
+	}
+      else
+	{
+	  newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
+	  if(![classManager isAction: [con label] 
+			    ofClass: [dest className]])
+	    {
+	      [classManager addAction: [con label] 
+			    forClassNamed: [dest className]];
+	    }	  
+	}
+      
+      NSLog(@"conn = %@  source = %@ dest = %@ label = %@, src name = %@ dest name = %@", newcon, source, dest, 
+	    [con label], [source className], [dest className]);
+      [newcon setSource: source];
+      [newcon setDestination: dest];
+      [newcon setLabel: [con label]];
+      [connections addObject: newcon];
+    }
+
   if ([gormRealObject isKindOfClass: [GModelApplication class]])
     {
       enumerator = [[gormRealObject windows] objectEnumerator];

@@ -253,7 +253,6 @@
     {
       [self addOutlet: outlet forClassNamed: subclassName];
     }
-
 }
 
 - (void) replaceAction: (NSString *)oldAction

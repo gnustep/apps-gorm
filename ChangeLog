@@ -1,3 +1,14 @@
+2004-05-09 10:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GModelDecoder.m: defineClass:inFile: changed signature
+	to take the object and get the classname from it.  This allows
+	a call to add the class under an assumed superclass, if the user
+	says no to the query.  Also in loadGModel: added code to pull
+	the outlet/action from the connections and add them to the class
+	if they are not present on the imported header.  This also allows,
+	in the above case, for Gorm to automatically get all outlets/actions
+	from the gmodel.
+
 2004-05-08 08:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument loadDocument:] added code
