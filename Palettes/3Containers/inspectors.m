@@ -160,6 +160,216 @@
 @end
 
 /*----------------------------------------------------------------------------
+ * NSTableColumn
+ */
+@implementation NSTableColumn (IBInspectorClassNames)
+- (NSString *) inspectorClassName
+{
+  return @"GormTableColumnAttributesInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormTableColumnSizeInspector";
+}
+
+@end
+
+@interface GormTableColumnAttributesInspector : IBInspector
+{
+  id titleAlignmentMatrix;
+  id contentsAlignmentMatrix;
+  id identifierTextField;
+  id resizableSwitch;
+  id editableSwitch;
+}
+@end
+
+@implementation GormTableColumnAttributesInspector
+- (id) init
+{
+  if ([super init] == nil)
+    {
+      return nil;
+    }
+
+  if ([NSBundle loadNibNamed: @"GormTableColumnInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormTableColumnInspector");
+      return nil;
+    }
+
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  NSLog(@"ok");
+  [self _setValuesFromControl: sender];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+- (void) _getValuesFromObject: anObject
+{
+  switch ([[anObject headerCell] alignment])
+    {
+    case NSLeftTextAlignment:
+      [titleAlignmentMatrix selectCellAtRow: 0 column: 0];
+      break;
+    case NSCenterTextAlignment:
+      [titleAlignmentMatrix selectCellAtRow: 0 column: 1];
+      break;
+    case NSRightTextAlignment:
+      [titleAlignmentMatrix selectCellAtRow: 0 column: 2];
+      break;
+      
+    }
+
+  switch ([[anObject dataCell] alignment])
+    {
+    case NSLeftTextAlignment:
+      [contentsAlignmentMatrix selectCellAtRow: 0 column: 0];
+      break;
+    case NSCenterTextAlignment:
+      [contentsAlignmentMatrix selectCellAtRow: 0 column: 1];
+      break;
+    case NSRightTextAlignment:
+      [contentsAlignmentMatrix selectCellAtRow: 0 column: 2];
+      break;
+      
+    }
+
+  [identifierTextField setStringValue: [anObject identifier]];
+
+  if ([anObject isResizable])
+    [resizableSwitch setState: NSOnState];
+  else
+    [resizableSwitch setState: NSOffState];
+
+  if ([anObject isEditable])
+    [editableSwitch setState: NSOnState];
+  else
+    [editableSwitch setState: NSOffState];
+}
+
+- (void) _setValuesFromControl: (id) control
+{
+  if (control == titleAlignmentMatrix)
+    {
+      if ([[control cellAtRow: 0 column: 0] state] == NSOnState)
+	{
+	  [[object headerCell] setAlignment: NSLeftTextAlignment];
+	}
+      else if ([[control cellAtRow: 0 column: 1] state] == NSOnState)
+	{
+	  [[object headerCell] setAlignment: NSCenterTextAlignment];
+	}
+      else if ([[control cellAtRow: 0 column: 2] state] == NSOnState)
+	{
+	  [[object headerCell] setAlignment: NSRightTextAlignment];
+	}
+
+      if ([[object tableView] headerView] != nil)
+	{
+	  [[[object tableView] headerView] setNeedsDisplay: YES];
+	}
+    }
+  else if (control == contentsAlignmentMatrix)
+    {
+      if ([[control cellAtRow: 0 column: 0] state] == NSOnState)
+	{
+	  [[object dataCell] setAlignment: NSLeftTextAlignment];
+	}
+      else if ([[control cellAtRow: 0 column: 1] state] == NSOnState)
+	{
+	  [[object dataCell] setAlignment: NSCenterTextAlignment];
+	}
+      else if ([[control cellAtRow: 0 column: 2] state] == NSOnState)
+	{
+	  [[object dataCell] setAlignment: NSRightTextAlignment];
+	}
+      [[object tableView] setNeedsDisplay: YES];
+    }
+  else if (control == identifierTextField)
+    {
+      [object setIdentifier:
+		[identifierTextField stringValue]];
+    }
+  else if (control == editableSwitch)
+    {
+      [object setEditable:
+		([editableSwitch state] == NSOnState)];
+    }
+  else if (control == resizableSwitch)
+    {
+      [object setResizable:
+		([resizableSwitch state] == NSOnState)];
+    }
+}
+@end
+
+@interface GormTableColumnSizeInspector : IBInspector
+{
+  id widthForm;
+}
+@end
+
+@implementation GormTableColumnSizeInspector
+- (id) init
+{
+  if ([super init] == nil)
+    {
+      return nil;
+    }
+
+  if ([NSBundle loadNibNamed: @"GormTableColumnSizeInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormTableColumnSizeInspector");
+      return nil;
+    }
+
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  NSLog(@"ok");
+  [self _setValuesFromControl: sender];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+- (void) _getValuesFromObject: anObject
+{
+  [[widthForm cellAtRow: 0 column: 0] setFloatValue:
+					[anObject minWidth]];
+  [[widthForm cellAtRow: 1 column: 0] setFloatValue:
+					[anObject width]];
+  [[widthForm cellAtRow: 2 column: 0] setFloatValue:
+					[anObject maxWidth]];
+}
+
+- (void) _setValuesFromControl: (id) control
+{
+  [object setMinWidth:
+	    [[widthForm cellAtRow: 0 column: 0] floatValue]];
+  [object setWidth:
+	    [[widthForm cellAtRow: 1 column: 0] floatValue]];
+  [object setMaxWidth:
+	    [[widthForm cellAtRow: 2 column: 0] floatValue]];
+
+  [self _getValuesFromObject: object];
+}
+@end
+
+/*----------------------------------------------------------------------------
  * NSTableView (possibly embedded in a Scroll view)
  */
 @implementation	NSTableView (IBInspectorClassNames)
@@ -202,14 +412,14 @@
   scrollView = [[object superview] superview];
   isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
 
-  if (control == optionMatrix)
+  if (control == selectionMatrix)
     {
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      [object setAllowsMultipleSelection: flag];
+      [object setGormAllowsMultipleSelection: flag];
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
-      [object setAllowsEmptySelection: flag];
+      [object setGormAllowsEmptySelection: flag];
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      [object setAllowsColumnSelection: flag];
+      [object setGormAllowsColumnSelection: flag];
     }
 
   else if ( (control == verticalScrollerSwitch) && isScrollView)
@@ -239,9 +449,9 @@
       flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
       [object setDrawsGrid: flag];
       flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
-      [object setAllowsColumnResizing: flag];
+      [object setGormAllowsColumnResizing: flag];
       flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      [object setAllowsColumnReordering: flag];
+      [object setGormAllowsColumnReordering: flag];
     }
   else if( control == tagField )
     {
@@ -249,6 +459,7 @@
     }
   
   [scrollView setNeedsDisplay: YES];
+
 }
 
 - (void) _getValuesFromObject: anObject
@@ -265,14 +476,14 @@
     {
       return;
     }
-  
+
   [selectionMatrix deselectAllCells];
-  if ([anObject allowsMultipleSelection])
-    [optionMatrix selectCellAtRow: 0 column: 0];
-  if ([anObject allowsEmptySelection])
-    [optionMatrix selectCellAtRow: 1 column: 0];
-  if ([anObject allowsColumnSelection])
-    [optionMatrix selectCellAtRow: 2 column: 0];
+  if ([anObject gormAllowsMultipleSelection])
+    [selectionMatrix selectCellAtRow: 0 column: 0];
+  if ([anObject gormAllowsEmptySelection])
+    [selectionMatrix selectCellAtRow: 1 column: 0];
+  if ([anObject gormAllowsColumnSelection])
+    [selectionMatrix selectCellAtRow: 2 column: 0];
 
   if (isScrollView)
     {
@@ -299,9 +510,9 @@
   [optionMatrix deselectAllCells];
   if ([anObject drawsGrid])
     [optionMatrix selectCellAtRow: 0 column: 0];
-  if ([anObject allowsColumnResizing])
+  if ([anObject gormAllowsColumnResizing])
     [optionMatrix selectCellAtRow: 1 column: 0];
-  if ([anObject allowsColumnReordering])
+  if ([anObject gormAllowsColumnReordering])
     [optionMatrix selectCellAtRow: 2 column: 0];
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
 }

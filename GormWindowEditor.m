@@ -64,7 +64,7 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
 
 @class GSTableCornerView;
 
-static NSView *bestKnownSuperview(NSView *aView)
+static NSView *bestKnownSuperview(NSView *aView, NSPoint loc)
 {
   NSView *best = aView;
   NSView *view = aView;
@@ -72,7 +72,18 @@ static NSView *bestKnownSuperview(NSView *aView)
   
   if ([view isKindOfClass:[NSTableHeaderView class]])
     {
-      return [view tableView];
+      NSPoint p = [view convertPoint: loc
+			 fromView: nil];
+      int columnNumber = [(NSTableHeaderView*) view columnAtPoint: p];
+
+      if (columnNumber == -1)
+	return nil;
+
+      if ([(NSTableHeaderView*)view tableView] == nil)
+	return nil;
+
+      return [[[(NSTableHeaderView*)view tableView] tableColumns] 
+	       objectAtIndex: columnNumber];
     }
   else if ([view isKindOfClass:[GSTableCornerView class]])
     {
@@ -814,6 +825,22 @@ static BOOL done_editing;
 	  if ([subeditor editedObject] != view)
 	    [subeditor changeObject: view];
 	}
+      else if ([view isKindOfClass: [NSScrollView class]])
+	{
+	  if ([view documentView] 
+	      && [[view documentView] isKindOfClass: 
+					[NSTableView class]])
+	    {
+	      id subeditor;
+	      if ((subeditor = [self openSubeditorForObject: 
+				       [view documentView]]) == nil)
+		{
+		  NSLog(@"Could not open editor for %@", view);
+		}
+	      if ([subeditor editedObject] != [view documentView])
+		[subeditor changeObject: [view documentView]];
+	    }
+	}
       else if ([view isKindOfClass: [NSTextField class]])
 	{
 	  [self editTextField: view withEvent: (NSEvent *)theEvent];
@@ -1454,7 +1481,7 @@ static BOOL done_editing;
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
 
-      sub = bestKnownSuperview(sub);
+      sub = bestKnownSuperview(sub, loc);
 
       if (sub == self)
 	{
@@ -1673,7 +1700,7 @@ static BOOL done_editing;
       NSPoint	loc = [sender draggingLocation];
       NSView	*sub = [super hitTest: loc];
 
-      sub = bestKnownSuperview(sub);
+      sub = bestKnownSuperview(sub, loc);
 
       //      NSLog(@"DST %@",sub);
       

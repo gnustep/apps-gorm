@@ -31,7 +31,9 @@ PALETTE_NAME = 3Containers
 3Containers_PRINCIPAL_CLASS = ContainersPalette
 3Containers_RESOURCE_FILES = ContainersPalette.tiff \
 	GormBrowserInspector.gorm \
-	GormTableViewInspector.gorm
+	GormTableViewInspector.gorm \
+	GormTableColumnInspector.gorm \
+	GormTableColumnSizeInspector.gorm
 
 -include GNUmakefile.preamble
 

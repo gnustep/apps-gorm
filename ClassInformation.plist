@@ -1,409 +1,609 @@
 {
+  FirstResponder = {
+    Actions = (
+      activateContextHelpMode:,
+      alignCenter:,
+      alignJustified:,
+      alignLeft:,
+      alignRight:,
+      arrangeInFront:,
+      cancel:,
+      capitalizeWord:,
+      changeColor:,
+      changeFont:,
+      checkSpelling:,
+      close:,
+      complete:,
+      copy:,
+      copyFont:,
+      copyRuler:,
+      cut:,
+      delete:,
+      deleteBackward:,
+      deleteForward:,
+      deleteToBeginningOfLine:,
+      deleteToBeginningOfParagraph:,
+      deleteToEndOfLine:,
+      deleteToEndOfParagraph:,
+      deleteToMark:,
+      deleteWordBackward:,
+      deleteWordForward:,
+      deminiaturize:,
+      deselectAll:,
+      fax:,
+      hide:,
+      hideOtherApplications:,
+      indent:,
+      loosenKerning:,
+      lowerBaseline:,
+      lowercaseWord:,
+      makeKeyAndOrderFront:,
+      miniaturize:,
+      miniaturizeAll:,
+      moveBackward:,
+      moveBackwardAndModifySelection:,
+      moveDown:,
+      moveDownAndModifySelection:,
+      moveForward:,
+      moveForwardAndModifySelection:,
+      moveLeft:,
+      moveRight:,
+      moveToBeginningOfDocument:,
+      moveToBeginningOfLine:,
+      moveToBeginningOfParagraph:,
+      moveToEndOfDocument:,
+      moveToEndOfLine:,
+      moveToEndOfParagraph:,
+      moveUp:,
+      moveUpAndModifySelection:,
+      moveWordBackward:,
+      moveWordBackwardAndModifySelection:,
+      moveWordForward:,
+      moveWordForwardAndModifySelection:,
+      ok:,
+      open:,
+      orderBack:,
+      orderFront:,
+      orderFrontColorPanel:,
+      orderFrontDataLinkPanel:,
+      orderFrontHelpPanel:,
+      orderFrontStandardAboutPanel:,
+      orderFrontStandardInfoPanel:,
+      orderOut:,
+      pageDown:,
+      pageUp:,
+      paste:,
+      pasteAsPlainText:,
+      pasteAsRichText:,
+      pasteFont:,
+      pasteRuler:,
+      performClose:,
+      performMiniaturize:,
+      performZoom:,
+      print:,
+      raiseBaseline:,
+      runPageLayout:,
+      runToolbarCustomizationPalette:,
+      scrollLineDown:,
+      scrollLineUp:,
+      scrollPageDown:,
+      scrollPageUp:,
+      scrollViaScroller:,
+      selectAll:,
+      selectLine:,
+      selectNextKeyView:,
+      selectParagraph:,
+      selectPreviousKeyView:,
+      selectText:,
+      selectText:,
+      selectToMark:,
+      selectWord:,
+      showContextHelp:,
+      showGuessPanel:,
+      showHelp:,
+      showWindow:,
+      stop:,
+      subscript:,
+      superscript:,
+      swapWithMark:,
+      takeDoubleValueFrom:,
+      takeFloatValueFrom:,
+      takeIntValueFrom:,
+      takeObjectValueFrom:,
+      takeStringValueFrom:,
+      terminate:,
+      tightenKerning:,
+      toggle:,
+      toggleContinuousSpellChecking:,
+      toggleRuler:,
+      toggleToolbarShown:,
+      toggleTraditionalCharacterShape:,
+      transpose:,
+      transposeWords:,
+      turnOffKerning:,
+      turnOffLigatures:,
+      underline:,
+      unhide:,
+      unhideAllApplications:,
+      unscript:,
+      uppercaseWord:,
+      useAllLigatures:,
+      useStandardKerning:,
+      useStandardLigatures:,
+      yank:,
+      zoom:
+    );
+    Super = NSObject;
+  };
+
   IBInspector = {
     Actions = (
-      "ok:",
-      "revert:",
-      "touch:"
+      ok:,
+      revert:,
+      touch:
     );
     Outlets = (
       window
     );
     Super = NSObject;
   };
+
+  IBPalette = {
+    Actions = (
+    );
+    Outlets = (
+      originalWindow
+    );
+    Super = NSObject;
+  };
+  NSActionCell = {
+    Super = NSCell;
+  };
   NSApplication = {
+    Actions = (
+      arrangeInFront:,
+      hide:,
+      hideOtherApplications:,
+      miniaturizeAll:,
+      orderFrontColorPanel:,
+      orderFrontDataLinkPanel:,
+      orderFrontHelpPanel:,
+      orderFrontStandardAboutPanel:,
+      orderFrontStandardInfoPanel:,
+      runPageLayout:,
+      stop:,
+      terminate:,
+      unhide:,
+      unhideAllApplications:
+    );
+    Outlets = (
+      delegate
+    );
     Super = NSResponder;
+  };
+
+  NSArray = {
+    Super = NSObject;
+  };
+
+  NSBrowser = {
+    Actions = (
+      doClick:,
+      doDoubleClick:,
+      selectAll:
+    );
     Outlets = (
       delegate
     );
-    Actions = (
-        "arrangeInFront:",
-        "hide:",
-        "hideOtherApplications:",
-        "miniaturizeAll:",
-        "orderFrontColorPanel:",
-        "orderFrontDataLinkPanel:",
-        "orderFrontHelpPanel:",
-        "orderFrontStandardAboutPanel:",
-        "orderFrontStandardInfoPanel:",
-        "runPageLayout:",
-        "stop:",
-        "terminate:",
-        "unhide:",
-        "unhideAllApplications:"
-    );
+    Super = NSControl;
   };
+
+  NSBrowserCell = {
+    Super = NSCell;
+  };
+
   NSButton = {
+    Actions = (
+      performClick:
+    );
     Super = NSControl;
   };
-  NSBrowser = 
-  {
-    Outlets = (
-      delegate
-    );
-    Super = NScontrol;
+
+  NSButtonCell = {
     Actions = (
-        "doClick:",
-        "doDoubleClick:"
+      performClick:
     );
+    Super = NSActionCell;
   };
+
+  NSCStringText = {
+    Actions = (
+      clear:,
+      selectText:
+    );
+    Super = NSText;
+  };
+
+  NSCell = {
+    Actions = (
+      takeDoubleValueFrom:,
+      takeFloatValueFrom:,
+      takeIntValueFrom:,
+      takeStringValueFrom:
+    );
+    Super = NSObject;
+  };
+
   NSColorWell = {
-    Super = NSControl;
     Actions = (
-        "takeColorFrom:"
+      takeColorFrom:
     );
+    Super = NSControl;
   };
+
+  NSComboBox = {
+    Outlets = (
+      dataSource
+    );
+    Super = NSTextField;
+  };
+
   NSControl = {
     Actions = (
-      "takeDoubleValueFrom:",
-      "takeFloatValueFrom:",
-      "takeIntValueFrom:",
-      "takeObjectValueFrom:",
-      "takeStringValueFrom:"
+      takeDoubleValueFrom:,
+      takeFloatValueFrom:,
+      takeIntValueFrom:,
+      takeObjectValueFrom:,
+      takeStringValueFrom:
     );
     Outlets = (
-      target
+        target
     );
     Super = NSView;
   };
-  NSDocumentController = 
-  {
+
+  NSCursor = {
     Super = NSObject;
-    Actions = (
-      "saveAllDocuments:",
-      "openDocument:",
-      "newDocument:",
-      "clearRecentDocuments:"
-    );
   };
-  NSDocument = 
-  {
+
+  NSDateFormatter = {
+    Super = NSFormatter;
+  };
+
+  NSDictionary = {
     Super = NSObject;
-    Actions = (
-        "runPageLayout:",
-        "printDocument:",
-        "saveDocument:",
-        "saveDocumentAs:",
-        "saveDocumentTo:",
-        "revertDocumentToSaved:"
-    );
   };
-  NSDrawer = 
-  {
-    Super = NSResponder;
+
+  NSDocument = {
     Actions = (
-        "close:",
-        "open:",
-        "toggle:"
+      printDocument:,
+      revertDocumentToSaved:,
+      runPageLayout:,
+      saveDocument:,
+      saveDocumentAs:,
+      saveDocumentTo:
+    );
+    Super = NSObject;
+  };
+
+  NSDocumentController = {
+    Actions = (
+      clearRecentDocuments:,
+      newDocument:,
+      openDocument:,
+      saveAllDocuments:
+    );
+    Super = NSObject;
+  };
+
+  NSDrawer = {
+    Actions = (
+      close:,
+      open:,
+      toggle:
     );
     Outlets = (
       delegate
     );
-  };
-  NSFontManager = 
-  {
     Super = NSResponder;
-    Actions = (
-        "addFontTrait:",
-        "removeFontTrait:",
-        "modifyFont:",
-        "modifyFontViaPanel:",
-        "orderFrontFontPanel:"
-    );
   };
 
-  NSHelpManager = 
-  {
-    Super = NSResponder;
+  NSFontManager = {
     Actions = (
-        "showHelp:",
-        "activateContextHelpMode:"
+      addFontTrait:,
+      modifyFont:,
+      modifyFontViaPanel:,
+      orderFrontFontPanel:,
+      removeFontTrait:
     );
+    Outlets = (
+        menu
+    );
+    Super = NSResponder;
   };
-  
+
+  NSForm = {
+    Super = NSMatrix;
+  };
+
+  NSFormCell = {
+    Super = NSActionCell;
+  };
+
+  NSFormatter = {
+    Super = NSObject;
+  };
+
+  NSHelpManager = {
+    Actions = (
+      activateContextHelpMode:,
+      showHelp:
+    );
+    Super = NSResponder;
+  };
+
+  NSImage = {
+    Super = NSObject;
+  };
+
+  NSImageView = {
+    Super = NScontrol;
+  };
+
+  NSMatrix = {
+    Actions = (
+      selectAll:,
+      selectText:
+    );
+    Outlets = (
+        delegate
+    );
+    Super = NSControl;
+  };
 
   NSMenu = {
     Super = NSObject;
   };
+
   NSMenuItem = {
     Outlets = (
       target
     );
     Super = NSObject;
   };
+
+  NSMutableArray = {
+    Super = NSArray;
+  };
+
+  NSMutableDictionary = {
+    Super = NSDictionary;
+  };
+
+  NSNumberFormatter = {
+    Super = NSFormatter;
+  };
+
   NSPanel = {
     Super = NSWindow;
   };
+
+  NSPopUpButton = {
+    Super = NSButton;
+  };
+
   NSProgressIndicator = {
-    Super = NSObject;
     Actions = (
-        "animate:",
-        "startAnimation:",
-        "stopAnimation:"
+      animate:,
+      startAnimation:,
+      stopAnimation:
     );
-  };
-  
-  NSSlider = {
-    Super = NSControl;
-  };
-  
-  NSTextField = {
-    Outlets = (
-      delegate
-    );
-    Super = NSControl;
+    Super = NSObject;
   };
 
   NSResponder = {
-    Super = NSObject;
-    Actions = (
-        "selectAll:",
-        "deselectAll:",
-        "selectText:"
+    Outlets = (
+      menu
     );
+    Super = NSObject;
+  };
+
+  NSRulerView = {
+    Super = NSView;
+  };
+
+  NSScrollView = {
+    Super = NSView;
+  };
+
+  NSScroller = {
+    Super = NSControl;
+  };
+
+  NSSecureTextField = {
+    Super = NSTextField;
+  };
+
+  NSSecureTextFieldCell = {
+    Super = NSTextFieldCell;
+  };
+
+  NSSlider = {
+    Super = NSControl;
+  };
+
+  NSSliderCell = {
+    Super = NSActionCell;
+  };
+
+  NSSplitView = {
+    Super = NSView;
   };
 
   NSTabView = {
-    Super = NSView;
     Actions = (
-        "selectFirstTabViewItem:",
-        "selectLastTabViewItem:",
-        "selectNextTabViewItem:",
-        "selectPreviousTabViewItem:",
-        "takeSelectedTabViewItemFromSender:"
+      selectFirstTabViewItem:,
+      selectLastTabViewItem:,
+      selectNextTabViewItem:,
+      selectPreviousTabViewItem:,
+      takeSelectedTabViewItemFromSender:
     );
     Outlets = (
       delegate
     );
+    Super = NSView;
+  };
+
+  NSTableColumn = {
+    Super = NSObject;
+  };
+
+  NSTableHeaderCell = {
+    Super = NSTextFieldCell;
+  };
+
+  NSTableHeaderView = {
+    Super = NSView;
+  };
+
+  NSTableView = {
+    Actions = (
+      deselectAll:,
+      selectAll:
+    );
+    Outlets = (
+      dataSource,
+      delegate
+    );
+    Super = NSControl;
   };
 
   NSText = {
-    Super = NSView;
     Actions = (
-        "toggleRuler:",
-        "copy:",
-        "copyFont:",
-        "copyRuler:",
-        "cut:",
-        "delete:",
-        "paste:",
-        "pasteFont:",
-        "pasteRuler:",
-        "selectAll:",
-        "changeFont:",
-        "alignCenter:",
-        "alignLeft:",
-        "alignRight:",
-        "subscript:",
-        "superscript:",
-        "underline:",
-        "unscript:",
-        "checkSpelling:",
-        "showGuessPanel:",
-        "changeSpelling:",
-        "ignoreSpelling:"
+      alignCenter:,
+      alignLeft:,
+      alignRight:,
+      changeFont:,
+      changeSpelling:,
+      checkSpelling:,
+      copy:,
+      copyFont:,
+      copyRuler:,
+      cut:,
+      delete:,
+      ignoreSpelling:,
+      paste:,
+      pasteFont:,
+      pasteRuler:,
+      selectAll:,
+      showGuessPanel:,
+      subscript:,
+      superscript:,
+      toggleRuler:,
+      underline:,
+      unscript:
     );
     Outlets = (
       delegate
     );
+    Super = NSView;
+  };
+
+  NSTextField = {
+    Actions = (
+      selectText:
+    );
+    Outlets = (
+      delegate
+    );
+    Super = NSControl;
+  };
+
+  NSTextFieldCell = {
+    Super = NSActionCell;
   };
 
   NSTextView = {
+    Actions = (
+      alignJustified:,
+      changeColor:,
+      deleteBackwards:,
+      insertBacktab:,
+      insertNewLine:,
+      insertParagraphSeparator:,
+      insertTab:,
+      loosenKerning:,
+      lowerBaseline:,
+      moveBackward:,
+      moveDown:,
+      moveForward:,
+      moveLeft:,
+      moveRight:,
+      moveUp:,
+      pasteAsPlainText:,
+      pasteAsRichText:,
+      raiseBaseline:,
+      tightenKerning:,
+      toggleContinuousSpellChecking:,
+      toggleTraditionalCharacterShape:,
+      turnOffKerning:,
+      turnOffLigatures:,
+      useAllLigatures:,
+      useDefaultBaseline:,
+      useDefaultKerning:,
+      useDefaultLigatures:,
+      useStandardBaseline:,
+      useStandardKerning:,
+      useStandardLigatures:
+    );
     Super = NSText;
-    Actions = (
-        "changeColor:",
-        "alignJustified:",
-        "pasteAsPlainText:",
-        "pasteAsRichText:",
-        "turnOffKerning:",
-        "tightenKerning:",
-        "loosenKerning:",
-        "useStandardKerning:",
-        "turnOffLigatures:",
-        "useStandardLigatures:",
-        "useAllLigatures:",
-        "raiseBaseline:",
-        "lowerBaseline:",
-        "toggleTraditionalCharacterShape:",
-        "toggleContinuousSpellChecking:"
-    );
   };
-    
+
   NSView = {
-    Super = NSResponder;
     Actions = (
-        "fax:",
-        "print:"
+      fax:,
+      print:
     );
-  };
-  
-  NSWindow = {
     Outlets = (
-      delegate
+      nextKeyView
     );
     Super = NSResponder;
-    Actions = (
-        "performZoom:",
-        "zoom:",
-        "orderBack:",
-        "orderFront:",
-        "orderOut:",
-        "makeKeyAndOrderFront:",
-        "selectNextKeyView:",
-        "selectPreviousKeyView:",
-        "performClose:",
-        "deminiaturize:",
-        "miniaturize:",
-        "performMiniaturize:",
-        "fax:",
-        "print:",
-        "toggleToolbarShown:",
-        "runToolbarCustomizationPalette:"
-    );
   };
+
+  NSWindow = {
+    Actions = (
+      deminiaturize:,
+      fax:,
+      makeKeyAndOrderFront:,
+      miniaturize:,
+      orderBack:,
+      orderFront:,
+      orderOut:,
+      performClose:,
+      performMiniaturize:,
+      performZoom:,
+      print:,
+      runToolbarCustomizationPalette:,
+      selectNextKeyView:,
+      selectPreviousKeyView:,
+      toggleToolbarShown:,
+      zoom:
+    );
+    Outlets = (
+      delegate,
+      initialFirstResponder
+    );
+    Super = NSResponder;
+  };
+
   NSWindowController = {
+    Actions = (
+      showWindow:
+    );
     Outlets = (
       document
     );
     Super = NSResponder;
-    Actions = (
-        "showWindow:"
-    );
   };
 
-  FirstResponder = {
-    Actions = (
-      "activateContextHelpMode:",
-      "alignCenter:",
-      "alignJustified:",
-      "alignLeft:",
-      "alignRight:",
-      "arrangeInFront:",
-      "cancel:",
-      "capitalizeWord:",
-      "changeColor:",
-      "changeFont:",
-      "checkSpelling:",
-      "close:",
-      "complete:",
-      "copy:",
-      "copyFont:",
-      "copyRuler:",
-      "cut:",
-      "delete:",
-      "deleteBackward:",
-      "deleteForward:",
-      "deleteToBeginningOfLine:",
-      "deleteToBeginningOfParagraph:",
-      "deleteToEndOfLine:",
-      "deleteToEndOfParagraph:",
-      "deleteToMark:",
-      "deleteWordBackward:",
-      "deleteWordForward:",
-      "deminiaturize:",
-      "deselectAll:",
-      "fax:",
-      "hide:",
-      "hideOtherApplications:",
-      "indent:",
-      "loosenKerning:",
-      "lowerBaseline:",
-      "lowercaseWord:",
-      "makeKeyAndOrderFront:",
-      "miniaturize:",
-      "miniaturizeAll:",
-      "moveBackward:",
-      "moveBackwardAndModifySelection:",
-      "moveDown:",
-      "moveDownAndModifySelection:",
-      "moveForward:",
-      "moveForwardAndModifySelection:",
-      "moveLeft:",
-      "moveRight:",
-      "moveToBeginningOfDocument:",
-      "moveToBeginningOfLine:",
-      "moveToBeginningOfParagraph:",
-      "moveToEndOfDocument:",
-      "moveToEndOfLine:",
-      "moveToEndOfParagraph:",
-      "moveUp:",
-      "moveUpAndModifySelection:",
-      "moveWordBackward:",
-      "moveWordBackwardAndModifySelection:",
-      "moveWordForward:",
-      "moveWordForwardAndModifySelection:",
-      "ok:",
-      "open:",
-      "orderBack:",
-      "orderFront:",
-      "orderFrontColorPanel:",
-      "orderFrontDataLinkPanel:",
-      "orderFrontHelpPanel:",
-      "orderFrontStandardAboutPanel:",
-      "orderFrontStandardInfoPanel:",
-      "orderOut:",
-      "pageDown:",
-      "pageUp:",
-      "paste:",
-      "pasteAsPlainText:",
-      "pasteAsRichText:",
-      "pasteFont:",
-      "pasteRuler:",
-      "performClose:",
-      "performMiniaturize:",
-      "performZoom:",
-      "print:",
-      "raiseBaseline:",
-      "runPageLayout:",
-      "runToolbarCustomizationPalette:",
-      "scrollLineDown:",
-      "scrollLineUp:",
-      "scrollPageDown:",
-      "scrollPageUp:",
-      "scrollViaScroller:",
-      "selectAll:",
-      "selectLine:",
-      "selectNextKeyView:",
-      "selectParagraph:",
-      "selectPreviousKeyView:",
-      "selectText:",
-      "selectText:",
-      "selectToMark:",
-      "selectWord:",
-      "showContextHelp:",
-      "showGuessPanel:",
-      "showHelp:",
-      "showWindow:",
-      "stop:",
-      "subscript:",
-      "superscript:",
-      "swapWithMark:",
-      "takeDoubleValueFrom:",
-      "takeFloatValueFrom:",
-      "takeIntValueFrom:",
-      "takeObjectValueFrom:",
-      "takeStringValueFrom:",
-      "terminate:",
-      "tightenKerning:",
-      "toggle:",
-      "toggleContinuousSpellChecking:",
-      "toggleRuler:",
-      "toggleToolbarShown:",
-      "toggleTraditionalCharacterShape:",
-      "transpose:",
-      "transposeWords:",
-      "turnOffKerning:",
-      "turnOffLigatures:",
-      "underline:",
-      "unhide:",
-      "unhideAllApplications:",
-      "unscript:",
-      "uppercaseWord:",
-      "useAllLigatures:",
-      "useStandardKerning:",
-      "useStandardLigatures:",
-      "yank:",
-      "zoom:",
-    );
-    Super = NSObject;
-  };
 }

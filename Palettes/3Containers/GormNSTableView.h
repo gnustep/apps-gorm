@@ -27,5 +27,11 @@
 @interface GormNSTableView : NSTableView
 {
   id _gormDataSource;
+  id _gormDelegate;
+  BOOL _gormAllowsColumnReordering;
+  BOOL _gormAllowsColumnResizing;
+  BOOL _gormAllowsColumnSelection;
+  BOOL _gormAllowsMultipleSelection;
+  BOOL _gormAllowsEmptySelection;
 }
 @end

@@ -119,6 +119,7 @@ Gorm_OBJC_FILES = \
 	GormFilesOwner.m \
 	GormClassEditor.m \
 	GormMatrixEditor.m \
+	GormTableViewEditor.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
 	GormWindowEditor.m \

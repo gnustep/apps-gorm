@@ -108,10 +108,43 @@ static id _sharedDataSource = nil;
   return _gormDataSource;
 }
 
+- (void)setDelegate: (id)anObject
+{
+  _gormDelegate = anObject;
+}
+
+- (id)delegate
+{
+  return _gormDelegate;
+}
+
+- (id)setGormDelegate: (id)anObject
+{
+  [super setDelegate: anObject];
+}
+
 - (void)encodeWithCoder: (NSCoder*) aCoder
 {
+  id oldDelegate;
+  _allowsColumnReordering = _gormAllowsColumnReordering;
+  _allowsColumnResizing = _gormAllowsColumnResizing;
+  _allowsColumnSelection = _gormAllowsColumnSelection;
+  _allowsMultipleSelection = _gormAllowsMultipleSelection;
+  _allowsEmptySelection = _gormAllowsEmptySelection;
+
   _dataSource = _gormDataSource;
+  oldDelegate = _delegate;
+  _delegate = _gormDelegate;
+  _numberOfRows = 0;
   [super encodeWithCoder: aCoder];
+  _numberOfRows = 10;
+  _allowsColumnReordering = YES;
+  _allowsColumnResizing = YES;
+  _allowsColumnSelection = YES;
+  _allowsMultipleSelection = NO;
+  _allowsEmptySelection = YES;
+
+  _delegate = oldDelegate;
   _dataSource = _sharedDataSource;
 }
 
@@ -119,7 +152,69 @@ static id _sharedDataSource = nil;
 {
   self = [super initWithCoder: aCoder];
   [super setDataSource: [GormNSTableView sharedDataSource]];
+
+  _gormAllowsColumnReordering = _allowsColumnReordering;
+  _gormAllowsColumnResizing = _allowsColumnResizing;
+  _gormAllowsColumnSelection = _allowsColumnSelection;
+  _gormAllowsMultipleSelection = _allowsMultipleSelection;
+  _gormAllowsEmptySelection = _allowsEmptySelection;
+  _gormDelegate = _delegate;
+  _delegate = nil;
+
   return self;
 }
+
+
+- (void) setGormAllowsColumnReordering: (BOOL)flag
+{
+  _gormAllowsColumnReordering = flag;
+}
+
+- (BOOL) gormAllowsColumnReordering
+{
+  return _gormAllowsColumnReordering;
+}
+
+- (void) setGormAllowsColumnResizing: (BOOL)flag
+{
+  _gormAllowsColumnResizing = flag;
+}
+
+- (BOOL) gormAllowsColumnResizing
+{
+  return _gormAllowsColumnResizing;
+}
+
+- (void) setGormAllowsMultipleSelection: (BOOL)flag
+{
+  _gormAllowsMultipleSelection = flag;
+}
+
+- (BOOL) gormAllowsMultipleSelection
+{
+  return _gormAllowsMultipleSelection;
+}
+
+- (void) setGormAllowsEmptySelection: (BOOL)flag
+{
+  _gormAllowsEmptySelection = flag;
+}
+
+- (BOOL) gormAllowsEmptySelection
+{
+  return _gormAllowsEmptySelection;
+}
+
+- (void) setGormAllowsColumnSelection: (BOOL)flag
+{
+  _gormAllowsColumnSelection = flag;
+}
+
+- (BOOL) gormAllowsColumnSelection
+{
+  return _gormAllowsColumnSelection;
+}
+
+
 
 @end

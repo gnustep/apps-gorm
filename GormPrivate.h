@@ -165,6 +165,14 @@ extern NSString *GormLinkPboardType;
 - (void) changeObject: anObject;
 @end
 
+@interface GormTableViewEditor : NSObject <IBEditors>
+{
+  id<IBDocuments>	document;
+  id			selected;
+  NSTableView           *tableView;
+}
+@end
+
 @interface GormFilesOwnerInspector : IBInspector
 {
   NSBrowser	*browser;

@@ -205,8 +205,20 @@ static NSImage	*classesImage = nil;
       if ([[anObject documentView] isKindOfClass: 
 				    [NSTableView class]] == YES)
 	{
-	  [self attachObject: [anObject documentView]
+	  int i;
+	  int count;
+	  NSArray *tc;
+	  id tv = [anObject documentView];
+	  tc = [tv tableColumns];
+	  count = [tc count];
+	  [self attachObject: tv
 		toParent: aParent];
+	  
+	  for (i = 0; i < count; i++)
+	    {
+	      [self attachObject: [tc objectAtIndex: i]
+		    toParent: aParent];
+	    }
 	}
       else if ([[anObject documentView] isKindOfClass: 
 					  [NSTextView class]] == YES)
@@ -1997,6 +2009,35 @@ static NSImage	*classesImage = nil;
        */
       *r = [object convertRect: [object bounds] toView: nil];
       return [object window];
+    }
+  else if ([object isKindOfClass: [NSTableColumn class]] == YES)
+    {
+      // dirty hack
+      NSTableView *tv = [[(NSTableColumn*)object dataCell] controlView];
+
+      NSTableHeaderView *th =  [tv headerView];
+      int index;
+
+      if (th == nil || tv == nil)
+	{
+	  NSLog(@"fail 1 %@ %@ %@", [(NSTableColumn*)object headerCell], th, tv);
+	  *r = NSZeroRect;
+	  return nil;
+	}
+      
+      index = [[tv tableColumns] indexOfObject: object];
+
+      if (index == NSNotFound)
+	{
+	  NSLog(@"fail 2");
+	  *r = NSZeroRect;
+	  return nil;
+	}
+      
+      *r = [th convertRect: [th headerRectOfColumn: index]
+	       toView: nil];
+      NSLog(@"%@", NSStringFromRect(*r));
+      return [th window];
     }
   else
     {
