@@ -26,6 +26,8 @@
 #define INCLUDED_INTERFACEBUIDLER_H
  
 #include <InterfaceBuilder/IBApplicationAdditions.h>
+#include <InterfaceBuilder/IBCellAdditions.h>
+#include <InterfaceBuilder/IBCellProtocol.h>
 #include <InterfaceBuilder/IBConnectors.h>
 #include <InterfaceBuilder/IBDefines.h>
 #include <InterfaceBuilder/IBDocuments.h>
@@ -33,8 +35,13 @@
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
+#include <InterfaceBuilder/IBObjectProtocol.h>
 #include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBProjects.h>
+#include <InterfaceBuilder/IBProjectFiles.h>
+#include <InterfaceBuilder/IBResourceManager.h>
 #include <InterfaceBuilder/IBSystem.h>
 #include <InterfaceBuilder/IBViewAdditions.h>
+#include <InterfaceBuilder/IBViewProtocol.h>
 
 #endif

@@ -43,6 +43,7 @@ NSString        *GormLinkPboardType = @"GormLinkPboardType";
 {
   NSMutableDictionary *nameTable;
   NSMutableArray *connections;
+  NSMutableArray *parentLinks;
   NSString *documentPath;
 }
 @end
@@ -168,9 +169,12 @@ static NSMapTable	*viewToType = 0;
 @end
 
 /**
- * Implementation of document protocol.  
+ * Implementation of document protocol for palette.  
  */
 
+//
+// NOTE: This is a very rudimentary implementation.
+//
 @implementation IBPaletteDocument
 
 - (id) initWithDocumentPath: (NSString *)docPath
@@ -180,6 +184,7 @@ static NSMapTable	*viewToType = 0;
       ASSIGN(documentPath, docPath);
       nameTable = [[NSMutableDictionary alloc] init];
       connections = [[NSMutableArray alloc] init];
+      parentLinks = [[NSMutableArray alloc] init];
     }
   return self;
 }
@@ -189,59 +194,133 @@ static NSMapTable	*viewToType = 0;
   RELEASE(documentPath);
   RELEASE(nameTable);
   RELEASE(connections);
+  RELEASE(parentLinks);
   [super dealloc];
 }
 
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
-  // does nothing...
+  [connections addObject: aConnector];
 }
 
 - (NSArray*) allConnectors
 {
-  return nil;
+  return connections;
+}
+
+- (NSString *) _uniqueObjectNameFrom: (NSString *)name
+{
+  NSString *search = [NSString stringWithString: name];
+  int i = 1;
+
+  while([nameTable objectForKey: search])
+    {
+      search = [name stringByAppendingString: [NSString stringWithFormat: @"%d",i++]];
+    }
+
+  return search;
 }
 
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
-  // does nothing...
+  NSNibConnector *conn = [NSNibConnector init];
+  NSString *name = [self _uniqueObjectNameFrom: [anObject className]];
+  
+  // create the relationship.
+  [conn setSource: aParent];
+  [conn setDestination: anObject];
+  [parentLinks addObject: conn];
+  [nameTable setObject: anObject forKey: name];
+  [connections addObject: conn];
 }
 
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent
 {
-  // does nothing...
+  NSEnumerator *en = [anArray objectEnumerator];
+  id obj;
+  
+  while((obj = [en nextObject]) != nil)
+    {
+      [self attachObject: obj toParent: aParent];
+    }
 }
 
 - (NSArray*) connectorsForDestination: (id)destination
 {
-  return nil;
+  return [self connectorsForDestination: destination ofClass: [NSObject class]];
 }
 
 - (NSArray*) connectorsForDestination: (id)destination
-			      ofClass: (Class)aConnectorClass
+			      ofClass: (Class)aClass
 {
-  return nil;
+  NSEnumerator *en = [connections objectEnumerator];
+  NSMutableArray *array = [NSMutableArray array];
+  id obj;
+  
+  while((obj = [en nextObject]) != nil)
+    {
+      id dest = [obj destination];
+      if(dest == destination && [obj isKindOfClass: aClass])
+	{
+	  [array addObject: obj];
+	}
+    }
+
+  return array;
 }
 
 - (NSArray*) connectorsForSource: (id)source
 {
-  return nil;
+  return [self connectorsForSource: source ofClass: [NSObject class]];
 }
 
 - (NSArray*) connectorsForSource: (id)source
-			 ofClass: (Class)aConnectorClass
+			 ofClass: (Class)aClass
 {
-  return nil;
+  NSEnumerator *en = [connections objectEnumerator];
+  NSMutableArray *array = [NSMutableArray array];
+  id obj;
+  
+  while((obj = [en nextObject]) != nil)
+    {
+      id src = [obj source];
+      if(src == source && [obj isKindOfClass: aClass])
+	{
+	  [array addObject: obj];
+	}
+    }
+
+  return array;
 }
 
 - (BOOL) containsObject: (id)anObject
 {
-  return NO;
+  return [[nameTable allValues] containsObject: anObject];
 }
 
 - (BOOL) containsObjectWithName: (NSString*)aName forParent: (id)parent
 {
-  return NO;
+  BOOL result = NO;
+  id obj = [nameTable objectForKey: aName];
+
+  if(obj != nil)
+    {
+      NSEnumerator *en = [parentLinks objectEnumerator];
+      id conn;
+      
+      while((conn = [en nextObject]) != nil)
+	{
+	  id dst = [conn destination];
+	  if(dst == obj)
+	    {
+	      result = YES;
+	      break;
+	    }
+	}
+      
+    }
+
+  return result;
 }
 
 - (BOOL) copyObject: (id)anObject
@@ -260,12 +339,19 @@ static NSMapTable	*viewToType = 0;
 
 - (void) detachObject: (id)anObject
 {
-  // does nothing...
+  NSString *name = [self nameForObject: anObject];
+  [nameTable removeObjectForKey: name];
 }
 
 - (void) detachObjects: (NSArray*)anArray
 {
-  // does nothing...
+  NSEnumerator *en = [anArray objectEnumerator];
+  id obj;
+  
+  while((obj = [en nextObject]) != nil)
+    {
+      [self detachObject: obj];
+    }  
 }
 
 - (NSString*) documentPath
@@ -281,6 +367,7 @@ static NSMapTable	*viewToType = 0;
 - (id<IBEditors>) editorForObject: (id)anObject
 			   create: (BOOL)flag
 {
+  // does nothing...
   return nil;
 }
 
@@ -288,22 +375,34 @@ static NSMapTable	*viewToType = 0;
 			 inEditor: (id<IBEditors>)anEditor
 			   create: (BOOL)flag
 {
+  // does nothing...
   return nil;
 }
 
 - (NSString*) nameForObject: (id)anObject
 {
-  return nil;
+  NSEnumerator *en = [nameTable keyEnumerator];
+  NSString *key;
+
+  while((key = [en nextObject]) != nil)
+    {
+      if(anObject == [nameTable objectForKey: key])
+	{
+	  break;
+	}
+    }
+  
+  return key;
 }
 
 - (id) objectForName: (NSString*)aName
 {
-  return nil;
+  return [nameTable objectForKey: aName];
 }
 
 - (NSArray*) objects
 {
-  return nil;
+  return [NSArray arrayWithArray: [nameTable allValues]];
 }
 
 - (id<IBEditors>) openEditorForObject: (id)anObject
@@ -318,7 +417,21 @@ static NSMapTable	*viewToType = 0;
 
 - (id) parentOfObject: (id)anObject
 {
-  return nil;
+  NSEnumerator *en = [parentLinks objectEnumerator];
+  id conn;
+  id result;
+
+  while((conn = [en nextObject]) != nil)
+    {
+      id dst = [conn destination];
+      if(dst == anObject)
+	{
+	  result = [conn source];
+	  break;
+	}
+    }
+  
+  return result;
 }
 
 - (NSArray*) pasteType: (NSString*)aType
@@ -330,7 +443,7 @@ static NSMapTable	*viewToType = 0;
 
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
-  // does nothing...
+  [connections removeObjectIdenticalTo: aConnector];
 }
 
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
@@ -340,7 +453,13 @@ static NSMapTable	*viewToType = 0;
 
 - (void) setName: (NSString*)aName forObject: (id)object
 {
-  
+  id obj = [nameTable objectForKey: aName];
+
+  RETAIN(obj);
+  [nameTable removeObjectForKey: aName];
+  [nameTable setObject: object forKey: aName];
+  RELEASE(obj);
+	       
 }
  
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor

@@ -1,4 +1,4 @@
-/* IBDocuments.m
+/* IBProjectFiles.h
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
@@ -22,10 +22,43 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <Foundation/NSString.h>
-#include <InterfaceBuilder/IBDocuments.h>
+#ifndef INCLUDED_IBPROJECTFILES_H
+#define INCLUDED_IBPROJECTFILES_H
 
-NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
-NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
-NSString *IBDidSaveDocumentNotification = @"IBDidSaveDocumentNotification";
-NSString *IBWillCloseDocumentNotification = @"IBWillCloseDocumentNotification";
+#include <InterfaceBuilder/IBProjects.h>
+
+@class NSString;
+
+@protocol IBProjectFiles <NSObject>
+/**
+ * The file name.
+ */
+- (NSString *) fileName;
+
+/**
+ * The file type for this file.
+ */
+- (NSString *) fileType;
+
+/**
+ * Returns YES, if the file is localized, NO if it's simply in Resources.
+ */
+- (BOOL) isLocalized;
+
+/**
+ * The language 
+ */
+- (NSString *) language;
+
+/**
+ * The path for the file.
+ */
+- (NSString *) path;
+
+/**
+ * The project to which this file belongs.
+ */
+- (id<IBProjects>) project;
+@end
+
+#endif

@@ -53,6 +53,9 @@ IBInspectorManager.h \
 IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
+IBProjects.h \
+IBProjectFiles.h \
+IBResourceManager.h \
 IBSystem.h \
 IBViewAdditions.h \
 IBViewProtocol.h \
@@ -70,7 +73,8 @@ IBEditors.m \
 IBInspector.m \
 IBInspectorManager.m \
 IBObjectAdditions.m \
-IBPalette.m
+IBPalette.m \
+IBResourceManager.m
 
 #
 # C files

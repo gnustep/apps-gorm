@@ -1,3 +1,16 @@
+2005-01-01 02:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/GNUmakefile: Added new headers and new .m file.
+	* GormLib/IBCellAdditions.h: Added include for NSCell.h
+	* GormLib/IBDocuments.h: Added documentation.
+	* GormLib/IBDocuments.m: Added include of IBDocuments.h to get
+	string declarations.
+	* GormLib/IBPalette.m: Implemented IBPaletteDocument.
+	* GormLib/IBProjectFiles.h: New
+	* GormLib/IBProjects.h: New
+	* GormLib/IBResourceManager.[hm]: New
+	* GormLib/InterfaceBuilder.h: Added new headers.
+
 2004-12-31 14:29 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindowInspector.gorm: Added form
