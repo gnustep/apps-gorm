@@ -161,7 +161,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   id classManager = [(Gorm *)NSApp classManager];
   NSString *currentClass = [inspector _currentClass];
-  NSArray *list = [classManager allOutletsForClassNamed: currentClass];
+  NSArray *list = [classManager allActionsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedAction = [GormDocument formatAction: anObject];
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];

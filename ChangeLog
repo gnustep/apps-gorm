@@ -1,3 +1,9 @@
+2004-08-23 22:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Corrected bug introduced a few 
+	days ago.  The actions tag in the class inspector wasn't 
+	functioning correctly.
+	
 2004-08-23 15:06 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.[hm]:
