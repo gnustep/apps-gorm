@@ -1125,6 +1125,10 @@ static NSImage	*classesImage = nil;
   RELEASE(editorInfo);
   [nameTable removeObjectForKey: @"NSOwner"];
   [nameTable removeObjectForKey: @"NSFirst"];
+  if (fontManager != nil)
+    {
+      [nameTable removeObjectForKey: @"NSFont"];
+    }
 
   archiveResult = [NSArchiver archiveRootObject: self toFile: documentPath];
 
@@ -1133,6 +1137,10 @@ static NSImage	*classesImage = nil;
    */
   [nameTable setObject: filesOwner forKey: @"NSOwner"];
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
+  if (fontManager != nil)
+    {
+      [nameTable setObject: fontManager forKey: @"NSFont"];
+    }
 
   /*
    * Map all connector source and destination names to their objects.
