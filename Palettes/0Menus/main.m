@@ -72,9 +72,9 @@
   [b setImagePosition: NSImageRight];
   [b setTitle: @" Info"];
   [contents addSubview: b];
-  [self associateObject: m
+  [self associateObject: i
 		   type: IBMenuPboardType
-		   with: i];
+		   with: b];
   RELEASE(b);
   RELEASE(i);
   RELEASE(m);
