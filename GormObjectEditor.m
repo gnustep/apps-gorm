@@ -477,15 +477,11 @@ static NSMapTable	*docMap = 0;
 - (id) raiseSelection: (id)sender
 {
   id	obj = [self changeSelection: sender];
+  id	e;
 
-  if ([obj isKindOfClass: [NSWindow class]])
-    {
-      [obj makeKeyAndOrderFront: self];
-    }
-  else if ([obj isKindOfClass: [NSMenu class]])
-    {
-      NSLog(@"Menu needs raising"); /* FIXME */
-    }
+  e = [document editorForObject: obj create: YES];
+  [e orderFront];
+  [e resetObject: obj];
   return self;
 }
 
@@ -577,6 +573,17 @@ static NSMapTable	*docMap = 0;
 
 - (void) resetObject: (id)anObject
 {
+  NSString		*name = [document nameForObject: anObject];
+  GormInspectorsManager	*mgr = [(Gorm*)NSApp inspectorsManager];
+
+  if ([name isEqual: @"NSOwner"] == YES)
+    {
+      [mgr setClassInspector];
+    }
+  if ([name isEqual: @"NSFirst"] == YES)
+    {
+      [mgr setClassInspector];
+    }
 }
 
 - (void) resizeWithOldSuperviewSize: (NSSize)oldSize

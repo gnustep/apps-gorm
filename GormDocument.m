@@ -547,7 +547,7 @@ static NSImage	*classesImage = nil;
     }
   else
     {
-      return [links lastObject];
+      return [[links lastObject] destination];
     }
 }
 

@@ -1148,7 +1148,7 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 - (void) resetObject: (id)anObject
 {
-  [self display];
+  [[self window] makeKeyAndOrderFront: self];
 }
 
 - (id) selectAll: (id)sender

@@ -364,6 +364,16 @@
       [panel makeKeyAndOrderFront: self];
       current = 1;
     }
+  else if (current == 4)
+    {
+      current = 1;
+    }
+  [self setCurrentInspector: self];
+}
+
+- (void) setClassInspector
+{
+  current = 4;
   [self setCurrentInspector: self];
 }
 

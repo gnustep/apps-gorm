@@ -15,6 +15,7 @@
   BOOL			hiddenDuringTest;
 }
 - (NSPanel*) panel;
+- (void) setClassInspector;
 - (void) setCurrentInspector: (id)anObject;
 - (void) updateSelection;
 @end

@@ -76,6 +76,7 @@
   NSArray	*classes;
   BOOL		hasConnections;
 }
+- (void) takeClassFrom: (id)sender;
 @end
 
 @implementation GormFilesOwnerInspector
@@ -88,52 +89,6 @@
 - (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)column
 {
   return @"Class";
-}
-
-- (BOOL) browser: (NSBrowser*)sender
-selectCellWithString: (NSString*)title
-	inColumn: (int)col
-{
-  if (hasConnections > 0 && [title isEqual: [object className]] == NO)
-    {
-      if (NSRunAlertPanel(0, @"This operation will break existing connection",
-	@"OK", @"Cancel", NULL) != NSAlertDefaultReturn)
-	{
-	  unsigned	pos = [classes indexOfObject: [object className]];
-
-	  if (pos != NSNotFound)
-	    {
-	      [browser selectRow: pos inColumn: 0];
-	    }
-	  return NO;
-	}
-      else
-	{
-	  NSArray	*array;
-	  id		doc = [(id<IB>)NSApp activeDocument];
-	  unsigned	i;
-
-	  array = [doc connectorsForSource: object
-				   ofClass: [NSNibControlConnector class]];
-	  for (i = 0; i < [array count]; i++)
-	    {
-	      id<IBConnectors>	con = [array objectAtIndex: i];
-
-	      [doc removeConnector: con];
-	    }
-	  array = [doc connectorsForSource: object
-				   ofClass: [NSNibOutletConnector class]];
-	  for (i = 0; i < [array count]; i++)
-	    {
-	      id<IBConnectors>	con = [array objectAtIndex: i];
-
-	      [doc removeConnector: con];
-	    }
-	  hasConnections = NO;
-	}
-    }
-  [object setClassName: title];
-  return YES;
 }
 
 - (void) browser: (NSBrowser*)sender
@@ -182,6 +137,8 @@ selectCellWithString: (NSString*)title
       [browser setAllowsMultipleSelection: NO];
       [browser setHasHorizontalScroller: NO];
       [browser setDelegate: self];
+      [browser setTarget: self];
+      [browser setAction: @selector(takeClassFrom:)];
 
       [contents addSubview: browser];
       RELEASE(browser);
@@ -219,6 +176,49 @@ selectCellWithString: (NSString*)title
 	  [browser selectRow: pos inColumn: 0];
 	}
     }
+}
+
+- (void) takeClassFrom: (id)sender
+{
+  NSString	*title = [[browser selectedCell] stringValue];
+
+NSLog(@"Selected %d, %@", [browser selectedRowInColumn: 0], title);
+  if (hasConnections > 0 && [title isEqual: [object className]] == NO)
+    {
+      if (NSRunAlertPanel(0, @"This operation will break existing connection",
+	@"OK", @"Cancel", NULL) != NSAlertDefaultReturn)
+	{
+	  unsigned	pos = [classes indexOfObject: [object className]];
+
+	  [browser selectRow: pos inColumn: 0];
+	  return;
+	}
+      else
+	{
+	  NSArray	*array;
+	  id		doc = [(id<IB>)NSApp activeDocument];
+	  unsigned	i;
+
+	  array = [doc connectorsForSource: object
+				   ofClass: [NSNibControlConnector class]];
+	  for (i = 0; i < [array count]; i++)
+	    {
+	      id<IBConnectors>	con = [array objectAtIndex: i];
+
+	      [doc removeConnector: con];
+	    }
+	  array = [doc connectorsForSource: object
+				   ofClass: [NSNibOutletConnector class]];
+	  for (i = 0; i < [array count]; i++)
+	    {
+	      id<IBConnectors>	con = [array objectAtIndex: i];
+
+	      [doc removeConnector: con];
+	    }
+	  hasConnections = NO;
+	}
+    }
+  [object setClassName: title];
 }
 
 @end
