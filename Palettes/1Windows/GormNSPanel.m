@@ -62,6 +62,9 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
       // Don't release when the window is closed, a window being edited may
       // be periodically opened and closed.
       [self setReleasedWhenClosed: NO];
+
+      // remove the default icon...
+      [self setMiniwindowImage: nil];
     }
 
   return self;
