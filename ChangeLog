@@ -1,3 +1,11 @@
+2002-07-16  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjectInspector.m: Removed extra RELEASE at line 93 which
+	was causing core dump.
+	* GormTableViewEditor.m: Removed [document detachObject: selected]
+	since this was deleting the reference in the map to the table when 
+	a column was deleted making connections impossible.
+
 2002-07-14  Gregory John Casamento <greg_casamento@yahoo.com>
 	
 	* GormClassManager.[hm]: Added methods to support deletion of

@@ -160,7 +160,6 @@ static NSColor *_oldColor;
     {
       NSLog(@"FIXME: remove the tableColumn from toplevel"); // FIXME
       [tableView removeTableColumn: selected];
-      [document detachObject: selected];
       [tableView deselectAll: self];
       selected = nil;
     }

@@ -90,7 +90,7 @@ selectCellWithString: (NSString*)title
   RELEASE(sets);
   RELEASE(types);
   RELEASE(okButton);
-  RELEASE(window);
+  // RELEASE(window);
   [super dealloc];
 }
 
