@@ -45,7 +45,8 @@ PALETTE_NAME = 3Containers
 	GormBrowserInspector.gorm \
 	GormTableViewInspector.gorm \
 	GormTableColumnInspector.gorm \
-	GormTableColumnSizeInspector.gorm
+	GormTableColumnSizeInspector.gorm \
+	GormTabViewInspector.gorm
 
 -include GNUmakefile.preamble
 

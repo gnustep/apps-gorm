@@ -1633,6 +1633,7 @@ static NSImage	*classesImage = nil;
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSMutableDictionary	*nt;
+  NSMutableDictionary	*cc;
   NSData		*data;
   NSUnarchiver		*u;
   GSNibContainer	*c;
@@ -1642,7 +1643,7 @@ static NSImage	*classesImage = nil;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
-
+  
   if([mgr fileExistsAtPath: aFile isDirectory: &isDir])
     {
       // if the data is in a directory, then load from objects.gorm in the directory
@@ -1709,8 +1710,14 @@ static NSImage	*classesImage = nil;
     }
 
   // retrieve the custom class data...
-  [classManager setCustomClassMap: [[c nameTable] objectForKey: @"GSCustomClassMap"]];
+  cc = [[c nameTable] objectForKey: @"GSCustomClassMap"];
+  if(cc == nil)
+    {
+      cc = [NSMutableDictionary dictionary]; // create an empty one.
+    }
+  [classManager setCustomClassMap: cc];
 
+  // convert from old file format...
   if(isDir == NO)
     {
       if (![classManager loadCustomClasses: [[aFile stringByDeletingPathExtension] 
@@ -2788,6 +2795,44 @@ static NSImage	*classesImage = nil;
   return removed;
 }
 
+- (BOOL) removeConnectionsForClassNamed: (NSString *)className
+{
+  NSEnumerator *en = [connections objectEnumerator];
+  id<IBConnectors> c = nil;
+  BOOL removed = YES;
+  int retval = -1;
+  NSString *title = [NSString stringWithFormat: @"Modifying Class"];
+  NSString *msg = [NSString stringWithFormat: 
+			      @"This will break all connections to actions/outlets to instances of class '%@'.  Continue?",
+			    className];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title,msg,@"OK",@"Cancel",nil,nil);
+  if(retval == NSAlertDefaultReturn)
+    {
+      removed = YES;
+    }
+  else
+    {
+      removed = NO;
+    }
+
+  // remove all.
+  while((c = [en nextObject]) != nil)
+    {
+      // check both...
+      if([[[c source] className] isEqualToString: className] ||
+	 [[[c destination] className] isEqualToString: className])
+	{
+	  [self removeConnector: c];
+	}
+    }
+  
+  // done...
+  NSDebugLog(@"Removed references to actions/outlets for objects of %@", className);
+  return removed;
+}
+
 // --- NSOutlineView dataSource ---
 - (id)        outlineView: (NSOutlineView *)anOutlineView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
@@ -2886,8 +2931,13 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     {
       if(![anObject isEqualToString: @""])
 	{
-	  [classManager renameClassNamed: item newName: anObject];
-	  [gov reloadData];
+	  BOOL removed = [self removeConnectionsForClassNamed: item];
+	  if(removed)
+	    {
+	      [classManager renameClassNamed: item newName: anObject];
+	      [self detachObject: [self objectForName: item]];
+	      [gov reloadData];
+	    }
 	}
     }
   [gov setNeedsDisplay: YES];

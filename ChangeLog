@@ -1,10 +1,17 @@
+2002-11-29  Gregory John Casamento <greg_casamento@yahoo.com>
+	
+	* NOTE: Added a patch submitted by Fabien Vallon to 
+	add tab view inspector.  Thanks.
+	* Palettes/3Containers/GormTabViewInspector.gorm: added.
+	* Palettes/3Containers/inspectors.m: Patched.
+	* Palettes/3Containers/GNUmakefile: Patched.	
+
 2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
 
 	* NOTE: Added a patch submitted by Fabien Vallon to 
 	add functionality to the combo box inspector.  Thanks.
 	* Palettes/4Data/GormNSComboBoxInspector.gorm: added.
-	* Palettes/4Data/inspectors.m: Patched.
-	
+	* Palettes/4Data/inspectors.m: Patched.	
 	
 2002-11-24  Gregory John Casamento  <greg_casamento@yahoo.com>
 

@@ -117,6 +117,7 @@
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
                       forClassNamed: (NSString *)className
                            isAction: (BOOL)action;
+- (BOOL) removeConnectionsForClassNamed: (NSString *)name;
 @end
 
 #endif

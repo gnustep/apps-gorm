@@ -27,7 +27,7 @@
 #include "../../GormPrivate.h"
 
 #import "GormNSTableView.h"
-
+#import "../../GormInternalViewEditor.h"
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
@@ -496,12 +496,12 @@
     {
       [verticalScrollerSwitch setEnabled: YES];
       [verticalScrollerSwitch setState: 
-         ([scrollView hasVerticalScroller]) ? NSOnState : NSOffState];
+				([scrollView hasVerticalScroller]) ? NSOnState : NSOffState];
 
       [horizontalScrollerSwitch setEnabled: YES];   
       [horizontalScrollerSwitch setState: 
-         ([scrollView hasHorizontalScroller]) ? NSOnState : NSOffState];
-
+				  ([scrollView hasHorizontalScroller]) ? NSOnState : NSOffState];
+      
       [borderMatrix setEnabled: YES];
       [borderMatrix selectCellWithTag: [scrollView borderType]];
     }
@@ -513,7 +513,7 @@
     }
 
   [[rowsHeightForm cellAtIndex: 0] setIntValue: [anObject rowHeight] ];
-
+  
   [optionMatrix deselectAllCells];
   if ([anObject drawsGrid])
     [optionMatrix selectCellAtRow: 0 column: 0];
@@ -580,5 +580,202 @@
 @end
 
 @implementation GormScrollViewAttributesInspector
+@end
+
+
+/*----------------------------------------------------------------------------
+ * NSTabView (possibly embedded in a Scroll view)
+ */
+
+static NSString *ITEM=@"item";
+
+@implementation	NSTabView (IBInspectorClassNames)
+
+- (NSString*) inspectorClassName
+{
+  return @"GormTabViewInspector";
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  //  return @"GormTableViewSizeInspector";
+}
+
+@end
+
+@interface GormTabViewInspector : IBInspector
+{
+  id typeMatrix;
+  int numberOfDisplayItem;
+  id allowtruncate;
+  id  numberOfItemsField;
+}
+
+- (void) _getValuesFromObject: (id)anObject;
+- (void) _setValuesFromControl: (id)anObject;
+@end
+
+
+@implementation GormTabViewInspector
+
+
+- (void) _setValuesFromControl: (id)control
+{
+  if (control == typeMatrix)
+    {
+      [object setTabViewType:[[control selectedCell] tag]];
+    }
+
+  if (control == allowtruncate)
+    {
+      BOOL flag;
+      flag = ([allowtruncate state] == NSOnState) ? YES : NO;
+      [object setAllowsTruncatedLabels:flag];
+    }
+
+
+  if (control == numberOfItemsField)
+    {
+      int newNumber = [[numberOfItemsField stringValue] intValue];
+
+      //Can we allow stupid numbers like 66666666 ????????
+      if (newNumber < 0) 
+	{
+	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",[object numberOfTabViewItems]]];
+	  return; 
+	}
+      if ( newNumber > [object numberOfTabViewItems] ) 
+	{
+	  int i;
+	  NSTabViewItem *newTabItem;
+	  for (i=([object numberOfTabViewItems]+1);i<=newNumber;i++)
+	    {
+	      NSString *identif = [NSString stringWithFormat:@"%i",i]; 
+	      newTabItem = [[NSTabViewItem alloc] initWithIdentifier:identif];
+	      [newTabItem setLabel:[ITEM  stringByAppendingString:identif]]; 
+	      [newTabItem setView:[[NSView alloc] init]];
+	      [object addTabViewItem:newTabItem];
+	    }
+	}
+      else 
+	{
+	  int i;
+	  for (i=([object numberOfTabViewItems]-1);i>=newNumber;i--)
+	    {
+	      [object removeTabViewItem:[object tabViewItemAtIndex:i]];
+	    }
+	}
+
+    }
+
+//        int newNumber = [itemStepper intValue];
+//        NSTabViewItem *newTabItem;
+//        if ( newNumber > numberOfDisplayItem ) 
+//  	{
+//  	  NSString *identif = [NSString stringWithFormat:@"%i",newNumber]; 
+//  	  newTabItem = [[NSTabViewItem alloc] initWithIdentifier:identif];
+//  	  [newTabItem setLabel:[ITEM  stringByAppendingString:identif]]; 
+//  	  [newTabItem setView:[[NSView alloc] init]];
+//  	  [object addTabViewItem:newTabItem];
+//  	  [displayItemsField setStringValue:identif];
+//  	  [labelField setStringValue: [ITEM  stringByAppendingString:identif]];
+//  	  [identifierField setStringValue:[ITEM stringByAppendingString:identif]];
+//  	  numberOfDisplayItem = newNumber;
+//  	}
+//        if ( newNumber < numberOfDisplayItem ) 
+//  	{
+//  	  NSLog(@"remove");
+//  	}
+
+
+  [object display];
+}
+
+- (void) _getValuesFromObject: anObject
+{
+//    BOOL isScrollView;
+//    id scrollView;
+
+//    scrollView = //[[object superview] superview];
+//      [object enclosingScrollView];
+
+//    isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
+
+//    if (anObject != object)
+//      {
+//        return;
+//      }
+
+//    [selectionMatrix deselectAllCells];
+//    if ([anObject gormAllowsMultipleSelection])
+//      [selectionMatrix selectCellAtRow: 0 column: 0];
+//    if ([anObject gormAllowsEmptySelection])
+//      [selectionMatrix selectCellAtRow: 1 column: 0];
+//    if ([anObject gormAllowsColumnSelection])
+//      [selectionMatrix selectCellAtRow: 2 column: 0];
+
+//    if (isScrollView)
+//      {
+//        [verticalScrollerSwitch setEnabled: YES];
+//        [verticalScrollerSwitch setState: 
+//           ([scrollView hasVerticalScroller]) ? NSOnState : NSOffState];
+
+//        [horizontalScrollerSwitch setEnabled: YES];   
+//        [horizontalScrollerSwitch setState: 
+//           ([scrollView hasHorizontalScroller]) ? NSOnState : NSOffState];
+
+//        [borderMatrix setEnabled: YES];
+//        [borderMatrix selectCellWithTag: [scrollView borderType]];
+//      }
+//    else
+//      {
+//        [verticalScrollerSwitch setEnabled: NO];
+//        [horizontalScrollerSwitch setEnabled: NO];   
+//        [borderMatrix setEnabled: NO];   
+//      }
+
+//    [[rowsHeightForm cellAtIndex: 0] setIntValue: [anObject rowHeight] ];
+
+//    [optionMatrix deselectAllCells];
+//    if ([anObject drawsGrid])
+//      [optionMatrix selectCellAtRow: 0 column: 0];
+//    if ([anObject gormAllowsColumnResizing])
+//      [optionMatrix selectCellAtRow: 1 column: 0];
+//    if ([anObject gormAllowsColumnReordering])
+//      [optionMatrix selectCellAtRow: 2 column: 0];
+//    [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
+}
+
+- (id) init
+{
+  if ([super init] == nil)
+    {
+      return nil;
+    }
+
+
+  if ([NSBundle loadNibNamed: @"GormTabViewInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not gorm GormTableViewInspector");
+      return nil;
+    }
+//    itemsViewArray=[[NSMutableArray alloc] initWithCapacity:2];
+//    [itemsViewArray setArray: [NSArray arrayWithObjects:@"plop",@"plip",nil]];
+//    numberOfDisplayItem = [itemsViewArray count];
+//    [itemsViewArray retain];
+  return self;
+}
+
+- (void) ok: (id)sender
+{
+  [self _setValuesFromControl: sender];
+}
+
+- (void) setObject: (id)anObject
+{
+  [super setObject: anObject];
+  [self _getValuesFromObject: anObject];
+}
+
 @end
 
