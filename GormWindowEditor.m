@@ -349,6 +349,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 
 	  /*
 	   * Track mouse movements until left mouse up.
+	   * While we keep track of all mouse movements, we only act on a
+	   * movement when a periodic event arives (every 20th of a second)
+	   * in order to avoid excessive amounts of drawing.
 	   */
 	  lastPoint = mouseDownPoint;
 	  [self lockFocus];
@@ -371,6 +374,9 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 		   * Clear old box and draw new one.
 		   * FIXME - there has to be a more efficient way to restore
 		   * the display under the box.
+		   * FIXME - does the fact that we need to redisplay a
+		   * rectangle slightly larger than the one we drew mean that
+		   * there is a drawing bug?
 		   */
 		  [[self window] disableFlushWindow];
 		  r = NSRectFromPoints(lastPoint, mouseDownPoint);
@@ -411,7 +417,8 @@ NSRectFromPoints(NSPoint p0, NSPoint p1)
 	  [self unlockFocus];
 
 	  /*
-	   * Now finally check the selected rectangle to find the views in it.
+	   * Now finally check the selected rectangle to find the views in it
+	   * and make them (if any) into our current selection.
 	   */
 	  point = [self convertPoint: [e locationInWindow]
 			    fromView: nil];
