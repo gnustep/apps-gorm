@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.1.9 of Gorm.
+This is version 0.2.0 of Gorm.
 
 What is Gorm?
 =============
@@ -31,6 +31,14 @@ Casamento and Pierre-Yves Rivaille. Thanks guys!
    * Improved drag n' drop support on many items.
 
    * Intelligent placement hints.
+
+   * Read gmodel files.
+
+   * More inspectors.
+
+   * Sound and Image support.
+
+   * gorm files were changed to directory wrappers for more flexibility.
 
 How can I get support for this software?
 ========================================

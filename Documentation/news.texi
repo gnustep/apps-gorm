@@ -15,6 +15,10 @@ Gregory John Casamento and Pierre-Yves Rivaille. Thanks guys!
 @item Improved test mode support.
 @item Improved drag n' drop support on many items.
 @item Intelligent placement hints.
+@item Read gmodel files.
+@item More inspectors.
+@item Sound and Image support.
+@item gorm files were changed to directory wrappers for more flexibility.
 @end itemize
 
 @c ====================================================================

@@ -1089,7 +1089,7 @@ static NSButtonType _buttonTypeForObject( id button )
 	    keyEquivalent: @""];
   [[aMenu addItemWithTitle: @"Font Panel" 
 	  action: @selector(orderFrontFontPanel:) 
-	  keyEquivalent: @"f"] setTarget: [NSFontManager sharedFontManager]];
+	  keyEquivalent: @"t"] setTarget: [NSFontManager sharedFontManager]];
   menuItem = [mainMenu addItemWithTitle: @"Edit" 
 				 action: NULL 
 			  keyEquivalent: @""];

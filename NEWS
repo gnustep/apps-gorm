@@ -15,6 +15,14 @@ Casamento and Pierre-Yves Rivaille. Thanks guys!
 
    * Intelligent placement hints.
 
+   * Read gmodel files.
+
+   * More inspectors.
+
+   * Sound and Image support.
+
+   * gorm files were changed to directory wrappers for more flexibility.
+
 Noteworthy changes in version `0.1.0'
 =====================================
 

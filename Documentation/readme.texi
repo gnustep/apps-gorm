@@ -38,17 +38,6 @@ Known problems (things to do) -
 
 @enumerate
 @item Documentation - only a tiny start has been made on this!
-
-@item Editors and inspectors need writing for most gui elements -
-  scrollviews
-  splitviews
-  etc etc
-
-@item Support for color and images on buttons etc.
-  This requires improved image and color support in the gui library
-
-@item Support for fonts etc
-  This requires improved font management support in the gui library
 @end enumerate
 
 @section Acknowledgements
