@@ -1,8 +1,8 @@
 #  GNUmakefile.preamble
 #
-#  Copyright (C) 2001 Free Software Foundation, Inc.
+#  Copyright (C) 2003 Free Software Foundation, Inc.
 #
-#  Author: Philippe C.D. Robert <prh@3dkit.org>
+#  Author: Gregory John Casamento <greg_casamento@yahoo.com>
 #
 #  This file is part of GNUstep
 #
@@ -38,22 +38,22 @@
 #
 
 # Additional flags to pass to the preprocessor
-ADDITIONAL_CPPFLAGS += -Wall -Werror
+# ADDITIONAL_CPPFLAGS += -Wall -Werror
 
 # Additional flags to pass to the Objective-C compiler
-ADDITIONAL_OBJCFLAGS += -Wall -Werror
+# ADDITIONAL_OBJCFLAGS += -Wall -Werror
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_CFLAGS += -Wall -Werror
+# ADDITIONAL_CFLAGS += -Wall -Werror
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += -I../PCLib
+ADDITIONAL_INCLUDE_DIRS += 
 
 # Additional LDFLAGS to pass to the linker
 #ADDITIONAL_LDFLAGS += 
 
 # Additional library directories the linker should search
-ADDITIONAL_LIB_DIRS += -L../PCLib/$(GNUSTEP_OBJ_DIR)
+ADDITIONAL_LIB_DIRS += 
 
 ADDITIONAL_TOOL_LIBS +=
 
