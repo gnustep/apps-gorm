@@ -1487,6 +1487,10 @@ static NSImage	*classesImage = nil;
     {
       if ([aNotification object] == classManager) [classesView reloadData];
     }
+  else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)
+    {
+      if ([aNotification object] == classManager) [classesView reloadData];
+    }
 }
 
 - (id) init 
@@ -1559,6 +1563,10 @@ static NSImage	*classesImage = nil;
       [nc addObserver: self
 	     selector: @selector(handleNotification:)
 		 name: IBClassNameChangedNotification
+	       object: nil];
+      [nc addObserver: self
+	     selector: @selector(handleNotification:)
+		 name: IBInspectorDidModifyObjectNotification
 	       object: nil];
 
       selectionView = [[NSMatrix alloc] initWithFrame: selectionRect

@@ -1,5 +1,13 @@
 2003-06-07  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormClassInspector.m: Added post of notification in 
+	appropriate places.  Now sends IBInspectorDidModifyObjectNotification
+	when the class is updated from the inspector.
+	* GormDocument.m: Added check in handleNotification to
+	process the new notification sent above.
+
+2003-06-07  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* Resources/GormClassInspector.gorm: Moved buttons into
 	tab view.
 	* GormClassInspector.[hm]: Added new methods and ivars for

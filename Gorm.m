@@ -32,6 +32,8 @@
 
 NSDate	*startDate;
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
+// NSString *GormAddedActionNotification = @"GormAddedActionNotification";
+// NSString *GormAddedOutletNotification = @"GormAddedOutletNotification";
 
 @class	InfoPanel;
 

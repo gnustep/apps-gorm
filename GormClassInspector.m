@@ -32,6 +32,8 @@
 #include "GormClassManager.h"
 #include "GormDocument.h"
 
+NSNotificationCenter *nc = nil;
+
 // the data source classes for each of the tables...
 @interface GormOutletDataSource : NSObject
 {
@@ -124,7 +126,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   if (self == [GormClassInspector class])
     {
-      // TBD
+      nc = [NSNotificationCenter defaultCenter];
     }
 }
 
@@ -201,12 +203,16 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) addAction: (id)sender
 {
   [[(Gorm *)NSApp classManager] addNewActionToClassNamed: [self _currentClass]];
+  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		    object: classManager];
   [actionTable reloadData];
 }
 
 - (void) addOutlet: (id)sender
 {
-  [[(Gorm *)NSApp classManager] addNewOutletToClassNamed: [self _currentClass]];
+  [[(Gorm *)NSApp classManager] addNewOutletToClassNamed: [self _currentClass]];  
+  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		    object: classManager];
   [outletTable reloadData];
 }
 
@@ -216,6 +222,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [[(Gorm *)NSApp classManager] allActionsForClassNamed: [self _currentClass]];
   NSString *name = [list objectAtIndex: i];
   [[(Gorm *)NSApp classManager] removeAction: name fromClassNamed: [self _currentClass]];
+  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		    object: classManager];
   [actionTable reloadData];
 }
 
@@ -225,6 +233,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSArray *list = [[(Gorm *)NSApp classManager] allOutletsForClassNamed: [self _currentClass]];
   NSString *name = [list objectAtIndex: i];
   [[(Gorm *)NSApp classManager] removeOutlet: name fromClassNamed: [self _currentClass]];
+  [nc postNotificationName: IBInspectorDidModifyObjectNotification
+		    object: classManager];
   [outletTable reloadData];
 }
 
