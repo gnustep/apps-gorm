@@ -1,3 +1,17 @@
+2005-03-21 23:30 Nicola Pero <n.pero@mi.flashnet.it>
+
+	* GormLib/IBSystem.h: Fixed windows32 check for building
+	the library.  The library name is libGorm, not libGormLib!
+	Also, simply use extern when exporting on Mingw.
+	* GormLib/GNUmakefile.preamble: Removed special linking
+	additions on Mingw, not needed.
+	* Palettes/0Menus/GNUmakefile.preamble: Use ADDITIONAL_GUI_LIBS,
+	not xxx_LIBRARIES_DEPEND_UPON, to link libGorm on Mingw.
+	* Palettes/1Windows/GNUmakefile.preamble: Same change.
+	* Palettes/2Controls/GNUmakefile.preamble: Same change.
+	* Palettes/3Containers/GNUmakefile.preamble: Same change.
+	* Palettes/4Data/GNUmakefile.preamble: Same change.	
+	
 2005-03-20 10:17 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormViewEditor.m: [GormViewEditor performDragOperation:]
