@@ -1,5 +1,13 @@
 2004-06-24 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* Gorm.m: [Gorm close:] the window is already released when
+	the document is released and the code had an  
+	"setReleasedWhenClosed" which was call which was causing
+	an extra release and subsequently a core dump when selecting
+	the "Close" item from the document menu.
+	
+2004-06-24 01:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: Additions to [GormDocument attachObject:
 	withParent:], [GormDocument loadDocument:], [GormDocument
 	setupDefaults:] to move the main menu appropriately when

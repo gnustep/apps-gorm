@@ -642,7 +642,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
   GormDocument  *document = (GormDocument *)[self activeDocument];
   NSWindow	*window = [document window];
 
-  [window setReleasedWhenClosed: YES];
   [window performClose: self];
 }
 
