@@ -1464,6 +1464,7 @@ static NSImage  *fileImage = nil;
   else if ([name isEqual: IBClassNameChangedNotification] == YES)
     {
       [classesView reloadData];
+      [self setSelectionFromEditor: nil];
       [self touch];
     }
   else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)

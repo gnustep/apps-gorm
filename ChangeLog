@@ -1,3 +1,11 @@
+2004-12-11 00:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormDocument.m: in handleNotification: changed the condition
+	for IBClassNameChangedNotification so that the inspector is
+	cleared when the class name is modified.  This prevents the
+	inspector from accidently being used to modify a class which
+	no longer exists.
+
 2004-12-10 23:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/GormClassInspector.gorm: Added proper resizing
