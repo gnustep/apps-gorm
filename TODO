@@ -11,5 +11,7 @@ table which seem intersting:
 * Set up defaults to allow Gorm to "preload" headers each time it starts
   up.   (cbv)
 
+* Look into automatic "localization" of .gorm files for applications.
+  (martin)
 --
 Gregory John Casamento
