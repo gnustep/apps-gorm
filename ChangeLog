@@ -1,3 +1,8 @@
+2004-02-15 13:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: -[GormClassInspector _refreshView] 
+	Corrected an issue when user clicked on NSObject.  
+
 2004-02-14 19:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormShelfPref.[hm]: Added controller class for new preferences

@@ -288,8 +288,11 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [searchCell setEnabled: (isCustom && !isFirstResponder)];
   
   // select the parent class
-  [parentClass selectRow: index byExtendingSelection: NO];
-  [parentClass scrollRowToVisible: index];
+  if(index != NSNotFound)
+    {
+      [parentClass selectRow: index byExtendingSelection: NO];
+      [parentClass scrollRowToVisible: index];
+    }
 }
 
 - (void) addAction: (id)sender
