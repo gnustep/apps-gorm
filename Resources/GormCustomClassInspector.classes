@@ -1,0 +1,11 @@
+{
+    GormCustomClassInspector = {
+	Actions = (
+	    "select:"
+	);
+	Outlets = (
+	    browser
+	);
+	Super = IBInspector;
+    };
+}
