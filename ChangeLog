@@ -1,5 +1,11 @@
 2004-12-02 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormObjCHeaderParser/OCClass.m: [OCClass parse] added
+	a check to determine if the string is nil before loading it
+	into the scanner.
+	
+2004-12-02 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormObjCHeaderParser/OCClass.m: added code in parse method
 	to use new class for IVar parsing.
 	* GormObjCHeaderParser/OCIVarDecl.[hm]: New class.  This

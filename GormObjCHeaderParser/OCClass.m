@@ -138,7 +138,6 @@
   NSString *interfaceLine = nil;
   NSString *methodsString = nil;
   NSString *ivarsString = nil;
-  NSScanner *methodScan = nil;
   NSRange range;
   NSRange notFound = NSMakeRange(NSNotFound,0);
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -194,22 +193,25 @@
       [scanner scanUpToString: @"}" intoString: &ivarsString];
       [scanner scanString: @"}" intoString: NULL];
       
-      // scan each ivar...
-      ivarScan = [NSScanner scannerWithString: ivarsString];
-      while(![ivarScan isAtEnd])
+      if(ivarsString != nil)
 	{
-	  NSString *ivarLine = nil;
-	  OCIVarDecl *ivarDecl = nil;
-	  
-	  [ivarScan scanUpToString: @";" intoString: &ivarLine];
-	  [ivarScan scanString: @";" intoString: NULL];
-	  ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
-	  [ivarDecl parse];
-	  [ivars addObjectsFromArray: [ivarDecl ivars]];
+	  // scan each ivar...
+	  ivarScan = [NSScanner scannerWithString: ivarsString];
+	  while(![ivarScan isAtEnd])
+	    {
+	      NSString *ivarLine = nil;
+	      OCIVarDecl *ivarDecl = nil;
+	      
+	      [ivarScan scanUpToString: @";" intoString: &ivarLine];
+	      [ivarScan scanString: @";" intoString: NULL];
+	      ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
+	      [ivarDecl parse];
+	      [ivars addObjectsFromArray: [ivarDecl ivars]];
+	    }
 	}
     }
-  
-  // put the methods into a a string...
+
+  // put the methods into a string...
   if(ivarsString != nil)
     {
       [scanner scanUpToString: @"@end" intoString: &methodsString];
@@ -222,17 +224,20 @@
     }
   
   // scan each method...
-  methodScan = [NSScanner scannerWithString: methodsString];
-  while(![methodScan isAtEnd])
+  if(methodsString != nil)
     {
-      NSString *methodLine = nil;
-      OCMethod *method = nil;
-      
-      [methodScan scanUpToString: @";" intoString: &methodLine];
-      [methodScan scanString: @";" intoString: NULL];
-      method = AUTORELEASE([[OCMethod alloc] initWithString: methodLine]);       
-      [method parse];
-      [methods addObject: method];
+      NSScanner *methodScan = [NSScanner scannerWithString: methodsString];
+      while(![methodScan isAtEnd])
+	{
+	  NSString *methodLine = nil;
+	  OCMethod *method = nil;
+	  
+	  [methodScan scanUpToString: @";" intoString: &methodLine];
+	  [methodScan scanString: @";" intoString: NULL];
+	  method = AUTORELEASE([[OCMethod alloc] initWithString: methodLine]);       
+	  [method parse];
+	  [methods addObject: method];
+	}
     }
 }
 @end
