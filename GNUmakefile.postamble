@@ -26,5 +26,18 @@ before-all::
 	rm -rf InterfaceBuilder
 	$(LN_S) GormLib InterfaceBuilder
 
+# FIXME: Obviously this is quite ugly and if you want to run Gorm
+# without installing you have to type 'make' twice.
+after-all::
+	(cd Palettes; $(MAKE))
+
+after-clean::
+	(cd Palettes; $(MAKE) clean)
+
+after-distclean::
+	(cd Palettes; $(MAKE) distclean)
+
+
+
 after-clean::
 	rm -rf InterfaceBuilder

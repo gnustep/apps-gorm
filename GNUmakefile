@@ -37,8 +37,7 @@ include ./Version
 #
 SUBPROJECTS = \
 	GormLib \
-	GormObjCHeaderParser \
-	Palettes 
+	GormObjCHeaderParser
 
 #
 # MAIN APP

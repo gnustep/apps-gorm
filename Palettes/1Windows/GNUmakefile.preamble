@@ -2,7 +2,7 @@
 ADDITIONAL_INCLUDE_DIRS += -I../..
 
 ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-ADDITIONAL_GUI_LIBS += -lGorm     
+ADDITIONAL_GUI_LIBS += -lGorm ../../Gorm.app/Gorm.exe.a
 endif
 ifeq ($(GNUSTEP_TARGET_OS),cygwin)
 1Windows_LIBRARIES_DEPEND_UPON += -lGorm

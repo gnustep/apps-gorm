@@ -1,3 +1,20 @@
+2005-03-22 04:30 Nicola Pero <n.pero@mi.flashnet.it>
+
+	With these changes, Gorm builds and runs out-of-the-box on Mingw32
+	with latest gnustep-make.
+	* GNUmakefile (SUBPROJECTS): Do not build Palettes as a subproject
+	because they depend on Gorm.app having been built first.
+	* GNUmakefile.postamble (after-all): Added rule to manually
+	build Palettes after Gorm.app.
+	(after-clean): Same change.
+	(after-distclean): Same change.
+	* Palettes/0Menus/GNUmakefile.preamble: Link ../../Gorm.app/Gorm.exe.a
+	on Mingw.
+	* Palettes/1Windows/GNUmakefile.preamble: Same change.
+	* Palettes/2Controls/GNUmakefile.preamble: Same change.
+	* Palettes/3Containers/GNUmakefile.preamble: Same change.
+	* Palettes/4Data/GNUmakefile.preamble: Same change.
+	
 2005-03-21 23:30 Nicola Pero <n.pero@mi.flashnet.it>
 
 	* GormLib/IBSystem.h: Fixed windows32 check for building
