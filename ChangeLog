@@ -1,4 +1,12 @@
-2004-05-29 08:56 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-05-29 23:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: [Gorm testInterface:] removed conditional.  The services
+	menu is always set to nil when testing. [Gorm endTesting:] added
+	a NS_DURING block to catch any issues with resetting the services menu.
+	This prevents Gorm from crashing, if there's a problem.  Since the 
+	menu is set to nil and then reset there shouldn't be an issue.
+	
+2004-05-29 16:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument attachObject:] added code
 	to automatically mark a menu being attached as the 

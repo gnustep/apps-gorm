@@ -757,11 +757,8 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 		}
 	    }
 
-	  // save the services menu...
-	  if([self servicesMenu] == servicesMenu)
-	    {
-	      [self setServicesMenu: nil]; // so we don't get the warning...
-	    }
+	  // so we don't get the warning...
+	  [self setServicesMenu: nil]; 
 
 	  // display the current main menu...
 	  [[self mainMenu] display];
@@ -1037,7 +1034,17 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	}
 
       [self setMainMenu: mainMenu];
-      [self setServicesMenu: servicesMenu];
+
+      NS_DURING
+	{
+	  [self setServicesMenu: servicesMenu];
+	}
+      NS_HANDLER
+	{
+	  NSDebugLog(@"Exception while setting services menu");
+	}
+
+      NS_ENDHANDLER
       [mainMenu display]; // bring it to the front...
 
       isTesting = NO;
