@@ -186,6 +186,7 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
+- (void) changeFont: (id) sender;
 - (void) close;
 - (void) closeSubeditors;
 - (void) copySelection;
@@ -209,6 +210,11 @@ _constrainPointToBounds(NSPoint point, NSRect bounds)
 @implementation	GormWindowEditor
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
+{
+  return YES;
+}
+
+- (BOOL) acceptsFirstResponder
 {
   return YES;
 }
@@ -1190,6 +1196,24 @@ static BOOL done_editing;
   return YES;
 }
 
+- (void)changeFont: (id)sender
+{
+  NSEnumerator *enumerator = [selection objectEnumerator];
+  id anObject;
+  NSFont *newFont;
+  while ((anObject = [enumerator nextObject]))
+    {
+      if ([anObject respondsToSelector: @selector(font)]
+	  && [anObject respondsToSelector: @selector(setFont:)])
+	{
+	  newFont = [sender convertFont: [anObject font]];
+	  [anObject setFont: newFont];
+	}
+    }
+
+  return;
+}
+
 - (void) close
 {
   NSAssert(isClosed == NO, NSInternalInconsistencyException);
@@ -1399,6 +1423,7 @@ static BOOL done_editing;
     }
   [win setContentView: self];
 
+
   ASSIGN(document, aDocument);
   ASSIGN(edited, anObject);
   selection = [NSMutableArray new];
@@ -1412,6 +1437,7 @@ static BOOL done_editing;
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, nil]];
 
+  [win setInitialFirstResponder: self];
   return self;
 }
 
@@ -1617,6 +1643,20 @@ static BOOL done_editing;
 	    {
 	      [selection removeObjectAtIndex: count];
 	    }
+	}
+      if ([selection count] == 1)
+	{
+	  id item;
+	  item = [selection objectAtIndex: 0];
+	  if ([item respondsToSelector: @selector(font)]
+	      && [item respondsToSelector: @selector(setFont:)])
+	    [[NSFontManager sharedFontManager] setSelectedFont: [item font]
+					       isMultiple: NO];
+	}
+      else if ([selection count] > 0)
+	{
+	  [[NSFontManager sharedFontManager] setSelectedFont: nil
+					     isMultiple: YES];
 	}
     }
   /*
