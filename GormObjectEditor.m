@@ -30,22 +30,7 @@
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@implementation NSObject (GormAdditions)
-+ (BOOL)canSubstituteForClass: (Class)origClass
-{
-  return NO;
-}
-
-- (void)awakeFromDocument: (id <IBDocuments>)doc
-{
-  // does nothing...
-}
-
-- (NSString *)nibLabel: (NSString *)objectName
-{
-  return nil;
-}
-
+@implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -58,11 +43,6 @@
     }
 
   return image;
-}
-
-- (NSString *)objectNameForInspectorTitle
-{
-  return [self className];
 }
 
 - (NSString*) inspectorClassName
@@ -89,14 +69,7 @@
 {
   return @"GormObjectEditor";
 }
-
-- (NSArray*) ibIncompatibleProperties
-{
-  return nil;
-}
 @end
-
-
 
 @implementation	GormObjectEditor
 

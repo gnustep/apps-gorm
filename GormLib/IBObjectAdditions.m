@@ -35,7 +35,7 @@
  */
 + (BOOL)canSubstituteForClass: (Class)origClass
 {
-  return YES;
+  return NO;
 }
 
 /**
@@ -69,7 +69,7 @@
  */
 - (NSString *)objectNameForInspectorTitle
 {
-  return NSStringFromClass([self class]);
+  return [self className];
 }
 
 /**
