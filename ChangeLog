@@ -1,4 +1,13 @@
-2004-09-05 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-09-05 12:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/inspectors.m: Added _getCellClassName to 
+	GormTableColumnAttribitesInspector to get the cell class
+	for the inspector.  Also modified _getValuesFromObject: to
+	call the method and display the cell class name in the table.
+	Modified setValuesFromControl to add the object to the 
+	document and assign the correct custom class.
+	
+2004-09-05 10:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormNSTableColumnInspector.gorm: 
 	Made changes to allow user to edit the tableColumn dataCell.

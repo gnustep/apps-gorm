@@ -25,10 +25,9 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSTableView.h"
 #include "GormPrivate.h"
-#include <InterfaceBuilder/IBInspector.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
@@ -226,10 +225,29 @@
   [super setObject: anObject];
   [self _getValuesFromObject: anObject];
 }
+
+- (NSString *)_getCellClassName
+{
+  id cell = [[self object] dataCell];
+  NSString *customClassName = [[(Gorm *)NSApp classManager] customClassForObject: cell];
+  NSString *result = nil;
+
+  if(customClassName == nil)
+    {
+      result = NSStringFromClass(cell);
+    }
+  else
+    {
+      result = customClassName;
+    }
+  
+  return result;
+}
+
 - (void) _getValuesFromObject: anObject
 {
-  NSString *cellClassName = NSStringFromClass([[anObject dataCell] class]);
   NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSString *cellClassName = [self _getCellClassName];
   int index = [list indexOfObject: cellClassName];
 
   if(index != NSNotFound && index != -1)
@@ -339,16 +357,20 @@
     }
   else if (control == setButton || control == cellTable)
     {
-      int i = [cellTable selectedRow];
+      id classManager = [(Gorm *)NSApp classManager];
+      id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
       id cell = nil;
-      NSArray *list = [[(Gorm *)NSApp classManager] allSubclassesOf: @"NSCell"];
+      int i = [cellTable selectedRow];
+      NSArray *list = [classManager allSubclassesOf: @"NSCell"];
       NSString *className = [list objectAtIndex: i];
-      BOOL isCustom = [[(Gorm *)NSApp classManager] isCustomClass: className];
+      BOOL isCustom = [classManager isCustomClass: className];
       Class cls = nil;
 
       if(isCustom)
 	{
-	  NSLog(@"Setting custom cell.. not working yet...");
+	  NSString *superClass = [classManager nonCustomSuperClassOf: className];
+	  cls = NSClassFromString(superClass);
+	  NSLog(@"Setting custom cell..");
 	}
       else
 	{
@@ -359,6 +381,21 @@
       cell = [cls new];
       [object setDataCell: cell];
       [[object tableView] setNeedsDisplay: YES];
+
+      // add it to the document, since it needs a custom class...
+      if(isCustom)
+	{
+	  NSString *name = nil;
+
+	  // An object needs to be a "named object" to have a custom class
+	  // assigned to it.   Add it to the document and get the name.
+	  [doc attachObject: cell toParent: object];
+	  if((name = [doc nameForObject: cell]) != nil)
+	    {
+	      [classManager setCustomClass: className forObject: name];
+	    } 
+	}
+
       RELEASE(cell);
     }
   else if (control == defaultButton)
