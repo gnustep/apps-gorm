@@ -889,7 +889,6 @@ static NSImage *horizontalImage;
 		    [NSArray arrayWithObject: editor]];
 	  }
 	}
-      // FIXME  we should maybe open ourself
     }
 
   return YES;

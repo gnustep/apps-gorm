@@ -1,4 +1,15 @@
-2004-09-06 08:52 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-09-06 17:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m:
+	* GormInspectorsManager.m:
+	* GormInternalViewEditor.m:
+	* GormMatrixEditor.m:
+	* GormViewKnobs.m:
+	* GormWindowEditor.m: Removed some old FIXME comments which
+	were no longer appropriate or which have already been 
+	addressed.
+	
+2004-09-06 15:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Temporary fix for crash.   Corrects a 
 	problem with document deallocation, until I can find a more

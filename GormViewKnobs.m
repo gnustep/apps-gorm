@@ -201,7 +201,6 @@ GormDrawKnobsForRect(NSRect aRect)
 }
 
 /* Draw these around an NSBox whose contents are being edited.
-   FIXME: Need some more representative indication of an edited view. 
 */
 void
 GormDrawOpenKnobsForRect(NSRect aRect)

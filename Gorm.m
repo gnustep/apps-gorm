@@ -69,9 +69,9 @@ static BOOL _isInInterfaceBuilder = NO;
     }
   else
     {
-      /* FIXME/TODO.  What do we do if we are an attributed string.  
+      /* TODO: What do we do if we are an attributed string.  
          Think about what happens when the user ends editing. 
-         Allows editing text attributes... Formatter... TODO. */
+         Allows editing text attributes... Formatter. */
     }
   [textObject setEditable: _cell.is_editable];
   [textObject setSelectable: _cell.is_selectable || _cell.is_editable];
@@ -843,7 +843,7 @@ static BOOL _isInInterfaceBuilder = NO;
 
 - (void) selectAllItems: (id)sender
 {
-  /* FIXME */
+  /* TODO: Select all items in the current selection owner. */
   return;
 }
 

@@ -266,11 +266,17 @@
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSDebugLog(@"draggedImage");
   /*
-   * FIXME - handle this.
    * Notification that a drag failed/succeeded.
    */
+
+  NSDebugLog(@"draggedImage");
+
+  if(f == NO)
+    {
+      NSRunAlertPanel(NULL, _(@"Window drag failed."),
+		      _(@"OK"), NULL, NULL);
+    }
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag

@@ -190,21 +190,6 @@
 	  [panel orderFront: self];
 	}
     }
-  else if ([name isEqual: NSWindowDidResignKeyNotification] == YES)
-    {
-      if (current == 1)
-	{
-	  /* FIXME - need to fix window focus handling for this to work */
-	  // [NSApp stopConnecting];
-	}
-    }
-  else if ([name isEqual: IBWillCloseDocumentNotification] == YES)
-    {
-      // FIXME
-      // show an empty selection of the document closes
-      // [self setEmptyInspector];
-      // [panel orderOut: self];
-    }
 }
 
 - (id) init
@@ -320,21 +305,10 @@
       name: IBWillEndTestingInterfaceNotification
       object: nil];
   [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: NSWindowDidResignKeyNotification
-      object: panel];
-  [nc addObserver: self
       selector: @selector(updateInspectorPopUp:)
       name: NSPopUpButtonWillPopUpNotification
       object: popup];
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: NSPopUpButtonWillPopUpNotification
-      object: popup];
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillCloseDocumentNotification
-      object: [(id<IB>)NSApp activeDocument]];
+
   [popup setTarget: self];
   [popup setAction: @selector(updateInspectorPopUp:)];
   return self;

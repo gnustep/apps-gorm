@@ -116,9 +116,7 @@ static BOOL done_editing;
 }
 
 /* Called when we double-click on a text/editable cell or form. Overlay
-   a text field so the user can edit the title.
-   FIXME: Only works with NSForms now, doesn't handle different fonts
-   or cell sizes, etc. Needs some work.*/
+   a text field so the user can edit the title. */
 - (void) editTitleWithEvent: (NSEvent *)theEvent
 {
   int row, col;
@@ -134,7 +132,7 @@ static BOOL done_editing;
   if (isForm == NO && [selected type] != NSTextCellType)
     return;
 
-  /* FIXME: Seems wierd to do this. */
+  // get the superview we are to edit from.
   edit_view = [_EO superview];
 
   [_EO getRow: &row column: &col ofCell: selected];
