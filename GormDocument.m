@@ -2176,6 +2176,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  return [NSString stringWithFormat: @"%d",
 	    [[classManager allActionsForClassNamed: className] count]];
 	}
+
     }
   return @"";
 }
@@ -2185,6 +2186,27 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
       forTableColumn: (NSTableColumn *)aTableColumn
 		 row: (int)rowIndex
 {
+}
+
+- (void) outlineView: (NSOutlineView *)anOutlineView 
+      setObjectValue: (id)anObject 
+      forTableColumn: (NSTableColumn *)aTableColumn
+	      byItem: (id)item
+{
+  NSLog(@"Edit item %@",item);
+  if([item isKindOfClass: [GormOutletActionHolder class]])
+    {
+      if([anOutlineView editType] == Actions)
+	{
+	  NSLog(@"the action %@",[item getName]);
+	}
+      else if([anOutlineView editType] == Outlets)
+	{
+	  NSLog(@"the outlet %@",[item getName]);
+	}
+      [item setName: anObject];
+      NSLog(@"Replaced by %@",anObject);
+    }
 }
 
 - (int) outlineView: (NSOutlineView *)anOutlineView 
@@ -2234,14 +2256,14 @@ numberOfChildrenOfItem: (id)item
   return nil;
 }
 
-- (NSArray *)outlineView: (GormOutlineView *)anOutlineView
+- (NSArray *)outlineView: (NSOutlineView *)anOutlineView
 	  actionsForItem: (id)item
 {
   NSArray *actions = [classManager allActionsForClassNamed: item];
   return actions;
 }
 
-- (NSArray *)outlineView: (GormOutlineView *)anOutlineView
+- (NSArray *)outlineView: (NSOutlineView *)anOutlineView
 	  outletsForItem: (id)item
 {
   NSArray *outlets = [classManager allOutletsForClassNamed: item];

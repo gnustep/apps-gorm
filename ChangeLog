@@ -1,4 +1,14 @@
-2002-07-09  Gregory John Casamento <greg_casamento@yahoo.com
+2002-07-11  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassManager.m: Added stubs for two new method to add actions
+	and outlets based on classname.
+	* GormDocument.m: Added logic set the name in the data source methods.
+	* GormOutlineView.m: Override [-editColumn:row:withEvent:select:]
+	to draw correcty for the outlet/actions.
+	* GormOutlineView.h: Move GormOutletActionHolder to header so it
+	can be used by the data source.
+
+2002-07-09  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Added new menu item and method to add outlet/action
 	-[Gorm addAttributeToClass:]

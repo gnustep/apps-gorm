@@ -28,10 +28,12 @@
 #include "GormOutlineView.h"
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSNull.h>
+#include <Foundation/NSException.h>
 #include <AppKit/NSTableColumn.h>
 #include <AppKit/NSCell.h>
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSTextFieldCell.h>
+#include <AppKit/NSWindow.h>
 
 static NSNotificationCenter *nc = nil;
 static const int current_version = 1;
@@ -52,17 +54,6 @@ static NSColor *darkSalmonColor = nil;
 static NSColor *lightGreyBlueColor = nil;
 static NSColor *darkGreyBlueColor = nil;
 
-// a class to hold the outlet/actions so that the
-// draw row method will know how to render them on
-// the display...
-@interface GormOutletActionHolder : NSObject
-{
-  NSString *_name;
-}
-- initWithName: (NSString *)name;
-- (NSString *)getName;
-@end
-
 @implementation GormOutletActionHolder
 - init
 {
@@ -81,6 +72,11 @@ static NSColor *darkGreyBlueColor = nil;
 - (NSString *)getName
 {
   return _name;
+}
+
+- (void)setName: (NSString *)name
+{
+  ASSIGN(_name,name);
 }
 @end
 
@@ -125,6 +121,11 @@ static NSColor *darkGreyBlueColor = nil;
     }
 }
 
+- (void) _handleDoubleClick: (id)sender
+{
+  NSLog(@"Double clicked");
+}
+
 - init
 {
   [super init];
@@ -134,6 +135,8 @@ static NSColor *darkGreyBlueColor = nil;
   _attributeOffset = 0.0;
   _edittype = None;
   _menuItem = nil;
+  [self setDoubleAction: @selector(_handleDoubleClick:)];
+  [self setTarget: self];
   return self;
 }
 
@@ -237,6 +240,7 @@ static NSColor *darkGreyBlueColor = nil;
   _numberOfRows += 1;
   insertionPoint = [_items indexOfObject: item];
   [_items insertObject: holder atIndex: insertionPoint + 1];
+  //  [self editColumn: 0 row: insertionPoint+1 withEvent: nil select: YES];
   [self setNeedsDisplay: YES];
   [self noteNumberOfRowsChanged];
 }
@@ -605,19 +609,190 @@ static NSColor *darkGreyBlueColor = nil;
   return _menuItem;
 }
 
+- (GSAttributeType)editType
+{
+  return _edittype;
+}
+
 - (void)addAttributeToClass
 {
   NSLog(@"got it here 2");
-  if(_edittype == Actions)
+  if(_isEditing == YES)
     {
-      [self _addAction: @"newAction:"
-	    toObject: _itemBeingEdited];
+      if(_edittype == Actions)
+	{
+	  [self _addAction: @"newAction:"
+		toObject: _itemBeingEdited];
+	}
+      if(_edittype == Outlets)
+	{
+	  [self _addOutlet: @"newOutlet"
+		toObject: _itemBeingEdited];
+	}
     }
-  if(_edittype == Outlets)
+}
+
+- (void) editColumn: (int) columnIndex 
+		row: (int) rowIndex 
+	  withEvent: (NSEvent *) theEvent 
+	     select: (BOOL) flag
+{
+  NSText *t;
+  NSTableColumn *tb;
+  NSRect drawingRect, imageRect;
+  unsigned length = 0;
+  id item = nil;
+  int level = 0;
+  float indentationFactor = 0.0;
+  NSImage *image = nil;
+  NSCell *imageCell = nil;
+  id value = nil;
+
+  // We refuse to edit cells if the delegate can not accept results 
+  // of editing.
+  if (_dataSource_editable == NO)
     {
-      [self _addOutlet: @"newOutlet"
-	    toObject: _itemBeingEdited];
+      return;
     }
+  
+  [self scrollRowToVisible: rowIndex];
+  [self scrollColumnToVisible: columnIndex];
+
+  if (rowIndex < 0 || rowIndex >= _numberOfRows 
+      || columnIndex < 0 || columnIndex >= _numberOfColumns)
+    {
+      [NSException raise: NSInvalidArgumentException
+		   format: @"Row/column out of index in edit"];
+    }
+  
+  if (_textObject != nil)
+    {
+      [self validateEditing];
+      [self abortEditing];
+    }
+
+  // Now (_textObject == nil)
+
+  t = [_window fieldEditor: YES  forObject: self];
+
+  if ([t superview] != nil)
+    {
+      if ([t resignFirstResponder] == NO)
+	{
+	  return;
+	}
+    }
+  
+  _editedRow = rowIndex;
+  _editedColumn = columnIndex;
+  item = [self itemAtRow: _editedRow];
+
+  // Prepare the cell
+  tb = [_tableColumns objectAtIndex: columnIndex];
+  // NB: need to be released when no longer used
+  _editedCell = [[tb dataCellForRow: rowIndex] copy];
+  value =  [_dataSource outlineView: self 
+			objectValueForTableColumn: tb
+			byItem: item];
+  if([value isKindOfClass: [GormOutletActionHolder class]])
+    {
+      value = [value getName];
+    }
+
+  [_editedCell setEditable: YES];
+  [_editedCell setObjectValue: value];
+  // We really want the correct background color!
+  if ([_editedCell respondsToSelector: @selector(setBackgroundColor:)])
+    {
+      [(NSTextFieldCell *)_editedCell setBackgroundColor: _backgroundColor];
+    }
+  else
+    {
+      [t setBackgroundColor: _backgroundColor];
+    }
+  
+  // But of course the delegate can mess it up if it wants
+  if (_del_responds)
+    {
+      [_delegate outlineView: self   
+		 willDisplayCell: _editedCell 
+		 forTableColumn: tb   
+		 item: [self itemAtRow: rowIndex]];
+    }
+
+  /* Please note the important point - calling stringValue normally
+     causes the _editedCell to call the validateEditing method of its
+     control view ... which happens to be this object :-)
+     but we don't want any spurious validateEditing to be performed
+     before the actual editing is started (otherwise you easily end up
+     with the table view picking up the string stored in the field
+     editor, which is likely to be the string resulting from the last
+     edit somewhere else ... getting into the bug that when you TAB
+     from one cell to another one, the string is copied!), so we must
+     call stringValue when _textObject is still nil.  */
+  if (flag)
+    {
+      length = [[_editedCell stringValue] length];
+    }
+
+  _textObject = [_editedCell setUpFieldEditorAttributes: t];
+
+  // determine which image to use...
+  if([self isItemExpanded: item])
+    {
+      image = expanded;
+    }
+  else
+    {
+      image = collapsed;
+    }
+
+  if(![self isExpandable: item])
+    {
+      image = unexpandable;
+    }
+  // move the drawing rect over like in the drawRow routine...
+  level = [self levelForItem: item];
+  indentationFactor = _indentationPerLevel * level;
+  drawingRect = [self frameOfCellAtColumn: columnIndex  row: rowIndex];
+  drawingRect.origin.x += indentationFactor + 5 + [image size].width;
+  drawingRect.size.width -= indentationFactor + 5 + [image size].width;
+
+  // create the image cell..
+  imageCell = [[NSCell alloc] initImageCell: image];
+  if(_indentationMarkerFollowsCell)
+    {
+      imageRect.origin.x = drawingRect.origin.x + indentationFactor;
+      imageRect.origin.y = drawingRect.origin.y;
+    }
+  else
+    {
+      imageRect.origin.x = drawingRect.origin.x;
+      imageRect.origin.y = drawingRect.origin.y;
+    }
+  
+  // draw...
+  imageRect.size.width = [image size].width;
+  imageRect.size.height = [image size].height;
+  [imageCell drawWithFrame: imageRect inView: self];
+  if (flag)
+    {
+      [_editedCell selectWithFrame: drawingRect
+		   inView: self
+		   editor: _textObject
+		   delegate: self
+		   start: 0
+		   length: length];
+    }
+  else
+    {
+      [_editedCell editWithFrame: drawingRect
+		   inView: self
+		   editor: _textObject
+		   delegate: self
+		   event: theEvent];
+    }
+  return;    
 }
 @end /* implementation of GormOutlineView */
 

@@ -62,6 +62,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
 - (NSMenuItem *)menuItem;
 - (void) setMenuItem: (NSMenuItem *)item;
 - (void) addAttributeToClass;
+- (GSAttributeType)editType;
 @end /* interface of GormOutlineView */
 
 // informal protocol to define necessary methods on
@@ -72,5 +73,17 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
            actionsForItem: (id)item;
 - (NSArray *) outlineView: (GormOutlineView *)ov
            outletsForItem: (id)item;
+@end
+
+// a class to hold the outlet/actions so that the
+// draw row method will know how to render them on
+// the display...
+@interface GormOutletActionHolder : NSObject
+{
+  NSString *_name;
+}
+- initWithName: (NSString *)name;
+- (NSString *)getName;
+- (void)setName: (NSString *)name;
 @end
 #endif /* _GNUstep_H_GormOutlineView */

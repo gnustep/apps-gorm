@@ -147,6 +147,14 @@ NSString *IBClassNameChangedNotification = @"IBClassNameChangedNotification";
   [[info objectForKey: @"AllOutlets"] addObject: anOutlet];
 }
 
+- (void) addAction: (NSString *)anOutlet forClassNamed: (NSString *)className
+{
+}
+
+- (void) addOutlet: (NSString *)anOutlet forClassNamed: (NSString *)className
+{
+}
+
 - (NSArray*) allActionsForObject: (NSObject*)obj
 {
   NSString	*className;
