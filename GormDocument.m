@@ -181,7 +181,7 @@ static NSImage	*classesImage = nil;
     {
       [self setName: nil forObject: anObject];
     }
-  NSLog(@"%@", anObject);
+
   /*
    * Add top-level objects to objectsView and open their editors.
    */
