@@ -1063,6 +1063,8 @@ static BOOL done_editing;
   if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
     {
       done_editing = YES;
+      [document setSelectionFromEditor: self]; // Correction for Bug#11410
+      // [self selectObjects: [NSArray arrayWithObject: edited]];
     }
 }
 
