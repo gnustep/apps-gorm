@@ -33,10 +33,12 @@
   id okButton;
   id classBrowser;
   id panel;
+  id classNameForm;
   NSString *className;
   NSMutableArray *allClasses;
 }
 - (id) initWithTitle: (NSString *)title classList: (NSArray *)classes;
 - (void) okButton: (id)sender;
+- (void) browserAction: (id)sender;
 - (NSString *)runModal;
 @end

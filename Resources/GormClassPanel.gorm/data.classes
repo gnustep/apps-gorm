@@ -2,26 +2,25 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "cut:",
 	    "indent:",
-	    "moveToBeginningOfLine:",
 	    "orderFront:",
-	    "performZoom:",
 	    "selectAll:",
-	    "takeDoubleValueFrom:",
 	    "underline:",
-	    "okButton:"
+	    "okButton:",
+	    "browserAction:"
 	);
 	Super = NSObject;
     };
     GormClassPanelController = {
 	Actions = (
-	    "okButton:"
+	    "okButton:",
+	    "browserAction:"
 	);
 	Outlets = (
 	    okButton,
 	    classBrowser,
-	    panel
+	    panel,
+	    classNameForm
 	);
 	Super = NSObject;
     };

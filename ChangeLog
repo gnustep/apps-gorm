@@ -1,3 +1,11 @@
+2004-11-16 19:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassPanelController.[hm]: Added method browserAction:.  Changed
+	okButton: to use the value from the textfield.  Added new textfield
+	so that the user can type the name of the class.
+	* GormClassPanel.gorm: Added textfield.  Changed connection so that
+	the browser now invokes browserAction: on the controller.
+	
 2004-11-13 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GModelDecoder.m: Added GModelMenuTemplate to allow decoding

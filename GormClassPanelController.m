@@ -67,8 +67,13 @@
 
 - (void) okButton: (id)sender
 {
-  ASSIGN(className, [[classBrowser selectedCell] stringValue]);
+  ASSIGN(className, [[classNameForm cellAtIndex: 0] stringValue]);
   [NSApp stopModal];
+}
+
+- (void) browserAction: (id)sender
+{
+  [[classNameForm cellAtIndex: 0] setStringValue: [[classBrowser selectedCell] stringValue]];
 }
 
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
