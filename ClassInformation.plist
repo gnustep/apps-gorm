@@ -357,7 +357,7 @@
   };
 
   NSImageView = {
-    Super = NScontrol;
+    Super = NSControl;
   };
 
   NSMatrix = {

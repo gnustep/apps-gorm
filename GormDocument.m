@@ -2804,10 +2804,10 @@ static NSImage	*classesImage = nil;
 		  NSString *soundPath;
 		  BOOL copied = NO;
 
-		  if(![object isEqualToString: imagePath])
+		  soundPath = [documentPath stringByAppendingPathComponent:
+					      [object lastPathComponent]];
+		  if(![object isEqualToString: soundPath])
 		    {
-		      soundPath = [documentPath stringByAppendingPathComponent:
-						  [object lastPathComponent]];
 		      copied = [mgr copyPath: object
 				    toPath: soundPath
 				    handler: nil];

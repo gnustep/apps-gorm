@@ -575,6 +575,11 @@ static NSMapTable	*docMap = 0;
   return path;
 }
 
+- (NSImage *) normalImage
+{
+  return image;
+}
+
 - (NSImage *) image
 {
   return smallImage;
