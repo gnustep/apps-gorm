@@ -27,6 +27,7 @@
 #include "GormPrefController.h"
 #include "GormFontViewController.h"
 #include "GormSetNameController.h"
+#include "GNUstepGUI/GSNibCompatibility.h"
 
 // for templates...
 #include <AppKit/NSControl.h>
@@ -277,7 +278,7 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
   RELEASE(palettesManager);
   RELEASE(documents);
   RELEASE(classManager);
-  //  [super dealloc];
+  [super dealloc];
 }
 
 
@@ -518,9 +519,9 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
      forKey: @"ApplicationName"];
   [dict setObject: @"[GNUstep | Graphical] Object Relationship Modeller"
      forKey: @"ApplicationDescription"];
-  [dict setObject: @"Gorm 0.4.5 (Beta)" 
+  [dict setObject: @"Gorm 0.4.6 (Beta)" 
      forKey: @"ApplicationRelease"];
-  [dict setObject: @"0.4.5 Oct 19 2003" 
+  [dict setObject: @"0.4.6 Oct 25 2003" 
      forKey: @"FullVersionID"];
   [dict setObject: [NSArray arrayWithObjects: @"Gregory John Casamento <greg_casamento@yahoo.com>",
 			 @"Richard Frith-Macdonald <rfm@gnu.org>",
@@ -1328,17 +1329,82 @@ NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectF
 }
 @end
 
-// temporary until the deprecated template is removed...
+// these are temporary until the deprecated templates are removed...
+////////////////////////////////////////////////////////
+// DEPRECATED TEMPLATES                               //
+////////////////////////////////////////////////////////
 @interface NSWindowTemplate (GormCustomClassAdditions)
 - (BOOL) isInInterfaceBuilder;
 @end
-
 @implementation NSWindowTemplate (GormCustomClassAdditions)
 - (BOOL) isInInterfaceBuilder
 {
   return YES;
 }
 @end
+
+@interface NSViewTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSViewTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+
+@interface NSTextTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSTextTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+
+@interface NSTextViewTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSTextViewTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+
+@interface NSMenuTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSMenuTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+
+@interface NSControlTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSControlTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+
+@interface NSButtonTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder;
+@end
+@implementation NSButtonTemplate (GormCustomClassAdditions)
+- (BOOL) isInInterfaceBuilder
+{
+  return YES;
+}
+@end
+////////////////////////////////////////////////////////
+// END OF DEPRECATED TEMPLATES                        //
+////////////////////////////////////////////////////////
 
 // main...
 int 

@@ -1,3 +1,10 @@
+2003-10-25 17:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Added categories for the old templates to allow them
+	to be loaded.  The old templates are for backwards compatibility
+	only and will be removed in future versions of both GNUstep and
+	Gorm.
+
 2003-10-19 23:12 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormOutlineView.m: Corrected issue in addAttributeToClass which
