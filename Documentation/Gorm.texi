@@ -61,7 +61,7 @@ Free Software Foundation instead of in the original English.
 @sp 3
 @c @subtitle last updated February, 2001
 @subtitle Version @value{GORM-VERSION}
-@subtitle (for use with @samp{gstep-base} version @value{GNUSTEP-VERSION})
+@subtitle (for use with @samp{gnustep-gui} version @value{GNUSTEP-VERSION})
 @author Gregory John Casamento <greg_casamento@@yahoo.com>
 @author Richard Frith-Macdonald <richard@@brainstorm.co.uk>
 @page
@@ -89,6 +89,8 @@ English.
 be performing a valuable service if you report any bugs you encounter.}
 
 @end titlepage
+
+@contents
 
 @node Top, Copying, , 
 
@@ -300,11 +302,12 @@ Determines if the old .gorm is moved to .gorm~ when the modified version is save
 
 @end itemize
 
+@chapter My First Application
+
+This chapter will cover the steps taken by the user to create his/her first application with Gorm.
+
 @node Concept Index, , Implementation, Top
 @unnumbered Concept Index
 @printindex cp
-
-@summarycontents
-@contents
 
 @bye
