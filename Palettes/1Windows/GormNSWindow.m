@@ -93,11 +93,6 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   return NO;
 }
 
-- (BOOL) canBecomeKeyWindow
-{
-  return NO;
-}
-
 - (NSString *) className
 {
   return @"NSWindow";
