@@ -357,16 +357,11 @@ static BOOL done_editing;
   
   if (!isMatrix)
     {
-      /* Check if it is already too small and we're just making it bigger */
-      NSRect oldFrame = [view frame];
-      if (NSWidth(frame) >= NSWidth(oldFrame) 
-	  && NSHeight(frame) >= NSHeight(oldFrame))
-	return YES;
-      /* Otherwise check if it is too small */
-      if (NSWidth(frame) < minSize.width)
+      /* Check if it is too small*/
+      if (NSWidth(frame) < minSize.width
+	  || NSHeight(frame) < minSize.height)
 	return NO;
-      if (NSHeight(frame) < minSize.height)
-	return NO;
+
       if (([theEvent modifierFlags] & NSAlternateKeyMask) 
 	  != NSAlternateKeyMask || isControl == NO)
 	return YES;
@@ -406,6 +401,7 @@ static BOOL done_editing;
       /* If possible convert the object to a matrix with the cell given by the
 	 current object. If already a matrix, set the number of rows/cols
          based on the frame size. */
+
       if (!isMatrix)
 	{
 	  /* Convert to a matrix object */
@@ -415,6 +411,9 @@ static BOOL done_editing;
 					           prototype: [view cell]
 					        numberOfRows: 1
 					     numberOfColumns: 1];
+
+	  cellSize.width = [view frame].size.width;
+	  cellSize.height = [view frame].size.height;
 	  /* Remove this view and add the new matrix */
 	  [edit_view addSubview: AUTORELEASE(matrix)];
 	  //[self makeSelectionVisible: NO];
@@ -426,16 +425,12 @@ static BOOL done_editing;
 	  *view_ptr = view = matrix;
 	  cols = rows = 1;
 	}
-      if (NSWidth(frame) < (cellSize.width+intercellSpace.width)*cols
-	  - intercellSpace.width)
-	return NO;
-      if (NSHeight(frame) < (cellSize.height+intercellSpace.height)*rows
-	  - intercellSpace.height)
-	return NO;
+
       new_cols = (NSWidth(frame)+intercellSpace.width)
 	/ (cellSize.width + intercellSpace.width);
       new_rows = (NSHeight(frame)+intercellSpace.height)
 	/ (cellSize.height+intercellSpace.height);
+
       if (new_rows < 0 || new_rows-rows > 50 
 	  || new_cols < 0 || new_cols-cols > 50)
 	{
@@ -457,6 +452,15 @@ static BOOL done_editing;
 		}
 	    }
 	}
+      else if (new_cols < cols)
+	{
+	  int num = [view numberOfColumns] - 1;
+
+	  if (num <= 0)
+	    return NO;
+
+	  [view removeColumn: num];
+	}
       if (new_rows > rows)
 	{
 	  int i;
@@ -468,6 +472,15 @@ static BOOL done_editing;
 	      else
 		[view addRow];
 	    }
+	}
+      else if (new_rows < rows)
+	{
+	  int num = [view numberOfRows] - 1;
+
+	  if (num <= 0)
+	    return NO;
+
+	  [view removeRow: num];
 	}
       if (redisplay)
 	{
