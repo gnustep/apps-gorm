@@ -85,6 +85,8 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
+  if ([types containsObject: IBObjectPboardType] == YES)
+    return YES;
   return NO;
 }
 
@@ -144,6 +146,12 @@ static NSMapTable	*docMap = 0;
 
 - (void) copySelection
 {
+  if (selected != nil)
+    {
+      [document copyObjects: [self selection]
+		       type: IBViewPboardType
+	       toPasteboard: [NSPasteboard generalPasteboard]];
+    }
 }
 
 - (void) dealloc
@@ -154,6 +162,16 @@ static NSMapTable	*docMap = 0;
 
 - (void) deleteSelection
 {
+  if (selected != nil
+    && [[document nameForObject: selected] isEqualToString: @"NSOwner"] == NO
+    && [[document nameForObject: selected] isEqualToString: @"NSFirst"] == NO
+    && [[document nameForObject: selected] isEqualToString: @"NSFont"] == NO)
+    {
+      [document detachObject: selected];
+      [objects removeObjectIdenticalTo: selected];
+      [self selectObjects: [NSArray array]];
+      [self refreshCells];
+    }
 }
 
 /*
@@ -161,22 +179,6 @@ static NSMapTable	*docMap = 0;
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSString	*type = [[dragPb types] lastObject];
-
-  /*
-   * Windows are an exception to the normal DnD mechanism - we create them
-   * if they are dropped anywhere except back in the pallettes view -
-   * ie. if they are dragged, but the drop fails.
-   */
-  if (f == NO && [type isEqual: IBWindowPboardType] == YES)
-    {
-      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
-
-      if (active != nil)
-	{
-	  [active pasteType: type fromPasteboard: dragPb parent: nil];
-	}
-    }
 }
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
@@ -220,8 +222,19 @@ static NSMapTable	*docMap = 0;
 	{
 	  obj = [objects objectAtIndex: pos];
 	}
+      if (obj == [NSApp connectSource])
+	{
+	  return 0;	/* Can't drag an object onto itsself */
+	}
       [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-      return NSDragOperationLink;
+      if (obj != nil)
+	{
+	  return NSDragOperationLink;
+	}
+      else
+	{
+	  return 0;
+	}
     }
   else
     {
@@ -314,11 +327,56 @@ static NSMapTable	*docMap = 0;
     {
       [self deselectAllCells];
     }
+  [self displayIfNeeded];
+  [[self window] flushWindow];
 }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  mouseDownPoint = [theEvent locationInWindow];
+  if ([theEvent modifierFlags] & NSControlKeyMask)
+    {
+      NSPoint	loc = [theEvent locationInWindow];
+      NSString	*name;
+      int	r, c;
+      int	pos;
+      id	obj;
+
+      loc = [self convertPoint: loc fromView: nil];
+      [self getRow: &r column: &c forPoint: loc];
+      pos = r * [self numberOfColumns] + c;
+      if (pos >= 0 && pos < [objects count])
+	{
+	  obj = [objects objectAtIndex: pos];
+	}
+      if (obj != nil && obj != selected)
+	{
+	  [self selectObjects: [NSArray arrayWithObject: obj]];
+	  [self makeSelectionVisible: YES];
+	  [self makeSelectionVisible: YES];
+	}
+      name = [document nameForObject: obj];
+      if ([name isEqualToString: @"NSFirst"] == NO)
+	{
+	  NSPasteboard	*pb;
+
+	  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
+		     owner: self];
+	  [pb setString: name forType: GormLinkPboardType];
+	  [NSApp displayConnectionBetween: obj and: nil];
+
+	  [self dragImage: [NSApp linkImage]
+		       at: loc
+		   offset: NSZeroSize
+		    event: theEvent
+	       pasteboard: pb
+		   source: self
+		slideBack: YES];
+	  [self makeSelectionVisible: YES];
+	  return;
+	}
+    }
+
   [super mouseDown: theEvent];
 }
 

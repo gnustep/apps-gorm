@@ -73,7 +73,6 @@ extern NSString *GormLinkPboardType;
   NSMutableArray	*objects;
   id<IBDocuments>	document;
   id			selected;
-  NSPoint		mouseDownPoint;
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }

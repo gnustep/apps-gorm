@@ -694,6 +694,7 @@ static NSImage	*classesImage = nil;
       [self setName: @"NSFirst" forObject: firstResponder];
       [objectsView addObject: firstResponder];
       fontManager = [GormFontManager new];
+      [self setName: @"NSFont" forObject: fontManager];
 
       /*
        * Watch to see when we are starting/ending testing.

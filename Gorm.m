@@ -164,19 +164,19 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    }
 	}
       connectSource = source;
-      if (connectSource != nil)
+    }
+  if (connectSource != nil)
+    {
+      w = [activeDocument windowAndRect: &r forObject: connectSource];
+      if (w != nil)
 	{
-	  w = [activeDocument windowAndRect: &r forObject: connectSource];
-	  if (w != nil)
-	    {
-	      NSView	*wv = [[w contentView] superview];
+	  NSView	*wv = [[w contentView] superview];
 
-	      [wv lockFocus];
-	      [sourceImage compositeToPoint: r.origin
-				  operation: NSCompositeCopy];
-	      [wv unlockFocus];
-	      [w flushWindow];
-	    }
+	  [wv lockFocus];
+	  [sourceImage compositeToPoint: r.origin
+			      operation: NSCompositeCopy];
+	  [wv unlockFocus];
+	  [w flushWindow];
 	}
     }
   if (destination != connectDestination)
@@ -204,19 +204,19 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
 	    }
 	}
       connectDestination = destination;
-      if (connectDestination != nil)
+    }
+  if (connectDestination != nil)
+    {
+      w = [activeDocument windowAndRect: &r forObject: connectDestination];
+      if (w != nil)
 	{
-	  w = [activeDocument windowAndRect: &r forObject: connectDestination];
-	  if (w != nil)
-	    {
-	      NSView	*wv = [[w contentView] superview];
+	  NSView	*wv = [[w contentView] superview];
 
-	      [wv lockFocus];
-	      [targetImage compositeToPoint: r.origin
-				  operation: NSCompositeCopy];
-	      [wv unlockFocus];
-	      [w flushWindow];
-	    }
+	  [wv lockFocus];
+	  [targetImage compositeToPoint: r.origin
+			      operation: NSCompositeCopy];
+	  [wv unlockFocus];
+	  [w flushWindow];
 	}
     }
 }
