@@ -23,7 +23,8 @@
  */
 
 #include "GormPrivate.h"
-#import "GormClassManager.h"
+#include "GormClassManager.h"
+#include "GormCustomView.h"
 
 NSString *IBDidOpenDocumentNotification = @"IBDidOpenDocumentNotification";
 NSString *IBWillSaveDocumentNotification = @"IBWillSaveDocumentNotification";
@@ -1237,7 +1238,7 @@ static NSImage	*classesImage = nil;
 	  [[self openEditorForObject: obj] activate];
 	}
       else if ([obj isKindOfClass: [GSNibItem class]] == YES
-	       && [obj isKindOfClass: [GSCustomView class]] == NO)
+	       && [obj isKindOfClass: [GormCustomView class]] == NO)
 	{
 	  [objectsView addObject: obj];
 	  //[[self openEditorForObject: obj] activate];

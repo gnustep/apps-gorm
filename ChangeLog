@@ -1,3 +1,8 @@
+2001-10-05  Adam Fedor  <fedor@gnu.org>
+
+	* GormDocument.m (-loadDocument:): Typo fix - don't include
+	GormCustomView in object proxies list.
+
 2001-10-04  Adam Fedor  <fedor@gnu.org>
 
 	* GormClassManager.m (-renameClass:): Change sender method to
