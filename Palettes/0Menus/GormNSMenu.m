@@ -114,6 +114,24 @@
 }
 @end
 
+/*
+@interface NSMenu (GormAdditions)
+- (NSWindow *)_bWindow;
+- (void) _setBwindow: (NSWindow *)win;
+@end
+
+@implementation NSMenu (GormAdditions)
+- (NSWindow *)_bWindow
+{
+  return _bWindow;
+}
+- (void) _setBwindow: (NSWindow *)win
+{
+  _bWindow = win;
+}
+@end
+*/
+
 @implementation GormNSMenu
 - (BOOL) performKeyEquivalent: (NSEvent*)theEvent
 {
@@ -136,18 +154,28 @@
   return win;
 }
 
+/*
 - (void) awakeFromDocument: (id)document
 {
-  if([self supermenu] == nil)
-    {
-      // bring main menu to front.
-    }
+  NSWindow *win = [self _bWindow];
+  [win close];
+  RELEASE(win);
+  [self _setBwindow: nil];
 }
+*/
 
 - (NSString *)className
 {
   return @"NSMenu";
 }
+
+/*
+- (void) display
+{
+  NSLog(@"Display...");
+  [super display];
+}
+*/
 @end
 
 /*

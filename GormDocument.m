@@ -2034,7 +2034,7 @@ static NSImage	*classesImage = nil;
   GSNibContainer	*c;
   NSEnumerator		*enumerator;
   id <IBConnectors>	con;
-  NSString              *ownerClass; // , *key;
+  NSString              *ownerClass, *key;
   NSFileManager	        *mgr = [NSFileManager defaultManager];
   BOOL                  isDir = NO;
   NSDirectoryEnumerator *dirEnumerator;
@@ -2253,17 +2253,16 @@ static NSImage	*classesImage = nil;
 
   NSDebugLog(@"nameTable = %@",[c nameTable]);
 
-  //
-  // enumerator = [[c nameTable] keyEnumerator];
-  // while ((key = [enumerator nextObject]) != nil)
-  //  {
-  //    id o = [[c nameTable] objectForKey: key];
-  //    if ([o respondsToSelector: @selector(awakeFromDocument:)])
-  //	{
-  //	  [o awakeFromDocument: self];
-  //	}
-  //  }
-  //
+  // awaken all elements after the load is completed.
+  enumerator = [[c nameTable] keyEnumerator];
+  while ((key = [enumerator nextObject]) != nil)
+    {
+      id o = [[c nameTable] objectForKey: key];
+      if ([o respondsToSelector: @selector(awakeFromDocument:)])
+	{
+  	  [o awakeFromDocument: self];
+  	}
+    }
 
   // this is the last thing we should do...
   [nc postNotificationName: IBDidOpenDocumentNotification
@@ -3065,15 +3064,22 @@ static NSImage	*classesImage = nil;
       enumerator = [nameTable objectEnumerator];
       if (flag == YES)
 	{
-	  [(GormDocument*)[(id<IB>)NSApp activeDocument] setDocumentActive: NO];
+	  GormDocument *document = (GormDocument*)[(id<IB>)NSApp activeDocument];
+
+	  // set the current document active and unset the old one.
+	  [document setDocumentActive: NO];
 	  isActive = YES;
+
+	  // display everything.
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
+	      NSString *name = [document nameForObject: obj];
 	      if ([obj isKindOfClass: [NSWindow class]] == YES)
 		{
 		  [obj orderFront: self];
 		}
-	      else if ([obj isKindOfClass: [NSMenu class]] == YES)
+	      else if ([obj isKindOfClass: [NSMenu class]] && 
+		       [name isEqual: @"NSMenu"] == YES)
 		{
 		  [obj display];
 		}

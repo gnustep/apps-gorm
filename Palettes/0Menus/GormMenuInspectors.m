@@ -134,6 +134,7 @@
   return @"GormMenuItemAttributesInspector";
 }
 
+/*
 - (void)awakeFromDocument: (id <IBDocuments>)doc
 {
   NSMenu *menu = [self menu];
@@ -148,6 +149,7 @@
 	}
     }
 }
+*/
 @end
 
 @interface GormMenuItemAttributesInspector : IBInspector

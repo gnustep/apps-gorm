@@ -596,6 +596,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
       // order everything front.
       [[doc window] makeKeyAndOrderFront: self];
 
+      /*
       // the load is completed, awaken all of the elements.
       while ((key = [enumerator nextObject]) != nil)
 	{
@@ -605,6 +606,7 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 	      [o awakeFromDocument: doc];
 	    }
 	}
+      */
     }
 }
 

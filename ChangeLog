@@ -1,4 +1,18 @@
-2004-04-30 22:15 Gregory John Casamento <greg_casamento@yahoo.com>
+2004-04-30 20:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Removed code which calls "awakeFromDocument:" on
+	objects loaded in palettes.
+	* GormDocument.m: [GormDocument loadGormDocument:] added back
+	code which calls awakeFromDocument:.  Also in [GormDocument
+	setDocumentActive:] removed code which was causing all menus
+	to display instead of just the main menu when loading a .gorm.
+	* GormMenuEditor.m: [GormMenuEditor activate] removed code
+	which was causing all submenus to be displayed when the editor
+	for a menu was activated.
+	* GormMenuInspectors.m: Removed awakeFromDocument: method.
+	* GormNSMenu.m: Commented out some old code.
+	
+2004-04-30 19:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: Modified _repairFile so that it works. :)
 	* Gorm.gorm: Removed some extraneous menu items/submenus.

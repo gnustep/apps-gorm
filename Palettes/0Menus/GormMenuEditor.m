@@ -420,18 +420,14 @@
 	  tl = frame.origin;
 	  tl.x += frame.size.width;
 	  tl.y += frame.size.height;
-	  [edited sizeToFit];
-	  [[[edited menuRepresentation] window] setFrameTopLeftPoint: tl];
-	}
-
-      // display the main menu only.
-      /* Don't display.  This is the cause for Report #3439
-      if([edited supermenu] == nil)
-	{
-	  // [edited display];
-	}
-      */
-      
+	  
+	  // if it's the main menu, display it when activated, otherwise don't.
+	  if([[document nameForObject: edited] isEqual: @"NSMenu"])
+	    {
+	      [edited sizeToFit];
+	      [[[edited menuRepresentation] window] setFrameTopLeftPoint: tl];
+	    }
+	}      
       return NO;
     }
   return YES;
@@ -637,9 +633,15 @@
 void _attachAllSubmenus(id menu, NSArray *items, id document)
 {
   NSEnumerator *e = [items objectEnumerator];
+  NSString *name = [document nameForObject: menu];
   id i = nil;
   
-  [menu display];
+  // if it's the main menu, display it... otherwise..
+  if([name isEqual: @"NSMenu"])
+    {
+      [menu display];
+    }
+
   while((i = [e nextObject]) != nil)
     {
       [document attachObject: i toParent: menu];
