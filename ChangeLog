@@ -1,5 +1,9 @@
 2002-11-05  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GormSoundEditor.m: Added missing file.
+	
+2002-11-05  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormDocument.m: added -[GormDocument openGModel:] to allow the
 	loading of .gmodel files for conversion into .gorm files.
 	* GormSoundInspector.m: Corrected a problem w/ deleting sounds which
