@@ -1,3 +1,8 @@
+2000-02-21  Adam Fedor  <fedor@gnu.org>
+
+	* GNUmakefile: Don't make Documentation by default for those who
+	don't have TeX setup.
+
 Sun Feb 14 06:56:00 2000 Richard Frith-Macdonald <richard@brainstorm.co.uk>
 
 	* Palettes/2Control/main.m: Add popup and pulldown menu controls

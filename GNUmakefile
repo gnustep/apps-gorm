@@ -28,7 +28,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Each palette is a subproject
 #
 SUBPROJECTS = \
-	Documentation \
 	Palettes \
 	Testing
 
