@@ -1,3 +1,7 @@
+2005-04-03 07:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBResourceManager.[hm]: Implementation of this class.
+
 2005-03-30 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m: Update the version of a 

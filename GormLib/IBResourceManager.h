@@ -30,7 +30,7 @@
 #include <InterfaceBuilder/IBProjectFiles.h>
 #include <InterfaceBuilder/IBDocuments.h>
 
-@class NSArray, NSString, NSPasteboard;
+@class NSArray, NSString, NSPasteboard, NSMutableArray;
 
 /**
  * Notification sent when a resource manager class is added to /removed from 
@@ -53,6 +53,7 @@ enum IBResourceLocation {
 @interface IBResourceManager : NSObject
 {
   id<IBDocuments> document;
+  NSMutableArray *resources;
 }
 
 /**
@@ -80,7 +81,7 @@ enum IBResourceLocation {
 /**
  * Add a resource.
  */
-- (void) addResources: (NSArray *)resources;
+- (void) addResources: (NSArray *)resourceList;
 
 /**
  * Add resoures from the pasteboard.  Invokes the 
