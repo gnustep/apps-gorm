@@ -92,12 +92,6 @@
   [verticalSlider setFloatValue: [anObject contentViewMargins].height];
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
   if ([super init] == nil)
@@ -332,13 +326,6 @@
     [typeButton indexOfItemWithTag: [self buttonTypeForObject: anObject]]];
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  RELEASE(okButton);
-  [super dealloc];
-}
-
 - (id) init
 {
   if ([super init] == nil)
@@ -452,12 +439,6 @@
     }
   [disabledSwitch setState: ([anObject isEnabled]) ? NSOffState : NSOnState];  
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -623,12 +604,6 @@
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
   if ([super init] == nil)
@@ -788,13 +763,6 @@
   [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  RELEASE(okButton);
-  [super dealloc];
-}
-
 - (id) init
 {
   if ([super init] == nil)
@@ -870,12 +838,6 @@
   [typeMatrix selectCellWithTag: [anObject pullsDown]];
   [disabledSwitch setState: ![anObject autoenablesItems]];
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [anObject tag]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -992,12 +954,6 @@
   [[knobThicknessForm cellAtIndex: 0] setFloatValue: 
 			       [[anObject cell] knobThickness]];
   [[tagForm cellAtIndex: 0] setIntValue: [[anObject cell] tag]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -1122,12 +1078,6 @@
     [valueWrapsButton setState: 1];
   else
     [valueWrapsButton setState: 0];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -1302,13 +1252,6 @@
     }
 
   [[tagForm cellAtIndex: 0] setIntValue: [anObject tag]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  RELEASE(okButton);
-  [super dealloc];
 }
 
 - (id) init

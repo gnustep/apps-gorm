@@ -106,13 +106,6 @@
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  RELEASE(okButton);
-  [super dealloc];
-}
-
 - (id) init
 {
   if ([super init] == nil)
@@ -278,13 +271,6 @@
   if ([anObject allowsColumnReordering])
     [optionMatrix selectCellAtRow: 2 column: 0];
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  RELEASE(okButton);
-  [super dealloc];
 }
 
 - (id) init

@@ -60,12 +60,6 @@
 
 @implementation ContainersPalette
 
-- (void) dealloc
-{
-  //  RELEASE(browserDelegate);
-  [super dealloc];
-}
-
 - (void) finishInstantiate
 { 
 

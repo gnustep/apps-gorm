@@ -93,6 +93,7 @@
   NSString	*path = [bundle pathForImageResource: @"WindowDrag"];
   NSImage	*dragImage = [[NSImage alloc] initWithContentsOfFile: path];
 
+  RELEASE(window);
   window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, 272, 192)
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
@@ -292,15 +293,9 @@ NSwindow inspector
   
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
- if ([super init] == nil)
+  if ([super init] == nil)
     return nil;
 
   if ([NSBundle loadNibNamed: @"GormWindowInspector" owner: self] == NO)
@@ -313,7 +308,7 @@ NSwindow inspector
 
 - (void) ok: (id)sender
 {
-  [self _setValuesFromControl: sender];
+    [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -379,13 +374,6 @@ NSwindow inspector
   id notifier = [aNotification object];
   
   [self _getValuesFromObject: notifier];
-}
-
-- (void) dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init

@@ -33,6 +33,7 @@ NSString *IBWillEndTestingInterfaceNotification
 NSString *IBDidEndTestingInterfaceNotification
   = @"IBDidEndTestingInterfaceNotification";
 
+NSDate	*startDate;
 
 NSString *GormLinkPboardType = @"GormLinkPboardType";
 
@@ -699,6 +700,7 @@ NSString *GormLinkPboardType = @"GormLinkPboardType";
   //  [mainMenu display];
   [self setDelegate: self];
   [super finishLaunching];
+NSLog(@"StartupTime %f", [startDate timeIntervalSinceNow]);
 }
 
 - (void) handleNotification: (NSNotification*)notification
@@ -1231,6 +1233,7 @@ main(int argc, const char **argv)
   NSImageDoesCaching = YES;
   //[NSObject enableDoubleReleaseCheck: YES];
 
+startDate = [[NSDate alloc] init];
   NSApplicationMain(argc, argv);
 
   return 0;

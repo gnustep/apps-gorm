@@ -34,7 +34,11 @@ NSString *IBSelectionChangedNotification
 
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(object);
+  RELEASE(okButton);
+  RELEASE(revertButton);
+  RELEASE(window);
   [super dealloc];
 }
 

@@ -1,3 +1,19 @@
+2002-03-06  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* IBInspector.m: Release all ivars on dealloc.
+	* IBPalette.m: ditto
+	* Palettes/0Menus/GormMenuInspectors.m: Don't release superclass
+	ivars in own dealloc method.
+	* Palettes/1Windows/main.m: ditto
+	* Palettes/2Controls/inspectors.m: ditto
+	* Palettes/3Containers/inspectors.m: ditto
+	* Palettes/3Containers/main.m: ditto
+	* Palettes/4Data/inspectors.m: ditto
+	Changes to make retain/release consistent ... subclasses must not
+	release the ivars of a superclass in their dealloc method as the
+	superclass dealloc method should do that. Fixes bug exposed by
+	recent NSWindow dealloc fixes.
+
 2002-03-04  Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
 
 	* Gorm.m ([GormObjectProxy -initWithCoder:]): 

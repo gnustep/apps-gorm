@@ -80,6 +80,7 @@ static NSMapTable	*viewToType = 0;
 
 - (void) dealloc
 {
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(icon);
   RELEASE(window);
   [super dealloc];

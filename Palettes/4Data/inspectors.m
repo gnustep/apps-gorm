@@ -119,15 +119,11 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if ([anObject usesDataSource])
     [optionMatrix selectCellAtRow: 2 column: 0];
 
-  [[visibleItemsForm cellAtIndex: 0] setIntValue: [anObject numberOfVisibleItems]];
+  [[visibleItemsForm cellAtIndex: 0]
+    setIntValue: [anObject numberOfVisibleItems]];
 
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
 
 - (id) init
 {
@@ -224,12 +220,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   [alignmentMatrix selectCellWithTag: [anObject imageAlignment]];
   [scalingMatrix selectCellWithTag: [anObject imageScaling]];
   [editableSwitch setState: [anObject isEditable]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -348,12 +338,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   if ([anObject importsGraphics])
     [optionMatrix selectCellAtRow: 3 column: 0];
 
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -497,12 +481,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     }
   [formatField setStringValue: VSTR([fmtr dateFormat]) ];
   [languageSwitch setState: [fmtr allowsNaturalLanguage]];
-}
-
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
 }
 
 - (id) init
@@ -813,12 +791,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   
 }
 
-- (void) dealloc
-{
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
 
@@ -826,7 +798,8 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     {
       return nil;
     }
-  if ([NSBundle loadNibNamed: @"GormNumberFormatterInspector" owner: self] == NO)
+  if ([NSBundle loadNibNamed: @"GormNumberFormatterInspector"
+		       owner: self] == NO)
     {
       NSLog(@"Could not gorm GormNumberFormatterInspector");
       return nil;

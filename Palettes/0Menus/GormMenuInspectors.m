@@ -44,13 +44,6 @@
   [object setTitle: [titleText stringValue]];
 }
 
-- (void) dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
   self = [super init];
@@ -59,6 +52,7 @@
       NSView		*contents;
       NSTextField	*title;
 
+      RELEASE(window);
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
@@ -129,13 +123,6 @@
   [[object menu] display];
 }
 
-- (void) dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver: self];
-  RELEASE(window);
-  [super dealloc];
-}
-
 - (id) init
 {
   self = [super init];
@@ -144,6 +131,7 @@
       NSView		*contents;
       NSTextField	*title;
 
+      RELEASE(window);
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
 					   styleMask: NSBorderlessWindowMask 
 					     backing: NSBackingStoreRetained
