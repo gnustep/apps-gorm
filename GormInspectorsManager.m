@@ -26,6 +26,7 @@
 #include <Foundation/NSException.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
+#include <InterfaceBuilder/IBInspectorManager.h>
 #include "GormPrivate.h"
 #include "GormImage.h"
 #include "GormSound.h"
@@ -386,6 +387,7 @@
 
 - (void) setCurrentInspector: (id)anObj
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
   unsigned	count = [selection count];
   id		obj = [selection lastObject];
@@ -568,6 +570,10 @@
 	}
     }
 
+  // inform the world that the object is about to be inspected.
+  [nc postNotificationName: IBWillInspectObjectNotification object: obj];
+
+  // inspect the object.
   [inspector setObject: obj];
 }
 

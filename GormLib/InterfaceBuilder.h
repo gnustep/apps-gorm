@@ -31,6 +31,7 @@
 #include <InterfaceBuilder/IBDocuments.h>
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBInspectorManager.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBPalette.h>
 #include <InterfaceBuilder/IBSystem.h>

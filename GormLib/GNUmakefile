@@ -49,6 +49,7 @@ IBDefines.h \
 IBDocuments.h \
 IBEditors.h \
 IBInspector.h \
+IBInspectorManager.h \
 IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
@@ -67,6 +68,7 @@ IBConnectors.m \
 IBDocuments.m \
 IBEditors.m \
 IBInspector.m \
+IBInspectorManager.m \
 IBObjectAdditions.m \
 IBPalette.m
 

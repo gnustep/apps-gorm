@@ -1146,7 +1146,7 @@ static NSImage *testingImage = nil;
 {
   if (inspectorsManager == nil)
     {
-      inspectorsManager = [GormInspectorsManager new];
+      inspectorsManager = (GormInspectorsManager *)[GormInspectorsManager sharedInspectorManager];
     }
   return inspectorsManager;
 }

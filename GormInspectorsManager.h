@@ -27,6 +27,7 @@
 #define INCLUDED_GormInspectorsManager_h
 
 #include <Foundation/NSObject.h>
+#include <InterfaceBuilder/IBInspectorManager.h>
 
 @class NSPanel;
 @class NSMutableDictionary;
@@ -34,7 +35,7 @@
 @class NSView;
 @class IBInspector;
 
-@interface GormInspectorsManager : NSObject
+@interface GormInspectorsManager : IBInspectorManager
 {
   NSPanel		*panel;
   NSMutableDictionary	*cache;

@@ -1,3 +1,14 @@
+2004-12-19 08:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInspectorsManager.h: Changed parent class.
+	* GormInspectorsManager.m: Added notification 
+	IBWillInspectoObjectNotification.
+	* GormLib/GNUmakefile: Added new class.
+	* GormLib/IBInspectorManager.h: New class
+	* GormLib/IBInspectorManager.m: New class
+	* GormLib/InterfaceBuilder.h: Added new class.
+	* Gorm.m: Coerce IBInspectorManager to GormInspectorsManager.
+
 2004-12-18 13:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBApplicationAdditions.h
