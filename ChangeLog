@@ -1,4 +1,10 @@
-2003-01-09  Gregory John Casamento <greg_casamento@yahoo.com
+2003-01-09  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCustomView.m: Corrected problem with dummy implementation
+	of encodeWithCoder:.  (Problem found and patch supplied by
+	Chris Vetter).
+	
+2003-01-09  Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormDocument.m: [GormDocument remove:]: added code
 	to check the boolean returned from the removeConnection
