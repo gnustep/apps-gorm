@@ -45,6 +45,9 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 // Define this as "NO" initially.   We only want to turn this on while loading or testing.
 static BOOL _isInInterfaceBuilder = NO;
 
+static NSImage *gormImage = nil;
+static NSImage *testingImage = nil;
+
 @class	InfoPanel;
 
 // we had this include for grouping/ungrouping selectors
@@ -257,6 +260,10 @@ static BOOL _isInInterfaceBuilder = NO;
       sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
       path = [bundle pathForImageResource: @"GormTargetTag"];
       targetImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"Gorm"];
+      gormImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormTesting"];
+      testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 
       documents = [NSMutableArray new];
       [nc addObserver: self
@@ -689,6 +696,7 @@ static BOOL _isInInterfaceBuilder = NO;
 	  
 	  
 	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
+	  [self setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
 	  [activDoc beginArchiving];
 	  [archiver encodeClassName: @"GormCustomView" 
@@ -749,8 +757,8 @@ static BOOL _isInInterfaceBuilder = NO;
 	    {
 	      NSMenu	*testMenu;
 	      
-	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu")];
-	      [testMenu addItemWithTitle: _(@"Quit") 
+	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu (Gorm)")];
+	      [testMenu addItemWithTitle: _(@"Quit Test") 
 			action: @selector(deferredEndTesting:)
 			keyEquivalent: @"q"];	
 	      [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
@@ -758,16 +766,20 @@ static BOOL _isInInterfaceBuilder = NO;
 	  else
 	    {
 	      NSMenu	*testMenu = [self mainMenu];
-	      id		item;
-	      
+	      id	 item;
+	      NSString  *newTitle = [[testMenu title] stringByAppendingString: @" (Gorm)"];
+
+	      // set the menu up so that it's easy to tell we're testing and how to quit.
+	      [testMenu setTitle: newTitle];
 	      item = [testMenu itemWithTitle: _(@"Quit")];
 	      if (item != nil)
 		{
+		  [item setTitle: _(@"Quit Test")];
 		  [item setAction: @selector(deferredEndTesting:)];
 		}
 	      else
 		{
-		  [testMenu addItemWithTitle: _(@"Quit") 
+		  [testMenu addItemWithTitle: _(@"Quit Test") 
 			    action: @selector(deferredEndTesting:)
 			    keyEquivalent: @"q"];	
 		}
@@ -1038,6 +1050,7 @@ static BOOL _isInInterfaceBuilder = NO;
 	}
 
       [self setMainMenu: mainMenu];
+      [self setApplicationIconImage: gormImage];
 
       NS_DURING
 	{
@@ -1047,8 +1060,8 @@ static BOOL _isInInterfaceBuilder = NO;
 	{
 	  NSDebugLog(@"Exception while setting services menu");
 	}
-
       NS_ENDHANDLER
+
       [mainMenu display]; // bring it to the front...
 
       isTesting = NO;

@@ -1,3 +1,12 @@
+2004-09-12 20:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Made some changes in [Gorm testInterface] and
+	[Gorm endTesting] to change the icon when testing and also
+	to modify the menu and quit titles so that it is obvious to
+	the user that Gorm is in testing mode and has not died.
+	* Images/GormTesting.tiff: Alternate icon used when Gorm
+	is testing.
+
 2004-09-08 22:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Removed main function from Gorm class file.

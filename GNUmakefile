@@ -118,6 +118,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormView.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
+	Images/GormTesting.tiff \
 	Resources/GormPrefColors.gorm \
 	Resources/GormViewSizeInspector.gorm \
 	Resources/GormCustomClassInspector.gorm \
