@@ -1,5 +1,11 @@
 2003-07-20  Gregory John Casamento <greg_casamento@yahoo.com>
 
+	* GNUmakefile.postamble: Added to help with one-pass compile.
+	* GNUmakefile.preamble: Added ADDITIONAL_LIB_DIR so that Gorm
+	can be compiled in one pass.  Corrects bug #3748.
+	
+2003-07-20  Gregory John Casamento <greg_casamento@yahoo.com>
+
 	* GormImageInspector.[hm]: Added.  Implements image inspector.
 	* Resources/GormImageInspector.gorm: Added interface file.
 

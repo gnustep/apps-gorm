@@ -20,15 +20,12 @@ See @url{http://www.gnustep.org/} for further information.
 
 @subsection Build and Install
 
-To build Gorm, you must first install GormLib.  GormLib is a subproject of
-Gorm.  Once GormLib is built, install it and then build Gorm.  Steps to build:
+Steps to build:
 
 @itemize
-@item cd GormLib
 @item make && make install 
-@item cd .. (to the Gorm directory)
-@item make && make install
 @end itemize
+
 @subsection Trouble
 
 Give us feedback!  Tell us what you like; tell us what you think
