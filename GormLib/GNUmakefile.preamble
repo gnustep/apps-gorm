@@ -69,9 +69,6 @@ ADDITIONAL_INSTALL_DIRS +=
 # Local configuration
 #
 
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-libGorm_LIBRARIES_DEPEND_UPON += -lobjc     
-endif
 ifeq ($(GNUSTEP_TARGET_OS),cygwin)
 libGorm_LIBRARIES_DEPEND_UPON += -lobjc
 endif
