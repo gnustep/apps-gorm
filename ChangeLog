@@ -1,3 +1,8 @@
+2004-11-27 09:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/OCClass.m: Condensed parse methods into
+	parse.  Corrected a minor issue.
+	
 2004-11-27 05:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/OCClass.h
