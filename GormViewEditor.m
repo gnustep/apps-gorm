@@ -1361,11 +1361,6 @@ static BOOL currently_displaying = NO;
   return YES;
 }
 
-- (void) deleteSelection
-{
-  // does nothing...
-}
-
 - (void) resetObject: (id)anObject
 {
   NS_DURING
@@ -1491,6 +1486,32 @@ static BOOL currently_displaying = NO;
     {
       [self setNeedsDisplay: YES];
     }
+}
+
+// stubs for the remainder of the IBEditors protocol not implemented in this class.
+- (void) deleteSelection
+{
+  // NSLog(@"deleteSelection should be defined in a subclass");
+}
+
+- (void) validateEditing
+{
+  // NSLog(@"validateEditing should be defined in a subclass");
+}
+
+- (void) pasteInSelection
+{
+  // NSLog(@"deleteSelection should be defined in a subclass");
+}
+
+- (id<IBEditors>) openSubeditorForObject: (id) object
+{
+  return nil;
+}
+
+- (void) closeSubeditors
+{
+  // NSLog(@"closeSubeditors should be defined in a subclass");
 }
 @end
 

@@ -323,36 +323,32 @@ static NSImage *horizontalImage;
 {
   BOOL onKnob = NO;
 
-  {
-    if ([parent respondsToSelector: @selector(selection)] &&
-	[[parent selection] containsObject: _editedObject])
-      {
-	IBKnobPosition	knob = IBNoneKnobPosition;
-	NSPoint mouseDownPoint = 
-	  [self convertPoint: [theEvent locationInWindow]
-		fromView: nil];
-	knob = GormKnobHitInRect([self bounds], 
-				 mouseDownPoint);
-	if (knob != IBNoneKnobPosition)
-	  onKnob = YES;
-      }
-    if (onKnob == YES)
-      {
-	if (parent)
-	  return [parent mouseDown: theEvent];
-	else
-	  return [self noResponderFor: @selector(mouseDown:)];
-      }
-  }
+  if ([parent respondsToSelector: @selector(selection)] &&
+      [[parent selection] containsObject: _editedObject])
+    {
+      IBKnobPosition	knob = IBNoneKnobPosition;
+      NSPoint mouseDownPoint = 
+	[self convertPoint: [theEvent locationInWindow]
+	      fromView: nil];
+      knob = GormKnobHitInRect([self bounds], 
+			       mouseDownPoint);
+      if (knob != IBNoneKnobPosition)
+	onKnob = YES;
+    }
+  if (onKnob == YES)
+    {
+      if (parent)
+	return [parent mouseDown: theEvent];
+      else
+	return [self noResponderFor: @selector(mouseDown:)];
+    }
   
-  {
-    if ([parent isOpened] == NO)
-      {
-	NSDebugLog(@"md %@ calling my parent %@", self, parent);
-	[parent mouseDown: theEvent];
-	return;
-      }
-  }
+  if ([parent isOpened] == NO)
+    {
+      NSDebugLog(@"md %@ calling my parent %@", self, parent);
+      [parent mouseDown: theEvent];
+      return;
+    }
 
   // are we on the knob of a selected view ?
   {

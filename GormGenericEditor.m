@@ -340,4 +340,15 @@
 {
   return (closed == NO);
 }
+
+// stubs for protocol methods not implemented in this editor.
+- (void) validateEditing
+{
+  // does nothing.
+}
+
+- (void) drawSelection
+{
+  // does nothing.
+}
 @end

@@ -256,14 +256,18 @@
     }
 }
 
-- (void) deleteSelection
-{
-  NSLog(@"deleteSelection should be subclassed");
-}
-
 - (BOOL) acceptsFirstResponder
 {
   return YES;
 }
 
+- (void) drawSelection
+{
+  // doesn nothing.
+}
+
+- (unsigned) selectionCount
+{
+  return [selection count];
+}
 @end

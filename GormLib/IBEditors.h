@@ -26,7 +26,6 @@
 #define INCLUDED_IBEDITORS_H
 
 #include <Foundation/NSObject.h>
-// #include <InterfaceBuilder/IBDocuments.h>
 
 // forward references
 @class NSString;
@@ -46,25 +45,36 @@ extern NSString *IBClassNameChangedNotification;
  * must implement.
  */
 @protocol IBSelectionOwners <NSObject>
-//  - (unsigned) selectionCount;
-- (NSArray*) selection;
-//  - (void) drawSelection;
+/**
+ * The number of currently selected objects.
+ */
+- (unsigned) selectionCount;
 
-/*
+/**
+ * Return the selection in an array.
+ */
+- (NSArray*) selection;
+
+/**
+ * Draw the selection.
+ */
+- (void) drawSelection;
+
+/**
  * This method is used to draw or remove markup that identifies selected
  * objects within the object being edited.
  */
 - (void) makeSelectionVisible: (BOOL)flag;
 
-/*
+/**
  * This method changes the current selection to those objects in the array.
  */
 - (void) selectObjects: (NSArray*)objects;
 
-//  /*
-//   * This method places the current selection from the editor on the pasteboard.
-//   */
-//  - (void) copySelection;
+/**
+ * This method places the current selection from the editor on the pasteboard.
+ */
+- (void) copySelection;
 
 @end
 
@@ -98,6 +108,11 @@ extern NSString *IBClassNameChangedNotification;
 - (void) close;
 
 /**
+ * Close all subeditors associated with this editor.
+ */
+- (void) closeSubeditors;
+
+/**
  * Deactivate an editor - removes it from the view hierarchy so that objects
  * can be archived without including the editor.
  * This method should be called automatically by the 'close' method.
@@ -105,9 +120,9 @@ extern NSString *IBClassNameChangedNotification;
  */
 - (void) deactivate;
 
-//  /*
-//   * This method deletes all the objects in the current selection in the editor.
-//   */
+/**
+ * This method deletes all the objects in the current selection in the editor.
+ */
 - (void) deleteSelection;
 
 /**
@@ -126,10 +141,17 @@ extern NSString *IBClassNameChangedNotification;
 - (void) orderFront;
 
 /**
+ * Opens the subeditor for an object when the object being edited is
+ * double clicked by the user.  If there is no sub-editor, return nil, otherwise
+ * method will return the editor for the object.
+ */
+- (id<IBEditors>) openSubeditorForObject: (id)object;
+
+/**
  * This method is used to add the contents of the pasteboard to the current
  * selection of objects within the editor.
  */
-//  - (void) pasteInSelection;
+- (void) pasteInSelection;
 
 /**
  * Redraws the edited object
@@ -142,6 +164,12 @@ extern NSString *IBClassNameChangedNotification;
  * into the current selection owner.
  */
 - (BOOL) wantsSelection;
+
+/**
+ * Causes the editor to select the text being edited in the current text
+ * field.
+ */
+- (void) validateEditing;
 
 /**
  * This returns the window in which the editor is drawn.

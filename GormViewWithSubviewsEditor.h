@@ -40,7 +40,6 @@
 - (void) silentlyResetSelection;
 - (void) selectObjects: (NSArray *) objects;
 - (void) copySelection;
-- (void) deleteSelection;
 
 /*
  * Close subeditors of this editor.

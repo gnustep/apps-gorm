@@ -366,6 +366,11 @@
 	}
     }    
 }
+
+- (void) copySelection
+{
+  // does nothing.
+}
 @end
 
 @implementation GormClassEditor (NSOutlineViewDataSource)

@@ -1,3 +1,18 @@
+2004-12-12 14:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassEditor.m: Implemented new methods.
+	* GormGenericEditor.m: Implemented new methods.
+	* GormLib/IBEditors.h: Added back some of the commented out
+	methods and added also validateEditing and openSubeditorForObject:
+	* GormLib/IBViewAdditions.h: Added the category IBCellAdditions
+	as defined in the IB API Spec.
+	* GormViewEditor.m: Added stub implementations for methods
+	not implemented in the view editor.  They are implemented in
+	some of the lower level editors, but it still needs to be 
+	compliant.
+	* GormViewWithSubviewsEditor.[hm]: Removed redundant method for
+	deleteSelection. 
+
 2004-12-11 18:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormClassManager.m: Correction for reparenting of a class in

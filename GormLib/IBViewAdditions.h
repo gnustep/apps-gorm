@@ -28,17 +28,26 @@
 #include <InterfaceBuilder/IBDefines.h>
 #include <Foundation/NSGeometry.h>
 #include <AppKit/NSView.h>
+#include <AppKit/NSCell.h>
 
 // forward references
 @class NSColor;
 
-@interface NSView (ViewAdditions)
+@interface NSView (IBViewAdditions)
 - (BOOL) acceptsColor: (NSColor*)color atPoint: (NSPoint)point;
 - (BOOL) allowsAltDragging;
 - (void) depositColor: (NSColor*)color atPoint: (NSPoint)point;
 - (NSSize) maximumSizeFromKnobPosition: (IBKnobPosition)knobPosition;
 - (NSSize) minimumSizeFromKnobPosition: (IBKnobPosition)position;
 - (void) placeView: (NSRect)newFrame;
+@end
+
+@interface NSCell (IBCellAdditions)
+- (void) cellWillAltDragWithSize: (NSSize)size;
+- (NSSize) maximumSizeForCellSize: (NSSize)size 
+                     knobPosition: (IBKnobPosition)position;
+- (NSSize) minimumSizeForCellSize: (NSSize)size 
+                     knobPosition: (IBKnobPosition)position;
 @end
 
 #endif
