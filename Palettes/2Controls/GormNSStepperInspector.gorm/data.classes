@@ -1,27 +1,5 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "capitalizeWord:",
-	    "changeFont:",
-	    "delete:",
-	    "deleteWordBackward:",
-	    "loosenKerning:",
-	    "moveDown:",
-	    "moveToBeginningOfParagraph:",
-	    "moveWordForward:",
-	    "orderFrontDataLinkPanel:",
-	    "pasteAsPlainText:",
-	    "raiseBaseline:",
-	    "scrollLineDown:",
-	    "selectParagraph:",
-	    "showWindow:",
-	    "takeObjectValueFrom:",
-	    "toggleTraditionalCharacterShape:",
-	    "unscript:"
-	);
-	Super = NSObject;
-    };
     GormStepperAttributesInspector = {
 	Actions = (
 	    "ok:",
@@ -36,6 +14,6 @@
 	    valueWrapsButton,
 	    window
 	);
-	Super = NSObject;
+	Super = IBInspector;
     };
 }

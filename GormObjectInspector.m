@@ -174,7 +174,8 @@ selectCellWithString: (NSString*)title
     {
       SEL	set = NSSelectorFromString(name);
       NSString	*type = [types objectForKey: name];
-
+      
+      [super ok: sender];
       if (type == typeChar)
 	{
 	  char	v = [value intValue];

@@ -358,6 +358,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [actionTable scrollRowToVisible: row];
   [actionTable selectRow: row byExtendingSelection: NO];
   [document selectClass: className];
+  [super ok: sender];
 }
 
 - (void) addOutlet: (id)sender
@@ -376,6 +377,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [outletTable scrollRowToVisible: row];
   [outletTable selectRow: row byExtendingSelection: NO];
   [document selectClass: className];
+  [super ok: sender];
 }
 
 - (void) removeAction: (id)sender
@@ -406,6 +408,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
       
       if(removed)
 	{
+	  [super ok: sender];
 	  [document collapseClass: className];
 	  [document reloadClasses];
 	  [classManager removeAction: name fromClassNamed: className];
@@ -439,6 +442,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   if(removed)
     {
+      [super ok: sender];
       [document collapseClass: className];
       [document reloadClasses];
       [classManager removeOutlet: name fromClassNamed: className];
@@ -485,6 +489,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
       // if it's a custom class, let it go, if not do nothing.
       if([classManager isCustomClass: name])
 	{     
+	  [super ok: sender];
+
 	  // check to see if the user wants to do this and remove the connections.
 	  removed = [document removeConnectionsForClassNamed: name]; 
 	  
@@ -524,6 +530,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  object: classManager];
       [document reloadClasses];
       [document selectClass: newName];
+      [super ok: sender];
     }
 }
 

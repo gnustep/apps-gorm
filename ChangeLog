@@ -1,3 +1,54 @@
+2005-01-28 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormClassInspector.m: Added call to super ok: method.
+	* GormCustomClassInspector.m: Added call to super ok: method.
+	* GormLib/IBInspector.m: Corrected touch method to properly
+	update the document status.  Implemented ok: which simply
+	calls touch: in the superclass.
+	* GormNSSplitViewInspector.m: Added call to super ok: method.
+	* GormObjectInspector.m: Added call to super ok: method.
+	* GormScrollViewAttributesInspector.m: Added call to super ok: method.
+	* GormViewSizeInspector.m: Added call to super ok: method.
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Corrected background.
+	* Palettes/1Windows/main.m: Added call to super ok: method for all
+	inspectors.
+	* Palettes/2Controls/GormNSBoxInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSCellInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSColorWellInspector.gorm: Corrected 
+	background.
+	* Palettes/2Controls/GormNSFormInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSMatrixInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm: Corrected 
+	background.
+	* Palettes/2Controls/GormNSSliderInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSStepperInspector.gorm: Corrected background.
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm: Corrected 
+	background.
+	* Palettes/2Controls/inspectors.m: Added call to super ok: method.
+	* Palettes/3Containers/GormNSBrowserInspector.gorm: Corrected 
+	background.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm: Corrected 
+	background.
+	* Palettes/3Containers/GormNSTableColumnSizeInspector.gorm: Corrected 
+	background.
+	* Palettes/3Containers/GormNSTableViewInspector.gorm: Corrected 
+	background.
+	* Palettes/3Containers/GormTabViewInspector.gorm: Corrected background.
+	* Palettes/3Containers/inspectors.m: Added call to super ok: method.
+	* Palettes/4Data/GormNSComboBoxInspector.gorm: Corrected background.
+	* Palettes/4Data/GormNSDateFormatterInspector.gorm: Corrected 
+	background.
+	* Palettes/4Data/GormNSImageViewInspector.gorm: Corrected background.
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm: Corrected 
+	background.
+	* Palettes/4Data/GormNSTextViewInspector.gorm: Corrected background.
+	* Palettes/4Data/inspectors.m: Added call to super ok: method for 
+	all inspectors.
+	* Resources/GormImageInspector.gorm: Corrected background.
+	* Resources/GormViewSizeInspector.gorm: Corrected background.
+	Corrects bug#11346
+	
 2005-01-23 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormFunctions.m: identifierString() added code which tests

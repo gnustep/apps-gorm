@@ -204,6 +204,29 @@ NSwindow inspector
 }
 @end
 
+@interface NSColorWell (ColorAdditions)
+- (void) setColorWithoutAction: (NSColor *)color;
+@end
+
+@implementation NSColorWell (ColorAdditions)
+- (void) setColorWithoutAction: (NSColor *)color
+{
+  ASSIGN(_the_color, color);
+  /*
+   * Experimentation with NeXTstep shows that when the color of an active
+   * colorwell is set, the color of the shared color panel is set too,
+   * though this does not raise the color panel, only the event of
+   * activation does that.
+   */
+  if ([self isActive])
+    {
+      NSColorPanel	*colorPanel = [NSColorPanel sharedColorPanel];
+
+      [colorPanel setColor: _the_color];
+    }
+  [self setNeedsDisplay: YES];
+}
+@end
 
 
 
@@ -215,6 +238,7 @@ NSwindow inspector
   id controlMatrix;
   id iconNameForm;
   id clearButton;
+  id colorWell;
 }
 @end
 
@@ -271,6 +295,10 @@ NSwindow inspector
       // (currently needs manual hide/unhide to update decorations)
       [object display];
    }
+  else if (control == colorWell)
+    {
+      [object setBackgroundColor: [colorWell color]];
+    }
   else if (control == optionMatrix)
     {
       BOOL flag;
@@ -355,6 +383,9 @@ NSwindow inspector
 
   // icon name
   [[iconNameForm cellAtIndex: 0] setStringValue: [[object miniwindowImage] name]];
+
+  // background color
+  [colorWell setColorWithoutAction: [object backgroundColor]];
 }
 
 - (void) _validate: (id)anObject
@@ -388,7 +419,8 @@ NSwindow inspector
 
 - (void) ok: (id)sender
 {
-    [self _setValuesFromControl: sender];
+  [super ok: sender];
+  [self _setValuesFromControl: sender];
 }
 
 - (void) setObject: (id)anObject
@@ -484,6 +516,7 @@ NSwindow inspector
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sizeForm];
   [self _setValuesFromControl: minForm];
 }

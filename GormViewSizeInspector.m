@@ -186,6 +186,7 @@ NSImage	*mVLine = nil;
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   id notifier = [aNotification object];
+  [super ok: notifier];
   [self _setValuesFromControl: notifier];
 }
 

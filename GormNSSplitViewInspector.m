@@ -71,6 +71,7 @@
 
   // horizontal switch..  if it's active/inactive we 
   // know what the selection is.
+  [super ok: sender];
   cell = [orientation cellAtRow: 0 column: 0];
   state = ([cell state] == NSOnState)?NO:YES;
   [object setVertical: state];

@@ -128,6 +128,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -218,6 +219,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -469,6 +471,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -713,6 +716,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -861,6 +865,7 @@ static NSString *ITEM=@"item";
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 

@@ -93,6 +93,7 @@
 - (void) colorSelected: (id)sender
 {
   /* insert your code here */
+  [super ok: sender];
   [object setBackgroundColor: [color color]];
 }
 
@@ -100,6 +101,7 @@
 - (void) verticalSelected: (id)sender
 {
   /* insert your code here */
+  [super ok: sender];
   [object setHasVerticalScroller: ([verticalScroll state] == NSOnState)];
 }
 
@@ -107,6 +109,7 @@
 - (void) horizontalSelected: (id)sender
 {
   /* insert your code here */
+  [super ok: sender];
   [object setHasHorizontalScroller: ([horizontalScroll state] == NSOnState)];
 }
 
@@ -114,6 +117,7 @@
 - (void) borderSelected: (id)sender
 {
   /* insert your code here */
+  [super ok: sender];
   [object setBorderType: [[borderMatrix selectedCell] tag]];
 }
 

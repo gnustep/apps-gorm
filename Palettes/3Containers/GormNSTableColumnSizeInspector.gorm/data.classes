@@ -1,27 +1,5 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "capitalizeWord:",
-	    "changeFont:",
-	    "delete:",
-	    "deleteWordBackward:",
-	    "loosenKerning:",
-	    "moveDown:",
-	    "moveToBeginningOfParagraph:",
-	    "moveWordForward:",
-	    "orderFrontHelpPanel:",
-	    "pasteAsRichText:",
-	    "runPageLayout:",
-	    "selectLine:",
-	    "showGuessPanel:",
-	    "takeFloatValueFrom:",
-	    "toggleRuler:",
-	    "unhide:",
-	    "zoom:"
-	);
-	Super = NSObject;
-    };
     GormTableViewSizeInspector = {
 	Actions = (
 	);
@@ -29,33 +7,5 @@
 	    widthForm
 	);
 	Super = IBInspector;
-    };
-    NSApplication = {
-	Actions = (
-	    "orderFrontStandardAboutPanel:"
-	);
-	Super = NSResponder;
-    };
-    NSText = {
-	Actions = (
-	    "copyFont:",
-	    "selectAll:"
-	);
-	Super = NSView;
-    };
-    NSTextView = {
-	Actions = (
-	    "loosenKerning:",
-	    "pasteAsPlainText:",
-	    "useAllLigatures:"
-	);
-	Super = NSText;
-    };
-    NSWindow = {
-	Actions = (
-	    "performClose:",
-	    "zoom:"
-	);
-	Super = NSResponder;
     };
 }

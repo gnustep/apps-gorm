@@ -1,44 +1,5 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "alignLeft:",
-	    "capitalizeWord:",
-	    "changeFont:",
-	    "copy:",
-	    "delete:",
-	    "deleteToBeginningOfParagraph:",
-	    "deleteWordBackward:",
-	    "fax:",
-	    "loosenKerning:",
-	    "miniaturize:",
-	    "moveDown:",
-	    "moveLeft:",
-	    "moveToBeginningOfParagraph:",
-	    "moveUp:",
-	    "moveWordForward:",
-	    "openDocument:",
-	    "orderFrontDataLinkPanel:",
-	    "orderOut:",
-	    "pasteAsPlainText:",
-	    "performClose:",
-	    "raiseBaseline:",
-	    "saveAllDocuments:",
-	    "scrollLineDown:",
-	    "scrollViaScroller:",
-	    "selectParagraph:",
-	    "selectWord:",
-	    "showWindow:",
-	    "swapWithMark:",
-	    "takeObjectValueFrom:",
-	    "toggle:",
-	    "toggleTraditionalCharacterShape:",
-	    "turnOffLigatures:",
-	    "unscript:",
-	    "useStandardLigatures:"
-	);
-	Super = NSObject;
-    };
     GormTextViewInspector = {
 	Actions = (
 	);
@@ -49,11 +10,5 @@
 	    optionMatrix
 	);
 	Super = IBInspector;
-    };
-    NSControl = {
-	Actions = (
-	    "takeObjectValueFrom:"
-	);
-	Super = NSView;
     };
 }

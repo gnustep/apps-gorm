@@ -9,7 +9,8 @@
 	    optionMatrix,
 	    titleForm,
 	    iconNameForm,
-	    clearButton
+	    clearButton,
+	    colorWell
 	);
 	Super = IBInspector;
     };

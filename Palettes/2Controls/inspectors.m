@@ -48,6 +48,8 @@
   id titleField;
   id horizontalSlider;
   id verticalSlider;
+  id colorWell;
+  id backgroundSwitch;
 }
 @end
 
@@ -77,10 +79,30 @@
       [object setContentViewMargins:
 	NSMakeSize([horizontalSlider floatValue], [control floatValue])];
     }
+  else if(control == colorWell)
+    {
+      NSTextFieldCell *titleCell = (NSTextFieldCell *)[object titleCell];
+      if([titleCell isKindOfClass: [NSTextFieldCell class]])
+	{
+	  [titleCell setBackgroundColor: [colorWell color]];
+	  [object display];
+	}
+    }
+  else if(control == backgroundSwitch)
+    {
+      NSTextFieldCell *titleCell = (NSTextFieldCell *)[object titleCell];
+      if([titleCell isKindOfClass: [NSTextFieldCell class]])
+	{
+	  BOOL state = ([backgroundSwitch state] == NSOnState)?YES:NO;
+	  [titleCell setDrawsBackground: state];
+	}
+    }
 }
 
 - (void) _getValuesFromObject: anObject
 {
+  NSTextFieldCell *titleCell = (NSTextFieldCell *)[anObject titleCell];
+  
   if (anObject != object)
     {
       return;
@@ -90,6 +112,12 @@
   [[titleField cellAtIndex: 0] setStringValue: VSTR([anObject title])];
   [horizontalSlider setFloatValue: [anObject contentViewMargins].width];
   [verticalSlider setFloatValue: [anObject contentViewMargins].height];
+  if([titleCell isKindOfClass: [NSTextFieldCell class]])
+    {
+      [colorWell setColor: [titleCell backgroundColor]];
+      [backgroundSwitch setState: ([titleCell drawsBackground]?
+				   NSOnState:NSOffState)];
+    }
 }
 
 - (id) init
@@ -109,7 +137,11 @@
 
 - (void) ok: (id)sender
 {
-  NSDebugLog(@"ok: sender : %@", sender);
+  // FIXME: wont mark as modified for color change, but this is for bw compat anyway.
+  if(sender != colorWell)
+    {
+      [super ok: sender];
+    }
   [self _setValuesFromControl: sender];
 }
 
@@ -117,6 +149,17 @@
 {
   [super setObject: anObject];
   [self _getValuesFromObject: anObject];
+
+  if([[anObject titleCell] isKindOfClass: [NSTextFieldCell class]])
+    {
+      [colorWell setEnabled: YES];
+      [backgroundSwitch setEnabled: YES];
+    }
+  else
+    {
+      [colorWell setEnabled: NO];
+      [backgroundSwitch setEnabled: NO];
+    }
 }
 
 @end
@@ -391,6 +434,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -510,6 +554,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -673,6 +718,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   NSDebugLog(@"ok: sender is %@", sender);
   [self _setValuesFromControl: sender];
 }
@@ -832,6 +878,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -931,6 +978,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -1045,6 +1093,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -1166,6 +1215,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: valueField];
   [self _setValuesFromControl: minimumValueField];
   [self _setValuesFromControl: maximumValueField];
@@ -1341,6 +1391,7 @@
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -1509,21 +1560,25 @@
 
 - (void) initialColorSelected: (id) sender
 {
+  [super ok: sender];
   [object setColor: [initialColor color]];
 }
 
 - (void) disabledSelected: (id)sender;
 {
+  [super ok: sender];
   [object setEnabled: ([disabled state] != NSOnState)];
 }
 
 - (void) borderedSelected: (id)sender;
 {
+  [super ok: sender];
   [object setBordered: ([bordered state] == NSOnState)];
 }
 
 - (void) tagSelected: (id)sender;
 {
+  [super ok: sender];
   [object setTag: [tagValue intValue]];
 }
 @end

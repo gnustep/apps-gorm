@@ -159,6 +159,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -322,6 +323,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -572,6 +574,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -715,6 +718,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 
@@ -990,6 +994,7 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 - (void) ok: (id)sender
 {
+  [super ok: sender];
   [self _setValuesFromControl: sender];
 }
 

@@ -166,6 +166,7 @@
   /* add or remove the mapping as necessary. */
   if(nameForObject != nil)
     {
+      [super ok: sender];
       if (![stringValue isEqualToString: classForObject])
 	{
 	  [_classManager setCustomClass: stringValue

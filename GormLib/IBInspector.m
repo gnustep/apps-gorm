@@ -22,6 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBDocuments.h>
 #include <Foundation/NSString.h>
@@ -81,6 +82,7 @@ static NSNotificationCenter *nc = nil;
 
 - (void) ok: sender
 {
+  [self touch: sender];
 }
 
 - (NSButton*) okButton
@@ -108,7 +110,9 @@ static NSNotificationCenter *nc = nil;
 
 - (void) touch: (id)sender
 {
-  [window setDocumentEdited: YES];
+  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
+  // [window setDocumentEdited: YES];
+  [doc touch];
 }
 
 - (BOOL) wantsButtons
