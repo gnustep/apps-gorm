@@ -53,7 +53,6 @@ enum IBResourceLocation {
 @interface IBResourceManager : NSObject
 {
   id<IBDocuments> document;
-  NSMutableArray *resources;
 }
 
 /**

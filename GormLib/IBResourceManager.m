@@ -23,6 +23,7 @@
  */
 
 #include <InterfaceBuilder/IBResourceManager.h>
+#include <InterfaceBuilder/IBPalette.h>
 #include <Foundation/NSArchiver.h>
 #include <Foundation/NSArray.h>
 #include <Foundation/NSEnumerator.h>
@@ -131,7 +132,7 @@ static NSMapTable *_resourceManagers = NULL;
  */
 - (void) addResources: (NSArray *)resourceList
 {
-  [resources addObjectsFromArray: resourceList];
+  // abstract...
 }
 
 /**
@@ -141,22 +142,7 @@ static NSMapTable *_resourceManagers = NULL;
  */
 - (void) addResourcesFromPasteboard: (NSPasteboard *)pboard
 {
-  if([self acceptsResourcesFromPasteboard: pboard])
-    {
-      NSArray *resourcePbTypes = [self resourcePasteboardTypes];
-      NSString *type = nil;
-      NSEnumerator *en = [resourcePbTypes objectEnumerator];
-
-      while((type = [en nextObject]) != nil)
-	{
-	  NSData *data = [pboard dataForType: type];
-	  id obj = [NSUnarchiver unarchiveObjectWithData: data];
-	  if(obj != nil)
-	    {
-	      [resources addObject: obj];
-	    }
-	}
-    }
+  // abstract...
 }
 
 /**
@@ -187,7 +173,6 @@ static NSMapTable *_resourceManagers = NULL;
   if((self = [super init]) != nil)
     {
       document = doc;
-      resources = [NSMutableArray array];
     }
   return self;
 }
@@ -198,7 +183,7 @@ static NSMapTable *_resourceManagers = NULL;
 - (void) dealloc
 {
   document = nil;
-  RELEASE(resources);
+  [super dealloc];
 }
 
 /**
@@ -251,7 +236,7 @@ static NSMapTable *_resourceManagers = NULL;
  */
 - (NSArray *) resourcePasteboardTypes
 {
-  return nil;
+  return [NSArray arrayWithObjects: IBObjectPboardType, IBViewPboardType, nil];
 }
 
 /**
