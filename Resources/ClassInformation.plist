@@ -586,4 +586,6 @@
 	);
 	Super = NSResponder;
     };
+    Object = {
+    };
 }

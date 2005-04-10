@@ -64,7 +64,7 @@
   BOOL			isActive;
   BOOL                  isDocumentOpen;
   NSMenu		*savedMenu;
-  NSMenuItem		*quitItem;		/* Replaced during test */
+  NSMenuItem		*quitItem;		/* Replaced during test-mode */
   NSMutableArray	*savedEditors;
   NSMutableArray	*hidden;
   NSMutableArray        *openEditors;
@@ -74,59 +74,39 @@
   id                    filePrefsView;
   id                    filePrefsManager;
   NSWindow              *filePrefsWindow;
+  NSMutableArray        *resourceManagers;
 }
-- (void) addConnector: (id<IBConnectors>)aConnector;
-- (NSArray*) allConnectors;
-- (void) attachObject: (id)anObject toParent: (id)aParent;
-- (void) attachObjects: (NSArray*)anArray toParent: (id)aParent;
+
+/* Archiving objects */
 - (void) beginArchiving;
-- (GormClassManager*) classManager;
-- (NSArray*) connectorsForDestination: (id)destination;
-- (NSArray*) connectorsForDestination: (id)destination
-			      ofClass: (Class)aConnectorClass;
-- (NSArray*) connectorsForSource: (id)source;
-- (NSArray*) connectorsForSource: (id)source
-			 ofClass: (Class)aConnectorClass;
-- (BOOL) containsObject: (id)anObject;
-- (BOOL) containsObjectWithName: (NSString*)aName forParent: (id)parent;
-- (BOOL) copyObject: (id)anObject
-	       type: (NSString*)aType
-       toPasteboard: (NSPasteboard*)aPasteboard;
-- (BOOL) copyObjects: (NSArray*)anArray
-		type: (NSString*)aType
-	toPasteboard: (NSPasteboard*)aPasteboard;
-- (void) detachObject: (id)anObject;
-- (void) detachObjects: (NSArray*)anArray;
-- (NSString*) documentPath;
 - (void) endArchiving;
+
+/* Handle notifications */
 - (void) handleNotification: (NSNotification*)aNotification;
+
+/* Document management */
 - (BOOL) isActive;
-- (NSString*) nameForObject: (id)anObject;
-- (id) objectForName: (NSString*)aString;
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject;
 - (BOOL) objectIsDeferred: (id)anObject;
-- (NSArray*) objects;
 - (id) loadDocument: (NSString*)path;
 - (id) openDocument: (id)sender;
-- (id) parentOfObject: (id)anObject;
-- (NSArray*) pasteType: (NSString*)aType
-	fromPasteboard: (NSPasteboard*)aPasteboard
-		parent: (id)parent;
-- (void) removeConnector: (id<IBConnectors>)aConnector;
 - (id) revertDocument: (id)sender;
 - (BOOL) saveAsDocument: (id)sender;
 - (BOOL) saveGormDocument: (id)sender;
 - (void) setupDefaults: (NSString*)type;
 - (void) setDocumentActive: (BOOL)flag;
-- (void) setName: (NSString*)aName forObject: (id)object;
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag;
 - (void) setObject: (id)anObject isDeferred: (BOOL)flag;
-- (void) touch;		/* Mark document as having been changed.	*/
 - (NSWindow*) window;
 - (BOOL) couldCloseDocument;
 - (BOOL) windowShouldClose: (id)sender;
+- (BOOL) isTopLevelObject: (id)obj;
+- (void) closeAllEditors;
+- (void) createResourceManagers;
+- (NSArray *) resourceManagers;
 
-// classes support..
+/* Managing classes */
+- (GormClassManager*) classManager;
 - (id) createSubclass: (id)sender;
 - (id) instantiateClass: (id)sender;
 - (id) createClassFiles: (id)sender;
@@ -138,11 +118,11 @@
 - (BOOL) classIsSelected;
 - (void) removeAllInstancesOfClass: (NSString *)classNamed;
 
-// sound & image support
+/* Sound & Image support */
 - (id) openSound: (id)sender;
 - (id) openImage: (id)sender;
 
-// Internals support
+/* Connections */
 - (void) rebuildObjToNameMapping;
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
                       forClassNamed: (NSString *)className
@@ -150,24 +130,24 @@
 - (BOOL) removeConnectionsForClassNamed: (NSString *)name;
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
-- (BOOL) isTopLevelObject: (id)obj;
-- (void) closeAllEditors;
 
-// class loading
+/* class loading */
 - (id) loadClass: (id)sender;
 
-// services/windows menus...
+/* services/windows menus... */
 - (void) setServicesMenu: (NSMenu *)menu;
 - (NSMenu *) servicesMenu;
 - (void) setWindowsMenu: (NSMenu *)menu;
 - (NSMenu *) windowsMenu;
 
-// first responder/font manager
+/* first responder/font manager */
 - (id) fontManager;
 - (id) firstResponder;
 
-// windowAndRect:forObject: is called by Gorm to determine where it should
-// draw selection markup
+/* 
+ * windowAndRect:forObject: is called by Gorm to determine where it should
+ * draw selection markup
+ */
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 @end
 

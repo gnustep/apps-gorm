@@ -90,6 +90,9 @@ static NSMapTable	*docMap = 0;
       docMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
 				NSObjectMapValueCallBacks, 
 				2);
+
+      // create the resource manager...
+      [IBResourceManager registerResourceManagerClass: [IBResourceManager class]];
     }
 }
 
@@ -128,7 +131,7 @@ static NSMapTable	*docMap = 0;
   if (selected != nil)
     {
       [document copyObjects: [self selection]
-		       type: IBViewPboardType
+		       type: IBObjectPboardType
 	       toPasteboard: [NSPasteboard generalPasteboard]];
     }
 }
@@ -158,7 +161,7 @@ static NSMapTable	*docMap = 0;
       [document detachObject: selected];
       if ([selected isKindOfClass: [NSWindow class]] == YES)
 	{
-	  NSArray *subviews = allSubviews([selected contentView]);
+	  NSArray *subviews = allSubviews([(NSWindow *)selected contentView]);
 	  [document detachObjects: subviews];
 	  [selected close];
 	}
@@ -428,8 +431,8 @@ static NSMapTable	*docMap = 0;
   if (dragType == IBObjectPboardType)
     {
       NSArray		*array;
-      NSEnumerator	*enumerator;
-      id		obj;
+      // NSEnumerator	*enumerator;
+      // id		obj;
 
       /*
        * Ask the document to get the dragged objects from the pasteboard and
@@ -438,13 +441,17 @@ static NSMapTable	*docMap = 0;
       array = [document pasteType: IBObjectPboardType
 		   fromPasteboard: dragPb
 			   parent: [objects objectAtIndex: 0]];
+      
+      /*
       enumerator = [array objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  RETAIN(obj);  // FIXME: This will probably leak...
+	  RETAIN(obj);  
 	  [[(GormDocument *)document topLevelObjects] addObject: obj];
 	  [self addObject: obj];
 	}
+      */
+
       return YES;
     }
   else if (dragType == GormLinkPboardType)

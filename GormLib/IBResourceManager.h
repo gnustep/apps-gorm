@@ -26,11 +26,12 @@
 #define INCLUDED_IBRESOURCEMANAGER_H
 
 #include <Foundation/NSObject.h>
+#include <Foundation/NSArray.h>
 #include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBProjectFiles.h>
 #include <InterfaceBuilder/IBDocuments.h>
 
-@class NSArray, NSString, NSPasteboard, NSMutableArray;
+@class NSString, NSPasteboard, NSMutableArray;
 
 /**
  * Notification sent when a resource manager class is added to /removed from 

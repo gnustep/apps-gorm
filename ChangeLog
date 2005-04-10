@@ -1,3 +1,18 @@
+2005-04-10 18:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Organized methods.
+	* GormCore/GormDocument.m: Added code here to add to top
+	level objects array, when appropriate.
+	* GormCore/GormGenericEditor.m: Prevent close when already
+	closed.
+	* GormCore/GormObjectEditor.m: Removed code which adds
+	to document/top level objects, this is done in the document now.
+	* GormCore/GormPrivate.h: Added new ivar to GormGenericEditor
+	* GormLib/IBResourceManager.h
+	* GormLib/IBResourceManager.m: Corrected implementation of 
+	register methods.
+	* Resources/ClassInformation.plist: Added Object.
+
 2005-04-03 07:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBResourceManager.[hm]: Implementation of this class.

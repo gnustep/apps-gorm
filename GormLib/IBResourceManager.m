@@ -23,6 +23,7 @@
  */
 
 #include <InterfaceBuilder/IBResourceManager.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBPalette.h>
 #include <Foundation/NSArchiver.h>
 #include <Foundation/NSArray.h>
@@ -30,19 +31,19 @@
 #include <Foundation/NSMapTable.h>
 #include <Foundation/NSNotification.h> 
 #include <Foundation/NSString.h>
+#include <Foundation/NSNull.h>
 #include <AppKit/NSPasteboard.h>
 
-/**
- * Notification sent when a resource manager class is added to /removed from 
- * the registry.
- */
 NSString *IBResourceManagerRegistryDidChangeNotification = @"IBResourceManagerRegistryDidChangeNotification";
 
 static NSMapTable *_resourceManagers = NULL;
 
 @implementation IBResourceManager : NSObject
 
-+ (void) _createTable
+/**
+ * Create the resource manager table.
+ */
++ (BOOL) _createTable
 {
   if(_resourceManagers == NULL)
     {
@@ -50,68 +51,83 @@ static NSMapTable *_resourceManagers = NULL;
 					   NSObjectMapValueCallBacks, 
 					   2);
     }
+
+  return (_resourceManagers != NULL);
 }
 
 /**
- * Register the given class as a resource mananger.
+ * Add a class to the resourceManager master list of classes.
  */
++ (void) _addClass: (Class)managerClass
+{
+  if([self _createTable])
+    {
+      NSMutableArray *list = NSMapGet(_resourceManagers, [NSNull null]);
+      if(list == nil)
+	{
+	  list = [NSMutableArray array];
+	  NSMapInsert(_resourceManagers, [NSNull null], list);
+	}
+      
+      if([list containsObject: managerClass] == NO)
+	{
+	  [list addObject: managerClass];
+	}
+    }
+}
+
 + (void) registerResourceManagerClass: (Class)managerClass
 {
-  NSMutableArray *list = NSMapGet(_resourceManagers, NULL);
-
-  if(list == NULL)
-    {
-      list = [NSMutableArray array];
-      NSMapInsert(_resourceManagers, NULL, list);
-    }
-  [list addObject: managerClass];
-
-  // notify.
-  [[NSNotificationCenter defaultCenter] 
-    postNotificationName: IBResourceManagerRegistryDidChangeNotification
-    object: nil];
+  [self _addClass: managerClass];
 }
 
-/**
- * Register the given class as a resource manager for the frameworks in the array.
- */ 
 + (void) registerResourceManagerClass: (Class)managerClass 
                         forFrameworks: (NSArray *)frameworks
 {
-  NSEnumerator *en = [frameworks objectEnumerator];
-  NSString *fw = nil;
-
-  [self _createTable];
-  while((fw = [en nextObject]) != nil)
+  if([self _createTable])
     {
-      NSMutableArray *list = NSMapGet(_resourceManagers, fw);
-      if(list == NULL)
+      NSMutableArray *list = nil;
+      if(frameworks == nil)
 	{
-	  list = [NSMutableArray array];
-	  NSMapInsert(_resourceManagers, fw, list);
+	  [self _addClass: managerClass];
 	}
-      [list addObject: managerClass];
-    }
+      else
+	{
+	  NSEnumerator *en = [frameworks objectEnumerator];
+	  NSString *fw = nil;
 
-  // notify 
-  [[NSNotificationCenter defaultCenter] 
-    postNotificationName: IBResourceManagerRegistryDidChangeNotification
-    object: nil];
+	  // add it to all of the frameworks.
+	  while((fw = [en nextObject]) != nil)
+	    {
+	      list = NSMapGet(_resourceManagers, fw);
+	      if(list == nil)
+		{
+		  list = [NSMutableArray array];
+		  NSMapInsert(_resourceManagers, fw, list);
+		}
+	      
+	      if([list containsObject: managerClass] == NO)
+		{
+		  [list addObject: managerClass];
+		}
+	    }
+
+	  // also add it to the master list.
+	  [self _addClass: managerClass];
+	}
+      
+      // notify 
+      [[NSNotificationCenter defaultCenter] 
+	postNotificationName: IBResourceManagerRegistryDidChangeNotification
+	object: managerClass];
+    }
 }
 
-
-/**
- * Return an array of classes for the given framework.
- */
 + (NSArray *) registeredResourceManagerClassesForFramework: (NSString *)framework
 {
-  return (NSArray *)(NSMapGet(_resourceManagers, framework));
+  return (NSArray *)(NSMapGet(_resourceManagers, ((framework == nil)?(void *)[NSNull null]:framework)));
 }
 
-/**
- * Returns YES, if the pasteboard contains a type the resource 
- * manager can accept.
- */
 - (BOOL) acceptsResourcesFromPasteboard: (NSPasteboard *)pboard
 {
   NSArray *types = [pboard types];
@@ -127,52 +143,43 @@ static NSMapTable *_resourceManagers = NULL;
   return result;
 }
 
-/**
- * Add an array of resources.
- */
 - (void) addResources: (NSArray *)resourceList
 {
-  // abstract...
+  [document attachObjects: resourceList toParent: nil];
 }
 
-/**
- * Add resoures from the pasteboard.  Invokes the 
- * acceptsResourcesFromPasteboard: method to determine 
- * if the resources will be added.
- */
 - (void) addResourcesFromPasteboard: (NSPasteboard *)pboard
 {
-  // abstract...
+  NSArray *resourcePbTypes = [self resourcePasteboardTypes];
+  NSString *type = nil;
+  NSEnumerator *en = [resourcePbTypes objectEnumerator];
+  
+  while((type = [en nextObject]) != nil)
+    {
+      NSData *data = [pboard dataForType: type];
+      id obj = [NSUnarchiver unarchiveObjectWithData: data];
+      if(obj != nil)
+	{
+	  [document attachObject: obj toParent: nil];
+	}
+    }
 }
 
-/**
- * Called by an external application when a file owned by 
- * the GUI builder is modified.  Override this method in a
- * subclass to take some special action.
- */
 - (void) application: (NSString *) appName didModifyFileAtPath: (NSString *)path
 {
   // does nothing.
 }
 
-/**
- * Returns the document with which this resource manager is
- * associated.
- */
 - (id<IBDocuments>) document
 {
   return document;
 }
 
-/**
- * Instantiate the resource manager with the given 
- * document object.
- */
 - (id) initWithDocument: (id<IBDocuments>)doc
 {
   if((self = [super init]) != nil)
     {
-      document = doc;
+      document = doc; // weak connection.
     }
   return self;
 }
@@ -186,73 +193,42 @@ static NSMapTable *_resourceManagers = NULL;
   [super dealloc];
 }
 
-/**
- * Returns YES, if this resource manager is non-modifiable.
- */
 - (BOOL) isReadOnly;
 {
   return NO;
 }
 
-/**
- * Called by an external application when the a file
- * is added.  Override in subclass to take action.
- */
 - (void) project: (id<IBProjects>)proj didAddFile: (id<IBProjectFiles>)file
 {
 }
 
-/**
- * Called by an external application when the a file
- * changes localization.   Override this method in a subclass
- * to take some special action.
- */
 - (void) project: (id<IBProjects>)proj didChangeLocalizationOfFile: (id<IBProjectFiles>)file
 {
 }
 
-/**
- * Called by an external application when a file
- * is removed.  Override this in a subclass to take
- * some special action.
- */
 - (void) project: (id<IBProjects>)proj didRemoveFile: (id<IBProjectFiles>)file
 {
-  // does nothing
+  // does nothing in base implementation.
 }
 
-/**
- * Returns a list of resource file types this manager can accept.  Default 
- * implementation returns nil.
- */
 - (NSArray *) resourceFileTypes
 {
   return nil;
 }
 
-/**
- * Returns a list of pasteboard types this manager can accept.  Default
- * implementation returns nil.
- */
 - (NSArray *) resourcePasteboardTypes
 {
   return [NSArray arrayWithObjects: IBObjectPboardType, IBViewPboardType, nil];
 }
 
-/**
- * Returns the associated resources for the objects.
- */
 - (NSArray *) resourcesForObjects: (NSArray *)objs;
 {
   return nil;
 }
 
-/**
- * Writes resources to the document path.
- */
 - (void) writeToDocumentPath: (NSString *)path
 {
-  // does nothing.
+  // does nothing in base implementation.
 }
 
 @end

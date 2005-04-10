@@ -112,6 +112,7 @@ extern NSString *GormResizeCellNotification;
   NSString		*dragType;
   BOOL                  closed;
   BOOL                  activated;
+  IBResourceManager     *resourceManager;
 }
 // selection methods...
 - (void) selectObjects: (NSArray*)objects;

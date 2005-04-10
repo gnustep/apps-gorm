@@ -254,7 +254,11 @@ static NSImage  *fileImage = nil;
 	      selector: @selector(handleNotification:)
 	      name: IBWillEndTestingInterfaceNotification
 	      object: nil];
-	  
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: IBResourceManagerRegistryDidChangeNotification
+	      object: nil];
+
 	  // objects...
 	  mainRect.origin = NSMakePoint(0,0);
 	  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -379,8 +383,12 @@ static NSImage  *fileImage = nil;
 
 	  // are we upgrading an archive?
 	  isOlderArchive = NO;
+
 	  // document is open...
 	  isDocumentOpen = YES;
+
+	  // load resource managers
+	  [self createResourceManagers];
 	}
       else
 	{
@@ -451,6 +459,7 @@ static NSImage  *fileImage = nil;
     {
       aParent = filesOwner;
     }
+
   old = [self connectorsForSource: anObject ofClass: [NSNibConnector class]];
   if ([old count] > 0)
     {
@@ -465,6 +474,7 @@ static NSImage  *fileImage = nil;
       [self addConnector: (id<IBConnectors>)con];
       RELEASE(con);
     }
+
   /*
    * Make sure that there is a name for this object.
    */
@@ -488,6 +498,22 @@ static NSImage  *fileImage = nil;
 	  [anObject setReleasedWhenClosed: NO];
 	}
     }
+  else if((aParent == filesOwner || aParent == nil) &&
+	  [anObject isKindOfClass: [NSMenu class]] == NO)
+    {
+      if([anObject isKindOfClass: [NSObject class]] &&
+	 [anObject isKindOfClass: [NSView class]] == NO)
+	{
+	  [objectsView addObject: anObject];
+	  [topLevelObjects addObject: anObject];
+	}
+      else if([anObject isKindOfClass: [NSView class]] && [anObject superview] == nil)
+	{
+	  [objectsView addObject: anObject];
+	  [topLevelObjects addObject: anObject];
+	}
+    }
+
   /*
    * Check if it's a font manager.
    */
@@ -497,6 +523,7 @@ static NSImage  *fileImage = nil;
       // the proxy instead.
       [self _instantiateFontManager];
     }
+
   /*
    * Add the current menu and any submenus.
    */
@@ -951,6 +978,10 @@ static NSImage  *fileImage = nil;
   // windows...
   RELEASE(window);
   RELEASE(filePrefsWindow);
+
+  // resource managers
+  RELEASE(resourceManagers);
+
   [super dealloc];
 }
 
@@ -1508,6 +1539,15 @@ static NSImage  *fileImage = nil;
 	  [classesView selectClass: newClass];
 	}
     }
+  else if([name isEqual: IBResourceManagerRegistryDidChangeNotification])
+    {
+      if(resourceManagers != nil)
+	{
+	  Class cls = [aNotification object];
+	  id mgr = [(IBResourceManager *)[cls alloc] initWithDocument: self];
+	  [resourceManagers addObject: mgr];
+	}
+    }
 }
 
 - (id) instantiateClass: (id)sender
@@ -1555,8 +1595,8 @@ static NSImage  *fileImage = nil;
       // add it to the top level objects...
       [self setName: nil forObject: instance];
       [self attachObject: instance toParent: nil];
-      [topLevelObjects addObject: instance];
-      [objectsView addObject: instance];
+      // [topLevelObjects addObject: instance];
+      // [objectsView addObject: instance];
       
       // we want to record if it's custom or not and act appropriately...
       if(isCustom)
@@ -3425,6 +3465,31 @@ static NSImage  *fileImage = nil;
 - (id) fontManager
 {
   return fontManager;
+}
+
+- (void) createResourceManagers
+{
+  NSArray *resourceClasses = [IBResourceManager registeredResourceManagerClassesForFramework: nil];
+  NSEnumerator *en = [resourceClasses objectEnumerator];
+  Class cls = nil;
+  
+  if(resourceManagers != nil)
+    {
+      // refresh...
+      DESTROY(resourceManagers);
+    }
+  
+  resourceManagers = [[NSMutableArray alloc] init];
+  while((cls = [en nextObject]) != nil)
+    {
+      id mgr = [(IBResourceManager *)[cls alloc] initWithDocument: self];
+      [resourceManagers addObject: mgr];
+    }
+}
+
+- (NSArray *) resourceManagers
+{
+  return resourceManagers;
 }
 @end
 

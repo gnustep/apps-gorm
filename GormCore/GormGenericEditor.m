@@ -113,10 +113,13 @@
 
 - (void) close
 {
-  closed = YES;
-  [document editor: self didCloseForObject: [self editedObject]];
-  [self deactivate];
-  [self closeSubeditors];
+  if(closed == NO)
+    {
+      closed = YES;
+      [document editor: self didCloseForObject: [self editedObject]];
+      [self deactivate];
+      [self closeSubeditors];
+    }
 }
 
 // Stubbed out methods...  Since this is an abstract class, some methods need to be
@@ -137,6 +140,7 @@
       document = aDocument;
       closed = NO;
       activated = NO;
+      resourceManager = nil;
     }
   return self;
 }
@@ -169,7 +173,8 @@
   if(closed == NO)
     [self close];
 
-  RELEASE(objects); //
+  RELEASE(objects); 
+  RELEASE(resourceManager);
   [super dealloc];
 }
 
