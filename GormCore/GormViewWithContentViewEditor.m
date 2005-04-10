@@ -1186,11 +1186,17 @@ int _sortViews(id view1, id view2, void *context)
 {
   NSEnumerator *en = nil;
   NSView *sub = nil;
+  NSView *par = [view superview];
 
   if([sub isKindOfClass: [GormViewEditor class]])
     return;
 
-  [document attachObject: view toParent: nil];
+  if([par isKindOfClass: [GormViewEditor class]])
+    {
+      par = [(GormViewEditor *)par editedObject];
+    }
+
+  [document attachObject: view toParent: par];
   en = [[view subviews] objectEnumerator];
   while((sub = [en nextObject]) != nil)
     {
