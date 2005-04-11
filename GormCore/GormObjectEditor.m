@@ -206,27 +206,33 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  NSArray	*types;
-  NSString      *type;
-  NSArray       *resourceTypes = [resourceManager resourcePasteboardTypes];
-
+  // Get the resource manager first, if nil don't bother calling the rest...
   dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
   resourceManager = [(GormDocument *)document resourceManagerForPasteboard: dragPb];
-  type = [resourceTypes firstObjectCommonWithArray: types];
 
-  if (type != nil)
+  if(resourceManager != nil)
     {
-      dragType = type;
+      NSArray	*types;
+      NSString  *type;
+      NSArray   *resourceTypes = [resourceManager resourcePasteboardTypes];
+      
+      types = [dragPb types];
+      type = [resourceTypes firstObjectCommonWithArray: types];
+      
+      if (type != nil)
+	{
+	  dragType = type;
+	}
+      else if ([types containsObject: GormLinkPboardType] == YES)
+	{
+	  dragType = GormLinkPboardType;
+	}
+      else
+	{
+	  dragType = nil;
+	}
     }
-  else if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      dragType = GormLinkPboardType;
-    }
-  else
-    {
-      dragType = nil;
-    }
+
   return [self draggingUpdated: sender];
 }
 
@@ -254,20 +260,17 @@ static NSMapTable	*docMap = 0;
 	{
 	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
 	}
+
       [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
       if (obj != nil)
 	{
 	  return NSDragOperationLink;
 	}
-      else
-	{
-	  return NSDragOperationNone;
-	}
-    }
-  else
-    {
+
       return NSDragOperationNone;
     }
+
+  return NSDragOperationNone;
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
