@@ -1,3 +1,8 @@
+2005-04-11 01:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBResourceManager.m: Made addResourcesFromPasteboard: call
+	addResources: for each array for a given type from the pasteboard.
+
 2005-04-11 01:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m

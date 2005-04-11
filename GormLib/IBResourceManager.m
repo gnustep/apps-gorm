@@ -143,17 +143,23 @@ static NSMapTable *_resourceManagers = NULL;
 
 - (void) addResourcesFromPasteboard: (NSPasteboard *)pboard
 {
-  NSArray *types = [pboard types];
-  NSArray *resourcePbTypes = [self resourcePasteboardTypes]; 
-  NSString *type = [types firstObjectCommonWithArray: resourcePbTypes];
-  
-  /*
-   * Ask the document to get the dragged objects from the pasteboard and
-   * add them to it's collection of known objects.
-   */
-  [document pasteType: type
-	    fromPasteboard: pboard
-	    parent: nil];  
+  NSArray *resourcePbTypes = [self resourcePasteboardTypes];
+  NSString *type = nil;
+  NSEnumerator *en = [resourcePbTypes objectEnumerator];
+
+  while((type = [en nextObject]) != nil)
+    {
+      NSData *data = [pboard dataForType: type];
+      if(data != nil)
+	{
+	  id obj = [NSUnarchiver unarchiveObjectWithData: data];
+	  if(obj != nil)
+	    {
+	      // the object is an array of objects of this type.
+	      [self addResources: obj];
+	    }
+	}
+    }
 }
 
 - (void) application: (NSString *) appName didModifyFileAtPath: (NSString *)path
