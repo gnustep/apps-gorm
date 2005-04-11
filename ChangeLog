@@ -1,3 +1,10 @@
+2005-04-10 23:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Moved call to register IBResourceManager
+	here and also correct a memory problem.
+	* GormCore/GormObjectEditor.m: Corrected a problem with
+	registering the types.
+
 2005-04-10 22:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m

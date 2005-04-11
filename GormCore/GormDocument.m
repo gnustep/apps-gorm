@@ -180,6 +180,9 @@ static NSImage  *fileImage = nil;
 	{
 	  fileImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
+
+      // create the resource manager...
+      [IBResourceManager registerResourceManagerClass: [IBResourceManager class]];
       
       [self setVersion: GNUSTEP_NIB_VERSION];
     }
@@ -258,6 +261,9 @@ static NSImage  *fileImage = nil;
 	      selector: @selector(handleNotification:)
 	      name: IBResourceManagerRegistryDidChangeNotification
 	      object: nil];
+
+	  // load resource managers
+	  [self createResourceManagers];
 
 	  // objects...
 	  mainRect.origin = NSMakePoint(0,0);
@@ -386,9 +392,6 @@ static NSImage  *fileImage = nil;
 
 	  // document is open...
 	  isDocumentOpen = YES;
-
-	  // load resource managers
-	  [self createResourceManagers];
 	}
       else
 	{
@@ -1262,7 +1265,7 @@ static NSImage  *fileImage = nil;
       id<IBConnectors>	link;
 
       editor = [[eClass alloc] initWithObject: anObject inDocument: self];
-      link = [GormObjectToEditor new];
+      link = AUTORELEASE([GormObjectToEditor new]);
       [link setSource: anObject];
       [link setDestination: editor];
       [connections addObject: link];
@@ -1272,7 +1275,6 @@ static NSImage  *fileImage = nil;
 	  [openEditors addObject: editor];
 	}
 
-      RELEASE(link);
       if (anEditor == nil)
 	{
 	  /*
@@ -1286,11 +1288,10 @@ static NSImage  *fileImage = nil;
 	  /*
 	   * Link to the parent of the editor.
 	   */
-	  link = [GormEditorToParent new];
+	  link = AUTORELEASE([GormEditorToParent new]);
 	  [link setSource: editor];
 	  [link setDestination: anEditor];
 	  [connections addObject: link];
-	  RELEASE(link);
 	}
       else
 	{
@@ -1298,6 +1299,7 @@ static NSImage  *fileImage = nil;
 	}
       [editor activate];
       RELEASE((NSObject *)editor);
+
       return editor;
     }
   else if ([links count] == 0)
@@ -2261,8 +2263,9 @@ static NSImage  *fileImage = nil;
   else 
     {
       NSEnumerator *enumerator = [objects objectEnumerator];
-      id	obj;
       NSRect frame;
+      id obj;
+
       while ((obj = [enumerator nextObject]) != nil)
       {
 	// check to see if the object has a frame.  If so, then
@@ -2526,7 +2529,7 @@ static NSImage  *fileImage = nil;
     }
   // nameCopy = [aName copy];	/* Make sure it's immutable */
   [nameTable setObject: object forKey: aName];
-  RELEASE(object); // make sure that when it's removed from the table, it's released.
+  // RELEASE(object); // TODO: Make sure whether we do or do not need this.
   NSMapInsert(objToName, (void*)object, (void*) aName); //nameCopy);
   if (oldName != nil)
     {
@@ -2548,7 +2551,6 @@ static NSImage  *fileImage = nil;
 	  [cc setObject: className forKey: aName]; //nameCopy];
 	}
     }
-  // RELEASE(nameCopy); // release the copy of the name which we made...
 }
 
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag

@@ -90,9 +90,6 @@ static NSMapTable	*docMap = 0;
       docMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
 				NSObjectMapValueCallBacks, 
 				2);
-
-      // create the resource manager...
-      [IBResourceManager registerResourceManagerClass: [IBResourceManager class]];
     }
 }
 
@@ -124,16 +121,12 @@ static NSMapTable	*docMap = 0;
 
 - (void) pasteInSelection
 {
+  // not implemented
 }
 
 - (void) copySelection
 {
-  if (selected != nil)
-    {
-      [document copyObjects: [self selection]
-		       type: IBObjectPboardType
-	       toPasteboard: [NSPasteboard generalPasteboard]];
-    }
+  // not implemented
 }
 
 - (void) deleteSelection
@@ -216,11 +209,12 @@ static NSMapTable	*docMap = 0;
 {
   NSArray	*types;
   NSString      *type;
+  NSArray       *resourceTypes = [resourceManager resourcePasteboardTypes];
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   resourceManager = [(GormDocument *)document resourceManagerForPasteboard: dragPb];
-  type = [[resourceManager resourcePasteboardTypes] firstObjectCommonWithArray: types];
+  type = [resourceTypes firstObjectCommonWithArray: types];
 
   if (type != nil)
     {
@@ -286,6 +280,24 @@ static NSMapTable	*docMap = 0;
 {
 }
 
+- (void) _registerForAllResourceManagers
+{
+  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: GormLinkPboardType, nil];
+  NSArray *mgrs = [(GormDocument *)document resourceManagers];
+  NSEnumerator *en = [mgrs objectEnumerator];
+  IBResourceManager *mgr = nil;
+  
+  AUTORELEASE(allTypes);
+
+  while((mgr = [en nextObject]) != nil)
+    {
+      NSArray *pbTypes = [mgr resourcePasteboardTypes];
+      [allTypes addObjectsFromArray: pbTypes]; 
+    }
+
+  [self registerForDraggedTypes: allTypes];
+}
+
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
@@ -294,6 +306,10 @@ static NSMapTable	*docMap = 0;
     {
       NSDebugLog(@"Recieved notification");
       [self setCellSize: defaultCellSize()];
+    }
+  else if([name isEqual: IBResourceManagerRegistryDidChangeNotification])
+    {
+      [self _registerForAllResourceManagers];
     }
 }
 
@@ -319,8 +335,9 @@ static NSMapTable	*docMap = 0;
 
       document = aDocument;
 
-      [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	IBObjectPboardType, GormLinkPboardType, nil]];
+      [self _registerForAllResourceManagers];
+      // [self registerForDraggedTypes: [NSArray arrayWithObjects:
+      //    IBObjectPboardType, GormLinkPboardType, nil]];
 
       [self setAutosizesCells: NO];
       [self setCellSize: defaultCellSize()];
@@ -352,6 +369,12 @@ static NSMapTable	*docMap = 0;
 	addObserver: self
 	selector: @selector(handleNotification:)
 	name: GormResizeCellNotification
+	object: nil];
+
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(handleNotification:)
+	name: IBResourceManagerRegistryDidChangeNotification
 	object: nil];
     }
   return self;
@@ -434,20 +457,6 @@ static NSMapTable	*docMap = 0;
 {
   if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
     {
-      // NSArray		*array;
-      // NSEnumerator	*enumerator;
-      // id		obj;
-
-      /*
-       * Ask the document to get the dragged objects from the pasteboard and
-       * add them to it's collection of known objects.
-       */
-      /*
-      array = [document pasteType: IBObjectPboardType
-		   fromPasteboard: dragPb
-			   parent: [objects objectAtIndex: 0]];
-      */
-      
       [resourceManager addResourcesFromPasteboard: dragPb];
       return YES;
     }
