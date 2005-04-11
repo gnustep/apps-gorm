@@ -1,11 +1,15 @@
 /* GormDocument.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * This class contains Gorm specific implementation of the IBDocuments
+ * protocol plus additional methods which are useful for managing the
+ * contents of the document.
  *
+ * Copyright (C) 1999,2002,2003,2004,2005 Free Software Foundation, Inc.
+ *
+ * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:        2002,2003,2004,2005
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2002,2003,2004
  *
  * This file is part of GNUstep.
  * 
@@ -147,6 +151,9 @@ static NSImage	*soundsImage = nil;
 static NSImage	*classesImage = nil;
 static NSImage  *fileImage = nil;
 
+/**
+ * Initialize the class.
+ */ 
 + (void) initialize
 {
   if (self == [GormDocument class])
@@ -188,6 +195,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Initialize the new GormDocument object.
+ */
 - (id) init 
 {
   self = [super init];
@@ -402,6 +412,9 @@ static NSImage  *fileImage = nil;
   return self;
 }
 
+/**
+ * Perform any additional setup which needs to happen.
+ */
 - (void) awakeFromNib
 {
   // set up the toolbar...
@@ -413,6 +426,9 @@ static NSImage  *fileImage = nil;
   [toolbar setUsesStandardBackgroundColor: YES];
 }
 
+/**
+ * Add aConnector to the set of connectors in this document.
+ */
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
   if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)
@@ -426,11 +442,17 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Returns all connectors.
+ */
 - (NSArray*) allConnectors
 {
   return [NSArray arrayWithArray: connections];
 }
 
+/**
+ * Creates the proxy font manager.
+ */
 - (void) _instantiateFontManager
 {
   GSNibItem *item = nil;
@@ -449,6 +471,9 @@ static NSImage  *fileImage = nil;
   [selectionBox setContentView: scrollView];
 }
 
+/**
+ * Attach anObject to the document with aParent.
+ */
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
   NSArray	*old;
@@ -669,6 +694,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Attach all objects in anArray to the document with aParent.
+ */
 - (void) attachObjects: (NSArray*)anArray toParent: (id)aParent
 {
   NSEnumerator	*enumerator = [anArray objectEnumerator];
@@ -680,6 +708,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Start the process of archiving.
+ */
 - (void) beginArchiving
 {
   NSEnumerator		*enumerator;
@@ -738,7 +769,9 @@ static NSImage  *fileImage = nil;
   [filePrefsManager setClassVersions];
 }
 
-// change the views...
+/**
+ * Change the view in the document window.
+ */
 - (void) changeView: (id)sender
 {
   int tag = [sender tag];
@@ -782,25 +815,34 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * The class manager.
+ */ 
 - (GormClassManager*) classManager
 {
   return classManager;
 }
 
-/*
- * A Gorm document is encoded in the archive as a GSNibContainer ...
- * A class that the gnustep gui library knbows about and can unarchive.
+/**
+ * A Gorm document is encoded in the archive as a GSNibContainer.
+ * A class that the gnustep gui library knows about and can unarchive.
  */
 - (Class) classForCoder
 {
   return [GSNibContainer class];
 }
 
+/**
+ * Returns all connectors to destination.
+ */
 - (NSArray*) connectorsForDestination: (id)destination
 {
   return [self connectorsForDestination: destination ofClass: 0];
 }
 
+/**
+ * Returns all connectors to destination of class aConnectorClass.
+ */
 - (NSArray*) connectorsForDestination: (id)destination
                               ofClass: (Class)aConnectorClass
 {
@@ -819,11 +861,18 @@ static NSImage  *fileImage = nil;
   return array;
 }
 
+/**
+ * Returns all connectors to source.
+ */
 - (NSArray*) connectorsForSource: (id)source
 {
   return [self connectorsForSource: source ofClass: 0];
 }
 
+/**
+ * Returns all connectors to a given source where the 
+ * connectors are of aConnectorClass.
+ */
 - (NSArray*) connectorsForSource: (id)source
 			 ofClass: (Class)aConnectorClass
 {
@@ -842,6 +891,9 @@ static NSImage  *fileImage = nil;
   return array;
 }
 
+/**
+ * Returns YES, if the document contains anObject.
+ */
 - (BOOL) containsObject: (id)anObject
 {
   if ([self nameForObject: anObject] == nil)
@@ -851,6 +903,10 @@ static NSImage  *fileImage = nil;
   return YES;
 }
 
+/**
+ * Returns YES, if the document contains an object with aName and
+ * parent.
+ */
 - (BOOL) containsObjectWithName: (NSString*)aName forParent: (id)parent
 {
   id	obj = [nameTable objectForKey: aName];
@@ -862,6 +918,10 @@ static NSImage  *fileImage = nil;
   return YES; 
 }
 
+/**
+ * Copy anObject to aPasteboard using aType.  Returns YES, if
+ * successful.
+ */
 - (BOOL) copyObject: (id)anObject
                type: (NSString*)aType
        toPasteboard: (NSPasteboard*)aPasteboard
@@ -871,6 +931,10 @@ static NSImage  *fileImage = nil;
 	      toPasteboard: aPasteboard];
 }
 
+/**
+ * Copy all objects in anArray to aPasteboard using aType.  Returns YES,
+ * if successful.
+ */
 - (BOOL) copyObjects: (NSArray*)anArray
                 type: (NSString*)aType
         toPasteboard: (NSPasteboard*)aPasteboard
@@ -917,6 +981,9 @@ static NSImage  *fileImage = nil;
   return [aPasteboard setData: data forType: aType];
 }
 
+/**
+ * Create a subclass of the currently selected class in the classes view.
+ */
 - (id) createSubclass: (id)sender
 {
   [classesView createSubclass];
@@ -938,11 +1005,17 @@ static NSImage  *fileImage = nil;
 }
 */
 
+/**
+ * The given pasteboard chaned ownership.
+ */
 - (void) pasteboardChangedOwner: (NSPasteboard *)sender
 {
   NSDebugLog(@"Owner changed for %@", sender);
 }
 
+/**
+ * Dealloc all things owned by a GormDocument object.
+ */
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -988,6 +1061,9 @@ static NSImage  *fileImage = nil;
   [super dealloc];
 }
 
+/**
+ * Deteach anObject from the document.
+ */
 - (void) detachObject: (id)anObject
 {
   NSString	*name = RETAIN([self nameForObject: anObject]); // released at end of method...
@@ -1072,6 +1148,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Detach every object in anArray from the document.
+ */
 - (void) detachObjects: (NSArray*)anArray
 {
   NSEnumerator  *enumerator = [anArray objectEnumerator];
@@ -1083,23 +1162,35 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * The path to where the .gorm file is saved.
+ */
 - (NSString*) documentPath
 {
   return documentPath;
 }
 
+/**
+ * Add an outlet/action to the classes view.
+ */
 - (id) addAttributeToClass: (id)sender
 {
   [classesView addAttributeToClass];
   return self;
 }
 
+/**
+ * Remove a class from the classes view
+ */
 - (id) remove: (id)sender
 {
   [classesView deleteSelection];
   return self;
 }
 
+/**
+ * Parse a header into the classes view.
+ */
 - (id) loadClass: (id)sender
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
@@ -1145,6 +1236,9 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * Create the class files for the selected class.
+ */
 - (id) createClassFiles: (id)sender
 {
   NSSavePanel		*sp;
@@ -1198,6 +1292,9 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * Close anEditor for anObject.
+ */ 
 - (void) editor: (id<IBEditors,IBSelectionOwners>)anEditor didCloseForObject: (id)anObject
 {
   NSArray		*links;
@@ -1239,12 +1336,20 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Returns an editor for anObject, if flag is YES, it creates a new
+ * editor, if one doesn't currently exist.
+ */
 - (id<IBEditors>) editorForObject: (id)anObject
                            create: (BOOL)flag
 {
   return [self editorForObject: anObject inEditor: nil create: flag];
 }
 
+/**
+ * Returns the editor for anObject, in the editor anEditor.  If flag is
+ * YES, an editor is created if one doesn't already exist.
+ */
 - (id<IBEditors>) editorForObject: (id)anObject
                          inEditor: (id<IBEditors>)anEditor
                            create: (BOOL)flag
@@ -1314,6 +1419,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Stop the archiving process.
+ */
 - (void) endArchiving
 {
   NSEnumerator		*enumerator;
@@ -1362,6 +1470,9 @@ static NSImage  *fileImage = nil;
   [savedEditors removeAllObjects];
 }
 
+/**
+ * Forces the closing of all editors in the document.
+ */
 - (void) closeAllEditors
 {
   NSEnumerator		*enumerator;
@@ -1402,7 +1513,11 @@ static NSImage  *fileImage = nil;
   [soundsView close];
 }
 
-
+/**
+ * Handle all notifications.   Checks the value of [aNotification name]
+ * against the set of notifications this class responds to and takes
+ * appropriate action.
+ */
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
@@ -1553,6 +1668,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Create an instance of a given class.
+ */
 - (id) instantiateClass: (id)sender
 {
   NSString *object = [classesView selectedClassName];
@@ -1598,8 +1716,6 @@ static NSImage  *fileImage = nil;
       // add it to the top level objects...
       [self setName: nil forObject: instance];
       [self attachObject: instance toParent: nil];
-      // [topLevelObjects addObject: instance];
-      // [objectsView addObject: instance];
       
       // we want to record if it's custom or not and act appropriately...
       if(isCustom)
@@ -1626,50 +1742,68 @@ static NSImage  *fileImage = nil;
   return self;
 }
 
+/**
+ * Returns YES, if document is active.
+ */
 - (BOOL) isActive
 {
   return isActive;
 }
 
+/**
+ * Returns the name for anObject.
+ */
 - (NSString*) nameForObject: (id)anObject
 {
   return (NSString*)NSMapGet(objToName, (void*)anObject);
 }
 
+/**
+ * Returns the object for name.
+ */
 - (id) objectForName: (NSString*)name
 {
   return [nameTable objectForKey: name];
 }
 
-- (BOOL) objectIsVisibleAtLaunch: (id)anObject
-{
-  return [[nameTable objectForKey: @"NSVisible"] containsObject: anObject];
-}
-
+/**
+ * Returns all objects in the document.
+ */
 - (NSArray*) objects
 {
   return [nameTable allValues];
 }
 
+/**
+ * Returns YES, if the current select on the classes view is a class.
+ */
 - (BOOL) classIsSelected
 {
   return [classesView currentSelectionIsClass];
 }
 
+/**
+ * Remove all instances of a given class.
+ */
 - (void) removeAllInstancesOfClass: (NSString *)className
 {
   [objectsView removeAllInstancesOfClass: className];
 }
 
+/**
+ * Select a class in the classes view
+ */
 - (void) selectClass: (NSString *)className
 {
   [classesView selectClass: className];
 }
 
-// The sole purpose of this method is to clean up .gorm files from older
-// versions of Gorm which might have some dangling references.   This method
-// should possibly added to as time goes on to make sure that it's possible 
-// to repair old .gorm files.
+/** 
+ * The sole purpose of this method is to clean up .gorm files from older
+ * versions of Gorm which might have some dangling references.   This method
+ * should possibly added to as time goes on to make sure that it's possible 
+ * to repair old .gorm files.
+ */
 - (void) _repairFile
 {
   NSEnumerator *en = [[nameTable allKeys] objectEnumerator];
@@ -1737,8 +1871,8 @@ static NSImage  *fileImage = nil;
   }
 }
 
-/*
- * NB. This assumes we have an empty document to start with - the loaded
+/**
+ * This assumes we have an empty document to start with - the loaded
  * document is merged in to it.
  */
 - (id) loadDocument: (NSString*)aFile
@@ -2090,7 +2224,7 @@ static NSImage  *fileImage = nil;
   return self;
 }
 
-/*
+/**
  * Build our reverse mapping information and other initialisation
  */
 - (void) rebuildObjToNameMapping
@@ -2126,8 +2260,8 @@ static NSImage  *fileImage = nil;
     }
 }
 
-/*
- * NB. This assumes we have an empty document to start with - the loaded
+/**
+ * This assumes we have an empty document to start with - the loaded
  * document is merged in to it.
  */
 - (id) openDocument: (id)sender
@@ -2176,6 +2310,9 @@ static NSImage  *fileImage = nil;
   return nil; /* Failed */
 }
 
+/**
+ * Open the editor for anObject.
+ */
 - (id<IBEditors>) openEditorForObject: (id)anObject
 {
   id<IBEditors>	e = [self editorForObject: anObject create: YES];
@@ -2196,6 +2333,9 @@ static NSImage  *fileImage = nil;
   return e;
 }
 
+/**
+ * Return the parent editor for anEditor.
+ */
 - (id<IBEditors, IBSelectionOwners>) parentEditorForEditor: (id<IBEditors>)anEditor
 {
   NSArray		*links;
@@ -2207,6 +2347,9 @@ static NSImage  *fileImage = nil;
   return [con destination];
 }
 
+/**
+ * Return the parent of anObject.
+ */
 - (id) parentOfObject: (id)anObject
 {
   NSArray		*old;
@@ -2221,6 +2364,10 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * Paste objects of aType into the document from aPasteboard 
+ * with parent as the parent of the objects.
+ */
 - (NSArray*) pasteType: (NSString*)aType
         fromPasteboard: (NSPasteboard*)aPasteboard
                 parent: (id)parent
@@ -2287,32 +2434,38 @@ static NSImage  *fileImage = nil;
   return objects;
 }
 
+/**
+ * Remove aConnector from the connections array and send the
+ * notifications.
+ */
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
   // issue pre notification..
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
       object: self];
+
   // mark the document as changed.
   [self touch];
-  // issue port notification..
+
+  // issue post notification..
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
       object: self];
 }
 
+/**
+ * The editor wants to give up the selection.  Go through all the known
+ * editors (with links in the connections array) and try to find one
+ * that wants to take over the selection.  Activate whatever editor we
+ * find (if any).
+ */
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
 {
   NSEnumerator		*enumerator = [connections objectEnumerator];
   Class			editClass = [GormObjectToEditor class];
   id<IBConnectors>	c;
 
-  /*
-   * This editor wants to give up the selection.  Go through all the known
-   * editors (with links in the connections array) and try to find one
-   * that wants to take over the selection.  Activate whatever editor we
-   * find (if any).
-   */
   while ((c = [enumerator nextObject]) != nil)
     {
       if ([c class] == editClass)
@@ -2333,6 +2486,11 @@ static NSImage  *fileImage = nil;
   [self setSelectionFromEditor: nil];
 }
 
+/**
+ * Creates a blank document depending on the value of type.
+ * If type is "Application", "Inspector" or "Palette" it creates 
+ * an appropriate blank document for the user to start with.
+ */
 - (void) setupDefaults: (NSString*)type
 {
   if (hasSetDefaults == YES)
@@ -2458,6 +2616,10 @@ static NSImage  *fileImage = nil;
   [self touch];
 }
 
+/**
+ * Set aName for object in the document.  If aName is nil,
+ * a name is automatically created for object.
+ */
 - (void) setName: (NSString*)aName forObject: (id)object
 {
   id		       oldObject;
@@ -2506,7 +2668,7 @@ static NSImage  *fileImage = nil;
 	}
       else
 	{
-	  return;	/* Already named ... nothing to do */
+	  return; /* Already named ... nothing to do */
 	}
     }
   else
@@ -2522,16 +2684,16 @@ static NSImage  *fileImage = nil;
 	{
 	  if ([oldName isEqual: aName] == YES)
 	    {
-	      return;	/* Already have this name ... nothing to do */
+	      return; /* Already have this name ... nothing to do */
 	    }
 	  [nameTable removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
-  // nameCopy = [aName copy];	/* Make sure it's immutable */
+
+  // add it to the dictionary.
   [nameTable setObject: object forKey: aName];
-  // RELEASE(object); // TODO: Make sure whether we do or do not need this.
-  NSMapInsert(objToName, (void*)object, (void*) aName); //nameCopy);
+  NSMapInsert(objToName, (void*)object, (void*)aName);
   if (oldName != nil)
     {
       [nameTable removeObjectForKey: oldName];
@@ -2549,11 +2711,14 @@ static NSImage  *fileImage = nil;
       if(className != nil)
 	{
 	  [cc removeObjectForKey: oldName];
-	  [cc setObject: className forKey: aName]; //nameCopy];
+	  [cc setObject: className forKey: aName]; 
 	}
     }
 }
 
+/**
+ * Add object to the visible at launch list.
+ */
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag
 {
   NSMutableArray	*a = [nameTable objectForKey: @"NSVisible"];
@@ -2577,6 +2742,17 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Return YES, if anObject is visible at launch time.
+ */
+- (BOOL) objectIsVisibleAtLaunch: (id)anObject
+{
+  return [[nameTable objectForKey: @"NSVisible"] containsObject: anObject];
+}
+
+/**
+ * Add anObject to the deferred list.
+ */
 - (void) setObject: (id)anObject isDeferred: (BOOL)flag
 {
   NSMutableArray	*a = [nameTable objectForKey: @"NSDeferred"];
@@ -2600,12 +2776,19 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Return YES, if the anObject is in the deferred list.
+ */
 - (BOOL) objectIsDeferred: (id)anObject
 {
   return [[nameTable objectForKey: @"NSDeferred"] containsObject: anObject];
 }
 
 // windows / services menus...
+
+/**
+ * Set the windows menu.
+ */
 - (void) setWindowsMenu: (NSMenu *)anObject 
 {
   if(anObject != nil)
@@ -2618,11 +2801,17 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * return the windows menu.
+ */ 
 - (NSMenu *) windowsMenu
 {
   return [nameTable objectForKey: @"NSWindowsMenu"];
 }
 
+/**
+ * Set the object that will be the services menu in the app.
+ */
 - (void) setServicesMenu: (NSMenu *)anObject
 {
   if(anObject != nil)
@@ -2635,6 +2824,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Return the object that will be the services menu.
+ */
 - (NSMenu *) servicesMenu
 {
   return [nameTable objectForKey: @"NSServicesMenu"];
@@ -2707,13 +2899,13 @@ static NSImage  *fileImage = nil;
   // loop through all objects.
   while((key = [en nextObject]) != nil)
     {
-      id customClass = [cm customClassForName: key];
+      id customClass = AUTORELEASE([[cm customClassForName: key] copy]);
       id object = [self objectForName: key];
       NSString *superClass = [cm nonCustomSuperClassOf: customClass];
       id template = [GSTemplateFactory templateForObject: object
 				       withClassName: customClass 
-				       withSuperClassName: superClass];
-      
+				       withSuperClassName: superClass]; // autoreleased
+
       // if the object is deferrable, then set the flag appropriately.
       if([template respondsToSelector: @selector(setDeferFlag:)])
 	{
@@ -3321,7 +3513,7 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
-  BOOL removed = YES;
+  BOOL renamed = YES;
   int retval = -1;
   NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
   NSString *msg = [NSString stringWithFormat: 
@@ -3332,15 +3524,15 @@ static NSImage  *fileImage = nil;
   retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
   if (retval == NSAlertDefaultReturn)
     {
-      removed = YES;
+      renamed = YES;
     }
   else
     {
-      removed = NO;
+      renamed = NO;
     }
 
   // remove all.
-  if(removed)
+  if(renamed)
     {
       while ((c = [en nextObject]) != nil)
 	{
@@ -3363,7 +3555,7 @@ static NSImage  *fileImage = nil;
 
   // done...
   NSDebugLog(@"Changed references to actions/outlets for objects of %@", className);
-  return removed;
+  return renamed;
 }
 
 
@@ -3485,7 +3677,7 @@ static NSImage  *fileImage = nil;
   resourceManagers = [[NSMutableArray alloc] init];
   while((cls = [en nextObject]) != nil)
     {
-      id mgr = [(IBResourceManager *)[cls alloc] initWithDocument: self];
+      id mgr = AUTORELEASE([(IBResourceManager *)[cls alloc] initWithDocument: self]);
       [resourceManagers addObject: mgr];
     }
 }
