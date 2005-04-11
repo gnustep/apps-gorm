@@ -114,9 +114,8 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  if ([types containsObject: IBObjectPboardType] == YES)
-    return YES;
-  return NO;
+  NSArray *resourceTypes = [resourceManager resourcePasteboardTypes];
+  return ([resourceTypes firstObjectCommonWithArray: types] != nil);
 }
 
 - (void) pasteInSelection
@@ -497,7 +496,7 @@ static NSMapTable	*docMap = 0;
   /*
    * Tell the source that we will accept the drop if we can.
    */
-  if (dragType == IBObjectPboardType)
+  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
     {
       /*
        * We can accept objects dropped anywhere.

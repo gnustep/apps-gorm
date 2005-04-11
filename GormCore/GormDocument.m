@@ -1297,6 +1297,7 @@ static NSImage  *fileImage = nil;
 	{
 	  NSDebugLog(@"WARNING anEditor = editor");
 	}
+
       [editor activate];
       RELEASE((NSObject *)editor);
 

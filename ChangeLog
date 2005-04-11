@@ -1,3 +1,9 @@
+2005-04-11 01:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m
+	* GormCore/GormObjectEditor.m: Corrected problem with resource
+	manager.
+
 2005-04-10 23:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Moved call to register IBResourceManager
