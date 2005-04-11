@@ -73,7 +73,7 @@ enum IBResourceLocation {
 + (NSArray *) registeredResourceManagerClassesForFramework: (NSString *)framework;
 
 /**
- * Returns YES, if the pasteboard contains a type the resource 
+ * Returns YES, if the pasteboard contains a type the resource  
  * manager can accept.
  */
 - (BOOL) acceptsResourcesFromPasteboard: (NSPasteboard *)pboard;

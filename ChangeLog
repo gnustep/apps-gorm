@@ -1,3 +1,13 @@
+2005-04-10 20:09 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h
+	* GormCore/GormDocument.m: addition of the method
+	resourceManagerForPasteboard:.
+	* GormCore/GormObjectEditor.m: Changes to utilize IBResourceManager
+	* GormLib/IBResourceManager.h
+	* GormLib/IBResourceManager.m: Changes to add objects to the document
+	properly.
+
 2005-04-10 18:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.h: Organized methods.

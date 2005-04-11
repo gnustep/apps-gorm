@@ -132,15 +132,8 @@ static NSMapTable *_resourceManagers = NULL;
 {
   NSArray *types = [pboard types];
   NSArray *resourcePbTypes = [self resourcePasteboardTypes]; 
-  id obj = [types firstObjectCommonWithArray: resourcePbTypes];
-  BOOL result = NO;
-
-  if(obj != nil)
-    {
-      result = YES;
-    }
-
-  return result;
+  NSString *type = [types firstObjectCommonWithArray: resourcePbTypes];
+  return (type != nil);
 }
 
 - (void) addResources: (NSArray *)resourceList
@@ -150,19 +143,17 @@ static NSMapTable *_resourceManagers = NULL;
 
 - (void) addResourcesFromPasteboard: (NSPasteboard *)pboard
 {
-  NSArray *resourcePbTypes = [self resourcePasteboardTypes];
-  NSString *type = nil;
-  NSEnumerator *en = [resourcePbTypes objectEnumerator];
+  NSArray *types = [pboard types];
+  NSArray *resourcePbTypes = [self resourcePasteboardTypes]; 
+  NSString *type = [types firstObjectCommonWithArray: resourcePbTypes];
   
-  while((type = [en nextObject]) != nil)
-    {
-      NSData *data = [pboard dataForType: type];
-      id obj = [NSUnarchiver unarchiveObjectWithData: data];
-      if(obj != nil)
-	{
-	  [document attachObject: obj toParent: nil];
-	}
-    }
+  /*
+   * Ask the document to get the dragged objects from the pasteboard and
+   * add them to it's collection of known objects.
+   */
+  [document pasteType: type
+	    fromPasteboard: pboard
+	    parent: nil];  
 }
 
 - (void) application: (NSString *) appName didModifyFileAtPath: (NSString *)path

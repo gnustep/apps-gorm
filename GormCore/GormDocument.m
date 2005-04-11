@@ -3491,6 +3491,23 @@ static NSImage  *fileImage = nil;
 {
   return resourceManagers;
 }
+
+- (IBResourceManager *) resourceManagerForPasteboard: (NSPasteboard *)pboard
+{
+  NSEnumerator *en = [resourceManagers objectEnumerator];
+  IBResourceManager *mgr = nil, *result = nil;
+  
+  while((mgr = [en nextObject]) != nil)
+    {
+      if([mgr acceptsResourcesFromPasteboard: pboard])
+	{
+	  result = mgr;
+	  break;
+	}
+    }
+
+  return result;
+}
 @end
 
 @implementation GormDocument (MenuValidation)

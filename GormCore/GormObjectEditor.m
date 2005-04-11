@@ -215,12 +215,16 @@ static NSMapTable	*docMap = 0;
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSArray	*types;
+  NSString      *type;
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
-  if ([types containsObject: IBObjectPboardType] == YES)
+  resourceManager = [(GormDocument *)document resourceManagerForPasteboard: dragPb];
+  type = [[resourceManager resourcePasteboardTypes] firstObjectCommonWithArray: types];
+
+  if (type != nil)
     {
-      dragType = IBObjectPboardType;
+      dragType = type;
     }
   else if ([types containsObject: GormLinkPboardType] == YES)
     {
@@ -235,7 +239,7 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  if (dragType == IBObjectPboardType)
+  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
     {
       return NSDragOperationCopy;
     }
@@ -428,9 +432,9 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  if (dragType == IBObjectPboardType)
+  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
     {
-      NSArray		*array;
+      // NSArray		*array;
       // NSEnumerator	*enumerator;
       // id		obj;
 
@@ -438,20 +442,13 @@ static NSMapTable	*docMap = 0;
        * Ask the document to get the dragged objects from the pasteboard and
        * add them to it's collection of known objects.
        */
+      /*
       array = [document pasteType: IBObjectPboardType
 		   fromPasteboard: dragPb
 			   parent: [objects objectAtIndex: 0]];
-      
-      /*
-      enumerator = [array objectEnumerator];
-      while ((obj = [enumerator nextObject]) != nil)
-	{
-	  RETAIN(obj);  
-	  [[(GormDocument *)document topLevelObjects] addObject: obj];
-	  [self addObject: obj];
-	}
       */
-
+      
+      [resourceManager addResourcesFromPasteboard: dragPb];
       return YES;
     }
   else if (dragType == GormLinkPboardType)

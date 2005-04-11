@@ -104,6 +104,7 @@
 - (void) closeAllEditors;
 - (void) createResourceManagers;
 - (NSArray *) resourceManagers;
+- (IBResourceManager *) resourceManagerForPasteboard: (NSPasteboard *)pboard;
 
 /* Managing classes */
 - (GormClassManager*) classManager;
