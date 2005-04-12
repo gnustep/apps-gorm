@@ -173,8 +173,9 @@
   if(closed == NO)
     [self close];
 
+  // The resource manager is a weak connection and is not retained,
+  // no need to release it here.
   RELEASE(objects); 
-  RELEASE(resourceManager);
   [super dealloc];
 }
 

@@ -1,3 +1,10 @@
+2005-04-11 22:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGenericEditor.m: Removed release of resource
+	manager.  This is a "weak connection" in the sense that the
+	manager is a shared instance and is retained by the document,
+	not the editor.
+
 2005-04-11 19:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormObjectEditor.m: Correction for problem which
