@@ -1,3 +1,8 @@
+2005-04-11 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Send a call to "revert"
+	to load the contents of the inspector from the object.
+
 2005-04-11 22:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGenericEditor.m: Removed release of resource

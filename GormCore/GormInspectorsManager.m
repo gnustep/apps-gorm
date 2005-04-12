@@ -579,6 +579,9 @@
 
   // inspect the object.
   [inspector setObject: obj];
+
+  // load the object.
+  [inspector revert: self];
 }
 
 /* This is to include the formatter item in the pop up button
