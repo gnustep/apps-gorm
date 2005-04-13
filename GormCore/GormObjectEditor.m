@@ -206,33 +206,34 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
+  NSArray   *pbTypes = nil;
+  NSString  *type = nil;
+  NSArray   *mgrTypes = nil; 
+  
   // Get the resource manager first, if nil don't bother calling the rest...
   dragPb = [sender draggingPasteboard];
+  pbTypes = [dragPb types];
   resourceManager = [(GormDocument *)document resourceManagerForPasteboard: dragPb];
 
   if(resourceManager != nil)
     {
-      NSArray	*types;
-      NSString  *type;
-      NSArray   *resourceTypes = [resourceManager resourcePasteboardTypes];
-      
-      types = [dragPb types];
-      type = [resourceTypes firstObjectCommonWithArray: types];
-      
-      if (type != nil)
-	{
-	  dragType = type;
-	}
-      else if ([types containsObject: GormLinkPboardType] == YES)
-	{
-	  dragType = GormLinkPboardType;
-	}
-      else
-	{
-	  dragType = nil;
-	}
+      mgrTypes = [resourceManager resourcePasteboardTypes];
+      type = [mgrTypes firstObjectCommonWithArray: pbTypes];
     }
 
+  if (type != nil)
+    {
+      dragType = type;
+    }
+  else if ([pbTypes containsObject: GormLinkPboardType] == YES)
+    {
+      dragType = GormLinkPboardType;
+    }
+  else
+    {
+      dragType = nil;
+    }
+  
   return [self draggingUpdated: sender];
 }
 

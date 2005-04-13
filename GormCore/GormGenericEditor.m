@@ -176,6 +176,11 @@
   // The resource manager is a weak connection and is not retained,
   // no need to release it here.
   RELEASE(objects); 
+
+  // Remove self from any and all notifications.
+  [[NSNotificationCenter defaultCenter]
+    removeObserver: self];
+  
   [super dealloc];
 }
 

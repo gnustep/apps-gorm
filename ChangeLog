@@ -1,3 +1,9 @@
+2005-04-12 20:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGenericEditor.m: Unsubscribe from all notifications.
+	* GormCore/GormObjectEditor.m: Correct problem preventing
+	connections.
+
 2005-04-11 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: Send a call to "revert"
