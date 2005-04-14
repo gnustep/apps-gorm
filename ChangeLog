@@ -1,3 +1,8 @@
+2005-04-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/ClassInformation.plist: Added NSPopUpButtonCell and
+	NSMenuItemCell.
+
 2005-04-14 00:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: More informative error message when

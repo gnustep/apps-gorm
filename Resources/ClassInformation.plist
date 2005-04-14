@@ -363,6 +363,9 @@
 	);
 	Super = NSObject;
     };
+    NSMenuItemCell = {
+	Super = NSButtonCell;
+    };    
     NSMutableArray = {
 	Super = NSArray;
     };
@@ -386,6 +389,9 @@
     NSPopUpButton = {
 	Super = NSButton;
     };
+    NSPopUpButtonCell = {
+	Super = NSMenuItemCell;
+    };    
     NSProgressIndicator = {
 	Actions = (
 	    "animate:",
