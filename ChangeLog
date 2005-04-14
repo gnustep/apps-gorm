@@ -1,3 +1,16 @@
+2005-04-14 00:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: More informative error message when
+	a class can't be found.
+	* GormCore/GormImage.m: Implement objectNameForInspectorTitle.
+	* GormCore/GormInspectorsManager.m: Remove special cases for Image
+	and Sound.
+	* GormCore/GormPalettesManager.m: Beginnings of code to get 
+	outlets/actions for exported class.
+	* GormCore/GormResource.h: Added include for IBObjectAdditions.h 
+	to GormResource.h
+	* GormCore/GormSound.m: Implement objectNameForInspectorTitle.
+
 2005-04-12 20:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGenericEditor.m: Unsubscribe from all notifications.

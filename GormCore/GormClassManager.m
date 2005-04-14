@@ -1825,7 +1825,7 @@
 	}
       else
 	{
-	  NSLog(@"This should never happen...  an instance without an associated class: %@",className);
+	  NSLog(@"Unable to find class named (%@), check that all palettes properly export classes to Gorm.",className);
 	  break;
 	}
     }

@@ -31,6 +31,7 @@
 #include <Foundation/NSObject.h>
 #include <InterfaceBuilder/IBProjectFiles.h>
 #include <InterfaceBuilder/IBProjects.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
 
 @class NSString;
 

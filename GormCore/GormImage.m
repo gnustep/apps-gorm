@@ -137,6 +137,11 @@
   return @"GormNotApplicableInspector";
 }
 
+- (NSString *) objectNameForInspectorTitle
+{
+  return @"Image";
+}
+
 - (NSImage *) imageForViewer
 {
   return [self image];

@@ -424,14 +424,6 @@
       [panel setTitle: [NSString stringWithFormat: @"Class Edit Inspector:%@",
 				 [obj className]]];
     }
-  else if ([obj isKindOfClass: [GormSound class]])
-    {
-      [panel setTitle: @"Sound Inspector"];
-    }
-  else if ([obj isKindOfClass: [GormImage class]])
-    {
-      [panel setTitle: @"Image Inspector"];
-    }
   else
     {
       NSString *newTitle = [obj objectNameForInspectorTitle]; 

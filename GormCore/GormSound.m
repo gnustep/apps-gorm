@@ -58,14 +58,19 @@
   return @"GormSoundInspector";
 }
 
-- (NSString*) classInspectorClassName
+- (NSString *) classInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
 
-- (NSString*) connectInspectorClassName
+- (NSString *) connectInspectorClassName
 {
   return @"GormNotApplicableInspector";
+}
+
+- (NSString *) objectNameForInspectorTitle
+{
+  return @"Sound";
 }
 
 - (NSImage *) imageForViewer

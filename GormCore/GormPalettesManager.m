@@ -614,6 +614,17 @@ static NSImage	*dragImage = nil;
   [dragView setNeedsDisplay: YES];
 }
 
+- (NSMutableArray *) actionsForClass: (Class) cls
+{
+  Class superclass = [cls superclass];
+  return nil;
+}
+
+- (NSMutableArray *) outletsForClass: (Class) cls
+{
+  return nil;
+}
+
 - (void) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict
 {
   NSEnumerator *en = [classes objectEnumerator];
@@ -627,8 +638,21 @@ static NSImage	*dragImage = nil;
       Class cls = NSClassFromString(className);
       Class supercls = [cls superclass];
       NSString *superClassName = NSStringFromClass(supercls);
+      NSMutableArray *actions = [self actionsForClass: cls];
+      NSMutableArray *outlets = [self outletsForClass: cls];
       
       [classDict setObject: superClassName forKey: @"Super"];
+
+      // set the action/outlet keys
+      if(actions != nil)
+	{
+	  [classDict setObject: actions forKey: @"Actions"];
+	}
+      if(outlets != nil)
+	{
+	  [classDict setObject: outlets forKey: @"Outlets"];
+	}
+
       [masterDict setObject: classDict forKey: className];
     }
   
