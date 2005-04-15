@@ -410,6 +410,9 @@
     || [[(NSScrollView *)obj documentView] isKindOfClass: [NSTextView class]]))
     {
       obj = [(NSScrollView *)obj documentView];
+      if ([obj isKindOfClass: [NSTableView class]])
+	if ([obj selectedColumn] != -1)
+	  obj = [[obj tableColumns] objectAtIndex:[obj selectedColumn]];
     }
 
   /*

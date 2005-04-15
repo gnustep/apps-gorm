@@ -25,11 +25,78 @@
 
 #include "GormPrivate.h"
 #include <Foundation/NSArray.h>
+#include <Foundation/NSSet.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
+#include <GNUstepBase/GSObjCRuntime.h>
 
 #define BUILTIN_PALETTES @"BuiltinPalettes"
 #define USER_PALETTES    @"UserPalettes"
+
+/**
+ * This method returns an array listing the names of all the
+ * instance methods available to obj, whether they
+ * belong to the class of obj or one of its superclasses.<br />
+ * If obj is a class, this returns the class methods.<br />
+ * Returns nil if obj is nil.
+ */
+NSArray *
+GSObjCMethodNamesForClass(Class class, BOOL collect)
+{
+  NSMutableSet	*set;
+  NSArray	*array;
+  GSMethodList	 methods;
+
+  if (class == nil)
+    {
+      return nil;
+    }
+  /*
+   * Add names to a set so methods declared in superclasses
+   * and then overridden do not appear more than once.
+   */
+  set = [[NSMutableSet alloc] initWithCapacity: 32];
+  while (class != nil)
+    {
+      void *iterator = 0;
+
+      while ((methods = class_nextMethodList(class, &iterator)))
+	{
+	  int i;
+
+	  for (i = 0; i < methods->method_count; i++)
+	    {
+	      GSMethod method = &methods->method_list[i];
+
+	      if (method->method_name != 0)
+		{
+		  NSString	*name;
+                  const char *cName;
+
+                  cName = GSNameFromSelector(method->method_name);
+                  name = [[NSString alloc] initWithUTF8String: cName];
+		  [set addObject: name];
+		  RELEASE(name);
+		}
+	    }
+	}
+      
+      // if we should collect all of the superclass methods, then iterate
+      // up the chain.
+      if(collect)
+	{
+	  class = class->super_class;
+	}
+      else
+	{
+	  class = nil;
+	}
+    }
+
+  array = [set allObjects];
+  RELEASE(set);
+  return array;
+}
 
 @interface GormPalettePanel : NSPanel
 @end
@@ -616,8 +683,34 @@ static NSImage	*dragImage = nil;
 
 - (NSMutableArray *) actionsForClass: (Class) cls
 {
-  Class superclass = [cls superclass];
-  return nil;
+  NSArray *methodArray = GSObjCMethodNamesForClass(cls, NO);
+  NSEnumerator *en = [methodArray objectEnumerator];
+  NSMethodSignature *actionSig = [NSMethodSignature signatureWithObjCTypes: "v12@0:4@8"];
+  NSMutableArray *actionsArray = [NSMutableArray array];
+  NSString *methodName = nil;
+
+  NSDebugLog(@"######## class = %@, %@", NSStringFromClass(cls), methodArray);
+
+  while((methodName = [en nextObject]) != nil)
+    {
+      SEL sel = NSSelectorFromString(methodName);
+      NSMethodSignature *signature = [cls instanceMethodSignatureForSelector: sel];
+      if([signature numberOfArguments] == 3)
+	{
+	  NSDebugLog(@"methodName = %@",methodName);
+	  NSDebugLog(@"returnType = %s, %s",[signature methodReturnType], @encode(id));
+	  NSDebugLog(@"firstArgument = %s",[signature getArgumentTypeAtIndex: 2]);
+	  
+	  if([actionSig isEqual: signature])
+	    {
+	      NSDebugLog(@"Matches");
+	      [actionsArray addObject: methodName];
+	    }
+	}
+    }
+  
+  NSDebugLog(@"#######");
+  return actionsArray;
 }
 
 - (NSMutableArray *) outletsForClass: (Class) cls

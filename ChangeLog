@@ -1,3 +1,12 @@
+2005-04-15 02:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Patch from Matt Rice to
+	allow connection from a table column.
+	* GormCore/GormPalettesManager.m: Import action methods automatically
+	from the class.
+	* Palettes/3Containers/GormTableViewEditor.m: Patch from Matt Rice
+	to allow connection from a table column.
+
 2005-04-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/ClassInformation.plist: Added NSPopUpButtonCell and

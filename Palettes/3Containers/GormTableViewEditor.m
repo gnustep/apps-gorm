@@ -265,7 +265,11 @@ static NSText *_textObject;
     }
   else if (hitView == tableView)
     {
-      if ([tableView selectedColumn] != -1)
+      if ([theEvent modifierFlags] & NSControlKeyMask)
+        {
+	  [super mouseDown: theEvent];
+	}
+      else if ([tableView selectedColumn] != -1)
 	{
 	  [tableView deselectColumn: [tableView selectedColumn]];
 	}
