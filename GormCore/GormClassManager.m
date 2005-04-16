@@ -112,6 +112,9 @@
       else
 	{
 	  GormPalettesManager *palettesManager = [(id<Gorm>)NSApp palettesManager];
+	  NSDictionary *importedClasses = [palettesManager importedClasses];
+	  NSEnumerator *en = [importedClasses objectEnumerator];
+	  NSDictionary *description = nil;
 
 	  // load the classes, initialize the custom class array and map..
 	  [self loadFromFile: path];
@@ -120,7 +123,22 @@
 	  categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
 
 	  // add the imported classes to the class information list...
-	  [classInformation addEntriesFromDictionary: [palettesManager importedClasses]];
+	  [classInformation addEntriesFromDictionary: importedClasses];
+
+	  // add all of the actions to the FirstResponder
+	  while((description = [en nextObject]) != nil)
+	    {
+	      NSArray *actions = [description objectForKey: @"Actions"];
+	      NSEnumerator *aen = [actions objectEnumerator];
+	      NSString *actionName = nil;
+
+	      // add the actions to the first responder...
+	      while((actionName = [aen nextObject]) != nil)
+		{
+		  [self addAction: actionName forClassNamed: @"FirstResponder"];
+		}
+	    }
+	  
 	}
     }
   

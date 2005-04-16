@@ -339,3 +339,111 @@ NSString *formatOutlet(NSString *outlet)
   NSString *identifier = identifierString(outlet);
   return identifier;
 }
+
+/**
+ * This method returns an array listing the names of all the
+ * instance methods available to obj, whether they
+ * belong to the class of obj or one of its superclasses.<br />
+ * If obj is a class, this returns the class methods.<br />
+ * Returns nil if obj is nil.
+ */
+NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect)
+{
+  NSMutableSet	*set;
+  NSArray	*array;
+  GSMethodList	 methods;
+
+  if (class == nil)
+    {
+      return nil;
+    }
+  /*
+   * Add names to a set so methods declared in superclasses
+   * and then overridden do not appear more than once.
+   */
+  set = [[NSMutableSet alloc] initWithCapacity: 32];
+  while (class != nil)
+    {
+      void *iterator = 0;
+
+      while ((methods = class_nextMethodList(class, &iterator)))
+	{
+	  int i;
+
+	  for (i = 0; i < methods->method_count; i++)
+	    {
+	      GSMethod method = &methods->method_list[i];
+
+	      if (method->method_name != 0)
+		{
+		  NSString	*name;
+                  const char *cName;
+
+                  cName = GSNameFromSelector(method->method_name);
+                  name = [[NSString alloc] initWithUTF8String: cName];
+		  [set addObject: name];
+		  RELEASE(name);
+		}
+	    }
+	}
+      
+      // if we should collect all of the superclass methods, then iterate
+      // up the chain.
+      if(collect)
+	{
+	  class = class->super_class;
+	}
+      else
+	{
+	  class = nil;
+	}
+    }
+
+  array = [set allObjects];
+  RELEASE(set);
+  return array;
+}
+
+/**
+ * This method returns an array listing the names of all the
+ * instance variables present in the instance obj, whether they
+ * belong to the class of obj or one of its superclasses.<br />
+ * Returns nil if obj is nil.
+ */
+NSArray *_GSObjCVariableNames(Class class, BOOL collect)
+{
+  NSMutableArray	*array;
+  struct objc_ivar_list	*ivars;
+
+  array = [NSMutableArray arrayWithCapacity: 16];
+  while (class != nil)
+    {
+      ivars = class->ivars;
+      if (ivars != 0)
+	{
+	  int		i;
+
+	  for (i = 0; i < ivars->ivar_count; i++)
+	    {
+	      NSString	*name;
+
+	      name = [[NSString alloc] initWithUTF8String:
+		ivars->ivar_list[i].ivar_name];
+	      [array addObject: name];
+	      RELEASE(name);
+	    }
+	}
+
+      // if we should collect all of the superclass methods, then iterate
+      // up the chain.
+      if(collect)
+	{
+	  class = class->super_class;
+	}
+      else
+	{
+	  class = nil;
+	}
+    }
+  return array;
+}

@@ -48,7 +48,8 @@ PALETTE_NAME = 3Containers
 	GormNSTableViewInspector.gorm \
 	GormNSTableColumnInspector.gorm \
 	GormNSTableColumnSizeInspector.gorm \
-	GormTabViewInspector.gorm
+	GormTabViewInspector.gorm \
+	palette.table
 
 3Containers_STANDARD_INSTALL = no
 

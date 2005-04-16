@@ -76,4 +76,8 @@ NSString *formatAction(NSString *action);
 // format an outlet
 NSString *formatOutlet(NSString *outlet);
 
+// get information about class.
+NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect);
+
+NSArray *_GSObjCVariableNames(Class class, BOOL collect);
 #endif

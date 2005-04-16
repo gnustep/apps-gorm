@@ -1,3 +1,17 @@
+2005-04-16 17:21 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Added code in initWithDocument:
+	to add the actions to the FirstResponder.
+	* GormCore/GormFunctions.h
+	* GormCore/GormFunctions.m: Added function to get the
+	actions from a class.
+	* GormCore/GormPalettesManager.m: Added code to get
+	actions/outlets from classes in exported from palettes.
+	* Palettes/0Menus/GNUmakefile
+	* Palettes/1Windows/GNUmakefile
+	* Palettes/2Controls/palette.table
+	* Palettes/3Containers/GNUmakefile: Added palette.table
+
 2005-04-15 02:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: Patch from Matt Rice to
