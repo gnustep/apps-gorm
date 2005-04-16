@@ -32,7 +32,8 @@ PALETTE_NAME = 4Data
 	GormNSTextViewInspector.gorm  \
 	GormNSComboBoxInspector.gorm  \
 	GormNSDateFormatterInspector.gorm \
-	GormNSNumberFormatterInspector.gorm
+	GormNSNumberFormatterInspector.gorm \
+	palette.table
 
 4Data_STANDARD_INSTALL = no
 
