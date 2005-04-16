@@ -632,7 +632,8 @@ static NSImage	*dragImage = nil;
       NSMethodSignature *signature = [cls instanceMethodSignatureForSelector: sel];
       if([signature numberOfArguments] == 3)
 	{
-	  if([actionSig isEqual: signature] && NSEqualRanges([methodName rangeOfString: @"set"], setRange) == NO)
+	  if([actionSig isEqual: signature] && NSEqualRanges([methodName rangeOfString: @"set"], setRange) == NO &&
+	     [methodName isEqual: @"encodeWithCoder:"] == NO && [methodName isEqual: @"mouseDown:"] == NO)
 	    {
 	      [actionsArray addObject: methodName];
 	    }
@@ -657,7 +658,8 @@ static NSImage	*dragImage = nil;
       NSMethodSignature *signature = [cls instanceMethodSignatureForSelector: sel];
       if([signature numberOfArguments] == 3)
 	{
-	  if([outletSig isEqual: signature] && NSEqualRanges([methodName rangeOfString: @"set"], setRange) == YES)
+	  if([outletSig isEqual: signature] && NSEqualRanges([methodName rangeOfString: @"set"], setRange) == YES &&
+	     [methodName isEqual: @"encodeWithCoder:"] == NO && [methodName isEqual: @"mouseDown:"] == NO)
 	    {
 	      NSRange range = NSMakeRange(3,([methodName length] - 4));
 	      NSString *outletMethod = [[methodName substringWithRange: range] lowercaseString];

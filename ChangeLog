@@ -1,3 +1,8 @@
+2005-04-16 19:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.m: Slight improvement to palette 
+	import.
+
 2005-04-16 17:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Added code in initWithDocument:
