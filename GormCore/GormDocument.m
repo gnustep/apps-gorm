@@ -2440,10 +2440,11 @@ static NSImage  *fileImage = nil;
  */
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
+  RETAIN(aConnector); // prevent it from being dealloc'd until the notification is done.
   // issue pre notification..
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName: IBWillRemoveConnectorNotification
-      object: self];
+      object: aConnector];
 
   // mark the document as changed.
   [self touch];
@@ -2451,7 +2452,8 @@ static NSImage  *fileImage = nil;
   // issue post notification..
   [connections removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
-      object: self];
+      object: aConnector];
+  RELEASE(aConnector); // NOW we can dealloc it.
 }
 
 /**

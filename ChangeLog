@@ -1,3 +1,10 @@
+2005-04-16 21:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: In removeConnector: make the 
+	IBWillRemoveConnectorNotification carry aConnector as the 
+	object, instead of the document.  The same for 
+	IBDidRemoveConnectorNotification.
+
 2005-04-16 19:29 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPalettesManager.m: Slight improvement to palette 
