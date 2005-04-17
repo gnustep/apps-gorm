@@ -1,3 +1,14 @@
+2005-04-17 12:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Added code in loadDocument: and
+	saveGormDocument: to use data from the new SubstituteClasses
+	entry in the palette.table. 
+	* GormCore/GormFilePrefsManager.m: Updated version to 0.9.9
+	* GormCore/GormPalettesManager.h: Added substituteClasses ivar.
+	* GormCore/GormPalettesManager.m: Implemented code to use
+	SubstituteClasses entry in palette.
+	* GormInfo.plist: Update version to 0.9.9
+
 2005-04-16 21:44 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: In removeConnector: make the 

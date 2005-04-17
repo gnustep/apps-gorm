@@ -43,6 +43,7 @@
   NSMutableDictionary   *importedClasses;
   NSMutableArray        *importedImages;
   NSMutableArray        *importedSounds;
+  NSMutableDictionary   *substituteClasses;
 }
 
 // methods for loading and display the palette panels
@@ -58,6 +59,7 @@
 - (NSArray *) importedImages;
 - (void) importSounds: (NSArray *)sounds withBundle: (NSBundle *) bundle;
 - (NSArray *) importedSounds;
+- (NSDictionary *) substituteClasses;
 @end
 
 #endif

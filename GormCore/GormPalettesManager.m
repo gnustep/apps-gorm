@@ -241,6 +241,10 @@ static NSImage	*dragImage = nil;
   RELEASE(panel);
   RELEASE(bundles);
   RELEASE(palettes);
+  RELEASE(importedClasses);
+  RELEASE(importedImages);
+  RELEASE(importedSounds);
+  RELEASE(substituteClasses);
   [super dealloc];
 }
 
@@ -287,11 +291,13 @@ static NSImage	*dragImage = nil;
   [panel setTitle: _(@"Palettes")];
   [panel setMinSize: [panel frame].size];
 
+  // allocate arrays and dictionaries.
   bundles = [NSMutableArray new];
   palettes = [NSMutableArray new];
   importedClasses = [NSMutableDictionary new];
   importedImages = [NSMutableArray new];
   importedSounds = [NSMutableArray new];
+  substituteClasses = [NSMutableDictionary new];
 
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasHorizontalScroller: YES];
@@ -375,6 +381,7 @@ static NSImage	*dragImage = nil;
   NSArray       *exportClasses;
   NSArray       *exportSounds;
   NSArray       *exportImages;
+  NSDictionary  *subClasses;
   IBPalette	*palette;
   NSImageCell	*cell;
   int		col;
@@ -481,6 +488,12 @@ static NSImage	*dragImage = nil;
   if(exportSounds != nil)
     {
       [self importSounds: exportSounds withBundle: bundle];
+    }
+
+  subClasses = [paletteInfo objectForKey: @"SubstituteClasses"];
+  if(subClasses != nil)
+    {
+      [substituteClasses addEntriesFromDictionary: subClasses];
     }
 
   [palette finishInstantiate];
@@ -758,5 +771,10 @@ static NSImage	*dragImage = nil;
 - (NSArray *) importedSounds
 {
   return importedSounds;
+}
+
+- (NSDictionary *) substituteClasses
+{
+  return substituteClasses;
 }
 @end

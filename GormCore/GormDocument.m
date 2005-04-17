@@ -1808,7 +1808,7 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator *en = [[nameTable allKeys] objectEnumerator];
   NSString *key = nil;
-
+  
   NSRunAlertPanel(_(@"Warning"), 
 		  _(@"You are running with 'GormRepairFileOnLoad' set to YES."),
 		  nil, nil, nil);
@@ -1894,6 +1894,10 @@ static NSImage  *fileImage = nil;
       BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
       NSMenu                    *mainMenu;
       NSString                  *ext = [aFile pathExtension];
+      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
+      NSDictionary              *substituteClasses = [palettesManager substituteClasses];
+      NSEnumerator              *en = [substituteClasses keyEnumerator];
+      NSString                  *subClassName = nil;
 
       // If someone attempts to open a .gmodel using open or in a 
       // workspace manager, open it.. otherwise open the .gorm file.
@@ -1962,6 +1966,8 @@ static NSImage  *fileImage = nil;
 	 asClassName: @"GormObjectProxy"];
       [u decodeClassName: @"GSCustomView" 
 	 asClassName: @"GormCustomView"];
+
+      /*
       [u decodeClassName: @"NSMenu" 
 	 asClassName: @"GormNSMenu"];
       [u decodeClassName: @"NSWindow" 
@@ -1978,7 +1984,15 @@ static NSImage  *fileImage = nil;
 	 asClassName: @"GormNSTableView"];
       [u decodeClassName: @"NSOutlineView" 
 	 asClassName: @"GormNSOutlineView"];
-      
+      */
+
+      while((subClassName = [en nextObject]) != nil)
+	{
+	  NSString *realClassName = [substituteClasses objectForKey: subClassName];
+	  [u decodeClassName: realClassName
+	     asClassName: subClassName];
+	}
+
       [GSClassSwapper setIsInInterfaceBuilder: YES]; // turn off custom classes.
       c = [u decodeObject];
       if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
@@ -2936,7 +2950,11 @@ static NSImage  *fileImage = nil;
   BOOL                  isDir;
   BOOL                  fileExists;
   int                   retval;
-
+  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
+  NSEnumerator          *en = [substituteClasses keyEnumerator];
+  NSString              *subClassName = nil;
+  
   if (documentPath == nil)
     {
       // if no path has been defined... define one.
@@ -2981,6 +2999,8 @@ static NSImage  *fileImage = nil;
 	    intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView"
 	    intoClassName: @"GSCustomView"];
+
+  /*
   [archiver encodeClassName: @"GormNSMenu"
   	    intoClassName: @"NSMenu"];
   [archiver encodeClassName: @"GormNSWindow"
@@ -2997,6 +3017,15 @@ static NSImage  *fileImage = nil;
 	    intoClassName: @"NSTableView"];
   [archiver encodeClassName: @"GormNSOutlineView" 
 	    intoClassName: @"NSOutlineView"];
+  */
+
+  while((subClassName = [en nextObject]) != nil)
+    {
+      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+      [archiver encodeClassName: subClassName
+		intoClassName: realClassName];
+    }
+
 
   [self _replaceObjectsWithTemplates: archiver];
 
