@@ -26,8 +26,11 @@
 
 #include <GormCore/GormControlEditor.h>
 
+@class NSTextView;
+
 @interface GormButtonEditor : GormControlEditor
 {
+  NSTextView *tempTextView;
 }
 @end
 

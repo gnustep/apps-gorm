@@ -266,12 +266,29 @@ static NSRect oldFrame;
 
 @implementation GormButtonEditor
 
+
+
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString	*name = [aNotification name];
   if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
     {
       done_editing = YES;
+    }
+  else if([name isEqual: IBWillSaveDocumentNotification] == YES)
+    {
+      done_editing = YES;
+
+      [[NSNotificationCenter defaultCenter] 
+	removeObserver: self
+	name: IBWillSaveDocumentNotification
+	object: nil];
+      
+      [tempTextView resignFirstResponder];
+      [tempTextView removeFromSuperview];
+      [tempTextView setDelegate: nil];
+
+      tempTextView = nil;
     }
 }
 
@@ -305,6 +322,11 @@ static NSRect oldFrame;
 	[[self window] flushWindow];
       }
   }
+
+  [[NSNotificationCenter defaultCenter] 
+    removeObserver: self
+    name: NSViewFrameDidChangeNotification
+    object: nil];
 }
 
 
@@ -331,9 +353,9 @@ static NSRect oldFrame;
   [editField setDrawsBackground: YES];
 
   [nc addObserver: self
-         selector: @selector(handleNotification:)
-             name: NSControlTextDidEndEditingNotification
-           object: nil];
+      selector: @selector(handleNotification:)
+      name: NSControlTextDidEndEditingNotification
+      object: nil];
 
   /* Do some modal editing */
   [editField selectText: self];
@@ -387,12 +409,15 @@ static NSRect oldFrame;
 
   [editField setEditable: wasEditable];
   [editField setDrawsBackground: didDrawBackground];
+
   [nc removeObserver: self
                 name: NSControlTextDidEndEditingNotification
               object: nil];
 
   [[editField currentEditor] resignFirstResponder];
   [self setNeedsDisplay: YES];
+
+  tempTextView = nil;
 
   return e;
 }
@@ -401,10 +426,12 @@ static NSRect oldFrame;
 {
   NSTextView *textView = [[NSTextView alloc] initWithFrame: frame];
   NSTextContainer *textContainer = [textView textContainer];
+
+  tempTextView = textView;
+
   [textContainer setContainerSize: NSMakeSize(3000, NSHeight([textView frame]))];
   [textContainer setWidthTracksTextView: NO];
   [textContainer setHeightTracksTextView: NO];
-
 
   [textView setMinSize: frame.size];
   [textView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
@@ -416,10 +443,19 @@ static NSRect oldFrame;
   [textView setHorizontallyResizable: YES];
   [textView setDelegate: self];
   [textView setPostsFrameChangedNotifications:YES];
-  [[NSNotificationCenter defaultCenter] addObserver: self
-					selector: @selector(textViewFrameChanged:)
-					name: NSViewFrameDidChangeNotification
-					object: textView];
+
+  [[NSNotificationCenter defaultCenter] 
+    addObserver: self
+    selector: @selector(textViewFrameChanged:)
+    name: NSViewFrameDidChangeNotification
+    object: textView];
+
+  [[NSNotificationCenter defaultCenter] 
+    addObserver: self
+    selector: @selector(handleNotification:)
+    name: IBWillSaveDocumentNotification
+    object: nil];
+
   oldFrame = frame;
   return textView;
 }

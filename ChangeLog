@@ -1,3 +1,14 @@
+2005-04-17 20:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomClassInspector.m: In _replaceCellClassForObject:
+	className: corrected a problem where the drawBackground flag
+	is set to NO when changing the cell type.  It is now preserved when
+	the new cell object is set.
+	* Palettes/2Controls/GormButtonEditor.h: Added ivar.
+	* Palettes/2Controls/GormButtonEditor.m: Corrects a bug reported
+	by Matt Rice where the temporary text field becomes part of 
+	the document when saving while editing a button.
+
 2005-04-17 12:06 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Added code in loadDocument: and

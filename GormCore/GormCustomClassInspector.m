@@ -125,6 +125,7 @@
     {
       NSCell *cell = [obj cell];
       NSCell *newCell = nil;
+      BOOL   drawsBackground = [object drawsBackground];
 
       // instantiate the cell...
       if([name isEqualToString: @"NSSecureTextField"])
@@ -140,7 +141,6 @@
       [newCell setFont: [cell font]];
       [newCell setEnabled: [cell isEnabled]];
       [newCell setEditable: [cell isEditable]];
-      // [newCell setRichText: [cell isRichText]];
       [newCell setImportsGraphics: [cell importsGraphics]];
       [newCell setShowsFirstResponder: [cell showsFirstResponder]];
       [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
@@ -150,7 +150,9 @@
       [newCell setSelectable: [cell isSelectable]];
       [newCell setState: [cell state]];
 
+      // set attributes of textfield.
       [object setCell: newCell];
+      [object setDrawsBackground: drawsBackground];
     }
 }
 
