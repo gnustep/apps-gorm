@@ -1,3 +1,9 @@
+2005-04-20 06:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/ControlsPalette.gorm: Corrected minor
+	problem with switch and radio buttons in the controls palette.
+	* TODO: Updated completed item.
+
 2005-04-17 20:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomClassInspector.m: In _replaceCellClassForObject:
