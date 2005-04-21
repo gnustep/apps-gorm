@@ -158,7 +158,10 @@ static BOOL currently_displaying = NO;
       // if the view window is not nil, it's a standalone view...
       if(viewWindow != nil)
 	{
-	  [viewWindow setView: _editedObject];
+	  if([viewWindow view] != _editedObject)
+	    {
+	      [viewWindow setView: _editedObject];
+	    }
 	}
 
       superview = [_editedObject superview];
@@ -181,7 +184,7 @@ static BOOL currently_displaying = NO;
 	}
       
       [self addSubview: _editedObject];
-      
+
       [_editedObject setPostsFrameChangedNotifications: YES];
       [[NSNotificationCenter defaultCenter]
 	addObserver: self

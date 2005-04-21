@@ -56,7 +56,8 @@
   NSWindow *window = [_view window];
   NSRect windowFrame = [window frame];
   
-  // if the view is uninitialized, it's new... give it size.
+  // if the view is uninitialized, 
+  // it's new... give it size.
   if(NSIsEmptyRect([_view frame]))
     {    
       NSRect newFrame = windowFrame;
@@ -65,7 +66,9 @@
       newFrame.origin.y = 20;
       newFrame.size.height -= 70;
       newFrame.size.width -= 20;
+      [_view setPostsFrameChangedNotifications: NO];
       [_view setFrame: newFrame];
+      [_view setPostsFrameChangedNotifications: YES];
     }
   else // otherwise take size from it.
     {
@@ -87,12 +90,23 @@
   NSWindow *window = [_view window];
   NSRect windowFrame = [window frame];
   NSRect newFrame = windowFrame;
+  NSRect viewFrame = [_view frame];
 
   newFrame.origin.x = 10;
   newFrame.origin.y = 20;
   newFrame.size.height -= 70;
   newFrame.size.width -= 20;
-  [_view setFrame: newFrame];
+
+  if(NSIsEmptyRect(viewFrame))
+    {
+      [_view setPostsFrameChangedNotifications: NO];
+      [_view setFrame: newFrame];
+      [_view setPostsFrameChangedNotifications: YES];
+    }
+  else
+    {
+      [_view setFrame: newFrame];
+    }
 }
 
 @end

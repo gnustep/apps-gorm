@@ -1,3 +1,8 @@
+2005-04-21 00:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewEditor.m: Fix for double "setView:" call.
+	* GormCore/GormViewWindow.m: Code cleanup.
+
 2005-04-20 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormObjectEditor.m: Added copyright information.
