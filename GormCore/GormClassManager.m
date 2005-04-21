@@ -1928,6 +1928,11 @@
     {
       return NO;
     }
+  else if([self isSuperclass: @"NSView" linkedToClass: className] || 
+	  [className isEqualToString: @"NSView"])
+    {
+      return NO;
+    }
   else if([self isSuperclass: @"NSWindow" linkedToClass: className] || 
 	  [className isEqualToString: @"NSWindow"])
     {

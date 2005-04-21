@@ -312,7 +312,7 @@ static BOOL currently_displaying = NO;
       // standalone view.
       if([anObject window] == nil)
 	{
-	  NSLog(@"#### Stand alone view: %@",_editedObject);
+	  NSDebugLog(@"#### Stand alone view: %@",_editedObject);
 	  viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
 	}
     }

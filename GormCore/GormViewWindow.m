@@ -36,7 +36,7 @@
 }
 
 - (id) initWithView: (NSView *)view;
-- (void) resize;
+- (void) initialResize;
 @end
 
 @implementation GormViewWindowDelegate
@@ -46,28 +46,53 @@
   if((self = [super init]) != nil)
     {
       _view = view;
-      [self resize];
+      [self initialResize];
     }
   return self;
 }
 
-- (void) resize
+- (void) initialResize
 {
   NSWindow *window = [_view window];
-  NSRect newFrame = [window frame];
+  NSRect windowFrame = [window frame];
   
+  // if the view is uninitialized, it's new... give it size.
+  if(NSIsEmptyRect([_view frame]))
+    {    
+      NSRect newFrame = windowFrame;
+
+      newFrame.origin.x = 10;
+      newFrame.origin.y = 20;
+      newFrame.size.height -= 70;
+      newFrame.size.width -= 20;
+      [_view setFrame: newFrame];
+    }
+  else // otherwise take size from it.
+    {
+      NSRect newFrame = [_view frame];
+
+      newFrame.origin.x = windowFrame.origin.x;
+      newFrame.origin.y = windowFrame.origin.y;
+      newFrame.size.height += 70;
+      newFrame.size.width += 20;
+
+      [window setFrame: newFrame display: YES];
+    }
+
+  [window center];
+}
+
+- (void) windowDidResize: (NSNotification *)notification
+{
+  NSWindow *window = [_view window];
+  NSRect windowFrame = [window frame];
+  NSRect newFrame = windowFrame;
+
   newFrame.origin.x = 10;
   newFrame.origin.y = 20;
   newFrame.size.height -= 70;
   newFrame.size.width -= 20;
   [_view setFrame: newFrame];
-
-  NSLog(@"Resized %@",NSStringFromRect(newFrame));
-}
-
-- (void) windowDidResize: (NSNotification *)notification
-{
-  [self resize];
 }
 
 @end
@@ -105,7 +130,6 @@
   [[self contentView] addSubview: _view];
   DESTROY(_delegate);
   [self setDelegate: [[GormViewWindowDelegate alloc] initWithView: _view]];
-  [self center];
 }
 
 - (NSView *) view
