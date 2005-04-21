@@ -1,3 +1,10 @@
+2005-04-20 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormObjectEditor.m: Added copyright information.
+	* GormLib/IBResourceManager.m: Added exception handling to prevent
+	a problem unarchiving an object from the pasteboard from crashing
+	the app.
+
 2005-04-20 21:51 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Restrict instantiation of NSView and

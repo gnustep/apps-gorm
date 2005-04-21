@@ -1,7 +1,9 @@
 /* GormObjectEditor.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * Copyright (C) 1999,2002,2003,2004,2005 Free Software Foundation, Inc.
  *
+ * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:        2002,2003,2004,2005
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
  * 

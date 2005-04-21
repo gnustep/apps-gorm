@@ -28,10 +28,11 @@
 #include <Foundation/NSArchiver.h>
 #include <Foundation/NSArray.h>
 #include <Foundation/NSEnumerator.h>
+#include <Foundation/NSException.h>
 #include <Foundation/NSMapTable.h>
 #include <Foundation/NSNotification.h> 
-#include <Foundation/NSString.h>
 #include <Foundation/NSNull.h>
+#include <Foundation/NSString.h>
 #include <AppKit/NSPasteboard.h>
 
 NSString *IBResourceManagerRegistryDidChangeNotification = @"IBResourceManagerRegistryDidChangeNotification";
@@ -152,12 +153,20 @@ static NSMapTable *_resourceManagers = NULL;
       NSData *data = [pboard dataForType: type];
       if(data != nil)
 	{
-	  id obj = [NSUnarchiver unarchiveObjectWithData: data];
-	  if(obj != nil)
+	  NS_DURING
 	    {
-	      // the object is an array of objects of this type.
-	      [self addResources: obj];
+	      id obj = [NSUnarchiver unarchiveObjectWithData: data];
+	      if(obj != nil)
+		{
+		  // the object is an array of objects of this type.
+		  [self addResources: obj];
+		}
 	    }
+	  NS_HANDLER
+	    {
+	      NSLog(@"Problem adding resource: %@",[localException reason]);
+	    }
+	  NS_ENDHANDLER;
 	}
     }
 }
