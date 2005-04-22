@@ -232,9 +232,18 @@ static NSMapTable	*docMap = 0;
     {
       dragType = GormLinkPboardType;
     }
+  else if ([pbTypes containsObject: NSFilenamesPboardType] == YES)
+    {
+      NSArray *data = [dragPb propertyListForType: NSFilenamesPboardType];
+      NSString *fileName = [data objectAtIndex: 0];
+      NSString *ext = [fileName pathExtension];
+
+      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes
+		       andFileType: ext]; 
+      dragType = nil;
+    }
   else
     {
-      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes]; 
       dragType = nil;
     }
   
@@ -289,7 +298,8 @@ static NSMapTable	*docMap = 0;
 
 - (void) _registerForAllResourceManagers
 {
-  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: GormLinkPboardType, nil];
+  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
+						     GormLinkPboardType, nil];
   NSArray *mgrs = [(GormDocument *)document resourceManagers];
   NSEnumerator *en = [mgrs objectEnumerator];
   IBResourceManager *mgr = nil;

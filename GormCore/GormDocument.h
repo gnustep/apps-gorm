@@ -105,7 +105,8 @@
 - (void) createResourceManagers;
 - (NSArray *) resourceManagers;
 - (IBResourceManager *) resourceManagerForPasteboard: (NSPasteboard *)pboard;
-- (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types; 
+- (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types 
+                                  andFileType: (NSString *)fileType;
 
 /* Managing classes */
 - (GormClassManager*) classManager;

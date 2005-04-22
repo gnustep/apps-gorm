@@ -1,3 +1,14 @@
+2005-04-22 17:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Changed signature.
+	* GormCore/GormDocument.m: Add another parameter on the new
+	method added previously.
+	* GormCore/GormObjectEditor.m: Get the ext to pass and call
+	changeToTopLevelEditorAcceptingTypes:andFileTypes: if the
+	type is NSFilenamePboardType.
+	* GormCore/GormResourceEditor.m: Get the ext to pass and call
+	changeToTopLevelEditorAcceptingTypes:andFileTypes:
+
 2005-04-22 15:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.h: Added new method.

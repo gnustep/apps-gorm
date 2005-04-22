@@ -60,6 +60,8 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
   NSPasteboard *pb = [sender draggingPasteboard];
   NSArray *pbTypes = [pb types];
   unsigned int mask = [sender draggingSourceOperationMask];
+  unsigned int oper = NSDragOperationNone;
+  NSString *ext = nil;
 
   if ((mask & handled_mask) && [pbTypes containsObject: NSFilenamesPboardType])
     {
@@ -77,25 +79,27 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
       en = [data objectEnumerator];
       while((fileName = (NSString *)[en nextObject]) != nil)
 	{
-	  NSString *ext = [fileName pathExtension];
+	  ext = [fileName pathExtension];
 	  if([types containsObject: ext] == YES)
 	    {
-	      return NSDragOperationCopy;
+	      oper = NSDragOperationCopy;
+	      break;
 	    }
 	  else
 	    {
-	      return NSDragOperationNone;
+	      oper = NSDragOperationNone;
+	      break;
 	    }
 	}
-
-      return NSDragOperationCopy;
     }
-  else
+
+  if(oper == NSDragOperationNone)
     {
-      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes]; 
+      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes 
+		       andFileType: ext]; 
     }
 
-  return NSDragOperationNone;
+  return oper;
 }
 
 - (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender

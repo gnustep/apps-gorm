@@ -813,23 +813,29 @@ static NSImage  *fileImage = nil;
 }
 
 - (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types
+				  andFileType: (NSString *)fileType
 {
   if([objectsView acceptsTypeFromArray: types])
     {
       [self changeToViewWithTag: 0];
     }
-  else if([imagesView acceptsTypeFromArray: types])
+  else if([imagesView acceptsTypeFromArray: types] &&
+	  [[imagesView fileTypes] containsObject: fileType])
     {
       [self changeToViewWithTag: 1];
     }
-  else if([soundsView acceptsTypeFromArray: types])
+  else if([soundsView acceptsTypeFromArray: types] &&
+	  [[soundsView fileTypes] containsObject: fileType])
     {
       [self changeToViewWithTag: 2];
     }
-  else if([classesView acceptsTypeFromArray: types])
+  /*
+  else if([classesView acceptsTypeFromArray: types] &&
+	  [[classesView fileTypes] containsObject: fileType])
     {
       [self changeToViewWithTag: 3];
     }
+  */
 }
 
 /**
