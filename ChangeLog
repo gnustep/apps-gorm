@@ -1,3 +1,8 @@
+2005-04-22 12:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuEditor.m: [GormMenuEditor pasteInSelection]
+	corrected problem with pasting the menu items.  
+
 2005-04-21 20:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Build the new resource manager.

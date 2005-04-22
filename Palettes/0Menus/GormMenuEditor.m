@@ -786,7 +786,7 @@ void _attachAll(NSMenu *menu, id document)
 	  [item setMixedStateImage: nil];
 	}
       [edited addItem: item];
-      [document attachObject: item toParent: [self _menu]];
+      [document attachObject: item toParent: edited];
     }
   [edited sizeToFit];
   [edited display];
