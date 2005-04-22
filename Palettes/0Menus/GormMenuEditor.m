@@ -780,13 +780,12 @@ void _attachAll(NSMenu *menu, id document)
     {
       NSString	*title = [item title];
 
-      if ([[self _menu] _ownedByPopUp])
+      if ([edited _ownedByPopUp])
 	{
 	  [item setOnStateImage: nil];
 	  [item setMixedStateImage: nil];
 	}
       [edited addItem: item];
-      [document attachObject: item toParent: edited];
     }
   [edited sizeToFit];
   [edited display];
