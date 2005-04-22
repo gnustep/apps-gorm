@@ -771,13 +771,8 @@ static NSImage  *fileImage = nil;
   [filePrefsManager setClassVersions];
 }
 
-/**
- * Change the view in the document window.
- */
-- (void) changeView: (id)sender
+- (void) changeToViewWithTag: (int)tag
 {
-  int tag = [sender tag];
-
   switch (tag)
     {
     case 0: // objects
@@ -815,6 +810,34 @@ static NSImage  *fileImage = nil;
       }
       break;
     }
+}
+
+- (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types
+{
+  if([objectsView acceptsTypeFromArray: types])
+    {
+      [self changeToViewWithTag: 0];
+    }
+  else if([imagesView acceptsTypeFromArray: types])
+    {
+      [self changeToViewWithTag: 1];
+    }
+  else if([soundsView acceptsTypeFromArray: types])
+    {
+      [self changeToViewWithTag: 2];
+    }
+  else if([classesView acceptsTypeFromArray: types])
+    {
+      [self changeToViewWithTag: 3];
+    }
+}
+
+/**
+ * Change the view in the document window.
+ */
+- (void) changeView: (id)sender
+{
+  [self changeToViewWithTag: [sender tag]];
 }
 
 /**

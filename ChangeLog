@@ -1,3 +1,15 @@
+2005-04-22 15:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Added new method.
+	* GormCore/GormDocument.m: Added implementation for
+	changeToTopLevelEditorAcceptingTypes and changeToViewWithTag:.
+	* GormCore/GormObjectEditor.m: Added code to call
+	changeToTopLevelEditorAcceptingTypes: when a given type isn't
+	accepted by this editor.
+	* GormCore/GormResourceEditor.m: Added code to call 
+	changeToTopLevelEditorAcceptingTypes: when a given type isn't
+	accepted by this editor.
+
 2005-04-22 12:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormMenuEditor.m: [GormMenuEditor pasteInSelection]

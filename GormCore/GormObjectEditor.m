@@ -117,7 +117,8 @@ static NSMapTable	*docMap = 0;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   NSArray *resourceTypes = [resourceManager resourcePasteboardTypes];
-  return ([resourceTypes firstObjectCommonWithArray: types] != nil);
+  return ([resourceTypes firstObjectCommonWithArray: types] != nil ||
+	  [types containsObject: GormLinkPboardType] == YES);
 }
 
 - (void) pasteInSelection
@@ -233,6 +234,7 @@ static NSMapTable	*docMap = 0;
     }
   else
     {
+      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes]; 
       dragType = nil;
     }
   

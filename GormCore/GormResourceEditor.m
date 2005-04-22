@@ -35,7 +35,7 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
-  return NO;
+  return [types containsObject: NSFilenamesPboardType];
 }
 
 - (NSArray *) fileTypes
@@ -58,10 +58,10 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
 - (unsigned int) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
-  NSArray *pbtypes = [pb types];
+  NSArray *pbTypes = [pb types];
   unsigned int mask = [sender draggingSourceOperationMask];
 
-  if ((mask & handled_mask) && [pbtypes containsObject: NSFilenamesPboardType])
+  if ((mask & handled_mask) && [pbTypes containsObject: NSFilenamesPboardType])
     {
       NSArray *data;
       NSEnumerator *en;
@@ -89,6 +89,10 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
 	}
 
       return NSDragOperationCopy;
+    }
+  else
+    {
+      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes]; 
     }
 
   return NSDragOperationNone;
@@ -187,7 +191,7 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
       NSButtonCell	*proto;
 
       [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	NSFilenamesPboardType, nil]];
+	NSFilenamesPboardType, GormLinkPboardType, nil]];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];
