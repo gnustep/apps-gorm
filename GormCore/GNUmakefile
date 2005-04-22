@@ -156,6 +156,7 @@ GormCore_HEADER_FILES = \
 	GormSplitViewEditor.h \
 	GormViewEditor.h \
 	GormViewKnobs.h \
+	GormViewResourceManager.h \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
@@ -202,6 +203,7 @@ GormCore_OBJC_FILES = \
 	GormSplitViewEditor.m \
 	GormViewEditor.m \
 	GormViewKnobs.m \
+	GormViewResourceManager.m \
 	GormViewSizeInspector.m \
 	GormViewWindow.m \
 	GormViewWithContentViewEditor.m \

@@ -224,7 +224,7 @@ static NSMapTable *_resourceManagers = NULL;
 
 - (NSArray *) resourcePasteboardTypes
 {
-  return [NSArray arrayWithObjects: IBObjectPboardType, IBViewPboardType, nil];
+  return [NSArray arrayWithObjects: IBObjectPboardType, nil];
 }
 
 - (NSArray *) resourcesForObjects: (NSArray *)objs;

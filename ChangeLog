@@ -1,3 +1,11 @@
+2005-04-21 20:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Build the new resource manager.
+	* GormCore/GormDocument.m: Register the new resource manager.
+	* GormCore/GormViewResourceManager.m: New resource manager for views.
+	* GormLib/IBResourceManager.m: Removed views for the main resource
+	manager.
+
 2005-04-21 00:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewEditor.m: Fix for double "setView:" call.

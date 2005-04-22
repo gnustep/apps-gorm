@@ -45,6 +45,7 @@
 #include "NSView+GormExtensions.h"
 #include "GormSound.h"
 #include "GormImage.h"
+#include "GormViewResourceManager.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -188,9 +189,10 @@ static NSImage  *fileImage = nil;
 	  fileImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
 
-      // create the resource manager...
+      // register the resource managers...
       [IBResourceManager registerResourceManagerClass: [IBResourceManager class]];
-      
+      [IBResourceManager registerResourceManagerClass: [GormViewResourceManager class]];
+
       [self setVersion: GNUSTEP_NIB_VERSION];
     }
 }
