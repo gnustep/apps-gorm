@@ -829,13 +829,11 @@ static NSImage  *fileImage = nil;
     {
       [self changeToViewWithTag: 2];
     }
-  /*
   else if([classesView acceptsTypeFromArray: types] &&
 	  [[classesView fileTypes] containsObject: fileType])
     {
       [self changeToViewWithTag: 3];
     }
-  */
 }
 
 /**

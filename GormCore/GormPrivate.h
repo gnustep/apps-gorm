@@ -82,7 +82,7 @@ extern NSString *GormResizeCellNotification;
 - (NSString*) sizeInspectorClassName;
 @end
 
-@interface GormClassEditor : GormOutlineView <IBSelectionOwners>
+@interface GormClassEditor : GormOutlineView <IBEditors, IBSelectionOwners>
 {
   GormDocument          *document;
   GormClassManager      *classManager;
@@ -101,6 +101,7 @@ extern NSString *GormResizeCellNotification;
 - (void) createSubclass;
 - (void) addAttributeToClass;
 - (void) deleteSelection;
+- (NSArray *) fileTypes;
 @end
 
 @interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
@@ -143,6 +144,7 @@ extern NSString *GormResizeCellNotification;
 
 - (NSArray *) objects;
 - (BOOL) isOpened;
+- (NSArray *) fileTypes;
 @end
 
 // private methods...
@@ -174,7 +176,6 @@ extern NSString *GormResizeCellNotification;
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (void) refreshCells;
 - (id) placeHolderWithPath: (NSString *)path;
-- (NSArray *) fileTypes;
 - (NSArray *) pbTypes;
 - (NSString *) resourceType;
 - (void) addSystemResources;

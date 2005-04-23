@@ -362,4 +362,9 @@
 {
   // does nothing.
 }
+
+- (NSArray *)fileTypes
+{
+  return nil;
+}
 @end

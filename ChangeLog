@@ -1,3 +1,14 @@
+2005-04-23 02:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Implementation of editor/dragging
+	methods.
+	* GormCore/GormDocument.m: Uncommented the section of the
+	changeToTopLevelEditorAcceptingTypes: method which switches to the
+	classes view.
+	* GormCore/GormGenericEditor.m: Added implementation for
+	fileTypes.
+	* GormCore/GormPrivate.h: Added declaration of fileTypes. 
+
 2005-04-22 17:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.h: Changed signature.

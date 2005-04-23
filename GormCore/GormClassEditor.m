@@ -49,8 +49,11 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		 alpha: 1.0 ];
       NSTableColumn  *tableColumn;
 
-      document = doc; // loose connection
+      // weak connections...
+      document = doc; 
       classManager = [doc classManager];
+
+      // set up the outline view...
       [self setDataSource: self];
       [self setDelegate: self];  
       [self setAutoresizesAllColumnsToFit: YES];
@@ -61,7 +64,8 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [self setIndentationPerLevel: 10];
       [self setAttributeOffset: 30];
       [self setRowHeight: 18];
-      [self registerForDraggedTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, nil]];
+      [self registerForDraggedTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, 
+					      GormLinkPboardType, nil]];
       [self setMenu: [(id<Gorm>)NSApp classMenu]]; 
       [self setBackgroundColor: salmonColor ];
 
@@ -95,6 +99,11 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
       // expand all of the items in the classesView...
       [self expandItem: @"NSObject"];
+
+      // register for types...
+      [self registerForDraggedTypes: [NSArray arrayWithObjects: GormLinkPboardType, 
+					      NSFilenamesPboardType, 
+					      nil]];
     }
   return self;
 }
@@ -513,6 +522,171 @@ NSString *GormClassPboardType = @"GormClassPboardType";
     }  
 }
 */
+
+/*
+ *	Dragging source protocol implementation
+ */
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
+{
+  // no image.
+}
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *pbTypes = [pb types];
+  unsigned int oper = NSDragOperationNone;
+  NSString *ext = nil;
+
+  // Get the resource manager first, if nil don't bother calling the rest...
+  if([pbTypes containsObject: NSFilenamesPboardType] == YES)
+    {
+      NSArray *types = [self fileTypes];
+      NSArray *data = [pb propertyListForType: NSFilenamesPboardType];
+      NSString *fileName = nil;
+      NSEnumerator *en = [data objectEnumerator];
+
+      while((fileName = [en nextObject]) != nil)
+	{
+	  ext = [fileName pathExtension];
+	  if([types containsObject: ext])
+	    {
+	      oper = NSDragOperationCopy;
+	      break;
+	    }
+	  else
+	    {
+	      oper = NSDragOperationNone;
+	      break;
+	    }
+	}
+    }
+
+  if(oper == NSDragOperationNone)
+    {      
+      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes 
+		       andFileType: ext];
+    }
+
+  return oper;
+}
+
+- (unsigned) draggingUpdate: (id<NSDraggingInfo>)sender
+{
+  return [self draggingEntered: sender]; 
+}
+
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{ 
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *types = [pb types];
+
+  if ([types containsObject: NSFilenamesPboardType])
+    {
+      NSArray *data;
+      NSEnumerator *en = nil;
+      NSString *fileName = nil;
+
+      data = [pb propertyListForType: NSFilenamesPboardType];
+      if(data != nil)
+	{
+	  en = [data objectEnumerator];
+	  while((fileName = [en nextObject]) != nil)
+	    {
+	      [classManager parseHeader: fileName];
+	    }
+	  return YES;
+	}
+      else
+	{
+	  return NO;
+	}
+    }
+
+  return NO;
+}
+
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  return YES;
+}
+
+// IBEditor protocol
+
+- (BOOL) acceptsTypeFromArray: (NSArray*)types
+{
+  return [types containsObject: NSFilenamesPboardType];
+}
+
+- (BOOL) activate
+{
+  return YES;
+}
+
+- (id) initWithObject: (id)anObject inDocument: (id/*<IBDocuments>*/)aDocument
+{
+  return [self initWithDocument: aDocument];
+}
+
+- (void) close
+{
+  // does nothing.
+}
+
+- (void) closeSubeditors
+{
+  // does nothing.
+}
+
+- (void) deactivate
+{
+  // does nothing.
+}
+
+- (id /*<IBDocuments>*/) document
+{
+  return document;
+}
+
+- (id) editedObject
+{
+  return selectedClass;
+}
+
+- (void) orderFront
+{
+  [[self window] orderFront: self];
+}
+
+- (id<IBEditors>) openSubeditorForObject: (id)object
+{
+  return nil;
+}
+
+- (void) resetObject: (id)anObject
+{
+  // does nothing.
+}
+
+- (BOOL) wantsSelection
+{
+  return NO;
+}
+
+- (void) validateEditing
+{
+  // does nothing.
+}
+
+- (NSWindow *) window
+{
+  return [super window];
+}
+
+- (NSArray *) fileTypes
+{
+  return [NSArray arrayWithObject: @"h"];
+}
 @end
 
 @implementation GormClassEditor (NSOutlineViewDataSource)
