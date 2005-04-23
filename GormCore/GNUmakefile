@@ -126,6 +126,7 @@ srcdir = .
 
 GormCore_HEADER_FILES = \
 	GormBoxEditor.h \
+	GormClassEditor.h \
 	GormClassInspector.h \
 	GormClassManager.h \
 	GormClassPanelController.h \
@@ -160,6 +161,7 @@ GormCore_HEADER_FILES = \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
+	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h 
@@ -209,6 +211,7 @@ GormCore_OBJC_FILES = \
 	GormViewWithContentViewEditor.m \
 	GormViewWithSubviewsEditor.m \
 	GormWindowEditor.m \
+	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
 	NSView+GormExtensions.m \

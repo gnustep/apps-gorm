@@ -194,8 +194,9 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
     {
       NSButtonCell	*proto;
 
-      [self registerForDraggedTypes: [NSArray arrayWithObjects:
-	NSFilenamesPboardType, GormLinkPboardType, nil]];
+      // register for all types.
+      [IBResourceManager registerForAllPboardTypes: self
+			 inDocument: aDocument];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];

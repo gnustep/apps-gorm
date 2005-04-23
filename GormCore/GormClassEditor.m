@@ -23,10 +23,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "GormPrivate.h"
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+#include "GormClassEditor.h"
 #include "GormClassManager.h"
 #include "GormFunctions.h"
-#include <AppKit/NSPasteboard.h>
+#include "GormDocument.h"
+#include "GormProtocol.h"
+#include "GormPrivate.h"
 
 NSString *GormClassPboardType = @"GormClassPboardType";
 
@@ -52,6 +56,8 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       // weak connections...
       document = doc; 
       classManager = [doc classManager];
+      [IBResourceManager registerForAllPboardTypes: self
+			 inDocument: document];
 
       // set up the outline view...
       [self setDataSource: self];
@@ -64,8 +70,6 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [self setIndentationPerLevel: 10];
       [self setAttributeOffset: 30];
       [self setRowHeight: 18];
-      [self registerForDraggedTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, 
-					      GormLinkPboardType, nil]];
       [self setMenu: [(id<Gorm>)NSApp classMenu]]; 
       [self setBackgroundColor: salmonColor ];
 

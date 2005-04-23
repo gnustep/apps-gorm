@@ -26,10 +26,6 @@
 #ifndef INCLUDED_GormPrivate_h
 #define INCLUDED_GormPrivate_h
 
-@class	GormDocument;
-@class	GormInspectorsManager;
-@class	GormPalettesManager;
-
 #include <InterfaceBuilder/IBApplicationAdditions.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBViewAdditions.h>
@@ -48,6 +44,10 @@ extern NSString *GormDidAddClassNotification;
 extern NSString *GormDidDeleteClassNotification;
 extern NSString *GormWillDetachObjectFromDocumentNotification;
 extern NSString *GormResizeCellNotification;
+
+@class	GormDocument;
+@class	GormInspectorsManager;
+@class	GormPalettesManager;
 
 // templates
 @interface GSNibItem (GormAdditions)
@@ -80,28 +80,6 @@ extern NSString *GormResizeCellNotification;
 - (NSString*) inspectorClassName;
 - (NSString*) connectInspectorClassName;
 - (NSString*) sizeInspectorClassName;
-@end
-
-@interface GormClassEditor : GormOutlineView <IBEditors, IBSelectionOwners>
-{
-  GormDocument          *document;
-  GormClassManager      *classManager;
-  NSString              *selectedClass;
-}
-- (GormClassEditor*) initWithDocument: (GormDocument*)doc;
-+ (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
-- (void) setSelectedClassName: (NSString*)cn;
-- (NSString *) selectedClassName;
-- (void) selectClassWithObject: (id)obj editClass: (BOOL)flag;
-- (void) selectClassWithObject: (id)obj;
-- (void) selectClass: (NSString *)className editClass: (BOOL)flag;
-- (void) selectClass: (NSString *)className;
-- (BOOL) currentSelectionIsClass;
-- (void) editClass;
-- (void) createSubclass;
-- (void) addAttributeToClass;
-- (void) deleteSelection;
-- (NSArray *) fileTypes;
 @end
 
 @interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
@@ -233,6 +211,11 @@ extern NSString *GormResizeCellNotification;
 
 @interface NSApplication (GormAdditions)
 - (BOOL) illegalClassSubstitution;
+@end
+
+@interface IBResourceManager (GormAdditions)
++ (void) registerForAllPboardTypes: (id)editor
+                        inDocument: (id)document;
 @end
 
 /*

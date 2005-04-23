@@ -296,25 +296,6 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-- (void) _registerForAllResourceManagers
-{
-  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
-						     GormLinkPboardType, nil];
-  NSArray *mgrs = [(GormDocument *)document resourceManagers];
-  NSEnumerator *en = [mgrs objectEnumerator];
-  IBResourceManager *mgr = nil;
-  
-  AUTORELEASE(allTypes);
-
-  while((mgr = [en nextObject]) != nil)
-    {
-      NSArray *pbTypes = [mgr resourcePasteboardTypes];
-      [allTypes addObjectsFromArray: pbTypes]; 
-    }
-
-  [self registerForDraggedTypes: allTypes];
-}
-
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
@@ -326,7 +307,8 @@ static NSMapTable	*docMap = 0;
     }
   else if([name isEqual: IBResourceManagerRegistryDidChangeNotification])
     {
-      [self _registerForAllResourceManagers];
+      [IBResourceManager registerForAllPboardTypes: self
+			 inDocument: document];
     }
 }
 
@@ -352,9 +334,8 @@ static NSMapTable	*docMap = 0;
 
       document = aDocument;
 
-      [self _registerForAllResourceManagers];
-      // [self registerForDraggedTypes: [NSArray arrayWithObjects:
-      //    IBObjectPboardType, GormLinkPboardType, nil]];
+      [IBResourceManager registerForAllPboardTypes: self
+			 inDocument: document];
 
       [self setAutosizesCells: NO];
       [self setCellSize: defaultCellSize()];

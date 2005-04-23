@@ -1,3 +1,18 @@
+2005-04-23 13:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added new files.
+	* GormCore/GormClassEditor.m: Changed to include new header, and 
+	use new method for registration of pboard types.
+	* GormCode/GormClassEditor.h: New file
+	* GormCore/GormDocument.m: Changed to include new header.
+	* GormCore/GormObjectEditor.m: Uses new method to register all
+	pboard types.
+	* GormCore/GormPrivate.h: Added declaration for new method.
+	* GormCore/GormPrivate.m: Added new method to register pboard types.
+	* GormCore/GormResourceEditor.m: Changed to use new method.
+	* NSCell+GormAdditions.h: Removed from GormPrivate.h
+	* NSCell+GormAdditions.m: Removed from GormPrivate.m
+	
 2005-04-23 02:50 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Implementation of editor/dragging

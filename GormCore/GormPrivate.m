@@ -51,37 +51,7 @@ static BOOL _illegalClassSubstitution = NO;
 // we had this include for grouping/ungrouping selectors
 #include "GormViewWithContentViewEditor.h"
 
-@implementation NSCell (GormAdditions)
-/*
- *  this methods is directly coming from NSCell.m
- *  The only additions is [textObject setUsesFontPanel: NO]
- *  We do this because we want to have control over the font panel changes
- */
-- (NSText *)setUpFieldEditorAttributes:(NSText *)textObject
-{
-  [textObject setUsesFontPanel: NO];
-  [textObject setTextColor: [self textColor]];
-  if (_cell.contents_is_attributed_string == NO)
-    {
-      /* TODO: Manage scrollable attribute */
-      [textObject setFont: _font];
-      [textObject setAlignment: _cell.text_align];
-    }
-  else
-    {
-      /* TODO: What do we do if we are an attributed string.  
-         Think about what happens when the user ends editing. 
-         Allows editing text attributes... Formatter. */
-    }
-  [textObject setEditable: _cell.is_editable];
-  [textObject setSelectable: _cell.is_selectable || _cell.is_editable];
-  [textObject setRichText: _cell.is_rich_text];
-  [textObject setImportsGraphics: _cell.imports_graphics];
-  [textObject setSelectedRange: NSMakeRange(0, 0)];
 
-  return textObject;
-}
-@end
 
 @implementation GSNibItem (GormAdditions)
 - initWithClassName: (NSString*)className frame: (NSRect)frame
@@ -254,6 +224,28 @@ static BOOL _illegalClassSubstitution = NO;
 - (BOOL) isInInterfaceBuilder
 {
   return _isInInterfaceBuilder;
+}
+@end
+
+@implementation IBResourceManager (GormAdditions)
++ (void) registerForAllPboardTypes: (id)editor
+			inDocument: (id)doc
+{
+  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
+						     GormLinkPboardType, nil];
+  NSArray *mgrs = [(GormDocument *)doc resourceManagers];
+  NSEnumerator *en = [mgrs objectEnumerator];
+  IBResourceManager *mgr = nil;
+  
+  AUTORELEASE(allTypes);
+
+  while((mgr = [en nextObject]) != nil)
+    {
+      NSArray *pbTypes = [mgr resourcePasteboardTypes];
+      [allTypes addObjectsFromArray: pbTypes]; 
+    }
+
+  [editor registerForDraggedTypes: allTypes];
 }
 @end
 
