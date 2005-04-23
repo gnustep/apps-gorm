@@ -25,12 +25,13 @@
 #include <AppKit/AppKit.h>
 #include <Foundation/NSUserDefaults.h>
 
-#include "GormPrivate.h"
+#include "GormGenericEditor.h"
 #include "GormViewEditor.h"
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
 #include "GormFunctions.h"
 #include "GormViewWindow.h"
+#include "GormViewKnobs.h"
 
 #include <math.h>
 #include <stdlib.h>

@@ -27,7 +27,7 @@
 #include "GormViewWithContentViewEditor.h"
 #include "GormPlacementInfo.h"
 #include "GormSplitViewEditor.h"
-
+#include "GormViewKnobs.h"
 
 @interface GormViewEditor (Private)
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame

@@ -23,6 +23,7 @@
  */
 
 #include "GormPrivate.h"
+#include "GormViewKnobs.h"
 
 @implementation	NSView (GormInspectors)
 - (NSString*) sizeInspectorClassName

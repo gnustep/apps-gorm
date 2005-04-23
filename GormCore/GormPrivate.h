@@ -82,95 +82,6 @@ extern NSString *GormResizeCellNotification;
 - (NSString*) sizeInspectorClassName;
 @end
 
-@interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
-{
-  NSMutableArray	*objects;
-  id<IBDocuments>	document;
-  id			selected;
-  NSPasteboard		*dragPb;
-  NSString		*dragType;
-  BOOL                  closed;
-  BOOL                  activated;
-  IBResourceManager     *resourceManager;
-}
-// selection methods...
-- (void) selectObjects: (NSArray*)objects;
-- (BOOL) wantsSelection;
-- (void) copySelection;
-- (void) deleteSelection;
-- (void) pasteInSelection;
-- (void) refreshCells;
-- (void) closeSubeditors;
-
-- (NSWindow*) window;
-- (void) addObject: (id)anObject;
-- (void) refreshCells;
-- (void) removeObject: (id)anObject;
-- (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id)aDocument;
-- (void) close;
-- (void) closeSubeditors;
-- (BOOL) containsObject: (id)anObject;
-- (void) copySelection;
-- (void) deleteSelection;
-- (id<IBDocuments>) document;
-- (id) editedObject;
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
-- (void) orderFront;
-- (void) pasteInSelection;
-- (NSRect) rectForObject: (id)anObject;
-
-- (NSArray *) objects;
-- (BOOL) isOpened;
-- (NSArray *) fileTypes;
-@end
-
-// private methods...
-@interface GormGenericEditor (PrivateMethods)
-- (void) groupSelectionInScrollView;
-- (void) groupSelectionInSplitView;
-- (void) groupSelectionInBox;
-- (void) ungroup;
-- (void) setEditor: (id)anEditor forDocument: (id<IBDocuments>)doc;
-- (id) changeSelection: (id)sender;
-@end
-
-@interface GormObjectEditor : GormGenericEditor 
-{
-}
-+ (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
-- (void) makeSelectionVisible: (BOOL)flag;
-- (void) resetObject: (id)anObject;
-- (void) removeAllInstancesOfClass: (NSString *)className;
-@end
-
-@interface GormResourceEditor : GormGenericEditor
-{
-}
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (void) refreshCells;
-- (id) placeHolderWithPath: (NSString *)path;
-- (NSArray *) pbTypes;
-- (NSString *) resourceType;
-- (void) addSystemResources;
-@end
-
-@interface GormSoundEditor : GormResourceEditor 
-{
-}
-+ (GormSoundEditor*) editorForDocument: (id<IBDocuments>)aDocument;
-@end
-
-@interface GormImageEditor : GormResourceEditor 
-{
-}
-+ (GormImageEditor*) editorForDocument: (id<IBDocuments>)aDocument;
-@end
-
 /*
  * NSDateFormatter and NSNumberFormatter extensions
  * for Gorm Formatters used in the Data Palette
@@ -217,15 +128,5 @@ extern NSString *GormResizeCellNotification;
 + (void) registerForAllPboardTypes: (id)editor
                         inDocument: (id)document;
 @end
-
-/*
- * Functions for drawing knobs etc.
- */
-void GormDrawKnobsForRect(NSRect aFrame);
-void GormDrawOpenKnobsForRect(NSRect aFrame);
-NSRect GormExtBoundsForRect(NSRect aFrame);
-IBKnobPosition GormKnobHitInRect(NSRect aFrame, NSPoint p);
-void GormShowFastKnobFills(void);
-void GormShowFrameWithKnob(NSRect aRect, IBKnobPosition aKnob);
 
 #endif

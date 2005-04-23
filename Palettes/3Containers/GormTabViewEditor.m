@@ -22,10 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <AppKit/AppKit.h>
-#include <GormCore/GormPrivate.h>
-#include "GormTabViewEditor.h"
 #include <InterfaceBuilder/IBObjectAdditions.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormViewKnobs.h>
+
+#include "GormTabViewEditor.h"
 
 #define _EO ((NSTabView *)_editedObject)
 

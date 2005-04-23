@@ -22,11 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include <AppKit/AppKit.h>
+
 #include "GormPrivate.h"
 #include "GormInternalViewEditor.h"
 #include "GormFontViewController.h"
-#include <InterfaceBuilder/IBObjectAdditions.h>
+
+#include "GormViewKnobs.h"
 
 @class GormEditorToParent;
 
@@ -45,9 +48,10 @@ static NSImage *horizontalImage;
 @implementation NSView (IBObjectAdditions)
 - (NSString*) editorClassName
 {
+  // using NSBox gets rid of compiler warning, should be safe for all classes. 
   if ([self superview] && 
       (([[self superview] respondsToSelector: @selector(contentView)] &&
-	[(id)[self superview] contentView] == self) 
+	[(NSBox *)[self superview] contentView] == self) 
        ||
        [[self superview] isKindOfClass: [NSTabView class]]
        || 

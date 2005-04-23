@@ -22,10 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <AppKit/NSImage.h>
+#include "GormDocument.h"
 #include "GormPrivate.h"
+#include "GormResourceEditor.h"
 #include "GormFunctions.h"
 #include "GormPalettesManager.h"
-#include <AppKit/NSImage.h>
 #include "GormResource.h"
 
 @implementation	GormResourceEditor

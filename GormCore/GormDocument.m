@@ -47,6 +47,9 @@
 #include "GormImage.h"
 #include "GormViewResourceManager.h"
 #include "GormClassEditor.h"
+#include "GormSoundEditor.h"
+#include "GormImageEditor.h"
+#include "GormObjectEditor.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end

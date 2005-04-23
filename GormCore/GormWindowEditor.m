@@ -22,11 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <InterfaceBuilder/IBViewAdditions.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
+
 #include "GormPrivate.h"
 #include "GormViewWithContentViewEditor.h"
 #include "GormInternalViewEditor.h"
-#include <InterfaceBuilder/IBViewAdditions.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
+#include "GormViewKnobs.h"
+
 #include <math.h>
 
 #define _EO ((NSWindow *)_editedObject)

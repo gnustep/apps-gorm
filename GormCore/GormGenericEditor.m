@@ -23,15 +23,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "GormPrivate.h"
+#include "GormGenericEditor.h"
 
 @implementation	GormGenericEditor
+
++ (id) editorForDocument: (id<IBDocuments>)aDocument
+{
+  // does nothing here, the subclass must define this.
+  return nil;
+}
 
 - (id) editorForDocument: (id<IBDocuments>)aDocument
 {
   return [[self class] editorForDocument: aDocument];
 }
 
++ (void) setEditor: (id)editor
+       forDocument: (id<IBDocuments>)aDocument
+{
+  // does nothing, defined by subclass.
+}
 
 - (void) setEditor: (id)editor
        forDocument: (id<IBDocuments>)aDocument

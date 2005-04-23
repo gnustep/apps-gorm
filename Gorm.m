@@ -23,6 +23,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+
+#include <GormCore/GormGenericEditor.h>
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormFontViewController.h>
 #include <GormCore/GormSetNameController.h>

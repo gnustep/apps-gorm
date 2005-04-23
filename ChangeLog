@@ -1,3 +1,34 @@
+2005-04-23 14:37 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added new files.
+	* GormCore/GormBoxEditor.m: Added new includes.
+	* GormCore/GormControlEditor.m: Added new includes
+	* GormCore/GormDocument.m: Added new includes.
+	* GormCore/GormGenericEditor.m: Added new includes.
+	* GormCore/GormImageEditor.m: Added new includes.
+	* GormCore/GormInternalViewEditor.m: 
+	* GormCore/GormMatrixEditor.m: Added new includes
+	* GormCore/GormObjectEditor.m: Added new header.
+	* GormCore/GormPrivate.h: Removed declarations.
+	* GormCore/GormResourceEditor.m: Include new header.
+	* GormCore/GormScrollViewEditor.m: Include new header.
+	* GormCore/GormSoundEditor.m: Include new header.
+	* GormCore/GormSplitViewEditor.m: Added GormViewKnobs.h
+	* GormCore/GormViewEditor.m: Added GormViewKnobs.h
+	* GormCore/GormViewSizeInspector.m: Added GormViewKnobs.h
+	* GormCore/GormViewWithContentViewEditor.m: Added GormViewKnobs.h
+	* GormCore/GormWindowEditor.m: Added GormViewKnobs.h
+	* GormCore/GormSoundEditor.h: Pulled out of GormPrivate.h
+	* GormCore/GormImageEditor.h: Pulled out of GormPrivate.h
+	* GormCore/GormResourceEditor.h: Pulled out of GormPrivate.h
+	* GormCore/GormObjectEditor.h: Pulled out of GormPrivate.h
+	* GormCore/GormGenericEditor.h: Pulled out of GormPrivate.h
+	* Gorm.m: Added new includes
+	* GormPrefs/GormPalettesPref.m: Eliminated warning.
+	* Palettes/0Menus/GormMenuEditor.m: Removed unused variable.
+	* Palettes/3Containers/GormTabViewEditor.m: Added include to
+	GormViewKnobs.h
+
 2005-04-23 13:11 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Added new files.

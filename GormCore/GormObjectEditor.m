@@ -24,10 +24,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "GormPrivate.h"
-#include "GormFunctions.h"
 #include <InterfaceBuilder/IBObjectAdditions.h>
-
+#include "GormPrivate.h"
+#include "GormObjectEditor.h"
+#include "GormFunctions.h"
+#include "GormDocument.h"
+#include "GormClassManager.h"
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.

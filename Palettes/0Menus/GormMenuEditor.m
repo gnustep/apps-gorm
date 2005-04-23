@@ -778,8 +778,6 @@ void _attachAll(NSMenu *menu, id document)
   enumerator = [items objectEnumerator];
   while ((item = [enumerator nextObject]) != nil)
     {
-      NSString	*title = [item title];
-
       if ([edited _ownedByPopUp])
 	{
 	  [item setOnStateImage: nil];

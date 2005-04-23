@@ -24,7 +24,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include <AppKit/AppKit.h>
+
 #include "GormPrivate.h"
 #include "GormImage.h"
 #include "GormViewEditor.h"
@@ -32,7 +34,7 @@
 #include "GormViewWithSubviewsEditor.h"
 #include "GormPlacementInfo.h"
 #include "GormFontViewController.h"
-#include <InterfaceBuilder/IBObjectAdditions.h>
+#include "GormViewKnobs.h"
 
 #define _EO ((NSMatrix*)_editedObject)
 

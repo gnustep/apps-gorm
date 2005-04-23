@@ -138,7 +138,9 @@ GormCore_HEADER_FILES = \
 	GormFilesOwner.h \
 	GormFontViewController.h \
 	GormFunctions.h \
+	GormGenericEditor.h \
 	GormImage.h \
+	GormImageEditor.h \
 	GormImageInspector.h \
 	GormInspectorsManager.h \
 	GormInternalViewEditor.h \
@@ -149,9 +151,11 @@ GormCore_HEADER_FILES = \
 	GormPlacementInfo.h \
 	GormPrivate.h \
 	GormResource.h \
+	GormResourceEditor.h \
 	GormScrollViewAttributesInspector.h \
 	GormSetNameController.h \
 	GormSound.h \
+	GormSoundEditor.h \
 	GormSoundInspector.h \
 	GormSoundView.h \
 	GormSplitViewEditor.h \
