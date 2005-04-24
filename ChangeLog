@@ -1,3 +1,8 @@
+2005-04-23 22:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Change in performDragOperation: to
+	bring up an alert panel if the header can't be parsed.
+
 2005-04-23 20:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Register for all types.
