@@ -231,20 +231,7 @@ static BOOL _illegalClassSubstitution = NO;
 + (void) registerForAllPboardTypes: (id)editor
 			inDocument: (id)doc
 {
-  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
-						     GormLinkPboardType, nil];
-  NSArray *mgrs = [(GormDocument *)doc resourceManagers];
-  NSEnumerator *en = [mgrs objectEnumerator];
-  IBResourceManager *mgr = nil;
-  
-  AUTORELEASE(allTypes);
-
-  while((mgr = [en nextObject]) != nil)
-    {
-      NSArray *pbTypes = [mgr resourcePasteboardTypes];
-      [allTypes addObjectsFromArray: pbTypes]; 
-    }
-
+  NSArray *allTypes = [doc allManagedPboardTypes];
   [editor registerForDraggedTypes: allTypes];
 }
 @end

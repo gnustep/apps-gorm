@@ -107,6 +107,8 @@
 - (IBResourceManager *) resourceManagerForPasteboard: (NSPasteboard *)pboard;
 - (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types 
                                   andFileType: (NSString *)fileType;
+- (void) changeToViewWithTag: (int)tag;
+- (NSArray *) allManagedPboardTypes;
 
 /* Managing classes */
 - (GormClassManager*) classManager;

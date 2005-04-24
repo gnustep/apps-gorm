@@ -103,11 +103,6 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
       // expand all of the items in the classesView...
       [self expandItem: @"NSObject"];
-
-      // register for types...
-      [self registerForDraggedTypes: [NSArray arrayWithObjects: GormLinkPboardType, 
-					      NSFilenamesPboardType, 
-					      nil]];
     }
   return self;
 }

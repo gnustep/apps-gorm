@@ -1,3 +1,12 @@
+2005-04-23 20:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Register for all types.
+	* GormCore/GormDocument.h: Added new method allManagedPbTypes.
+	* GormCore/GormDocument.m: Implemented new method.
+	* GormCore/GormObjectEditor.m: Register for all types.
+	* GormCore/GormPrivate.m: Added call to new method which returns the
+	pb types for all resource managers.
+
 2005-04-23 14:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Added new files.

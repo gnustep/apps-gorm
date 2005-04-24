@@ -819,7 +819,8 @@ static NSImage  *fileImage = nil;
 - (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types
 				  andFileType: (NSString *)fileType
 {
-  if([objectsView acceptsTypeFromArray: types])
+  if([objectsView acceptsTypeFromArray: types] &&
+     fileType == nil)
     {
       [self changeToViewWithTag: 0];
     }
@@ -3766,6 +3767,26 @@ static NSImage  *fileImage = nil;
     }
 
   return result;
+}
+
+- (NSArray *) allManagedPboardTypes
+{
+  NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
+						     GormLinkPboardType, 
+						     nil];
+  NSArray *mgrs = [self resourceManagers];
+  NSEnumerator *en = [mgrs objectEnumerator];
+  IBResourceManager *mgr = nil;
+  
+  AUTORELEASE(allTypes);
+
+  while((mgr = [en nextObject]) != nil)
+    {
+      NSArray *pbTypes = [mgr resourcePasteboardTypes];
+      [allTypes addObjectsFromArray: pbTypes]; 
+    }
+  
+  return allTypes;
 }
 @end
 
