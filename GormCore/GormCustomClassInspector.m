@@ -78,6 +78,39 @@
   ASSIGN(_parentClassName, [anobject className]);
 }
 
+- (NSMutableArray *) _generateClassList
+{
+  NSMutableArray *classes = [NSMutableArray arrayWithObject: _parentClassName];
+  NSArray *subclasses = [_classManager allSubclassesOf: _parentClassName];
+  NSEnumerator *en = [subclasses objectEnumerator];
+  NSString *className = nil;
+  Class parentClass = NSClassFromString(_parentClassName);
+
+  while((className = [en nextObject]) != nil)
+    {
+      if([_classManager isCustomClass: className] == YES)
+	{
+	  [classes addObject: className];
+	}
+      else if(parentClass != nil)
+	{
+	  Class cls = NSClassFromString(className);
+	  if(cls != nil)
+	    {
+	      if([cls respondsToSelector: @selector(canSubstituteForClass:)])
+		{
+		  if([cls canSubstituteForClass: parentClass])
+		    {
+		      [classes addObject: className];
+		    }
+		}
+	    }
+	}
+    }
+  
+  return classes;
+}
+
 - (void) setObject: (id)anObject
 {
   if(anObject != nil)
@@ -97,8 +130,9 @@
       
       // get a list of all of the classes allowed and the class to be shown
       // and select the appropriate row in the inspector...
-      classes = [NSMutableArray arrayWithObject: _parentClassName];
-      [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
+      classes = [self _generateClassList];
+      // [NSMutableArray arrayWithObject: _parentClassName];
+      // [classes addObjectsFromArray: [_classManager allCustomSubclassesOf: _parentClassName]];
       
       _rowToSelect = [classes indexOfObject: _currentSelectionClassName];
       _rowToSelect = (_rowToSelect != NSNotFound)?_rowToSelect:0;
@@ -200,10 +234,11 @@ createRowsForColumn: (int)column
       NSBrowserCell	*cell = nil;
       int		i = 0;
       
-      classes = [NSMutableArray arrayWithObject: _parentClassName];
+      classes = [self _generateClassList]; 
+      // [NSMutableArray arrayWithObject: _parentClassName];
       // get a list of all of the classes allowed and the class to be shown.
-      [classes addObjectsFromArray:
-	[_classManager allCustomSubclassesOf: _parentClassName]];
+      //[classes addObjectsFromArray:
+      // [_classManager allCustomSubclassesOf: _parentClassName]];
       
       // enumerate through the classes...
       e = [classes objectEnumerator];

@@ -997,15 +997,18 @@
 {
   NSMutableArray *array = [NSMutableArray array];
 
-  [self allSubclassesOf: superClass
-     referenceClassList: customClasses
-	      intoArray: array];
+  if(superClass != nil)
+    {
+      [self allSubclassesOf: superClass
+	    referenceClassList: customClasses
+	    intoArray: array];
+    }
 
   // add known allowable subclasses to the list.
-  if ([superClass isEqualToString: @"NSTextField"])
-    {
-      [array addObject: @"NSSecureTextField"];
-    }
+  // if ([superClass isEqualToString: @"NSTextField"])
+  //  {
+  //    [array addObject: @"NSSecureTextField"];
+  //  }
 
   return array;
 }

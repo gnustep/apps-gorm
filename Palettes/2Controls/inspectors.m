@@ -30,16 +30,27 @@
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
+/* This is so that the NSSecureTextField will show in the custom class inspector */
+@implementation NSSecureTextField (IBObjectAdditions)
++ (BOOL) canSubstituteForClass: (Class)origClass
+{
+  if(origClass == [NSTextField class])
+    {
+      return YES;
+    }
+
+  return NO;
+}
+@end
+
 /*----------------------------------------------------------------------------
  * NSBox
  */
 @implementation	NSBox (IBObjectAdditions)
-
 - (NSString*) inspectorClassName
 {
   return @"GormBoxAttributesInspector";
 }
-
 @end
 
 @interface GormBoxAttributesInspector : IBInspector

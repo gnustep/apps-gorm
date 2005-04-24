@@ -51,8 +51,6 @@ static BOOL _illegalClassSubstitution = NO;
 // we had this include for grouping/ungrouping selectors
 #include "GormViewWithContentViewEditor.h"
 
-
-
 @implementation GSNibItem (GormAdditions)
 - initWithClassName: (NSString*)className frame: (NSRect)frame
 {
@@ -84,6 +82,11 @@ static BOOL _illegalClassSubstitution = NO;
     {
       _illegalClassSubstitution = YES;
     }
+}
+
++ (BOOL) canSubstituteForClass: (Class)origClass
+{
+  return NO;
 }
 @end
 

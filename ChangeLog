@@ -1,3 +1,15 @@
+2005-04-24 11:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Remove special case for 
+	NSSecureTextField.
+	* GormCore/GormCustomClassInspector.m: Added new private
+	method to call canSubstituteForClass: when appropriate to
+	determine if the class should appear in the class list.
+	* GormCore/GormPrivate.m: Added default implementation of
+	canSubstituteForClass: on NSObject to return NO.
+	* Palettes/2Controls/inspectors.m: Added implementation of
+	canSubstituteForClass: to NSSecureTextField.
+
 2005-04-23 22:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Change in performDragOperation: to
