@@ -2672,10 +2672,10 @@ static NSImage  *fileImage = nil;
  */
 - (void) setName: (NSString*)aName forObject: (id)object
 {
-  id		       oldObject;
-  NSString	      *oldName;
+  id		       oldObject = nil;
+  NSString	      *oldName = nil;
   NSMutableDictionary *cc = [classManager customClassMap];
-  NSString            *className;
+  NSString            *className = nil;
 
   if (object == nil)
     {
@@ -2721,7 +2721,7 @@ static NSImage  *fileImage = nil;
 	  return; /* Already named ... nothing to do */
 	}
     }
-  else
+  else // user supplied a name...
     {
       oldObject = [nameTable objectForKey: aName];
       if (oldObject != nil)
@@ -2746,6 +2746,7 @@ static NSImage  *fileImage = nil;
   NSMapInsert(objToName, (void*)object, (void*)aName);
   if (oldName != nil)
     {
+      RETAIN(oldName); // hold on to this temporarily...
       [nameTable removeObjectForKey: oldName];
     }
   if ([objectsView containsObject: object] == YES)
@@ -2763,6 +2764,12 @@ static NSImage  *fileImage = nil;
 	  [cc removeObjectForKey: oldName];
 	  [cc setObject: className forKey: aName]; 
 	}
+    }
+
+  // release oldName, if we get to this point.
+  if(oldName != nil)
+    {
+      RELEASE(oldName);
     }
 }
 

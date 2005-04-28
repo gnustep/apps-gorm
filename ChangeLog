@@ -1,3 +1,8 @@
+2005-04-28 08:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Correct problem in setName:forObject:
+	which was causing a segfault.
+
 2005-04-24 11:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Remove special case for 
