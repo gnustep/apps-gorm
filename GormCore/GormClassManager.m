@@ -115,30 +115,41 @@
 	  NSDictionary *importedClasses = [palettesManager importedClasses];
 	  NSEnumerator *en = [importedClasses objectEnumerator];
 	  NSDictionary *description = nil;
-
+   
 	  // load the classes, initialize the custom class array and map..
-	  [self loadFromFile: path];
-	  customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
-	  customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
-	  categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
-
-	  // add the imported classes to the class information list...
-	  [classInformation addEntriesFromDictionary: importedClasses];
-
-	  // add all of the actions to the FirstResponder
-	  while((description = [en nextObject]) != nil)
+	  if([self loadFromFile: path])
 	    {
-	      NSArray *actions = [description objectForKey: @"Actions"];
-	      NSEnumerator *aen = [actions objectEnumerator];
-	      NSString *actionName = nil;
+	      NSMutableDictionary *classDict = [classInformation objectForKey: @"FirstResponder"];
+	      NSMutableArray *firstResponderActions = [classDict objectForKey: @"Actions"];
+	      NSMutableArray *firstResponderAllActions = [classDict objectForKey: @"AllActions"];
 
-	      // add the actions to the first responder...
-	      while((actionName = [aen nextObject]) != nil)
+	      customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	      customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
+	      categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	      
+	      // add the imported classes to the class information list...
+	      [classInformation addEntriesFromDictionary: importedClasses];
+	      
+	      // add all of the actions to the FirstResponder
+	      while((description = [en nextObject]) != nil)
 		{
-		  [self addAction: actionName forClassNamed: @"FirstResponder"];
+		  NSArray *actions = [description objectForKey: @"Actions"];
+		  NSEnumerator *aen = [actions objectEnumerator];
+		  NSString *actionName = nil;
+		  
+		  // add the actions to the first responder...
+		  while((actionName = [aen nextObject]) != nil)
+		    {
+		      if(![firstResponderActions containsObject: actionName])
+			{
+			  [firstResponderActions addObject: [actionName copy]];
+			}
+		    }
 		}
+	      
+	      // incorporate the added actions into the list and sort.
+	      [self allActionsForClassNamed: @"FirstResponder"]; 
 	    }
-	  
 	}
     }
   
@@ -705,7 +716,7 @@
 	  NSArray       *extraActions = [info objectForKey: @"ExtraActions"];
 	  NSArray	*superActions;
 
-	  if (superName == nil)
+	  if (superName == nil || [className isEqual: @"FirstResponder"])
 	    {
 	      superActions = nil;
 	    }
