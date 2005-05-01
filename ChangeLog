@@ -1,3 +1,10 @@
+2005-05-01 01:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Added code in initWithDocument:
+	which properly adds the methods to FirstResponder.   Previously these
+	methods were being added in "ExtraActions" which was not correct.
+	Methods which are added in the palette should be added to "Actions".
+	
 2005-04-28 08:50 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Correct problem in setName:forObject:
