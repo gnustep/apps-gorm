@@ -70,9 +70,7 @@ NSNotificationCenter *nc = nil;
 - (void) collapseClass: (NSString *)className
 {
   NSDebugLog(@"%@",className);
-  [classesView reset];
-  [classesView expandItem: className];
-  [classesView collapseItem: className collapseChildren: YES];
+  [classesView resetObject: className];
 }
 
 - (void) reloadClasses

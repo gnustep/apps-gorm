@@ -46,32 +46,57 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   self = [super init];
   if (self != nil)
     {
+      NSRect			scrollRect = {{0, 0}, {340, 188}};
+      NSRect			mainRect = {{20, 0}, {320, 188}};
       NSColor *salmonColor = 
 	[NSColor colorWithCalibratedRed: 0.850980 
 		 green: 0.737255
 		 blue: 0.576471
 		 alpha: 1.0 ];
       NSTableColumn  *tableColumn;
+      
+      // eliminate the border and title.
+      [self setBorderType: NSNoBorder];
+      [self setTitlePosition: NSNoTitle];
+
+      // set up the scroll view.
+      scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+      [scrollView setHasVerticalScroller: YES];
+      [scrollView setHasHorizontalScroller: NO];
+      [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setBorderType: NSBezelBorder];
+	  
+      // allocate the outline view.
+      outlineView = [[GormOutlineView alloc] init];
+      [outlineView setFrame: mainRect];
+      [outlineView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+      [scrollView setDocumentView: outlineView];
+      RELEASE(outlineView);
+
+      // add outline view to self;
+      [self setContentView: scrollView];
+      [self setContentViewMargins: NSZeroSize];
+      [self sizeToFit];
+      RELEASE(scrollView);
 
       // weak connections...
       document = doc; 
       classManager = [doc classManager];
-      [IBResourceManager registerForAllPboardTypes: self
-			 inDocument: document];
 
       // set up the outline view...
-      [self setDataSource: self];
-      [self setDelegate: self];  
-      [self setAutoresizesAllColumnsToFit: YES];
-      [self setAllowsColumnResizing: NO];
-      [self setDrawsGrid: NO];
-      [self setIndentationMarkerFollowsCell: YES];
-      [self setAutoresizesOutlineColumn: YES];
-      [self setIndentationPerLevel: 10];
-      [self setAttributeOffset: 30];
-      [self setRowHeight: 18];
-      [self setMenu: [(id<Gorm>)NSApp classMenu]]; 
-      [self setBackgroundColor: salmonColor ];
+      [outlineView setDataSource: self];
+      [outlineView setDelegate: self];
+  
+      [outlineView setAutoresizesAllColumnsToFit: YES];
+      [outlineView setAllowsColumnResizing: NO];
+      [outlineView setDrawsGrid: NO];
+      [outlineView setIndentationMarkerFollowsCell: YES];
+      [outlineView setAutoresizesOutlineColumn: YES];
+      [outlineView setIndentationPerLevel: 10];
+      [outlineView setAttributeOffset: 30];
+      [outlineView setRowHeight: 18];
+      [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
+      [outlineView setBackgroundColor: salmonColor ];
 
       // add the table columns...
       tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
@@ -79,8 +104,8 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [tableColumn setMinWidth: 190];
       [tableColumn setResizable: YES];
       [tableColumn setEditable: YES];
-      [self addTableColumn: tableColumn];     
-      [self setOutlineTableColumn: tableColumn];
+      [outlineView addTableColumn: tableColumn];     
+      [outlineView setOutlineTableColumn: tableColumn];
       RELEASE(tableColumn);
       
       tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"outlets"];
@@ -88,8 +113,8 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
-      [self addTableColumn: tableColumn];
-      [self setOutletColumn: tableColumn];
+      [outlineView addTableColumn: tableColumn];
+      [outlineView setOutletColumn: tableColumn];
       RELEASE(tableColumn);
       
       tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"actions"];
@@ -97,12 +122,17 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [tableColumn setWidth: 50]; 
       [tableColumn setResizable: NO];
       [tableColumn setEditable: NO];
-      [self addTableColumn: tableColumn];
-      [self setActionColumn: tableColumn];
+      [outlineView addTableColumn: tableColumn];
+      [outlineView setActionColumn: tableColumn];
       RELEASE(tableColumn); 
 
       // expand all of the items in the classesView...
-      [self expandItem: @"NSObject"];
+      [outlineView expandItem: @"NSObject"];
+
+      // register for types...
+      [IBResourceManager registerForAllPboardTypes: self
+			 inDocument: document];
+
     }
   return self;
 }
@@ -125,12 +155,12 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (NSString *)selectedClassName
 {
-  int row = [self selectedRow];
-  id  className = [self itemAtRow: row];
+  int row = [outlineView selectedRow];
+  id  className = [outlineView itemAtRow: row];
 
   if ([className isKindOfClass: [GormOutletActionHolder class]])
     {
-      className = [self itemBeingEdited];
+      className = [outlineView itemBeingEdited];
     }
 
   return className;
@@ -150,7 +180,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   int		row = 0;
 
   // abort, if we're editing a class.
-  if([self isEditing])
+  if([outlineView isEditing])
     {
       return;
     }
@@ -175,15 +205,15 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   // open the items...
   while ((currentClass = [en nextObject]) != nil)
     {
-      [self expandItem: currentClass];
+      [outlineView expandItem: currentClass];
     }
   
   // select the item...
-  row = [self rowForItem: className];
+  row = [outlineView rowForItem: className];
   if (row != NSNotFound)
     {
-      [self selectRow: row byExtendingSelection: NO];
-      [self scrollRowToVisible: row];
+      [outlineView selectRow: row byExtendingSelection: NO];
+      [outlineView scrollRowToVisible: row];
     }
 
   if(flag)
@@ -229,12 +259,12 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (BOOL) currentSelectionIsClass
 {  
-  int i = [self selectedRow];
+  int i = [outlineView selectedRow];
   BOOL result = NO;
   
-  if (i >= 0 && i <= ([self numberOfRows] - 1))
+  if (i >= 0 && i <= ([outlineView numberOfRows] - 1))
     {
-      id object = [self itemAtRow: i];
+      id object = [outlineView itemAtRow: i];
       if([object isKindOfClass: [NSString class]])
 	{
 	  result = YES;
@@ -245,7 +275,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) editClass
 {
-  int	row = [self selectedRow];
+  int	row = [outlineView selectedRow];
 
   if (row >= 0)
     {
@@ -256,7 +286,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) createSubclass
 {
-  if (![self isEditing])
+  if (![outlineView isEditing])
     {
       NSString *newClassName;
       NSString *itemSelected = [self selectedClassName];
@@ -269,11 +299,11 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 	      
 	      newClassName = [classManager addClassWithSuperClassName:
 					     itemSelected];
-	      [self reloadData];
-	      [self expandItem: itemSelected];
-	      i = [self rowForItem: newClassName]; 
-	      [self selectRow: i byExtendingSelection: NO];
-	      [self scrollRowToVisible: i];
+	      [outlineView reloadData];
+	      [outlineView expandItem: itemSelected];
+	      i = [outlineView rowForItem: newClassName]; 
+	      [outlineView selectRow: i byExtendingSelection: NO];
+	      [outlineView scrollRowToVisible: i];
 	    }
 	  else
 	    {
@@ -289,7 +319,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 //--- IBSelectionOwners protocol ---
 - (unsigned) selectionCount
 {
-  return ([self selectedRow] == -1)?0:1;
+  return ([outlineView selectedRow] == -1)?0:1;
 }
 
 - (NSArray*) selection
@@ -329,7 +359,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 - (void) deleteSelection
 {
   id anitem;
-  int i = [self selectedRow];
+  int i = [outlineView selectedRow];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   
   // if no selection, then return.
@@ -338,10 +368,10 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       return;
     }
 
-  anitem = [self itemAtRow: i];
+  anitem = [outlineView itemAtRow: i];
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
-      id itemBeingEdited = [self itemBeingEdited];
+      id itemBeingEdited = [outlineView itemBeingEdited];
       NSString *name = [anitem getName];
 
       // if the class being edited is a custom class or a category, 
@@ -349,7 +379,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       if ([classManager isCustomClass: itemBeingEdited] ||
 	  [classManager isAction: name onCategoryForClassNamed: itemBeingEdited])
 	{
-	  if ([self editType] == Actions)
+	  if ([outlineView editType] == Actions)
 	    {
 	      // if this action is an action on the class, not it's superclass
 	      // allow the deletion...
@@ -363,13 +393,13 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		    {
 		      [classManager removeAction: name
 				    fromClassNamed: itemBeingEdited];
-		      [self removeItemAtRow: i];
+		      [outlineView removeItemAtRow: i];
 		      [nc postNotificationName: GormDidModifyClassNotification
 			  object: classManager];
 		    }
 		}
 	    }
-	  else if ([self editType] == Outlets)
+	  else if ([outlineView editType] == Outlets)
 	    {
 	      // if this outlet is an outlet on the class, not it's superclass
 	      // allow the deletion...
@@ -383,7 +413,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		    {
 		      [classManager removeOutlet: name
 				    fromClassNamed: itemBeingEdited];
-		      [self removeItemAtRow: i];
+		      [outlineView removeItemAtRow: i];
 		      [nc postNotificationName: GormDidModifyClassNotification
 			  object: classManager];
 		    }
@@ -406,7 +436,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 		  [self copySelection];
 		  [document removeAllInstancesOfClass: anitem];
 		  [classManager removeClassNamed: anitem];
-		  [self reloadData];
+		  [outlineView reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
 		      object: classManager];
 		  ASSIGN(selectedClass, nil); // don't keep the class we're pointing to.
@@ -490,37 +520,32 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) addAttributeToClass
 {
-  if (_isEditing == YES)
+  id edited = [outlineView itemBeingEdited];
+  if ([outlineView isEditing] == YES)
     {
-      if (_edittype == Actions)
+      if ([outlineView editType] == Actions)
 	{
-	  [self _addNewActionToObject: _itemBeingEdited];
+	  [outlineView _addNewActionToObject: edited];
 	}
-      if (_edittype == Outlets)
+      if ([outlineView editType] == Outlets)
 	{
-	  if([classManager isCustomClass: _itemBeingEdited])
+	  if([classManager isCustomClass: edited])
 	    {
-	      [self _addNewOutletToObject: _itemBeingEdited];
+	      [outlineView _addNewOutletToObject: edited];
 	    }
 	}
     }
 }
 
-/*
-- (void) handleNotification: (NSNotification *)notification
+- (void) reloadData
 {
-  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
-  [selectionBox setContentView: classesScrollView];
-  
-  // if something is selected, in the object view.
-  // show the equivalent class in the classes view.
-  if ([selection count] > 0)
-    {
-      id obj = [selection objectAtIndex: 0];
-      [classesView selectClassWithObject: obj];
-    }  
+  [outlineView reloadData];
 }
-*/
+
+- (BOOL) isEditing
+{
+  return [outlineView isEditing];
+}
 
 /*
  *	Dragging source protocol implementation
@@ -683,7 +708,9 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (void) resetObject: (id)anObject
 {
-  // does nothing.
+  [outlineView reset];
+  [outlineView expandItem: anObject];
+  [outlineView collapseItem: anObject collapseChildren: YES];
 }
 
 - (BOOL) wantsSelection
@@ -935,12 +962,12 @@ numberOfChildrenOfItem: (id)item
 }
 
 // Delegate methods
-- (BOOL)  outlineView: (NSOutlineView *)outlineView
+- (BOOL)  outlineView: (NSOutlineView *)outline
 shouldEditTableColumn: (NSTableColumn *)tableColumn
 		 item: (id)item
 {
   BOOL result = NO;
-  GormOutlineView *gov = (GormOutlineView *)outlineView;
+  GormOutlineView *gov = (GormOutlineView *)outline;
 
   NSDebugLog(@"in the delegate %@", [tableColumn identifier]);
   if (tableColumn == [gov outlineTableColumn])

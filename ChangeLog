@@ -1,3 +1,16 @@
+2005-05-04 05:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.h: Changed class inheritance added
+	some ivars.
+	* GormCore/GormClassEditor.m: Made the editor indenpendent of the
+	outlineview.  It now is an NSBox subclass.  Preparing to
+	implement NSBrowser view of class hierarchy.
+	* GormCore/GormClassInspector.m: Changed document extensions
+	to call resetObject: on the editor instead of reset.
+	* GormCore/GormClassManager.m: Removed uneeded variable.
+	* GormCore/GormDocument.m: Changed to use new editor view.
+	* GormCore/GormPrivate.h: Added include.
+
 2005-05-01 01:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Added code in initWithDocument:

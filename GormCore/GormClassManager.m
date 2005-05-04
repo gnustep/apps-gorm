@@ -121,7 +121,6 @@
 	    {
 	      NSMutableDictionary *classDict = [classInformation objectForKey: @"FirstResponder"];
 	      NSMutableArray *firstResponderActions = [classDict objectForKey: @"Actions"];
-	      NSMutableArray *firstResponderAllActions = [classDict objectForKey: @"AllActions"];
 
 	      customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
 	      customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 

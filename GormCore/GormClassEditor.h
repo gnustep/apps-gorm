@@ -26,17 +26,21 @@
 #define INCLUDED_GormClassEditor_h
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include <AppKit/NSBox.h>
 #include <GormCore/GormOutlineView.h>
 
 @class NSString, NSArray, GormDocument, GormClassManager;
 
 extern NSString *GormClassPboardType;
 
-@interface GormClassEditor : GormOutlineView <IBEditors, IBSelectionOwners>
+@interface GormClassEditor : NSBox <IBEditors, IBSelectionOwners>
 {
   GormDocument          *document;
   GormClassManager      *classManager;
   NSString              *selectedClass;
+  NSScrollView          *scrollView;
+  GormOutlineView       *outlineView;
+  NSBrowser             *browserView;
 }
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
@@ -52,6 +56,9 @@ extern NSString *GormClassPboardType;
 - (void) addAttributeToClass;
 - (void) deleteSelection;
 - (NSArray *) fileTypes;
+
+- (void) reloadData;
+- (BOOL) isEditing;
 @end
 
 #endif

@@ -36,6 +36,7 @@
 #include <GormCore/GormPalettesManager.h>
 #include <GormCore/GormOutlineView.h>
 #include <GormCore/GormProtocol.h>
+#include <GormCore/GormClassEditor.h>
 
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;

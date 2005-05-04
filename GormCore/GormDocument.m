@@ -331,18 +331,18 @@ static NSImage  *fileImage = nil;
 	  RELEASE(soundsView);
 
 	  // classes...
-	  classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  [classesScrollView setHasVerticalScroller: YES];
-	  [classesScrollView setHasHorizontalScroller: NO];
-	  [classesScrollView setAutoresizingMask:
-			       NSViewHeightSizable|NSViewWidthSizable];
-	  [classesScrollView setBorderType: NSBezelBorder];
+	  // classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  // [classesScrollView setHasVerticalScroller: YES];
+	  // [classesScrollView setHasHorizontalScroller: NO];
+	  // [classesScrollView setAutoresizingMask:
+	  //		       NSViewHeightSizable|NSViewWidthSizable];
+	  // [classesScrollView setBorderType: NSBezelBorder];
 	  
 	  mainRect.origin = NSMakePoint(0,0);
 	  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
 	  [classesView setFrame: mainRect];
-	  [classesScrollView setDocumentView: classesView];
-	  RELEASE(classesView);	  
+	  // [classesScrollView setDocumentView: classesView];
+	  // RELEASE(classesView);	  
 	  
 	  /*
 	   * Set the objects view as the initial view the user's see on startup.
@@ -797,7 +797,7 @@ static NSImage  *fileImage = nil;
     case 3: // classes
       {
 	NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
-	[selectionBox setContentView: classesScrollView];
+	[selectionBox setContentView: classesView];
 	
 	// if something is selected, in the object view.
 	// show the equivalent class in the classes view.
@@ -1081,7 +1081,7 @@ static NSImage  *fileImage = nil;
   // editor views...
   RELEASE(documentPath);
   RELEASE(scrollView);
-  RELEASE(classesScrollView);
+  RELEASE(classesView);
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
 
@@ -1684,7 +1684,7 @@ static NSImage  *fileImage = nil;
 
       // go to the class which was just loaded in the classes view...
       [classesView reloadData];
-      [selectionBox setContentView: classesScrollView];
+      [selectionBox setContentView: classesView];
 
       if(newClass != nil)
 	{
@@ -3815,7 +3815,7 @@ static NSImage  *fileImage = nil;
 
 - (BOOL) isEditingClasses
 {
-  return ([selectionBox contentView] == classesScrollView);
+  return ([selectionBox contentView] == classesView);
 }
 @end
 
