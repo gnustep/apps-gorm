@@ -1,3 +1,9 @@
+2005-05-07 06:35 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GModelDecoder.m: Code to remove uneeded
+	classes from the model during processing.
+	* GormCore/GormClassEditor.m: Beginnings of class browser code.
+
 2005-05-04 05:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.h: Changed class inheritance added

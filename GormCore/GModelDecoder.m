@@ -353,55 +353,72 @@ static BOOL gormFileOwnerDecoded;
 			 inPath: (NSString *)path
 {
   NSMutableDictionary *customMap = nil;
-  NSEnumerator *en = [model objectEnumerator];
-  id obj;
+  NSEnumerator *en = [model keyEnumerator];
+  NSMutableArray *deleted = [NSMutableArray array];
+  id key;
 
   NSLog(@"Processing model...");
-  while((obj = [en nextObject]) != nil)
+  while((key = [en nextObject]) != nil)
     {
-      if([obj isKindOfClass: [NSDictionary class]])
+      NSDictionary *obj = [model objectForKey: key];
+      if(obj != nil)
 	{
-	  NSString *objIsa = [(NSMutableDictionary *)obj objectForKey: @"isa"];
-	  Class cls = NSClassFromString(objIsa);
-	  
-	  // NSLog(@"isa = %@",objIsa);
-	  if([classManager isKnownClass: objIsa] == NO &&
-	     [objIsa isEqual: @"IMControlConnector"] == NO &&
-	     [objIsa isEqual: @"IMOutletConnector"] == NO &&
-	     [objIsa isEqual: @"IMCustomObject"] == NO &&
-	     [objIsa isEqual: @"IMCustomView"] == NO &&
-	     cls == nil)
+	  if([obj isKindOfClass: [NSDictionary class]])
 	    {
-	      NSString *superClass;
+	      NSString *objIsa = [(NSMutableDictionary *)obj objectForKey: @"isa"];
+	      Class cls = NSClassFromString(objIsa);
 	      
-	      NSLog(@"%@ is not a known class",objIsa);
-	      [self defineClass: objIsa inFile: path];
-	      superClass = [classManager superClassNameForClassNamed: objIsa];
-	      [(NSMutableDictionary *)obj setObject: superClass forKey: @"isa"];
-
-	      // guess at name which will be given in the nameTable...
-	      /*
-	      if([superClass isEqual: @"NSMenu"])
-		name = @"GormNSMenu";
-	      else if([superClass isEqual: @"NSWindow"])
-		name = @"GormNSWindow";
-	      else if([superClass isEqual: @"NSPanel"])
-		name = @"GormNSPanel";
-	      else if([superClass isEqual: @"NSBrowser"])
-		name = @"GormNSBrowser";
-	      else if([superClass isEqual: @"NSTableView"])
-		name = @"GormNSTableView";
-	      else if([superClass isEqual: @"NSOutlineView"])
-		name = @"GormNSOutlineView";
-	      else if([superClass isEqual: @"NSPopUpButton"])
-		name = @"GormNSPopUpButton";
-	      else if([superClass isEqual: @"NSPopUpButtonCell"]) 
-		name = @"GormNSPopUpButtonCell";
-	      else if([superClass isEqual: @"NSOutlineView"])
-		name = @"GormNSOutlineView";
-	      */
+	      if(cls == nil)
+		{
+		  // Remove this class.  It's not defined on GNUstep and it's generally
+		  // useless.
+		  if([objIsa isEqual: @"NSNextStepFrame"])
+		    {
+		      NSString *subviewsKey = [obj objectForKey: @"subviews"];
+		      NSDictionary *subviews = [model objectForKey: subviewsKey];
+		      NSArray *elements = [subviews objectForKey: @"elements"];
+		      NSEnumerator *subViewEnum = [elements objectEnumerator];
+		      NSString *svkey = nil;
+		      
+		      while((svkey = [subViewEnum nextObject]) != nil)
+			{
+			  [deleted addObject: svkey];
+			}
+		      
+		      [deleted addObject: key];
+		      [deleted addObject: subviewsKey];
+		      continue;
+		    }
+		  
+		  if([objIsa isEqual: @"NSImageCacheView"])
+		    {
+		      // this is eliminated in the NSNextStepFrame section above.
+		      continue;
+		    }
+ 
+		  if([classManager isKnownClass: objIsa] == NO &&
+		     [objIsa isEqual: @"IMControlConnector"] == NO &&
+		     [objIsa isEqual: @"IMOutletConnector"] == NO &&
+		     [objIsa isEqual: @"IMCustomObject"] == NO &&
+		     [objIsa isEqual: @"IMCustomView"] == NO)
+		    {
+		      NSString *superClass;
+		      
+		      NSLog(@"%@ is not a known class",objIsa);
+		      [self defineClass: objIsa inFile: path];
+		      superClass = [classManager superClassNameForClassNamed: objIsa];
+		      [(NSMutableDictionary *)obj setObject: superClass forKey: @"isa"];
+		    }
+		}
 	    }
 	}
+    }
+
+  // remove objects marked for deletion the model.
+  en = [deleted objectEnumerator];
+  while((key = [en nextObject]) != nil)
+    {
+      [model removeObjectForKey: key];
     }
   
   return customMap;

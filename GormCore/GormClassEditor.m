@@ -129,6 +129,14 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       // expand all of the items in the classesView...
       [outlineView expandItem: @"NSObject"];
 
+      // allocate the NSBrowser view.
+      /*
+      browserView = [[NSBrowser alloc] initWithFrame: mainRect];
+      [browserView setDelegate: self];
+      [browserView loadColumnZero];
+      [browserView selectRow: 0 inColumn: 0];
+      */
+
       // register for types...
       [IBResourceManager registerForAllPboardTypes: self
 			 inDocument: document];
@@ -1025,3 +1033,12 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 }
 
 @end // end of data source
+
+@implementation GormClassEditor (NSBrowserDelegate)
+- (void) browser: (NSBrowser *)browser createRowsForColumn: (int)column inMatrix: (NSMatrix *)matrix
+{
+}
+
+
+@end
+
