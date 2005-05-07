@@ -1029,6 +1029,7 @@
     }
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
+      selectionOwner = nil;
       [documents removeObjectIdenticalTo: obj];
     }
 }
@@ -1153,16 +1154,15 @@
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
   SEL		action = [item action];
-  GormClassManager *cm = [active classManager];
-  NSArray	*s = [selectionOwner selection];
+  GormClassManager *cm = nil; 
+  NSArray	*s = nil;
 
-  // temporarily disabling this functionality....
-  /*
-  if (sel_eq(action, @selector(loadClass:)))
+  // if we have an active document...
+  if(active != nil)
     {
-      return NO;
+      cm = [active classManager];
+      s = [selectionOwner selection];
     }
-  */
 
   if (sel_eq(action, @selector(close:))
     || sel_eq(action, @selector(miniaturize:))
