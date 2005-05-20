@@ -1,3 +1,7 @@
+2005-05-19 11:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 0.9.10
+	
 2005-05-07 06:50 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: In handleNotification: reset selection owner to 
