@@ -60,6 +60,7 @@ static NSString *INTTYPE=@"ClassViewType";
   {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *arcType = [defaults stringForKey: ARCTYPE];
+    NSString *intType = [defaults stringForKey: INTTYPE];
  
     [inspectorButton setState: [defaults integerForKey: SHOWINSPECTOR]];
     [palettesButton setState: [defaults integerForKey: SHOWPALETTES]];
@@ -85,13 +86,13 @@ static NSString *INTTYPE=@"ClassViewType";
 	[archiveMatrix setState: NSOnState atRow: 2 column: 0];
       }
 
-    // set the archive matrix...
-    if([arcType isEqual: @"Outline"])
+    // set the interface matrix...
+    if([intType isEqual: @"Outline"])
       {
 	[interfaceMatrix setState: NSOnState atRow: 0 column: 0];
 	[interfaceMatrix setState: NSOffState atRow: 1 column: 0];
       }
-    else if([arcType isEqual: @"Browser"])
+    else if([intType isEqual: @"Browser"])
       {
 	[interfaceMatrix setState: NSOffState atRow: 0 column: 0];
 	[interfaceMatrix setState: NSOnState atRow: 1 column: 0];

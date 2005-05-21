@@ -156,9 +156,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	  object: nil];
       
       // switch...
-      [self setContentViewMargins: NSZeroSize];
       [self switchView];
-      [self sizeToFit];
 
       // register for types...
       [IBResourceManager registerForAllPboardTypes: self
@@ -176,13 +174,30 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 - (void) switchView
 {
   NSString *viewType = [[NSUserDefaults standardUserDefaults] stringForKey: @"ClassViewType"];
+
+  [self setContentViewMargins: NSZeroSize];
   if([viewType isEqual: @"Outline"] || viewType == nil)
     {
+      NSRect rect = [[self superview] frame];
+      // NSRect old = rect;
+
+      // reset the origin...
+      // rect.origin.x = 0;
+      // rect.origin.y = 0;
+
       [self setContentView: scrollView];
-    }
+      // [scrollView setFrame: old];
+      // [outlineView setFrame: rect];
+      
+      [self sizeToFit];
+      [[self superview] setFrame: rect];
+      // [scrollView setFrame: rect];
+
+     }
   else if([viewType isEqual: @"Browser"])
     {
       [self setContentView: browserView];
+      [self sizeToFit];
     }
 }
 
@@ -200,6 +215,10 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 
 - (void) dealloc
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  [nc removeObserver: self];
+  RELEASE(scrollView);
+  RELEASE(browserView);
   RELEASE(selectedClass);
   [super dealloc];
 }

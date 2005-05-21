@@ -347,6 +347,7 @@ static NSImage  *fileImage = nil;
 	  /*
 	   * Set the objects view as the initial view the user's see on startup.
 	   */
+	  // [selectionBox setContentViewMargins: NSZeroSize];
 	  [selectionBox setContentView: scrollView];
 	  
 	  /*
