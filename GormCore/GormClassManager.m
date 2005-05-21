@@ -185,8 +185,9 @@
 
 - (NSString *) addClassWithSuperClassName: (NSString*)name
 {
-  if ([name isEqualToString: @"NSObject"]
-    || [classInformation objectForKey: name] != nil)
+  if (([name isEqualToString: @"NSObject"]
+       || [classInformation objectForKey: name] != nil)
+      && [name isEqual: @"FirstResponder"] == NO)
     {
       NSMutableDictionary	*classInfo;
       NSMutableArray		*outlets;
@@ -979,12 +980,14 @@
   while ((object = [cen nextObject]))
     {
       NSDictionary *dictForClass = [classInformation objectForKey: object];
-      if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+      NSString *superClassName = [dictForClass objectForKey: @"Super"];
+      if ([superClassName isEqual: superclass] || 
+	  (superClassName == nil && superclass == nil))
 	{
 	  [array addObject: object];
 	  [self allSubclassesOf: object
-	     referenceClassList: classList
-		      intoArray: array];
+		referenceClassList: classList
+		intoArray: array];
 	}
     }
 }
@@ -993,12 +996,9 @@
 {
   NSMutableArray *array = [NSMutableArray array];
   
-  if(superClass != nil)
-    {
-      [self allSubclassesOf: superClass
-	    referenceClassList: [classInformation allKeys]
-	    intoArray: array];
-    }
+  [self allSubclassesOf: superClass
+	referenceClassList: [classInformation allKeys]
+	intoArray: array];
 
   return array;
 }
@@ -1006,19 +1006,10 @@
 - (NSArray *) allCustomSubclassesOf: (NSString *)superClass
 {
   NSMutableArray *array = [NSMutableArray array];
-
-  if(superClass != nil)
-    {
-      [self allSubclassesOf: superClass
-	    referenceClassList: customClasses
-	    intoArray: array];
-    }
-
-  // add known allowable subclasses to the list.
-  // if ([superClass isEqualToString: @"NSTextField"])
-  //  {
-  //    [array addObject: @"NSSecureTextField"];
-  //  }
+  
+  [self allSubclassesOf: superClass
+	referenceClassList: customClasses
+	intoArray: array];
 
   return array;
 }
@@ -1052,8 +1043,9 @@
   while ((object = [cen nextObject]))
     {
       NSDictionary *dictForClass = [classInformation objectForKey: object];
-
-      if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
+      NSString *superClassName = [dictForClass objectForKey: @"Super"];
+      if ([superClassName isEqual: superclass] || 
+	  (superClassName == nil && superclass == nil))
 	{  
 	  [subclasses addObject: object];
 	}
@@ -1852,7 +1844,10 @@
       if(dict != nil)
 	{
 	  className = [dict objectForKey: @"Super"];
-	  [classes insertObject: className atIndex: 0];
+	  if(className != nil)
+	    {
+	      [classes insertObject: className atIndex: 0];
+	    }
 	}
       else
 	{

@@ -33,10 +33,17 @@
 #include "GormPrivate.h"
 
 NSString *GormClassPboardType = @"GormClassPboardType";
+NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNotification";
 
 @interface GormOutlineView (PrivateMethods)
 - (void) _addNewActionToObject: (id)item;
 - (void) _addNewOutletToObject: (id)item;
+@end
+
+@interface GormClassEditor (PrivateMethods)
+- (void) browserClick: (id)sender;
+- (void) switchView;
+- (void) handleNotification: (NSNotification *)notification;
 @end
 
 @implementation	GormClassEditor
@@ -46,6 +53,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   self = [super init];
   if (self != nil)
     {
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSRect			scrollRect = {{0, 0}, {340, 188}};
       NSRect			mainRect = {{20, 0}, {320, 188}};
       NSColor *salmonColor = 
@@ -73,11 +81,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [scrollView setDocumentView: outlineView];
       RELEASE(outlineView);
 
-      // add outline view to self;
-      [self setContentView: scrollView];
-      [self setContentViewMargins: NSZeroSize];
-      [self sizeToFit];
-      RELEASE(scrollView);
+      // RELEASE(scrollView);
 
       // weak connections...
       document = doc; 
@@ -96,7 +100,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [outlineView setAttributeOffset: 30];
       [outlineView setRowHeight: 18];
       [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
-      [outlineView setBackgroundColor: salmonColor ];
+      [outlineView setBackgroundColor: salmonColor];
 
       // add the table columns...
       tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
@@ -130,12 +134,31 @@ NSString *GormClassPboardType = @"GormClassPboardType";
       [outlineView expandItem: @"NSObject"];
 
       // allocate the NSBrowser view.
-      /*
       browserView = [[NSBrowser alloc] initWithFrame: mainRect];
-      [browserView setDelegate: self];
+      [browserView setRefusesFirstResponder:YES];
+      [browserView setAutoresizingMask: NSViewWidthSizable | NSViewMinYMargin];
+      [browserView setTitled:NO];
+      [browserView setMaxVisibleColumns:3];
+      [browserView setSeparatesColumns:NO];
+      [browserView setAllowsMultipleSelection:YES];
+      [browserView setDelegate:self];
+      [browserView setTarget:self];
+      [browserView setAction: @selector(browserClick:)];
+      // [browserView setDoubleAction: nil]; // @selector(doubleClick:)];
+      [browserView setRefusesFirstResponder:YES];
       [browserView loadColumnZero];
-      [browserView selectRow: 0 inColumn: 0];
-      */
+
+      
+      // observe certain notifications...
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: GormSwitchViewPreferencesNotification
+	  object: nil];
+      
+      // switch...
+      [self setContentViewMargins: NSZeroSize];
+      [self switchView];
+      [self sizeToFit];
 
       // register for types...
       [IBResourceManager registerForAllPboardTypes: self
@@ -148,6 +171,31 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc
 {
   return AUTORELEASE([(GormClassEditor *)[self alloc] initWithDocument: doc]);
+}
+
+- (void) switchView
+{
+  NSString *viewType = [[NSUserDefaults standardUserDefaults] stringForKey: @"ClassViewType"];
+  if([viewType isEqual: @"Outline"] || viewType == nil)
+    {
+      [self setContentView: scrollView];
+    }
+  else if([viewType isEqual: @"Browser"])
+    {
+      [self setContentView: browserView];
+    }
+}
+
+- (void) handleNotification: (NSNotification *)notification
+{
+  [self switchView];
+}
+
+- (void) browserClick: (id)sender
+{
+  NSString *className = [[sender selectedCell] stringValue];
+  ASSIGN(selectedClass, className);
+  [document setSelectionFromEditor: (id)self];
 }
 
 - (void) dealloc
@@ -163,12 +211,21 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (NSString *)selectedClassName
 {
-  int row = [outlineView selectedRow];
-  id  className = [outlineView itemAtRow: row];
+  id className = nil;
 
-  if ([className isKindOfClass: [GormOutletActionHolder class]])
+  if([self contentView] == scrollView)
     {
-      className = [outlineView itemBeingEdited];
+      int row = [outlineView selectedRow];
+      className = [outlineView itemAtRow: row];
+      
+      if ([className isKindOfClass: [GormOutletActionHolder class]])
+	{
+	  className = [outlineView itemBeingEdited];
+	}
+    }
+  else if([self contentView] == browserView)
+    {
+      className = [[browserView selectedCell] stringValue];
     }
 
   return className;
@@ -183,9 +240,10 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 - (void) selectClass: (NSString *)className editClass: (BOOL)flag
 {
   NSString	*currentClass = nil;
-  NSArray	*classes;
+  NSArray	*classes, *subclasses;
   NSEnumerator	*en;
   int		row = 0;
+  int           col = 0;
 
   // abort, if we're editing a class.
   if([outlineView isEditing])
@@ -209,20 +267,33 @@ NSString *GormClassPboardType = @"GormClassPboardType";
   
   classes = [classManager allSuperClassesOf: className]; 
   en = [classes objectEnumerator];
-
   // open the items...
   while ((currentClass = [en nextObject]) != nil)
     {
       [outlineView expandItem: currentClass];
     }
   
-  // select the item...
+  // select the item in the outline view...
   row = [outlineView rowForItem: className];
   if (row != NSNotFound)
     {
       [outlineView selectRow: row byExtendingSelection: NO];
       [outlineView scrollRowToVisible: row];
     }
+
+  // select class in browser...
+  subclasses = [classManager subClassesOf: [classManager superClassNameForClassNamed: className]];
+  row = [subclasses indexOfObject: className];
+  col = [classes count];
+  if(col > 0)
+    {
+      [browserView reloadColumn: col];
+      if(col > 1)
+	{
+	  [browserView reloadColumn: col - 1]; 
+	}
+    }
+  [browserView selectRow: row inColumn: col];
 
   if(flag)
     {
@@ -267,17 +338,26 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 
 - (BOOL) currentSelectionIsClass
 {  
-  int i = [outlineView selectedRow];
   BOOL result = NO;
-  
-  if (i >= 0 && i <= ([outlineView numberOfRows] - 1))
+
+  if([self contentView] == scrollView)
     {
-      id object = [outlineView itemAtRow: i];
-      if([object isKindOfClass: [NSString class]])
+      int i = [outlineView selectedRow];
+      
+      if (i >= 0 && i <= ([outlineView numberOfRows] - 1))
 	{
-	  result = YES;
+	  id object = [outlineView itemAtRow: i];
+	  if([object isKindOfClass: [NSString class]])
+	    {
+	      result = YES;
+	    }
 	}
     }
+  else if([self contentView] == browserView)
+    {
+      result = YES;
+    }
+
   return result;
 }
 
@@ -296,22 +376,29 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 {
   if (![outlineView isEditing])
     {
-      NSString *newClassName;
       NSString *itemSelected = [self selectedClassName];
       
       if(itemSelected != nil)
 	{
-	  if(![itemSelected isEqualToString: @"FirstResponder"])
+	  NSString *newClassName;
+
+	  newClassName = [classManager addClassWithSuperClassName:
+					 itemSelected];
+	  if(newClassName != nil)
 	    {
 	      int i = 0;
-	      
-	      newClassName = [classManager addClassWithSuperClassName:
-					     itemSelected];
-	      [outlineView reloadData];
-	      [outlineView expandItem: itemSelected];
-	      i = [outlineView rowForItem: newClassName]; 
-	      [outlineView selectRow: i byExtendingSelection: NO];
-	      [outlineView scrollRowToVisible: i];
+	      if([self contentView] == scrollView)
+		{
+		  [outlineView reloadData];
+		  [outlineView expandItem: itemSelected];
+		  i = [outlineView rowForItem: newClassName]; 
+		  [outlineView selectRow: i byExtendingSelection: NO];
+		  [outlineView scrollRowToVisible: i];
+		}
+	      else if([self contentView] == browserView)
+		{
+		  [self selectClass: newClassName editClass: NO];
+		}
 	    }
 	  else
 	    {
@@ -548,6 +635,7 @@ NSString *GormClassPboardType = @"GormClassPboardType";
 - (void) reloadData
 {
   [outlineView reloadData];
+  // [browserView loadColumnZero];
 }
 
 - (BOOL) isEditing
@@ -887,17 +975,8 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (int) outlineView: (NSOutlineView *)anOutlineView 
 numberOfChildrenOfItem: (id)item
 {
-  if (item == nil) 
-    {
-      return 1;
-    }
-  else
-    {
-      NSArray *subclasses = [classManager subClassesOf: item];
-      return [subclasses count];
-    }
-
-  return 0;
+  NSArray *subclasses = [classManager subClassesOf: item];
+  return [subclasses count];
 }
 
 - (BOOL) outlineView: (NSOutlineView *)anOutlineView 
@@ -918,17 +997,8 @@ numberOfChildrenOfItem: (id)item
 	     child: (int)index
 	    ofItem: (id)item
 {
-  if (item == nil && index == 0)
-    {
-      return @"NSObject";
-    }
-  else
-    {
-      NSArray *subclasses = [classManager subClassesOf: item];
-      return [subclasses objectAtIndex: index];
-    }
-
-  return nil;
+  NSArray *subclasses = [classManager subClassesOf: item];
+  return [subclasses objectAtIndex: index];
 }
 
 // GormOutlineView data source methods...
@@ -1035,10 +1105,41 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 @end // end of data source
 
 @implementation GormClassEditor (NSBrowserDelegate)
-- (void) browser: (NSBrowser *)browser createRowsForColumn: (int)column inMatrix: (NSMatrix *)matrix
-{
-}
 
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(int)column inMatrix:(NSMatrix *)matrix
+{
+  NSArray      *classes = nil;
+  NSEnumerator *en = nil;
+  NSString     *className = nil;
+  int          i = 0;
+
+  if (sender != browserView || !matrix || ![matrix isKindOfClass:[NSMatrix class]])
+    {
+      return;
+    }
+
+  if(column == 0)
+    {
+      classes = [classManager subClassesOf: nil];
+    }
+  else
+    {
+      className = [[sender selectedCellInColumn: column - 1] stringValue];
+      classes = [classManager subClassesOf: className];
+    }
+
+  en = [classes objectEnumerator];
+  for(i = 0; ((className = [en nextObject]) != nil); i++) 
+    {
+      id              cell;
+      NSArray         *sub = [classManager subClassesOf: className];
+      
+      [matrix insertRow:i];
+      cell = [matrix cellAtRow:i column:0];
+      [cell setStringValue: className];
+      [cell setLeaf: ([sub count] == 0)];
+    }
+}
 
 @end
 

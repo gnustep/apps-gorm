@@ -1,3 +1,21 @@
+2005-05-21 11:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPrefGeneral.gorm: Added oulets/actions for
+	matrix to choose outline or browser view.
+	* GormCore/GormClassEditor.h: Added forward declaration for
+	NSBrowser.
+	* GormCore/GormClassEditor.m: Added new private methods and
+	also added code to existing methods to handle the browser view.
+	* GormCore/GormClassManager.m: Removed artificial returning of
+	NSObject in subClassesOf: and allSubclassesOf: so that it's now
+	possible to all root classes when querying for "nil".
+	* GormCore/GormFilePrefsManager.m: Updated version.
+	* GormInfo.plist: Updated version.
+	* GormPrefs/GormGeneralPref.h: Added interfaceMatrix and classesAction:
+	* GormPrefs/GormGeneralPref.m: Implemented classesAction.
+	* Resources/Defaults.plist: Added new default so that the user's 
+	preference for the classes view is stored.
+
 2005-05-19 23:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.9.10

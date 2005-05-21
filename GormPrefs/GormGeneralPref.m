@@ -1,18 +1,44 @@
+/* GormGeneralPref.m
+ *
+ * Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+ *
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	2003, 2004, 2005
+ * 
+ * This file is part of GNUstep.
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #include "GormGeneralPref.h"
 
 #include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSNotification.h>
 
 #include <AppKit/NSButtonCell.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSMatrix.h>
 
+#include <GormCore/GormClassEditor.h>
 
 static NSString *SHOWPALETTES=@"ShowPalettes";
 static NSString *SHOWINSPECTOR=@"ShowInspectors";
 static NSString *BACKUPFILE=@"BackupFile";
 static NSString *ARCTYPE=@"ArchiveType";
-
+static NSString *INTTYPE=@"ClassViewType";
 
 @implementation GormGeneralPref
 
@@ -38,8 +64,8 @@ static NSString *ARCTYPE=@"ArchiveType";
     [inspectorButton setState: [defaults integerForKey: SHOWINSPECTOR]];
     [palettesButton setState: [defaults integerForKey: SHOWPALETTES]];
     [backupButton setState: [defaults integerForKey: BACKUPFILE]];
-
     
+    // set the archive matrix...
     if([arcType isEqual: @"Typed"])
       {
 	[archiveMatrix setState: NSOnState atRow: 0 column: 0];
@@ -59,6 +85,17 @@ static NSString *ARCTYPE=@"ArchiveType";
 	[archiveMatrix setState: NSOnState atRow: 2 column: 0];
       }
 
+    // set the archive matrix...
+    if([arcType isEqual: @"Outline"])
+      {
+	[interfaceMatrix setState: NSOnState atRow: 0 column: 0];
+	[interfaceMatrix setState: NSOffState atRow: 1 column: 0];
+      }
+    else if([arcType isEqual: @"Browser"])
+      {
+	[interfaceMatrix setState: NSOffState atRow: 0 column: 0];
+	[interfaceMatrix setState: NSOnState atRow: 1 column: 0];
+      }
   }
 
   return self;
@@ -133,6 +170,32 @@ static NSString *ARCTYPE=@"ArchiveType";
 	{
 	  [defaults setObject: @"Both" forKey: ARCTYPE];
 	}
+      [defaults synchronize];
+    }
+}
+
+- (void) classesAction: (id)sender
+{
+  if (sender != interfaceMatrix) 
+    return;
+  else
+    {
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+ 
+      if([[interfaceMatrix cellAtRow: 0 column: 0] state] == NSOnState)
+	{
+	  [defaults setObject: @"Outline" forKey: INTTYPE];
+	}
+      else if([[interfaceMatrix cellAtRow: 1 column: 0] state] == NSOnState)
+	{
+	  [defaults setObject: @"Browser" forKey: INTTYPE];
+	}
+
+      // let the world know it's changed.
+      [nc postNotificationName: GormSwitchViewPreferencesNotification
+	  object: nil];
+
       [defaults synchronize];
     }
 }

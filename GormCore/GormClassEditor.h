@@ -29,9 +29,10 @@
 #include <AppKit/NSBox.h>
 #include <GormCore/GormOutlineView.h>
 
-@class NSString, NSArray, GormDocument, GormClassManager;
+@class NSString, NSArray, GormDocument, GormClassManager, NSBrowser;
 
 extern NSString *GormClassPboardType;
+extern NSString *GormSwitchViewPreferencesNotification;
 
 @interface GormClassEditor : NSBox <IBEditors, IBSelectionOwners>
 {

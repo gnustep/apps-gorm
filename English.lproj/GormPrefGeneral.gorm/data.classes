@@ -2,8 +2,9 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "orderFrontFontPanel:",
-	    "archiveAction:"
+	    "archiveAction:",
+	    "classesAction:",
+	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
     };
@@ -12,14 +13,16 @@
 	    "palettesAction:",
 	    "inspectorAction:",
 	    "backupAction:",
-	    "archiveAction:"
+	    "archiveAction:",
+	    "classesAction:"
 	);
 	Outlets = (
 	    window,
 	    palettesButton,
 	    inspectorButton,
 	    backupButton,
-	    archiveMatrix
+	    archiveMatrix,
+	    interfaceMatrix
 	);
 	Super = NSObject;
     };

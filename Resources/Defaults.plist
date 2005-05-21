@@ -9,6 +9,7 @@
 	4Data.palette
     );
     CellSizeWidth = 72;
+    ClassViewType = Outline;
     GuideColor = {
 	alpha = 1;
 	blue = 0;
