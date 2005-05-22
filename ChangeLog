@@ -1,3 +1,8 @@
+2005-05-22 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Correction for outline view
+	resize issues in switchView.
+
 2005-05-21 13:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormPrefGeneral.gorm: Make the top switch off. 

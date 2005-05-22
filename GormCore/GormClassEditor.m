@@ -155,6 +155,10 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	  name: GormSwitchViewPreferencesNotification
 	  object: nil];
       
+      // kludge to prevent it from having resize issues.
+      [self setContentView: scrollView];
+      [self sizeToFit];
+
       // switch...
       [self switchView];
 
@@ -179,20 +183,9 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   if([viewType isEqual: @"Outline"] || viewType == nil)
     {
       NSRect rect = [[self superview] frame];
-      // NSRect old = rect;
-
-      // reset the origin...
-      // rect.origin.x = 0;
-      // rect.origin.y = 0;
-
       [self setContentView: scrollView];
-      // [scrollView setFrame: old];
-      // [outlineView setFrame: rect];
-      
       [self sizeToFit];
       [[self superview] setFrame: rect];
-      // [scrollView setFrame: rect];
-
      }
   else if([viewType isEqual: @"Browser"])
     {
