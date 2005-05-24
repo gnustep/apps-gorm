@@ -68,4 +68,6 @@
 - (void) _refreshView;
 - (void) handleNotification: (NSNotification *)notification;
 - (void) changeClassName: (id)sender;
+- (void) selectAction: (id)sender;
+- (void) selectOutlet: (id)sender;
 @end
