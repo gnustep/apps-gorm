@@ -2,12 +2,14 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "addOutlet:",
+	    "clickOnClass:",
+	    "selectOutlet:",
 	    "orderFrontFontPanel:",
 	    "removeOutlet:",
-	    "addOutlet:",
-	    "selectClass:",
 	    "searchForClass:",
-	    "clickOnClass:"
+	    "selectAction:",
+	    "selectClass:"
 	);
 	Super = NSObject;
     };
@@ -21,7 +23,9 @@
 	    "selectClass:",
 	    "searchForClass:",
 	    "clickOnClass:",
-	    "changeClassName:"
+	    "changeClassName:",
+	    "selectOutlet:",
+	    "selectAction:"
 	);
 	Outlets = (
 	    classField,

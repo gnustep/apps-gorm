@@ -1,3 +1,11 @@
+2005-05-24 00:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormClassInspector.gorm: Added link to
+	invoke selectAction: when an action is selected, also added link
+	to invoke selectOutlet: when an outlet is selected.
+	* GormCore/GormClassInspector.m: Addition of two new actions
+	selectAction: and selectOutlet:
+
 2005-05-22 00:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Correction for outline view

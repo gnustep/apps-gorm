@@ -309,6 +309,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   id searchCell = [search cell];
   BOOL isEditable = [classManager isCustomClass: [self _currentClass]]; 
   BOOL isFirstResponder = [[self _currentClass] isEqualToString: @"FirstResponder"];
+
   NSArray *list = [classManager allClassNames];
   NSString *superClass = [classManager parentOfClass: [self _currentClass]];
   int index = [list indexOfObject: superClass];
@@ -317,14 +318,16 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [outletTable reloadData];
   [actionTable reloadData];
   [parentClass reloadData];
+  [outletTable deselectAll: self];
+  [actionTable deselectAll: self];
 
   // activate for actions...
-  [addActionCell setEnabled: YES]; //isEditable];
-  [removeActionCell setEnabled: YES]; //isEditable];
+  [addActionCell setEnabled: YES]; 
+  [removeActionCell setEnabled: NO]; // YES]; 
 
   // activate for outlet...
   [addOutletCell setEnabled: (isEditable && !isFirstResponder)];
-  [removeOutletCell setEnabled: (isEditable && !isFirstResponder)];
+  [removeOutletCell setEnabled: NO]; // (isEditable && !isFirstResponder)];
 
   // activate select class...
   [selectClassCell setEnabled: (isEditable && !isFirstResponder)];
@@ -585,6 +588,36 @@ objectValueForTableColumn: (NSTableColumn *)tc
       [document reloadClasses];
       [document selectClass: newName];
       [super ok: sender];
+    }
+}
+
+- (void) selectAction: (id)sender
+{
+  int row = [sender selectedRow];
+  NSArray *actions = [classManager allActionsForClassNamed: currentClass];
+  if(row <= [actions count])
+    {
+      BOOL isCustom = [classManager isCustomClass: currentClass]; 
+      id cell = [removeAction cell];
+      NSString *action = [actions objectAtIndex: row];
+      BOOL isAction = [classManager isAction: action ofClass: currentClass];
+      BOOL isActionOnCategory = [classManager isAction: action onCategoryForClassNamed: currentClass];
+      [cell setEnabled: ((isCustom && isAction) || isActionOnCategory)];
+    }
+}
+
+- (void) selectOutlet: (id)sender
+{
+  int row = [sender selectedRow];
+  NSArray *outlets = [classManager allOutletsForClassNamed: currentClass];
+  if(row <= [outlets count])
+    {
+      BOOL isCustom = [classManager isCustomClass: currentClass]; 
+      BOOL isFirstResponder = [currentClass isEqualToString: @"FirstResponder"];
+      id cell = [removeOutlet cell];
+      NSString *outlet = [outlets objectAtIndex: row];
+      BOOL isOutlet = [classManager isOutlet: outlet ofClass: currentClass];
+      [cell setEnabled: (isOutlet && isCustom && !isFirstResponder)];
     }
 }
 
