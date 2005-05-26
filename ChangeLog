@@ -1,3 +1,15 @@
+2005-05-25 23:09 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile
+	* GNUmakefile.postamble
+	* GNUmakefile.preamble
+	* Gorm.m
+	* main.m: Change address of FSF.
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Remove "wants to
+	be color".
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Added window
+	autoposition section and max size section to .gorm file.
+
 2005-05-24 00:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassInspector.gorm: Added link to
