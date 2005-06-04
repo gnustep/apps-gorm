@@ -119,6 +119,7 @@ NSImage	*mVLine = nil;
 	    }
 	}
 
+      // set the tags...
       [top setTag: NSViewMaxYMargin];  
       [bottom setTag: NSViewMinYMargin];
       [right setTag: NSViewMaxXMargin];

@@ -1,12 +1,24 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "setAutoposition:"
+	);
+	Super = NSObject;
+    };
     GormWindowSizeInspector = {
 	Actions = (
+	    "setAutoposition:"
 	);
 	Outlets = (
 	    minForm,
 	    sizeForm,
-	    window
+	    window,
+	    bottom,
+	    left,
+	    maxForm,
+	    right,
+	    top
 	);
 	Super = IBInspector;
     };

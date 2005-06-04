@@ -23,6 +23,7 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+#include <GNUstepGUI/GSNibTemplates.h>
 #include <InterfaceBuilder/IBPalette.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBApplicationAdditions.h>
@@ -356,8 +357,6 @@ NSwindow inspector
   if ([anObject hasDynamicDepthLimit])
     [optionMatrix selectCellAtRow: 5 column: 0];
   
-  // FIXME: wants to be color comes here
-
   // icon name
   [[iconNameForm cellAtIndex: 0] setStringValue: [[object miniwindowImage] name]];
 
@@ -417,7 +416,14 @@ NSwindow inspector
 {
   NSForm *sizeForm;
   NSForm *minForm;
+  NSForm *maxForm;
+  id top;
+  id bottom;
+  id left;
+  id right;
 }
+
+- (void) setAutoposition: (id)sender;
 @end
 
 @implementation GormWindowSizeInspector
@@ -440,12 +446,20 @@ NSwindow inspector
 			[[minForm cellAtIndex: 1] floatValue]);
       [object setMinSize: size];
     }
+  else if (control == maxForm)
+    {
+      NSSize size;
+      size = NSMakeSize([[maxForm cellAtIndex: 0] floatValue],
+			[[maxForm cellAtIndex: 1] floatValue]);
+      [object setMaxSize: size];
+    }
 }
 
 - (void) _getValuesFromObject: anObject
 {
   NSRect frame;
   NSSize size;
+  unsigned int mask = [object autoPositionMask];
 
   if (anObject != object)
     return;
@@ -459,6 +473,30 @@ NSwindow inspector
   size = [anObject minSize];
   [[minForm cellAtIndex: 0] setFloatValue: size.width];
   [[minForm cellAtIndex: 1] setFloatValue: size.height];
+
+  size = [anObject maxSize];
+  [[maxForm cellAtIndex: 0] setFloatValue: size.width];
+  [[maxForm cellAtIndex: 1] setFloatValue: size.height];
+
+  if (mask & GSWindowMaxYMargin)
+    [top setState: NSOnState];
+  else
+    [top setState: NSOffState];
+  
+  if (mask & GSWindowMinYMargin)
+    [bottom setState: NSOnState];
+  else
+    [bottom setState: NSOffState];
+  
+  if (mask & GSWindowMaxXMargin)
+    [right setState: NSOnState];
+  else
+    [right setState: NSOffState];
+  
+  if (mask & GSWindowMinXMargin)
+    [left setState: NSOnState];
+  else
+    [left setState: NSOffState];
 }
 
 - (void) windowChangeNotification: (NSNotification*)aNotification
@@ -488,6 +526,13 @@ NSwindow inspector
          selector: @selector(windowChangeNotification:)
              name: NSWindowDidResizeNotification
            object: object];
+
+  // set up tags...
+  [top setTag: GSWindowMaxYMargin];
+  [bottom setTag: GSWindowMinYMargin];
+  [left setTag: GSWindowMinXMargin];
+  [right setTag: GSWindowMaxXMargin];
+
   return self;
 }
 
@@ -496,6 +541,7 @@ NSwindow inspector
   [super ok: sender];
   [self _setValuesFromControl: sizeForm];
   [self _setValuesFromControl: minForm];
+  [self _setValuesFromControl: maxForm];
 }
 
 - (void) setObject: (id)anObject
@@ -504,4 +550,19 @@ NSwindow inspector
   [self _getValuesFromObject: anObject];
 }
 
+- (void) setAutoposition: (id)sender
+{
+  unsigned	mask = [sender tag];
+
+  [super ok: sender];
+  if ([sender state] == NSOnState)
+    {
+      mask = [object autoPositionMask] | mask;
+    }
+  else
+    {
+      mask = [object autoPositionMask] & ~mask;
+    }
+  [object setAutoPositionMask: mask];
+}
 @end

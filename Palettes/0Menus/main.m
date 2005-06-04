@@ -118,35 +118,27 @@
   /*
    * The Font menu
    */
-  m = [GormNSMenu new];
-  [m addItemWithTitle: @"Font Panel..." 
-	       action: @selector(orderFrontFontPanel:) 
-	keyEquivalent: @"t"];
-  [m addItemWithTitle: @"Bold" 
-	       action: @selector(addFontTrait:)
-	keyEquivalent: @"b"];
-  [m addItemWithTitle: @"Italic" 
-	       action: @selector(addFontTrait:)
-	keyEquivalent: @"i"];
+  m = [GormNSMenu menuWithMenu: [[NSFontManager sharedFontManager] fontMenu: YES]];
+  // Other font menu items
   [m addItemWithTitle: @"Underline" 
-	       action: @selector(underline:)
-	keyEquivalent: @""];
+     action: @selector(underline:)
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Superscript" 
-	       action: @selector(superscript:)
-	keyEquivalent: @""];
+     action: @selector(superscript:)
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Subscript" 
-	       action: @selector(subscript:)
-	keyEquivalent: @""];
+     action: @selector(subscript:)
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Unscript" 
-	       action: @selector(unscript:)
-	keyEquivalent: @""];
+     action: @selector(unscript:)
+     keyEquivalent: @""];
   [m addItemWithTitle: @"Copy Font" 
-	       action: @selector(copyFont:)
-	keyEquivalent: @"3"];
+     action: @selector(copyFont:)
+     keyEquivalent: @"3"];
   [m addItemWithTitle: @"Paste Font" 
-	       action: @selector(pasteFont:) 
-	keyEquivalent: @"4"];
-  [m setTitle: @"Font"];
+     action: @selector(pasteFont:) 
+     keyEquivalent: @"4"];
+
   i = [[NSMenuItem alloc] initWithTitle: @"Font" 
 				 action: @selector(submenuAction:)
 			  keyEquivalent: @""];
@@ -341,35 +333,28 @@
   i = (NSMenuItem *)[m addItemWithTitle: @"Font" 
 		       action: NULL
 		       keyEquivalent: @""];
-  s = [GormNSMenu new];
-  [s addItemWithTitle: @"Font Panel..." 
-	       action: @selector(orderFrontFontPanel:) 
-	keyEquivalent: @"t"];
-  [s addItemWithTitle: @"Bold" 
-	       action: @selector(addFontTrait:)
-	keyEquivalent: @"b"];
-  [s addItemWithTitle: @"Italic" 
-	       action: @selector(addFontTrait:)
-	keyEquivalent: @"i"];
+
+  s = [GormNSMenu menuWithMenu: [[NSFontManager sharedFontManager] fontMenu: YES]];
+
+  // Other font menu items
   [s addItemWithTitle: @"Underline" 
-	       action: @selector(underline:)
-	keyEquivalent: @""];
+     action: @selector(underline:)
+     keyEquivalent: @""];
   [s addItemWithTitle: @"Superscript" 
-	       action: @selector(superscript:)
-	keyEquivalent: @""];
+     action: @selector(superscript:)
+     keyEquivalent: @""];
   [s addItemWithTitle: @"Subscript" 
-	       action: @selector(subscript:)
-	keyEquivalent: @""];
+     action: @selector(subscript:)
+     keyEquivalent: @""];
   [s addItemWithTitle: @"Unscript" 
-	       action: @selector(unscript:)
-	keyEquivalent: @""];
+     action: @selector(unscript:)
+     keyEquivalent: @""];
   [s addItemWithTitle: @"Copy Font" 
-	       action: @selector(copyFont:)
-	keyEquivalent: @"3"];
+     action: @selector(copyFont:)
+     keyEquivalent: @"3"];
   [s addItemWithTitle: @"Paste Font" 
-	       action: @selector(pasteFont:) 
-	keyEquivalent: @"4"];
-  [s setTitle: @"Font"];
+     action: @selector(pasteFont:) 
+     keyEquivalent: @"4"];
   [m setSubmenu: s forItem: i];
 
   /*

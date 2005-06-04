@@ -30,11 +30,14 @@
 {
   unsigned _gormStyleMask;
   BOOL     _gormReleasedWhenClosed;
+  unsigned int autoPositionMask;
 }
 - (void) _setStyleMask: (unsigned int)newStyleMask;
 - (unsigned int) _styleMask;
 - (void) _setReleasedWhenClosed: (BOOL) flag;
 - (BOOL) _isReleasedWhenClosed;
+- (unsigned int) autoPositionMask;
+- (void) setAutoPositionMask: (unsigned int)mask;
 @end
 
 #endif

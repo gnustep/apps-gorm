@@ -24,6 +24,7 @@
 */
 
 #include <AppKit/AppKit.h>
+#include <GNUstepGUI/GSNibTemplates.h>
 #include "GormNSPanel.h"
 
 static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
@@ -65,6 +66,9 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 
       // remove the default icon...
       [self setMiniwindowImage: nil];
+
+      // set the default position mask;
+      autoPositionMask = GSWindowMaxXMargin | GSWindowMaxYMargin;
     }
 
   return self;
@@ -93,5 +97,15 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 - (BOOL) _isReleasedWhenClosed
 {
   return _gormReleasedWhenClosed;
+}
+
+- (unsigned int) autoPositionMask
+{
+  return autoPositionMask;
+}
+
+- (void) setAutoPositionMask: (unsigned int)mask
+{
+  autoPositionMask = mask;
 }
 @end

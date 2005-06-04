@@ -657,7 +657,7 @@ static NSImage  *fileImage = nil;
 	  
 	  // if the connection needs to be made with the font manager, replace
 	  // it with our proxy object and proceed with creating the connection.
-	  if(destination == nil && 
+	  if((destination == nil || destination == [NSFontManager sharedFontManager]) && 
 	     [classManager isAction: label ofClass: @"NSFontManager"])
 	    {
 	      if(!fontManager)
@@ -1933,6 +1933,7 @@ static NSImage  *fileImage = nil;
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
+      unsigned int              version = NSNotFound;
 
       // If someone attempts to open a .gmodel using open or in a 
       // workspace manager, open it.. otherwise open the .gorm file.
@@ -1994,32 +1995,13 @@ static NSImage  *fileImage = nil;
        */
       u = [[NSUnarchiver alloc] initForReadingWithData: data];
       
-      // classes
+      // special internal classes
       [u decodeClassName: @"GSNibContainer" 
 	 asClassName: @"GormDocument"];
       [u decodeClassName: @"GSNibItem" 
 	 asClassName: @"GormObjectProxy"];
       [u decodeClassName: @"GSCustomView" 
 	 asClassName: @"GormCustomView"];
-
-      /*
-      [u decodeClassName: @"NSMenu" 
-	 asClassName: @"GormNSMenu"];
-      [u decodeClassName: @"NSWindow" 
-	 asClassName: @"GormNSWindow"];
-      [u decodeClassName: @"NSPanel" 
-	 asClassName: @"GormNSPanel"];
-      [u decodeClassName: @"NSPopUpButton" 
-	 asClassName: @"GormNSPopUpButton"];
-      [u decodeClassName: @"NSPopUpButtonCell"
-	 asClassName: @"GormNSPopUpButtonCell"];
-      [u decodeClassName: @"NSBrowser" 
-	 asClassName: @"GormNSBrowser"];
-      [u decodeClassName: @"NSTableView" 
-	 asClassName: @"GormNSTableView"];
-      [u decodeClassName: @"NSOutlineView" 
-	 asClassName: @"GormNSOutlineView"];
-      */
 
       while((subClassName = [en nextObject]) != nil)
 	{
@@ -2134,7 +2116,7 @@ static NSImage  *fileImage = nil;
 	}
       
       /*
-       * If the .gorm file is version 0, we need to add the top level objects
+       * If the GSNibContainer version is 0, we need to add the top level objects
        * to the list so that they can be properly processed.
        */
       if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
@@ -2151,6 +2133,17 @@ static NSImage  *fileImage = nil;
 		  [topLevelObjects addObject: obj];
 		}
 	    }
+	  isOlderArchive = YES;
+	}
+
+      /*
+       * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
+       * an older archive.  Also, if the window template is not in the archive we know
+       * it was made by an older version of Gorm.
+       */
+      version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
+      if(version == 0 || version == NSNotFound)
+	{
 	  isOlderArchive = YES;
 	}
 
@@ -2951,27 +2944,52 @@ static NSImage  *fileImage = nil;
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
   GormClassManager *cm = [self classManager];
-  NSEnumerator *en = [[cm customClassMap] keyEnumerator];
+  NSEnumerator *en = [[self nameTable] keyEnumerator];
   id key = nil;
 
-  // loop through all objects.
+  // loop through all custom objects and windows
   while((key = [en nextObject]) != nil)
     {
-      id customClass = AUTORELEASE([[cm customClassForName: key] copy]);
+      id customClass = [cm customClassForName: key];
       id object = [self objectForName: key];
-      NSString *superClass = [cm nonCustomSuperClassOf: customClass];
-      id template = [GSTemplateFactory templateForObject: object
-				       withClassName: customClass 
-				       withSuperClassName: superClass]; // autoreleased
-
-      // if the object is deferrable, then set the flag appropriately.
-      if([template respondsToSelector: @selector(setDeferFlag:)])
+      id template = nil;
+      if(customClass != nil)
 	{
-	  [template setDeferFlag: [self objectIsDeferred: object]];
+	  NSString *superClass = [cm nonCustomSuperClassOf: customClass];
+	  template = [GSTemplateFactory templateForObject: object
+					withClassName: customClass 
+					withSuperClassName: superClass];
+	}
+      else if([object isKindOfClass: [NSWindow class]])
+	{
+	  template = [GSTemplateFactory templateForObject: object
+					withClassName: [object className]
+					withSuperClassName: [object className]]; 
+	  
 	}
 
-      // replace the object with the template.
-      [archiver replaceObject: object withObject: template];
+      // if the template has been created, replace the object with it.
+      if(template != nil)
+	{
+	  // if the object is deferrable, then set the flag appropriately.
+	  if([template respondsToSelector: @selector(setDeferFlag:)])
+	    {
+	      [template setDeferFlag: [self objectIsDeferred: object]];
+	    }
+	  
+	  //  if the object can accept autoposition information
+	  if([object respondsToSelector: @selector(autoPositionMask)])
+	    {
+	      int mask = [object autoPositionMask];
+	      if([template respondsToSelector: @selector(setAutoPositionMask:)])
+		{
+		  [template setAutoPositionMask: mask];
+		}
+	    }
+
+	  // replace the object with the template.
+	  [archiver replaceObject: object withObject: template];
+	}
     }
 }
 
@@ -3008,7 +3026,7 @@ static NSImage  *fileImage = nil;
   if(isOlderArchive && [filePrefsManager isLatest])
     {
       retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.3 Release or CVS prior to Jun 28 2004."),
+			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.5 (or earlier) Release or CVS prior to June 2 2005."),
 			       _(@"Save"),
 			       _(@"Don't Save"), nil, nil);
       if (retval != NSAlertDefaultReturn)
@@ -3036,30 +3054,11 @@ static NSImage  *fileImage = nil;
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
 
   /* Special gorm classes to their archive equivalents. */
-  // see implementation of classForCoder for GSNibContainer.
+  // NOTE: GSNibContainer replaces GormDocument using classforCoder
   [archiver encodeClassName: @"GormObjectProxy" 
 	    intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView"
 	    intoClassName: @"GSCustomView"];
-
-  /*
-  [archiver encodeClassName: @"GormNSMenu"
-  	    intoClassName: @"NSMenu"];
-  [archiver encodeClassName: @"GormNSWindow"
-	    intoClassName: @"NSWindow"];
-  [archiver encodeClassName: @"GormNSPanel"
-	    intoClassName: @"NSPanel"];
-  [archiver encodeClassName: @"GormNSPopUpButton" 
-	    intoClassName: @"NSPopUpButton"];
-  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
-	    intoClassName: @"NSPopUpButtonCell"];
-  [archiver encodeClassName: @"GormNSBrowser" 
-	    intoClassName: @"NSBrowser"];
-  [archiver encodeClassName: @"GormNSTableView" 
-	    intoClassName: @"NSTableView"];
-  [archiver encodeClassName: @"GormNSOutlineView" 
-	    intoClassName: @"NSOutlineView"];
-  */
 
   while((subClassName = [en nextObject]) != nil)
     {
@@ -3073,7 +3072,6 @@ static NSImage  *fileImage = nil;
 
   [archiver encodeRootObject: self];
   NSDebugLog(@"nameTable = %@",nameTable);
-
   NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
 
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];

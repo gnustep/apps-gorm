@@ -23,6 +23,7 @@
 */
 
 #include "GormNSMenu.h"
+#include <Foundation/NSEnumerator.h>
 #include <AppKit/NSPopUpButton.h>
 #include <AppKit/NSPopUpButtonCell.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
@@ -80,6 +81,22 @@
 @end
 
 @implementation GormNSMenu
++ (GormNSMenu *) menuWithMenu: (NSMenu *)menu
+{
+  GormNSMenu *newMenu = [GormNSMenu new];
+  NSEnumerator *en = [[menu itemArray] objectEnumerator];
+  NSMenuItem *item = nil;
+ 
+  while((item = [en nextObject]) != nil)
+    {
+      [newMenu addItem: [item copy]];
+    }
+
+  [newMenu setTitle: [menu title]];
+
+  return newMenu;
+}
+
 - (id) initWithCoder: (NSCoder *)coder
 {
   if((self = [super initWithCoder: coder]) != nil)

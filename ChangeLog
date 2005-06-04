@@ -1,3 +1,35 @@
+2005-06-04 07:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormClassInspector.gorm: Updated to new .gorm file
+	version
+	* English.lproj/GormDocument.gorm: Added new profile to drop down. 
+	* English.lproj/GormViewSizeInspector.gorm: Updated to new .gorm 
+	file version
+	* GormCore/GormDocument.m: Change to _replaceObjectsWithTemplates: to
+	always replace windows with a GSWindowTemplate.  This allows the 
+	autoposition and defered logic to work properly when loading this
+	.gorm file in an application.
+	* GormCore/GormFilePrefsManager.m: Bumped version to 0.10.1
+	* GormCore/GormViewSizeInspector.m: Minor changes.
+	* GormInfo.plist: Bumped version to 0.10.1
+	* Palettes/0Menus/GormMenuEditor.m: Removed uneeded code.
+	* Palettes/0Menus/GormNSMenu.h: Added +menuWithMenu declaration.
+	* Palettes/0Menus/GormNSMenu.m: Added +menuWithMenu: to initialize
+	one menu from another.
+	* Palettes/0Menus/main.m: Change to use the fontMenu: method in 
+	the NSFontManager to build the menu in Gorm's palette.
+	* Palettes/1Windows/GormNSPanel.h: Declarations for new methods.
+	* Palettes/1Windows/GormNSPanel.m: setAutoPositionMask: and 
+	autoPositionMask methods added.
+	* Palettes/1Windows/GormNSWindow.h: Declarations for new methods. 
+	* Palettes/1Windows/GormNSWindow.m: setAutoPositionMask: and 
+	autoPositionMask methods added.
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Additions to handle
+	window positioning and maxsize.
+	* Palettes/1Windows/main.m: Additions to the window inspector
+	to handle maxSize and window position.
+	* Resources/VersionProfiles.plist: New profile entry
+
 2005-05-25 23:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GModelDecoder.m

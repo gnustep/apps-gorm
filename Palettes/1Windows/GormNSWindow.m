@@ -22,6 +22,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+#include <GNUstepGUI/GSNibTemplates.h>
 #include "GormNSWindow.h"
 
 // the default style mask we start with.
@@ -76,6 +77,9 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
       
       // remove the default icon...
       [self setMiniwindowImage: nil];
+
+      // set the default position mask;
+      autoPositionMask = GSWindowMaxXMargin | GSWindowMaxYMargin;
     }
 
   return self;
@@ -116,48 +120,13 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   return _gormReleasedWhenClosed;
 }
 
-// for testing...
-/*
-- (id) retain
+- (unsigned int) autoPositionMask
 {
-  NSLog(@"Being retained... %d: %@", [self retainCount], self);
-  return [super retain];
+  return autoPositionMask;
 }
 
-- (oneway void) release
+- (void) setAutoPositionMask: (unsigned int)mask
 {
-  NSLog(@"Being released... %d: %@", [self retainCount], self);
-  [super release];
+  autoPositionMask = mask;
 }
-
-- (void) dealloc
-{
-  NSLog(@"Deallocing %@",self);
-  [super dealloc];
-}
-
-- (void) orderFront: (id)sender
-{
-  NSLog(@"Ordering front...%@",self);
-  [super orderFront: sender];
-}
-
-- (void) orderFrontRegardless
-{
-  NSLog(@"Ordering front regardless...%@",self);
-  [super orderFrontRegardless];
-}
-
-- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
-{
-  // NSLog(@"Ordering window %@",self);
-  [super orderWindow: place relativeTo: otherWin];
-}
-
-- (void) orderOut: (id)sender
-{
-  NSLog(@"Ordering out...%@",self);
-  [super orderOut: sender];
-}
-*/
 @end
