@@ -27,3 +27,11 @@ Thanks, GJC
 Gregory John Casamento 
 -- CEO/President Open Logic Corp. (A MD Corp.)
 ## Maintainer of Gorm (IB Equiv.) for GNUstep.
+
+------------------
+
+BTW, forgot to mention:
+
+You MUST update core (specifically gui) and Gorm together for this change.
+
+Later, GJC
