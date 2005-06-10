@@ -1151,6 +1151,11 @@
   connectDestination = nil;
 }
 
+- (void) translate: (id)sender
+{
+  [[self activeDocument] performSelector: @selector(translate)];
+}
+
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];

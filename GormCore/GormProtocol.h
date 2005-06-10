@@ -86,6 +86,7 @@
 
 // utility...
 - (BOOL) documentNameIsUnique: (NSString *)filename;
+- (void) translate: (id)sender;
 @end
 
 #endif

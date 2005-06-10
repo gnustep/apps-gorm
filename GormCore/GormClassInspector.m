@@ -111,7 +111,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *formattedOutlet = formatOutlet( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
   
-  if(![name isEqual: anObject])
+  if(![name isEqual: formattedOutlet])
     {
       BOOL removed = [document 
 		       removeConnectionsWithLabel: name 
@@ -127,7 +127,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  // certain that names in the list are kept in sync.
 	  [document collapseClass: currentClass];
 	  [document reloadClasses];
-	  [document selectClass: currentClass];
+	  [document selectClass: currentClass editClass: NO];
 	}
     }
 }
@@ -166,7 +166,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *formattedAction = formatAction( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 
-  if(![name isEqual: anObject])
+  if(![name isEqual: formattedAction])
     {
       BOOL removed = [document 
 		       removeConnectionsWithLabel: name 
@@ -182,7 +182,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  // certain that names in the list are kept in sync.
 	  [document collapseClass: currentClass];
 	  [document reloadClasses];
-	  [document selectClass: currentClass];
+	  [document selectClass: currentClass editClass: NO];
 	}
     }
 }

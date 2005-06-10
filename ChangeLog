@@ -1,3 +1,18 @@
+2005-06-10 07:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Addition of "Translate" menu.
+	* GormCore/GormClassInspector.m: Corrected problem in 
+	outlet and action data sources in tableView:setObjectValue:
+	tableColumn:row:
+	* GormCore/GormDocument.h: Added translate method, also added
+	selectClass:editClass: method declarations.
+	* GormCore/GormDocument.m Added translate method, also added
+	selectClass:editClass: method implementation.
+	* GormCore/GormProtocol.h: Added translate method declaration
+	to call from the menu.
+	* Gorm.m: Added translate method implementation which simply
+	calls the method on the currently active document.
+
 2005-06-04 07:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassInspector.gorm: Updated to new .gorm file

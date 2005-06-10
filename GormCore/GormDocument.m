@@ -1833,6 +1833,14 @@ static NSImage  *fileImage = nil;
   [classesView selectClass: className];
 }
 
+/**
+ * Select a class in the classes view
+ */
+- (void) selectClass: (NSString *)className editClass: (BOOL)flag
+{
+  [classesView selectClass: className editClass: flag];
+}
+
 /** 
  * The sole purpose of this method is to clean up .gorm files from older
  * versions of Gorm which might have some dangling references.   This method
@@ -1933,7 +1941,10 @@ static NSImage  *fileImage = nil;
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
-      unsigned int              version = NSNotFound;
+      unsigned int              
+	version = NSNotFound, 
+	winversion = NSNotFound, 
+	panversion = NSNotFound;
 
       // If someone attempts to open a .gmodel using open or in a 
       // workspace manager, open it.. otherwise open the .gorm file.
@@ -2142,7 +2153,9 @@ static NSImage  *fileImage = nil;
        * it was made by an older version of Gorm.
        */
       version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
-      if(version == 0 || version == NSNotFound)
+      winversion = [u versionForClassName: NSStringFromClass([NSWindow class])];
+      panversion = [u versionForClassName: NSStringFromClass([NSPanel class])];
+      if(version == NSNotFound && (winversion != NSNotFound || panversion != NSNotFound))
 	{
 	  isOlderArchive = YES;
 	}
@@ -3793,6 +3806,58 @@ static NSImage  *fileImage = nil;
     }
   
   return allTypes;
+}
+
+// language translation
+- (void) translate
+{
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
+  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  int		result;
+
+  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setCanChooseFiles: YES];
+  [oPanel setCanChooseDirectories: NO];
+  result = [oPanel runModalForDirectory: nil
+				   file: nil
+				  types: fileTypes];
+  if (result == NSOKButton)
+    {
+      NSString *filename = [oPanel filename];
+      NSDictionary *dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
+      NSEnumerator *en = [[self objects] objectEnumerator];
+      id obj = nil;
+      BOOL touched = NO;
+
+      while((obj = [en nextObject]) != nil)
+	{
+	  if([obj respondsToSelector: @selector(setTitle:)] &&
+	     [obj respondsToSelector: @selector(title)])
+	    {
+	      NSString *translation = [dictionary objectForKey: [obj title]];
+	      if(translation != nil)
+		{
+		  [obj setTitle: translation];
+		  touched = YES;
+		}
+	    }
+	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
+		  [obj respondsToSelector: @selector(stringValue)])
+	    {
+	      NSString *translation = [dictionary objectForKey: [obj stringValue]];
+	      if(translation != nil)
+		{
+		  [obj setStringValue: translation];
+		  touched = YES;
+		}
+	    }
+	}
+
+      if(touched)
+	{
+	  [self touch]; 
+	}
+    } 
 }
 @end
 

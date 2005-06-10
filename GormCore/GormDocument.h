@@ -109,6 +109,7 @@
                                   andFileType: (NSString *)fileType;
 - (void) changeToViewWithTag: (int)tag;
 - (NSArray *) allManagedPboardTypes;
+- (void) translate;
 
 /* Managing classes */
 - (GormClassManager*) classManager;
@@ -120,6 +121,7 @@
 - (id) createClassFiles: (id)sender;
 - (id) instantiateClass: (id)sender;
 - (void) selectClass: (NSString *)className;
+- (void) selectClass: (NSString *)className editClass: (BOOL)flag;
 - (BOOL) classIsSelected;
 - (void) removeAllInstancesOfClass: (NSString *)classNamed;
 
