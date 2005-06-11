@@ -84,9 +84,12 @@
 - (void) instantiateClass: (id)sender;
 - (NSMenu*) classMenu;
 
-// utility...
+// utility
 - (BOOL) documentNameIsUnique: (NSString *)filename;
+
+// language translation
 - (void) translate: (id)sender;
+- (void) exportStrings: (id)sender;
 @end
 
 #endif

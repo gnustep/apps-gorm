@@ -1156,6 +1156,11 @@
   [[self activeDocument] performSelector: @selector(translate)];
 }
 
+- (void) exportStrings: (id)sender
+{
+  [[self activeDocument] performSelector: @selector(exportStrings)];
+}
+
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
@@ -1191,6 +1196,11 @@
 	return NO;
     }
   else if (sel_eq(action, @selector(translate:)))
+    {
+      if (active == nil)
+	return NO;
+    }
+  else if (sel_eq(action, @selector(exportStrings:)))
     {
       if (active == nil)
 	return NO;

@@ -1,3 +1,12 @@
+2005-06-11 14:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Addition of "Translation" submenu as well
+	as Load Strings and Export Strings
+	* GormCore/GormDocument.h: Declaration of exportStrings
+	* GormCore/GormDocument.m: Implementation of exportStrings
+	* GormCore/GormProtocol.h: Declaration of app level exportStrings:
+	* Gorm.m: Implementation of app level exportStrings: method.
+
 2005-06-11 05:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Improved translate method.

@@ -2,8 +2,9 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "translate:",
-	    "orderFrontFontPanel:"
+	    "exportStrings:",
+	    "orderFrontFontPanel:",
+	    "translate:"
 	);
 	Super = NSObject;
     };
@@ -50,7 +51,8 @@
 	    "loadClass:",
 	    "preferencesPanel:",
 	    "guideline:",
-	    "translate:"
+	    "translate:",
+	    "exportStrings:"
 	);
 	Outlets = (
 	    gormMenu,

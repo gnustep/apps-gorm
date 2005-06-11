@@ -3808,7 +3808,64 @@ static NSImage  *fileImage = nil;
   return allTypes;
 }
 
-// language translation
+// language translation methods.
+
+/**
+ * This method is used to translate all of the strings in the file from one language
+ * into another.  This is helpful when attempting to translate an application for use
+ * in different locales.
+ */
+- (NSArray *) collectAllObjects
+{
+  NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
+  NSEnumerator *en = [topLevelObjects objectEnumerator];
+  NSMutableArray *removeObjects = [NSMutableArray array];
+  id obj = nil;
+  
+  // collect all subviews/menus/etc.
+  while((obj = [en nextObject]) != nil)
+    {
+      if([obj isKindOfClass: [NSWindow class]])
+	{
+	  NSMutableArray *views = [NSMutableArray array];
+	  NSEnumerator *ven = [views objectEnumerator];
+	  id vobj = nil;
+	  
+	  subviewsForView([(NSWindow *)obj contentView], views);
+	  [allObjects addObjectsFromArray: views];
+	  
+	  while((vobj = [ven nextObject]))
+	    {
+	      if([vobj isKindOfClass: [GormCustomView class]])
+		{
+		  [removeObjects addObject: vobj];
+		}
+	      else if([vobj isKindOfClass: [NSMatrix class]])
+		{
+		  [allObjects addObjectsFromArray: [vobj cells]];
+		}
+	      else if([vobj isKindOfClass: [NSPopUpButton class]])
+		{
+		  [allObjects addObjectsFromArray: [vobj itemArray]];
+		}
+	      else if([vobj isKindOfClass: [NSTabView class]])
+		{
+		  [allObjects addObjectsFromArray: [vobj tabViewItems]];
+		}
+	    }
+	}
+      else if([obj isKindOfClass: [NSMenu class]])
+	{
+	  [allObjects addObjectsFromArray: findAll(obj)];
+	}
+    }
+
+  // take out objects which shouldn't be considered.
+  [allObjects removeObjectsInArray: removeObjects];
+
+  return allObjects;
+}
+
 - (void) translate
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
@@ -3823,103 +3880,116 @@ static NSImage  *fileImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
+      NSMutableArray *allObjects = [self collectAllObjects];
       NSString *filename = [oPanel filename];
       NSDictionary *dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
-      NSEnumerator *en = [topLevelObjects objectEnumerator];
+      NSEnumerator *en = [allObjects objectEnumerator];
       id obj = nil;
-      BOOL touched = NO;
-
-      // collect all subviews/menus/etc.
-      while((obj = [en nextObject]) != nil)
-	{
-	  if([obj isKindOfClass: [NSWindow class]])
-	    {
-	      NSMutableArray *views = [NSMutableArray array];
-	      NSEnumerator *ven = [views objectEnumerator];
-	      id vobj = nil;
-
-	      subviewsForView([(NSWindow *)obj contentView], views);
-	      [allObjects addObjectsFromArray: views];
-	      
-	      while((vobj = [ven nextObject]))
-		{
-		  if([vobj isKindOfClass: [NSMatrix class]])
-		    {
-		      [allObjects addObjectsFromArray: [vobj cells]];
-		    }
-		  else if([vobj isKindOfClass: [NSPopUpButton class]])
-		    {
-		      [allObjects addObjectsFromArray: [vobj itemArray]];
-		    }
-		  else if([vobj isKindOfClass: [NSTabView class]])
-		    {
-		      [allObjects addObjectsFromArray: [vobj tabViewItems]];
-		    }
-
-		  [vobj setNeedsDisplay: YES];
-		}
-
-	      [obj setViewsNeedDisplay: YES];
-	    }
-	  else if([obj isKindOfClass: [NSMenu class]])
-	    {
-	      [allObjects addObjectsFromArray: findAll(obj)];
-	    }
-	}
 
       // change to translated values.
-      en = [allObjects objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
-	  BOOL translated = NO;
+	  NSString *translation = nil; 
 
 	  if([obj respondsToSelector: @selector(setTitle:)] &&
 	     [obj respondsToSelector: @selector(title)])
 	    {
-	      NSString *translation = [dictionary objectForKey: [obj title]];
+	      translation = [dictionary objectForKey: [obj title]];
 	      if(translation != nil)
 		{
 		  [obj setTitle: translation];
-		  touched = YES;
-		  translated = YES;
 		}
 	    }
 	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
 		  [obj respondsToSelector: @selector(stringValue)])
 	    {
-	      NSString *translation = [dictionary objectForKey: [obj stringValue]];
+	      translation = [dictionary objectForKey: [obj stringValue]];
 	      if(translation != nil)
 		{
 		  [obj setStringValue: translation];
-		  touched = YES;
-		  translated = YES;
 		}
 	    }
 	  else if([obj respondsToSelector: @selector(setLabel:)] &&
 		  [obj respondsToSelector: @selector(label)])
 	    {
-	      NSString *translation = [dictionary objectForKey: [obj label]];
+	      translation = [dictionary objectForKey: [obj label]];
 	      if(translation != nil)
 		{
 		  [obj setLabel: translation];
-		  touched = YES;
-		  translated = YES;
 		}
 	    }
 
-	  if(translated)
+	  if(translation != nil)
 	    {
 	      if([obj isKindOfClass: [NSView class]])
 		{
 		  [obj setNeedsDisplay: YES];
 		}
+	      else if([obj isKindOfClass: [NSWindow class]])
+		{
+		  [obj setViewsNeedDisplay: YES];
+		}
+
+	      [self touch]; 
+	    }
+	}
+    } 
+}
+
+/**
+ * This method is used to export all strings in a document to a file for Language
+ * translation.  This allows the user to see all of the strings which can be translated
+ * and allows the user to provide a translateion for each of them.
+ */ 
+- (void) exportStrings
+{
+  NSOpenPanel	*sp = [NSSavePanel savePanel];
+  int		result;
+
+  [sp setRequiredFileType: @"strings"];
+  [sp setTitle: _(@"Save strings file as...")];
+  result = [sp runModalForDirectory: NSHomeDirectory()
+	       file: nil];
+  if (result == NSOKButton)
+    {
+      NSMutableArray *allObjects = [self collectAllObjects];
+      NSString *filename = [sp filename];
+      NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+      NSEnumerator *en = [allObjects objectEnumerator];
+      id obj = nil;
+      BOOL touched = NO;
+
+      // change to translated values.
+      while((obj = [en nextObject]) != nil)
+	{
+	  NSString *string = nil;
+	  if([obj respondsToSelector: @selector(setTitle:)] &&
+	     [obj respondsToSelector: @selector(title)])
+	    {
+	      string = [obj title];
+	    }
+	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
+		  [obj respondsToSelector: @selector(stringValue)])
+	    {
+	      string = [obj stringValue];
+	    }
+	  else if([obj respondsToSelector: @selector(setLabel:)] &&
+		  [obj respondsToSelector: @selector(label)])
+	    {
+	      string = [obj label];
+	    }
+
+	  if(string != nil)
+	    {
+	      [dictionary setObject: string forKey: string];
+	      touched = YES;
 	    }
 	}
 
       if(touched)
 	{
-	  [self touch]; 
+	  NSString *stringToWrite = [dictionary descriptionInStringsFileFormat];
+	  [stringToWrite writeToFile: filename atomically: YES];
 	}
     } 
 }

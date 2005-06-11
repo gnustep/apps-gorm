@@ -109,7 +109,10 @@
                                   andFileType: (NSString *)fileType;
 - (void) changeToViewWithTag: (int)tag;
 - (NSArray *) allManagedPboardTypes;
+
+/* Language translation */
 - (void) translate;
+- (void) exportStrings;
 
 /* Managing classes */
 - (GormClassManager*) classManager;
