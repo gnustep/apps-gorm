@@ -1,3 +1,8 @@
+2005-06-11 05:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Improved translate method.
+	* Gorm.m: validateMenuItem: add case to handle translate menu.
+
 2005-06-10 07:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Addition of "Translate" menu.

@@ -1190,6 +1190,11 @@
       if (active == nil)
 	return NO;
     }
+  else if (sel_eq(action, @selector(translate:)))
+    {
+      if (active == nil)
+	return NO;
+    }
   else if (sel_eq(action, @selector(copy:)))
     {
       if ([s count] == 0)

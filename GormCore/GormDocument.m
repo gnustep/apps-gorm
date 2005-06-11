@@ -3823,14 +3823,57 @@ static NSImage  *fileImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
+      NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
       NSString *filename = [oPanel filename];
       NSDictionary *dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
-      NSEnumerator *en = [[self objects] objectEnumerator];
+      NSEnumerator *en = [topLevelObjects objectEnumerator];
       id obj = nil;
       BOOL touched = NO;
 
+      // collect all subviews/menus/etc.
       while((obj = [en nextObject]) != nil)
 	{
+	  if([obj isKindOfClass: [NSWindow class]])
+	    {
+	      NSMutableArray *views = [NSMutableArray array];
+	      NSEnumerator *ven = [views objectEnumerator];
+	      id vobj = nil;
+
+	      subviewsForView([(NSWindow *)obj contentView], views);
+	      [allObjects addObjectsFromArray: views];
+	      
+	      while((vobj = [ven nextObject]))
+		{
+		  if([vobj isKindOfClass: [NSMatrix class]])
+		    {
+		      [allObjects addObjectsFromArray: [vobj cells]];
+		    }
+		  else if([vobj isKindOfClass: [NSPopUpButton class]])
+		    {
+		      [allObjects addObjectsFromArray: [vobj itemArray]];
+		    }
+		  else if([vobj isKindOfClass: [NSTabView class]])
+		    {
+		      [allObjects addObjectsFromArray: [vobj tabViewItems]];
+		    }
+
+		  [vobj setNeedsDisplay: YES];
+		}
+
+	      [obj setViewsNeedDisplay: YES];
+	    }
+	  else if([obj isKindOfClass: [NSMenu class]])
+	    {
+	      [allObjects addObjectsFromArray: findAll(obj)];
+	    }
+	}
+
+      // change to translated values.
+      en = [allObjects objectEnumerator];
+      while((obj = [en nextObject]) != nil)
+	{
+	  BOOL translated = NO;
+
 	  if([obj respondsToSelector: @selector(setTitle:)] &&
 	     [obj respondsToSelector: @selector(title)])
 	    {
@@ -3839,6 +3882,7 @@ static NSImage  *fileImage = nil;
 		{
 		  [obj setTitle: translation];
 		  touched = YES;
+		  translated = YES;
 		}
 	    }
 	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
@@ -3849,6 +3893,26 @@ static NSImage  *fileImage = nil;
 		{
 		  [obj setStringValue: translation];
 		  touched = YES;
+		  translated = YES;
+		}
+	    }
+	  else if([obj respondsToSelector: @selector(setLabel:)] &&
+		  [obj respondsToSelector: @selector(label)])
+	    {
+	      NSString *translation = [dictionary objectForKey: [obj label]];
+	      if(translation != nil)
+		{
+		  [obj setLabel: translation];
+		  touched = YES;
+		  translated = YES;
+		}
+	    }
+
+	  if(translated)
+	    {
+	      if([obj isKindOfClass: [NSView class]])
+		{
+		  [obj setNeedsDisplay: YES];
 		}
 	    }
 	}
