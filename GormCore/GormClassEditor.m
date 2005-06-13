@@ -886,7 +886,8 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 
   if ([item isKindOfClass: [GormOutletActionHolder class]])
     {
-      if (![anObject isEqualToString: @""])
+      if (![anObject isEqualToString: @""] && 
+	  ![anObject isEqualToString: [item getName]])
 	{
 	  NSString *name = [item getName];
 
@@ -958,7 +959,8 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     }
   else
     {
-      if  ( ( ![anObject isEqualToString: @""] ) && ( ! [anObject isEqualToString:item]  ) )
+      if((![anObject isEqualToString: @""]) && 
+	 (![anObject isEqualToString:item]))
 	{
 	  BOOL rename;
 

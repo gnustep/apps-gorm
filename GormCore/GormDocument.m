@@ -3811,11 +3811,9 @@ static NSImage  *fileImage = nil;
 // language translation methods.
 
 /**
- * This method is used to translate all of the strings in the file from one language
- * into another.  This is helpful when attempting to translate an application for use
- * in different locales.
+ * This method collects all of the objects in the document.
  */
-- (NSArray *) collectAllObjects
+- (NSArray *) _collectAllObjects
 {
   NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
   NSEnumerator *en = [topLevelObjects objectEnumerator];
@@ -3866,6 +3864,11 @@ static NSImage  *fileImage = nil;
   return allObjects;
 }
 
+/**
+ * This method is used to translate all of the strings in the file from one language
+ * into another.  This is helpful when attempting to translate an application for use
+ * in different locales.
+ */
 - (void) translate
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
@@ -3880,7 +3883,7 @@ static NSImage  *fileImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSMutableArray *allObjects = [self collectAllObjects];
+      NSMutableArray *allObjects = [self _collectAllObjects];
       NSString *filename = [oPanel filename];
       NSDictionary *dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
       NSEnumerator *en = [allObjects objectEnumerator];
@@ -3928,6 +3931,7 @@ static NSImage  *fileImage = nil;
 	      else if([obj isKindOfClass: [NSWindow class]])
 		{
 		  [obj setViewsNeedDisplay: YES];
+		  [obj orderFront: self];
 		}
 
 	      [self touch]; 
@@ -3952,7 +3956,7 @@ static NSImage  *fileImage = nil;
 	       file: nil];
   if (result == NSOKButton)
     {
-      NSMutableArray *allObjects = [self collectAllObjects];
+      NSMutableArray *allObjects = [self _collectAllObjects];
       NSString *filename = [sp filename];
       NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
       NSEnumerator *en = [allObjects objectEnumerator];

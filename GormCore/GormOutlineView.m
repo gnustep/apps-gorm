@@ -537,6 +537,7 @@ static NSColor *darkGreyBlueColor = nil;
 	      [self _openOutlets: _clickedItem];
 	    }
 	}
+      [super mouseDown: theEvent];
     }
   else if (_isEditing && !isActionOrOutlet)
     {
@@ -563,8 +564,10 @@ static NSColor *darkGreyBlueColor = nil;
 	    }
 	}
     }
-
-  [super mouseDown: theEvent];
+  else
+    {
+      [super mouseDown: theEvent];
+    }
 }  
 
 // additional methods for subclass

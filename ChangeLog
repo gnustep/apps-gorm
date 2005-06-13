@@ -1,3 +1,13 @@
+2005-06-12 23:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Modified the data source method
+	outlineView:setObjectValue:forItem: to reject outlet/action changes
+	when the item and the objectValue are the same.
+	* GormCore/GormDocument.m: Changed collectAllObjects to 
+	_collectAllObjects, since it is private.
+	* GormCore/GormOutlineView.m: In mouseDown: only send to the super
+	class under certain conditions.
+
 2005-06-11 14:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Addition of "Translation" submenu as well
