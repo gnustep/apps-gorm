@@ -1,3 +1,8 @@
+2005-06-12 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormOutlineView.m: _handleDoubleClick: now calls 
+	NSDebugLog 
+
 2005-06-12 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Added GormProtocol.h to the exported headers.

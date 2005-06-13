@@ -29,6 +29,7 @@
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSNull.h>
 #include <Foundation/NSException.h>
+#include <Foundation/NSDebug.h>
 #include <AppKit/NSTableColumn.h>
 #include <AppKit/NSCell.h>
 #include <AppKit/NSEvent.h>
@@ -124,7 +125,7 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void) _handleDoubleClick: (id)sender
 {
-  NSLog(@"Double clicked");
+  NSDebugLog(@"Double clicked");
 }
 
 - init
