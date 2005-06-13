@@ -37,93 +37,6 @@ GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-
-#GormCore_RESOURCE_FILES = \
-#	GormInfo.plist \
-#	ClassInformation.plist \
-#	VersionProfiles.plist \
-#	Defaults.plist \
-#	Palettes/0Menus/0Menus.palette \
-#	Palettes/1Windows/1Windows.palette \
-#	Palettes/2Controls/2Controls.palette \
-#	Palettes/3Containers/3Containers.palette \
-#	Palettes/4Data/4Data.palette \
-#	Images/GormClass.tiff \
-#	Images/GormFilesOwner.tiff \
-#	Images/GormFirstResponder.tiff \
-#	Images/GormFontManager.tiff \
-#	Images/GormImage.tiff \
-#	Images/GormWindow.tiff \
-#	Images/GormMenu.tiff \
-#	Images/GormObject.tiff \
-#	Images/GormSound.tiff \
-#	Images/GormUnknown.tiff \
-#	Images/GormSourceTag.tiff \
-#	Images/GormTargetTag.tiff \
-#	Images/GormLinkImage.tiff \
-#	Images/GormEHCoil.tiff \
-#	Images/GormEHLine.tiff \
-#	Images/GormEVCoil.tiff \
-#	Images/GormEVLine.tiff \
-#	Images/GormMHCoil.tiff \
-#	Images/GormMHLine.tiff \
-#	Images/GormMVCoil.tiff \
-#	Images/GormMVLine.tiff \
-#        Images/Gorm.tiff \
-#        Images/leftalign_nib.tiff \
-#        Images/rightalign_nib.tiff \
-#        Images/centeralign_nib.tiff \
-#        Images/justifyalign_nib.tiff \
-#        Images/naturalalign_nib.tiff \
-#	Images/iconAbove_nib.tiff \
-#	Images/iconBelow_nib.tiff \
-#	Images/iconLeft_nib.tiff \
-#	Images/iconOnly_nib.tiff \
-#	Images/iconRight_nib.tiff \
-#	Images/titleOnly_nib.tiff \
-#	Images/line_nib.tiff \
-#	Images/bezel_nib.tiff \
-#	Images/noBorder_nib.tiff \
-#	Images/ridge_nib.tiff \
-#	Images/button_nib.tiff \
-#	Images/shortbutton_nib.tiff \
-#	Images/photoframe_nib.tiff \
-#	Images/date_formatter.tiff \
-#	Images/number_formatter.tiff \
-#	Images/Sunday_seurat.tiff \
-#	Images/iconBottomLeft_nib.tiff \
-#	Images/iconBottomRight_nib.tiff \
-#	Images/iconBottom_nib.tiff \
-#	Images/iconCenterLeft_nib.tiff \
-#	Images/iconCenterRight_nib.tiff \
-#	Images/iconCenter_nib.tiff \
-#	Images/iconTopLeft_nib.tiff \
-#	Images/iconTopRight_nib.tiff \
-#	Images/iconTop_nib.tiff \
-#	Images/GormAction.tiff \
-#	Images/GormOutlet.tiff \
-#	Images/GormActionSelected.tiff \
-#	Images/GormOutletSelected.tiff \
-#	Images/FileIcon_gmodel.tiff \
-#	Images/tabtop_nib.tiff \
-#	Images/tabbot_nib.tiff \
-#	Images/GormView.tiff \
-#	Images/LeftArr.tiff \
-#	Images/RightArr.tiff \
-#	Images/GormTesting.tiff \
-#	Resources/GormClassPanel.gorm \
-#	Resources/GormViewSizeInspector.gorm \
-#	Resources/GormCustomClassInspector.gorm \
-#	Resources/GormSoundInspector.gorm \
-#	Resources/GormImageInspector.gorm \
-#	Resources/GormScrollViewAttributesInspector.gorm \
-#	Resources/GormNSSplitViewInspector.gorm \
-#	Resources/GormClassInspector.gorm \
-#	Resources/GormFontView.gorm \
-#	Resources/GormSetName.gorm \
-#	Resources/GormDocument.gorm \
-#	Resources/Gorm.gorm
-
 GormCore_HEADER_FILES = \
 	GormBoxEditor.h \
 	GormClassEditor.h \
@@ -150,6 +63,7 @@ GormCore_HEADER_FILES = \
 	GormPalettesManager.h \
 	GormPlacementInfo.h \
 	GormPrivate.h \
+	GormProtocol.h \
 	GormResource.h \
 	GormResourceEditor.h \
 	GormScrollViewAttributesInspector.h \
