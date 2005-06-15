@@ -1,3 +1,8 @@
+2005-06-14 20:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Fix in [GormDocument translate] to
+	properly redisplay the window after translation.
+
 2005-06-12 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormOutlineView.m: _handleDoubleClick: now calls 

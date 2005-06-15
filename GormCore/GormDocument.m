@@ -2495,10 +2495,11 @@ static NSImage  *fileImage = nil;
  */
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
   RETAIN(aConnector); // prevent it from being dealloc'd until the notification is done.
   // issue pre notification..
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  [nc postNotificationName: IBWillRemoveConnectorNotification
+ [nc postNotificationName: IBWillRemoveConnectorNotification
       object: aConnector];
 
   // mark the document as changed.
@@ -3928,14 +3929,22 @@ static NSImage  *fileImage = nil;
 		{
 		  [obj setNeedsDisplay: YES];
 		}
-	      else if([obj isKindOfClass: [NSWindow class]])
-		{
-		  [obj setViewsNeedDisplay: YES];
-		  [obj orderFront: self];
-		}
 
 	      [self touch]; 
 	    }
+	  
+	  // redisplay/flush, if the object is a window.
+	  if([obj isKindOfClass: [NSWindow class]])
+	    {
+	      NSWindow *w = (NSWindow *)obj;
+	      [w setViewsNeedDisplay: YES];
+	      [w disableFlushWindow];
+	      [[w contentView] setNeedsDisplay: YES];
+	      [[w contentView] displayIfNeeded];
+	      [w enableFlushWindow];
+	      [w flushWindowIfNeeded];
+	    }
+
 	}
     } 
 }
