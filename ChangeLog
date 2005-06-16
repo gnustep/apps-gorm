@@ -1,3 +1,7 @@
+2005-06-16 19:49 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBInspector.m: Added "revert" call in setObject:
+
 2005-06-14 20:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Fix in [GormDocument translate] to
