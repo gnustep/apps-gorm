@@ -1,3 +1,14 @@
+2005-06-17 00:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m
+	* GormCore/GormDocument.m
+	* GormCore/GormInspectorsManager.m
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormObjectInspector.m
+	* GormCore/GormPalettesManager.m
+	* GormCore/GormResourceEditor.m
+	* GormCore/GormWindowEditor.m: Code cleanup.
+
 2005-06-17 00:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Code cleanup.

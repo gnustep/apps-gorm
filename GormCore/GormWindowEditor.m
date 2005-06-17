@@ -333,8 +333,8 @@
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     GormLinkPboardType, IBViewPboardType, nil]];
 
-  selection = [NSMutableArray new];
-  subeditors = [NSMutableArray new];
+  selection = [[NSMutableArray alloc] init];
+  subeditors = [[NSMutableArray alloc] init];
 
   activated = NO;
   closed = NO;

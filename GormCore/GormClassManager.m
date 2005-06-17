@@ -729,7 +729,7 @@
 	    {
 	      if (actions == nil)
 		{
-		  allActions = [NSMutableArray new];
+		  allActions = [[NSMutableArray alloc] init];
 		}
 	      else
 		{
@@ -850,7 +850,7 @@
 	    {
 	      if (outlets == nil)
 		{
-		  allOutlets = [NSMutableArray new];
+		  allOutlets = [[NSMutableArray alloc] init];
 		}
 	      else
 		{
@@ -1181,7 +1181,7 @@
 
       // get the info...
       classInfo = [classInformation objectForKey: key];
-      newInfo = [NSMutableDictionary new];
+      newInfo = [[NSMutableDictionary alloc] init];
       [ci setObject: newInfo forKey: key];
 
       // superclass...
@@ -1234,7 +1234,7 @@
 
       // get the info...
       classInfo = [classInformation objectForKey: key];
-      newInfo = [NSMutableDictionary new];
+      newInfo = [[NSMutableDictionary alloc] init];
       [ci setObject: newInfo forKey: key];
 
       // superclass...
@@ -1294,7 +1294,7 @@
       NSMutableDictionary   *oldInfo;
       id		    obj;
       
-      newInfo = [NSMutableDictionary new];
+      newInfo = [[NSMutableDictionary alloc] init];
       oldInfo = [classInformation objectForKey: key];
       
       [classInformation setObject: newInfo forKey: key];

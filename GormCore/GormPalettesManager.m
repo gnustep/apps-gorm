@@ -200,7 +200,7 @@ static NSImage	*dragImage = nil;
     }
 
   RELEASE(dragImage);
-  dragImage = [NSImage new];
+  dragImage = [[NSImage alloc] init];
   rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
 					    rect: rect];
   [dragImage setSize: rect.size];
@@ -292,12 +292,12 @@ static NSImage	*dragImage = nil;
   [panel setMinSize: [panel frame].size];
 
   // allocate arrays and dictionaries.
-  bundles = [NSMutableArray new];
-  palettes = [NSMutableArray new];
-  importedClasses = [NSMutableDictionary new];
-  importedImages = [NSMutableArray new];
-  importedSounds = [NSMutableArray new];
-  substituteClasses = [NSMutableDictionary new];
+  bundles = [[NSMutableArray alloc] init];
+  palettes = [[NSMutableArray alloc] init];
+  importedClasses = [[NSMutableDictionary alloc] init];
+  importedImages = [[NSMutableArray alloc] init];
+  importedSounds = [[NSMutableArray alloc] init];
+  substituteClasses = [[NSMutableDictionary alloc] init];
 
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasHorizontalScroller: YES];
@@ -460,7 +460,7 @@ static NSImage	*dragImage = nil;
       return NO;
     }
 
-  palette = [paletteClass new];
+  palette = [[paletteClass alloc] init];
   if ([palette isKindOfClass: [IBPalette class]] == NO)
     {
       NSRunAlertPanel (nil, _(@"Palette contains wrong type of class"), 

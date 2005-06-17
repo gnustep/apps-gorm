@@ -349,8 +349,8 @@ static NSMapTable	*docMap = 0;
       [self setDoubleAction: @selector(raiseSelection:)];
       [self setTarget: self];
 
-      objects = [NSMutableArray new];
-      proto = [NSButtonCell new];
+      objects = [[NSMutableArray alloc] init];
+      proto = [[NSButtonCell alloc] init];
       [proto setBordered: NO];
       [proto setAlignment: NSCenterTextAlignment];
       [proto setImagePosition: NSImageAbove];

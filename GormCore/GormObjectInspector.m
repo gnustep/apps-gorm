@@ -102,9 +102,9 @@ selectCellWithString: (NSString*)title
       NSRect		windowRect = NSMakeRect(0, 0, IVW, IVH-IVB);
       NSRect		rect;
 
-      sets = [NSMutableArray new];
-      gets = [NSMutableDictionary new];
-      types = [NSMutableDictionary new];
+      sets = [[NSMutableArray alloc] init];
+      gets = [[NSMutableDictionary alloc] init];
+      types = [[NSMutableDictionary alloc] init];
 
       window = [[NSWindow alloc] initWithContentRect: windowRect
 					   styleMask: NSBorderlessWindowMask 
@@ -251,7 +251,7 @@ selectCellWithString: (NSString*)title
 
 		  if (c != 0)
 		    {
-		      (*imp)(object, set, [c new]);
+		      (*imp)(object, set, [[c alloc] init]);
 		    }
 		}
 	      else

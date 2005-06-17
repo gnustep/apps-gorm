@@ -210,7 +210,7 @@
       NSRect	           inspectorRect = {{0, 0}, {IVW, IVH}};
       unsigned int	   style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
       
-      cache = [NSMutableDictionary new];
+      cache = [[NSMutableDictionary alloc] init];
       panel = [[NSPanel alloc] initWithContentRect: contentRect
 			       styleMask: style
 			       backing: NSBackingStoreRetained
@@ -294,10 +294,10 @@
       
       current = -1;
       
-      inspector = [GormEmptyInspector new];
+      inspector = [[GormEmptyInspector alloc] init];
       [cache setObject: inspector forKey: @"GormEmptyInspector"];
       RELEASE(inspector);
-      inspector = [GormMultipleInspector new];
+      inspector = [[GormMultipleInspector alloc] init];
       [cache setObject: inspector forKey: @"GormMultipleInspector"];
       DESTROY(inspector);
       
@@ -361,7 +361,7 @@
   if(inspector == nil)
     {
 	  Class	c = NSClassFromString(newInspector);
-	  inspector = [c new];
+	  inspector = [[c alloc] init];
     }
 
   newView = [[inspector window] contentView];
@@ -489,14 +489,14 @@
 	{
 	  Class	c = NSClassFromString(newInspector);
 
-	  inspector = [c new];
+	  inspector = [[c alloc] init];
 	  /* Try to gracefully handle an inspector creation error */
 	  while (inspector == nil && (obj = [obj superclass]) 
 		 && current == 0)
 	    {
 	      NSDebugLog(@"Error loading %@ inspector", newInspector);
 	      newInspector = [obj inspectorClassName];
-	      inspector = [NSClassFromString(newInspector) new];
+	      inspector = [[NSClassFromString(newInspector) alloc] init];
 	    }
 	  [cache setObject: inspector forKey: newInspector];
 	  RELEASE(inspector);
@@ -738,7 +738,7 @@
 		    allActionsForObject: [NSApp connectDestination]]);
 		  if ([actions count] > 0)
 		    {
-		      con = [NSNibControlConnector new];
+		      con = [[NSNibControlConnector alloc] init];
 		      [con setSource: object];
 		      [con setDestination: [NSApp connectDestination]];
 		      [con setLabel: [actions objectAtIndex: 0]];
@@ -782,7 +782,7 @@
 	      if (found == NO)
 		{
 		  RELEASE(currentConnector);
-		  currentConnector = [NSNibOutletConnector new];
+		  currentConnector = [[NSNibOutletConnector alloc] init];
 		  [currentConnector setSource: object];
 		  [currentConnector setDestination: [NSApp connectDestination]];
 		  [currentConnector setLabel: title];
@@ -819,7 +819,7 @@
 	  if (found == NO)
 	    {
 	      RELEASE(currentConnector);
-	      currentConnector = [NSNibControlConnector new];
+	      currentConnector = [[NSNibControlConnector alloc] init];
 	      [currentConnector setSource: object];
 	      [currentConnector setDestination: [NSApp connectDestination]];
 	      [currentConnector setLabel: title];
@@ -1135,7 +1135,7 @@ selectCellWithString: (NSString*)title
       /*
        * Create list of existing connections for selected object.
        */
-      connectors = [NSMutableArray new];
+      connectors = [[NSMutableArray alloc] init];
       array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
 	ofClass: [NSNibControlConnector class]];
       [connectors addObjectsFromArray: array];

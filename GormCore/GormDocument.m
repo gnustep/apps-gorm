@@ -217,7 +217,7 @@ static NSImage  *fileImage = nil;
 	  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	  
 	  // initialize...
-	  openEditors = [NSMutableArray new];
+	  openEditors = [[NSMutableArray alloc] init];
 	  classManager = [(GormClassManager *)[GormClassManager alloc] initWithDocument: self]; 
 	  
 	  /*
@@ -228,7 +228,7 @@ static NSImage  *fileImage = nil;
 					       NSObjectMapValueCallBacks, 128, [self zone]);
 	  
 	  // for saving the editors when the gorm file is persisted.
-	  savedEditors = [NSMutableArray new];	  
+	  savedEditors = [[NSMutableArray alloc] init];	  
 	  [window setMinSize: [window frame].size];
 	  [window setTitle: _(@"UNTITLED")];
 	  
@@ -353,10 +353,10 @@ static NSImage  *fileImage = nil;
 	  /*
 	   * Set up special-case dummy objects and add them to the objects view.
 	   */
-	  filesOwner = [GormFilesOwner new];
+	  filesOwner = [[GormFilesOwner alloc] init];
 	  [self setName: @"NSOwner" forObject: filesOwner];
 	  [objectsView addObject: filesOwner];
-	  firstResponder = [GormFirstResponder new];
+	  firstResponder = [[GormFirstResponder alloc] init];
 	  [self setName: @"NSFirst" forObject: firstResponder];
 	  [objectsView addObject: firstResponder];
 	  
@@ -364,7 +364,7 @@ static NSImage  *fileImage = nil;
 	   * Set image for this miniwindow.
 	   */
 	  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];	  
-	  hidden = [NSMutableArray new];
+	  hidden = [[NSMutableArray alloc] init];
 	  
 	  // retain the file prefs view...
 	  RETAIN(filePrefsView);
@@ -502,7 +502,7 @@ static NSImage  *fileImage = nil;
     }
   else
     {
-      NSNibConnector	*con = [NSNibConnector new];
+      NSNibConnector	*con = [[NSNibConnector alloc] init];
 
       [con setSource: anObject];
       [con setDestination: aParent];
@@ -644,7 +644,7 @@ static NSImage  *fileImage = nil;
 	{
 	  NSString *label = NSStringFromSelector(sel);
 	  id source = anObject;
-	  NSNibControlConnector *con = [NSNibControlConnector new];
+	  NSNibControlConnector *con = [[NSNibControlConnector alloc] init];
 	  id destination = [(NSControl *)anObject target];
 	  NSArray *sourceConnections = [self connectorsForSource: source];
 
@@ -984,7 +984,7 @@ static NSImage  *fileImage = nil;
    * Remove all editors from the selected objects before archiving
    * and restore them afterwards.
    */
-  editorSet = [NSMutableSet new];
+  editorSet = [[NSMutableSet alloc] init];
   enumerator = [anArray objectEnumerator];
   while ((obj = [enumerator nextObject]) != nil)
     {
@@ -1405,7 +1405,7 @@ static NSImage  *fileImage = nil;
       id<IBConnectors>	link;
 
       editor = [[eClass alloc] initWithObject: anObject inDocument: self];
-      link = AUTORELEASE([GormObjectToEditor new]);
+      link = AUTORELEASE([[GormObjectToEditor alloc] init]);
       [link setSource: anObject];
       [link setDestination: editor];
       [connections addObject: link];
@@ -1428,7 +1428,7 @@ static NSImage  *fileImage = nil;
 	  /*
 	   * Link to the parent of the editor.
 	   */
-	  link = AUTORELEASE([GormEditorToParent new]);
+	  link = AUTORELEASE([[GormEditorToParent alloc] init]);
 	  [link setSource: editor];
 	  [link setDestination: anEditor];
 	  [connections addObject: link];
@@ -2792,7 +2792,7 @@ static NSImage  *fileImage = nil;
     {
       if (a == nil)
 	{
-	  a = [NSMutableArray new];
+	  a = [[NSMutableArray alloc] init];
 	  [nameTable setObject: a forKey: @"NSVisible"];
 	  RELEASE(a);
 	}
@@ -2826,7 +2826,7 @@ static NSImage  *fileImage = nil;
     {
       if (a == nil)
 	{
-	  a = [NSMutableArray new];
+	  a = [[NSMutableArray alloc] init];
 	  [nameTable setObject: a forKey: @"NSDeferred"];
 	  RELEASE(a);
 	}
@@ -2903,7 +2903,7 @@ static NSImage  *fileImage = nil;
  */
 - (id) revertDocument: (id)sender
 {
-  GormDocument	*reverted = AUTORELEASE([GormDocument new]);
+  GormDocument	*reverted = AUTORELEASE([[GormDocument alloc] init]);
 
   if ([reverted loadDocument: documentPath] != nil)
     {
