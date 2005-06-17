@@ -153,6 +153,18 @@
   [super dealloc];
 }
 
+- (void) stop: (id)sender
+{
+  if(isTesting == NO)
+    {
+      [super stop: sender];
+    }
+  else
+    {
+      [self endTesting: sender];
+    }
+}
+
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -546,8 +558,10 @@
 	  NSData		*data;
 	  NSArchiver            *archiver;
 	  NSEnumerator          *en;
+	  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
+	  NSString              *subClassName;
 	  id                    obj;
-
+	  
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init]; 
 	  en = [[self windows] objectEnumerator];
@@ -565,6 +579,8 @@
 	  [activeDoc beginArchiving];
 	  [archiver encodeClassName: @"GormCustomView" 
 		    intoClassName: @"GormTestCustomView"];
+	  
+	  /*
 	  [archiver encodeClassName: @"GormNSMenu"
 		    intoClassName: @"NSMenu"];
 	  [archiver encodeClassName: @"GormNSWindow"
@@ -575,6 +591,16 @@
 		    intoClassName: @"NSPopUpButton"];
 	  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
 		    intoClassName: @"NSPopUpButtonCell"];
+	  */
+
+	  en = [substituteClasses keyEnumerator];
+	  while((subClassName = [en nextObject]) != nil)
+	    {
+	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+	      [archiver encodeClassName: subClassName
+			intoClassName: realClassName];
+	    }
+
 	  /*
 	  [archiver encodeClassName: @"GormNSBrowser" 
 		    intoClassName: @"NSBrowser"];
@@ -583,12 +609,13 @@
 	  [archiver encodeClassName: @"GormNSOutlineView" 
 		    intoClassName: @"NSOutlineView"];
 	  */
+
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; // do not allow custom classes during testing.
 	  [archiver encodeRootObject: activeDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activeDoc endArchiving];
 	  RELEASE(archiver);
-	  [GSClassSwapper setIsInInterfaceBuilder: NO]; // beginal allowing custom classes...
+	  [GSClassSwapper setIsInInterfaceBuilder: NO]; // begin allowing custom classes...
 	  
 	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
 		       object: self];

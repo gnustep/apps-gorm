@@ -1,3 +1,8 @@
+2005-06-16 23:49 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Override "stop:" to call endTesting: if a test
+	session is running, instead of killing the app.
+
 2005-06-16 19:49 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBInspector.m: Added "revert" call in setObject:
