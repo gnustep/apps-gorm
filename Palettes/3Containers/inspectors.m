@@ -382,7 +382,7 @@
 	}
 
       // initialize
-      cell = [cls new];
+      cell = [[cls alloc] init];
       [object setDataCell: cell];
       [[object tableView] setNeedsDisplay: YES];
 

@@ -673,7 +673,7 @@ void _attachAll(NSMenu *menu, id document)
     {
       document = aDocument;
       ASSIGN(edited, anObject);
-      selection = [NSMutableArray new];
+      selection = [[NSMutableArray alloc] init];
       rep = [edited menuRepresentation];
       
       /*

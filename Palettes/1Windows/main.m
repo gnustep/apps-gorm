@@ -120,7 +120,7 @@
 					   defer: NO];
   contents = [originalWindow contentView];
 
-  w = [GormWindowMaker new];
+  w = [[GormWindowMaker alloc] init];
   v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 64)];
   [v setBordered: NO];
   [v setImage: dragImage];
@@ -133,7 +133,7 @@
   RELEASE(v);
   RELEASE(w);
 
-  w = [GormPanelMaker new];
+  w = [[GormPanelMaker alloc] init];
   v = [[NSButton alloc] initWithFrame: NSMakeRect(155, 60, 80, 64)];
   [v setBordered: NO];
   [v setImage: dragImage];

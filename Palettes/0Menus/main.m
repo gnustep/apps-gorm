@@ -85,7 +85,7 @@
   /*
    * The Info menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Info Panel..." 
      action: @selector(orderFrontStandardInfoPanel:) 
      keyEquivalent: @""];
@@ -161,7 +161,7 @@
   /*
    * The Document menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Open..." 
 	       action: @selector(openDocument:)
 	keyEquivalent: @"o"];
@@ -209,7 +209,7 @@
   /*
    * The Text menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Align Left" 
 	       action: @selector(alignLeft:) 
 	keyEquivalent: @""];
@@ -251,7 +251,7 @@
   /*
    * The Edit menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Cut" 
 	       action: @selector(cut:) 
 	keyEquivalent: @"x"];
@@ -287,7 +287,7 @@
   /*
    * The Find menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Find Panel..." 
 	       action: NULL
 	keyEquivalent: @"f"];
@@ -326,7 +326,7 @@
   /*
    * The Format menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   /*
    * Font submenu
    */
@@ -363,7 +363,7 @@
   i = (NSMenuItem *)[m addItemWithTitle: @"Text" 
 		       action: NULL
 		       keyEquivalent: @""];
-  s = [GormNSMenu new];
+  s = [[GormNSMenu alloc] init];
   [s addItemWithTitle: @"Align Left" 
 	       action: @selector(alignLeft:) 
 	keyEquivalent: @""];
@@ -429,7 +429,7 @@
   /*
    * The Windows menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Arrange In Front" 
 	       action: @selector(arrangeInFront:)
 	keyEquivalent: @""];
@@ -480,7 +480,7 @@
   /*
    * The Services menu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m setTitle: @"Services"];
   i = [[NSMenuItem alloc] initWithTitle: @"Services" 
 				 action: @selector(submenuAction:)
@@ -504,7 +504,7 @@
   /*
    * The general submenu
    */
-  m = [GormNSMenu new];
+  m = [[GormNSMenu alloc] init];
   [m addItemWithTitle: @"Item" 
 	       action: NULL
 	keyEquivalent: @""];
@@ -530,7 +530,7 @@
   /*
    * A whole new menu...
    */
-  menu = [GormMenuMaker new];
+  menu = [[GormMenuMaker alloc] init];
   v = [[NSButton alloc] initWithFrame: NSMakeRect(148,6,48,48)];
   [v setBordered: NO];
   [v setImage: dragImage];
