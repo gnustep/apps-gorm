@@ -83,7 +83,7 @@
 @implementation GormNSMenu
 + (GormNSMenu *) menuWithMenu: (NSMenu *)menu
 {
-  GormNSMenu *newMenu = [GormNSMenu new];
+  GormNSMenu *newMenu = [[GormNSMenu alloc] init];
   NSEnumerator *en = [[menu itemArray] objectEnumerator];
   NSMenuItem *item = nil;
  
