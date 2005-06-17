@@ -1,3 +1,7 @@
+2005-06-17 00:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Code cleanup.
+
 2005-06-16 23:49 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Override "stop:" to call endTesting: if a test

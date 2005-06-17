@@ -113,7 +113,7 @@
       path = [bundle pathForImageResource: @"GormTesting"];
       testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 
-      documents = [NSMutableArray new];
+      documents = [[NSMutableArray alloc] init];
       [nc addObserver: self
 	  selector: @selector(handleNotification:)
 	  name: IBSelectionChangedNotification
@@ -277,7 +277,7 @@
   /* kept in the case one want access to the classManager without document */
   else if (classManager == nil)
     {
-      classManager = [GormClassManager new];
+      classManager = [[GormClassManager alloc] init];
     }
   return classManager;
   
@@ -434,7 +434,7 @@
 
 - (void) open: (id) sender
 {
-  GormDocument	*doc = AUTORELEASE([GormDocument new]);
+  GormDocument	*doc = AUTORELEASE([[GormDocument alloc] init]);
 
   [documents addObject: doc];
   if ([doc openDocument: sender] == nil)
@@ -451,7 +451,7 @@
 
 - (void) newGormDocument : (id) sender 
 {
-  id doc = AUTORELEASE([GormDocument new]);
+  id doc = AUTORELEASE([[GormDocument alloc] init]);
   [documents addObject: doc];
   switch ([sender tag]) 
     {
@@ -782,7 +782,7 @@
 
   if([(GormDocument *)[self activeDocument] isTopLevelObject: obj])
     {
-      panel = [GormSetNameController new];
+      panel = [[GormSetNameController alloc] init];
       returnPanel = [panel runAsModal];
       textField = [panel textField];
       
@@ -1109,7 +1109,7 @@
 
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
-  GormDocument	*doc = AUTORELEASE([GormDocument new]);
+  GormDocument	*doc = AUTORELEASE([[GormDocument alloc] init]);
 
   [documents addObject: doc];
   if ([doc loadDocument: fileName] == nil)
@@ -1130,7 +1130,7 @@
 {
   if (palettesManager == nil)
     {
-      palettesManager = [GormPalettesManager new];
+      palettesManager = [[GormPalettesManager alloc] init];
     }
   return palettesManager;
 }
