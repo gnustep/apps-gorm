@@ -1,0 +1,67 @@
+/* GormOpenGLView.h - Demo view for show when displaying a NSOpenGLView during
+ *                    testing only.
+ *
+ * Copyright (C) 2005 Free Software Foundation, Inc.
+ *
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	2005
+ * 
+ * This file is part of GNUstep.
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
+ */
+
+#include <GormCore/GormOpenGLView.h>
+#include <Foundation/NSTimer.h>
+#include <AppKit/NSOpenGL.h>
+#include <GL/gl.h>
+
+@implementation GormOpenGLView 
+- (id) initWithFrame: (NSRect)rect
+{
+  if((self = [super initWithFrame: rect]) != nil)
+    {
+      rtri = 0.0f;
+      timer = [NSTimer scheduledTimerWithTimeInterval: 0.05
+		       target: self
+		       selector: @selector(oneStep)
+		       userInfo: nil
+		       repeats: YES];
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  [timer invalidate];
+  [super dealloc];
+}
+
+- (void) oneStep
+{
+  // rotate.
+  // rtri -= 0.2f;
+  rtri = 0.5f; // fabs( sin( 2.0 * M_PI * [startTime timeIntervalSinceNow] ) ) ;
+
+  [self setNeedsDisplay: YES];
+}
+
+- (void) drawRect: (NSRect)rect
+{   
+  // do nothing for now...
+}
+
+@end
+

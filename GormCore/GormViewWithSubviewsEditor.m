@@ -24,11 +24,9 @@
 
 #include <AppKit/AppKit.h>
 
-#include "GormPrivate.h"
-
-#include "GormViewWithSubviewsEditor.h"
-
-#include "GormFontViewController.h"
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormViewWithSubviewsEditor.h>
+#include <GormCore/GormFontViewController.h>
 
 @class GormEditorToParent;
 

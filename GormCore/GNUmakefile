@@ -59,6 +59,8 @@ GormCore_HEADER_FILES = \
 	GormInternalViewEditor.h \
 	GormMatrixEditor.h \
 	GormNSSplitViewInspector.h \
+	GormObjectEditor.h \
+	GormOpenGLView.h \
 	GormOutlineView.h \
 	GormPalettesManager.h \
 	GormPlacementInfo.h \
@@ -109,6 +111,7 @@ GormCore_OBJC_FILES = \
 	GormNSSplitViewInspector.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
+	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
 	GormResource.m \

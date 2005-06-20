@@ -1,3 +1,14 @@
+2005-06-20 19:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile.preamble: Add -lGL to ADDITIONAL_LIBS
+	* GormCore/GNUmakefile: Added new opengl view.
+	* GormCore/GormCustomView.m: Added include for GormOpenGLView and 
+	modified _bestPossibleSuperClass to return the GormOpenGLView.
+	* GormCore/GormOpenGLView.[hm]: Displays a rotating polygon to
+	illustrate that this is a OpenGL view to the user when in test mode.
+	* GormCore/GormViewWithSubviewsEditor.m: Corrected includes.
+	* Gorm.m: Corrected a memory leak in testInterface and endTesting.
+
 2005-06-17 17:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenu.m: Code cleanup.

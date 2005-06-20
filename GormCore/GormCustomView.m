@@ -22,14 +22,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include "GormCustomView.h"
+#include <GormCore/GormCustomView.h>
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormOpenGLView.h>
+
 #include <AppKit/NSColor.h>
 #include <AppKit/NSGraphics.h>
 #include <AppKit/NSFont.h>
-
 #include <AppKit/NSNibLoading.h>
+
 #include <GNUstepGUI/GSNibTemplates.h>
-#include "GormPrivate.h"
 
 @class GSCustomView;
 
@@ -132,7 +134,12 @@
   Class cls = [NSView class];
   GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
 
-  if([classManager isSuperclass: @"NSView" linkedToClass: theClass])
+  if([classManager isSuperclass: @"NSOpenGLView" linkedToClass: theClass] ||
+     [theClass isEqual: @"NSOpenGLView"])
+    {
+      cls = [GormOpenGLView class];
+    }
+  else  if([classManager isSuperclass: @"NSView" linkedToClass: theClass])
     {
       NSString *superClass = [classManager nonCustomSuperClassOf: theClass];
 
@@ -155,6 +162,7 @@
   id		obj;
   Class		cls;
   unsigned int      mask;
+  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
   
   [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
   theFrame = [aCoder decodeRect];
@@ -162,7 +170,8 @@
 	  at: &mask];
   
   cls = NSClassFromString(theClass);
-  if (cls == nil)
+  if([classManager isSuperclass: @"NSOpenGLView" linkedToClass: theClass] ||
+     [theClass isEqual: @"NSOpenGLView"] || cls == nil)
     {
       cls = [self _bestPossibleSuperClass];
     }
@@ -178,12 +187,13 @@
       [obj setAutoresizingMask: mask];
     }
   
-  
+  /*
   if (![self isKindOfClass: [GSCustomView class]])
     {
       RETAIN(obj);
     }
-  
+  */
+
   RELEASE(self);
   return obj;
 }

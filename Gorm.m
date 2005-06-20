@@ -45,8 +45,8 @@
   BOOL			isTesting;
   id			testContainer;
   id                    gormMenu;
-  NSMenu		*mainMenu; // saves the main menu when testing...
-  NSMenu                *servicesMenu; // saves the services menu when testing...
+  NSMenu		*mainMenu; // saves the main menu...
+  NSMenu                *servicesMenu; // saves the services menu...
   NSMenu                *classMenu; // so we can set it for the class view
   NSMenuItem            *guideLineMenuItem; 
   NSDictionary		*menuLocations;
@@ -63,6 +63,7 @@
   NSRect		connectDRect;
   NSPoint               cascadePoint;
   NSMutableArray        *testingWindows;
+  NSMutableArray        *topObjects;
 }
 
 // handle notifications the object recieves.
@@ -550,6 +551,9 @@
     }
   else
     {
+      // top level objects
+      topObjects = [[NSMutableArray alloc] init];
+
       NS_DURING
 	{
 	  NSUserDefaults	*defaults;
@@ -561,7 +565,9 @@
 	  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
 	  NSString              *subClassName;
 	  id                    obj;
-	  
+	  NSDictionary          *context = [NSDictionary dictionaryWithObject: topObjects
+							 forKey: @"NSTopLevelObjects"];
+
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init]; 
 	  en = [[self windows] objectEnumerator];
@@ -573,26 +579,15 @@
 		}
 	    }
 
-	  isTesting = YES; // set here, so that beginArchiving and endArchiving do not use templates.
+	  // set here, so that beginArchiving and endArchiving do not use templates.
+	  isTesting = YES; 
 	  [self setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc beginArchiving];
 	  [archiver encodeClassName: @"GormCustomView" 
 		    intoClassName: @"GormTestCustomView"];
-	  
-	  /*
-	  [archiver encodeClassName: @"GormNSMenu"
-		    intoClassName: @"NSMenu"];
-	  [archiver encodeClassName: @"GormNSWindow"
-		    intoClassName: @"NSWindow"];
-	  [archiver encodeClassName: @"GormNSPanel"
-		    intoClassName: @"NSPanel"];
-	  [archiver encodeClassName: @"GormNSPopUpButton" 
-		    intoClassName: @"NSPopUpButton"];
-	  [archiver encodeClassName: @"GormNSPopUpButtonCell" 
-		    intoClassName: @"NSPopUpButtonCell"];
-	  */
 
+	  // substitute classes from palettes.
 	  en = [substituteClasses keyEnumerator];
 	  while((subClassName = [en nextObject]) != nil)
 	    {
@@ -601,22 +596,15 @@
 			intoClassName: realClassName];
 	    }
 
-	  /*
-	  [archiver encodeClassName: @"GormNSBrowser" 
-		    intoClassName: @"NSBrowser"];
-	  [archiver encodeClassName: @"GormNSTableView" 
-		    intoClassName: @"NSTableView"];
-	  [archiver encodeClassName: @"GormNSOutlineView" 
-		    intoClassName: @"NSOutlineView"];
-	  */
-
-	  [GSClassSwapper setIsInInterfaceBuilder: YES]; // do not allow custom classes during testing.
+	  // do not allow custom classes during testing.
+	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
 	  [archiver encodeRootObject: activeDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activeDoc endArchiving];
 	  RELEASE(archiver);
-	  [GSClassSwapper setIsInInterfaceBuilder: NO]; // begin allowing custom classes...
+	  [GSClassSwapper setIsInInterfaceBuilder: NO]; 
 	  
+	  // signal the start of testing...
 	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
 		       object: self];
 	  
@@ -636,8 +624,7 @@
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
-	      [testContainer awakeWithContext: nil];
-	      RETAIN(testContainer); // released in endTesting:
+	      [testContainer awakeWithContext: context];
 	    }
 	  
 	  /*
@@ -678,10 +665,7 @@
 
 	  // so we don't get the warning...
 	  [self setServicesMenu: nil]; 
-
-	  // display the current main menu...
 	  [[self mainMenu] display];
-
 	  [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
 		       object: self];
 	  
@@ -936,15 +920,14 @@
       NSEnumerator		*e;
       id			val;
 
-      CREATE_AUTORELEASE_POOL(pool);
-
+      // CREATE_AUTORELEASE_POOL(pool);
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
 			object: self];
 
       /*
        * Make sure windows will go away when the container is destroyed.
        */
-      e = [[testContainer nameTable] objectEnumerator];
+      e = [topObjects objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
 	  if ([val isKindOfClass: [NSWindow class]] == YES)
@@ -990,7 +973,6 @@
       NS_ENDHANDLER
 
       [mainMenu display]; // bring it to the front...
-
       isTesting = NO;
 
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
@@ -1002,8 +984,10 @@
       
 
       DESTROY(testingWindows);
+      // RELEASE(pool);
 
-      RELEASE(pool);
+      // deallocate top leve objects
+      RELEASE(topObjects);
 
       return self;
     }
