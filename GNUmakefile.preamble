@@ -28,8 +28,7 @@ ADDITIONAL_GUI_LIBS += \
 	-lGormCore \
 	-lGorm \
 	-lGormObjCHeaderParser \
-	-lGormPrefs \
-	-lGL
+	-lGormPrefs 
 
 ADDITIONAL_INCLUDE_DIRS += \
 	-IInterfaceBuilder \

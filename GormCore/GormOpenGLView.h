@@ -26,11 +26,11 @@
 #ifndef INCLUDED_GormOpenGLView_h
 #define INCLUDED_GormOpenGLView_h
 
-#include <AppKit/NSOpenGLView.h>
+#include <AppKit/NSView.h>
 
 @class NSTimer;
 
-@interface GormOpenGLView : NSOpenGLView
+@interface GormOpenGLView : NSView
 {
   float rtri;
   NSTimer *timer;

@@ -25,27 +25,30 @@
 
 #include <GormCore/GormOpenGLView.h>
 #include <Foundation/NSTimer.h>
-#include <AppKit/NSOpenGL.h>
-#include <GL/gl.h>
+#include <AppKit/PSOperators.h>
+// #include <AppKit/NSOpenGL.h>
+// #include <GL/gl.h>
 
 @implementation GormOpenGLView 
 - (id) initWithFrame: (NSRect)rect
 {
   if((self = [super initWithFrame: rect]) != nil)
     {
+      /*
       rtri = 0.0f;
       timer = [NSTimer scheduledTimerWithTimeInterval: 0.05
 		       target: self
 		       selector: @selector(oneStep)
 		       userInfo: nil
 		       repeats: YES];
+      */
     }
   return self;
 }
 
 - (void) dealloc
 {
-  [timer invalidate];
+  // [timer invalidate];
   [super dealloc];
 }
 
@@ -53,14 +56,15 @@
 {
   // rotate.
   // rtri -= 0.2f;
-  rtri = 0.5f; // fabs( sin( 2.0 * M_PI * [startTime timeIntervalSinceNow] ) ) ;
-
+  rtri = 0.5f; 
   [self setNeedsDisplay: YES];
 }
 
 - (void) drawRect: (NSRect)rect
 {   
   // do nothing for now...
+  [[NSColor blackColor] set];
+  PSrectfill(NSMinX(rect), NSMinY(rect), NSWidth(rect),  NSHeight(rect));
 }
 
 @end
