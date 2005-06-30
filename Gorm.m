@@ -212,12 +212,12 @@
 
 - (void) applicationWillTerminate: (NSApplication*)sender
 {
-//   [[NSUserDefaults standardUserDefaults] 
-//     setBool: [[[self inspectorsManager] panel] isVisible]
-//     forKey: @"ShowInspectors"];
-//   [[NSUserDefaults standardUserDefaults] 
-//     setBool: [[[self palettesManager] panel] isVisible]
-//     forKey: @"ShowPalettes"];
+  [[NSUserDefaults standardUserDefaults] 
+    setBool: [[[self inspectorsManager] panel] isVisible]
+    forKey: @"ShowInspectors"];
+  [[NSUserDefaults standardUserDefaults] 
+    setBool: [[[self palettesManager] panel] isVisible]
+    forKey: @"ShowPalettes"];
 }
 
 - (BOOL) applicationShouldTerminate: (NSApplication*)sender
