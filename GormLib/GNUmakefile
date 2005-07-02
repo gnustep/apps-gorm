@@ -50,6 +50,7 @@ IBDocuments.h \
 IBEditors.h \
 IBInspector.h \
 IBInspectorManager.h \
+IBInspectorMode.h \
 IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
@@ -73,6 +74,7 @@ IBDocuments.m \
 IBEditors.m \
 IBInspector.m \
 IBInspectorManager.m \
+IBInspectorMode.m \
 IBObjectAdditions.m \
 IBPalette.m \
 IBResourceManager.m

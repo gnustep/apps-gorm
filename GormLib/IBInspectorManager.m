@@ -25,7 +25,10 @@
 #include <Foundation/NSObject.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSDictionary.h>
+#include <Foundation/NSArray.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
+#include <InterfaceBuilder/IBInspectorMode.h>
+#include <math.h>
 
 static IBInspectorManager *_sharedInspectorManager = nil;
 
@@ -60,6 +63,7 @@ NSString *IBWillInspectWithModeNotification =
       if((self = [super init]) != nil)
 	{
 	  // set the shared instance...
+	  modes = [[NSMutableArray alloc] init];
 	  _sharedInspectorManager = self;
 	}
     }
@@ -72,6 +76,12 @@ NSString *IBWillInspectWithModeNotification =
   return self;
 }
 
+- (void) dealloc
+{
+  RELEASE(modes);
+  [super dealloc];
+}
+
 /**
  * Add an inspector for a given mode.  This allows the addition
  * of inspectors for different aspects of the same object.
@@ -82,6 +92,30 @@ NSString *IBWillInspectWithModeNotification =
                      inspectorClassName: (NSString *)className
                                ordering: (float)ord
 {
+  IBInspectorMode *mode = [[IBInspectorMode alloc] 
+			    initWithIdentifier: ident
+			    forObject: obj
+			    localizedLabel: label
+			    inspectorClassName: className
+			    ordering: ord];
+  int position = 0;
+  int count = [modes count];
+
+  if(ord == -1)
+    {
+      position = count; // last
+    }
+  else
+    {
+      position = (int)ceil((double)ord);
+      if(position > count)
+	{
+	  position = count;
+	}
+    }
+
+  [modes insertObject: mode
+	 atIndex: position];  
 }
 
 /**
@@ -90,6 +124,19 @@ NSString *IBWillInspectWithModeNotification =
  */
 - (unsigned int) indexOfModeWithIdentifier: (NSString *)ident
 {
-  return 0;
+  NSEnumerator *en = [modes objectEnumerator];
+  int index = 0;
+  id mode = nil;
+
+  while((mode = [en nextObject]) != nil)
+    {
+      if([[mode identifier] isEqualToString: ident])
+	{
+	  break;
+	}
+      index++;
+    }
+  
+  return index;
 }
 @end

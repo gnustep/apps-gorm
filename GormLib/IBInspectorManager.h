@@ -40,6 +40,7 @@ IB_EXTERN NSString *IBWillInspectWithModeNotification;
 {
   NSMutableArray        *modes;
   id                    currentMode;
+  id                    selectedObject;
 }
 
 /**
