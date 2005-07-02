@@ -24,6 +24,7 @@
 
 #include <Foundation/Foundation.h>
 #include <Foundation/NSFormatter.h>
+#include <Foundation/NSNotification.h>
 #include <Foundation/NSNumberFormatter.h>
 #include <AppKit/NSComboBox.h>
 #include <AppKit/NSScrollView.h>
@@ -300,10 +301,35 @@ int defaultDateFormatIndex = 3;
   v = [[NSComboBox alloc] initWithFrame: NSMakeRect(143, 22, 96, 21)];
   [contents addSubview: v];
   RELEASE(v);
-  
+
+  // subscribe to the notification...      
+  [[NSNotificationCenter defaultCenter]
+    addObserver: self
+    selector: @selector(willInspectObject:)
+    name: IBWillInspectObjectNotification
+    object: nil];
 }
 
+- (void) willInspectObject: (NSNotification *)notification
+{
+  id o = [notification object];
+  if([o respondsToSelector: @selector(cell)])
+    {
+      id cell = [o cell];
+      if([cell respondsToSelector: @selector(formatter)])
+	{
+	  id formatter = [o formatter];
+	  if([formatter isKindOfClass: [NSFormatter class]])
+	    {
+	      NSString *ident = NSStringFromClass([formatter class]);
+	      [[IBInspectorManager sharedInspectorManager]
+		addInspectorModeWithIdentifier: ident 
+		forObject: o
+		localizedLabel: _(@"Formatter")
+		inspectorClassName: [formatter inspectorClassName]
+		ordering: -1.0];      
+	    }
+	}
+    }
+}
 @end
-
-
-

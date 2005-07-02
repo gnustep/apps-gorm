@@ -1,3 +1,16 @@
+2005-07-02 16:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormControlEditor.m: Added call to setSelectionFromEditor:
+	in performDragOperation, if the object has a formatter. 
+	* GormCore/GormInspectorsManager.m: Changes to refresh the
+	popup button based on the inspector modes in setCurrentInspector:
+	* GormLib/IBInspectorManager.[hm]: New instance variable. 
+	Implemented addInspectorModeWithIndentifier:forObject:...
+	* GormLib/IBInspectorMode.[hm]: Added.
+	* Palettes/4Data/inspectors.m: minor cleanup.
+	* Palettes/4Data/main.m: Added code to add the inspector mode to
+	the manager when the object is selected.
+
 2005-06-30 00:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormPrefGeneral.gorm: Remove the preferences

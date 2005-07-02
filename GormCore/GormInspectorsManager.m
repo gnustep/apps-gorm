@@ -25,16 +25,15 @@
 #include <AppKit/NSNibConnector.h>
 #include <Foundation/NSException.h>
 #include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/IBInspectorMode.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
 #include "GormPrivate.h"
 #include "GormImage.h"
 #include "GormSound.h"
 
-#define HASFORMATTER(obj) \
-      [obj respondsToSelector: @selector(cell)] && \
-      [[obj cell] respondsToSelector: @selector(formatter)] && \
-      [[obj cell] formatter] != nil
+
+#define NUM_DEFAULT_INSPECTORS 5
 
 /*
  *	The GormEmptyInspector is a placeholder for an empty selection.
@@ -311,13 +310,15 @@
 	  selector: @selector(handleNotification:)
 	  name: IBWillEndTestingInterfaceNotification
 	  object: nil];
+      /*
       [nc addObserver: self
 	  selector: @selector(updateInspectorPopUp:)
 	  name: NSPopUpButtonWillPopUpNotification
 	  object: popup];
-      
+
       [popup setTarget: self];
       [popup setAction: @selector(updateInspectorPopUp:)];
+      */
     }
 
   return self;
@@ -389,6 +390,70 @@
     }
 }
 
+- (void) _addDefaultModes
+{
+  // remove all items... clear out current state
+  [modes removeAllObjects];
+  currentMode = nil;
+  
+  // Attributes inspector...
+  [self addInspectorModeWithIdentifier: @"AttributesInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Attributes")
+	inspectorClassName: [selectedObject inspectorClassName]
+	ordering: 0.0];
+
+  // Connection inspector...
+  [self addInspectorModeWithIdentifier: @"ConnectionInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Connections")
+	inspectorClassName: [selectedObject connectInspectorClassName]
+	ordering: 1.0];
+
+  // Size inspector...
+  [self addInspectorModeWithIdentifier: @"SizeInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Size")
+	inspectorClassName: [selectedObject sizeInspectorClassName]
+	ordering: 2.0];
+
+  // Help inspector...
+  [self addInspectorModeWithIdentifier: @"HelpInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Help")
+	inspectorClassName: [selectedObject helpInspectorClassName]
+	ordering: 3.0];
+
+  // Custom class inspector...
+  [self addInspectorModeWithIdentifier: @"CustomClassInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Custom Class")
+	inspectorClassName: [selectedObject classInspectorClassName]
+	ordering: 4.0];
+}
+
+- (void) _refreshPopUp
+{
+  NSEnumerator *en = [modes objectEnumerator];
+  int index = 0;
+  id obj = nil;
+
+  [popup removeAllItems];
+  while((obj = [en nextObject]) != nil)
+    {
+      int tag = index + 1;
+      NSMenuItem *item;
+      [popup addItemWithTitle: [obj localizedLabel]];
+
+      item = (NSMenuItem *)[popup itemAtIndex: index];
+      [item setTarget: self];
+      [item setAction: @selector(setCurrentInspector:)];
+      [item setKeyEquivalent: [NSString stringWithFormat: @"%d",tag]];
+      [item setTag: tag];
+      index++;
+    }
+}
+
 - (void) setCurrentInspector: (id)anObj
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
@@ -397,10 +462,18 @@
   id		obj = [selection lastObject];
   NSView	*newView = nil;
   NSString	*newInspector = nil;
+  int           tag = 0; 
 
   if (anObj != self)
     {
-      current = [anObj tag];
+      tag = [anObj tag];
+      current = ((tag > 0)?(tag - 1):tag);
+    }
+
+  // reset current under certain conditions.
+  if(current < 0)
+    {
+      current = 0;
     }
 
   // Operate on the document view if the selected object is a NSScrollView
@@ -415,22 +488,26 @@
 	  obj = [[obj tableColumns] objectAtIndex:[obj selectedColumn]];
     }
 
-  /*
-   * Set panel title for the type of object being inspected.
-   */
-  if (obj == nil)
+  // if(obj != selectedObject)
     {
-      [panel setTitle: _(@"Inspector")];
-    }
-  else if ([obj isKindOfClass: [GormClassProxy class]])
-    {
-      [panel setTitle: [NSString stringWithFormat: @"Class Edit Inspector:%@",
-				 [obj className]]];
-    }
-  else
-    {
-      NSString *newTitle = [obj objectNameForInspectorTitle]; 
-      [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
+      selectedObject = obj;
+
+      // remove any items beyond the original items on the list..
+      [self _addDefaultModes];
+      
+      // inform the world that the object is about to be inspected.
+      [nc postNotificationName: IBWillInspectObjectNotification object: obj];
+      
+      // set key equivalent
+      [self _refreshPopUp];
+
+      if([modes count] == NUM_DEFAULT_INSPECTORS)
+	{
+	  if(current > (NUM_DEFAULT_INSPECTORS - 1))
+	    {
+	      current = 0;
+	    }
+	}
     }
 
   if (count == 0)
@@ -443,29 +520,26 @@
     }
   else
     {
-      switch (current)
-	{
-	  case 0: newInspector = [obj inspectorClassName]; break;
-	  case 1: newInspector = [obj connectInspectorClassName]; break;
-	  case 2: newInspector = [obj sizeInspectorClassName]; break;
-	  case 3: newInspector = [obj helpInspectorClassName]; break;
-          case 5: 
-            {
-              // If the object doesn't understand formatter then default to attributes
-              if (HASFORMATTER(obj))
-                {
-                  newInspector = [ [[obj cell] formatter] inspectorClassName];
-                }
-              else
-                {
-                  current = 0;
-                  [popup selectItemAtIndex: 0];
-                  newInspector = [obj inspectorClassName];
-                }
-              break;
-            }  
-	  default: newInspector = [obj classInspectorClassName]; break;
-	}
+      currentMode = [modes objectAtIndex: current];
+      newInspector = [currentMode inspectorClassName];
+    }
+  
+  /*
+   * Set panel title for the type of object being inspected.
+   */
+  if (selectedObject == nil)
+    {
+      [panel setTitle: _(@"Inspector")];
+    }
+  else if([selectedObject isKindOfClass: [GormClassProxy class]]) 
+    {
+      [panel setTitle: [NSString stringWithFormat: @"Class Edit Inspector:%@",
+				 [selectedObject className]]];
+    }
+  else
+    {
+      NSString *newTitle = [selectedObject objectNameForInspectorTitle]; 
+      [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
     }
 
   if (newInspector == nil)
@@ -481,7 +555,6 @@
       [[inspector revertButton] removeFromSuperview];
       [[inspector window] setContentView:
 	[[inspectorView subviews] lastObject]];
-      [popup selectItemAtIndex: current];
 
       ASSIGN(oldInspector, newInspector);
       inspector = [cache objectForKey: newInspector];
@@ -569,19 +642,20 @@
 	}
     }
 
-  // inform the world that the object is about to be inspected.
-  [nc postNotificationName: IBWillInspectObjectNotification object: obj];
+  // reset the popup..
+  [popup selectItemAtIndex: current];
 
   // inspect the object.
-  [inspector setObject: obj];
+  [inspector setObject: [currentMode object]];
 
   // load the object.
   [inspector revert: self];
 }
 
-/* This is to include the formatter item in the pop up button
+/**
+ * This is to include the formatter item in the pop up button
  * if the selected object in Gorm has a formatter set
- */
+ *
 - (void) updateInspectorPopUp: (NSNotification*)aNotification
 {
   NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
@@ -611,7 +685,7 @@
         }
     }
 }
-
+*/
 @end
 
 

@@ -717,7 +717,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
   return self;
 }
 
-
 - (void) ok: (id)sender
 {
   [super ok: sender];
@@ -988,11 +987,8 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
     [[negativeField cell] setFormatter: fmtr];
   }
   
-  
-
   return self;
 }
-
 
 - (void) ok: (id)sender
 {

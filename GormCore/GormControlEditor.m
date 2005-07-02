@@ -695,6 +695,7 @@
 		      [_editedObject setObjectValue: fieldValue];
 		    }
 		  
+		  [document setSelectionFromEditor: self];
 		  result = YES;
 		}
 	    }
