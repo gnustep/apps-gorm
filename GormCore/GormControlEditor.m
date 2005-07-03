@@ -637,6 +637,7 @@
     }
 }
 
+/*
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
@@ -728,5 +729,6 @@
 
   return result;
 }
+*/
 @end
 

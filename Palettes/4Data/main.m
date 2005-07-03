@@ -35,6 +35,7 @@
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSClipView.h>
 #include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBViewResourceDragging.h>
 #include <GormCore/GormPrivate.h>
 
 /* -----------------------------------------------------------
@@ -191,12 +192,37 @@ int defaultDateFormatIndex = 3;
  * The Data Palette (Scroll Text View, formatters, Combo box,...)
  *
  * -----------------------------------------------------------*/
-@interface DataPalette: IBPalette
-{
-}
+@interface DataPalette: IBPalette <IBViewResourceDraggingDelegates>
 @end
 
 @implementation DataPalette
+
+- (id) init
+{
+  if((self = [super init]) != nil)
+    {
+      // Make ourselves a delegate, so that when the formatter is dragged in, 
+      // this code is called...
+      [NSView registerViewResourceDraggingDelegate: self];
+
+      // subscribe to the notification...      
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(willInspectObject:)
+	name: IBWillInspectObjectNotification
+	object: nil];
+      
+    }
+  
+  return self;
+}
+
+- (void) dealloc
+{
+  [NSView unregisterViewResourceDraggingDelegate: self];
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [super dealloc];
+}
 
 - (void) finishInstantiate
 { 
@@ -301,13 +327,6 @@ int defaultDateFormatIndex = 3;
   v = [[NSComboBox alloc] initWithFrame: NSMakeRect(143, 22, 96, 21)];
   [contents addSubview: v];
   RELEASE(v);
-
-  // subscribe to the notification...      
-  [[NSNotificationCenter defaultCenter]
-    addObserver: self
-    selector: @selector(willInspectObject:)
-    name: IBWillInspectObjectNotification
-    object: nil];
 }
 
 - (void) willInspectObject: (NSNotification *)notification
@@ -332,4 +351,71 @@ int defaultDateFormatIndex = 3;
 	}
     }
 }
+
+// view resource dragging delegate...
+
+/**
+ * Ask if the view accepts the object.
+ */
+- (BOOL) acceptsViewResourceFromPasteboard: (NSPasteboard *)pb
+                                 forObject: (id)obj
+                                   atPoint: (NSPoint)p
+{
+  return ([obj respondsToSelector: @selector(setFormatter:)] && 
+	  [[pb types] containsObject: IBFormatterPboardType]);
+}
+
+/**
+ * Perform the action of depositing the object.
+ */
+- (void) depositViewResourceFromPasteboard: (NSPasteboard *)pb
+                                  onObject: (id)obj
+                                   atPoint: (NSPoint)p
+{
+  NSData *data = [pb dataForType: IBFormatterPboardType];
+  id array = [NSUnarchiver unarchiveObjectWithData: data];
+  
+  if(array != nil)
+    {
+      if([array count] > 0)
+	{
+	  id <IBDocuments> document = [(id<IB>)NSApp documentForObject: obj];
+	  id formatter = [array objectAtIndex: 0];
+	  if([obj respondsToSelector: @selector(setFormatter:)])
+	    {
+	      [obj setFormatter: formatter];	      
+	      if ([formatter isMemberOfClass: [NSNumberFormatter class]])
+		{
+		  id fieldValue = [NSNumber numberWithFloat: 1.123456789];
+		  [obj setStringValue: [fieldValue stringValue]];
+		  [obj setObjectValue: fieldValue];
+		}
+	      else if ([formatter isMemberOfClass: [NSDateFormatter class]])
+		{
+		  id fieldValue = [NSDate date];
+		  [obj setStringValue: [fieldValue description]];
+		  [obj setObjectValue: fieldValue];
+		}	      
+	    }
+	}
+    }
+}
+
+/**
+ * Should we draw the connection frame when the resource is
+ * dragged in?
+ */
+- (BOOL) shouldDrawConnectionFrame
+{
+  return NO;
+}
+
+/**
+ * Types of resources accepted by this view.
+ */
+- (NSArray *)viewResourcePasteboardTypes
+{
+  return [NSArray arrayWithObject: IBFormatterPboardType];
+}
+
 @end

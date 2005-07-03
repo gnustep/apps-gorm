@@ -24,6 +24,7 @@
 
 #include <AppKit/AppKit.h>
 #include <Foundation/NSUserDefaults.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormGenericEditor.h"
 #include "GormViewEditor.h"
@@ -294,19 +295,9 @@ static BOOL currently_displaying = NO;
       document = aDocument;
       
       draggedTypes = [NSMutableArray arrayWithObject: GormLinkPboardType];
-      if ([_editedObject respondsToSelector: @selector(setImage:)])
-	{
-	  [draggedTypes addObject: GormImagePboardType];
-	}
-      if ([_editedObject respondsToSelector: @selector(setSound:)])
-	{
-	  [draggedTypes addObject: GormSoundPboardType];
-	}
-      if ([_editedObject respondsToSelector: @selector(setFormatter:)])
-	{
-	  [draggedTypes addObject: IBFormatterPboardType];
-	} 
-      
+
+      // in addition to the link, any other types accepted by dragging delegates.
+      [draggedTypes addObjectsFromArray: [NSView acceptedViewResourcePasteboardTypes]]; 
       [self registerForDraggedTypes: draggedTypes];
       
       activated = NO;
@@ -343,7 +334,6 @@ static BOOL currently_displaying = NO;
 {
   GormPlacementInfo *gip;
   gip = [[GormPlacementInfo alloc] init];
-
     
   gip->resizingIn = view;
   gip->firstPass = YES;
@@ -384,7 +374,6 @@ static BOOL currently_displaying = NO;
   int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
   int halfSpacing = guideSpacing / 2;
 
-//    NSLog(@"initializing hints");
   gpi->lastLeftRect = NSZeroRect;
   gpi->lastRightRect = NSZeroRect;
   gpi->lastTopRect = NSZeroRect;
@@ -827,15 +816,12 @@ static BOOL currently_displaying = NO;
 
   }
 
-
-
   GormShowFrameWithKnob(gpi->hintFrame, gpi->knob);
   gpi->oldRect = GormExtBoundsForRect(gpi->hintFrame);
   gpi->oldRect.origin.x--;
   gpi->oldRect.origin.y--;
   gpi->oldRect.size.width += 2;
   gpi->oldRect.size.height += 2;
-
 }
 
 - (void) updateResizingWithFrame: (NSRect) frame
@@ -1226,11 +1212,7 @@ static BOOL currently_displaying = NO;
 	     and: _editedObject];
       return NSDragOperationLink;
     }
-  else if ([types containsObject: GormImagePboardType] == YES)
-    {
-      return NSDragOperationCopy;
-    }
-  else if ([types containsObject: GormSoundPboardType] == YES)
+  else if ([types firstObjectCommonWithArray: [NSView acceptedViewResourcePasteboardTypes]] != nil)
     {
       return NSDragOperationCopy;
     }
@@ -1301,6 +1283,31 @@ static BOOL currently_displaying = NO;
     }
 }
 
+- (id) _selectDelegate: (id<NSDraggingInfo>)sender
+{
+  NSEnumerator *en = [[NSView registeredViewResourceDraggingDelegates] objectEnumerator];
+  id delegate = nil;
+  id selectedDelegate = nil;
+  NSPasteboard *pb = [sender draggingPasteboard];
+  NSPoint point = [sender draggingLocation];
+
+  while((delegate = [en nextObject]) != nil)
+    {
+      if([delegate respondsToSelector: @selector(acceptsViewResourceFromPasteboard:forObject:atPoint:)])
+	{
+	  if([delegate acceptsViewResourceFromPasteboard: pb
+		       forObject: _editedObject
+		       atPoint: point])
+	    {
+	      selectedDelegate = delegate;
+	      break;
+	    }
+	}
+    }
+  
+  return selectedDelegate;
+}
+
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
@@ -1312,11 +1319,7 @@ static BOOL currently_displaying = NO;
     {
       return YES;
     }
-  else if ([types containsObject: GormImagePboardType] == YES)
-    {
-      return YES;
-    }
-  else if ([types containsObject: GormSoundPboardType] == YES)
+  else if ([types firstObjectCommonWithArray: [NSView acceptedViewResourcePasteboardTypes]] != nil)
     {
       return YES;
     }
@@ -1330,7 +1333,9 @@ static BOOL currently_displaying = NO;
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
-  
+  id            delegate = nil;
+  NSPoint       point = [sender draggingLocation];
+
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   
@@ -1340,30 +1345,31 @@ static BOOL currently_displaying = NO;
 	     and: _editedObject];
       [NSApp startConnecting];
     }
-  else if ([types containsObject: GormImagePboardType] == YES)
+  else if ((delegate = [self _selectDelegate: sender]) != nil)
     {
-      NSString *name = [dragPb stringForType: GormImagePboardType];
-      if([(id)_editedObject respondsToSelector: @selector(setImage:)])
+      if([delegate respondsToSelector: @selector(shouldDrawConnectionFrame)])
 	{
-	  NSImage *image = [NSImage imageNamed: name];
-	  // [image setArchiveByName: NO];
-	  [(id)_editedObject setImage: AUTORELEASE([image copy])];
-	  [document setSelectionFromEditor: self];
+	  if([delegate shouldDrawConnectionFrame])
+	    {      
+	      [NSApp displayConnectionBetween: [NSApp connectSource] 
+		     and: _editedObject];      
+	    }
 	}
-      return YES;
-    }
-  else   if ([types containsObject: GormSoundPboardType] == YES)
-    {
-      NSString *name;
-      name = [dragPb stringForType: GormSoundPboardType];
-      if([(id)_editedObject respondsToSelector: @selector(setSound:)])
+
+      if([delegate respondsToSelector: @selector(depositViewResourceFromPasteboard:onObject:atPoint:)])
 	{
-	  NSSound *sound = [NSSound soundNamed: name];
-	  [(id)_editedObject setSound: AUTORELEASE([sound copy])];
+	  [delegate depositViewResourceFromPasteboard: dragPb
+		    onObject: _editedObject
+		    atPoint: point];
+	  
+	  // refresh the selection...
 	  [document setSelectionFromEditor: self];
+
+	  // return success.
+	  return YES;
 	}
-      return YES;
     }
+
   return NO;
 }
 

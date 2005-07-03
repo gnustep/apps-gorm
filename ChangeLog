@@ -1,3 +1,26 @@
+2005-07-03 12:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormBoxEditor.m: Minor cleanup.
+	* GormCore/GormControlEditor.m: Removed unecessary code to 
+	handle formatter, since it is now handled generically via the
+	dragging delegate code.
+	* GormCore/GormViewEditor.m: Added code in performDragOperation:
+	and other dragging methods to correctly use the dragging delegate
+	code.
+	* GormCore/NSView+GormExtensions.m: Added implementation
+	of delegate registration methods to NSView here.
+	* GormLib/IBApplicationAdditions.h: Added declaration
+	for documentForObject: to the IBDocuments protocol.
+	* GormLib/IBPalette.h: Changed "document" ivar to paletteDocument.
+	* GormLib/IBPalette.m: Changed "document" ivar to paletteDocument.
+	* Gorm.m: Added implementation of documentForObject:
+	* Palettes/2Controls/main.m: Added methods for 
+	IBViewResourceDraggingDelegates to handle images and sounds
+	dragged to controls.
+	* Palettes/4Data/main.m: Added methods for 
+	IBViewResourceDraggingDelegates to handle formatters being
+	dragged to controls.
+
 2005-07-02 16:12 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormControlEditor.m: Added call to setSelectionFromEditor:

@@ -25,8 +25,14 @@
 #include <Foundation/NSArray.h>
 #include <Foundation/NSEnumerator.h>
 #include "NSView+GormExtensions.h"
+#include <InterfaceBuilder/IBViewResourceDragging.h>
+#include <Foundation/NSArray.h>
+#include <Foundation/NSEnumerator.h>
 
 @implementation NSView (GormExtensions)
+/**
+ * All superviews of this view
+ */
 - (NSArray *) superviews
 {
   NSMutableArray *result = [NSMutableArray array];
@@ -41,6 +47,9 @@
   return result;
 }
 
+/**
+ * Checks for a superview of a give class.
+ */
 - (BOOL) hasSuperviewKindOfClass: (Class)cls
 {
   NSEnumerator *en = [[self superviews] objectEnumerator];
@@ -55,4 +64,65 @@
 
   return result;
 }
+@end
+
+static NSMutableArray *_registeredViewResourceDraggingDelegates = nil;
+
+@implementation NSView (IBViewResourceDraggingDelegates)
+
+/**
+ * Types accepted by the view.
+ */
++ (NSArray *) acceptedViewResourcePasteboardTypes
+{
+  NSMutableArray *result = nil;
+  if([_registeredViewResourceDraggingDelegates count] > 0)
+    {
+      NSEnumerator *en = [_registeredViewResourceDraggingDelegates objectEnumerator];
+      id delegate = nil;
+      result = [NSMutableArray array];
+
+      while((delegate = [en nextObject]) != nil)
+	{
+	  if([delegate respondsToSelector: @selector(viewResourcePasteboardTypes)])
+	    {
+	      [result addObjectsFromArray: [delegate viewResourcePasteboardTypes]];
+	    }
+	}
+    }
+  return result;
+}
+
+/**
+ * Return the list of registered delegates.
+ */
++ (NSArray *) registeredViewResourceDraggingDelegates
+{
+  return _registeredViewResourceDraggingDelegates;
+}
+
+/**
+ * Register a delegate.
+ */
++ (void) registerViewResourceDraggingDelegate: (id<IBViewResourceDraggingDelegates>)delegate
+{
+  if(_registeredViewResourceDraggingDelegates == nil)
+    {
+      _registeredViewResourceDraggingDelegates = [[NSMutableArray alloc] init];
+    }
+
+  [_registeredViewResourceDraggingDelegates addObject: delegate];
+}
+
+/**
+ * Remove a previously registered delegate.
+ */
++ (void) unregisterViewResourceDraggingDelegate: (id<IBViewResourceDraggingDelegates>)delegate
+{
+  if(_registeredViewResourceDraggingDelegates != nil)
+    {
+      [_registeredViewResourceDraggingDelegates removeObject: delegate];
+    }
+}
+
 @end

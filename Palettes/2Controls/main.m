@@ -24,16 +24,38 @@
 */
 
 #include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBViewResourceDragging.h>
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSPopUpButton.h>
+#include <AppKit/NSPasteboard.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/NSSound.h>
 
 @class GormNSPopUpButton;
 
-@interface ControlsPalette: IBPalette
+@interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates>
 @end
 
 
-@implementation ControlsPalette
+@implementation ControlsPalette 
+- (id) init
+{
+  if((self = [super init]) != nil)
+    {
+      // Make ourselves a delegate, so that when the sound/image is dragged in, 
+      // this code is called...
+      [NSView registerViewResourceDraggingDelegate: self];
+    }
+
+  return self;
+}
+
+- (void) dealloc
+{
+  [NSView unregisterViewResourceDraggingDelegate: self];
+  [super dealloc];
+}
+
 - (void) finishInstantiate
 {
   NSView	*contents;
@@ -46,5 +68,65 @@
   [v addItemWithTitle: @"Item 3"];
   [contents addSubview: v];
   RELEASE(v);
+}
+
+/**
+ * Ask if the view accepts the object.
+ */
+- (BOOL) acceptsViewResourceFromPasteboard: (NSPasteboard *)pb
+                                 forObject: (id)obj
+                                   atPoint: (NSPoint)p
+{
+  NSArray *types = [pb types];
+  return (([obj respondsToSelector: @selector(setSound:)] || 
+	   [obj respondsToSelector: @selector(setImage:)]) &&
+	  ([types containsObject: GormImagePboardType] ||
+	   [types containsObject: GormSoundPboardType]));
+}
+
+/**
+ * Perform the action of depositing the object.
+ */
+- (void) depositViewResourceFromPasteboard: (NSPasteboard *)pb
+                                  onObject: (id)obj
+                                   atPoint: (NSPoint)p
+{
+  NSArray *types = [pb types];
+  if ([types containsObject: GormImagePboardType] == YES)
+    {
+      NSString *name = [pb stringForType: GormImagePboardType];
+      if([(id)obj respondsToSelector: @selector(setImage:)])
+	{
+	  NSImage *image = [NSImage imageNamed: name];
+	  [(id)obj setImage: AUTORELEASE([image copy])];
+	}
+    }
+  else   if ([types containsObject: GormSoundPboardType] == YES)
+    {
+      NSString *name;
+      name = [pb stringForType: GormSoundPboardType];
+      if([(id)obj respondsToSelector: @selector(setSound:)])
+	{
+	  NSSound *sound = [NSSound soundNamed: name];
+	  [(id)obj setSound: AUTORELEASE([sound copy])];
+	}
+    }
+}
+
+/**
+ * Should we draw the connection frame when the resource is
+ * dragged in?
+ */
+- (BOOL) shouldDrawConnectionFrame
+{
+  return NO;
+}
+
+/**
+ * Types of resources accepted by this view.
+ */
+- (NSArray *)viewResourcePasteboardTypes
+{
+  return [NSArray arrayWithObjects: GormImagePboardType, GormSoundPboardType, nil];
 }
 @end

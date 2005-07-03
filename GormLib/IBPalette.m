@@ -98,7 +98,7 @@ static NSMapTable	*viewToType = 0;
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   RELEASE(icon);
-  RELEASE(document);
+  RELEASE(paletteDocument);
   [super dealloc];
 }
 
@@ -147,7 +147,7 @@ static NSMapTable	*viewToType = 0;
 	}
     }
 
-  document = [[IBPaletteDocument alloc] init];
+  paletteDocument = [[IBPaletteDocument alloc] init];
 
   return self;
 }
@@ -164,7 +164,7 @@ static NSMapTable	*viewToType = 0;
 
 - (id<IBDocuments>) paletteDocument
 {
-  return document;
+  return paletteDocument;
 }
 @end
 

@@ -1129,6 +1129,23 @@
   return [[selectionOwner selection] lastObject];
 } 
 
+- (id<IBDocuments>) documentForObject: (id)object
+{
+  NSEnumerator *en = [documents objectEnumerator];
+  id doc = nil;
+  id result = nil;
+
+  while((doc = [en nextObject]) != nil)
+    {
+      if([doc containsObject: object])
+	{
+	  result = doc;
+	  break;
+	}
+    }
+
+  return result;
+}
 
 - (void) startConnecting
 {

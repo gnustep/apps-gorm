@@ -55,6 +55,11 @@ IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
  * owner.
  */
 - (id) selectedObject;
+
+/**
+ * Returns the document which contains this object.
+ */
+- (id<IBDocuments>) documentForObject: (id)object;
 @end
 
 @interface NSApplication (GormSpecific)

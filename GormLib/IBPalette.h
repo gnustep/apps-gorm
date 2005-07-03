@@ -62,7 +62,7 @@ IB_EXTERN NSString      *GormLinkPboardType;
 {
   NSWindow	  *originalWindow;
   NSImage	  *icon;
-  id<IBDocuments> document;
+  id<IBDocuments> paletteDocument;
 }
 /*
  * For internal use only - these class methods return the information

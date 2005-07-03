@@ -109,12 +109,9 @@
     return nil;
 
   selection = [[NSMutableArray alloc] initWithCapacity: 5];
-
-
   
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
-
   
   return self;
 }
