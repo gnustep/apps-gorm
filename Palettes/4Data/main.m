@@ -379,11 +379,11 @@ int defaultDateFormatIndex = 3;
     {
       if([array count] > 0)
 	{
-	  id <IBDocuments> document = [(id<IB>)NSApp documentForObject: obj];
 	  id formatter = [array objectAtIndex: 0];
 	  if([obj respondsToSelector: @selector(setFormatter:)])
 	    {
-	      [obj setFormatter: formatter];	      
+	      [obj setFormatter: formatter];
+	      RETAIN(formatter);
 	      if ([formatter isMemberOfClass: [NSNumberFormatter class]])
 		{
 		  id fieldValue = [NSNumber numberWithFloat: 1.123456789];
