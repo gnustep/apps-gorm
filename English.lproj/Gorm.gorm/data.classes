@@ -2,7 +2,9 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "arrangeSelectedObjects:",
 	    "exportStrings:",
+	    "alignSelectedObjects:",
 	    "orderFrontFontPanel:",
 	    "translate:"
 	);
@@ -52,7 +54,9 @@
 	    "preferencesPanel:",
 	    "guideline:",
 	    "translate:",
-	    "exportStrings:"
+	    "exportStrings:",
+	    "arrangeSelectedObjects:",
+	    "alignSelectedObjects:"
 	);
 	Outlets = (
 	    gormMenu,

@@ -1179,6 +1179,18 @@
   connectDestination = nil;
 }
 
+- (void) arrangeSelectedObjects: (id)sender
+{
+  [[self activeDocument] performSelector: @selector(arrangeSelectedObjects:)
+			 withObject: sender];
+}
+
+- (void) alignSelectedObjects: (id)sender
+{
+  [[self activeDocument] performSelector: @selector(alignSelectedObjects:)
+			 withObject: sender];
+}
+
 - (void) translate: (id)sender
 {
   [[self activeDocument] performSelector: @selector(translate)];
@@ -1224,6 +1236,16 @@
 	return NO;
     }
   else if (sel_eq(action, @selector(translate:)))
+    {
+      if (active == nil)
+	return NO;
+    }
+  else if (sel_eq(action, @selector(arrangeSelectedObjects:)))
+    {
+      if (active == nil)
+	return NO;
+    }
+  else if (sel_eq(action, @selector(alignSelectedObjects:)))
     {
       if (active == nil)
 	return NO;

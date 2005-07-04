@@ -1,3 +1,15 @@
+2005-07-04 17:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Added Layout and Alignment menus.
+	* GormCore/GormDocument.[hm]: Added alignSelectedObjects: and 
+	arrangeSelectedObjects: methods.
+	* GormCore/GormProtocol.h: Added alignSelectedObjects: and 
+	arrangeSelectedObjects: methods declarations
+	* GormCore/NSView+GormExtensions.[hm]: Added moveViewToFront: and
+	moveViewToBack: methods.
+	* Gorm.m: Added alignSelectedObjects: and 
+	arrangeSelectedObjects: methods.
+
 2005-07-03 12:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/4Data/main.m: Minor fix in 

@@ -4006,6 +4006,90 @@ static NSImage  *fileImage = nil;
 	}
     } 
 }
+
+- (void) arrangeSelectedObjects: (id)sender
+{
+  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  int tag = [sender tag];
+  NSEnumerator *en = [selection objectEnumerator];
+  id v = nil;
+
+  while((v = [en nextObject]) != nil)
+    {
+      if([v isKindOfClass: [NSView class]])
+	{
+	  id editor = [self editorForObject: v create: NO];
+	  if([editor respondsToSelector: @selector(superview)])
+	    {
+	      id superview = [editor superview];
+	      if(tag == 0) // bring to front...
+		{ 
+		  [superview moveViewToFront: editor];
+		}
+	      else if(tag == 1) // send to back
+		{
+		  [superview moveViewToBack: editor];
+		}
+	      [superview setNeedsDisplay: YES];
+	    }
+	}
+    }
+}
+
+- (void) alignSelectedObjects: (id)sender
+{
+  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  int tag = [sender tag];
+  NSEnumerator *en = [selection objectEnumerator];
+  id v = nil;
+
+  id prev = nil;
+  while((v = [en nextObject]) != nil)
+    {
+      if([v isKindOfClass: [NSView class]])
+	{
+	  id editor = [self editorForObject: v create: NO];
+	  if(prev != nil)
+	    {
+	      NSRect r = [prev frame];
+	      NSRect e = [editor frame];
+	      if(tag == 0) // center vertically
+		{
+		  float center = (r.origin.x + (r.size.width / 2));
+		  e.origin.x = (center - (e.size.width / 2));
+		}
+	      else if(tag == 1) // center horizontally
+		{
+		  float center = (r.origin.y + (r.size.height / 2));		  
+		  e.origin.y = (center - (e.size.height / 2));  
+		}
+	      else if(tag == 2) // align left
+		{
+		  e.origin.x = r.origin.x;
+		}	      
+	      else if(tag == 3) // align right
+		{
+		  float right = (r.origin.x + r.size.width);
+		  e.origin.x = (right - e.size.width);
+		}	      
+	      else if(tag == 4) // align top
+		{
+		  float top = (r.origin.y + r.size.height);
+		  e.origin.y = (top - e.size.height);
+		}
+	      else if(tag == 5) // align bottom
+		{
+		  e.origin.y = r.origin.y;
+		}
+
+	      [editor setFrame: e];
+	      [[editor superview] setNeedsDisplay: YES];
+	    }
+	  prev = editor;
+	} 
+    }	      
+}
+
 @end
 
 @implementation GormDocument (MenuValidation)

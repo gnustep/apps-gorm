@@ -32,6 +32,8 @@
 @interface NSView (GormExtensions)
 - (NSArray *) superviews;
 - (BOOL) hasSuperviewKindOfClass: (Class)cls;
+- (void) moveViewToFront: (NSView *)sv;
+- (void) moveViewToBack: (NSView *)sv;
 @end
 
 #endif

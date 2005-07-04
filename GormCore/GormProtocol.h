@@ -72,7 +72,9 @@
 - (void) loadSound: (id) sender;
 - (void) loadImage: (id) sender;
 
-// grouping
+// grouping/layout
+- (void) arrangeSelectedObjects: (id)sender;
+- (void) alignSelectedObjects: (id)sender;
 - (void) groupSelectionInSplitView: (id)sender;
 - (void) groupSelectionInBox: (id)sender;
 - (void) groupSelectionInScrollView: (id)sender;

@@ -154,6 +154,10 @@
 - (id) fontManager;
 - (id) firstResponder;
 
+/* Layout */
+- (void) arrangeSelectedObjects: (id)sender;
+- (void) alignSelectedObjects: (id)sender;
+
 /* 
  * windowAndRect:forObject: is called by Gorm to determine where it should
  * draw selection markup

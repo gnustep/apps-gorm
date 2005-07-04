@@ -24,10 +24,10 @@
 
 #include <Foundation/NSArray.h>
 #include <Foundation/NSEnumerator.h>
+#include <Foundation/NSDebug.h>
+
 #include "NSView+GormExtensions.h"
 #include <InterfaceBuilder/IBViewResourceDragging.h>
-#include <Foundation/NSArray.h>
-#include <Foundation/NSEnumerator.h>
 
 @implementation NSView (GormExtensions)
 /**
@@ -64,10 +64,59 @@
 
   return result;
 }
+
+/**
+ * Moves the specified subview to the end of the list, so it's displayed
+ * in front of the other views.
+ */
+- (void) moveViewToFront: (NSView *)sv
+{
+  NSDebugLog(@"move to front %@", sv);
+  if([_sub_views containsObject: sv])
+    {
+      RETAIN(sv); // make sure it doesn't deallocate the view.
+      [_sub_views removeObject: sv];
+      [_sub_views addObject: sv]; // add it to the end.
+      RELEASE(sv);
+    }
+}
+
+/**
+ * Moves the specified subview to the beginning of the list, so it's 
+ * displayed behind all of the other views.
+ */
+- (void) moveViewToBack: (NSView *)sv
+{
+  NSDebugLog(@"move to back %@", sv);
+  if([_sub_views containsObject: sv])
+    {
+      RETAIN(sv); // make sure it doesn't deallocate the view.
+      [_sub_views removeObject: sv];
+      if([_sub_views count] > 0)
+	{
+	  [_sub_views insertObject: sv 
+		      atIndex: 0]; // add it to the end.
+	}
+      else
+	{
+	  [_sub_views addObject: sv];
+	}
+      RELEASE(sv);
+    }
+}
 @end
 
+/**
+ * Registry of delegates.  This allows the implementation of the protocol
+ * to select from the list of delegates to determine which one should be called.
+ */
 static NSMutableArray *_registeredViewResourceDraggingDelegates = nil;
 
+/**
+ * IBViewResourceDraggingDelegates implementation.  These methods
+ * make it possible to declare types in palettes and dynamically select the
+ * appropriate delegate to handle the addition of an object to the document.
+ */
 @implementation NSView (IBViewResourceDraggingDelegates)
 
 /**
