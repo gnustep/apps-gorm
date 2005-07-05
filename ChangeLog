@@ -1,3 +1,10 @@
+2005-07-05 10:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Corrected problem where the Gorm
+	was incorrectly warning of version upgrade on .gorm files which
+	don't contain windows.  Also added documentation/comments for
+	all methods in GormDocument.m.
+
 2005-07-04 21:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: In -testInterface corrected a problem with testing

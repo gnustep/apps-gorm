@@ -1844,7 +1844,7 @@ static NSImage  *fileImage = nil;
 /** 
  * The sole purpose of this method is to clean up .gorm files from older
  * versions of Gorm which might have some dangling references.   This method
- * should possibly added to as time goes on to make sure that it's possible 
+ * may be added to as time goes on to make sure that it's possible 
  * to repair old .gorm files.
  */
 - (void) _repairFile
@@ -1912,6 +1912,24 @@ static NSImage  *fileImage = nil;
 	  }
       }
   }
+}
+
+/**
+ * Private method.  Determines if the document contains an instance of a given
+ * class or one of it's subclasses.
+ */
+- (BOOL) _containsKindOfClass: (Class)cls
+{
+  NSEnumerator *en = [nameTable objectEnumerator];
+  id obj = nil;
+  while((obj = [en nextObject]) != nil)
+    {
+      if([obj isKindOfClass: cls])
+	{
+	  return YES;
+	}
+    }
+  return NO;
 }
 
 /**
@@ -2148,19 +2166,6 @@ static NSImage  *fileImage = nil;
 	}
 
       /*
-       * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
-       * an older archive.  Also, if the window template is not in the archive we know
-       * it was made by an older version of Gorm.
-       */
-      version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
-      winversion = [u versionForClassName: NSStringFromClass([NSWindow class])];
-      panversion = [u versionForClassName: NSStringFromClass([NSPanel class])];
-      if(version == NSNotFound && (winversion != NSNotFound || panversion != NSNotFound))
-	{
-	  isOlderArchive = YES;
-	}
-
-      /*
        * Now we merge the objects from the nib container into our own data
        * structures, taking care not to overwrite our NSOwner and NSFirst.
        */
@@ -2170,6 +2175,17 @@ static NSImage  *fileImage = nil;
       [connections addObjectsFromArray: [c connections]];
       [nameTable addEntriesFromDictionary: nt];
       [self rebuildObjToNameMapping];
+
+      /*
+       * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
+       * an older archive.  Also, if the window template is not in the archive we know
+       * it was made by an older version of Gorm.
+       */
+      version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
+      if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
+	{
+	  isOlderArchive = YES;
+	}
 
       /*
        * repair the .gorm file, if needed.
@@ -3276,6 +3292,10 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Sets the current selection from the given editor.  This method
+ * causes the inspector to refresh with the proper object.
+ */
 - (void) setSelectionFromEditor: (id<IBEditors>)anEditor
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
@@ -3292,11 +3312,17 @@ static NSImage  *fileImage = nil;
 		    object: anEditor];
 }
 
+/**
+ * Mark the document as modified.
+ */
 - (void) touch
 {
   [window setDocumentEdited: YES];
 }
 
+/**
+ * Returns the window and the rect r for object.
+ */
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object
 {
   /*
@@ -3388,11 +3414,17 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * The document window.
+ */
 - (NSWindow*) window
 {
   return window;
 }
 
+/**
+ * Determine if the document should be closed or not.
+ */
 - (BOOL) couldCloseDocument
 {
   if ([window isDocumentEdited] == YES)
@@ -3441,11 +3473,18 @@ static NSImage  *fileImage = nil;
   return YES;
 }
 
+/**
+ * Called when the document window close is selected.
+ */
 - (BOOL) windowShouldClose: (id)sender
 {
   return [self couldCloseDocument];
 }
 
+/**
+ * Removes all connections given action or outlet with the specified label 
+ * (paramter name) class name (parameter className). 
+ */
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
 		      forClassNamed: (NSString *)className
 			   isAction: (BOOL)action
@@ -3535,6 +3574,9 @@ static NSImage  *fileImage = nil;
   return removed;
 }
 
+/**
+ * Remove all connections to any and all instances of className.
+ */
 - (BOOL) removeConnectionsForClassNamed: (NSString *)className
 {
   NSEnumerator *en = nil; 
@@ -3593,6 +3635,9 @@ static NSImage  *fileImage = nil;
   return removed;
 }
 
+/**
+ * Rename connections connected to an instance of on class to another.
+ */
 - (BOOL) renameConnectionsForClassNamed: (NSString *)className
 				 toName: (NSString *)newName
 {
@@ -3644,7 +3689,9 @@ static NSImage  *fileImage = nil;
 }
 
 
-// for debuging purpose
+/**
+ * Print out all editors for debugging purposes.
+ */
 - (void) printAllEditors
 {
   NSMutableSet	        *set = [NSMutableSet setWithCapacity: 16];
@@ -3662,7 +3709,9 @@ static NSImage  *fileImage = nil;
   NSLog(@"all editors %@", set);
 }
 
-// sound support...
+/**
+ * Open a sound and load it into the document.
+ */
 - (id) openSound: (id)sender
 {
   NSArray	*fileTypes = [NSSound soundUnfilteredFileTypes]; 
@@ -3693,7 +3742,9 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
-// image support...
+/**
+ * Open an image and copy it into the document.
+ */
 - (id) openImage: (id)sender
 {
   NSArray	*fileTypes = [NSImage imageFileTypes]; 
@@ -3724,6 +3775,9 @@ static NSImage  *fileImage = nil;
   return nil;
 }
 
+/**
+ * Return a text description of the document.
+ */
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = %@",
@@ -3732,21 +3786,33 @@ static NSImage  *fileImage = nil;
 		   nameTable];
 }
 
+/**
+ * Returns YES, if obj is a top level object.
+ */
 - (BOOL) isTopLevelObject: (id)obj
 {
   return [topLevelObjects containsObject: obj];
 }
 
+/**
+ * Return first responder stand in.
+ */
 - (id) firstResponder
 {
   return firstResponder;
 }
 
+/**
+ * Return font manager standin.
+ */
 - (id) fontManager
 {
   return fontManager;
 }
 
+/**
+ * Create resource manager instances for all registered classes.
+ */
 - (void) createResourceManagers
 {
   NSArray *resourceClasses = [IBResourceManager registeredResourceManagerClassesForFramework: nil];
@@ -3767,11 +3833,17 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * The list of all resource managers.
+ */
 - (NSArray *) resourceManagers
 {
   return resourceManagers;
 }
 
+/**
+ * Get the resource manager which handles the content on pboard.
+ */
 - (IBResourceManager *) resourceManagerForPasteboard: (NSPasteboard *)pboard
 {
   NSEnumerator *en = [resourceManagers objectEnumerator];
@@ -3789,6 +3861,9 @@ static NSImage  *fileImage = nil;
   return result;
 }
 
+/**
+ * Get all pasteboard types managed by the resource manager.
+ */
 - (NSArray *) allManagedPboardTypes
 {
   NSMutableArray *allTypes = [[NSMutableArray alloc] initWithObjects: NSFilenamesPboardType,
@@ -4007,6 +4082,9 @@ static NSImage  *fileImage = nil;
     } 
 }
 
+/**
+ * Arrange views in front or in back of one another.
+ */
 - (void) arrangeSelectedObjects: (id)sender
 {
   NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
@@ -4036,6 +4114,9 @@ static NSImage  *fileImage = nil;
     }
 }
 
+/**
+ * Align objects to center, left, right, top, bottom.
+ */
 - (void) alignSelectedObjects: (id)sender
 {
   NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
