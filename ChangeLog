@@ -1,3 +1,10 @@
+2005-07-04 20:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Cleaned up some duplicate connections
+	* GormCore/GormFilePrefsManager.m: Updated version to 0.10.2
+	* GormInfo.plist: Updated version to 0.10.2
+	* Version: Updated version to 0.10.2
+
 2005-07-04 17:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Added Layout and Alignment menus.
