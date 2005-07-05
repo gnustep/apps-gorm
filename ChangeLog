@@ -1,3 +1,8 @@
+2005-07-04 21:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: In -testInterface corrected a problem with testing
+	interface when menu item is connected to NSOwner.
+
 2005-07-04 20:44 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Cleaned up some duplicate connections

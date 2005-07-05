@@ -565,8 +565,8 @@
 	  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
 	  NSString              *subClassName;
 	  id                    obj;
-	  NSDictionary          *context = [NSDictionary dictionaryWithObject: topObjects
-							 forKey: @"NSTopLevelObjects"];
+	  NSDictionary          *context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
+							 @"NSTopLevelObjects", self, @"NSOwner", nil];
 
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init]; 
