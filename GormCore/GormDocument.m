@@ -783,16 +783,19 @@ static NSImage  *fileImage = nil;
     case 0: // objects
       {
 	[selectionBox setContentView: scrollView];
+	[self setSelectionFromEditor: objectsView];
       }
       break;
     case 1: // images
       {
 	[selectionBox setContentView: imagesScrollView];
+	[self setSelectionFromEditor: imagesView];
       }
       break;
     case 2: // sounds
       {
 	[selectionBox setContentView: soundsScrollView];
+	[self setSelectionFromEditor: soundsView];
       }
       break;
     case 3: // classes
@@ -807,6 +810,7 @@ static NSImage  *fileImage = nil;
 	    id obj = [selection objectAtIndex: 0];
 	    [classesView selectClassWithObject: obj];
 	  }
+	[self setSelectionFromEditor: classesView];
       }
       break;
     case 4: // file prefs
