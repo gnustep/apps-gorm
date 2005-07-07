@@ -205,7 +205,7 @@ The @samp{Info} menu item produces a submenu ...
 @itemize @bullet
 @item Info Panel @*
 A panel giving very limited information about Gorm
-@item Preferences (not implemented) @*
+@item Preferences  @*
 A panel allowing you to set preferences about how Gorm operates
 @item Help (not implemented) @*
 A panel providing general help on using Gorm
@@ -245,6 +245,17 @@ the document was opened.
 @item Test Interface @*
 This provides interactive testing of the active document.  To end testing, you
 need to select the @samp{quit} menu item.
+@item Translate @*
+Contains a submenu, which also contains:
+
+@itemize @bullet
+@item Load Strings @* 
+Load a string file. This file contains the strings to translate. 
+@item Export Strings @*
+Export a strings file. TODO
+@end itemize
+
+
 @item Miniaturize @*
 This miniaturises the active document (or whatever panel is currently key).
 @item Close @*
@@ -260,6 +271,9 @@ Loads an image into the .gorm file.
 @item Edit @*
 In addition to the usual Cut, Copy, Paste, Delete Select All, this menu also contains:
 
+@item Set Name @*
+This allows the user to set a name for a given object in the Objects view in the main document window.
+
 @itemize @bullet
 @item Group @*
 Which produces a submenu
@@ -274,11 +288,11 @@ Simply groups all of the views into one NSScrollView.
 Ungroups the contained views.
 @end itemize
 
-@item Set Name @*
-This allows the user to set a name for a given object in the Objects view in the main document window.
-
 @item Disable Guideline @*
 This item toggles between Enable Guideline and Disable Guideline.  This allows the user to turn on or off the guides which appear when placing views in a window or view in Gorm.
+
+@item Font Panel
+The Font Panel allow you to modify fonts of your views.
 
 @end itemize
 
@@ -308,6 +322,33 @@ Shows the inspector
 Shows the palette
 @item Load Palette @*
 Opens a file panel and allows the user to load a palette into Gorm.
+@end itemize
+
+@item Layout @*
+Contains a menu for working with alignement and layout of you views
+@itemize @bullet
+@item Alignement
+Wich produces a submenu 
+@itemize @bullet
+@item Center Vertically @*
+Center Vertically two or more views. TODO :explain what is the reference view
+@item Center Horizontally @*
+Center Horizontally two or more views. TODO :explain what is the reference view
+@item Left Edges @*
+TODO
+@item Right Edges @*
+TODO
+@item Top Edges @*
+TODO
+@item Bottom Edges @* 
+TODO
+@end itemize
+
+@item Bring to Front @*
+Bring to front the selected view
+@item Send to Back @*
+Send to back the selected view
+
 @end itemize
 
 @item Windows @*
