@@ -1,14 +1,5 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "changeFont:",
-	    "moveDown:",
-	    "pasteAsPlainText:",
-	    "showWindow:"
-	);
-	Super = NSObject;
-    };
     GormCustomClassInspector = {
 	Actions = (
 	    "select:"
