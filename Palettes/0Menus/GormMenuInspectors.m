@@ -39,11 +39,9 @@
 
 @implementation GormMenuAttributesInspector
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
-  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
   [object setTitle: [titleText stringValue]];
-  [doc touch];
 }
 
 - (id) init
@@ -163,7 +161,7 @@
 
 @implementation GormMenuItemAttributesInspector
 
-- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
   id	o = [aNotification object];
   id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
