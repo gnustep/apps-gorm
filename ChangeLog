@@ -1,8 +1,62 @@
+2005-07-07  fabien  <fabien@sonappart.net>
+
+	* English.lproj/GormClassInspector.gorm : Improve UI
+	* English.lproj/GormClassPanel.gorm : Ditto
+	* English.lproj/GormCustomClassInspector.gorm  : Ditto
+	* English.lproj/GormDocument.gorm : Ditto
+	* English.lproj/GormFontView.gorm : Ditto
+	* English.lproj/GormImageInspector.gorm : Ditto
+	* English.lproj/GormNSSplitViewInspector.gorm : Ditto
+	* English.lproj/GormPrefColors.gorm : Ditto
+	* English.lproj/GormPrefGeneral.gorm : Ditto
+	* English.lproj/GormPrefGuideline.gorm : Ditto
+	* English.lproj/GormPrefHeaders.gorm : Ditto
+	* English.lproj/GormPrefPalettes.gorm : Ditto
+	* English.lproj/GormPreferences.gorm : Ditto
+	* English.lproj/GormScrollViewAttributesInspector.gorm : Ditto
+	* English.lproj/GormSetName.gorm : Ditto
+	* English.lproj/GormShelfPref.gorm : Ditto
+	* English.lproj/GormSoundInspector.gorm : Ditto
+	* English.lproj/GormViewSizeInspector.gorm : Ditto
+	* Palettes/0Menus/GormMenuInspectors.m: Implement the delegate method
+	controlTextDidChange for textField  
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm:  Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/1Windows/main.m: Implement delegate methodcontrolTextDidChange for textFields
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/2Controls/inspectors.m: Implement delegate methodcontrolTextDidChange for textFields
+	* Palettes/2Controls/ControlsPalette.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/2Controls/GormNSBoxInspector.gorm: Ditto
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Ditto
+	* Palettes/2Controls/GormNSCellInspector.gorm: Ditto
+	* Palettes/2Controls/GormNSColorWellInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSFormInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSMatrixInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSSliderInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSStepperInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm : Ditto
+	* Palettes/3Containers/inspectors.m: Implement delegate methodcontrolTextDidChange for textFields
+	* Palettes/3Containers/GormNSBrowserInspector.gorm :Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm  :Ditto
+	* Palettes/3Containers/GormNSTableColumnSizeInspector.gorm  :Ditto
+	* Palettes/3Containers/GormNSTableViewInspector.gorm  :Ditto
+	* Palettes/3Containers/GormTabViewInspector.gorm : Ditto
+	* Palettes/4Data/GormNSComboBoxInspector.gorm : Ditto
+	* Palettes/4Data/GormNSDateFormatterInspector.gorm: Ditto
+	* Palettes/4Data/GormNSImageViewInspector.gorm: Ditto
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm: Ditto
+	* Palettes/4Data/GormNSTextViewInspector.gorm: Ditto
+	
+=======
 2005-07-06 10:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: changeToViewWithTag: added code to 
 	change current selection when switching the editor.
 
+>>>>>>> 1.696
 2005-07-05 10:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Corrected problem where the Gorm
@@ -4151,7 +4205,7 @@
 
 	* GNUmakefile.preamble (ADDITIONAL_GUI_LIBS): Add -lGormLib
 
-2003-08-13  Fabien Vallon  <fabien@tuxfamily.org>
+2003-08-13  Fabien Vallon  <fabien@sonappart.net>
 
 	* GormNSPopUpButton.goem : Add Visual help
 
@@ -4175,11 +4229,11 @@
 	which was causing a problem when removing connections from
 	NSOwner.
 
-2003-08-04  Fabien Vallon  <fabien@tuxfamily.org>
+2003-08-04  Fabien Vallon  <fabien@sonappart.net>
 
 	* Add a good when adding Images
 
-2003-08-04  Fabien Vallon  <fabien@tuxfamily.org>
+2003-08-04  Fabien Vallon  <fabien@sonappart.net>
 
 	* GormImageEditor.m : Fix dnd (Todo : accept NSTIFFPboardType)
 	(code borrow from Terminal.app by Alexander Malmberg)
@@ -4412,11 +4466,11 @@
 	* Gorm.m: Cleaned up some places where I was using (Gorm *) and should
 	have been using (id<IB>).
 	
-2003-05-25  Fabien Vallon  <fabien@tuxfamily>
+2003-05-25  Fabien Vallon  <fabien@sonappart.net>
 
 	* Gorm.m : fix typo
 
-2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
+2003-05-24  Fabien Vallon  <fabien@sonappart.net>
 
 	* Gorm.m : Add Localization
 	* GormDocument.m : Ditto
@@ -4425,7 +4479,7 @@
 	* GormObjectInspector.m : Ditto
 	* GormPalettesManager.m : Ditto
 
-2003-05-24  Fabien Vallon  <fabien@tuxfamily.org>
+2003-05-24  Fabien Vallon  <fabien@sonappart.net>
 
 	* Gorm.m : refactored newApplication, newEmpty, newPalettes,
 	newInspector. new method : newGormDocument
@@ -4493,7 +4547,7 @@
 	
 2003-05-19  Gregory John Casamento <greg_casamento@yahoo.com>
 	
-	Applied patch submitted by Fabien Vallon <fabien@tuxfamily.org>
+	Applied patch submitted by Fabien Vallon <fabien@sonappart.net>
 	* Gorm.m: Cleaned up NSRunAlertPanel call.  Added methods to allow
 	toggling of guidlines.  Changed call from saveDocument to
 	saveGormDocument.
@@ -4516,7 +4570,7 @@
 	
 2003-05-10  Gregory John Casamento <greg_casamento@yahoo.com>
 
-        Applied patch submitted by Fabien <fabien@tuxfamily.org>
+        Applied patch submitted by Fabien <fabien@sonappart.net>
 	* GNUmakefile: Added .gorm files and new .h and .m files.
 	* Gorm.m/GormPrivate.h: Removed code to automatically 
 	update the preferences values.  Removed references to 
@@ -4603,7 +4657,7 @@
 
 	* Version: 0.2.6
 
-2003-03-04  Fabien <fabien@tuxfamily.org>
+2003-03-04  Fabien <fabien@sonappart.net>
 
 	* Palettes/3Containers/inspectors.m: Update TabView inspector
 	* Palettes/4Data/inspectors.m: Update comboBox inspector.
@@ -5148,7 +5202,7 @@
 
 	* GormDocument.m ([GormDocument -parseHeader:]): Reload the class
 	view after adding a class (suggestion from Fabien
-	<fabien@tuxfamily.org>).
+	<fabien@sonappart.net>).
 
 2002-11-13  Adam Fedor  <fedor@gnu.org>
 
