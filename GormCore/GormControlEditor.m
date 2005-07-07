@@ -616,10 +616,10 @@
 
 
 @interface GormTextFieldEditor : GormControlEditor
-
 @end
 
 @implementation GormTextFieldEditor
+
 - (void) mouseDown:  (NSEvent*)theEvent
 {
   // double-clicked -> let's edit
@@ -637,98 +637,5 @@
     }
 }
 
-/*
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  unsigned       result = NSDragOperationNone;
-
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      result = NSDragOperationCopy;
-    }
-  else
-    {
-      result = [super draggingEntered: sender];
-    }
-
-  return result;
-}
-
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  BOOL           result = NO;
-
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  
-  if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      NSData *data = [dragPb dataForType: IBFormatterPboardType];
-      id array = RETAIN([NSUnarchiver unarchiveObjectWithData: data]);
-      
-      if(array != nil)
-	{
-	  if([array count] > 0)
-	    {
-	      id object = [array objectAtIndex: 0];
-
-	      if([_editedObject respondsToSelector: @selector(setFormatter:)])
-		{
-		  id fieldValue = nil;
-
-		  [_editedObject setFormatter: object];	      
-		  if ([object isMemberOfClass: [NSNumberFormatter class]])
-		    {
-		      fieldValue = [NSNumber numberWithFloat: 1.123456789];
-		      [_editedObject setStringValue: [fieldValue stringValue]];
-		      [_editedObject setObjectValue: fieldValue];
-		    }
-		  else if ([object isMemberOfClass: [NSDateFormatter class]])
-		    {
-		      fieldValue = [NSDate date];
-		      [_editedObject setStringValue: [fieldValue description]];
-		      [_editedObject setObjectValue: fieldValue];
-		    }
-		  
-		  [document setSelectionFromEditor: self];
-		  result = YES;
-		}
-	    }
-	}
-    }
-  else
-    {
-      [super performDragOperation: sender];
-    }
-
-  return result;
-}
-
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  BOOL           result = NO;
-
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      result = YES;
-    }
-  else
-    {
-      result = [super prepareForDragOperation: sender];
-    }
-
-  return result;
-}
-*/
 @end
 

@@ -23,18 +23,16 @@
 */
 
 #include <Foundation/NSObject.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 #include <AppKit/NSTableColumn.h>
 #include "GormNSTableView.h"
 
 /* --------------------------------------------------------------- 
  * NSTableView dataSource
 */
-@interface NSTableViewDataSource: NSObject
-{
-}
+@interface NSTableViewDataSource: NSObject <NSCoding>
 - (int) numberOfRowsInTableView: (NSTableView *)tv;
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex;
-
 @end
 
 static NSString* value1[] =
@@ -67,6 +65,7 @@ static NSString* value2[] =
 {
   return 10;
 }
+
 - (id)tableView:(NSTableView *)aTableView 
 objectValueForTableColumn:(NSTableColumn *)aTableColumn 
 	    row:(int)rowIndex
@@ -78,6 +77,15 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
   return value2[rowIndex];
 }
 
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  return;
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  return self;
+}
 @end
 
 static id _sharedDataSource = nil;
@@ -142,9 +150,13 @@ static id _sharedDataSource = nil;
   _allowsMultipleSelection = _gormAllowsMultipleSelection;
   _allowsEmptySelection = _gormAllowsEmptySelection;
 
-  _dataSource = _gormDataSource;
-  oldDelegate = _delegate;
-  _delegate = _gormDelegate;
+  if([(id<IB>)NSApp isTestingInterface] == NO)
+    {
+      _dataSource = _gormDataSource;
+      oldDelegate = _delegate;
+      _delegate = _gormDelegate;
+    }
+
   _numberOfRows = 0;
   [super encodeWithCoder: aCoder];
   _numberOfRows = 10;
@@ -154,8 +166,11 @@ static id _sharedDataSource = nil;
   _allowsMultipleSelection = NO;
   _allowsEmptySelection = YES;
 
-  _delegate = oldDelegate;
-  _dataSource = _sharedDataSource;
+  if([(id<IB>)NSApp isTestingInterface] == NO)
+    {
+      _delegate = oldDelegate;
+      _dataSource = _sharedDataSource;
+    }
 }
 
 - (id) initWithCoder: (NSCoder*) aCoder

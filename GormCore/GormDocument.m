@@ -1963,10 +1963,7 @@ static NSImage  *fileImage = nil;
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
-      unsigned int              
-	version = NSNotFound, 
-	winversion = NSNotFound, 
-	panversion = NSNotFound;
+      unsigned int           	version = NSNotFound;
 
       // If someone attempts to open a .gmodel using open or in a 
       // workspace manager, open it.. otherwise open the .gorm file.

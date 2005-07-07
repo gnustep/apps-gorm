@@ -1,3 +1,11 @@
+2005-07-07 13:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormControlEditor.m: Removed commented out code 
+	in GormControlEditor.
+	* GormCore/GormDocument.m: Removed unused variables.
+	* Palettes/3Containers/GormNSTableView.m: Added encoder methods to
+	the data source/delegate to allow testInterface: to work properly.
+
 2005-07-07  fabien  <fabien@sonappart.net>
 
 	* English.lproj/GormClassInspector.gorm : Improve UI
@@ -20,13 +28,20 @@
 	* English.lproj/GormViewSizeInspector.gorm : Ditto
 	* Palettes/0Menus/GormMenuInspectors.m: Implement the delegate method
 	controlTextDidChange for textField  
-	* Palettes/0Menus/GormMenuAttributesInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
-	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm:  Improve UI,set setNextView:, initialFirstResponder: ...
-	* Palettes/1Windows/main.m: Implement delegate methodcontrolTextDidChange for textFields
-	* Palettes/1Windows/GormNSWindowInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
-	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
-	* Palettes/2Controls/inspectors.m: Implement delegate methodcontrolTextDidChange for textFields
-	* Palettes/2Controls/ControlsPalette.gorm: Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm: Improve UI,
+	set setNextView:, initialFirstResponder: ...
+	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm:  Improve UI,
+	set setNextView:, initialFirstResponder: ...
+	* Palettes/1Windows/main.m: Implement delegate method
+	controlTextDidChange for textFields
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Improve UI,set 
+	setNextView:, initialFirstResponder: ...
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Improve UI,set 
+	setNextView:, initialFirstResponder: ...
+	* Palettes/2Controls/inspectors.m: Implement delegate 
+	method controlTextDidChange: for textFields
+	* Palettes/2Controls/ControlsPalette.gorm: Improve UI,set 
+	setNextView:, initialFirstResponder: ...
 	* Palettes/2Controls/GormNSBoxInspector.gorm: Ditto
 	* Palettes/2Controls/GormNSButtonInspector.gorm: Ditto
 	* Palettes/2Controls/GormNSCellInspector.gorm: Ditto
@@ -38,8 +53,10 @@
 	* Palettes/2Controls/GormNSSliderInspector.gorm : Ditto
 	* Palettes/2Controls/GormNSStepperInspector.gorm : Ditto
 	* Palettes/2Controls/GormNSTextFieldInspector.gorm : Ditto
-	* Palettes/3Containers/inspectors.m: Implement delegate methodcontrolTextDidChange for textFields
-	* Palettes/3Containers/GormNSBrowserInspector.gorm :Improve UI,set setNextView:, initialFirstResponder: ...
+	* Palettes/3Containers/inspectors.m: Implement delegate method
+	controlTextDidChange: for textFields
+	* Palettes/3Containers/GormNSBrowserInspector.gorm :Improve UI,
+	set setNextView:, initialFirstResponder: ...
 	* Palettes/3Containers/GormNSTableColumnInspector.gorm  :Ditto
 	* Palettes/3Containers/GormNSTableColumnSizeInspector.gorm  :Ditto
 	* Palettes/3Containers/GormNSTableViewInspector.gorm  :Ditto
@@ -50,13 +67,11 @@
 	* Palettes/4Data/GormNSNumberFormatterInspector.gorm: Ditto
 	* Palettes/4Data/GormNSTextViewInspector.gorm: Ditto
 	
-=======
 2005-07-06 10:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: changeToViewWithTag: added code to 
 	change current selection when switching the editor.
 
->>>>>>> 1.696
 2005-07-05 10:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Corrected problem where the Gorm
