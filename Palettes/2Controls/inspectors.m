@@ -67,6 +67,11 @@
 
 @implementation GormBoxAttributesInspector
 
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == positionMatrix)
@@ -206,6 +211,13 @@
 @end
 
 @implementation GormButtonAttributesInspector
+
+/* delegate method for changing the NSButton title */
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 
 /* The button type isn't stored in the button, so reverse-engineer it */
 - (NSButtonType) buttonTypeForObject: button
@@ -523,6 +535,12 @@
 @end
 
 @implementation GormCellAttributesInspector
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == disabledSwitch)
@@ -598,6 +616,11 @@
 @end
 
 @implementation GormFormAttributesInspector
+
+-(void) controlTextDidChange:(NSNotification*) aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 - (void) _setValuesFromControl: control
 {
@@ -768,6 +791,11 @@
 
 @implementation GormMatrixAttributesInspector
 
+-(void) controlTextDidChange:(NSNotification*) aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == autosizeSwitch)
@@ -922,6 +950,11 @@
 
 @implementation GormPopUpButtonAttributesInspector
 
+-(void) controlTextDidChange:(NSNotification*) aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == typeMatrix)
@@ -1028,6 +1061,11 @@
 @end
 
 @implementation GormSliderAttributesInspector
+
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 - (void) _setValuesFromControl: control
 {
@@ -1137,6 +1175,11 @@
 @end
 
 @implementation GormStepperAttributesInspector
+
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 - (void) _setValuesFromControl: control
 {
@@ -1287,6 +1330,12 @@
 
 @implementation GormTextFieldAttributesInspector
 
+
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == alignMatrix)
@@ -1426,6 +1475,7 @@
 @end
 
 @implementation NSProgressIndicator (IBObjectAdditions)
+
 - (NSString *) inspectorClassName
 {
   return @"GormProgressIndicatorInspector";
@@ -1433,7 +1483,17 @@
 @end
 
 @implementation GormProgressIndicatorInspector
-- init
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  if ( [aNotification object] ==  minValue )
+       [object setMinValue: [minValue doubleValue]];
+  else if ( [aNotification object] ==  maxValue )
+       [object setMinValue: [maxValue doubleValue]];
+}
+
+
+-(id) init
 {
   NSDebugLog(@"Starting to instantiate...");
   self = [super init];
@@ -1526,7 +1586,14 @@
 @end
 
 @implementation GormColorWellInspector
-- init
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self tagSelected: [aNotification object]];
+}
+
+
+-(id) init
 {
   self = [super init];
   if (self != nil)

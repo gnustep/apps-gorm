@@ -222,6 +222,12 @@ NSwindow inspector
 
 @implementation GormWindowAttributesInspector
 
+/* delegate method for changing the Window title */
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (void) _setValuesFromControl: control
 {
   if (control == titleForm)
@@ -427,6 +433,13 @@ NSwindow inspector
 @end
 
 @implementation GormWindowSizeInspector
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
+
 
 - (void) _setValuesFromControl: control
 {

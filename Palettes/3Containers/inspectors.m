@@ -57,6 +57,10 @@
 
 @implementation GormBrowserAttributesInspector
 
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 - (void) _setValuesFromControl: (id)control
 {
@@ -197,6 +201,13 @@
 @end
 
 @implementation GormTableColumnAttributesInspector
+
+
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 - (id) init
 {
   if ([super init] == nil)
@@ -454,6 +465,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 @end
 
 @implementation GormTableColumnSizeInspector
+
 - (id) init
 {
   if ([super init] == nil)
@@ -540,6 +552,10 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 
 @implementation GormTableViewAttributesInspector
 
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 - (void) _setValuesFromControl: (id)control
 {
@@ -766,6 +782,11 @@ static NSString *ITEM=@"item";
 
 
 @implementation GormTabViewInspector
+
+-(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
 
 
 - (void) _setValuesFromControl: (id)control
