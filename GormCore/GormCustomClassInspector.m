@@ -182,36 +182,76 @@
 	      NSCell *cell = [obj cell];
 	      Class cellClass = [cls cellClass];
 	      NSCell *newCell = [[cellClass alloc] init];
-	      BOOL   drawsBackground = [object drawsBackground];
-	      
+	      BOOL   drawsBackground = NO;
+
+	      if([object respondsToSelector: @selector(drawsBackground)])
+		{
+		  drawsBackground = [object drawsBackground];
+		}
+
 	      // copy everything from the old cell...
-	      if([newCell respondsToSelector: @selector(setFont:)])
-		[newCell setFont: [cell font]];
-	      if([newCell respondsToSelector: @selector(setEnabled:)])
-		[newCell setEnabled: [cell isEnabled]];
-	      if([newCell respondsToSelector: @selector(setEditable:)])
-		[newCell setEditable: [cell isEditable]];
-	      if([newCell respondsToSelector: @selector(setImportsGraphics:)])
-		[newCell setImportsGraphics: [cell importsGraphics]];
-	      if([newCell respondsToSelector: @selector(setShowsFirstResponder:)])
-		[newCell setShowsFirstResponder: [cell showsFirstResponder]];
-	      if([newCell respondsToSelector: @selector(setRefusesFirstResponder:)])
-		[newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
-	      if([newCell respondsToSelector: @selector(setBordered:)])
-		[newCell setBordered: [cell isBordered]];
-	      if([newCell respondsToSelector: @selector(setBezeled:)])
-		[newCell setBezeled: [cell isBezeled]];
-	      if([newCell respondsToSelector: @selector(setScrollable:)])
-		[newCell setScrollable: [cell isScrollable]];
-	      if([newCell respondsToSelector: @selector(setSelectable:)])
-		[newCell setSelectable: [cell isSelectable]];
-	      if([newCell respondsToSelector: @selector(setState:)])
-		[newCell setState: [cell state]];
+	      if([newCell respondsToSelector: @selector(setFont:)] &&
+		 [cell respondsToSelector: @selector(font)])
+		{
+		  [newCell setFont: [cell font]];
+		}
+	      if([newCell respondsToSelector: @selector(setEnabled:)] &&
+		 [cell respondsToSelector: @selector(isEnabled)])
+		{
+		  [newCell setEnabled: [cell isEnabled]];
+		}
+	      if([newCell respondsToSelector: @selector(setEditable:)] &&
+		 [cell respondsToSelector: @selector(isEditable)])
+		{
+		  [newCell setEditable: [cell isEditable]];
+		}
+	      if([newCell respondsToSelector: @selector(setImportsGraphics:)] &&
+		 [cell respondsToSelector: @selector(importsGraphics)])
+		{
+		  [newCell setImportsGraphics: [cell importsGraphics]];
+		}
+	      if([newCell respondsToSelector: @selector(setShowsFirstResponder:)] &&
+		 [cell respondsToSelector: @selector(showsFirstResponder)])
+		{
+		  [newCell setShowsFirstResponder: [cell showsFirstResponder]];
+		}
+	      if([newCell respondsToSelector: @selector(setRefusesFirstResponder:)] &&
+		 [cell respondsToSelector: @selector(refusesFirstResponder)])
+		{
+		  [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
+		}
+	      if([newCell respondsToSelector: @selector(setBordered:)] &&
+		 [cell respondsToSelector: @selector(isBordered)])
+		{
+		  [newCell setBordered: [cell isBordered]];
+		}
+	      if([newCell respondsToSelector: @selector(setBezeled:)] &&
+		 [cell respondsToSelector: @selector(isBezeled)])
+		{
+		  [newCell setBezeled: [cell isBezeled]];
+		}
+	      if([newCell respondsToSelector: @selector(setScrollable:)] &&
+		 [cell respondsToSelector: @selector(isScrollable)])
+		{
+		  [newCell setScrollable: [cell isScrollable]];
+		}
+	      if([newCell respondsToSelector: @selector(setSelectable:)] &&
+		 [cell respondsToSelector: @selector(isSelectable)])
+		{ 
+		  [newCell setSelectable: [cell isSelectable]];
+		}
+	      if([newCell respondsToSelector: @selector(setState:)] &&
+		 [cell respondsToSelector: @selector(state)])
+		{
+		  [newCell setState: [cell state]];
+		}
 	      
 	      // set attributes of textfield.
 	      [object setCell: newCell];
-	      if([newCell respondsToSelector: @selector(setDrawsBackground:)])
-		[object setDrawsBackground: drawsBackground];
+	      if([object respondsToSelector: @selector(setDrawsBackground:)])
+		{
+		  [object setDrawsBackground: drawsBackground];
+		}
 	      [object setNeedsDisplay: YES];
 	    }
 	}

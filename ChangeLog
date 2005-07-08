@@ -1,3 +1,11 @@
+2005-07-08 04:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomClassInspector.m: In 
+	-(void)_replaceCellClassForObject:className: added checks
+	to make sure the object/cell responds to appropriate messages
+	before call.  This prevents an issue when selecting a new
+	custom class.
+
 2005-07-07 22:02 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomClassInspector.m: In the method
