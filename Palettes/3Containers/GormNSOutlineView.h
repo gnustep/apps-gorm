@@ -37,7 +37,6 @@
   BOOL _gormAllowsColumnSelection;
   BOOL _gormAllowsMultipleSelection;
   BOOL _gormAllowsEmptySelection;
-  // NSColor *_savedColor;
 }
 
 - (void) setGormDelegate: (id)anObject;
@@ -51,10 +50,6 @@
 - (BOOL) gormAllowsEmptySelection;
 - (void) setGormAllowsColumnSelection: (BOOL)flag;
 - (BOOL) gormAllowsColumnSelection;
-
-// preserve the color during selection...
-//- (void) select;
-//- (void) unselect;
 @end
 
 #endif

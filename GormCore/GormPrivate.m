@@ -86,6 +86,25 @@ static BOOL _illegalClassSubstitution = NO;
 
 + (BOOL) canSubstituteForClass: (Class)origClass
 {
+  if(self == origClass)
+    {
+      return YES;
+    }
+  else if([self isSubclassOfClass: origClass])
+    {
+      Class cls = self;
+      while(cls != nil && cls != origClass)
+	{
+	  if(GSGetMethod(cls, @selector(initWithCoder:), YES, NO) != NULL &&
+	     GSGetMethod(cls, @selector(encodeWithCoder:), YES, NO) != NULL)
+	    {
+	      return NO;
+	    }
+	  cls = GSObjCSuper(cls); // get super class
+	}
+      return YES;
+    }
+
   return NO;
 }
 @end

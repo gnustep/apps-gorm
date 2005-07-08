@@ -31,6 +31,7 @@
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
 /* This is so that the NSSecureTextField will show in the custom class inspector */
+/*
 @implementation NSSecureTextField (IBObjectAdditions)
 + (BOOL) canSubstituteForClass: (Class)origClass
 {
@@ -42,6 +43,7 @@
   return NO;
 }
 @end
+*/
 
 /*----------------------------------------------------------------------------
  * NSBox

@@ -90,7 +90,18 @@
     {
       if([_classManager isCustomClass: className] == YES)
 	{
-	  [classes addObject: className];
+	  NSString *superClass = [_classManager nonCustomSuperClassOf: className];
+	  Class cls = NSClassFromString(superClass);
+	  if(cls != nil)
+	    {
+	      if([cls respondsToSelector: @selector(canSubstituteForClass:)])
+		{
+		  if([cls canSubstituteForClass: parentClass])
+		    {
+		      [classes addObject: className];
+		    }
+		}
+	    }
 	}
       else if(parentClass != nil)
 	{
@@ -154,42 +165,58 @@
 - (void) _replaceCellClassForObject: (id)obj
 			  className: (NSString *)name
 {
-  if([name isEqualToString: @"NSSecureTextField"] || 
-     [name isEqualToString: @"NSTextField"])
+  NSString *className = name;
+
+  if([[obj class] respondsToSelector: @selector(cellClass)])
     {
-      NSCell *cell = [obj cell];
-      NSCell *newCell = nil;
-      BOOL   drawsBackground = [object drawsBackground];
-
-      // instantiate the cell...
-      if([name isEqualToString: @"NSSecureTextField"])
+      if([_classManager isCustomClass: className])
 	{
-	  newCell = [[NSSecureTextFieldCell alloc] init];
+	  className = [_classManager nonCustomSuperClassOf: name];
 	}
-      else if([name isEqualToString: @"NSTextField"])
+      
+      if(className != nil)
 	{
-	  newCell = [[NSTextFieldCell alloc] init];
+	  Class cls = NSClassFromString(className);
+	  if(cls != nil)
+	    {
+	      NSCell *cell = [obj cell];
+	      Class cellClass = [cls cellClass];
+	      NSCell *newCell = [[cellClass alloc] init];
+	      BOOL   drawsBackground = [object drawsBackground];
+	      
+	      // copy everything from the old cell...
+	      if([newCell respondsToSelector: @selector(setFont:)])
+		[newCell setFont: [cell font]];
+	      if([newCell respondsToSelector: @selector(setEnabled:)])
+		[newCell setEnabled: [cell isEnabled]];
+	      if([newCell respondsToSelector: @selector(setEditable:)])
+		[newCell setEditable: [cell isEditable]];
+	      if([newCell respondsToSelector: @selector(setImportsGraphics:)])
+		[newCell setImportsGraphics: [cell importsGraphics]];
+	      if([newCell respondsToSelector: @selector(setShowsFirstResponder:)])
+		[newCell setShowsFirstResponder: [cell showsFirstResponder]];
+	      if([newCell respondsToSelector: @selector(setRefusesFirstResponder:)])
+		[newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
+	      if([newCell respondsToSelector: @selector(setBordered:)])
+		[newCell setBordered: [cell isBordered]];
+	      if([newCell respondsToSelector: @selector(setBezeled:)])
+		[newCell setBezeled: [cell isBezeled]];
+	      if([newCell respondsToSelector: @selector(setScrollable:)])
+		[newCell setScrollable: [cell isScrollable]];
+	      if([newCell respondsToSelector: @selector(setSelectable:)])
+		[newCell setSelectable: [cell isSelectable]];
+	      if([newCell respondsToSelector: @selector(setState:)])
+		[newCell setState: [cell state]];
+	      
+	      // set attributes of textfield.
+	      [object setCell: newCell];
+	      if([newCell respondsToSelector: @selector(setDrawsBackground:)])
+		[object setDrawsBackground: drawsBackground];
+	      [object setNeedsDisplay: YES];
+	    }
 	}
-
-      // copy everything from the old cell...
-      [newCell setFont: [cell font]];
-      [newCell setEnabled: [cell isEnabled]];
-      [newCell setEditable: [cell isEditable]];
-      [newCell setImportsGraphics: [cell importsGraphics]];
-      [newCell setShowsFirstResponder: [cell showsFirstResponder]];
-      [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
-      [newCell setBordered: [cell isBordered]];
-      [newCell setBezeled: [cell isBezeled]];
-      [newCell setScrollable: [cell isScrollable]];
-      [newCell setSelectable: [cell isSelectable]];
-      [newCell setState: [cell state]];
-
-      // set attributes of textfield.
-      [object setCell: newCell];
-      [object setDrawsBackground: drawsBackground];
     }
 }
-
 - (void) select: (id)sender
 {
   NSCell *cell = [browser selectedCellInColumn: 0];

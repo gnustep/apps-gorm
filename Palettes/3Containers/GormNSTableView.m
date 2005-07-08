@@ -144,21 +144,21 @@ static id _sharedDataSource = nil;
 - (void)encodeWithCoder: (NSCoder*) aCoder
 {
   id oldDelegate;
+  
+  // set actual values...
   _allowsColumnReordering = _gormAllowsColumnReordering;
   _allowsColumnResizing = _gormAllowsColumnResizing;
   _allowsColumnSelection = _gormAllowsColumnSelection;
   _allowsMultipleSelection = _gormAllowsMultipleSelection;
-  _allowsEmptySelection = _gormAllowsEmptySelection;
-
-  if([(id<IB>)NSApp isTestingInterface] == NO)
-    {
-      _dataSource = _gormDataSource;
-      oldDelegate = _delegate;
-      _delegate = _gormDelegate;
-    }
-
+  _allowsEmptySelection = _gormAllowsEmptySelection;  
+  _dataSource = _gormDataSource;
+  oldDelegate = _delegate;
+  _delegate = _gormDelegate;
   _numberOfRows = 0;
+
   [super encodeWithCoder: aCoder];
+
+  // reset fake values...
   _numberOfRows = 10;
   _allowsColumnReordering = YES;
   _allowsColumnResizing = YES;
@@ -166,18 +166,15 @@ static id _sharedDataSource = nil;
   _allowsMultipleSelection = NO;
   _allowsEmptySelection = YES;
 
-  if([(id<IB>)NSApp isTestingInterface] == NO)
-    {
-      _delegate = oldDelegate;
-      _dataSource = _sharedDataSource;
-    }
+  _delegate = oldDelegate;
+  _dataSource = _sharedDataSource;
 }
 
 - (id) initWithCoder: (NSCoder*) aCoder
 {
   self = [super initWithCoder: aCoder];
-  [super setDataSource: [GormNSTableView sharedDataSource]];
 
+  [super setDataSource: [GormNSTableView sharedDataSource]];
   _gormAllowsColumnReordering = _allowsColumnReordering;
   _gormAllowsColumnResizing = _allowsColumnResizing;
   _gormAllowsColumnSelection = _allowsColumnSelection;
@@ -185,15 +182,13 @@ static id _sharedDataSource = nil;
   _gormAllowsEmptySelection = _allowsEmptySelection;
   _gormDelegate = _delegate;
   _delegate = nil;
-  // ASSIGN(_savedColor, [self backgroundColor]);
   
   return self;
 }
 
-- (void) dealloc
+- (void) awakeFromNib
 {
-  // RELEASE(_savedColor);
-  [super dealloc];
+  [super setDataSource: [GormNSTableView sharedDataSource]];
 }
 
 - (void) setGormAllowsColumnReordering: (BOOL)flag
@@ -250,23 +245,4 @@ static id _sharedDataSource = nil;
 {
   return @"NSTableView";
 }
-
-/*
-- (void) setBackgroundColor: (NSColor *)color
-{
-  [super setBackgroundColor: color];
-  ASSIGN(_savedColor, color);
-}
-
-- (void) select
-{
-  [super setBackgroundColor: [NSColor whiteColor]];
-}
-
-- (void) unselect
-{
-  [super setBackgroundColor: _savedColor]; 
-  [self deselectAll: self];
-}
-*/
 @end

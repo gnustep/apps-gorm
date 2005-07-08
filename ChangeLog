@@ -1,3 +1,17 @@
+2005-07-07 22:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomClassInspector.m: In the method
+	- (void) _replaceCellClassForObject:className: added logic to 
+	automatically replace the cell in a more generic fashion.
+	* GormCore/GormPrivate.m: Added logic to canSubstituteForClass: to
+	determine if it's possible for the class passed in to substitute for
+	the reciever.
+	* Palettes/2Controls/inspectors.m: Removed canSubstituteForClass:
+	implementation for NSSecureTextView.
+	* Palettes/3Containers/GormNSOutlineView.[hm]: Cleaned up
+	initWithCoder: and encodeWithCoder:.
+	* Palettes/3Containers/GormNSTableView.[hm]: Ditto 
+
 2005-07-07 13:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormControlEditor.m: Removed commented out code 
