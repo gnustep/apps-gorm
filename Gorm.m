@@ -592,6 +592,13 @@
 	  while((subClassName = [en nextObject]) != nil)
 	    {
 	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+
+	      if([realClassName isEqualToString: @"NSTableView"] ||
+		 [realClassName isEqualToString: @"NSOutlineView"])
+		{
+		  continue;
+		}
+
 	      [archiver encodeClassName: subClassName
 			intoClassName: realClassName];
 	    }

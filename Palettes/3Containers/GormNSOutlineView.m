@@ -267,11 +267,6 @@ static id _sharedDataSource = nil;
   return self;
 }
 
-- (void) awakeFromNib
-{
-  [super setDataSource: [GormNSOutlineView sharedDataSource]];
-}
-
 - (void) setGormAllowsColumnReordering: (BOOL)flag
 {
   _gormAllowsColumnReordering = flag;

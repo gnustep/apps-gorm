@@ -1,3 +1,10 @@
+2005-07-08 13:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Correction for problem with testing with tables and outline
+	views in testInterface.
+	* Palettes/3Containers/GormNSOutlineView.m: Removed awakeFromNib
+	* Palettes/3Containers/GormNSTableView.m: ditto.
+
 2005-07-08 04:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomClassInspector.m: In 
