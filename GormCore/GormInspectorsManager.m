@@ -198,6 +198,7 @@
 
 - (id) init
 {
+  NSLog(@"====== init ======");
   if((self = [super init]) != nil)
     {
       NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -476,6 +477,8 @@
       current = 0;
     }
 
+  NSLog(@"current %i",current);
+
   // Operate on the document view if the selected object is a NSScrollView
   if ([obj isKindOfClass: [NSScrollView class]]
     && ([(NSScrollView *)obj documentView] != nil)
@@ -576,10 +579,15 @@
 	}
 
       newView = [[inspector window] contentView];
+
       if (newView != nil)
 	{
+	  /* Keep the initialFirstResponder */
+	  id initialResponder = [[inspector window] initialFirstResponder];
 	  NSView	*outer = [panel contentView];
 	  NSRect	rect = [outer bounds];
+	  
+	  /* Set initialFirstResponder */
 
 	  if (buttonView != nil)
 	    {
@@ -639,6 +647,10 @@
 	  rect.origin = NSZeroPoint;
 	  [newView setFrame: rect];
 	  [inspectorView addSubview: newView];
+	  
+	  /* Set the default First responder to the new View */
+	  if ( initialResponder ) 
+	    [panel setInitialFirstResponder:initialResponder];
 	}
     }
 
