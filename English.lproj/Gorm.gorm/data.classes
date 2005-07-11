@@ -13,7 +13,6 @@
     Gorm = {
 	Actions = (
 	    "editClass:",
-	    "instantiateSubclass:",
 	    "createSubclass:",
 	    "testInterface:",
 	    "setName:",

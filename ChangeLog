@@ -1,3 +1,9 @@
+2005-07-10 20:37 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Corrected some connections which were
+	causing the "Classes" menu items to be enabled when the shouldn't
+	have been.
+
 2005-07-08 13:34 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Correction for problem with testing with tables and outline
