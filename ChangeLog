@@ -3,6 +3,18 @@
 	* Palettes/1Windows/ControlsPalette.gorm : 
 	Fix bad layout when doing a matrix of NSForms.
 	* Documentation : Gorm.texi, Update documentation
+	* GormCore/GormInspectorsManager.m : make setInitialFirstResponder working with inspector
+	* Palettes/0Menus/GormMenuInspectors.gorm : set initialFirstResponder
+	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm : Ditto
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm : Ditto 
+	* Palettes/2Controls/GormNSButtonInspector.gorm : Ditto
+	* Palettes/2Controls/GormNSCellInspector.gorm : Ditto
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm : Ditto
+	* Palettes/4Data/GormNSDateFormatterInspector.gorm: Ditto
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm : Ditto
+	* English.lproj/GormCustomClassInspector.gorm : Ditto 
+	* English.lproj/GormScrollViewAttributesInspector.gorm: Ditto
+	* English.lproj/GormViewSizeInspector.gorm : Ditto
 	
 2005-07-10 20:37 Gregory John Casamento <greg_casamento@yahoo.com>
 
