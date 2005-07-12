@@ -5,7 +5,8 @@
 	);
 	Outlets = (
 	    optionMatrix,
-	    maxNumField
+	    maxNumField,
+	    minColumnWidth
 	);
 	Super = IBInspector;
     };
