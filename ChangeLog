@@ -1,3 +1,11 @@
+2005-07-12  fabien  <fabien@sonappart.net>
+
+	* GormCore/GormClassEditor.m: Fix OutlineView / BrowserView switch 
+	Add some warnings.
+	Greg please check the code.
+	You will need to change it when GormClassManager will
+	change ( for root object )
+
 2005-07-11  fabien  <fabien@sonappart.net>
 
 	* Palettes/1Windows/ControlsPalette.gorm : 
@@ -4307,7 +4315,7 @@
 	(code borrow from Terminal.app by Alexander Malmberg)
 	
 
-2003-08-01  Fabien Vallon  <fabien@uxfamily.org>
+2003-08-01  Fabien Vallon  <fabien@sonappart.net>
 
 	* GormDocument.m : Add offset when pasting
 	* Gorm.m : clean up & add some comment
