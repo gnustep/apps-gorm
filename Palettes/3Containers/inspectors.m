@@ -50,6 +50,7 @@
 {
   id optionMatrix;
   id tagField;
+  id minColumnWidth;
 }
 
 - (void) _getValuesFromObject: (id)anObject;
@@ -88,6 +89,10 @@
     {
       [object setTag:[[tagField cellAtIndex:0] intValue]];
     }
+  else if ( control == minColumnWidth ) 
+    {
+      [object setMinColumnWidth:[minColumnWidth intValue]];
+    }
 }
 
 - (void) _getValuesFromObject: anObject
@@ -113,6 +118,7 @@
     [optionMatrix selectCellAtRow: 5 column: 0];
   
   [[tagField cellAtIndex:0] setIntValue:[anObject tag]];
+  [minColumnWidth setStringValue:[NSString stringWithFormat:@"%i",[anObject minColumnWidth]]];
 }
 
 - (id) init
