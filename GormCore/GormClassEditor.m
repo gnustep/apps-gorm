@@ -263,7 +263,6 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   int		row = 0;
   int           col = 0;
 
-  NSLog(@"selectClass: %@",className);
   if ( ( ! className )  
        || (  [className isEqual: @"CustomView"] )
        || ( [className isEqual: @"GormSound"] ) 
@@ -330,12 +329,9 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   
   for (i=([subClassesArray count] - 2);i>=0;i--)
     {
-      NSLog(@"====> %@",[subClassesArray objectAtIndex:i]);
       subclasses = [classManager subClassesOf:[[browserView selectedCellInColumn:col] stringValue]];
-      NSLog(@"subclasses %@",subclasses);
       row = [subclasses indexOfObject: [subClassesArray objectAtIndex:i]];
       col++;
-      NSLog(@"row %i col %i",row,col);
       [browserView selectRow:row inColumn:col];
 //       [browserView reloadColumn:col];
 
