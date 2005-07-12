@@ -5,6 +5,9 @@
 	Greg please check the code.
 	You will need to change it when GormClassManager will
 	change ( for root object )
+	* Palettes/3Containers/inspector.m : Add minimum column size for 
+	NSBrowser
+	* Palettes/3Containers/GormNSBrowserInspector.gorm : Ditto
 
 2005-07-11  fabien  <fabien@sonappart.net>
 
