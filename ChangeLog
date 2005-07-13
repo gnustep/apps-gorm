@@ -1,3 +1,8 @@
+2005-07-13 09:01 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Corrected problem selecting NSObject 
+	in browser when it's selected in the outline.
+
 2005-07-13 02:17 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Changed code in selectClass:editClass:
