@@ -185,8 +185,7 @@
 
 - (NSString *) addClassWithSuperClassName: (NSString*)name
 {
-  if (([name isEqualToString: @"NSObject"]
-       || [classInformation objectForKey: name] != nil)
+  if (([self isRootClass: name] || [classInformation objectForKey: name] != nil)
       && [name isEqual: @"FirstResponder"] == NO)
     {
       NSMutableDictionary	*classInfo;
@@ -278,7 +277,7 @@
   // We make an autoreleased copy of all of the inputs.  This prevents changes
   // to the original objects from reflecting here. GJC
 
-  if ([superClassNameCopy isEqualToString: @"NSObject"] ||
+  if ([self isRootClass: superClassNameCopy] ||
       ([classInformation objectForKey: superClassNameCopy] != nil &&
        [superClassNameCopy isEqualToString: @"FirstResponder"] == NO))
     {
@@ -1462,8 +1461,7 @@
   if (superclass != nil 
       && subclass != nil 
       && [cn containsObject: subclass]
-      && ([cn containsObject: superclass]
-	  || [superclass isEqualToString: @"NSObject"])
+      && ([cn containsObject: superclass] || [self isRootClass: superclass])
       && [self isSuperclass: subclass linkedToClass: superclass] == NO)
     {
       NSMutableDictionary	*info;
@@ -1503,10 +1501,6 @@
     {
       superName = [info objectForKey: @"Super"];
     }
-  if (superName == nil)
-    {
-      superName = @"NSObject";
-    }
 
   return superName;
 }
@@ -1516,14 +1510,6 @@
   NSString *ssclass;
 
   if (superclass == nil || subclass == nil)
-    {
-      return NO;
-    }
-  if ([superclass isEqualToString: @"NSObject"])
-    {
-      return YES;
-    }
-  if ([subclass isEqualToString: @"NSObject"])
     {
       return NO;
     }
@@ -1814,11 +1800,16 @@
   return ([customClassMap count] == 0);
 }
 
+- (BOOL) isRootClass: (NSString *)className
+{
+  return ([self superClassNameForClassNamed: className] == nil);
+}
+
 - (NSString *) nonCustomSuperClassOf: (NSString *)className
 {
   NSString *result = className;
   
-  if(![self isCustomClass: className] && ![className isEqual: @"NSObject"])
+  if(![self isCustomClass: className] && ![self isRootClass: className])
     {
       result = [self superClassNameForClassNamed: result];
     }
@@ -1838,7 +1829,7 @@
 - (NSArray *) allSuperClassesOf: (NSString *)className
 {
   NSMutableArray *classes = [NSMutableArray array];
-  while (![className isEqualToString: @"NSObject"] && className != nil)
+  while (![self isRootClass: className] && className != nil)
     {
       NSDictionary *dict = [self classInfoForClassName: className];
       if(dict != nil)

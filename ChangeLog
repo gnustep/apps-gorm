@@ -1,3 +1,17 @@
+2005-07-13 02:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Changed code in selectClass:editClass:
+	to use the methods from the GormClassManager as appropriate.  Removed
+	do.. while construct since it did the same thing as 
+	allSuperClassesOf in GormClassManager.
+	* GormCore/GormClassManager.[hm]: Added new method isRootClass: which
+	returns true if the argument is a root class.  Also replaced
+	references to @"NSObject" in a number of places with calls to this
+	method.  This makes the code more generic.
+	* GormCore/GormPalettesManager.m: Added check in 
+	importClasses:withDictionary: which should allow loading palettes
+	which define root level classes.
+
 2005-07-12  fabien  <fabien@sonappart.net>
 
 	* GormCore/GormClassEditor.m: Fix OutlineView / BrowserView switch 

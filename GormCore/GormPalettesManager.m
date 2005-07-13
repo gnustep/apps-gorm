@@ -703,7 +703,12 @@ static NSImage	*dragImage = nil;
       NSMutableArray *actions = [self actionsForClass: cls];
       NSMutableArray *outlets = [self outletsForClass: cls];
       
-      [classDict setObject: superClassName forKey: @"Super"];
+      // if the superclass is defined, set it.  if not, don't since
+      // this might be a palette which adds a root class.
+      if(superClassName != nil)
+	{
+	  [classDict setObject: superClassName forKey: @"Super"];
+	}
 
       // set the action/outlet keys
       if(actions != nil)

@@ -257,13 +257,15 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 // class selection...
 - (void) selectClass: (NSString *)className editClass: (BOOL)flag
 {
-  NSString	*currentClass = nil;
-  NSArray	*classes, *subclasses;
-  NSEnumerator	*en;
-  int		row = 0;
-  int           col = 0;
-
-  if ( ( ! className )  
+  NSString	 *currentClass = nil;
+  NSArray	 *classes, *subclasses;
+  NSMutableArray *subClassesArray = [NSMutableArray array];
+  NSEnumerator	 *en;
+  NSString       *superClass;
+  int		 row = 0;
+  int            col = 0;
+  
+  if ( ( className == nil )  
        || (  [className isEqual: @"CustomView"] )
        || ( [className isEqual: @"GormSound"] ) 
        || ( [className isEqual: @"GormImage"] ) 
@@ -282,7 +284,6 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   
   // select the item in the outline view...
   row = [outlineView rowForItem: className];
-
   if (row != -1)
     {
       [outlineView selectRow: row byExtendingSelection: NO];
@@ -290,51 +291,36 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     }
 
   // select class in browser...
-  
-  NSMutableArray *subClassesArray = [[NSMutableArray alloc] init];
-  int i;
-  NSString *superClass;
-  NSString *className2 = className;
-  [subClassesArray addObject:className2];
-
-  do 
+  subClassesArray = [classManager allSuperClassesOf: className];
+  if ((subClassesArray == nil) || ([subClassesArray count] == 0))
     {
-      superClass =  [classManager superClassNameForClassNamed: className2];
-      if ( ! superClass ) 
-	break;
-      
-      className2 = superClass;
-      [subClassesArray addObject:className2];
-
-      if ( [superClass isEqualToString:@"NSObject"] ) 
-	break;
-	
+      return;
     }
-  while ( YES );
+  [subClassesArray addObject: className]; // include in the list.
 
-  if ((  ! subClassesArray ) || ( [subClassesArray count] == 0 )  )
-    return;
-
+  // Get the super class position in the browser.  Passing "nil" to subClassesOf causes it
+  // to get all of the root classes.
   col = 0;
-  
-  if ( [[subClassesArray objectAtIndex:([subClassesArray count] -1)] 
-	 isEqualToString:@"NSObject"] ) {
-    row = 0;
-  }
-  else
-    row = 1;
+  row = [[classManager subClassesOf: nil] indexOfObject: [subClassesArray objectAtIndex: 0]];
 
+  // reset the enumerator...
+  currentClass = nil;
   [browserView reloadColumn:col];  
-  [browserView selectRow:row inColumn:col];
-  
-  for (i=([subClassesArray count] - 2);i>=0;i--)
-    {
-      subclasses = [classManager subClassesOf:[[browserView selectedCellInColumn:col] stringValue]];
-      row = [subclasses indexOfObject: [subClassesArray objectAtIndex:i]];
-      col++;
-      [browserView selectRow:row inColumn:col];
-//       [browserView reloadColumn:col];
 
+  // if row is not NSNotFound, then we found something.
+  if(row != NSNotFound)
+    {
+      [browserView selectRow: row inColumn: col];
+      en = [subClassesArray objectEnumerator];
+      [en nextObject]; // skip the first one.
+      while((currentClass = [en nextObject]) != nil)
+	{
+	  NSString *prevClass = [[browserView selectedCellInColumn: col] stringValue];
+	  subclasses = [classManager subClassesOf: prevClass];
+	  row = [subclasses indexOfObject: currentClass];
+	  col++;
+	  [browserView selectRow:row inColumn:col];
+	}
     }
 
   if(flag)

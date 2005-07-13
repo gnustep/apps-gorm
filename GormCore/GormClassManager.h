@@ -93,6 +93,7 @@
 	linkedToClass: (NSString *)subclass;
 - (NSDictionary *) dictionaryForClassNamed: (NSString *)className;
 - (NSString *) uniqueClassNameFrom: (NSString *)name;
+- (BOOL) isRootClass: (NSString *)className;
 
 /* Managing custom classes */
 - (BOOL) isCustomClass: (NSString *)className;
