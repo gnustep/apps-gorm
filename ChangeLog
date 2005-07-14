@@ -1,3 +1,10 @@
+2005-07-14 00:05 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Removed commented out
+	code.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm: Changed
+	"Is visible at launch" to NO to prevent exception.
+
 2005-07-13 22:51 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormButtonEditor.m: Corrected issue with 

@@ -311,15 +311,6 @@
 	  selector: @selector(handleNotification:)
 	  name: IBWillEndTestingInterfaceNotification
 	  object: nil];
-      /*
-      [nc addObserver: self
-	  selector: @selector(updateInspectorPopUp:)
-	  name: NSPopUpButtonWillPopUpNotification
-	  object: popup];
-
-      [popup setTarget: self];
-      [popup setAction: @selector(updateInspectorPopUp:)];
-      */
     }
 
   return self;
@@ -663,41 +654,6 @@
   // load the object.
   [inspector revert: self];
 }
-
-/**
- * This is to include the formatter item in the pop up button
- * if the selected object in Gorm has a formatter set
- *
-- (void) updateInspectorPopUp: (NSNotification*)aNotification
-{
-  NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
-  id		obj = [selection lastObject];
- 
-  // See if the selected object has a formatter
-  if (HASFORMATTER(obj))
-    {
-      // Ifso add the Formatter menu item if not already there
-      if ([popup numberOfItems] < 6)
-        {
-          NSMenuItem *item;
-          [popup addItemWithTitle: _(@"Formatter")];
-          item = (NSMenuItem *)[popup itemAtIndex: 5];
-          [item setTarget: self];
-          [item setAction: @selector(setCurrentInspector:)];
-          [item setKeyEquivalent: @"6"];
-          [item setTag: 5];
-        }
-    }
-  else
-    {
-      // Remove the Formatter menu item
-      if ([popup numberOfItems] == 6)
-        {
-          [popup removeItemAtIndex: 5];
-        }
-    }
-}
-*/
 @end
 
 
