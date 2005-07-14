@@ -1,3 +1,10 @@
+2005-07-14 12:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Minor change to changeView: to
+	switch to the appropriate toolbar item when the view changes 
+	automatically while dragging.  Also a change to awakeFromNib
+	to select the correct item on startup.
+
 2005-07-14 09:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Implement toolbarSelectableItemIdentifiers

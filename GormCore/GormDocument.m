@@ -431,6 +431,7 @@ static NSImage  *fileImage = nil;
   [window setToolbar: toolbar];
   RELEASE(toolbar);
   [toolbar setUsesStandardBackgroundColor: YES];
+  [toolbar setSelectedItemIdentifier: @"ObjectsItem"]; // set initial selection.
 }
 
 /**
@@ -824,24 +825,29 @@ static NSImage  *fileImage = nil;
 - (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types
 				  andFileType: (NSString *)fileType
 {
+  // NSToolbar *toolbar = [window toolbar];
   if([objectsView acceptsTypeFromArray: types] &&
      fileType == nil)
     {
+      [toolbar setSelectedItemIdentifier: @"ObjectsItem"];
       [self changeToViewWithTag: 0];
     }
   else if([imagesView acceptsTypeFromArray: types] &&
 	  [[imagesView fileTypes] containsObject: fileType])
     {
+      [toolbar setSelectedItemIdentifier: @"ImagesItem"];
       [self changeToViewWithTag: 1];
     }
   else if([soundsView acceptsTypeFromArray: types] &&
 	  [[soundsView fileTypes] containsObject: fileType])
     {
+      [toolbar setSelectedItemIdentifier: @"SoundsItem"];
       [self changeToViewWithTag: 2];
     }
   else if([classesView acceptsTypeFromArray: types] &&
 	  [[classesView fileTypes] containsObject: fileType])
     {
+      [toolbar setSelectedItemIdentifier: @"ClassesItem"];
       [self changeToViewWithTag: 3];
     }
 }
