@@ -266,8 +266,6 @@ static NSRect oldFrame;
 
 @implementation GormButtonEditor
 
-
-
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString	*name = [aNotification name];
@@ -322,11 +320,6 @@ static NSRect oldFrame;
 	[[self window] flushWindow];
       }
   }
-
-  [[NSNotificationCenter defaultCenter] 
-    removeObserver: self
-    name: NSViewFrameDidChangeNotification
-    object: nil];
 }
 
 

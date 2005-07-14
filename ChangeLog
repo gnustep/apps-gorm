@@ -1,3 +1,8 @@
+2005-07-13 22:51 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormButtonEditor.m: Corrected issue with 
+	button editing.  bug #13756.
+
 2005-07-13 09:01 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Corrected problem selecting NSObject 
