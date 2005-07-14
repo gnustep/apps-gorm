@@ -4268,4 +4268,14 @@ willBeInsertedIntoToolbar: (BOOL)flag
 		  @"FileItem",
 		  nil];
 }
+
+- (NSArray*) toolbarSelectableItemIdentifiers: (NSToolbar*)toolbar
+{ 
+  return [NSArray arrayWithObjects: @"ObjectsItem", 
+		  @"ImagesItem", 
+		  @"SoundsItem", 
+		  @"ClassesItem", 
+		  @"FileItem",
+		  nil];
+}
 @end
