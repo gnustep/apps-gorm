@@ -178,7 +178,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 - (void) switchView
 {
   NSString *viewType = [[NSUserDefaults standardUserDefaults] stringForKey: @"ClassViewType"];
-  NSString *selectedClassName = [self selectedClassName];
+  // NSString *selectedClassName = [self selectedClassName];
 
   [self setContentViewMargins: NSZeroSize];
   if([viewType isEqual: @"Outline"] || viewType == nil)
@@ -228,23 +228,32 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 {
   id className = nil;
 
-  if([self contentView] == scrollView)
+  NS_DURING
     {
-      int row =  [outlineView selectedRow];
-      if ( row == -1 ) 
-	row = 0;
-#warning add exception
-      className = [outlineView itemAtRow: row];
- 
-      if ([className isKindOfClass: [GormOutletActionHolder class]])
+      if([self contentView] == scrollView)
 	{
-	  className = [outlineView itemBeingEdited];
+	  int row =  [outlineView selectedRow];	  
+	  if ( row == -1 ) 
+	    {
+	      row = 0;
+	    }
+
+	  className = [outlineView itemAtRow: row];	  
+	  if ([className isKindOfClass: [GormOutletActionHolder class]])
+	    {
+	      className = [outlineView itemBeingEdited];
+	    }
+	}
+      else if([self contentView] == browserView)
+	{
+	  className = [[browserView selectedCell] stringValue];
 	}
     }
-  else if([self contentView] == browserView)
+  NS_HANDLER
     {
-      className = [[browserView selectedCell] stringValue];
+      NSLog(@"%@",[localException reason]);
     }
+  NS_ENDHANDLER;
 
   return className;
 }
@@ -261,7 +270,6 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   NSArray	 *classes, *subclasses;
   NSMutableArray *subClassesArray = [NSMutableArray array];
   NSEnumerator	 *en;
-  NSString       *superClass;
   int		 row = 0;
   int            col = 0;
   
@@ -291,7 +299,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     }
 
   // select class in browser...
-  subClassesArray = [classManager allSuperClassesOf: className];
+  subClassesArray = AUTORELEASE([[classManager allSuperClassesOf: className] mutableCopy]);
   if ((subClassesArray == nil || [subClassesArray count] == 0) &&
       [classManager isRootClass: className] == NO)
     {
@@ -375,12 +383,19 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
       
       if (i >= 0 && i <= ([outlineView numberOfRows] - 1))
 	{
-#warning Add exception
-	  id object = [outlineView itemAtRow: i];
-	  if([object isKindOfClass: [NSString class]])
+	  NS_DURING
 	    {
-	      result = YES;
+	      id object = [outlineView itemAtRow: i];
+	      if([object isKindOfClass: [NSString class]])
+		{
+		  result = YES;
+		}
 	    }
+	  NS_HANDLER
+	    {
+	      NSLog(@"%@",[localException reason]);
+	    }
+	  NS_ENDHANDLER;
 	}
     }
   else if([self contentView] == browserView)
@@ -492,8 +507,18 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     {
       return;
     }
-#warning add exception
-  anitem = [outlineView itemAtRow: i];
+
+  // get the item, and catch the exception, if there's a problem.
+  NS_DURING
+    {
+      anitem = [outlineView itemAtRow: i];
+    }
+  NS_HANDLER
+    {
+      anitem = nil;
+    }
+  NS_ENDHANDLER;
+
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [outlineView itemBeingEdited];
@@ -1126,12 +1151,19 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 
   if(row != -1)
     {
-#warning add exception
-      id item = [object itemAtRow: [object selectedRow]];
-      if (![item isKindOfClass: [GormOutletActionHolder class]])
+      NS_DURING
 	{
-	  [self editClass];
+	  id item = [object itemAtRow: [object selectedRow]];
+	  if (![item isKindOfClass: [GormOutletActionHolder class]])
+	    {
+	      [self editClass];
+	    }
 	}
+      NS_HANDLER
+	{
+	  NSLog(@"%@",[localException reason]);
+	}
+      NS_ENDHANDLER;
     }
 }
 

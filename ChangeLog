@@ -1,3 +1,10 @@
+2005-07-15 00:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Added exception handling to portions 
+	of code which call itemAtIndex: method on the outline view to 
+	prevent any problems.
+	* GormCore/GormInspectorsManager.m: Changed a NSLog to NSDebugLog.
+
 2005-07-14 12:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Minor change to changeView: to

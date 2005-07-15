@@ -468,7 +468,7 @@
       current = 0;
     }
 
-  NSLog(@"current %i",current);
+  NSDebugLog(@"current %i",current);
 
   // Operate on the document view if the selected object is a NSScrollView
   if ([obj isKindOfClass: [NSScrollView class]]
