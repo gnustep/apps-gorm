@@ -198,7 +198,7 @@
 
 - (id) init
 {
-  NSLog(@"====== init ======");
+  NSDebugLog(@"====== init ======");
   if((self = [super init]) != nil)
     {
       NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
