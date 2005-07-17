@@ -1,3 +1,8 @@
+2005-07-17 15:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Added code to prevent memory leak
+	with previous change.
+
 2005-07-17 15:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Removed AUTORELEASE for 

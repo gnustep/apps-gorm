@@ -299,7 +299,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     }
 
   // select class in browser...
-  subClassesArray = [[classManager allSuperClassesOf: className] mutableCopy];
+  subClassesArray = [NSMutableArray arrayWithArray: [classManager allSuperClassesOf: className]];
   if ((subClassesArray == nil || [subClassesArray count] == 0) &&
       [classManager isRootClass: className] == NO)
     {
