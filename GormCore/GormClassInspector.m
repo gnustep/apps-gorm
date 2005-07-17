@@ -318,8 +318,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [outletTable reloadData];
   [actionTable reloadData];
   [parentClass reloadData];
-  [outletTable deselectAll: self];
-  [actionTable deselectAll: self];
+  // [outletTable deselectAll: self];
+  // [actionTable deselectAll: self];
 
   // activate for actions...
   [addActionCell setEnabled: YES]; 

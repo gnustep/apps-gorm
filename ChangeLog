@@ -1,3 +1,10 @@
+2005-07-16 23:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassInspector.m: -_refreshView removed
+	call to deselectAll: for the actionTable and outletTable.
+	On occasion this was causing the application to go into a 
+	notification-update loop.
+
 2005-07-15 21:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: -init, changed NSLog to 
