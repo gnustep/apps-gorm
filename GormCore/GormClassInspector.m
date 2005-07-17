@@ -632,20 +632,27 @@ objectValueForTableColumn: (NSTableColumn *)tc
   int actionsCount = 0;
   NSTabViewItem *item = nil;
 
-  [super setObject: anObject];
-  ASSIGN(classManager, [(id<Gorm>)NSApp classManager]);
-  ASSIGN(currentClass, [object className]);
-
-  outletsCount = [[classManager allOutletsForClassNamed: currentClass] count];
-  actionsCount = [[classManager allActionsForClassNamed: currentClass] count];
-
-  item = [tabView tabViewItemAtIndex: 1]; // actions;
-  [item setLabel: [NSString stringWithFormat: @"Actions (%d)",actionsCount]];
-  item = [tabView tabViewItemAtIndex: 0]; // outlets;
-  [item setLabel: [NSString stringWithFormat: @"Outlets (%d)",outletsCount]];
-  [tabView setNeedsDisplay: YES];
-
-  [self _refreshView];
+  if([anObject isKindOfClass: [GormClassProxy class]])
+    {
+      [super setObject: anObject];
+      ASSIGN(classManager, [(id<Gorm>)NSApp classManager]);
+      ASSIGN(currentClass, [object className]);
+      
+      outletsCount = [[classManager allOutletsForClassNamed: currentClass] count];
+      actionsCount = [[classManager allActionsForClassNamed: currentClass] count];
+      
+      item = [tabView tabViewItemAtIndex: 1]; // actions;
+      [item setLabel: [NSString stringWithFormat: @"Actions (%d)",actionsCount]];
+      item = [tabView tabViewItemAtIndex: 0]; // outlets;
+      [item setLabel: [NSString stringWithFormat: @"Outlets (%d)",outletsCount]];
+      [tabView setNeedsDisplay: YES];
+      
+      [self _refreshView];
+    }
+  else
+    {
+      NSLog(@"Got %@ set to class edit inspector");
+    }
 }
 
 - (NSString *) _currentClass

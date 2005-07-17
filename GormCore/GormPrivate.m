@@ -192,7 +192,14 @@ static BOOL _illegalClassSubstitution = NO;
   self = [super init];
   if (self != nil)
     {
-      ASSIGN(name, n);
+      if([n isKindOfClass: [NSString class]])
+	{
+	  ASSIGN(name, n);
+	}
+      else
+	{
+	  NSLog(@"Attempt to add a class proxy with className=%@",n);
+	}
     }
   return self;
 }

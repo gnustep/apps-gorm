@@ -1,3 +1,13 @@
+2005-07-17 15:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Removed AUTORELEASE for 
+	subClassesArray, it was causing a crash.
+	* GormCore/GormClassInspector.m: setObject: conditional which 
+	prints a warning if a non-GormClassProxy class is passed in.
+	* GormCore/GormPrivate.m: initWithClassName: conditional which
+	prints a warning if a non-string is used to initialize th
+	GormClassProxy.
+
 2005-07-17 08:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInternalViewEditor.m: -init, prepareForDragOperation:,
