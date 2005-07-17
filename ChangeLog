@@ -1,3 +1,9 @@
+2005-07-17 08:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInternalViewEditor.m: -init, prepareForDragOperation:,
+	performDragOperation: removed uneeded IBFormatterPboardType from
+	the list.
+
 2005-07-16 23:34 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassInspector.m: -_refreshView removed

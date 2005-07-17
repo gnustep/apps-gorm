@@ -229,12 +229,6 @@ static NSImage *horizontalImage;
     [NSMutableArray arrayWithObjects: IBViewPboardType, 
 		    GormLinkPboardType, nil];
 
-  // if the object can take a formatter, add it to the list.
-  if([anObject respondsToSelector: @selector(setFormatter:)])
-    {
-      [types addObject: IBFormatterPboardType];
-    }
-
   opened = NO;
   openedSubeditor = nil;
 
@@ -243,9 +237,7 @@ static NSImage *horizontalImage;
     return nil;
 
   selection = [[NSMutableArray alloc] initWithCapacity: 5];
-  
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];  
+  [self registerForDraggedTypes: types];
 
   if (horizontalImage == nil)
     {
@@ -792,10 +784,6 @@ static NSImage *horizontalImage;
       dragType = GormLinkPboardType;
       return [parent prepareForDragOperation: sender];
     }
-  else if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      dragType = IBFormatterPboardType;
-    }
   else
     {
       dragType = nil;
@@ -837,10 +825,6 @@ static NSImage *horizontalImage;
   else if ([types containsObject: GormLinkPboardType] == YES)
     {
       dragType = GormLinkPboardType;
-    }
-  else if ([types containsObject: IBFormatterPboardType] == YES)
-    {
-      dragType = IBFormatterPboardType;
     }
   else
     {
