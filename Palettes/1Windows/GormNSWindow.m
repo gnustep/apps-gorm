@@ -132,22 +132,42 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   autoPositionMask = mask;
 }
 
-- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
+- (void) sendEvent: (NSEvent*)theEvent
 {
-  id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
-  [super orderWindow: place relativeTo: otherWin];
-  if([NSApp isConnecting] == NO)
-    { 
-      id editor = [document editorForObject: self create: NO];
+  NSView	*v;
+  NSEventType	type;
 
-      // select myself.
-      if([editor respondsToSelector: @selector(selectObjects:)])
-	{
-	  [editor selectObjects: [NSArray arrayWithObject: self]];
-	}
+  if (!_f.visible && [theEvent type] != NSAppKitDefined)
+    return;
 
-      [document setSelectionFromEditor: editor];
-      [editor makeSelectionVisible: YES];
+  if (!_f.cursor_rects_valid)
+    {
+      [self resetCursorRects];
     }
+
+  type = [theEvent type];
+  switch (type)
+    {
+      case NSLeftMouseDown:
+	{
+	  id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
+	  if([NSApp isConnecting] == NO)
+	    { 
+	      id editor = [document editorForObject: self create: NO];
+	      
+	      // select myself.
+	      if([editor respondsToSelector: @selector(selectObjects:)])
+		{
+		  [editor selectObjects: [NSArray arrayWithObject: self]];
+		}
+	      
+	      [document setSelectionFromEditor: editor];
+	      [editor makeSelectionVisible: YES];
+	    }
+	}
+	break;
+    }
+
+  [super sendEvent: theEvent];
 }
 @end

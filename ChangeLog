@@ -1,3 +1,10 @@
+2005-07-19 00:35 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.m: Removed override for
+	orderWindow:... added sendEvent: to do the same thing, since 
+	it's a little more generic.  This corrects bug#13838.
+
 2005-07-18 23:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m
