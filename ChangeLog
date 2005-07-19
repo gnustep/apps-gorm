@@ -1,3 +1,10 @@
+2005-07-18 23:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.m: Added override for 
+	orderWindow:relativeTo: which causes selection of the window
+	by Gorm, if the title bar is clicked.
+
 2005-07-17 15:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Added code to prevent memory leak

@@ -22,7 +22,9 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+#include <AppKit/AppKit.h>
 #include <GNUstepGUI/GSNibTemplates.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSWindow.h"
 
 // the default style mask we start with.
@@ -128,5 +130,24 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 - (void) setAutoPositionMask: (unsigned int)mask
 {
   autoPositionMask = mask;
+}
+
+- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
+{
+  id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
+  [super orderWindow: place relativeTo: otherWin];
+  if([NSApp isConnecting] == NO)
+    { 
+      id editor = [document editorForObject: self create: NO];
+
+      // select myself.
+      if([editor respondsToSelector: @selector(selectObjects:)])
+	{
+	  [editor selectObjects: [NSArray arrayWithObject: self]];
+	}
+
+      [document setSelectionFromEditor: editor];
+      [editor makeSelectionVisible: YES];
+    }
 }
 @end
