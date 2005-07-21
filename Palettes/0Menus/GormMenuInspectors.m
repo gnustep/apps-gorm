@@ -88,6 +88,7 @@
 
   // look at the values passed back in the matrix.
   flag = ([[menuType cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO; // windows menu...
+
   if(flag) 
     { 
       [doc setWindowsMenu: [self object]]; 
@@ -110,8 +111,14 @@
   flag = ([[menuType cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO; // normal menu...
   if(flag) 
     {
-      [doc setWindowsMenu: nil]; 
-      [doc setServicesMenu: nil]; 
+      if([doc windowsMenu] == [self object])
+	{
+	  [doc setWindowsMenu: nil];
+	}
+      if([doc servicesMenu] == [self object])
+	{
+	  [doc setServicesMenu: nil];
+	}
     }
 }
 
