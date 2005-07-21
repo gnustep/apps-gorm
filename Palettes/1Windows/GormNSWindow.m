@@ -132,6 +132,7 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   autoPositionMask = mask;
 }
 
+/*
 - (void) sendEvent: (NSEvent*)theEvent
 {
   NSView	*v;
@@ -170,4 +171,5 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 
   [super sendEvent: theEvent];
 }
+*/
 @end

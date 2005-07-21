@@ -1,3 +1,8 @@
+2005-07-20 23:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.m: Reverted previous change.
+
 2005-07-19 00:35 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m

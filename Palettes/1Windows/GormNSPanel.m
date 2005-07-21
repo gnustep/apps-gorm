@@ -111,26 +111,6 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 }
 
 /*
-- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
-{
-  id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
-  [super orderWindow: place relativeTo: otherWin];
-  if([NSApp isConnecting] == NO)
-    { 
-      id editor = [document editorForObject: self create: NO];
-
-      // select myself.
-      if([editor respondsToSelector: @selector(selectObjects:)])
-	{
-	  [editor selectObjects: [NSArray arrayWithObject: self]];
-	}
-
-      [document setSelectionFromEditor: editor];
-      [editor makeSelectionVisible: YES];
-    }
-}
-*/
-
 - (void) sendEvent: (NSEvent*)theEvent
 {
   NSView	*v;
@@ -169,4 +149,5 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 
   [super sendEvent: theEvent];
 }
+*/
 @end
