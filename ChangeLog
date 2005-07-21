@@ -1,3 +1,7 @@
+2005-07-21  fabien  <fabien@sonappart.net>
+
+	* Palettes/0Menus/GormMenuInspectors.m : Corrects bug #13872 
+
 2005-07-20 23:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m
