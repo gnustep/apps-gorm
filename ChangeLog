@@ -1,3 +1,8 @@
+2005-07-23 10:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Makefile.postamble: Create documentation
+	for GormCore, GormObjCHeaderParser and GormPrefs.
+
 2005-07-21  fabien  <fabien@sonappart.net>
 
 	* Palettes/0Menus/GormMenuInspectors.m : Corrects bug #13872 

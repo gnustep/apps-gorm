@@ -16,6 +16,18 @@ before-all:: version.texi
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
 		  ../GormLib/*.h 2> /dev/null
+	autogsdoc -MakeFrames YES \
+		  -DocumentationDirectory GormCore \
+		  -Declared GormCore \
+		  ../GormCore/*.[hm] 2> /dev/null
+	autogsdoc -MakeFrames YES \
+		  -DocumentationDirectory GormPrefs \
+		  -Declared GormPrefs \
+		  ../GormPrefs/*.[hm] 2> /dev/null
+	autogsdoc -MakeFrames YES \
+		  -DocumentationDirectory GormObjCHeaderParser \
+		  -Declared GormObjCHeaderParser \
+		  ../GormObjCHeaderParser/*.[hm] 2> /dev/null
 
 # Things to do after compiling
 # after-all::
@@ -40,6 +52,9 @@ after-clean::
 	rm -f *.bak *.cl *.fns *.pr *.log
 	rm -f version.texi
 	rm -rf InterfaceBuilder
+	rm -rf GormCore
+	rm -rf GormPrefs
+	rm -rf GormObjCHeaderParser
 
 # Things to do before distcleaning
 # before-distclean::
