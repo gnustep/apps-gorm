@@ -1,3 +1,8 @@
+2005-07-24 16:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.h: Removed GormOutlineView.h from the
+	includes.
+
 2005-07-24 16:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Call selectRow: method.

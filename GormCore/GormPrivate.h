@@ -34,7 +34,6 @@
 #include <GormCore/GormInspectorsManager.h>
 #include <GormCore/GormClassManager.h>
 #include <GormCore/GormPalettesManager.h>
-#include <GormCore/GormOutlineView.h>
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormClassEditor.h>
 
