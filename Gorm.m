@@ -677,9 +677,13 @@
 	      // so we don't get the warning...
 	      [self setServicesMenu: nil]; 
 	      [[self mainMenu] display];
-	      [[NSApp mainWindow] orderFrontRegardless];
+	      [[NSApp mainWindow] makeKeyAndOrderFront: self];
+	      
+	      // we're now in testing mode.
 	      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
 			   object: self];	      
+
+	      [NSApp unhide: self];
 	    }
 
 	  RELEASE(data);
