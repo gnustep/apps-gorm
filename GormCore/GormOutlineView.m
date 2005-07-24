@@ -30,6 +30,7 @@
 #include <Foundation/NSNull.h>
 #include <Foundation/NSException.h>
 #include <Foundation/NSDebug.h>
+#include <Foundation/NSIndexSet.h>
 #include <AppKit/NSTableColumn.h>
 #include <AppKit/NSCell.h>
 #include <AppKit/NSEvent.h>
@@ -808,6 +809,13 @@ static NSColor *darkGreyBlueColor = nil;
 		   event: theEvent];
     }
   return;    
+}
+
+- (void) selectRow: (int)rowIndex
+{
+  [self setNeedsDisplayInRect: [self rectOfRow: rowIndex]];
+  [_selectedRows addIndex: rowIndex];
+  _selectedRow = rowIndex;
 }
 @end /* implementation of GormOutlineView */
 

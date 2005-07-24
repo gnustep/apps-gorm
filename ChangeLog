@@ -1,3 +1,9 @@
+2005-07-24 16:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Call selectRow: method.
+	* GormCore/GormOutlineView.[hm]: Added new selectRow: method.
+	Corrects bug#13754.
+
 2005-07-24 12:29 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Eliminated [Gorm finishLaunching] and moved default

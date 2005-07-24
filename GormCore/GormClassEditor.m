@@ -1022,6 +1022,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	      
 	      // scroll to the item..
 	      [gov scrollRowToVisible: row];
+	      [gov selectRow: row]; 
 	    }
 	}
     }
