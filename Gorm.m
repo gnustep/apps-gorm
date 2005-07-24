@@ -125,17 +125,41 @@
 	  object: nil];
 
       /*
+       * establish registration domain defaults from file.
+       */
+      path = [bundle pathForResource: @"Defaults" ofType: @"plist"];
+      if (path != nil)
+	{
+	  NSDictionary	*dict;
+	  
+	  dict = [NSDictionary dictionaryWithContentsOfFile: path];
+	  if (dict != nil)
+	    {
+	      NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
+	      
+	      [defaults registerDefaults: dict];
+	    }
+	}
+
+      /*
        * Make sure the palettes manager exists, so that the editors and
        * inspectors provided in the standard palettes are available.
        */
       [self palettesManager];
 
-      // load the interface...
+      /*
+       * load the interface...
+       */
       if(![NSBundle loadNibNamed: @"Gorm" owner: self])
 	{
 	  NSLog(@"Failed to load interface");
 	  exit(-1);
 	}
+
+      /*
+       * set the delegate.
+       */
+      [self setDelegate: self];
     }
   return self;
 }
@@ -171,7 +195,6 @@
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray *a = nil;
   
-
   if ( [defaults boolForKey: @"ShowInspectors"] )
     {
       [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
@@ -209,7 +232,6 @@
     }
 }
 
-
 - (void) applicationWillTerminate: (NSApplication*)sender
 {
   [[NSUserDefaults standardUserDefaults] 
@@ -225,14 +247,12 @@
   id doc;
   BOOL edited = NO;
   NSEnumerator *enumerator = [documents objectEnumerator];
-
   
   if (isTesting == YES)
     {
        [self endTesting: sender];
        return NO;
     }
-  
   
   while (( doc = [enumerator nextObject] ) != nil )
     {
@@ -937,7 +957,6 @@
       NSEnumerator		*e;
       id			val;
 
-      // CREATE_AUTORELEASE_POOL(pool);
       [nc postNotificationName: IBWillEndTestingInterfaceNotification
 			object: self];
 
@@ -1001,40 +1020,12 @@
       
 
       DESTROY(testingWindows);
-      // RELEASE(pool);
 
-      // deallocate top leve objects
+      // deallocate top level objects
       RELEASE(topObjects);
 
       return self;
     }
-}
-
-- (void) finishLaunching
-{
-  NSBundle		*bundle;
-  NSString		*path;
-
-  /*
-   * establish registration domain defaults from file.
-   */
-  bundle = [NSBundle mainBundle];
-  path = [bundle pathForResource: @"Defaults" ofType: @"plist"];
-  if (path != nil)
-    {
-      NSDictionary	*dict;
-
-      dict = [NSDictionary dictionaryWithContentsOfFile: path];
-      if (dict != nil)
-	{
-	  NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-
-	  [defaults registerDefaults: dict];
-	}
-    }
-
-  [self setDelegate: self];
-  [super finishLaunching];
 }
 
 - (void) handleNotification: (NSNotification*)notification

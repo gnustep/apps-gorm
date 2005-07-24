@@ -1,3 +1,16 @@
+2005-07-24 12:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Eliminated [Gorm finishLaunching] and moved default
+	initialization code to init before paletteManager is called so
+	that the palette window is placed correctly.
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.m: Added override for 
+	saveFrameUsingName: to prevent saving the position of windows
+	during testing in Gorm's defaults.
+	* Resources/Defaults.plist: Added defaults for Inspector, Palettes,
+	and Preferences windows so that they appear at a reasonable position
+	on the screen when Gorm is first used.  Corrects bug#13780.
+
 2005-07-24 11:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m

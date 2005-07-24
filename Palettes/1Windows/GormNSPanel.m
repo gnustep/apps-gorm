@@ -128,4 +128,9 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
       [editor makeSelectionVisible: YES];
     }
 }
+
+- (void) saveFrameUsingName: (NSString*)name
+{
+  // do nothing... 
+}
 @end

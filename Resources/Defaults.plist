@@ -24,4 +24,7 @@
     ShowPalettes = YES;
     UserPalettes = (
     );
+   "NSWindow Frame Inspector" = "663 15 274 452 0 0  960 768 ";
+   "NSWindow Frame Palettes" = "663 470 274 298 0 0  960 768 ";
+   "NSWindow Frame Preferences" = "336 200 352 368 0 0  960 768 ";
 }
