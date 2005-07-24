@@ -2,8 +2,11 @@
 
    Copyright (C) 1999,2000 Free Software Foundation, Inc.
 
-   Author:  Richard frith-Macdonald (richard@brainstorm.co.uk>
+   Author:  Richard frith-Macdonald <richard@brainstorm.co.uk>
    Date: 1999
+
+   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Date: 2003, 2004, 2005
    
    This file is part of GNUstep.
    

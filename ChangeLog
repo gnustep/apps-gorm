@@ -1,3 +1,11 @@
+2005-07-23 18:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Remove extra revert: call.
+	* GormLib/IBInspector.m: Touch changes the inspector X to the broken
+	X, per specs.
+	* Gorm.m:
+	* Palettes/0Menus/main.m: Added to authors list.
+
 2005-07-23 10:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Documentation/Makefile.postamble: Create documentation

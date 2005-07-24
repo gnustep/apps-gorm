@@ -92,6 +92,7 @@ static NSNotificationCenter *nc = nil;
 
 - (void) revert: (id)sender
 {
+  [window setDocumentEdited: NO];
 }
 
 - (NSButton*) revertButton
@@ -112,7 +113,7 @@ static NSNotificationCenter *nc = nil;
 - (void) touch: (id)sender
 {
   id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
-  // [window setDocumentEdited: YES];
+  [window setDocumentEdited: YES];
   [doc touch];
 }
 

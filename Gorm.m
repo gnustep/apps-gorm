@@ -552,8 +552,6 @@
   else
     {
       // top level objects
-      topObjects = [[NSMutableArray alloc] init];
-
       NS_DURING
 	{
 	  NSUserDefaults	*defaults;
@@ -565,8 +563,7 @@
 	  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
 	  NSString              *subClassName;
 	  id                    obj;
-	  NSDictionary          *context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
-							 @"NSTopLevelObjects", self, @"NSOwner", nil];
+	  id                    savedDelegate = [NSApp delegate];
 
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init]; 
@@ -628,54 +625,63 @@
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
 	    {
+	      NSDictionary          *context = nil;
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
+
+	      // initialize the context.
+	      topObjects = [[NSMutableArray alloc] init];
+	      context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
+				      @"NSTopLevelObjects", self, @"NSOwner", nil];
+
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
 	      [testContainer awakeWithContext: context];
-	    }
-	  
-	  /*
-	   * If the NIB didn't have a main menu, create one,
-	   * otherwise, ensure that 'quit' ends testing mode.
-	   */
-	  if ([self mainMenu] == mainMenu)
-	    {
-	      NSMenu	*testMenu;
+	      [NSApp setDelegate: savedDelegate]; // makes sure the delegate isn't reset.
 	      
-	      testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu (Gorm)")];
-	      [testMenu addItemWithTitle: _(@"Quit Test") 
-			action: @selector(deferredEndTesting:)
-			keyEquivalent: @"q"];	
-	      [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
-	    }
-	  else
-	    {
-	      NSMenu	*testMenu = [self mainMenu];
-	      id	 item;
-	      NSString  *newTitle = [[testMenu title] stringByAppendingString: @" (Gorm)"];
-
-	      // set the menu up so that it's easy to tell we're testing and how to quit.
-	      [testMenu setTitle: newTitle];
-	      item = [testMenu itemWithTitle: _(@"Quit")];
-	      if (item != nil)
+	      /*
+	       * If the NIB didn't have a main menu, create one,
+	       * otherwise, ensure that 'quit' ends testing mode.
+	       */
+	      if ([self mainMenu] == mainMenu)
 		{
-		  [item setTitle: _(@"Quit Test")];
-		  [item setAction: @selector(deferredEndTesting:)];
-		}
-	      else
-		{
+		  NSMenu	*testMenu;
+		  
+		  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu (Gorm)")];
 		  [testMenu addItemWithTitle: _(@"Quit Test") 
 			    action: @selector(deferredEndTesting:)
 			    keyEquivalent: @"q"];	
+		  [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
 		}
+	      else
+		{
+		  NSMenu	*testMenu = [self mainMenu];
+		  id	 item;
+		  NSString  *newTitle = [[testMenu title] stringByAppendingString: @" (Gorm)"];
+		  
+		  // set the menu up so that it's easy to tell we're testing and how to quit.
+		  [testMenu setTitle: newTitle];
+		  item = [testMenu itemWithTitle: _(@"Quit")];
+		  if (item != nil)
+		    {
+		      [item setTitle: _(@"Quit Test")];
+		      [item setAction: @selector(deferredEndTesting:)];
+		    }
+		  else
+		    {
+		      [testMenu addItemWithTitle: _(@"Quit Test") 
+				action: @selector(deferredEndTesting:)
+				keyEquivalent: @"q"];	
+		    }
+		}
+
+	      // so we don't get the warning...
+	      [self setServicesMenu: nil]; 
+	      [[self mainMenu] display];
+	      [[NSApp mainWindow] orderFrontRegardless];
+	      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
+			   object: self];	      
 	    }
 
-	  // so we don't get the warning...
-	  [self setServicesMenu: nil]; 
-	  [[self mainMenu] display];
-	  [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
-		       object: self];
-	  
 	  RELEASE(data);
 	}
       NS_HANDLER

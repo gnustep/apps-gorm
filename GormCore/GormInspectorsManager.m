@@ -650,9 +650,6 @@
 
   // inspect the object.
   [inspector setObject: [currentMode object]];
-
-  // load the object.
-  [inspector revert: self];
 }
 @end
 
