@@ -2475,7 +2475,7 @@ static NSImage  *fileImage = nil;
    * Windows and panels are a special case - for a multiple window paste,
    * the windows need to be positioned so they are not on top of each other.
    */
-  if ([aType isEqualToString: IBWindowPboardType] == YES)
+  if ([aType isEqualToString: IBWindowPboardType])
     {
       NSWindow	*win;
 
@@ -2486,7 +2486,7 @@ static NSImage  *fileImage = nil;
 	  screenPoint.y -= 10;
 	}
     }
-  else 
+  else if([aType isEqualToString: IBViewPboardType]) 
     {
       NSEnumerator *enumerator = [objects objectEnumerator];
       NSRect frame;
@@ -2496,7 +2496,8 @@ static NSImage  *fileImage = nil;
       {
 	// check to see if the object has a frame.  If so, then
 	// modify it.  If not, simply iterate to the next object
-	if([obj respondsToSelector: @selector(frame)])
+	if([obj respondsToSelector: @selector(frame)]
+	   && [obj respondsToSelector: @selector(setFrame:)])
 	  {
 	    frame = [obj frame];
 	    frame.origin.x -= 6;
@@ -2507,8 +2508,10 @@ static NSImage  *fileImage = nil;
       } 
     }
 
+  // attach the objects to the parent and touch the document.
   [self attachObjects: objects toParent: parent];
   [self touch];
+
   return objects;
 }
 
