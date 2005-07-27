@@ -122,7 +122,6 @@ static NSString *INTTYPE=@"ClassViewType";
     {
       NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
       [defaults setInteger:[palettesButton state] forKey:SHOWPALETTES];
-      [defaults synchronize];
     }
 }
 
@@ -135,7 +134,6 @@ static NSString *INTTYPE=@"ClassViewType";
     {
       NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
       [defaults setInteger:[inspectorButton state] forKey:SHOWINSPECTOR];
-      [defaults synchronize];
     }
 }
 
@@ -148,7 +146,6 @@ static NSString *INTTYPE=@"ClassViewType";
     {
       NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
       [defaults setInteger:[backupButton state] forKey:BACKUPFILE];
-      [defaults synchronize];
     }
 }
 
@@ -171,7 +168,6 @@ static NSString *INTTYPE=@"ClassViewType";
 	{
 	  [defaults setObject: @"Both" forKey: ARCTYPE];
 	}
-      [defaults synchronize];
     }
 }
 
@@ -197,7 +193,6 @@ static NSString *INTTYPE=@"ClassViewType";
       [nc postNotificationName: GormSwitchViewPreferencesNotification
 	  object: nil];
 
-      [defaults synchronize];
     }
 }
 @end

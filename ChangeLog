@@ -1,3 +1,8 @@
+2005-07-27 02:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPrefs/GormGeneralPref.m: Removed extra calls to synchronize.
+	* GormPrefs/GormHeadersPref.m: ditto
+
 2005-07-27 01:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.h: Added documentation.
