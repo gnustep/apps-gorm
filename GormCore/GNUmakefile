@@ -81,6 +81,7 @@ GormCore_HEADER_FILES = \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
+	GormWindowEditor.h \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \

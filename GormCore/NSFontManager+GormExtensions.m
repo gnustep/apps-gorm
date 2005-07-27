@@ -33,6 +33,9 @@
 @end
 
 @implementation GormDocument (FontManagerMethod)
+/**
+ * Get the last editor selected by the document.
+ */
 - (id) lastEditor
 {
   return lastEditor;
@@ -41,6 +44,11 @@
 
 @implementation NSFontManager (GormExtensions)
 
+/**
+ * Override for sendAction in NSFontManager.  This method calls the action on the 
+ * last edited object if the attempt to send the action to the first responder is
+ * unsuccessful.   This allows the font to be more easily set.
+ */
 - (BOOL) sendAction
 {
   NSApplication *theApp = [NSApplication sharedApplication];

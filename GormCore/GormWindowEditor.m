@@ -1,9 +1,11 @@
 /* GormWindowEditor.m
  *
- * Copyright (C) 1999 Free Software Foundation, Inc.
+ * Copyright (C) 1999,2004,2005 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	2004,2005
  * 
  * This file is part of GNUstep.
  * 
@@ -29,6 +31,7 @@
 #include "GormViewWithContentViewEditor.h"
 #include "GormInternalViewEditor.h"
 #include "GormViewKnobs.h"
+#include "GormWindowEditor.h"
 
 #include <math.h>
 
@@ -117,34 +120,51 @@
 @end
 
 
-
-@interface GormWindowEditor : GormViewWithContentViewEditor
-{
-  NSView                *edit_view;
-  NSMutableArray	*subeditors;
-  BOOL			isLinkSource;
-  NSPasteboard		*dragPb;
-  NSString		*dragType;
-}
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
-- (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
-- (void) changeFont: (id) sender;
-- (void) close;
-- (void) closeSubeditors;
-- (void) deactivate;
-- (void) deleteSelection;
-- (id<IBDocuments>) document;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (void) makeSelectionVisible: (BOOL)flag;
-- (id<IBEditors>) openSubeditorForObject: (id)anObject;
-- (void) orderFront;
-- (void) pasteInSelection;
-- (void) resetObject: (id)anObject;
-@end
-
 @implementation	GormWindowEditor
+
+- (id) initWithObject: (id)anObject 
+	   inDocument: (id<IBDocuments>)aDocument
+{
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  
+  if ((self = [super initWithFrame: NSZeroRect]) == nil)
+    return nil;
+
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: IBWillCloseDocumentNotification
+      object: aDocument];
+      
+  _displaySelection = YES;
+  ASSIGN(_editedObject, anObject);
+
+  // we don't retain the document...
+  document = aDocument;
+
+  [self registerForDraggedTypes: [NSArray arrayWithObjects:
+    GormLinkPboardType, IBViewPboardType, nil]];
+
+  selection = [[NSMutableArray alloc] init];
+  subeditors = [[NSMutableArray alloc] init];
+
+  activated = NO;
+  closed = NO;
+
+  [self activate];
+  
+  return self;
+}
+
+- (void) dealloc
+{
+  if (closed == NO)
+      [self close];
+
+  RELEASE(selection);
+  RELEASE(subeditors);
+
+  [super dealloc];
+}
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
@@ -189,6 +209,17 @@
   return NO;
 }
 
+- (void) deactivate
+{
+  if (activated == YES)
+    {
+      [contentViewEditor deactivate];
+      [_EO unsetInitialFirstResponder];
+      activated = NO;
+    }
+  return;
+}
+
 - (void) changeFont: (id)sender
 {
   NSDebugLog(@"changeFont");
@@ -227,78 +258,9 @@
   NSLog(@"copySelection");
 }
 
-- (void) deactivate
-{
-  if (activated == YES)
-    {
-      [contentViewEditor deactivate];
-      [_EO unsetInitialFirstResponder];
-      activated = NO;
-    }
-  return;
-}
-
-- (void) dealloc
-{
-  if (closed == NO)
-      [self close];
-
-  RELEASE(selection);
-  RELEASE(subeditors);
-
-  [super dealloc];
-}
-
 - (void) deleteSelection
 {
-}
-
-/*
-- (id) retain
-{
-  NSLog(@"Being retained... %d: %@", [self retainCount], self);
-  return [super retain];
-}
-
-- (oneway void) release
-{
-  NSLog(@"Being released... %d: %@", [self retainCount], self);
-  [super release];
-}
-*/
-
-/*
- *	Dragging source protocol implementation
- */
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
-{
-  /*
-   * Notification that a drag failed/succeeded.
-   */
-
-  NSDebugLog(@"draggedImage");
-
-  if(f == NO)
-    {
-      NSRunAlertPanel(nil, _(@"Window drag failed."),
-		      _(@"OK"), nil, nil);
-    }
-}
-
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
-{
-  NSDebugLog(@"draggingSourceOperationMaskForLocal");
-  return NSDragOperationNone;
-}
-
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  return NSDragOperationNone;
-}
-
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
-{
-  return NSDragOperationNone;
+  NSLog(@"deleteSelection");
 }
 
 - (void) drawSelection
@@ -309,39 +271,6 @@
 - (id<IBDocuments>) document
 {
   return document;
-}
-
-- (id) initWithObject: (id)anObject 
-	   inDocument: (id<IBDocuments>)aDocument
-{
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-  
-  if ((self = [super initWithFrame: NSZeroRect]) == nil)
-    return nil;
-
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillCloseDocumentNotification
-      object: aDocument];
-      
-  _displaySelection = YES;
-  ASSIGN(_editedObject, anObject);
-
-  // we don't retain the document...
-  document = aDocument;
-
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    GormLinkPboardType, IBViewPboardType, nil]];
-
-  selection = [[NSMutableArray alloc] init];
-  subeditors = [[NSMutableArray alloc] init];
-
-  activated = NO;
-  closed = NO;
-
-  [self activate];
-  
-  return self;
 }
 
 - (void) makeSelectionVisible: (BOOL)flag
@@ -420,21 +349,37 @@
   NSDebugLog(@"validateEditing");
 }
 
-- (void)windowDidBecomeMain: (id) aNotification
+/*
+ *	Dragging source protocol implementation
+ */
+- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-  NSDebugLog(@"windowDidBecomeMain %@", selection);
-  if ([NSApp isConnecting] == NO)
+  /*
+   * Notification that a drag failed/succeeded.
+   */
+
+  NSDebugLog(@"draggedImage");
+
+  if(f == NO)
     {
-      [document setSelectionFromEditor: self];
-      NSDebugLog(@"windowDidBecomeMain %@", selection);
-      [self makeSelectionVisible: YES];
+      NSRunAlertPanel(nil, _(@"Window drag failed."),
+		      _(@"OK"), nil, nil);
     }
 }
 
-- (void)windowDidResignMain: (id) aNotification
+- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
-  NSDebugLog(@"windowDidResignMain");
-  // [document setSelectionFromEditor: self];
-  [self makeSelectionVisible: NO];
+  NSDebugLog(@"draggingSourceOperationMaskForLocal");
+  return NSDragOperationNone;
+}
+
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  return NSDragOperationNone;
+}
+
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+{
+  return NSDragOperationNone;
 }
 @end

@@ -30,9 +30,29 @@
 @class NSArray;
 
 @interface NSView (GormExtensions)
+/**
+ * All superviews of the receiver.
+ */
 - (NSArray *) superviews;
+
+/**
+ * Returns YES if the receiver has an instance of the Class cls 
+ * as a superview.
+ */
 - (BOOL) hasSuperviewKindOfClass: (Class)cls;
+
+/**
+ * Move the subview sv in reciever to the end of the reciever's
+ * display list.   This has the effect of making it appear in front
+ * of the other views.
+ */
 - (void) moveViewToFront: (NSView *)sv;
+
+/**
+ * Move the subview sv in reciever to the beginning of the reciever's
+ * display list.   This has the effect of making it appear in back
+ * of the other views.
+ */
 - (void) moveViewToBack: (NSView *)sv;
 @end
 

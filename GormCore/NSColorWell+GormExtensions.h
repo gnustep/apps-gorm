@@ -29,6 +29,9 @@
 #include <AppKit/NSColorWell.h>
 
 @interface NSColorWell (GormExtensions)
+/**
+ * Changes the color without sending the action associated with it.
+ */
 - (void) setColorWithoutAction: (NSColor *)color;
 @end
 

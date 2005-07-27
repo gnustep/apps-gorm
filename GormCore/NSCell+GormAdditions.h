@@ -30,6 +30,12 @@
 @class NSText;
 
 @interface NSCell (GormAdditions)
+/**
+ *  This methods is comes directly from NSCell.m
+ *  The only additions is [textObject setUsesFontPanel: NO]
+ *  We do this because we want to have control over the font 
+ *  panel changes.
+ */
 - (NSText *)setUpFieldEditorAttributes:(NSText *)textObject;
 @end
 
