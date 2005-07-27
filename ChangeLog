@@ -1,3 +1,11 @@
+2005-07-27 01:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Added documentation.
+	* GormCore/GormDocument.m: Removed commented code.  Corrected 
+	problem in [GormDocument instantiateClass:] when switching to
+	the objects view.
+	* GormCore/GormWindowEditor.h: Added documentation.
+
 2005-07-26 22:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Added new GormWindowEditor.h file.

@@ -330,19 +330,10 @@ static NSImage  *fileImage = nil;
 	  [soundsScrollView setDocumentView: soundsView];
 	  RELEASE(soundsView);
 
-	  // classes...
-	  // classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  // [classesScrollView setHasVerticalScroller: YES];
-	  // [classesScrollView setHasHorizontalScroller: NO];
-	  // [classesScrollView setAutoresizingMask:
-	  //		       NSViewHeightSizable|NSViewWidthSizable];
-	  // [classesScrollView setBorderType: NSBezelBorder];
-	  
+	  /* classes view */
 	  mainRect.origin = NSMakePoint(0,0);
 	  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
 	  [classesView setFrame: mainRect];
-	  // [classesScrollView setDocumentView: classesView];
-	  // RELEASE(classesView);	  
 	  
 	  /*
 	   * Set the objects view as the initial view the user's see on startup.
@@ -784,18 +775,21 @@ static NSImage  *fileImage = nil;
     case 0: // objects
       {
 	[selectionBox setContentView: scrollView];
+	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
 	[self setSelectionFromEditor: objectsView];
       }
       break;
     case 1: // images
       {
 	[selectionBox setContentView: imagesScrollView];
+	[toolbar setSelectedItemIdentifier: @"ImagesItem"];
 	[self setSelectionFromEditor: imagesView];
       }
       break;
     case 2: // sounds
       {
 	[selectionBox setContentView: soundsScrollView];
+	[toolbar setSelectedItemIdentifier: @"SoundsItem"];
 	[self setSelectionFromEditor: soundsView];
       }
       break;
@@ -811,11 +805,13 @@ static NSImage  *fileImage = nil;
 	    id obj = [selection objectAtIndex: 0];
 	    [classesView selectClassWithObject: obj];
 	  }
+	[toolbar setSelectedItemIdentifier: @"ClassesItem"];
 	[self setSelectionFromEditor: classesView];
       }
       break;
     case 4: // file prefs
       {
+	[toolbar setSelectedItemIdentifier: @"FileItem"];
 	[selectionBox setContentView: filePrefsView];
       }
       break;
@@ -829,25 +825,21 @@ static NSImage  *fileImage = nil;
   if([objectsView acceptsTypeFromArray: types] &&
      fileType == nil)
     {
-      [toolbar setSelectedItemIdentifier: @"ObjectsItem"];
       [self changeToViewWithTag: 0];
     }
   else if([imagesView acceptsTypeFromArray: types] &&
 	  [[imagesView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"ImagesItem"];
       [self changeToViewWithTag: 1];
     }
   else if([soundsView acceptsTypeFromArray: types] &&
 	  [[soundsView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"SoundsItem"];
       [self changeToViewWithTag: 2];
     }
   else if([classesView acceptsTypeFromArray: types] &&
 	  [[classesView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"ClassesItem"];
       [self changeToViewWithTag: 3];
     }
 }
@@ -1695,7 +1687,7 @@ static NSImage  *fileImage = nil;
 
       // go to the class which was just loaded in the classes view...
       [classesView reloadData];
-      [selectionBox setContentView: classesView];
+      [self changeToViewWithTag: 3];
 
       if(newClass != nil)
 	{
@@ -1769,8 +1761,8 @@ static NSImage  *fileImage = nil;
 	  [classManager setCustomClass: object
 			forName: name];
 	}
-      
-      [selectionBox setContentView: scrollView];
+
+      [self changeToViewWithTag: 0];
       NSLog(@"Instantiate NSView subclass %@",object);	      
     }
   else
@@ -1779,9 +1771,8 @@ static NSImage  *fileImage = nil;
 				      frame: NSMakeRect(0,0,0,0)];
       
       [self setName: nil forObject: item];
-      [self attachObject: item toParent: nil];
-      
-      [selectionBox setContentView: scrollView];
+      [self attachObject: item toParent: nil];      
+      [self changeToViewWithTag: 0];
     }
   
   return self;
@@ -3813,7 +3804,7 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Return font manager standin.
+ * Return font manager stand in.
  */
 - (id) fontManager
 {

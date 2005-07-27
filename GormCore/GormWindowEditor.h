@@ -96,12 +96,26 @@
  */
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
 
-
+/**
+ * Make current selection visible.
+ */
 - (void) makeSelectionVisible: (BOOL)flag;
 
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
+
+/**
+ * Order the edited window to the front.
+ */
 - (void) orderFront;
+
+/**
+ * Paste from pasteboard.
+ */
 - (void) pasteInSelection;
+
+/**
+ * Reset object, redisplays the window.
+ */
 - (void) resetObject: (id)anObject;
 @end
 
