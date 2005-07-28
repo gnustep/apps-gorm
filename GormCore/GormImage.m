@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/NSImage.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include "GormImage.h"
 
 // implementation of category on NSImage.
@@ -121,7 +122,9 @@
   [image setArchiveByName: flag];
   [smallImage setArchiveByName: flag];
 }
+@end
 
+@implementation GormImage (IBObjectAdditions)
 - (NSString *)inspectorClassName
 {
   return @"GormImageInspector"; 

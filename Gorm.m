@@ -193,7 +193,6 @@
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSArray *a = nil;
   
   if ( [defaults boolForKey: @"ShowInspectors"] )
     {
@@ -203,26 +202,7 @@
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
     }
-  if((a = [defaults arrayForKey: @"GSAppKitUserBundles"]) != nil ||
-     [self illegalClassSubstitution] == YES)
-    {
-      if([a count] > 0)
-	{
-	  NSRunAlertPanel(_(@"User Bundle Warning"), 
-			  _(@"Gorm has detected that you are using user bundles.  Please make certain that these are compatible with Gorm as some bundles can cause issues which may corrupt your .gorm files."),
-			  _(@"OK"), nil, nil);
-	}
 
-      if([self illegalClassSubstitution] == YES)
-	{
-	  NSRunAlertPanel(_(@"Illegal Class Substitution"), 
-			  _(@"A bundle has invoked 'poseAsClass:', this could corrupt .gorm files.  Quitting."),
-			  _(@"OK"), nil, nil);
-	  NSBeep();
-	  [self terminate: self];
-	}
-
-    }
   if(GSGetMethod([GSNibContainer class],@selector(awakeWithContext:),YES,YES) == NULL)
     {
       NSRunAlertPanel(_(@"Incorrect GNUstep Version"), 

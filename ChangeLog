@@ -1,3 +1,13 @@
+2005-07-28 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormImage.h: Added documentation.
+	* GormCore/GormImage.m: Properly implemented IBObjectAdditions.
+	* GormCore/GormPrivate.h: Remove illegalClassSubstitution method.
+	* GormCore/GormPrivate.m: Remove illegalClassSubstitution method.
+	* GormCore/GormSound.h: Added documentation.
+	* GormCore/GormSound.m: Properly implemented IBObjectAdditions.
+	* Gorm.m: Removed methods which check for user bundles.  
+
 2005-07-27 02:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormPrefs/GormGeneralPref.m: Removed extra calls to synchronize.

@@ -120,10 +120,6 @@ extern NSString *GormResizeCellNotification;
 - (NSImage *) imageForViewer;
 @end
 
-@interface NSApplication (GormAdditions)
-- (BOOL) illegalClassSubstitution;
-@end
-
 @interface IBResourceManager (GormAdditions)
 + (void) registerForAllPboardTypes: (id)editor
                         inDocument: (id)document;
