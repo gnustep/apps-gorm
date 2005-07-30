@@ -71,13 +71,40 @@ typedef enum {
   int cellsWidth;
 }
 
+/**
+ * Sets the frame for the resize arrows.
+ */
 - (void)tile;
+
+/**
+ * Called when the selection is changed.
+ */ 
 - (void)selectionChanged:(NSNotification *)n;
+
+/**
+ * Invoked when the resizer widgets are moved.
+ */
 - (void)startMouseEvent:(NSEvent *)event 
               onResizer:(ArrResizer *)resizer;
+
+/**
+ * Programmatically set a width.
+ */ 
 - (void)setNewWidth:(int)w;
+
+/**
+ * Set the resizer back to the default width.
+ */
 - (IBAction)setDefaultWidth:(id)sender;
+
+/**
+ * The view to display in the prefs panel.
+ */
 - (NSView *)view;
+
+/**
+ * Return the current width.
+ */ 
 - (int) shelfCellsWidth;
 @end
 

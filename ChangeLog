@@ -1,3 +1,16 @@
+2005-07-30 09:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Makefile.postamble: Generate documentation from 
+	headers only.
+	* GormPrefs/GormColorsPref.h
+	* GormPrefs/GormGeneralPref.h
+	* GormPrefs/GormGeneralPref.m
+	* GormPrefs/GormGuidelinePref.h
+	* GormPrefs/GormHeadersPref.h
+	* GormPrefs/GormPalettesPref.h
+	* GormPrefs/GormPrefController.h
+	* GormPrefs/GormShelfPref.h: Added documentation.
+
 2005-07-30 04:29 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.h: Added documentation.
