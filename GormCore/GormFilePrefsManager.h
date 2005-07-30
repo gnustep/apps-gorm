@@ -37,6 +37,7 @@
 // set class versions
 - (void) setClassVersions;
 - (void) restoreClassVersions;
+- (int) versionOfClass: (NSString *)className;
 
 + (int) currentVersion;
 @end

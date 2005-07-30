@@ -2991,7 +2991,8 @@ static NSImage  *fileImage = nil;
 					withClassName: customClass 
 					withSuperClassName: superClass];
 	}
-      else if([object isKindOfClass: [NSWindow class]])
+      else if([object isKindOfClass: [NSWindow class]] 
+	      && [filePrefsManager versionOfClass: @"GSWindowTemplate"] > 0)
 	{
 	  template = [GSTemplateFactory templateForObject: object
 					withClassName: [object className]

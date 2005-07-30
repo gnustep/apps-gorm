@@ -1,3 +1,9 @@
+2005-07-30 04:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: use versionOfClass: in 
+	_replaceObjectsWithTemplates: method.
+	* GormCore/GormFilePrefsManager.[hm]: Added versionOfClass:.
+
 2005-07-28 23:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Corrected layout.
