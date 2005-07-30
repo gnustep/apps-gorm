@@ -29,9 +29,9 @@
 #include <Foundation/NSObject.h>
 #include <AppKit/NSWindowController.h>
 
-@interface GormPrefController : NSWindowController
+@interface GormPrefController : NSObject
 {
-  id window;
+  id panel;
   id popup;
   id prefBox;
 
@@ -48,6 +48,10 @@
  */
 - (void) popupAction: (id)sender;
 
+/**
+ * Return the preferences panel.
+ */
+- (id) panel;
 @end
 
 #endif

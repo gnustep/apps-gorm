@@ -6,8 +6,9 @@
 	);
 	Outlets = (
 	    popup,
-	    prefBox
+	    prefBox,
+	    panel
 	);
-	Super = NSWindowController;
+	Super = NSObject;
     };
 }

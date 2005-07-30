@@ -657,7 +657,17 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (NSString *) _currentClass
 {
-  return [object className];
+  if(object == nil)
+    {
+      return nil;
+    }
+
+  if([object className] == nil)
+    {
+      return nil;
+    }
+
+  return [NSString stringWithString: [object className]];
 }
 
 - (void) handleNotification: (NSNotification *)notification

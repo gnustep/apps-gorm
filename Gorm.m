@@ -35,7 +35,7 @@
 @interface Gorm : NSApplication <IB, Gorm>
 {
   id			infoPanel;
-  id                    preferencesController;
+  GormPrefController    *preferencesController;
   GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
@@ -425,10 +425,10 @@
 {
   if(! preferencesController)
     {
-      preferencesController =  [[GormPrefController alloc] initWithWindowNibName:@"GormPreferences"];
+      preferencesController =  [[GormPrefController alloc] init];
     }
 
-  [[preferencesController window] makeKeyAndOrderFront:nil];
+  [[preferencesController panel] makeKeyAndOrderFront:nil];
 }
 
 /** Document Menu Actions */

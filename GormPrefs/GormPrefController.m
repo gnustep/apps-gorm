@@ -13,6 +13,18 @@
 
 @implementation GormPrefController
 
+- (id) init
+{
+  if(self = [super init])
+    {
+      if(![NSBundle loadNibNamed: @"GormPreferences" owner: self])
+	{
+	  return nil;
+	}
+    }
+  return self;
+}
+
 - (void) awakeFromNib
 {
   _generalView  = [[GormGeneralPref alloc] init];
@@ -24,43 +36,43 @@
 
   [prefBox setContentView:[_generalView view]];
 
-  [[self window] setFrameUsingName: @"Preferences"];
-  [[self window] setFrameAutosaveName: @"Preferences"];
-  [[self window] center];
+  [[self panel] setFrameUsingName: @"Preferences"];
+  [[self panel] setFrameAutosaveName: @"Preferences"];
+  [[self panel] center];
 }
 
 - (void) popupAction: (id)sender
 {
+  int tag = -1;
+
   if ( sender != popup )
     return;
 
-  {
-    int tag = [[sender selectedItem] tag];
-    switch(tag)
-      {
-      case 0: 
-	[prefBox setContentView: [_generalView view]];
-	break;	
-      case 1:
-	[prefBox setContentView: [_headersView view]];
-	break;
-      case 2:
-	[prefBox setContentView: [_shelfView view]];
-	break;
-      case 3:
-	[prefBox setContentView: [_colorsView view]];
-	break;
-      case 4:
-	[prefBox setContentView: [_palettesView view]];
-	break;
-      case 5:
-	[prefBox setContentView: [_guidelineView view]];
-	break;
-      default:
-	NSLog(@"Error Default (GormPrefController.m) : - (void) popupAction: (id)sender, no match for tag %d",tag);
-	break;
-      }
-  }
+  tag = [[sender selectedItem] tag];
+  switch(tag)
+    {
+    case 0: 
+      [prefBox setContentView: [_generalView view]];
+      break;	
+    case 1:
+      [prefBox setContentView: [_headersView view]];
+      break;
+    case 2:
+      [prefBox setContentView: [_shelfView view]];
+      break;
+    case 3:
+      [prefBox setContentView: [_colorsView view]];
+      break;
+    case 4:
+      [prefBox setContentView: [_palettesView view]];
+      break;
+    case 5:
+      [prefBox setContentView: [_guidelineView view]];
+      break;
+    default:
+      NSLog(@"Error Default (GormPrefController.m) : - (void) popupAction: (id)sender, no match for tag %d",tag);
+      break;
+    }
 }
 
 - (void) dealloc
@@ -70,6 +82,12 @@
   RELEASE(_shelfView);
   RELEASE(_colorsView);
   RELEASE(_palettesView);
+  RELEASE(panel);
   [super dealloc];
+}
+
+- (id) panel
+{
+  return panel;
 }
 @end

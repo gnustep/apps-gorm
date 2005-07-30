@@ -1,3 +1,14 @@
+2005-07-30 15:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPreferences.gorm: Changed class hierarchy.  Also
+	added panel outlet.
+	* GormCore/GormClassInspector.m: -[GormClassInspector _currentClass]
+	copy the className.
+	* GormCore/GormPrivate.m: -[GormClassProxy init] copy the className.
+	* Gorm.m: Changed to initialize preferences panel using init.
+	* GormPrefs/GormPrefController.[hm]: Added panel method, changed
+	derivation to a subclass of NSObject, instead of NSWindowController.
+
 2005-07-30 09:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Documentation/Makefile.postamble: Generate documentation from 

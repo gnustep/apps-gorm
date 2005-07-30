@@ -186,7 +186,8 @@ static BOOL _isInInterfaceBuilder = NO;
     {
       if([n isKindOfClass: [NSString class]])
 	{
-	  ASSIGN(name, n);
+	  // create a copy.
+	  name = [[NSString alloc] initWithString: n];
 	}
       else
 	{
