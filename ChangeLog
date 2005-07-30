@@ -1,3 +1,7 @@
+2005-07-30 04:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.h: Added documentation.
+
 2005-07-30 04:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: use versionOfClass: in 

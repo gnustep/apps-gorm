@@ -20,24 +20,76 @@
   NSDictionary *versionProfiles;
   NSDictionary *currentProfile;
 }
+/**
+ * Show incompatibilities in the panel.
+ */
 - (void) showIncompatibilities: (id)sender;
+
+/**
+ * Action called when the target version pulldown is selected.
+ */
 - (void) selectTargetVersion: (id)sender;
+
+/**
+ * Action called when the archive type pulldown is selected.
+ */
 - (void) selectArchiveType: (id)sender;
 
+/**
+ * Loads the encoded file info.
+ */
 - (BOOL) loadFromFile: (NSString *)path;
+
+/**
+ * Saves the encoded file info.
+ */
 - (BOOL) saveToFile: (NSString *)path;
+
+/**
+ * Loads the profile.
+ */
 - (void) loadProfile: (NSString *)version;
 
 // accessors...
+
+/**
+ * Gorm Version of the current archive.
+ */
 - (int) version;
+
+/**
+ * Which version of the gui library, by name.
+ */
 - (NSString *)targetVersionName;
+
+/**
+ * Which achive type, by name.
+ */
 - (NSString *)archiveTypeName;
+
+/**
+ * Are we set to the latest version?  Returns YES, if so.
+ */
 - (BOOL) isLatest;
 
 // set class versions
+/**
+ * Sets the version of the classes.
+ */
 - (void) setClassVersions;
+
+/**
+ * Restores the versions to the most current.
+ */
 - (void) restoreClassVersions;
+
+/**
+ * Returns the version of the class in the current profile.
+ */
 - (int) versionOfClass: (NSString *)className;
 
+/**
+ * The current Gorm version.
+ */
 + (int) currentVersion;
 @end
