@@ -179,7 +179,7 @@ static BOOL _isInInterfaceBuilder = NO;
 
 // define the class proxy...
 @implementation GormClassProxy
-- (id) initWithClassName: (NSString*)n
+- (id) initWithClassName: (NSString *)n
 {
   self = [super init];
   if (self != nil)
@@ -187,11 +187,11 @@ static BOOL _isInInterfaceBuilder = NO;
       if([n isKindOfClass: [NSString class]])
 	{
 	  // create a copy.
-	  name = [[NSString alloc] initWithString: n];
+	  ASSIGN(name, n);
 	}
       else
 	{
-	  NSLog(@"Attempt to add a class proxy with className=%@",n);
+	  NSLog(@"Attempt to add a class proxy with className = %@",n);
 	}
     }
   return self;
