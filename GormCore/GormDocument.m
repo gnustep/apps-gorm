@@ -2631,13 +2631,13 @@ static NSImage  *fileImage = nil;
     }
   else if ([type isEqual: @"Inspector"] == YES)
     {
-      NSWindow	*aWindow;
+      NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
 	{
-	  aWindow = [[NSWindow allocSubstitute] 
+	  aWindow = [[NSPanel allocSubstitute] 
 		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2645,7 +2645,7 @@ static NSImage  *fileImage = nil;
 	}
       else
 	{
-	  aWindow = [[NSWindow alloc] 
+	  aWindow = [[NSPanel alloc] 
 		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2660,13 +2660,13 @@ static NSImage  *fileImage = nil;
     }
   else if ([type isEqual: @"Palette"] == YES)
     {
-      NSWindow	*aWindow;
+      NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
 	{
-	  aWindow = [[NSWindow allocSubstitute] 
+	  aWindow = [[NSPanel allocSubstitute] 
 		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2674,7 +2674,7 @@ static NSImage  *fileImage = nil;
 	}
       else
 	{
-	  aWindow = [[NSWindow alloc] 
+	  aWindow = [[NSPanel alloc] 
 		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained

@@ -1,3 +1,9 @@
+2005-07-31 18:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Correction for bug#13990.
+	* GormCore/GormInspectorsManager.m: Removed uneeded GormISelectionView
+	class.
+
 2005-07-31 10:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: [GormConnectionsInspector ok:]

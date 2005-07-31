@@ -151,18 +151,6 @@
 }
 @end
 
- 
-
-@interface GormISelectionView : NSView
-{
-}
-@end
-
-@implementation GormISelectionView : NSView
-@end
-
-
-
 @implementation GormInspectorsManager
 
 - (void) dealloc
@@ -222,7 +210,7 @@
        * The selection view sits at the top of the panel and is always the
        * same height.
        */
-      selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
+      selectionView = [[NSView alloc] initWithFrame: selectionRect];
       [selectionView setAutoresizingMask:
 		       NSViewMinYMargin | NSViewWidthSizable];
       [[panel contentView] addSubview: selectionView];
