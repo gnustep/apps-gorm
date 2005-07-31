@@ -1101,19 +1101,9 @@ selectCellWithString: (NSString*)title
   else if ([connectors containsObject: currentConnector] == YES)
     {
       id con = currentConnector;
-      RETAIN(con);
+
       [[(id<IB>)NSApp activeDocument] removeConnector: con];
-      if ([con isKindOfClass: [NSNibOutletConnector class]])
-	{
-	  [con setDestination: nil];
-	}
-      if ([con isKindOfClass: [NSNibControlConnector class]])
-	{
-	  [con setDestination: nil];
-	  [con setLabel: nil];
-	}
       [connectors removeObject: con];
-      RELEASE(con);
       [oldBrowser loadColumnZero];
     }
   else
@@ -1168,7 +1158,6 @@ selectCellWithString: (NSString*)title
       NSArray		*array;
 
       [super setObject: anObject];
-      // DESTROY(currentConnector);
       RELEASE(connectors);
 
       /*
