@@ -1,7 +1,8 @@
 2005-07-31 10:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: [GormConnectionsInspector ok:]
-	Removed code which blanks out the connector.
+	Removed code which blanks out the connector.  This allows the user
+	to select connections repeatedly.  Suggested by Matt Rice.
 
 2005-07-31 08:43 Gregory John Casamento <greg_casamento@yahoo.com>
 
