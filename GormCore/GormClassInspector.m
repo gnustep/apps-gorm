@@ -657,7 +657,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (NSString *) _currentClass
 {
-  return [object className];
+  return AUTORELEASE([[object className] copy]);
 }
 
 - (void) handleNotification: (NSNotification *)notification
