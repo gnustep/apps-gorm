@@ -282,8 +282,6 @@
       }
  
       [object _setStyleMask: newStyleMask];
-      // FIXME: This doesn't refresh the window decoration. How to do that?
-      // (currently needs manual hide/unhide to update decorations)
       [object display];
    }
   else if (control == colorWell)

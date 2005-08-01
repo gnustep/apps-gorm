@@ -1,3 +1,10 @@
+2005-08-01 05:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassInspector.m: Remove dopy code from _currentClass.
+	* GormCore/GormPrivate.m: Use ASSIGNCOPY in initWithClassName:
+	* Palettes/1Windows/main.m: Removed FIXME, since Gorm shouldn't
+	show the window decoration changes directly.
+
 2005-07-31 19:14 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/main.m: Addition of allocSubstitute method for

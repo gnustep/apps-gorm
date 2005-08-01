@@ -159,8 +159,7 @@ static BOOL _isInInterfaceBuilder = NO;
 
 - (void) setClassName: (NSString *)className
 {
-  RELEASE(theClass);
-  theClass = [className copy];
+  ASSIGNCOPY(theClass, className); 
 }
 
 - (NSImage *) imageForViewer
@@ -187,7 +186,7 @@ static BOOL _isInInterfaceBuilder = NO;
       if([n isKindOfClass: [NSString class]])
 	{
 	  // create a copy.
-	  ASSIGN(name, n);
+	  ASSIGNCOPY(name, n);
 	}
       else
 	{
