@@ -123,12 +123,43 @@ static NSMapTable	*docMap = 0;
 
 - (void) pasteInSelection
 {
-  // not implemented
+  NSPasteboard *pb = [NSPasteboard generalPasteboard];
+  NSString *type = [[(GormDocument *)document allManagedPboardTypes] firstObjectCommonWithArray: [pb types]];
+
+  if(type != nil)
+    {
+      // paste the object in.
+      [document pasteType: type
+		fromPasteboard: pb
+		parent: nil];
+    }
 }
 
 - (void) copySelection
 {
-  // not implemented
+  NSArray *sel = [self selection];
+  if([sel count] > 0)
+    {
+      NSString *type = nil;
+      id obj = [sel objectAtIndex: 0];
+
+      if([obj isKindOfClass: [NSWindow class]])
+	{
+	  type = IBWindowPboardType;
+ 	}
+      if([obj isKindOfClass: [NSView class]])
+	{
+	  type = IBViewPboardType;
+	}
+      else
+	{
+	  type = IBObjectPboardType;
+	}
+
+      [document copyObject: sel
+		type: type
+		toPasteboard: [NSPasteboard generalPasteboard]];
+    }
 }
 
 - (void) deleteSelection

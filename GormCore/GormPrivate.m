@@ -43,9 +43,6 @@ NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 // Define this as "NO" initially.   We only want to turn this on while loading or testing.
 static BOOL _isInInterfaceBuilder = NO;
 
-// Has poseAs: been called?
-static BOOL _illegalClassSubstitution = NO;
-
 @class	InfoPanel;
 
 // we had this include for grouping/ungrouping selectors
@@ -74,14 +71,9 @@ static BOOL _illegalClassSubstitution = NO;
 @implementation NSObject (GormPrivate)
 + (void) poseAsClass: (Class)aClassObject
 {
-  BOOL allow = [[NSUserDefaults standardUserDefaults] boolForKey: @"AllowUserBundles"];
-
   // disable poseAs: while in Gorm.
   class_pose_as(self, aClassObject);
-  if(!allow)
-    {
-      _illegalClassSubstitution = YES;
-    }
+  NSLog(@"WARNING: poseAs: called in Gorm.");
 }
 
 + (BOOL) canSubstituteForClass: (Class)origClass
@@ -167,8 +159,7 @@ static BOOL _illegalClassSubstitution = NO;
 
 - (void) setClassName: (NSString *)className
 {
-  RELEASE(theClass);
-  theClass = [className copy];
+  ASSIGNCOPY(theClass, className); 
 }
 
 - (NSImage *) imageForViewer
@@ -187,18 +178,19 @@ static BOOL _illegalClassSubstitution = NO;
 
 // define the class proxy...
 @implementation GormClassProxy
-- (id) initWithClassName: (NSString*)n
+- (id) initWithClassName: (NSString *)n
 {
   self = [super init];
   if (self != nil)
     {
       if([n isKindOfClass: [NSString class]])
 	{
-	  ASSIGN(name, n);
+	  // create a copy.
+	  ASSIGNCOPY(name, n);
 	}
       else
 	{
-	  NSLog(@"Attempt to add a class proxy with className=%@",n);
+	  NSLog(@"Attempt to add a class proxy with className = %@",n);
 	}
     }
   return self;
@@ -233,13 +225,6 @@ static BOOL _illegalClassSubstitution = NO;
 - (NSString*) sizeInspectorClassName
 {
   return @"GormNotApplicableInspector";
-}
-@end
-
-@implementation NSApplication (GormAdditions)
-- (BOOL) illegalClassSubstitution
-{
-  return _illegalClassSubstitution;
 }
 @end
 

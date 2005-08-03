@@ -16,9 +16,25 @@
 
   NSMutableArray *headers;
 }
+
+/**
+ * View to show in prefs panel.
+ */
 - (NSView *) view;
+
+/**
+ * Add a header.
+ */
 - (void) addAction: (id)sender;
+
+/**
+ * Remove a header.
+ */
 - (void) removeAction: (id)sender;
+
+/**
+ * Called when the "preload" switch is set.
+ */
 - (void) preloadAction: (id)sender;
 @end
 

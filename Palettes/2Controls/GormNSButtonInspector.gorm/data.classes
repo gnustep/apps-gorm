@@ -13,9 +13,9 @@
 	Outlets = (
 	    alignMatrix,
 	    iconMatrix,
-	    keyField,
+	    keyForm,
 	    optionMatrix,
-	    tagField,
+	    tagForm,
 	    titleForm,
 	    typeButton,
 	    keyEquiv

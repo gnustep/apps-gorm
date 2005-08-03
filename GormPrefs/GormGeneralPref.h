@@ -8,19 +8,24 @@
 {
   id window;
   id backupButton;
-  id inspectorButton;
-  id palettesButton;
-  id archiveMatrix;
   id interfaceMatrix;
 
   id _view;
 }
 
+/**
+ * View to be shown.
+ */
 - (NSView *) view;
-- (void) palettesAction: (id)sender;
-- (void) inspectorAction: (id)sender;
+
+/**
+ * Should create a backup file.
+ */
 - (void) backupAction: (id)sender;
-- (void) archiveAction: (id)sender;
+
+/**
+ * Show the classes view as a browser or an outline.
+ */
 - (void) classesAction: (id)sender;
 @end
 

@@ -27,15 +27,13 @@
 #include "NSColorWell+GormExtensions.h"
 
 @implementation NSColorWell (GormExtensions)
+
+/**
+ * Changes the color without sending the action associated with it.
+ */
 - (void) setColorWithoutAction: (NSColor *)color
 {
   ASSIGN(_the_color, color);
-  /*
-   * Experimentation with NeXTstep shows that when the color of an active
-   * colorwell is set, the color of the shared color panel is set too,
-   * though this does not raise the color panel, only the event of
-   * activation does that.
-   */
   if ([self isActive])
     {
       NSColorPanel	*colorPanel = [NSColorPanel sharedColorPanel];
@@ -44,4 +42,5 @@
     }
   [self setNeedsDisplay: YES];
 }
+
 @end

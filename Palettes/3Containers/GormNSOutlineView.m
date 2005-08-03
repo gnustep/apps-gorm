@@ -2,7 +2,7 @@
 
    Copyright (C) 2002 Free Software Foundation, Inc.
 
-   Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+   Author: Gregory John Casamento <greg_casamento@yahoo.com>
    Date: 2002
    
    This file is part of GNUstep.

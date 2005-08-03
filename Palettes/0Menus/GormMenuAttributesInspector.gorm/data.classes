@@ -3,17 +3,13 @@
     FirstResponder = {
 	Actions = (
 	    "orderFrontFontPanel:",
-	    "setObject:",
-	    "updateMenuType:",
-	    "updateAutoenable:"
+	    "setObject:"
 	);
 	Super = NSObject;
     };
     GormMenuAttributesInspector = {
 	Actions = (
-	    "setObject:",
-	    "updateMenuType:",
-	    "updateAutoenable:"
+	    "setObject:"
 	);
 	Outlets = (
 	    titleText,

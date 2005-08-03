@@ -118,7 +118,6 @@ objectValueForTableColumn: (NSTableColumn *)tc
     {
       NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
       [defaults setBool: ([preloadButton state] == NSOnState?YES:NO) forKey:@"PreloadHeaders"];
-      [defaults synchronize];
     }
 }
 

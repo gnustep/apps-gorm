@@ -26,7 +26,7 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormFunctions.h>
 
-@implementation NSMenu (IBObjectAdditions)
+@implementation NSMenu (IBObjectAdditionsEditor)
 - (NSString*) editorClassName
 {
   return @"GormMenuEditor";

@@ -37,7 +37,15 @@
   NSWindow *window;
   id _view;
 }
+
+/**
+ * View to be shown.
+ */
 - (NSView *) view;
+
+/**
+ * Set the colors.
+ */
 - (void)ok: (id)sender;
 @end
 

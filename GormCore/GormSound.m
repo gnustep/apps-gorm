@@ -25,6 +25,7 @@
 #include <Foundation/NSString.h>
 #include <AppKit/NSSound.h>
 #include <AppKit/NSImage.h>
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include "GormSound.h"
 
 // sound proxy object...
@@ -52,7 +53,9 @@
     }
   return self;
 }
+@end
 
+@implementation GormSound (IBObjectAdditions)
 - (NSString *)inspectorClassName
 {
   return @"GormSoundInspector";

@@ -34,12 +34,18 @@
 @class NSString;
 
 @interface GormSound : GormResource
-{
-}
 
+/**
+ * Creates a GormSound object using the file at path.
+ */
 + (GormSound*) soundForPath: (NSString *)path;
+
+/**
+ * Creates a GormSound object using the file at path, and marks it as
+ * inside or outside of the .gorm/.nib wrapper.
+ */
 + (GormSound*) soundForPath: (NSString *)path inWrapper: (BOOL)flag;
-- (NSString *)inspectorClassName;
+
 @end
 
 #endif

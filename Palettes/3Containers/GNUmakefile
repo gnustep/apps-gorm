@@ -25,6 +25,9 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 3Containers
 3Containers_PALETTE_ICON = ContainersPalette
+
+3Containers_PRINCIPAL_CLASS = ContainersPalette
+
 3Containers_OBJC_FILES = \
 	main.m \
 	inspectors.m \
@@ -32,16 +35,14 @@ PALETTE_NAME = 3Containers
 	GormNSTableView.m \
 	GormTableViewEditor.m \
 	GormTabViewEditor.m \
-	GormNSOutlineView.m
+	GormNSOutlineView.m \
+	GormBrowserAttributesInspector.m \
+	GormTabViewAttributesInspector.m \
+	GormTableColumnAttributesInspector.m \
+	GormTableColumnSizeInspector.m \
+	GormTableViewAttributesInspector.m \
+	GormTableViewSizeInspector.m
 
-3Containers_HEADER_FILES = \
-	GormNSBrowser.h \
-	GormNSTableView.h \
-	GormTableViewEditor.h \
-	GormTabViewEditor.h \
-	GormNSOutlineView.h
-
-3Containers_PRINCIPAL_CLASS = ContainersPalette
 3Containers_RESOURCE_FILES = \
 	ContainersPalette.tiff \
 	GormNSBrowserInspector.gorm \

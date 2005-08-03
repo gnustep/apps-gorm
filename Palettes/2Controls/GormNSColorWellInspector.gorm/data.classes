@@ -2,26 +2,18 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "orderFrontFontPanel:",
-	    "tagSelected:",
-	    "borderedSelected:",
-	    "disabledSelected:",
-	    "initialColorSelected:"
+	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
     };
     GormColorWellInspector = {
 	Actions = (
-	    "tagSelected:",
-	    "borderedSelected:",
-	    "disabledSelected:",
-	    "initialColorSelected:"
 	);
 	Outlets = (
-	    bordered,
-	    disabled,
-	    initialColor,
-	    tagValue
+	    borderedSwitch,
+	    disabledSwitch,
+	    initialColorWell,
+	    tagField
 	);
 	Super = IBInspector;
     };

@@ -330,19 +330,10 @@ static NSImage  *fileImage = nil;
 	  [soundsScrollView setDocumentView: soundsView];
 	  RELEASE(soundsView);
 
-	  // classes...
-	  // classesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  // [classesScrollView setHasVerticalScroller: YES];
-	  // [classesScrollView setHasHorizontalScroller: NO];
-	  // [classesScrollView setAutoresizingMask:
-	  //		       NSViewHeightSizable|NSViewWidthSizable];
-	  // [classesScrollView setBorderType: NSBezelBorder];
-	  
+	  /* classes view */
 	  mainRect.origin = NSMakePoint(0,0);
 	  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
 	  [classesView setFrame: mainRect];
-	  // [classesScrollView setDocumentView: classesView];
-	  // RELEASE(classesView);	  
 	  
 	  /*
 	   * Set the objects view as the initial view the user's see on startup.
@@ -784,18 +775,21 @@ static NSImage  *fileImage = nil;
     case 0: // objects
       {
 	[selectionBox setContentView: scrollView];
+	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
 	[self setSelectionFromEditor: objectsView];
       }
       break;
     case 1: // images
       {
 	[selectionBox setContentView: imagesScrollView];
+	[toolbar setSelectedItemIdentifier: @"ImagesItem"];
 	[self setSelectionFromEditor: imagesView];
       }
       break;
     case 2: // sounds
       {
 	[selectionBox setContentView: soundsScrollView];
+	[toolbar setSelectedItemIdentifier: @"SoundsItem"];
 	[self setSelectionFromEditor: soundsView];
       }
       break;
@@ -811,11 +805,13 @@ static NSImage  *fileImage = nil;
 	    id obj = [selection objectAtIndex: 0];
 	    [classesView selectClassWithObject: obj];
 	  }
+	[toolbar setSelectedItemIdentifier: @"ClassesItem"];
 	[self setSelectionFromEditor: classesView];
       }
       break;
     case 4: // file prefs
       {
+	[toolbar setSelectedItemIdentifier: @"FileItem"];
 	[selectionBox setContentView: filePrefsView];
       }
       break;
@@ -829,25 +825,21 @@ static NSImage  *fileImage = nil;
   if([objectsView acceptsTypeFromArray: types] &&
      fileType == nil)
     {
-      [toolbar setSelectedItemIdentifier: @"ObjectsItem"];
       [self changeToViewWithTag: 0];
     }
   else if([imagesView acceptsTypeFromArray: types] &&
 	  [[imagesView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"ImagesItem"];
       [self changeToViewWithTag: 1];
     }
   else if([soundsView acceptsTypeFromArray: types] &&
 	  [[soundsView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"SoundsItem"];
       [self changeToViewWithTag: 2];
     }
   else if([classesView acceptsTypeFromArray: types] &&
 	  [[classesView fileTypes] containsObject: fileType])
     {
-      [toolbar setSelectedItemIdentifier: @"ClassesItem"];
       [self changeToViewWithTag: 3];
     }
 }
@@ -1695,7 +1687,7 @@ static NSImage  *fileImage = nil;
 
       // go to the class which was just loaded in the classes view...
       [classesView reloadData];
-      [selectionBox setContentView: classesView];
+      [self changeToViewWithTag: 3];
 
       if(newClass != nil)
 	{
@@ -1769,8 +1761,8 @@ static NSImage  *fileImage = nil;
 	  [classManager setCustomClass: object
 			forName: name];
 	}
-      
-      [selectionBox setContentView: scrollView];
+
+      [self changeToViewWithTag: 0];
       NSLog(@"Instantiate NSView subclass %@",object);	      
     }
   else
@@ -1779,9 +1771,8 @@ static NSImage  *fileImage = nil;
 				      frame: NSMakeRect(0,0,0,0)];
       
       [self setName: nil forObject: item];
-      [self attachObject: item toParent: nil];
-      
-      [selectionBox setContentView: scrollView];
+      [self attachObject: item toParent: nil];      
+      [self changeToViewWithTag: 0];
     }
   
   return self;
@@ -2475,7 +2466,7 @@ static NSImage  *fileImage = nil;
    * Windows and panels are a special case - for a multiple window paste,
    * the windows need to be positioned so they are not on top of each other.
    */
-  if ([aType isEqualToString: IBWindowPboardType] == YES)
+  if ([aType isEqualToString: IBWindowPboardType])
     {
       NSWindow	*win;
 
@@ -2486,7 +2477,7 @@ static NSImage  *fileImage = nil;
 	  screenPoint.y -= 10;
 	}
     }
-  else 
+  else if([aType isEqualToString: IBViewPboardType]) 
     {
       NSEnumerator *enumerator = [objects objectEnumerator];
       NSRect frame;
@@ -2496,7 +2487,8 @@ static NSImage  *fileImage = nil;
       {
 	// check to see if the object has a frame.  If so, then
 	// modify it.  If not, simply iterate to the next object
-	if([obj respondsToSelector: @selector(frame)])
+	if([obj respondsToSelector: @selector(frame)]
+	   && [obj respondsToSelector: @selector(setFrame:)])
 	  {
 	    frame = [obj frame];
 	    frame.origin.x -= 6;
@@ -2507,8 +2499,10 @@ static NSImage  *fileImage = nil;
       } 
     }
 
+  // attach the objects to the parent and touch the document.
   [self attachObjects: objects toParent: parent];
   [self touch];
+
   return objects;
 }
 
@@ -2637,13 +2631,13 @@ static NSImage  *fileImage = nil;
     }
   else if ([type isEqual: @"Inspector"] == YES)
     {
-      NSWindow	*aWindow;
+      NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
 	{
-	  aWindow = [[NSWindow allocSubstitute] 
+	  aWindow = [[NSPanel allocSubstitute] 
 		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2651,7 +2645,7 @@ static NSImage  *fileImage = nil;
 	}
       else
 	{
-	  aWindow = [[NSWindow alloc] 
+	  aWindow = [[NSPanel alloc] 
 		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2666,13 +2660,13 @@ static NSImage  *fileImage = nil;
     }
   else if ([type isEqual: @"Palette"] == YES)
     {
-      NSWindow	*aWindow;
+      NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
       unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
 
-      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
+      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
 	{
-	  aWindow = [[NSWindow allocSubstitute] 
+	  aWindow = [[NSPanel allocSubstitute] 
 		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2680,7 +2674,7 @@ static NSImage  *fileImage = nil;
 	}
       else
 	{
-	  aWindow = [[NSWindow alloc] 
+	  aWindow = [[NSPanel alloc] 
 		      initWithContentRect: NSMakeRect(0,0,272,160)
 		      styleMask: style
 		      backing: NSBackingStoreRetained
@@ -2997,7 +2991,8 @@ static NSImage  *fileImage = nil;
 					withClassName: customClass 
 					withSuperClassName: superClass];
 	}
-      else if([object isKindOfClass: [NSWindow class]])
+      else if([object isKindOfClass: [NSWindow class]] 
+	      && [filePrefsManager versionOfClass: @"GSWindowTemplate"] > 0)
 	{
 	  template = [GSTemplateFactory templateForObject: object
 					withClassName: [object className]
@@ -3810,7 +3805,7 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Return font manager standin.
+ * Return font manager stand in.
  */
 - (id) fontManager
 {

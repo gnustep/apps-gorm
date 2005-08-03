@@ -28,7 +28,14 @@
 #include <AppKit/NSFontManager.h>
 
 @interface NSFontManager (GormExtensions)
+
+/**
+ * Override for sendAction in NSFontManager.  This method calls the action on the 
+ * last edited object if the attempt to send the action to the first responder is
+ * unsuccessful.   This allows the font to be more easily set.
+ */
 - (BOOL) sendAction;
+
 @end
 
 #endif

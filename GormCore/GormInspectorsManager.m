@@ -151,18 +151,6 @@
 }
 @end
 
- 
-
-@interface GormISelectionView : NSView
-{
-}
-@end
-
-@implementation GormISelectionView : NSView
-@end
-
-
-
 @implementation GormInspectorsManager
 
 - (void) dealloc
@@ -222,7 +210,7 @@
        * The selection view sits at the top of the panel and is always the
        * same height.
        */
-      selectionView = [[GormISelectionView alloc] initWithFrame: selectionRect];
+      selectionView = [[NSView alloc] initWithFrame: selectionRect];
       [selectionView setAutoresizingMask:
 		       NSViewMinYMargin | NSViewWidthSizable];
       [[panel contentView] addSubview: selectionView];
@@ -1101,19 +1089,9 @@ selectCellWithString: (NSString*)title
   else if ([connectors containsObject: currentConnector] == YES)
     {
       id con = currentConnector;
-      RETAIN(con);
+
       [[(id<IB>)NSApp activeDocument] removeConnector: con];
-      if ([con isKindOfClass: [NSNibOutletConnector class]])
-	{
-	  [con setDestination: nil];
-	}
-      if ([con isKindOfClass: [NSNibControlConnector class]])
-	{
-	  [con setDestination: nil];
-	  [con setLabel: nil];
-	}
       [connectors removeObject: con];
-      RELEASE(con);
       [oldBrowser loadColumnZero];
     }
   else
@@ -1168,7 +1146,6 @@ selectCellWithString: (NSString*)title
       NSArray		*array;
 
       [super setObject: anObject];
-      // DESTROY(currentConnector);
       RELEASE(connectors);
 
       /*

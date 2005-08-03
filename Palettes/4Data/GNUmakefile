@@ -25,8 +25,15 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 4Data
 4Data_PALETTE_ICON = DataPalette
-4Data_OBJC_FILES = main.m inspectors.m
 4Data_PRINCIPAL_CLASS = DataPalette
+
+4Data_OBJC_FILES = GormNSComboBoxAttributesInspector.m\
+		   GormImageViewAttributesInspector.m\
+		   GormTextViewAttributesInspector.m\
+	           inspectors.m\
+		   main.m
+
+
 4Data_RESOURCE_FILES = DataPalette.tiff \
 	GormNSImageViewInspector.gorm \
 	GormNSTextViewInspector.gorm  \
@@ -43,5 +50,5 @@ PALETTE_NAME = 4Data
 
 include $(GNUSTEP_MAKEFILES)/palette.make
 
--include GNUmakefile.postamble
+#-include GNUmakefile.postamble
 

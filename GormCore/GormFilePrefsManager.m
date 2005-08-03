@@ -169,6 +169,24 @@ NSString *formatVersion(int version)
   return [NSArchiver archiveRootObject: self toFile: path];
 }
 
+- (int) versionOfClass: (NSString *)className 
+{
+  int result = -1; 
+
+  NSDictionary *clsProfile = [currentProfile objectForKey: className];
+  if(clsProfile != nil)
+    {
+      NSString *versionString = [clsProfile objectForKey: @"version"];
+      if(versionString != nil)
+	{
+	  result = [versionString intValue];
+	}
+    }
+
+  return result;
+		      
+}
+
 - (BOOL) loadFromFile: (NSString *)path
 {
   BOOL result = YES;

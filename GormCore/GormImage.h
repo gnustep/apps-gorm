@@ -39,19 +39,41 @@
   NSImage  *smallImage;
 }
 
+/**
+ * Initialize with image data located at path.
+ */
 + (GormImage *) imageForPath: (NSString *)path;
+
+/**
+ * Initialize with image data located at path.  Mark it as in the
+ * wrapper depending on the value of flag.
+ */
 + (GormImage *) imageForPath: (NSString *)path inWrapper: (BOOL)flag;
-- (NSString *)inspectorClassName;
+
+/**
+ * A thumbnail of the image.
+ */
 - (NSImage *)image;
+
+/**
+ * The full sized image.
+ */
 - (NSImage *)normalImage;
 @end
 
-/**
+/*
  * A category which will allow us to set whether or not 
  * an image is archived by reference, or directly.
  */
 @interface NSImage (GormNSImageAddition)
+/**
+ * Set to YES, if the image should be archived by name only, NO otherwise.
+ */
 - (void) setArchiveByName: (BOOL) archiveByName;
+
+/**
+ * Returns YES, if the image should be archived by name only, NO otherwise.
+ */
 - (BOOL) archiveByName;
 @end
 

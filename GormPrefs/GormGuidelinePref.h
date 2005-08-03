@@ -39,8 +39,19 @@
   id currentSpacing;
   id halfSpacing;
 }
+/**
+ * View to show in prefs panel.
+ */
 - (NSView *) view;
+
+/**
+ * Called when the guidline preferences are changed.
+ */
 - (void)ok: (id)sender;
+
+/**
+ * Reset to defaults.
+ */
 - (void)reset: (id)sender;
 @end
 

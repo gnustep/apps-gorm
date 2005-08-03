@@ -1,16 +1,23 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    GormWindowInspector = {
+    GormWindowAttributesInspector = {
 	Actions = (
 	);
 	Outlets = (
 	    backingMatrix,
-	    controlMatrix,
-	    optionMatrix,
 	    titleForm,
 	    iconNameForm,
 	    clearButton,
-	    colorWell
+	    colorWell,
+	    releaseButton,
+	    hideButton,
+	    visibleButton,
+	    deferredButton,
+	    oneShotButton,
+	    dynamicDepthButton,
+	    miniaturizeButton,
+	    closeButton,
+	    resizeBarButton
 	);
 	Super = IBInspector;
     };
