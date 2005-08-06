@@ -1,7 +1,7 @@
 ANNOUNCE
 ********
 
-This is version 0.9.10 of Gorm.
+This is version 0.11.0 of Gorm.
 
 What is Gorm?
 =============
@@ -12,36 +12,42 @@ perhaps GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.9.10'
+Noteworthy changes in version `0.11.0'
 ======================================
 
-   * Gorm now has a full implementation of canSubstituteForClass: which
-     is used to determine if a class can be substituted in the custom
-     class inspector.  This allows classes added in palettes to say
-     whether or not they can be used as a subsitute for a kit class.
+   * Improved implementation of canSubstituteForClass: the default
+     implementation of this method tests the classes to see if
+     initWithCoder: or encodeWithCoder: is implemented on a subclass to
+     determine automatically if that class has the same encoding
+     signature as the original class, if it does, it can be substituted.
 
-   * Better separation of Gorm into libraries.  As well as the ability
-     to compile on windows with a simple: "make install"
+   * Improved handling of classes which use cell classes in the custom
+     class inspector.  The inspector now autmatically replaces the cell
+     class with the appropriate one when the user selects a given
+     subclass.
 
-   * Implementation of IBResourceManager class.  This class is used by
-     palettes to register drag types to be considered by the top level
-     editors in the document window: object, sound, image, class.
+   * Browser based class editor in document panel.   This interface is
+     more like the one on OSX.  The user now has a choice in
+     preferences to determine which view they would like to use.
 
-   * Gorm now is able to switch views in the document window when you
-     drag a file into it.  If it's an image it will switch to the image
-     view, if it's a sound, the sound view, an object the object view
-     etc or if it's a class (a .h file) it will switch to the classes
-     view.
+   * Translation tools.  The Document->Translate menu allows the user
+     to export string and import strings in the strings format, so that
+     someone can easily translate just the strings in the file and
+     doesn't need to directly edit anything in Gorm.  The strings file
+     can then be loaded back into Gorm and all of the relevant strings
+     are updated.
 
-   * Drag and drop parsing of header files (if you hadn't gathered from
-     the previous item).
+   * Alignment tools.  In the new Layout menu there are options to
+     align views, center views, bring views to front or push them to
+     the back of the view layers.
 
-   * Better support for standalone views.  while the user cannot
-     instantiate from the classes view (there were too many problems
-     with this approach).  They can now drag any view from the palette
-     into the objects view and have it work.
+   * Implementation of IBViewResourceDraggingDelegate.  This allows
+     updating of the pull down in the inspectors panel dynamically.  It
+     requires the developer of a palette to implement some code to
+     enable this, as on OSX.
 
-   * A myriad of bug fixes.
+   * Lots of bugfixes and usability changes are also included in this
+     release.
 
 How can I get support for this software?
 ========================================

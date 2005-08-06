@@ -1,3 +1,40 @@
+Noteworthy changes in version `0.11.0'
+======================================
+
+   * Improved implementation of canSubstituteForClass: the default
+     implementation of this method tests the classes to see if
+     initWithCoder: or encodeWithCoder: is implemented on a subclass to
+     determine automatically if that class has the same encoding
+     signature as the original class, if it does, it can be substituted.
+
+   * Improved handling of classes which use cell classes in the custom
+     class inspector.  The inspector now autmatically replaces the cell
+     class with the appropriate one when the user selects a given
+     subclass.
+
+   * Browser based class editor in document panel.   This interface is
+     more like the one on OSX.  The user now has a choice in
+     preferences to determine which view they would like to use.
+
+   * Translation tools.  The Document->Translate menu allows the user
+     to export string and import strings in the strings format, so that
+     someone can easily translate just the strings in the file and
+     doesn't need to directly edit anything in Gorm.  The strings file
+     can then be loaded back into Gorm and all of the relevant strings
+     are updated.
+
+   * Alignment tools.  In the new Layout menu there are options to
+     align views, center views, bring views to front or push them to
+     the back of the view layers.
+
+   * Implementation of IBViewResourceDraggingDelegate.  This allows
+     updating of the pull down in the inspectors panel dynamically.  It
+     requires the developer of a palette to implement some code to
+     enable this, as on OSX.
+
+   * Lots of bugfixes and usability changes are also included in this
+     release.
+
 Noteworthy changes in version `0.9.10'
 ======================================
 

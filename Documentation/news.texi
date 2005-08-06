@@ -4,6 +4,22 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{0.11.0}
+
+@itemize @bullet
+@item Improved implementation of canSubstituteForClass: the default implementation of this method tests the classes to see if initWithCoder: or encodeWithCoder: is implemented on a subclass to determine automatically if that class has the same encoding signature as the original class, if it does, it can be substituted.
+@item Improved handling of classes which use cell classes in the custom class inspector.  The inspector now autmatically replaces the cell class with the appropriate one when the user selects a given subclass.
+@item Browser based class editor in document panel.   This interface is more like the one on OSX.  The user now has a choice in preferences to determine which view they would like to use.
+@item Translation tools.  The Document->Translate menu allows the user to export string and import strings in the strings format, so that someone can easily translate just the strings in the file and doesn't need to directly edit anything in Gorm.  The strings file can then be loaded back into Gorm and all of the relevant strings are updated.
+@item Alignment tools.  In the new Layout menu there are options to align views, center views, bring views to front or push them to the back of the view layers.
+@item Implementation of IBViewResourceDraggingDelegate.  This allows updating of the pull down in the inspectors panel dynamically.  It requires the developer of a palette to implement some code to enable this, as on OSX.
+@item Lots of bugfixes and usability changes are also included in this release.
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.9.10}
 
 @itemize @bullet
@@ -15,10 +31,6 @@
 @item Better support for standalone views.  while the user cannot instantiate from the classes view (there were too many problems with this approach).  They can now drag any view from the palette into the objects view and have it work.
 @item A myriad of bug fixes.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.9.2}
 
