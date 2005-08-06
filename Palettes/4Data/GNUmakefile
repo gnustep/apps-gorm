@@ -31,7 +31,7 @@ PALETTE_NAME = 4Data
 		   GormImageViewAttributesInspector.m\
 		   GormTextViewAttributesInspector.m\
 	           inspectors.m\
-		   main.m
+		   DataPalette.m
 
 
 4Data_RESOURCE_FILES = DataPalette.tiff \

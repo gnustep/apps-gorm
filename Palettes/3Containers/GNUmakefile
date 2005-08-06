@@ -29,7 +29,7 @@ PALETTE_NAME = 3Containers
 3Containers_PRINCIPAL_CLASS = ContainersPalette
 
 3Containers_OBJC_FILES = \
-	main.m \
+	ContainersPalette.m \
 	inspectors.m \
 	GormNSBrowser.m \
 	GormNSTableView.m \

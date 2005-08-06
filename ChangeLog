@@ -1,3 +1,17 @@
+2005-08-06 15:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GNUmakefile
+	* Palettes/1Windows/GNUmakefile
+	* Palettes/2Controls/GNUmakefile
+	* Palettes/3Containers/GNUmakefile
+	* Palettes/4Data/GNUmakefile: Added new palette file names.
+	* Palettes/0Menus/MenusPalette.m: New file created from main.m
+	* Palettes/1Windows/WindowsPalette.m: New file created from main.m
+	* Palettes/2Controls/ControlsPalette.m: New file created from main.m
+	* Palettes/3Containers/ContainersPalette.m: : New file created from 
+	main.m
+	* Palettes/4Data/DataPalette.m: New file created from main.m
+	
 2005-08-06 11:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Merge from post 1.0 branch.

@@ -26,7 +26,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PALETTE_NAME = 1Windows
 1Windows_PALETTE_ICON = WindowsPalette
 
-1Windows_OBJC_FILES = main.m \
+1Windows_OBJC_FILES = WindowsPalette.m \
 		      GormNSWindow.m\
 		      GormNSPanel.m\
 		      GormWindowAttributesInspector.m\

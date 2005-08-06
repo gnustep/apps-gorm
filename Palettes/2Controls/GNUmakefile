@@ -36,7 +36,7 @@ PALETTE_NAME = 2Controls
                        GormProgressIndicatorAttributesInspector.m\
                        GormTextFieldAttributesInspector.m\
                        GormMatrixAttributesInspector.m\
-	               main.m \
+	               ControlsPalette.m \
 	               GormPopUpButtonEditor.m \
                        GormButtonEditor.m\
 	               inspectors.m 
