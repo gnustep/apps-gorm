@@ -4,6 +4,8 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	2000
+ * Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date: 2003
  * 
  * This file is part of GNUstep.
  * 
@@ -133,30 +135,6 @@
 @end
 
 
-
-@implementation	NSMenuItem (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormMenuItemAttributesInspector";
-}
-
-/*
-- (void)awakeFromDocument: (id <IBDocuments>)doc
-{
-  NSMenu *menu = [self menu];
-  if(menu != nil)
-    {
-      if([menu supermenu] != nil)
-	{
-	  // NSLog(@"Menu = %@",menu);
-	  // [menu display];
-	  [menu close];
-	  [menu closeTransient];
-	}
-    }
-}
-*/
-@end
 
 @interface GormMenuItemAttributesInspector : IBInspector
 {

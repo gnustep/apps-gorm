@@ -26,24 +26,28 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PALETTE_NAME = 1Windows
 1Windows_PALETTE_ICON = WindowsPalette
 
-1Windows_OBJC_FILES = WindowsPalette.m \
-		      GormNSWindow.m\
-		      GormNSPanel.m\
-		      GormWindowAttributesInspector.m\
-		      GormWindowSizeInspector.m
+1Windows_OBJC_FILES = \
+	WindowsPalette.m \
+	GormNSWindow.m\
+	GormNSPanel.m\
+	GormWindowAttributesInspector.m\
+	GormWindowSizeInspector.m \
+	inspectors.m
 
-1Windows_HEADER_FILES = GormNSWindow.h \
-			GormWindowAttributesInspector.h\
-                        GormWindowSizeInspector.h\
-			GormNSPanel.h
+1Windows_HEADER_FILES = \
+	GormNSWindow.h \
+	GormWindowAttributesInspector.h\
+        GormWindowSizeInspector.h\
+	GormNSPanel.h
 
 1Windows_PRINCIPAL_CLASS = WindowsPalette
 
-1Windows_RESOURCE_FILES = WindowsPalette.tiff \
-		          WindowDrag.tiff \
-	                  GormNSWindowSizeInspector.gorm \
-			  GormNSWindowInspector.gorm \
-			  palette.table
+1Windows_RESOURCE_FILES = \
+	WindowsPalette.tiff \
+	WindowDrag.tiff \
+	GormNSWindowSizeInspector.gorm \
+	GormNSWindowInspector.gorm \
+	palette.table
 
 1Windows_STANDARD_INSTALL = no
 

@@ -38,26 +38,6 @@
 #include <GormCore/NSColorWell+GormExtensions.h>
 #include <AppKit/NSNibLoading.h>
 
-/*
-  IBObjectAdditions category for NSPanel 
-*/
-@implementation	NSPanel (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormWindowAttributesInspector";
-}
-@end 
-
-/*
-  IBObjectAdditions category for NSWindow
-*/
-@implementation	NSWindow (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormWindowAttributesInspector";
-}
-@end
-
 @implementation GormWindowAttributesInspector
 
 - (id) init

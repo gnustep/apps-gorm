@@ -39,15 +39,6 @@
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSTextField.h>
 
-@implementation	NSMenuItem (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormMenuItemAttributesInspector";
-}
-
-@end
-
-
 @implementation GormMenuItemAttributesInspector
 
 - (id) init

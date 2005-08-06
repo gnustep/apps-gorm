@@ -5,6 +5,8 @@
 
    Author:  Richard frith-Macdonald (richard@brainstorm.co.uk>
    Date: 1999
+   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Date: 2003
    
    This file is part of GNUstep.
    
@@ -45,14 +47,6 @@
 #define WINDOWSMENUTAG  0
 #define SERVICESMENUTAG 1 
 #define NORMALMENUTAG   2
-
-@implementation	NSMenu (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormMenuAttributesInspector";
-}
-@end
-
 
 @implementation GormMenuAttributesInspector
 

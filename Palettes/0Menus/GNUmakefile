@@ -32,7 +32,8 @@ PALETTE_NAME = 0Menus
 	GormNSMenu.m \
 	GormMenuItemAttributesInspector.m\
 	GormMenuAttributesInspector.m\
-	MenusPalette.m
+	MenusPalette.m \
+	inspectors.m
 
 0Menus_RESOURCE_FILES = MenusPalette.tiff \
 	GormMenuDrag.tiff \

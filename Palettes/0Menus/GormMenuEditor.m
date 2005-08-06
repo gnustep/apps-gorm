@@ -26,35 +26,6 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormFunctions.h>
 
-@implementation NSMenu (IBObjectAdditionsEditor)
-- (NSString*) editorClassName
-{
-  return @"GormMenuEditor";
-}
-/*
- * Method to return the image that should be used to display menus within
- * the matrix containing the objects in a document.
- */
-- (NSImage*) imageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormMenu"];
-
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-
-- (NSString*) inspectorClassName
-{
-  return @"GormMenuAttributesInspector";
-}
-@end
-
 /*
  * This method will allow us to check if the menu is
  * open, so that it can be conditionally closed.
