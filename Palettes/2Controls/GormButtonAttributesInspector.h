@@ -45,12 +45,12 @@
 {
   NSMatrix *alignMatrix;
   NSMatrix *iconMatrix;
-  NSForm *keyField;
+  NSForm *keyForm;
   NSMatrix *optionMatrix;
   NSForm *tagForm;
-  NSMatrix *titleForm;
-  NSPopUpButton *typePopUpButton;
-  NSPopUpButton *keyEquivPopUpButton;
+  NSForm *titleForm;
+  NSPopUpButton *typeButton;
+  NSPopUpButton *keyEquiv;
 }
 
 @end

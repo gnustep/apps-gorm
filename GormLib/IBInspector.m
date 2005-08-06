@@ -103,7 +103,7 @@ static NSNotificationCenter *nc = nil;
 - (void) setObject: (id)anObject
 {
   ASSIGN(object, anObject);
-  [self revert: self];
+  [self revert: object];
 }
 
 - (void) textDidBeginEditing: (NSNotification*)aNotification

@@ -32,22 +32,17 @@
 */
 
 #include "GormStepperAttributesInspector.h"
-
 #include <Foundation/NSNotification.h>
-
 #include <AppKit/NSButton.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSStepper.h>
 #include <AppKit/NSTextField.h>
 
+// Some simple inspectors.
+@interface GormStepperCellAttributesInspector : GormStepperAttributesInspector
+@end
 
-
-
-@implementation	NSStepper (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormStepperAttributesInspector";
-}
+@implementation GormStepperCellAttributesInspector
 @end
 
 @implementation GormStepperAttributesInspector

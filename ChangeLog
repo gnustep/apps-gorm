@@ -1,3 +1,22 @@
+2005-08-06 17:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBInspector.m: Call revert with object instead of anObject.
+	Same object, just a slightly nicer way to do it.
+	* Palettes/2Controls/GNUmakefile: Add in GormButtonAttributesInspector
+	files.
+	* Palettes/2Controls/GormButtonAttributesInspector.h: Changed ivar 
+	names.
+	* Palettes/2Controls/GormButtonAttributesInspector.m: Changed names
+	of vars and corrected problem with revert using anObject instead
+	of object as it should.  Removed explicit button item adds from
+	init.  Added trivial subclass to the file.
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Added NSPopUpButton
+	items for button types.
+	* Palettes/2Controls/GormStepperAttributesInspector.m: Added trivial
+	subclass to the file.
+	* Palettes/2Controls/inspectors.m: Moved all of IBObjectAdditions
+	categories here.
+
 2005-08-06 15:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GNUmakefile: Add new file
