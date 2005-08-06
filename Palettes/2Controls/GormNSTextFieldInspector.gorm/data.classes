@@ -8,10 +8,11 @@
 	    backgroundColor,
 	    borderMatrix,
 	    drawsBackground,
-	    optionMatrix,
-	    tagField,
 	    tagForm,
-	    textColor
+	    textColor,
+	    editableSwitch,
+	    scrollableSwitch,
+	    selectabelSwitch
 	);
 	Super = IBInspector;
     };

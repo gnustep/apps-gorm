@@ -81,6 +81,16 @@ static NSImage *horizontalImage;
 
   return image;
 }
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormViewSizeInspector";
+}
+
+- (NSString*) customClassInspector
+{
+  return @"GormCustomClassInspector";
+}
 @end
 
 

@@ -8,9 +8,15 @@
 	    horizontalScrollerSwitch,
 	    optionMatrix,
 	    rowsHeightForm,
-	    selectionMatrix,
 	    verticalScrollerSwitch,
-	    backgroundColor
+	    backgroundColor,
+	    tagForm,
+	    multipleSelectionSwitch,
+	    emptySelectionSwith,
+	    columnSelectionSwitch,
+	    drawgridSwitch,
+	    resizingSwitch,
+	    reorderingSwitch
 	);
 	Super = IBInspector;
     };

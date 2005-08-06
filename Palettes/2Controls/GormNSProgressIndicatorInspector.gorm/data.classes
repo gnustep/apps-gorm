@@ -2,32 +2,28 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "orderFrontFontPanel:",
-	    "borderSelected:",
-	    "verticalSelected:",
 	    "indeterminateSelected:",
-	    "maxValueSelected:",
-	    "minValueSelected:",
-	    "inderterminateSelected:"
+	    "revert:",
+	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
     };
     GormProgressIndicatorInspector = {
 	Actions = (
-	    "borderSelected:",
-	    "verticalSelected:",
-	    "inderterminateSelected:",
-	    "maxValueSelected:",
-	    "minValueSelected:"
 	);
 	Outlets = (
 	    vertical,
 	    maxValue,
 	    minValue,
-	    indeterminate,
-	    borderMatrix,
-	    doubleValue
+	    indeterminate
 	);
 	Super = IBInspector;
+    };
+    NSBox = {
+	Actions = (
+	    "revert:",
+	    "ok:"
+	);
+	Super = NSView;
     };
 }

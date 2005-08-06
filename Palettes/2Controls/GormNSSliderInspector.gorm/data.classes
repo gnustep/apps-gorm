@@ -4,17 +4,12 @@
 	Actions = (
 	);
 	Outlets = (
-	    altForm,
 	    altIncrementForm,
-	    knobField,
 	    knobThicknessForm,
-	    numberOfTicks,
-	    optionMatrix,
-	    snapToTicks,
 	    tagForm,
-	    tickPosition,
-	    unitForm,
-	    valueForm
+	    valuesForm,
+	    continuousSwitch,
+	    enabledSwitch
 	);
 	Super = IBInspector;
     };

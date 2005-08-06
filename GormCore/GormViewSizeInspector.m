@@ -24,30 +24,7 @@
 
 #include "GormPrivate.h"
 #include "GormViewKnobs.h"
-
-@implementation	NSView (GormInspectors)
-- (NSString*) sizeInspectorClassName
-{
-  return @"GormViewSizeInspector";
-}
-
-- (NSString*) customClassInspector
-{
-  return @"GormCustomClassInspector";
-}
-@end
-
-@interface GormViewSizeInspector : IBInspector
-{
-  NSButton	*top;
-  NSButton	*bottom;
-  NSButton	*left;
-  NSButton	*right;
-  NSButton	*width;
-  NSButton	*height;
-  NSForm        *sizeForm;
-}
-@end
+#include "GormViewSizeInspector.h"
 
 @implementation GormViewSizeInspector
 

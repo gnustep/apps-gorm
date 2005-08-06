@@ -1,13 +1,16 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    GormTextViewInspector = {
+    GormNSTextViewAttributesInspector = {
 	Actions = (
 	);
 	Outlets = (
 	    backgroundColorWell,
 	    textColorWell,
 	    borderMatrix,
-	    optionMatrix
+	    editableButton,
+	    multipleFontsButton,
+	    graphicsButton,
+	    selectableButton
 	);
 	Super = IBInspector;
     };

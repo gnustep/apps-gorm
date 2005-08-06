@@ -6,10 +6,13 @@
 	Outlets = (
 	    backgroundColorWell,
 	    drawsBackgroundSwitch,
-	    optionMatrix,
 	    tagForm,
 	    textMatrix,
-	    titleMatrix
+	    titleMatrix,
+	    cellPositionSwitch,
+	    editableSwitch,
+	    scrollableSwitch,
+	    selectableSwitch
 	);
 	Super = IBInspector;
     };

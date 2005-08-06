@@ -3,7 +3,9 @@
    Copyright (C) 2001 Free Software Foundation, Inc.
 
    Author:  Laurent Julliard <laurent@julliard-online.org>
-   Date: Nov 2001
+   Date: Nov 2001   
+   Author:  Gregory Casamento <greg_casamento@yahoo.com>
+   Date: Nov 2003,2004,2005
    
    This file is part of GNUstep.
    
@@ -28,333 +30,28 @@
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormViewEditor.h>
 #include <GormCore/NSColorWell+GormExtensions.h>
+#include <GormCore/GormViewSizeInspector.h>
 
-/* This macro makes sure that the string contains a value, even if @"" */
+/* this macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
 
 extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
-/*----------------------------------------------------------------------------
- * NSComboBox
- */
-
-@implementation	NSComboBox (IBInspectorClassNames)
-
-- (NSString*) inspectorClassName
-{
-  return @"GormComboBoxAttributesInspector";
-}
-
-@end
-
-@interface GormComboBoxAttributesInspector : IBInspector
-{
-  id alignmentMatrix;
-  id backgroundColorWell;
-  id itemField;
-  id optionMatrix;
-  id textColorWell;
-  id visibleItemsForm;
-  id itemTableView;
-  id itemTxt;
-  id addButton;
-  id removeButton;
-  NSMutableArray *itemsArray;
-}
-@end
-
-@implementation GormComboBoxAttributesInspector
-
-- (void) _setValuesFromControl: control
-{
-  if (control == backgroundColorWell)
-    {
-      [object setBackgroundColor: [control color]];
-    }
-  else if (control == textColorWell)
-    {
-      [object setTextColor: [control color]];
-    }
-  else if (control == alignmentMatrix)
-    {
-      [object setAlignment: (NSTextAlignment)[[control selectedCell] tag]];
-    }
-  else if (control == optionMatrix)
-    {
-      BOOL flag;
-
-      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES :NO;
-      [object setEditable: flag];
-      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES :NO;
-      [object setSelectable: flag];
-      flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES :NO;
-      [[object cell] setUsesDataSource: flag];
-    }
-  else if (control == visibleItemsForm)
-    {
-      [object setNumberOfVisibleItems: [[control cellAtIndex: 0] intValue]];
-    }
-  else if (control == itemField )
-    {
-      // To be done
-    }
-  else if (control == addButton) 
-    {
-      if ( ! [[itemTxt stringValue] isEqualToString:@""] )
-	{
- 	  [object addItemWithObjectValue:[itemTxt stringValue]];
-	  [itemTableView reloadData];
-	}
-    }
-  else if (control == removeButton) 
-    {
-      int selected = [itemTableView selectedRow];
-      if ( selected != -1 ) 
-	{
-	  [itemTxt setStringValue:@""];
-	  [object removeItemAtIndex:selected];
-	  [itemTableView reloadData];
-	}
-    }
-}
-
-- (void) _getValuesFromObject: anObject
-{
-  if (anObject != object)
-    return;
-
-  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
-  [textColorWell setColorWithoutAction: [anObject textColor]];
-    
-  [alignmentMatrix selectCellWithTag: [anObject alignment]];
-
-  [optionMatrix deselectAllCells];
-  if ([anObject isEditable])
-    [optionMatrix selectCellAtRow: 0 column: 0];
-  if ([anObject isSelectable])
-    [optionMatrix selectCellAtRow: 1 column: 0];
-  if ([anObject usesDataSource])
-    [optionMatrix selectCellAtRow: 2 column: 0];
-
-  [itemTableView reloadData];
-  [itemTxt setStringValue:@""];
-
-  [[visibleItemsForm cellAtIndex: 0]
-    setIntValue: [anObject numberOfVisibleItems]];
-}
-
-
-- (id) init
-{
-  if ([super init] == nil)
-    {
-      return nil;
-    }
-  if ([NSBundle loadNibNamed: @"GormNSComboBoxInspector" owner: self] == NO)
-    {
-      NSLog(@"Could not gorm GormNSComboBoxInspector");
-      return nil;
-    }
-  return self;
-}
-
-- (void) ok: (id)sender
-{
-  [super ok: sender];
-  [self _setValuesFromControl: sender];
-}
-
-- (void) setObject: (id)anObject
-{
-  [super setObject: anObject];
-  [self _getValuesFromObject: anObject];
-}
-
-// TableView DataSource
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
-{
-  if (aTableView == itemTableView )
-    {
-      return [[object objectValues]  count];
-    }
-  else
-    return 0;
-}
-
-
-- (id)tableView:(NSTableView *)aTableView 
-    objectValueForTableColumn:(NSTableColumn *)aTableColumn
-    row:(int)rowIndex
-{
-  if (aTableView == itemTableView )
-    return  [object itemObjectValueAtIndex:rowIndex];
-  return nil;
-}
-
-//TableView delegate
-- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
-{
-  if ( aTableView == itemTableView ) 
-    {
-      [itemTxt setStringValue:[object itemObjectValueAtIndex:rowIndex]];
-      return YES;
-    }
-  return NO;
-}
-
-//itemTxt delegate
-- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
-{
-//   if (fieldEditor != itemTxt )
-//     return YES;
-//   if ( [[itemTxt setStringValue] isEqualToString:@""] )
-//     return YES;
-//   else if ( [aTableView selectedRow] != -1 )
-//     {
-//       [object 
-    
-  return YES;
-}
-
-@end
 
 
 /*----------------------------------------------------------------------------
  * NSImageView
  */
 
-@implementation	NSImageView (IBInspectorClassNames)
-
-- (NSString*) inspectorClassName
-{
-  return @"GormImageViewAttributesInspector";
-}
-
-@end
-
-@interface GormImageViewAttributesInspector : IBInspector
-{
-  id iconField;
-  id borderMatrix;
-  id alignmentMatrix;
-  id scalingMatrix;
-  id editableSwitch;
-}
-@end
-
-@implementation GormImageViewAttributesInspector
-
-- (void) _setValuesFromControl: control
-{
-  if (control == iconField)
-    {
-      NSString *name = [control stringValue];
-      NSImage *image;
-      if (name == nil || [name isEqual: @""])
-	{
-	  [object setImage: nil];
-	  return;
-	}
-      image = [NSImage imageNamed: name];
-      if (image == nil)
-	{
-	  image = [[NSImage alloc] initByReferencingFile: name];
-	  if (image)
-	    [image setName: name];
-	}
-      if (image == nil)
-	{
-	  NSRunAlertPanel(@"Gorm ImageView", @"Cannot find image", 
-			  @"OK", NULL, NULL);
-	  return;
-	}	
-      [object setImage: image ];
-    }
-  else  if (control == borderMatrix)
-    {
-      [object setImageFrameStyle: [[control selectedCell] tag]];
-    }
-  else if (control == alignmentMatrix)
-    {
-      [object setImageAlignment: [[control selectedCell] tag]];
-    }
-  else if (control == scalingMatrix)
-    {
-      [object setImageScaling: [[control selectedCell] tag]];
-    }
-  else if (control == editableSwitch)
-    {
-      [object setEditable: ([control state] == NSOnState)];
-    }
-  
-}
-
-- (void) _getValuesFromObject: anObject
-{
-  if (anObject != object)
-    {
-      return;
-    }
-
-  // If this is still the original image as in the Palette then clean it
-  if ( [ [[anObject image] name] isEqualToString: @"Sunday_seurat.tiff"] )
-        [anObject setImage: nil];
- 
-  [iconField setStringValue: VSTR([[anObject image] name])];
-  [borderMatrix selectCellWithTag: [anObject imageFrameStyle]];
-  [alignmentMatrix selectCellWithTag: [anObject imageAlignment]];
-  [scalingMatrix selectCellWithTag: [anObject imageScaling]];
-  [editableSwitch setState: [anObject isEditable]];
-}
-
-- (id) init
-{
-  if ([super init] == nil)
-    {
-      return nil;
-    }
-  if ([NSBundle loadNibNamed: @"GormNSImageViewInspector" owner: self] == NO)
-    {
-      NSLog(@"Could not gorm GormImageViewInspector");
-      return nil;
-    }
-
-  return self;
-}
-
-- (void) ok: (id)sender
-{
-  [super ok: sender];
-  [self _setValuesFromControl: sender];
-}
-
-- (void) setObject: (id)anObject
-{
-  [super setObject: anObject];
-  [self _getValuesFromObject: anObject];
-}
-
-@end
 
 /*----------------------------------------------------------------------------
  * NSTextView (possibly embedded in a Scroll view)
  */
 
-@interface GormViewSizeInspector : IBInspector
-{
-  NSButton	*top;
-  NSButton	*bottom;
-  NSButton	*left;
-  NSButton	*right;
-  NSButton	*width;
-  NSButton	*height;
-  NSForm        *sizeForm;
-}
-@end
-
 @interface GormTextViewSizeInspector : GormViewSizeInspector
 @end
+
 @implementation GormTextViewSizeInspector
 - (void) setObject: (id)anObject
 {
@@ -367,11 +64,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
 
 
 @implementation	NSTextView (IBInspectorClassNames)
-
-- (NSString*) inspectorClassName
-{
-  return @"GormTextViewAttributesInspector";
-}
 
 - (NSString*) sizeInspectorClassName
 {
@@ -479,113 +171,6 @@ extern NSArray *predefinedDateFormats, *predefinedNumberFormats;
       return [super windowAndRect: prect forObject: object];
     }
 }
-@end
-
-@interface GormTextViewAttributesInspector : IBInspector
-{
-  id  backgroundColorWell;
-  id  textColorWell;
-  id  borderMatrix;
-  id  optionMatrix;
-}
-@end
-
-@implementation GormTextViewAttributesInspector
-
-- (void) _setValuesFromControl: control
-{
-  BOOL flag;
-  BOOL isScrollView;
-  id scrollView;
-
-  scrollView = [[object superview] superview];
-  isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
-
-  if (control == backgroundColorWell)
-    {
-      [object setBackgroundColor: [control color]];
-    }
-  else if (control == textColorWell)
-    {
-      [object setTextColor: [control color]];
-    }
-  else if ( (control == borderMatrix) && isScrollView)
-    {
-      [scrollView setBorderType: [[control selectedCell] tag]];
-      [scrollView setNeedsDisplay: YES];
-    }
-  else if (control == optionMatrix)
-    {
-      flag = ([[control cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      [object setSelectable: flag];
-      flag = ([[control cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
-      [object setEditable: flag];
-      flag = ([[control cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      [object setRichText: flag];
-      flag = ([[control cellAtRow: 3 column: 0] state] == NSOnState) ? YES : NO;
-      [object setImportsGraphics: flag];
-    } 
-
-}
-
-- (void) _getValuesFromObject: anObject
-{
-  BOOL isScrollView;
-  id scrollView;
-
-  if (anObject != object)
-    {
-      return;
-    }
-
-  scrollView = [[anObject superview] superview];
-  isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
-
-  [backgroundColorWell setColorWithoutAction: [anObject backgroundColor]];
-  [textColorWell setColorWithoutAction: [anObject textColor]];
-
-  if (isScrollView) {
-    [borderMatrix selectCellWithTag: [scrollView borderType]];
-  }
-  
-  if ([anObject isSelectable])
-    [optionMatrix selectCellAtRow: 0 column: 0];
-  if ([anObject isEditable])
-    [optionMatrix selectCellAtRow: 1 column: 0];
-  if ([anObject isRichText])
-    [optionMatrix selectCellAtRow: 2 column: 0];
-  if ([anObject importsGraphics])
-    [optionMatrix selectCellAtRow: 3 column: 0];
-
-}
-
-- (id) init
-{
-  if ([super init] == nil)
-    {
-      return nil;
-    }
-  if ([NSBundle loadNibNamed: @"GormNSTextViewInspector" owner: self] == NO)
-    {
-      NSLog(@"Could not gorm GormTextViewInspector");
-      return nil;
-    }
-
-  return self;
-}
-
-- (void) ok: (id)sender
-{
-  [super ok: sender];
-  [self _setValuesFromControl: sender];
-}
-
-- (void) setObject: (id)anObject
-{
-  [super setObject: anObject];
-  [self _getValuesFromObject: anObject];
-}
-
 @end
 
 

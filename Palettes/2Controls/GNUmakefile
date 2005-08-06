@@ -25,11 +25,22 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 2Controls
 2Controls_PALETTE_ICON = ControlsPalette
-2Controls_OBJC_FILES = \
-	main.m \
-	inspectors.m \
-	GormPopUpButtonEditor.m \
-	GormButtonEditor.m
+
+2Controls_OBJC_FILES = GormBoxAttributesInspector.m\
+		       GormCellAttributesInspector.m\
+                       GormColorWellAttributesInspector.m\
+                       GormFormAttributesInspector.m\
+                       GormPopUpButtonAttributesInspector.m\
+                       GormSliderAttributesInspector.m\
+                       GormStepperAttributesInspector.m\
+                       GormProgressIndicatorAttributesInspector.m\
+                       GormTextFieldAttributesInspector.m\
+                       GormMatrixAttributesInspector.m\
+	               main.m \
+	               GormPopUpButtonEditor.m \
+                       GormButtonEditor.m\
+	               inspectors.m 
+#		       GormButtonAttributesInspector.m\
 
 2Controls_PRINCIPAL_CLASS = ControlsPalette
 

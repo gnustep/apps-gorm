@@ -1,15 +1,13 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    GormBoxInspector = {
+    GormBoxAttributesInspector = {
 	Actions = (
 	);
 	Outlets = (
 	    borderMatrix,
 	    horizontalSlider,
 	    positionMatrix,
-	    tagField,
-	    tagForm,
-	    titleField,
+	    titleForm,
 	    verticalSlider,
 	    colorWell,
 	    backgroundSwitch

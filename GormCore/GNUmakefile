@@ -78,6 +78,7 @@ GormCore_HEADER_FILES = \
 	GormViewEditor.h \
 	GormViewKnobs.h \
 	GormViewResourceManager.h \
+	GormViewSizeInspector.h \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \

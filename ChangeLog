@@ -1,3 +1,364 @@
+2005-08-06 11:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Merge from post 1.0 branch.
+	
+2005-08-03 07:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormStepperAttributesInspector.m: Removed call
+	to setNeedsDisplay in ok: method.
+
+2005-08-03 07:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/4Data/inspectors.m: Removed local declaration of
+	GormViewSizeInspector, added include of new header, added 
+	copyright header.
+
+2005-08-03 06:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added new GormViewSizeInspector.h file, split 
+	out from the GormViewSizeInspector.h file.
+	* GormCore/GormViewSizeInspector.m: Removed interface, put into .h 
+	* GormCore/GormViewSizeInspector.h: Moved interface here.
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Corrected position
+	and sizing of elements in size inspector.
+	* Palettes/1Windows/GormWindowAttributesInspector.m: Corrected comment,
+	added copyright header.
+	* Palettes/1Windows/GormWindowSizeInspector.m: Corrected comment,
+	added copyright header.
+	* Palettes/1Windows/main.m: Added category for NSPanel to add
+	allocSubstitute.  Same as change on HEAD.
+	* Palettes/2Controls/GormBoxAttributesInspector.[hm]: Added copyright
+	header.
+	* Palettes/2Controls/GormCellAttributesInspector.[hm]: Added copyright
+	header.
+	* Palettes/2Controls/GormColorWellAttributesInspector.[hm]: Added 
+	copyright header.
+	* Palettes/2Controls/GormFormAttributesInspector.m: 
+	Added copyright header.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m: Corrected
+	comment.
+	* Palettes/2Controls/GormPopUpButtonAttributesInspector.m: Corrected
+	comment.
+	* Palettes/2Controls/GormProgressIndicatorAttributesInspector.m: 
+	Corrected comment.
+	* Palettes/2Controls/GormSliderAttributesInspector.m: Corrected
+	comment.
+	* Palettes/2Controls/GormStepperAttributesInspector.m: Corrected
+	comment.
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Corrected
+	comment.
+	* Palettes/3Containers/GNUmakefile: Added table size inspector files.
+	* Palettes/3Containers/GormBrowserAttributesInspector.m: Corrected
+	comment.
+	* Palettes/3Containers/GormNSOutlineView.[hm]: Added copyright header.
+	* Palettes/3Containers/GormTableColumnAttributesInspector.[hm]: Added
+	copyright header.  Corrected comment.
+	* Palettes/3Containers/GormTableColumnSizeInspector.m: Corrected
+	comment.
+	* Palettes/3Containers/GormTableViewAttributesInspector.m: Corrected
+	comment.
+	* Palettes/3Containers/GormTableViewSizeInspector.[hm]: Re-added this
+	as it was previously removed.
+	* Palettes/3Containers/GormTabViewAttributesInspector.m: Corrected 
+	comment.
+	* Palettes/3Containers/inspectors.m: Moved all categories from
+	containers to here.
+	* Palettes/4Data/GormImageViewAttributesInspector.m: Corrected
+	comment.
+	* Palettes/4Data/GormNSComboBoxAttributesInspector.m: Corrected
+	comment.
+	* Palettes/4Data/GormTextViewAttributesInspector.m: Corrected
+	comment.
+
+2005-08-02  Fabien VALLON  <fabien@sonappart.net>
+
+	* Palettes/2Controls/GormBoxAttributesInspector.m : split file
+	use ok: revert:, clean up and comments. Add NSBox IBObjectAdditions
+	category
+	* Palettes/2Controls/GormBoxAttributesInspector.h : split file
+	clean up and comments
+	* Palettes/2Controls/GormCellAttributesInspector.m: split file
+	use ok: revert: , clean up and comments. Add NSCell IBObjectAdditions
+	category
+	* Palettes/2Controls/GormCellAttributesInspector.h: split file
+	clean up and comments. 
+	* Palettes/2Controls/GormFormAttributesInspector.m: split file
+	use ok: revert:, replace optionMatrix by cellPositionSwitch,
+	editableSwitch,selectableSwitch, and scrollableSwitch.	
+	clean up and comments. 
+	Add NSForm IBObjectAdditions category
+	* Palettes/2Controls/GormFormAttributesInspector.h: split file
+	 replace optionMatrix by cellPositionSwitch,editableSwitch,
+	selectableSwitch, and scrollableSwitch.	clean up and comments. 
+	* Palettes/2Controls/GormNSFormInspector.gorm:
+	replace optionMatrix by cellPositionSwitch,editableSwitch, 
+	selectableSwitch, and scrollableSwitch. setNextKeyView
+	* Palettes/2Controls/GormMatrixdAttributesInspector.m: split file
+	use ok: revert:. clean up and comments. Add NSMatrix IBObjectAdditions
+	category
+	* Palettes/2Controls/GormMatrixdAttributesInspector.h: split file
+	clean up and comments
+	* Palettes/2Controls/GormPopUpButtonAttributesInspector.m: split file
+	use ok: revert:, clean up and comments. Add NSPopUpButton 
+	IBObjectAdditions category
+	* Palettes/2Controls/GormPopUpButtonAttributesInspector.h : split file
+	clean up and comments
+	* Palettes/2Controls/GormSliderAttributesInspector.m: split file
+	use ok: revert:, clean up and comments.  Add NSSlider IBObjectAdditions
+	category. Remove : altForm, knobField, numberOfTicks,snapToTicks,
+	tickPosition
+	Rename : valueForm into valuesForm. clean up & comments.
+	* Palettes/2Controls/GormSliderAttributesInspector.h: split file
+	clean up and comments
+	* Palettes/2Controls/GormNSSliderInspector.gorm :
+	Remove : altForm, knobField, numberOfTicks,snapToTicks,tickPosition
+	Rename : valueForm into valuesForm.
+	Remove : ok: target for NSForms ( use delegate )
+	* Palettes/2Controls/GormStepperAttributesInspector.m: split file
+	use ok: revert: clean up and comments. Add NSStepper IBObjectAdditions
+	category
+	* Palettes/2Controls/GormStepperAttributesInspector.h: split file
+	Clean up and comments
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m: split file
+	use ok: revert. replace optionsMatrix by editableSwitch,
+	selectableSwitch,scrollableSwitch. clean up and comments.
+	Add NSTextField IBObjectAdditions category.
+	* Palettes/2Controls/GormTextFieldAttributesInspector.h: split file
+	replace optionsMatrix by editableSwitch, selectableSwitch,
+	scrollableSwitch. clean up and comments.
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm: 
+	replace optionsMatrix by editableSwitch, selectableSwitch
+	andscrollableSwitch. set NextKeyView:
+	* Palettes/2Controls/GormColorWellAttributesInspector.m: split file
+	renamed bordered in borderedSwitch, initialColor in initialColorWell,
+	disabled in disabledSwitch, tagValue in tagField.
+	remove  initialColorSelected:, disabledSelected:, borderedSelected:.
+	use ok: revert: clean up and comments.
+	* Palettes/2Controls/GormColorWellAttributesInspector.h: split file
+	renamed bordered in borderedSwitch, initialColor in initialColorWell,
+	disabled in disabledSwitch, tagValue in tagField.
+	remove  initialColorSelected:, disabledSelected:, borderedSelected:.
+	Clean up and comments.
+	* Palettes/2Controls/GormColorWellInspector.gorm:	
+	renamed bordered in borderedSwitch, initialColor in initialColorWell,
+	disabled in disabledSwitch, tagValue in tagField.
+	remove  initialColorSelected:, disabledSelected:, borderedSelected:.
+	tagField remove ok: target ( use delegate )
+	* Palettes/2Controls/GormProgressIndicatorAttributesInspector.m :
+	split file emove  doubleValue; borderMatrix. use ok: revert:
+	Clean up and comments
+	* Palettes/2Controls/GormProgressIndicatorAttributesInspector.h : 
+	split file remove  doubleValue; borderMatrix. Clean up and comments
+	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm: 
+	remove  doubleValue; borderMatrix
+	* Palettes/3Containers/GormBrowserAttributesInspector.m : split file
+	use ok: revert: , use multipleSelectionSwitch, emptySelectionSwitch,
+	branchSelectionSwitch,separateColumnsSwitch,horizontalScrollerSwitch,
+	and displayTitlesSwitch instead of optionMatrix.clean up and comments
+	Add NSBrowser category ( IBObjectAdditions ) 
+	* Palettes/3Containers/GormBrowserAttributesInspector.h : split file
+	use multipleSelectionSwitch, emptySelectionSwitch,
+	branchSelectionSwitch,separateColumnsSwitch,horizontalScrollerSwitch,
+	and displayTitlesSwitch instead of optionMatrix. clean up and comments
+	* Palettes/3Containers/GormNSBrowserInspector.gorm:
+	use multipleSelectionSwitch, emptySelectionSwitch,
+	branchSelectionSwitch,separateColumnsSwitch,horizontalScrollerSwitch,
+	and displayTitlesSwitch instead of optionMatrix. set nextKeyView:
+	* Palettes/3Containers/GormTableViewAttributesInspector.m: split file
+	use ok: revert:, replace selectionMatrix by  multipleSelectionSwitch,
+	emptySelectionSwith and columnSelectionSwitch, 
+	replace optionMatrix by drawgridSwitch, resizingSwitch and
+	reorderingSwitch.clean up and comments.
+	Add NSTableView category ( IBObjectAdditions ) 
+	* Palettes/3Containers/GormTableViewAttributesInspector.h: split file
+	replace selectionMatrix by  multipleSelectionSwitch,emptySelectionSwith
+	and columnSelectionSwitch. 
+	replace optionMatrix by drawgridSwitch, resizingSwitch
+	and reorderingSwitch.clean up and comments.
+	* Palettes/3Containers/GormNSTableViewInspector.gorm :
+	replace selectionMatrix
+	by  multipleSelectionSwitch,emptySelectionSwith and
+	columnSelectionSwitch. replace optionMatrix by drawgridSwitch, 
+	resizingSwitch and reorderingSwitch.set nextKeyView:
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m : split file
+	clean up, comments and warnings ( TODO ) 
+	Add NSTableColumn category ( IBObjectAdditions ) 
+	* Palettes/3Containers/GormTableColumnAttributesInspector.h : split file
+	clean up and comments
+	* Palettes/3Containers/GormTableColumnSizeInspector.m: split file
+	use controlTextDidChange: for the form, clean up and comments.
+	Add IBObjectAdditionsSize category
+	* Palettes/3Containers/GormTableColumnSizeInspector.h: split file
+	clean up and comments.
+	* Palettes/3Containers/
+	GormNSTableColumnSizeInspector.gorm: remove 
+	ok: taget ( use delegate )
+	* Palettes/3Containers/GNUmakefile : add 
+	GormBrowserAttributesInspector.m
+	GormTabViewAttributesInspector.m, GormTableColumnAttributesInspector.m
+	GormTableColumnSizeInspector.m and GormTableViewAttributesInspector.
+	* Palettes/3Containers/inspector.m : remove 
+	GormBrowserAttributesInspector
+	GormTabViewAttributesInspector, GormTableColumnAttributesInspector
+	GormTableColumnSizeInspector and GormTableViewAttributesInspector
+	* Palettes/4Data/GormComboBoxAttributesInspector.m: split file 
+	* Palettes/4Data/GormImageViewAttributesInspector.m: split file
+	use ok:, revert:, clean up and comments
+	* Palettes/4Data/GormImageViewAttributesInspector.h: split file 
+	clean up 
+	* Palettes/4Data/GormTextViewAttributesInspector.m: split file
+	replace optionsMatrix by  selectableButton, editableButton,
+	multipleFontsButtonand graphicsButton, clean up and comments.
+	Add NSTextView IBObjectAdditions category
+	* Palettes/4Data/GormTextViewAttributesInspector.h: split file
+	replace optionsMatrix by selectableButton, editableButton, 
+	multipleFontsButton and graphicsButton, clean up and comments
+	* Palettes/4Data/GormNSTextViewInspector.gorm: replace optionsMatrix 
+	by selectableButton, editableButton, multipleFontsButton and
+	graphicsButton
+
+2005-08-01 20:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPreferences.gorm: Add keyboard equivalents
+	to dropdown for preference panels.
+
+2005-08-01 07:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassInspector.m: Return an autoreleased copy of the
+	class name from _currentClass.
+
+2005-08-01 05:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassInspector.m: Remove dopy code from _currentClass.
+	* GormCore/GormPrivate.m: Use ASSIGNCOPY in initWithClassName:
+	* Palettes/1Windows/main.m: Removed FIXME, since Gorm shouldn't
+	show the window decoration changes directly.
+
+2005-07-31 19:14 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/main.m: Addition of allocSubstitute method for
+	NSPanel in the category GormPrivate.
+
+2005-07-31 18:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Correction for bug#13990.
+	* GormCore/GormInspectorsManager.m: Removed uneeded GormISelectionView
+	class.
+
+2005-07-31 10:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: [GormConnectionsInspector ok:]
+	Removed code which blanks out the connector.  This allows the user
+	to select connections repeatedly.  Suggested by Matt Rice.
+
+2005-07-31 08:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.m: Reverted previous change in init.
+
+
+2005-07-30 15:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPreferences.gorm: Changed class hierarchy.  Also
+	added panel outlet.
+	* GormCore/GormClassInspector.m: -[GormClassInspector _currentClass]
+	copy the className.
+	* GormCore/GormPrivate.m: -[GormClassProxy init] copy the className.
+	* Gorm.m: Changed to initialize preferences panel using init.
+	* GormPrefs/GormPrefController.[hm]: Added panel method, changed
+	derivation to a subclass of NSObject, instead of NSWindowController.
+
+2005-07-30 09:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/Makefile.postamble: Generate documentation from 
+	headers only.
+	* GormPrefs/GormColorsPref.h
+	* GormPrefs/GormGeneralPref.h
+	* GormPrefs/GormGeneralPref.m
+	* GormPrefs/GormGuidelinePref.h
+	* GormPrefs/GormHeadersPref.h
+	* GormPrefs/GormPalettesPref.h
+	* GormPrefs/GormPrefController.h
+	* GormPrefs/GormShelfPref.h: Added documentation.
+
+2005-07-30 04:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.h: Added documentation.
+
+2005-07-30 04:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: use versionOfClass: in 
+	_replaceObjectsWithTemplates: method.
+	* GormCore/GormFilePrefsManager.[hm]: Added versionOfClass:.
+
+2005-07-30  Fabien VALLON  <fabien@sonappart.net>
+
+	* Palettes/1Window/GormWindowAttributesInspector.[mh] : split files.
+         use ok: revert: methods, remove controls & options Matrix, 
+	 & replace it by a set of switch buttons. Clean up  & comments
+	* Palettes/1Window/GormWindowSizeInspector.{m,h} :split files.
+         use ok: revert: methods. Clean up  & comments
+	* Palettes/1Window/main.m : remove GormWindowSizeInspector,
+	GormWindowAttributesInspector classes and move IBObjectAdditions 
+	categories into GormWindowAttributesInspector and GormSizeInspector.
+	* Palettes/1Window/GormNSWindowInspector.gorm: remove controls and 
+	options matrix, & replace it by a set of switch buttons.
+	* Palettes/0Menus/GormMenuAttributesInspector.{m,h} : split files.
+         use ok: revert: methods, replace menuType matrix by a matrix of Radio 
+	 buttons.Clean up and comments.
+	* Palettes/0Menus/GormMenuItemAttributesInspector.m: split files.
+         use ok: revert: methods, Clean up and comments.
+	* Palettes/0Menus/MenuInspectors.m : removed
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm : improve ui,
+	use a matrix of radioButtonCell for menu type
+	* Palettes/0Menus/GormMenuEditor.m : rename IBObjectAdditions category
+		
+2005-07-28 00:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormImage.h: Added documentation.
+	* GormCore/GormImage.m: Properly implemented IBObjectAdditions.
+	* GormCore/GormPrivate.h: Remove illegalClassSubstitution method.
+	* GormCore/GormPrivate.m: Remove illegalClassSubstitution method.
+	* GormCore/GormSound.h: Added documentation.
+	* GormCore/GormSound.m: Properly implemented IBObjectAdditions.
+	* Gorm.m: Removed methods which check for user bundles.  
+
+2005-07-27 02:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormPrefs/GormGeneralPref.m: Removed extra calls to synchronize.
+	* GormPrefs/GormHeadersPref.m: ditto
+
+2005-07-27 01:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Added documentation.
+	* GormCore/GormDocument.m: Removed commented code.  Corrected 
+	problem in [GormDocument instantiateClass:] when switching to
+	the objects view.
+	* GormCore/GormWindowEditor.h: Added documentation.
+
+2005-07-26 22:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added new GormWindowEditor.h file.
+	* GormCore/GormWindowEditor.m: Reorganized methods, extracted .h
+	* GormCore/GormWindowEditor.h: New file.
+	* GormCore/NSCell+GormAdditions.h
+	* GormCore/NSColorWell+GormExtensions.h
+	* GormCore/NSColorWell+GormExtensions.m
+	* GormCore/NSFontManager+GormExtensions.h
+	* GormCore/NSFontManager+GormExtensions.m
+	* GormCore/NSView+GormExtensions.h: Added documentation.
+
+2005-07-26 21:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm: Correct
+	resize attributes.
+
+2005-07-25 23:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: [GormClassEditor selectClass:editClass:]
+	add exception handling.
+	* GormCore/GormDocument.m: [GormDocument pasteObjects:type
+	fromPasteboard:] added check for specific pb types.
+
 2005-08-06 08:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 0.11.0
