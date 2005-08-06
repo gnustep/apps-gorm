@@ -1,7 +1,11 @@
+2005-08-06 18:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBInspector.m: Change to correct problem with revert call
+	in setObject:.  It should call using self as the sender parameter, not
+	anObject or object.
+
 2005-08-06 17:52 Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormLib/IBInspector.m: Call revert with object instead of anObject.
-	Same object, just a slightly nicer way to do it.
 	* Palettes/2Controls/GNUmakefile: Add in GormButtonAttributesInspector
 	files.
 	* Palettes/2Controls/GormButtonAttributesInspector.h: Changed ivar 
