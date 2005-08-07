@@ -1,3 +1,8 @@
+2005-08-07 08:30 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m: Update version to 0.13.0
+	* GormInfo.plist: Same
+
 2005-08-06 22:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassInspector.gorm: Minor changes.
