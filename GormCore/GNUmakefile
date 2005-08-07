@@ -43,6 +43,7 @@ GormCore_HEADER_FILES = \
 	GormClassInspector.h \
 	GormClassManager.h \
 	GormClassPanelController.h \
+	GormConnectionInspector.h \
 	GormControlEditor.h \
 	GormCustomClassInspector.h \
 	GormCustomView.h \

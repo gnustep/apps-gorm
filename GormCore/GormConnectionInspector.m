@@ -4,6 +4,8 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
+ * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Date:	2003,2005
  *
  * This file is part of GNUstep.
  *
@@ -23,21 +25,10 @@
  */
 
 #include <AppKit/NSNibConnector.h>
-#include <Foundation/NSException.h>
 #include <InterfaceBuilder/IBInspector.h>
-#include "GormPrivate.h"
 
-@interface GormConnectionInspector : IBInspector
-{
-  id			currentConnector;
-  NSMutableArray	*connectors;
-  NSArray		*actions;
-  NSArray		*outlets;
-  NSBrowser		*newBrowser;
-  NSBrowser		*oldBrowser;
-}
-- (void) updateButtons;
-@end
+#include "GormPrivate.h"
+#include "GormConnectionInspector.h"
 
 @implementation GormConnectionInspector
 
