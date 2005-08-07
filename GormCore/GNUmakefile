@@ -68,6 +68,7 @@ GormCore_HEADER_FILES = \
 	GormProtocol.h \
 	GormResource.h \
 	GormResourceEditor.h \
+	GormResourceManager.h \
 	GormScrollViewAttributesInspector.h \
 	GormSetNameController.h \
 	GormSound.h \
@@ -77,7 +78,6 @@ GormCore_HEADER_FILES = \
 	GormSplitViewEditor.h \
 	GormViewEditor.h \
 	GormViewKnobs.h \
-	GormViewResourceManager.h \
 	GormViewSizeInspector.h \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
@@ -118,6 +118,7 @@ GormCore_OBJC_FILES = \
 	GormPalettesManager.m \
 	GormResource.m \
 	GormResourceEditor.m \
+	GormResourceManager.m \
 	GormScrollViewAttributesInspector.m \
 	GormScrollViewEditor.m \
 	GormSetNameController.m \
@@ -128,7 +129,6 @@ GormCore_OBJC_FILES = \
 	GormSplitViewEditor.m \
 	GormViewEditor.m \
 	GormViewKnobs.m \
-	GormViewResourceManager.m \
 	GormViewSizeInspector.m \
 	GormViewWindow.m \
 	GormViewWithContentViewEditor.m \

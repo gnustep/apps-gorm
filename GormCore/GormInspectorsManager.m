@@ -657,6 +657,35 @@
 
 @implementation GormConnectionInspector
 
+- (id) init
+{
+  if ((self = [super init]) != nil)
+    {
+      if([NSBundle loadNibNamed: @"GormConnectionInspector" owner: self] == NO)
+	{
+	  NSLog(@"Couldn't load GormConnectionInsector");
+	  return nil;
+	}
+
+      // Create the okay and revert buttons, programmatically, since we shouldn't 
+      // add them to the view.  The wantsButtons handling code will do that.
+      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,70,20)];
+      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAction: @selector(ok:)];
+      [okButton setTarget: self];
+      [okButton setTitle: _(@"Connect")];
+      [okButton setEnabled: NO];
+
+      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
+      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [revertButton setAction: @selector(revert:)];
+      [revertButton setTarget: self];
+      [revertButton setTitle: _(@"Revert")];
+      [revertButton setEnabled: NO];      
+    }
+  return self;
+}
+
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
 {
   int		rows = 0;
@@ -1012,69 +1041,6 @@ selectCellWithString: (NSString*)title
   // got the notification...  since we only subscribe to one, just do what
   // needs to be done.
   [self setObject: object]; // resets the browser...
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView		*contents;
-      NSSplitView	*split;
-      NSRect		rect;
-
-      rect = NSMakeRect(0, 0, IVW, IVH);
-      window = [[NSWindow alloc] initWithContentRect: rect
-					   styleMask: NSBorderlessWindowMask
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-      split = [[NSSplitView alloc] initWithFrame: [contents bounds]];
-      [split setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-
-      newBrowser = [[NSBrowser alloc] initWithFrame: rect];
-      [newBrowser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [newBrowser setMaxVisibleColumns: 2];
-      [newBrowser setAllowsMultipleSelection: NO];
-      [newBrowser setHasHorizontalScroller: NO];
-      [newBrowser setDelegate: self];
-      [newBrowser setTarget: self];
-      [newBrowser setAction: @selector(_internalCall:)];
-
-      [split addSubview: newBrowser];
-      RELEASE(newBrowser);
-
-      rect.size.height /= 2;
-      oldBrowser = [[NSBrowser alloc] initWithFrame: rect];
-      [oldBrowser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [oldBrowser setMaxVisibleColumns: 1];
-      [oldBrowser setAllowsMultipleSelection: NO];
-      [oldBrowser setHasHorizontalScroller: NO];
-      [oldBrowser setDelegate: self];
-      [oldBrowser setTarget: self];
-      [oldBrowser setAction: @selector(_internalCall:)];
-
-      [split addSubview: oldBrowser];
-      RELEASE(oldBrowser);
-
-      [contents addSubview: split];
-      RELEASE(split);
-
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,70,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: _(@"Connect")];
-      [okButton setEnabled: NO];
-
-      revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,60,20)];
-      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [revertButton setAction: @selector(revert:)];
-      [revertButton setTarget: self];
-      [revertButton setTitle: _(@"Revert")];
-      [revertButton setEnabled: NO];
-    }
-  return self;
 }
 
 - (void) ok: (id)sender

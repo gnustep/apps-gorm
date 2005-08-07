@@ -52,6 +52,7 @@
 
   NSForm *tagForm;
   NSTextField *minColumnWidthField;
+  NSTextField *maxVisibleColumnsField;
 }
 
 @end

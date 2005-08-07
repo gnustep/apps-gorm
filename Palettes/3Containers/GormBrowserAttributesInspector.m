@@ -88,14 +88,16 @@
     {
       [object setTitled: [displayTitlesSwitch state]];
     }
-  /* minimum column width */
-  else if ( sender == minColumnWidthField ) 
+  else if ( sender == minColumnWidthField )   /* minimum column width */
     {
-#warning TODO use stepper
-      [object setMinColumnWidth:[minColumnWidthField intValue]];
+      // TODO: Use stepper..
+      [object setMinColumnWidth: [minColumnWidthField intValue]];
     }
-  /* tag */
-  else if(sender == tagForm)
+  else if ( sender == maxVisibleColumnsField ) 
+    {
+      [object setMaxVisibleColumns: [maxVisibleColumnsField intValue]];
+    }
+  else if(sender == tagForm)   /* tag */
     {
       [object setTag:[[tagForm cellAtIndex:0] intValue]];
     }
@@ -116,10 +118,14 @@
   [displayTitlesSwitch setState:[object isTitled]];
   [horizontalScrollerSwitch setState:[object hasHorizontalScroller]];
 
-#warning chek where is the bug ? !!! 
-  [[tagForm cellAtIndex:0] setIntValue:[object tag]];
+  [[tagForm cellAtIndex:0] setIntValue: [object tag]];
 
-  [minColumnWidthField setStringValue:[NSString stringWithFormat:@"%i",[object minColumnWidth]]];
+  [minColumnWidthField setStringValue:
+			 [NSString stringWithFormat:@"%i",
+				   [object minColumnWidth]]];
+  [maxVisibleColumnsField setStringValue:
+			    [NSString stringWithFormat:@"%i",
+				      [object maxVisibleColumns]]];
 
   [super revert:sender];
 }

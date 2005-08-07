@@ -45,7 +45,7 @@
 #include "NSView+GormExtensions.h"
 #include "GormSound.h"
 #include "GormImage.h"
-#include "GormViewResourceManager.h"
+#include "GormResourceManager.h"
 #include "GormClassEditor.h"
 #include "GormSoundEditor.h"
 #include "GormImageEditor.h"
@@ -194,9 +194,10 @@ static NSImage  *fileImage = nil;
 	}
 
       // register the resource managers...
-      [IBResourceManager registerResourceManagerClass: [IBResourceManager class]];
-      [IBResourceManager registerResourceManagerClass: [GormViewResourceManager class]];
-
+      [IBResourceManager registerResourceManagerClass: 
+			   [IBResourceManager class]];
+      [IBResourceManager registerResourceManagerClass: 
+			   [GormResourceManager class]];
       [self setVersion: GNUSTEP_NIB_VERSION];
     }
 }
@@ -996,6 +997,19 @@ static NSImage  *fileImage = nil;
 	  [editorSet addObject: editor];
 	  [editor deactivate];
 	}
+
+      // Windows are a special case.  Check the content view and see if it's an active editor.
+      /**
+      if([obj isKindOfClass: [NSWindow class]])
+	{
+	  id contentView = [obj contentView];
+	  if([contentView conformsToProtocol: @protocol(IBEditors)])
+	    {
+	      [contentView deactivate];
+	      [editorSet addObject: contentView];
+	    }
+	}
+      */
     }
 
   // encode the data
@@ -1026,21 +1040,6 @@ static NSImage  *fileImage = nil;
   [classesView createSubclass];
   return self;
 }
-
-//  For debugging ONLY.
-/*
-- (id) retain
-{
-  NSLog(@"Document being retained... %d: %@", [self retainCount], self);
-  return [super retain];
-}
-
-- (oneway void) release
-{
-  NSLog(@"Document being released... %d: %@", [self retainCount], self);
-  [super release];
-}
-*/
 
 /**
  * The given pasteboard chaned ownership.

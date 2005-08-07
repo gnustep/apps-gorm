@@ -125,6 +125,7 @@ Gorm_RESOURCE_FILES = \
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \
+	GormConnectionInspector.gorm \
 	GormCustomClassInspector.gorm \
 	GormDocument.gorm \
 	GormFontView.gorm \

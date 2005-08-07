@@ -1,3 +1,20 @@
+2005-08-06 22:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormClassInspector.gorm: Minor changes.
+	* GNUmakefile: Added GormConnectionInspector.m
+	* GormCore/GNUmakefile: Added the new resource manager.
+	* GormCore/GormDocument.m: Changed to refer to the new resource
+	manager.
+	* GormCore/GormInspectorsManager.m: Removed hard coded gui.
+	* GormCore/GormObjectEditor.m: Enabled copy/paste for objects in the
+	object view.
+	* GormCore/GormResourceManager.[hm]: Added to replace 
+	GormViewResourceManager.[hm]
+	* Palettes/3Containers/GormBrowserAttributesInspector.[hm]:
+	Added code to handle maxVisibleColumnsField.  Corrected tag issue.
+	* Palettes/3Containers/GormNSBrowserInspector.gorm:
+	Added maximum visible columns field.
+	
 2005-08-06 18:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormLib/IBInspector.m: Change to correct problem with revert call

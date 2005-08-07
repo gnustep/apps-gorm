@@ -11,7 +11,8 @@
 	    emptySelectionSwitch,
 	    multipleSelectionSwitch,
 	    horizontalScrollerSwitch,
-	    separateColumnsSwitch
+	    separateColumnsSwitch,
+	    maxVisibleColumnsField
 	);
 	Super = IBInspector;
     };

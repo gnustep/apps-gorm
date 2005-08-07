@@ -27,7 +27,7 @@
 
 #include <InterfaceBuilder/IBResourceManager.h>
 
-@interface GormViewResourceManager : IBResourceManager
+@interface GormResourceManager : IBResourceManager
 @end
 
 #endif

@@ -147,7 +147,7 @@ static NSMapTable	*docMap = 0;
 	{
 	  type = IBWindowPboardType;
  	}
-      if([obj isKindOfClass: [NSView class]])
+      else if([obj isKindOfClass: [NSView class]])
 	{
 	  type = IBViewPboardType;
 	}
@@ -156,7 +156,7 @@ static NSMapTable	*docMap = 0;
 	  type = IBObjectPboardType;
 	}
 
-      [document copyObject: sel
+      [document copyObjects: sel
 		type: type
 		toPasteboard: [NSPasteboard generalPasteboard]];
     }

@@ -24,13 +24,13 @@
 
 #include <Foundation/NSArray.h>
 #include <InterfaceBuilder/IBPalette.h>
-#include "GormViewResourceManager.h"
+#include "GormResourceManager.h"
 
-@implementation GormViewResourceManager
+@implementation GormResourceManager
 
 - (NSArray *) resourcePasteboardTypes
 {
-  return [NSArray arrayWithObjects: IBViewPboardType, nil];
+  return [NSArray arrayWithObjects: IBWindowPboardType, IBViewPboardType, nil];
 }
 
 @end
