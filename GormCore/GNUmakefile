@@ -95,6 +95,7 @@ GormCore_OBJC_FILES = \
 	GormClassInspector.m \
 	GormClassManager.m \
 	GormClassPanelController.m \
+	GormConnectionInspector.m \
 	GormControlEditor.m \
 	GormCustomClassInspector.m \
 	GormCustomView.m \

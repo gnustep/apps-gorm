@@ -1,3 +1,10 @@
+2005-08-07 08:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added new file.
+	* GormCore/GormInspectorsManager.m: Removed GormConnectionInspector.
+	* GormCore/GormConnectionInspector.m: Split out from 
+	GormInspectorsManager.m
+	
 2005-08-07 08:30 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m: Update version to 0.13.0
