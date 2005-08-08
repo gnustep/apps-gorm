@@ -1,3 +1,12 @@
+2005-08-07 21:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added new GormObjectInspector.gorm file.
+	* English.lproj/GormObjectInspector.gorm: New file.
+	* GormCore/GNUmakefile: Added new GormObjectInspector.h.
+	* GormCore/GormObjectInspector.m: Now loads gorm file.
+	* GormCore/GormObjectInspector.h: New file.
+	* Gorm.m: Corrected comment in header.
+
 2005-08-07 10:26 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Add new header file.

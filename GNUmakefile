@@ -131,6 +131,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormFontView.gorm \
 	Gorm.gorm \
 	GormImageInspector.gorm \
+	GormObjectInspector.gorm \
 	GormNSSplitViewInspector.gorm \
 	GormPrefColors.gorm \
 	GormPreferences.gorm \

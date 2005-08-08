@@ -22,31 +22,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include "GormPrivate.h"
-
-static NSString	*typeId = @"Object";
-static NSString	*typeChar = @"Character or Boolean";
-static NSString	*typeUChar = @"Unsigned character/bool";
-static NSString	*typeInt = @"Integer";
-static NSString	*typeUInt = @"Unsigned integer";
-static NSString	*typeFloat = @"Float";
-static NSString	*typeDouble = @"Double";
-
-
-@interface GormObjectInspector : IBInspector
-{
-  NSBrowser		*browser;
-  NSMutableArray	*sets;
-  NSMutableDictionary	*gets;
-  NSMutableDictionary	*types;
-  NSButton		*label;
-  NSTextField		*value;
-  BOOL			isString;
-}
-- (void) updateButtons;
-@end
+#include "GormObjectInspector.h"
 
 @implementation GormObjectInspector
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      if([NSBundle loadNibNamed: @"GormObjectInspector" owner: self] == NO)
+	{
+	  NSLog(@"Couldn't load GormObjectInsector");
+	  return nil;
+	}
+      else
+	{
+	  sets = [[NSMutableArray alloc] init];
+	  gets = [[NSMutableDictionary alloc] init];
+	  types = [[NSMutableDictionary alloc] init];
+
+	  okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
+	  [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+	  [okButton setAction: @selector(ok:)];
+	  [okButton setTarget: self];
+	  [okButton setTitle: _(@"OK")];
+	  [okButton setEnabled: NO];
+	  
+	  revertButton = nil;
+	}
+    }
+  return self;
+}
 
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
 {
@@ -57,7 +64,7 @@ static NSString	*typeDouble = @"Double";
 selectCellWithString: (NSString*)title
 	inColumn: (int)col
 {
-  [self updateButtons];
+  [self update: self];
   return YES;
 }
 
@@ -91,72 +98,6 @@ selectCellWithString: (NSString*)title
   RELEASE(types);
   RELEASE(okButton);
   [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView		*contents;
-      NSRect		windowRect = NSMakeRect(0, 0, IVW, IVH-IVB);
-      NSRect		rect;
-
-      sets = [[NSMutableArray alloc] init];
-      gets = [[NSMutableDictionary alloc] init];
-      types = [[NSMutableDictionary alloc] init];
-
-      window = [[NSWindow alloc] initWithContentRect: windowRect
-					   styleMask: NSBorderlessWindowMask 
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-
-      rect = windowRect;
-      rect.size.height -= 70;
-      rect.origin.y += 70;
-
-      browser = [[NSBrowser alloc] initWithFrame: rect];
-      [browser setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
-      [browser setMaxVisibleColumns: 1];
-      [browser setAllowsMultipleSelection: NO];
-      [browser setHasHorizontalScroller: NO];
-      [browser setTitled: YES];
-      [browser setDelegate: self];
-      [browser setTarget: self];
-      [browser setAction: @selector(updateButtons)];
-
-      [contents addSubview: browser];
-      RELEASE(browser);
-
-      rect = windowRect;
-      rect.size.width -= 40;
-      rect.size.height = 22;
-      rect.origin.y = 30;
-      rect.origin.x = 20;
-      label = [[NSButton alloc] initWithFrame: rect];
-      [label setBordered: NO];
-      [label setTitle: _(@"No Type")];
-      [contents addSubview: label];
-      RELEASE(label);
-
-      rect = windowRect;
-      rect.size.height = 22;
-      rect.origin.y = 0;
-      value = [[NSTextField alloc] initWithFrame: rect];
-      [contents addSubview: value];
-      RELEASE(value);
-
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: _(@"OK")];
-      [okButton setEnabled: NO];
-
-      revertButton = nil;
-    }
-  return self;
 }
 
 - (void) ok: (id)sender
@@ -265,7 +206,7 @@ selectCellWithString: (NSString*)title
 		}
 	    }
 	}
-      [self updateButtons];
+      [self update: self];
     }
 }
 
@@ -388,11 +329,11 @@ selectCellWithString: (NSString*)title
 	}
       [sets sortUsingSelector: @selector(compare:)];
       [browser loadColumnZero];
-      [self updateButtons];
+      [self update: self];
     }
 }
 
-- (void) updateButtons
+- (void) update: (id)sender
 {
   NSString	*name = [[browser selectedCell] stringValue];
   unsigned	pos;

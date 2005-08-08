@@ -1,4 +1,4 @@
-/* GormPrivate.m
+/* Gorm.m
  *
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
