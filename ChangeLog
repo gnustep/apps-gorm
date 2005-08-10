@@ -1,3 +1,13 @@
+2005-08-10 02:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.[hm]: Added retrieveObjectForParent:recursive:
+	which retrieves all of the children of a given parent.  Also modified
+	detachObject: to use this method.
+	* GormCore/GormFilePrefsManager.m: Bumped version to 0.13.1
+	* GormInfo.plist: Bumped version to 0.13.1
+	* Palettes/3Containers/GormNSTableViewInspector.gorm: Corrected minor
+	spacing issue.
+
 2005-08-07 21:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added new GormObjectInspector.gorm file.

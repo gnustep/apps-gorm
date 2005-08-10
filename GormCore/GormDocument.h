@@ -129,6 +129,12 @@
 - (id) openDocument: (id)sender;
 
 /**
+ * Retrieve all objects which have parent as thier parent.  If flag is YES,
+ * then retrieve the entire graph of objects starting with the parent.
+ */
+- (NSArray *) retrieveObjectsForParent: (id)parent recursively: (BOOL)flag;
+
+/**
  * To revert to a saved version, we actually load a new document and
  * close the original document, returning the id of the new document.
  */

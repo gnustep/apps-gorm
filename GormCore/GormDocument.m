@@ -471,6 +471,8 @@ static NSImage  *fileImage = nil;
   [selectionBox setContentView: scrollView];
 }
 
+
+
 /**
  * Attach anObject to the document with aParent.
  */
@@ -610,17 +612,17 @@ static NSImage  *fileImage = nil;
 	  id tv = [anObject documentView];
 	  tc = [tv tableColumns];
 	  count = [tc count];
-	  [self attachObject: tv toParent: aParent];
+	  [self attachObject: tv toParent: anObject];
 	  
 	  for (i = 0; i < count; i++)
 	    {
 	      [self attachObject: [tc objectAtIndex: i]
-			toParent: aParent];
+			toParent: tv];
 	    }
 	}
       else if ([[anObject documentView] isKindOfClass: [NSTextView class]] == YES)
 	{
-	  [self attachObject: [anObject documentView] toParent: aParent];
+	  [self attachObject: [anObject documentView] toParent: anObject];
 	}
     }
 
@@ -1098,14 +1100,56 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Pull all objects which are under the given parent, into array.
+ */
+- (void) _retrieveObjectsForParent: (id)parent
+			 intoArray: (NSMutableArray *)array
+		       recursively: (BOOL)flag
+{
+  NSArray *cons = [self connectorsForDestination: parent
+			ofClass: [NSNibConnector class]];
+  NSEnumerator *en = [cons objectEnumerator];
+  id con = nil;
+
+  while((con = [en nextObject]) != nil)
+    {
+      id obj = [con source];
+      [array addObject: obj];
+      if(flag)
+	{
+	  [self _retrieveObjectsForParent: obj intoArray: array recursively: flag];
+	}
+    }
+}
+
+/**
+ * Pull all of the objects which are under a given parent.  Returns an 
+ * autoreleased array.
+ */
+- (NSArray *) retrieveObjectsForParent: (id)parent recursively: (BOOL)flag
+{
+  NSMutableArray *result = [NSMutableArray array];
+  [self _retrieveObjectsForParent: parent intoArray: result recursively: flag];
+  return result;
+}
+
+/**
  * Deteach anObject from the document.
  */
 - (void) detachObject: (id)anObject
 {
-  NSString	*name = RETAIN([self nameForObject: anObject]); // released at end of method...
+  NSString	   *name = RETAIN([self nameForObject: anObject]); // released at end of method...
   GormClassManager *cm = [self classManager];
-  unsigned	count;
-  
+  unsigned	   count;
+  NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
+  id               obj = nil;
+  NSEnumerator     *en = [objs objectEnumerator];
+
+  if([self containsObject: anObject] == NO)
+    {
+      return;
+    }
+
   [[self editorForObject: anObject create: NO] close];
 
   count = [connections count];
@@ -1181,6 +1225,15 @@ static NSImage  *fileImage = nil;
       // free...
       NSMapRemove(objToName, (void*)anObject);
       RELEASE(name);
+    }
+
+  // iterate over the list and remove any subordinate objects.
+  if(en != nil)
+    {
+      while((obj = [en nextObject]) != nil)
+	{
+	  [self detachObject: obj];
+	}
     }
 }
 
