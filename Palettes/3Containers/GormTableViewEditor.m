@@ -180,7 +180,7 @@ static NSText *_textObject;
 
   objects = [document pasteType: IBTableColumnPboardType
                  fromPasteboard: [NSPasteboard generalPasteboard]
-	                 parent: nil];
+	                 parent: _editedObject];
 
   if (objects == nil)
     return;
