@@ -1,3 +1,21 @@
+2005-08-11 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Removed explicit check for table
+	or text view.
+	* GormCore/GormScrollViewAttributesInspector.m: removed explicit 
+	check for table or text view.
+	* Palettes/3Containers/inspectors.m: Added editorClassName
+	* Palettes/4Data/GNUmakefile: Added new files.
+	* Palettes/4Data/GormImageViewAttributesInspector.m: Pulled out
+	IBObjectAdditions category
+	* Palettes/4Data/GormTextViewAttributesInspector.[hm]: Change class
+	name to GormTextViewAttributesInspector.
+	* Palettes/4Data/GormNumberFormatterAttributesInspector.m: Split
+	* Palettes/4Data/GormDateFormatterAttributesInspector.m: Split
+	* Palettes/4Data/GormTextViewEditor.m: Split
+	* Palettes/4Data/inspectors.m: Moved all IBObjectAdditions categories
+	here.
+
 2005-08-10 21:05 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormTableViewEditor.m: in pasteInSelection,

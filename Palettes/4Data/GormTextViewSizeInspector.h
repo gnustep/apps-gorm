@@ -1,10 +1,11 @@
-/*
-  GormTextViewAttributesInspector.h
+/* inspectors - Various inspectors for data elements
 
-   Copyright (C) 2001-2005 Free Software Foundation, Inc.
+   Copyright (C) 2001 Free Software Foundation, Inc.
 
    Author:  Laurent Julliard <laurent@julliard-online.org>
-   Date: Nov 2001
+   Date: Nov 2001   
+   Author:  Gregory Casamento <greg_casamento@yahoo.com>
+   Date: Nov 2003,2004,2005
    
    This file is part of GNUstep.
    
@@ -23,33 +24,13 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
-/*
-  July 2005 : Spilt inspector in separate classes.
-  Always use ok: revert: methods
-  Clean up
-  Author : Fabien Vallon <fabien@sonappart.net>
-*/
+#ifndef INCLUDED_GormTextViewSizeInspector_h
+#define INCLUDED_GormTextViewSizeInspector_h
 
-#ifndef INCLUDED_GormTextViewAttributesInspector_h
-#define INCLUDED_GormTextViewAttributesInspector_h
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormViewSizeInspector.h>
 
-#include <InterfaceBuilder/IBInspector.h>
-
-@class NSColorWell;
-@class NSMatrix;
-
-@interface GormTextViewAttributesInspector : IBInspector
-{
-  NSColorWell *backgroundColorWell;
-  NSColorWell *textColorWell;
-  NSMatrix *borderMatrix;
-  /* options */
-  NSButton *selectableButton;
-  NSButton *editableButton;
-  NSButton *multipleFontsButton;
-  NSButton *graphicsButton;  
-}
-
+@interface GormTextViewSizeInspector : GormViewSizeInspector
 @end
 
-#endif /* INCLUDED_GormTextViewAttributesInspector_h */
+#endif

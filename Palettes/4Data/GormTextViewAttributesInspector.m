@@ -41,20 +41,7 @@
 #include <AppKit/NSScrollView.h>
 #include <AppKit/NSTextView.h>
 
-
-/*
-  IBObjectAdditions category
-*/
-@implementation	NSTextView (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormNSTextViewAttributesInspector";
-}
-@end
-
-
-
-@implementation GormNSTextViewAttributesInspector
+@implementation GormTextViewAttributesInspector
 
 - (id) init
 {
@@ -146,6 +133,5 @@
 
   [super revert:sender];
 }
-
 
 @end

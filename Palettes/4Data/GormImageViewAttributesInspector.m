@@ -31,9 +31,7 @@
 */
 
 #include "GormImageViewAttributesInspector.h"
-
 #include <Foundation/NSNotification.h>
-
 #include <AppKit/NSButton.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSImageView.h>
@@ -43,17 +41,6 @@
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
-
-
-/*
-  IBObjectAdditions category
- */
-@implementation	NSImageView (IBObjectAdditions)
-- (NSString*) inspectorClassName
-{
-  return @"GormNSImageViewAttributesInspector";
-}
-@end
 
 @implementation GormImageViewAttributesInspector
 
@@ -72,7 +59,7 @@
 }
 
 /* Commit changes that the user makes in the Attributes Inspector */
-- (void) ok: (id) sender
+- (void) ok: (id)sender
 {
   /* icon name */
   if (sender == iconField)
@@ -90,19 +77,15 @@
       if (image == nil)
 	{
 	  image = [[NSImage alloc] initByReferencingFile: name];
-	  
 	  if (image)
-	    [image setName: name];
+	    {
+	      [image setName: name];
+	    }
 	}
-#warning Not Sure
-      if ( image != nil ) 
-	[object setImage: image ];	
-//       if (image == nil)
-// 	{
-// 	  NSRunAlertPanel(@"Gorm ImageView", @"Cannot find image", 
-// 			  @"OK", NULL, NULL);
-// 	  return;
-// 	}	
+      else
+	{
+	  [object setImage: image ];
+	}
     }
   /* border */
   else  if (sender == borderMatrix)

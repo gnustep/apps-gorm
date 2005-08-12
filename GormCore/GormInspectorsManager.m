@@ -35,18 +35,12 @@
 
 #define NUM_DEFAULT_INSPECTORS 5
 
-/*
- *	The GormEmptyInspector is a placeholder for an empty selection.
- */
-@interface GormEmptyInspector : IBInspector
+@interface GormDummyInspector : IBInspector
+- (NSString *)title;
 @end
 
-@implementation GormEmptyInspector
-- (void) dealloc
-{
-  [super dealloc];
-}
 
+@implementation GormDummyInspector
 - (id) init
 {
   self = [super init];
@@ -63,7 +57,7 @@
       button = [[NSButton alloc] initWithFrame: [contents bounds]];
       [button setAutoresizingMask:
 	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: _(@"Empty Selection")];
+      [button setStringValue: [self title]];
       [button setBordered: NO];
       [button setEnabled: NO];
       [contents addSubview: button];
@@ -71,83 +65,49 @@
     }
   return self;
 }
+
+- (NSString *)title
+{
+  return nil;
+}
+@end;
+
+/*
+ *	The GormEmptyInspector is a placeholder for an empty selection.
+ */
+@interface GormEmptyInspector : GormDummyInspector
 @end
 
-
+@implementation GormEmptyInspector
+- (NSString *)title
+{
+  return _(@"Empty Selection");
+}
+@end
 
 /*
  *	The GormMultipleInspector is a placeholder for a multiple selection.
  */
-@interface GormMultipleInspector : IBInspector
+@interface GormMultipleInspector : GormDummyInspector
 @end
 
 @implementation GormMultipleInspector
-- (void) dealloc
+- (NSString *)title
 {
-  [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView	*contents;
-      NSButton	*button;
-
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-      button = [[NSButton alloc] initWithFrame: [contents bounds]];
-      [button setAutoresizingMask:
-	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: _(@"Multiple Selection")];
-      [button setBordered: NO];
-      [button setEnabled: NO];
-      [contents addSubview: button];
-      RELEASE(button);
-    }
-  return self;
+  return _(@"Multiple Selection");
 }
 @end
 
 /*
  *	The GormNotApplicableInspector is a uitility for odd objects.
  */
-@interface GormNotApplicableInspector : IBInspector
+@interface GormNotApplicableInspector : GormDummyInspector
 @end
 
 @implementation GormNotApplicableInspector
-- (void) dealloc
+- (NSString *)title
 {
-  [super dealloc];
-}
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      NSView	*contents;
-      NSButton	*button;
-
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-      button = [[NSButton alloc] initWithFrame: [contents bounds]];
-      [button setAutoresizingMask:
-	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: _(@"Not Applicable")];
-      [button setBordered: NO];
-      [button setEnabled: NO];
-      [contents addSubview: button];
-      RELEASE(button);
-    }
-  return self;
+  return _(@"Not Applicable");
 }
 @end
 
@@ -459,36 +419,40 @@
   NSDebugLog(@"current %i",current);
 
   // Operate on the document view if the selected object is a NSScrollView
-  if ([obj isKindOfClass: [NSScrollView class]]
-    && ([(NSScrollView *)obj documentView] != nil)
-    && ([[(NSScrollView *)obj documentView] isKindOfClass: [NSTableView class]]
-    || [[(NSScrollView *)obj documentView] isKindOfClass: [NSTextView class]]))
+  if ([obj isKindOfClass: [NSScrollView class]] && 
+      [(NSScrollView *)obj documentView])
     {
+      // && [[(NSScrollView *)obj documentView] conformsToProtocol: @protocol(IBEditors)] == NO)
+
       obj = [(NSScrollView *)obj documentView];
+      // FIXME: Find a more generalized way to do this.
       if ([obj isKindOfClass: [NSTableView class]])
-	if ([obj selectedColumn] != -1)
-	  obj = [[obj tableColumns] objectAtIndex:[obj selectedColumn]];
+	{
+	  if ([obj selectedColumn] != -1)
+	    {
+	      obj = [[obj tableColumns] objectAtIndex:
+					  [obj selectedColumn]];
+	    }
+	}
     }
 
-  // if(obj != selectedObject)
+  // refresh object.
+  selectedObject = obj;
+  
+  // remove any items beyond the original items on the list..
+  [self _addDefaultModes];
+  
+  // inform the world that the object is about to be inspected.
+  [nc postNotificationName: IBWillInspectObjectNotification object: obj];
+  
+  // set key equivalent
+  [self _refreshPopUp];
+  
+  if([modes count] == NUM_DEFAULT_INSPECTORS)
     {
-      selectedObject = obj;
-
-      // remove any items beyond the original items on the list..
-      [self _addDefaultModes];
-      
-      // inform the world that the object is about to be inspected.
-      [nc postNotificationName: IBWillInspectObjectNotification object: obj];
-      
-      // set key equivalent
-      [self _refreshPopUp];
-
-      if([modes count] == NUM_DEFAULT_INSPECTORS)
+      if(current > (NUM_DEFAULT_INSPECTORS - 1))
 	{
-	  if(current > (NUM_DEFAULT_INSPECTORS - 1))
-	    {
-	      current = 0;
-	    }
+	  current = 0;
 	}
     }
 

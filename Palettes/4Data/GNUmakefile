@@ -27,11 +27,16 @@ PALETTE_NAME = 4Data
 4Data_PALETTE_ICON = DataPalette
 4Data_PRINCIPAL_CLASS = DataPalette
 
-4Data_OBJC_FILES = GormNSComboBoxAttributesInspector.m\
-		   GormImageViewAttributesInspector.m\
-		   GormTextViewAttributesInspector.m\
-	           inspectors.m\
-		   DataPalette.m
+4Data_OBJC_FILES = \
+	DataPalette.m \
+	GormDateFormatterAttributesInspector.m \
+	GormImageViewAttributesInspector.m \
+	GormNSComboBoxAttributesInspector.m \
+	GormNumberFormatterAttributesInspector.m \
+	GormTextViewAttributesInspector.m \
+	GormTextViewEditor.m \
+	GormTextViewSizeInspector.m \
+	inspectors.m 
 
 
 4Data_RESOURCE_FILES = DataPalette.tiff \

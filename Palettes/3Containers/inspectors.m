@@ -27,9 +27,6 @@
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
-/* This macro makes sure that the string contains a value, even if @"" */
-#define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
-
 /**
  * IBObjectAdditions categories. 
  */
@@ -71,5 +68,10 @@
 - (NSString*) sizeInspectorClassName
 {
   return @"GormTableViewSizeInspector";
+}
+
+- (NSString*) editorClassName
+{
+  return @"GormTableViewEditor";
 }
 @end
