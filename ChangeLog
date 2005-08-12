@@ -1,3 +1,8 @@
+2005-08-12 01:23 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Correction for crash when loading
+	.gorm files via [NSApplication openFile:...].
+
 2005-08-11 23:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: Removed explicit check for table
