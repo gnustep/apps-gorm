@@ -156,19 +156,20 @@
   shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
 {
   NSDebugLog(@"shouldSelectTabViewItem called");
-
-  if ([[[tabView selectedTabViewItem] view] 
-	isKindOfClass: 
-	  [GormInternalViewEditor class]])
+  id view = [[tabView selectedTabViewItem] view];
+  if ([view isKindOfClass: [GormInternalViewEditor class]])
     {
-      
       NSDebugLog(@"closing tabviewitem");
-      [(GormInternalViewEditor *)[[tabView selectedTabViewItem] view] 
-				 deactivate];
+      [view deactivate];
       currentView = nil;
       openedSubeditor = nil;
     }
 
   return YES;
+}
+
+- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)tabView
+{
+  // [tabView selectFirstTabViewItem: self];
 }
 @end

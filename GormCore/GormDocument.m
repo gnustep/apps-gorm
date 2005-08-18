@@ -625,6 +625,27 @@ static NSImage  *fileImage = nil;
 	  [self attachObject: [anObject documentView] toParent: anObject];
 	}
     }
+  /*
+   * If it's a tab view, then we want the tab items.
+   */
+  else if ([anObject isKindOfClass: [NSTabView class]] == YES)
+    {
+      NSEnumerator *tie = [[anObject tabViewItems] objectEnumerator];
+      NSTabViewItem *ti = nil;
+      while((ti = [tie nextObject]) != nil)
+	{
+	  [self attachObject: ti toParent: anObject];
+	}
+    }
+  /*
+   * If it's a tab view item, then we attach the view.
+   */
+  else if ([anObject isKindOfClass: [NSTabViewItem class]] == YES)
+    {
+      NSTabViewItem *ti = (NSTabViewItem *)anObject; 
+      id v = [ti view];
+      [self attachObject: v toParent: ti];
+    }
 
   // Detect and add any connection the object might have.
   // This is done so that any palette items which have predefined connections will be
@@ -763,6 +784,9 @@ static NSImage  *fileImage = nil;
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
+
+  /* Deactivate remaining editors */
+  [openEditors makeObjectsPerformSelector: @selector(deactivate)]; 
 
   /*
    * Set the appropriate profile so that we save the right versions of 
@@ -1557,6 +1581,7 @@ static NSImage  *fileImage = nil;
 	[[con destination] activate];
     }
   [savedEditors removeAllObjects];
+  // [openEditors makeObjectsPerformSelector: @selector(activate)]; 
 }
 
 /**

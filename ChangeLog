@@ -1,3 +1,13 @@
+2005-08-17 23:26 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: attachObject:toParent: code to handle
+	addition of tab view and items.
+	* Palettes/3Containers/GormTabViewAttributesInspector.m: in ok:
+	code to handle attaching and detaching from the document, when items
+	are added and deleted.
+	* Palettes/3Containers/GormTabViewEditor.m: Streamlined code in
+	delegate.
+
 2005-08-12 01:23 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Correction for crash when loading

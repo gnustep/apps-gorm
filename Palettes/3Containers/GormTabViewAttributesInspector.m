@@ -33,7 +33,6 @@
 #include "GormTabViewAttributesInspector.h"
 
 #include <Foundation/NSNotification.h>
-
 #include <AppKit/NSButton.h>
 #include <AppKit/NSForm.h>
 #include <AppKit/NSMatrix.h>
@@ -43,7 +42,7 @@
 #include <AppKit/NSTabViewItem.h>
 #include <AppKit/NSTextField.h>
 
-static NSString *ITEM=@"item";
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @implementation GormTabViewAttributesInspector
 
@@ -81,13 +80,10 @@ static NSString *ITEM=@"item";
       [itemIdentifier setStringValue:[[object tabViewItemAtIndex:number] identifier]];
       [object selectTabViewItemAtIndex:number];
     }
-  
-
   else if (sender == numberOfItemsField)
     {
       int newNumber = [[numberOfItemsField stringValue] intValue];
 
-      //Can we allow stupid numbers like 66666666 ????????
       if (newNumber <= 0) 
 	{
 	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",[object numberOfTabViewItems]]];
@@ -97,13 +93,16 @@ static NSString *ITEM=@"item";
 	{
 	  int i;
 	  NSTabViewItem *newTabItem;
+	  id document = [(id<IB>)NSApp documentForObject: object];
+	      
 	  for (i=([object numberOfTabViewItems]+1);i<=newNumber;i++)
 	    {
-	      NSString *identif = [NSString stringWithFormat:@"%i",i]; 
-	      newTabItem = [(NSTabViewItem *)[NSTabViewItem alloc] initWithIdentifier: (id)identif];
-	      [newTabItem setLabel:[ITEM  stringByAppendingString:identif]]; 
+	      NSString *ident = [NSString stringWithFormat: @"item %i",i];
+	      newTabItem = [(NSTabViewItem *)[NSTabViewItem alloc] initWithIdentifier: (id)ident];
+	      [newTabItem setLabel: [NSString stringWithFormat: @"Item %i",i]]; 
 	      [newTabItem setView:[[NSView alloc] init]];
 	      [object addTabViewItem:newTabItem];
+	      [document attachObject: newTabItem toParent: object];
 	    }
 	}
       else 
@@ -111,24 +110,35 @@ static NSString *ITEM=@"item";
 	  int i;
 	  for (i=([object numberOfTabViewItems]-1);i>=newNumber;i--)
 	    {
-	      [object removeTabViewItem:[object tabViewItemAtIndex:i]];
+	      id item = [object tabViewItemAtIndex:i];
+	      id document = [(id<IB>)NSApp documentForObject: item];
+
+	      [object selectFirstTabViewItem: self];
+	      [object removeTabViewItem: item];
+	      if(document != nil)
+		{
+		  [document detachObject: item];
+		}
 	    }
 	}
-      [itemStepper setMaxValue:(newNumber - 1)];
+      [itemStepper setMaxValue: (newNumber - 1)];
     }
   else if ( sender == itemLabel )
     {
-      if ( ! [[itemLabel stringValue] isEqualToString:@""] )
-	[[object selectedTabViewItem] setLabel:[itemLabel stringValue]];
+      if ([[itemLabel stringValue] isEqualToString:@""] == NO)
+	{
+	  [[object selectedTabViewItem] setLabel:[itemLabel stringValue]];
+	}
     }
   else if ( sender == itemIdentifier )
     {
-      if ( ! [[itemIdentifier stringValue] isEqualToString:@""] )
-	[[object selectedTabViewItem] setIdentifier:[itemIdentifier stringValue]];
+      if ([[itemIdentifier stringValue] isEqualToString:@""] == NO)
+	{
+	  [[object selectedTabViewItem] setIdentifier:[itemIdentifier stringValue]];
+	}
     }
 
-#warning needed ? 
-  [object display];
+  [object setNeedsDisplay: YES];
   
   [super ok: sender];
 }
