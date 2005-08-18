@@ -786,7 +786,7 @@ static NSImage  *fileImage = nil;
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
 
   /* Deactivate remaining editors */
-  [openEditors makeObjectsPerformSelector: @selector(deactivate)]; 
+  // [openEditors makeObjectsPerformSelector: @selector(deactivate)]; 
 
   /*
    * Set the appropriate profile so that we save the right versions of 
