@@ -785,9 +785,6 @@ static NSImage  *fileImage = nil;
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
 
-  /* Deactivate remaining editors */
-  // [openEditors makeObjectsPerformSelector: @selector(deactivate)]; 
-
   /*
    * Set the appropriate profile so that we save the right versions of 
    * the classes for older GNUstep releases.
@@ -1581,7 +1578,6 @@ static NSImage  *fileImage = nil;
 	[[con destination] activate];
     }
   [savedEditors removeAllObjects];
-  // [openEditors makeObjectsPerformSelector: @selector(activate)]; 
 }
 
 /**
