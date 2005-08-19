@@ -570,7 +570,10 @@ static NSImage  *fileImage = nil;
   else if([anObject isKindOfClass: [NSMenuItem class]])
     {
       NSMenu *menu = [(NSMenuItem *)anObject submenu]; 
-      [self attachObject: menu toParent: anObject];
+      if(menu != nil)
+	{
+	  [self attachObject: menu toParent: anObject];
+	}
     }
   /*
    * Add the current menu and any submenus.
@@ -1176,10 +1179,13 @@ static NSImage  *fileImage = nil;
   while((con = [en nextObject]) != nil)
     {
       id obj = [con source];
-      [array addObject: obj];
-      if(flag)
+      if(obj != nil)
 	{
-	  [self _retrieveObjectsForParent: obj intoArray: array recursively: flag];
+	  [array addObject: obj];
+	  if(flag)
+	    {
+	      [self _retrieveObjectsForParent: obj intoArray: array recursively: flag];
+	    }
 	}
     }
 }
