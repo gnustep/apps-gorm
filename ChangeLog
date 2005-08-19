@@ -1,3 +1,12 @@
+2005-08-18 21:02 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: attachObject:toParent: added code to insert
+	the content view into the nametable and the parent->child 
+	connections.
+	* GormCore/GormViewWithContentViewEditor.m: in the group* methods added
+	code to "reparent" the objects so that the parent->child relationships
+	are reset to represent the reflect the new relationship.
+
 2005-08-18 20:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Remove commented out code.
@@ -11,7 +20,8 @@
 	are added and deleted.
 	* Palettes/3Containers/GormTabViewEditor.m: Streamlined code in
 	delegate.
-
+	Corrects bug#14004.
+	
 2005-08-12 01:23 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Correction for crash when loading

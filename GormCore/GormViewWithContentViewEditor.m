@@ -1034,6 +1034,8 @@ int _sortViews(id view1, id view2, void *context)
       frameOrigin.x -= rect.origin.x;
       frameOrigin.y -= rect.origin.y;
       [[subview editedObject] setFrameOrigin: frameOrigin];
+      [document attachObject: [subview editedObject]
+		toParent: box];
       [subview close];
     }
 
@@ -1096,6 +1098,8 @@ int _sortViews(id view1, id view2, void *context)
 	  frameOrigin.x -= rect.origin.x;
 	  frameOrigin.y -= rect.origin.y;
 	  [[subview editedObject] setFrameOrigin: frameOrigin];
+	  [document attachObject: [subview editedObject]
+		    toParent: scrollView];
 	  [subview close];
 	}
     }

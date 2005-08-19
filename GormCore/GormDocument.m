@@ -522,11 +522,14 @@ static NSImage  *fileImage = nil;
     {
       [objectsView addObject: anObject];
       [topLevelObjects addObject: anObject];
-      [[self openEditorForObject: anObject] activate];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
+	  // Turn off the release when closed flag, add the content view.
 	  [anObject setReleasedWhenClosed: NO];
+	  [self attachObject: [(NSWindow *)anObject contentView] 
+		toParent: anObject];
 	}
+      [[self openEditorForObject: anObject] activate];
     }
   else if((aParent == filesOwner || aParent == nil) &&
 	  [anObject isKindOfClass: [NSMenu class]] == NO)
@@ -543,17 +546,15 @@ static NSImage  *fileImage = nil;
 	  [topLevelObjects addObject: anObject];
 	}
     }
-
   /*
    * Check if it's a font manager.
    */
   else if([anObject isKindOfClass: [NSFontManager class]])
     {
-      // if someone tries to attach a font manager, we must attach
+      // If someone tries to attach a font manager, we must attach
       // the proxy instead.
       [self _instantiateFontManager];
     }
-
   /*
    * Add the current menu and any submenus.
    */
@@ -561,7 +562,7 @@ static NSImage  *fileImage = nil;
     {
       BOOL isMainMenu = NO;
 
-      // if there is no main menu and a menu gets added, it
+      // If there is no main menu and a menu gets added, it
       // will become the main menu.
       if([self objectForName: @"NSMenu"] == nil)
 	{
@@ -584,7 +585,7 @@ static NSImage  *fileImage = nil;
 
       [[self openEditorForObject: anObject] activate];
 
-      // if it's the main menu... locate it appropriately...
+      // If it's the main menu... locate it appropriately...
       if(isMainMenu)
 	{
 	  NSRect frame = [window frame];
@@ -592,13 +593,12 @@ static NSImage  *fileImage = nil;
 
 	  origin.y += (frame.size.height + 150);
 
-	  // place the main menu appropriately...
+	  // Place the main menu appropriately...
 	  [[anObject window] setFrameTopLeftPoint: origin];
 	}
     }
   /*
-   * if this a scrollview, it is interesting to add its contentview
-   * if it is a tableview or a textview
+   * If this a scrollview, it is interesting to add its contentview.
    */
   else if (([anObject isKindOfClass: [NSScrollView class]] == YES)
 	   && ([(NSScrollView *)anObject documentView] != nil))
