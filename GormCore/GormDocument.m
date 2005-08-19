@@ -128,8 +128,6 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 }
 @end
 
-
-
 /*
  * Trivial classes for connections from objects to their editors, and from
  * child editors to their parents.  This does nothing special, but we can
@@ -466,12 +464,8 @@ static NSImage  *fileImage = nil;
 
   // set the holder in the document.
   fontManager = (GormObjectProxy *)item;
-  
-  // [selectionView selectCellWithTag: 0];
-  [selectionBox setContentView: scrollView];
+  [self changeToViewWithTag: 0];
 }
-
-
 
 /**
  * Attach anObject to the document with aParent.
@@ -544,7 +538,7 @@ static NSImage  *fileImage = nil;
       [[self openEditorForObject: anObject] activate];
     }
   /*
-   * Add the menu.
+   * Determine what should be a top level object.
    */
   else if((aParent == filesOwner || aParent == nil) &&
 	  [anObject isKindOfClass: [NSMenu class]] == NO)
@@ -571,34 +565,52 @@ static NSImage  *fileImage = nil;
       [self _instantiateFontManager];
     }
   /*
+   * Add the menu item.
+   */
+  else if([anObject isKindOfClass: [NSMenuItem class]])
+    {
+      NSMenu *menu = [(NSMenuItem *)anObject submenu]; 
+      [self attachObject: menu toParent: anObject];
+    }
+  /*
    * Add the current menu and any submenus.
    */
   else if ([anObject isKindOfClass: [NSMenu class]] == YES)
     {
       BOOL isMainMenu = NO;
+      NSMenu *menu = (NSMenu *)anObject;
+      NSEnumerator *en = [[menu itemArray] objectEnumerator];
+      id item = nil;
 
       // If there is no main menu and a menu gets added, it
       // will become the main menu.
       if([self objectForName: @"NSMenu"] == nil)
 	{
-	  [self setName: @"NSMenu" forObject: anObject];
-	  [objectsView addObject: anObject];
-	  [topLevelObjects addObject: anObject];
+	  [self setName: @"NSMenu" forObject: menu];
+	  [objectsView addObject: menu];
+	  [topLevelObjects addObject: menu];
 	  isMainMenu = YES;
 	}
       else
 	{
-	  if([[anObject title] isEqual: @"Services"] && [self servicesMenu] == nil)
+	  if([[menu title] isEqual: @"Services"] && [self servicesMenu] == nil)
 	    {
-	      [self setServicesMenu: anObject];
+	      [self setServicesMenu: menu];
 	    }
-	  else if([[anObject title] isEqual: @"Windows"] && [self windowsMenu] == nil)
+	  else if([[menu title] isEqual: @"Windows"] && [self windowsMenu] == nil)
 	    {
-	      [self setWindowsMenu: anObject];
+	      [self setWindowsMenu: menu];
 	    }
 	}
 
-      [[self openEditorForObject: anObject] activate];
+      // add all of the items in the menu.
+      while((item = [en nextObject]) != nil)
+	{
+	  [self attachObject: item toParent: menu];
+	}
+      
+      // activate the editor...
+      [[self openEditorForObject: menu] activate];
 
       // If it's the main menu... locate it appropriately...
       if(isMainMenu)
@@ -609,7 +621,7 @@ static NSImage  *fileImage = nil;
 	  origin.y += (frame.size.height + 150);
 
 	  // Place the main menu appropriately...
-	  [[anObject window] setFrameTopLeftPoint: origin];
+	  [[menu window] setFrameTopLeftPoint: origin];
 	}
     }
   /*
@@ -1179,6 +1191,13 @@ static NSImage  *fileImage = nil;
 - (NSArray *) retrieveObjectsForParent: (id)parent recursively: (BOOL)flag
 {
   NSMutableArray *result = [NSMutableArray array];
+
+  // If parent is nil, use file's owner.
+  if(parent == nil)
+    {
+      parent = filesOwner;
+    }
+
   [self _retrieveObjectsForParent: parent intoArray: result recursively: flag];
   return result;
 }
@@ -2224,7 +2243,9 @@ static NSImage  *fileImage = nil;
        */
       ownerClass = [[c nameTable] objectForKey: @"NSOwner"];
       if (ownerClass)
-	[filesOwner setClassName: ownerClass];
+	{
+	  [filesOwner setClassName: ownerClass];
+	}
       [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
       [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
       
