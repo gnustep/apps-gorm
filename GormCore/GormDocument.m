@@ -565,6 +565,21 @@ static NSImage  *fileImage = nil;
       [self _instantiateFontManager];
     }
   /*
+   * Add the menu items from the popup.
+   */
+  else if([anObject isKindOfClass: [NSPopUpButton class]])
+    {
+      NSPopUpButton *button = (NSPopUpButton *)anObject;
+      NSEnumerator *en = [[button itemArray] objectEnumerator];
+      id item = nil;
+
+      // add all of the items in the popup..
+      while((item = [en nextObject]) != nil)
+	{
+	  [self attachObject: item toParent: button];
+	}      
+    }
+  /*
    * Add the menu item.
    */
   else if([anObject isKindOfClass: [NSMenuItem class]])

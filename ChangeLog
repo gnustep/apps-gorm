@@ -1,3 +1,10 @@
+2005-08-19 00:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: [GormDocument attachObject:toParent:]
+	handle popup button items.
+	* GormCore/GormFilePrefsManager.m: Updated version.
+	* GormInfo.plist: Updated version.
+
 2005-08-18 23:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: retrieveObjectForParent:.. check for 
