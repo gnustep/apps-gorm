@@ -478,8 +478,8 @@ static NSImage  *fileImage = nil;
  */
 - (void) attachObject: (id)anObject toParent: (id)aParent
 {
-  NSArray	*old;
-  BOOL           newObject = NO;
+  NSArray *old;
+  BOOL newObject = NO;
 
   /*
    * Create a connector that links this object to its parent.
@@ -524,13 +524,28 @@ static NSImage  *fileImage = nil;
       [topLevelObjects addObject: anObject];
       if ([anObject isKindOfClass: [NSWindow class]] == YES)
 	{
+	  NSWindow *win = (NSWindow *)anObject;
+	  NSView *contentView = [win contentView];
+	  NSArray *subviews = [contentView subviews];
+	  NSEnumerator *en = [subviews objectEnumerator];
+	  NSView *view = nil;
+
 	  // Turn off the release when closed flag, add the content view.
 	  [anObject setReleasedWhenClosed: NO];
-	  [self attachObject: [(NSWindow *)anObject contentView] 
+	  [self attachObject: contentView
 		toParent: anObject];
+
+	  // Add all subviews from the window, if any.
+	  while((view = [en nextObject]) != nil)
+	    {
+	      [self attachObject: view toParent: win];
+	    }
 	}
       [[self openEditorForObject: anObject] activate];
     }
+  /*
+   * Add the menu.
+   */
   else if((aParent == filesOwner || aParent == nil) &&
 	  [anObject isKindOfClass: [NSMenu class]] == NO)
     {
@@ -645,6 +660,20 @@ static NSImage  *fileImage = nil;
       NSTabViewItem *ti = (NSTabViewItem *)anObject; 
       id v = [ti view];
       [self attachObject: v toParent: ti];
+    }
+  /*
+   * If it's a simple NSView, add it and all of it's subviews.
+   */
+  else if ([anObject isKindOfClass: [NSView class]] == YES)
+    {
+      NSView *view = (NSView *)anObject, *sv = nil;
+      NSEnumerator *en = [[view subviews] objectEnumerator];
+      
+      // Add all subviews from the window, if any.
+      while((sv = [en nextObject]) != nil)
+	{
+	  [self attachObject: sv toParent: view];
+	}
     }
 
   // Detect and add any connection the object might have.

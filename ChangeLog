@@ -1,3 +1,8 @@
+2005-08-18 21:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: attachObject:toParent code to add all
+	subviews of a view when it's added to the document.
+
 2005-08-18 21:02 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: attachObject:toParent: added code to insert
