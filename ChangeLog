@@ -1,3 +1,9 @@
+2005-08-29 19:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormMatrixEditor.m: Corrected bug in
+	editTitleWithEvent: which was causing a portion of the window
+	to become transparent.
+	
 2005-08-19 00:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: [GormDocument attachObject:toParent:]
