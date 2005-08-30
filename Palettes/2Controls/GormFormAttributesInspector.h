@@ -49,6 +49,7 @@
   NSButton *editableSwitch;
   NSButton *selectableSwitch;
   NSButton *scrollableSwitch;
+  NSButton *autosizeSwitch;
   id backgroundColorWell;
   id drawsBackgroundSwitch;
   id tagForm;

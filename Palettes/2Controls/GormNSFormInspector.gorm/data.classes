@@ -12,7 +12,8 @@
 	    cellPositionSwitch,
 	    editableSwitch,
 	    scrollableSwitch,
-	    selectableSwitch
+	    selectableSwitch,
+	    autosizeSwitch
 	);
 	Super = IBInspector;
     };

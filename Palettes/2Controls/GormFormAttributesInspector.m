@@ -34,11 +34,10 @@
 */
 
 #include "GormFormAttributesInspector.h"
-
-#warning GNUstep bug ? 
 #include <GormCore/NSColorWell+GormExtensions.h>
 
 #include <Foundation/NSNotification.h>
+#include <Foundation/NSDebug.h>
 
 #include <AppKit/NSButton.h>
 #include <AppKit/NSForm.h>
@@ -147,6 +146,12 @@
     {
       [object setTag: [[sender cellAtIndex: 0] intValue]];
     }
+  /* autosize */
+  else if (sender == autosizeSwitch)
+    {
+      BOOL flag = ([autosizeSwitch state] == NSOnState) ? YES : NO;
+      [object setAutosizesCells: flag];
+    }
 
   [super ok:sender];
 }
@@ -170,6 +175,7 @@
   [editableSwitch setState:[[object cellAtIndex: 0] isEditable]];
   [selectableSwitch setState:[[object cellAtIndex: 0] isSelectable]];
   [scrollableSwitch setState:[[object cellAtIndex: 0] isScrollable]];
+  [autosizeSwitch setState: [object autosizesCells]];
 
   // Cells tags = position is not directly stored in the Form so guess it.
   {
