@@ -179,7 +179,8 @@ static BOOL done_editing;
     [editField setStringValue: [selected stringValue]];
   [edit_view addSubview: editField];
   // [edit_view displayRect: frame];
-  [edit_view display]; 
+  [edit_view display];
+  [[edit_view window] flushWindow];
   [nc addObserver: self
          selector: @selector(handleNotification:)
              name: NSControlTextDidEndEditingNotification
