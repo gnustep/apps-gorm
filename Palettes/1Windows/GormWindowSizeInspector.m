@@ -89,14 +89,18 @@
              name: NSWindowDidResizeNotification
            object: object];
 
-#warning why not in setObject: ?
+  return self;
+}
+
+- (void) setObject: (id)obj
+{
+  [super setObject: obj];
+
   // set up tags...
   [top setTag: GSWindowMaxYMargin];
   [bottom setTag: GSWindowMinYMargin];
   [left setTag: GSWindowMinXMargin];
   [right setTag: GSWindowMaxXMargin];
-
-  return self;
 }
 
 
@@ -132,12 +136,10 @@
     }
   
   /* AutoPosition */
-#warning Maybye set condition for each button ( more readeable ? )
-  else if ( [sender isKindOfClass:[NSButton class]] )
+  else if ( sender == top || sender == bottom || 
+	    sender == left || sender == right )
     {
-
       unsigned	mask = [sender tag];
-
       if ([sender state] == NSOnState)
 	{
 	  mask = [object autoPositionMask] | mask;
@@ -201,7 +203,6 @@
   [super revert:object];
 }
 
-#warning what about delegate ? or revert: ??
 - (void) windowChangeNotification: (NSNotification*)aNotification
 {
   [self ok: [aNotification object]];
@@ -211,7 +212,7 @@
 /* Delegate for textFields /  Forms */
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
-  [self ok:[aNotification object]];
+  [self ok: [aNotification object]];
 }
 
 

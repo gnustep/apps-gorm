@@ -72,7 +72,6 @@
   [cellTable setDoubleAction: @selector(ok:)];
 }
 
-#warning set private ? 
 - (NSString *)_getCellClassName
 {
   id cell = [[self object] dataCell];
@@ -109,7 +108,7 @@
  	{
  	  [[object headerCell] setAlignment: NSRightTextAlignment];
  	}
-#warning TODO use tags 
+
        // [[object headerCell] setAlignment: [[titleAlignmentMatrix selectedRow] tag]];
 
       if ([[object tableView] headerView] != nil)
@@ -120,7 +119,6 @@
   /* contents Alignment */
   else if (sender == contentsAlignmentMatrix)
     {
-#warning TODO use tags 
       if ([[sender cellAtRow: 0 column: 0] state] == NSOnState)
 	{
 	  [[object dataCell] setAlignment: NSLeftTextAlignment];
@@ -228,7 +226,6 @@
       [cellTable scrollRowToVisible: index];
     }
   /* title Alignment */
-#warning TODO use tags 
   switch ([[object headerCell] alignment])
     {
     case NSLeftTextAlignment:
@@ -245,7 +242,6 @@
       break;
     }
   /* contents Alignment */
-#warning TODO use tags 
   switch ([[object dataCell] alignment])
     {
     case NSLeftTextAlignment:
@@ -279,7 +275,7 @@
 }
 
 // Data Source 
-#warning replace by an NSBrowser ? 
+// replace by an NSBrowser ? 
 - (int) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];

@@ -1,3 +1,20 @@
+2005-09-04 10:00 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormWindowAttributesInspector.m
+	* Palettes/1Windows/GormWindowSizeInspector.m
+	* Palettes/2Controls/GormBoxAttributesInspector.m
+	* Palettes/2Controls/GormColorWellAttributesInspector.m
+	* Palettes/2Controls/GormMatrixAttributesInspector.m
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m
+	* Palettes/3Containers/GormTableViewAttributesInspector.m
+	* Palettes/4Data/GormNSComboBoxAttributesInspector.h
+	* Palettes/4Data/GormNSComboBoxAttributesInspector.m
+	* Palettes/4Data/GormNSComboBoxInspector.gorm
+	* Palettes/4Data/GormTextViewAttributesInspector.m: Removed all
+	extraneous and unecessary (and annoying) #warning messages.
+
 2005-08-29 22:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormFormAttributesInspector.h: Added ivar

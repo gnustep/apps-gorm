@@ -35,7 +35,6 @@
 
 #include "GormBoxAttributesInspector.h"
 
-#warning NSColorWell bug ? 
 #include <GormCore/NSColorWell+GormExtensions.h>
 
 #include <Foundation/NSNotification.h>
@@ -108,8 +107,7 @@
       [object setContentViewMargins:
 	NSMakeSize([horizontalSlider floatValue], [sender floatValue])];
     }
-  /* title cell : background color */ 
-#warning seems to not work
+  /* title cell : background color, only useful for older NSBox instances */
   else if(sender == colorWell)
     {
       NSTextFieldCell *titleCell = (NSTextFieldCell *)[object titleCell];
@@ -119,7 +117,7 @@
 	  [object display];
 	}
     }
-#warning NSBox is borken ? 
+  /* only useful for older NSBox instances */
   else if(sender == backgroundSwitch)
     {
       NSTextFieldCell *titleCell = (NSTextFieldCell *)[object titleCell];

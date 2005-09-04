@@ -32,7 +32,7 @@
 
 #include "GormTextViewAttributesInspector.h"
 
-#warning GNUstep bug ? 
+// #warning GNUstep bug ? 
 #include <GormCore/NSColorWell+GormExtensions.h>
 
 #include <AppKit/NSButton.h>
@@ -66,7 +66,6 @@
 /* Commit changes that the user makes in the Attributes Inspector */
 - (void) ok: (id) sender
 {
-  BOOL flag;
   BOOL isScrollView;
   id scrollView;
 

@@ -84,15 +84,19 @@
     {
       [object setAlignment: (NSTextAlignment)[[sender selectedCell] tag]];
     }
-  else if (sender == optionMatrix)
+  if (sender == editable)
     {
-      BOOL flag;
-
-      flag = ([[sender cellAtRow: 0 column: 0] state] == NSOnState) ? YES :NO;
-      [object setEditable: flag];
-      flag = ([[sender cellAtRow: 1 column: 0] state] == NSOnState) ? YES :NO;
-      [object setSelectable: flag];
-      flag = ([[sender cellAtRow: 2 column: 0] state] == NSOnState) ? YES :NO;
+      BOOL flag = ([sender state] == NSOnState) ? YES :NO;
+      [[object cell] setEditable: flag];
+    }
+  if (sender == selectable)
+    {
+      BOOL flag = ([sender state] == NSOnState) ? YES :NO;
+      [[object cell] setSelectable: flag];
+    }
+  if (sender == usesDataSource)
+    {
+      BOOL flag = ([sender state] == NSOnState) ? YES :NO;
       [[object cell] setUsesDataSource: flag];
     }
   else if (sender == visibleItemsForm)
@@ -101,7 +105,7 @@
     }
   else if (sender == itemField )
     {
-#warning To be done
+      // #warning To be done
     }
   else if (sender == addButton) 
     {
@@ -137,21 +141,23 @@
 
   [alignmentMatrix selectCellWithTag: [object alignment]];
 
-#warning Fabien TODO remove the matrix ? 
-  [optionMatrix deselectAllCells];
+  // clear buttons.
+  [editable setState: NSOffState];
+  [selectable setState: NSOffState];
+  [usesDataSource setState: NSOffState];
 
-  if ([object isEditable])
-    [optionMatrix selectCellAtRow: 0 column: 0];
-  if ([object isSelectable])
-    [optionMatrix selectCellAtRow: 1 column: 0];
-  if ([object usesDataSource])
-    [optionMatrix selectCellAtRow: 2 column: 0];
+  // set buttons.
+  if ([[object cell] isEditable])
+    [editable setState: NSOnState];
+
+  if ([[object cell] isSelectable])
+    [selectable setState: NSOnState];
+
+  if ([[object cell] usesDataSource])
+    [usesDataSource setState: NSOnState];
 
   [itemTableView reloadData];
   [itemTxt setStringValue:@""];
-
-  //     [[visibleItemsForm cellAtIndex: 0]
-  //       setIntValue: [object numberOfVisibleItems]];
   
   [super revert:sender];
 }
@@ -185,19 +191,4 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     }
    return NO;
 }
-
-#warning TODO : clean up 
-// - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
-// {
-// //   if (fieldEditor != itemTxt )
-// //     return YES;
-// //   if ( [[itemTxt setStringValue] isEqualToString:@""] )
-// //     return YES;
-// //   else if ( [aTableView selectedRow] != -1 )
-// //     {
-// //       [object 
-    
-//   return YES;
-// }
-
 @end

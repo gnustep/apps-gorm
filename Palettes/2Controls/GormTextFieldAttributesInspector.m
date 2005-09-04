@@ -34,7 +34,6 @@
 
 #include "GormTextFieldAttributesInspector.h"
 
-#warning GNUstep bug ? 
 #include <GormCore/NSColorWell+GormExtensions.h>
 
 #include <Foundation/NSNotification.h>

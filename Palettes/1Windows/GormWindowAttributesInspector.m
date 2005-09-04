@@ -91,11 +91,11 @@
 	newStyleMask &= ~NSResizableWindowMask;
 
       [object _setStyleMask: newStyleMask];            
-#warning FIXME
-      // FIXME: This doesn't refresh the window decoration. How to do that?
-      // (currently needs manual hide/unhide to update decorations)
-      [object display];
-      
+
+      // The window proxy hides the current button config since
+      // we need to be able to use them in Gorm.  The state is shown
+      // on the inspector window.  Redisplay the window anyway.
+      [object display];      
     }
 
   /* backgroundColor */
@@ -149,7 +149,8 @@
       NSString *string = [[sender cellAtIndex: 0] stringValue];
       NSImage *image;
       /* the clearButton is disabled if the form is empty, enabled otherwise */
-#warning probably not enough ( space ... )
+      // This allows the user to set the icon, if they wish, for the mini window.
+      // if it's clear it will default to the application icon.
       if ([string length] > 0)
 	{
 	  image = [NSImage imageNamed: string];

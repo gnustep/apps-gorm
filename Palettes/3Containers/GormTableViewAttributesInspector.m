@@ -170,7 +170,7 @@
       [object setBackgroundColor: [backgroundColor color]];
     }
 
-#warning always needed ? 
+  // #warning always needed ? 
   [scrollView setNeedsDisplay: YES];
 
   [super ok:sender];

@@ -14,7 +14,10 @@
 	    itemTxt,
 	    addButton,
 	    removeButton,
-	    itemTableView
+	    itemTableView,
+	    editable,
+	    selectable,
+	    usesDataSource
 	);
 	Super = IBInspector;
     };

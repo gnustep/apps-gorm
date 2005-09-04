@@ -36,11 +36,10 @@
 #include <InterfaceBuilder/IBInspector.h>
 
 @class NSMutableArray;
-
+@class NSMatrix;
 @class NSButton;
 @class NSColorWell;
 @class NSForm;
-@class NSMatrix;
 @class NSTableView;
 @class NSTextField;
 
@@ -49,14 +48,16 @@
    NSMatrix *alignmentMatrix;
    NSColorWell *backgroundColorWell;
    NSForm  *itemField;
-   NSMatrix *optionMatrix;
+   NSButton *editable;
+   NSButton *selectable;
+   NSButton *usesDataSource;
    NSColorWell *textColorWell;
    NSForm *visibleItemsForm;
    NSTableView *itemTableView;
    NSTextField *itemTxt;
    NSButton *addButton;
    NSButton *removeButton;
-#warning should be private
+@private
    NSMutableArray *itemsArray;
 }
  @end
