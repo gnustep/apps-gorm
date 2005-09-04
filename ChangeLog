@@ -1,3 +1,9 @@
+2005-09-04 10:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/4Data/GormNSComboBoxAttributesInspector.m: In ok:
+	performs a revert to show any changes which were made
+	automatically as a result of other changes.
+
 2005-09-04 10:00 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormWindowAttributesInspector.m

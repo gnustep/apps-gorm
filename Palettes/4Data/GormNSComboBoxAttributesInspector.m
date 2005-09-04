@@ -126,13 +126,16 @@
 	}
     }
 
-  [super ok:sender];
+  // some changes might affect other settings...
+  [self revert: sender];
+
+  // call the superclass.
+  [super ok: sender];
 }
 
 /* Sync from object ( NSComboBox ) changes to the inspector   */
 -(void) revert:(id) sender
 {
-  
   if ( object == nil )
     return;
 
