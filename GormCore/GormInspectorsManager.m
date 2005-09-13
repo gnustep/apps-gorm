@@ -36,6 +36,9 @@
 #define NUM_DEFAULT_INSPECTORS 5
 
 @interface GormDummyInspector : IBInspector
+{
+    NSButton *button;
+}
 - (NSString *)title;
 @end
 
@@ -46,22 +49,10 @@
   self = [super init];
   if (self != nil)
     {
-      NSView	*contents;
-      NSButton	*button;
-
-      window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0, 0, IVW, IVH)
-					   styleMask: NSBorderlessWindowMask
-					     backing: NSBackingStoreRetained
-					       defer: NO];
-      contents = [window contentView];
-      button = [[NSButton alloc] initWithFrame: [contents bounds]];
-      [button setAutoresizingMask:
-	NSViewHeightSizable | NSViewWidthSizable];
-      [button setStringValue: [self title]];
-      [button setBordered: NO];
-      [button setEnabled: NO];
-      [contents addSubview: button];
-      RELEASE(button);
+      if([NSBundle loadNibNamed: @"GormDummyInspector" owner: self])
+      {
+	  [button setStringValue: [self title]];
+      }
     }
   return self;
 }

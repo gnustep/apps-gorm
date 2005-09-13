@@ -3,7 +3,8 @@
 	* GNUmakefile: Copy the .gorm file into the Resources.
 	* GormCore/GormInspectorsManager.h: Use the inspector panel gorm.
 	* GormCore/GormInspectorsManager.m: Use the inspector panel gorm.
-	* English/GormInspectorPanel.gorm: corrects bug#14757.
+	* English.lproj/GormInspectorPanel.gorm: corrects bug#13767.
+	* English.lproj/GormDummyInspector.gorm: corrects bug#13767.
 	
 2005-09-04 10:17 Gregory John Casamento <greg_casamento@yahoo.com>
 

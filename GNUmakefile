@@ -128,6 +128,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormConnectionInspector.gorm \
 	GormCustomClassInspector.gorm \
 	GormDocument.gorm \
+	GormDummyInspector.gorm \
 	GormFontView.gorm \
 	Gorm.gorm \
 	GormImageInspector.gorm \
