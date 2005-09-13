@@ -33,24 +33,24 @@
 @class NSMutableDictionary;
 @class NSPopUpButton;
 @class NSView;
+@class NSBox;
 @class IBInspector;
 
 @interface GormInspectorsManager : IBInspectorManager
 {
-  NSPanel		*panel;
-  NSMutableDictionary	*cache;
-  NSPopUpButton		*popup;
-  NSView		*selectionView;
-  NSView		*inspectorView;
-  NSView		*buttonView;
-  NSString		*oldInspector;
-  IBInspector		*inspector;
-  int			current;
-  BOOL			hiddenDuringTest;
+  IBOutlet NSPanel	 *panel;
+  NSMutableDictionary	 *cache;
+  IBOutlet NSPopUpButton *popup;
+  IBOutlet NSBox	 *selectionView;
+  IBOutlet NSBox         *inspectorView;
+  NSView		 *buttonView;
+  NSString		 *oldInspector;
+  IBOutlet IBInspector	 *inspector;
+  int			 current;
+  BOOL			 hiddenDuringTest;
 }
 - (NSPanel*) panel;
 - (void) setClassInspector;
-- (void) setEmptyInspector;
 - (void) setCurrentInspector: (id)anObject;
 - (void) updateSelection;
 @end
