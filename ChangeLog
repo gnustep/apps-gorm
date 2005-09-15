@@ -1,3 +1,11 @@
+2005-09-15 00:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.[mh]: Added origFrame to allow
+	resetting the inspectorView frame to it's original size in 
+	setCurrentInspector:.
+	* GormCore/GormPalettesManager.m: Removed old commented out code
+	in init.
+
 2005-09-12 22:15 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Copy the .gorm file into the Resources.

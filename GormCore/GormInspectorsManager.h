@@ -28,6 +28,7 @@
 
 #include <Foundation/NSObject.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
+#include <Foundation/NSGeometry.h>
 
 @class NSPanel;
 @class NSMutableDictionary;
@@ -48,6 +49,7 @@
   IBOutlet IBInspector	 *inspector;
   int			 current;
   BOOL			 hiddenDuringTest;
+  NSRect                 origFrame;
 }
 - (NSPanel*) panel;
 - (void) setClassInspector;

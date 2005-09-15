@@ -160,6 +160,9 @@
 	  [cache setObject: inspector forKey: @"GormMultipleInspector"];
 	  DESTROY(inspector);
 	  
+	  // get the original framesize.
+	  origFrame = [inspectorView frame];
+
 	  [self setCurrentInspector: 0];
 	  
 	  [nc addObserver: self
@@ -427,8 +430,8 @@
 	      rect.size.height = [selectionView frame].origin.y;
 	      buttonsRect = rect;
 	      buttonsRect.size.height = IVB;
-	      rect.origin.y += IVB + 2;
-	      rect.size.height -= IVB;
+	      rect.origin.y += IVB;
+	      rect.size.height -= (IVB + 3);
 
 	      buttonView = [[NSView alloc] initWithFrame: buttonsRect];
 	      [buttonView setAutoresizingMask:
@@ -458,6 +461,7 @@
 	    }
 	  else
 	    {
+	      rect = origFrame;
 	      [buttonView removeFromSuperview];
 	    }
 

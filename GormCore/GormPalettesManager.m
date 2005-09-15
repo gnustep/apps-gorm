@@ -282,7 +282,6 @@ static NSImage	*dragImage = nil;
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
-  // NSArray        *builtinPalettes = [defaults arrayForKey: BUILTIN_PALETTES];
   
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
