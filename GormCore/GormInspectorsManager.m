@@ -160,9 +160,6 @@
 	  [cache setObject: inspector forKey: @"GormMultipleInspector"];
 	  DESTROY(inspector);
 	  
-	  // get the original framesize.
-	  // origFrame = [inspectorView frame];
-
 	  [self setCurrentInspector: 0];
 	  
 	  [nc addObserver: self
@@ -428,8 +425,9 @@
 	      NSButton	*revert;
 
 	      rect.size.height = [selectionView frame].origin.y;
-	      buttonsRect = rect;
-	      buttonsRect.size.height = IVB;
+	      buttonsRect = NSMakeRect(0,0,IVW,IVB);
+	      // buttonsRect.size.height = IVB;
+	      // buttonsRect.size.width = IVW;
 	      rect.origin.y += IVB;
 	      rect.size.height -= (IVB + 3);
 
