@@ -140,12 +140,12 @@
   if((self = [super init]) != nil)
     {
       NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-
+      
       if([NSBundle loadNibNamed: @"GormInspectorPanel" owner: self])
-      {
+	{
 	  // initialized the cache...
 	  cache = [[NSMutableDictionary alloc] init];
-
+	  
 	  // set the name under which this panel saves it's dimensions.
 	  [panel setFrameUsingName: @"Inspector"];
 	  [panel setFrameAutosaveName: @"Inspector"];
@@ -161,7 +161,7 @@
 	  DESTROY(inspector);
 	  
 	  // get the original framesize.
-	  origFrame = [inspectorView frame];
+	  // origFrame = [inspectorView frame];
 
 	  [self setCurrentInspector: 0];
 	  
@@ -173,7 +173,7 @@
 	      selector: @selector(handleNotification:)
 	      name: IBWillEndTestingInterfaceNotification
 	      object: nil];
-      }
+	}
     }
   
   return self;
@@ -434,8 +434,8 @@
 	      rect.size.height -= (IVB + 3);
 
 	      buttonView = [[NSView alloc] initWithFrame: buttonsRect];
-	      [buttonView setAutoresizingMask:
-		NSViewHeightSizable | NSViewWidthSizable];
+	      // [buttonView setAutoresizingMask:
+	      //   NSViewMaxYMargin | NSViewMinYMargin | NSViewMaxXMargin];
 	      [outer addSubview: buttonView];
 	      RELEASE(buttonView);
 
@@ -461,7 +461,7 @@
 	    }
 	  else
 	    {
-	      rect = origFrame;
+	      rect.size.height = [selectionView frame].origin.y - 3;
 	      [buttonView removeFromSuperview];
 	    }
 

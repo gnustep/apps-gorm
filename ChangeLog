@@ -1,3 +1,13 @@
+2005-09-25 12:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormInspectorPanel.gorm: Set resize options correctly.
+	* GormCore/GormConnectionInspector.m: [GormConnectionInspector init]
+	modified size of ok/revert buttons.
+	* GormCore/GormDocument.m: Pull the archive type in 
+	[GormDocument saveGormDocument:]
+	* GormCore/GormInspectorsManager.m: in setCurrentInspector: 
+	corrected issues with inspector resizing.
+
 2005-09-15 00:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.[mh]: Added origFrame to allow

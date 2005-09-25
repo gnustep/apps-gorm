@@ -3190,7 +3190,9 @@ static NSImage  *fileImage = nil;
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;
-  
+  NSUserDefaults        *defaults = [NSUserDefaults standardUserDefaults];
+  NSString              *archiveType = [defaults stringForKey: @"ArchiveType"];
+
   if (documentPath == nil)
     {
       // if no path has been defined... define one.
