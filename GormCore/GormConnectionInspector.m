@@ -45,14 +45,14 @@
       // Create the okay and revert buttons, programmatically, since we shouldn't 
       // add them to the view.  The wantsButtons handling code will do that.
       okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [okButton setAutoresizingMask: NSViewMinXMargin];
       [okButton setAction: @selector(ok:)];
       [okButton setTarget: self];
       [okButton setTitle: _(@"Connect")];
       [okButton setEnabled: NO];
 
       revertButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,80,20)];
-      [revertButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
+      [revertButton setAutoresizingMask: NSViewMaxXMargin];
       [revertButton setAction: @selector(revert:)];
       [revertButton setTarget: self];
       [revertButton setTitle: _(@"Revert")];

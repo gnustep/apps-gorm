@@ -425,15 +425,12 @@
 	      NSButton	*revert;
 
 	      rect.size.height = [selectionView frame].origin.y;
-	      buttonsRect = NSMakeRect(0,0,IVW,IVB);
-	      // buttonsRect.size.height = IVB;
-	      // buttonsRect.size.width = IVW;
+	      buttonsRect = NSMakeRect(0,0,rect.size.width,IVB);
 	      rect.origin.y += IVB;
 	      rect.size.height -= (IVB + 3);
 
 	      buttonView = [[NSView alloc] initWithFrame: buttonsRect];
-	      // [buttonView setAutoresizingMask:
-	      //   NSViewMaxYMargin | NSViewMinYMargin | NSViewMaxXMargin];
+	      [buttonView setAutoresizingMask: NSViewWidthSizable];
 	      [outer addSubview: buttonView];
 	      RELEASE(buttonView);
 
@@ -467,7 +464,6 @@
 	   * Make the inspector view the correct size for the viewable panel,
 	   * and set the frame size for the new contents before adding them.
 	   */
-
 	  [inspectorView setFrame: rect];
 	  rect.origin = NSZeroPoint;
 	  [newView setFrame: rect];
