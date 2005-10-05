@@ -78,37 +78,32 @@
 {
   BOOL onKnob = NO;
 
+  if ([parent respondsToSelector: @selector(selection)] &&
+      [[parent selection] containsObject: _EO])
+    {
+      IBKnobPosition	knob = IBNoneKnobPosition;
+      NSPoint mouseDownPoint = 
+	[self convertPoint: [theEvent locationInWindow]
+	      fromView: nil];
+      knob = GormKnobHitInRect([self bounds], 
+			       mouseDownPoint);
+      if (knob != IBNoneKnobPosition)
+	onKnob = YES;
+    }
 
-  // if we are on one of our own knob, then this event should be processed
-  // by our parent (cause this is a resizing event)
-  {
-    if ([parent respondsToSelector: @selector(selection)] &&
-	[[parent selection] containsObject: _EO])
-      {
-	IBKnobPosition	knob = IBNoneKnobPosition;
-	NSPoint mouseDownPoint = 
-	  [self convertPoint: [theEvent locationInWindow]
-		fromView: nil];
-	knob = GormKnobHitInRect([self bounds], 
-				 mouseDownPoint);
-	if (knob != IBNoneKnobPosition)
-	  onKnob = YES;
-      }
-    if (onKnob == YES)
-      {
-	if (parent)
-	  return [parent mouseDown: theEvent];
-	else
-	  return [self noResponderFor: @selector(mouseDown:)];
-      }
-  }
+  if (onKnob == YES)
+    {
+      if (parent)
+	return [parent mouseDown: theEvent];
+      else
+	return [self noResponderFor: @selector(mouseDown:)];
+    }
 
   if (opened == NO)
     {
       [super mouseDown: theEvent];
       return;
     }
-
 
   if ([[_EO hitTest: [theEvent locationInWindow]]
 	isDescendantOf: documentViewEditor])

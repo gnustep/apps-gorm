@@ -1,3 +1,10 @@
+2005-10-04 20:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormScrollViewAttributesInspector.m: In category
+	IBObjectAdditions, for editorClassName, return only 
+	GormScrollViewEditor.
+	* GormCore/GormScrollViewEditor.m: Cleanup.
+
 2005-09-29 19:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormConnectionInspector.m: Corrected resizing attributes in
