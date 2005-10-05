@@ -253,4 +253,10 @@
     }
 }
 
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok: [aNotification object]];
+}
+
+
 @end
