@@ -214,6 +214,4 @@
 {
   [self ok: [aNotification object]];
 }
-
-
 @end
