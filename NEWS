@@ -1,5 +1,21 @@
-Noteworthy changes in version `0.11.0'
-======================================
+0.1 Noteworthy changes in version `1.0.0'
+=========================================
+
+   * All inspectors are now modeled in .gorm files.
+
+   * Added autosizing to form attributes inspector.
+
+   * Utilize and maintain parent/child data structure more pervasively
+
+   * Reorganized code in palettes for cleaner implementation.
+
+   * Removed code to check for user bundles, since bugs in Camaelon
+     which prompted those changes were fixed long ago.
+
+   * Added documentation to GormCore
+
+0.2 Noteworthy changes in version `0.11.0'
+==========================================
 
    * Improved implementation of canSubstituteForClass: the default
      implementation of this method tests the classes to see if
@@ -35,8 +51,8 @@ Noteworthy changes in version `0.11.0'
    * Lots of bugfixes and usability changes are also included in this
      release.
 
-Noteworthy changes in version `0.9.10'
-======================================
+0.3 Noteworthy changes in version `0.9.10'
+==========================================
 
    * Gorm now has a full implementation of canSubstituteForClass: which
      is used to determine if a class can be substituted in the custom
@@ -66,10 +82,10 @@ Noteworthy changes in version `0.9.10'
 
    * A myriad of bug fixes.
 
-Noteworthy changes in version `0.9.2'
-=====================================
+0.4 Noteworthy changes in version `0.9.2'
+=========================================
 
-   NOTE: This is mainly a bugfix release.
+NOTE: This is mainly a bugfix release.
 
    * Some improvements to the procedure for removing connections.
 
@@ -87,8 +103,8 @@ Noteworthy changes in version `0.9.2'
 
    * Various improvements in documentation
 
-Noteworthy changes in version `0.9.0'
-=====================================
+0.5 Noteworthy changes in version `0.9.0'
+=========================================
 
    * Images/Sounds can now be dragged into a matrix cell.
 
@@ -126,12 +142,12 @@ Noteworthy changes in version `0.9.0'
 
    * Fixed a number of bugs.
 
-Noteworthy changes in version `0.8.0'
-=====================================
+0.6 Noteworthy changes in version `0.8.0'
+=========================================
 
-   PLEASE NOTE: It is important for this release that you upgrade to
-Gorm 0.8.0 when using Gorm with the new GNUstep libraries (base-1.10.0
-and gui-0.9.4).  This version of Gorm contains some features which are
+PLEASE NOTE: It is important for this release that you upgrade to Gorm
+0.8.0 when using Gorm with the new GNUstep libraries (base-1.10.0 and
+gui-0.9.4).  This version of Gorm contains some features which are
 reliant on changes made in those versions of the libraries.  It is
 stated in Gorm's documentation (the Gorm.texi file) that this is
 required, but I felt it important enough to also mention it here so
@@ -174,8 +190,8 @@ that it is known beyond a reasonable doubt.
      amount of time the user needs to spend fiddling with the font
      panel.
 
-Noteworthy changes in version `0.7.7'
-=====================================
+0.7 Noteworthy changes in version `0.7.7'
+=========================================
 
    * Important bugfixes in editor classes.
 
@@ -198,10 +214,10 @@ Noteworthy changes in version `0.7.7'
    * Gorm will now show an alert panel when a model fails to load or
      test properly.
 
-Noteworthy changes in version `0.7.6'
-=====================================
+0.8 Noteworthy changes in version `0.7.6'
+=========================================
 
-   This release is mainly a bugfix release for 0.7.5.
+This release is mainly a bugfix release for 0.7.5.
 
    * Improved .gmodel support
 
@@ -211,8 +227,8 @@ Noteworthy changes in version `0.7.6'
 
    * Important bugfixes for class inspector.
 
-Noteworthy changes in version `0.7.5'
-=====================================
+0.9 Noteworthy changes in version `0.7.5'
+=========================================
 
    * The 'reparent' feature in the class inspector.  This allows the
      user to change the class hierarchy from within Gorm.
@@ -232,8 +248,8 @@ Noteworthy changes in version `0.7.5'
    * A way to restore a complete NSMenu if it's deleted (a new palette
      entry for NSMenu, not just an item)
 
-Noteworthy changes in version `0.6.0'
-=====================================
+0.10 Noteworthy changes in version `0.6.0'
+==========================================
 
    * Several major bugs corrected.
 
@@ -243,8 +259,8 @@ Noteworthy changes in version `0.6.0'
 
    * More descriptive title displayed when a class is being edited.
 
-Noteworthy changes in version `0.5.0'
-=====================================
+0.11 Noteworthy changes in version `0.5.0'
+==========================================
 
    * Enabled defer in NSWindow inspector.
 
@@ -262,8 +278,8 @@ Noteworthy changes in version `0.5.0'
 
    * Bug fixes, eliminated memory leak, code cleanup, etc.
 
-Noteworthy changes in version `0.4.0'
-=====================================
+0.12 Noteworthy changes in version `0.4.0'
+==========================================
 
    * New Menu and Menu Item inspectors.
 
@@ -284,8 +300,8 @@ Noteworthy changes in version `0.4.0'
 
    * Windows and Services menus now function correctly.
 
-Noteworthy changes in version `0.3.1'
-=====================================
+0.13 Noteworthy changes in version `0.3.1'
+==========================================
 
    * New custom class system.
 
@@ -295,8 +311,8 @@ Noteworthy changes in version `0.3.1'
 
    * Various bugfixes
 
-Noteworthy changes in version `0.3.0'
-=====================================
+0.14 Noteworthy changes in version `0.3.0'
+==========================================
 
    * Preferences added.
 
@@ -320,10 +336,10 @@ Noteworthy changes in version `0.3.0'
 
    * various bug fixes.
 
-Noteworthy changes in version `0.2.5'.
-======================================
+0.15 Noteworthy changes in version `0.2.5'.
+===========================================
 
-   Many fixes and improvements to make the app work better.
+Many fixes and improvements to make the app work better.
 
    * Better parsing of headers
 
@@ -331,10 +347,10 @@ Noteworthy changes in version `0.2.5'.
 
    * Re-add multiple selection via mouse drag.
 
-Noteworthy changes in version `0.2.0' snapshot.
-===============================================
+0.16 Noteworthy changes in version `0.2.0' snapshot.
+====================================================
 
-   Gobs of improvements, mostly due to the hard work of Gregory John
+Gobs of improvements, mostly due to the hard work of Gregory John
 Casamento and Pierre-Yves Rivaille. Thanks guys!
 
    * Custom class support/translations implemented.
@@ -356,8 +372,8 @@ Casamento and Pierre-Yves Rivaille. Thanks guys!
 
    * gorm files were changed to directory wrappers for more flexibility.
 
-Noteworthy changes in version `0.1.0'
-=====================================
+0.17 Noteworthy changes in version `0.1.0'
+==========================================
 
    * load/parses class files for entry into class list.
 
@@ -375,8 +391,8 @@ Noteworthy changes in version `0.1.0'
 
    * Ability to change the font of some objects.
 
-Noteworthy changes in version `0.0.3'
-=====================================
+0.18 Noteworthy changes in version `0.0.3'
+==========================================
 
    * Create stub .m and .h files from new classes
 
@@ -391,8 +407,8 @@ Noteworthy changes in version `0.0.3'
 
    * Support for custom objects.
 
-Noteworthy changes in version `0.0.2'
-=====================================
+0.19 Noteworthy changes in version `0.0.2'
+==========================================
 
    * Add popup and pulldown menu controls
 
@@ -404,8 +420,8 @@ Noteworthy changes in version `0.0.2'
 
    * Much more fleshed out - too numerous to mention.
 
-Noteworthy changes in version `0.0.1'
-=====================================
+0.20 Noteworthy changes in version `0.0.1'
+==========================================
 
    * 8th December 1999
 

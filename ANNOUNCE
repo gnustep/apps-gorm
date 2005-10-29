@@ -1,75 +1,54 @@
-ANNOUNCE
-********
+1 ANNOUNCE
+**********
 
-This is version 0.11.0 of Gorm.
+This is version 1.0.0 of Gorm.
 
-What is Gorm?
-=============
+1.1 What is Gorm?
+=================
 
-   Gorm is an acronym for Graphic Object Relationship modeler (or
-perhaps GNUstep Object Relationship Modeler).
+Gorm is an acronym for Graphic Object Relationship modeler (or perhaps
+GNUstep Object Relationship Modeler).
 
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-Noteworthy changes in version `0.11.0'
-======================================
+1.2 Noteworthy changes in version `1.0.0'
+=========================================
 
-   * Improved implementation of canSubstituteForClass: the default
-     implementation of this method tests the classes to see if
-     initWithCoder: or encodeWithCoder: is implemented on a subclass to
-     determine automatically if that class has the same encoding
-     signature as the original class, if it does, it can be substituted.
+   * All inspectors are now modeled in .gorm files.
 
-   * Improved handling of classes which use cell classes in the custom
-     class inspector.  The inspector now autmatically replaces the cell
-     class with the appropriate one when the user selects a given
-     subclass.
+   * Added autosizing to form attributes inspector.
 
-   * Browser based class editor in document panel.   This interface is
-     more like the one on OSX.  The user now has a choice in
-     preferences to determine which view they would like to use.
+   * Utilize and maintain parent/child data structure more pervasively
 
-   * Translation tools.  The Document->Translate menu allows the user
-     to export string and import strings in the strings format, so that
-     someone can easily translate just the strings in the file and
-     doesn't need to directly edit anything in Gorm.  The strings file
-     can then be loaded back into Gorm and all of the relevant strings
-     are updated.
+   * Reorganized code in palettes for cleaner implementation.
 
-   * Alignment tools.  In the new Layout menu there are options to
-     align views, center views, bring views to front or push them to
-     the back of the view layers.
+   * Removed code to check for user bundles, since bugs in Camaelon
+     which prompted those changes were fixed long ago.
 
-   * Implementation of IBViewResourceDraggingDelegate.  This allows
-     updating of the pull down in the inspectors panel dynamically.  It
-     requires the developer of a palette to implement some code to
-     enable this, as on OSX.
+   * Added documentation to GormCore
 
-   * Lots of bugfixes and usability changes are also included in this
-     release.
+1.3 How can I get support for this software?
+============================================
 
-How can I get support for this software?
-========================================
-
-   You may wish to use the GNUstep discussion mailing list for general
+You may wish to use the GNUstep discussion mailing list for general
 questions and discussion.  Look at the GNUstep Web Pages for more
-information regarding GNUstep resources <http://www.gnustep.org/>
+information regarding GNUstep resources `http://www.gnustep.org/'
 
-Where can you get it?  How can you compile it?
-==============================================
+1.4 Where can you get it?  How can you compile it?
+==================================================
 
-   You can download sources and rpms (for some machines) from
-<ftp://ftp.gnustep.org/pub/gnustep/dev-apps>.
+You can download sources and rpms (for some machines) from
+`ftp://ftp.gnustep.org/pub/gnustep/dev-apps'.
 
-Where do I send bug reports?
-============================
+1.5 Where do I send bug reports?
+================================
 
-   Bug reports can be sent to <bug-gnustep@gnu.org>.
+Bug reports can be sent to <bug-gnustep@gnu.org>.
 
-Obtaining GNU Software
-======================
+1.6 Obtaining GNU Software
+==========================
 
-   Check out the GNUstep web site. (<http://www.gnustep.org/>), and the
-GNU web site. (<http://www.gnu.org/>)
+Check out the GNUstep web site. (`http://www.gnustep.org/'), and the
+GNU web site. (`http://www.gnu.org/')
 

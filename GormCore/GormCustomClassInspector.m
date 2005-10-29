@@ -162,12 +162,11 @@
   [browser setMaxVisibleColumns: 1];
 }
 
-- (void) _replaceCellClassForObject: (id)obj
-			  className: (NSString *)name
+- (void) _replaceWithCellClassForClassName: (NSString *)name
 {
   NSString *className = name;
 
-  if([[obj class] respondsToSelector: @selector(cellClass)])
+  if([[object class] respondsToSelector: @selector(cellClass)])
     {
       if([_classManager isCustomClass: className])
 	{
@@ -179,80 +178,119 @@
 	  Class cls = NSClassFromString(className);
 	  if(cls != nil)
 	    {
-	      NSCell *cell = [obj cell];
 	      Class cellClass = [cls cellClass];
-	      NSCell *newCell = [[cellClass alloc] init];
-	      BOOL   drawsBackground = NO;
-
-	      if([object respondsToSelector: @selector(drawsBackground)])
-		{
-		  drawsBackground = [object drawsBackground];
-		}
-
-	      // copy everything from the old cell...
-	      if([newCell respondsToSelector: @selector(setFont:)] &&
-		 [cell respondsToSelector: @selector(font)])
-		{
-		  [newCell setFont: [cell font]];
-		}
-	      if([newCell respondsToSelector: @selector(setEnabled:)] &&
-		 [cell respondsToSelector: @selector(isEnabled)])
-		{
-		  [newCell setEnabled: [cell isEnabled]];
-		}
-	      if([newCell respondsToSelector: @selector(setEditable:)] &&
-		 [cell respondsToSelector: @selector(isEditable)])
-		{
-		  [newCell setEditable: [cell isEditable]];
-		}
-	      if([newCell respondsToSelector: @selector(setImportsGraphics:)] &&
-		 [cell respondsToSelector: @selector(importsGraphics)])
-		{
-		  [newCell setImportsGraphics: [cell importsGraphics]];
-		}
-	      if([newCell respondsToSelector: @selector(setShowsFirstResponder:)] &&
-		 [cell respondsToSelector: @selector(showsFirstResponder)])
-		{
-		  [newCell setShowsFirstResponder: [cell showsFirstResponder]];
-		}
-	      if([newCell respondsToSelector: @selector(setRefusesFirstResponder:)] &&
-		 [cell respondsToSelector: @selector(refusesFirstResponder)])
-		{
-		  [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
-		}
-	      if([newCell respondsToSelector: @selector(setBordered:)] &&
-		 [cell respondsToSelector: @selector(isBordered)])
-		{
-		  [newCell setBordered: [cell isBordered]];
-		}
-	      if([newCell respondsToSelector: @selector(setBezeled:)] &&
-		 [cell respondsToSelector: @selector(isBezeled)])
-		{
-		  [newCell setBezeled: [cell isBezeled]];
-		}
-	      if([newCell respondsToSelector: @selector(setScrollable:)] &&
-		 [cell respondsToSelector: @selector(isScrollable)])
-		{
-		  [newCell setScrollable: [cell isScrollable]];
-		}
-	      if([newCell respondsToSelector: @selector(setSelectable:)] &&
-		 [cell respondsToSelector: @selector(isSelectable)])
-		{ 
-		  [newCell setSelectable: [cell isSelectable]];
-		}
-	      if([newCell respondsToSelector: @selector(setState:)] &&
-		 [cell respondsToSelector: @selector(state)])
-		{
-		  [newCell setState: [cell state]];
-		}
 	      
-	      // set attributes of textfield.
-	      [object setCell: newCell];
-	      if([object respondsToSelector: @selector(setDrawsBackground:)])
+	      if(cellClass != [[object cell] class])
 		{
-		  [object setDrawsBackground: drawsBackground];
+		  NSCell *newCell = [[cellClass alloc] init];
+		  BOOL   drawsBackground = NO;
+		  NSCell *cell = [object cell];
+		  
+		  if([object respondsToSelector: @selector(drawsBackground)])
+		    {
+		      drawsBackground = [object drawsBackground];
+		    }
+		  
+		  // TODO: Need to find a more generic way to handle this.  Perhaps using
+		  // encoding or @defs(...).
+		  
+		  // general state...
+		  if([newCell respondsToSelector: @selector(setFont:)] &&
+		     [cell respondsToSelector: @selector(font)])
+		    {
+		      [newCell setFont: [cell font]];
+		    }
+		  if([newCell respondsToSelector: @selector(setEnabled:)] &&
+		     [cell respondsToSelector: @selector(isEnabled)])
+		    {
+		      [newCell setEnabled: [cell isEnabled]];
+		    }
+		  if([newCell respondsToSelector: @selector(setEditable:)] &&
+		     [cell respondsToSelector: @selector(isEditable)])
+		    {
+		      [newCell setEditable: [cell isEditable]];
+		    }
+		  if([newCell respondsToSelector: @selector(setImportsGraphics:)] &&
+		     [cell respondsToSelector: @selector(importsGraphics)])
+		    {
+		      [newCell setImportsGraphics: [cell importsGraphics]];
+		    }
+		  if([newCell respondsToSelector: @selector(setShowsFirstResponder:)] &&
+		     [cell respondsToSelector: @selector(showsFirstResponder)])
+		    {
+		      [newCell setShowsFirstResponder: [cell showsFirstResponder]];
+		    }
+		  if([newCell respondsToSelector: @selector(setRefusesFirstResponder:)] &&
+		     [cell respondsToSelector: @selector(refusesFirstResponder)])
+		    {
+		      [newCell setRefusesFirstResponder: [cell refusesFirstResponder]];
+		    }
+		  if([newCell respondsToSelector: @selector(setBordered:)] &&
+		     [cell respondsToSelector: @selector(isBordered)])
+		    {
+		      [newCell setBordered: [cell isBordered]];
+		    }
+		  if([newCell respondsToSelector: @selector(setBezeled:)] &&
+		     [cell respondsToSelector: @selector(isBezeled)])
+		    {
+		      [newCell setBezeled: [cell isBezeled]];
+		    }
+		  if([newCell respondsToSelector: @selector(setScrollable:)] &&
+		     [cell respondsToSelector: @selector(isScrollable)])
+		    {
+		      [newCell setScrollable: [cell isScrollable]];
+		    }
+		  if([newCell respondsToSelector: @selector(setSelectable:)] &&
+		     [cell respondsToSelector: @selector(isSelectable)])
+		    { 
+		      [newCell setSelectable: [cell isSelectable]];
+		    }
+		  if([newCell respondsToSelector: @selector(setState:)] &&
+		     [cell respondsToSelector: @selector(state)])
+		    {
+		      [newCell setState: [cell state]];
+		    }
+		  // title...
+		  if([newCell respondsToSelector: @selector(setStringValue:)] &&
+		     [cell respondsToSelector: @selector(stringValue)])
+		    {
+		      [newCell setStringValue: [cell stringValue]];
+		    }
+		  if([newCell respondsToSelector: @selector(setTitle:)] &&
+		     [cell respondsToSelector: @selector(title)])
+		    {
+		      [newCell setTitle: [cell title]];
+		    }
+		  if([newCell respondsToSelector: @selector(setAlternateTitle:)] &&
+		     [cell respondsToSelector: @selector(alternateTitle)])
+		    {
+		      [newCell setAlternateTitle: [cell alternateTitle]];
+		    }
+		  // images...
+		  if([newCell respondsToSelector: @selector(setAlternateImage:)] &&
+		     [cell respondsToSelector: @selector(alternateImage)])
+		    {
+		      [newCell setAlternateTitle: [cell alternateImage]];
+		    }
+		  if([newCell respondsToSelector: @selector(setImage:)] &&
+		     [cell respondsToSelector: @selector(image)])
+		    {
+		      [newCell setImage: [cell image]];
+		    }
+		  if([newCell respondsToSelector: @selector(setImagePosition:)] &&
+		     [cell respondsToSelector: @selector(imagePosition)])
+		    {
+		      [newCell setImagePosition: [cell imagePosition]];
+		    }
+		  
+		  // set attributes of textfield.
+		  [object setCell: newCell];
+		  if([object respondsToSelector: @selector(setDrawsBackground:)])
+		    {
+		      [object setDrawsBackground: drawsBackground];
+		    }
+		  [object setNeedsDisplay: YES];
 		}
-	      [object setNeedsDisplay: YES];
 	    }
 	}
     }
@@ -279,10 +317,7 @@
 	{
 	  [_classManager removeCustomClassForName: nameForObject];
 	}
-
-      [self _replaceCellClassForObject: [self object]
-	    className: stringValue];
-
+      [self _replaceWithCellClassForClassName: stringValue];
     }
   else
     NSLog(@"name for object %@ returned as nil",[self object]);

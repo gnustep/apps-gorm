@@ -1,3 +1,14 @@
+2005-10-29 09:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE: Updated for 1.0
+	* Documentation/news.texi: Updated for 1.0
+	* INSTALL: Updated for 1.0
+	* NEWS: Updated for 1.0
+	* README: Updated for 1.0
+	* Version: Updated for 1.0
+	* GormCore/GormCustomClassInspector.m: Fixed minor problem 
+	updating cell.
+
 2005-10-05 20:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindowSizeInspector.gorm: Remove delegate 

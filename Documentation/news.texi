@@ -4,6 +4,21 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.0}
+
+@itemize @bullet
+@item All inspectors are now modeled in .gorm files.
+@item Added autosizing to form attributes inspector.
+@item Utilize and maintain parent/child data structure more pervasively
+@item Reorganized code in palettes for cleaner implementation.
+@item Removed code to check for user bundles, since bugs in Camaelon which prompted those changes were fixed long ago.
+@item Added documentation to GormCore
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{0.11.0}
 
 @itemize @bullet
@@ -15,10 +30,6 @@
 @item Implementation of IBViewResourceDraggingDelegate.  This allows updating of the pull down in the inspectors panel dynamically.  It requires the developer of a palette to implement some code to enable this, as on OSX.
 @item Lots of bugfixes and usability changes are also included in this release.
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.9.10}
 

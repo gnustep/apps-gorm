@@ -1,5 +1,5 @@
-Required software
------------------
+0.0.1 Required software
+-----------------------
 
 You need to have the GNUstep core libraries installed in order to
 compile and use Gorm. The core packages are, at a minimum:
@@ -12,20 +12,20 @@ compile and use Gorm. The core packages are, at a minimum:
 
    * gnustep-back
 
-   See <http://www.gnustep.org/> for further information.
+   See `http://www.gnustep.org/' for further information.
 
-Build and Install
------------------
+0.0.2 Build and Install
+-----------------------
 
-   Steps to build:
+Steps to build:
 
    * make && make install
 
    Please note that GormLib must be installed for Gorm.app to run.
 
-Trouble
--------
+0.0.3 Trouble
+-------------
 
-   Give us feedback!  Tell us what you like; tell us what you think
-could be better.  Send bug reports and patches to <bug-gnustep@gnu.org>.
+Give us feedback!  Tell us what you like; tell us what you think could
+be better.  Send bug reports and patches to <bug-gnustep@gnu.org>.
 
