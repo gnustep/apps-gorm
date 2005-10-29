@@ -7,7 +7,7 @@
 @section Noteworthy changes in version @samp{1.0.0}
 
 PLEASE NOTE: This version of Gorm requires base 1.11.1 and 
-             gui 0.10.1 to be installed.
+             gui 0.10.1 to be installed (gnustep-startup-0.13.0).
 
 @itemize @bullet
 @item All inspectors are now modeled in .gorm files.

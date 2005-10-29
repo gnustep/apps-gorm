@@ -2,7 +2,7 @@
 =========================================
 
 PLEASE NOTE: This version of Gorm requires base 1.11.1 and
-gui 0.10.1 to be installed.
+gui 0.10.1 to be installed (gnustep-startup-0.13.0).
 
    * All inspectors are now modeled in .gorm files.
 
