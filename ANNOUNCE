@@ -15,6 +15,9 @@ GNUstep.
 1.2 Noteworthy changes in version `1.0.0'
 =========================================
 
+PLEASE NOTE: This version of Gorm requires base 1.11.1 and
+gui 0.10.1 to be installed.
+
    * All inspectors are now modeled in .gorm files.
 
    * Added autosizing to form attributes inspector.
