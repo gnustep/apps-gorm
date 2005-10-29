@@ -184,7 +184,7 @@
 		{
 		  NSCell *newCell = [[cellClass alloc] init];
 		  BOOL   drawsBackground = NO;
-		  NSCell *cell = [object cell];
+		  id *cell = [object cell];
 		  
 		  if([object respondsToSelector: @selector(drawsBackground)])
 		    {
