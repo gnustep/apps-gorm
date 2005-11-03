@@ -1,3 +1,10 @@
+2005-11-02 20:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m: Updated version to 1.0.1
+	* GormInfo.plist: Same
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm: Corrected resize
+	issues.
+
 2005-10-29 09:09 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.0
