@@ -1,3 +1,7 @@
+2005-11-04 00:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomClassInspector.m: Corrected problem with cell.
+
 2005-11-02 20:17 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m: Updated version to 1.0.1

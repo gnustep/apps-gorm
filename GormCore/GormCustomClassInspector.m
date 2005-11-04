@@ -182,9 +182,9 @@
 	      
 	      if(cellClass != [[object cell] class])
 		{
-		  NSCell *newCell = [[cellClass alloc] init];
+		  id newCell = [[cellClass alloc] init];
+		  id cell = [object cell];
 		  BOOL   drawsBackground = NO;
-		  id *cell = [object cell];
 		  
 		  if([object respondsToSelector: @selector(drawsBackground)])
 		    {
@@ -270,7 +270,7 @@
 		  if([newCell respondsToSelector: @selector(setAlternateImage:)] &&
 		     [cell respondsToSelector: @selector(alternateImage)])
 		    {
-		      [newCell setAlternateTitle: [cell alternateImage]];
+		      [newCell setAlternateImage: [cell alternateImage]];
 		    }
 		  if([newCell respondsToSelector: @selector(setImage:)] &&
 		     [cell respondsToSelector: @selector(image)])
