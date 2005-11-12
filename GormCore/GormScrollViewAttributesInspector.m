@@ -38,16 +38,14 @@
 
 - (NSString*) editorClassName
 {
-  /*
   if ([self documentView])
     {
       return [[self documentView] editorClassName];
     }
   else
     { 
-  */
       return @"GormScrollViewEditor";
-/*  } */
+    }
 }
 @end
 
