@@ -61,7 +61,7 @@
 - (void) refreshCells;
 - (void) removeObject: (id)anObject;
 - (BOOL) activate;
-- (id) initWithObject: (id)anObject inDocument: (id)aDocument;
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
 - (void) close;
 - (void) closeSubeditors;
 - (BOOL) containsObject: (id)anObject;

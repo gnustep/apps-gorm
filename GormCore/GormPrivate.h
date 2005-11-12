@@ -108,7 +108,7 @@ extern NSString *GormResizeCellNotification;
 + (NSString *) negativeFormatAtIndex: (int)index;
 + (NSDecimalNumber *) positiveValueAtIndex: (int)index;
 + (NSDecimalNumber *) negativeValueAtIndex: (int)index;
-+ (int) indexOfFormat: format;
++ (int) indexOfFormat: (NSString *)format;
 + (NSString *) defaultFormat;
 + (id) defaultFormatValue;
 - (NSString *) zeroFormat;

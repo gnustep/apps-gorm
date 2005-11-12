@@ -168,7 +168,7 @@ static NSImage	*dragImage = nil;
 {
   NSPoint	dragPoint = [theEvent locationInWindow];
   NSView	*view;
-  GormDocument	*active = [(id<IB>)NSApp activeDocument];
+  GormDocument	*active = (GormDocument *)[(id<IB>)NSApp activeDocument];
   NSRect	rect;
   NSString	*type;
   id		obj;

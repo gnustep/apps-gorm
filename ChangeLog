@@ -1,3 +1,13 @@
+2005-11-12 16:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m
+	* GormCore/GormGenericEditor.h
+	* GormCore/GormPalettesManager.m
+	* GormCore/GormPrivate.h
+	* GormObjCHeaderParser/OCHeaderParser.m
+	* Palettes/0Menus/GormMenuAttributesInspector.m: Corrected minor
+	compilation warnings.
+
 2005-11-12 15:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormScrollViewAttributesInspector.m: Corrected problem

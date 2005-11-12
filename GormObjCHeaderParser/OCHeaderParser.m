@@ -56,7 +56,7 @@
   [super dealloc];
 }
 
-- (NSArray *)classes
+- (NSMutableArray *)classes
 {
   return classes;
 }

@@ -80,7 +80,6 @@
     }
   else if ( sender == menuType ) 
     {
-      BOOL flag;
       GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
       int tag = [[menuType selectedCell] tag];
       

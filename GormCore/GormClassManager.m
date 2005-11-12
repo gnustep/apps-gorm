@@ -166,8 +166,7 @@
 
 - (void) convertDictionary: (NSMutableDictionary *)dict
 {
-  NSMutableArray *array = [classInformation allKeys];
-  [dict removeObjectsForKeys: array];
+  [dict removeObjectsForKeys: [classInformation allKeys]];
 }
 
 - (NSString *) uniqueClassNameFrom: (NSString *)name
@@ -427,7 +426,7 @@
 
 - (void) replaceAction: (NSString *)oldAction
 	    withAction: (NSString *)aNewAction
-	 forClassNamed: className
+	 forClassNamed: (NSString *)className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
@@ -478,7 +477,7 @@
 
 - (void) replaceOutlet: (NSString *)oldOutlet
 	    withOutlet: (NSString *)aNewOutlet
-	 forClassNamed: className
+	 forClassNamed: (NSString *)className
 {
   NSMutableDictionary *info = [classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
