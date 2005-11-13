@@ -225,8 +225,8 @@ NSDictionary *colorToDict(NSColor *color)
 
 NSArray *systemImagesList()
 {
-  NSString *system = [NSOpenStepRootDirectory() stringByAppendingPathComponent: @"System"];
-  NSString *lib = [system stringByAppendingPathComponent: @"Library"];
+  NSString *lib = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSSystemDomainMask) lastObject];
+
   NSString *path = [lib stringByAppendingPathComponent: @"Images"];
   NSArray *contents = [[NSFileManager defaultManager] directoryContentsAtPath: path];
   NSEnumerator *en = [contents objectEnumerator];
@@ -248,8 +248,7 @@ NSArray *systemImagesList()
 
 NSArray *systemSoundsList()
 {
-  NSString *system = [NSOpenStepRootDirectory() stringByAppendingPathComponent: @"System"];
-  NSString *lib = [system stringByAppendingPathComponent: @"Library"];
+  NSString *lib = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSSystemDomainMask) lastObject];
   NSString *path = [lib stringByAppendingPathComponent: @"Sounds"];
   NSArray *contents = [[NSFileManager defaultManager] directoryContentsAtPath: path];
   NSEnumerator *en = [contents objectEnumerator];

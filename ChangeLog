@@ -1,3 +1,8 @@
+2005-11-13  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormCore/GormFunctions.m: Use NSSearchPathForDirectoriesInDomains()
+	to locate resources rather than broken use of NSOpenStepRootDirectory()
+
 2005-11-12 16:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m
