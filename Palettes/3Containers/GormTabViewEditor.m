@@ -155,8 +155,8 @@
 - (BOOL)          tabView: (NSTabView *)tabView 
   shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
 {
-  NSDebugLog(@"shouldSelectTabViewItem called");
   id view = [[tabView selectedTabViewItem] view];
+  NSDebugLog(@"shouldSelectTabViewItem called");
   if ([view isKindOfClass: [GormInternalViewEditor class]])
     {
       NSDebugLog(@"closing tabviewitem");
