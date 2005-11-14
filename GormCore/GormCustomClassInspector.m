@@ -165,12 +165,14 @@
 - (void) _replaceWithCellClassForClassName: (NSString *)name
 {
   NSString *className = name;
-
   if([[object class] respondsToSelector: @selector(cellClass)])
     {
-      if([_classManager isCustomClass: className])
+      if([_classManager customClassForObject: object])
 	{
-	  className = [_classManager nonCustomSuperClassOf: name];
+	  if([_classManager isCustomClass: className])
+	    {
+	      className = [_classManager nonCustomSuperClassOf: name];
+	    }
 	}
       
       if(className != nil)
@@ -183,7 +185,7 @@
 	      if(cellClass != [[object cell] class])
 		{
 		  id newCell = [[cellClass alloc] init];
-		  id cell = [object cell];
+		  id cell = RETAIN([object cell]); // retain the old cell for now...
 		  BOOL   drawsBackground = NO;
 		  
 		  if([object respondsToSelector: @selector(drawsBackground)])
@@ -192,7 +194,9 @@
 		    }
 		  
 		  // TODO: Need to find a more generic way to handle this.  Perhaps using
-		  // encoding or @defs(...).
+		  // encoding, kv-copying or @defs(...).
+		  // set the new cell..
+		  [object setCell: newCell];
 		  
 		  // general state...
 		  if([newCell respondsToSelector: @selector(setFont:)] &&
@@ -250,51 +254,58 @@
 		    {
 		      [newCell setState: [cell state]];
 		    }
-		  // title...
-		  if([newCell respondsToSelector: @selector(setStringValue:)] &&
-		     [cell respondsToSelector: @selector(stringValue)])
+
+		  if([cell type] == NSTextCellType)
 		    {
-		      [newCell setStringValue: [cell stringValue]];
+		      // title...
+		      if([newCell respondsToSelector: @selector(setStringValue:)] &&
+			 [cell respondsToSelector: @selector(stringValue)])
+			{
+			  [newCell setStringValue: [cell stringValue]];
+			}
+		      if([newCell respondsToSelector: @selector(setTitle:)] &&
+			 [cell respondsToSelector: @selector(title)])
+			{
+			  [newCell setTitle: [cell title]];
+			}
+		      if([newCell respondsToSelector: @selector(setAlternateTitle:)] &&
+			 [cell respondsToSelector: @selector(alternateTitle)])
+			{
+			  [newCell setAlternateTitle: [cell alternateTitle]];
+			}
 		    }
-		  if([newCell respondsToSelector: @selector(setTitle:)] &&
-		     [cell respondsToSelector: @selector(title)])
+		  else if([cell type] == NSImageCellType)
 		    {
-		      [newCell setTitle: [cell title]];
+		      // images...
+		      if([newCell respondsToSelector: @selector(setAlternateImage:)] &&
+			 [cell respondsToSelector: @selector(alternateImage)])
+			{
+			  [newCell setAlternateImage: [cell alternateImage]];
+			}
+		      if([newCell respondsToSelector: @selector(setImage:)] &&
+			 [cell respondsToSelector: @selector(image)])
+			{
+			  [newCell setImage: [cell image]];
+			}
+		      if([newCell respondsToSelector: @selector(setImagePosition:)] &&
+			 [cell respondsToSelector: @selector(imagePosition)])
+			{
+			  [newCell setImagePosition: [cell imagePosition]];
+			}
 		    }
-		  if([newCell respondsToSelector: @selector(setAlternateTitle:)] &&
-		     [cell respondsToSelector: @selector(alternateTitle)])
-		    {
-		      [newCell setAlternateTitle: [cell alternateTitle]];
-		    }
-		  // images...
-		  if([newCell respondsToSelector: @selector(setAlternateImage:)] &&
-		     [cell respondsToSelector: @selector(alternateImage)])
-		    {
-		      [newCell setAlternateImage: [cell alternateImage]];
-		    }
-		  if([newCell respondsToSelector: @selector(setImage:)] &&
-		     [cell respondsToSelector: @selector(image)])
-		    {
-		      [newCell setImage: [cell image]];
-		    }
-		  if([newCell respondsToSelector: @selector(setImagePosition:)] &&
-		     [cell respondsToSelector: @selector(imagePosition)])
-		    {
-		      [newCell setImagePosition: [cell imagePosition]];
-		    }
-		  
 		  // set attributes of textfield.
-		  [object setCell: newCell];
 		  if([object respondsToSelector: @selector(setDrawsBackground:)])
 		    {
 		      [object setDrawsBackground: drawsBackground];
 		    }
 		  [object setNeedsDisplay: YES];
+		  RELEASE(cell);
 		}
 	    }
 	}
     }
 }
+
 - (void) select: (id)sender
 {
   NSCell *cell = [browser selectedCellInColumn: 0];
