@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.0.0 of Gorm.
+This is version 1.0.1 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -15,21 +15,11 @@ GNUstep.
 1.2 Noteworthy changes in version `1.0.0'
 =========================================
 
-PLEASE NOTE: This version of Gorm requires base 1.11.1 and
-gui 0.10.1 to be installed (gnustep-startup-0.13.0).
+This is a bugfix release.
 
-   * All inspectors are now modeled in .gorm files.
+   * Fixed some bugs with table column selection.
 
-   * Added autosizing to form attributes inspector.
-
-   * Utilize and maintain parent/child data structure more pervasively
-
-   * Reorganized code in palettes for cleaner implementation.
-
-   * Removed code to check for user bundles, since bugs in Camaelon
-     which prompted those changes were fixed long ago.
-
-   * Added documentation to GormCore
+   * Corrected a minor problem in the custom class inspector.
 
 1.3 How can I get support for this software?
 ============================================

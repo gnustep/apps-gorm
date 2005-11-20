@@ -6,6 +6,19 @@
 
 @section Noteworthy changes in version @samp{1.0.0}
 
+This is a bugfix release.
+
+@itemize @bullet
+@item Fixed some bugs with table column selection.
+@item Corrected a minor problem in the custom class inspector.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
+@section Noteworthy changes in version @samp{1.0.0}
+
 PLEASE NOTE: This version of Gorm requires base 1.11.1 and 
              gui 0.10.1 to be installed (gnustep-startup-0.13.0).
 
@@ -17,10 +30,6 @@ PLEASE NOTE: This version of Gorm requires base 1.11.1 and
 @item Removed code to check for user bundles, since bugs in Camaelon which prompted those changes were fixed long ago.
 @item Added documentation to GormCore
 @end itemize
-
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{0.11.0}
 
