@@ -1,3 +1,11 @@
+2005-12-14 22:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Declaration for new readableTypes method.
+	* GormCore/GormDocument.m: Added readableTypes method to return the 
+	types accepted by GormDocument.
+	* Gorm.m: Use readableTypes in application:openFile: corrects 
+	bug#15178
+
 2005-11-19 09:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.1

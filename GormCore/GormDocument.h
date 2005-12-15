@@ -77,6 +77,11 @@
   NSMutableArray        *resourceManagers;
 }
 
+/**
+ * Return the types readable by this document class
+ */
++ (NSArray *) readableTypes;
+
 /* Archiving objects */
 
 /**

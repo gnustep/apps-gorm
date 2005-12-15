@@ -201,6 +201,14 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Return the types readable by this document class.
+ */
++ (NSArray *) readableTypes
+{
+  return [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
+}
+
+/**
  * Initialize the new GormDocument object.
  */
 - (id) init 
@@ -1681,7 +1689,6 @@ static NSImage  *fileImage = nil;
   [editors addObjectsFromArray: openEditors];
   [editors makeObjectsPerformSelector: @selector(close)]; 
   [openEditors removeAllObjects];
-  // [editors makeObjectsPerformSelector: @selector(release)];
   [editors removeAllObjects];
 
   // Close the editors in the document window...
@@ -1710,19 +1717,8 @@ static NSImage  *fileImage = nil;
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  /*
-	  if ([obj isKindOfClass: [NSMenu class]] == YES)
-	    {
-	      if ([[obj window] isVisible] == YES)
-		{
-		  [obj close];
-		}
-	    }
-	    else 
-	  */
 	  if ([obj isKindOfClass: [NSWindow class]] == YES)
 	    {
-	      // [obj setReleasedWhenClosed: YES];
 	      [obj close];
 	      RELEASE(obj);
 	    }

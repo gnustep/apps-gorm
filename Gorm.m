@@ -1077,22 +1077,24 @@
   return nil;
 }
 
-
-
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
-  GormDocument	*doc = AUTORELEASE([[GormDocument alloc] init]);
+  NSString *ext = [fileName pathExtension];
+  GormDocument *doc = nil;
 
-  [documents addObject: doc];
-  if ([doc loadDocument: fileName] == nil)
+  if([[GormDocument readableTypes] containsObject: ext])
     {
-      [documents removeObjectIdenticalTo: doc];
-      doc = nil;
-    }
-  else
-    {
-      [[doc window] orderFrontRegardless];
-      [[doc window] makeKeyWindow];
+      doc = AUTORELEASE([[GormDocument alloc] init]);
+      if ([doc loadDocument: fileName] == nil)
+	{
+	  doc = nil;
+	}
+      else
+	{
+	  [documents addObject: doc];
+	  [[doc window] orderFrontRegardless];
+	  [[doc window] makeKeyWindow];
+	}
     }
   
   return (doc != nil);
