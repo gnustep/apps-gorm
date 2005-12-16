@@ -1690,13 +1690,6 @@ static NSImage  *fileImage = nil;
   [editors makeObjectsPerformSelector: @selector(close)]; 
   [openEditors removeAllObjects];
   [editors removeAllObjects];
-
-  // Close the editors in the document window...
-  // don't worry about the "classesView" since it's not really an
-  // editor.
-  [objectsView close];
-  [imagesView close];
-  [soundsView close];
 }
 
 /**
