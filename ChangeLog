@@ -1,3 +1,9 @@
+2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.m: Removed deprecated templates.
+	* GormCore/GormViewEditor.m: Removed problem which was causing
+	a notification loop.
+
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Correction for crash on close after

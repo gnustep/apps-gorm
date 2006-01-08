@@ -187,13 +187,15 @@ static BOOL currently_displaying = NO;
       
       [self addSubview: _editedObject];
 
+      /** FIXME: Need to use the standard resize controls....
       [_editedObject setPostsFrameChangedNotifications: YES];
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
 	selector: @selector(editedObjectFrameDidChange:)
 	name: NSViewFrameDidChangeNotification
 	object: _editedObject];
-      
+      **/ 
+
       [self setPostsFrameChangedNotifications: YES];
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
