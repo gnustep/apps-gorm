@@ -1,3 +1,9 @@
+2006-01-16 12:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
+	for bug#15236.  In ok: method the newStyleMask variable wasn't
+	properly initialized, this was causing the flags to be set improperly.
+
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Correction for crash on close after
