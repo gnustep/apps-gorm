@@ -155,6 +155,9 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
+  // stop editing so that the new values can be populated.
+  [sizeForm abortEditing];
+
   frame = [anObject frame];
   [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
   [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];

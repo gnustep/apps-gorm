@@ -1,3 +1,8 @@
+2006-01-16 23:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewSizeInspector.m: Correction for a similar problem
+	in the view size inspector. Added to call to abort editing.
+
 2006-01-16 16:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormWindowSizeInspector.m: Correction for 
