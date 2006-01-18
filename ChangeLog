@@ -1,8 +1,33 @@
+2006-01-17 22:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ChangeLog
+	* GormCore/GormViewEditor.m
+	* GormCore/GormViewSizeInspector.m
+	* Palettes/1Windows/GormWindowAttributesInspector.m
+	* Palettes/1Windows/GormWindowSizeInspector.m: Merged changes from 
+	the baseline.
+
 2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPrivate.m: Removed deprecated templates.
 	* GormCore/GormViewEditor.m: Removed problem which was causing
 	a notification loop.
+
+2006-01-16 23:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewSizeInspector.m: Correction for a similar problem
+	in the view size inspector. Added to call to abort editing.
+
+2006-01-16 16:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormWindowSizeInspector.m: Correction for 
+	bug#13994.  abortEditing call to all forms added to revert:.
+
+2006-01-16 12:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
+	for bug#15236.  In ok: method the newStyleMask variable wasn't
+	properly initialized, this was causing the flags to be set improperly.
 
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 

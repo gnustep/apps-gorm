@@ -101,6 +101,8 @@
   [bottom setTag: GSWindowMinYMargin];
   [left setTag: GSWindowMinXMargin];
   [right setTag: GSWindowMaxXMargin];
+
+  // reset information in forms...
 }
 
 
@@ -155,7 +157,7 @@
 }
 
 /* Sync from object ( NSWindow ) changes to the inspector   */
-- (void) revert:(id)sender
+- (void) revert: (id)sender
 {
   NSRect frame;
   NSSize size;
@@ -163,6 +165,12 @@
 
   if ( object == nil ) 
     return;
+
+  // Abort editing of the fields, so that the new values can be
+  // populated.
+  [sizeForm abortEditing];
+  [minForm abortEditing];
+  [maxForm abortEditing];
     
   mask = [object autoPositionMask];
 
@@ -205,7 +213,7 @@
 
 - (void) windowChangeNotification: (NSNotification*)aNotification
 {
-  [self ok: [aNotification object]];
+  [self revert: nil];
 }
 
 
