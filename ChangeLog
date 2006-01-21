@@ -1,3 +1,11 @@
+2006-01-21 00:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewEditor.m: [GormViewEditor activate] do not send
+	notifications about frame size changes, if the object is a standalone
+	view.
+	* GormCore/GormViewSizeInspector.m: [GormViewSizeInspector setObject:]
+	Added code to enable/disable cells if view is standalone.
+
 2006-01-16 23:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewSizeInspector.m: Correction for a similar problem
