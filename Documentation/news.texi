@@ -4,6 +4,21 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.0.4}
+
+This is a bugfix release.
+
+@itemize @bullet
+@item Corrected some bug#15236 with window style mask settings.
+@item Corrected bug#15236, which caused window fields in the inspector not to update when the field was being edited and a new window is selected.
+@item Corrected bug #15178.
+@item Corrected problem with standalone views
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.0.0}
 
 This is a bugfix release.
@@ -12,10 +27,6 @@ This is a bugfix release.
 @item Fixed some bugs with table column selection.
 @item Corrected a minor problem in the custom class inspector.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.0.0}
 
