@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.0.1 of Gorm.
+This is version 1.0.4 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,14 +12,20 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.0.0'
+1.2 Noteworthy changes in version `1.0.4'
 =========================================
 
 This is a bugfix release.
 
-   * Fixed some bugs with table column selection.
+   * Corrected some bug#15236 with window style mask settings.
 
-   * Corrected a minor problem in the custom class inspector.
+   * Corrected bug#15236, which caused window fields in the inspector
+     not to update when the field was being edited and a new window is
+     selected.
+
+   * Corrected bug #15178.
+
+   * Corrected problem with standalone views
 
 1.3 How can I get support for this software?
 ============================================
