@@ -179,6 +179,7 @@ static BOOL currently_displaying = NO;
       if(viewWindow == nil)
 	{
 	  [self setAutoresizesSubviews: NO];
+	  [_editedObject setPostsFrameChangedNotifications: YES];
 	}
       else
 	{
@@ -187,7 +188,7 @@ static BOOL currently_displaying = NO;
       
       [self addSubview: _editedObject];
 
-      [_editedObject setPostsFrameChangedNotifications: YES];
+      
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
 	selector: @selector(editedObjectFrameDidChange:)
@@ -323,7 +324,6 @@ static BOOL currently_displaying = NO;
   [self setPostsFrameChangedNotifications: YES];
 }
 
-
 - (void) frameDidChange: (id) sender
 {
   [_editedObject setPostsFrameChangedNotifications: NO];
@@ -331,7 +331,6 @@ static BOOL currently_displaying = NO;
   [_editedObject setFrame: [self frame]];
   [_editedObject setPostsFrameChangedNotifications: YES];
 }
-
 
 - (GormPlacementInfo *) initializeResizingInFrame: (NSView *)view
 					 withKnob: (IBKnobPosition) knob

@@ -25,6 +25,7 @@
 #include "GormPrivate.h"
 #include "GormViewKnobs.h"
 #include "GormViewSizeInspector.h"
+#include "GormViewWindow.h"
 
 @implementation GormViewSizeInspector
 
@@ -155,6 +156,15 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
+  if([[anObject window] isKindOfClass: [GormViewWindow class]])
+    {
+      [sizeForm setEnabled: NO];
+    }
+  else
+    {
+      [sizeForm setEnabled: YES];
+    }
+
   // stop editing so that the new values can be populated.
   [sizeForm abortEditing];
 
@@ -241,6 +251,32 @@ NSImage	*mVLine = nil;
       [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
       [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
       [anObject setPostsFrameChangedNotifications: YES];
+
+      if([[anObject window] isKindOfClass: [GormViewWindow class]] ||
+	 [anObject window] == nil)
+	{ 
+	  [[sizeForm cellAtIndex: 0] setEnabled: NO]; 
+	  [[sizeForm cellAtIndex: 1] setEnabled: NO]; 
+	  [[sizeForm cellAtIndex: 2] setEnabled: NO]; 
+	  [[sizeForm cellAtIndex: 3] setEnabled: NO]; 
+
+	  [[sizeForm cellAtIndex: 0] setEditable: NO]; 
+	  [[sizeForm cellAtIndex: 1] setEditable: NO]; 
+	  [[sizeForm cellAtIndex: 2] setEditable: NO]; 
+	  [[sizeForm cellAtIndex: 3] setEditable: NO]; 
+	}
+      else
+	{
+	  [[sizeForm cellAtIndex: 0] setEnabled: YES]; 
+	  [[sizeForm cellAtIndex: 1] setEnabled: YES]; 
+	  [[sizeForm cellAtIndex: 2] setEnabled: YES]; 
+	  [[sizeForm cellAtIndex: 3] setEnabled: YES]; 
+
+	  [[sizeForm cellAtIndex: 0] setEditable: YES]; 
+	  [[sizeForm cellAtIndex: 1] setEditable: YES]; 
+	  [[sizeForm cellAtIndex: 2] setEditable: YES]; 
+	  [[sizeForm cellAtIndex: 3] setEditable: YES]; 
+	}
     }
 }
 @end

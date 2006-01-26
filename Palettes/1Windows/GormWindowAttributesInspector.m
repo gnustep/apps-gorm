@@ -73,7 +73,7 @@
 	    ( sender == closeButton ) ||
 	    ( sender == resizeBarButton ) )
     {
-      unsigned int newStyleMask = 0;
+      unsigned int newStyleMask = [object _styleMask];
 
       if ( [miniaturizeButton state] == NSOnState ) 
 	newStyleMask |= NSMiniaturizableWindowMask;
