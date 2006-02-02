@@ -1,3 +1,8 @@
+2006-02-01 22:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/4Data/GormDateFormatterAttributesInspector.m: Correction 
+	for bug#15556
+
 2006-01-25 05:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.4

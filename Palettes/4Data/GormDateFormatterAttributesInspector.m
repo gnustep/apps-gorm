@@ -99,6 +99,7 @@ extern NSArray *predefinedDateFormats;
         }
       else if (sender == languageSwitch)
         {
+	  dateFmt = [formatField stringValue];
           allowslanguage = ([sender state] == NSOnState);
         }
 
