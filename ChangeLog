@@ -1,3 +1,9 @@
+2006-02-01 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* Version: Updated with new version information.
+
 2006-02-01 22:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/4Data/GormDateFormatterAttributesInspector.m: Correction 
