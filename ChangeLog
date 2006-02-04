@@ -1,3 +1,9 @@
+2006-02-03 21:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormScrollViewAttributesInspector.m
+	* GormCore/GormScrollViewEditor.m: Corrected problem with adding
+	something to a scrollview.
+
 2006-02-01 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m

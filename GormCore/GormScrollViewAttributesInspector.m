@@ -28,26 +28,6 @@
 
 #include <AppKit/AppKit.h>
 #include "GormScrollViewAttributesInspector.h"
-#include <InterfaceBuilder/IBObjectAdditions.h>
-
-@implementation NSScrollView (IBObjectAdditions)
-- (NSString *) inspectorClassName
-{
-  return @"GormScrollViewAttributesInspector";
-}
-
-- (NSString*) editorClassName
-{
-  if ([self documentView])
-    {
-      return [[self documentView] editorClassName];
-    }
-  else
-    { 
-      return @"GormScrollViewEditor";
-    }
-}
-@end
 
 @implementation GormScrollViewAttributesInspector
 - init
