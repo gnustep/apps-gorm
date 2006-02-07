@@ -1,3 +1,9 @@
+2006-02-06 21:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormNSTableViewInspector.gorm
+	* Palettes/3Containers/GormTableViewAttributesInspector.m: 
+	Correction for bug#15642.
+
 2006-02-03 21:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormScrollViewAttributesInspector.m
