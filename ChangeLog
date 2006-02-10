@@ -1,3 +1,8 @@
+2006-02-09 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Change "RELEASE" to SVN to indicate that 1.0.5 is
+	an unstable version.
+
 2006-02-06 21:06 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormNSTableViewInspector.gorm
