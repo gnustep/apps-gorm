@@ -107,9 +107,17 @@
     {
       int numCols = [object numberOfColumns];
       int newNumCols = [[sender cellAtIndex: 1] intValue];
+      float rowHeight = [[sender cellAtIndex: 0] floatValue];
+
+      // make sure the minimum height doesn't go below 1.
+      if(rowHeight < 1.0)
+	{
+	  rowHeight = 1.0;
+	  [[sender cellAtIndex: 0] setFloatValue: 1.0]; 
+	}
 
       // add/delete columns based on number in #columns field...
-      [object setRowHeight: [[sender cellAtIndex: 0] intValue] ];
+      [object setRowHeight: rowHeight];
       if(newNumCols > 0)
 	{
 	  if(numCols < newNumCols)
@@ -241,5 +249,4 @@
 {
   [self ok:[aNotification object]];
 }
-
 @end

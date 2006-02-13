@@ -27,6 +27,26 @@
 #include "GormPrivate.h"
 #include "GormBoxEditor.h"
 #include "GormViewKnobs.h"
+#include <InterfaceBuilder/IBObjectAdditions.h>
+
+@implementation NSScrollView (IBObjectAdditions)
+- (NSString *) inspectorClassName
+{
+  return @"GormScrollViewAttributesInspector";
+}
+
+- (NSString*) editorClassName
+{
+  // if ([[self documentView] isKindOfClass: [NSTableView class]])
+  //  {
+  //    return [[self documentView] editorClassName];
+  //  }
+  // else
+  //  { 
+      return @"GormScrollViewEditor";
+  //  }
+}
+@end
 
 #define _EO ((NSScrollView *)_editedObject)
 

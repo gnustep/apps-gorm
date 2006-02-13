@@ -29,6 +29,34 @@
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
 	properly initialized, this was causing the flags to be set improperly.
 
+2006-02-09 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Change "RELEASE" to SVN to indicate that 1.0.5 is
+	an unstable version.
+
+2006-02-06 21:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormNSTableViewInspector.gorm
+	* Palettes/3Containers/GormTableViewAttributesInspector.m: 
+	Correction for bug#15642.
+
+2006-02-03 21:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormScrollViewAttributesInspector.m
+	* GormCore/GormScrollViewEditor.m: Corrected problem with adding
+	something to a scrollview.
+
+2006-02-01 23:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* Version: Updated with new version information.
+
+2006-02-01 22:08 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/4Data/GormDateFormatterAttributesInspector.m: Correction 
+	for bug#15556
+
 2006-01-25 05:21 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.4
