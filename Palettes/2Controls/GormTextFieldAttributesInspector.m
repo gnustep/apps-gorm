@@ -97,17 +97,15 @@
     }
   else if ( sender == editableSwitch ) 
     {
-      NSLog(@"setEditable ");
-      [object setEditable:[selectableSwitch state]];
+      [object setEditable: [editableSwitch state]];
     }
   else if  ( sender == selectableSwitch )
     {
-      NSLog(@"setSelectable ");
-      [object setSelectable:[selectableSwitch state]];
+      [object setSelectable: [selectableSwitch state]];
     }
   else if ( sender == scrollableSwitch ) 
     {
-      [[object cell] setScrollable:[scrollableSwitch state]];
+      [[object cell] setScrollable: [scrollableSwitch state]];
     }
   else if (sender == borderMatrix)
     {
