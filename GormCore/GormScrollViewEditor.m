@@ -37,14 +37,12 @@
 
 - (NSString*) editorClassName
 {
-  // if ([[self documentView] isKindOfClass: [NSTableView class]])
-  //  {
-  //    return [[self documentView] editorClassName];
-  //  }
-  // else
-  //  { 
-      return @"GormScrollViewEditor";
-  //  }
+  if ([[self documentView] isKindOfClass: [NSTableView class]])
+    {
+      return [[self documentView] editorClassName];
+    }
+  
+  return @"GormScrollViewEditor";
 }
 @end
 

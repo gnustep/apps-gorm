@@ -1,3 +1,9 @@
+2006-02-20 08:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormScrollViewEditor.m: Correction for bug#15817.
+	Returning only GormScrollViewEditor was causing an issue with
+	editing tables.
+
 2006-02-19 12:07 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Correction 
