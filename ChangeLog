@@ -1,3 +1,8 @@
+2006-02-22 22:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Overide arrangeInFront: so that when testing the interface
+	it doesn't inadvertantly bring the edited window forward.
+
 2006-02-20 08:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormScrollViewEditor.m: Correction for bug#15817.

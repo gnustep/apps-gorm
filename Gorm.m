@@ -543,6 +543,14 @@
   [(GormDocument *)[self activeDocument] openImage: sender];
 }
 
+- (void) arrangeInFront: (id)sender
+{
+  if([self isTestingInterface] == NO)
+    {
+      [super arrangeInFront: sender];
+    }
+}
+
 - (void) testInterface: (id)sender
 {
   if (isTesting == YES)
@@ -677,11 +685,20 @@
 	      // so we don't get the warning...
 	      [self setServicesMenu: nil]; 
 	      [[self mainMenu] display];
-	      [[NSApp mainWindow] makeKeyAndOrderFront: self];
+	      en = [[self windows] objectEnumerator];
+	      while((obj = [en nextObject]) != nil)
+		{
+		  if([obj isVisible])
+		    {
+		      [obj makeKeyAndOrderFront: self];
+		    }
+		}
+	      
+	      // [[NSApp mainWindow] makeKeyAndOrderFront: self];
 	      
 	      // we're now in testing mode.
 	      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
-			   object: self];	      
+			   object: self];      
 
 	      [NSApp unhide: self];
 	    }
