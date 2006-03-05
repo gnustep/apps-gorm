@@ -135,14 +135,8 @@ static NSText *_textObject;
     {
       NSDebugLog(@"no column to delete");
     }
-  else
-  if ([tableView numberOfColumns] <= 1)
+  else if([[selection objectAtIndex: 0] isKindOfClass: [NSTableColumn class]])
     {
-      NSDebugLog(@"can't delete last column");
-    }
-  else
-    {
-      NSDebugLog(@"FIXME: remove the tableColumn from toplevel"); // FIXME
       [tableView removeTableColumn: [selection objectAtIndex: 0]];
       [tableView deselectAll: self];
       [self selectObjects: [NSArray array]];
