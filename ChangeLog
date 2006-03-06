@@ -1,3 +1,7 @@
+2006-03-05 20:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.m: Correction for bug#15989
+
 2006-03-04 19:44 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormTableViewEditor.m: Correction for 

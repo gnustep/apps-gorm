@@ -370,6 +370,21 @@ static NSImage	*dragImage = nil;
   return self;
 }
 
+- (BOOL) bundlePathIsLoaded: (NSString *)path
+{
+  int		col = 0;  
+  NSBundle	*bundle;
+  for (col = 0; col < [bundles count]; col++)
+    {
+      bundle = [bundles objectAtIndex: col];
+      if ([path isEqualToString: [bundle bundlePath]] == YES)
+	{
+	  return YES;
+	}
+    }
+  return NO;
+}
+
 - (BOOL) loadPalette: (NSString*)path
 {
   NSBundle	*bundle;
@@ -385,15 +400,11 @@ static NSImage	*dragImage = nil;
   NSImageCell	*cell;
   int		col;
 
-  for (col = 0; col < [bundles count]; col++)
+  if([self bundlePathIsLoaded: path])
     {
-      bundle = [bundles objectAtIndex: col];
-      if ([path isEqualToString: [bundle bundlePath]] == YES)
-	{
-	  NSRunAlertPanel (nil, _(@"Palette has already been loaded"), 
-			   _(@"OK"), nil, nil);
-	  return NO;
-	}
+      NSRunAlertPanel (nil, _(@"Palette has already been loaded"), 
+		       _(@"OK"), nil, nil);
+      return NO;
     }
   bundle = [NSBundle bundleWithPath: path]; 
   if (bundle == nil)
@@ -552,10 +563,24 @@ static NSImage	*dragImage = nil;
 	{
 	  NSString	*aFile = [filesToOpen objectAtIndex: i];
 
-	  [newUserPalettes addObject: aFile];
-	  if([self loadPalette: aFile] == NO)
+	  if([self bundlePathIsLoaded: aFile] == YES &&
+	     [userPalettes containsObject: aFile] == NO)
+	    {
+	      // This is done here so that, if we try to reload a palette
+	      // that has previously been deleted during this session that
+	      // the palette manager won't fail, but it will simply add
+	      // the palette back in.  If this returns NO, then we should
+	      // flag a problem otherwise it's successful if the palette is
+	      // already in the bundles array.  This is to address bug#15989.
+	      [newUserPalettes addObject: aFile];
+	    }
+	  else if([self loadPalette: aFile] == NO)
 	    {
 	      return nil;
+	    }
+	  else
+	    {
+	      [newUserPalettes addObject: aFile];
 	    }
 	}
 
