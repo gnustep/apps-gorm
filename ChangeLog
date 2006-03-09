@@ -1,3 +1,14 @@
+2006-03-09 05:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormEHCoil.tiff
+	* Images/GormEHLine.tiff
+	* Images/GormEVCoil.tiff
+	* Images/GormEVLine.tiff
+	* Images/GormMHCoil.tiff
+	* Images/GormMHLine.tiff
+	* Images/GormMVCoil.tiff
+	* Images/GormMVLine.tiff: Remade coil/lines to look cleaner.
+
 2006-03-05 20:10 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPalettesManager.m: Correction for bug#15989
