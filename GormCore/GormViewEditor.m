@@ -1178,24 +1178,22 @@ static BOOL currently_displaying = NO;
   NSString	*name = [document nameForObject: anObject];
   NSPoint	dragPoint = [theEvent locationInWindow];
   
-
-  pb = [NSPasteboard pasteboardWithName: NSDragPboard];
-  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
-      owner: self];
-  [pb setString: name forType: GormLinkPboardType];
-  [NSApp displayConnectionBetween: anObject and: nil];
-  
-  //  isLinkSource = YES;
-  [self dragImage: [NSApp linkImage]
-	at: dragPoint
-	offset: NSZeroSize
-	event: theEvent
-	pasteboard: pb
-	source: self
-	slideBack: YES];
-  //  isLinkSource = NO;
-
-  return;  
+  if(name != nil)
+    {
+      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+      [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
+	  owner: self];
+      [pb setString: name forType: GormLinkPboardType];
+      [NSApp displayConnectionBetween: anObject and: nil];
+      
+      [self dragImage: [NSApp linkImage]
+	    at: dragPoint
+	    offset: NSZeroSize
+	    event: theEvent
+	    pasteboard: pb
+	    source: self
+	    slideBack: YES];
+    }
 }
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
