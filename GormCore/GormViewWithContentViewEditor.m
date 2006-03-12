@@ -573,9 +573,11 @@
 		
 		//case guideLine
 		if ( _followGuideLine )
-		  suggestedFrame = [[selection objectAtIndex: 0]
- 				   _displayMovingFrameWithHint: r
- 				   andPlacementInfo: gpi];
+		  {
+		    suggestedFrame = [[selection objectAtIndex: 0]
+				       _displayMovingFrameWithHint: r
+				       andPlacementInfo: gpi];
+		  }
 		else 
 		  {
 		    suggestedFrame = NSMakeRect (NSMinX(r), 
@@ -591,8 +593,7 @@
   	      }
   	    else
 	      {
-		enumerator = [selection objectEnumerator];
-		
+		enumerator = [selection objectEnumerator];		
 		while ((subview = [enumerator nextObject]) != nil)
 		  {
 		    NSRect	oldFrame = [subview frame];

@@ -262,7 +262,7 @@ int defaultDateFormatIndex = 3;
   tv = [[NSTextView alloc] initWithFrame: rect];
   [tv setMinSize: NSMakeSize(0.0, 0.0)];
   [tv setMaxSize: NSMakeSize(1.0E7,1.0E7)];
-  [tv setHorizontallyResizable: NO];
+  [tv setHorizontallyResizable: YES];
   [tv setVerticallyResizable: YES];
   [tv setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
   [tv setSelectable: YES];
