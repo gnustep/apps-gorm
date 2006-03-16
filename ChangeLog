@@ -1,3 +1,9 @@
+2006-03-16 06:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewWithContentViewEditor.m: Correction related to
+	bug#16049.  There was an issue with moving a table column while the
+	table was selected.
+
 2006-03-11 20:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewWithContentViewEditor.m: Minor formatting changes.

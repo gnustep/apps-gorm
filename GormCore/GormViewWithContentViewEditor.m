@@ -556,42 +556,44 @@
 
   	    if ([selection count] == 1)
   	      {
-		[[selection objectAtIndex: 0] 
-		  setFrameOrigin:
-		    NSMakePoint(NSMaxX([self bounds]),
-				NSMaxY([self bounds]))];
-		[superview display];
-
-		r = oldMovingFrame;
-		r.origin.x += xDiff;
-		r.origin.y += yDiff;
-		r.origin.x = (int) r.origin.x;
-		r.origin.y = (int) r.origin.y;
-		r.size.width = (int) r.size.width;
-		r.size.height = (int) r.size.height;
-		oldMovingFrame = r;
-		
-		//case guideLine
-		if ( _followGuideLine )
+		id obj = [selection objectAtIndex: 0];
+		if([obj isKindOfClass: [NSView class]])
 		  {
-		    suggestedFrame = [[selection objectAtIndex: 0]
-				       _displayMovingFrameWithHint: r
-				       andPlacementInfo: gpi];
+		    [[selection objectAtIndex: 0] 
+		      setFrameOrigin:
+			NSMakePoint(NSMaxX([self bounds]),
+				    NSMaxY([self bounds]))];
+		    [superview display];
+		    
+		    r = oldMovingFrame;
+		    r.origin.x += xDiff;
+		    r.origin.y += yDiff;
+		    r.origin.x = (int) r.origin.x;
+		    r.origin.y = (int) r.origin.y;
+		    r.size.width = (int) r.size.width;
+		    r.size.height = (int) r.size.height;
+		    oldMovingFrame = r;
+		    
+		    //case guideLine
+		    if ( _followGuideLine )
+		      {
+			suggestedFrame = [obj _displayMovingFrameWithHint: r
+					      andPlacementInfo: gpi];
+		      }
+		    else 
+		      {
+			suggestedFrame = NSMakeRect (NSMinX(r), 
+						     NSMinY(r),
+						     NSMaxX(r) - NSMinX(r),
+						     NSMaxY(r) - NSMinY(r));
+		      }
+		    
+		    [obj setFrame: suggestedFrame];
+		    [obj setNeedsDisplay: YES];
+		    
 		  }
-		else 
-		  {
-		    suggestedFrame = NSMakeRect (NSMinX(r), 
-						 NSMinY(r),
-						 NSMaxX(r) - NSMinX(r),
-						 NSMaxY(r) - NSMinY(r));
-		  }
-
-		[[selection objectAtIndex: 0] setFrame:
-						suggestedFrame];
-		[[selection objectAtIndex: 0] setNeedsDisplay: YES];
-		
-  	      }
-  	    else
+	      }
+	    else
 	      {
 		enumerator = [selection objectEnumerator];		
 		while ((subview = [enumerator nextObject]) != nil)
@@ -610,7 +612,7 @@
 		    [subview setNeedsDisplay: YES];
 		  }
 	      }
-
+	    
 	    /*
 	     * Flush any drawing performed for this event.
 	     */
