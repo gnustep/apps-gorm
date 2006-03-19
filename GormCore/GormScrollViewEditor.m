@@ -3,6 +3,7 @@
  * Copyright (C) 2002 Free Software Foundation, Inc.
  *
  * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
+ * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:	2002
  * 
  * This file is part of GNUstep.
@@ -23,11 +24,10 @@
  */
 
 #include <AppKit/AppKit.h>
-
+#include <InterfaceBuilder/IBObjectAdditions.h>
 #include "GormPrivate.h"
 #include "GormBoxEditor.h"
 #include "GormViewKnobs.h"
-#include <InterfaceBuilder/IBObjectAdditions.h>
 
 @implementation NSScrollView (IBObjectAdditions)
 - (NSString *) inspectorClassName
@@ -153,16 +153,14 @@
 
   if ((self = [super initWithObject: anObject
 		     inDocument: aDocument]) == nil)
-    return nil;
+    {
+      return nil;
+    }
 
-  selection = [[NSMutableArray alloc] initWithCapacity: 5];
-
-
-  
+  selection = [[NSMutableArray alloc] initWithCapacity: 5];  
   [self registerForDraggedTypes: [NSArray arrayWithObjects:
     IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
 
-  
   return self;
 }
 
@@ -171,13 +169,14 @@
   id documentView = [_EO documentView];
   NSArray *subviews = [documentView subviews];
   NSMutableArray *newSelection = [NSMutableArray array];
+  id thisView = nil;
 
   if([documentView conformsToProtocol: @protocol(IBEditors)] == YES)
     {
       id internalView = [subviews objectAtIndex: 0];
       NSEnumerator *enumerator = [[internalView subviews] objectEnumerator];
       GormViewEditor *subview;
-      
+
       [parent makeSubeditorResign];
       while ((subview = [enumerator nextObject]) != nil)
 	{
@@ -200,16 +199,13 @@
       frame = [parent convertRect: frame fromView: _EO];
       [documentView setFrame: frame];
       [newSelection addObject: documentView];
-      [_EO setDocumentView: nil]; // remove any reference to the box.
-      // RELEASE(_EO);
+      [_EO setDocumentView: nil];
     }
 
-  {
-    id thisView = [self editedObject];
-    [self close];
-    [thisView removeFromSuperview];
-    [document detachObject: thisView];
-  }
+  thisView = [self editedObject];
+  [self close];
+  [thisView removeFromSuperview];
+  [document detachObject: thisView];
 
   return newSelection;
 }

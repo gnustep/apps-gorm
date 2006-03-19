@@ -1,3 +1,11 @@
+2006-03-18 20:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Generalize rule for adding documentView
+	objects from a scrollview.
+	* GormCore/GormInspectorsManager.m: Correct logic which selects the
+	object to send to the inspector.
+	* GormCore/GormScrollViewEditor.m: Cleanup code a little bit.
+
 2006-03-16 06:33 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewWithContentViewEditor.m: Correction related to
