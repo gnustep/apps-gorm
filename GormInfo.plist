@@ -16,7 +16,7 @@
     ApplicationName = "Gorm";
     ApplicationRelease = "Gorm 1.0.5 (SVN)";
     Authors = ("Gregory John Casamento <greg_casamento@yahoo.com>","Richard Frith-Macdonald <rfm@gnu.org>","Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
-    Copyright = "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005 FSF";
+    Copyright = "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 FSF";
     CopyrightDescription = "Released under the GNU General Public License 2.0";
     NSBuildVersion = "1.0.5 Mar 19 2006";
 }
