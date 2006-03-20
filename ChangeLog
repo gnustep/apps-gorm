@@ -1,3 +1,14 @@
+2006-03-19 21:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormEHCoil.tiff
+	* Images/GormEHLine.tiff
+	* Images/GormEVCoil.tiff
+	* Images/GormEVLine.tiff
+	* Images/GormMHCoil.tiff
+	* Images/GormMHLine.tiff
+	* Images/GormMVCoil.tiff
+	* Images/GormMVLine.tiff: Improved images.
+
 2006-03-18 20:12 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Generalize rule for adding documentView
