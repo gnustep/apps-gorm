@@ -1,3 +1,13 @@
+2006-03-20 22:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added entries for new icons
+	* GormInfo.plist: Added entries for new icons
+	* Images/FileIcon_gmodel.tiff: Changed icon
+	* Images/GormFile.tiff: New icon
+	* Images/GormPalette.tiff: New icon
+	* Images/GormTesting.tiff: Changed icon
+	* Images/Gorm.tiff: Changed icon
+
 2006-03-19 23:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInfo.plist: Added 2006

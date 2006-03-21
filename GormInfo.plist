@@ -4,11 +4,15 @@
     NSTypes = (
       {
         NSUnixExtensions = ( "gorm" );
-        NSIcon = "Gorm.tiff";
+        NSIcon = "GormFile.tiff";
       },
       {
         NSUnixExtensions = ( "gmodel" );
         NSIcon = "FileIcon_gmodel.tiff";
+      },
+      {
+        NSUnixExtensions = ( "palette" );
+        NSIcon = "GormPalette.tiff";
       }
     );
     ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
