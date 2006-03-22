@@ -1,3 +1,8 @@
+2006-03-21 20:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/Gorm.tiff: Slight change so that .xpm renders a little more
+	nicely when docking.
+
 2006-03-21 19:54 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile
