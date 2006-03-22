@@ -81,6 +81,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormMVLine.tiff \
         Images/Gorm.tiff \
 	Images/GormFile.tiff \
+	Images/GormNib.tiff \
 	Images/GormPalette.tiff \
         Images/leftalign_nib.tiff \
         Images/rightalign_nib.tiff \

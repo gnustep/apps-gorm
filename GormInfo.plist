@@ -11,6 +11,10 @@
         NSIcon = "FileIcon_gmodel.tiff";
       },
       {
+        NSUnixExtensions = ( "nib" );
+        NSIcon = "GormNib.tiff";
+      },
+      {
         NSUnixExtensions = ( "palette" );
         NSIcon = "GormPalette.tiff";
       }

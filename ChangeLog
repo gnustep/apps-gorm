@@ -1,3 +1,9 @@
+2006-03-21 19:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile
+	* GormInfo.plist
+	* Images/Gorm.tiff: Improved icon.
+
 2006-03-20 22:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added entries for new icons
