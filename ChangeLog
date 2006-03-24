@@ -1,3 +1,11 @@
+2006-03-24 17:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormTesting.tiff: New testing icon
+	* Palettes/2Controls/GormNSButtonInspector.gorm:
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm:
+	* Palettes/4Data/GormNSImageViewInspector.gorm: Usability changes.
+	Some inspectors had some "dead" space.
+
 2006-03-21 20:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Images/Gorm.tiff: Slight change so that .xpm renders a little more
