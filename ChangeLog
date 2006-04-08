@@ -1,3 +1,10 @@
+2006-04-08 14:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* NEWS
+	* Version: Changed for release 1.0.6.
+
 2006-04-06 07:29 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInfo.plist: Update date in info file.
