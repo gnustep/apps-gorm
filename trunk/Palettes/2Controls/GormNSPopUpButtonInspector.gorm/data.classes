@@ -1,0 +1,15 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormPopUpButtonInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    autoenableSwitch,
+	    tagForm,
+	    typeMatrix,
+	    defaultItemForm,
+	    enableSwitch
+	);
+	Super = IBInspector;
+    };
+}

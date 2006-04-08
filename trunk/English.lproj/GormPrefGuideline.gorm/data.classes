@@ -1,0 +1,23 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "reset:"
+	);
+	Super = NSObject;
+    };
+    GormGuidelinePref = {
+	Actions = (
+	    "ok:",
+	    "reset:"
+	);
+	Outlets = (
+	    spacingSlider,
+	    window,
+	    _view,
+	    currentSpacing,
+	    halfSpacing
+	);
+	Super = NSObject;
+    };
+}
