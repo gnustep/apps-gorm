@@ -123,8 +123,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormView.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
-	Images/GormTesting.tiff \
-	Images/GormOpenOutletWarning.tiff 
+	Images/GormTesting.tiff 
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormClassInspector.gorm \
