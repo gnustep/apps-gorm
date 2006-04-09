@@ -673,7 +673,7 @@ static NSImage  *fileImage = nil;
 			toParent: tv];
 	    }
 	}
-      else if ([[anObject documentView] isKindOfClass: [NSTextView class]] == YES)
+      else // if ([[anObject documentView] isKindOfClass: [NSTextView class]] == YES)
 	{
 	  [self attachObject: [anObject documentView] toParent: anObject];
 	}

@@ -41,28 +41,36 @@ static NSText *_textObject;
 
 @implementation GormTableViewEditor
 /**
+ * Initialize the table editor.
+ */
+
+/*
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
+{
+  self = [super initWithObject: anObject inDocument: aDocument];
+  if(self != nil)
+    {
+    }
+  return self;
+}
+*/
+
+- (void) setFrame: (NSRect)frame
+{
+  if(tableView != nil)
+    {
+      [tableView deselectAll: self];
+    }
+  [super setFrame: frame];
+}
+
+/**
  * Decide whether an editor can accept data from the pasteboard.
  */
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   return NO;
 }
-
-/*
-- (void) setOpened: (BOOL) flag
-{
-  if (flag)
-    {
-      [tableView select]; // setBackgroundColor: [NSColor whiteColor]];
-    }
-  else
-    {
-      [tableView unselect];
-    }
-
-  [super setOpened: flag];
-}
-*/
 
 /**
  * Activate an editor - inserts it into the view hierarchy or whatever is
@@ -135,14 +143,8 @@ static NSText *_textObject;
     {
       NSDebugLog(@"no column to delete");
     }
-  else
-  if ([tableView numberOfColumns] <= 1)
+  else if([[selection objectAtIndex: 0] isKindOfClass: [NSTableColumn class]])
     {
-      NSDebugLog(@"can't delete last column");
-    }
-  else
-    {
-      NSDebugLog(@"FIXME: remove the tableColumn from toplevel"); // FIXME
       [tableView removeTableColumn: [selection objectAtIndex: 0]];
       [tableView deselectAll: self];
       [self selectObjects: [NSArray array]];
@@ -347,9 +349,6 @@ static NSText *_textObject;
   _currentHeaderCell = [tc headerCell];
   [_editedCell setStringValue: [[tc headerCell] stringValue]];
   [_editedCell setEditable: YES];
-  // [_editedCell setAlignment: NSLeftTextAlignment];
-  // [(NSTableHeaderCell *)_editedCell setTextColor: [NSColor blackColor]];
-  // [(NSTableHeaderCell *)_editedCell setBackgroundColor: [NSColor whiteColor]];
   _textObject = [_editedCell setUpFieldEditorAttributes: t];
 
   drawingRect = [th headerRectOfColumn: columnIndex];
@@ -368,18 +367,6 @@ static NSText *_textObject;
 
   RELEASE(_editedCell);
 }
-
-/*
-- (NSArray*) selection
-{
-  if (tableView == nil)
-    return [NSArray array];
-  else if (selected == nil)
-    return [NSArray arrayWithObject: tableView];
-  else
-    return [NSArray arrayWithObject: selected];
-}
-*/
 
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
@@ -431,6 +418,7 @@ static NSText *_textObject;
       return NSDragOperationNone;
     }
 }
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
@@ -488,5 +476,4 @@ static NSText *_textObject;
       return [super windowAndRect: prect forObject: object];
     }
 }
-
 @end

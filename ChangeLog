@@ -29,6 +29,147 @@
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
 	properly initialized, this was causing the flags to be set improperly.
 
+2006-04-08 15:16 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 1.0.6
+
+2006-04-08 15:15 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m
+
+2006-04-08 14:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* NEWS
+	* Version: Changed for release 1.0.6.
+
+2006-04-06 07:29 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Update date in info file.
+
+2006-03-25 10:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm: Change labels
+	in inspector to clarify.
+
+2006-03-24 17:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormTesting.tiff: New testing icon
+	* Palettes/2Controls/GormNSButtonInspector.gorm:
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm:
+	* Palettes/4Data/GormNSImageViewInspector.gorm: Usability changes.
+	Some inspectors had some "dead" space.
+
+2006-03-21 20:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/Gorm.tiff: Slight change so that .xpm renders a little more
+	nicely when docking.
+
+2006-03-21 19:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile
+	* GormInfo.plist
+	* Images/Gorm.tiff: Improved icon.
+
+2006-03-20 22:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added entries for new icons
+	* GormInfo.plist: Added entries for new icons
+	* Images/FileIcon_gmodel.tiff: Changed icon
+	* Images/GormFile.tiff: New icon
+	* Images/GormPalette.tiff: New icon
+	* Images/GormTesting.tiff: Changed icon
+	* Images/Gorm.tiff: Changed icon
+
+2006-03-19 23:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Added 2006
+	* Images/centeralign_nib.tiff
+	* Images/leftalign_nib.tiff
+	* Images/rightalign_nib.tiff: Recreated images.
+
+2006-03-19 22:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Update date.
+
+2006-03-19 21:43 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormEHCoil.tiff
+	* Images/GormEHLine.tiff
+	* Images/GormEVCoil.tiff
+	* Images/GormEVLine.tiff
+	* Images/GormMHCoil.tiff
+	* Images/GormMHLine.tiff
+	* Images/GormMVCoil.tiff
+	* Images/GormMVLine.tiff: Improved images.
+
+2006-03-18 20:12 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Generalize rule for adding documentView
+	objects from a scrollview.
+	* GormCore/GormInspectorsManager.m: Correct logic which selects the
+	object to send to the inspector.
+	* GormCore/GormScrollViewEditor.m: Cleanup code a little bit.
+
+2006-03-16 06:33 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewWithContentViewEditor.m: Correction related to
+	bug#16049.  There was an issue with moving a table column while the
+	table was selected.
+
+2006-03-11 20:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewWithContentViewEditor.m: Minor formatting changes.
+	* Palettes/4Data/DataPalette.m: Correction for bug#15988, patch by
+	Matt Rice.
+
+2006-03-11 16:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormTableViewEditor.m: Correction for
+	bug#16050.
+
+2006-03-10 01:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewEditor.m: Correction for bug#16049
+
+2006-03-09 05:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormEHCoil.tiff
+	* Images/GormEHLine.tiff
+	* Images/GormEVCoil.tiff
+	* Images/GormEVLine.tiff
+	* Images/GormMHCoil.tiff
+	* Images/GormMHLine.tiff
+	* Images/GormMVCoil.tiff
+	* Images/GormMVLine.tiff: Remade coil/lines to look cleaner.
+
+2006-03-05 20:10 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.m: Correction for bug#15989
+
+2006-03-04 19:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormTableViewEditor.m: Correction for 
+	bug#15987.
+
+2006-02-22 22:52 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Overide arrangeInFront: so that when testing the interface
+	it doesn't inadvertantly bring the edited window forward.
+
+2006-02-20 08:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormScrollViewEditor.m: Correction for bug#15817.
+	Returning only GormScrollViewEditor was causing an issue with
+	editing tables.
+
+2006-02-19 12:07 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Correction 
+	for bug#15780.
+
+>>>>>>> .merge-right.r22767
 2006-02-09 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInfo.plist: Change "RELEASE" to SVN to indicate that 1.0.5 is

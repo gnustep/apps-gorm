@@ -296,12 +296,12 @@
   if ([obj isKindOfClass: [NSScrollView class]] && 
       [(NSScrollView *)obj documentView])
     {
-      // && [[(NSScrollView *)obj documentView] conformsToProtocol: @protocol(IBEditors)] == NO)
+      id docView = [(NSScrollView *)obj documentView];
 
-      obj = [(NSScrollView *)obj documentView];
-      // FIXME: Find a more generalized way to do this.
-      if ([obj isKindOfClass: [NSTableView class]])
+      // FIXME: Really need to find a more generalized way to do this.
+      if ([docView isKindOfClass: [NSTableView class]])
 	{
+	  obj = docView;
 	  if ([obj selectedColumn] != -1)
 	    {
 	      obj = [[obj tableColumns] objectAtIndex:
