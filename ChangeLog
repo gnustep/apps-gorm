@@ -1,3 +1,9 @@
+2006-04-30 09:15  David Ayers  <d.ayers@inode.at>
+
+	* GormCore/GormCustomClassInspector.m
+	([-_replaceWithCellClassForClassName:]): Cast to NSCell to invoke
+	type to disambiguate incompatible method signatures.
+	
 2006-04-08 15:16 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.6
