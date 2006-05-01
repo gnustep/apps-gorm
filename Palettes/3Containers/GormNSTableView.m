@@ -70,7 +70,7 @@ static NSString* value2[] =
 objectValueForTableColumn:(NSTableColumn *)aTableColumn 
 	    row:(int)rowIndex
 {
-  if ([[aTableColumn identifier] isEqualToString: @"column1"])
+  if ([[aTableColumn identifier] isEqual: @"column1"])
     {
       return value1[rowIndex];
     }

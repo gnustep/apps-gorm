@@ -1,3 +1,9 @@
+2006-05-01 07:45  David Ayers  <d.ayers@inode.at>
+
+	* Palettes/3Containers/GormNSTableView.m 
+	([-tableView:objectValueForTableColumn:row:]): Do not assume that
+	the identifier of the table column is an NSString.
+	
 2006-04-30 09:15  David Ayers  <d.ayers@inode.at>
 
 	* GormCore/GormCustomClassInspector.m
