@@ -1,3 +1,9 @@
+2006-05-15 22:58 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Reload all on calls to reloadData
+	* GormCore/GormDocument.m: in detachObject: make certain that
+	window is closed and released.
+
 2006-05-15 21:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m
