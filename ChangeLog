@@ -1,3 +1,8 @@
+2006-05-15 21:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist: Update to 1.0.7.
+
 2006-05-01 07:45  David Ayers  <d.ayers@inode.at>
 
 	* Palettes/3Containers/GormNSTableView.m 
