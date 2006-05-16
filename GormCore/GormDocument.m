@@ -1236,107 +1236,118 @@ static NSImage  *fileImage = nil;
  */
 - (void) detachObject: (id)anObject
 {
-  NSString	   *name = RETAIN([self nameForObject: anObject]); // released at end of method...
-  GormClassManager *cm = [self classManager];
-  unsigned	   count;
-  NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
-  id               obj = nil;
-  NSEnumerator     *en = [objs objectEnumerator];
-
-  if([self containsObject: anObject] == NO)
+  if([self containsObject: anObject])
     {
-      return;
-    }
+      NSString	       *name = RETAIN([self nameForObject: anObject]); // released at end of method...
+      unsigned	       count;
+      NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
+      id               obj = nil;
+      NSEnumerator     *en = [objs objectEnumerator];
+      id               editor = [self editorForObject: anObject create: NO];
+      id               parent = [self parentEditorForEditor: editor];
 
-  [[self editorForObject: anObject create: NO] close];
-
-  count = [connections count];
-  while (count-- > 0)
-    {
-      id<IBConnectors>	con = [connections objectAtIndex: count];
-
-      if ([con destination] == anObject || [con source] == anObject)
+      // close the editor...
+      [editor close];
+      if([parent respondsToSelector: @selector(selectObjects:)])
 	{
-	  [connections removeObjectAtIndex: count];
+	  [parent selectObjects: [NSArray array]];
 	}
-    }
 
-  // if the font manager is being reset, zero out the instance variable.
-  if([name isEqual: @"NSFont"])
-    {
-      fontManager = nil;
-    }
-
-  if ([anObject isKindOfClass: [NSWindow class]] 
-      || [anObject isKindOfClass: [NSMenu class]] 
-      || [topLevelObjects containsObject: anObject])
-    {
-      [objectsView removeObject: anObject];
-    }
-
-  // if it's in the top level items array, remove it.
-  if([topLevelObjects containsObject: anObject])
-    {
-      [topLevelObjects removeObject: anObject];
-    }
-
-  // eliminate it from being the windows/services menu, if it's being detached.
-  if ([anObject isKindOfClass: [NSMenu class]])
-    {
-      if([self windowsMenu] == anObject)
+      count = [connections count];
+      while (count-- > 0)
 	{
-	  [self setWindowsMenu: nil];
-	}
-      else if([self servicesMenu] == anObject)
-	{
-	  [self setServicesMenu: nil];
-	}
-    }
-
-  /*
-   * Make sure this window isn't in the list of objects to be made visible
-   * on nib loading.
-   */
-  if([anObject isKindOfClass: [NSWindow class]])
-    {
-      [self setObject: anObject isVisibleAtLaunch: NO];
-    }
-
-  // some objects are given a name, some are not.  The only ones we need
-  // to worry about are those that have names.
-  if(name != nil)
-    {
-      // remove from custom class map...
-      NSDebugLog(@"Delete from custom class map -> %@",name);
-      [cm removeCustomClassForName: name];
-      if([anObject isKindOfClass: [NSScrollView class]])
-	{
-	  NSView *subview = [anObject documentView];
-	  NSString *objName = [self nameForObject: subview];
-	  NSDebugLog(@"Delete from custom class map -> %@",objName);
-	  [cm removeCustomClassForName: objName];
+	  id<IBConnectors> con = [connections objectAtIndex: count];
+	  
+	  if ([con destination] == anObject || [con source] == anObject)
+	    {
+	      [connections removeObjectAtIndex: count];
+	    }
 	}
       
-      // remove from name table...
+      // if the font manager is being reset, zero out the instance variable.
+      if([name isEqual: @"NSFont"])
+	{
+	  fontManager = nil;
+	}
+      
+      if ([anObject isKindOfClass: [NSWindow class]] 
+	  || [anObject isKindOfClass: [NSMenu class]] 
+	  || [topLevelObjects containsObject: anObject])
+	{
+	  [objectsView removeObject: anObject];
+	}
+      
+      // if it's in the top level items array, remove it.
+      if([topLevelObjects containsObject: anObject])
+	{
+	  [topLevelObjects removeObject: anObject];
+	}
+      
+      // eliminate it from being the windows/services menu, if it's being detached.
+      if ([anObject isKindOfClass: [NSMenu class]])
+	{
+	  if([self windowsMenu] == anObject)
+	    {
+	      [self setWindowsMenu: nil];
+	    }
+	  else if([self servicesMenu] == anObject)
+	    {
+	      [self setServicesMenu: nil];
+	    }
+	}
+      
+      /*
+       * Make sure this window isn't in the list of objects to be made visible
+       * on nib loading.
+       */
       if([anObject isKindOfClass: [NSWindow class]])
 	{
-	  [anObject setReleasedWhenClosed: YES];
-	  [anObject close];
+	  [self setObject: anObject isVisibleAtLaunch: NO];
 	}
-      [nameTable removeObjectForKey: name];
       
-      // free...
-      NSMapRemove(objToName, (void*)anObject);
-      RELEASE(name);
-    }
-
-  // iterate over the list and remove any subordinate objects.
-  if(en != nil)
-    {
-      while((obj = [en nextObject]) != nil)
+      // some objects are given a name, some are not.  The only ones we need
+      // to worry about are those that have names.
+      if(name != nil)
 	{
-	  [self detachObject: obj];
+	  // remove from custom class map...
+	  NSDebugLog(@"Delete from custom class map -> %@",name);
+	  [classManager removeCustomClassForName: name];
+	  if([anObject isKindOfClass: [NSScrollView class]])
+	    {
+	      NSView *subview = [anObject documentView];
+	      NSString *objName = [self nameForObject: subview];
+	      NSDebugLog(@"Delete from custom class map -> %@",objName);
+	      [classManager removeCustomClassForName: objName];
+	    }
+	  else if([anObject isKindOfClass: [NSWindow class]])
+	    {
+	      [anObject setReleasedWhenClosed: YES];
+	      [anObject close];
+	    }
+
+	  // make certain it's not displayed, if it's being detached.
+	  if([anObject isKindOfClass: [NSView class]])
+	    {
+	      [anObject removeFromSuperview];
+	    }
+
+	  [nameTable removeObjectForKey: name];
+	  
+	  // free...
+	  NSMapRemove(objToName, (void*)anObject);
 	}
+      
+      // iterate over the list and remove any subordinate objects.
+      if(en != nil)
+	{
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      [self detachObject: obj];
+	    }
+	}
+
+      [self setSelectionFromEditor: nil]; // clear the selection.
+      RELEASE(name); // retained at beginning of method...
     }
 }
 
@@ -1961,7 +1972,22 @@ static NSImage  *fileImage = nil;
  */
 - (void) removeAllInstancesOfClass: (NSString *)className
 {
-  [objectsView removeAllInstancesOfClass: className];
+  NSMutableArray *removedObjects = [NSMutableArray array];
+  NSEnumerator *en = [[self objects] objectEnumerator];
+  id object = nil;
+
+  // locate objects for removal
+  while((object = [en nextObject]) != nil)
+    {
+      NSString *clsForObj = [classManager classNameForObject: object];
+      if([className isEqual: clsForObj])
+	{
+	  [removedObjects addObject: object];
+	}
+    }
+
+  // remove the objects
+  [self detachObjects: removedObjects];
 }
 
 /**
@@ -3114,19 +3140,18 @@ static NSImage  *fileImage = nil;
  */
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
-  GormClassManager *cm = [self classManager];
   NSEnumerator *en = [[self nameTable] keyEnumerator];
   id key = nil;
 
   // loop through all custom objects and windows
   while((key = [en nextObject]) != nil)
     {
-      id customClass = [cm customClassForName: key];
+      id customClass = [classManager customClassForName: key];
       id object = [self objectForName: key];
       id template = nil;
       if(customClass != nil)
 	{
-	  NSString *superClass = [cm nonCustomSuperClassOf: customClass];
+	  NSString *superClass = [classManager nonCustomSuperClassOf: customClass];
 	  template = [GSTemplateFactory templateForObject: object
 					withClassName: customClass 
 					withSuperClassName: superClass];

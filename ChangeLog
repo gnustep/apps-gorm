@@ -1,8 +1,21 @@
+2006-05-16 00:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Improved logic in detachObject: to clear the
+	selection in the parent editor and reset the selection in the document 
+	to prevent any problems when an object is removed.   Also added
+	code for removeAllInstancesOfClass: from GormObjectEditor.  
+	* GormCore/GormFunctions.m: allSubviews shouldn't return the view
+	which is initially passed.
+	* GormCore/GormInternalViewEditor.m: simplified deleteSelection because
+	of changes to detachObject:
+	* GormCore/GormObjectEditor.[hm]: Remove removeAllInstancesOfClass:
+	from the header and class.
+
 2006-05-15 22:58 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Reload all on calls to reloadData
 	* GormCore/GormDocument.m: in detachObject: make certain that
-	window is closed and released.
+	window is closed and released. Corrects bug#16587.
 
 2006-05-15 21:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
