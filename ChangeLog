@@ -1,3 +1,9 @@
+2006-05-20 18:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m: Updated to 1.0.9
+	* GormInfo.plist: Updated to 1.0.9.
+	* NibCompatibility: Merged from this branch to HEAD.
+
 2006-05-20 04:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.8
