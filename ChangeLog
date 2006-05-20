@@ -1,3 +1,16 @@
+2006-05-20 04:47 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version 1.0.8
+	
+2006-05-20 04:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Version: Changes for 1.0.8 bugfix release.
+
 2006-05-16 00:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Improved logic in detachObject: to clear the
