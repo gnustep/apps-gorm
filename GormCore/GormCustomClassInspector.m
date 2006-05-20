@@ -255,7 +255,7 @@
 		      [newCell setState: [cell state]];
 		    }
 
-		  if([cell type] == NSTextCellType)
+		  if([(NSCell *)cell type] == NSTextCellType)
 		    {
 		      // title...
 		      if([newCell respondsToSelector: @selector(setStringValue:)] &&
@@ -274,7 +274,7 @@
 			  [newCell setAlternateTitle: [cell alternateTitle]];
 			}
 		    }
-		  else if([cell type] == NSImageCellType)
+		  else if([(NSCell *)cell type] == NSImageCellType)
 		    {
 		      // images...
 		      if([newCell respondsToSelector: @selector(setAlternateImage:)] &&
