@@ -227,6 +227,16 @@
 	* GormCore/GormViewSizeInspector.m: [GormViewSizeInspector setObject:]
 	Added code to enable/disable cells if view is standalone.
 
+
+2006-01-17 22:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ChangeLog
+	* GormCore/GormViewEditor.m
+	* GormCore/GormViewSizeInspector.m
+	* Palettes/1Windows/GormWindowAttributesInspector.m
+	* Palettes/1Windows/GormWindowSizeInspector.m: Merged changes from 
+	the baseline.
+
 2006-01-16 23:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewSizeInspector.m: Correction for a similar problem
@@ -241,7 +251,13 @@
 
 	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
-	properly initialized, this was causing the flags to be set improperly.
+	properly initialized, this was causing the flags to be set 
+	
+2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.m: Removed deprecated templates.
+	* GormCore/GormViewEditor.m: Removed problem which was causing
+	a notification loop.
 
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
