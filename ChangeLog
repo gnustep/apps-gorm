@@ -2,7 +2,13 @@
 
 	* GormCore/GormFilePrefsManager.m: Updated to 1.0.9
 	* GormInfo.plist: Updated to 1.0.9.
-	* NibCompatibility: Merged from this branch to HEAD.
+	* [NibCompatibility]: Merged from this branch to HEAD.
+
+2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.m: Removed deprecated templates.
+	* GormCore/GormViewEditor.m: Removed problem which was causing
+	a notification loop. [NibCompatibility]
 
 2006-05-20 04:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
@@ -259,12 +265,6 @@
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
 	properly initialized, this was causing the flags to be set 
 	
-2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
-
-	* GormCore/GormPrivate.m: Removed deprecated templates.
-	* GormCore/GormViewEditor.m: Removed problem which was causing
-	a notification loop.
-
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Correction for crash on close after
