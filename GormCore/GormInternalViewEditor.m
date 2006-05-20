@@ -308,21 +308,15 @@ static NSImage *horizontalImage;
 {
   int i;
   int count = [selection count];
-  id temp;
   
   for (i = count - 1; i >= 0; i--)
     {
-      temp = [[selection objectAtIndex: i] editedObject];
+      id ed = [selection objectAtIndex: i];
+      id temp = [ed editedObject];
 
-      [[selection objectAtIndex: i] detachSubviews];
+      [ed detachSubviews];
       [document detachObject: temp];
-      [[selection objectAtIndex: i] close];
-
-      [temp removeFromSuperview];
-      [selection removeObjectAtIndex: i];
     }
-  
-  [self selectObjects: [NSArray array]];  
 }
 
 - (void) mouseDown: (NSEvent *) theEvent

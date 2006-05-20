@@ -37,7 +37,6 @@
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (void) resetObject: (id)anObject;
-- (void) removeAllInstancesOfClass: (NSString *)className;
 @end
 
 #endif

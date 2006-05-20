@@ -592,7 +592,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 		  [self copySelection];
 		  [document removeAllInstancesOfClass: anitem];
 		  [classManager removeClassNamed: anitem];
-		  [outlineView reloadData];
+		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
 		      object: classManager];
 		  ASSIGN(selectedClass, nil); // don't keep the class we're pointing to.
@@ -696,7 +696,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 - (void) reloadData
 {
   [outlineView reloadData];
-  // [browserView loadColumnZero];
+  [browserView loadColumnZero];
 }
 
 - (BOOL) isEditing

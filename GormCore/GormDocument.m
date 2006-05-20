@@ -524,7 +524,7 @@ static NSImage  *fileImage = nil;
     {
       [objectsView addObject: anObject];
       [topLevelObjects addObject: anObject];
-      if ([anObject isKindOfClass: [NSWindow class]] == YES)
+      if ([anObject isKindOfClass: [NSWindow class]])
 	{
 	  NSWindow *win = (NSWindow *)anObject;
 	  NSView *contentView = [win contentView];
@@ -601,7 +601,7 @@ static NSImage  *fileImage = nil;
   /*
    * Add the current menu and any submenus.
    */
-  else if ([anObject isKindOfClass: [NSMenu class]] == YES)
+  else if ([anObject isKindOfClass: [NSMenu class]])
     {
       BOOL isMainMenu = NO;
       NSMenu *menu = (NSMenu *)anObject;
@@ -653,11 +653,11 @@ static NSImage  *fileImage = nil;
   /*
    * If this a scrollview, it is interesting to add its contentview.
    */
-  else if (([anObject isKindOfClass: [NSScrollView class]] == YES)
+  else if (([anObject isKindOfClass: [NSScrollView class]])
 	   && ([(NSScrollView *)anObject documentView] != nil))
     {
       if ([[anObject documentView] isKindOfClass: 
-				    [NSTableView class]] == YES)
+				    [NSTableView class]])
 	{
 	  int i;
 	  int count;
@@ -673,7 +673,7 @@ static NSImage  *fileImage = nil;
 			toParent: tv];
 	    }
 	}
-      else // if ([[anObject documentView] isKindOfClass: [NSTextView class]] == YES)
+      else // if ([[anObject documentView] isKindOfClass: [NSTextView class]])
 	{
 	  [self attachObject: [anObject documentView] toParent: anObject];
 	}
@@ -681,7 +681,7 @@ static NSImage  *fileImage = nil;
   /*
    * If it's a tab view, then we want the tab items.
    */
-  else if ([anObject isKindOfClass: [NSTabView class]] == YES)
+  else if ([anObject isKindOfClass: [NSTabView class]])
     {
       NSEnumerator *tie = [[anObject tabViewItems] objectEnumerator];
       NSTabViewItem *ti = nil;
@@ -693,7 +693,7 @@ static NSImage  *fileImage = nil;
   /*
    * If it's a tab view item, then we attach the view.
    */
-  else if ([anObject isKindOfClass: [NSTabViewItem class]] == YES)
+  else if ([anObject isKindOfClass: [NSTabViewItem class]])
     {
       NSTabViewItem *ti = (NSTabViewItem *)anObject; 
       id v = [ti view];
@@ -702,7 +702,7 @@ static NSImage  *fileImage = nil;
   /*
    * If it's a simple NSView, add it and all of it's subviews.
    */
-  else if ([anObject isKindOfClass: [NSView class]] == YES)
+  else if ([anObject isKindOfClass: [NSView class]])
     {
       NSView *view = (NSView *)anObject, *sv = nil;
       NSEnumerator *en = [[view subviews] objectEnumerator];
@@ -717,9 +717,9 @@ static NSImage  *fileImage = nil;
   // Detect and add any connection the object might have.
   // This is done so that any palette items which have predefined connections will be
   // shown in the connections list.
-  if([anObject respondsToSelector: @selector(action)] == YES &&
-     [anObject respondsToSelector: @selector(target)] == YES &&
-     newObject == YES)
+  if([anObject respondsToSelector: @selector(action)]  &&
+     [anObject respondsToSelector: @selector(target)]  &&
+     newObject)
     {
       SEL sel = [anObject action];
 
@@ -815,12 +815,12 @@ static NSImage  *fileImage = nil;
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+      if ([con isKindOfClass: [GormObjectToEditor class]])
 	{
 	  [savedEditors addObject: con];
 	  [[con destination] deactivate];
 	}
-      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+      else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [savedEditors addObject: con];
 	}
@@ -1236,102 +1236,118 @@ static NSImage  *fileImage = nil;
  */
 - (void) detachObject: (id)anObject
 {
-  NSString	   *name = RETAIN([self nameForObject: anObject]); // released at end of method...
-  GormClassManager *cm = [self classManager];
-  unsigned	   count;
-  NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
-  id               obj = nil;
-  NSEnumerator     *en = [objs objectEnumerator];
-
-  if([self containsObject: anObject] == NO)
+  if([self containsObject: anObject])
     {
-      return;
-    }
+      NSString	       *name = RETAIN([self nameForObject: anObject]); // released at end of method...
+      unsigned	       count;
+      NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
+      id               obj = nil;
+      NSEnumerator     *en = [objs objectEnumerator];
+      id               editor = [self editorForObject: anObject create: NO];
+      id               parent = [self parentEditorForEditor: editor];
 
-  [[self editorForObject: anObject create: NO] close];
-
-  count = [connections count];
-  while (count-- > 0)
-    {
-      id<IBConnectors>	con = [connections objectAtIndex: count];
-
-      if ([con destination] == anObject || [con source] == anObject)
+      // close the editor...
+      [editor close];
+      if([parent respondsToSelector: @selector(selectObjects:)])
 	{
-	  [connections removeObjectAtIndex: count];
+	  [parent selectObjects: [NSArray array]];
 	}
-    }
 
-  // if the font manager is being reset, zero out the instance variable.
-  if([name isEqual: @"NSFont"])
-    {
-      fontManager = nil;
-    }
-
-  if ([anObject isKindOfClass: [NSWindow class]] == YES
-      || [anObject isKindOfClass: [NSMenu class]] == YES
-      || [topLevelObjects containsObject: anObject] == YES)
-    {
-      [objectsView removeObject: anObject];
-    }
-
-  // if it's in the top level items array, remove it.
-  if([topLevelObjects containsObject: anObject])
-    {
-      [topLevelObjects removeObject: anObject];
-    }
-
-  // eliminate it from being the windows/services menu, if it's being detached.
-  if ([anObject isKindOfClass: [NSMenu class]])
-    {
-      if([self windowsMenu] == anObject)
+      count = [connections count];
+      while (count-- > 0)
 	{
-	  [self setWindowsMenu: nil];
-	}
-      else if([self servicesMenu] == anObject)
-	{
-	  [self setServicesMenu: nil];
-	}
-    }
-
-  /*
-   * Make sure this window isn't in the list of objects to be made visible
-   * on nib loading.
-   */
-  if([anObject isKindOfClass: [NSWindow class]])
-    {
-      [self setObject: anObject isVisibleAtLaunch: NO];
-    }
-
-  // some objects are given a name, some are not.  The only ones we need
-  // to worry about are those that have names.
-  if(name != nil)
-    {
-      // remove from custom class map...
-      NSDebugLog(@"Delete from custom class map -> %@",name);
-      [cm removeCustomClassForName: name];
-      if([anObject isKindOfClass: [NSScrollView class]] == YES)
-	{
-	  NSView *subview = [anObject documentView];
-	  NSString *objName = [self nameForObject: subview];
-	  NSDebugLog(@"Delete from custom class map -> %@",objName);
-	  [cm removeCustomClassForName: objName];
+	  id<IBConnectors> con = [connections objectAtIndex: count];
+	  
+	  if ([con destination] == anObject || [con source] == anObject)
+	    {
+	      [connections removeObjectAtIndex: count];
+	    }
 	}
       
-      // remove from name table...
-      [nameTable removeObjectForKey: name];
-      
-      // free...
-      NSMapRemove(objToName, (void*)anObject);
-      RELEASE(name);
-    }
-
-  // iterate over the list and remove any subordinate objects.
-  if(en != nil)
-    {
-      while((obj = [en nextObject]) != nil)
+      // if the font manager is being reset, zero out the instance variable.
+      if([name isEqual: @"NSFont"])
 	{
-	  [self detachObject: obj];
+	  fontManager = nil;
 	}
+      
+      if ([anObject isKindOfClass: [NSWindow class]] 
+	  || [anObject isKindOfClass: [NSMenu class]] 
+	  || [topLevelObjects containsObject: anObject])
+	{
+	  [objectsView removeObject: anObject];
+	}
+      
+      // if it's in the top level items array, remove it.
+      if([topLevelObjects containsObject: anObject])
+	{
+	  [topLevelObjects removeObject: anObject];
+	}
+      
+      // eliminate it from being the windows/services menu, if it's being detached.
+      if ([anObject isKindOfClass: [NSMenu class]])
+	{
+	  if([self windowsMenu] == anObject)
+	    {
+	      [self setWindowsMenu: nil];
+	    }
+	  else if([self servicesMenu] == anObject)
+	    {
+	      [self setServicesMenu: nil];
+	    }
+	}
+      
+      /*
+       * Make sure this window isn't in the list of objects to be made visible
+       * on nib loading.
+       */
+      if([anObject isKindOfClass: [NSWindow class]])
+	{
+	  [self setObject: anObject isVisibleAtLaunch: NO];
+	}
+      
+      // some objects are given a name, some are not.  The only ones we need
+      // to worry about are those that have names.
+      if(name != nil)
+	{
+	  // remove from custom class map...
+	  NSDebugLog(@"Delete from custom class map -> %@",name);
+	  [classManager removeCustomClassForName: name];
+	  if([anObject isKindOfClass: [NSScrollView class]])
+	    {
+	      NSView *subview = [anObject documentView];
+	      NSString *objName = [self nameForObject: subview];
+	      NSDebugLog(@"Delete from custom class map -> %@",objName);
+	      [classManager removeCustomClassForName: objName];
+	    }
+	  else if([anObject isKindOfClass: [NSWindow class]])
+	    {
+	      [anObject setReleasedWhenClosed: YES];
+	      [anObject close];
+	    }
+
+	  // make certain it's not displayed, if it's being detached.
+	  if([anObject isKindOfClass: [NSView class]])
+	    {
+	      [anObject removeFromSuperview];
+	    }
+
+	  [nameTable removeObjectForKey: name];
+	  
+	  // free...
+	  NSMapRemove(objToName, (void*)anObject);
+	}
+      
+      // iterate over the list and remove any subordinate objects.
+      if(en != nil)
+	{
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      [self detachObject: obj];
+	    }
+	}
+
+      [self setSelectionFromEditor: nil]; // clear the selection.
+      RELEASE(name); // retained at beginning of method...
     }
 }
 
@@ -1482,7 +1498,7 @@ static NSImage  *fileImage = nil;
 /**
  * Close anEditor for anObject.
  */ 
-- (void) editor: (id<IBEditors,IBSelectionOwners>)anEditor didCloseForObject: (id)anObject
+- (void) editor: (id<IBEditors>)anEditor didCloseForObject: (id)anObject
 {
   NSArray		*links;
 
@@ -1517,7 +1533,7 @@ static NSImage  *fileImage = nil;
    * Make sure that this editor is not the selection owner.
    */
   if ([(id<IB>)NSApp selectionOwner] == 
-      anEditor)
+      (id<IBSelectionOwners>)anEditor)
     {
       [self resignSelectionForEditor: anEditor];
     }
@@ -1550,7 +1566,7 @@ static NSImage  *fileImage = nil;
    */
   links = [self connectorsForSource: anObject
 			    ofClass: [GormObjectToEditor class]];
-  if ([links count] == 0 && flag == YES)
+  if ([links count] == 0 && flag)
     {
       Class		eClass = NSClassFromString([anObject editorClassName]);
       id<IBEditors>	editor;
@@ -1670,11 +1686,11 @@ static NSImage  *fileImage = nil;
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
-      if ([con isKindOfClass: [GormObjectToEditor class]] == YES)
+      if ([con isKindOfClass: [GormObjectToEditor class]])
 	{
 	  [editors addObject: con];
 	}
-      else if ([con isKindOfClass: [GormEditorToParent class]] == YES)
+      else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [editors addObject: con];
 	}
@@ -1702,7 +1718,7 @@ static NSImage  *fileImage = nil;
   NSString *name = [aNotification name];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
-  if ([name isEqual: NSWindowWillCloseNotification] == YES)
+  if ([name isEqual: NSWindowWillCloseNotification])
     {
       NSEnumerator	*enumerator;
       id		obj;
@@ -1710,7 +1726,7 @@ static NSImage  *fileImage = nil;
       enumerator = [nameTable objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
-	  if ([obj isKindOfClass: [NSWindow class]] == YES)
+	  if ([obj isKindOfClass: [NSWindow class]])
 	    {
 	      [obj close];
 	      RELEASE(obj);
@@ -1723,21 +1739,21 @@ static NSImage  *fileImage = nil;
       [nc postNotificationName: IBWillCloseDocumentNotification object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
     }
-  else if ([name isEqual: NSWindowDidBecomeKeyNotification] == YES)
+  else if ([name isEqual: NSWindowDidBecomeKeyNotification])
     {
       [self setDocumentActive: YES];
     }
-  else if ([name isEqual: NSWindowWillMiniaturizeNotification] == YES)
+  else if ([name isEqual: NSWindowWillMiniaturizeNotification])
     {
       [self setDocumentActive: NO];
     }
-  else if ([name isEqual: NSWindowDidDeminiaturizeNotification] == YES)
+  else if ([name isEqual: NSWindowDidDeminiaturizeNotification])
     {
       [self setDocumentActive: YES];
     }
-  else if ([name isEqual: IBWillBeginTestingInterfaceNotification] == YES)
+  else if ([name isEqual: IBWillBeginTestingInterfaceNotification])
     {
-      if ([window isVisible] == YES)
+      if ([window isVisible])
 	{
 	  [hidden addObject: window];
 	  [window setExcludedFromWindowsMenu: YES];
@@ -1751,17 +1767,17 @@ static NSImage  *fileImage = nil;
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      if ([obj isKindOfClass: [NSMenu class]] == YES)
+	      if ([obj isKindOfClass: [NSMenu class]])
 		{
-		  if ([[obj window] isVisible] == YES)
+		  if ([[obj window] isVisible])
 		    {
 		      [hidden addObject: obj];
 		      [obj close];
 		    }
 		}
-	      else if ([obj isKindOfClass: [NSWindow class]] == YES)
+	      else if ([obj isKindOfClass: [NSWindow class]])
 		{
-		  if ([obj isVisible] == YES)
+		  if ([obj isVisible])
 		    {
 		      [hidden addObject: obj];
 		      [obj orderOut: self];
@@ -1770,7 +1786,7 @@ static NSImage  *fileImage = nil;
 	    }
 	}
     }
-  else if ([name isEqual: IBWillEndTestingInterfaceNotification] == YES)
+  else if ([name isEqual: IBWillEndTestingInterfaceNotification])
     {
       if ([hidden count] > 0)
 	{
@@ -1780,11 +1796,11 @@ static NSImage  *fileImage = nil;
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      if ([obj isKindOfClass: [NSMenu class]] == YES)
+	      if ([obj isKindOfClass: [NSMenu class]])
 		{
 		  [obj display];
 		}
-	      else if ([obj isKindOfClass: [NSWindow class]] == YES)
+	      else if ([obj isKindOfClass: [NSWindow class]])
 		{
 		  [obj orderFront: self];
 		}
@@ -1793,22 +1809,24 @@ static NSImage  *fileImage = nil;
 	  [window setExcludedFromWindowsMenu: NO];
 	}
     }
-  else if ([name isEqual: IBClassNameChangedNotification] == YES)
+  else if ([name isEqual: IBClassNameChangedNotification])
     {
       [classesView reloadData];
       [self setSelectionFromEditor: nil];
       [self touch];
     }
-  else if ([name isEqual: IBInspectorDidModifyObjectNotification] == YES)
+  else if ([name isEqual: IBInspectorDidModifyObjectNotification])
     {
       [classesView reloadData];
       [self touch];
     }
-  else if ([name isEqual: GormDidModifyClassNotification] == YES)
+  else if ([name isEqual: GormDidModifyClassNotification] ||
+	   [name isEqual: GormDidDeleteClassNotification])
     {
       if ([classesView isEditing] == NO) 
 	{
 	  [classesView reloadData];
+	  [self touch];
 	}
     }
   else if ([name isEqual: GormDidAddClassNotification])
@@ -1954,7 +1972,22 @@ static NSImage  *fileImage = nil;
  */
 - (void) removeAllInstancesOfClass: (NSString *)className
 {
-  [objectsView removeAllInstancesOfClass: className];
+  NSMutableArray *removedObjects = [NSMutableArray array];
+  NSEnumerator *en = [[self objects] objectEnumerator];
+  id object = nil;
+
+  // locate objects for removal
+  while((object = [en nextObject]) != nil)
+    {
+      NSString *clsForObj = [classManager classNameForObject: object];
+      if([className isEqual: clsForObj])
+	{
+	  [removedObjects addObject: object];
+	}
+    }
+
+  // remove the objects
+  [self detachObjects: removedObjects];
 }
 
 /**
@@ -2321,7 +2354,7 @@ static NSImage  *fileImage = nil;
       /*
        * repair the .gorm file, if needed.
        */
-      if(repairFile == YES)
+      if(repairFile)
 	{
 	  [self _repairFile];
 	}
@@ -2680,7 +2713,7 @@ static NSImage  *fileImage = nil;
 	{
 	  id<IBEditors>	e = [c destination];
 
-	  if (e != editor && [e wantsSelection] == YES)
+	  if (e != editor && [e wantsSelection])
 	    {
 	      [e activate];
 	      [self setSelectionFromEditor: e];
@@ -2701,12 +2734,12 @@ static NSImage  *fileImage = nil;
  */
 - (void) setupDefaults: (NSString*)type
 {
-  if (hasSetDefaults == YES)
+  if (hasSetDefaults)
     {
       return;
     }
   hasSetDefaults = YES;
-  if ([type isEqual: @"Application"] == YES)
+  if ([type isEqual: @"Application"])
     {
       NSMenu	*aMenu;
       NSWindow	*aWindow;
@@ -2762,7 +2795,7 @@ static NSImage  *fileImage = nil;
       [self attachObject: aMenu toParent: nil]; 
       [[aMenu window] setFrameTopLeftPoint: origin];
     }
-  else if ([type isEqual: @"Inspector"] == YES)
+  else if ([type isEqual: @"Inspector"])
     {
       NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
@@ -2791,7 +2824,7 @@ static NSImage  *fileImage = nil;
       [self setName: @"InspectorWin" forObject: aWindow];
       [self attachObject: aWindow toParent: nil];
     }
-  else if ([type isEqual: @"Palette"] == YES)
+  else if ([type isEqual: @"Palette"])
     {
       NSPanel	*aWindow;
       NSRect	frame = [[NSScreen mainScreen] frame];
@@ -2890,7 +2923,7 @@ static NSImage  *fileImage = nil;
       oldName = [self nameForObject: object];
       if (oldName != nil)
 	{
-	  if ([oldName isEqual: aName] == YES)
+	  if ([oldName isEqual: aName])
 	    {
 	      return; /* Already have this name ... nothing to do */
 	    }
@@ -2907,7 +2940,7 @@ static NSImage  *fileImage = nil;
       RETAIN(oldName); // hold on to this temporarily...
       [nameTable removeObjectForKey: oldName];
     }
-  if ([objectsView containsObject: object] == YES)
+  if ([objectsView containsObject: object])
     {
       [objectsView refreshCells];
     }
@@ -2938,7 +2971,7 @@ static NSImage  *fileImage = nil;
 {
   NSMutableArray	*a = [nameTable objectForKey: @"NSVisible"];
 
-  if (flag == YES)
+  if (flag)
     {
       if (a == nil)
 	{
@@ -2972,7 +3005,7 @@ static NSImage  *fileImage = nil;
 {
   NSMutableArray	*a = [nameTable objectForKey: @"NSDeferred"];
 
-  if (flag == YES)
+  if (flag)
     {
       if (a == nil)
 	{
@@ -3084,7 +3117,7 @@ static NSImage  *fileImage = nil;
       NSString		*path = [sp filename];
 
       if ([path isEqual: documentPath] == NO
-	&& [mgr fileExistsAtPath: path] == YES)
+	&& [mgr fileExistsAtPath: path])
 	{
 	  /* NSSavePanel has already asked if it's ok to replace */
 	  NSString	*bPath = [path stringByAppendingString: @"~"];
@@ -3107,19 +3140,18 @@ static NSImage  *fileImage = nil;
  */
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
-  GormClassManager *cm = [self classManager];
   NSEnumerator *en = [[self nameTable] keyEnumerator];
   id key = nil;
 
   // loop through all custom objects and windows
   while((key = [en nextObject]) != nil)
     {
-      id customClass = [cm customClassForName: key];
+      id customClass = [classManager customClassForName: key];
       id object = [self objectForName: key];
       id template = nil;
       if(customClass != nil)
 	{
-	  NSString *superClass = [cm nonCustomSuperClassOf: customClass];
+	  NSString *superClass = [classManager nonCustomSuperClassOf: customClass];
 	  template = [GSTemplateFactory templateForObject: object
 					withClassName: customClass 
 					withSuperClassName: superClass];
@@ -3179,8 +3211,10 @@ static NSImage  *fileImage = nil;
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;
-  NSUserDefaults        *defaults = [NSUserDefaults standardUserDefaults];
-  NSString              *archiveType = [defaults stringForKey: @"ArchiveType"];
+
+  // ** to be used in nib compat.
+  // NSUserDefaults        *defaults = [NSUserDefaults standardUserDefaults];
+  // NSString              *archiveType = [defaults stringForKey: @"ArchiveType"];
 
   if (documentPath == nil)
     {
@@ -3378,7 +3412,7 @@ static NSImage  *fileImage = nil;
       [(id<Gorm>)NSApp stopConnecting];
 
       enumerator = [nameTable objectEnumerator];
-      if (flag == YES)
+      if (flag)
 	{
 	  GormDocument *document = (GormDocument*)[(id<IB>)NSApp activeDocument];
 
@@ -3390,12 +3424,12 @@ static NSImage  *fileImage = nil;
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
 	      NSString *name = [document nameForObject: obj];
-	      if ([obj isKindOfClass: [NSWindow class]] == YES)
+	      if ([obj isKindOfClass: [NSWindow class]])
 		{
 		  [obj orderFront: self];
 		}
 	      else if ([obj isKindOfClass: [NSMenu class]] && 
-		       [name isEqual: @"NSMenu"] == YES)
+		       [name isEqual: @"NSMenu"])
 		{
 		  [obj display];
 		}
@@ -3414,12 +3448,12 @@ static NSImage  *fileImage = nil;
 	  isActive = NO;
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
-	      if ([obj isKindOfClass: [NSWindow class]] == YES)
+	      if ([obj isKindOfClass: [NSWindow class]])
 		{
 		  [obj orderOut: self];
 		}
-	      else if ([obj isKindOfClass: [NSMenu class]] == YES &&
-		       [[self nameForObject: obj] isEqual: @"NSMenu"] == YES)
+	      else if ([obj isKindOfClass: [NSMenu class]]  &&
+		       [[self nameForObject: obj] isEqual: @"NSMenu"])
 		{
 		  [obj close];
 		}
@@ -3465,7 +3499,7 @@ static NSImage  *fileImage = nil;
   /*
    * Get the window and rectangle for which link markup should be drawn.
    */
-  if ([objectsView containsObject: object] == YES)
+  if ([objectsView containsObject: object])
     {
       /*
        * objects that exist in the document objects view must have their link
@@ -3474,7 +3508,7 @@ static NSImage  *fileImage = nil;
       *r = [objectsView rectForObject: object];
       return [objectsView window];
     }
-  else if ([object isKindOfClass: [NSMenuItem class]] == YES)
+  else if ([object isKindOfClass: [NSMenuItem class]])
     {
       NSArray	*links;
       NSMenu	*menu;
@@ -3491,7 +3525,7 @@ static NSImage  *fileImage = nil;
       *r = [editor rectForObject: object];
       return [editor window];
     }
-  else if ([object isKindOfClass: [NSView class]] == YES)
+  else if ([object isKindOfClass: [NSView class]])
     {
       /*
        * Normal view objects just get link markup drawn on them.
@@ -3515,9 +3549,9 @@ static NSImage  *fileImage = nil;
 	  return [editor windowAndRect: r forObject: object];
 	}
     }
-  else if ([object isKindOfClass: [NSTableColumn class]] == YES)
+  else if ([object isKindOfClass: [NSTableColumn class]])
     {
-      NSTableView *tv = [[(NSTableColumn*)object dataCell] controlView];
+      NSTableView *tv = (NSTableView *)[[(NSTableColumn*)object dataCell] controlView];
       NSTableHeaderView *th =  [tv headerView];
       int index;
 
@@ -3564,7 +3598,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) couldCloseDocument
 {
-  if ([window isDocumentEdited] == YES)
+  if ([window isDocumentEdited])
     {
       NSString	*msg;
       int	result;
@@ -4026,7 +4060,7 @@ static NSImage  *fileImage = nil;
 /**
  * This method collects all of the objects in the document.
  */
-- (NSArray *) _collectAllObjects
+- (NSMutableArray *) _collectAllObjects
 {
   NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
   NSEnumerator *en = [topLevelObjects objectEnumerator];
@@ -4168,7 +4202,7 @@ static NSImage  *fileImage = nil;
  */ 
 - (void) exportStrings
 {
-  NSOpenPanel	*sp = [NSSavePanel savePanel];
+  NSSavePanel	*sp = [NSSavePanel savePanel];
   int		result;
 
   [sp setRequiredFileType: @"strings"];

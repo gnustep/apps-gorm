@@ -3,6 +3,18 @@
 @ifset TEXT-ONLY
 @include version.texi
 @end ifset
+@section Noteworthy changes in version @samp{1.0.8}
+
+This is a bugfix release.
+
+@itemize @bullet
+@item Correction for bug#16587.
+@item Correction for handling non-string identifiers in tableviews.
+@end itemize
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.0.6}
 
 This is a bugfix release.
@@ -13,10 +25,6 @@ This is a bugfix release.
 @item Corrected the following bugs since the last release: #16049, #16050, #15988, #16049, #15989, #15987, #15817, #15780, #15642, #15556.
 @item Changed formatting in some of the inspectors so that they are easier to navigate.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.0.4}
 

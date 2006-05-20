@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.0.6 of Gorm.
+This is version 1.0.8 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,22 +12,14 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.0.6'
+1.2 Noteworthy changes in version `1.0.8'
 =========================================
 
 This is a bugfix release.
 
-   * Entirely new icon set, for palettes, gorm, gmodel, nib and the
-     application.
+   * Correction for bug#16587.
 
-   * Replaced some of the images for the inspectors.
-
-   * Corrected the following bugs since the last release: #16049,
-     #16050, #15988, #16049, #15989, #15987, #15817, #15780, #15642,
-     #15556.
-
-   * Changed formatting in some of the inspectors so that they are
-     easier to navigate.
+   * Correction for handling non-string identifiers in tableviews.
 
 1.3 How can I get support for this software?
 ============================================

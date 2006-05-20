@@ -101,6 +101,7 @@ NSArray *allSubviews(NSView *view)
 {
   NSMutableArray *views = [NSMutableArray array];
   subviewsForView( view, views );
+  [views removeObject: view];
   return views;
 }
 
