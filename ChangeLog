@@ -1,3 +1,15 @@
+2006-05-20 18:19 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.m: Updated to 1.0.9
+	* GormInfo.plist: Updated to 1.0.9.
+	* [NibCompatibility]: Merged from this branch to HEAD.
+
+2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPrivate.m: Removed deprecated templates.
+	* GormCore/GormViewEditor.m: Removed problem which was causing
+	a notification loop. [NibCompatibility]
+
 2006-05-20 04:47 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version 1.0.8
@@ -187,7 +199,6 @@
 	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Correction 
 	for bug#15780.
 
->>>>>>> .merge-right.r22767
 2006-02-09 23:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInfo.plist: Change "RELEASE" to SVN to indicate that 1.0.5 is
@@ -252,10 +263,15 @@
 
 	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
+<<<<<<< .working
 	properly initialized, this was causing the flags to be set 
 	
 2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
+=======
+	properly initialized, this was causing the flags to be set 
+	
+>>>>>>> .merge-right.r22963
 	* GormCore/GormPrivate.m: Removed deprecated templates.
 	* GormCore/GormViewEditor.m: Removed problem which was causing
 	a notification loop.
