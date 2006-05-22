@@ -349,8 +349,9 @@ static NSImage  *fileImage = nil;
 	  [selectionBox setContentView: scrollView];
 	  
 	  /*
-	   * Set up special-case dummy objects and add them to the objects view.
+	   * Set up container....
 	   */
+	  container = [[GSNibContainer alloc] init];
 	  filesOwner = [[GormFilesOwner alloc] init];
 	  [self setName: @"NSOwner" forObject: filesOwner];
 	  [objectsView addObject: filesOwner];
@@ -437,12 +438,12 @@ static NSImage  *fileImage = nil;
  */
 - (void) addConnector: (id<IBConnectors>)aConnector
 {
-  if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)
+  if ([[container connections] indexOfObjectIdenticalTo: aConnector] == NSNotFound)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       [nc postNotificationName: IBWillAddConnectorNotification
 			object: aConnector];
-      [connections addObject: aConnector];
+      [[container connections] addObject: aConnector];
       [nc postNotificationName: IBDidAddConnectorNotification
 			object: aConnector];
     }
@@ -453,7 +454,7 @@ static NSImage  *fileImage = nil;
  */
 - (NSArray*) allConnectors
 {
-  return [NSArray arrayWithArray: connections];
+  return [NSArray arrayWithArray: [container connections]];
 }
 
 /**
@@ -523,7 +524,7 @@ static NSImage  *fileImage = nil;
       [anObject isKindOfClass: [GSNibItem class]])
     {
       [objectsView addObject: anObject];
-      [topLevelObjects addObject: anObject];
+      [[container topLevelObjects] addObject: anObject];
       if ([anObject isKindOfClass: [NSWindow class]])
 	{
 	  NSWindow *win = (NSWindow *)anObject;
@@ -555,12 +556,12 @@ static NSImage  *fileImage = nil;
 	 [anObject isKindOfClass: [NSView class]] == NO)
 	{
 	  [objectsView addObject: anObject];
-	  [topLevelObjects addObject: anObject];
+	  [[container topLevelObjects] addObject: anObject];
 	}
       else if([anObject isKindOfClass: [NSView class]] && [anObject superview] == nil)
 	{
 	  [objectsView addObject: anObject];
-	  [topLevelObjects addObject: anObject];
+	  [[container topLevelObjects] addObject: anObject];
 	}
     }
   /*
@@ -614,7 +615,7 @@ static NSImage  *fileImage = nil;
 	{
 	  [self setName: @"NSMenu" forObject: menu];
 	  [objectsView addObject: menu];
-	  [topLevelObjects addObject: menu];
+	  [[container topLevelObjects] addObject: menu];
 	  isMainMenu = YES;
 	}
       else
@@ -812,7 +813,7 @@ static NSImage  *fileImage = nil;
    * Deactivate editors so they won't be archived.
    */
 
-  enumerator = [connections objectEnumerator];
+  enumerator = [[container connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if ([con isKindOfClass: [GormObjectToEditor class]])
@@ -835,22 +836,22 @@ static NSImage  *fileImage = nil;
 	  [con setDestination: name];
 	}
     }
-  [connections removeObjectsInArray: savedEditors];
+  [[container connections] removeObjectsInArray: savedEditors];
 
   NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
-  [nameTable setObject: [classManager customClassMap] forKey: GSCustomClassMap];
+  [[container nameTable] setObject: [classManager customClassMap] forKey: GSCustomClassMap];
 
   /*
    * Remove objects and connections that shouldn't be archived.
    */
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
-  [nameTable removeObjectForKey: @"NSOwner"];
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
-  [nameTable removeObjectForKey: @"NSFirst"];
+  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSOwner"]);
+  [[container nameTable] removeObjectForKey: @"NSOwner"];
+  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSFirst"]);
+  [[container nameTable] removeObjectForKey: @"NSFirst"];
 
   /* Add information about the NSOwner to the archive */
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
-  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
+  [[container nameTable] setObject: [filesOwner className] forKey: @"NSOwner"];
 
   /*
    * Set the appropriate profile so that we save the right versions of 
@@ -975,7 +976,7 @@ static NSImage  *fileImage = nil;
                               ofClass: (Class)aConnectorClass
 {
   NSMutableArray	*array = [NSMutableArray arrayWithCapacity: 16];
-  NSEnumerator		*enumerator = [connections objectEnumerator];
+  NSEnumerator		*enumerator = [[container connections] objectEnumerator];
   id<IBConnectors>	c;
 
   while ((c = [enumerator nextObject]) != nil)
@@ -1005,7 +1006,7 @@ static NSImage  *fileImage = nil;
 			 ofClass: (Class)aConnectorClass
 {
   NSMutableArray	*array = [NSMutableArray arrayWithCapacity: 16];
-  NSEnumerator		*enumerator = [connections objectEnumerator];
+  NSEnumerator		*enumerator = [[container connections] objectEnumerator];
   id<IBConnectors>	c;
 
   while ((c = [enumerator nextObject]) != nil)
@@ -1037,7 +1038,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) containsObjectWithName: (NSString*)aName forParent: (id)parent
 {
-  id	obj = [nameTable objectForKey: aName];
+  id	obj = [[container nameTable] objectForKey: aName];
 
   if (obj == nil)
     {
@@ -1184,6 +1185,9 @@ static NSImage  *fileImage = nil;
   // resource managers
   RELEASE(resourceManagers);
 
+  // container
+  RELEASE(container);
+  
   [super dealloc];
 }
 
@@ -1253,14 +1257,14 @@ static NSImage  *fileImage = nil;
 	  [parent selectObjects: [NSArray array]];
 	}
 
-      count = [connections count];
+      count = [[container connections] count];
       while (count-- > 0)
 	{
-	  id<IBConnectors> con = [connections objectAtIndex: count];
+	  id<IBConnectors> con = [[container connections] objectAtIndex: count];
 	  
 	  if ([con destination] == anObject || [con source] == anObject)
 	    {
-	      [connections removeObjectAtIndex: count];
+	      [[container connections] removeObjectAtIndex: count];
 	    }
 	}
       
@@ -1272,15 +1276,15 @@ static NSImage  *fileImage = nil;
       
       if ([anObject isKindOfClass: [NSWindow class]] 
 	  || [anObject isKindOfClass: [NSMenu class]] 
-	  || [topLevelObjects containsObject: anObject])
+	  || [[container topLevelObjects] containsObject: anObject])
 	{
 	  [objectsView removeObject: anObject];
 	}
       
       // if it's in the top level items array, remove it.
-      if([topLevelObjects containsObject: anObject])
+      if([[container topLevelObjects] containsObject: anObject])
 	{
-	  [topLevelObjects removeObject: anObject];
+	  [[container topLevelObjects] removeObject: anObject];
 	}
       
       // eliminate it from being the windows/services menu, if it's being detached.
@@ -1331,7 +1335,7 @@ static NSImage  *fileImage = nil;
 	      [anObject removeFromSuperview];
 	    }
 
-	  [nameTable removeObjectForKey: name];
+	  [[container nameTable] removeObjectForKey: name];
 	  
 	  // free...
 	  NSMapRemove(objToName, (void*)anObject);
@@ -1510,7 +1514,7 @@ static NSImage  *fileImage = nil;
   NSAssert([links count] < 2, NSInternalInconsistencyException);
   if ([links count] == 1)
     {
-      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+      [[container connections] removeObjectIdenticalTo: [links objectAtIndex: 0]];
     }
 
   /*
@@ -1521,7 +1525,7 @@ static NSImage  *fileImage = nil;
   NSAssert([links count] < 2, NSInternalInconsistencyException);
   if ([links count] == 1)
     {
-      [connections removeObjectIdenticalTo: [links objectAtIndex: 0]];
+      [[container connections] removeObjectIdenticalTo: [links objectAtIndex: 0]];
     }
 
   /*
@@ -1576,7 +1580,7 @@ static NSImage  *fileImage = nil;
       link = AUTORELEASE([[GormObjectToEditor alloc] init]);
       [link setSource: anObject];
       [link setDestination: editor];
-      [connections addObject: link];
+      [[container connections] addObject: link];
       
       if(![openEditors containsObject: editor] && editor != nil)
 	{
@@ -1599,7 +1603,7 @@ static NSImage  *fileImage = nil;
 	  link = AUTORELEASE([[GormEditorToParent alloc] init]);
 	  [link setSource: editor];
 	  [link setDestination: anEditor];
-	  [connections addObject: link];
+	  [[container connections] addObject: link];
 	}
       else
 	{
@@ -1639,16 +1643,16 @@ static NSImage  *fileImage = nil;
   /*
    * Restore removed objects.
    */
-  [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
 
-  [nameTable setObject: firstResponder forKey: @"NSFirst"];
+  [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
 
   /*
    * Map all connector source and destination names to their objects.
    */
-  enumerator = [connections objectEnumerator];
+  enumerator = [[container connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       NSString	*name;
@@ -1663,7 +1667,7 @@ static NSImage  *fileImage = nil;
   /*
    * Restore editor links and reactivate the editors.
    */
-  [connections addObjectsFromArray: savedEditors];
+  [[container connections] addObjectsFromArray: savedEditors];
   enumerator = [savedEditors objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
@@ -1683,7 +1687,7 @@ static NSImage  *fileImage = nil;
   NSMutableArray        *editors = [NSMutableArray array];
 
   // remove the editor connections from the connection array...
-  enumerator = [connections objectEnumerator];
+  enumerator = [[container connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if ([con isKindOfClass: [GormObjectToEditor class]])
@@ -1695,7 +1699,7 @@ static NSImage  *fileImage = nil;
 	  [editors addObject: con];
 	}
     }
-  [connections removeObjectsInArray: editors];
+  [[container connections] removeObjectsInArray: editors];
   [editors removeAllObjects];
 
   // Close all of the editors & get all of the objects out.
@@ -1723,7 +1727,7 @@ static NSImage  *fileImage = nil;
       NSEnumerator	*enumerator;
       id		obj;
       
-      enumerator = [nameTable objectEnumerator];
+      enumerator = [[container nameTable] objectEnumerator];
       while ((obj = [enumerator nextObject]) != nil)
 	{
 	  if ([obj isKindOfClass: [NSWindow class]])
@@ -1764,7 +1768,7 @@ static NSImage  *fileImage = nil;
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
-	  enumerator = [nameTable objectEnumerator];
+	  enumerator = [[container nameTable] objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
 	      if ([obj isKindOfClass: [NSMenu class]])
@@ -1948,7 +1952,7 @@ static NSImage  *fileImage = nil;
  */
 - (id) objectForName: (NSString*)name
 {
-  return [nameTable objectForKey: name];
+  return [[container nameTable] objectForKey: name];
 }
 
 /**
@@ -1956,7 +1960,7 @@ static NSImage  *fileImage = nil;
  */
 - (NSArray*) objects
 {
-  return [nameTable allValues];
+  return [[container nameTable] allValues];
 }
 
 /**
@@ -2014,7 +2018,7 @@ static NSImage  *fileImage = nil;
  */
 - (void) _repairFile
 {
-  NSEnumerator *en = [[nameTable allKeys] objectEnumerator];
+  NSEnumerator *en = [[[container nameTable] allKeys] objectEnumerator];
   NSString *key = nil;
   
   NSRunAlertPanel(_(@"Warning"), 
@@ -2023,7 +2027,7 @@ static NSImage  *fileImage = nil;
 
   while((key = [en nextObject]) != nil)
   {
-    id obj = [nameTable objectForKey: key];
+    id obj = [[container nameTable] objectForKey: key];
     if([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
       {
 	id sm = [obj supermenu];
@@ -2069,7 +2073,7 @@ static NSImage  *fileImage = nil;
     if([obj isKindOfClass: [NSView class]])
       {
 	if([obj window] == nil && 
-	   [topLevelObjects containsObject: obj] == NO &&
+	   [[container topLevelObjects] containsObject: obj] == NO &&
 	   [obj hasSuperviewKindOfClass: [NSTabView class]] == NO)
 	  {
 	    NSLog(@"Found and removed an orphan view %@, %@",obj,[self nameForObject: obj]);
@@ -2085,7 +2089,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) _containsKindOfClass: (Class)cls
 {
-  NSEnumerator *en = [nameTable objectEnumerator];
+  NSEnumerator *en = [[container nameTable] objectEnumerator];
   id obj = nil;
   while((obj = [en nextObject]) != nil)
     {
@@ -2110,7 +2114,6 @@ static NSImage  *fileImage = nil;
       NSMutableDictionary	*cc;
       NSData		        *data;
       NSUnarchiver		*u;
-      GSNibContainer	        *c;
       NSEnumerator		*enumerator;
       id <IBConnectors>	         con;
       NSString                  *ownerClass, *key;
@@ -2187,8 +2190,6 @@ static NSImage  *fileImage = nil;
       u = [[NSUnarchiver alloc] initForReadingWithData: data];
       
       // special internal classes
-      [u decodeClassName: @"GSNibContainer" 
-	 asClassName: @"GormDocument"];
       [u decodeClassName: @"GSNibItem" 
 	 asClassName: @"GormObjectProxy"];
       [u decodeClassName: @"GSCustomView" 
@@ -2202,8 +2203,8 @@ static NSImage  *fileImage = nil;
 	}
 
       [GSClassSwapper setIsInInterfaceBuilder: YES]; // turn off custom classes.
-      c = [u decodeObject];
-      if (c == nil || [c isKindOfClass: [GSNibContainer class]] == NO)
+      ASSIGN(container, [u decodeObject]);
+      if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
 	{
 	  NSRunAlertPanel(_(@"Problem Loading"), 
 			  _(@"Could not unarchive document data"), 
@@ -2213,11 +2214,11 @@ static NSImage  *fileImage = nil;
       [GSClassSwapper setIsInInterfaceBuilder: NO]; // turn on custom classes.
       
       // retrieve the custom class data...
-      cc = [[c nameTable] objectForKey: GSCustomClassMap];
+      cc = [[container nameTable] objectForKey: GSCustomClassMap];
       if (cc == nil)
 	{
 	  cc = [NSMutableDictionary dictionary]; // create an empty one.
-	  [[c nameTable] setObject: cc forKey: GSCustomClassMap];
+	  [[container nameTable] setObject: cc forKey: GSCustomClassMap];
 	}
       [classManager setCustomClassMap: cc];
       NSDebugLog(@"cc = %@", cc);
@@ -2284,17 +2285,17 @@ static NSImage  *fileImage = nil;
        * to hold the objects rather than their names (using our own dummy
        * object as the 'NSOwner'.
        */
-      ownerClass = [[c nameTable] objectForKey: @"NSOwner"];
+      ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
       if (ownerClass)
 	{
 	  [filesOwner setClassName: ownerClass];
 	}
-      [[c nameTable] setObject: filesOwner forKey: @"NSOwner"];
-      [[c nameTable] setObject: firstResponder forKey: @"NSFirst"];
+      [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
+      [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
       
       /* Iterate over the contents of nameTable and create the connections */
-      nt = [c nameTable];
-      enumerator = [[c connections] objectEnumerator];
+      nt = [container nameTable];
+      enumerator = [[container connections] objectEnumerator];
       while ((con = [enumerator nextObject]) != nil)
 	{
 	  NSString  *name;
@@ -2323,7 +2324,7 @@ static NSImage  *fileImage = nil;
 	      if([obj isKindOfClass: [GSNibItem class]] &&
 		 [obj isKindOfClass: [GSCustomView class]] == NO)
 		{
-		  [topLevelObjects addObject: obj];
+		  [[container topLevelObjects] addObject: obj];
 		}
 	    }
 	  isOlderArchive = YES;
@@ -2333,11 +2334,13 @@ static NSImage  *fileImage = nil;
        * Now we merge the objects from the nib container into our own data
        * structures, taking care not to overwrite our NSOwner and NSFirst.
        */
+      /*
       [nt removeObjectForKey: @"NSOwner"];
       [nt removeObjectForKey: @"NSFirst"];
-      [topLevelObjects addObjectsFromArray: [[c topLevelObjects] allObjects]];
-      [connections addObjectsFromArray: [c connections]];
-      [nameTable addEntriesFromDictionary: nt];
+      [[container topLevelObjects] addObjectsFromArray: [[c topLevelObjects] allObjects]];
+      [[container connections] addObjectsFromArray: [c connections]];
+      [[container nameTable] addEntriesFromDictionary: nt];
+      */
       [self rebuildObjToNameMapping];
 
       /*
@@ -2409,13 +2412,13 @@ static NSImage  *fileImage = nil;
 	    }
 	}
       
-      NSDebugLog(@"nameTable = %@",[c nameTable]);
+      NSDebugLog(@"nameTable = %@",[container nameTable]);
       
       // awaken all elements after the load is completed.
-      enumerator = [[c nameTable] keyEnumerator];
+      enumerator = [[container nameTable] keyEnumerator];
       while ((key = [enumerator nextObject]) != nil)
 	{
-	  id o = [[c nameTable] objectForKey: key];
+	  id o = [[container nameTable] objectForKey: key];
 	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
 	    {
 	      [o awakeFromDocument: self];
@@ -2423,7 +2426,7 @@ static NSImage  *fileImage = nil;
 	}
 
       // reposition the loaded menu appropriately...
-      mainMenu = [nameTable objectForKey: @"NSMenu"];
+      mainMenu = [[container nameTable] objectForKey: @"NSMenu"];
       if(mainMenu != nil)
 	{
 	  NSRect frame = [window frame];
@@ -2472,10 +2475,10 @@ static NSImage  *fileImage = nil;
   NSResetMapTable(objToName);
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-  enumerator = [[nameTable allKeys] objectEnumerator];
+  enumerator = [[[container nameTable] allKeys] objectEnumerator];
   while ((name = [enumerator nextObject]) != nil)
     {
-      id obj = [nameTable objectForKey: name];
+      id obj = [[container nameTable] objectForKey: name];
       
       NSDebugLog(@"%@ --> %@",name, obj);
 
@@ -2488,7 +2491,7 @@ static NSImage  *fileImage = nil;
 
   // All of the entries in the items array are "top level items" 
   // which should be visible in the object's view. 
-  enumerator = [topLevelObjects objectEnumerator];
+  enumerator = [[container topLevelObjects] objectEnumerator];
   while((o = [enumerator nextObject]) != nil)
     {
       [objectsView addObject: o];
@@ -2689,7 +2692,7 @@ static NSImage  *fileImage = nil;
   [self touch];
 
   // issue post notification..
-  [connections removeObjectIdenticalTo: aConnector];
+  [[container connections] removeObjectIdenticalTo: aConnector];
   [nc postNotificationName: IBDidRemoveConnectorNotification
       object: aConnector];
   RELEASE(aConnector); // NOW we can dealloc it.
@@ -2703,7 +2706,7 @@ static NSImage  *fileImage = nil;
  */
 - (void) resignSelectionForEditor: (id<IBEditors>)editor
 {
-  NSEnumerator		*enumerator = [connections objectEnumerator];
+  NSEnumerator		*enumerator = [[container connections] objectEnumerator];
   Class			editClass = [GormObjectToEditor class];
   id<IBConnectors>	c;
 
@@ -2902,7 +2905,7 @@ static NSImage  *fileImage = nil;
 	      base = [base substringFromIndex: 2];
 	    }
 	  aName = base;
-	  while ([nameTable objectForKey: aName] != nil)
+	  while ([[container nameTable] objectForKey: aName] != nil)
 	    {
 	      aName = [base stringByAppendingFormat: @"%u", ++i];
 	    }
@@ -2914,7 +2917,7 @@ static NSImage  *fileImage = nil;
     }
   else // user supplied a name...
     {
-      oldObject = [nameTable objectForKey: aName];
+      oldObject = [[container nameTable] objectForKey: aName];
       if (oldObject != nil)
 	{
 	  NSDebugLog(@"Attempt to re-use name '%@'", aName);
@@ -2927,18 +2930,18 @@ static NSImage  *fileImage = nil;
 	    {
 	      return; /* Already have this name ... nothing to do */
 	    }
-	  [nameTable removeObjectForKey: oldName];
+	  [[container nameTable] removeObjectForKey: oldName];
 	  NSMapRemove(objToName, (void*)object);
 	}
     }
 
   // add it to the dictionary.
-  [nameTable setObject: object forKey: aName];
+  [[container nameTable] setObject: object forKey: aName];
   NSMapInsert(objToName, (void*)object, (void*)aName);
   if (oldName != nil)
     {
       RETAIN(oldName); // hold on to this temporarily...
-      [nameTable removeObjectForKey: oldName];
+      [[container nameTable] removeObjectForKey: oldName];
     }
   if ([objectsView containsObject: object])
     {
@@ -2969,14 +2972,14 @@ static NSImage  *fileImage = nil;
  */
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag
 {
-  NSMutableArray	*a = [nameTable objectForKey: @"NSVisible"];
+  NSMutableArray	*a = [[container nameTable] objectForKey: @"NSVisible"];
 
   if (flag)
     {
       if (a == nil)
 	{
 	  a = [[NSMutableArray alloc] init];
-	  [nameTable setObject: a forKey: @"NSVisible"];
+	  [[container nameTable] setObject: a forKey: @"NSVisible"];
 	  RELEASE(a);
 	}
       if ([a containsObject: anObject] == NO)
@@ -2995,7 +2998,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject
 {
-  return [[nameTable objectForKey: @"NSVisible"] containsObject: anObject];
+  return [[[container nameTable] objectForKey: @"NSVisible"] containsObject: anObject];
 }
 
 /**
@@ -3003,14 +3006,14 @@ static NSImage  *fileImage = nil;
  */
 - (void) setObject: (id)anObject isDeferred: (BOOL)flag
 {
-  NSMutableArray	*a = [nameTable objectForKey: @"NSDeferred"];
+  NSMutableArray	*a = [[container nameTable] objectForKey: @"NSDeferred"];
 
   if (flag)
     {
       if (a == nil)
 	{
 	  a = [[NSMutableArray alloc] init];
-	  [nameTable setObject: a forKey: @"NSDeferred"];
+	  [[container nameTable] setObject: a forKey: @"NSDeferred"];
 	  RELEASE(a);
 	}
       if ([a containsObject: anObject] == NO)
@@ -3029,7 +3032,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) objectIsDeferred: (id)anObject
 {
-  return [[nameTable objectForKey: @"NSDeferred"] containsObject: anObject];
+  return [[[container nameTable] objectForKey: @"NSDeferred"] containsObject: anObject];
 }
 
 // windows / services menus...
@@ -3041,11 +3044,11 @@ static NSImage  *fileImage = nil;
 {
   if(anObject != nil)
     {
-      [nameTable setObject: anObject forKey: @"NSWindowsMenu"];
+      [[container nameTable] setObject: anObject forKey: @"NSWindowsMenu"];
     }
   else
     {
-      [nameTable removeObjectForKey: @"NSWindowsMenu"];
+      [[container nameTable] removeObjectForKey: @"NSWindowsMenu"];
     }
 }
 
@@ -3054,7 +3057,7 @@ static NSImage  *fileImage = nil;
  */ 
 - (NSMenu *) windowsMenu
 {
-  return [nameTable objectForKey: @"NSWindowsMenu"];
+  return [[container nameTable] objectForKey: @"NSWindowsMenu"];
 }
 
 /**
@@ -3064,11 +3067,11 @@ static NSImage  *fileImage = nil;
 {
   if(anObject != nil)
     {
-      [nameTable setObject: anObject forKey: @"NSServicesMenu"];
+      [[container nameTable] setObject: anObject forKey: @"NSServicesMenu"];
     }
   else
     {
-      [nameTable removeObjectForKey: @"NSServicesMenu"];
+      [[container nameTable] removeObjectForKey: @"NSServicesMenu"];
     }
 }
 
@@ -3077,7 +3080,7 @@ static NSImage  *fileImage = nil;
  */
 - (NSMenu *) servicesMenu
 {
-  return [nameTable objectForKey: @"NSServicesMenu"];
+  return [[container nameTable] objectForKey: @"NSServicesMenu"];
 }
 
 /**
@@ -3140,7 +3143,7 @@ static NSImage  *fileImage = nil;
  */
 - (void) _replaceObjectsWithTemplates: (NSArchiver *)archiver
 {
-  NSEnumerator *en = [[self nameTable] keyEnumerator];
+  NSEnumerator *en = [[container nameTable] keyEnumerator];
   id key = nil;
 
   // loop through all custom objects and windows
@@ -3255,7 +3258,6 @@ static NSImage  *fileImage = nil;
   archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
 
   /* Special gorm classes to their archive equivalents. */
-  // NOTE: GSNibContainer replaces GormDocument using classforCoder
   [archiver encodeClassName: @"GormObjectProxy" 
 	    intoClassName: @"GSNibItem"];
   [archiver encodeClassName: @"GormCustomView"
@@ -3271,8 +3273,8 @@ static NSImage  *fileImage = nil;
 
   [self _replaceObjectsWithTemplates: archiver];
 
-  [archiver encodeRootObject: self];
-  NSDebugLog(@"nameTable = %@",nameTable);
+  [archiver encodeRootObject: container];
+  NSDebugLog(@"nameTable = %@",[container nameTable]);
   NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
 
   fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
@@ -3411,7 +3413,7 @@ static NSImage  *fileImage = nil;
       // stop all connection activities.
       [(id<Gorm>)NSApp stopConnecting];
 
-      enumerator = [nameTable objectEnumerator];
+      enumerator = [[container nameTable] objectEnumerator];
       if (flag)
 	{
 	  GormDocument *document = (GormDocument*)[(id<IB>)NSApp activeDocument];
@@ -3660,7 +3662,7 @@ static NSImage  *fileImage = nil;
 		      forClassNamed: (NSString *)className
 			   isAction: (BOOL)action
 {
-  NSEnumerator *en = [connections objectEnumerator];
+  NSEnumerator *en = [[container connections] objectEnumerator];
   NSMutableArray *removedConnections = [NSMutableArray array];
   id<IBConnectors> c = nil;
   BOOL removed = YES;
@@ -3777,7 +3779,7 @@ static NSImage  *fileImage = nil;
       NSMutableArray *removedConnections = [NSMutableArray array];
 
       // first find all of the connections...
-      en = [connections objectEnumerator];
+      en = [[container connections] objectEnumerator];
       while ((c = [en nextObject]) != nil)
 	{
 	  NSString *srcClass = [[c source] className];
@@ -3812,7 +3814,7 @@ static NSImage  *fileImage = nil;
 - (BOOL) renameConnectionsForClassNamed: (NSString *)className
 				 toName: (NSString *)newName
 {
-  NSEnumerator *en = [connections objectEnumerator];
+  NSEnumerator *en = [[container connections] objectEnumerator];
   id<IBConnectors> c = nil;
   BOOL renamed = YES;
   int retval = -1;
@@ -3866,7 +3868,7 @@ static NSImage  *fileImage = nil;
 - (void) printAllEditors
 {
   NSMutableSet	        *set = [NSMutableSet setWithCapacity: 16];
-  NSEnumerator		*enumerator = [connections objectEnumerator];
+  NSEnumerator		*enumerator = [[container connections] objectEnumerator];
   id<IBConnectors>	c;
 
   while ((c = [enumerator nextObject]) != nil)
@@ -3954,7 +3956,7 @@ static NSImage  *fileImage = nil;
   return [NSString stringWithFormat: @"<%s: %lx> = %@",
 		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
-		   nameTable];
+		   [container nameTable]];
 }
 
 /**
@@ -3962,7 +3964,7 @@ static NSImage  *fileImage = nil;
  */
 - (BOOL) isTopLevelObject: (id)obj
 {
-  return [topLevelObjects containsObject: obj];
+  return [[container topLevelObjects] containsObject: obj];
 }
 
 /**
@@ -4062,8 +4064,8 @@ static NSImage  *fileImage = nil;
  */
 - (NSMutableArray *) _collectAllObjects
 {
-  NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [topLevelObjects allObjects]];
-  NSEnumerator *en = [topLevelObjects objectEnumerator];
+  NSMutableArray *allObjects = [NSMutableArray arrayWithArray: [[container topLevelObjects] allObjects]];
+  NSEnumerator *en = [[container topLevelObjects] objectEnumerator];
   NSMutableArray *removeObjects = [NSMutableArray array];
   id obj = nil;
   

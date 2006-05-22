@@ -37,6 +37,7 @@
 - (void) dealloc
 {
   RELEASE(className);
+  [super dealloc];
 }
 
 - (NSImage*) imageForViewer

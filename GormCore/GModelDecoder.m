@@ -561,11 +561,11 @@ static BOOL gormFileOwnerDecoded;
       [newcon setSource: source];
       [newcon setDestination: (dest != nil)?dest:[self firstResponder]];
       [newcon setLabel: [con label]];
-      [connections addObject: newcon];
+      [[container connections] addObject: newcon];
     }
 
   // make sure that all of the actions on the application's delegate object are also added to FirstResponder.
-  enumerator = [connections objectEnumerator];
+  enumerator = [[container connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if([con isKindOfClass: [NSNibControlConnector class]])

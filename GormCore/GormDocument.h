@@ -42,7 +42,7 @@
 }
 @end
 
-@interface GormDocument : GSNibContainer <IBDocuments>
+@interface GormDocument : NSObject <IBDocuments>
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
@@ -75,6 +75,7 @@
   id                    filePrefsManager;
   NSWindow              *filePrefsWindow;
   NSMutableArray        *resourceManagers;
+  GSNibContainer        *container;
 }
 
 /**
