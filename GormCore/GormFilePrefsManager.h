@@ -38,7 +38,17 @@
 /**
  * Loads the encoded file info.
  */
+- (BOOL) loadFromData: (NSData *)data;
+
+/**
+ * Loads the encoded file info.
+ */
 - (BOOL) loadFromFile: (NSString *)path;
+
+/**
+ * Saves the encoded file info.
+ */
+- (NSData *) data;
 
 /**
  * Saves the encoded file info.

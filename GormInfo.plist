@@ -3,15 +3,30 @@
     NSRole = "Editor";
     NSTypes = (
       {
+	NSName = "gorm";
+	NSHumanReadableName = "Gorm GUI Model";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "gorm" );
+        NSDOSExtensions = ( "gorm" );
         NSIcon = "GormFile.tiff";
       },
       {
+	NSName = "gorm";
+	NSHumanReadableName = "GModel GUI Model";
+	NSRole = Editor;
+	NSDocumentClass = GModelDocument;
         NSUnixExtensions = ( "gmodel" );
+        NSDOSExtensions = ( "gmodel" );
         NSIcon = "FileIcon_gmodel.tiff";
       },
       {
+	NSName = "nib";
+	NSHumanReadableName = "Cocoa Nib";
+	NSRole = Editor;
+	NSDocumentClass = NibDocument;
         NSUnixExtensions = ( "nib" );
+        NSDOSExtensions = ( "nib" );
         NSIcon = "GormNib.tiff";
       },
       {

@@ -547,12 +547,14 @@ static BOOL gormFileOwnerDecoded;
 	}
       else
 	{
+	  NSString *className = (dest == nil)?(NSString *)@"FirstResponder":(NSString *)[dest className];
 	  newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
+	  
 	  if(![classManager isAction: [con label] 
-			    ofClass: (dest == nil)?@"FirstResponder":[dest className]])
+			    ofClass: className])
 	    {
 	      [classManager addAction: [con label] 
-			    forClassNamed: (dest == nil)?@"FirstResponder":[dest className]];
+			    forClassNamed: className];
 	    }	  
 	}
       

@@ -121,9 +121,11 @@ static NSMapTable *docMap = 0;
   if(closed == NO)
     [self close];
 
-  // TODO: This is a band-aid fix until I find the actual problem. 
-  // This *WILL* leak, but I don't want it crashing on people.
-  
+  // It is not necessary to call super dealloc here.
+  // images are cached throughout the lifetime of the app.
+  // Once loaded, they are in the cache permanently and
+  // are release on app termination.
+
   RELEASE(objects);
   NSDebugLog(@"Released...");
 }

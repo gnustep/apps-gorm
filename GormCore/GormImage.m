@@ -51,11 +51,25 @@
   return AUTORELEASE([[GormImage alloc] initWithPath: aPath inWrapper: flag]);
 }
 
++ (GormImage*)imageForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
+{
+  return AUTORELEASE([[GormImage alloc] initWithData: aData withFileName: aName inWrapper: flag]);
+}
+
+- (id) initWithData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
+{
+  if((self = [super initWithData: aData withFileName: aName inWrapper: flag]))
+    {
+      ASSIGN(image, AUTORELEASE([[NSImage alloc] initWithData: aData]));
+    }
+  return self;
+}
+
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag
 {
-  if((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
+  if((self = [super initWithName: aName path: aPath inWrapper: flag]))
     {
       NSSize originalSize;
       float ratioH;

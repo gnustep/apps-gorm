@@ -51,6 +51,12 @@
 + (GormImage *) imageForPath: (NSString *)path inWrapper: (BOOL)flag;
 
 /**
+ * Initialize with image data.  Mark it as in the
+ * wrapper depending on the value of flag.
+ */
++ (GormImage*)imageForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag;
+
+/**
  * A thumbnail of the image.
  */
 - (NSImage *)image;

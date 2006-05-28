@@ -56,14 +56,6 @@
 - (GormPalettesManager*) palettesManager;
 - (GormInspectorsManager*) inspectorsManager;
 
-// file manipulation
-- (void) newGormDocument: (id) sender;
-- (void) open: (id)sender;
-- (void) revertToSaved: (id)sender;
-- (void) save: (id)sender;
-- (void) saveAll: (id)sender;
-- (void) saveAs: (id)sender;
-
 // testing the interface
 - (void) testInterface: (id)sender;
 - (id) endTesting: (id)sender;

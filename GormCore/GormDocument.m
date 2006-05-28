@@ -88,6 +88,17 @@
 // Internal only
 NSString *GSCustomClassMap = @"GSCustomClassMap";
 
+@interface NSDocument (GormPrivate)
+- (NSWindow *) _docWindow;
+@end
+
+@implementation NSDocument (GormPrivate)
+- (NSWindow *) _docWindow
+{
+  return _window;
+}
+@end
+
 @interface GormDocument (GModel)
 - (id) openGModel: (NSString *)path;
 @end
@@ -201,14 +212,6 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Return the types readable by this document class.
- */
-+ (NSArray *) readableTypes
-{
-  return [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
-}
-
-/**
  * Initialize the new GormDocument object.
  */
 - (id) init 
@@ -216,204 +219,105 @@ static NSImage  *fileImage = nil;
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormDocument" owner: self])
-	{      
-	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-	  NSRect			scrollRect = {{0, 0}, {340, 188}};
-	  NSRect			mainRect = {{20, 0}, {320, 188}};
-	  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      
+      // initialize...
+      openEditors = [[NSMutableArray alloc] init];
+      classManager = [(GormClassManager *)[GormClassManager alloc] initWithDocument: self]; 
+      
+      /*
+       * NB. We must retain the map values (object names) as the nameTable
+       * may not hold identical name objects, but merely equal strings.
+       */
+      objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
+					   NSObjectMapValueCallBacks, 128, [self zone]);
+      
+      // for saving the editors when the gorm file is persisted.
+      savedEditors = [[NSMutableArray alloc] init];	  
+      
+      // observe certain notifications...
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBClassNameChangedNotification
+	  object: classManager];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBInspectorDidModifyObjectNotification
+	  object: classManager];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: GormDidModifyClassNotification
+	  object: classManager];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: GormDidAddClassNotification
+	  object: classManager];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillBeginTestingInterfaceNotification
+	  object: nil];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBWillEndTestingInterfaceNotification
+	  object: nil];
+      [nc addObserver: self
+	  selector: @selector(handleNotification:)
+	  name: IBResourceManagerRegistryDidChangeNotification
+	  object: nil];
+      
+      // load resource managers
+      [self createResourceManagers];
+      
+      /*
+       * Set up container....
+       */
+      container = [[GSNibContainer alloc] init];
+      filesOwner = [[GormFilesOwner alloc] init];
+      [self setName: @"NSOwner" forObject: filesOwner];
+      firstResponder = [[GormFirstResponder alloc] init];
+      [self setName: @"NSFirst" forObject: firstResponder];
+      
+      // preload headers...
+      if ([defaults boolForKey: @"PreloadHeaders"])
+	{
+	  NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
+	  NSEnumerator *en = [headerList objectEnumerator];
+	  id obj = nil;
 	  
-	  // initialize...
-	  openEditors = [[NSMutableArray alloc] init];
-	  classManager = [(GormClassManager *)[GormClassManager alloc] initWithDocument: self]; 
-	  
-	  /*
-	   * NB. We must retain the map values (object names) as the nameTable
-	   * may not hold identical name objects, but merely equal strings.
-	   */
-	  objToName = NSCreateMapTableWithZone(NSObjectMapKeyCallBacks,
-					       NSObjectMapValueCallBacks, 128, [self zone]);
-	  
-	  // for saving the editors when the gorm file is persisted.
-	  savedEditors = [[NSMutableArray alloc] init];	  
-	  [window setMinSize: [window frame].size];
-	  [window setTitle: _(@"UNTITLED")];
-	  
-	  // observe certain notifications...
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: NSWindowWillCloseNotification
-	      object: window];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: NSWindowDidBecomeKeyNotification
-	      object: window];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: NSWindowWillMiniaturizeNotification
-	      object: window];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: NSWindowDidDeminiaturizeNotification
-	      object: window];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: IBClassNameChangedNotification
-	      object: classManager];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: IBInspectorDidModifyObjectNotification
-	      object: classManager];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: GormDidModifyClassNotification
-	      object: classManager];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: GormDidAddClassNotification
-	      object: classManager];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: IBWillBeginTestingInterfaceNotification
-	      object: nil];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: IBWillEndTestingInterfaceNotification
-	      object: nil];
-	  [nc addObserver: self
-	      selector: @selector(handleNotification:)
-	      name: IBResourceManagerRegistryDidChangeNotification
-	      object: nil];
-
-	  // load resource managers
-	  [self createResourceManagers];
-
-	  // objects...
-	  mainRect.origin = NSMakePoint(0,0);
-	  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  [scrollView setHasVerticalScroller: YES];
-	  [scrollView setHasHorizontalScroller: YES];
-	  [scrollView setAutoresizingMask:
-			NSViewHeightSizable|NSViewWidthSizable];
-	  [scrollView setBorderType: NSBezelBorder];
-	  
-	  objectsView = [[GormObjectEditor alloc] initWithObject: nil
-						  inDocument: self];
-	  [objectsView setFrame: mainRect];
-	  [objectsView setAutoresizingMask:
-			 NSViewHeightSizable|NSViewWidthSizable];
-	  [scrollView setDocumentView: objectsView];
-	  RELEASE(objectsView); 
-
-	  // images...
-	  mainRect.origin = NSMakePoint(0,0);
-	  imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  [imagesScrollView setHasVerticalScroller: YES];
-	  [imagesScrollView setHasHorizontalScroller: YES];
-	  [imagesScrollView setAutoresizingMask:
-			      NSViewHeightSizable|NSViewWidthSizable];
-	  [imagesScrollView setBorderType: NSBezelBorder];
-	  
-	  imagesView = [[GormImageEditor alloc] initWithObject: nil
-						inDocument: self];
-	  [imagesView setFrame: mainRect];
-	  [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-	  [imagesScrollView setDocumentView: imagesView];
-	  RELEASE(imagesView);
-
-	  // sounds...
-	  mainRect.origin = NSMakePoint(0,0);
-	  soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-	  [soundsScrollView setHasVerticalScroller: YES];
-	  [soundsScrollView setHasHorizontalScroller: YES];
-	  [soundsScrollView setAutoresizingMask:
-			      NSViewHeightSizable|NSViewWidthSizable];
-	  [soundsScrollView setBorderType: NSBezelBorder];
-	  
-	  soundsView = [[GormSoundEditor alloc] initWithObject: nil
-						inDocument: self];
-	  [soundsView setFrame: mainRect];
-	  [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-	  [soundsScrollView setDocumentView: soundsView];
-	  RELEASE(soundsView);
-
-	  /* classes view */
-	  mainRect.origin = NSMakePoint(0,0);
-	  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
-	  [classesView setFrame: mainRect];
-	  
-	  /*
-	   * Set the objects view as the initial view the user's see on startup.
-	   */
-	  // [selectionBox setContentViewMargins: NSZeroSize];
-	  [selectionBox setContentView: scrollView];
-	  
-	  /*
-	   * Set up container....
-	   */
-	  container = [[GSNibContainer alloc] init];
-	  filesOwner = [[GormFilesOwner alloc] init];
-	  [self setName: @"NSOwner" forObject: filesOwner];
-	  [objectsView addObject: filesOwner];
-	  firstResponder = [[GormFirstResponder alloc] init];
-	  [self setName: @"NSFirst" forObject: firstResponder];
-	  [objectsView addObject: firstResponder];
-	  
-	  /*
-	   * Set image for this miniwindow.
-	   */
-	  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];	  
-	  hidden = [[NSMutableArray alloc] init];
-	  
-	  // retain the file prefs view...
-	  RETAIN(filePrefsView);
-
-	  // preload headers...
-	  if ([defaults boolForKey: @"PreloadHeaders"])
+	  while ((obj = [en nextObject]) != nil)
 	    {
-	      NSArray *headerList = [defaults arrayForKey: @"HeaderList"];
-	      NSEnumerator *en = [headerList objectEnumerator];
-	      id obj = nil;
+	      NSString *header = (NSString *)obj;
 	      
-	      while ((obj = [en nextObject]) != nil)
+	      NSDebugLog(@"Preloading %@", header);
+	      NS_DURING
 		{
-		  NSString *header = (NSString *)obj;
-
-		  NSDebugLog(@"Preloading %@", header);
-		  NS_DURING
+		  if(![classManager parseHeader: header])
 		    {
-		      if(![classManager parseHeader: header])
-			{
-			  NSString *file = [header lastPathComponent];
-			  NSString *message = [NSString stringWithFormat: 
-							  _(@"Unable to parse class in %@"),file];
-			  NSRunAlertPanel(_(@"Problem parsing class"), 
-					  message,
-					  nil, nil, nil);
-			}
-		    }
-		  NS_HANDLER
-		    {
-		      NSString *message = [localException reason];
+		      NSString *file = [header lastPathComponent];
+		      NSString *message = [NSString stringWithFormat: 
+						      _(@"Unable to parse class in %@"),file];
 		      NSRunAlertPanel(_(@"Problem parsing class"), 
 				      message,
 				      nil, nil, nil);
 		    }
-		  NS_ENDHANDLER;
 		}
+	      NS_HANDLER
+		{
+		  NSString *message = [localException reason];
+		  NSRunAlertPanel(_(@"Problem parsing class"), 
+				  message,
+				  nil, nil, nil);
+		}
+	      NS_ENDHANDLER;
 	    }
-
-	  // are we upgrading an archive?
-	  isOlderArchive = NO;
-
-	  // document is open...
-	  isDocumentOpen = YES;
 	}
-      else
-	{
-	  NSLog(@"Couldn't load GormDocument interface.");
-	  [NSApp terminate: self];
-	}
+      
+      // are we upgrading an archive?
+      isOlderArchive = NO;
+      
+      // document is open...
+      isDocumentOpen = YES;
     }
   return self;
 }
@@ -423,6 +327,16 @@ static NSImage  *fileImage = nil;
  */
 - (void) awakeFromNib
 {
+  NSRect                scrollRect = {{0, 0}, {340, 188}};
+  NSRect                mainRect = {{20, 0}, {320, 188}};
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSMenu                *mainMenu = nil;
+  NSEnumerator          *en = nil; 
+  id                    o = nil;
+
+  // get the window and cache it...
+  window = [self _docWindow];
+
   // set up the toolbar...
   toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
   [toolbar setAllowsUserCustomization: NO];
@@ -431,6 +345,152 @@ static NSImage  *fileImage = nil;
   RELEASE(toolbar);
   [toolbar setUsesStandardBackgroundColor: YES];
   [toolbar setSelectedItemIdentifier: @"ObjectsItem"]; // set initial selection.
+
+  // set up notifications for window.
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: NSWindowWillCloseNotification
+      object: window];
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: NSWindowDidBecomeKeyNotification
+      object: window];
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: NSWindowWillMiniaturizeNotification
+      object: window];
+  [nc addObserver: self
+      selector: @selector(handleNotification:)
+      name: NSWindowDidDeminiaturizeNotification
+      object: window];
+
+  // objects...
+  mainRect.origin = NSMakePoint(0,0);
+  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  [scrollView setHasVerticalScroller: YES];
+  [scrollView setHasHorizontalScroller: YES];
+  [scrollView setAutoresizingMask:
+		NSViewHeightSizable|NSViewWidthSizable];
+  [scrollView setBorderType: NSBezelBorder];
+  
+  objectsView = [[GormObjectEditor alloc] initWithObject: nil
+					  inDocument: self];
+  [objectsView setFrame: mainRect];
+  [objectsView setAutoresizingMask:
+		 NSViewHeightSizable|NSViewWidthSizable];
+  [scrollView setDocumentView: objectsView];
+  RELEASE(objectsView); 
+  
+  // images...
+  mainRect.origin = NSMakePoint(0,0);
+  imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  [imagesScrollView setHasVerticalScroller: YES];
+  [imagesScrollView setHasHorizontalScroller: YES];
+  [imagesScrollView setAutoresizingMask:
+		      NSViewHeightSizable|NSViewWidthSizable];
+  [imagesScrollView setBorderType: NSBezelBorder];
+  
+  imagesView = [[GormImageEditor alloc] initWithObject: nil
+					inDocument: self];
+  [imagesView setFrame: mainRect];
+  [imagesView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+  [imagesScrollView setDocumentView: imagesView];
+  RELEASE(imagesView);
+  
+  // sounds...
+  mainRect.origin = NSMakePoint(0,0);
+  soundsScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  [soundsScrollView setHasVerticalScroller: YES];
+  [soundsScrollView setHasHorizontalScroller: YES];
+  [soundsScrollView setAutoresizingMask:
+		      NSViewHeightSizable|NSViewWidthSizable];
+  [soundsScrollView setBorderType: NSBezelBorder];
+  
+  soundsView = [[GormSoundEditor alloc] initWithObject: nil
+					inDocument: self];
+  [soundsView setFrame: mainRect];
+  [soundsView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+  [soundsScrollView setDocumentView: soundsView];
+  RELEASE(soundsView);
+  
+  /* classes view */
+  mainRect.origin = NSMakePoint(0,0);
+  classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
+  [classesView setFrame: mainRect];
+  
+  /*
+   * Set the objects view as the initial view the user's see on startup.
+   */
+  [selectionBox setContentView: scrollView];
+
+  // add to the objects view...
+  [objectsView addObject: filesOwner];
+  [objectsView addObject: firstResponder];
+  
+  /*
+   * Set image for this miniwindow.
+   */
+  [window setMiniwindowImage: [(id)filesOwner imageForViewer]];	  
+  hidden = [[NSMutableArray alloc] init];
+
+  // reposition the loaded menu appropriately...
+  mainMenu = [[container nameTable] objectForKey: @"NSMenu"];
+  if(mainMenu != nil)
+    {
+      NSRect frame = [window frame];
+      NSPoint origin = frame.origin;
+      NSRect menuFrame = [[mainMenu window] frame];
+      
+      // account for the height of the menu we're loading.
+      origin.y += (frame.size.height + menuFrame.size.height + 150);
+      
+      // place the main menu appropriately...
+      [[mainMenu window] setFrameTopLeftPoint: origin];
+    }
+  
+  // load the file preferences....
+  if(infoData != nil)
+    {
+      if([filePrefsManager loadFromData: infoData])
+	{
+	  int version = [filePrefsManager version];
+	  int currentVersion = [GormFilePrefsManager currentVersion];
+	  
+	  if(version > currentVersion)
+	    {
+	      int retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
+					   _(@"The file being loaded was created with a newer build, continue?"), 
+					   _(@"OK"), 
+					   _(@"Cancel"), 
+					   nil,
+					   nil);
+	      if(retval != NSAlertDefaultReturn)
+		{
+		  // close the document, if the user says "NO."
+		  [self close];
+		}
+	    }
+	}
+      else
+	{
+	  NSLog(@"Loading gorm without data.info file.  Default settings will be assumed.");
+	}
+    }
+
+  //
+  // Retain the file prefs view...
+  //
+  RETAIN(filePrefsView);
+
+  //
+  // All of the entries in the items array are "top level items" 
+  // which should be visible in the object's view. 
+  //
+  en = [[container topLevelObjects] objectEnumerator];
+  while((o = [en nextObject]) != nil)
+    {
+      [objectsView addObject: o];
+    }
 }
 
 /**
@@ -642,7 +702,7 @@ static NSImage  *fileImage = nil;
       // If it's the main menu... locate it appropriately...
       if(isMainMenu)
 	{
-	  NSRect frame = [window frame];
+	  NSRect frame = [[self window] frame];
 	  NSPoint origin = frame.origin;
 
 	  origin.y += (frame.size.height + 150);
@@ -799,67 +859,6 @@ static NSImage  *fileImage = nil;
     }
 }
 
-/**
- * Start the process of archiving.
- */
-- (void) beginArchiving
-{
-  NSEnumerator		*enumerator;
-  id<IBConnectors>	con;
-  id			obj;
-
-  /*
-   * Map all connector sources and destinations to their name strings.
-   * Deactivate editors so they won't be archived.
-   */
-
-  enumerator = [[container connections] objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]])
-	{
-	  [savedEditors addObject: con];
-	  [[con destination] deactivate];
-	}
-      else if ([con isKindOfClass: [GormEditorToParent class]])
-	{
-	  [savedEditors addObject: con];
-	}
-      else
-	{
-	  NSString	*name;
-	  obj = [con source];
-	  name = [self nameForObject: obj];
-	  [con setSource: name];
-	  obj = [con destination];
-	  name = [self nameForObject: obj];
-	  [con setDestination: name];
-	}
-    }
-  [[container connections] removeObjectsInArray: savedEditors];
-
-  NSDebugLog(@"*** customClassMap = %@",[classManager customClassMap]);
-  [[container nameTable] setObject: [classManager customClassMap] forKey: GSCustomClassMap];
-
-  /*
-   * Remove objects and connections that shouldn't be archived.
-   */
-  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSOwner"]);
-  [[container nameTable] removeObjectForKey: @"NSOwner"];
-  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSFirst"]);
-  [[container nameTable] removeObjectForKey: @"NSFirst"];
-
-  /* Add information about the NSOwner to the archive */
-  NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
-  [[container nameTable] setObject: [filesOwner className] forKey: @"NSOwner"];
-
-  /*
-   * Set the appropriate profile so that we save the right versions of 
-   * the classes for older GNUstep releases.
-   */
-  [filePrefsManager setClassVersions];
-}
-
 - (void) changeToViewWithTag: (int)tag
 {
   switch (tag)
@@ -913,7 +912,7 @@ static NSImage  *fileImage = nil;
 - (void) changeToTopLevelEditorAcceptingTypes: (NSArray *)types
 				  andFileType: (NSString *)fileType
 {
-  // NSToolbar *toolbar = [window toolbar];
+  // NSToolbar *toolbar = [_window toolbar];
   if([objectsView acceptsTypeFromArray: types] &&
      fileType == nil)
     {
@@ -950,15 +949,6 @@ static NSImage  *fileImage = nil;
 - (GormClassManager*) classManager
 {
   return classManager;
-}
-
-/**
- * A Gorm document is encoded in the archive as a GSNibContainer.
- * A class that the gnustep gui library knows about and can unarchive.
- */
-- (Class) classForCoder
-{
-  return [GSNibContainer class];
 }
 
 /**
@@ -1148,22 +1138,14 @@ static NSImage  *fileImage = nil;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   ASSIGN(lastEditor, nil);
 
-  // close the window...
-  [window close];
-
   // Get rid of the selection box.
   [selectionBox removeFromSuperviewWithoutNeedingDisplay];
 
-  // release the managers...
   RELEASE(classManager);
   RELEASE(filePrefsManager);
   RELEASE(filePrefsView);
-
-  // release editors...
   RELEASE(savedEditors);
   RELEASE(openEditors);
-
-  // hidden objects...
   RELEASE(hidden);
 
   if (objToName != 0)
@@ -1171,21 +1153,12 @@ static NSImage  *fileImage = nil;
       NSFreeMapTable(objToName);
     }
 
-  // editor views...
-  RELEASE(documentPath);
   RELEASE(scrollView);
   RELEASE(classesView);
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
-
-  // windows...
-  RELEASE(window);
   RELEASE(filePrefsWindow);
-
-  // resource managers
   RELEASE(resourceManagers);
-
-  // container
   RELEASE(container);
   
   [super dealloc];
@@ -1374,7 +1347,7 @@ static NSImage  *fileImage = nil;
  */
 - (NSString*) documentPath
 {
-  return documentPath;
+  return [self fileName];
 }
 
 /**
@@ -1412,13 +1385,13 @@ static NSImage  *fileImage = nil;
 				  types: fileTypes];
   if (result == NSOKButton)
     {
-      NSString *fileName = [oPanel filename];
+      NSString *filename = [oPanel filename];
 
       NS_DURING
 	{
-	  if(![classManager parseHeader: fileName])
+	  if(![classManager parseHeader: filename])
 	    {
-	      NSString *file = [fileName lastPathComponent];
+	      NSString *file = [filename lastPathComponent];
 	      NSString *message = [NSString stringWithFormat: 
 					      _(@"Unable to parse class in %@"),file];
 	      NSRunAlertPanel(_(@"Problem parsing class"), 
@@ -1451,11 +1424,11 @@ static NSImage  *fileImage = nil;
   NSSavePanel		*sp;
   NSString              *className = [classesView selectedClassName];
   int			result;
-  
+
   sp = [NSSavePanel savePanel];
   [sp setRequiredFileType: @"m"];
   [sp setTitle: _(@"Save source file as...")];
-  if (documentPath == nil)
+  if ([self fileName] == nil)
     {
       result = [sp runModalForDirectory: NSHomeDirectory() 
 		   file: [className stringByAppendingPathExtension: @"m"]];
@@ -1463,7 +1436,7 @@ static NSImage  *fileImage = nil;
   else
     {
       result = [sp runModalForDirectory: 
-		     [documentPath stringByDeletingLastPathComponent]
+		     [[self fileName] stringByDeletingLastPathComponent]
 		   file: [className stringByAppendingPathExtension: @"m"]];
     }
 
@@ -1627,6 +1600,67 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Start the process of archiving.
+ */
+- (void) beginArchiving
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+
+  /*
+   * Map all connector sources and destinations to their name strings.
+   * Deactivate editors so they won't be archived.
+   */
+
+  enumerator = [[container connections] objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]])
+	{
+	  [savedEditors addObject: con];
+	  [[con destination] deactivate];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]])
+	{
+	  [savedEditors addObject: con];
+	}
+      else
+	{
+	  NSString	*name;
+	  obj = [con source];
+	  name = [self nameForObject: obj];
+	  [con setSource: name];
+	  obj = [con destination];
+	  name = [self nameForObject: obj];
+	  [con setDestination: name];
+	}
+    }
+  [[container connections] removeObjectsInArray: savedEditors];
+
+  NSDebugLog(@"Custom Class Map = %@",[classManager customClassMap]);
+  [[container nameTable] setObject: [classManager customClassMap] forKey: GSCustomClassMap];
+
+  /*
+   * Remove objects and connections that shouldn't be archived.
+   */
+  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSOwner"]);
+  [[container nameTable] removeObjectForKey: @"NSOwner"];
+  NSMapRemove(objToName, (void*)[[container nameTable] objectForKey: @"NSFirst"]);
+  [[container nameTable] removeObjectForKey: @"NSFirst"];
+
+  /* Add information about the NSOwner to the archive */
+  NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
+  [[container nameTable] setObject: [filesOwner className] forKey: @"NSOwner"];
+
+  /*
+   * Set the appropriate profile so that we save the right versions of 
+   * the classes for older GNUstep releases.
+   */
+  [filePrefsManager setClassVersions];
+}
+
+/**
  * Stop the archiving process.
  */
 - (void) endArchiving
@@ -1733,7 +1767,7 @@ static NSImage  *fileImage = nil;
 	  if ([obj isKindOfClass: [NSWindow class]])
 	    {
 	      [obj close];
-	      RELEASE(obj);
+	      // RELEASE(obj);
 	    }
 	}
 
@@ -1757,17 +1791,18 @@ static NSImage  *fileImage = nil;
     }
   else if ([name isEqual: IBWillBeginTestingInterfaceNotification])
     {
-      if ([window isVisible])
-	{
-	  [hidden addObject: window];
-	  [window setExcludedFromWindowsMenu: YES];
-	  [window orderOut: self];
-	}
       if ([(id<IB>)NSApp activeDocument] == self)
 	{
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
+	  if ([[self window] isVisible])
+	    {
+	      [hidden addObject: [self window]];
+	      [[self window] setExcludedFromWindowsMenu: YES];
+	      [[self window] orderOut: self];
+	    }
+	  
 	  enumerator = [[container nameTable] objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
@@ -1810,7 +1845,7 @@ static NSImage  *fileImage = nil;
 		}
 	    }
 	  [hidden removeAllObjects];
-	  [window setExcludedFromWindowsMenu: NO];
+	  [[self window] setExcludedFromWindowsMenu: NO];
 	}
     }
   else if ([name isEqual: IBClassNameChangedNotification])
@@ -2102,367 +2137,6 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * This assumes we have an empty document to start with - the loaded
- * document is merged in to it.
- */
-- (id) loadDocument: (NSString*)aFile
-{
-  NS_DURING
-    {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSMutableDictionary	*nt;
-      NSMutableDictionary	*cc;
-      NSData		        *data;
-      NSUnarchiver		*u;
-      NSEnumerator		*enumerator;
-      id <IBConnectors>	         con;
-      NSString                  *ownerClass, *key;
-      NSFileManager	        *mgr = [NSFileManager defaultManager];
-      BOOL                       isDir = NO;
-      NSDirectoryEnumerator     *dirEnumerator;
-      BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
-      NSMenu                    *mainMenu;
-      NSString                  *ext = [aFile pathExtension];
-      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
-      NSDictionary              *substituteClasses = [palettesManager substituteClasses];
-      NSEnumerator              *en = [substituteClasses keyEnumerator];
-      NSString                  *subClassName = nil;
-      unsigned int           	version = NSNotFound;
-
-      // If someone attempts to open a .gmodel using open or in a 
-      // workspace manager, open it.. otherwise open the .gorm file.
-      if([ext isEqual: @"gmodel"])
-	{
-	  return [self openGModel: aFile];
-	}
-      
-      if ([mgr fileExistsAtPath: aFile isDirectory: &isDir])
-	{
-	  // if the data is in a directory, then load from objects.gorm 
-	  if (isDir == NO)
-	    {
-	      NSString *lastComponent = [aFile lastPathComponent];
-	      NSString *parent = [aFile stringByDeletingLastPathComponent];
-	      NSString *parentExt = [parent pathExtension];
-	      
-	      // test if we're doing it wrong...
-	      if([lastComponent isEqual: @"objects.gorm"] && 
-		 [parentExt isEqual: @"gorm"])
-		{
-		  NSRunAlertPanel(_(@"Problem Loading"),
-				  _(@"Cannot load directly from objects.gorm file, please load from the gorm package."),
-				  _(@"OK"), nil, nil);
-		  return nil;
-		}
-	      
-	      data = [NSData dataWithContentsOfFile: aFile];
-	      NSDebugLog(@"Loaded data from file...");
-	    }
-	  else
-	    {
-	      NSString *newFileName;
-	      
-	      newFileName = [aFile stringByAppendingPathComponent: @"objects.gorm"];
-	      data = [NSData dataWithContentsOfFile: newFileName];
-	      NSDebugLog(@"Loaded data from %@...", newFileName);
-	    }
-	}
-      else
-	{
-	  // no file exists...
-	  data = nil;
-	}
-      
-      // check the data...
-      if (data == nil)
-	{
-	  NSRunAlertPanel(_(@"Problem Loading"),
-			  [NSString stringWithFormat: @"Could not read '%@' data", aFile],
-			  _(@"OK"), nil, nil);
-	  return nil;
-	}
-      
-      /*
-       * Create an unarchiver, and use it to unarchive the nib file while
-       * handling class replacement so that standard objects understood
-       * by the gui library are converted to their Gorm internal equivalents.
-       */
-      u = [[NSUnarchiver alloc] initForReadingWithData: data];
-      
-      // special internal classes
-      [u decodeClassName: @"GSNibItem" 
-	 asClassName: @"GormObjectProxy"];
-      [u decodeClassName: @"GSCustomView" 
-	 asClassName: @"GormCustomView"];
-
-      while((subClassName = [en nextObject]) != nil)
-	{
-	  NSString *realClassName = [substituteClasses objectForKey: subClassName];
-	  [u decodeClassName: realClassName
-	     asClassName: subClassName];
-	}
-
-      [GSClassSwapper setIsInInterfaceBuilder: YES]; // turn off custom classes.
-      ASSIGN(container, [u decodeObject]);
-      if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
-	{
-	  NSRunAlertPanel(_(@"Problem Loading"), 
-			  _(@"Could not unarchive document data"), 
-			  _(@"OK"), nil, nil);
-	  return nil;
-	}
-      [GSClassSwapper setIsInInterfaceBuilder: NO]; // turn on custom classes.
-      
-      // retrieve the custom class data...
-      cc = [[container nameTable] objectForKey: GSCustomClassMap];
-      if (cc == nil)
-	{
-	  cc = [NSMutableDictionary dictionary]; // create an empty one.
-	  [[container nameTable] setObject: cc forKey: GSCustomClassMap];
-	}
-      [classManager setCustomClassMap: cc];
-      NSDebugLog(@"cc = %@", cc);
-      NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
-      
-      // convert from old file format...
-      if (isDir == NO)
-	{
-	  NSString	*s;
-	  
-	  s = [aFile stringByDeletingPathExtension];
-	  s = [s stringByAppendingPathExtension: @"classes"];
-	  if (![classManager loadCustomClasses: s])
-	    {
-	      NSRunAlertPanel(_(@"Problem Loading"), 
-			      _(@"Could not open the associated classes file.\n"
-				@"You won't be able to edit connections on custom classes"), 
-			      _(@"OK"), nil, nil);
-	    }
-	}
-      else
-	{
-	  NSString	*s;
-	  
-	  s = [aFile stringByAppendingPathComponent: @"data.classes"];
-	  if (![classManager loadCustomClasses: s]) 
-	    {
-	      NSRunAlertPanel(_(@"Problem Loading"), 
-			      _(@"Could not open the associated classes file.\n"
-				@"You won't be able to edit connections on custom classes"), 
-			      _(@"OK"), nil, nil);
-	    }
-
-	  s = [aFile stringByAppendingPathComponent: @"data.info"];
-	  if (![filePrefsManager loadFromFile: s])
-	    {
-	      NSLog(@"Loading gorm without data.info file.  Default settings will be assumed.");
-	    }
-	  else
-	    {
-	      int version = [filePrefsManager version];
-	      int currentVersion = [GormFilePrefsManager currentVersion];
-
-	      if(version > currentVersion)
-		{
-		  int retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
-					       _(@"The file being loaded was created with a newer build, continue?"), 
-					       _(@"OK"), 
-					       _(@"Cancel"), 
-					       nil,
-					       nil);
-		  if(retval != NSAlertDefaultReturn)
-		    {
-		      return nil;
-		    }
-		}
-	    }
-	}
-      
-      [classesView reloadData];
-      
-      /*
-       * In the newly loaded nib container, we change all the connectors
-       * to hold the objects rather than their names (using our own dummy
-       * object as the 'NSOwner'.
-       */
-      ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
-      if (ownerClass)
-	{
-	  [filesOwner setClassName: ownerClass];
-	}
-      [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
-      [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
-      
-      /* Iterate over the contents of nameTable and create the connections */
-      nt = [container nameTable];
-      enumerator = [[container connections] objectEnumerator];
-      while ((con = [enumerator nextObject]) != nil)
-	{
-	  NSString  *name;
-	  id        obj;
-	  
-	  name = (NSString*)[con source];
-	  obj = [nt objectForKey: name];
-	  [con setSource: obj];
-	  name = (NSString*)[con destination];
-	  obj = [nt objectForKey: name];
-	  [con setDestination: obj];
-	}
-      
-      /*
-       * If the GSNibContainer version is 0, we need to add the top level objects
-       * to the list so that they can be properly processed.
-       */
-      if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
-	{
-	  id obj;
-	  NSEnumerator *en = [nt objectEnumerator];
-
-	  // get all of the GSNibItem subclasses which could be top level objects
-	  while((obj = [en nextObject]) != nil)
-	    {
-	      if([obj isKindOfClass: [GSNibItem class]] &&
-		 [obj isKindOfClass: [GSCustomView class]] == NO)
-		{
-		  [[container topLevelObjects] addObject: obj];
-		}
-	    }
-	  isOlderArchive = YES;
-	}
-
-      /*
-       * Now we merge the objects from the nib container into our own data
-       * structures, taking care not to overwrite our NSOwner and NSFirst.
-       */
-      /*
-      [nt removeObjectForKey: @"NSOwner"];
-      [nt removeObjectForKey: @"NSFirst"];
-      [[container topLevelObjects] addObjectsFromArray: [[c topLevelObjects] allObjects]];
-      [[container connections] addObjectsFromArray: [c connections]];
-      [[container nameTable] addEntriesFromDictionary: nt];
-      */
-      [self rebuildObjToNameMapping];
-
-      /*
-       * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
-       * an older archive.  Also, if the window template is not in the archive we know
-       * it was made by an older version of Gorm.
-       */
-      version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
-      if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
-	{
-	  isOlderArchive = YES;
-	}
-
-      /*
-       * repair the .gorm file, if needed.
-       */
-      if(repairFile)
-	{
-	  [self _repairFile];
-	}
-      
-      /*
-       * set our new file name
-       */
-      ASSIGN(documentPath, aFile);
-      [window setTitleWithRepresentedFilename: documentPath];
-      
-      /*
-       * read in all of the sounds in the .gorm wrapper and
-       * load them into the editor.
-       */
-      dirEnumerator = [mgr enumeratorAtPath: documentPath];
-      if (dirEnumerator)
-	{
-	  NSString *file = nil;
-	  NSArray  *fileTypes = [NSSound soundUnfilteredFileTypes];
-	  while ((file = [dirEnumerator nextObject]))
-	    {
-	      if ([fileTypes containsObject: [file pathExtension]])
-		{
-		  NSString *soundPath;
-		  
-		  NSDebugLog(@"Add the sound %@", file);
-		  soundPath = [documentPath stringByAppendingPathComponent: file];
-		  [soundsView addObject: [GormSound soundForPath: soundPath inWrapper: YES]];
-		}
-	    }
-	}
-      
-      /*
-       * read in all of the images in the .gorm wrapper and
-       * load them into the editor.
-       */
-      dirEnumerator = [mgr enumeratorAtPath: documentPath];
-      if (dirEnumerator)
-	{
-	  NSString *file = nil;
-	  NSArray  *fileTypes = [NSImage imageFileTypes];
-	  while ((file = [dirEnumerator nextObject]))
-	    {
-	      if ([fileTypes containsObject: [file pathExtension]])
-		{
-		  NSString	*imagePath;
-		  
-		  NSDebugLog(@"Add the image %@", file);
-		  imagePath = [documentPath stringByAppendingPathComponent: file];
-		  [imagesView addObject: [GormImage imageForPath: imagePath inWrapper: YES]];
-		}
-	    }
-	}
-      
-      NSDebugLog(@"nameTable = %@",[container nameTable]);
-      
-      // awaken all elements after the load is completed.
-      enumerator = [[container nameTable] keyEnumerator];
-      while ((key = [enumerator nextObject]) != nil)
-	{
-	  id o = [[container nameTable] objectForKey: key];
-	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
-	    {
-	      [o awakeFromDocument: self];
-	    }
-	}
-
-      // reposition the loaded menu appropriately...
-      mainMenu = [[container nameTable] objectForKey: @"NSMenu"];
-      if(mainMenu != nil)
-	{
-	  NSRect frame = [window frame];
-	  NSPoint origin = frame.origin;
-	  NSRect menuFrame = [[mainMenu window] frame];
-
-	  // account for the height of the menu we're loading.
-	  origin.y += (frame.size.height + menuFrame.size.height + 150);
-	  
-	  // place the main menu appropriately...
-	  [[mainMenu window] setFrameTopLeftPoint: origin];
-	}
-
-      // this is the last thing we should do...
-      [nc postNotificationName: IBDidOpenDocumentNotification
-	  object: self];
-      
-      // document opened...
-      isDocumentOpen = YES;
-
-      // release the unarchiver.. now that we're all done...
-      RELEASE(u);
-    }
-  NS_HANDLER
-    {
-      NSRunAlertPanel(_(@"Problem Loading"), 
-		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
-		      _(@"OK"), nil, nil);
-      return nil; // This will cause the calling method to release the document.
-    }
-  NS_ENDHANDLER
-
-  return self;
-}
-
-/**
  * Build our reverse mapping information and other initialisation
  */
 - (void) rebuildObjToNameMapping
@@ -2488,64 +2162,6 @@ static NSImage  *fileImage = nil;
 	  [[self openEditorForObject: obj] activate];
 	}
     }
-
-  // All of the entries in the items array are "top level items" 
-  // which should be visible in the object's view. 
-  enumerator = [[container topLevelObjects] objectEnumerator];
-  while((o = [enumerator nextObject]) != nil)
-    {
-      [objectsView addObject: o];
-    }
-}
-
-/**
- * This assumes we have an empty document to start with - the loaded
- * document is merged in to it.
- */
-- (id) openDocument: (id)sender
-{
-  NSArray	*fileTypes;
-  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
-  int		result;
-  NSString      *pth = [[NSUserDefaults standardUserDefaults] 
-			 objectForKey:@"OpenDir"];
-  
-  fileTypes = [NSArray arrayWithObjects: @"gorm", @"gmodel", nil];
-  [oPanel setAllowsMultipleSelection: NO];
-  [oPanel setCanChooseFiles: YES];
-  [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: pth
-				   file: nil
-				  types: fileTypes];
-  if (result == NSOKButton)
-    {
-      NSString *filename  = [oPanel filename];
-      NSString *ext       = [filename pathExtension];
-      BOOL     uniqueName = [(id<Gorm>)NSApp documentNameIsUnique: filename];
-
-      if(uniqueName)
-	{
-	  [[NSUserDefaults standardUserDefaults] setObject: [oPanel directory]
-						 forKey:@"OpenDir"];
-	  if ([ext isEqualToString:@"gorm"] || [ext isEqualToString:@"nib"])
-	    {
-	      return [self loadDocument: filename];
-	    }
-	  else if ([ext isEqualToString:@"gmodel"])
-	    {
-	      return [self openGModel: filename];
-	    }
-	}
-      else
-	{
-	  // if we get this far, we didn't succeed..
-	  NSRunAlertPanel(_(@"Problem Loading"),
-			  _(@"Attempted to load a model which is already opened."), 
-			  _(@"OK"), nil, nil);
-	}
-    }
-
-  return nil; /* Failed */
 }
 
 /**
@@ -2628,8 +2244,8 @@ static NSImage  *fileImage = nil;
      asClassName: @"GormCustomView"];
   objects = [u decodeObject];
   enumerator = [objects objectEnumerator];
-  filePoint = [window mouseLocationOutsideOfEventStream];
-  screenPoint = [window convertBaseToScreen: filePoint];
+  filePoint = [[self window] mouseLocationOutsideOfEventStream];
+  screenPoint = [[self window] convertBaseToScreen: filePoint];
 
   /*
    * Windows and panels are a special case - for a multiple window paste,
@@ -2728,136 +2344,6 @@ static NSImage  *fileImage = nil;
    * No editor available to take the selection - set a nil owner.
    */
   [self setSelectionFromEditor: nil];
-}
-
-/**
- * Creates a blank document depending on the value of type.
- * If type is "Application", "Inspector" or "Palette" it creates 
- * an appropriate blank document for the user to start with.
- */
-- (void) setupDefaults: (NSString*)type
-{
-  if (hasSetDefaults)
-    {
-      return;
-    }
-  hasSetDefaults = YES;
-  if ([type isEqual: @"Application"])
-    {
-      NSMenu	*aMenu;
-      NSWindow	*aWindow;
-      NSRect    winFrame = [window frame];
-      NSPoint   origin = winFrame.origin;
-      NSRect	frame = [[NSScreen mainScreen] frame];
-      unsigned	style = NSTitledWindowMask | NSClosableWindowMask
-                        | NSResizableWindowMask | NSMiniaturizableWindowMask;
-
-      origin.y += (winFrame.size.height + 150);
-
-      if ([NSMenu respondsToSelector: @selector(allocSubstitute)])
-	{
-	  aMenu = [[NSMenu allocSubstitute] init];
-	}
-      else
-	{
-	  aMenu = [[NSMenu alloc] init];
-	}
-
-      if ([NSWindow respondsToSelector: @selector(allocSubstitute)])
-	{
-	  aWindow = [[NSWindow allocSubstitute]
-		      initWithContentRect: NSMakeRect(0,0,600, 400)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-      else
-	{
-	  aWindow = [[NSWindow alloc]
-		      initWithContentRect: NSMakeRect(0,0,600, 400)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-      [aWindow setFrameTopLeftPoint:
-	NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: _(@"My Window")]; 
-      [self setName: @"My Window" forObject: aWindow];
-      [self attachObject: aWindow toParent: nil];
-      [self setObject: aWindow isVisibleAtLaunch: YES];
-
-      [aMenu setTitle: _(@"Main Menu")];
-      [aMenu addItemWithTitle: _(@"Hide") 
-		       action: @selector(hide:)
-		keyEquivalent: @"h"];	
-      [aMenu addItemWithTitle: _(@"Quit") 
-		       action: @selector(terminate:)
-		keyEquivalent: @"q"];
-
-      // the first menu attached becomes the main menu.
-      [self attachObject: aMenu toParent: nil]; 
-      [[aMenu window] setFrameTopLeftPoint: origin];
-    }
-  else if ([type isEqual: @"Inspector"])
-    {
-      NSPanel	*aWindow;
-      NSRect	frame = [[NSScreen mainScreen] frame];
-      unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
-
-      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
-	{
-	  aWindow = [[NSPanel allocSubstitute] 
-		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-      else
-	{
-	  aWindow = [[NSPanel alloc] 
-		      initWithContentRect: NSMakeRect(0,0, IVW, IVH)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-
-      [aWindow setFrameTopLeftPoint:
-		 NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: _(@"Inspector Window")];
-      [self setName: @"InspectorWin" forObject: aWindow];
-      [self attachObject: aWindow toParent: nil];
-    }
-  else if ([type isEqual: @"Palette"])
-    {
-      NSPanel	*aWindow;
-      NSRect	frame = [[NSScreen mainScreen] frame];
-      unsigned	style = NSTitledWindowMask | NSClosableWindowMask;
-
-      if ([NSPanel respondsToSelector: @selector(allocSubstitute)])
-	{
-	  aWindow = [[NSPanel allocSubstitute] 
-		      initWithContentRect: NSMakeRect(0,0,272,160)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-      else
-	{
-	  aWindow = [[NSPanel alloc] 
-		      initWithContentRect: NSMakeRect(0,0,272,160)
-		      styleMask: style
-		      backing: NSBackingStoreRetained
-		      defer: NO];
-	}
-
-      [aWindow setFrameTopLeftPoint:
-		 NSMakePoint(220, frame.size.height-100)];
-      [aWindow setTitle: _(@"Palette Window")];
-      [self setName: @"PaletteWin" forObject: aWindow];
-      [self attachObject: aWindow toParent: nil];
-    }
-
-  [self touch];
 }
 
 /**
@@ -3084,59 +2570,6 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * To revert to a saved version, we actually load a new document and
- * close the original document, returning the id of the new document.
- */
-- (id) revertDocument: (id)sender
-{
-  GormDocument	*reverted = AUTORELEASE([[GormDocument alloc] init]);
-
-  if ([reverted loadDocument: documentPath] != nil)
-    {
-      NSRect	frame = [window frame];
-
-      [window close];
-      [[reverted window] setFrame: frame display: YES];
-      return reverted;
-    }
-  return nil;
-}
-
-/**
- * Save the document.  If this is called when documentPath is nil, 
- * then saveGormDocument: will call it to define the path.
- */
-- (BOOL) saveAsDocument: (id)sender
-{
-  NSSavePanel		*sp;
-  int			result;
-
-  sp = [NSSavePanel savePanel];
-  [sp setRequiredFileType: @"gorm"];
-  result = [sp runModalForDirectory: NSHomeDirectory() file: @""];
-  if (result == NSOKButton)
-    {
-      NSFileManager	*mgr = [NSFileManager defaultManager];
-      NSString		*path = [sp filename];
-
-      if ([path isEqual: documentPath] == NO
-	&& [mgr fileExistsAtPath: path])
-	{
-	  /* NSSavePanel has already asked if it's ok to replace */
-	  NSString	*bPath = [path stringByAppendingString: @"~"];
-	  
-	  [mgr removeFileAtPath: bPath handler: nil];
-	  [mgr movePath: path toPath: bPath handler: nil];
-	}
-
-      // set the path...
-      ASSIGN(documentPath, path);
-      return [self saveGormDocument: sender];
-    }
-  return NO;
-}
-
-/**
  * Private method which iterates through the list of custom classes and instructs 
  * the archiver to replace the actual object with template during the archiving 
  * process.
@@ -3191,212 +2624,6 @@ static NSImage  *fileImage = nil;
 	  [archiver replaceObject: object withObject: template];
 	}
     }
-}
-
-/**
- * Save the document.  This method creates the directory and the files needed
- * to comprise the .gorm package.
- */
-- (BOOL) saveGormDocument: (id)sender
-{
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  BOOL			archiveResult;
-  NSArchiver            *archiver;
-  NSMutableData         *archiverData;
-  NSString              *gormPath;
-  NSString              *classesPath;
-  NSString              *infoPath;
-  NSFileManager         *mgr = [NSFileManager defaultManager];
-  BOOL                  isDir;
-  BOOL                  fileExists;
-  int                   retval;
-  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
-  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
-  NSEnumerator          *en = [substituteClasses keyEnumerator];
-  NSString              *subClassName = nil;
-
-  // ** to be used in nib compat.
-  // NSUserDefaults        *defaults = [NSUserDefaults standardUserDefaults];
-  // NSString              *archiveType = [defaults stringForKey: @"ArchiveType"];
-
-  if (documentPath == nil)
-    {
-      // if no path has been defined... define one.
-      return ([self saveAsDocument: sender]);
-    }
-
-  // Warn the user about possible incompatibility.
-  // TODO: Remove after the next release of GUI.
-  if(isOlderArchive && [filePrefsManager isLatest])
-    {
-      retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-			       _(@"Saving will update this gorm to the latest version, which is not compatible with GNUstep's gui 0.9.5 (or earlier) Release or CVS prior to June 2 2005."),
-			       _(@"Save"),
-			       _(@"Don't Save"), nil, nil);
-      if (retval != NSAlertDefaultReturn)
-	{
-	  return NO;
-	}
-      else
-	{
-	  // we're saving anyway... set to new value.
-	  isOlderArchive = NO;
-	}
-    }
-
-  [nc postNotificationName: IBWillSaveDocumentNotification
-		    object: self];
-
-  [self beginArchiving];
-
-  // set up the necessary paths...
-  gormPath = [documentPath stringByAppendingPathComponent: @"objects.gorm"];
-  classesPath = [documentPath stringByAppendingPathComponent: @"data.classes"];
-  infoPath = [documentPath stringByAppendingPathComponent: @"data.info"];
-
-  archiverData = [NSMutableData dataWithCapacity: 0];
-  archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
-
-  /* Special gorm classes to their archive equivalents. */
-  [archiver encodeClassName: @"GormObjectProxy" 
-	    intoClassName: @"GSNibItem"];
-  [archiver encodeClassName: @"GormCustomView"
-	    intoClassName: @"GSCustomView"];
-
-  while((subClassName = [en nextObject]) != nil)
-    {
-      NSString *realClassName = [substituteClasses objectForKey: subClassName];
-      [archiver encodeClassName: subClassName
-		intoClassName: realClassName];
-    }
-
-
-  [self _replaceObjectsWithTemplates: archiver];
-
-  [archiver encodeRootObject: container];
-  NSDebugLog(@"nameTable = %@",[container nameTable]);
-  NSDebugLog(@"customClasses = %@", [classManager customClassMap]);
-
-  fileExists = [mgr fileExistsAtPath: documentPath isDirectory: &isDir];
-  if (fileExists)
-    {
-      if (isDir == NO)
-	{
-	  NSString *saveFilePath;
-
-	  saveFilePath = [documentPath stringByAppendingPathExtension: @"save"];
-	  // move the old file to something...
-	  if (![mgr movePath: documentPath toPath: saveFilePath handler: nil])
-	    {
-	      NSDebugLog(@"Error moving old %@ file to %@",
-	      	documentPath, saveFilePath);
-	    }
-	  
-	  // create the new directory..
-	  archiveResult = [mgr createDirectoryAtPath: documentPath
-	 				  attributes: nil];
-	}
-      else
-	{
-	  // set to yes since the directory is already present.
-	  archiveResult = YES;
-	}
-    }
-  else
-    {
-      // create the directory...
-      archiveResult = [mgr createDirectoryAtPath: documentPath attributes: nil];
-    }
-  
-  RELEASE(archiver); // We're done with the archiver here..
-
-  if (archiveResult)
-    {
-      // save the data...
-      archiveResult = [archiverData writeToFile: gormPath atomically: YES]; 
-      if (archiveResult) 
-	{
-	  // save the custom classes.. and we're done...
-	  archiveResult = [classManager saveToFile: classesPath];
-	  
-	  // save the file prefs metadata...
-	  if (archiveResult)
-	    {
-	      archiveResult = [filePrefsManager saveToFile: infoPath];
-	    }
-
-	  //
-	  // Copy resources into the new folder...
-	  // Gorm doesn't copy these into the folder right away since the folder may
-	  // not yet exist.   This allows the user to add/delete resources as they see fit
-	  // but only those which they end up with will actually be put into the wrapper
-	  // when the model/document is saved.
-	  //
-	  if (archiveResult)
-	    {
-	      NSArray *sounds = [soundsView objects];
-	      NSArray *images = [imagesView objects];
-	      NSArray *resources = [sounds arrayByAddingObjectsFromArray: images];
-	      
-	      id object = nil;
-	      NSEnumerator *en = [resources objectEnumerator];
-	      while ((object = [en nextObject]) != nil)
-		{
-		  if(![object isSystemResource])
-		    {
-		      NSString *rscPath;
-		      NSString *path = [object path];
-		      BOOL copied = NO;
-		      
-		      rscPath = [documentPath stringByAppendingPathComponent:
-						[path lastPathComponent]];
-		      if(![path isEqualToString: rscPath])
-			{
-			  copied = [mgr copyPath: path
-					toPath: rscPath
-					handler: nil];
-			  if(copied)
-			    {
-			      [object setInWrapper: YES];
-			      [object setPath: rscPath];
-			    }
-			}
-		      else
-			{
-			  // mark as copied if paths are equal...
-			  copied = YES;
-			  [object setInWrapper: YES];
-			}
-		      
-		      if (!copied)
-			{
-			  NSDebugLog(@"Could not find resource at path %@", object);
-			}
-		    }
-		}
-	    }
-	}
-    }
-
-  [self endArchiving];
-
-  if (archiveResult == NO)
-    {
-      NSRunAlertPanel(_(@"Problem Saving"),
-		      _(@"Could not save document"), 
-		      _(@"OK"), nil, nil);
-    }
-  else
-    {
-      // mark the file as not edited.
-      [window setDocumentEdited: NO];
-      [window setTitleWithRepresentedFilename: documentPath];
-
-      // notify everyone of the save.
-      [nc postNotificationName: IBDidSaveDocumentNotification
-			object: self];
-    }
-  return YES;
 }
 
 /**
@@ -3490,7 +2717,7 @@ static NSImage  *fileImage = nil;
  */
 - (void) touch
 {
-  [window setDocumentEdited: YES];
+  [self updateChangeCount: NSChangeDone];
 }
 
 /**
@@ -3592,66 +2819,16 @@ static NSImage  *fileImage = nil;
  */
 - (NSWindow*) window
 {
-  return window;
+  NSWindowController *winController = [[self windowControllers] objectAtIndex: 0];
+  return [winController window];
 }
 
 /**
- * Determine if the document should be closed or not.
+ * Return the container object associated with this document.
  */
-- (BOOL) couldCloseDocument
+- (GSNibContainer *) container
 {
-  if ([window isDocumentEdited])
-    {
-      NSString	*msg;
-      int	result;
-
-      if (documentPath == nil)
-	{
-	  msg = _(@"Document 'UNTITLED' has been modified");
-	}
-      else
-	{
-	  msg = [NSString stringWithFormat: _(@"Document '%@' has been modified"),
-	    [documentPath lastPathComponent]];
-	}
-      result = NSRunAlertPanel(_(@"Close Document"), 
-			       msg, 
-			       _(@"Save"), 
-			       _(@"Don't Save"), 
-			       _(@"Cancel"));
-
-      if (result == NSAlertDefaultReturn) 
-	{ 	  
-	  //Save
-	  if (! [self saveGormDocument: self] )
-	    {
-	      return NO;
-	    }
-	  else
-	    {
-	      isDocumentOpen = NO;
-	    }
-	}
-      else if (result == NSAlertOtherReturn)
-	{
-	  //Cancel
-	  return NO;
-	}
-      else // Don't save...
-	{
-	  isDocumentOpen = NO;
-	}
-    }
-
-  return YES;
-}
-
-/**
- * Called when the document window close is selected.
- */
-- (BOOL) windowShouldClose: (id)sender
-{
-  return [self couldCloseDocument];
+  return container;
 }
 
 /**
@@ -4057,8 +3234,6 @@ static NSImage  *fileImage = nil;
   return allTypes;
 }
 
-// language translation methods.
-
 /**
  * This method collects all of the objects in the document.
  */
@@ -4342,6 +3517,380 @@ static NSImage  *fileImage = nil;
 	  prev = editor;
 	} 
     }	      
+}
+
+/**
+ * The window nib for the document class...
+ */
+- (NSString *) windowNibName
+{
+  return @"GormDocument";
+}
+
+- (NSFileWrapper *)fileWrapperRepresentationOfType: (NSString *)type
+{
+  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSArchiver            *archiver = nil;
+  NSMutableData         *archiverData = nil;
+  NSString              *gormPath = @"objects.gorm";
+  NSString              *classesPath = @"data.classes";
+  NSString              *infoPath = @"data.info";
+  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
+  NSEnumerator          *en = [substituteClasses keyEnumerator];
+  NSString              *subClassName = nil;
+  NSFileWrapper         *fileWrapper = nil;
+  NSMutableDictionary   *fileWrappers = [NSMutableDictionary dictionary];
+
+  /*
+   * Warn the user, if we are about to upgrade the package.
+   */
+  if(isOlderArchive && [filePrefsManager isLatest])
+    {
+      int retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
+				   _(@"Saving will update this gorm to the latest version,\n" 
+				     @"which is not compatible with GNUstep's gui 0.9.5 (or earlier) Release\n"
+				     @"or CVS prior to June 2 2005."),
+				   _(@"Save"),
+				   _(@"Don't Save"), nil, nil);
+      if (retval != NSAlertDefaultReturn)
+	{
+	  return nil;
+	}
+      else
+	{
+	  // we're saving anyway... set to new value.
+	  isOlderArchive = NO;
+	}
+    }
+
+  /*
+   * Notify the world that we are saving...
+   */
+  [nc postNotificationName: IBWillSaveDocumentNotification
+		    object: self];
+
+  /*
+   * Set up archiving...
+   */
+  [self beginArchiving];
+  archiverData = [NSMutableData dataWithCapacity: 0];
+  archiver = [[NSArchiver alloc] initForWritingWithMutableData: archiverData];
+
+  /* Special gorm classes to their archive equivalents. */
+  [archiver encodeClassName: @"GormObjectProxy" 
+	    intoClassName: @"GSNibItem"];
+  [archiver encodeClassName: @"GormCustomView"
+	    intoClassName: @"GSCustomView"];
+
+  while((subClassName = [en nextObject]) != nil)
+    {
+      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+      [archiver encodeClassName: subClassName
+		intoClassName: realClassName];
+    }
+
+  /* Initialize templates */
+  [self _replaceObjectsWithTemplates: archiver];
+  [archiver encodeRootObject: container];
+  [self endArchiving];
+  RELEASE(archiver); // We're done with the archiver here..
+
+  // 
+  // Add the gorm, info and classes files to the package.
+  //
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: archiverData];
+  [fileWrappers setObject: fileWrapper forKey: gormPath];
+  RELEASE(fileWrapper);
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: [classManager data]];
+  [fileWrappers setObject: fileWrapper forKey: classesPath];
+  RELEASE(fileWrapper);
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: [filePrefsManager data]];
+  [fileWrappers setObject: fileWrapper forKey: infoPath];
+  RELEASE(fileWrapper);
+
+  //
+  // Copy resources into the new folder...
+  // Gorm doesn't copy these into the folder right away since the folder may
+  // not yet exist.   This allows the user to add/delete resources as they see fit
+  // but only those which they end up with will actually be put into the wrapper
+  // when the model/document is saved.
+  //
+  NSArray *sounds = [soundsView objects];
+  NSArray *images = [imagesView objects];
+  NSArray *resources = [sounds arrayByAddingObjectsFromArray: images];
+  
+  id object = nil;
+  en = [resources objectEnumerator];
+  while ((object = [en nextObject]) != nil)
+    {
+      if([object isSystemResource] == NO)
+	{
+	  NSString *path = [object path];
+	  NSString *resName = nil;
+	  NSData   *resData = nil;
+
+	  if([object isInWrapper])
+	    {
+	      resName = [object filename];
+	      resData = [object data];
+	    }
+	  else
+	    {
+	      resData = [NSData dataWithContentsOfFile: path];
+	      [object setData: resData];
+	      [object setInWrapper: YES];
+	    }
+
+	  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: resData];
+	  [fileWrappers setObject: fileWrapper forKey: resName];
+	  RELEASE(fileWrapper);
+	}
+    }
+
+  // notify everyone of the save.
+  [nc postNotificationName: IBDidSaveDocumentNotification
+      object: self];
+
+  return [[NSFileWrapper alloc] initDirectoryWithFileWrappers: fileWrappers];
+}
+
+- (BOOL)loadFileWrapperRepresentation: (NSFileWrapper *)wrapper ofType: (NSString *)type
+{
+  NS_DURING
+    {
+      NSMutableDictionary	*nt = nil;
+      NSMutableDictionary	*cc = nil;
+      NSData		        *data = nil;
+      NSData                    *classes = nil;
+      NSUnarchiver		*u = nil;
+      NSEnumerator		*enumerator = nil;
+      id <IBConnectors>	         con = nil;
+      NSString                  *ownerClass, *key = nil;
+      BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
+      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
+      NSDictionary              *substituteClasses = [palettesManager substituteClasses];
+      NSEnumerator              *en = [substituteClasses keyEnumerator];
+      NSString                  *subClassName = nil;
+      unsigned int           	version = NSNotFound;
+      NSDictionary              *fileWrappers = nil;
+
+      if ([wrapper isDirectory])
+	{
+	  NSArray *imageFileTypes = [NSImage imageFileTypes];
+	  NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
+
+	  key = nil;
+	  fileWrappers = [wrapper fileWrappers];	  
+	  enumerator = [fileWrappers keyEnumerator];
+	  while((key = [enumerator nextObject]) != nil)
+	    {
+	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
+	      if([fw isRegularFile])
+		{
+		  NSData *fileData = [fw regularFileContents];
+		  if([key isEqual: @"objects.gorm"])
+		    {
+		      data = fileData;
+		    }
+		  else if([key isEqual: @"data.info"])
+		    {
+		      infoData = fileData;
+		    }
+		  else if([key isEqual: @"data.classes"])
+		    {
+		      classes = fileData;
+		      
+		      // load the custom classes...
+		      if (![classManager loadCustomClassesWithData: classes]) 
+			{
+			  NSRunAlertPanel(_(@"Problem Loading"), 
+					  _(@"Could not open the associated classes file.\n"
+					    @"You won't be able to edit connections on custom classes"), 
+					  _(@"OK"), nil, nil);
+			}
+		    }
+		  else if ([imageFileTypes containsObject: [key pathExtension]])
+		    {
+		      [imagesView addObject: [GormImage imageForData: fileData withFileName: key inWrapper: YES]];
+		    }
+		  else if ([soundFileTypes containsObject: [key pathExtension]])
+		    {
+		      [soundsView addObject: [GormSound soundForData: fileData withFileName: key inWrapper: YES]];
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  return NO;
+	}
+
+      // check the data...
+      if (data == nil || infoData == nil || classes == nil)
+	{
+	  return NO;
+	}
+      
+      /*
+       * Create an unarchiver, and use it to unarchive the gorm file while
+       * handling class replacement so that standard objects understood
+       * by the gui library are converted to their Gorm internal equivalents.
+       */
+      u = [[NSUnarchiver alloc] initForReadingWithData: data];
+      
+      /*
+       * Special internal classes
+       */ 
+      [u decodeClassName: @"GSNibItem" 
+	 asClassName: @"GormObjectProxy"];
+      [u decodeClassName: @"GSCustomView" 
+	 asClassName: @"GormCustomView"];
+
+      /*
+       * Substitute any classes specified by the palettes...
+       */
+      while((subClassName = [en nextObject]) != nil)
+	{
+	  NSString *realClassName = [substituteClasses objectForKey: subClassName];
+	  [u decodeClassName: realClassName
+	     asClassName: subClassName];
+	}
+
+      // turn off custom classes.
+      [GSClassSwapper setIsInInterfaceBuilder: YES]; 
+      ASSIGN(container, [u decodeObject]);
+      if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
+	{
+	  return NO;
+	}
+      // turn on custom classes.
+      [GSClassSwapper setIsInInterfaceBuilder: NO]; 
+      
+      /*
+       * Retrieve the custom class data and refresh the classes view...
+       */
+      cc = [[container nameTable] objectForKey: GSCustomClassMap];
+      if (cc == nil)
+	{
+	  cc = [NSMutableDictionary dictionary]; // create an empty one.
+	  [[container nameTable] setObject: cc forKey: GSCustomClassMap];
+	}
+
+      [classManager setCustomClassMap: cc];
+      NSDebugLog(@"cc = %@", cc);
+      NSDebugLog(@"customClasses = %@", [classManager customClassMap]);      
+      [classesView reloadData];
+      
+      /*
+       * In the newly loaded nib container, we change all the connectors
+       * to hold the objects rather than their names (using our own dummy
+       * object as the 'NSOwner'.
+       */
+      ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
+      if (ownerClass)
+	{
+	  [filesOwner setClassName: ownerClass];
+	}
+      [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
+      [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
+      
+      /* Iterate over the contents of nameTable and create the connections */
+      nt = [container nameTable];
+      enumerator = [[container connections] objectEnumerator];
+      while ((con = [enumerator nextObject]) != nil)
+	{
+	  NSString  *name;
+	  id        obj;
+	  
+	  name = (NSString*)[con source];
+	  obj = [nt objectForKey: name];
+	  [con setSource: obj];
+	  name = (NSString*)[con destination];
+	  obj = [nt objectForKey: name];
+	  [con setDestination: obj];
+	}
+      
+      /*
+       * If the GSNibContainer version is 0, we need to add the top level objects
+       * to the list so that they can be properly processed.
+       */
+      if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
+	{
+	  id obj;
+	  NSEnumerator *en = [nt objectEnumerator];
+
+	  // get all of the GSNibItem subclasses which could be top level objects
+	  while((obj = [en nextObject]) != nil)
+	    {
+	      if([obj isKindOfClass: [GSNibItem class]] &&
+		 [obj isKindOfClass: [GSCustomView class]] == NO)
+		{
+		  [[container topLevelObjects] addObject: obj];
+		}
+	    }
+	  isOlderArchive = YES;
+	}
+
+      /*
+       * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
+       * an older archive.  Also, if the window template is not in the archive we know
+       * it was made by an older version of Gorm.
+       */
+      version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
+      if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
+	{
+	  isOlderArchive = YES;
+	}
+
+      /*
+       * repair the .gorm file, if needed.
+       */
+      if(repairFile)
+	{
+	  [self _repairFile];
+	}
+
+      /* 
+       * Rebuild the mapping from object to name for the nameTable... 
+       */
+      [self rebuildObjToNameMapping];
+            
+      NSDebugLog(@"nameTable = %@",[container nameTable]);
+      
+      // awaken all elements after the load is completed.
+      enumerator = [[container nameTable] keyEnumerator];
+      while ((key = [enumerator nextObject]) != nil)
+	{
+	  id o = [[container nameTable] objectForKey: key];
+	  if ([o respondsToSelector: @selector(awakeFromDocument:)])
+	    {
+	      [o awakeFromDocument: self];
+	    }
+	}
+
+      // this is the last thing we should do...
+      [[NSNotificationCenter defaultCenter]
+	postNotificationName: IBDidOpenDocumentNotification
+	object: self];
+      
+      // document opened...
+      isDocumentOpen = YES;
+
+      // release the unarchiver.. now that we're all done...
+      RELEASE(u);
+    }
+  NS_HANDLER
+    {
+      NSRunAlertPanel(_(@"Problem Loading"), 
+		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
+		      _(@"OK"), nil, nil);
+      return NO; 
+    }
+  NS_ENDHANDLER;
+
+  // if we made it here, then it was a success....
+  return YES;
 }
 
 @end

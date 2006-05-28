@@ -48,6 +48,7 @@ GormCore_HEADER_FILES = \
 	GormCustomClassInspector.h \
 	GormCustomView.h \
 	GormDocument.h \
+	GormDocumentController.h \
 	GormFilePrefsManager.h \
 	GormFilesOwner.h \
 	GormFontViewController.h \
@@ -102,6 +103,7 @@ GormCore_OBJC_FILES = \
 	GormCustomClassInspector.m \
 	GormCustomView.m \
 	GormDocument.m \
+	GormDocumentController.m \
 	GormFilePrefsManager.m \
 	GormFilesOwner.m \
 	GormFontViewController.m \

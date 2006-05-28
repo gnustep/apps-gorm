@@ -40,6 +40,20 @@
   return AUTORELEASE([[GormSound alloc] initWithPath: aPath inWrapper: flag]);
 }
 
++ (GormSound*)soundForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
+{
+  return AUTORELEASE([[GormSound alloc] initWithData: aData withFileName: aName inWrapper: flag]);
+}
+
+- (id) initWithData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
+{
+  if((self = [super initWithData: aData withFileName: aName inWrapper: flag]))
+    {
+      // ASSIGN(sound, AUTORELEASE([[NSImage alloc] initWithData: aData]));
+    }
+  return self;
+}
+
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag

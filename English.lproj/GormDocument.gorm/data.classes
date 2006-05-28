@@ -18,12 +18,11 @@
 	);
 	Outlets = (
 	    selectionBox,
-	    window,
 	    filePrefsView,
 	    filePrefsManager,
 	    filePrefsWindow
 	);
-	Super = GSNibContainer;
+	Super = NSDocument;
     };
     GormFilePrefsManager = {
 	Actions = (

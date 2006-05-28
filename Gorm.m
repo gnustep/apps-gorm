@@ -74,21 +74,8 @@
 
 - (id<IBDocuments>) activeDocument
 {
-  unsigned	i = [documents count];
-
-  if (i > 0)
-    {
-      while (i-- > 0)
-	{
-	  id	doc = [documents objectAtIndex: i];
-
- 	  if ([doc isActive] == YES)
-	    {
-	      return doc;
-	    }
-	}
-    }
-  return nil;
+  NSDocumentController *docController = [NSDocumentController sharedDocumentController];
+  return [docController currentDocument];
 }
 
 /* 
@@ -142,12 +129,6 @@
 	}
 
       /*
-       * Make sure the palettes manager exists, so that the editors and
-       * inspectors provided in the standard palettes are available.
-       */
-      [self palettesManager];
-
-      /*
        * load the interface...
        */
       if(![NSBundle loadNibNamed: @"Gorm" owner: self])
@@ -155,6 +136,12 @@
 	  NSLog(@"Failed to load interface");
 	  exit(-1);
 	}
+
+      /*
+       * Make sure the palettes manager exists, so that the editors and
+       * inspectors provided in the standard palettes are available.
+       */
+      [self palettesManager];
 
       /*
        * set the delegate.
@@ -258,7 +245,7 @@
  	    {
  	      if ( [[doc window]  isDocumentEdited] == YES)
  		{
-		  if ( ! [doc couldCloseDocument] )
+		  if ( ! [doc canCloseDocument] )
 		    return NO;
  		}
  	    }	
@@ -420,7 +407,6 @@
 }
 
 /** Info Menu Actions */
-
 - (void) preferencesPanel: (id) sender
 {
   if(! preferencesController)
@@ -432,100 +418,13 @@
 }
 
 /** Document Menu Actions */
-
-- (void) open: (id) sender
-{
-  GormDocument	*doc = AUTORELEASE([[GormDocument alloc] init]);
-
-  [documents addObject: doc];
-  if ([doc openDocument: sender] == nil)
-    {
-      [doc closeAllEditors];
-      [documents removeObjectIdenticalTo: doc];
-      doc = nil;
-    }
-  else
-    {
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-}
-
-- (void) newGormDocument : (id) sender 
-{
-  id doc = AUTORELEASE([[GormDocument alloc] init]);
-  [documents addObject: doc];
-  switch ([sender tag]) 
-    {
-    case 0:
-      [doc setupDefaults: @"Application"];
-      break;
-    case 1:
-      [doc setupDefaults: @"Empty"];
-      break;
-    case 2:
-      [doc setupDefaults: @"Inspector"];
-      break;
-    case 3:
-      [doc setupDefaults: @"Palette"];
-      break;
-
-    default: 
-      printf("unknow newGormDocument tag");
-    }
-  if (NSEqualPoints(cascadePoint, NSZeroPoint))
-    {	
-      NSRect frame = [[doc window] frame];
-      cascadePoint = NSMakePoint(frame.origin.x, NSMaxY(frame));
-    }
-  cascadePoint = [[doc window] cascadeTopLeftFromPoint:cascadePoint];
-  [[doc window] makeKeyAndOrderFront: self];
-}
-
-- (void) save: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveGormDocument: sender];
-}
-
-- (void) saveAs: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveAsDocument: sender];
-}
-
-
-- (void) saveAll: (id)sender
-{
-  NSEnumerator	*enumerator = [documents objectEnumerator];
-  id		doc;
-
-  while ((doc = [enumerator nextObject]) != nil)
-    {
-      if ([[doc window] isDocumentEdited] == YES)
-	{
-	  if (! [doc saveGormDocument: sender] )
-	    NSLog(@"can not save %@",doc);
-	}
-    }
-}
-
-
-- (void) revertToSaved: (id)sender
-{
-  id	doc = [(GormDocument *)[self activeDocument] revertDocument: sender];
-
-  if (doc != nil)
-    {
-      [documents addObject: doc];
-      // RELEASE(doc);
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-}
-
 - (void) close: (id)sender
 {
   GormDocument  *document = (GormDocument *)[self activeDocument];
-  NSWindow	*window = [document window];
-
-  [window performClose: self];
+  if([document canCloseDocument])
+    {
+      [document close];
+    }
 }
 
 - (void) debug: (id) sender
@@ -610,7 +509,7 @@
 
 	  // do not allow custom classes during testing.
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
-	  [archiver encodeRootObject: activeDoc];
+	  [archiver encodeRootObject: [activeDoc container]];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activeDoc endArchiving];
 	  RELEASE(archiver);
@@ -1094,6 +993,7 @@
   return nil;
 }
 
+/*
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
   NSString *ext = [fileName pathExtension];
@@ -1116,6 +1016,7 @@
   
   return (doc != nil);
 }
+*/
 
 - (GormPalettesManager*) palettesManager
 {

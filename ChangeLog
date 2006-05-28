@@ -1,3 +1,30 @@
+2006-05-28 19:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Reparented GormDocument
+	to be a subclass of NSDocument and also redid connections.
+	* English.lproj/Gorm.gorm: Added new GormDocumentController class.
+	redid connections to save/new/and loadDocument methods for NSDocument
+	subclasses.
+	* GormCore/GModelDecoder.m: Changed to reflect changes to document.
+	* GormCore/GNUmakefile: Added new classes.
+	* GormCore/GormClassManager.[hm]: Added methods to allow
+	initialization and saving to NSData
+	* GormCore/GormDocument.[hm]: Removed save* and load* methods,
+	implemented loadFileWrapperRepresentation:ofType: and
+	fileWrapperRepresentationOfType: for NSDocument.
+	* GormCore/GormFilePrefsManager.[hm]: Added methods
+	to allow initialization from data.
+	* GormCore/GormImageEditor.m: Changed comment.
+	* GormCore/GormImage.[hm]: Allow init with data.
+	* GormCore/GormProtocol.h: Removed superceded methods.
+	* GormCore/GormResource.[hm]: Allow initialization with data.
+	* GormCore/GormSound.[hm]: Changed to allow initialization with
+	data.
+	* GormCore/GormViewWithContentViewEditor.m: Fixed warning.
+	* GormInfo.plist: Updated information for use with NSDocument.
+	* Gorm.m: Remove superceded methods.
+	* Palettes/1Windows/GormNSWindow.m: Temporary debugging method.
+
 2006-05-20 18:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m: Updated to 1.0.9

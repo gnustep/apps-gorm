@@ -33,7 +33,7 @@
 #include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 
-@class NSString;
+@class NSString, NSData;
 
 @interface GormResource : NSObject <IBProjectFiles>
 {
@@ -46,6 +46,7 @@
   id<IBProjects>  project;
   BOOL            isSystemResource;
   BOOL            isInWrapper;
+  NSData          *data;
 }
 
 // factory methods
@@ -61,6 +62,9 @@
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath
           inWrapper: (BOOL)flag;
+- (id) initWithData: (NSData *)aData 
+       withFileName: (NSString *)aFileName 
+          inWrapper: (BOOL)flag;
 
 // instances methods
 - (void) setName: (NSString *)aName;
@@ -69,6 +73,8 @@
 - (BOOL) isSystemResource;
 - (void) setInWrapper: (BOOL)flag;
 - (BOOL) isInWrapper;
+- (void) setData: (NSData *)data;
+- (NSData *) data;
 - (BOOL) isEqual: (id)object;
 @end
 
