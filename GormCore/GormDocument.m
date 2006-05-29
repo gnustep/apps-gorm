@@ -2154,7 +2154,6 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator  *enumerator;
   NSString	*name;
-  id            o;
 
   NSDebugLog(@"------ Rebuilding object to name mapping...");
   NSResetMapTable(objToName);
@@ -3902,6 +3901,24 @@ static NSImage  *fileImage = nil;
 
   // if we made it here, then it was a success....
   return YES;
+}
+
+- (BOOL) keepBackupFile
+{
+  return ([[NSUserDefaults standardUserDefaults]
+	    integerForKey: @"BackupFile"] == 1);
+}
+
+- (NSString *)displayName
+{
+  if ([self fileName] != nil)
+    {
+      return [[self fileName] lastPathComponent];
+    }
+  else
+    {
+      return [super displayName];
+    }
 }
 
 @end
