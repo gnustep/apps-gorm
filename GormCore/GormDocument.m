@@ -470,12 +470,28 @@ static NSImage  *fileImage = nil;
 		  [self close];
 		}
 	    }
+	  DESTROY(infoData);
 	}
       else
 	{
 	  NSLog(@"Loading gorm without data.info file.  Default settings will be assumed.");
 	}
     }
+
+  // load the images and sounds...
+  en = [images objectEnumerator];
+  while((o = [en nextObject]) != nil)
+    {
+      [imagesView addObject: o];
+    }
+  DESTROY(images);
+
+  en = [images objectEnumerator];
+  while((o = [en nextObject]) != nil)
+    {
+      [soundsView addObject: o];
+    }
+  DESTROY(sounds);
 
   //
   // Retain the file prefs view...
@@ -3637,7 +3653,7 @@ static NSImage  *fileImage = nil;
       if([object isSystemResource] == NO)
 	{
 	  NSString *path = [object path];
-	  NSString *resName = nil;
+	  NSString *resName = nil; 
 	  NSData   *resData = nil;
 
 	  if([object isInWrapper])
@@ -3647,6 +3663,7 @@ static NSImage  *fileImage = nil;
 	    }
 	  else
 	    {
+	      resName = [path lastPathComponent];
 	      resData = [NSData dataWithContentsOfFile: path];
 	      [object setData: resData];
 	      [object setInWrapper: YES];
@@ -3690,6 +3707,10 @@ static NSImage  *fileImage = nil;
 	  NSArray *imageFileTypes = [NSImage imageFileTypes];
 	  NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
 
+	  // initialize arrays for sounds/images.
+	  images = [[NSMutableArray alloc] init];
+	  sounds = [[NSMutableArray alloc] init];
+
 	  key = nil;
 	  fileWrappers = [wrapper fileWrappers];	  
 	  enumerator = [fileWrappers keyEnumerator];
@@ -3705,7 +3726,7 @@ static NSImage  *fileImage = nil;
 		    }
 		  else if([key isEqual: @"data.info"])
 		    {
-		      infoData = fileData;
+		      ASSIGN(infoData, fileData);
 		    }
 		  else if([key isEqual: @"data.classes"])
 		    {
@@ -3722,11 +3743,11 @@ static NSImage  *fileImage = nil;
 		    }
 		  else if ([imageFileTypes containsObject: [key pathExtension]])
 		    {
-		      [imagesView addObject: [GormImage imageForData: fileData withFileName: key inWrapper: YES]];
+		      [images addObject: [GormImage imageForData: fileData withFileName: key inWrapper: YES]];
 		    }
 		  else if ([soundFileTypes containsObject: [key pathExtension]])
 		    {
-		      [soundsView addObject: [GormSound soundForData: fileData withFileName: key inWrapper: YES]];
+		      [sounds addObject: [GormSound soundForData: fileData withFileName: key inWrapper: YES]];
 		    }
 		}
 	    }

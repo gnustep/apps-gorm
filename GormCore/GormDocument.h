@@ -73,7 +73,9 @@
   id                    filePrefsManager;
   NSWindow              *filePrefsWindow;
   NSMutableArray        *resourceManagers;
-  NSData                *infoData;              /* data.info contents */
+  NSData                *infoData;   /* data.info contents */
+  NSMutableArray        *images;     /* temporary storage for images. */             
+  NSMutableArray        *sounds;     /* temporary storage for sounds. */
   GSNibContainer        *container;
 }
 

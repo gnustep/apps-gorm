@@ -1,3 +1,13 @@
+2006-05-29 11:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Added new ivars for holding images/sounds
+	temporarily.
+	* GormCore/GormDocument.m: loadFileWrapperRepresentation:ofType: 
+	modified to use images/sounds arrays.  The awakeFromNib method
+	now pulls objects from those arrays and inserts them into the
+	GormImageEditor/GormSoundEditor instances when the nib is fully
+	loaded.
+
 2006-05-29 10:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Override displayName and keepBackupFile.
