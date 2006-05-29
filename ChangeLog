@@ -1,3 +1,7 @@
+2006-05-28 23:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormProtocol.h: Removed some methods not needed anymore.
+
 2006-05-28 23:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Removed uneeded methods from Gorm class.
