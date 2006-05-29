@@ -1747,6 +1747,15 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Close the document and all windows associated.  Mark this document as closed.
+ */
+- (void) close
+{
+  isDocumentOpen = NO;
+  [super close];
+}
+
+/**
  * Handle all notifications.   Checks the value of [aNotification name]
  * against the set of notifications this class responds to and takes
  * appropriate action.
@@ -1756,7 +1765,7 @@ static NSImage  *fileImage = nil;
   NSString *name = [aNotification name];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
-  if ([name isEqual: NSWindowWillCloseNotification])
+  if ([name isEqual: NSWindowWillCloseNotification] && isDocumentOpen)
     {
       NSEnumerator	*enumerator;
       id		obj;
@@ -1766,6 +1775,7 @@ static NSImage  *fileImage = nil;
 	{
 	  if ([obj isKindOfClass: [NSWindow class]])
 	    {
+	      [obj setReleasedWhenClosed: YES];
 	      [obj close];
 	      // RELEASE(obj);
 	    }
@@ -1776,20 +1786,21 @@ static NSImage  *fileImage = nil;
       [self closeAllEditors]; // shut down all of the editors..
       [nc postNotificationName: IBWillCloseDocumentNotification object: self];
       [nc removeObserver: self]; // stop listening to all notifications.
+      isDocumentOpen = NO;
     }
-  else if ([name isEqual: NSWindowDidBecomeKeyNotification])
+  else if ([name isEqual: NSWindowDidBecomeKeyNotification] && isDocumentOpen)
     {
       [self setDocumentActive: YES];
     }
-  else if ([name isEqual: NSWindowWillMiniaturizeNotification])
+  else if ([name isEqual: NSWindowWillMiniaturizeNotification] && isDocumentOpen)
     {
       [self setDocumentActive: NO];
     }
-  else if ([name isEqual: NSWindowDidDeminiaturizeNotification])
+  else if ([name isEqual: NSWindowDidDeminiaturizeNotification] && isDocumentOpen)
     {
       [self setDocumentActive: YES];
     }
-  else if ([name isEqual: IBWillBeginTestingInterfaceNotification])
+  else if ([name isEqual: IBWillBeginTestingInterfaceNotification] && isDocumentOpen)
     {
       if ([(id<IB>)NSApp activeDocument] == self)
 	{
@@ -1825,7 +1836,7 @@ static NSImage  *fileImage = nil;
 	    }
 	}
     }
-  else if ([name isEqual: IBWillEndTestingInterfaceNotification])
+  else if ([name isEqual: IBWillEndTestingInterfaceNotification] && isDocumentOpen)
     {
       if ([hidden count] > 0)
 	{
@@ -1848,19 +1859,19 @@ static NSImage  *fileImage = nil;
 	  [[self window] setExcludedFromWindowsMenu: NO];
 	}
     }
-  else if ([name isEqual: IBClassNameChangedNotification])
+  else if ([name isEqual: IBClassNameChangedNotification] && isDocumentOpen)
     {
       [classesView reloadData];
       [self setSelectionFromEditor: nil];
       [self touch];
     }
-  else if ([name isEqual: IBInspectorDidModifyObjectNotification])
+  else if ([name isEqual: IBInspectorDidModifyObjectNotification] && isDocumentOpen)
     {
       [classesView reloadData];
       [self touch];
     }
-  else if ([name isEqual: GormDidModifyClassNotification] ||
-	   [name isEqual: GormDidDeleteClassNotification])
+  else if (([name isEqual: GormDidModifyClassNotification] ||
+	    [name isEqual: GormDidDeleteClassNotification]) && isDocumentOpen)
     {
       if ([classesView isEditing] == NO) 
 	{
@@ -1868,7 +1879,7 @@ static NSImage  *fileImage = nil;
 	  [self touch];
 	}
     }
-  else if ([name isEqual: GormDidAddClassNotification])
+  else if ([name isEqual: GormDidAddClassNotification] && isDocumentOpen)
     {
       NSArray *customClasses = [classManager allCustomClassNames];
       NSString *newClass = [customClasses lastObject];
@@ -1882,7 +1893,7 @@ static NSImage  *fileImage = nil;
 	  [classesView selectClass: newClass];
 	}
     }
-  else if([name isEqual: IBResourceManagerRegistryDidChangeNotification])
+  else if([name isEqual: IBResourceManagerRegistryDidChangeNotification] && isDocumentOpen)
     {
       if(resourceManagers != nil)
 	{
@@ -3293,7 +3304,7 @@ static NSImage  *fileImage = nil;
  * into another.  This is helpful when attempting to translate an application for use
  * in different locales.
  */
-- (void) translate
+- (void) translate: (id)sender
 {
   NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
@@ -3377,7 +3388,7 @@ static NSImage  *fileImage = nil;
  * translation.  This allows the user to see all of the strings which can be translated
  * and allows the user to provide a translateion for each of them.
  */ 
-- (void) exportStrings
+- (void) exportStrings: (id)sender
 {
   NSSavePanel	*sp = [NSSavePanel savePanel];
   int		result;

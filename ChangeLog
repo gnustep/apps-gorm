@@ -1,3 +1,12 @@
+2006-05-28 23:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Removed uneeded methods from Gorm class.
+	* GormCore/GormDocument.[hm]: Add sender as a parameter to translate
+	and exportStrings.
+	* Gorm.m: Removed some uneeded checks in validateMenu: also removed
+	uneeded methods which were used to forward to GormDocument. 
+	* Palettes/0Menus/GormNSMenu.m: Can't become key.
+
 2006-05-28 19:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Reparented GormDocument

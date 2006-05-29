@@ -1087,28 +1087,6 @@
   connectDestination = nil;
 }
 
-- (void) arrangeSelectedObjects: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(arrangeSelectedObjects:)
-			 withObject: sender];
-}
-
-- (void) alignSelectedObjects: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(alignSelectedObjects:)
-			 withObject: sender];
-}
-
-- (void) translate: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(translate)];
-}
-
-- (void) exportStrings: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(exportStrings)];
-}
-
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
@@ -1124,41 +1102,12 @@
     }
 
   if (sel_eq(action, @selector(close:))
-    || sel_eq(action, @selector(miniaturize:))
-    || sel_eq(action, @selector(save:))
-    || sel_eq(action, @selector(saveAs:))
-    || sel_eq(action, @selector(saveAll:)))
+      || sel_eq(action, @selector(miniaturize:)))
     {
       if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(revertToSaved:)))
-    {
-      if (active == nil || [active documentPath] == nil
-	|| [[active window] isDocumentEdited] == NO)
 	return NO;
     }
   else if (sel_eq(action, @selector(testInterface:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(translate:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(arrangeSelectedObjects:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(alignSelectedObjects:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(exportStrings:)))
     {
       if (active == nil)
 	return NO;
@@ -1313,9 +1262,6 @@
 	    {
 	      return NO;
 	    }
-
-	  // if([name isEqual: @"FirstResponder"])
-	  //   return NO;
 	}
 
       if(sel_eq(action, @selector(instantiateClass:)))

@@ -193,8 +193,8 @@
 - (NSArray *) allManagedPboardTypes;
 
 /* Language translation */
-- (void) translate;
-- (void) exportStrings;
+- (void) translate: (id)sender;
+- (void) exportStrings: (id)sender;
 
 /* Managing classes */
 - (GormClassManager*) classManager;
