@@ -1,3 +1,7 @@
+2006-05-29 18:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormImage.m: Corrected minor issue in initWithData:...
+
 2006-05-29 11:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.h: Added new ivars for holding images/sounds
