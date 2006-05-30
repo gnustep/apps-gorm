@@ -1,3 +1,8 @@
+2006-05-29 22:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Removed some unused variables in
+	fileWrapperRepresentationOfType:.
+
 2006-05-29 22:50 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.[hm]: Added scmDirWrapper and private method

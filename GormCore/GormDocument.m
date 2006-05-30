@@ -3662,10 +3662,7 @@ static NSImage  *fileImage = nil;
   // but only those which they end up with will actually be put into the wrapper
   // when the model/document is saved.
   //
-  NSArray *sounds = [soundsView objects];
-  NSArray *images = [imagesView objects];
-  NSArray *resources = [sounds arrayByAddingObjectsFromArray: images];
-  
+  NSArray *resources = [sounds arrayByAddingObjectsFromArray: images];  
   id object = nil;
   en = [resources objectEnumerator];
   while ((object = [en nextObject]) != nil)
