@@ -1,3 +1,9 @@
+2006-05-30 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocumentController.h
+	* GormCore/GormDocumentController.m: New file.
+	* Gorm.m: Reimplemented activeDocument to use the document controller.
+
 2006-05-29 22:55 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Removed some unused variables in

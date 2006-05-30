@@ -74,8 +74,7 @@
 
 - (id<IBDocuments>) activeDocument
 {
-  NSDocumentController *docController = [NSDocumentController sharedDocumentController];
-  return [docController currentDocument];
+  return [[NSDocumentController sharedDocumentController] currentDocument];
 }
 
 /* 
