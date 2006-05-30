@@ -15,7 +15,7 @@
 	NSName = "gorm";
 	NSHumanReadableName = "GModel GUI Model";
 	NSRole = Editor;
-	NSDocumentClass = GModelDocument;
+	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "gmodel" );
         NSDOSExtensions = ( "gmodel" );
         NSIcon = "FileIcon_gmodel.tiff";
@@ -24,7 +24,7 @@
 	NSName = "nib";
 	NSHumanReadableName = "Cocoa Nib";
 	NSRole = Editor;
-	NSDocumentClass = NibDocument;
+	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "nib" );
         NSDOSExtensions = ( "nib" );
         NSIcon = "GormNib.tiff";

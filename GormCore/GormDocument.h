@@ -76,6 +76,7 @@
   NSData                *infoData;   /* data.info contents */
   NSMutableArray        *images;     /* temporary storage for images. */             
   NSMutableArray        *sounds;     /* temporary storage for sounds. */
+  NSFileWrapper         *scmDirWrapper;
   GSNibContainer        *container;
 }
 

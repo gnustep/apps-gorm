@@ -1,3 +1,11 @@
+2006-05-29 22:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.[hm]: Added scmDirWrapper and private method
+	saveSCMDirectory to preserve the .svn/CVS directories, if they
+	are there.
+	* GormInfo.plist: GormDocument will be responsible for saving/reading
+	all types.
+
 2006-05-29 18:38 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormImage.m: Corrected minor issue in initWithData:...

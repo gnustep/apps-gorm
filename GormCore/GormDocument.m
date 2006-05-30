@@ -1177,6 +1177,8 @@ static NSImage  *fileImage = nil;
   RELEASE(resourceManagers);
   RELEASE(container);
   
+  TEST_RELEASE(scmDirWrapper);
+
   [super dealloc];
 }
 
@@ -3545,6 +3547,15 @@ static NSImage  *fileImage = nil;
     }	      
 }
 
+- (void) saveSCMDirectory: (NSDictionary *) fileWrappers
+{
+  ASSIGN(scmDirWrapper, [fileWrappers objectForKey: @".svn"]);
+  if(scmDirWrapper == nil)
+    {
+      ASSIGN(scmDirWrapper, [fileWrappers objectForKey: @"CVS"]);
+    }
+}
+
 /**
  * The window nib for the document class...
  */
@@ -3636,6 +3647,15 @@ static NSImage  *fileImage = nil;
   RELEASE(fileWrapper);
 
   //
+  // Add the SCM wrapper to the wrapper, if it's present.
+  //
+  if(scmDirWrapper != nil)
+    {
+      NSString *name = [[scmDirWrapper filename] lastPathComponent];
+      [fileWrappers setObject: scmDirWrapper forKey: name];
+    }
+
+  //
   // Copy resources into the new folder...
   // Gorm doesn't copy these into the folder right away since the folder may
   // not yet exist.   This allows the user to add/delete resources as they see fit
@@ -3712,7 +3732,10 @@ static NSImage  *fileImage = nil;
 	  sounds = [[NSMutableArray alloc] init];
 
 	  key = nil;
-	  fileWrappers = [wrapper fileWrappers];	  
+	  fileWrappers = [wrapper fileWrappers];
+
+	  [self saveSCMDirectory: fileWrappers];
+	  
 	  enumerator = [fileWrappers keyEnumerator];
 	  while((key = [enumerator nextObject]) != nil)
 	    {
