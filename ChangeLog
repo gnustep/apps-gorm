@@ -1,3 +1,7 @@
+2006-06-01 23:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Correct NSName entries.
+
 2006-05-30 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocumentController.h
