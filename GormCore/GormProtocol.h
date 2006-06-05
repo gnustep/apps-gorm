@@ -30,7 +30,6 @@
 @class GormClassManager, GormPalettesManager, GormInspectorsManager, NSString, NSMenu;
 
 @protocol Gorm
-
 // Connections
 - (id) connectSource;
 - (id) connectDestination;

@@ -1161,6 +1161,140 @@
   return [dictForClass objectForKey: @"Super"];
 }
 
+- (NSData *) nibData
+{
+  NSMutableDictionary	*dict = nil;
+  NSMutableArray        *classes = nil;
+  NSEnumerator		*enumerator = nil;
+  id			name = nil;
+  NSString              *result = nil;
+  
+  // save all custom classes....
+  dict = [NSMutableDictionary dictionary];
+  [dict setObject: @"1" forKey: @"IBVersion"];
+  classes = [NSMutableArray array];
+
+  // build IBClasses...
+  enumerator = [customClasses objectEnumerator];
+  while ((name = [enumerator nextObject]) != nil)
+    {
+      NSDictionary		*classInfo;
+      NSMutableDictionary	*newInfo;
+      id			obj;
+      id                        extraObj;
+
+      // get the info...
+      classInfo = [classInformation objectForKey: name];
+
+      newInfo = [[NSMutableDictionary alloc] init];
+      [newInfo setObject: name forKey: @"CLASS"];
+
+      // superclass...
+      obj = [classInfo objectForKey: @"Super"];
+      if (obj != nil)
+	{
+	  [newInfo setObject: obj forKey: @"SUPERCLASS"];
+	}
+
+      // outlets...
+      obj = [classInfo objectForKey: @"Outlets"];
+      extraObj = [classInfo objectForKey: @"ExtraOutlets"];
+      if (obj && extraObj)
+	{
+	  obj = [obj arrayByAddingObjectsFromArray: extraObj];
+	}
+      else if (extraObj)
+	{
+	  obj = extraObj;
+	}
+      if (obj != nil)
+	{
+	  NSMutableDictionary *outletDict = [NSMutableDictionary dictionary];
+	  NSEnumerator *oen = [obj objectEnumerator];
+	  id outlet = nil;
+
+	  while((outlet = [oen nextObject]) != nil)
+	    {
+	      [outletDict setObject: @"id" forKey: outlet];
+	    }
+
+	  [newInfo setObject: outletDict forKey: @"OUTLETS"];
+	}
+
+      // actions...
+      obj = [classInfo objectForKey: @"Actions"];
+      extraObj = [classInfo objectForKey: @"ExtraActions"];
+      if (obj && extraObj)
+	{
+	  obj = [obj arrayByAddingObjectsFromArray: extraObj];
+	}
+      else if (extraObj)
+	{
+	  obj = extraObj;
+	}
+      if (obj != nil)
+	{	  
+	  NSMutableDictionary *actionDict = [NSMutableDictionary dictionary];
+	  NSEnumerator *aen = [obj objectEnumerator];
+	  id action = nil;
+
+	  while((action = [aen nextObject]) != nil)
+	    {
+	      [actionDict setObject: @"id" forKey: action];
+	    }
+
+	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
+	}
+
+      [classes addObject: newInfo];
+    }
+
+  // save all categories on existing, non-custom classes....
+  enumerator = [categoryClasses objectEnumerator];
+  while((name = [enumerator nextObject]) != nil)
+    {
+      NSDictionary  *classInfo;
+      NSMutableDictionary  *newInfo;
+      id obj;
+
+      // get the info...
+      classInfo = [classInformation objectForKey: name];
+      newInfo = [NSMutableDictionary dictionary];
+      [newInfo setObject: name forKey: @"CLASS"];
+
+      // superclass...
+      obj = [classInfo objectForKey: @"Super"];
+      if (obj != nil)
+	{
+	  [newInfo setObject: obj forKey: @"SUPERCLASS"];
+	}
+
+      // actions...
+      obj = [classInfo objectForKey: @"ExtraActions"];
+      if (obj != nil)
+	{
+	  NSMutableDictionary *actionDict = [NSMutableDictionary dictionary];
+	  NSEnumerator *aen = [obj objectEnumerator];
+	  id action = nil;
+
+	  while((action = [aen nextObject]) != nil)
+	    {
+	      [actionDict setObject: @"id" forKey: action];
+	    }
+
+	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
+	}
+      
+      [classes addObject: newInfo];
+    }
+
+  [dict setObject: @"ObjC" forKey: @"LANGUAGE"];
+  result = [dict description];
+
+  return [NSData dataWithBytes: [result cString] 
+		 length: [result cStringLength]];
+}
+
 - (NSData *) data
 {
   NSMutableDictionary	*ci = nil;
@@ -1169,7 +1303,7 @@
   NSString              *result = nil;
 
   // save all custom classes....
-  ci = AUTORELEASE([[NSMutableDictionary alloc] initWithCapacity: 0]);
+  ci = [NSMutableDictionary dictionary];
   enumerator = [customClasses objectEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -1233,7 +1367,7 @@
 
       // get the info...
       classInfo = [classInformation objectForKey: key];
-      newInfo = [[NSMutableDictionary alloc] init];
+      newInfo = [NSMutableDictionary dictionary];
       [ci setObject: newInfo forKey: key];
 
       // superclass...
@@ -1284,8 +1418,7 @@
   /*
    * Convert property-list data into a mutable structure.
    */
-  RELEASE(classInformation);
-  classInformation = [[NSMutableDictionary alloc] init];
+  ASSIGN(classInformation, [[NSMutableDictionary alloc] init]);
 
   // iterate over all entries..
   enumerator = [dict keyEnumerator];
@@ -1331,13 +1464,68 @@
   return YES;
 }
 
+- (BOOL) loadNibFormatCustomClassesWithDict: (NSDictionary *)dict
+{
+  NSArray *classes = [dict objectForKey: @"IBClasses"];
+  NSEnumerator *en = [classes objectEnumerator];
+  BOOL result = NO;
+  id cls = nil;
 
+  while((cls = [en nextObject]) != nil)
+    {
+      NSString *className = [cls objectForKey: @"CLASS"];
+      NSString *superClass = [cls objectForKey: @"SUPERCLASS"];
+      NSDictionary *actionDict = [cls objectForKey: @"ACTIONS"];
+      NSDictionary *outletDict = [cls objectForKey: @"OUTLETS"];
+      NSMutableArray *actions = [NSMutableArray array];
+      NSArray *outlets = [outletDict allKeys];
+      NSEnumerator *aen = [actionDict keyEnumerator];
+      id action = nil;
+
+      //
+      // Convert action format.
+      //
+      while((action = [aen nextObject]) != nil)
+	{
+	  NSString *aname = [action stringByAppendingString: @":"];
+	  [actions addObject: aname];
+	}
+
+      //
+      // If the class is known, add the actions/outlets, if it's
+      // not, then add all of the information.
+      //
+      if([self isKnownClass: className])
+	{
+	  [self addActions: actions forClassNamed: className];
+	  [self addOutlets: outlets forClassNamed: className];
+	  result = YES;
+	}
+      else
+	{
+	  result = [self addClassNamed: className
+			 withSuperClassNamed: superClass
+			 withActions: actions
+			 withOutlets: outlets];
+	}
+    }
+
+  return result;
+}
+
+- (BOOL) loadNibFormatCustomClassesWithData: (NSData *)data
+{
+  NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data encoding: NSASCIIStringEncoding]);
+  NSDictionary *dict = [dictString propertyList];
+  return [self loadCustomClassesWithDict: dict];
+}
 
 // this method will load the custom classes and merge them with the
 // Class information loaded at initialization time.
 - (BOOL) loadCustomClasses: (NSString *)path
 {
-  NSMutableDictionary		*dict;
+  NSMutableDictionary  *dict;
+  BOOL result = NO;
 
   NSDebugLog(@"Load custom classes from file %@",path);
 
@@ -1354,12 +1542,20 @@
       return NO;
     }
   
-  return [self loadCustomClassesWithDict: dict];
+  if([path isEqualToString: @"data.classes"])
+    {
+      result = [self loadCustomClassesWithDict: dict];
+    }
+  else if([path isEqualToString: @"classes.nib"])
+    {
+      result = [self loadNibFormatCustomClassesWithDict: dict];
+    }
+  return result;
 }
 
 - (BOOL) loadCustomClassesWithData: (NSData *)data
 {
-  NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding]);
+  NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data encoding: NSASCIIStringEncoding]);
   NSDictionary *dict = [dictString propertyList];
   return [self loadCustomClassesWithDict: dict];
 }

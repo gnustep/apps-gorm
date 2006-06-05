@@ -77,7 +77,7 @@
   NSMutableArray        *images;     /* temporary storage for images. */             
   NSMutableArray        *sounds;     /* temporary storage for sounds. */
   NSFileWrapper         *scmDirWrapper;
-  id<GSNibContainer>    container;
+  id<GSNibContainer, NSObject> container;
 }
 
 /* Archiving objects */

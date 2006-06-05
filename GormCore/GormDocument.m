@@ -99,10 +99,6 @@ NSString *GSCustomClassMap = @"GSCustomClassMap";
 }
 @end
 
-@interface GormDocument (GModel)
-- (id) openGModel: (NSString *)path;
-@end
-
 @implementation	GormFirstResponder
 - (NSImage*) imageForViewer
 {

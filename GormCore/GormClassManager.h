@@ -125,10 +125,13 @@
 /* Loading and saving */
 - (BOOL) saveToFile: (NSString *)path;
 - (NSData *) data;
+- (NSData *) nibData;
 - (BOOL) loadFromFile: (NSString *)path;
 - (BOOL) loadCustomClasses: (NSString *)path;
 - (BOOL) loadCustomClassesWithData: (NSData *)data;
 - (BOOL) loadCustomClassesWithDict: (NSDictionary *)dict;
+- (BOOL) loadNibFormatCustomClassesWithData: (NSData *)data;
+- (BOOL) loadNibFormatCustomClassesWithDict: (NSDictionary *)dict;
 @end
 
 #endif
