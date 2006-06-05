@@ -547,12 +547,14 @@ static BOOL gormFileOwnerDecoded;
 	}
       else
 	{
+	  NSString *className = (dest == nil)?(NSString *)@"FirstResponder":(NSString *)[dest className];
 	  newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
+	  
 	  if(![classManager isAction: [con label] 
-			    ofClass: (dest == nil)?@"FirstResponder":[dest className]])
+			    ofClass: className])
 	    {
 	      [classManager addAction: [con label] 
-			    forClassNamed: (dest == nil)?@"FirstResponder":[dest className]];
+			    forClassNamed: className];
 	    }	  
 	}
       
@@ -561,11 +563,11 @@ static BOOL gormFileOwnerDecoded;
       [newcon setSource: source];
       [newcon setDestination: (dest != nil)?dest:[self firstResponder]];
       [newcon setLabel: [con label]];
-      [connections addObject: newcon];
+      [[container connections] addObject: newcon];
     }
 
   // make sure that all of the actions on the application's delegate object are also added to FirstResponder.
-  enumerator = [connections objectEnumerator];
+  enumerator = [[container connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if([con isKindOfClass: [NSNibControlConnector class]])

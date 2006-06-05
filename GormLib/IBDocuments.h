@@ -171,7 +171,9 @@ IB_EXTERN NSString *IBWillCloseDocumentNotification;
 - (id<IBEditors, IBSelectionOwners>) parentEditorForEditor: (id<IBEditors>)anEditor;
 
 /**
- * Returns the parent of the given object.
+ * Return the parent of anObject.  The File's Owner is the root object in the
+ * hierarchy, if anObject's parent is the Files's Owner, this method should return
+ * nil.
  */
 - (id) parentOfObject: (id)anObject;
 

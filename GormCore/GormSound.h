@@ -46,6 +46,8 @@
  */
 + (GormSound*) soundForPath: (NSString *)path inWrapper: (BOOL)flag;
 
+
++ (GormSound*) soundForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag;
 @end
 
 #endif

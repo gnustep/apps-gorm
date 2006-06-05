@@ -34,7 +34,7 @@
 @implementation GormNSMenuWindow
 - (BOOL)canBecomeMainWindow
 {
-  return YES;
+  return NO;
 }
 - (BOOL)canBecomeKeyWindow
 {

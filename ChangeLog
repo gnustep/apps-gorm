@@ -1,3 +1,129 @@
+2006-06-04 22:11 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ChangeLog
+	* English.lproj/GormDocument.gorm
+	* English.lproj/Gorm.gorm
+	* GormCore/GModelDecoder.m
+	* GormCore/GNUmakefile
+	* GormCore/GormClassManager.h
+	* GormCore/GormClassManager.m
+	* GormCore/GormDocument.h
+	* GormCore/GormDocument.m
+	* GormCore/GormFilePrefsManager.h
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormFilesOwner.m
+	* GormCore/GormImageEditor.m
+	* GormCore/GormImage.h
+	* GormCore/GormImage.m
+	* GormCore/GormProtocol.h
+	* GormCore/GormResource.h
+	* GormCore/GormResource.m
+	* GormCore/GormSound.h
+	* GormCore/GormSound.m
+	* GormCore/GormViewWithContentViewEditor.m
+	* GormInfo.plist
+	* GormLib/IBDocuments.h
+	* GormLib/IBPalette.m
+	* Gorm.m
+	* Palettes/0Menus/GormNSMenu.m
+	* Palettes/1Windows/GormNSWindow.m
+	* Version: Merged from NibCompatibility branch.
+
+2006-06-03 11:44 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Add GormDocumentController as delegate
+	to Gorm.
+	* GormCore/GormDocumentController.m: Comment.
+	* GormCore/GormDocument.h: Comments and containerClass declaration.
+	* GormCore/GormDocument.m: containerClass implementation and use.
+	* GormLib/IBDocuments.h: More descriptive comment.
+	* GormLib/IBPalette.m: Remove IBPaletteDocument, since this is
+	not used.
+	* Gorm.m: Remove applicationShouldTerminate, since it is handled
+	by GormDocumentController as the app delegate.
+
+2006-06-01 23:06 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormInfo.plist: Correct NSName entries.
+
+2006-05-30 00:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocumentController.h
+	* GormCore/GormDocumentController.m: New file.
+	* Gorm.m: Reimplemented activeDocument to use the document controller.
+
+2006-05-29 22:55 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Removed some unused variables in
+	fileWrapperRepresentationOfType:.
+
+2006-05-29 22:50 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.[hm]: Added scmDirWrapper and private method
+	saveSCMDirectory to preserve the .svn/CVS directories, if they
+	are there.
+	* GormInfo.plist: GormDocument will be responsible for saving/reading
+	all types.
+
+2006-05-29 18:38 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormImage.m: Corrected minor issue in initWithData:...
+
+2006-05-29 11:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.h: Added new ivars for holding images/sounds
+	temporarily.
+	* GormCore/GormDocument.m: loadFileWrapperRepresentation:ofType: 
+	modified to use images/sounds arrays.  The awakeFromNib method
+	now pulls objects from those arrays and inserts them into the
+	GormImageEditor/GormSoundEditor instances when the nib is fully
+	loaded.
+
+2006-05-29 10:39 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Override displayName and keepBackupFile.
+	* Palettes/1Windows/GormNSWindow.m: Remove test code.
+
+2006-05-28 23:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormProtocol.h: Removed some methods not needed anymore.
+
+2006-05-28 23:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Removed uneeded methods from Gorm class.
+	* GormCore/GormDocument.[hm]: Add sender as a parameter to translate
+	and exportStrings.
+	* Gorm.m: Removed some uneeded checks in validateMenu: also removed
+	uneeded methods which were used to forward to GormDocument. 
+	* Palettes/0Menus/GormNSMenu.m: Can't become key.
+
+2006-05-28 19:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Reparented GormDocument
+	to be a subclass of NSDocument and also redid connections.
+	* English.lproj/Gorm.gorm: Added new GormDocumentController class.
+	redid connections to save/new/and loadDocument methods for NSDocument
+	subclasses.
+	* GormCore/GModelDecoder.m: Changed to reflect changes to document.
+	* GormCore/GNUmakefile: Added new classes.
+	* GormCore/GormClassManager.[hm]: Added methods to allow
+	initialization and saving to NSData
+	* GormCore/GormDocument.[hm]: Removed save* and load* methods,
+	implemented loadFileWrapperRepresentation:ofType: and
+	fileWrapperRepresentationOfType: for NSDocument.
+	* GormCore/GormFilePrefsManager.[hm]: Added methods
+	to allow initialization from data.
+	* GormCore/GormImageEditor.m: Changed comment.
+	* GormCore/GormImage.[hm]: Allow init with data.
+	* GormCore/GormProtocol.h: Removed superceded methods.
+	* GormCore/GormResource.[hm]: Allow initialization with data.
+	* GormCore/GormSound.[hm]: Changed to allow initialization with
+	data.
+	* GormCore/GormViewWithContentViewEditor.m: Fixed warning.
+	* GormInfo.plist: Updated information for use with NSDocument.
+	* Gorm.m: Remove superceded methods.
+	* Palettes/1Windows/GormNSWindow.m: Temporary debugging method.
+
 2006-05-20 18:19 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m: Updated to 1.0.9
@@ -263,8 +389,19 @@
 
 	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
+<<<<<<< .working
 	properly initialized, this was causing the flags to be set 
 	
+2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
+
+=======
+	properly initialized, this was causing the flags to be set 
+	
+>>>>>>> .merge-right.r22963
+	* GormCore/GormPrivate.m: Removed deprecated templates.
+	* GormCore/GormViewEditor.m: Removed problem which was causing
+	a notification loop.
+
 2005-12-15 19:08 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Correction for crash on close after

@@ -1161,12 +1161,13 @@
   return [dictForClass objectForKey: @"Super"];
 }
 
-- (BOOL) saveToFile: (NSString *)path
+- (NSData *) data
 {
-  NSMutableDictionary	*ci;
-  NSEnumerator		*enumerator;
-  id			key;
-  
+  NSMutableDictionary	*ci = nil;
+  NSEnumerator		*enumerator = nil;
+  id			key = nil;
+  NSString              *result = nil;
+
   // save all custom classes....
   ci = AUTORELEASE([[NSMutableDictionary alloc] initWithCapacity: 0]);
   enumerator = [customClasses objectEnumerator];
@@ -1254,12 +1255,15 @@
   [ci setObject: @"Do NOT change this file, Gorm maintains it"
       forKey: @"## Comment"];
 
-  /*
-  [ci setObject: [NSNumber numberWithInt: [[ci description] hash]]
-      forKey: @"hashValue"];
-  */
+  result = [ci description];
 
-  return [ci writeToFile: path atomically: YES];
+  return [NSData dataWithBytes: [result cString] 
+		 length: [result cStringLength]];
+}
+
+- (BOOL) saveToFile: (NSString *)path
+{
+  return [[self data]  writeToFile: path atomically: YES];
 }
 
 - (BOOL) loadFromFile: (NSString *)path
@@ -1327,15 +1331,13 @@
   return YES;
 }
 
+
+
 // this method will load the custom classes and merge them with the
 // Class information loaded at initialization time.
 - (BOOL) loadCustomClasses: (NSString *)path
 {
   NSMutableDictionary		*dict;
-  NSEnumerator                  *en;
-  id                             key;
-  // int                            hash;
-  // int                            hashDict;
 
   NSDebugLog(@"Load custom classes from file %@",path);
 
@@ -1351,18 +1353,21 @@
       NSLog(@"Default classes file not loaded");
       return NO;
     }
+  
+  return [self loadCustomClassesWithDict: dict];
+}
 
-  /*
-  // Hash value to prevent tampering.  This value stops someone from
-  // being able to manually modify the file.
-  hash = [[dict objectForKey: @"hashValue"] intValue];
-  [dict removeObjectForKey: @"hashValue"];
-  hashDict = [[dict description] hash];
-  if(hash != hashDict && hash != 0)
-    {
-      NSLog(@"WARNING: The data.classes file has been tampered with");
-    }
-  */
+- (BOOL) loadCustomClassesWithData: (NSData *)data
+{
+  NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding]);
+  NSDictionary *dict = [dictString propertyList];
+  return [self loadCustomClassesWithDict: dict];
+}
+
+- (BOOL) loadCustomClassesWithDict: (NSDictionary *)dict
+{
+  NSEnumerator *en = nil;
+  id            key = nil; 
 
   // Iterate over the set of classes, if it's in the classInformation 
   // list, it's a category, if it's not it's a custom class.

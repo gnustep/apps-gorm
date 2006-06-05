@@ -56,14 +56,6 @@
 - (GormPalettesManager*) palettesManager;
 - (GormInspectorsManager*) inspectorsManager;
 
-// file manipulation
-- (void) newGormDocument: (id) sender;
-- (void) open: (id)sender;
-- (void) revertToSaved: (id)sender;
-- (void) save: (id)sender;
-- (void) saveAll: (id)sender;
-- (void) saveAs: (id)sender;
-
 // testing the interface
 - (void) testInterface: (id)sender;
 - (id) endTesting: (id)sender;
@@ -73,8 +65,6 @@
 - (void) loadImage: (id) sender;
 
 // grouping/layout
-- (void) arrangeSelectedObjects: (id)sender;
-- (void) alignSelectedObjects: (id)sender;
 - (void) groupSelectionInSplitView: (id)sender;
 - (void) groupSelectionInBox: (id)sender;
 - (void) groupSelectionInScrollView: (id)sender;
@@ -82,16 +72,10 @@
 
 // added for classes support
 - (GormClassManager*) classManager;
-- (void) createSubclass: (id)sender;
-- (void) instantiateClass: (id)sender;
 - (NSMenu*) classMenu;
 
 // utility
 - (BOOL) documentNameIsUnique: (NSString *)filename;
-
-// language translation
-- (void) translate: (id)sender;
-- (void) exportStrings: (id)sender;
 @end
 
 #endif

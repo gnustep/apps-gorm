@@ -124,8 +124,11 @@
 
 /* Loading and saving */
 - (BOOL) saveToFile: (NSString *)path;
+- (NSData *) data;
 - (BOOL) loadFromFile: (NSString *)path;
 - (BOOL) loadCustomClasses: (NSString *)path;
+- (BOOL) loadCustomClassesWithData: (NSData *)data;
+- (BOOL) loadCustomClassesWithDict: (NSDictionary *)dict;
 @end
 
 #endif

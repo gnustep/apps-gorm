@@ -879,8 +879,8 @@ int _sortViews(id view1, id view2, void *context)
 		   isVertical: (BOOL)isVertical
 {
   NSMutableArray *array = [subviews mutableCopy];
-  NSMutableArray *result = [array sortedArrayUsingFunction: _sortViews
-				  context: &isVertical];
+  NSArray *result = [array sortedArrayUsingFunction: _sortViews
+			   context: &isVertical];
   return result;
 }
 

@@ -155,4 +155,13 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 {
   // do nothing... 
 }
+
+/*
+- (void) release
+{
+  NSLog(@"Someone is releasing %@",self);
+  [super release];
+}
+*/
+
 @end

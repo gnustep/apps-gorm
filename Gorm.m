@@ -34,7 +34,6 @@
 
 @interface Gorm : NSApplication <IB, Gorm>
 {
-  id			infoPanel;
   GormPrefController    *preferencesController;
   GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
@@ -74,21 +73,7 @@
 
 - (id<IBDocuments>) activeDocument
 {
-  unsigned	i = [documents count];
-
-  if (i > 0)
-    {
-      while (i-- > 0)
-	{
-	  id	doc = [documents objectAtIndex: i];
-
- 	  if ([doc isActive] == YES)
-	    {
-	      return doc;
-	    }
-	}
-    }
-  return nil;
+  return [[NSDocumentController sharedDocumentController] currentDocument];
 }
 
 /* 
@@ -142,12 +127,6 @@
 	}
 
       /*
-       * Make sure the palettes manager exists, so that the editors and
-       * inspectors provided in the standard palettes are available.
-       */
-      [self palettesManager];
-
-      /*
        * load the interface...
        */
       if(![NSBundle loadNibNamed: @"Gorm" owner: self])
@@ -155,6 +134,12 @@
 	  NSLog(@"Failed to load interface");
 	  exit(-1);
 	}
+
+      /*
+       * Make sure the palettes manager exists, so that the editors and
+       * inspectors provided in the standard palettes are available.
+       */
+      [self palettesManager];
 
       /*
        * set the delegate.
@@ -170,7 +155,6 @@
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
-  RELEASE(infoPanel);
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
   RELEASE(documents);
@@ -202,14 +186,6 @@
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
     }
-
-  if(GSGetMethod([GSNibContainer class],@selector(awakeWithContext:),YES,YES) == NULL)
-    {
-      NSRunAlertPanel(_(@"Incorrect GNUstep Version"), 
-		      _(@"The version of GNUstep you are using is too old for this version of Gorm, please update."),
-		      _(@"OK"), nil, nil);
-      [self terminate: self];
-    }
 }
 
 - (void) applicationWillTerminate: (NSApplication*)sender
@@ -222,53 +198,6 @@
     forKey: @"ShowPalettes"];
 }
 
-- (BOOL) applicationShouldTerminate: (NSApplication*)sender
-{
-  id doc;
-  BOOL edited = NO;
-  NSEnumerator *enumerator = [documents objectEnumerator];
-  
-  if (isTesting == YES)
-    {
-       [self endTesting: sender];
-       return NO;
-    }
-  
-  while (( doc = [enumerator nextObject] ) != nil )
-    {
-    if ([[doc window]  isDocumentEdited] == YES)
-      {
-	edited = YES;
-	break;
-      }
-    }
-
-   if (edited == YES)
-     {
-       int	result;
-       result = NSRunAlertPanel(_(@"Quit"), 
-				_(@"There are edited windows"),
-				_(@"Review Unsaved"),
-				_( @"Quit Anyway"),
-				_(@"Cancel"));
-      if (result == NSAlertDefaultReturn) 
-	{ 	  
-	  enumerator = [ documents objectEnumerator];
- 	  while ((doc = [enumerator nextObject]) != nil)
- 	    {
- 	      if ( [[doc window]  isDocumentEdited] == YES)
- 		{
-		  if ( ! [doc couldCloseDocument] )
-		    return NO;
- 		}
- 	    }	
-	}
-      else if (result == NSAlertOtherReturn) 
-	return NO; 
-     }
-   return YES;
-}
-  
 - (GormClassManager*) classManager
 {
   id document = [self activeDocument];
@@ -420,7 +349,6 @@
 }
 
 /** Info Menu Actions */
-
 - (void) preferencesPanel: (id) sender
 {
   if(! preferencesController)
@@ -432,100 +360,13 @@
 }
 
 /** Document Menu Actions */
-
-- (void) open: (id) sender
-{
-  GormDocument	*doc = AUTORELEASE([[GormDocument alloc] init]);
-
-  [documents addObject: doc];
-  if ([doc openDocument: sender] == nil)
-    {
-      [doc closeAllEditors];
-      [documents removeObjectIdenticalTo: doc];
-      doc = nil;
-    }
-  else
-    {
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-}
-
-- (void) newGormDocument : (id) sender 
-{
-  id doc = AUTORELEASE([[GormDocument alloc] init]);
-  [documents addObject: doc];
-  switch ([sender tag]) 
-    {
-    case 0:
-      [doc setupDefaults: @"Application"];
-      break;
-    case 1:
-      [doc setupDefaults: @"Empty"];
-      break;
-    case 2:
-      [doc setupDefaults: @"Inspector"];
-      break;
-    case 3:
-      [doc setupDefaults: @"Palette"];
-      break;
-
-    default: 
-      printf("unknow newGormDocument tag");
-    }
-  if (NSEqualPoints(cascadePoint, NSZeroPoint))
-    {	
-      NSRect frame = [[doc window] frame];
-      cascadePoint = NSMakePoint(frame.origin.x, NSMaxY(frame));
-    }
-  cascadePoint = [[doc window] cascadeTopLeftFromPoint:cascadePoint];
-  [[doc window] makeKeyAndOrderFront: self];
-}
-
-- (void) save: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveGormDocument: sender];
-}
-
-- (void) saveAs: (id)sender
-{
-  [(GormDocument *)[self activeDocument] saveAsDocument: sender];
-}
-
-
-- (void) saveAll: (id)sender
-{
-  NSEnumerator	*enumerator = [documents objectEnumerator];
-  id		doc;
-
-  while ((doc = [enumerator nextObject]) != nil)
-    {
-      if ([[doc window] isDocumentEdited] == YES)
-	{
-	  if (! [doc saveGormDocument: sender] )
-	    NSLog(@"can not save %@",doc);
-	}
-    }
-}
-
-
-- (void) revertToSaved: (id)sender
-{
-  id	doc = [(GormDocument *)[self activeDocument] revertDocument: sender];
-
-  if (doc != nil)
-    {
-      [documents addObject: doc];
-      // RELEASE(doc);
-      [[doc window] makeKeyAndOrderFront: self];
-    }
-}
-
 - (void) close: (id)sender
 {
   GormDocument  *document = (GormDocument *)[self activeDocument];
-  NSWindow	*window = [document window];
-
-  [window performClose: self];
+  if([document canCloseDocument])
+    {
+      [document close];
+    }
 }
 
 - (void) debug: (id) sender
@@ -610,7 +451,7 @@
 
 	  // do not allow custom classes during testing.
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
-	  [archiver encodeRootObject: activeDoc];
+	  [archiver encodeRootObject: [activeDoc container]];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activeDoc endArchiving];
 	  RELEASE(archiver);
@@ -1094,6 +935,7 @@
   return nil;
 }
 
+/*
 - (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
 {
   NSString *ext = [fileName pathExtension];
@@ -1116,6 +958,7 @@
   
   return (doc != nil);
 }
+*/
 
 - (GormPalettesManager*) palettesManager
 {
@@ -1186,28 +1029,6 @@
   connectDestination = nil;
 }
 
-- (void) arrangeSelectedObjects: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(arrangeSelectedObjects:)
-			 withObject: sender];
-}
-
-- (void) alignSelectedObjects: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(alignSelectedObjects:)
-			 withObject: sender];
-}
-
-- (void) translate: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(translate)];
-}
-
-- (void) exportStrings: (id)sender
-{
-  [[self activeDocument] performSelector: @selector(exportStrings)];
-}
-
 - (BOOL) validateMenuItem: (NSMenuItem*)item
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
@@ -1223,41 +1044,12 @@
     }
 
   if (sel_eq(action, @selector(close:))
-    || sel_eq(action, @selector(miniaturize:))
-    || sel_eq(action, @selector(save:))
-    || sel_eq(action, @selector(saveAs:))
-    || sel_eq(action, @selector(saveAll:)))
+      || sel_eq(action, @selector(miniaturize:)))
     {
       if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(revertToSaved:)))
-    {
-      if (active == nil || [active documentPath] == nil
-	|| [[active window] isDocumentEdited] == NO)
 	return NO;
     }
   else if (sel_eq(action, @selector(testInterface:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(translate:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(arrangeSelectedObjects:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(alignSelectedObjects:)))
-    {
-      if (active == nil)
-	return NO;
-    }
-  else if (sel_eq(action, @selector(exportStrings:)))
     {
       if (active == nil)
 	return NO;
@@ -1412,9 +1204,6 @@
 	    {
 	      return NO;
 	    }
-
-	  // if([name isEqual: @"FirstResponder"])
-	  //   return NO;
 	}
 
       if(sel_eq(action, @selector(instantiateClass:)))

@@ -51,18 +51,58 @@
   return AUTORELEASE([[GormImage alloc] initWithPath: aPath inWrapper: flag]);
 }
 
-- (id) initWithName: (NSString *)aName
-	       path: (NSString *)aPath
-	  inWrapper: (BOOL)flag
++ (GormImage*)imageForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
 {
-  if((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
+  return AUTORELEASE([[GormImage alloc] initWithData: aData withFileName: aName inWrapper: flag]);
+}
+
+- (id) initWithData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
+{
+  if((self = [super initWithData: aData withFileName: aName inWrapper: flag]))
     {
       NSSize originalSize;
       float ratioH;
       float ratioW;
 
-      image = RETAIN([[NSImage alloc] initByReferencingFile: aPath]);
-      smallImage = RETAIN([[NSImage alloc] initWithContentsOfFile: aPath]);
+      ASSIGN(image, AUTORELEASE([[NSImage alloc] initWithData: aData]));
+      ASSIGN(smallImage, AUTORELEASE([[NSImage alloc] initWithData: aData]));
+      [image setName: aName];
+
+      originalSize = [smallImage size];
+      ratioW = originalSize.width / 70;
+      ratioH = originalSize.height / 55;
+      
+      if (ratioH > 1 || ratioW > 1)
+	{
+	  [smallImage setScalesWhenResized: YES];
+	  if (ratioH > ratioW)
+	    {
+	      [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
+	    }
+	  else 
+	    {
+	      [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
+	    }
+	}
+
+      [image setArchiveByName: NO];
+      [smallImage setArchiveByName: NO];
+    }
+  return self;
+}
+
+- (id) initWithName: (NSString *)aName
+	       path: (NSString *)aPath
+	  inWrapper: (BOOL)flag
+{
+  if((self = [super initWithName: aName path: aPath inWrapper: flag]))
+    {
+      NSSize originalSize;
+      float ratioH;
+      float ratioW;
+
+      ASSIGN(image, AUTORELEASE([[NSImage alloc] initByReferencingFile: aPath]));
+      ASSIGN(smallImage, AUTORELEASE([[NSImage alloc] initWithContentsOfFile: aPath]));
       [image setName: aName];
       
       if (smallImage == nil)
@@ -90,10 +130,6 @@
 
       [image setArchiveByName: NO];
       [smallImage setArchiveByName: NO];
-    }
-  else
-    {
-      RELEASE(self);
     }
 
   return self;

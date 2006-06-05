@@ -46,13 +46,25 @@
 - (id) initWithPath: (NSString *)aPath inWrapper: (BOOL)flag
 {
   NSString *aName = [[aPath lastPathComponent] stringByDeletingPathExtension];
-  if((self = [self initWithName: aName path: aPath inWrapper: flag]) == nil)
+  return [self initWithName: aName path: aPath inWrapper: flag];
+}
+
+- (id) initWithData: (NSData *)aData withFileName: (NSString *)aFileName inWrapper: (BOOL)flag
+{
+  if((self = [self init]))
     {
-      RELEASE(self);
+      ASSIGN(path, nil);
+      ASSIGN(fileName, aFileName);
+      ASSIGN(name, [fileName stringByDeletingPathExtension]);
+      ASSIGN(fileType, [fileName pathExtension]);
+      language = nil;
+      isLocalized = NO;
+      isSystemResource = NO;
+      isInWrapper = flag;
+      project = nil;
     }
   return self;
 }
-
 
 - (id) initWithName: (NSString *)aName
 	       path: (NSString *)aPath
@@ -67,7 +79,7 @@
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag
 {
-  if((self = [super init]) != nil)
+  if((self = [super init]))
     {
       ASSIGN(path, aPath);
       ASSIGN(name, aName);
@@ -79,11 +91,6 @@
       isInWrapper = flag;
       project = nil;
     }
-  else
-    {
-      RELEASE(self);
-    }
-
   return self;
 }
 
@@ -93,6 +100,7 @@
   RELEASE(path);
   RELEASE(fileName);
   RELEASE(fileType);
+  RELEASE(data);
   [super dealloc];
 }
 
@@ -129,6 +137,16 @@
 - (BOOL) isInWrapper
 {
   return isInWrapper;
+}
+
+- (void) setData: (NSData *)aData
+{
+  ASSIGN(data, aData);
+}
+
+- (NSData *) data
+{
+  return data;
 }
 
 - (BOOL) isEqual: (id)object

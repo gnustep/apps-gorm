@@ -83,7 +83,7 @@ NSString *formatVersion(int version)
 
 + (int) currentVersion
 {
-  return appVersion(1,0,9); 
+  return appVersion(1,1,0); 
 }
 
 - (void) awakeFromNib
@@ -161,12 +161,18 @@ NSString *formatVersion(int version)
 // Loading and saving the file.
 - (BOOL) saveToFile: (NSString *)path
 {
+  return [[self data] writeToFile: path atomically: YES];
+}
+
+// Loading and saving the file.
+- (NSData *) data
+{
   // upon saving, update to the latest.
   version = [GormFilePrefsManager currentVersion];
   [gormAppVersion setStringValue: formatVersion(version)];
 
-  // save.
-  return [NSArchiver archiveRootObject: self toFile: path];
+  // return the data...
+  return  [NSArchiver archivedDataWithRootObject: self];
 }
 
 - (int) versionOfClass: (NSString *)className 
@@ -189,32 +195,32 @@ NSString *formatVersion(int version)
 
 - (BOOL) loadFromFile: (NSString *)path
 {
+  return [self loadFromData: [NSData dataWithContentsOfFile: path]];
+}
+
+- (BOOL) loadFromData: (NSData *)data
+{
   BOOL result = YES;
-  NSFileManager *mgr = [NSFileManager defaultManager];
 
-  // read/load the file...
-  if([mgr isReadableFileAtPath: path])
+  NS_DURING
     {
-      NS_DURING
-	{
-	  id object = [NSUnarchiver unarchiveObjectWithFile: path];
-	  [gormAppVersion setStringValue: formatVersion([object version])];
-	  version = [object version];
-	  [targetVersion selectItemWithTitle: [object targetVersionName]];
-	  ASSIGN(targetVersionName,[object targetVersionName]);
-	  [archiveType selectItemWithTitle: [object archiveTypeName]];
-	  ASSIGN(archiveTypeName, [object archiveTypeName]);
-	  [self selectTargetVersion: targetVersion];
-	  result = YES;
-	}
-      NS_HANDLER
-	{
-	  NSLog(@"Problem loading info file: %@",[localException reason]);
-	  result = NO;
-	}
-      NS_ENDHANDLER
+      id object = [NSUnarchiver unarchiveObjectWithData: data];
+      [gormAppVersion setStringValue: formatVersion([object version])];
+      version = [object version];
+      [targetVersion selectItemWithTitle: [object targetVersionName]];
+      ASSIGN(targetVersionName,[object targetVersionName]);
+      [archiveType selectItemWithTitle: [object archiveTypeName]];
+      ASSIGN(archiveTypeName, [object archiveTypeName]);
+      [self selectTargetVersion: targetVersion];
+      result = YES;
     }
-
+  NS_HANDLER
+    {
+      NSLog(@"Problem loading info file: %@",[localException reason]);
+      result = NO;
+    }
+  NS_ENDHANDLER;
+  
   return result;
 }
 
