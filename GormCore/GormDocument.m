@@ -2417,14 +2417,21 @@ static NSImage  *fileImage = nil;
 	    {
 	      base = NSStringFromClass([object class]);
 	    }
+
+	  // pare down the name, if we're generating it.
+	  if ([base hasPrefix: @"Gorm"])
+	    {
+	      base = [base substringFromIndex: 4];
+	    }
 	  if ([base hasPrefix: @"NS"] || [base hasPrefix: @"GS"])
 	    {
 	      base = [base substringFromIndex: 2];
 	    }
-	  aName = base;
+
+	  aName = [base stringByAppendingFormat: @"(%u)", i];
 	  while ([[container nameTable] objectForKey: aName] != nil)
 	    {
-	      aName = [base stringByAppendingFormat: @"%u", ++i];
+	      aName = [base stringByAppendingFormat: @"(%u)", ++i];
 	    }
 	}
       else

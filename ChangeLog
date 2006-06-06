@@ -1,3 +1,13 @@
+2006-06-05 21:20 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocumentController.m: touches the initial document
+	so that the user cannot simply quit after.  Also sets the initial
+	fileType.
+	* GormCore/GormDocument.m: Compose the names used in Gorm name table
+	using the base class name (without NS or GS) and a number in 
+	parenthesis starting with 0.  A new panel or window might look like
+	Window(0) or Panel(1).
+
 2006-06-05 01:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.h: Added classes.nib loading and
