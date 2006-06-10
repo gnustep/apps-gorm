@@ -51,7 +51,8 @@ extern NSString *GormResizeCellNotification;
 
 // templates
 @interface GSNibItem (GormAdditions)
-- initWithClassName: (NSString*)className frame: (NSRect)frame;
+- (id) initWithClassName: (NSString*)className;
+- (id) initWithClassName: (NSString*)className frame: (NSRect)frame;
 - (NSString*) className;
 @end
 

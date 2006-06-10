@@ -42,7 +42,7 @@
   NSMutableArray	*documents;
   BOOL			isConnecting;
   BOOL			isTesting;
-  id			testContainer;
+  id             	testContainer;
   id                    gormMenu;
   NSMenu		*mainMenu; // saves the main menu...
   NSMenu                *servicesMenu; // saves the services menu...
@@ -451,7 +451,7 @@
 
 	  // do not allow custom classes during testing.
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
-	  [archiver encodeRootObject: [activeDoc container]];
+	  [archiver encodeRootObject: activeDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
 	  [activeDoc endArchiving];
 	  RELEASE(archiver);
@@ -478,6 +478,7 @@
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
 
 	      // initialize the context.
+	      RETAIN(testContainer);
 	      topObjects = [[NSMutableArray alloc] init];
 	      context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
 				      @"NSTopLevelObjects", self, @"NSOwner", nil];
@@ -859,8 +860,8 @@
 
       DESTROY(testingWindows);
 
-      // deallocate top level objects
-      RELEASE(topObjects);
+      // deallocate
+      RELEASE(testContainer);
 
       return self;
     }

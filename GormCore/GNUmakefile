@@ -86,6 +86,8 @@ GormCore_HEADER_FILES = \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
 	GormWindowEditor.h \
+	GormWrapperBuilder.h \
+	GormWrapperLoader.h \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \
@@ -139,6 +141,10 @@ GormCore_OBJC_FILES = \
 	GormViewWithContentViewEditor.m \
 	GormViewWithSubviewsEditor.m \
 	GormWindowEditor.m \
+	GormWrapperBuilder.m \
+	GormWrapperLoader.m \
+	GormGormWrapperBuilder.m \
+	GormGormWrapperLoader.m \
 	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \

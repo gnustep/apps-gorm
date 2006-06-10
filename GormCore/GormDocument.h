@@ -31,7 +31,7 @@
 #include <GNUstepGUI/GSNibTemplates.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
-@class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner;
+@class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, GormFilePrefsManager;
 
 /*
  * Each document has a GormFirstResponder object that is used as a placeholder
@@ -42,7 +42,7 @@
 }
 @end
 
-@interface GormDocument : NSDocument <IBDocuments>
+@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding>
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
@@ -70,14 +70,20 @@
   id                    lastEditor;
   BOOL                  isOlderArchive;
   id                    filePrefsView;
-  id                    filePrefsManager;
+  GormFilePrefsManager  *filePrefsManager;
   NSWindow              *filePrefsWindow;
   NSMutableArray        *resourceManagers;
   NSData                *infoData;   /* data.info contents */
   NSMutableArray        *images;     /* temporary storage for images. */             
   NSMutableArray        *sounds;     /* temporary storage for sounds. */
-  NSFileWrapper         *scmDirWrapper;
-  id<GSNibContainer, NSObject> container;
+  NSFileWrapper         *scmWrapper;
+
+  // container data structures
+  NSMutableDictionary   *nameTable;
+  NSMutableArray        *connections;
+  NSMutableSet          *topLevelObjects;
+  NSMutableSet          *visibleWindows;
+  NSMutableSet          *deferredWindows;
 }
 
 /* Archiving objects */
@@ -145,11 +151,6 @@
  * The document window.
  */
 - (NSWindow*) window;
-
-/**
- * Return the container object associated with this document.
- */
-- (id<GSNibContainer>) container;
 
 /**
  * Returns YES, if obj is a top level object.
@@ -311,9 +312,66 @@
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 
 /**
- * The container class to use in editing....
+ * Save the SCM directory.
  */
-- (Class) containerClass;
+- (void) setSCMWrapper: (NSFileWrapper *) wrapper;
+
+/**
+ * Save the SCM directory.
+ */
+- (NSFileWrapper *) scmWrapper;
+
+/**
+ * Images
+ */
+- (NSArray *) images;
+
+/**
+ * Sounds
+ */
+- (NSArray *) sounds;
+
+/**
+ * Images
+ */
+- (void) setImages: (NSArray *) imgs;
+
+/**
+ * Sounds
+ */
+- (void) setSounds: (NSArray *) snds;
+
+/**
+ * File's Owner
+ */
+- (GormFilesOwner *) filesOwner;
+
+/**
+ * File preferences.
+ */
+- (GormFilePrefsManager *) filePrefsManager;
+
+/**
+ * Windows visible at launch...
+ */ 
+- (NSSet *) visibleWindows;
+
+/**
+ * Windows deferred.
+ */ 
+- (NSSet *) deferredWindows;
+
+- (void) setDocumentOpen: (BOOL) flag;
+
+- (BOOL) isDocumentOpen;
+
+- (void) setInfoData: (NSData *)data;
+
+- (NSData *) infoData;
+
+- (void) setOlderArchive: (BOOL)flag;
+
+- (BOOL) isOlderArchive;
 @end
 
 @interface GormDocument (MenuValidation)

@@ -188,7 +188,6 @@
 
   // set the filetype and touch the document.
   [doc setFileType: @"GSGormFileType"];
-  [doc touch];
 }
 
 @end

@@ -49,15 +49,23 @@ static BOOL _isInInterfaceBuilder = NO;
 #include "GormViewWithContentViewEditor.h"
 
 @implementation GSNibItem (GormAdditions)
-- initWithClassName: (NSString*)className frame: (NSRect)frame
+- (id) initWithClassName: (NSString*)className frame: (NSRect)frame
 {
-  self = [super init];
-
-  theClass = [className copy];
-  theFrame = frame;
-
+  if((self = [super init]) != nil)
+    {
+      theClass = [className copy];
+      theFrame = frame;
+    }
   return self;
 }
+
+- (id) initWithClassName: (NSString*)className
+{
+  return [self initWithClassName: className 
+	       frame: NSMakeRect(0,0,0,0)];
+}
+
+
 - (NSString*) className
 {
   return theClass;
@@ -109,42 +117,50 @@ static BOOL _isInInterfaceBuilder = NO;
  */
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  int version = [aCoder versionForClassName: 
-			  NSStringFromClass([GSNibItem class])];
-  
-  if (version == NSNotFound)
+  if([aCoder allowsKeyedCoding])
     {
-      NSLog(@"no GSNibItem");
-      version = [aCoder versionForClassName: 
-			  NSStringFromClass([GormObjectProxy class])];
-    }
 
-  if (version == 0)
-    {
-      // do not decode super (it would try to morph into theClass ! )
-      [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
-      theFrame = [aCoder decodeRect];
-      RETAIN(theClass); // release in dealloc of GSNibItem... 
-      
-      return self; 
-    }
-  else if (version == 1)
-    {
-      // do not decode super (it would try to morph into theClass ! )
-      [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
-      theFrame = [aCoder decodeRect];
-      [aCoder decodeValueOfObjCType: @encode(unsigned int) 
-	      at: &autoresizingMask];  
-      RETAIN(theClass); // release in dealloc of GSNibItem... 
-      
-      return self; 
     }
   else
     {
-      NSLog(@"no initWithCoder for version %d", version);
-      RELEASE(self);
-      return nil;
+      int version = [aCoder versionForClassName: 
+			      NSStringFromClass([GSNibItem class])];
+      
+      if (version == NSNotFound)
+	{
+	  NSLog(@"no GSNibItem");
+	  version = [aCoder versionForClassName: 
+			      NSStringFromClass([GormObjectProxy class])];
+	}
+      
+      if (version == 0)
+	{
+	  // do not decode super (it would try to morph into theClass ! )
+	  [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+	  theFrame = [aCoder decodeRect];
+	  RETAIN(theClass); // release in dealloc of GSNibItem... 
+	  
+	  return self; 
+	}
+      else if (version == 1)
+	{
+	  // do not decode super (it would try to morph into theClass ! )
+	  [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
+	  theFrame = [aCoder decodeRect];
+	  [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+		  at: &autoresizingMask];  
+	  RETAIN(theClass); // release in dealloc of GSNibItem... 
+	  
+	  return self; 
+	}
+      else
+	{
+	  NSLog(@"no initWithCoder for version %d", version);
+	  RELEASE(self);
+	  return nil;
+	}
     }
+  return nil;
 }
 
 - (NSString*) inspectorClassName

@@ -32,6 +32,7 @@
 #include <AppKit/NSNibLoading.h>
 
 #include <GNUstepGUI/GSNibTemplates.h>
+#include <GNUstepGUI/GSNibCompatibility.h>
 
 @class GSCustomView;
 
@@ -87,38 +88,50 @@
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  int version = [aCoder versionForClassName: 
-			  NSStringFromClass([GSCustomView class])];
-
-  if (version == 1)
+  if([aCoder allowsKeyedCoding])
     {
-      NSString *string;
-      // do not decode super. We need to maintain mapping to NibItems
-      string = [aCoder decodeObject];
-      _frame = [aCoder decodeRect];
-      [self initWithFrame: _frame];
-      [aCoder decodeValueOfObjCType: @encode(unsigned int) 
-	      at: &_autoresizingMask];
-      [self setClassName: string];
-      return self;
-    }
-  else if (version == 0)
-    {
-      NSString *string;
-      // do not decode super. We need to maintain mapping to NibItems
-      string = [aCoder decodeObject];
-      _frame = [aCoder decodeRect];
-      
-      [self initWithFrame: _frame];
-      [self setClassName: string];
-      return self;
+      NSCustomView *customView = [[NSCustomView alloc] initWithCoder: aCoder];
+      [self initWithFrame: [customView frame]];
+      [self setClassName: [customView className]];
+      _autoresizingMask = [customView autoresizingMask];
+      RELEASE(customView);
     }
   else
     {
-      NSLog(@"no initWithCoder for version");
-      RELEASE(self);
-      return nil;
+      int version = [aCoder versionForClassName: 
+			      NSStringFromClass([GSCustomView class])];
+      
+      if (version == 1)
+	{
+	  NSString *string;
+	  // do not decode super. We need to maintain mapping to NibItems
+	  string = [aCoder decodeObject];
+	  _frame = [aCoder decodeRect];
+	  [self initWithFrame: _frame];
+	  [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+		  at: &_autoresizingMask];
+	  [self setClassName: string];
+	  return self;
+	}
+      else if (version == 0)
+	{
+	  NSString *string;
+	  // do not decode super. We need to maintain mapping to NibItems
+	  string = [aCoder decodeObject];
+	  _frame = [aCoder decodeRect];
+	  
+	  [self initWithFrame: _frame];
+	  [self setClassName: string];
+	  return self;
+	}
+      else
+	{
+	  NSLog(@"no initWithCoder for version");
+	  RELEASE(self);
+	  return nil;
+	}
     }
+  return nil;
 }
 @end
 

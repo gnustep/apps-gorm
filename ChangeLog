@@ -1,3 +1,22 @@
+2006-06-10 09:24 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GModelDecoder.m: Changes to make this compile with
+	new modifications.
+	* GormCore/GNUmakefile: Addition of new files.
+	* GormCore/GormCustomView.m:Encoding changes for NSCustomView.
+	* GormCore/GormDocumentController.m: Removed touch, so that it
+	is possible to quit when first creating a new document, this is the
+	way other document oriented apps behave.
+	* GormCore/GormDocument.[hm]: Added container methods and
+	coding methods.
+	* GormCore/GormGormWrapperBuilder.m: Class whic writes gorm files.
+	* GormCore/GormGormWrapperLoader.m: Class which loads gorm files
+	* GormCore/GormPrivate.[hm]: Simplification of init call to
+	GormObjectProxy.
+	* GormCore/GormWrapperBuilder.[hm]: Wrapper builder
+	* GormCore/GormWrapperLoader.[hm]: Wrapper loader
+	* Gorm.m: Change testInterface to encode the doc.
+
 2006-06-05 21:20 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocumentController.m: touches the initial document
