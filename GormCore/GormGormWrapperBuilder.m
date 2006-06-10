@@ -36,6 +36,8 @@
 
 @interface GSNibContainer (BuilderAdditions)
 - (id) initWithDocument: (GormDocument *)document;
+- (void) prepareConnectionsWithDocument: (GormDocument *)document;
+- (void) resetConnectionsWithDocument: (GormDocument *)document;
 @end;
 
 @implementation GSNibContainer (BuilderAdditions)
@@ -53,6 +55,38 @@
       [deferred addObjectsFromArray: [[document deferredWindows] allObjects]];
     }
   return self;
+}
+
+- (void) prepareConnectionsWithDocument: (GormDocument *)document
+{
+  NSEnumerator *enumerator = [connections objectEnumerator];
+  id o = nil;
+  while ((o = [enumerator nextObject]) != nil)
+    {
+      NSString *name = nil;
+      id obj = nil;
+
+      obj = [o source];
+      name = [document nameForObject: obj];
+      [o setSource: name];
+      obj = [o destination];
+      name = [document nameForObject: obj];
+      [o setDestination: name];
+    }
+}
+
+- (void) resetConnectionsWithDocument: (GormDocument *)document
+{
+  NSEnumerator *enumerator = [connections objectEnumerator];
+  id o = nil;
+  while ((o = [enumerator nextObject]) != nil)
+    {
+      id src = [document objectForName: [o source]];
+      id dst = [document objectForName: [o destination]];
+      [o setSource: src];
+      [o setDestination: dst];
+      [o establishConnection];
+    }
 }
 @end
 
@@ -170,7 +204,9 @@
        * Initialize templates 
        */
       [self _replaceObjectsWithTemplates: archiver];
+      [container prepareConnectionsWithDocument: document];
       [archiver encodeRootObject: container];
+      [container resetConnectionsWithDocument: document];
       RELEASE(archiver); // We're done with the archiver here..
       
       /* 

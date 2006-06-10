@@ -474,22 +474,22 @@
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
 	    {
-	      NSDictionary          *context = nil;
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
+	      NSMenu *aMenu = [nameTable objectForKey: @"NSMenu"];
 
+	      [self setMainMenu: aMenu];
 	      // initialize the context.
 	      RETAIN(testContainer);
-	      topObjects = [[NSMutableArray alloc] init];
-	      context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
-				      @"NSTopLevelObjects", self, @"NSOwner", nil];
+	      // context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
+	      //   @"NSTopLevelObjects", self, @"NSOwner", nil];
 
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
-	      [testContainer awakeWithContext: context];
+	      [testContainer awakeWithContext: nil];
 	      [NSApp setDelegate: savedDelegate]; // makes sure the delegate isn't reset.
 	      
 	      /*
-	       * If the NIB didn't have a main menu, create one,
+	       * If the model didn't have a main menu, create one,
 	       * otherwise, ensure that 'quit' ends testing mode.
 	       */
 	      if ([self mainMenu] == mainMenu)
@@ -535,8 +535,6 @@
 		      [obj makeKeyAndOrderFront: self];
 		    }
 		}
-	      
-	      // [[NSApp mainWindow] makeKeyAndOrderFront: self];
 	      
 	      // we're now in testing mode.
 	      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification

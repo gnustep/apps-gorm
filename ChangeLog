@@ -1,3 +1,11 @@
+2006-06-10 10:28 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Removed code that does name/obj 
+	substitution in connections.
+	* GormCore/GormGormWrapperBuilder.m: Added code which handles
+	name/obj substitution.
+	* Gorm.m: Corrected issues with testing.
+
 2006-06-10 09:24 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GModelDecoder.m: Changes to make this compile with

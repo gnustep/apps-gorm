@@ -1627,7 +1627,6 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
-  id			obj;
 
   /*
    * Map all connector sources and destinations to their name strings.
@@ -1645,16 +1644,6 @@ static NSImage  *fileImage = nil;
       else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [savedEditors addObject: con];
-	}
-      else
-	{
-	  NSString	*name;
-	  obj = [con source];
-	  name = [self nameForObject: obj];
-	  [con setSource: name];
-	  obj = [con destination];
-	  name = [self nameForObject: obj];
-	  [con setDestination: name];
 	}
     }
   [connections removeObjectsInArray: savedEditors];
@@ -1685,7 +1674,6 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
-  id			obj;
 
   /*
    * Restore class versions.
@@ -1700,21 +1688,6 @@ static NSImage  *fileImage = nil;
 
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-
-  /*
-   * Map all connector source and destination names to their objects.
-   */
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSString	*name;
-      name = (NSString*)[con source];
-      obj = [self objectForName: name];
-      [con setSource: obj];
-      name = (NSString*)[con destination];
-      obj = [self objectForName: name];
-      [con setDestination: obj];
-    }
 
   /*
    * Restore editor links and reactivate the editors.
@@ -3624,10 +3597,6 @@ static NSImage  *fileImage = nil;
   id o = nil;
   while((o = [en nextObject]) != nil)
     {
-      id src = [nameTable objectForKey: [o source]];
-      id dst = [nameTable objectForKey: [o destination]];
-      [o setSource: src];
-      [o setDestination: dst];
       [o establishConnection];
     }
 
