@@ -1,3 +1,8 @@
+2006-06-10 21:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGormWrapperLoader.m: removed uneeded sound/image
+	logic.  That is in the parent class.
+
 2006-06-10 10:28 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Removed code that does name/obj 

@@ -157,16 +157,10 @@
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
 	  GormClassManager *classManager = [document classManager];
-	  NSArray *imageFileTypes = [NSImage imageFileTypes];
-	  NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
-	  NSMutableArray *images = [[NSMutableArray alloc] init];
-	  NSMutableArray *sounds = [[NSMutableArray alloc] init];
 
 	  key = nil;
 	  fileWrappers = [wrapper fileWrappers];
 
-	  // [ saveSCMDirectory: fileWrappers];
-	  
 	  enumerator = [fileWrappers keyEnumerator];
 	  while((key = [enumerator nextObject]) != nil)
 	    {
@@ -194,14 +188,6 @@
 					    @"You won't be able to edit connections on custom classes"), 
 					  _(@"OK"), nil, nil);
 			}
-		    }
-		  else if ([imageFileTypes containsObject: [key pathExtension]])
-		    {
-		      [images addObject: [GormImage imageForData: fileData withFileName: key inWrapper: YES]];
-		    }
-		  else if ([soundFileTypes containsObject: [key pathExtension]])
-		    {
-		      [sounds addObject: [GormSound soundForData: fileData withFileName: key inWrapper: YES]];
 		    }
 		}
 	    }
