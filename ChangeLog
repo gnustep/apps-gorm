@@ -1,3 +1,23 @@
+2006-06-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Addition of GormNibWrapperLoader to the
+	makefile.
+	* GormCore/GormClassManager.[hm]: Correction for nib classes loading.
+	* GormCore/GormDocument.h:  Added include for GSNibContainer
+	* GormCore/GormDocument.m: In NSNibConnector category which 
+	implements "isEqual" check if it's the same "kind of class".  If
+	not return NO.
+	* GormCore/GormGormWrapperBuilder.m: Corrections for connection
+	persistence issues.
+	* GormCore/GormGormWrapperLoader.m: Corrections for connection
+	persistence issues.
+	* GormCore/GormNibWrapperLoader.m: Initial cut at class to build the
+	nib wrapper.
+	* GormCore/GormPrivate.[hm]: Added encoding changes to 
+	GormObjectProxy and GormCustomView to allow them to handle
+	NSCustomObject and NSCustomView respectively
+	* Gorm.m: In testing, don't substitute the browser either.
+
 2006-06-10 21:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m: removed uneeded sound/image

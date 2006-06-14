@@ -117,6 +117,7 @@ GormCore_OBJC_FILES = \
 	GormInspectorsManager.m \
 	GormInternalViewEditor.m \
 	GormMatrixEditor.m \
+	GormNibWrapperLoader.m \
 	GormNSSplitViewInspector.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \

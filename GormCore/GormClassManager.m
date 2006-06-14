@@ -1517,7 +1517,7 @@
 {
   NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data encoding: NSASCIIStringEncoding]);
   NSDictionary *dict = [dictString propertyList];
-  return [self loadCustomClassesWithDict: dict];
+  return [self loadNibFormatCustomClassesWithDict: dict];
 }
 
 // this method will load the custom classes and merge them with the
@@ -1972,14 +1972,14 @@
 }
 
 - (void) setCustomClass: (NSString *)className
-                forName: (NSString *)object
+                forName: (NSString *)name
 {
-  [customClassMap setObject: className forKey: object];
+  [customClassMap setObject: className forKey: name];
 }
 
-- (void) removeCustomClassForName: (NSString *)object
+- (void) removeCustomClassForName: (NSString *)name
 {
-  [customClassMap removeObjectForKey: object];
+  [customClassMap removeObjectForKey: name];
 }
 
 - (NSMutableDictionary *) customClassMap

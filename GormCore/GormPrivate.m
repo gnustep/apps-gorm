@@ -119,7 +119,9 @@ static BOOL _isInInterfaceBuilder = NO;
 {
   if([aCoder allowsKeyedCoding])
     {
-
+      ASSIGN(theClass, [aCoder decodeObjectForKey: @"NSClassName"]);
+      theFrame = NSZeroRect;
+      return self;
     }
   else
     {

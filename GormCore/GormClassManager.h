@@ -107,8 +107,8 @@
 - (NSString *) customClassForObject: (id)object;
 - (NSString *) customClassForName: (NSString *)name;
 - (void) setCustomClass: (NSString *)className
-                forName: (NSString *)object;
-- (void) removeCustomClassForName: (NSString *) object;
+                forName: (NSString *)name;
+- (void) removeCustomClassForName: (NSString *)name;
 - (NSMutableDictionary *) customClassMap;
 - (void) setCustomClassMap: (NSMutableDictionary *)dict;
 - (BOOL) isCustomClassMapEmpty;

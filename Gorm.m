@@ -440,7 +440,8 @@
 	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
 
 	      if([realClassName isEqualToString: @"NSTableView"] ||
-		 [realClassName isEqualToString: @"NSOutlineView"])
+		 [realClassName isEqualToString: @"NSOutlineView"] ||
+		 [realClassName isEqualToString: @"NSBrowser"])
 		{
 		  continue;
 		}

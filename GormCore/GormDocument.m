@@ -72,14 +72,19 @@
 {
   BOOL result = NO;
 
+  if([object isKindOfClass: [NSNibConnector class]] == NO)
+    {
+      return NO;
+    }
+
   if(self == object)
     {
       result = YES;
     }
   else if([[self source] isEqual: [object source]] &&
-     [[self destination] isEqual: [object destination]] &&
-     [[self label] isEqual: [object label]] &&
-     ([self class] == [object class]))
+	  [[self destination] isEqual: [object destination]] &&
+	  [[self label] isEqual: [object label]] &&
+	  ([self class] == [object class]))
     {
       result = YES;
     }
@@ -715,7 +720,7 @@ static NSImage  *fileImage = nil;
       [[self openEditorForObject: menu] activate];
 
       // If it's the main menu... locate it appropriately...
-      if(isMainMenu)
+      if(isMainMenu && [self isActive])
 	{
 	  NSRect frame = [[self window] frame];
 	  NSPoint origin = frame.origin;
@@ -1155,7 +1160,7 @@ static NSImage  *fileImage = nil;
 
   // Get rid of the selection box.
   [selectionBox removeFromSuperviewWithoutNeedingDisplay];
-
+  
   RELEASE(classManager);
   RELEASE(filePrefsManager);
   RELEASE(filePrefsView);
@@ -1172,8 +1177,10 @@ static NSImage  *fileImage = nil;
   RELEASE(classesView);
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
-  RELEASE(filePrefsWindow);
+  
+  RELEASE(filePrefsWindow); // FIXME: Causes NIB to crash...
   RELEASE(resourceManagers);
+
   RELEASE(nameTable);
   RELEASE(connections);
   RELEASE(topLevelObjects);
@@ -1181,7 +1188,6 @@ static NSImage  *fileImage = nil;
   RELEASE(deferredWindows);
 
   TEST_RELEASE(scmWrapper);
-
   [super dealloc];
 }
 
@@ -1623,10 +1629,15 @@ static NSImage  *fileImage = nil;
 /**
  * Start the process of archiving.
  */
+
+/**
+ * Start the process of archiving.
+ */
 - (void) beginArchiving
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
+  id			obj;
 
   /*
    * Map all connector sources and destinations to their name strings.
@@ -1644,6 +1655,16 @@ static NSImage  *fileImage = nil;
       else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [savedEditors addObject: con];
+	}
+      else
+	{
+	  NSString	*name;
+	  obj = [con source];
+	  name = [self nameForObject: obj];
+	  [con setSource: name];
+	  obj = [con destination];
+	  name = [self nameForObject: obj];
+	  [con setDestination: name];
 	}
     }
   [connections removeObjectsInArray: savedEditors];
@@ -1674,6 +1695,7 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
+  id			obj;
 
   /*
    * Restore class versions.
@@ -1688,6 +1710,21 @@ static NSImage  *fileImage = nil;
 
   [nameTable setObject: firstResponder forKey: @"NSFirst"];
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
+
+  /*
+   * Map all connector source and destination names to their objects.
+   */
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString	*name;
+      name = (NSString*)[con source];
+      obj = [self objectForName: name];
+      [con setSource: obj];
+      name = (NSString*)[con destination];
+      obj = [self objectForName: name];
+      [con setDestination: obj];
+    }
 
   /*
    * Restore editor links and reactivate the editors.
@@ -3394,9 +3431,9 @@ static NSImage  *fileImage = nil;
     postNotificationName: IBWillSaveDocumentNotification
     object: self];
 
-  [self beginArchiving];
+  // [self beginArchiving];
   result = [builder buildFileWrapperWithDocument: self];
-  [self endArchiving];
+  // [self endArchiving];
 
   if(result)
     {

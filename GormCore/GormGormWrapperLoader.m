@@ -276,14 +276,18 @@
 	   * to hold the objects rather than their names (using our own dummy
 	   * object as the 'NSOwner'.
 	   */
+	  GormFilesOwner *filesOwner = [document filesOwner];
+	  GormFirstResponder *firstResponder = [document firstResponder];
 	  ownerClass = [nt objectForKey: @"NSOwner"];
 	  if (ownerClass)
 	    {
-	      [[document filesOwner] setClassName: ownerClass];
+	      [filesOwner setClassName: ownerClass];
 	    }
 	  [[container nameTable] removeObjectForKey: @"NSOwner"];
 	  [[container nameTable] removeObjectForKey: @"NSFirst"];
-	  
+	  [nt setObject: filesOwner forKey: @"NSOwner"];
+	  [nt setObject: firstResponder forKey: @"NSFirst"];
+
 	  //
 	  // Add entries...
 	  //
@@ -295,10 +299,15 @@
 	  NSArray *objs = [[container topLevelObjects] allObjects];
 	  [[document topLevelObjects] addObjectsFromArray: objs];
 					
-	  
+	  //
+	  // Add connections
+	  //
+	  NSMutableArray *connections = [document connections];
+	  [connections addObjectsFromArray: [container connections]];
+
 	  /* Iterate over the contents of nameTable and create the connections */
 	  nt = [document nameTable];
-	  enumerator = [[container connections] objectEnumerator];
+	  enumerator = [connections objectEnumerator];
 	  while ((con = [enumerator nextObject]) != nil)
 	    {
 	      NSString  *name;

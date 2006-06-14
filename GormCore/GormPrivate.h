@@ -36,6 +36,8 @@
 #include <GormCore/GormPalettesManager.h>
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormClassEditor.h>
+#include <GNUstepGUI/GSNibTemplates.h>
+#include <GNUstepGUI/GSNibCompatibility.h>
 
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;
@@ -57,6 +59,11 @@ extern NSString *GormResizeCellNotification;
 @end
 
 @interface GSClassSwapper (GormCustomClassAdditions)
++ (void) setIsInInterfaceBuilder: (BOOL)flag;
+- (BOOL) isInInterfaceBuilder;
+@end
+
+@interface NSClassSwapper (GormCustomClassAdditions)
 + (void) setIsInInterfaceBuilder: (BOOL)flag;
 - (BOOL) isInInterfaceBuilder;
 @end

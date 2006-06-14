@@ -47,12 +47,17 @@
     {
       NSMutableArray        *visible = [nameTable objectForKey: @"NSVisible"];
       NSMutableArray        *deferred = [nameTable objectForKey: @"NSDeferred"];
-      
+      NSDictionary          *customClasses = [[document classManager] customClassMap];
+
       // Create the container for the .gorm file...
       [nameTable addEntriesFromDictionary: [document nameTable]];
-      [topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]]; 
+      [topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
+      [connections addObjectsFromArray: [document connections]];
       [visible addObjectsFromArray: [[document visibleWindows] allObjects]];
       [deferred addObjectsFromArray: [[document deferredWindows] allObjects]];
+
+      // add the custom class mapping...
+      [nameTable setObject: customClasses forKey: @"GSCustomClassMap"];
     }
   return self;
 }
@@ -60,32 +65,36 @@
 - (void) prepareConnectionsWithDocument: (GormDocument *)document
 {
   NSEnumerator *enumerator = [connections objectEnumerator];
-  id o = nil;
-  while ((o = [enumerator nextObject]) != nil)
+  id conn = nil;
+  while ((conn = [enumerator nextObject]) != nil)
     {
       NSString *name = nil;
       id obj = nil;
 
-      obj = [o source];
+      obj = [conn source];
       name = [document nameForObject: obj];
-      [o setSource: name];
-      obj = [o destination];
+      [conn setSource: name];
+      obj = [conn destination];
       name = [document nameForObject: obj];
-      [o setDestination: name];
+      [conn setDestination: name];
     }
 }
 
 - (void) resetConnectionsWithDocument: (GormDocument *)document
 {
   NSEnumerator *enumerator = [connections objectEnumerator];
-  id o = nil;
-  while ((o = [enumerator nextObject]) != nil)
+  id conn = nil;
+  while ((conn = [enumerator nextObject]) != nil)
     {
-      id src = [document objectForName: [o source]];
-      id dst = [document objectForName: [o destination]];
-      [o setSource: src];
-      [o setDestination: dst];
-      [o establishConnection];
+      NSString	*name = nil;
+      id obj = nil;
+
+      name = (NSString*)[conn source];
+      obj = [document objectForName: name];
+      [conn setSource: obj];
+      name = (NSString*)[conn destination];
+      obj = [document objectForName: name];
+      [conn setDestination: obj];
     }
 }
 @end
@@ -176,7 +185,10 @@
     {
       GormClassManager *classManager = [document classManager];
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
-      GSNibContainer *container = [[GSNibContainer alloc] initWithDocument: document];
+      GSNibContainer *container = nil;
+
+      [document beginArchiving];
+      container = [[GSNibContainer alloc] initWithDocument: document];
 
       /*
        * Set up archiving...
@@ -204,9 +216,9 @@
        * Initialize templates 
        */
       [self _replaceObjectsWithTemplates: archiver];
-      [container prepareConnectionsWithDocument: document];
+      // [container prepareConnectionsWithDocument: document];
       [archiver encodeRootObject: container];
-      [container resetConnectionsWithDocument: document];
+      // [container resetConnectionsWithDocument: document];
       RELEASE(archiver); // We're done with the archiver here..
       
       /* 
@@ -224,6 +236,7 @@
 
       // release the container...
       RELEASE(container);
+      [document endArchiving];
     }
 
   return fileWrappers;
