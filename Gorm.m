@@ -429,7 +429,7 @@
 	  isTesting = YES; 
 	  [self setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
-	  [activeDoc beginArchiving];
+	  [activeDoc deactivateEditors];
 	  [archiver encodeClassName: @"GormCustomView" 
 		    intoClassName: @"GormTestCustomView"];
 
@@ -454,7 +454,7 @@
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
 	  [archiver encodeRootObject: activeDoc];
 	  data = RETAIN([archiver archiverData]); // Released below... 
-	  [activeDoc endArchiving];
+	  [activeDoc reactivateEditors];
 	  RELEASE(archiver);
 	  [GSClassSwapper setIsInInterfaceBuilder: NO]; 
 	  

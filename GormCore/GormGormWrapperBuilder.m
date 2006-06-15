@@ -34,10 +34,100 @@
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormPalettesManager.h>
 
+@interface GormDocument (BuilderAdditions)
+- (void) prepareConnections;
+- (void) resetConnections;
+@end
+
+@implementation GormDocument (BuilderAdditions)
+/**
+ * Start the process of archiving.
+ */
+- (void) prepareConnections
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+
+  /*
+   * Map all connector sources and destinations to their name strings.
+   * Deactivate editors so they won't be archived.
+   */
+
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString	*name;
+      obj = [con source];
+      name = [self nameForObject: obj];
+      [con setSource: name];
+      obj = [con destination];
+      name = [self nameForObject: obj];
+      [con setDestination: name];
+    }
+
+  /*
+   * Remove objects and connections that shouldn't be archived.
+   */
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
+  [nameTable removeObjectForKey: @"NSOwner"];
+  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
+  [nameTable removeObjectForKey: @"NSFirst"];
+
+  /* Add information about the NSOwner to the archive */
+  NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
+  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
+
+  /*
+   * Set the appropriate profile so that we save the right versions of 
+   * the classes for older GNUstep releases.
+   */
+  [filePrefsManager setClassVersions];
+}
+
+/**
+ * Stop the archiving process.
+ */
+- (void) resetConnections
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+  id			obj;
+
+  /*
+   * Restore class versions.
+   */
+  [filePrefsManager restoreClassVersions];
+
+  /*
+   * Restore removed objects.
+   */
+  [nameTable setObject: filesOwner forKey: @"NSOwner"];
+  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
+
+  [nameTable setObject: firstResponder forKey: @"NSFirst"];
+  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
+
+  /*
+   * Map all connector source and destination names to their objects.
+   */
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      NSString	*name;
+      name = (NSString*)[con source];
+      obj = [self objectForName: name];
+      [con setSource: obj];
+      name = (NSString*)[con destination];
+      obj = [self objectForName: name];
+      [con setDestination: obj];
+    }
+}
+
+@end
+
 @interface GSNibContainer (BuilderAdditions)
 - (id) initWithDocument: (GormDocument *)document;
-- (void) prepareConnectionsWithDocument: (GormDocument *)document;
-- (void) resetConnectionsWithDocument: (GormDocument *)document;
 @end;
 
 @implementation GSNibContainer (BuilderAdditions)
@@ -60,42 +150,6 @@
       [nameTable setObject: customClasses forKey: @"GSCustomClassMap"];
     }
   return self;
-}
-
-- (void) prepareConnectionsWithDocument: (GormDocument *)document
-{
-  NSEnumerator *enumerator = [connections objectEnumerator];
-  id conn = nil;
-  while ((conn = [enumerator nextObject]) != nil)
-    {
-      NSString *name = nil;
-      id obj = nil;
-
-      obj = [conn source];
-      name = [document nameForObject: obj];
-      [conn setSource: name];
-      obj = [conn destination];
-      name = [document nameForObject: obj];
-      [conn setDestination: name];
-    }
-}
-
-- (void) resetConnectionsWithDocument: (GormDocument *)document
-{
-  NSEnumerator *enumerator = [connections objectEnumerator];
-  id conn = nil;
-  while ((conn = [enumerator nextObject]) != nil)
-    {
-      NSString	*name = nil;
-      id obj = nil;
-
-      name = (NSString*)[conn source];
-      obj = [document objectForName: name];
-      [conn setSource: obj];
-      name = (NSString*)[conn destination];
-      obj = [document objectForName: name];
-      [conn setDestination: obj];
-    }
 }
 @end
 
@@ -187,7 +241,7 @@
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
       GSNibContainer *container = nil;
 
-      [document beginArchiving];
+      [document prepareConnections];
       container = [[GSNibContainer alloc] initWithDocument: document];
 
       /*
@@ -236,7 +290,7 @@
 
       // release the container...
       RELEASE(container);
-      [document endArchiving];
+      [document resetConnections];
     }
 
   return fileWrappers;

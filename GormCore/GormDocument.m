@@ -139,23 +139,15 @@
 }
 @end
 
-/*
- * Trivial classes for connections from objects to their editors, and from
- * child editors to their parents.  This does nothing special, but we can
- * use the fact that it's a different class to search for it in the connections
- * array.
- */
-@interface	GormObjectToEditor : NSNibConnector
-@end
-
+//
+// Implementation of trivial classes.
+//
 @implementation	GormObjectToEditor
-@end
-
-@interface	GormEditorToParent : NSNibConnector
 @end
 
 @implementation	GormEditorToParent
 @end
+
 
 @implementation GormDocument
 
@@ -1624,119 +1616,6 @@ static NSImage  *fileImage = nil;
       [[[links lastObject] destination] activate];
       return [[links lastObject] destination];
     }
-}
-
-/**
- * Start the process of archiving.
- */
-
-/**
- * Start the process of archiving.
- */
-- (void) beginArchiving
-{
-  NSEnumerator		*enumerator;
-  id<IBConnectors>	con;
-  id			obj;
-
-  /*
-   * Map all connector sources and destinations to their name strings.
-   * Deactivate editors so they won't be archived.
-   */
-
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([con isKindOfClass: [GormObjectToEditor class]])
-	{
-	  [savedEditors addObject: con];
-	  [[con destination] deactivate];
-	}
-      else if ([con isKindOfClass: [GormEditorToParent class]])
-	{
-	  [savedEditors addObject: con];
-	}
-      else
-	{
-	  NSString	*name;
-	  obj = [con source];
-	  name = [self nameForObject: obj];
-	  [con setSource: name];
-	  obj = [con destination];
-	  name = [self nameForObject: obj];
-	  [con setDestination: name];
-	}
-    }
-  [connections removeObjectsInArray: savedEditors];
-
-  /*
-   * Remove objects and connections that shouldn't be archived.
-   */
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSOwner"]);
-  [nameTable removeObjectForKey: @"NSOwner"];
-  NSMapRemove(objToName, (void*)[nameTable objectForKey: @"NSFirst"]);
-  [nameTable removeObjectForKey: @"NSFirst"];
-
-  /* Add information about the NSOwner to the archive */
-  NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
-  [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
-
-  /*
-   * Set the appropriate profile so that we save the right versions of 
-   * the classes for older GNUstep releases.
-   */
-  [filePrefsManager setClassVersions];
-}
-
-/**
- * Stop the archiving process.
- */
-- (void) endArchiving
-{
-  NSEnumerator		*enumerator;
-  id<IBConnectors>	con;
-  id			obj;
-
-  /*
-   * Restore class versions.
-   */
-  [filePrefsManager restoreClassVersions];
-
-  /*
-   * Restore removed objects.
-   */
-  [nameTable setObject: filesOwner forKey: @"NSOwner"];
-  NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
-
-  [nameTable setObject: firstResponder forKey: @"NSFirst"];
-  NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
-
-  /*
-   * Map all connector source and destination names to their objects.
-   */
-  enumerator = [connections objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      NSString	*name;
-      name = (NSString*)[con source];
-      obj = [self objectForName: name];
-      [con setSource: obj];
-      name = (NSString*)[con destination];
-      obj = [self objectForName: name];
-      [con setDestination: obj];
-    }
-
-  /*
-   * Restore editor links and reactivate the editors.
-   */
-  [connections addObjectsFromArray: savedEditors];
-  enumerator = [savedEditors objectEnumerator];
-  while ((con = [enumerator nextObject]) != nil)
-    {
-      if ([[con source] isKindOfClass: [NSView class]] == NO)
-	[[con destination] activate];
-    }
-  [savedEditors removeAllObjects];
 }
 
 /**
@@ -3431,10 +3310,10 @@ static NSImage  *fileImage = nil;
     postNotificationName: IBWillSaveDocumentNotification
     object: self];
 
-  // [self beginArchiving];
+  // build the archive...
+  [self deactivateEditors];
   result = [builder buildFileWrapperWithDocument: self];
-  // [self endArchiving];
-
+  [self reactivateEditors];
   if(result)
     {
       /*
@@ -3644,6 +3523,57 @@ static NSImage  *fileImage = nil;
       [o orderFront: self];
     }
 }
+
+/**
+ * Deactivate the editors for archiving..
+ */
+- (void) deactivateEditors
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+
+  /*
+   * Map all connector sources and destinations to their name strings.
+   * Deactivate editors so they won't be archived.
+   */
+
+  enumerator = [connections objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]])
+	{
+	  [savedEditors addObject: con];
+	  [[con destination] deactivate];
+	}
+      else if ([con isKindOfClass: [GormEditorToParent class]])
+	{
+	  [savedEditors addObject: con];
+	}
+    }
+  [connections removeObjectsInArray: savedEditors];
+}
+
+/**
+ * Reactivate all of the editors...
+ */
+- (void) reactivateEditors
+{
+  NSEnumerator		*enumerator;
+  id<IBConnectors>	con;
+
+  /*
+   * Restore editor links and reactivate the editors.
+   */
+  [connections addObjectsFromArray: savedEditors];
+  enumerator = [savedEditors objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([[con source] isKindOfClass: [NSView class]] == NO)
+	[[con destination] activate];
+    }
+  [savedEditors removeAllObjects];
+}
+
 @end
 
 @implementation GormDocument (MenuValidation)

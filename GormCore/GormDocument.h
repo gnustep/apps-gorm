@@ -34,6 +34,18 @@
 @class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, GormFilePrefsManager;
 
 /*
+ * Trivial classes for connections from objects to their editors, and from
+ * child editors to their parents.  This does nothing special, but we can
+ * use the fact that it's a different class to search for it in the connections
+ * array.
+ */
+@interface	GormObjectToEditor : NSNibConnector
+@end
+
+@interface	GormEditorToParent : NSNibConnector
+@end
+
+/*
  * Each document has a GormFirstResponder object that is used as a placeholder
  * for the first responder at any instant.
  */
@@ -85,18 +97,6 @@
   NSMutableSet          *visibleWindows;
   NSMutableSet          *deferredWindows;
 }
-
-/* Archiving objects */
-
-/**
- * Start the archiving process.
- */
-- (void) beginArchiving;
-
-/**
- * Stop the archiving process.
- */
-- (void) endArchiving;
 
 /* Handle notifications */
 
@@ -361,17 +361,45 @@
  */ 
 - (NSSet *) deferredWindows;
 
+/**
+ * Set the document open flag.
+ */
 - (void) setDocumentOpen: (BOOL) flag;
 
+/**
+ * Return the document open flag.
+ */
 - (BOOL) isDocumentOpen;
 
+/**
+ * Set the file info for this document.
+ */
 - (void) setInfoData: (NSData *)data;
 
+/**
+ * return the file info.
+ */
 - (NSData *) infoData;
 
+/**
+ * Set the "older archive" flag.
+ */ 
 - (void) setOlderArchive: (BOOL)flag;
 
+/**
+ * Return YES if this is an older archive.
+ */
 - (BOOL) isOlderArchive;
+
+/**
+ * Deactivate the editors for archiving..
+ */
+- (void) deactivateEditors;
+
+/**
+ * Reactivate all of the editors...
+ */
+- (void) reactivateEditors;
 @end
 
 @interface GormDocument (MenuValidation)

@@ -1,3 +1,11 @@
+2006-06-14 22:45 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.[hm]: Added new deactivateEditors and
+	reactivateEditors methods.
+	* GormCore/GormGormWrapperBuilder.m: Moved connection
+	name/object swap here for gorm format.
+	* Gorm.m: Calling new deactivate/reactivateEditors
+
 2006-06-14 01:42 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Addition of GormNibWrapperLoader to the
