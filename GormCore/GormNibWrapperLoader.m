@@ -67,7 +67,7 @@
 
 - (void) dealloc
 {
-  // RELEASE(swappedObjects);
+  RELEASE(swappedObjects);
   [super dealloc];
 }
 

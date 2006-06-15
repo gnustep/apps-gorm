@@ -24,6 +24,8 @@
 
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSNibConnector.h>
+#include <AppKit/NSFileWrapper.h>
+#include <GormWrapperLoader.h>
 #include <GNUstepGUI/GMArchiver.h>
 #include <GNUstepGUI/IMLoading.h>
 #include <GNUstepGUI/IMCustomObject.h>
@@ -212,8 +214,14 @@ static BOOL gormFileOwnerDecoded;
 }
 @end
 
-@implementation GormDocument (GModel)
+@interface GormDocument (GModelLoaderAdditions)
+- (void) defineClass: (id)className inFile: (NSString *)path;
+- (id) connectionObjectForObject: object;
+- (NSDictionary *) processModel: (NSMutableDictionary *)model
+			 inPath: (NSString *)path;
+@end
 
+@implementation GormDocument (GModelLoaderAdditions)
 /* Try to define a possibly custom class that's in the gmodel
    file. This is not information that is contained in the file
    itself. For instance, we don't even know what the superclass
@@ -423,21 +431,35 @@ static BOOL gormFileOwnerDecoded;
   
   return customMap;
 }
+@end
+
+@interface GormGModelWrapperLoader : GormWrapperLoader
+@end
+
+@implementation GormGModelWrapperLoader
++ (NSString *) type
+{
+  return @"GSGModelFileType";
+}
 
 /* importing of legacy gmodel files.*/
-- (id) openGModel: (NSString *)path
+- (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
 {
-  id                obj, con;
-  id                unarchiver;
-  id                decoded;
-  NSEnumerator     *enumerator;
-  NSArray          *gmobjects;
-  NSArray          *gmconnections;
-  Class             u = gmodel_class(@"GMUnarchiver");
-  NSString         *delegateClass = nil;
-  NSMutableDictionary *model;
+  id obj, con;
+  id unarchiver;
+  id decoded;
+  NSEnumerator *enumerator;
+  NSArray *gmobjects;
+  NSArray *gmconnections;
+  Class u = gmodel_class(@"GMUnarchiver");
+  NSString *delegateClass = nil;
+  NSData *data = [wrapper regularFileContents];
+  NSString *dictString = AUTORELEASE([[NSString alloc] initWithData: data 
+						       encoding: NSASCIIStringEncoding]);
+  NSMutableDictionary *model = [NSMutableDictionary dictionaryWithDictionary: 
+						      [dictString propertyList]];
+  NSString *path = [[wrapper filename] stringByDeletingLastPathComponent];
 
-  NSLog (@"Loading gmodel file %@...", path);
   gormNibOwner = nil;
   gormRealObject = nil;
   gormFileOwnerDecoded = NO;
@@ -459,24 +481,26 @@ static BOOL gormFileOwnerDecoded;
   [u decodeClassName: @"NSCStringText"     asClassName: @"NSText"];
 
   // process the model to take care of any custom classes...
-  model = [NSMutableDictionary dictionaryWithContentsOfFile: path];
-  [self processModel: model inPath: path];
+  [doc processModel: model inPath: path];
   
   // initialize with the property list...
   unarchiver = [[u alloc] initForReadingWithPropertyList: [[model description] propertyList]];
   if (!unarchiver)
     {
-      NSLog(@"Failed to load gmodel file %@!!",path);
-      return nil;
+      return NO;
     }
   
   NSLog(@"----------------- GModel testing -----------------");
   NS_DURING
-    decoded = [unarchiver decodeObjectWithName:@"RootObject"];
+    {
+      decoded = [unarchiver decodeObjectWithName:@"RootObject"];
+    }
   NS_HANDLER
-    NSRunAlertPanel(_(@"GModel Loading"), [localException reason], 
-		    @"Ok", nil, nil);
-    return nil;
+    {
+      NSRunAlertPanel(_(@"GModel Loading"), [localException reason], 
+		      @"Ok", nil, nil);
+      return NO;
+    }
   NS_ENDHANDLER
   gmobjects = [decoded performSelector: @selector(objects)];
   gmconnections = [decoded performSelector: @selector(connections)];
@@ -486,8 +510,8 @@ static BOOL gormFileOwnerDecoded;
 
   if (gormNibOwner)
     {
-      [self defineClass: [gormNibOwner className] inFile: path];
-      [filesOwner setClassName: [gormNibOwner className]];
+      [doc defineClass: [gormNibOwner className] inFile: path];
+      [[document filesOwner] setClassName: [gormNibOwner className]];
     }
 
   /*
@@ -499,7 +523,7 @@ static BOOL gormFileOwnerDecoded;
     {
       if (obj != gormNibOwner)
 	{
-	  [self attachObject: obj toParent: nil];
+	  [doc attachObject: obj toParent: nil];
 	}
 
       if([obj isKindOfClass: [GormObjectProxy class]])
@@ -507,15 +531,15 @@ static BOOL gormFileOwnerDecoded;
 	  if([[obj className] isEqual: @"NSFontManager"])
 	    {
 	      // if it's the font manager, take care of it...
-	      [self setName: @"NSFont" forObject: obj];
-	      [self attachObject: obj toParent: nil];
+	      [doc setName: @"NSFont" forObject: obj];
+	      [doc attachObject: obj toParent: nil];
 	      // RELEASE(item);    
-	      fontManager = obj;
+	      // fontManager = obj; // FIXME!!!!
 	    }
 	  else 
 	    {
 	      NSLog(@"processing... %@",[obj className]);
-	      [self defineClass: [obj className] inFile: path];
+	      [doc defineClass: [obj className] inFile: path];
 	    }
 	} 
     }
@@ -527,17 +551,17 @@ static BOOL gormFileOwnerDecoded;
       NSNibConnector *newcon;
       id source, dest;
 
-      source = [self connectionObjectForObject: [con source]];
-      dest   = [self connectionObjectForObject: [con destination]];
+      source = [doc connectionObjectForObject: [con source]];
+      dest   = [doc connectionObjectForObject: [con destination]];
       NSDebugLog(@"connector = %@",con);
       if ([[con className] isEqual: @"IMOutletConnector"]) // We don't link the gmodel library at compile time...
 	{
 	  newcon = AUTORELEASE([[NSNibOutletConnector alloc] init]);
-	  if(![classManager isOutlet: [con label] 
-			    ofClass: [source className]])
+	  if(![[doc classManager] isOutlet: [con label] 
+				  ofClass: [source className]])
 	    {
-	      [classManager addOutlet: [con label] 
-			    forClassNamed: [source className]];
+	      [[doc classManager] addOutlet: [con label] 
+				  forClassNamed: [source className]];
 	    }
 
 	  if([[source className] isEqual: @"NSApplication"])
@@ -550,24 +574,24 @@ static BOOL gormFileOwnerDecoded;
 	  NSString *className = (dest == nil)?(NSString *)@"FirstResponder":(NSString *)[dest className];
 	  newcon = AUTORELEASE([[NSNibControlConnector alloc] init]);
 	  
-	  if(![classManager isAction: [con label] 
-			    ofClass: className])
+	  if(![[doc classManager] isAction: [con label] 
+				  ofClass: className])
 	    {
-	      [classManager addAction: [con label] 
-			    forClassNamed: className];
+	      [[doc classManager] addAction: [con label] 
+				  forClassNamed: className];
 	    }	  
 	}
       
       NSDebugLog(@"conn = %@  source = %@ dest = %@ label = %@, src name = %@ dest name = %@", newcon, source, dest, 
 		 [con label], [source className], [dest className]);
       [newcon setSource: source];
-      [newcon setDestination: (dest != nil)?dest:[self firstResponder]];
+      [newcon setDestination: (dest != nil)?dest:[doc firstResponder]];
       [newcon setLabel: [con label]];
-      [[self connections] addObject: newcon];
+      [[doc connections] addObject: newcon];
     }
 
   // make sure that all of the actions on the application's delegate object are also added to FirstResponder.
-  enumerator = [connections objectEnumerator];
+  enumerator = [[doc connections] objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if([con isKindOfClass: [NSNibControlConnector class]])
@@ -575,11 +599,11 @@ static BOOL gormFileOwnerDecoded;
 	  id dest = [con destination];
 	  if([[dest className] isEqual: delegateClass])
 	    {
-	      if(![classManager isAction: [con label] 
-				ofClass: @"FirstResponder"])
+	      if(![[doc classManager] isAction: [con label] 
+				      ofClass: @"FirstResponder"])
 		{
-		  [classManager addAction: [con label] 
-				forClassNamed: @"FirstResponder"];
+		  [[doc classManager] addAction: [con label] 
+				      forClassNamed: @"FirstResponder"];
 		} 
 	    }
 	}
@@ -603,14 +627,14 @@ static BOOL gormFileOwnerDecoded;
 		    }
 		}
 	      
-	      [self attachObject: obj toParent: nil];
+	      [doc attachObject: obj toParent: nil];
 	    }
 	  
 	  if([gormRealObject respondsToSelector: @selector(mainMenu)])
 	    {
 	      if ([(GModelApplication *)gormRealObject mainMenu])
 		{
-		  [self attachObject: [(GModelApplication *)gormRealObject mainMenu] toParent: nil];
+		  [doc attachObject: [(GModelApplication *)gormRealObject mainMenu] toParent: nil];
 		}
 	    }
 	}
@@ -619,19 +643,19 @@ static BOOL gormFileOwnerDecoded;
   else if(gormRealObject != nil)
     {
       // Here we need to addClass:... (outlets, actions).  */
-      [self defineClass: [gormRealObject className] inFile: path];
+      [doc defineClass: [gormRealObject className] inFile: path];
     }
   else
     {
       NSLog(@"Don't understand real object %@", gormRealObject);
     }
 
-  [self rebuildObjToNameMapping];
+  [doc rebuildObjToNameMapping];
 
   // RELEASE(unarchiver);
-  [self touch]; // mark the document
+  // [doc touch]; // mark the document
 
-  return self;
+  return YES;
 }
 @end
 

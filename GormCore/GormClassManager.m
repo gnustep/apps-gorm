@@ -1397,7 +1397,7 @@
 
 - (BOOL) saveToFile: (NSString *)path
 {
-  return [[self data]  writeToFile: path atomically: YES];
+  return [[self data] writeToFile: path atomically: YES];
 }
 
 - (BOOL) loadFromFile: (NSString *)path

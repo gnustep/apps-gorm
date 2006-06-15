@@ -94,7 +94,6 @@ GormCore_HEADER_FILES = \
 	NSView+GormExtensions.h 
 
 GormCore_OBJC_FILES = \
-	GModelDecoder.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -111,6 +110,9 @@ GormCore_OBJC_FILES = \
 	GormFontViewController.m \
 	GormFunctions.m \
 	GormGenericEditor.m \
+	GormGormWrapperBuilder.m \
+	GormGormWrapperLoader.m \
+	GormGModelWrapperLoader.m \
 	GormImage.m \
 	GormImageEditor.m \
 	GormImageInspector.m \
@@ -144,8 +146,6 @@ GormCore_OBJC_FILES = \
 	GormWindowEditor.m \
 	GormWrapperBuilder.m \
 	GormWrapperLoader.m \
-	GormGormWrapperBuilder.m \
-	GormGormWrapperLoader.m \
 	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \

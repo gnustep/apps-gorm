@@ -1170,7 +1170,7 @@ static NSImage  *fileImage = nil;
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
   
-  RELEASE(filePrefsWindow); // FIXME: Causes NIB to crash...
+  // RELEASE(filePrefsWindow); // FIXME: Causes NIB to crash...
   RELEASE(resourceManagers);
 
   RELEASE(nameTable);

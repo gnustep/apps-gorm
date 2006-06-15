@@ -13,10 +13,18 @@
       {
 	NSName = "GSNibFileType";
 	NSHumanReadableName = "Cocoa Nib";
-	NSRole = Editor;
+	NSRole = Viewer;
 	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "nib" );
         NSIcon = "GormNib.tiff";
+      },
+      {
+	NSName = "GSGModelFileType";
+	NSHumanReadableName = "GNUstep GModel";
+	NSRole = Viewer;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "gmodel" );
+        NSIcon = "FileIcon_gmodel.tiff";
       },
       {
         NSUnixExtensions = ( "palette" );

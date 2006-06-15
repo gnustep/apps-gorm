@@ -1,3 +1,15 @@
+2006-06-15 00:48 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GModelDecoder.m: Removed old class.
+	* GormCore/GNUmakefile: Added new GormGModelWrapperLoader class
+	* GormCore/GormClassManager.m: Minor cleanup
+	* GormCore/GormDocument.m: Temporarily comment out release of file
+	prefs window.
+	* GormCore/GormGModelWrapperLoader.m: new loader class for GModel.
+	* GormCore/GormNibWrapperLoader.m: Minor cleanup
+	* GormInfo.plist: Added GModel entry back in and made both GModel
+	and Nib "Viewer" entries.
+
 2006-06-14 22:45 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.[hm]: Added new deactivateEditors and
