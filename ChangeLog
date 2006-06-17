@@ -1,3 +1,12 @@
+2006-06-17 06:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Added code to clear changes
+	so that the nib loads without showing the document as changed.
+	Also added code to correct the missing colon in some nib files
+	for certain methods so that connections are correctly made.
+	* Resources/ClassInformation.plist: Addition of missing methods on
+	NSFirst.
+
 2006-06-17 06:25 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Fix for connections to NSOwner.

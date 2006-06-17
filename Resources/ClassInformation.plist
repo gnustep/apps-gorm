@@ -12,6 +12,7 @@
 	    "changeColor:",
             "changeFont:",
 	    "checkSpelling:",
+	    "clearRecentDocuments:",
 	    "close:",
 	    "complete:",
 	    "copy:",

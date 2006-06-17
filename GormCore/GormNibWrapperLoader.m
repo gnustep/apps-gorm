@@ -286,6 +286,7 @@
 	      id dest = [o destination];
 	      if([o isKindOfClass: [NSNibControlConnector class]])
 		{
+		  NSString *tag = [o label];
 		  if(dest == nibFilesOwner)
 		    {
 		      [o setDestination: [document filesOwner]];
@@ -294,13 +295,26 @@
 		    {
 		      [o setDestination: [document firstResponder]];
 		    }
+
+		  // Correct the missing colon problem...
+		  NSRange colonRange = [tag rangeOfString: @":"];
+		  unsigned int location = colonRange.location;
+		  
+		  if(location == NSNotFound)
+		    {
+		      NSString *newTag = [NSString stringWithFormat: @"%@:",tag];
+		      [o setLabel: (id)newTag];
+		    }
 		}
 	      [document addConnector: o];
 	    }
 
 	  // turn on custom classes.
 	  [NSClassSwapper setIsInInterfaceBuilder: NO]; 
-	  
+
+	  // clear the changes, since we just loaded the document.
+	  [document updateChangeCount: NSChangeCleared];
+
 	  return YES;
 	}
     }
