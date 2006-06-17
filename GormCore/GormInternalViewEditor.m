@@ -139,7 +139,8 @@ static NSImage *horizontalImage;
 	}
       else if ([[superview window] contentView] == _editedObject) 
 	{
-	  [self setFrame: [_editedObject frame]];
+	  // NSRect frame = [_editedObject frame];
+	  // [self setFrame: frame];
 	  [[superview window] setContentView: self];
 	}
       else if ([superview isKindOfClass: [NSClipView class]])
