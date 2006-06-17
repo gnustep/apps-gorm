@@ -95,6 +95,7 @@
       [self setClassName: [customView className]];
       _autoresizingMask = [customView autoresizingMask];
       RELEASE(customView);
+      return self;
     }
   else
     {

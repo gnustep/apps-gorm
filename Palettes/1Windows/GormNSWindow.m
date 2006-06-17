@@ -67,10 +67,10 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   _gormStyleMask = aStyle;
   // _originalContentRect = contentRect;
   self = [super initWithContentRect: contentRect
-		  styleMask: defaultStyleMask
-		  backing: bufferingType
-		  defer: flag
-		  screen: aScreen];
+		styleMask: defaultStyleMask
+		backing: bufferingType
+		defer: NO // always no, because this isn't recorded here...
+		screen: aScreen];
   if(self != nil)
     {
       // Don't release when the window is closed, a window being edited may
@@ -81,7 +81,7 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
       [self setMiniwindowImage: nil];
 
       // set the default position mask;
-      autoPositionMask = GSWindowMaxXMargin | GSWindowMaxYMargin;
+      autoPositionMask = GSWindowMaxXMargin | GSWindowMinYMargin;
     }
 
   return self;

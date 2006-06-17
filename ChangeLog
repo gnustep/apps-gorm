@@ -1,3 +1,11 @@
+2006-06-17 10:54 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.m: Return self in the conditional that
+	reads the custom view.
+	* GormCore/GormInternalViewEditor.m: Reset the current view size
+	so that the window is properly displayed.
+	* Palettes/1Windows/GormNSWindow.m: Send deferred as "NO" always.
+
 2006-06-17 06:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Added code to clear changes
