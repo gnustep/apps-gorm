@@ -52,6 +52,7 @@
 {
   NSIBObjectData *container;
   NSMutableDictionary *swappedObjects;
+  id nibFilesOwner;
 }
 @end
 
@@ -186,8 +187,8 @@
 	    {
 	      return NO;
 	    }
+	  nibFilesOwner = [container objectForName: @"File's Owner"];
 
-	  id nibFilesOwner = [container objectForName: @"File's Owner"];
 	  id docFilesOwner = [document filesOwner];
 	  NSMapTable objects = [container objects];
 	  NSArray *objs = NSAllMapTableKeys(objects);
@@ -282,6 +283,18 @@
 	  o = nil;
 	  while((o = [en nextObject]) != nil)
 	    {
+	      id dest = [o destination];
+	      if([o isKindOfClass: [NSNibControlConnector class]])
+		{
+		  if(dest == nibFilesOwner)
+		    {
+		      [o setDestination: [document filesOwner]];
+		    }
+		  else if(dest == nil)
+		    {
+		      [o setDestination: [document firstResponder]];
+		    }
+		}
 	      [document addConnector: o];
 	    }
 
@@ -332,18 +345,15 @@
       Class clz = [unarchiver classForClassName: className];
       [obj setBaseWindowClass: clz];
     }
-  else if([obj isKindOfClass: [NSNibOutletConnector class]] ||
-	  [obj isKindOfClass: [NSNibControlConnector class]])
+  else if([obj respondsToSelector: @selector(setTarget:)] &&
+	  [obj respondsToSelector: @selector(setAction:)] &&
+	  [obj isKindOfClass: [NSCell class]] == NO)
     {
-      if([obj source] == nil)
-	{
-	  [obj setSource: [document firstResponder]];
-	}
-      if([obj destination] == nil)
-	{
-	  [obj setDestination: [document firstResponder]];
-	}
+      // blank the target/action for all objects.
+      [obj setTarget: nil];
+      [obj setAction: NULL];
     }
+
   return obj;
 }
 @end

@@ -1,3 +1,7 @@
+2006-06-17 06:25 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Fix for connections to NSOwner.
+
 2006-06-15 00:48 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GModelDecoder.m: Removed old class.
