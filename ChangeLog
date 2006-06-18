@@ -1,3 +1,8 @@
+2006-06-18 14:40 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Added filter to remove
+	NSIBHelpConnector instances from the connections array.
+
 2006-06-17 20:39 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Remove resizing change from
