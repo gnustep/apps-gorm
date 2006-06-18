@@ -236,8 +236,6 @@
 
 		  // make the object deferred/visible...
 		  obj = [o nibInstantiate];
-		  [obj setFrame: [NSWindow frameRectForContentRect: [o windowRect] styleMask: [o windowStyle]]
-		       display: NO];
 		  
 		  [document setObject: obj isDeferred: isDeferred];
 		  [document setObject: obj isVisibleAtLaunch: isVisible];
@@ -368,10 +366,6 @@
       // blank the target/action for all objects.
       [obj setTarget: nil];
       [obj setAction: NULL];
-    }
-  else if([obj isKindOfClass: [NSView class]])
-    {
-      [self setSuperView: nil];
     }
 
   return obj;
