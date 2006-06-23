@@ -201,7 +201,7 @@
 	  nibFilesOwner = [container objectForName: @"File's Owner"];
 
 	  id docFilesOwner = [document filesOwner];
-	  NSMapTable objects = [container objects];
+	  NSMapTable objects = [container names];
 	  NSArray *objs = NSAllMapTableKeys(objects);
 	  NSEnumerator *en = [objs objectEnumerator];
 	  id o = nil;

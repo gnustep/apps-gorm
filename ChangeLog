@@ -1,3 +1,12 @@
+2006-06-23 00:57 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGModelWrapperLoader.m: call 
+	-[NSDocument updateChangeCount:] to 
+	clear changes so that the document isn't flagged as needing
+	to be saved right after load.
+	* GormCore/GormNibWrapperLoader.m: Use the objects in the map
+	returned by -names in -loadFileWrapper:withDocument:.
+
 2006-06-18 14:40 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Added filter to remove

@@ -534,7 +534,7 @@ static BOOL gormFileOwnerDecoded;
 	      [doc setName: @"NSFont" forObject: obj];
 	      [doc attachObject: obj toParent: nil];
 	      // RELEASE(item);    
-	      // fontManager = obj; // FIXME!!!!
+	      // [document setFontManager: obj]; // FIXME!!!!
 	    }
 	  else 
 	    {
@@ -652,8 +652,8 @@ static BOOL gormFileOwnerDecoded;
 
   [doc rebuildObjToNameMapping];
 
-  // RELEASE(unarchiver);
-  // [doc touch]; // mark the document
+  // clear the changes, since we just loaded the document.
+  [document updateChangeCount: NSChangeCleared];
 
   return YES;
 }
