@@ -62,27 +62,11 @@
 @interface GormNibWrapperLoader : GormWrapperLoader
 {
   NSIBObjectData *container;
-  NSMutableDictionary *swappedObjects;
   id nibFilesOwner;
 }
 @end
 
 @implementation GormNibWrapperLoader
-- (id) init
-{
-  if((self = [super init]) != nil)
-    {
-      swappedObjects = [[NSMutableDictionary alloc] init];
-    }
-  return self;
-}
-
-- (void) dealloc
-{
-  RELEASE(swappedObjects);
-  [super dealloc];
-}
-
 + (NSString *) type
 {
   return @"GSNibFileType";

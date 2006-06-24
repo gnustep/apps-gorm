@@ -1,3 +1,8 @@
+2006-06-24 10:36 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Remove swappedObjects
+	ivar and also remove from -init and -dealloc in GormNibWrapperLoader.
+
 2006-06-24 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Use the "classes" map properly in
