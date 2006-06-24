@@ -1,7 +1,7 @@
 /* main.m
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
-
+ *
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:	2004
  * 

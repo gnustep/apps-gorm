@@ -270,21 +270,16 @@
 	    }
 
 	  //
-	  // add the swapped objects...
+	  // Add custom classes...
 	  //
-	  en = [swappedObjects keyEnumerator];
-	  NSString *key = nil;
-	  while((key = [en nextObject]) != nil)
+	  NSMapTable *classes = [container classes];
+	  NSArray *classKeys = NSAllMapTableKeys(classes);
+	  en = [classKeys objectEnumerator];
+	  while((o = [en nextObject]) != nil)
 	    {
-	      NSArray *array = [swappedObjects objectForKey: key];
-	      NSEnumerator *oen = [array objectEnumerator];
-	      id actualObj = nil;
-
-	      while((actualObj = [oen nextObject]) != nil)
-		{
-		  NSString *name = [document nameForObject: actualObj];
-		  [classManager setCustomClass: key forName: name];		  
-		}	      
+	      NSString *name = [document nameForObject: o];
+	      NSString *customClass = NSMapGet(classes, o);
+	      [classManager setCustomClass: customClass forName: name];
 	    }
 
 	  //
@@ -350,17 +345,7 @@
 
 - (void) unarchiver: (NSKeyedUnarchiver *)unarchiver willReplaceObject: (id)obj withObject: (id)newObj
 {
-  if([obj isKindOfClass: [NSClassSwapper class]])
-    {
-      NSString *className = [obj className];
-      NSMutableArray *objects = [swappedObjects objectForKey: className];
-      if(objects == nil)
-	{
-	  objects = [NSMutableArray array];
-	  [swappedObjects setObject: objects forKey: className];
-	}
-      [objects addObject: newObj];
-    }
+  // Nothing for now...
 }
 
 - (id) unarchiver: (NSKeyedUnarchiver *)unarchiver didDecodeObject: (id)obj

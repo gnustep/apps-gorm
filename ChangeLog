@@ -1,3 +1,9 @@
+2006-06-24 10:22 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Use the "classes" map properly in
+	-[GormNibWrapperLoader loadWrapperFile:withDocument:].
+	* main.m: Correct comment.
+
 2006-06-23 00:57 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGModelWrapperLoader.m: call 
