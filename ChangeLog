@@ -1,3 +1,12 @@
+2006-06-24 20:41 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Change 
+	-[GormNibWrapperLoader _isTopLevelObject:] to use the "objects"
+	map.  This map is used to maintain parent/child object
+	relationships in the .nib file.
+	* Gorm.m: in -[Gorm testInterface] change the warning to use
+	multiple lines.  On smaller screens it runs over.
+
 2006-06-24 10:36 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Remove swappedObjects

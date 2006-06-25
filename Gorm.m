@@ -549,11 +549,11 @@
       NS_HANDLER
 	{
 	  // reset the application after the error.
-	  NSLog(@"Error while testing interface: %@", 
+	  NSLog(@"Problem while testing interface: %@", 
 		[localException reason]);
-	  NSRunAlertPanel(_(@"An Error Occurred"), 
-			  [NSString stringWithFormat: 
-				      @"Problem testing interface.  Make sure connections are to appropriate objects.  Exception: %@",
+	  NSRunAlertPanel(_(@"Problem While Testing Interface"), 
+			  [NSString stringWithFormat: @"Make sure connections are to appropriate objects.\n"
+				    @"Exception: %@",
 				    [localException reason]], 
 			  _(@"OK"), nil, nil);
 	  [self endTesting: self];

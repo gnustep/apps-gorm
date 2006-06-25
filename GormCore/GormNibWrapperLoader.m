@@ -74,20 +74,16 @@
 
 - (BOOL) _isTopLevelObject: (id)obj
 {
-  if([obj isKindOfClass: [NSWindow class]] ||
-     [obj isKindOfClass: [GormObjectProxy class]])
+  NSMapTable *objects = [container objects];
+  id val = NSMapGet(objects,obj);
+  BOOL result = NO;
+
+  if(val == nibFilesOwner || val == nil)
     {
-      return YES;
-    }
-  else if([obj isKindOfClass: [NSMenu class]])
-    {
-      if([obj supermenu] == nil)
-	{
-	  return YES;
-	}
+      result = YES;
     }
 
-  return NO;
+  return result;
 }
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
