@@ -1,3 +1,8 @@
+2006-06-24 20:49 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Make _isTopLevelObject: into
+	a normal method, not private.
+
 2006-06-24 20:41 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Change 

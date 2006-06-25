@@ -64,6 +64,7 @@
   NSIBObjectData *container;
   id nibFilesOwner;
 }
+- (BOOL) isTopLevelObject: (id)obj;
 @end
 
 @implementation GormNibWrapperLoader
@@ -72,7 +73,7 @@
   return @"GSNibFileType";
 }
 
-- (BOOL) _isTopLevelObject: (id)obj
+- (BOOL) isTopLevelObject: (id)obj
 {
   NSMapTable *objects = [container objects];
   id val = NSMapGet(objects,obj);
@@ -237,7 +238,7 @@
 		    }
 		}
 
-	      if([self _isTopLevelObject: obj])
+	      if([self isTopLevelObject: obj])
 		{		  
 		  [document attachObject: obj toParent: nil];
 		}
