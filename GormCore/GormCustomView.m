@@ -54,6 +54,12 @@
   return self;
 }
 
+- (void) dealloc
+{
+  RELEASE(className);
+  [super dealloc];
+}
+
 - (NSString*) inspectorClassName
 {
   return @"GormFilesOwnerInspector";
@@ -66,12 +72,36 @@
 
 - (void) setClassName: (NSString *)aName
 {
+  ASSIGN(className, aName);
   [self setStringValue: aName];
 }
 
 - (NSString *) className
 {
-  return [self stringValue];
+  return className;
+}
+
+- (Class) bestPossibleSuperClass
+{
+  Class cls = [NSView class];
+  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+
+  if([classManager isSuperclass: @"NSView" linkedToClass: className])
+    {
+      NSString *superClass = [classManager nonCustomSuperClassOf: className];
+
+      // get the superclass if one exists...
+      if(superClass != nil)
+	{
+	  cls = NSClassFromString(superClass);
+	  if(cls == nil)
+	    {
+	      cls = [NSView class];
+	    }
+	}
+    }
+
+  return cls;
 }
 
 /*
@@ -91,10 +121,34 @@
   if([aCoder allowsKeyedCoding])
     {
       NSCustomView *customView = [[NSCustomView alloc] initWithCoder: aCoder];
-      [self initWithFrame: [customView frame]];
+      NSArray *subviews = [customView subviews];
+      
+      // get the classname...
       [self setClassName: [customView className]];
-      _autoresizingMask = [customView autoresizingMask];
+
+      // if the custom view has subviews....
+      if(subviews != nil && [subviews count] > 0)
+	{
+	  Class cls = [self bestPossibleSuperClass];
+	  id replacementView = [[cls alloc] initWithFrame: [customView frame]];
+	  NSEnumerator *en = [[customView subviews] objectEnumerator];
+	  id v = nil;
+
+	  [replacementView setAutoresizingMask: [customView autoresizingMask]];
+	  while((v = [en nextObject]) != nil)
+	    {
+	      [replacementView addSubview: v];
+	    }	  
+
+	  return replacementView;
+	}
+      else
+	{
+	  [self initWithFrame: [customView frame]];
+	  _autoresizingMask = [customView autoresizingMask];
+	}
       RELEASE(customView);
+
       return self;
     }
   else
@@ -143,7 +197,7 @@
 
 @implementation	GormTestCustomView
 
-- (Class) _bestPossibleSuperClass
+- (Class) bestPossibleSuperClass
 {
   Class cls = [NSView class];
   GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
@@ -171,6 +225,7 @@
   return cls;
 }
 
+
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   id		obj;
@@ -187,7 +242,7 @@
   if([classManager isSuperclass: @"NSOpenGLView" linkedToClass: theClass] ||
      [theClass isEqual: @"NSOpenGLView"] || cls == nil)
     {
-      cls = [self _bestPossibleSuperClass];
+      cls = [self bestPossibleSuperClass];
     }
   
   obj = [cls allocWithZone: [self zone]];

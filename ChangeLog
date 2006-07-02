@@ -1,3 +1,10 @@
+2006-07-02 00:53 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.[hm]: If CustomView includes some
+	subviews in a nib file make the custom view into the best possible
+	superclass of the custom class indicated.   Also store the className
+	in a variable instead of depending on "stringValue".
+
 2006-06-24 20:49 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Make _isTopLevelObject: into

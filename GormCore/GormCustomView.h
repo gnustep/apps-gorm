@@ -29,6 +29,7 @@
 
 @interface GormCustomView : NSTextField
 {
+  NSString *className;
 }
 
 - (void) setClassName: (NSString *)aName;
