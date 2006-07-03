@@ -48,17 +48,6 @@
 }
 @end
 
-@interface NSView (NibLoaderPrivate)
-- (void) setSuperview: (NSView *)view;
-@end
-
-@implementation NSView (NibLoaderPrivate)
-- (void) setSuperview: (NSView *)view
-{
-  ASSIGN(_super_view, view);
-}
-@end
-
 @interface GormNibWrapperLoader : GormWrapperLoader
 {
   NSIBObjectData *container;
@@ -349,12 +338,6 @@
       // blank the target/action for all objects.
       [obj setTarget: nil];
       [obj setAction: NULL];
-    }
-
-  // okay, this might be a kludge...
-  if([obj isKindOfClass: [NSView class]])
-    {
-      [obj setSuperview: nil];
     }
 
   return obj;

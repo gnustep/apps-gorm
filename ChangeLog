@@ -1,3 +1,8 @@
+2006-07-03 17:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Remove category for NSView
+	which provided setSuperview as it is no longer needed.
+
 2006-07-02 00:53 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.[hm]: If CustomView includes some
