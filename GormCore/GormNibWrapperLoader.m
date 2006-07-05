@@ -249,7 +249,11 @@
 	    {
 	      NSString *name = [document nameForObject: o];
 	      NSString *customClass = NSMapGet(classes, o);
-	      [classManager setCustomClass: customClass forName: name];
+	      if(name != nil && customClass != nil)
+		{
+		  NSLog(@"Name or class is nil.");
+		  [classManager setCustomClass: customClass forName: name];
+		}
 	    }
 
 	  //
