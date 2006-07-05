@@ -1,3 +1,10 @@
+2006-07-05 19:56 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Correct bug introduced at some point in testInterface which
+	causes the test mode not to display a menu when the application has no
+	menu.   It is supposed to show a small test menu so that test mode
+	can be exited.
+
 2006-07-05 00:02 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Added check to prevent error

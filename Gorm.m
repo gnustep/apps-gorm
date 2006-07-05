@@ -493,7 +493,7 @@
 	       * If the model didn't have a main menu, create one,
 	       * otherwise, ensure that 'quit' ends testing mode.
 	       */
-	      if ([self mainMenu] == mainMenu)
+	      if (aMenu == nil)
 		{
 		  NSMenu	*testMenu;
 		  
