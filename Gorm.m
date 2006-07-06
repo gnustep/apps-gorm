@@ -62,7 +62,7 @@
   NSRect		connectDRect;
   NSPoint               cascadePoint;
   NSMutableArray        *testingWindows;
-  NSMutableArray        *topObjects;
+  NSSet                 *topObjects;
 }
 
 // handle notifications the object recieves.
@@ -481,8 +481,7 @@
 	      [self setMainMenu: aMenu];
 	      // initialize the context.
 	      RETAIN(testContainer);
-	      // context = [NSDictionary dictionaryWithObjectsAndKeys: topObjects, 
-	      //   @"NSTopLevelObjects", self, @"NSOwner", nil];
+	      topObjects = [testContainer topLevelObjects]; 
 
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];

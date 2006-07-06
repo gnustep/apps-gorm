@@ -1,3 +1,9 @@
+2006-07-05 20:17 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: In testInterface, assign top level objects from the
+	testContainer to topObjects, a temporary var, so that they can be
+	properly cleaned up.
+
 2006-07-05 19:56 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Correct bug introduced at some point in testInterface which
