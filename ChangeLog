@@ -1,3 +1,21 @@
+2006-07-09 10:46 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: New version profile added
+	to pull down.
+	* GormCore/GormDocument.m: Encode topLevelObjects first in
+	encodeWithCoder: and decode first in initWithCoder:.
+	* GormCore/GormGormWrapperBuilder.m: Changes for version 2 of
+	GSNibContainer.
+	* GormCore/GormGormWrapperLoader.m: Changes for version 2 of
+	GSNibContainer.
+	* GormCore/GormNibWrapperLoader.m: No longer explicitly get
+	the main menu.  The main menu is the only menu that is a top
+	level object, so let it determine itself.
+	* GormCore/GormWrapperBuilder.m: Changes to prevent sending
+	back a file wrapper if the dictionary returned is nil in
+	buildWrapperWithDocument:.
+	* Resources/VersionProfiles.plist: New version profile.
+
 2006-07-05 20:17 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: In testInterface, assign top level objects from the

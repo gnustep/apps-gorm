@@ -3493,6 +3493,7 @@ static NSImage  *fileImage = nil;
 
 - (void) encodeWithCoder: (NSCoder *)coder
 {
+  [coder encodeObject: topLevelObjects];
   [coder encodeObject: nameTable];
   [coder encodeObject: visibleWindows];
   [coder encodeObject: connections];
@@ -3500,6 +3501,7 @@ static NSImage  *fileImage = nil;
 
 - (id) initWithCoder: (NSCoder *)coder
 {
+  ASSIGN(topLevelObjects, [coder decodeObject]);
   ASSIGN(nameTable, [coder decodeObject]);
   ASSIGN(visibleWindows, [coder decodeObject]);
   ASSIGN(connections, [coder decodeObject]);

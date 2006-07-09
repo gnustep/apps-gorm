@@ -185,15 +185,6 @@
 	    }
 
 	  //
-	  // Add the main menu first...
-	  //
-	  id menu = [container objectForName: @"MainMenu"];
-	  if(menu)
-	    {
-	      [document attachObject: menu toParent: nil];
-	    }
-
-	  //
 	  // add objects...
 	  //
 	  while((o = [en nextObject]) != nil)
@@ -238,6 +229,17 @@
 		  [classManager setCustomClass: customClassName forName: objName];
 		}
 	    }
+
+	  //
+	  // Add the main menu
+	  //
+	  /*
+	  id menu = [container objectForName: @"MainMenu"];
+	  if(menu)
+	    {
+	      [document attachObject: menu toParent: nil];
+	    }
+	  */
 
 	  //
 	  // Add custom classes...

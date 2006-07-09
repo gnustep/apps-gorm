@@ -135,19 +135,15 @@
 {
   if((self = [self init]) != nil)
     {
-      NSMutableArray        *visible = [nameTable objectForKey: @"NSVisible"];
-      NSMutableArray        *deferred = [nameTable objectForKey: @"NSDeferred"];
-      NSDictionary          *customClasses = [[document classManager] customClassMap];
+      NSDictionary          *custom = [[document classManager] customClassMap];
 
       // Create the container for the .gorm file...
-      [nameTable addEntriesFromDictionary: [document nameTable]];
       [topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
+      [nameTable addEntriesFromDictionary: [document nameTable]];
       [connections addObjectsFromArray: [document connections]];
-      [visible addObjectsFromArray: [[document visibleWindows] allObjects]];
-      [deferred addObjectsFromArray: [[document deferredWindows] allObjects]];
-
-      // add the custom class mapping...
-      [nameTable setObject: customClasses forKey: @"GSCustomClassMap"];
+      [visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
+      [deferredWindows addObjectsFromArray: [[document deferredWindows] allObjects]];
+      [customClasses addEntriesFromDictionary: custom];
     }
   return self;
 }
@@ -240,6 +236,23 @@
       GormClassManager *classManager = [document classManager];
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
       GSNibContainer *container = nil;
+      
+      //
+      // If we are a nib, currently, and it's not being saved using the Latest, then
+      // flag an error. NOTE: The next time the gorm container version is
+      // changed, it will be necessary to add to the list here...
+      //
+      if([[document fileType] isEqual: @"GSNibFileType"] &&
+	 [[document filePrefsManager] isLatest] == NO)
+	{	      
+	  NSRunAlertPanel(_(@"Incorrect gui version"),
+			  _(@"Nibs cannot be converted to gui-0.10.3 and older"), 
+			  _(@"OK"), 
+			  nil,
+			  nil,
+			  nil);
+	  return nil;
+	}
 
       [document prepareConnections];
       container = [[GSNibContainer alloc] initWithDocument: document];
@@ -270,9 +283,7 @@
        * Initialize templates 
        */
       [self _replaceObjectsWithTemplates: archiver];
-      // [container prepareConnectionsWithDocument: document];
       [archiver encodeRootObject: container];
-      // [container resetConnectionsWithDocument: document];
       RELEASE(archiver); // We're done with the archiver here..
       
       /* 

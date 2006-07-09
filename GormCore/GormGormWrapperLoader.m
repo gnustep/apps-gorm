@@ -139,7 +139,6 @@
 {
   NS_DURING
     {
-      NSMutableDictionary	*cc = nil;
       NSData		        *data = nil;
       NSData                    *classes = nil;
       NSUnarchiver		*u = nil;
@@ -236,40 +235,31 @@
 	  /*
 	   * Retrieve the custom class data and refresh the classes view...
 	   */
-	  NSMutableDictionary *nt = [container nameTable];
-	  
-	  cc = [nt objectForKey: @"GSCustomClassMap"];
-	  if (cc == nil)
-	    {
-	      cc = [NSMutableDictionary dictionary]; // create an empty one.
-	      [nt setObject: cc forKey: @"GSCustomClassMap"];
-	    }
-	  [classManager setCustomClassMap: cc];
-	  [nt removeObjectForKey: @"GSCustomClassMap"];
+	  [classManager setCustomClassMap: 
+			  [NSMutableDictionary dictionaryWithDictionary: 
+						 [container customClasses]]];
 	  
 	  //
 	  // Get all of the visible objects...
 	  //
-	  NSArray *visible = [nt objectForKey: @"NSVisible"];
+	  NSArray *visible = [container visibleWindows];
 	  id visObj = nil;
 	  enumerator = [visible objectEnumerator];
 	  while((visObj = [enumerator nextObject]) != nil)
 	    {
 	      [document setObject: visObj isVisibleAtLaunch: YES];
 	    }
-	  [nt removeObjectForKey: @"NSVisible"];
 	  
 	  //
 	  // Get all of the deferred objects...
 	  //
-	  NSArray *deferred = [nt objectForKey: @"NSDeferred"];
+	  NSArray *deferred = [container deferredWindows];
 	  id defObj = nil;
 	  enumerator = [deferred objectEnumerator];
 	  while((defObj = [enumerator nextObject]) != nil)
 	    {
 	      [document setObject: defObj isDeferred: YES];
 	    }
-	  [nt removeObjectForKey: @"NSDeferred"];
 	  
 	  /*
 	   * In the newly loaded nib container, we change all the connectors
@@ -278,20 +268,20 @@
 	   */
 	  GormFilesOwner *filesOwner = [document filesOwner];
 	  GormFirstResponder *firstResponder = [document firstResponder];
-	  ownerClass = [nt objectForKey: @"NSOwner"];
+	  ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
 	  if (ownerClass)
 	    {
 	      [filesOwner setClassName: ownerClass];
 	    }
-	  [[container nameTable] removeObjectForKey: @"NSOwner"];
-	  [[container nameTable] removeObjectForKey: @"NSFirst"];
-	  [nt setObject: filesOwner forKey: @"NSOwner"];
-	  [nt setObject: firstResponder forKey: @"NSFirst"];
+	  // [[container nameTable] removeObjectForKey: @"NSOwner"];
+	  // [[container nameTable] removeObjectForKey: @"NSFirst"];
+	  [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
+	  [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
 
 	  //
 	  // Add entries...
 	  //
-	  [[document nameTable] addEntriesFromDictionary: nt];
+	  [[document nameTable] addEntriesFromDictionary: [container nameTable]];
 	  
 	  //
 	  // Add top level items...
@@ -306,7 +296,7 @@
 	  [connections addObjectsFromArray: [container connections]];
 
 	  /* Iterate over the contents of nameTable and create the connections */
-	  nt = [document nameTable];
+	  NSDictionary *nt = [document nameTable];
 	  enumerator = [connections objectEnumerator];
 	  while ((con = [enumerator nextObject]) != nil)
 	    {

@@ -27,10 +27,24 @@
 	    version = 0;
 	};
     };
+    "GNUstep gui-0.10.3" = {
+	GSNibContainer = {
+	    comment = "Not compatible with GNUstep gui-0.9.5 or earlier.";
+	    version = 1;
+	};
+	NSTextFieldCell = {
+	    comment = "Change the default behavior defined in the action mask, this will not be useable under older versions.";
+	    version = 2;
+	};
+	GSWindowTemplate = {
+	    comment = "New attribute to store auto-position mask.  Not compatible with 0.9.5 or earlier.";
+	    version = 1;
+	};
+    };
     "Latest Version" = {
 	GSNibContainer = {
-	    comment = "Not compatible with GNUstep gui-0.9.3 or earlier.";
-	    version = 1;
+	    comment = "Not compatible with GNUstep gui-0.10.3 or earlier.";
+	    version = 2;
 	};
 	NSTextFieldCell = {
 	    comment = "Change the default behavior defined in the action mask, this will not be useable under older versions.";

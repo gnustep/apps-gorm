@@ -46,8 +46,13 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
 
 - (NSFileWrapper *) buildFileWrapperWithDocument: (GormDocument *)doc
 {
-  return [[NSFileWrapper alloc] initDirectoryWithFileWrappers: 
-				  [self buildFileWrapperDictionaryWithDocument: doc]];
+  NSFileWrapper *result = nil;
+  NSDictionary *wrappers = [self buildFileWrapperDictionaryWithDocument: doc];
+  if(wrappers != nil)
+    {
+      result = [[NSFileWrapper alloc] initDirectoryWithFileWrappers: wrappers];
+    }
+  return result;
 }
 
 - (NSMutableDictionary *) buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
