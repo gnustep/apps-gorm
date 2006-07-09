@@ -123,9 +123,6 @@
       NSCustomView *customView = [[NSCustomView alloc] initWithCoder: aCoder];
       NSArray *subviews = [customView subviews];
       
-      // get the classname...
-      [self setClassName: [customView className]];
-
       // if the custom view has subviews....
       if(subviews != nil && [subviews count] > 0)
 	{
@@ -147,6 +144,10 @@
 	  [self initWithFrame: [customView frame]];
 	  _autoresizingMask = [customView autoresizingMask];
 	}
+
+      // get the classname...
+      [self setClassName: [customView className]];
+
       RELEASE(customView);
 
       return self;

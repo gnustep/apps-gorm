@@ -231,17 +231,6 @@
 	    }
 
 	  //
-	  // Add the main menu
-	  //
-	  /*
-	  id menu = [container objectForName: @"MainMenu"];
-	  if(menu)
-	    {
-	      [document attachObject: menu toParent: nil];
-	    }
-	  */
-
-	  //
 	  // Add custom classes...
 	  //
 	  NSMapTable *classes = [container classes];

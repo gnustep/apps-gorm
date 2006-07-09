@@ -1,3 +1,9 @@
+2006-07-09 11:18 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.m: initWithCoder: move call to get customView
+	className after the if, so that it's properly set.
+	* GormCore/GormNibWrapperLoader.m: Remove commented out code.
+
 2006-07-09 10:46 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: New version profile added
