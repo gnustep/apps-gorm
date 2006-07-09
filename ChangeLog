@@ -1,3 +1,8 @@
+2006-07-09 13:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Correct test for customClass or
+	name in loadFileWrapper:withDocument:.
+
 2006-07-09 11:18 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.m: initWithCoder: move call to get customView

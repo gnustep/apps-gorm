@@ -242,8 +242,11 @@
 	      NSString *customClass = NSMapGet(classes, o);
 	      if(name != nil && customClass != nil)
 		{
-		  NSLog(@"Name or class is nil.");
 		  [classManager setCustomClass: customClass forName: name];
+		}
+	      else
+		{
+		  NSLog(@"Name %@ or class %@ for object %@ is nil.", name, customClass, o);
 		}
 	    }
 
