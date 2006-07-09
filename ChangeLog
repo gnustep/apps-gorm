@@ -1,3 +1,10 @@
+2006-07-09 17:59 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewEditor.m: Correction for issue which was causing
+	size inspector not to update when a view was moved or changed.
+	Removed code in editoedObjectFrameDidChange: and frameDidChange:
+	to correct the problem.
+
 2006-07-09 13:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Correct test for customClass or

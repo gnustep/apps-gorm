@@ -318,18 +318,14 @@ static BOOL currently_displaying = NO;
 
 - (void) editedObjectFrameDidChange: (id) sender
 {
-  [self setPostsFrameChangedNotifications: NO];
   [self setFrame: [_editedObject frame]];
   [self setBounds: [_editedObject frame]];
-  [self setPostsFrameChangedNotifications: YES];
 }
 
 - (void) frameDidChange: (id) sender
 {
-  [_editedObject setPostsFrameChangedNotifications: NO];
   [self setBounds: [self frame]];
   [_editedObject setFrame: [self frame]];
-  [_editedObject setPostsFrameChangedNotifications: YES];
 }
 
 - (GormPlacementInfo *) initializeResizingInFrame: (NSView *)view
