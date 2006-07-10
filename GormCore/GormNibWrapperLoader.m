@@ -258,6 +258,7 @@
 	  while((o = [en nextObject]) != nil)
 	    {
 	      id dest = [o destination];
+	      id src = [o source];
 	      if([o isKindOfClass: [NSNibControlConnector class]])
 		{
 		  NSString *tag = [o label];
@@ -280,6 +281,19 @@
 		      [o setLabel: (id)newTag];
 		    }
 		}
+
+	      // check src/dest for window template...
+	      if([src isKindOfClass: [NSWindowTemplate class]])
+		{
+		  id win = [src realObject];
+		  [o setSource: win];
+		}
+	      else if([dest isKindOfClass: [NSWindowTemplate class]])
+		{
+		  id win = [dest realObject];
+		  [o setDestination: win];
+		}
+
 
 	      // skip any help connectors...
 	      if([o isKindOfClass: [NSIBHelpConnector class]])

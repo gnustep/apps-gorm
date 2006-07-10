@@ -1,3 +1,8 @@
+2006-07-09 23:27 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Replace the destination or
+	source of any connection which connects to an NSWindowTemplate object.
+
 2006-07-09 17:59 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewEditor.m: Correction for issue which was causing
