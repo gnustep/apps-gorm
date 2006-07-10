@@ -192,7 +192,9 @@
 	    }
 	  
 	  // check the data...
-	  if (data == nil || [document infoData] == nil || classes == nil)
+	  // NOTE: If info isn't present, then it's an older archive which
+	  //  doesn't contain that file.
+	  if (data == nil || classes == nil)
 	    {
 	      return NO;
 	    }

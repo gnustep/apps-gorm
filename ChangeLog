@@ -1,3 +1,9 @@
+2006-07-10 01:32 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGormWrapperLoader.m: in loadFileWrapper:withDocument:
+	removed the check for the info file.  Some earlier versions of
+	the .gorm wrapper don't have this file.
+
 2006-07-09 23:27 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Replace the destination or
