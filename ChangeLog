@@ -1,3 +1,8 @@
+2006-07-12 00:31 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: in testInterface, make the item with terminate:
+	the "Quit Test" item, if none is found add one.
+
 2006-07-10 01:32 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m: in loadFileWrapper:withDocument:
@@ -632,15 +637,10 @@
 
 	* Palettes/1Windows/GormWindowAttributesInspector.m: Correction
 	for bug#15236.  In ok: method the newStyleMask variable wasn't
-<<<<<<< .working
 	properly initialized, this was causing the flags to be set 
 	
 2006-01-08 14:03 Gregory John Casamento <greg_casamento@yahoo.com>
 
-=======
-	properly initialized, this was causing the flags to be set 
-	
->>>>>>> .merge-right.r22963
 	* GormCore/GormPrivate.m: Removed deprecated templates.
 	* GormCore/GormViewEditor.m: Removed problem which was causing
 	a notification loop.

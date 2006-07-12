@@ -29,6 +29,7 @@
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormFontViewController.h>
 #include <GormCore/GormSetNameController.h>
+#include <GormCore/GormFunctions.h>
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <GormPrefs/GormPrefController.h>
 
@@ -504,19 +505,34 @@
 		}
 	      else
 		{
-		  NSMenu	*testMenu = [self mainMenu];
-		  id	 item;
+		  NSMenu *testMenu = [self mainMenu];
 		  NSString  *newTitle = [[testMenu title] stringByAppendingString: @" (Gorm)"];
-		  
+		  NSArray *items = findAll(testMenu);
+		  NSEnumerator *en = [items objectEnumerator];
+		  id item;
+		  BOOL found = NO;
+
+		  while((item = [en nextObject]) != nil)
+		    {
+		      if([item isKindOfClass: [NSMenuItem class]])
+			{
+			  SEL action = [item action];
+			  if(sel_eq(action, @selector(terminate:)))
+			    {
+			      found = YES;
+			      [item setTitle: _(@"Quit Test")];
+			      [item setTarget: self];
+			      [item setAction: @selector(deferredEndTesting:)];
+			    }
+			}
+		    }
+
+		  // releast the items...
+		  RELEASE(items);
+
 		  // set the menu up so that it's easy to tell we're testing and how to quit.
 		  [testMenu setTitle: newTitle];
-		  item = [testMenu itemWithTitle: _(@"Quit")];
-		  if (item != nil)
-		    {
-		      [item setTitle: _(@"Quit Test")];
-		      [item setAction: @selector(deferredEndTesting:)];
-		    }
-		  else
+		  if(found == NO)
 		    {
 		      [testMenu addItemWithTitle: _(@"Quit Test") 
 				action: @selector(deferredEndTesting:)
