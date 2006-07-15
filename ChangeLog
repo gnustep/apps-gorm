@@ -1,3 +1,8 @@
+2006-07-15 18:34 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/Gorm.tiff: Slightly improved icon.  Based on suggestions
+	from people on #gnustep.  More improvements to come.
+
 2006-07-12 00:31 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: in testInterface, make the item with terminate:
