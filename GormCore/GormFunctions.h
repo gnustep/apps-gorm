@@ -80,4 +80,6 @@ NSString *formatOutlet(NSString *outlet);
 NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect);
 
 NSArray *_GSObjCVariableNames(Class class, BOOL collect);
+
+NSRect minimalContainerFrame(NSArray *views);
 #endif

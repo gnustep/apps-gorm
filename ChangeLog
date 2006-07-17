@@ -1,3 +1,10 @@
+2006-07-16 23:13 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFunctions.h:
+	* GormCore/GormFunctions.m:
+	* GormCore/GormViewWindow.m: Improved placement of standalone
+	views when being loaded by .gorm files.
+
 2006-07-15 18:34 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Images/Gorm.tiff: Slightly improved icon.  Based on suggestions

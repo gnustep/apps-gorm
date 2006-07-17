@@ -447,3 +447,27 @@ NSArray *_GSObjCVariableNames(Class class, BOOL collect)
     }
   return array;
 }
+
+
+NSRect minimalContainerFrame(NSArray *views)
+{
+  NSEnumerator *en = [views objectEnumerator];
+  id o = nil;
+  float w = 0.0;
+  float h = 0.0;
+
+  while((o = [en nextObject]) != nil)
+    {
+      NSRect frame = [o frame];
+      float nw = frame.origin.x + frame.size.width;
+      float nh = frame.origin.y + frame.size.height;
+
+      if(nw > w)
+	w = nw;
+
+      if(nh > h)
+	h = nh;
+    }
+
+  return NSMakeRect(0,0,w+40,h+70);
+}

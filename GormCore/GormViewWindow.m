@@ -29,6 +29,7 @@
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSException.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include "GormFunctions.h"
 
 @interface GormViewWindowDelegate : NSObject
 {
@@ -60,12 +61,25 @@
   // it's new... give it size.
   if(NSIsEmptyRect([_view frame]))
     {    
-      NSRect newFrame = windowFrame;
+      NSArray *subs = [_view subviews];
+      NSRect newFrame;
 
-      newFrame.origin.x = 10;
-      newFrame.origin.y = 20;
-      newFrame.size.height -= 70;
-      newFrame.size.width -= 20;
+      if([subs count] > 0)
+	{
+	  newFrame = minimalContainerFrame(subs);	  
+	  [window setFrame: newFrame display: YES];
+	  [_view setPostsFrameChangedNotifications: YES];
+	}
+      else
+	{
+	  newFrame = windowFrame;
+	  
+	  newFrame.origin.x = 10;
+	  newFrame.origin.y = 20;
+	  newFrame.size.height -= 70;
+	  newFrame.size.width -= 20;
+	}
+
       [_view setPostsFrameChangedNotifications: NO];
       [_view setFrame: newFrame];
       [_view setPostsFrameChangedNotifications: YES];
