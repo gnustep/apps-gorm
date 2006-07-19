@@ -469,5 +469,5 @@ NSRect minimalContainerFrame(NSArray *views)
 	h = nh;
     }
 
-  return NSMakeRect(0,0,w+40,h+70);
+  return NSMakeRect(0,0,w,h);
 }

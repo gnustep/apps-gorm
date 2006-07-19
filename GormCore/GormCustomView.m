@@ -147,6 +147,8 @@
 
       // get the classname...
       [self setClassName: [customView className]];
+      // _super_view = [customView superview];
+      // _window = [customView window];
 
       RELEASE(customView);
 

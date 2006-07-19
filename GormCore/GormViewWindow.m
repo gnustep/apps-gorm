@@ -66,7 +66,9 @@
 
       if([subs count] > 0)
 	{
-	  newFrame = minimalContainerFrame(subs);	  
+	  newFrame = minimalContainerFrame(subs);
+	  newFrame.size.height += 70;
+	  newFrame.size.width += 40;
 	  [window setFrame: newFrame display: YES];
 	  [_view setPostsFrameChangedNotifications: YES];
 	}

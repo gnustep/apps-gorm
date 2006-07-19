@@ -1,3 +1,12 @@
+2006-07-18 23:04 Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFunctions.m: Remove the width and height adjustment
+	from the function minimalContainerFrame().
+	* GormCore/GormPrivate.m: Add the encoding logic for saving
+	NSCustomObject.
+	* GormCore/GormViewWindow.m: Add the width and height here, instead
+	of in the function.
+
 2006-07-16 23:13 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFunctions.h:

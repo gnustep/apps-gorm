@@ -65,7 +65,6 @@ static BOOL _isInInterfaceBuilder = NO;
 	       frame: NSMakeRect(0,0,0,0)];
 }
 
-
 - (NSString*) className
 {
   return theClass;
@@ -163,6 +162,19 @@ static BOOL _isInInterfaceBuilder = NO;
 	}
     }
   return nil;
+}
+
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  if([coder allowsKeyedCoding])
+    {
+      [coder encodeObject: theClass 
+	     forKey: @"NSClassName"];
+    }
+  else
+    {
+      [super encodeWithCoder: coder];
+    }
 }
 
 - (NSString*) inspectorClassName
