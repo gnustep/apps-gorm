@@ -34,9 +34,11 @@
 #include <GNUstepGUI/GSNibTemplates.h>
 #include "GormFilePrefsManager.h"
 #include "GormFunctions.h"
+#include "GormDocument.h"
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSArchiver.h>
 #include <GNUstepBase/GSObjCRuntime.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 NSString *formatVersion(int version)
 {
@@ -175,6 +177,34 @@ NSString *formatVersion(int version)
   return  [NSArchiver archivedDataWithRootObject: self];
 }
 
+- (NSData *) nibData
+{
+  NSMutableDictionary *dict = 
+    [NSMutableDictionary dictionary];
+  NSRect docLocation = 
+    [[(GormDocument *)[(id<IB>)NSApp activeDocument] window] frame];
+  NSRect screenRect = [[NSScreen mainScreen] frame];
+  NSString *stringRect = [NSString stringWithFormat: @"%d %d %d %d %d %d %d %d",
+				   docLocation.origin.x, docLocation.origin.y, 
+				   docLocation.size.width, docLocation.size.height,
+				   screenRect.origin.x, screenRect.origin.y, 
+				   screenRect.size.width, screenRect.size.height];
+
+  // upon saving, update to the latest.
+  version = [GormFilePrefsManager currentVersion];
+  [gormAppVersion setStringValue: formatVersion(version)];
+  
+  [dict setObject: stringRect forKey: @"IBDocumentLocation"];
+  [dict setObject: @"437.0" forKey: @"IBFramework Version"];
+  [dict setObject: @"8I127" forKey: @"IBSystem Version"];
+  [dict setObject: [NSNumber numberWithBool: YES] 
+	forKey: @"IBUsesTextArchiving"]; // for now.
+
+  return [NSPropertyListSerialization dataFromPropertyList: dict 
+				      format: NSPropertyListXMLFormat_v1_0
+				      errorDescription: NULL];
+}
+
 - (int) versionOfClass: (NSString *)className 
 {
   int result = -1; 
@@ -298,5 +328,6 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	       row: (int)rowIndex
 {
 }
+
 @end
 

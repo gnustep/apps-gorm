@@ -1166,9 +1166,9 @@
   NSMutableDictionary	*dict = nil;
   NSMutableArray        *classes = nil;
   NSEnumerator		*enumerator = nil;
+  NSMutableArray        *cats = [NSMutableArray arrayWithArray: categoryClasses];
   id			name = nil;
-  NSString              *result = nil;
-  
+
   // save all custom classes....
   dict = [NSMutableDictionary dictionary];
   [dict setObject: @"1" forKey: @"IBVersion"];
@@ -1207,7 +1207,7 @@
 	{
 	  obj = extraObj;
 	}
-      if (obj != nil)
+      if (obj != nil && [obj count] > 0)
 	{
 	  NSMutableDictionary *outletDict = [NSMutableDictionary dictionary];
 	  NSEnumerator *oen = [obj objectEnumerator];
@@ -1232,7 +1232,7 @@
 	{
 	  obj = extraObj;
 	}
-      if (obj != nil)
+      if (obj != nil && [obj count] > 0)
 	{	  
 	  NSMutableDictionary *actionDict = [NSMutableDictionary dictionary];
 	  NSEnumerator *aen = [obj objectEnumerator];
@@ -1240,17 +1240,28 @@
 
 	  while((action = [aen nextObject]) != nil)
 	    {
-	      [actionDict setObject: @"id" forKey: action];
+	      NSString *actionName = nil;
+	      NSScanner *scanner = [NSScanner scannerWithString: action]; 
+	      
+	      [scanner scanUpToString: @":" intoString: &actionName];
+	      [actionDict setObject: @"id" forKey: actionName];
 	    }
 
 	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
 	}
+      
+      [newInfo setObject: @"ObjC" forKey: @"LANGUAGE"];
 
       [classes addObject: newInfo];
     }
 
-  // save all categories on existing, non-custom classes....
-  enumerator = [categoryClasses objectEnumerator];
+  // Save all categories on existing, non-custom classes....
+  // Always save the FirstResponder....
+  if([cats containsObject: @"FirstResponder"] == NO)
+    {
+      [cats addObject: @"FirstResponder"];
+    }
+  enumerator = [cats objectEnumerator];
   while((name = [enumerator nextObject]) != nil)
     {
       NSDictionary  *classInfo;
@@ -1271,7 +1282,7 @@
 
       // actions...
       obj = [classInfo objectForKey: @"ExtraActions"];
-      if (obj != nil)
+      if (obj != nil && [obj count] > 0)
 	{
 	  NSMutableDictionary *actionDict = [NSMutableDictionary dictionary];
 	  NSEnumerator *aen = [obj objectEnumerator];
@@ -1279,20 +1290,25 @@
 
 	  while((action = [aen nextObject]) != nil)
 	    {
-	      [actionDict setObject: @"id" forKey: action];
+	      NSString *actionName = nil;
+	      NSScanner *scanner = [NSScanner scannerWithString: action]; 
+	      
+	      [scanner scanUpToString: @":" intoString: &actionName];
+	      [actionDict setObject: @"id" forKey: actionName];
 	    }
 
+	  [newInfo setObject: @"ObjC" forKey: @"LANGUAGE"];
 	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
 	}
       
       [classes addObject: newInfo];
     }
 
-  [dict setObject: @"ObjC" forKey: @"LANGUAGE"];
-  result = [dict description];
+  [dict setObject: classes forKey: @"IBClasses"];
 
-  return [NSData dataWithBytes: [result cString] 
-		 length: [result cStringLength]];
+  return [NSPropertyListSerialization dataFromPropertyList: dict 
+				      format: NSPropertyListOpenStepFormat
+				      errorDescription: NULL];
 }
 
 - (NSData *) data
@@ -1300,7 +1316,6 @@
   NSMutableDictionary	*ci = nil;
   NSEnumerator		*enumerator = nil;
   id			key = nil;
-  NSString              *result = nil;
 
   // save all custom classes....
   ci = [NSMutableDictionary dictionary];
@@ -1389,10 +1404,9 @@
   [ci setObject: @"Do NOT change this file, Gorm maintains it"
       forKey: @"## Comment"];
 
-  result = [ci description];
-
-  return [NSData dataWithBytes: [result cString] 
-		 length: [result cStringLength]];
+  return [NSPropertyListSerialization dataFromPropertyList: ci 
+				      format: NSPropertyListOpenStepFormat
+				      errorDescription: NULL];
 }
 
 - (BOOL) saveToFile: (NSString *)path

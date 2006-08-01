@@ -13,7 +13,7 @@
       {
 	NSName = "GSNibFileType";
 	NSHumanReadableName = "Cocoa Nib";
-	NSRole = Viewer;
+	NSRole = Editor;
 	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "nib" );
         NSIcon = "GormNib.tiff";

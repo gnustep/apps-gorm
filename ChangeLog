@@ -1,3 +1,14 @@
+2006-08-01 00:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Add GormNibWrapperBuilder.m
+	* GormCore/GormClassManager.m: Correct nibData method to properly
+	output information in classes.nib format.
+	* GormCore/GormDocument.m: Slight improvement to windowAndRect:
+	forObject:.
+	* GormCore/GormFilePrefsManager.[hm]: Add nibData method.
+	* GormInfo.plist: Change GSNibFileType entry to "Editor"
+	* GormNibWrapperBuilder.m: Class to write nibs.
+	
 2006-07-18 23:04 Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFunctions.m: Remove the width and height adjustment

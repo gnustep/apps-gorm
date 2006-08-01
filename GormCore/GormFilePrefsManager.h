@@ -53,6 +53,11 @@
 /**
  * Saves the encoded file info.
  */
+- (NSData *) nibData;
+
+/**
+ * Saves the encoded file info.
+ */
 - (BOOL) saveToFile: (NSString *)path;
 
 /**

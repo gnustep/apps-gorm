@@ -2557,13 +2557,12 @@ static NSImage  *fileImage = nil;
 	       toView: nil];
       return [th window];
     }
-  else
+  else if([object isKindOfClass: [NSCell class]])
     {
-      *r = NSZeroRect;
-      return nil;
     }
 
-  // never reached, keeps gcc happy
+  // if we get here, then it wasn't any of the above.
+  *r = NSZeroRect;
   return nil;
 }
 
