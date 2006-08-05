@@ -1297,10 +1297,11 @@
 	      [actionDict setObject: @"id" forKey: actionName];
 	    }
 
-	  [newInfo setObject: @"ObjC" forKey: @"LANGUAGE"];
 	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
 	}
       
+      [newInfo setObject: @"ObjC" forKey: @"LANGUAGE"];
+
       [classes addObject: newInfo];
     }
 

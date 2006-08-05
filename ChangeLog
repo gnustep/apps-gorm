@@ -1,3 +1,15 @@
+2006-08-05 08:46-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Fixes to encode classes.nib file
+	properly.
+	* GormCore/GormFilePrefsManager.m: Added code to encode a dummy
+	info.nib for nib saving.
+	* GormCore/GormFilesOwner.m: Code to encode this as a NSCustomObject
+	in encodeWithCoder:
+	* GormCore/GormNibWrapperBuilder.m: in 
+	-[NSIBObjectData initWithDocument:] added code to pull the names
+	and generate OIDS for the .nib properly.
+
 2006-08-01 00:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Add GormNibWrapperBuilder.m

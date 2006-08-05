@@ -185,10 +185,10 @@ NSString *formatVersion(int version)
     [[(GormDocument *)[(id<IB>)NSApp activeDocument] window] frame];
   NSRect screenRect = [[NSScreen mainScreen] frame];
   NSString *stringRect = [NSString stringWithFormat: @"%d %d %d %d %d %d %d %d",
-				   docLocation.origin.x, docLocation.origin.y, 
-				   docLocation.size.width, docLocation.size.height,
-				   screenRect.origin.x, screenRect.origin.y, 
-				   screenRect.size.width, screenRect.size.height];
+				   (int)docLocation.origin.x, (int)docLocation.origin.y, 
+				   (int)docLocation.size.width, (int)docLocation.size.height,
+				   (int)screenRect.origin.x, (int)screenRect.origin.y, 
+				   (int)screenRect.size.width, (int)screenRect.size.height];
 
   // upon saving, update to the latest.
   version = [GormFilePrefsManager currentVersion];

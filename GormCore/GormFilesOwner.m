@@ -76,10 +76,24 @@
   ASSIGN(className, aName);
 }
 
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  if([coder allowsKeyedCoding])
+    {
+      [coder encodeObject: className forKey: @"NSClassName"];
+    }
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  [NSException raise: NSInvalidArgumentException
+	       format: @"Keyed coding not implemented for %@.", 
+	       NSStringFromClass([self class])];
+  return nil; // never reached, but keeps gcc happy.
+}
 @end
 
 @implementation GormFilesOwnerInspector
-
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
 {
   return [classes count];
@@ -255,6 +269,4 @@
     }
   [object setClassName: title];
 }
-
 @end
-

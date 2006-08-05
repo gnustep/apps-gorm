@@ -45,7 +45,6 @@
 {
   if((self = [self init]) != nil)
     {
-      NSMutableArray *windowTemplates = [NSMutableArray array];
       NSArray *cons = [document connections];
       NSDictionary *customClasses = [[document classManager] customClassMap];
       NSArray *keys = [customClasses allKeys];
@@ -56,9 +55,9 @@
       
       // Create the container for the .nib file...
       ASSIGN(_root, owner);
-      // NSMapInsert(_objects, owner, nil);
+      NSMapInsert(_names, owner, @"File's Owner");
       [_topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
-      [_visibleWindows addObjectsFromArray: windowTemplates];
+      [_visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
       
       // fill in objects and connections....
       while((o = [en nextObject]) != nil)
@@ -67,7 +66,17 @@
 	    {
 	      id src = [o source];
 	      id dst = [o destination];
-	      NSString *name = [document nameForObject: src];
+	      NSString *name = nil;
+
+	      // 
+	      if(src != nil)
+		{
+		  name = [document nameForObject: src];
+		}
+	      else
+		{
+		  continue;
+		}
 
 	      if([name isEqual: @"NSOwner"])
 		{
@@ -89,6 +98,9 @@
 	      [_connections addObject: o];
 	    }
 	}
+
+      // set the next oid...
+      _nextOid = oid;
 
       // custom classes...
       en = [keys objectEnumerator];
@@ -237,7 +249,11 @@
   id replacementObject = NSMapGet(_objectMap,object);
   id o = object;
 
-  if(replacementObject != nil)
+  if([o isKindOfClass: [GormFirstResponder class]])
+    {
+      o = nil;
+    }
+  else if(replacementObject != nil)
     {
       o = replacementObject;
     }
@@ -270,7 +286,7 @@
       /*
        * Set up archiving...
        */
-      archiverData = [NSMutableData dataWithCapacity: 0];
+      archiverData = [NSMutableData dataWithCapacity: 10240];
       archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData: archiverData];
       [archiver setDelegate: self];
 
@@ -281,6 +297,8 @@
 		forClass: [GormObjectProxy class]];
       [archiver setClassName: @"NSCustomView"
 		forClass: [GormCustomView class]];
+      [archiver setClassName: @"NSCustomObject"
+		forClass: [GormFilesOwner class]];
       
       
       while((subClassName = [en nextObject]) != nil)
@@ -297,6 +315,7 @@
       [self _replaceObjectsWithTemplates: archiver];
       [archiver setOutputFormat: NSPropertyListXMLFormat_v1_0]; // force XML output for now....
       [archiver encodeObject: _container forKey: @"IB.objectdata"];
+      [archiver finishEncoding];
       RELEASE(archiver); // We're done with the archiver here..
       
       /* 
