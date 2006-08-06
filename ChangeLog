@@ -1,3 +1,9 @@
+2006-08-06 00:37-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilesOwner.m: Remove implementation of initWithCoder:
+	* GormCore/GormNibWrapperBuilder.m: In -[NSIBObjectData 
+	initWithDocument:] add code to set NSFramework key.
+
 2006-08-05 08:46-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Fixes to encode classes.nib file

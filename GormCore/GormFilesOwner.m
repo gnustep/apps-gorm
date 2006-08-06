@@ -84,6 +84,7 @@
     }
 }
 
+/*
 - (id) initWithCoder: (NSCoder *)coder
 {
   [NSException raise: NSInvalidArgumentException
@@ -91,6 +92,7 @@
 	       NSStringFromClass([self class])];
   return nil; // never reached, but keeps gcc happy.
 }
+*/
 @end
 
 @implementation GormFilesOwnerInspector

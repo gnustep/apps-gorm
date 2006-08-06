@@ -56,6 +56,7 @@
       // Create the container for the .nib file...
       ASSIGN(_root, owner);
       NSMapInsert(_names, owner, @"File's Owner");
+      ASSIGN(_framework, @"IBCocoaFramework");
       [_topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
       [_visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
       
