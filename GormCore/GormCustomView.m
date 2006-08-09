@@ -110,10 +110,20 @@
  */
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  [aCoder encodeObject: [self stringValue]];
-  [aCoder encodeRect: _frame];
-  [aCoder encodeValueOfObjCType: @encode(unsigned int) 
-	  at: &_autoresizingMask];
+  if([aCoder allowsKeyedCoding])
+    {
+      id cv = [[NSCustomView alloc] initWithFrame: [self frame]];
+      [cv setAutoresizingMask: [self autoresizingMask]];
+      [cv setClassName: className];
+      [cv encodeWithCoder: aCoder];
+    }
+  else
+    {
+      [aCoder encodeObject: [self stringValue]];
+      [aCoder encodeRect: _frame];
+      [aCoder encodeValueOfObjCType: @encode(unsigned int) 
+	      at: &_autoresizingMask];
+    }
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder

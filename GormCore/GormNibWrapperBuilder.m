@@ -51,11 +51,12 @@
       NSEnumerator *en = [cons objectEnumerator];
       id o = nil;
       id owner = [document objectForName: @"NSOwner"];
-      int oid = 0;
+      int oid = 1;
       
       // Create the container for the .nib file...
       ASSIGN(_root, owner);
       NSMapInsert(_names, owner, @"File's Owner");
+      NSMapInsert(_oids, owner, @"0");
       ASSIGN(_framework, @"IBCocoaFramework");
       [_topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
       [_visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
@@ -83,6 +84,10 @@
 		{
 		  name = @"File's Owner";
 		}
+	      if([name isEqual: @"NSMenu"])
+		{
+		  name = @"MainMenu";
+		}
 	      else if([name isEqual: @"NSFirst"])
 		{
 		  // skip it...
@@ -92,12 +97,16 @@
 	      NSMapInsert(_objects, src, dst);
 	      NSMapInsert(_names, src, name);
 	      NSMapInsert(_oids, src, [NSString stringWithFormat: @"%d", oid]);
-	      oid++;
 	    }
 	  else
 	    {
 	      [_connections addObject: o];
+	      NSMapInsert(_oids, o, [NSString stringWithFormat: @"%d", oid]);
+	      // NSMapInsert(_objects, o, owner);
 	    }
+
+	  // next...
+	  oid++;
 	}
 
       // set the next oid...
