@@ -1,3 +1,9 @@
+2006-08-11 11:13-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocumentController.m: Default backing store changed
+	in newDocument: to NSBackingStoreBuffered instead of 
+	NSBackingStoreRetained.
+
 2006-08-11 01:53-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.m: Corrected encoding issues with custom

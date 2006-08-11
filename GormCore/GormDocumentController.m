@@ -85,7 +85,7 @@
 	    aWindow = [[NSWindow allocSubstitute]
 			initWithContentRect: NSMakeRect(0,0,600, 400)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 	else
@@ -93,7 +93,7 @@
 	    aWindow = [[NSWindow alloc]
 			initWithContentRect: NSMakeRect(0,0,600, 400)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 	[aWindow setFrameTopLeftPoint:
@@ -126,7 +126,7 @@
 	    aWindow = [[NSPanel allocSubstitute] 
 			initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 	else
@@ -134,7 +134,7 @@
 	    aWindow = [[NSPanel alloc] 
 			initWithContentRect: NSMakeRect(0,0, IVW, IVH)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 	
@@ -156,7 +156,7 @@
 	    aWindow = [[NSPanel allocSubstitute] 
 			initWithContentRect: NSMakeRect(0,0,272,160)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 	else
@@ -164,7 +164,7 @@
 	    aWindow = [[NSPanel alloc] 
 			initWithContentRect: NSMakeRect(0,0,272,160)
 			styleMask: style
-			backing: NSBackingStoreRetained
+			backing: NSBackingStoreBuffered
 			defer: NO];
 	  }
 
