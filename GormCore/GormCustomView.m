@@ -112,10 +112,30 @@
 {
   if([aCoder allowsKeyedCoding])
     {
-      id cv = [[NSCustomView alloc] initWithFrame: [self frame]];
-      [cv setAutoresizingMask: [self autoresizingMask]];
-      [cv setClassName: className];
-      [cv encodeWithCoder: aCoder];
+      GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+      NSString *extension = nil;
+
+      ASSIGNCOPY(extension,[classManager nonCustomSuperClassOf: className]);
+
+      [aCoder encodeObject: className forKey: @"NSClassName"];
+      [aCoder encodeRect: [self frame] forKey: @"NSFrame"];
+
+      if(extension != nil)
+	{
+	  [aCoder encodeObject: extension forKey: @"NSExtension"];
+	}
+
+      if([self nextResponder] != nil)
+	{
+	  [aCoder encodeObject: [self nextResponder] forKey: @"NSNextResponder"];
+	}
+
+      if([self superview] != nil)
+	{
+	  [aCoder encodeObject: [self superview] forKey: @"NSSuperview"];
+	}
+
+      RELEASE(extension);
     }
   else
     {
