@@ -950,31 +950,6 @@
   return nil;
 }
 
-/*
-- (BOOL)application:(NSApplication *)application openFile:(NSString *)fileName
-{
-  NSString *ext = [fileName pathExtension];
-  GormDocument *doc = nil;
-
-  if([[GormDocument readableTypes] containsObject: ext])
-    {
-      doc = AUTORELEASE([[GormDocument alloc] init]);
-      if ([doc loadDocument: fileName] == nil)
-	{
-	  doc = nil;
-	}
-      else
-	{
-	  [documents addObject: doc];
-	  [[doc window] orderFrontRegardless];
-	  [[doc window] makeKeyWindow];
-	}
-    }
-  
-  return (doc != nil);
-}
-*/
-
 - (GormPalettesManager*) palettesManager
 {
   if (palettesManager == nil)

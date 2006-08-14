@@ -1,3 +1,14 @@
+2006-08-13 21:48-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperBuilder.m: Correct issue which was
+	causing IB to complain about the File's Owner not having
+	an oid in [NSIBObjectData initWithDocument:].
+	* GormCore/GormWrapperBuilder.m: Correct issue discovered by
+	Benhur Stein that was causing images not to be saved in the
+	wrapper correctly in buildFileWrapperDictionaryWithDocument:
+	* Gorm.m: Remove uneeded application:openFile: method which was
+	commented out.
+
 2006-08-11 11:13-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocumentController.m: Default backing store changed

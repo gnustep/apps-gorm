@@ -51,12 +51,12 @@
       NSEnumerator *en = [cons objectEnumerator];
       id o = nil;
       id owner = [document objectForName: @"NSOwner"];
-      int oid = 1;
+      unsigned int oid = 1;
       
       // Create the container for the .nib file...
       ASSIGN(_root, owner);
       NSMapInsert(_names, owner, @"File's Owner");
-      NSMapInsert(_oids, owner, @"0");
+      NSMapInsert(_oids, owner, [[NSNumber alloc] initWithUnsignedInt: oid++]);
       ASSIGN(_framework, @"IBCocoaFramework");
       [_topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
       [_visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
@@ -64,6 +64,8 @@
       // fill in objects and connections....
       while((o = [en nextObject]) != nil)
 	{
+	  NSNumber *currOid = [[NSNumber alloc] initWithUnsignedInt: oid++];
+
 	  if([o isMemberOfClass: [NSNibConnector class]])
 	    {
 	      id src = [o source];
@@ -96,17 +98,13 @@
 
 	      NSMapInsert(_objects, src, dst);
 	      NSMapInsert(_names, src, name);
-	      NSMapInsert(_oids, src, [NSString stringWithFormat: @"%d", oid]);
+	      NSMapInsert(_oids, src, currOid);
 	    }
 	  else
 	    {
 	      [_connections addObject: o];
-	      NSMapInsert(_oids, o, [NSString stringWithFormat: @"%d", oid]);
-	      // NSMapInsert(_objects, o, owner);
+	      NSMapInsert(_oids, o, currOid);
 	    }
-
-	  // next...
-	  oid++;
 	}
 
       // set the next oid...
