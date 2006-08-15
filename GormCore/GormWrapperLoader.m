@@ -73,9 +73,9 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
       while((key = [enumerator nextObject]) != nil)
 	{
 	  NSFileWrapper *fw = [fileWrappers objectForKey: key];
-	  NSData *fileData = [fw regularFileContents];
 	  if([fw isRegularFile])
 	    {
+	      NSData *fileData = [fw regularFileContents];
 	      if ([imageFileTypes containsObject: [key pathExtension]])
 		{
 		  [images addObject: [GormImage imageForData: fileData 
