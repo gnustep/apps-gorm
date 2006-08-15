@@ -56,7 +56,7 @@
       // Create the container for the .nib file...
       ASSIGN(_root, owner);
       NSMapInsert(_names, owner, @"File's Owner");
-      NSMapInsert(_oids, owner, [NSString stringWithFormat: @"%d", oid++]); // [[NSNumber alloc] initWithUnsignedInt: oid++]);
+      NSMapInsert(_oids, owner, [[NSNumber alloc] initWithUnsignedInt: oid++]);
       ASSIGN(_framework, @"IBCocoaFramework");
       [_topLevelObjects addObjectsFromArray: [[document topLevelObjects] allObjects]];
       [_visibleWindows addObjectsFromArray: [[document visibleWindows] allObjects]];
@@ -64,13 +64,9 @@
       // fill in objects and connections....
       while((o = [en nextObject]) != nil)
 	{
-	  NSString *currOid = [NSString stringWithFormat: @"%d", oid++];
-	  
-	  //
-	  // NOTE: Should change to this once the 17426 is resolved.
-	  // NSNumber *currOid = [NSNumber numberWithUnsignedInt: oid++];
-	  //
- 
+	  NSNumber *currOid = [NSNumber numberWithUnsignedInt: oid++];
+	  // NSString *currOid = [NSString stringWithFormat: @"%d", oid++];
+	   
 	  if([o isMemberOfClass: [NSNibConnector class]])
 	    {
 	      id src = [o source];

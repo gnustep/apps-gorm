@@ -1,3 +1,9 @@
+2006-08-14 21:48-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperBuilder.m: Properly encode oids as
+	integers in -[NSIBObjectData initWithDocument:] since bug#17426
+	is corrected.
+
 2006-08-14 01:04-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperBuilder.m: Temporary workaround in 
