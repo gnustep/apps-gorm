@@ -53,7 +53,7 @@
 /**
  * Saves the encoded file info.
  */
-- (NSData *) nibData;
+- (NSData *) nibDataWithOpenItems: (NSArray *)openItems;
 
 /**
  * Saves the encoded file info.

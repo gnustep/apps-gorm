@@ -270,6 +270,31 @@
   return o;
 }
 
+- (NSArray *) openItems
+{
+  NSMapTable *oids = [_container oids];
+  NSMutableArray *openItems = [NSMutableArray array];
+  NSNumber *menuOid = NSMapGet(oids,[document objectForName: @"NSMenu"]);
+  id obj = nil;
+  NSEnumerator *en = [[_container visibleWindows] objectEnumerator];
+
+  // Get the open items, so that IB displays the same windows that Gorm had open when it
+  // saved....
+  while((obj = [en nextObject]) != nil)
+    {
+      if([obj isVisible])
+	{
+	  NSNumber *windowOid = NSMapGet(oids, obj);
+	  [openItems addObject: windowOid];
+	}
+    }
+
+  // add the menu...
+  [openItems addObject: menuOid];
+
+  return openItems;
+}
+
 - (NSMutableDictionary *)buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
 {
   NSKeyedArchiver       *archiver = nil;
@@ -288,9 +313,9 @@
     {
       GormClassManager *classManager = [document classManager];
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
-      
+
       // instantiate the container.
-      _container = [[NSIBObjectData alloc] initWithDocument: document];
+      _container = [[NSIBObjectData alloc] initWithDocument: document];      
 
       /*
        * Set up archiving...
@@ -336,7 +361,8 @@
       fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: [classManager nibData]];
       [fileWrappers setObject: fileWrapper forKey: classesPath];
       RELEASE(fileWrapper);
-      fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: [filePrefsManager nibData]];
+      fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: 
+					     [filePrefsManager nibDataWithOpenItems: [self openItems]]];
       [fileWrappers setObject: fileWrapper forKey: infoPath];
       RELEASE(fileWrapper);
     }

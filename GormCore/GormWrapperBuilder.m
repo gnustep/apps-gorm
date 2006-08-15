@@ -89,16 +89,18 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
       if([object isSystemResource] == NO)
 	{
 	  NSString *path = [object path];
-	  NSString *resName = [path lastPathComponent];
+	  NSString *resName = nil;
 	  NSData   *resData = nil;
 	  NSFileWrapper *fileWrapper = nil;
 
 	  if([object isInWrapper])
 	    {
+	      resName = [object fileName];
 	      resData = [object data];
 	    }
 	  else
 	    {
+	      resName = [path lastPathComponent];
 	      resData = [NSData dataWithContentsOfFile: path];
 	      [object setData: resData];
 	      [object setInWrapper: YES];

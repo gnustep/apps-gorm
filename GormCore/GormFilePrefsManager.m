@@ -177,7 +177,7 @@ NSString *formatVersion(int version)
   return  [NSArchiver archivedDataWithRootObject: self];
 }
 
-- (NSData *) nibData
+- (NSData *) nibDataWithOpenItems: (NSArray *)openItems
 {
   NSMutableDictionary *dict = 
     [NSMutableDictionary dictionary];
@@ -199,6 +199,7 @@ NSString *formatVersion(int version)
   [dict setObject: @"8I127" forKey: @"IBSystem Version"];
   [dict setObject: [NSNumber numberWithBool: YES] 
 	forKey: @"IBUsesTextArchiving"]; // for now.
+  [dict setObject: openItems forKey: @"IBOpenItems"];
 
   return [NSPropertyListSerialization dataFromPropertyList: dict 
 				      format: NSPropertyListXMLFormat_v1_0

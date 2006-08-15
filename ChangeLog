@@ -1,3 +1,17 @@
+2006-08-15 02:16-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormFilePrefsManager.h: Add declaration for
+	nibDataWithOpenObjects:
+	* GormCore/GormFilePrefsManager.m: Rename nibData to 
+	nibDataWithOpenObjects:
+	* GormCore/GormNibWrapperBuilder.m: Create the IBOpenObjects
+	list in buildWrapper...
+	* GormCore/GormResource.m: Properly assign the data to the ivar
+	in initWithData:...
+	* GormCore/GormWrapperBuilder.m: Correct image loading and saving
+	issue.
+	* GormCore/GormWrapperLoader.m: Correct image problem.
+
 2006-08-14 21:48-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperBuilder.m: Properly encode oids as

@@ -57,6 +57,7 @@
       ASSIGN(fileName, aFileName);
       ASSIGN(name, [fileName stringByDeletingPathExtension]);
       ASSIGN(fileType, [fileName pathExtension]);
+      ASSIGN(data, aData);
       language = nil;
       isLocalized = NO;
       isSystemResource = NO;

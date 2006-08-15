@@ -62,7 +62,6 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
       NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
       NSMutableArray *images = [NSMutableArray array];
       NSMutableArray *sounds = [NSMutableArray array];
-      NSData *fileData = nil;
 
       document = doc; // don't retain...
       key = nil;
@@ -74,6 +73,7 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
       while((key = [enumerator nextObject]) != nil)
 	{
 	  NSFileWrapper *fw = [fileWrappers objectForKey: key];
+	  NSData *fileData = [fw regularFileContents];
 	  if([fw isRegularFile])
 	    {
 	      if ([imageFileTypes containsObject: [key pathExtension]])
