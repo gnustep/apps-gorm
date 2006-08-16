@@ -1,3 +1,10 @@
+2006-08-16 00:54-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Simplify message in 
+	fileRepresentationOfType:.
+	* GormCore/GormNibWrapperBuilder.m: Correct test for menu which
+	was causing the app to crash in openItems method.
+
 2006-08-15 17:50-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWrapperLoader.m: Correct problem introduced in 

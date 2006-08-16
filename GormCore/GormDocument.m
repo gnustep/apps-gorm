@@ -3287,8 +3287,8 @@ static NSImage  *fileImage = nil;
     {
       int retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
 				   _(@"Saving will update this gorm to the latest version,\n" 
-				     @"which is not compatible with GNUstep's gui 0.9.5 (or earlier) Release\n"
-				     @"or CVS prior to June 2 2005."),
+				     @"which may not be compatible with some previous versions, \n"
+				     @"of GNUstep."),
 				   _(@"Save"),
 				   _(@"Don't Save"), nil, nil);
       if (retval != NSAlertDefaultReturn)

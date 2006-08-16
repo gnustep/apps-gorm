@@ -274,9 +274,9 @@
 {
   NSMapTable *oids = [_container oids];
   NSMutableArray *openItems = [NSMutableArray array];
-  NSNumber *menuOid = NSMapGet(oids,[document objectForName: @"NSMenu"]);
-  id obj = nil;
   NSEnumerator *en = [[_container visibleWindows] objectEnumerator];
+  id menu = [document objectForName: @"NSMenu"];
+  id obj = nil;
 
   // Get the open items, so that IB displays the same windows that Gorm had open when it
   // saved....
@@ -290,7 +290,11 @@
     }
 
   // add the menu...
-  [openItems addObject: menuOid];
+  if(menu != nil)
+    {
+      NSNumber *menuOid = NSMapGet(oids,menu);
+      [openItems addObject: menuOid];
+    }
 
   return openItems;
 }
