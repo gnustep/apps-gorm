@@ -161,8 +161,10 @@
 - (void) revert: (id) sender
 {
   if ( object == nil )
-    return;
-  
+    {
+      return;
+    }
+
   /* background color */
   [backgroundColorWell setColorWithoutAction: [object backgroundColor]];
   [drawsBackgroundSwitch setState: 

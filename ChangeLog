@@ -1,3 +1,10 @@
+2006-08-19 19:18-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormFormAttributesInspector.m: Minor
+	cleanup in ok:
+	* Palettes/2Controls/GormNSFormInspector.gorm: Added missing
+	connections.
+
 2006-08-16 00:54-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Simplify message in 
