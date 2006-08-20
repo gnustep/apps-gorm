@@ -3286,8 +3286,8 @@ static NSImage  *fileImage = nil;
   if(isOlderArchive && [filePrefsManager isLatest])
     {
       int retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-				   _(@"Saving will update this gorm to the latest version,\n" 
-				     @"which may not be compatible with some previous versions, \n"
+				   _(@"Saving will update this gorm to the latest version \n" 
+				     @"which may not be compatible with some previous versions \n"
 				     @"of GNUstep."),
 				   _(@"Save"),
 				   _(@"Don't Save"), nil, nil);

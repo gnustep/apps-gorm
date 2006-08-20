@@ -145,14 +145,15 @@
       NSEnumerator		*enumerator = nil;
       id <IBConnectors>	         con = nil;
       NSString                  *ownerClass, *key = nil;
-      BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] boolForKey: @"GormRepairFileOnLoad"];
+      BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] 
+						boolForKey: @"GormRepairFileOnLoad"];
       GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
       unsigned int           	version = NSNotFound;
       NSDictionary              *fileWrappers = nil;
-      
+
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
 	  GormClassManager *classManager = [document classManager];
@@ -317,7 +318,8 @@
 	   * If the GSNibContainer version is 0, we need to add the top level objects
 	   * to the list so that they can be properly processed.
 	   */
-	  if([u versionForClassName: NSStringFromClass([GSNibContainer class])] == 0)
+	  version = [u versionForClassName: NSStringFromClass([GSNibContainer class])];
+	  if(version == 0)
 	    {
 	      id obj;
 	      NSEnumerator *en = [nt objectEnumerator];
@@ -331,6 +333,11 @@
 		      [[container topLevelObjects] addObject: obj];
 		    }
 		}
+	      [document setOlderArchive: YES];
+	    }
+	  else if(version == 1)
+	    {
+	      // nothing else, just mark it as older...
 	      [document setOlderArchive: YES];
 	    }
 	  
