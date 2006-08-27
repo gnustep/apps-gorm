@@ -230,7 +230,14 @@
 {
   if (contentViewEditor)
     {
-      return [contentViewEditor destroyAndListSubviews];
+      if([contentViewEditor respondsToSelector: @selector(destroyAndListSubviews)])
+	{
+	  return [contentViewEditor destroyAndListSubviews];
+	}
+      else
+	{
+	  return nil;
+	}
     }
   else
     {

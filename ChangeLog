@@ -1,3 +1,13 @@
+2006-08-27 01:37-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormBoxEditor.m: Check to see if the subview responds
+	to destroyAndListSubviews.
+	* GormCore/GormViewWithContentViewEditor.m: 
+	[GormViewWithContentViewEditor ungroup] added local
+	variable "v" to hold the view.
+	* Gorm.m: Remove NSLog from ungroup method.
+	Partial correction for bug#17538.
+	
 2006-08-20 12:23-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Modify outdated "upgrade" warning in

@@ -725,7 +725,7 @@
 
 - (void) ungroup: (id)sender
 {
-  NSLog(@"ungroup: selectionOwner %@", selectionOwner);
+  // NSLog(@"ungroup: selectionOwner %@", selectionOwner);
   if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
     return;
   [(GormGenericEditor *)selectionOwner ungroup];

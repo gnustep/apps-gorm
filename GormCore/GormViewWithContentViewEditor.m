@@ -1177,9 +1177,10 @@ int _sortViews(id view1, id view2, void *context)
       views = [contentView destroyAndListSubviews];
       for (i = 0; i < [views count]; i++)
 	{
-	  [_editedObject addSubview: [views objectAtIndex: i]];
+	  id v = [views objectAtIndex: i];
+	  [_editedObject addSubview: v];
 	  [newSelection addObject:
-			  [document editorForObject: [views objectAtIndex: i]
+			  [document editorForObject: v
 				    inEditor: self
 				    create: YES]];
 	}
