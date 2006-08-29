@@ -3,6 +3,23 @@
 @ifset TEXT-ONLY
 @include version.texi
 @end ifset
+
+@section Noteworthy changes in version @samp{1.1.0}
+
+@itemize @bullet
+@item Changed Gorm architecture to use NSDocument classes.
+@item Abstracted model loading mechanism.  This was done by implementing a set of ``Loader'' and ``Builder'' classes which handle filling in the data structures in Gorm and exporting them to external formats.
+@item Implemented GormNibWrapperLoader and GormNibWrapperBuilder for reading and writing Cocoa NIB files.
+@item Implemented GormGormWrapperLoader and GormGormWrapperBuilder for reading and writing GNUstep Gorm files
+@item Implemented GormGModelWrapperLoader for reading GNUstep gmodel files.
+@item Updated icon
+@item A number of bugs have been addressed in this release.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.0.8}
 
 This is a bugfix release.
@@ -11,9 +28,6 @@ This is a bugfix release.
 @item Correction for bug#16587.
 @item Correction for handling non-string identifiers in tableviews.
 @end itemize
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.0.6}
 
