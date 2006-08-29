@@ -1,0 +1,16 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormSliderInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    altIncrementForm,
+	    knobThicknessForm,
+	    tagForm,
+	    valuesForm,
+	    continuousSwitch,
+	    enabledSwitch
+	);
+	Super = IBInspector;
+    };
+}

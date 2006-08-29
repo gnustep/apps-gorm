@@ -1,0 +1,24 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormNSComboBoxAttributesInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    alignmentMatrix,
+	    backgroundColorWell,
+	    itemBrowser,
+	    itemField,
+	    optionMatrix,
+	    textColorWell,
+	    visibleItemsForm,
+	    itemTxt,
+	    addButton,
+	    removeButton,
+	    itemTableView,
+	    editable,
+	    selectable,
+	    usesDataSource
+	);
+	Super = IBInspector;
+    };
+}
