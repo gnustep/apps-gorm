@@ -29,7 +29,7 @@ GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
-PACKAGE_NAME=Gorm
+PACKAGE_NAME=gorm
 include ./Version
 
 #
