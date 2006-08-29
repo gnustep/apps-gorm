@@ -309,11 +309,12 @@ static NSImage *horizontalImage;
 - (void) deleteSelection
 {
   int i;
-  int count = [selection count];
+  NSArray *sel = [selection copy];
+  int count = [sel count];
   
   for (i = count - 1; i >= 0; i--)
     {
-      id ed = [selection objectAtIndex: i];
+      id ed = [sel objectAtIndex: i];
       id temp = [ed editedObject];
 
       [ed detachSubviews];
