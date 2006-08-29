@@ -29,6 +29,11 @@ GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_SYSTEM_ROOT)
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+CVS_MODULE_NAME = gorm
+SVN_MODULE_NAME = gorm
+SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
+
+
 PACKAGE_NAME=gorm
 include ./Version
 
