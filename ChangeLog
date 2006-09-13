@@ -1,3 +1,20 @@
+2006-09-12 23:10-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormWindowEditor.m: Remove IBApplicationAdditions category.
+	* Palettes/1Windows/DrawerSmall.tiff: icon for NSDrawer in objects 
+	view.
+	* Palettes/1Windows/Drawer.tiff: Icon for drawer on palette
+	* Palettes/1Windows/GNUmakefile: Added new files.
+	* Palettes/1Windows/inspectors.m: Add IBApplicationAdditions category
+	for NSWindow (from GormWindowEditor above) and add category for
+	NSDrawer.
+	* Palettes/1Windows/WindowsPalette.h: Moved interface for 
+	WindowsPalette here.
+	* Palettes/1Windows/WindowsPalette.m: Removed interface and added
+	#include
+	* Resources/ClassInformation.plist: Added ivars which were missing 
+	for NSDrawer.
+
 2006-08-27 01:37-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormBoxEditor.m: Check to see if the subview responds

@@ -34,6 +34,7 @@
 #include "GormNSPanel.h"
 #include "GormNSWindow.h"
 #include "GormWindowSizeInspector.h"
+#include "WindowsPalette.h"
 
 @interface GormWindowMaker : NSObject <NSCoding>
 {
@@ -100,11 +101,6 @@
 }
 @end
 
-@interface WindowsPalette: IBPalette
-{
-}
-@end
-
 @implementation WindowsPalette
 - (void) finishInstantiate
 {
@@ -114,17 +110,20 @@
   NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
   NSString	*path = [bundle pathForImageResource: @"WindowDrag"];
   NSImage	*dragImage = [[NSImage alloc] initWithContentsOfFile: path];
-
+  NSString	*drawerPath = [bundle pathForImageResource: @"Drawer"];
+  NSImage	*drawerImage = [[NSImage alloc] initWithContentsOfFile: drawerPath];
+  NSFont        *systemFont = [NSFont boldSystemFontOfSize: [NSFont systemFontSize]];
   RELEASE(originalWindow);
-  originalWindow= [[NSWindow alloc] initWithContentRect: 
-				      NSMakeRect(0, 0, 272, 192)
-				    styleMask: NSBorderlessWindowMask 
-				    backing: NSBackingStoreRetained
-				    defer: NO];
+  originalWindow = [[NSWindow alloc] initWithContentRect: 
+				       NSMakeRect(0, 0, 272, 192)
+				     styleMask: NSBorderlessWindowMask 
+				     backing: NSBackingStoreRetained
+				     defer: NO];
   contents = [originalWindow contentView];
 
   w = [[GormWindowMaker alloc] init];
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 60, 80, 64)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(35, 100, 80, 64)];
+  [v setFont: systemFont];
   [v setBordered: NO];
   [v setImage: dragImage];
   [v setImagePosition: NSImageOverlaps];
@@ -137,7 +136,8 @@
   RELEASE(w);
 
   w = [[GormPanelMaker alloc] init];
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(155, 60, 80, 64)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(155, 100, 80, 64)];
+  [v setFont: systemFont];
   [v setBordered: NO];
   [v setImage: dragImage];
   [v setImagePosition: NSImageOverlaps];
@@ -149,7 +149,22 @@
   RELEASE(v);
   RELEASE(w);
 
+  w = [[NSDrawer alloc] init];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(95, 30, 80, 64)];
+  [v setFont: systemFont];
+  [v setBordered: NO];
+  [v setImage: drawerImage];
+  [v setImagePosition: NSImageOverlaps];
+  [v setTitle: @"Drawer"];
+  [contents addSubview: v];
+  [self associateObject: w
+	type: IBObjectPboardType
+	with: v];
+  RELEASE(v);
+  RELEASE(w);
+
   RELEASE(dragImage);
+  RELEASE(drawerImage);
 }
 @end
 

@@ -38,13 +38,16 @@ PALETTE_NAME = 1Windows
 	GormNSWindow.h \
 	GormWindowAttributesInspector.h\
         GormWindowSizeInspector.h\
-	GormNSPanel.h
+	GormNSPanel.h \
+	WindowsPalette.h
 
 1Windows_PRINCIPAL_CLASS = WindowsPalette
 
 1Windows_RESOURCE_FILES = \
 	WindowsPalette.tiff \
 	WindowDrag.tiff \
+	Drawer.tiff \
+	DrawerSmall.tiff \
 	GormNSWindowSizeInspector.gorm \
 	GormNSWindowInspector.gorm \
 	palette.table

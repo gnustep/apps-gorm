@@ -37,30 +37,6 @@
 
 #define _EO ((NSWindow *)_editedObject)
 
-@implementation NSWindow (IBObjectAdditions)
-- (NSString*) editorClassName
-{
-  return @"GormWindowEditor";
-}
-
-/*
- * Method to return the image that should be used to display windows within
- * the matrix containing the objects in a document.
- */
-- (NSImage*) imageForViewer
-{
-  static NSImage	*image = nil;
-
-  if (image == nil)
-    {
-      NSBundle	*bundle = [NSBundle mainBundle];
-      NSString	*path = [bundle pathForImageResource: @"GormWindow"];
-      image = [[NSImage alloc] initWithContentsOfFile: path];
-    }
-  return image;
-}
-@end
-
 /*
  *	Default implementations of methods used for updating a view by
  *	direct action through an editor.

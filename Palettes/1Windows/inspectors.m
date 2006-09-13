@@ -26,7 +26,7 @@
 
 #include <AppKit/AppKit.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
-
+#include "WindowsPalette.h"
 /*
   IBObjectAdditions category for NSPanel 
 */
@@ -44,5 +44,42 @@
 - (NSString*) inspectorClassName
 {
   return @"GormWindowAttributesInspector";
+}
+
+- (NSString*) editorClassName
+{
+  return @"GormWindowEditor";
+}
+
+/*
+ * Method to return the image that should be used to display windows within
+ * the matrix containing the objects in a document.
+ */
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle mainBundle];
+      NSString	*path = [bundle pathForImageResource: @"GormWindow"];
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
+}
+@end
+
+@implementation NSDrawer (IBObjectAdditions)
+- (NSImage*) imageForViewer
+{
+  static NSImage	*image = nil;
+
+  if (image == nil)
+    {
+      NSBundle	*bundle = [NSBundle bundleForClass: [WindowsPalette class]];
+      NSString	*path = [bundle pathForImageResource: @"DrawerSmall"];
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+  return image;
 }
 @end
