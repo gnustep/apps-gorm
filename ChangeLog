@@ -1,3 +1,12 @@
+2006-09-13 23:19-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GNUmakefile: Added new classes and interface.
+	* Palettes/1Windows/GormDrawerAttributesInspector.gorm: Inspector 
+	interface.
+	* Palettes/1Windows/GormDrawerAttributesInspector.[hm]: Inspector.
+	* Palettes/1Windows/inspectors.m: Added implementation for
+	inspectorClassName.
+
 2006-09-12 23:10-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWindowEditor.m: Remove IBApplicationAdditions category.

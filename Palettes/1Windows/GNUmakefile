@@ -30,6 +30,7 @@ PALETTE_NAME = 1Windows
 	WindowsPalette.m \
 	GormNSWindow.m\
 	GormNSPanel.m\
+	GormDrawerAttributesInspector.m \
 	GormWindowAttributesInspector.m\
 	GormWindowSizeInspector.m \
 	inspectors.m
@@ -48,6 +49,7 @@ PALETTE_NAME = 1Windows
 	WindowDrag.tiff \
 	Drawer.tiff \
 	DrawerSmall.tiff \
+	GormDrawerAttributesInspector.gorm \
 	GormNSWindowSizeInspector.gorm \
 	GormNSWindowInspector.gorm \
 	palette.table

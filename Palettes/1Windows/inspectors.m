@@ -70,6 +70,11 @@
 @end
 
 @implementation NSDrawer (IBObjectAdditions)
+- (NSString*) inspectorClassName
+{
+  return @"GormDrawerAttributesInspector";
+}
+
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
