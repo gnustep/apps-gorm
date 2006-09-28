@@ -9,7 +9,7 @@
 	4Data.palette
     );
     CellSizeWidth = 72;
-    ClassViewType = Outline;
+    ClassViewType = Browser;
     GuideColor = {
 	alpha = 1;
 	blue = 0;

@@ -1,3 +1,7 @@
+2006-09-28 00:43-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/Defaults.plist: Make the browser classes view the default.
+
 2006-09-28 00:36-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Correct problem which caused
