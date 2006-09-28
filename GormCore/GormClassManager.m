@@ -998,7 +998,7 @@
 	referenceClassList: [classInformation allKeys]
 	intoArray: array];
 
-  return array;
+  return [array sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
 }
 
 - (NSArray *) allCustomSubclassesOf: (NSString *)superClass
@@ -1009,7 +1009,7 @@
 	referenceClassList: customClasses
 	intoArray: array];
 
-  return array;
+  return [array sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
 }
 
 - (NSArray *) customSubClassesOf: (NSString *)superclass
@@ -1049,7 +1049,7 @@
 	}
     }
       
-  return subclasses;
+  return [subclasses sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
 }
 
 - (void) removeClassNamed: (NSString *)className
@@ -2044,6 +2044,7 @@
 - (NSArray *) allSuperClassesOf: (NSString *)className
 {
   NSMutableArray *classes = [NSMutableArray array];
+
   while (![self isRootClass: className] && className != nil)
     {
       NSDictionary *dict = [self classInfoForClassName: className];
@@ -2061,7 +2062,8 @@
 	  break;
 	}
     }
-  return classes;
+
+  return [classes sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
 }
 
 - (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className
