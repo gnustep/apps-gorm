@@ -15,11 +15,11 @@
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
       int spacing = [defaults integerForKey: @"GuideSpacing"];
       
-      if ( ! [NSBundle loadNibNamed:@"GormPrefGuideline" owner:self] )
+      if ( [NSBundle loadNibNamed:@"GormPrefGuideline" owner:self] == NO )
 	{
 	  NSLog(@"Can not load bundle GormPrefGuideline");
 	  return nil;
-	}
+	} 
 
       [spacingSlider setIntValue: spacing];
       [currentSpacing setIntValue: spacing];

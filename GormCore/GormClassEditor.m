@@ -1161,7 +1161,8 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
       NS_DURING
 	{
 	  id item = [object itemAtRow: [object selectedRow]];
-	  if (![item isKindOfClass: [GormOutletActionHolder class]])
+	  if ([item isKindOfClass: [GormOutletActionHolder class]] == NO &&
+	      [self contentView] == scrollView)
 	    {
 	      [self editClass];
 	    }
