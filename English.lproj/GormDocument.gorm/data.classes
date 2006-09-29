@@ -1,1 +1,49 @@
-{"## Comment" = "Do NOT change this file, Gorm maintains it"; FirstResponder = {Actions = ("selectArchiveType:"); Super = NSObject; }; GSNibContainer = {Actions = (); Outlets = (); Super = NSObject; }; GormDocument = {Actions = (); Outlets = (selectionBox, filePrefsView, filePrefsManager, filePrefsWindow); Super = NSDocument; }; GormFilePrefsManager = {Actions = ("showIncompatibilities:", "selectTargetVersion:", "selectArchiveType:"); Outlets = (showIncompatibilities, targetVersion, gormAppVersion, archiveType, iwindow, itable); Super = NSObject; }; }
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "createSubclass:",
+	    "loadClass:",
+	    "createClassFiles:",
+	    "selectArchiveType:"
+	);
+	Super = NSObject;
+    };
+    GSNibContainer = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSObject;
+    };
+    GormDocument = {
+	Actions = (
+	    "createSubclass:",
+	    "loadClass:",
+	    "createClassFiles:"
+	);
+	Outlets = (
+	    selectionBox,
+	    filePrefsView,
+	    filePrefsManager,
+	    filePrefsWindow
+	);
+	Super = NSDocument;
+    };
+    GormFilePrefsManager = {
+	Actions = (
+	    "showIncompatibilities:",
+	    "selectTargetVersion:",
+	    "selectArchiveType:"
+	);
+	Outlets = (
+	    showIncompatibilities,
+	    targetVersion,
+	    gormAppVersion,
+	    archiveType,
+	    iwindow,
+	    itable
+	);
+	Super = NSObject;
+    };
+}

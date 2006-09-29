@@ -2063,7 +2063,7 @@
 	}
     }
 
-  return [classes sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+  return classes; 
 }
 
 - (void) addActions: (NSArray *)actions forClassNamed: (NSString *)className

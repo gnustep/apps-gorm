@@ -3575,6 +3575,11 @@ static NSImage  *fileImage = nil;
   [savedEditors removeAllObjects];
 }
 
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  id object = [aNotification object];
+  [classesView selectClass: [object stringValue]];
+}
 @end
 
 @implementation GormDocument (MenuValidation)
@@ -3682,3 +3687,4 @@ willBeInsertedIntoToolbar: (BOOL)flag
 		  nil];
 }
 @end
+
