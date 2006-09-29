@@ -269,9 +269,9 @@
 {
   BOOL result = NO;
   NSString *classNameCopy = [NSString stringWithString: className];
-  NSString *superClassNameCopy = [NSString stringWithString: superClassName];
-  NSMutableArray *actionsCopy = [NSMutableArray arrayWithArray: actions];
-  NSMutableArray *outletsCopy = [NSMutableArray arrayWithArray: outlets];
+  NSString *superClassNameCopy = (superClassName != nil)?[NSString stringWithString: superClassName]:nil;
+  NSMutableArray *actionsCopy = (actions != nil)?[NSMutableArray arrayWithArray: actions]:[NSMutableArray array];
+  NSMutableArray *outletsCopy = (outlets != nil)?[NSMutableArray arrayWithArray: outlets]:[NSMutableArray array];
 
   // We make an autoreleased copy of all of the inputs.  This prevents changes
   // to the original objects from reflecting here. GJC
@@ -299,7 +299,10 @@
 	  
 	  [classInfo setObject: outletsCopy forKey: @"Outlets"];
 	  [classInfo setObject: actionsCopy forKey: @"Actions"];
-	  [classInfo setObject: superClassNameCopy forKey: @"Super"];
+	  if(superClassNameCopy != nil)
+	    {
+	      [classInfo setObject: superClassNameCopy forKey: @"Super"];
+	    }
 	  [classInformation setObject: classInfo forKey: classNameCopy];
 	  
 	  // if it's a custom class add it to the list.
@@ -1878,9 +1881,8 @@
 		    }
 		}
 	      
-	      if([self isKnownClass: superClass] && 
-		 [cls isCategory] == NO &&
-		 superClass != nil)
+	      if(([self isKnownClass: superClass] || superClass == nil) && 
+		 [cls isCategory] == NO)
 		{
 		  if([self isKnownClass: className])
 		    {
@@ -1908,7 +1910,7 @@
 		{
 		  [self addActions: actions forClassNamed: className];
 		}
-	      else if(superClass != nil)
+	      else if(superClass != nil && [self isKnownClass: superClass] == NO)
 		{
 		  result = NO;
 		  [NSException raise: NSGenericException

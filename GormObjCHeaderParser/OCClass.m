@@ -180,7 +180,12 @@
       [iscan scanUpToCharactersFromSet: wsnl intoString: &cn];
       className = [cn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(className);
-      isCategory = YES;
+      
+      // check to see if it's a category on an existing interface...
+      if(lookAhead(interfaceLine,@"("))
+	{
+	  isCategory = YES;
+	}
     }
   
   if(isCategory == NO)

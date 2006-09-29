@@ -1,3 +1,10 @@
+2006-09-28 22:27-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Allow addClassNamed:... to accept
+	arguments superClass, actions, and outlets as nil.
+	* GormObjCHeaderParser/OCClass.m: Correctly recognize a category
+	in [OCClass parse];  Corrects bug#17804.
+
 2006-09-28 20:38-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Added search field and drop down
