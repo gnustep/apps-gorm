@@ -1,3 +1,13 @@
+2006-09-30 12:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.h: Added declaration findByClassName:
+	* GormCore/GormClassManager.m: Added findClassByName: method to 
+	find classes with partial text matches.
+	* GormCore/GormDocument.m: Modified controlTextDidChange: to call
+	findClassByName:.
+	* GormCore/GormGModelWrapperLoader.m: Change className to cm
+	in initWithModelUnarchiver: to avoid warning.
+
 2006-09-29 22:56-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Added "Remove" to Operations

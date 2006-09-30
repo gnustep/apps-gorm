@@ -2166,6 +2166,39 @@
   return YES;
 }
 
+- (NSString *) findClassByName: (NSString *)name
+{
+  NSArray *classNames = [self allClassNames];
+  NSEnumerator *en = [classNames objectEnumerator];
+  NSString *className = nil;
+  int namelen = [name length];
+
+  while((className = [en nextObject]) != nil)
+    {
+      int classlen = [className length];
+      if(namelen < classlen)
+	{
+	  NSComparisonResult result = 
+	    [className compare: name
+		       options: NSCaseInsensitiveSearch
+		       range: ((NSRange){0, namelen})];
+	  if(result == NSOrderedSame)
+	    {
+	      break;
+	    }
+	}
+      else if(namelen == classlen)
+	{
+	  if([className caseInsensitiveCompare: name] == NSOrderedSame)
+	    {
+	      break;
+	    }
+	} 
+    }
+
+  return className;
+}
+
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = %@",

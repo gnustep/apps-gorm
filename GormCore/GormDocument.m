@@ -1819,8 +1819,15 @@ static NSImage  *fileImage = nil;
   GSNibItem *item = nil;
   
   if([object isEqualToString: @"FirstResponder"])
-    return nil;
-  
+    {
+      return nil;
+    }
+
+  if([classManager canInstantiateClassNamed: object] == NO)
+    {
+      return nil;
+    }
+
   if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
      [object isEqual: @"NSView"])
     {
@@ -3578,7 +3585,8 @@ static NSImage  *fileImage = nil;
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
   id object = [aNotification object];
-  [classesView selectClass: [object stringValue]];
+  NSString *className = [classManager findClassByName: [object stringValue]];
+  [classesView selectClass: className];
 }
 @end
 

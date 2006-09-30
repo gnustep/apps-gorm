@@ -193,15 +193,15 @@ static BOOL gormFileOwnerDecoded;
 
 - (id)initWithModelUnarchiver:(GMUnarchiver*)unarchiver
 {
-  NSString *className;
+  NSString *cn;
   id realObject;
   id extension;
 
-  className = [unarchiver decodeStringWithName: @"className"];
+  cn = [unarchiver decodeStringWithName: @"className"];
   extension = [unarchiver decodeObjectWithName: @"extension"];
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
   [self setFrame: [unarchiver decodeRectWithName: @"frame"]];
-  [self setClassName: className];
+  [self setClassName: cn];
 
   if (!gormFileOwnerDecoded) 
     {

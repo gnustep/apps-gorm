@@ -115,6 +115,7 @@
 - (NSString *) nonCustomSuperClassOf: (NSString *)className;
 - (BOOL) isAction: (NSString *)actionName  onCategoryForClassNamed: (NSString *)className;
 - (NSString *) classNameForObject: (id)object;
+- (NSString *) findClassByName: (NSString *)name;
 
 /* Parsing and creating classes */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className
