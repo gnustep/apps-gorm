@@ -2,9 +2,11 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "createSubclass:",
-	    "loadClass:",
 	    "createClassFiles:",
+	    "createSubclass:",
+	    "instantiateClass:",
+	    "loadClass:",
+	    "remove:",
 	    "selectArchiveType:"
 	);
 	Super = NSObject;
@@ -20,7 +22,9 @@
 	Actions = (
 	    "createSubclass:",
 	    "loadClass:",
-	    "createClassFiles:"
+	    "createClassFiles:",
+	    "instantiateClass:",
+	    "remove:"
 	);
 	Outlets = (
 	    selectionBox,
