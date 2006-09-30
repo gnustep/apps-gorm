@@ -1,3 +1,9 @@
+2006-09-29 21:59-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Added "Operations" item to
+	prevent accidental subclassing.   Aligned with side of view and
+	changed resizing properties.
+
 2006-09-28 22:27-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Allow addClassNamed:... to accept
