@@ -1,3 +1,8 @@
+2006-09-30 23:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGModelWrapperLoader.m: Cleanup NSLog()
+	calls.
+
 2006-09-30 12:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.h: Added declaration findByClassName:

@@ -282,7 +282,6 @@ static BOOL gormFileOwnerDecoded;
 						[classManager allClassNames]);
       BOOL added = NO;
       
-      // RETAIN(superClass);
       // cheesy attempt to determine superclass..
       if(superClass == nil)
 	{
@@ -490,7 +489,6 @@ static BOOL gormFileOwnerDecoded;
       return NO;
     }
   
-  NSLog(@"----------------- GModel testing -----------------");
   NS_DURING
     {
       decoded = [unarchiver decodeObjectWithName:@"RootObject"];
@@ -504,10 +502,7 @@ static BOOL gormFileOwnerDecoded;
   NS_ENDHANDLER
   gmobjects = [decoded performSelector: @selector(objects)];
   gmconnections = [decoded performSelector: @selector(connections)];
-  NSLog(@"Gmodel objects = %@", gmobjects);
-  NSLog(@"       Nib Owner %@ class name is %@", 
-	gormNibOwner, [gormNibOwner className]);
-
+  
   if (gormNibOwner)
     {
       [doc defineClass: [gormNibOwner className] inFile: path];
@@ -533,8 +528,6 @@ static BOOL gormFileOwnerDecoded;
 	      // if it's the font manager, take care of it...
 	      [doc setName: @"NSFont" forObject: obj];
 	      [doc attachObject: obj toParent: nil];
-	      // RELEASE(item);    
-	      // [document setFontManager: obj]; // FIXME!!!!
 	    }
 	  else 
 	    {
