@@ -1,3 +1,8 @@
+2006-10-01 23:07-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m: Correct issue with class selection in 
+	deleteSelection method.
+
 2006-10-01 22:50-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Remove some extra classes.

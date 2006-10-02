@@ -515,15 +515,22 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     }
 
   // get the item, and catch the exception, if there's a problem.
-  NS_DURING
+  if([self contentView] == outlineView)
     {
-      anitem = [outlineView itemAtRow: i];
+      NS_DURING
+	{
+	  anitem = [outlineView itemAtRow: i];
+	}
+      NS_HANDLER
+	{
+	  anitem = nil;
+	}
+      NS_ENDHANDLER;
     }
-  NS_HANDLER
+  else
     {
-      anitem = nil;
+      anitem = [[browserView selectedCell] stringValue];
     }
-  NS_ENDHANDLER;
 
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
