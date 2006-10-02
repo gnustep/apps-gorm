@@ -374,7 +374,6 @@ static NSText *_textObject;
 }
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
-
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
@@ -384,6 +383,8 @@ static NSText *_textObject;
   if ([types containsObject: GormLinkPboardType] == YES)
     {
       id destination = nil;
+
+      /*
       NSView *hitView = 
 	[[tableView enclosingScrollView] 
 	  hitTest: 
@@ -405,9 +406,17 @@ static NSText *_textObject;
 
       if (hitView == tableView)
 	destination = tableView;
+      */
 
       if (destination == nil)
-	destination = _editedObject;
+	{
+	  int col = 0;
+	  destination = _editedObject;	  
+	  if((col = [_editedObject selectedColumn]) != -1)
+	    {
+	      destination = [[_editedObject tableColumns] objectAtIndex: col];
+	    }
+	}
 
       [NSApp displayConnectionBetween: [NSApp connectSource] 
 	     and: destination];
@@ -421,45 +430,7 @@ static NSText *_textObject;
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      id destination = nil;
-      NSView *hitView = 
-	[[tableView enclosingScrollView] 
-	  hitTest: 
-	    [[[tableView enclosingScrollView] superview]
-	      convertPoint: [sender draggingLocation]
-	      fromView: nil]];
-      
-      if (hitView == [tableView headerView])
-	{
-	  NSPoint p = [hitView convertPoint: [sender draggingLocation]
-			       fromView: nil];
-	  int columnNumber = 
-	    [(NSTableHeaderView*) hitView columnAtPoint: p];
-	  
-	  if (columnNumber != -1)
-	    destination = [[tableView tableColumns] 
-			    objectAtIndex: columnNumber];
-	}
-
-      if (hitView == tableView)
-	destination = tableView;
-
-      if (destination == nil)
-	destination = _editedObject;
-
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: destination];
-      [NSApp startConnecting];
-      return YES;
-    }
-  return YES;
+  return ([self draggingUpdated: sender] == NSDragOperationLink);
 }
 
 - (NSWindow *)windowAndRect: (NSRect *)prect

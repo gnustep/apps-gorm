@@ -37,11 +37,6 @@
 
 - (NSString*) editorClassName
 {
-  if ([[self documentView] isKindOfClass: [NSTableView class]])
-    {
-      return [[self documentView] editorClassName];
-    }
-  
   return @"GormScrollViewEditor";
 }
 @end
@@ -99,22 +94,28 @@
   if ([parent respondsToSelector: @selector(selection)] &&
       [[parent selection] containsObject: _EO])
     {
-      IBKnobPosition	knob = IBNoneKnobPosition;
+      IBKnobPosition knob = IBNoneKnobPosition;
       NSPoint mouseDownPoint = 
 	[self convertPoint: [theEvent locationInWindow]
 	      fromView: nil];
       knob = GormKnobHitInRect([self bounds], 
 			       mouseDownPoint);
       if (knob != IBNoneKnobPosition)
-	onKnob = YES;
+	{
+	  onKnob = YES;
+	}
     }
 
   if (onKnob == YES)
     {
       if (parent)
-	return [parent mouseDown: theEvent];
+	{
+	  return [parent mouseDown: theEvent];
+	}
       else
-	return [self noResponderFor: @selector(mouseDown:)];
+	{
+	  return [self noResponderFor: @selector(mouseDown:)];
+	}
     }
 
   if (opened == NO)
@@ -127,15 +128,30 @@
 	isDescendantOf: documentViewEditor])
     {
       if (([self isOpened] == YES) && ([documentViewEditor isOpened] == NO))
-	[documentViewEditor setOpened: YES];
+	{
+	  [documentViewEditor setOpened: YES];
+	}
       if ([documentViewEditor isOpened])
-	[documentViewEditor mouseDown: theEvent];
+	{
+	  [documentViewEditor mouseDown: theEvent];
+	}
     }
   else
     {
       NSView *v = [_EO hitTest: [theEvent locationInWindow]];
-      if (v && [v isKindOfClass: [NSScroller class]])
-	[v mouseDown: theEvent];
+      id r = [v nextResponder];
+      
+      if([v respondsToSelector: @selector(setNextResponder:)])
+	{
+	  // this is done to prevent a responder loop.
+	  [v setNextResponder: nil];
+	  [v mouseDown: theEvent];	  
+	  [v setNextResponder: r];
+	}
+      else
+	{
+	  [v mouseDown: theEvent];	  
+	}
     }
 }
 
@@ -158,8 +174,10 @@
     }
 
   selection = [[NSMutableArray alloc] initWithCapacity: 5];  
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
+  [self registerForDraggedTypes: [NSArray arrayWithObjects: IBViewPboardType, 
+					  GormLinkPboardType, 
+					  IBFormatterPboardType, 
+					  nil]];
 
   return self;
 }
@@ -182,6 +200,7 @@
 	{
 	  id v;
 	  NSRect frame;
+
 	  v = [subview editedObject];
 	  frame = [v frame];
 	  frame = [parent convertRect: frame fromView: _EO];
@@ -194,7 +213,7 @@
     {
       NSRect frame = [documentView frame];
 
-      // in this case the view editor is the documentView and
+      // In this case the view editor is the documentView and
       // we need to add the internal view back into the superview
       frame = [parent convertRect: frame fromView: _EO];
       [documentView setFrame: frame];
@@ -209,5 +228,4 @@
 
   return newSelection;
 }
-
 @end

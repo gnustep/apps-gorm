@@ -37,21 +37,65 @@
 
 @implementation GormTextViewEditor
 
+- (id) initWithObject: (id)anObject 
+	   inDocument: (id<IBDocuments>)aDocument
+{
+  if((self = [super initWithObject: anObject inDocument: aDocument]) != nil)
+    {
+      id sv = [anObject enclosingScrollView];
+      [self registerForDraggedTypes: [NSArray arrayWithObjects: IBViewPboardType, 
+					      GormLinkPboardType, 
+					      IBFormatterPboardType, 
+					      nil]];
+
+      // subscribe to frame changes of the superview...
+      [[NSNotificationCenter defaultCenter] addObserver: self
+					    selector: @selector(handleNotification:)
+					    name: NSViewFrameDidChangeNotification
+					    object: sv];
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  [super dealloc];
+}
+
 - (BOOL) activate
 {
   if ([super activate])
     {
       if ([_editedObject isKindOfClass: [NSScrollView class]])
-	textView = [(NSScrollView *)_editedObject documentView];
+	{
+	  textView = [(NSScrollView *)_editedObject documentView];
+	}
       else
-	textView = (NSTextView *)_editedObject;
+	{
+	  textView = (NSTextView *)_editedObject;
+	}
+
+      // make the view post frame changes...
+      [[textView enclosingScrollView] setPostsFrameChangedNotifications: YES];
+
       return YES;
     }
   return NO;
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (void) deactivate
+{
+  [super deactivate];
+  [[textView enclosingScrollView] setPostsFrameChangedNotifications: NO];
+}
 
+- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  return [self draggingUpdated: sender];
+}
+
+- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
@@ -85,35 +129,34 @@
 }
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*dragPb;
-  NSArray	*types;
-  
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: GormLinkPboardType] == YES)
-    {
-      id destination = nil;
-      NSView *hitView = 
-	[[textView enclosingScrollView] 
-	  hitTest: 
-	    [[[textView enclosingScrollView] superview]
-	      convertPoint: [sender draggingLocation]
-	      fromView: nil]];
-      
-      if ((hitView == textView) || (hitView == [textView superview]))
-	destination = textView;
-
-      if (destination == nil)
-	destination = _editedObject;
-
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: destination];
-      [NSApp startConnecting];
-      return YES;
-    }
-  return YES;
+  return ([self draggingUpdated: sender] == NSDragOperationLink);
 }
 
+- (void) handleNotification: (id) notification
+{
+  id view = [notification object];
+  NSRect frame = [view frame];
+  NSSize size;
+  
+  if([view hasVerticalScroller])
+    {
+      NSSize s = [[view verticalScroller] frame].size;
+      frame.size.width -= (s.width + 5);
+    }
+
+  if([view hasHorizontalScroller])
+    {
+      NSSize s = [[view horizontalScroller] frame].size;
+      frame.size.height -= (s.height + 5);
+    }
+
+  size = frame.size;
+
+  [textView setMinSize: size];
+  [textView setFrame: frame]; 
+}
+
+/*
 - (NSWindow *)windowAndRect: (NSRect *)prect
 		  forObject: (id) object
 {
@@ -128,4 +171,5 @@
       return [super windowAndRect: prect forObject: object];
     }
 }
+*/
 @end

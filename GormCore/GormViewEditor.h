@@ -55,6 +55,7 @@
 - (BOOL) isOpened;
 - (BOOL) canBeOpened;
 - (void) setOpened: (BOOL) value;
+- (void) frameDidChange: (id) sender;
 @end
 
 @interface GormViewEditor (EditingAdditions)

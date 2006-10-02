@@ -292,24 +292,6 @@
 
   NSDebugLog(@"current %i",current);
 
-  // Operate on the document view if the selected object is a NSScrollView
-  if ([obj isKindOfClass: [NSScrollView class]] && 
-      [(NSScrollView *)obj documentView])
-    {
-      id docView = [(NSScrollView *)obj documentView];
-
-      // FIXME: Really need to find a more generalized way to do this.
-      if ([docView isKindOfClass: [NSTableView class]])
-	{
-	  obj = docView;
-	  if ([obj selectedColumn] != -1)
-	    {
-	      obj = [[obj tableColumns] objectAtIndex:
-					  [obj selectedColumn]];
-	    }
-	}
-    }
-
   // refresh object.
   selectedObject = obj;
   

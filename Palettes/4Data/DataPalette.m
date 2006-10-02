@@ -260,7 +260,7 @@ int defaultDateFormatIndex = 3;
   rect = [[(NSScrollView *)v contentView] frame];
 
   tv = [[NSTextView alloc] initWithFrame: rect];
-  [tv setMinSize: NSMakeSize(0.0, 0.0)];
+  [tv setMinSize: NSMakeSize(108.0, 143.0)];
   [tv setMaxSize: NSMakeSize(1.0E7,1.0E7)];
   [tv setHorizontallyResizable: YES];
   [tv setVerticallyResizable: YES];
