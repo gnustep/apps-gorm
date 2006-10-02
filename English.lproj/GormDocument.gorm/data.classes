@@ -51,46 +51,4 @@
 	);
 	Super = NSObject;
     };
-    NewClass = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NSButton;
-    };
-    NewClass1 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NewClass;
-    };
-    NewClass2 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NSButton;
-    };
-    NewClass3 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NewClass2;
-    };
-    NewClass4 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NewClass3;
-    };
-    NewClass5 = {
-	Actions = (
-	);
-	Outlets = (
-	);
-	Super = NSOpenGLView;
-    };
 }
