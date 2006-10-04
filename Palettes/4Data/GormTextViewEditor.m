@@ -53,12 +53,16 @@
 					    selector: @selector(handleNotification:)
 					    name: NSViewFrameDidChangeNotification
 					    object: sv];
+
+      // make the view post frame changes...
+      [[textView enclosingScrollView] setPostsFrameChangedNotifications: YES];
     }
   return self;
 }
 
 - (void) dealloc
 {
+  [[textView enclosingScrollView] setPostsFrameChangedNotifications: NO];
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   [super dealloc];
 }
@@ -75,9 +79,6 @@
 	{
 	  textView = (NSTextView *)_editedObject;
 	}
-
-      // make the view post frame changes...
-      [[textView enclosingScrollView] setPostsFrameChangedNotifications: YES];
 
       return YES;
     }
@@ -155,21 +156,4 @@
   [textView setMinSize: size];
   [textView setFrame: frame]; 
 }
-
-/*
-- (NSWindow *)windowAndRect: (NSRect *)prect
-		  forObject: (id) object
-{
-  if (object == textView)
-    {
-      *prect = [[textView superview] convertRect: [[textView superview] visibleRect]
-			  toView :nil];
-      return _window;
-    }
-  else
-    {
-      return [super windowAndRect: prect forObject: object];
-    }
-}
-*/
 @end

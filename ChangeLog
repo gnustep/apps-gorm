@@ -1,3 +1,18 @@
+2006-10-04 00:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Make connection to 
+	fileType in GormFilePrefsManager.
+	* GormCore/GormDocumentController.m: Move the window when 
+	"New Application" is selected.
+	* GormCore/GormDocument.m: Add call in awakeFromNib
+	to setFileTypeName:.
+	* GormCore/GormFilePrefsManager.h: add setFileTypeName: and
+	fileTypeName.
+	* GormCore/GormFilePrefsManager.m: add setFileTypeName: and
+	fileTypeName.
+	* Palettes/4Data/GormTextViewEditor.m: Remove commented out 
+	windowAndRect:forObject:
+
 2006-10-01 23:07-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Correct issue with class selection in 

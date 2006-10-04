@@ -97,7 +97,7 @@
 			defer: NO];
 	  }
 	[aWindow setFrameTopLeftPoint:
-		   NSMakePoint(220, frame.size.height-100)];
+		   NSMakePoint(230, frame.size.height-100)];
 	[aWindow setTitle: _(@"My Window")]; 
 	[doc setName: @"My Window" forObject: aWindow];
 	[doc attachObject: aWindow toParent: nil];
@@ -139,7 +139,7 @@
 	  }
 	
 	[aWindow setFrameTopLeftPoint:
-		   NSMakePoint(220, frame.size.height-100)];
+		   NSMakePoint(230, frame.size.height-100)];
 	[aWindow setTitle: _(@"Inspector Window")];
 	[doc setName: @"InspectorWin" forObject: aWindow];
 	[doc attachObject: aWindow toParent: nil];
@@ -169,7 +169,7 @@
 	  }
 
 	[aWindow setFrameTopLeftPoint:
-		   NSMakePoint(220, frame.size.height-100)];
+		   NSMakePoint(230, frame.size.height-100)];
 	[aWindow setTitle: _(@"Palette Window")];
 	[doc setName: @"PaletteWin" forObject: aWindow];
 	[doc attachObject: aWindow toParent: nil];

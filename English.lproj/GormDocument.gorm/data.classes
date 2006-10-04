@@ -30,8 +30,7 @@
 	    selectionBox,
 	    filePrefsView,
 	    filePrefsManager,
-	    filePrefsWindow,
-	    fileType
+	    filePrefsWindow
 	);
 	Super = NSDocument;
     };
@@ -47,7 +46,8 @@
 	    gormAppVersion,
 	    archiveType,
 	    iwindow,
-	    itable
+	    itable,
+	    fileType
 	);
 	Super = NSObject;
     };

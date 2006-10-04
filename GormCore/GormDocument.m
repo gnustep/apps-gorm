@@ -504,6 +504,9 @@ static NSImage  *fileImage = nil;
     {
       [objectsView addObject: o];
     }
+
+  // set the file type in the prefs manager...
+  [filePrefsManager setFileTypeName: [self fileType]];  
 }
 
 /**
@@ -3587,6 +3590,12 @@ static NSImage  *fileImage = nil;
   id object = [aNotification object];
   NSString *className = [classManager findClassByName: [object stringValue]];
   [classesView selectClass: className];
+}
+
+- (void) setFileType: (NSString *)type
+{
+  [super setFileType: type];
+  [filePrefsManager setFileTypeName: type];
 }
 @end
 

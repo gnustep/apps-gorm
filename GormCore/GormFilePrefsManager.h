@@ -10,7 +10,8 @@
   id archiveType;
   id iwindow;
   id itable;
-  
+  id fileType;
+
   // encoded ivars...
   int version;
   NSString *targetVersionName;
@@ -102,6 +103,17 @@
  * Returns the version of the class in the current profile.
  */
 - (int) versionOfClass: (NSString *)className;
+
+// file type...
+/**
+ * File type name...
+ */
+- (void) setFileTypeName: (NSString *)ft;
+
+/**
+ * return file type.
+ */
+- (NSString *) fileTypeName;
 
 /**
  * The current Gorm version.

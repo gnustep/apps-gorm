@@ -296,6 +296,16 @@ NSString *formatVersion(int version)
   return ([targetVersionName isEqual: @"Latest Version"]);
 }
 
+- (void) setFileTypeName: (NSString *)ft
+{
+  [fileType setStringValue: ft];
+}
+
+- (NSString *) fileTypeName
+{
+  return [fileType stringValue];
+}
+
 // Data Source
 - (int) numberOfRowsInTableView: (NSTableView *)aTableView
 {
