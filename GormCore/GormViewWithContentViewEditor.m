@@ -1151,6 +1151,28 @@ int _sortViews(id view1, id view2, void *context)
 @class GormSplitViewEditor;
 @class GormScrollViewEditor;
 
+- (void) _addViewToDocument: (NSView *)view
+{
+  NSEnumerator *en = nil;
+  NSView *sub = nil;
+  NSView *par = [view superview];
+
+  if([sub isKindOfClass: [GormViewEditor class]])
+    return;
+
+  if([par isKindOfClass: [GormViewEditor class]])
+    {
+      par = [(GormViewEditor *)par editedObject];
+    }
+
+  [document attachObject: view toParent: par];
+  en = [[view subviews] objectEnumerator];
+  while((sub = [en nextObject]) != nil)
+    {
+      [self _addViewToDocument: sub];
+    }
+}
+
 - (void) ungroup
 {
   NSView *toUngroup;
@@ -1179,6 +1201,7 @@ int _sortViews(id view1, id view2, void *context)
 	{
 	  id v = [views objectAtIndex: i];
 	  [_editedObject addSubview: v];
+	  [self _addViewToDocument: v];
 	  [newSelection addObject:
 			  [document editorForObject: v
 				    inEditor: self
@@ -1188,28 +1211,6 @@ int _sortViews(id view1, id view2, void *context)
       
     }
 
-}
-
-- (void) _addViewToDocument: (NSView *)view
-{
-  NSEnumerator *en = nil;
-  NSView *sub = nil;
-  NSView *par = [view superview];
-
-  if([sub isKindOfClass: [GormViewEditor class]])
-    return;
-
-  if([par isKindOfClass: [GormViewEditor class]])
-    {
-      par = [(GormViewEditor *)par editedObject];
-    }
-
-  [document attachObject: view toParent: par];
-  en = [[view subviews] objectEnumerator];
-  while((sub = [en nextObject]) != nil)
-    {
-      [self _addViewToDocument: sub];
-    }
 }
 
 - (void) pasteInView: (NSView *)view

@@ -1,3 +1,11 @@
+2006-10-04 22:35-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.m: Minor cleanup in initWithFrame:
+	* GormCore/GormGormWrapperLoader.m: Added logic to _repairFile
+	to correct issue with views that don't have a name in the nametable.
+	* GormCore/GormViewWithContentViewEditor.m: Properly add 
+	the subview back into the document in ungroup method.
+
 2006-10-04 00:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Make connection to 

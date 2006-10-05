@@ -54,7 +54,9 @@
 {
   NSEnumerator *en = [[[document nameTable] allKeys] objectEnumerator];
   NSString *key = nil;
-  
+  int errorCount = 0;
+  NSString *errorMsg = nil;
+
   NSRunAlertPanel(_(@"Warning"), 
 		  _(@"You are running with 'GormRepairFileOnLoad' set to YES."),
 		  nil, nil, nil);
@@ -62,6 +64,7 @@
   while((key = [en nextObject]) != nil)
   {
     id obj = [[document nameTable] objectForKey: key];
+
     if([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
       {
 	id sm = [obj supermenu];
@@ -78,6 +81,7 @@
 	    // crash, so this extra retain is only here to stave off the 
 	    // release, so the autorelease can release the menu when it should.
 	    RETAIN(obj); // extra retain to stave off autorelease...
+	    errorCount++;
 	  }
       }
 
@@ -97,13 +101,14 @@
 		NSArray *menus = findAll(sm);
 		[document detachObjects: menus];
 	      }
+	    errorCount++;
 	  }
       }
 
     /**
      * If it's a view and it does't have a window *AND* it's not a top level object
      * then it's not a standalone view, it's an orphan.   Delete it.
-     */
+     *
     if([obj isKindOfClass: [NSView class]])
       {
 	if([obj window] == nil && 
@@ -112,9 +117,47 @@
 	  {
 	    NSLog(@"Found and removed an orphan view %@, %@",obj,[document nameForObject: obj]);
 	    [document detachObject: obj];
+	    [obj removeFromSuperview];
+	    errorCount++;
+	  }
+      }
+    */
+
+    /**
+     * If there is a view which is not associated with a name, give it one...
+     */
+    if([obj isKindOfClass: [NSWindow class]])
+      {
+	NSArray *allViews = allSubviews([obj contentView]);
+	NSEnumerator *ven = [allViews objectEnumerator];
+	id v = nil;
+	
+	while((v = [ven nextObject]) != nil)
+	  {
+	    if([document nameForObject: v] == nil)
+	      {
+		NSString *name = nil;
+		[document attachObject: v toParent: [v superview]];
+		name = [document nameForObject: v];
+		NSLog(@"Found view %@ without an associated name, adding to the nametable as %@", v, name);
+		if([v respondsToSelector: @selector(stringValue)])
+		  {
+		    NSLog(@"View string value is %@",[v stringValue]);
+		  }
+		errorCount++;
+	      }
 	  }
       }
   }
+
+  // report the number of errors...
+  if(errorCount > 0)
+    {
+      errorMsg = [NSString stringWithFormat: @"%d inconsistencies were found, please save the file.",errorCount]; 
+      NSRunAlertPanel(_(@"Warning"), 
+		      errorMsg,
+		      nil, nil, nil); 
+    }
 }
 
 /**
@@ -352,6 +395,11 @@
 	      [document setOlderArchive: YES];
 	    }
 
+	  /* 
+	   * Rebuild the mapping from object to name for the nameTable... 
+	   */
+	  [document rebuildObjToNameMapping];
+	  
 	  /*
 	   * repair the .gorm file, if needed.
 	   */
@@ -359,11 +407,6 @@
 	    {
 	      [self _repairFile];
 	    }
-	  
-	  /* 
-	   * Rebuild the mapping from object to name for the nameTable... 
-	   */
-	  [document rebuildObjToNameMapping];
 	  
 	  NSDebugLog(@"nameTable = %@",[container nameTable]);
 	  
