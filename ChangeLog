@@ -1,3 +1,19 @@
+2006-10-05 13:16-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormClassEditor.gorm: Added new gorm file to hold
+	classes view contents as well as search and operations drop down.
+	* English.lproj/GormDocument.gorm: Removed seatch and drop down
+	* GNUmakefile: Added new gorm file.
+	* GormCore/GormClassEditor.h: new outlets classesView and mainView, 
+	added declarations for methods createSubclass:, createClassFiles:, 
+	instantiateClass:, removeClass:
+	* GormCore/GormClassEditor.m: Changes to methods to use the above.
+	* GormCore/GormDocument.h: Removed duplicate declarations.
+	* GormCore/GormDocument.m: Remove code for methods and replace with
+	simple calls to the editor.
+	* Palettes/2Controls/GormBoxAttributesInspector.m: ok: and revert:
+	changed to convert to integer.  
+
 2006-10-04 22:35-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.m: Minor cleanup in initWithFrame:

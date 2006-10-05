@@ -131,6 +131,7 @@ Gorm_RESOURCE_FILES = \
 	Images/GormTesting.tiff 
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
+	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \
 	GormConnectionInspector.gorm \

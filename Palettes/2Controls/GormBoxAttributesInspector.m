@@ -100,12 +100,12 @@
   else if (sender == horizontalSlider)
     {
       [object setContentViewMargins:
-	NSMakeSize([sender floatValue], [verticalSlider floatValue])];
+	NSMakeSize((float)[sender intValue], (float)[verticalSlider intValue])];
     }
   else if (sender == verticalSlider)
     {
       [object setContentViewMargins:
-	NSMakeSize([horizontalSlider floatValue], [sender floatValue])];
+	NSMakeSize((float)[horizontalSlider intValue], (float)[sender intValue])];
     }
   /* title cell : background color, only useful for older NSBox instances */
   else if(sender == colorWell)
@@ -146,8 +146,8 @@
   /* title */
   [[titleForm cellAtIndex: 0] setStringValue: VSTR([object title])];
   /* content view margins */
-  [horizontalSlider setFloatValue: [object contentViewMargins].width];
-  [verticalSlider setFloatValue: [object contentViewMargins].height];
+  [horizontalSlider setIntValue: (int)[object contentViewMargins].width];
+  [verticalSlider setIntValue: (int)[object contentViewMargins].height];
 
   /* title cell: background color */
   titleCell = (NSTextFieldCell *)[object titleCell];

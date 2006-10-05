@@ -34,7 +34,7 @@
 extern NSString *GormClassPboardType;
 extern NSString *GormSwitchViewPreferencesNotification;
 
-@interface GormClassEditor : NSBox <IBEditors, IBSelectionOwners>
+@interface GormClassEditor : NSView <IBEditors, IBSelectionOwners>
 {
   GormDocument          *document;
   GormClassManager      *classManager;
@@ -42,6 +42,8 @@ extern NSString *GormSwitchViewPreferencesNotification;
   NSScrollView          *scrollView;
   GormOutlineView       *outlineView;
   NSBrowser             *browserView;
+  id                     classesView;
+  id                     mainView;
 }
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
@@ -53,13 +55,19 @@ extern NSString *GormSwitchViewPreferencesNotification;
 - (void) selectClass: (NSString *)className;
 - (BOOL) currentSelectionIsClass;
 - (void) editClass;
-- (void) createSubclass;
+// - (void) createSubclass;
 - (void) addAttributeToClass;
 - (void) deleteSelection;
 - (NSArray *) fileTypes;
 
 - (void) reloadData;
 - (BOOL) isEditing;
+
+- (id) instantiateClass: (id)sender;
+- (id) createSubclass: (id)sender;
+- (id) loadClass: (id)sender;
+- (id) createClassFiles: (id)sender;
+- (id) removeClass: (id)sender;
 @end
 
 #endif

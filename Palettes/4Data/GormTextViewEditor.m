@@ -156,4 +156,6 @@
   [textView setMinSize: size];
   [textView setFrame: frame]; 
 }
+
+
 @end

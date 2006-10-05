@@ -53,123 +53,130 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
   self = [super init];
   if (self != nil)
     {
-      NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-      NSRect			scrollRect = {{0, 0}, {340, 188}};
-      NSRect			mainRect = {{20, 0}, {320, 188}};
-      NSColor *salmonColor = 
-	[NSColor colorWithCalibratedRed: 0.850980 
-		 green: 0.737255
-		 blue: 0.576471
-		 alpha: 1.0 ];
-      NSTableColumn  *tableColumn;
-      
-      // eliminate the border and title.
-      [self setBorderType: NSNoBorder];
-      [self setTitlePosition: NSNoTitle];
+      if([NSBundle loadNibNamed: @"GormClassEditor" owner: self])
+	{
+	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+	  NSRect		 scrollRect = [classesView frame]; //  = {{0, 0}, {340, 188}};
+	  NSRect		 mainRect = NSMakeRect(20,0,scrollRect.size.width-20,
+						       scrollRect.size.height); 
+	  NSColor *salmonColor = [NSColor colorWithCalibratedRed: 0.850980 
+					  green: 0.737255
+					  blue: 0.576471
+					  alpha: 1.0 ];
+	  NSTableColumn         *tableColumn;
 
-      // set up the scroll view.
-      scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setHasHorizontalScroller: NO];
-      [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setBorderType: NSBezelBorder];
+	  // setup the view...
+	  [self setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+	  [self setFrame: [mainView frame]];
+	  [self addSubview: mainView];
 	  
-      // allocate the outline view.
-      outlineView = [[GormOutlineView alloc] init];
-      [outlineView setFrame: mainRect];
-      [outlineView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
-      [scrollView setDocumentView: outlineView];
-      RELEASE(outlineView);
-
-      // RELEASE(scrollView);
-
-      // weak connections...
-      document = doc; 
-      classManager = [doc classManager];
-
-      // set up the outline view...
-      [outlineView setDataSource: self];
-      [outlineView setDelegate: self];
-  
-      [outlineView setAutoresizesAllColumnsToFit: YES];
-      [outlineView setAllowsColumnResizing: NO];
-      [outlineView setDrawsGrid: NO];
-      [outlineView setIndentationMarkerFollowsCell: YES];
-      [outlineView setAutoresizesOutlineColumn: YES];
-      [outlineView setIndentationPerLevel: 10];
-      [outlineView setAttributeOffset: 30];
-      [outlineView setRowHeight: 18];
-      [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
-      [outlineView setBackgroundColor: salmonColor];
-
-      // add the table columns...
-      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
-      [[tableColumn headerCell] setStringValue: _(@"Classes")];
-      [tableColumn setMinWidth: 190];
-      [tableColumn setResizable: YES];
-      [tableColumn setEditable: YES];
-      [outlineView addTableColumn: tableColumn];     
-      [outlineView setOutlineTableColumn: tableColumn];
-      RELEASE(tableColumn);
-      
-      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"outlets"];
-      [[tableColumn headerCell] setStringValue: _(@"Outlet")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [outlineView addTableColumn: tableColumn];
-      [outlineView setOutletColumn: tableColumn];
-      RELEASE(tableColumn);
-      
-      tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"actions"];
-      [[tableColumn headerCell] setStringValue: _(@"Action")];
-      [tableColumn setWidth: 50]; 
-      [tableColumn setResizable: NO];
-      [tableColumn setEditable: NO];
-      [outlineView addTableColumn: tableColumn];
-      [outlineView setActionColumn: tableColumn];
-      RELEASE(tableColumn); 
-
-      // expand all of the items in the classesView...
-      [outlineView expandItem: @"NSObject"];
-
-      // allocate the NSBrowser view.
-      browserView = [[NSBrowser alloc] initWithFrame: mainRect];
-      [browserView setRefusesFirstResponder:YES];
-      [browserView setAutoresizingMask: NSViewWidthSizable | NSViewMinYMargin];
-      [browserView setTitled:NO];
-      [browserView setMaxVisibleColumns:3];
-      [browserView setSeparatesColumns:NO];
-      [browserView setAllowsMultipleSelection:YES];
-      [browserView setDelegate:self];
-      [browserView setTarget:self];
-      [browserView setAction: @selector(browserClick:)];
-      // [browserView setDoubleAction: nil]; // @selector(doubleClick:)];
-      [browserView setRefusesFirstResponder:YES];
-      [browserView loadColumnZero];
-
-      
-      // observe certain notifications...
-      [nc addObserver: self
-	  selector: @selector(handleNotification:)
-	  name: GormSwitchViewPreferencesNotification
-	  object: nil];
-      
-      // kludge to prevent it from having resize issues.
-      [self setContentView: scrollView];
-      [self sizeToFit];
-
-      // switch...
-      [self switchView];
-
-      // register for types...
-      [IBResourceManager registerForAllPboardTypes: self
-			 inDocument: document];
-
+	  // set up the scroll view.
+	  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+	  [scrollView setHasVerticalScroller: YES];
+	  [scrollView setHasHorizontalScroller: NO];
+	  [scrollView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+	  [scrollView setBorderType: NSBezelBorder];
+	  
+	  // allocate the outline view.
+	  outlineView = [[GormOutlineView alloc] init];
+	  [outlineView setFrame: scrollRect];
+	  [outlineView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
+	  [scrollView setDocumentView: outlineView];
+	  // [outlineView sizeToFit];
+	  RELEASE(outlineView);
+	  	  
+	  // weak connections...
+	  document = doc; 
+	  classManager = [doc classManager];
+	  
+	  // set up the outline view...
+	  [outlineView setDataSource: self];
+	  [outlineView setDelegate: self];
+	  
+	  [outlineView setAutoresizesAllColumnsToFit: YES];
+	  [outlineView setAllowsColumnResizing: NO];
+	  [outlineView setDrawsGrid: NO];
+	  [outlineView setIndentationMarkerFollowsCell: YES];
+	  [outlineView setAutoresizesOutlineColumn: YES];
+	  [outlineView setIndentationPerLevel: 10];
+	  [outlineView setAttributeOffset: 30];
+	  [outlineView setRowHeight: 18];
+	  [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
+	  [outlineView setBackgroundColor: salmonColor];
+	  
+	  // add the table columns...
+	  tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
+	  [[tableColumn headerCell] setStringValue: _(@"Classes")];
+	  [tableColumn setMinWidth: 190];
+	  [tableColumn setResizable: YES];
+	  [tableColumn setEditable: YES];
+	  [outlineView addTableColumn: tableColumn];     
+	  [outlineView setOutlineTableColumn: tableColumn];
+	  RELEASE(tableColumn);
+	  
+	  tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"outlets"];
+	  [[tableColumn headerCell] setStringValue: _(@"Outlet")];
+	  [tableColumn setWidth: 50]; 
+	  [tableColumn setResizable: NO];
+	  [tableColumn setEditable: NO];
+	  [outlineView addTableColumn: tableColumn];
+	  [outlineView setOutletColumn: tableColumn];
+	  RELEASE(tableColumn);
+	  
+	  tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"actions"];
+	  [[tableColumn headerCell] setStringValue: _(@"Action")];
+	  [tableColumn setWidth: 50]; 
+	  [tableColumn setResizable: NO];
+	  [tableColumn setEditable: NO];
+	  [outlineView addTableColumn: tableColumn];
+	  [outlineView setActionColumn: tableColumn];
+	  RELEASE(tableColumn); 
+	  
+	  // expand all of the items in the classesView...
+	  [outlineView expandItem: @"NSObject"];
+	  [outlineView setFrame: scrollRect];
+	  
+	  // allocate the NSBrowser view.
+	  browserView = [[NSBrowser alloc] initWithFrame: mainRect];
+	  [browserView setRefusesFirstResponder:YES];
+	  [browserView setAutoresizingMask: NSViewWidthSizable | NSViewMinYMargin];
+	  [browserView setTitled:NO];
+	  [browserView setMaxVisibleColumns:3];
+	  [browserView setSeparatesColumns:NO];
+	  [browserView setAllowsMultipleSelection:YES];
+	  [browserView setDelegate:self];
+	  [browserView setTarget:self];
+	  [browserView setAction: @selector(browserClick:)];
+	  // [browserView setDoubleAction: nil]; // @selector(doubleClick:)];
+	  [browserView setRefusesFirstResponder:YES];
+	  [browserView loadColumnZero];
+	  
+	  
+	  // observe certain notifications...
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: GormSwitchViewPreferencesNotification
+	      object: nil];
+	  
+	  // kludge to prevent it from having resize issues.
+	  [classesView setContentView: scrollView];
+	  [classesView sizeToFit];
+	  
+	  // switch...
+	  [self switchView];
+	  
+	  // register for types...
+	  [IBResourceManager registerForAllPboardTypes: self
+			     inDocument: document];
+	}
+      else
+	{
+	  return nil;
+	}
     }
   return self;
 }
-
+  
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc
 {
   return AUTORELEASE([(GormClassEditor *)[self alloc] initWithDocument: doc]);
@@ -177,21 +184,22 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 
 - (void) switchView
 {
-  NSString *viewType = [[NSUserDefaults standardUserDefaults] stringForKey: @"ClassViewType"];
-  // NSString *selectedClassName = [self selectedClassName];
+  NSString *viewType = [[NSUserDefaults standardUserDefaults] 
+			 stringForKey: @"ClassViewType"];
 
-  [self setContentViewMargins: NSZeroSize];
+  // [classesView setContentViewMargins: NSZeroSize];
   if([viewType isEqual: @"Outline"] || viewType == nil)
     {
-      NSRect rect = [[self superview] frame];
-      [self setContentView: scrollView];
-      [self sizeToFit];
-      [[self superview] setFrame: rect];
+      NSRect rect = [classesView frame];
+      [classesView setContentView: scrollView];
+      [outlineView setFrame: rect];
+      [outlineView sizeToFit];
+      // [[classesView superview] setFrame: rect];
     }
   else if([viewType isEqual: @"Browser"])
     {
-      [self setContentView: browserView];
-      [self sizeToFit];
+      [classesView setContentView: browserView];
+      // [classesView sizeToFit];
     }
 
   [self setSelectedClassName: selectedClass];
@@ -230,7 +238,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 
   NS_DURING
     {
-      if([self contentView] == scrollView)
+      if([classesView contentView] == scrollView)
 	{
 	  int row =  [outlineView selectedRow];	  
 	  if ( row == -1 ) 
@@ -244,7 +252,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	      className = [outlineView itemBeingEdited];
 	    }
 	}
-      else if([self contentView] == browserView)
+      else if([classesView contentView] == browserView)
 	{
 	  className = [[browserView selectedCell] stringValue];
 	}
@@ -383,7 +391,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 {  
   BOOL result = NO;
 
-  if([self contentView] == scrollView)
+  if([classesView contentView] == scrollView)
     {
       int i = [outlineView selectedRow];
       
@@ -404,7 +412,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	  NS_ENDHANDLER;
 	}
     }
-  else if([self contentView] == browserView)
+  else if([classesView contentView] == browserView)
     {
       result = YES;
     }
@@ -420,45 +428,6 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     {
       ASSIGN(selectedClass, [self selectedClassName]);
       [document setSelectionFromEditor: (id)self];
-    }
-}
-
-- (void) createSubclass
-{
-  if (![outlineView isEditing])
-    {
-      NSString *itemSelected = [self selectedClassName];
-      
-      if(itemSelected != nil)
-	{
-	  NSString *newClassName;
-
-	  newClassName = [classManager addClassWithSuperClassName:
-					 itemSelected];
-	  if(newClassName != nil)
-	    {
-	      int i = 0;
-	      if([self contentView] == scrollView)
-		{
-		  [outlineView reloadData];
-		  [outlineView expandItem: itemSelected];
-		  i = [outlineView rowForItem: newClassName]; 
-		  [outlineView selectRow: i byExtendingSelection: NO];
-		  [outlineView scrollRowToVisible: i];
-		}
-	      else if([self contentView] == browserView)
-		{
-		  [self selectClass: newClassName editClass: NO];
-		}
-	    }
-	  else
-	    {
-	      // inform the user of this error.
-	      NSRunAlertPanel(_(@"Cannot instantiate"), 
-			      _(@"FirstResponder cannot be instantiated."),
-			      nil, nil, nil);
-	    }
-	}
     }
 }
 
@@ -515,7 +484,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
     }
 
   // get the item, and catch the exception, if there's a problem.
-  if([self contentView] == outlineView)
+  if([classesView contentView] == outlineView)
     {
       NS_DURING
 	{
@@ -896,6 +865,248 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 {
   return [NSArray arrayWithObject: @"h"];
 }
+
+/**
+ * Create a subclass from the selected subclass...
+ */
+- (id) createSubclass: (id)sender
+{
+  if (![outlineView isEditing])
+    {
+      NSString *itemSelected = [self selectedClassName];
+      
+      if(itemSelected != nil)
+	{
+	  NSString *newClassName;
+
+	  newClassName = [classManager addClassWithSuperClassName:
+					 itemSelected];
+	  if(newClassName != nil)
+	    {
+	      int i = 0;
+	      if([classesView contentView] == scrollView)
+		{
+		  [outlineView reloadData];
+		  [outlineView expandItem: itemSelected];
+		  i = [outlineView rowForItem: newClassName]; 
+		  [outlineView selectRow: i byExtendingSelection: NO];
+		  [outlineView scrollRowToVisible: i];
+		}
+	      else if([classesView contentView] == browserView)
+		{
+		  [self selectClass: newClassName editClass: NO];
+		}
+	    }
+	  else
+	    {
+	      // inform the user of this error.
+	      NSRunAlertPanel(_(@"Cannot instantiate"), 
+			      _(@"FirstResponder cannot be instantiated."),
+			      nil, nil, nil);
+	    }
+	}
+    }
+  return self;
+}
+
+/**
+ * Create an instance of a given class.
+ */
+- (id) instantiateClass: (id)sender
+{
+  NSString *object = [self selectedClassName];
+  GSNibItem *item = nil;
+  
+  if([object isEqualToString: @"FirstResponder"])
+    {
+      return nil;
+    }
+
+  if([classManager canInstantiateClassNamed: object] == NO)
+    {
+      return nil;
+    }
+
+  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
+     [object isEqual: @"NSView"])
+    {
+      Class cls;
+      NSString *className = object;
+      BOOL isCustom = [classManager isCustomClass: object];
+      id instance;
+      
+      if(isCustom)
+	{
+	  className = [classManager nonCustomSuperClassOf: object];
+	}
+      
+      // instantiate the object or it's substitute...
+      cls = NSClassFromString(className);
+      if([cls respondsToSelector: @selector(allocSubstitute)])
+	{
+	  instance = [cls allocSubstitute];
+	}
+      else
+	{
+	  instance = [cls alloc];
+	}
+      
+      // give it some initial dimensions...
+      if([instance respondsToSelector: @selector(initWithFrame:)])
+	{
+	  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
+	}
+      else
+	{
+	  instance = [instance init];
+	}
+      
+      // add it to the top level objects...
+      [document setName: nil forObject: instance];
+      [document attachObject: instance toParent: nil];
+      
+      // we want to record if it's custom or not and act appropriately...
+      if(isCustom)
+	{
+	  NSString *name = [document nameForObject: instance];
+	  [classManager setCustomClass: object
+			forName: name];
+	}
+
+      [document changeToViewWithTag: 0];
+      NSLog(@"Instantiate NSView subclass %@",object);	      
+    }
+  else
+    {
+      item = [[GormObjectProxy alloc] initWithClassName: object];
+      [document setName: nil forObject: item];
+      [document attachObject: item toParent: nil];      
+      [document changeToViewWithTag: 0];
+    }
+  
+  return self;
+}
+
+/**
+ * Remove a class from the classes view
+ */
+- (id) removeClass: (id)sender
+{
+  [self deleteSelection];
+  return self;
+}
+
+/**
+ * Parse a header into the classes view.
+ */
+- (id) loadClass: (id)sender
+{
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
+  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
+  int		result;
+
+  [oPanel setAllowsMultipleSelection: NO];
+  [oPanel setCanChooseFiles: YES];
+  [oPanel setCanChooseDirectories: NO];
+  result = [oPanel runModalForDirectory: nil
+				   file: nil
+				  types: fileTypes];
+  if (result == NSOKButton)
+    {
+      NSString *filename = [oPanel filename];
+
+      NS_DURING
+	{
+	  if(![classManager parseHeader: filename])
+	    {
+	      NSString *file = [filename lastPathComponent];
+	      NSString *message = [NSString stringWithFormat: 
+					      _(@"Unable to parse class in %@"),file];
+	      NSRunAlertPanel(_(@"Problem parsing class"), 
+			      message,
+			      nil, nil, nil);
+	    }
+	  else
+	    {
+	      return self;
+	    }
+	}
+      NS_HANDLER
+	{
+	  NSString *message = [localException reason];
+	  NSRunAlertPanel(_(@"Problem parsing class"), 
+			  message,
+			  nil, nil, nil);
+	}
+      NS_ENDHANDLER
+    }
+
+  return nil;
+}
+
+/**
+ * Create the class files for the selected class.
+ */
+- (id) createClassFiles: (id)sender
+{
+  NSSavePanel		*sp;
+  NSString              *className = [self selectedClassName];
+  int			result;
+
+  sp = [NSSavePanel savePanel];
+  [sp setRequiredFileType: @"m"];
+  [sp setTitle: _(@"Save source file as...")];
+  if ([document fileName] == nil)
+    {
+      result = [sp runModalForDirectory: NSHomeDirectory() 
+		   file: [className stringByAppendingPathExtension: @"m"]];
+    }
+  else
+    {
+      result = [sp runModalForDirectory: 
+		     [[document fileName] stringByDeletingLastPathComponent]
+		   file: [className stringByAppendingPathExtension: @"m"]];
+    }
+
+  if (result == NSOKButton)
+    {
+      NSString *sourceName = [sp filename];
+      NSString *headerName;
+
+      [sp setRequiredFileType: @"h"];
+      [sp setTitle: _(@"Save header file as...")];
+      result = [sp runModalForDirectory: 
+		     [sourceName stringByDeletingLastPathComponent]
+		   file: 
+		     [[[sourceName lastPathComponent]
+			stringByDeletingPathExtension] 
+		       stringByAppendingString: @".h"]];
+      if (result == NSOKButton)
+	{
+	  headerName = [sp filename];
+	  NSDebugLog(@"Saving %@", className);
+	  if (![classManager makeSourceAndHeaderFilesForClass: className
+			     withName: sourceName
+			     and: headerName])
+	    {
+	      NSRunAlertPanel(_(@"Alert"), 
+			      _(@"Could not create the class's file"),
+			      nil, nil, nil);
+	    }
+	  
+	  return self;
+	}
+    }
+  return nil;
+}
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  id object = [aNotification object];
+  NSString *className = [classManager findClassByName: [object stringValue]];
+  [self selectClass: className];
+}
+
 @end
 
 @implementation GormClassEditor (NSOutlineViewDataSource)
@@ -1169,7 +1380,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 	{
 	  id item = [object itemAtRow: [object selectedRow]];
 	  if ([item isKindOfClass: [GormOutletActionHolder class]] == NO &&
-	      [self contentView] == scrollView)
+	      [classesView contentView] == scrollView)
 	    {
 	      [self editClass];
 	    }

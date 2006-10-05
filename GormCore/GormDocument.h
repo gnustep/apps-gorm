@@ -207,8 +207,6 @@
 - (id) createClassFiles: (id)sender;
 - (id) addAttributeToClass: (id)sender;
 - (id) remove: (id)sender;
-- (id) createClassFiles: (id)sender;
-- (id) instantiateClass: (id)sender;
 - (void) selectClass: (NSString *)className;
 - (void) selectClass: (NSString *)className editClass: (BOOL)flag;
 - (BOOL) classIsSelected;

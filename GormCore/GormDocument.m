@@ -413,7 +413,7 @@ static NSImage  *fileImage = nil;
   /* classes view */
   mainRect.origin = NSMakePoint(0,0);
   classesView = [(GormClassEditor *)[GormClassEditor alloc] initWithDocument: self];
-  [classesView setFrame: mainRect];
+  // [classesView setFrame: mainRect];
   
   /*
    * Set the objects view as the initial view the user's see on startup.
@@ -1129,15 +1129,6 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Create a subclass of the currently selected class in the classes view.
- */
-- (id) createSubclass: (id)sender
-{
-  [classesView createSubclass];
-  return self;
-}
-
-/**
  * The given pasteboard chaned ownership.
  */
 - (void) pasteboardChangedOwner: (NSPasteboard *)sender
@@ -1373,6 +1364,14 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Create a subclass of the currently selected class in the classes view.
+ */
+- (id) createSubclass: (id)sender
+{
+  return [classesView createSubclass: sender];
+}
+
+/**
  * Add an outlet/action to the classes view.
  */
 - (id) addAttributeToClass: (id)sender
@@ -1382,12 +1381,19 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Create an instance of a given class.
+ */
+- (id) instantiateClass: (id)sender
+{
+  return [classesView instantiateClass: sender];
+}
+
+/**
  * Remove a class from the classes view
  */
 - (id) remove: (id)sender
 {
-  [classesView deleteSelection];
-  return self;
+  return [classesView removeClass: sender];
 }
 
 /**
@@ -1395,47 +1401,7 @@ static NSImage  *fileImage = nil;
  */
 - (id) loadClass: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
-  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
-  int		result;
-
-  [oPanel setAllowsMultipleSelection: NO];
-  [oPanel setCanChooseFiles: YES];
-  [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: nil
-				   file: nil
-				  types: fileTypes];
-  if (result == NSOKButton)
-    {
-      NSString *filename = [oPanel filename];
-
-      NS_DURING
-	{
-	  if(![classManager parseHeader: filename])
-	    {
-	      NSString *file = [filename lastPathComponent];
-	      NSString *message = [NSString stringWithFormat: 
-					      _(@"Unable to parse class in %@"),file];
-	      NSRunAlertPanel(_(@"Problem parsing class"), 
-			      message,
-			      nil, nil, nil);
-	    }
-	  else
-	    {
-	      return self;
-	    }
-	}
-      NS_HANDLER
-	{
-	  NSString *message = [localException reason];
-	  NSRunAlertPanel(_(@"Problem parsing class"), 
-			  message,
-			  nil, nil, nil);
-	}
-      NS_ENDHANDLER
-    }
-
-  return nil;
+  return [classesView loadClass: sender];
 }
 
 /**
@@ -1443,55 +1409,7 @@ static NSImage  *fileImage = nil;
  */
 - (id) createClassFiles: (id)sender
 {
-  NSSavePanel		*sp;
-  NSString              *className = [classesView selectedClassName];
-  int			result;
-
-  sp = [NSSavePanel savePanel];
-  [sp setRequiredFileType: @"m"];
-  [sp setTitle: _(@"Save source file as...")];
-  if ([self fileName] == nil)
-    {
-      result = [sp runModalForDirectory: NSHomeDirectory() 
-		   file: [className stringByAppendingPathExtension: @"m"]];
-    }
-  else
-    {
-      result = [sp runModalForDirectory: 
-		     [[self fileName] stringByDeletingLastPathComponent]
-		   file: [className stringByAppendingPathExtension: @"m"]];
-    }
-
-  if (result == NSOKButton)
-    {
-      NSString *sourceName = [sp filename];
-      NSString *headerName;
-
-      [sp setRequiredFileType: @"h"];
-      [sp setTitle: _(@"Save header file as...")];
-      result = [sp runModalForDirectory: 
-		     [sourceName stringByDeletingLastPathComponent]
-		   file: 
-		     [[[sourceName lastPathComponent]
-			stringByDeletingPathExtension] 
-		       stringByAppendingString: @".h"]];
-      if (result == NSOKButton)
-	{
-	  headerName = [sp filename];
-	  NSDebugLog(@"Saving %@", className);
-	  if (![classManager makeSourceAndHeaderFilesForClass: className
-			     withName: sourceName
-			     and: headerName])
-	    {
-	      NSRunAlertPanel(_(@"Alert"), 
-			      _(@"Could not create the class's file"),
-			      nil, nil, nil);
-	    }
-	  
-	  return self;
-	}
-    }
-  return nil;
+  return [classesView createClassFiles: sender];
 }
 
 /**
@@ -1811,84 +1729,6 @@ static NSImage  *fileImage = nil;
 	  [resourceManagers addObject: mgr];
 	}
     }
-}
-
-/**
- * Create an instance of a given class.
- */
-- (id) instantiateClass: (id)sender
-{
-  NSString *object = [classesView selectedClassName];
-  GSNibItem *item = nil;
-  
-  if([object isEqualToString: @"FirstResponder"])
-    {
-      return nil;
-    }
-
-  if([classManager canInstantiateClassNamed: object] == NO)
-    {
-      return nil;
-    }
-
-  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
-     [object isEqual: @"NSView"])
-    {
-      Class cls;
-      NSString *className = object;
-      BOOL isCustom = [classManager isCustomClass: object];
-      id instance;
-      
-      if(isCustom)
-	{
-	  className = [classManager nonCustomSuperClassOf: object];
-	}
-      
-      // instantiate the object or it's substitute...
-      cls = NSClassFromString(className);
-      if([cls respondsToSelector: @selector(allocSubstitute)])
-	{
-	  instance = [cls allocSubstitute];
-	}
-      else
-	{
-	  instance = [cls alloc];
-	}
-      
-      // give it some initial dimensions...
-      if([instance respondsToSelector: @selector(initWithFrame:)])
-	{
-	  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
-	}
-      else
-	{
-	  instance = [instance init];
-	}
-      
-      // add it to the top level objects...
-      [self setName: nil forObject: instance];
-      [self attachObject: instance toParent: nil];
-      
-      // we want to record if it's custom or not and act appropriately...
-      if(isCustom)
-	{
-	  NSString *name = [self nameForObject: instance];
-	  [classManager setCustomClass: object
-			forName: name];
-	}
-
-      [self changeToViewWithTag: 0];
-      NSLog(@"Instantiate NSView subclass %@",object);	      
-    }
-  else
-    {
-      item = [[GormObjectProxy alloc] initWithClassName: object];
-      [self setName: nil forObject: item];
-      [self attachObject: item toParent: nil];      
-      [self changeToViewWithTag: 0];
-    }
-  
-  return self;
 }
 
 /**
@@ -3583,13 +3423,6 @@ static NSImage  *fileImage = nil;
 	[[con destination] activate];
     }
   [savedEditors removeAllObjects];
-}
-
-- (void)controlTextDidChange:(NSNotification *)aNotification
-{
-  id object = [aNotification object];
-  NSString *className = [classManager findClassByName: [object stringValue]];
-  [classesView selectClass: className];
 }
 
 - (void) setFileType: (NSString *)type
