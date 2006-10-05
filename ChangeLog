@@ -2,7 +2,7 @@
 
 	* English.lproj/GormClassEditor.gorm: Added new gorm file to hold
 	classes view contents as well as search and operations drop down.
-	* English.lproj/GormDocument.gorm: Removed seatch and drop down
+	* English.lproj/GormDocument.gorm: Removed search and drop down
 	* GNUmakefile: Added new gorm file.
 	* GormCore/GormClassEditor.h: new outlets classesView and mainView, 
 	added declarations for methods createSubclass:, createClassFiles:, 
