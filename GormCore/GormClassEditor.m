@@ -157,6 +157,10 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	      selector: @selector(handleNotification:)
 	      name: GormSwitchViewPreferencesNotification
 	      object: nil];
+	  [nc addObserver: self
+	      selector: @selector(handleNotification:)
+	      name: GormDidAddClassNotification
+	      object: nil];
 	  
 	  // kludge to prevent it from having resize issues.
 	  [classesView setContentView: scrollView];
@@ -207,7 +211,10 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 
 - (void) handleNotification: (NSNotification *)notification
 {
-  [self switchView];
+  if([[notification name] isEqualToString: GormSwitchViewPreferencesNotification])
+    {
+      [self switchView];
+    }
 }
 
 - (void) browserClick: (id)sender
@@ -501,6 +508,9 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
       anitem = [[browserView selectedCell] stringValue];
     }
 
+  if(anitem == nil)
+    return;
+  
   if ([anitem isKindOfClass: [GormOutletActionHolder class]])
     {
       id itemBeingEdited = [outlineView itemBeingEdited];
