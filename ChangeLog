@@ -1,3 +1,11 @@
+2006-10-06  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormCore/GormPalettesManager.m: rewrite code to set up drag image
+	so we avoid glitches on the pallette view (we no longer use the
+	pallette window directly as the cached image window) and ensure that
+	the image dragged is all copied correctly to avoid the glitches
+	when dragging BSBox and NSScrollView items.
+
 2006-10-06 00:16-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m: Minor cleanup in handleNotification: 

@@ -167,6 +167,7 @@ static NSImage	*dragImage = nil;
 - (void) mouseDown: (NSEvent*)theEvent
 {
   NSPoint	dragPoint = [theEvent locationInWindow];
+  NSWindow	*w = [self window];
   NSView	*view;
   GormDocument	*active = (GormDocument *)[(id<IB>)NSApp activeDocument];
   NSRect	rect;
@@ -201,11 +202,24 @@ static NSImage	*dragImage = nil;
 
   RELEASE(dragImage);
   dragImage = [[NSImage alloc] init];
-  rep = [[NSCachedImageRep alloc] initWithWindow: [self window]
-					    rect: rect];
   [dragImage setSize: rect.size];
+  rep = [[NSCachedImageRep alloc] initWithSize: rect.size
+					 depth: [w depthLimit]
+				      separate: YES
+					 alpha: [w alphaValue]>0.0 ? YES : NO];
   [dragImage addRepresentation: rep];
   RELEASE(rep);
+
+  /* Copy the contents of the clicked view from our window into the
+   * cached image representation.
+   * NB. We use lockFocusOnRepresentation: for this because it sets
+   * up cached image representation information in the image, and if
+   * that's not done before our copy, the image will overwrite our
+   * copied data when asked to draw the representation.
+   */
+  [dragImage lockFocusOnRepresentation: rep];
+  NSCopyBits([w gState], rect, NSZeroPoint);
+  [dragImage unlockFocus];
 
   type = [IBPalette typeForView: view];
   obj = [IBPalette objectForView: view];
