@@ -2,10 +2,11 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "instantiateClass:",
-	    "createSubclass:",
-	    "loadClass:",
 	    "createClassFiles:",
+	    "createSubclass:",
+	    "instantiateClass:",
+	    "loadClass:",
+	    "toggleView:",
 	    "removeClass:"
 	);
 	Super = NSObject;
@@ -16,7 +17,8 @@
 	    "createSubclass:",
 	    "loadClass:",
 	    "createClassFiles:",
-	    "removeClass:"
+	    "removeClass:",
+	    "toggleView:"
 	);
 	Outlets = (
 	    classesView,

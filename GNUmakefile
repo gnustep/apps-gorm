@@ -125,7 +125,9 @@ Gorm_RESOURCE_FILES = \
 	Images/GormView.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
-	Images/GormTesting.tiff 
+	Images/GormTesting.tiff \
+	Images/outlineView.tiff \
+	Images/browserView.tiff
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormClassEditor.gorm \
