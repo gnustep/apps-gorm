@@ -175,6 +175,8 @@
             */
       [object setButtonType: [sender tag]];
     }
+
+  [super ok: sender];
 }
 
 -(void) revert: (id)sender

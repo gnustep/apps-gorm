@@ -113,7 +113,6 @@ static NSNotificationCenter *nc = nil;
 - (void) touch: (id)sender
 {
   id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
-  [window setDocumentEdited: YES];
   [doc touch];
 }
 

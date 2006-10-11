@@ -1,3 +1,10 @@
+2006-10-10 21:28-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBInspector.m: Remove uneeded call to 
+	[window setDocumentEdited:] in touch: method.
+	* Palettes/2Controls/GormButtonAttributesInspector.m:
+	In ok: call [super ok:].
+
 2006-10-10 20:56-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassEditor.gorm: Make button momentary push
