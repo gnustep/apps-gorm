@@ -24,6 +24,9 @@
 #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 
+# Put in the system directory...
+GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
+
 include $(GNUSTEP_MAKEFILES)/common.make
 
 CVS_MODULE_NAME = gorm
