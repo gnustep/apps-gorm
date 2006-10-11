@@ -44,6 +44,7 @@ extern NSString *GormSwitchViewPreferencesNotification;
   NSBrowser             *browserView;
   id                     classesView;
   id                     mainView;
+  id                     viewToggle;
 }
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;

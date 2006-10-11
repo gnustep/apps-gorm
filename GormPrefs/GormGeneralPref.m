@@ -105,7 +105,7 @@ static NSString *INTTYPE=@"ClassViewType";
   else
     {
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+      // NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
  
       if([[interfaceMatrix cellAtRow: 0 column: 0] state] == NSOnState)
 	{
@@ -117,8 +117,8 @@ static NSString *INTTYPE=@"ClassViewType";
 	}
 
       // let the world know it's changed.
-      [nc postNotificationName: GormSwitchViewPreferencesNotification
-	  object: nil];
+      // [nc postNotificationName: GormSwitchViewPreferencesNotification
+      //     object: nil];
 
     }
 }

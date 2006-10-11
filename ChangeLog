@@ -1,3 +1,14 @@
+2006-10-10 20:56-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormClassEditor.gorm: Make button momentary push
+	and remove the image.
+	* English.lproj/GormPrefGeneral.gorm: Change box title.
+	* GormCore/GormClassEditor.[hm]: Change switchView to 
+	switchViewToDefault, add method toggleView:, add code to change
+	image as appropriate.
+	* GormPrefs/GormGeneralPref.m: Remove notification in classesAction:
+	so that the default changes don't effect all class editors.
+
 2006-10-10 00:37-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassEditor.gorm: Aligned the toggle with

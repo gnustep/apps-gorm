@@ -22,7 +22,8 @@
 	);
 	Outlets = (
 	    classesView,
-	    mainView
+	    mainView,
+	    viewToggle
 	);
 	Super = NSView;
     };

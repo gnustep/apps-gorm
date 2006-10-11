@@ -34,6 +34,8 @@
 
 NSString *GormClassPboardType = @"GormClassPboardType";
 NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNotification";
+NSImage *outlineImage = nil;
+NSImage *browserImage = nil;
 
 @interface GormOutlineView (PrivateMethods)
 - (void) _addNewActionToObject: (id)item;
@@ -43,11 +45,20 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 @interface GormClassEditor (PrivateMethods)
 - (void) browserClick: (id)sender;
 - (void) toggleView: (id) sender;
-- (void) switchView;
+- (void) switchViewToDefault;
 - (void) handleNotification: (NSNotification *)notification;
 @end
 
 @implementation	GormClassEditor
+
++ (void) initialize
+{
+  if(self == [GormClassEditor class])
+    {
+      outlineImage = [NSImage imageNamed: @"outlineView"];
+      browserImage = [NSImage imageNamed: @"browserView"];
+    }
+}
 
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc
 {
@@ -168,7 +179,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 	  [classesView sizeToFit];
 	  
 	  // switch...
-	  [self switchView]; 
+	  [self switchViewToDefault]; 
 	  
 	  // register for types...
 	  [IBResourceManager registerForAllPboardTypes: self
@@ -189,22 +200,25 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 
 - (void) toggleView: (id) sender
 {
-  NSUserDefaults *ud = [NSUserDefaults standardUserDefaults]; 
-  NSString *viewType = [ud stringForKey: @"ClassViewType"];
-
-  if([viewType isEqual: @"Outline"] || viewType == nil)
+  id contentView = [classesView contentView];
+  if(contentView == browserView)
     {
-      [ud setObject: @"Browser" forKey: @"ClassViewType"];
+      NSRect rect = [classesView frame];
+      [classesView setContentView: scrollView];
+      [outlineView setFrame: rect];
+      [outlineView sizeToFit];
+      [viewToggle setImage: browserImage];
     }
-  else if([viewType isEqual: @"Browser"] || viewType == nil)
+  else if(contentView == scrollView)
     {
-      [ud setObject: @"Outline" forKey: @"ClassViewType"];
+      [classesView setContentView: browserView];
+      [viewToggle setImage: outlineImage];
     }
 
-  [self switchView];
+  [self setSelectedClassName: selectedClass];
 }
 
-- (void) switchView
+- (void) switchViewToDefault
 {
   NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
   NSString *viewType = [ud stringForKey: @"ClassViewType"];
@@ -215,10 +229,12 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
       [classesView setContentView: scrollView];
       [outlineView setFrame: rect];
       [outlineView sizeToFit];
+      [viewToggle setImage: browserImage];
     }
   else if([viewType isEqual: @"Browser"])
     {
       [classesView setContentView: browserView];
+      [viewToggle setImage: outlineImage];
     }
 
   [self setSelectedClassName: selectedClass];
@@ -228,7 +244,7 @@ NSString *GormSwitchViewPreferencesNotification = @"GormSwitchViewPreferencesNot
 {
   if([[notification name] isEqualToString: GormSwitchViewPreferencesNotification])
     {
-      [self switchView];
+      [self switchViewToDefault];
     }
 }
 
