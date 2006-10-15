@@ -1,3 +1,9 @@
+2006-10-15 19:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Images/GormFile.tiff: New Gorm file icon, based on new Gorm icon.
+	* Images/GormTesting.tiff: New testing icon.
+	* Images/Gorm.tiff: Switch to icon by Jesse Ross.
+
 2006-10-10 22:46-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Install into SYSTEM domain by default.
