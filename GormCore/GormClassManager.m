@@ -1911,6 +1911,10 @@
 
 		      if (retval == NSAlertDefaultReturn)
 			{
+			  // get the owner and reset the class name to NSApplication.
+			  GormFilesOwner *owner = [document objectForName: @"NSOwner"];
+			  NSString *ownerClassName = [owner className];
+
 			  // delete the class..
 			  [self removeClassNamed: className];
 			  
@@ -1922,6 +1926,9 @@
 			  
 			  // refresh the connections.
 			  [document refreshConnectionsForClassNamed: className];
+
+			  // reset the class name.
+			  [owner setClassName: ownerClassName];
 			}
 		    }
 		  else

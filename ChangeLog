@@ -1,3 +1,9 @@
+2006-10-19 23:11-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.m: Retain File's Owner setting, if
+	class is being updated.
+	Correction for bug #18035 
+
 2006-10-19 22:56-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.[hm]: Added actionExists:onClassNamed: and
@@ -9,6 +15,7 @@
 	which type this is for.
 	* Images/GormNib.tiff: Added "nib" in the center to make it obvious
 	which type this is for.
+	Correction for bug #18035 
 
 2006-10-18 14:03-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
