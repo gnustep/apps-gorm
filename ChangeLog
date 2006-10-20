@@ -1,3 +1,15 @@
+2006-10-19 22:56-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassManager.[hm]: Added actionExists:onClassNamed: and
+	outletExists:onClassNamed: methods to query the existence of a
+	given action/outlet on a given class.
+	* GormCore/GormDocument.[hm]: Added refreshConnectionsForClassNamed:
+	method.
+	* Images/GormFile.tiff: Added "gorm" in the center to make it obvious
+	which type this is for.
+	* Images/GormNib.tiff: Added "nib" in the center to make it obvious
+	which type this is for.
+
 2006-10-18 14:03-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Images/FileIcon_gmodel.tiff

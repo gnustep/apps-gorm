@@ -94,6 +94,10 @@
 - (NSDictionary *) dictionaryForClassNamed: (NSString *)className;
 - (NSString *) uniqueClassNameFrom: (NSString *)name;
 - (BOOL) isRootClass: (NSString *)className;
+- (BOOL) outletExists: (NSString *)outlet
+         onClassNamed: (NSString *)className;
+- (BOOL) actionExists: (NSString *)action
+         onClassNamed: (NSString *)className;
 
 /* Managing custom classes */
 - (BOOL) isCustomClass: (NSString *)className;

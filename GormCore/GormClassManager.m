@@ -950,6 +950,20 @@
   return [self classInfoForClassName: className];
 }
 
+- (BOOL) actionExists: (NSString *)action
+	 onClassNamed: (NSString *)className
+{
+  NSArray *actions = [self allActionsForClassNamed: className];
+  return [actions containsObject: action];
+}
+
+- (BOOL) outletExists: (NSString *)outlet
+	 onClassNamed: (NSString *)className
+{
+  NSArray *outlets = [self allOutletsForClassNamed: className];
+  return [outlets containsObject: outlet];
+}
+
 - (void) dealloc
 {
   RELEASE(classInformation);
@@ -1886,7 +1900,16 @@
 		{
 		  if([self isKnownClass: className])
 		    {
-		      if([document removeConnectionsForClassNamed: className])
+		      NSString *title = [NSString stringWithFormat: 
+						    _(@"Reparsing Class")];
+		      NSString *msg = [NSString stringWithFormat: 
+						  _(@"This may break connections to "
+						    @"actions/outlets to instances of class '%@' "
+						    @"and it's subclasses.  Continue?"), 
+						className];
+		      int retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+
+		      if (retval == NSAlertDefaultReturn)
 			{
 			  // delete the class..
 			  [self removeClassNamed: className];
@@ -1896,6 +1919,9 @@
 				withSuperClassNamed: superClass
 				withActions: actions
 				withOutlets: outlets];
+			  
+			  // refresh the connections.
+			  [document refreshConnectionsForClassNamed: className];
 			}
 		    }
 		  else

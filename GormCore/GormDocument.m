@@ -2580,6 +2580,57 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Refresh all connections to any and all instances of className.  Checks if
+ * the class has the action/outlet present and deletes it, if it doesn't.
+ */
+- (void) refreshConnectionsForClassNamed: (NSString *)className
+{
+  NSEnumerator *en = [connections objectEnumerator];
+  NSMutableArray *removedConnections = [NSMutableArray array];
+  id<IBConnectors> c = nil;
+  
+  // first find all of the connections...
+  while ((c = [en nextObject]) != nil)
+    {
+      NSString *srcClass = [[c source] className];
+      NSString *dstClass = [[c destination] className];
+      NSString *label = [c label];
+      
+      if ([srcClass isEqualToString: className] ||
+	  [classManager isSuperclass: className 
+			linkedToClass: srcClass])
+	{
+	  if([c isKindOfClass: [NSNibOutletConnector class]])
+	    {
+	      if([classManager outletExists: label onClassNamed: className] == NO)
+		{
+		  [removedConnections addObject: c];
+		}
+	    }	      
+	}
+      else if([dstClass isEqualToString: className] ||
+	      [classManager isSuperclass: className 
+			    linkedToClass: dstClass])
+	{
+	  if([c isKindOfClass: [NSNibControlConnector class]])
+	    {
+	      if([classManager actionExists: label onClassNamed: className] == NO)
+		{
+		  [removedConnections addObject: c];
+		}
+	    }
+	}
+    }
+  
+  // then remove them.
+  en = [removedConnections objectEnumerator];
+  while((c = [en nextObject]) != nil)
+    {
+      [self removeConnector: c];
+    }
+}
+
+/**
  * Rename connections connected to an instance of on class to another.
  */
 - (BOOL) renameConnectionsForClassNamed: (NSString *)className

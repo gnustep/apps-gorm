@@ -249,6 +249,12 @@
 - (BOOL) renameConnectionsForClassNamed: (NSString *)name 
                                  toName: (NSString *)newName;
 
+/**
+ * Refresh all connections to any and all instances of className.  Checks if
+ * the class has the action/outlet present and deletes it, if it doesn't.
+ */
+- (void) refreshConnectionsForClassNamed: (NSString *)className;
+
 /* class loading */
 
 /**
