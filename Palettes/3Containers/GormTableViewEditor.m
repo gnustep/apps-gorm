@@ -101,6 +101,15 @@ static NSText *_textObject;
   return NO;
 }
 
+- (NSRect) documentRect
+{
+  NSRect visRect = _bounds;
+  if ([_super_view respondsToSelector:@selector(documentRect)])
+    {
+      visRect = [(NSClipView *)_super_view documentRect]; 
+    }
+  return visRect; 
+}
 
 /**
  * Deactivate an editor - removes it from the view hierarchy so that objects
