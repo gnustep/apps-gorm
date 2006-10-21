@@ -255,10 +255,10 @@
 - (void) refreshCells
 {
   unsigned	count = [objects count];
-  unsigned	index;
+  unsigned	index = 0;
   int		cols = 0;
-  int		rows;
-  int		width;
+  int		rows = 0;
+  int		width = 0;
 
   width = [[self superview] bounds].size.width;
   while (width >= 72)

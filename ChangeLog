@@ -1,3 +1,11 @@
+2006-10-21 16:06-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormConnectionInspector.m: Added awakeFromNib method
+	to call setDoubleAction: on the newBrowser (connection) object
+	so that double click will now cause a connection to be made.
+	* GormCore/GormGenericEditor.m: Initialize local variables in
+	refreshCells method.
+
 2006-10-21 11:45-EDT Matt Rice <ratmice@yahoo.com>
 
 	* Palettes/3Containers/GormTableViewEditor.m: Implement documentRect.

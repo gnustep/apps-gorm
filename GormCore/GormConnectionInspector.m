@@ -61,6 +61,11 @@
   return self;
 }
 
+- (void) awakeFromNib
+{
+  [newBrowser setDoubleAction: @selector(ok:)];
+}
+
 - (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
 {
   int		rows = 0;
