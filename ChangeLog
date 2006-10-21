@@ -1,3 +1,13 @@
+2006-10-20 20:08-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile
+	* GormLib/GNUmakefile
+	* GormLib/Version
+	* GormObjCHeaderParser/GNUmakefile
+	* GormObjCHeaderParser/Version
+	* GormPrefs/GNUmakefile: Modify GNUmakefiles to use Version
+	to properly name .so libraries.
+
 2006-10-19 23:11-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassManager.m: Retain File's Owner setting, if

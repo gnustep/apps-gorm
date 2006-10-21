@@ -34,6 +34,8 @@ GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
+include ../Version
+
 GormCore_HEADER_FILES = \
 	GormBoxEditor.h \
 	GormClassEditor.h \
