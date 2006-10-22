@@ -30,14 +30,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 #include "GormTableViewAttributesInspector.h"
-
 #include "GormNSTableView.h"
-
 #include <GormCore/NSColorWell+GormExtensions.h>
 #include <GormCore/GormPrivate.h>
-
 #include <Foundation/NSNotification.h>
-
 #include <AppKit/NSButton.h>
 #include <AppKit/NSColorWell.h>
 #include <AppKit/NSForm.h>
