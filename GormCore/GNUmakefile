@@ -53,6 +53,7 @@ GormCore_HEADER_FILES = \
 	GormFontViewController.h \
 	GormFunctions.h \
 	GormGenericEditor.h \
+	GormHelpInspector.h \
 	GormImage.h \
 	GormImageEditor.h \
 	GormImageInspector.h \
@@ -109,6 +110,7 @@ GormCore_OBJC_FILES = \
 	GormFontViewController.m \
 	GormFunctions.m \
 	GormGenericEditor.m \
+	GormHelpInspector.m \
 	GormGormWrapperBuilder.m \
 	GormGormWrapperLoader.m \
 	GormGModelWrapperLoader.m \

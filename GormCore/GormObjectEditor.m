@@ -83,6 +83,13 @@
 }
 @end
 
+@implementation NSView (GormObjectAdditions)
+- (NSString*) helpInspectorClassName
+{
+  return @"GormHelpInspector";
+}
+@end
+
 @implementation	GormObjectEditor
 
 static NSMapTable	*docMap = 0;

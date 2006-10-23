@@ -141,6 +141,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormDocument.gorm \
 	GormDummyInspector.gorm \
 	GormFontView.gorm \
+	GormHelpInspector.gorm \
 	Gorm.gorm \
 	GormImageInspector.gorm \
 	GormInspectorPanel.gorm \

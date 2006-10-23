@@ -481,7 +481,9 @@ selectCellWithString: (NSString*)title
       [oldBrowser loadColumnZero];
       [oldBrowser setPath: path];
     }
-  [[(id<IB>)NSApp activeDocument] touch];	/* mark as edited.	*/
+
+  // mark as edited.   
+  [super ok: sender];
   [self updateButtons];
 }
 
