@@ -73,6 +73,11 @@
       NSString *val = [con marker];
       [toolTip setStringValue: val];
     }
+  else
+    {
+      [toolTip setStringValue: @""];
+    }
+
   [super revert: sender];
 }
 
