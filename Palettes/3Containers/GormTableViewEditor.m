@@ -101,12 +101,12 @@ static NSText *_textObject;
   return NO;
 }
 
-- (NSRect) documentRect
+- (NSRect) documentVisibleRect
 {
   NSRect visRect = _bounds;
-  if ([_super_view respondsToSelector:@selector(documentRect)])
+  if ([_super_view respondsToSelector:@selector(documentVisibleRect)])
     {
-      visRect = [(NSClipView *)_super_view documentRect]; 
+      visRect = [(NSClipView *)_super_view documentVisibleRect]; 
     }
   return visRect; 
 }
