@@ -1,3 +1,8 @@
+2006-10-29 19:21-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/3Containers/GormTableViewEditor.m: Add scrollToPoint:
+	method to call the super_view. Corrects bug #18143.
+
 2006-10-28 09:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormClassEditor.gorm: Add tool tips for button and

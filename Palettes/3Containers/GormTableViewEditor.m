@@ -101,6 +101,14 @@ static NSText *_textObject;
   return NO;
 }
 
+- (void) scrollToPoint: (NSPoint)point
+{
+  if ([_super_view respondsToSelector:@selector(scrollToPoint:)])
+    {
+      [(NSClipView *)_super_view scrollToPoint: point]; 
+    }
+}
+
 - (NSRect) documentVisibleRect
 {
   NSRect visRect = _bounds;
