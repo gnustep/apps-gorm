@@ -75,6 +75,11 @@
       [object setMinValue: [[sender cellAtIndex: 0] doubleValue]];
       [object setDoubleValue: [[sender cellAtIndex: 1] doubleValue]];
       [object setMaxValue: [[sender cellAtIndex: 2] doubleValue]];
+      [object setNumberOfTickMarks: [[sender cellAtIndex: 3] intValue]];
+    }
+  else if ( sender == stopOnTicksSwitch ) 
+    {
+      [object setAllowsTickMarkValuesOnly: [stopOnTicksSwitch state]];
     }
   else if ( sender == continuousSwitch ) 
     {
@@ -109,9 +114,11 @@
   [[valuesForm cellAtIndex: 0] setDoubleValue: [object minValue]];
   [[valuesForm cellAtIndex: 1] setDoubleValue: [object doubleValue]];
   [[valuesForm cellAtIndex: 2] setDoubleValue: [object maxValue]];
+  [[valuesForm cellAtIndex: 3] setIntValue: [object numberOfTickMarks]];
 
-  [continuousSwitch setState:[object isContinuous]];
-  [enabledSwitch setState:[object isEnabled]];
+  [continuousSwitch setState: [object isContinuous]];
+  [enabledSwitch setState: [object isEnabled]];
+  [stopOnTicksSwitch setState: [object allowsTickMarkValuesOnly]];
 
   [[altIncrementForm cellAtIndex: 0] setDoubleValue:
 				       [[object cell] altIncrementValue]];
@@ -120,7 +127,6 @@
 			       [[object cell] knobThickness]];
 
   [[tagForm cellAtIndex: 0] setIntValue: [[object cell] tag]];
-
   [super revert:sender];
 }
 

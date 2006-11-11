@@ -46,6 +46,7 @@
   NSForm *altIncrementForm;
   NSButton *continuousSwitch;
   NSButton *enabledSwitch;
+  NSButton *stopOnTicksSwitch;
   NSForm *knobThicknessForm;
   NSForm *tagForm;
 }

@@ -9,7 +9,8 @@
 	    tagForm,
 	    valuesForm,
 	    continuousSwitch,
-	    enabledSwitch
+	    enabledSwitch,
+	    stopOnTicksSwitch
 	);
 	Super = IBInspector;
     };

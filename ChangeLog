@@ -1,3 +1,10 @@
+2006-11-11 00:04-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormNSSliderInspector.gorm: Added switch
+	and textfield to hold the number of tickmarks.
+	* Palettes/2Controls/GormSliderAttributesInspector.[hm]: Added
+	method and ivar to handle tick marks.
+
 2006-10-29 19:21-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/3Containers/GormTableViewEditor.m: Add scrollToPoint:
