@@ -15,7 +15,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PACKAGE_NAME=SimpleApp
 
 APP_NAME=SimpleApp
-GNUSTEP_INSTALLATION_DIR=$(GNUSTEP_LOCAL_ROOT)/
 SimpleApp_MAIN_MODEL_FILE=MainMenu.gorm
 
 #
