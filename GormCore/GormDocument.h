@@ -192,6 +192,12 @@
 - (void) changeToViewWithTag: (int)tag;
 
 /**
+ * returns the view using the specified tag.  
+ * They are 0=objects, 1=images, 2=sounds, 3=classes, 4=file prefs.
+ */
+- (NSView *)viewWithTag:(int)tag;
+
+/**
  * Returns all pasteboard types registered for with the IBResourceManager.
  */
 - (NSArray *) allManagedPboardTypes;

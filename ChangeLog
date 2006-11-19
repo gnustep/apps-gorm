@@ -1,3 +1,21 @@
+2006-11-18  Matt Rice  <ratmice@yahoo.com>
+
+	* GormCore/GNUmakefile: Add GormDocumentWindow.[h,m].
+	* GormCore/GormResourceManager.m: Add code to handle 
+	image/sound/header files.
+	* GormCore/GormDocument.[h,m]: Add -viewWithTag: method.
+	* GormCore/GormClassEditor.m: Remove dragging destination code
+	for resources.
+	* GormCore/GormResourceEditor.m: Ditto.
+	* GormCore/GormObjectEditor.m: Ditto.
+	(addObject:): Change the editor to the GormObjectEditor.
+	* GormCore/GormDocument.m: Register the window for dragged types.
+	Implement -viewWithTag:.
+	* GormCore/GormDocumentWindow.[h,m]: New subclass of NSWindow which
+	handles drag and drop to GormResourceManager.
+	* GormCore/GormDocument.gorm: Set the main document  window to a
+	GormDocumentWindow class.
+
 2006-11-15  Nicola Pero  <nicola.pero@meta-innovation.com>
 
 	* Documentation/Examples/Controller/GNUmakefile: Do not set 

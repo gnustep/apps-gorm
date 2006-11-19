@@ -333,7 +333,10 @@ static NSImage  *fileImage = nil;
 
   // get the window and cache it...
   window = [self _docWindow];
-
+  [IBResourceManager registerForAllPboardTypes:window
+	  			inDocument:self];
+  [window setDocument:self];
+  
   // set up the toolbar...
   toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
   [toolbar setAllowsUserCustomization: NO];
@@ -921,6 +924,25 @@ static NSImage  *fileImage = nil;
 	[selectionBox setContentView: filePrefsView];
       }
       break;
+    }
+}
+
+- (NSView *) viewWithTag:(int)tag
+{
+  switch (tag)
+    {
+      case 0: // objects
+	return objectsView;
+      case 1: // images
+	return imagesView;
+      case 2: // sounds
+	return soundsView;
+      case 3: // classes
+	return classesView;
+      case 4: // file prefs
+        return filePrefsView;
+      default: 
+        return nil;
     }
 }
 
@@ -1727,6 +1749,8 @@ static NSImage  *fileImage = nil;
 	  Class cls = [aNotification object];
 	  id mgr = [(IBResourceManager *)[cls alloc] initWithDocument: self];
 	  [resourceManagers addObject: mgr];
+  	  [IBResourceManager registerForAllPboardTypes:window
+	  			inDocument:self];
 	}
     }
 }

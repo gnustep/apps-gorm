@@ -180,10 +180,6 @@ NSImage *browserImage = nil;
 	  
 	  // switch...
 	  [self switchViewToDefault]; 
-	  
-	  // register for types...
-	  [IBResourceManager registerForAllPboardTypes: self
-			     inDocument: document];
 	}
       else
 	{
@@ -727,105 +723,6 @@ NSImage *browserImage = nil;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
   // no image.
-}
-
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard *pb = [sender draggingPasteboard];
-  NSArray *pbTypes = [pb types];
-  unsigned int oper = NSDragOperationNone;
-  NSString *ext = nil;
-
-  // Get the resource manager first, if nil don't bother calling the rest...
-  if([pbTypes containsObject: NSFilenamesPboardType] == YES)
-    {
-      NSArray *types = [self fileTypes];
-      NSArray *data = [pb propertyListForType: NSFilenamesPboardType];
-      NSString *fileName = nil;
-      NSEnumerator *en = [data objectEnumerator];
-
-      while((fileName = [en nextObject]) != nil)
-	{
-	  ext = [fileName pathExtension];
-	  if([types containsObject: ext])
-	    {
-	      oper = NSDragOperationCopy;
-	      break;
-	    }
-	  else
-	    {
-	      oper = NSDragOperationNone;
-	      break;
-	    }
-	}
-    }
-
-  if(oper == NSDragOperationNone)
-    {      
-      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes 
-		       andFileType: ext];
-    }
-
-  return oper;
-}
-
-- (unsigned) draggingUpdate: (id<NSDraggingInfo>)sender
-{
-  return [self draggingEntered: sender]; 
-}
-
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{ 
-  NSPasteboard *pb = [sender draggingPasteboard];
-  NSArray *types = [pb types];
-
-  if ([types containsObject: NSFilenamesPboardType])
-    {
-      NSArray *data;
-      NSEnumerator *en = nil;
-      NSString *fileName = nil;
-
-      data = [pb propertyListForType: NSFilenamesPboardType];
-      if(data != nil)
-	{
-	  en = [data objectEnumerator];
-	  while((fileName = [en nextObject]) != nil)
-	    {
-	      NS_DURING
-		{
-		  if(![classManager parseHeader: fileName])
-		    {
-		      NSString *file = [fileName lastPathComponent];
-		      NSString *message = [NSString stringWithFormat: 
-						      _(@"Unable to parse class in %@"),file];
-		      NSRunAlertPanel(_(@"Problem parsing class"), 
-				      message,
-				      nil, nil, nil);
-		    }
-		}
-	      NS_HANDLER
-		{
-		  NSString *message = [localException reason];
-		  NSRunAlertPanel(_(@"Problem parsing class"), 
-				  message,
-				  nil, nil, nil);
-		}
-	      NS_ENDHANDLER;
-	    }
-	  return YES;
-	}
-      else
-	{
-	  return NO;
-	}
-    }
-
-  return NO;
-}
-
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
 }
 
 // IBEditor protocol

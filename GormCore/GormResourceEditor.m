@@ -32,9 +32,6 @@
 
 @implementation	GormResourceEditor
 
-// for the resource editors
-static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOperationPrivate;
-
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
   return [types containsObject: NSFilenamesPboardType];
@@ -55,101 +52,6 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
  */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f
 {
-}
-
-- (unsigned int) draggingEntered: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard *pb = [sender draggingPasteboard];
-  NSArray *pbTypes = [pb types];
-  unsigned int mask = [sender draggingSourceOperationMask];
-  unsigned int oper = NSDragOperationNone;
-  NSString *ext = nil;
-
-  if ((mask & handled_mask) && [pbTypes containsObject: NSFilenamesPboardType])
-    {
-      NSArray *data;
-      NSEnumerator *en;
-      NSString *fileName;
-      NSArray *types = [self fileTypes];
-
-      data = [pb propertyListForType: NSFilenamesPboardType];
-      if (!data)
-	{
-	  data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
-	}
-
-      en = [data objectEnumerator];
-      while((fileName = (NSString *)[en nextObject]) != nil)
-	{
-	  ext = [fileName pathExtension];
-	  if([types containsObject: ext] == YES)
-	    {
-	      oper = NSDragOperationCopy;
-	      break;
-	    }
-	  else
-	    {
-	      oper = NSDragOperationNone;
-	      break;
-	    }
-	}
-    }
-
-  if(oper == NSDragOperationNone)
-    {
-      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes 
-		       andFileType: ext]; 
-    }
-
-  return oper;
-}
-
-- (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender
-{
-  return [self draggingEntered: sender];
-}
-
-- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
-{
-  NSPasteboard *pb = [sender draggingPasteboard];
-  NSArray *types = [pb types];
-  unsigned int mask = [sender draggingSourceOperationMask];
-
-  NSDebugLLog(@"dragndrop",@"performDrag %x %@",mask,types);
-
-   if (!(mask & handled_mask))
-     return NO;
-
-  if ([types containsObject: NSFilenamesPboardType])
-    {
-      NSArray *data;
-      int i,c;
-
-      data = [pb propertyListForType: NSFilenamesPboardType];
-      if (!data)
-	data = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: NSFilenamesPboardType]];
-
-      c=[data count];
-      for (i=0;i<c;i++)
-	{
-	  NSString *fileName = [data objectAtIndex: i];
- 	  id placeHolder =  [self placeHolderWithPath: fileName];
-
-	  NSLog(@"====> %@", fileName);
-	  if (placeHolder)
- 	    {
- 	      NSLog(@"here %@", fileName);
-   	      [self addObject: placeHolder];
-	    }
-	}
-      return YES;
-    }
-  return NO;
-}
-
-- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
-{
-  return YES;
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
@@ -188,17 +90,13 @@ static int handled_mask= NSDragOperationCopy | NSDragOperationGeneric | NSDragOp
 }
 
 /*
- *	Initialisation - register to receive DnD with our own types.
+ *	Initialisation 
  */
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
 {
   if ((self = [super initWithObject: anObject inDocument: aDocument]) != nil)
     {
       NSButtonCell	*proto;
-
-      // register for all types.
-      [IBResourceManager registerForAllPboardTypes: self
-			 inDocument: aDocument];
 
       [self setAutosizesCells: NO];
       [self setCellSize: NSMakeSize(72,72)];

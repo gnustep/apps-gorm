@@ -227,37 +227,14 @@ static NSMapTable	*docMap = 0;
 - (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSArray   *pbTypes = nil;
-  NSString  *type = nil;
-  NSArray   *mgrTypes = nil; 
   
   // Get the resource manager first, if nil don't bother calling the rest...
   dragPb = [sender draggingPasteboard];
   pbTypes = [dragPb types];
-  resourceManager = [(GormDocument *)document resourceManagerForPasteboard: dragPb];
-
-  if(resourceManager != nil)
-    {
-      mgrTypes = [resourceManager resourcePasteboardTypes];
-      type = [mgrTypes firstObjectCommonWithArray: pbTypes];
-    }
-
-  if (type != nil)
-    {
-      dragType = type;
-    }
-  else if ([pbTypes containsObject: GormLinkPboardType] == YES)
+  
+  if ([pbTypes containsObject: GormLinkPboardType] == YES)
     {
       dragType = GormLinkPboardType;
-    }
-  else if ([pbTypes containsObject: NSFilenamesPboardType] == YES)
-    {
-      NSArray *data = [dragPb propertyListForType: NSFilenamesPboardType];
-      NSString *fileName = [data objectAtIndex: 0];
-      NSString *ext = [fileName pathExtension];
-
-      [(GormDocument *)document changeToTopLevelEditorAcceptingTypes: pbTypes
-		       andFileType: ext]; 
-      dragType = nil;
     }
   else
     {
@@ -269,11 +246,7 @@ static NSMapTable	*docMap = 0;
 
 - (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
-    {
-      return NSDragOperationCopy;
-    }
-  else if (dragType == GormLinkPboardType)
+  if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
       int	r, c;
@@ -322,11 +295,6 @@ static NSMapTable	*docMap = 0;
       NSDebugLog(@"Recieved notification");
       [self setCellSize: defaultCellSize()];
     }
-  else if([name isEqual: IBResourceManagerRegistryDidChangeNotification])
-    {
-      [IBResourceManager registerForAllPboardTypes: self
-			 inDocument: document];
-    }
 }
 
 /*
@@ -350,10 +318,8 @@ static NSMapTable	*docMap = 0;
       NSButtonCell	*proto;
 
       document = aDocument;
-
-      [IBResourceManager registerForAllPboardTypes: self
-			 inDocument: document];
-
+      
+      [self registerForDraggedTypes:[NSArray arrayWithObject:GormLinkPboardType]];
       [self setAutosizesCells: NO];
       [self setCellSize: defaultCellSize()];
       [self setIntercellSpacing: NSMakeSize(8,8)];
@@ -470,12 +436,7 @@ static NSMapTable	*docMap = 0;
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
-    {
-      [resourceManager addResourcesFromPasteboard: dragPb];
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
+  if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
       int	r, c;
@@ -512,14 +473,7 @@ static NSMapTable	*docMap = 0;
   /*
    * Tell the source that we will accept the drop if we can.
    */
-  if ([[resourceManager resourcePasteboardTypes] containsObject: dragType]) 
-    {
-      /*
-       * We can accept objects dropped anywhere.
-       */
-      return YES;
-    }
-  else if (dragType == GormLinkPboardType)
+  if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
       int	r, c;
@@ -570,6 +524,15 @@ static NSMapTable	*docMap = 0;
       [mgr setClassInspector];
     }
 }
+
+- (void) addObject:(id)anObject
+{
+  [super addObject:anObject];
+  /* we need to do this for palettes which can drop top level objects */
+  [(GormDocument *)document changeToViewWithTag:0];
+}
+
+
 @end
 
 

@@ -23,14 +23,162 @@
  */
 
 #include <Foundation/NSArray.h>
+#include <Foundation/NSArchiver.h>
+#include <AppKit/NSSound.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/NSPasteboard.h>
 #include <InterfaceBuilder/IBPalette.h>
+
+#include "GormSound.h"
+#include "GormImage.h"
+#include "GormClassManager.h"
 #include "GormResourceManager.h"
+#include "GormGenericEditor.h"
+#include "GormDocument.h"
+#include "GormObjectEditor.h"
 
 @implementation GormResourceManager
 
 - (NSArray *) resourcePasteboardTypes
 {
-  return [NSArray arrayWithObjects: IBWindowPboardType, IBViewPboardType, nil];
+  return [NSArray arrayWithObjects: IBWindowPboardType, IBViewPboardType,
+	 			    NSFilenamesPboardType, GormLinkPboardType,
+				    nil];
+}
+
+- (BOOL) acceptsResourcesFromPasteboard:(NSPasteboard *)pb
+{
+  NSArray *types = [pb types];
+  NSArray *acceptedTypes = [self resourcePasteboardTypes];
+  BOOL flag = YES;
+  int i;
+  int c = [types count];
+
+  if (c == 0) return NO; 
+  
+  flag = ([acceptedTypes firstObjectCommonWithArray:types] != nil);
+  
+  for (i = 0; flag && i < c; i++)
+    {
+      id type = [types objectAtIndex:i];
+
+      if ([type isEqual:NSFilenamesPboardType])
+        {
+	  NSArray *files = [pb propertyListForType:type];
+	  NSArray *acceptedFiles = [self resourceFileTypes]; 
+	  int j, d;
+  
+	  if (!files)
+	    {
+	      files = [NSUnarchiver unarchiveObjectWithData:
+			 [pb dataForType: NSFilenamesPboardType]];
+	    }
+	  for (j = 0, d = [files count]; j < d; j++)
+	    {
+	      NSString *ext = [[files objectAtIndex:j] pathExtension];
+	      flag = [acceptedFiles containsObject:ext];
+	    }
+        }
+      else if ([type isEqual:GormLinkPboardType])
+        {
+	  [(GormDocument *)document changeToViewWithTag:0];
+	  return NO;
+        }
+    }
+  return flag;
+}
+
+- (void) addResourcesFromPasteboard:(NSPasteboard *)pb
+{
+  NSArray *types = [pb types];
+  NSArray *soundTypes = [NSSound soundUnfilteredFileTypes];
+  NSArray *imageTypes = [NSImage imageFileTypes];
+  int i;
+  int c = [types count];
+  BOOL found = NO;
+  
+  for (i = 0; i < c; i++)
+    {
+      id type = [types objectAtIndex:i];
+      
+      if ([type isEqual:NSFilenamesPboardType])
+        {
+	  int j, d;
+	  NSArray *files = [pb propertyListForType:type];
+	  found = YES;
+	  if (!files)
+	    {
+	      files = [NSUnarchiver unarchiveObjectWithData:
+			 [pb dataForType: NSFilenamesPboardType]];
+	    }
+
+	  for (j = 0, d = [files count]; j < d; j++)
+	    {
+	      NSString *file = [files objectAtIndex:j];
+	      NSString *ext = [file pathExtension];
+	      if ([ext isEqual:@"h"])
+	        {
+		  GormDocument *doc = document;
+		  GormClassManager *classManager = [doc classManager];
+                  NS_DURING
+                    {
+                      if (![classManager parseHeader: file])
+                        {
+                          NSString *file = [file lastPathComponent];
+                          NSString *message;
+
+			  message = [NSString stringWithFormat:
+                                      _(@"Unable to parse class in %@"), file];
+
+                          NSRunAlertPanel(_(@"Problem parsing class"),
+	                                  message,
+        	                          nil, nil, nil);
+                    	}
+
+		      [doc changeToViewWithTag:3];
+                    }
+                  NS_HANDLER
+                    {
+                      NSString *message = [localException reason];
+                      NSRunAlertPanel(_(@"Problem parsing class"),
+                                      message,
+                                      nil, nil, nil);
+                    }
+                  NS_ENDHANDLER;
+	        }
+	      else if ([imageTypes containsObject:ext])
+	        {
+		  GormDocument *doc = document;
+		  [(GormGenericEditor *)[doc viewWithTag:1]
+			  addObject:[GormImage imageForPath:file]]; 
+		  [doc changeToViewWithTag:1];
+		}
+	      else if ([soundTypes containsObject:ext])
+	        {
+		  GormDocument *doc = document;
+		  [(GormGenericEditor *)[doc viewWithTag:2]
+			  addObject:[GormSound soundForPath:file]]; 
+		  [doc changeToViewWithTag:2];
+	        }
+	    }
+	}
+    }
+  
+  if (!found)
+    {
+      [super addResourcesFromPasteboard:pb];
+    }
+}
+
+- (NSArray *) resourceFileTypes
+{
+  NSArray *types = [NSSound soundUnfilteredFileTypes];
+
+  types = [types arrayByAddingObjectsFromArray:[NSImage imageFileTypes]];
+
+  types = [types arrayByAddingObject:@"h"];
+
+  return types;
 }
 
 @end
