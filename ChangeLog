@@ -1,4 +1,8 @@
-2006-11-18  Matt Rice  <ratmice@yahoo.com>
+2006-11-18  Matt Rice  <ratmice@gmail.com>
+
+	* GormCore/GormDocumentWindow.[h,m]: Add copyright headers.
+	
+2006-11-18  Matt Rice  <ratmice@gmail.com>
 
 	* GormCore/GNUmakefile: Add GormDocumentWindow.[h,m].
 	* GormCore/GormResourceManager.m: Add code to handle 
