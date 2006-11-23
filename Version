@@ -6,7 +6,7 @@
 GNUSTEP_GCC=3.1.0
 
 # GNUstep version required
-GNUSTEP_CORE_VERSION=0.11.0
+GNUSTEP_CORE_VERSION=0.12.0
 
 # The version number of this release.
 MAJOR_VERSION=1
