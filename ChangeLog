@@ -1,3 +1,7 @@
+2006-11-27  Matt Rice  <ratmice@gmail.com>
+	
+	* GormCore/GormResourceManager.m: Temporarily comment out some code.
+
 2006-11-23 22:23-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Move initial position of

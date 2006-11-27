@@ -81,7 +81,13 @@
         }
       else if ([type isEqual:GormLinkPboardType])
         {
-	  [(GormDocument *)document changeToViewWithTag:0];
+	  /* FIXME
+	   * temporarily comment this out 
+	   * changeToViewWithTag: calls
+	   * setSelectionFromEditor: calls
+	   * -stopConnecting which gets rid of the connect source
+	   */
+	  //[(GormDocument *)document changeToViewWithTag:0];
 	  return NO;
         }
     }
