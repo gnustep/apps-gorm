@@ -200,6 +200,7 @@
 			 owner: self];
 	      [pb setString: name forType: GormLinkPboardType];
 	      [NSApp displayConnectionBetween: item and: nil];
+	      [NSApp startConnecting];
 
 	      isLinkSource = YES;
 	      [self dragImage: [NSApp linkImage]

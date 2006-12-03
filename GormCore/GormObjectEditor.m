@@ -418,6 +418,7 @@ static NSMapTable	*docMap = 0;
 		     owner: self];
 	  [pb setString: name forType: GormLinkPboardType];
 	  [NSApp displayConnectionBetween: obj and: nil];
+	  [NSApp startConnecting];
 
 	  [self dragImage: [NSApp linkImage]
 		       at: loc

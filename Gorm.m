@@ -993,11 +993,12 @@
     {
       return;
     }
-  if (connectDestination == nil || connectSource == nil)
+  if (connectSource == nil)
     {
       return;
     }
-  if ([[self activeDocument] containsObject: connectDestination] == NO)
+  if (connectDestination
+      && [[self activeDocument] containsObject: connectDestination] == NO)
     {
       NSLog(@"Oops - connectDestination not in active document");
       return;

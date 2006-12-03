@@ -1,3 +1,15 @@
+2006-12-02  Matt Rice  <ratmice@gmail.com>
+
+	* Palettes/0Menus/GormMenuEditor.m (-mouseDown:): Call
+	startConnecting.
+	* GormCore/GormViewEditor.m (-startConnectingObject:withEvent:): Ditto.
+	* GormCore/GormObjectEditor.m (-mouseDown:): Ditto.
+	* GormCore/GormDocument.m (changeToViewWithTag:): Don't change the
+	selection if connecting.
+	* GormCore/GormResourceManager.m: Revert previous commit.
+	* Gorm.m (-startConnecting:): Remove checks for a nil
+	connectDestination.
+
 2006-11-27  Matt Rice  <ratmice@gmail.com>
 	
 	* GormCore/GormResourceManager.m: Temporarily comment out some code.

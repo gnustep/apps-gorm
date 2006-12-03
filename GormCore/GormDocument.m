@@ -885,7 +885,8 @@ static NSImage  *fileImage = nil;
       {
 	[selectionBox setContentView: scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
-	[self setSelectionFromEditor: objectsView];
+	if (![NSApp isConnecting])
+	  [self setSelectionFromEditor: objectsView];
       }
       break;
     case 1: // images

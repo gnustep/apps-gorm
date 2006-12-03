@@ -1185,6 +1185,7 @@ static BOOL currently_displaying = NO;
 	  owner: self];
       [pb setString: name forType: GormLinkPboardType];
       [NSApp displayConnectionBetween: anObject and: nil];
+      [NSApp startConnecting];
       
       [self dragImage: [NSApp linkImage]
 	    at: dragPoint
