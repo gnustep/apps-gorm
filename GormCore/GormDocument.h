@@ -31,7 +31,8 @@
 #include <GNUstepGUI/GSNibContainer.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
-@class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, GormFilePrefsManager;
+@class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, 
+  GormFilePrefsManager, GormDocumentWindow;
 
 /*
  * Trivial classes for connections from objects to their editors, and from
@@ -61,7 +62,7 @@
   GormFirstResponder	*firstResponder;
   GormObjectProxy       *fontManager;
   NSMapTable		*objToName;
-  NSWindow		*window;
+  GormDocumentWindow	*window;
   NSBox                 *selectionBox;
   NSScrollView		*scrollView;
   NSScrollView          *classesScrollView;

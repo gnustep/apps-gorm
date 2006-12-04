@@ -333,10 +333,10 @@ static NSImage  *fileImage = nil;
   id                    o = nil;
 
   // get the window and cache it...
-  window = [self _docWindow];
+  window = (GormDocumentWindow *)[self _docWindow];
   [IBResourceManager registerForAllPboardTypes:window
 	  			inDocument:self];
-  [(GormDocumentWindow *)window setDocument:self];
+  [window setDocument: self];
   
   // set up the toolbar...
   toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
