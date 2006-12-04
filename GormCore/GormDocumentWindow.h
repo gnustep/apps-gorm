@@ -30,7 +30,7 @@
   id _document;
   IBResourceManager *dragMgr;
 }
-
+- (void) setDocument:(id)document;
 @end
 
 #define __INCLUDED_GormDocumentWindow_h

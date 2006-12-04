@@ -52,6 +52,7 @@
 #include "GormObjectEditor.h"
 #include "GormWrapperBuilder.h"
 #include "GormWrapperLoader.h"
+#include "GormDocumentWindow.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -335,7 +336,7 @@ static NSImage  *fileImage = nil;
   window = [self _docWindow];
   [IBResourceManager registerForAllPboardTypes:window
 	  			inDocument:self];
-  [window setDocument:self];
+  [(GormDocumentWindow *)window setDocument:self];
   
   // set up the toolbar...
   toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];

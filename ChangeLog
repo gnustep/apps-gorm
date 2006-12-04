@@ -1,3 +1,8 @@
+2006-12-03 19:34-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Use setDocument: method in awakeFromNib.
+	* GormCore/GormDocumentWindow.h: Add setDocument: method.
+
 2006-12-02  Matt Rice  <ratmice@gmail.com>
 
 	* Palettes/0Menus/GormMenuEditor.m (-mouseDown:): Call
