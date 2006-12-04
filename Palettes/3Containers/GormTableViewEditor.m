@@ -293,6 +293,49 @@ static NSText *_textObject;
 	  [tableView deselectColumn: [tableView selectedColumn]];
 	}
     }
+  else if (hitView == self && [theEvent modifierFlags] & NSControlKeyMask)
+    {
+      /*
+       * see if we're making a connection from the selected column.
+       * not useful in vanilla gorm as they have no outlets or actions,
+       * but palettes might find it useful.
+       */
+      int selectedColumn = [tableView selectedColumn];
+
+      if (selectedColumn != -1)
+        {
+          NSPoint pt = [theEvent locationInWindow];
+          NSRect r = [tableView rectOfColumn: selectedColumn];
+      
+          pt = [tableView convertPoint:pt fromView:nil];
+      
+          if (NSMouseInRect(pt, r, [tableView isFlipped]))
+            {
+              /* mouse was inside the selected column */
+	      NSPasteboard *pb;
+	      NSPoint	dragPoint = [theEvent locationInWindow];
+	      NSTableColumn *col = [[tableView tableColumns] 
+		  			objectAtIndex: selectedColumn];
+	      NSString	*name = [document nameForObject: col];
+	      
+	      pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+	      [pb declareTypes:
+		[NSArray arrayWithObject: GormLinkPboardType]
+			 owner: self];
+	      [pb setString: name forType: GormLinkPboardType];
+	      [NSApp displayConnectionBetween: col and: nil];
+	      [NSApp startConnecting];
+
+	      [self dragImage: [NSApp linkImage]
+			   at: dragPoint
+		       offset: NSZeroSize
+			event: theEvent
+		   pasteboard: pb
+		       source: self
+		    slideBack: YES];
+	    }
+	}
+    }
 }
 
 - (void) tableViewSelectionDidChange: (id) tv
