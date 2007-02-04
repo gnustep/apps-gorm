@@ -1598,12 +1598,35 @@ static NSImage  *fileImage = nil;
   [editors removeAllObjects];
 }
 
+static void _real_close(GormDocument *self,
+			NSEnumerator *enumerator)
+{
+  id                obj;
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+
+  while ((obj = [enumerator nextObject]) != nil)
+    {
+      if ([obj isKindOfClass: [NSWindow class]])
+        {
+          [obj setReleasedWhenClosed: YES];
+          [obj close];
+        }
+    }
+
+  // deactivate the document...
+  [self setDocumentActive: NO];
+  [self closeAllEditors]; // shut down all of the editors..
+  [nc postNotificationName: IBWillCloseDocumentNotification object: self];
+  [nc removeObserver: self]; // stop listening to all notifications.
+}
+
 /**
  * Close the document and all windows associated.  Mark this document as closed.
  */
 - (void) close
 {
-  isDocumentOpen = NO;
+  isDocumentOpen = NO; 
+  _real_close(self, [nameTable objectEnumerator]);
   [super close];
 }
 
@@ -1615,28 +1638,10 @@ static NSImage  *fileImage = nil;
 - (void) handleNotification: (NSNotification*)aNotification
 {
   NSString *name = [aNotification name];
-  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   if ([name isEqual: NSWindowWillCloseNotification] && isDocumentOpen)
     {
-      NSEnumerator	*enumerator;
-      id		obj;
-      
-      enumerator = [nameTable objectEnumerator];
-      while ((obj = [enumerator nextObject]) != nil)
-	{
-	  if ([obj isKindOfClass: [NSWindow class]])
-	    {
-	      [obj setReleasedWhenClosed: YES];
-	      [obj close];
-	    }
-	}
-
-      // deactivate the document...
-      [self setDocumentActive: NO];
-      [self closeAllEditors]; // shut down all of the editors..
-      [nc postNotificationName: IBWillCloseDocumentNotification object: self];
-      [nc removeObserver: self]; // stop listening to all notifications.
+      _real_close(self, [nameTable objectEnumerator]);
       isDocumentOpen = NO;
     }
   else if ([name isEqual: NSWindowDidBecomeKeyNotification] && isDocumentOpen)
