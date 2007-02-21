@@ -80,6 +80,11 @@ static NSMapTable *_resourceManagers = NULL;
 + (void) registerResourceManagerClass: (Class)managerClass
 {
   [self _addClass: managerClass];
+
+  // notify
+  [[NSNotificationCenter defaultCenter] 
+    postNotificationName: IBResourceManagerRegistryDidChangeNotification
+    object: managerClass];
 }
 
 + (void) registerResourceManagerClass: (Class)managerClass 

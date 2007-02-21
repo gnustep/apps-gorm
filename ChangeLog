@@ -1,4 +1,9 @@
-2006-02-04  Matt Rice  <ratmice@gmail.com>
+2007-02-21  Matt Rice  <ratmice@gmail.com>
+
+	* GormLib/IBResourceManager.m (+registerResourceManagerClass:):
+	Post an IBResourceManagerRegistryDidChangeNotification.
+
+2007-02-04  Matt Rice  <ratmice@gmail.com>
 
 	* GormCore/GormDocument.m (_real_close): New function.
 	(handleNotification:): Move document closing code to _real_close.
