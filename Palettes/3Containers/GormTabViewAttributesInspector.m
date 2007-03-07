@@ -66,7 +66,37 @@
 - (void) ok: (id)sender
 {
   if (sender == typeMatrix)
-      [object setTabViewType:[[sender selectedCell] tag]];
+    {
+      unsigned int type = 0;
+
+      switch([[sender selectedCell] tag])
+        {
+	  case 0:
+	    type = NSTopTabsBezelBorder;
+	    break;
+	  case 5:
+	    type = NSLeftTabsBezelBorder;
+	    break;
+	  case 1:
+	    type = NSBottomTabsBezelBorder;
+	    break;
+	  case 6:
+	    type = NSRightTabsBezelBorder;
+	    break;
+	  case 2:
+	    type = NSNoTabsBezelBorder;
+	    break;
+	  case 3:
+	    type = NSNoTabsLineBorder;
+	    break;
+	  case 4:
+	    type = NSNoTabsNoBorder;
+	    break;
+	  default:
+	    break;
+	}
+      [object setTabViewType: type];
+    }
   else if (sender == allowtruncate)
     {
       BOOL flag;
