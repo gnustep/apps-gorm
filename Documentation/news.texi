@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.0}
+
+@itemize @bullet
+@item Corrections to some editors to not change seslection if connection is in progress.
+@item Force menu style to NSNextStepInterfaceStyle for editing purposes.
+@item Correction for memory issue when closing document.
+@item Minor bug fixes.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.1.0}
 
 @itemize @bullet
@@ -15,10 +28,6 @@
 @item Updated icon
 @item A number of bugs have been addressed in this release.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.0.8}
 

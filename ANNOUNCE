@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.1.0 of Gorm.
+This is version 1.2.0 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,27 +12,17 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.1.0'
+1.2 Noteworthy changes in version `1.2.0'
 =========================================
 
-   * Changed Gorm architecture to use NSDocument classes.
+   * Corrections to some editors to not change seslection if connection
+     is in progress.
 
-   * Abstracted model loading mechanism.  This was done by implementing
-     a set of "Loader" and "Builder" classes which handle filling in
-     the data structures in Gorm and exporting them to external formats.
+   * Force menu style to NSNextStepInterfaceStyle for editing purposes.
 
-   * Implemented GormNibWrapperLoader and GormNibWrapperBuilder for
-     reading and writing Cocoa NIB files.
+   * Correction for memory issue when closing document.
 
-   * Implemented GormGormWrapperLoader and GormGormWrapperBuilder for
-     reading and writing GNUstep Gorm files
-
-   * Implemented GormGModelWrapperLoader for reading GNUstep gmodel
-     files.
-
-   * Updated icon
-
-   * A number of bugs have been addressed in this release.
+   * Minor bug fixes.
 
 1.3 How can I get support for this software?
 ============================================

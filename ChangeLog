@@ -1,3 +1,7 @@
+2007-03-17  Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version: 1.2.0
+
 2007-03-08  Fred Kiefer <FredKiefer@gmx.de>
 
 	* Palettes/3Containers/GormTabViewAttributesInspector.m (-ok:):
@@ -57,10 +61,10 @@
 
 	* English.lproj/GormDocument.gorm: Move initial position of
 	Gorm document window back to the lower left of the screen.
-
+	
 2006-11-23 11:03-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* Version: updated version requirements.
+	* Version: 1.1.0 (also updated version requirements.)
 
 2006-11-18  Matt Rice  <ratmice@gmail.com>
 
