@@ -1448,7 +1448,7 @@ static BOOL currently_displaying = NO;
     {
       [[self window] disableFlushWindow];
       currently_displaying = YES;
-      [super displayIfNeededInRectIgnoringOpacity: rect];
+      [super displayRectIgnoringOpacity: rect];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
@@ -1458,7 +1458,7 @@ static BOOL currently_displaying = NO;
     }
   else
     {
-      [super displayIfNeededInRectIgnoringOpacity: rect];
+      [super displayRectIgnoringOpacity: rect];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
