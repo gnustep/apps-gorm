@@ -53,19 +53,6 @@
   else
     submenuFrame = NSZeroRect;
 
-  /*
-  NSRect aRect = [self rectOfItemAtIndex: 
-			 [[self attachedMenu] indexOfItemWithSubmenu: aSubmenu]];
-  NSPoint subOrigin = [_window convertBaseToScreen: 
-				 NSMakePoint(aRect.origin.x, aRect.origin.y)];
-  */
-
-  /* 
-  return NSMakePoint (NSMaxX(frame),
-		      subOrigin.y - NSHeight(submenuFrame) - 3 +
-		      2*[NSMenuView menuBarHeight]);
-  */
-
   return NSMakePoint(NSMaxX(frame),
 		     NSMaxY(frame) - NSHeight(submenuFrame));
 
