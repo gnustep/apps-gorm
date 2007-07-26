@@ -22,6 +22,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+#include "GormNSMenuView.h"
 #include "GormNSMenu.h"
 #include <Foundation/NSEnumerator.h>
 #include <AppKit/NSPopUpButton.h>
@@ -95,6 +96,16 @@
   [newMenu setTitle: [menu title]];
 
   return newMenu;
+}
+
+- (id) initWithTitle: (NSString *)aTitle
+{
+  if((self = [super initWithTitle: aTitle]) != nil)
+    {
+      [self setMenuRepresentation: 
+	      [[GormNSMenuView alloc] initWithFrame: NSZeroRect]];
+    }
+  return self;
 }
 
 - (id) initWithCoder: (NSCoder *)coder
@@ -196,6 +207,29 @@
   [super dealloc];
 }
 
+- (NSString*) _locationKey
+{
+  if (_superMenu == nil)
+    {
+      if ([NSApp mainMenu] == self)
+	{
+	  return @"\033";	/* Root menu.	*/
+	}
+      else
+	{
+	  return nil;		/* Unused menu.	*/
+	}
+    }
+  else if (_superMenu->_superMenu == nil)
+    {
+      return [NSString stringWithFormat: @"\033%@", [self title]];
+    }
+  else
+    {
+      return [[_superMenu _locationKey] stringByAppendingFormat: @"\033%@",
+	[self title]];
+    }
+}
 @end
 
 @implementation NSMenu (GormNSMenu)

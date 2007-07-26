@@ -130,9 +130,9 @@
 
       // force the menu style to be NextStep so that we always edit in 
       // that style...
-      [[NSUserDefaults standardUserDefaults]
-	setObject: @"NSNextStepInterfaceStyle" 
-	forKey: @"NSMenuInterfaceStyle"];
+      // [[NSUserDefaults standardUserDefaults]
+      //   setObject: @"NSNextStepInterfaceStyle" 
+      //   forKey: @"NSMenuInterfaceStyle"];
 
       /*
        * load the interface...

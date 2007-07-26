@@ -4,5 +4,6 @@
   Icon = "MenusPalette";
   SubstituteClasses = {
     GormNSMenu = NSMenu;
+    GormNSMenuView = NSMenuView;
   };
 }

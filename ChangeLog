@@ -1,3 +1,14 @@
+2007-07-26 10:06-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Remove default setting
+	* Palettes/0Menus/GNUmakefile: Add GormNSMenuView.m
+	* Palettes/0Menus/GormNSMenu.m: Override methods to prevent changing
+	style to Mac style for menu being edited.
+	* Palettes/0Menus/GormNSMenuView.[mh]: New class overrides methods
+	to prevent switching style to Mac style for menu being edited.
+	* Palettes/0Menus/palette.table: Added substitution rule for 
+	NSMenuView.
+
 2007-06-27 19:25-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewEditor.m: Correct bug#20274. Changed call

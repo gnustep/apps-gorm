@@ -30,6 +30,7 @@ PALETTE_NAME = 0Menus
 0Menus_OBJC_FILES = \
 	GormMenuEditor.m \
 	GormNSMenu.m \
+	GormNSMenuView.m \
 	GormMenuItemAttributesInspector.m\
 	GormMenuAttributesInspector.m\
 	MenusPalette.m \
