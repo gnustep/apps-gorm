@@ -81,6 +81,10 @@
 }
 @end
 
+@interface NSMenu (GormNSMenuPrivate)
+- (NSString*) _locationKey;
+@end
+
 @implementation GormNSMenu
 + (GormNSMenu *) menuWithMenu: (NSMenu *)menu
 {

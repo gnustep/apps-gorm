@@ -1,3 +1,9 @@
+2007-07-27 13:30-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Gorm.m: Remove commented code.
+	* Palettes/0Menus/GormNSMenu.m: Added private category to prevent
+	compilation warning.
+
 2007-07-26 10:25-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenuView.m: Remove commented out code.
