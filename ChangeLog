@@ -1,3 +1,21 @@
+2007-08-19 21:22-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ChangeLog
+	* GNUmakefile
+	* Palettes/5Controllers/ControllersPalette.m
+	* Palettes/5Controllers/ControllersPalette.tiff
+	* Palettes/5Controllers/GNUmakefile
+	* Palettes/5Controllers/GNUmakefile.preamble
+	* Palettes/5Controllers/palette.table
+	* Palettes/GNUmakefile
+	* Resources/Defaults.plist: Initial changes for controllers palette.
+
+2007-08-19 21:21-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile
+	* Palettes/GNUmakefile
+	* Resources/Defaults.plist
+
 2007-07-27 13:30-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Remove commented code.

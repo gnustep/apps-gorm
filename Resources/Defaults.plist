@@ -6,7 +6,8 @@
 	1Windows.palette,
 	2Controls.palette,
 	3Containers.palette,
-	4Data.palette
+	4Data.palette,
+	5Controllers.palette
     );
     CellSizeWidth = 72;
     ClassViewType = Browser;
