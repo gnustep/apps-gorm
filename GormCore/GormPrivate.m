@@ -40,6 +40,9 @@ NSString *GormDidDeleteClassNotification = @"GormDidDeleteClassNotification";
 NSString *GormWillDetachObjectFromDocumentNotification = @"GormWillDetachObjectFromDocumentNotification";
 NSString *GormResizeCellNotification = @"GormResizeCellNotification";
 
+// Private, and soon to be deprecated, notification string...
+NSString *GSInternalNibItemAddedNotification = @"_GSInternalNibItemAddedNotification";
+
 // Define this as "NO" initially.   We only want to turn this on while loading or testing.
 static BOOL _isInInterfaceBuilder = NO;
 
@@ -126,7 +129,9 @@ static BOOL _isInInterfaceBuilder = NO;
     {
       int version = [aCoder versionForClassName: 
 			      NSStringFromClass([GSNibItem class])];
-      
+      int cv = [aCoder versionForClassName:
+			 NSStringFromClass([GSNibContainer class])];
+
       if (version == NSNotFound)
 	{
 	  NSLog(@"no GSNibItem");
@@ -134,6 +139,14 @@ static BOOL _isInInterfaceBuilder = NO;
 			      NSStringFromClass([GormObjectProxy class])];
 	}
       
+      // add to the top level items during unarchiving, if the container is old.
+      if (cv == 0)
+	{
+	  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	  [nc postNotificationName: GSInternalNibItemAddedNotification
+	      object: self];
+	}
+
       if (version == 0)
 	{
 	  // do not decode super (it would try to morph into theClass ! )
