@@ -12,6 +12,10 @@
 	    comment = "Will not store autoposition mask information.";
 	    version = 0;
 	};
+	NSButtonCell = {
+	    comment = "NSEvent masks are not compatible with Mac OS X.";
+	    version = 0;
+	};
     };
     "GNUstep gui-0.9.5" = {
 	GSNibContainer = {
@@ -25,6 +29,10 @@
 	GSWindowTemplate = {
 	    comment = "Will not store autoposition mask information.";
 	    version = 0;
+	};
+	NSButtonCell = {
+	    comment = "NSEvent masks are not compatible with Mac OS X.";
+	    version = 1;
 	};
     };
     "GNUstep gui-0.10.3" = {
@@ -40,6 +48,10 @@
 	    comment = "New attribute to store auto-position mask.  Not compatible with 0.9.5 or earlier.";
 	    version = 1;
 	};
+	NSButtonCell = {
+	    comment = "NSEvent masks are not compatible with Mac OS X.";
+	    version = 2;
+	};
     };
     "Latest Version" = {
 	GSNibContainer = {
@@ -53,6 +65,10 @@
 	GSWindowTemplate = {
 	    comment = "New attribute to store auto-position mask.  Not compatible with 0.9.5 or earlier.";
 	    version = 1;
+	};
+	NSButtonCell = {
+	    comment = "Not compatible with GNUstep gui-0.10.3 or earlier.";
+	    version = 3;
 	};
     };
 }
