@@ -1,3 +1,9 @@
+2007-09-01 16:24-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormNSMenu.m: Correction for compilation issue 
+	found by Riccardo.   Code was improperly using protected _superMenu 
+	variable directly.
+
 2007-08-24 22:36-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/VersionProfiles.plist: Added version information for

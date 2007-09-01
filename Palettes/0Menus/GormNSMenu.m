@@ -213,7 +213,7 @@
 
 - (NSString*) _locationKey
 {
-  if (_superMenu == nil)
+  if ([self supermenu] == nil)
     {
       if ([NSApp mainMenu] == self)
 	{
@@ -224,13 +224,13 @@
 	  return nil;		/* Unused menu.	*/
 	}
     }
-  else if (_superMenu->_superMenu == nil)
+  else if ([[self supermenu] supermenu] == nil)
     {
       return [NSString stringWithFormat: @"\033%@", [self title]];
     }
   else
     {
-      return [[_superMenu _locationKey] stringByAppendingFormat: @"\033%@",
+      return [[[self supermenu] locationKey] stringByAppendingFormat: @"\033%@",
 	[self title]];
     }
 }
