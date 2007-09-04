@@ -34,6 +34,17 @@
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
 
+const unichar up[]={NSUpArrowFunctionKey};
+const unichar dn[]={NSDownArrowFunctionKey};
+const unichar lt[]={NSLeftArrowFunctionKey};
+const unichar rt[]={NSRightArrowFunctionKey};
+
+NSString *upString = nil;
+NSString *dnString = nil;
+NSString *ltString = nil;
+NSString *rtString = nil;
+
+
 // trivial cell subclass.
 @interface GormButtonCellAttributesInspector : GormButtonAttributesInspector
 @end
@@ -50,11 +61,26 @@
 
   if ([NSBundle loadNibNamed: @"GormNSButtonInspector" owner: self] == NO)
     {
-      NSLog(@"Could not gorm GormButtonInspector");
+      NSLog(@"Could not load GormButtonInspector");
       return nil;
     }
  
+  // initialize the strings.
+  upString = RETAIN([NSString stringWithCharacters: up length: 1]);
+  dnString = RETAIN([NSString stringWithCharacters: dn length: 1]);
+  ltString = RETAIN([NSString stringWithCharacters: lt length: 1]);
+  rtString = RETAIN([NSString stringWithCharacters: rt length: 1]);
+
   return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(upString);
+  RELEASE(dnString);
+  RELEASE(ltString);
+  RELEASE(rtString);
+  [super dealloc];
 }
 
 /* The button type isn't stored in the button, so reverse-engineer it */
@@ -121,6 +147,64 @@
     {
       [keyEquiv selectItem: nil]; // if the user does his own thing, select the default...
       [object setKeyEquivalent: [[sender cellAtIndex: 0] stringValue]];
+    }
+  else if (sender == keyEquiv)
+    {
+      unsigned int tag = [[keyEquiv selectedItem] tag];
+      switch(tag)
+	{
+	case 0: // none
+	  {
+	    [object setKeyEquivalent: nil];
+	  }
+	  break;
+	case 1: // return
+	  {
+	    [object setKeyEquivalent: @"\n"];
+	  }
+	  break;
+	case 2: // delete 
+	  {
+	    [object setKeyEquivalent: @"\b"];
+	  }
+	  break;
+	case 3: // escape
+	  {
+	    [object setKeyEquivalent: @"\E"];
+	  }
+	  break;
+	case 4: // tab
+	  {
+	    [object setKeyEquivalent: @"\t"];
+	  }
+	  break;
+	case 5: // up
+	  {
+	    [object setKeyEquivalent: upString];
+	  }
+	  break;
+	case 6: // down
+	  {
+	    [object setKeyEquivalent: dnString];
+	  }
+	  break;
+	case 7: // left
+	  {
+	    [object setKeyEquivalent: ltString];
+	  }
+	  break;
+	case 8: // right
+	  {
+	    [object setKeyEquivalent: rtString];
+	  }
+	  break;
+	default: // should never happen..
+	  {
+	    [object setKeyEquivalent: nil];
+	    NSLog(@"This shouldn't happen.");
+	  }
+	  break;
+	}
     }
   else if (sender == optionMatrix)
     {
@@ -207,6 +291,22 @@
 	{
 	  [keyEquiv selectItemAtIndex: 4];
 	}
+      else if([key isEqualToString: upString])
+	{
+	  [keyEquiv selectItemAtIndex: 5];
+	}
+      else if([key isEqualToString: dnString])
+	{
+	  [keyEquiv selectItemAtIndex: 6];
+	}
+      else if([key isEqualToString: ltString])
+	{
+	  [keyEquiv selectItemAtIndex: 7];
+	}
+      else if([key isEqualToString: rtString])
+	{
+	  [keyEquiv selectItemAtIndex: 8];
+	}
       else
 	{
 	  [keyEquiv selectItem: nil];
@@ -260,5 +360,8 @@
   [self ok: [aNotification object]];
 }
 
-
+- (void) selectKeyEquivalent: (id)sender
+{
+  NSLog(@"Select key equivalent: %d",[[sender selectedItem] tag]);
+}
 @end

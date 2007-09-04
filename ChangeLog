@@ -1,3 +1,10 @@
+2007-09-03 23:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormButtonAttributesInspector.m: added
+	code to ok: and revert: to handle arrow keys for key equivalents.
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Added to dropdown
+	list to include options for arrow keys.
+
 2007-09-01 16:24-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenu.m: Correction for compilation issue 

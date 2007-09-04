@@ -1,14 +1,7 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    FirstResponder = {
-	Actions = (
-	    "selectKeyEquivalent:"
-	);
-	Super = NSObject;
-    };
     GormButtonInspector = {
 	Actions = (
-	    "selectKeyEquivalent:"
 	);
 	Outlets = (
 	    alignMatrix,
