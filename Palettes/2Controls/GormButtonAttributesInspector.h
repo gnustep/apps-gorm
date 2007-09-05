@@ -40,6 +40,7 @@
 @class NSForm;
 @class NSMatrix;
 @class NSPopUpButton;
+@class NSSwitch;
 
 @interface GormButtonAttributesInspector: IBInspector
 {
@@ -51,6 +52,10 @@
   NSForm *titleForm;
   NSPopUpButton *typeButton;
   NSPopUpButton *keyEquiv;
+  NSSwitch *altMod;
+  NSSwitch *shiftMod;
+  NSSwitch *ctrlMod;
+  NSSwitch *cmdMod;
 }
 
 @end

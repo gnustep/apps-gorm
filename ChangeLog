@@ -1,3 +1,12 @@
+2007-09-05 00:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormButtonAttributesInspector.h: Added ivars
+	for new buttons.
+	* Palettes/2Controls/GormButtonAttributesInspector.m: Addeed code
+	in ok: and revert: to handle modifier settings
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Added key equivalent
+	modifier buttons.
+
 2007-09-03 23:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormButtonAttributesInspector.m: added

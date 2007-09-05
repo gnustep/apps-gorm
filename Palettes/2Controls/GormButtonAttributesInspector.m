@@ -259,6 +259,50 @@ NSString *rtString = nil;
             */
       [object setButtonType: [sender tag]];
     }
+  else if (sender == altMod)
+    {
+      if([altMod state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSAlternateKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSAlternateKeyMask];
+	}
+    }
+  else if (sender == ctrlMod)
+    {
+      if([ctrlMod state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSControlKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSControlKeyMask];
+	}
+    }
+  else if (sender == shiftMod)
+    {
+      if([shiftMod state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSShiftKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSShiftKeyMask];
+	}
+    }
+  else if (sender == cmdMod)
+    {
+      if([cmdMod state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSCommandKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSCommandKeyMask];
+	}
+    }
 
   [super ok: sender];
 }
@@ -270,6 +314,7 @@ NSString *rtString = nil;
   if(sender != nil)
     {
       NSString *key = VSTR([object keyEquivalent]);
+      unsigned int flags = [object keyEquivalentModifierMask];
       
       [alignMatrix selectCellWithTag: [object alignment]];
       [iconMatrix selectCellWithTag: [object imagePosition]];
@@ -349,6 +394,28 @@ NSString *rtString = nil;
 	  [[titleForm cellAtIndex: 3] setStringValue: @""];
 	}
       
+      // key modifier mask...
+      [altMod setState: NSOffState];
+      [ctrlMod setState: NSOffState];
+      [shiftMod setState: NSOffState];
+      [cmdMod setState: NSOffState];
+      if(flags & NSAlternateKeyMask)
+	{
+	  [altMod setState: NSOnState];
+	}
+      if(flags & NSControlKeyMask)
+	{
+	  [ctrlMod setState: NSOnState];
+	}
+      if(flags & NSShiftKeyMask)
+	{
+	  [shiftMod setState: NSOnState];
+	}
+      if(flags & NSCommandKeyMask)
+	{
+	  [cmdMod setState: NSOnState];
+	}
+
       [typeButton selectItemAtIndex: 
 		    [typeButton indexOfItemWithTag: 
 				  [self buttonTypeForObject: object]]];

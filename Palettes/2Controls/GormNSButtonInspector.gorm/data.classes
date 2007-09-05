@@ -11,7 +11,11 @@
 	    tagForm,
 	    titleForm,
 	    typeButton,
-	    keyEquiv
+	    keyEquiv,
+	    altMod,
+	    ctrlMod,
+	    shiftMod,
+	    cmdMod
 	);
 	Super = IBInspector;
     };
