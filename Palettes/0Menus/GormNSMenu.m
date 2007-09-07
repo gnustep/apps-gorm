@@ -230,7 +230,7 @@
     }
   else
     {
-      return [[[self supermenu] locationKey] stringByAppendingFormat: @"\033%@",
+      return [[[self supermenu] _locationKey] stringByAppendingFormat: @"\033%@",
 	[self title]];
     }
 }

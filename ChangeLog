@@ -1,3 +1,8 @@
+2007-09-07 19:57-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormNSMenu.m: Correct exception on start when
+	opening a gorm from the command line.
+
 2007-09-05 00:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/2Controls/GormButtonAttributesInspector.h: Added ivars
