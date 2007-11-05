@@ -52,6 +52,7 @@
   NSButton *setButton;
   NSButton *defaultButton;
   NSTableView *cellTable;
+  NSTextField *columnTitle;
 }
 
 @end

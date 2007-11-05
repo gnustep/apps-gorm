@@ -1417,34 +1417,6 @@ static BOOL currently_displaying = NO;
 	    withObject: self];
 }
 
-/*
-- (void) displayIfNeededInRectIgnoringOpacity: (NSRect) rect 
-				    inContext: (NSGraphicsConext *)gc
-{
-  if (currently_displaying == NO)
-    {
-      [[self window] disableFlushWindow];
-      currently_displaying = YES;
-      [super displayIfNeededInRectIgnoringOpacity: rect
-	     inContext: gc];
-      [self lockFocus];
-      [self postDraw: rect];
-      [self unlockFocus];
-      [[self window] enableFlushWindow];
-      [[self window] flushWindow];
-      currently_displaying = NO;
-    }
-  else
-    {
-      [super displayIfNeededInRectIgnoringOpacity: rect
-	     inContext: gc];
-      [self lockFocus];
-      [self postDraw: rect];
-      [self unlockFocus];
-    }    
-}
-*/
-
 - (void) drawRect: (NSRect) rect
 {
   if (currently_displaying == NO)

@@ -11,7 +11,8 @@
 	    titleAlignmentMatrix,
 	    cellTable,
 	    defaultButton,
-	    setButton
+	    setButton,
+	    columnTitle
 	);
 	Super = IBInspector;
     };

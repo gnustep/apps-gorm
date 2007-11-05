@@ -40,21 +40,6 @@ static NSText *_textObject;
 @end
 
 @implementation GormTableViewEditor
-/**
- * Initialize the table editor.
- */
-
-/*
-- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
-{
-  self = [super initWithObject: anObject inDocument: aDocument];
-  if(self != nil)
-    {
-    }
-  return self;
-}
-*/
-
 - (void) setFrame: (NSRect)frame
 {
   if(tableView != nil)

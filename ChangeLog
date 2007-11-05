@@ -1,3 +1,13 @@
+2007-11-05 18:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewEditor.m: Removed commented out code.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm
+	* Palettes/3Containers/GormTableColumnAttributesInspector.h
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m
+	* Palettes/3Containers/GormTableViewEditor.m: Added new column title
+	field to the inspector so that the title can be edited there instead
+	of directly.
+
 2007-11-05 01:56-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewEditor.m: Change code to use drawRect: instead

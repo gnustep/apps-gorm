@@ -202,6 +202,12 @@
       [[object tableView] setNeedsDisplay: YES];
       [self setObject: [self object]]; // reset...
     }
+  else if (sender == columnTitle)
+    {
+      [[object headerCell] setStringValue:
+			     [columnTitle stringValue]];
+      [[[object tableView] headerView] setNeedsDisplay: YES];
+    }
 
   [super ok:sender];
 }
@@ -259,6 +265,7 @@
     }
 
   [identifierTextField setStringValue: [(NSTableColumn *)object identifier]];
+  [columnTitle setStringValue: [[(NSTableColumn *)object headerCell] stringValue]];
 
   /* options */
   if ([object isResizable])
