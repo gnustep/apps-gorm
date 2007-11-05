@@ -122,8 +122,6 @@
 
 static BOOL currently_displaying = NO;
 
-
-
 @implementation	GormViewEditor
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
@@ -1419,13 +1417,16 @@ static BOOL currently_displaying = NO;
 	    withObject: self];
 }
 
-- (void) displayIfNeededInRectIgnoringOpacity: (NSRect) rect
+/*
+- (void) displayIfNeededInRectIgnoringOpacity: (NSRect) rect 
+				    inContext: (NSGraphicsConext *)gc
 {
   if (currently_displaying == NO)
     {
       [[self window] disableFlushWindow];
       currently_displaying = YES;
-      [super displayIfNeededInRectIgnoringOpacity: rect];
+      [super displayIfNeededInRectIgnoringOpacity: rect
+	     inContext: gc];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
@@ -1435,20 +1436,22 @@ static BOOL currently_displaying = NO;
     }
   else
     {
-      [super displayIfNeededInRectIgnoringOpacity: rect];
+      [super displayIfNeededInRectIgnoringOpacity: rect
+	     inContext: gc];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
     }    
 }
+*/
 
-- (void) displayRectIgnoringOpacity: (NSRect) rect
+- (void) drawRect: (NSRect) rect
 {
   if (currently_displaying == NO)
     {
       [[self window] disableFlushWindow];
       currently_displaying = YES;
-      [super displayRectIgnoringOpacity: rect];
+      [super drawRect: rect];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
@@ -1458,11 +1461,11 @@ static BOOL currently_displaying = NO;
     }
   else
     {
-      [super displayRectIgnoringOpacity: rect];
+      [super drawRect: rect];
       [self lockFocus];
       [self postDraw: rect];
       [self unlockFocus];
-    }
+    }    
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
@@ -1538,121 +1541,6 @@ static BOOL currently_displaying = NO;
 
 
 @implementation GormViewEditor (ResponderAdditions)
-
-- (void) keyDown: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder keyDown: theEvent];
-  else
-    return [self noResponderFor: @selector(keyDown:)];
-}
-
-- (void) keyUp: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder keyUp: theEvent];
-  else
-    return [self noResponderFor: @selector(keyUp:)];
-}
-
-- (void) otherMouseDown: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder otherMouseDown: theEvent];
-  else
-    return [self noResponderFor: @selector(otherMouseDown:)];
-}
-
-- (void) otherMouseDragged: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder otherMouseDragged: theEvent];
-  else
-    return [self noResponderFor: @selector(otherMouseDragged:)];
-}
-
-- (void) otherMouseUp: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder otherMouseUp: theEvent];
-  else
-    return [self noResponderFor: @selector(otherMouseUp:)];
-}
-
-
-- (void) mouseDragged: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder mouseDragged: theEvent];
-  else
-    return [self noResponderFor: @selector(mouseDragged:)];
-}
-
-- (void) mouseEntered: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder mouseEntered: theEvent];
-  else
-    return [self noResponderFor: @selector(mouseEntered:)];
-}
-
-- (void) mouseExited: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder mouseExited: theEvent];
-  else
-    return [self noResponderFor: @selector(mouseExited:)];
-}
-
-- (void) mouseMoved: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder mouseMoved: theEvent];
-  else
-    return [self noResponderFor: @selector(mouseMoved:)];
-}
-
-- (void) mouseUp: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder mouseUp: theEvent];
-  else
-    return [self noResponderFor: @selector(mouseUp:)];
-}
-
-- (void) rightMouseDown: (NSEvent*)theEvent
-{
-  if (_next_responder != nil)
-    return [_next_responder rightMouseDown: theEvent];
-  else
-    return [self noResponderFor: @selector(rightMouseDown:)];
-}
-
-- (void) rightMouseDragged: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder rightMouseDragged: theEvent];
-  else
-    return [self noResponderFor: @selector(rightMouseDragged:)];
-}
-
-- (void) rightMouseUp: (NSEvent*)theEvent
-{
-  if (_next_responder)
-    return [_next_responder rightMouseUp: theEvent];
-  else
-    return [self noResponderFor: @selector(rightMouseUp:)];
-}
-
-- (void) scrollWheel: (NSEvent *)theEvent
-{
-  if (_next_responder)
-    return [_next_responder scrollWheel: theEvent];
-  else
-    return [self noResponderFor: @selector(scrollWheel:)];
-}
-
-
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
   return YES;
