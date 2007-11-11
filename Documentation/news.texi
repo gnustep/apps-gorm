@@ -20,6 +20,12 @@
 @c ====================================================================
 @c Keep the next line just below the list of changes in most recent version.
 
+@section Noteworthy changes in version @samp{1.2.1}
+
+@itemize @bullet
+@item Minor corrections to previous release.
+@end itemize
+
 @section Noteworthy changes in version @samp{1.2.0}
 
 @itemize @bullet
