@@ -6,6 +6,8 @@
 
 @section Noteworthy changes in version @samp{1.2.2}
 
+Requires: gnustep-gui-0.13.0.
+
 @itemize @bullet
 @item Moved to GPLv3
 @item Added text field to NSTableColumn inspector to allow editing of table column title.
