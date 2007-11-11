@@ -1,3 +1,8 @@
+2007-11-11 00:18-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuItemAttributesInspector.m: call
+	itemChanged: so that changes are seen immediately in the menu.
+
 2007-11-10 21:46-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Documentation/news.texi

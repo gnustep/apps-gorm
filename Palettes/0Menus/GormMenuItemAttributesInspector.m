@@ -235,6 +235,7 @@ NSString *rtString = nil;
 	  [object setKeyEquivalentModifierMask: 
 		    [object keyEquivalentModifierMask] & ~NSAlternateKeyMask];
 	}
+      [[object menu] itemChanged: object];
     }
   else if (sender == ctrlBtn)
     {
@@ -248,6 +249,7 @@ NSString *rtString = nil;
 	  [object setKeyEquivalentModifierMask: 
 		    [object keyEquivalentModifierMask] & ~NSControlKeyMask];
 	}
+      [[object menu] itemChanged: object];
     }
   else if (sender == shiftBtn)
     {
@@ -261,6 +263,7 @@ NSString *rtString = nil;
 	  [object setKeyEquivalentModifierMask: 
 		    [object keyEquivalentModifierMask] & ~NSShiftKeyMask];
 	}
+      [[object menu] itemChanged: object];
     }
   else if (sender == cmdBtn)
     {
@@ -274,6 +277,7 @@ NSString *rtString = nil;
 	  [object setKeyEquivalentModifierMask: 
 		    [object keyEquivalentModifierMask] & ~NSCommandKeyMask];
 	}
+      [[object menu] itemChanged: object];
     }
 
   [super ok:sender];
