@@ -32,7 +32,7 @@
 #include "GormButtonAttributesInspector.h"
 
 /* This macro makes sure that the string contains a value, even if @"" */
-#define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
+#define VSTR(str) ({NSString *_str = (NSString *)str; ((NSString *)_str) ? (NSString *)_str : (NSString *)@"";})
 
 const unichar up[]={NSUpArrowFunctionKey};
 const unichar dn[]={NSDownArrowFunctionKey};
@@ -318,7 +318,7 @@ NSString *rtString = nil;
       
       [alignMatrix selectCellWithTag: [object alignment]];
       [iconMatrix selectCellWithTag: [object imagePosition]];
-      [[keyForm cellAtIndex: 0] setStringValue: VSTR([object keyEquivalent])];
+      [[keyForm cellAtIndex: 0] setStringValue: key];
       
       if([key isEqualToString: @"\n"])
 	{

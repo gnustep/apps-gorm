@@ -36,13 +36,18 @@
 
 #include <InterfaceBuilder/IBInspector.h>
 
-@class NSTextField;
+@class NSTextField, NSPopUpButton;
 
 @interface GormMenuItemAttributesInspector : IBInspector
 {
   NSTextField	*titleText;
   NSTextField	*shortCut;
   NSTextField	*tagText;
+  NSPopUpButton *keyPopup;
+  id             altBtn;
+  id             ctrlBtn;
+  id             shiftBtn;
+  id             cmdBtn;
 }
 @end
 

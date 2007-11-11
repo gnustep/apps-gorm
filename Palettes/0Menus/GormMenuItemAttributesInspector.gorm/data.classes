@@ -12,7 +12,12 @@
 	Outlets = (
 	    tagText,
 	    shortCut,
-	    titleText
+	    titleText,
+	    altBtn,
+	    ctrlBtn,
+	    shiftBtn,
+	    cmdBtn,
+	    keyPopup
 	);
 	Super = IBInspector;
     };

@@ -1,3 +1,13 @@
+2007-11-10 21:46-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Documentation/news.texi
+	* Documentation/readme.texi: Update of documentation.
+	* Palettes/0Menus/GormMenuItemAttributesInspector.gorm
+	* Palettes/0Menus/GormMenuItemAttributesInspector.h
+	* Palettes/0Menus/GormMenuItemAttributesInspector.m
+	* Palettes/2Controls/GormButtonAttributesInspector.m: Add
+	key equivalent drop down for special keys for menu items.
+
 2007-11-05 18:43-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormBoxEditor.h

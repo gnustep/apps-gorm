@@ -30,14 +30,21 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-
 #include "GormMenuItemAttributesInspector.h"
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
-#include <Foundation/NSNotification.h>
+const unichar up[]={NSUpArrowFunctionKey};
+const unichar dn[]={NSDownArrowFunctionKey};
+const unichar lt[]={NSLeftArrowFunctionKey};
+const unichar rt[]={NSRightArrowFunctionKey};
 
-#include <AppKit/NSMenuItem.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTextField.h>
+NSString *upString = nil;
+NSString *dnString = nil;
+NSString *ltString = nil;
+NSString *rtString = nil;
+
+#define VSTR(str) ({NSString *_str = (NSString *)str; ((NSString *)_str) ? (NSString *)_str : (NSString *)@"";})
 
 @implementation GormMenuItemAttributesInspector
 
@@ -52,18 +59,96 @@
       NSLog(@"Could not gorm GormMenuItemAttributesInspector");
       return nil;
     }
+
+  // initialize the strings.
+  upString = RETAIN([NSString stringWithCharacters: up length: 1]);
+  dnString = RETAIN([NSString stringWithCharacters: dn length: 1]);
+  ltString = RETAIN([NSString stringWithCharacters: lt length: 1]);
+  rtString = RETAIN([NSString stringWithCharacters: rt length: 1]);
+
   return self;
 }
 
+- (void) dealloc
+{
+  RELEASE(upString);
+  RELEASE(dnString);
+  RELEASE(ltString);
+  RELEASE(rtString);
+  [super dealloc];
+}
 
 - (void) revert : (id)sender
 {
+  unsigned int flags = [object keyEquivalentModifierMask];
+  NSString *key = VSTR([object keyEquivalent]);
+
   if ( object == nil )
     return;
 
-  [titleText setStringValue: [object title]];
-  [shortCut setStringValue: [object keyEquivalent]];
+  [titleText setStringValue: VSTR([object title])];
+  [shortCut setStringValue: key];
+  
   [tagText setIntValue: [object tag]];
+
+  if([key isEqualToString: @"\n"])
+    {
+      [keyPopup selectItemAtIndex: 1];
+    }
+  else if([key isEqualToString: @"\b"])
+    {
+      [keyPopup selectItemAtIndex: 2];
+    }
+  else if([key isEqualToString: @"\E"])
+    {
+      [keyPopup selectItemAtIndex: 3];
+    }
+  else if([key isEqualToString: @"\t"])
+    {
+      [keyPopup selectItemAtIndex: 4];
+    }
+  else if([key isEqualToString: upString])
+    {
+      [keyPopup selectItemAtIndex: 5];
+    }
+  else if([key isEqualToString: dnString])
+    {
+      [keyPopup selectItemAtIndex: 6];
+    }
+  else if([key isEqualToString: ltString])
+    {
+      [keyPopup selectItemAtIndex: 7];
+    }
+  else if([key isEqualToString: rtString])
+    {
+      [keyPopup selectItemAtIndex: 8];
+    }
+  else
+    {
+      [keyPopup selectItem: nil];
+    }
+  
+  // key modifier mask...
+  [altBtn setState: NSOffState];
+  [ctrlBtn setState: NSOffState];
+  [shiftBtn setState: NSOffState];
+  [cmdBtn setState: NSOffState];
+  if(flags & NSAlternateKeyMask)
+    {
+      [altBtn setState: NSOnState];
+    }
+  if(flags & NSControlKeyMask)
+    {
+      [ctrlBtn setState: NSOnState];
+    }
+  if(flags & NSShiftKeyMask)
+    {
+      [shiftBtn setState: NSOnState];
+    }
+  if(flags & NSCommandKeyMask)
+    {
+      [cmdBtn setState: NSOnState];
+    }  
 }
 
 -(void) ok: (id) sender
@@ -74,11 +159,121 @@
     }
   if (sender == shortCut)
     {
-      [object setKeyEquivalent:[[shortCut stringValue]stringByTrimmingSpaces]];
+      [object setKeyEquivalent:[[shortCut stringValue] stringByTrimmingSpaces]];
     }
   if (sender == tagText)
     {
       [object setTag: [tagText intValue]];
+    }
+  else if (sender == keyPopup)
+    {
+      unsigned int tag = [[keyPopup selectedItem] tag];
+      switch(tag)
+	{
+	case 0: // none
+	  {
+	    [object setKeyEquivalent: nil];
+	  }
+	  break;
+	case 1: // return
+	  {
+	    [object setKeyEquivalent: @"\n"];
+	  }
+	  break;
+	case 2: // delete 
+	  {
+	    [object setKeyEquivalent: @"\b"];
+	  }
+	  break;
+	case 3: // escape
+	  {
+	    [object setKeyEquivalent: @"\E"];
+	  }
+	  break;
+	case 4: // tab
+	  {
+	    [object setKeyEquivalent: @"\t"];
+	  }
+	  break;
+	case 5: // up
+	  {
+	    [object setKeyEquivalent: upString];
+	  }
+	  break;
+	case 6: // down
+	  {
+	    [object setKeyEquivalent: dnString];
+	  }
+	  break;
+	case 7: // left
+	  {
+	    [object setKeyEquivalent: ltString];
+	  }
+	  break;
+	case 8: // right
+	  {
+	    [object setKeyEquivalent: rtString];
+	  }
+	  break;
+	default: // should never happen..
+	  {
+	    [object setKeyEquivalent: nil];
+	    NSLog(@"This shouldn't happen.");
+	  }
+	  break;
+	}
+    }
+  else if (sender == altBtn)
+    {
+      if([altBtn state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] | NSAlternateKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] & ~NSAlternateKeyMask];
+	}
+    }
+  else if (sender == ctrlBtn)
+    {
+      if([ctrlBtn state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] | NSControlKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] & ~NSControlKeyMask];
+	}
+    }
+  else if (sender == shiftBtn)
+    {
+      if([shiftBtn state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] | NSShiftKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] & ~NSShiftKeyMask];
+	}
+    }
+  else if (sender == cmdBtn)
+    {
+      if([cmdBtn state] == NSOnState)
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] | NSCommandKeyMask];
+	}
+      else
+	{
+	  [object setKeyEquivalentModifierMask: 
+		    [object keyEquivalentModifierMask] & ~NSCommandKeyMask];
+	}
     }
 
   [super ok:sender];

@@ -4,18 +4,30 @@
 @include version.texi
 @end ifset
 
-@section Noteworthy changes in version @samp{1.2.0}
+@section Noteworthy changes in version @samp{1.2.2}
 
 @itemize @bullet
-@item Corrections to some editors to not change seslection if connection is in progress.
-@item Force menu style to NSNextStepInterfaceStyle for editing purposes.
-@item Correction for memory issue when closing document.
-@item Minor bug fixes.
+@item Moved to GPLv3
+@item Added text field to NSTableColumn inspector to allow editing of table column title.
+@item Corrected issue with selection.
+@item Added button modifiers for special keys to button inspectors.
+@item Corrected issue with loading of older gorm files.
+@item Fix to allow Gorm's menus to be Mac-style, but not the one being edited.
+@item Other miscellaneous bug corrections.
 @end itemize
 
 @ifclear ANNOUNCE-ONLY
 @c ====================================================================
 @c Keep the next line just below the list of changes in most recent version.
+
+@section Noteworthy changes in version @samp{1.2.0}
+
+@itemize @bullet
+@item Corrections to some editors to not change selection if connection is in progress.
+@item Force menu style to NSNextStepInterfaceStyle for editing purposes.
+@item Correction for memory issue when closing document.
+@item Minor bug fixes.
+@end itemize
 
 @section Noteworthy changes in version @samp{1.1.0}
 
