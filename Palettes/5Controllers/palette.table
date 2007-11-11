@@ -1,6 +1,0 @@
-{
-  NibFile = "";
-  Class = "ControllersPalette";
-  Icon = "ControllersPalette";
-  ExportClasses = (NSController,NSObjectController,NSArrayController,NSUserDefaultsController);
-}
