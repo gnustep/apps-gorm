@@ -1,3 +1,16 @@
+2007-11-11 15:38-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* Documentation/Gorm.texi
+	* GNUmakefile
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Palettes/GNUmakefile
+	* README
+	* Resources/Defaults.plist
+	* Version: Preparing for release.
+
 2007-11-11 00:18-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormMenuItemAttributesInspector.m: call

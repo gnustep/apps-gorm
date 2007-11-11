@@ -84,9 +84,8 @@ except that the section entitled ``GNU Library General Public License'' may be
 included in a translation approved by the author instead of in the original
 English.
 
-@strong{Note: The Gorm application is in alpha release. You will
-be performing a valuable service if you report any bugs you encounter.}
-
+@strong{Note: You will be performing a valuable service if you report any bugs you encounter.}
+@strong{The full gorm manual is available at http://wiki.gnustep.org/index.php/Gorm_Manual.}
 @end titlepage
 
 @contents

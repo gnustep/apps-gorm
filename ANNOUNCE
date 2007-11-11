@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.2.0 of Gorm.
+This is version 1.2.2 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,17 +12,24 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.2.0'
+1.2 Noteworthy changes in version `1.2.2'
 =========================================
 
-   * Corrections to some editors to not change seslection if connection
-     is in progress.
+   * Moved to GPLv3
 
-   * Force menu style to NSNextStepInterfaceStyle for editing purposes.
+   * Added text field to NSTableColumn inspector to allow editing of
+     table column title.
 
-   * Correction for memory issue when closing document.
+   * Corrected issue with selection.
 
-   * Minor bug fixes.
+   * Added button modifiers for special keys to button inspectors.
+
+   * Corrected issue with loading of older gorm files.
+
+   * Fix to allow Gorm's menus to be Mac-style, but not the one being
+     edited.
+
+   * Other miscellaneous bug corrections.
 
 1.3 How can I get support for this software?
 ============================================

@@ -63,7 +63,6 @@ Gorm_RESOURCE_FILES = \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
 	Palettes/4Data/4Data.palette \
-	Palettes/5Controllers/5Controllers.palette \
 	Images/GormClass.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \

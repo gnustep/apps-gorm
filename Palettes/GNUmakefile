@@ -32,8 +32,7 @@ SUBPROJECTS = \
 	1Windows \
 	2Controls \
 	3Containers \
-	4Data \
-	5Controllers
+	4Data 
 
 -include GNUmakefile.preamble
 

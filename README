@@ -15,8 +15,9 @@ Software Foundation.
 
    Gorm is released under the GPL - see the file `COPYING' for details.
 
-   Little documentation exists. There is a nice basic tutorial at
-`http://www.sophos.ca/~ludovic/article/article.html'.
+   Documentation for Gorm is located in the Documentation directory.
+It's also available on the wiki at
+http://wiki.gnustep.org/index.php/Gorm_Manual.
 
 0.2 Status
 ==========
@@ -27,7 +28,9 @@ bug-gnustep@gnu.org
 
    Known problems (things to do) -
 
-  1. Documentation - only a tiny start has been made on this!
+  1. Support for IB 3.0 functionality.
+
+  2. More palettes.
 
 0.3 Acknowledgements
 ====================
