@@ -55,6 +55,7 @@ IBInspectorMode.h \
 IBObjectAdditions.h \
 IBObjectProtocol.h \
 IBPalette.h \
+IBPlugin.h \
 IBProjects.h \
 IBProjectFiles.h \
 IBResourceManager.h \
@@ -78,6 +79,7 @@ IBInspectorManager.m \
 IBInspectorMode.m \
 IBObjectAdditions.m \
 IBPalette.m \
+IBPlugin.m \
 IBResourceManager.m
 
 #

@@ -45,7 +45,8 @@ SUBPROJECTS = \
 	GormLib \
 	GormCore \
 	GormPrefs \
-	Palettes 
+	Palettes \
+	Plugins
 
 #
 # MAIN APP

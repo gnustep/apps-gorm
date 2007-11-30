@@ -37,6 +37,7 @@
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBObjectProtocol.h>
 #include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/IBPlugin.h>
 #include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBProjectFiles.h>
 #include <InterfaceBuilder/IBResourceManager.h>

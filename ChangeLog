@@ -1,3 +1,13 @@
+2007-11-30 15:58-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile
+	* GormLib/GNUmakefile
+	* GormLib/IBPlugin.h
+	* GormLib/IBPlugin.m
+	* GormLib/InterfaceBuilder.h
+	* Plugins/GNUmakefile: First cut at changes to add Plugin support
+	to Gorm.
+
 2007-11-11 15:38-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ANNOUNCE
