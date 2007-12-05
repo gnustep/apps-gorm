@@ -1,3 +1,8 @@
+2007-12-04 20:52-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormViewSizeInspector.gorm: Correction for
+	bug#19640.
+
 2007-11-30 15:58-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile
