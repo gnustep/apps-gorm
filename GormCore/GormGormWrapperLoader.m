@@ -56,15 +56,24 @@
   NSString *key = nil;
   int errorCount = 0;
   NSString *errorMsg = nil;
+  NSArray *connections = [document allConnectors];
+  id con = nil;
 
   NSRunAlertPanel(_(@"Warning"), 
 		  _(@"You are running with 'GormRepairFileOnLoad' set to YES."),
 		  nil, nil, nil);
 
+  /**
+   * Iterate over all objects in nameTable.
+   */
+  [document deactivateEditors];
   while((key = [en nextObject]) != nil)
   {
     id obj = [[document nameTable] objectForKey: key];
 
+    /*
+     * Take care of any dangling menus...
+     */
     if([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
       {
 	id sm = [obj supermenu];
@@ -85,6 +94,9 @@
 	  }
       }
 
+    /*
+     * Take care of any dangling menu items...
+     */
     if([obj isKindOfClass: [NSMenuItem class]])
       {
 	id m = [obj menu];
@@ -105,25 +117,7 @@
 	  }
       }
 
-    /**
-     * If it's a view and it does't have a window *AND* it's not a top level object
-     * then it's not a standalone view, it's an orphan.   Delete it.
-     *
-    if([obj isKindOfClass: [NSView class]])
-      {
-	if([obj window] == nil && 
-	   [[document topLevelObjects] containsObject: obj] == NO &&
-	   [obj hasSuperviewKindOfClass: [NSTabView class]] == NO)
-	  {
-	    NSLog(@"Found and removed an orphan view %@, %@",obj,[document nameForObject: obj]);
-	    [document detachObject: obj];
-	    [obj removeFromSuperview];
-	    errorCount++;
-	  }
-      }
-    */
-
-    /**
+    /*
      * If there is a view which is not associated with a name, give it one...
      */
     if([obj isKindOfClass: [NSWindow class]])
@@ -134,22 +128,48 @@
 	
 	while((v = [ven nextObject]) != nil)
 	  {
-	    if([document nameForObject: v] == nil)
+	    NSString *name = nil;
+	    if((name = [document nameForObject: v]) == nil)
 	      {
-		NSString *name = nil;
 		[document attachObject: v toParent: [v superview]];
 		name = [document nameForObject: v];
-		NSLog(@"Found view %@ without an associated name, adding to the nametable as %@", v, name);
+		NSLog(@"==> Found view %@ without an associated name, adding to the nametable as %@", v, name);
 		if([v respondsToSelector: @selector(stringValue)])
 		  {
 		    NSLog(@"View string value is %@",[v stringValue]);
 		  }
 		errorCount++;
 	      }
+	    NSLog(@"Found view %@ with name %@", v, name);
 	  }
       }
   }
+  [document reactivateEditors];
+  
+  /**
+   * Iterate over all connections...
+   */
+  en = [connections objectEnumerator];
+  while((con = [en nextObject]) != nil)
+    {
+      if([con isKindOfClass: [NSNibConnector class]])
+	{
+	  if([con source] == nil)
+	    {
+	      NSLog(@"==> Removing bad connector with nil source: %@",con);
+	      [document removeConnector: con];
+	      errorCount++;
+	    }
 
+	  if([con destination] == nil)
+	    {
+	      NSLog(@"==> Removing bad connector with nil destination: %@",con);
+	      [document removeConnector: con];
+	      errorCount++;
+	    }
+	}
+    }
+  
   // report the number of errors...
   if(errorCount > 0)
     {
