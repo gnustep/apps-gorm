@@ -9,7 +9,7 @@
   id window;
   id backupButton;
   id interfaceMatrix;
-
+  id checkConsistency;
   id _view;
 }
 
@@ -27,6 +27,8 @@
  * Show the classes view as a browser or an outline.
  */
 - (void) classesAction: (id)sender;
+
+- (void) consistencyAction: (id)sender;
 @end
 
 

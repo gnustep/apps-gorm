@@ -36,6 +36,7 @@
 
 static NSString *BACKUPFILE=@"BackupFile";
 static NSString *INTTYPE=@"ClassViewType";
+static NSString *REPAIRFILE=@"GormRepairFileOnLoad";
 
 @implementation GormGeneralPref
 
@@ -59,6 +60,7 @@ static NSString *INTTYPE=@"ClassViewType";
     NSString *intType = [defaults stringForKey: INTTYPE];
  
     [backupButton setState: [defaults integerForKey: BACKUPFILE]];
+    [checkConsistency setState: ([defaults boolForKey: REPAIRFILE]?NSOnState:NSOffState)];
     
     // set the interface matrix...
     if([intType isEqual: @"Outline"])
@@ -89,38 +91,35 @@ static NSString *INTTYPE=@"ClassViewType";
 
 - (void) backupAction: (id)sender
 {
-  if (sender != backupButton) 
-    return;
-  else
-    {
-      NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
-      [defaults setInteger:[backupButton state] forKey:BACKUPFILE];
-    }
+  NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+  [defaults setInteger:[backupButton state] forKey:BACKUPFILE];
 }
 
 - (void) classesAction: (id)sender
 {
-  if (sender != interfaceMatrix) 
-    return;
-  else
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  // NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  
+  if([[interfaceMatrix cellAtRow: 0 column: 0] state] == NSOnState)
     {
-      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      // NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
- 
-      if([[interfaceMatrix cellAtRow: 0 column: 0] state] == NSOnState)
-	{
-	  [defaults setObject: @"Outline" forKey: INTTYPE];
-	}
-      else if([[interfaceMatrix cellAtRow: 1 column: 0] state] == NSOnState)
-	{
-	  [defaults setObject: @"Browser" forKey: INTTYPE];
-	}
-
-      // let the world know it's changed.
-      // [nc postNotificationName: GormSwitchViewPreferencesNotification
-      //     object: nil];
-
+      [defaults setObject: @"Outline" forKey: INTTYPE];
     }
+  else if([[interfaceMatrix cellAtRow: 1 column: 0] state] == NSOnState)
+    {
+      [defaults setObject: @"Browser" forKey: INTTYPE];
+    }
+  
+  // let the world know it's changed.
+  // [nc postNotificationName: GormSwitchViewPreferencesNotification
+  //     object: nil];
+  
+}
+
+- (void) consistencyAction: (id)sender
+{
+  NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+  [defaults setBool: (([checkConsistency state] == NSOnState)?YES:NO) 
+	    forKey: REPAIRFILE];
 }
 @end
 

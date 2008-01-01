@@ -1,3 +1,15 @@
+2007-12-31 21:22-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormInconsistenciesPanel.gorm: Error panel to show
+	detected inconsistencies.
+	* English.lproj/GormPrefGeneral.gorm: Added option to turn on
+	repair method.
+	* GNUmakefile: Added reference to new gorm file.
+	* GormCore/GormGormWrapperLoader.m: Added code to bring up the 
+	new panel and show the errors.
+	* GormPrefs/GormGeneralPref.[mh]: Added new method and ivar to
+	handle switch for consistency checking.
+
 2007-12-19 19:03-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m

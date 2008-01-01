@@ -4,6 +4,7 @@
 	Actions = (
 	    "archiveAction:",
 	    "classesAction:",
+	    "consistencyAction:",
 	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
@@ -14,7 +15,8 @@
 	    "inspectorAction:",
 	    "backupAction:",
 	    "archiveAction:",
-	    "classesAction:"
+	    "classesAction:",
+	    "consistencyAction:"
 	);
 	Outlets = (
 	    window,
@@ -22,7 +24,8 @@
 	    inspectorButton,
 	    backupButton,
 	    archiveMatrix,
-	    interfaceMatrix
+	    interfaceMatrix,
+	    checkConsistency
 	);
 	Super = NSObject;
     };

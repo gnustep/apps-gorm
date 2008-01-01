@@ -36,12 +36,56 @@
 #include <GormCore/GormFunctions.h>
 
 @interface GormGormWrapperLoader : GormWrapperLoader
+{
+  NSMutableArray *_repairLog;
+  id message;
+  id textField;
+  id panel;
+}
 @end
 
 @implementation GormGormWrapperLoader
 + (NSString *) type
 {
   return @"GSGormFileType";
+}
+
+- (id) init
+{
+  if((self = [super init]) != nil)
+    {
+      _repairLog = [[NSMutableArray alloc] init];
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(_repairLog);
+  [super dealloc];
+}
+
+- (void) _openMessagePanel: (NSString *) msg
+{
+  NSEnumerator *en = [_repairLog objectEnumerator];
+  id m = nil;
+
+  if([NSBundle loadNibNamed: @"GormInconsistenciesPanel"
+	       owner: self] == NO)
+    {
+      NSLog(@"Failed to open message panel...");
+    }
+  else
+    {
+      [message setStringValue: msg];
+      
+      while((m = [en nextObject]) != nil)
+	{
+	  [textField insertText: m];
+	}
+
+      [panel orderFront: self];
+    }
 }
 
 /** 
@@ -80,7 +124,9 @@
 	if(sm == nil)
 	  {
 	    NSArray *menus = findAll(obj);
-	    NSLog(@"Found and removed a dangling menu %@, %@.",obj,[document nameForObject: obj]);
+	    [_repairLog addObject: 
+			  [NSString stringWithFormat: @"ERROR ==> Found and removed a dangling menu %@, %@.\n",
+				    obj,[document nameForObject: obj]]];
 	    [document detachObjects: menus];
 	    [document detachObject: obj];
 	    
@@ -104,7 +150,9 @@
 	  {
 	    id sm = [obj submenu];
 
-	    NSLog(@"Found and removed a dangling menu item %@, %@.",obj,[document nameForObject: obj]);
+	    [_repairLog addObject:
+			  [NSString stringWithFormat: @"ERROR ==> Found and removed a dangling menu item %@, %@.\n",
+				    obj,[document nameForObject: obj]]];
 	    [document detachObject: obj];
 
 	    // if there are any submenus, detach those as well.
@@ -133,21 +181,24 @@
 	      {
 		[document attachObject: v toParent: [v superview]];
 		name = [document nameForObject: v];
-		NSLog(@"==> Found view %@ without an associated name, adding to the nametable as %@", v, name);
+		[_repairLog addObject: 
+			      [NSString stringWithFormat: 
+					  @"ERROR ==> Found view %@ without an associated name, adding to the nametable as %@\n", 
+					v, name]];
 		if([v respondsToSelector: @selector(stringValue)])
 		  {
-		    NSLog(@"View string value is %@",[v stringValue]);
+		    [_repairLog addObject: [NSString stringWithFormat: @"INFO: View string value is %@\n",[v stringValue]]];
 		  }
 		errorCount++;
 	      }
-	    NSLog(@"Found view %@ with name %@", v, name);
+	    [_repairLog addObject: [NSString stringWithFormat: @"INFO: Checking view %@ with name %@\n", v, name]];
 	  }
       }
   }
   [document reactivateEditors];
   
   /**
-   * Iterate over all connections...
+   * Iterate over all connections...  remove connections with nil sources.
    */
   en = [connections objectEnumerator];
   while((con = [en nextObject]) != nil)
@@ -156,14 +207,8 @@
 	{
 	  if([con source] == nil)
 	    {
-	      NSLog(@"==> Removing bad connector with nil source: %@",con);
-	      [document removeConnector: con];
-	      errorCount++;
-	    }
-
-	  if([con destination] == nil)
-	    {
-	      NSLog(@"==> Removing bad connector with nil destination: %@",con);
+	      [_repairLog addObject: 
+			    [NSString stringWithFormat: @"ERROR ==> Removing bad connector with nil source: %@\n",con]];
 	      [document removeConnector: con];
 	      errorCount++;
 	    }
@@ -174,9 +219,7 @@
   if(errorCount > 0)
     {
       errorMsg = [NSString stringWithFormat: @"%d inconsistencies were found, please save the file.",errorCount]; 
-      NSRunAlertPanel(_(@"Warning"), 
-		      errorMsg,
-		      nil, nil, nil); 
+      [self _openMessagePanel: errorMsg];
     }
 }
 

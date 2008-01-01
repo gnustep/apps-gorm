@@ -145,6 +145,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormHelpInspector.gorm \
 	Gorm.gorm \
 	GormImageInspector.gorm \
+	GormInconsistenciesPanel.gorm \
 	GormInspectorPanel.gorm \
 	GormObjectInspector.gorm \
 	GormNSSplitViewInspector.gorm \
