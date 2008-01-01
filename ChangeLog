@@ -1,3 +1,9 @@
+2008-01-01 15:26-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Plugins/GModel/GNUmakefile
+	* Plugins/Gorm/GNUmakefile
+	* Plugins/Nib/GNUmakefile: Add dummy makefiles.
+
 2008-01-01 15:21-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Plugins/GNUmakefile: Add makefile in plugins dir.
