@@ -126,7 +126,7 @@
 	    NSArray *menus = findAll(obj);
 	    [_repairLog addObject: 
 			  [NSString stringWithFormat: @"ERROR ==> Found and removed a dangling menu %@, %@.\n",
-				    obj,[document nameForObject: obj]]];
+				    obj, key]];
 	    [document detachObjects: menus];
 	    [document detachObject: obj];
 	    
@@ -143,6 +143,7 @@
     /*
      * Take care of any dangling menu items...
      */
+    /*
     if([obj isKindOfClass: [NSMenuItem class]])
       {
 	id m = [obj menu];
@@ -151,8 +152,8 @@
 	    id sm = [obj submenu];
 
 	    [_repairLog addObject:
-			  [NSString stringWithFormat: @"ERROR ==> Found and removed a dangling menu item %@, %@.\n",
-				    obj,[document nameForObject: obj]]];
+			  [NSString stringWithFormat: @"ERROR ==> Found and removed an unattached menu item %@, %@.\n",
+				    obj, key]];
 	    [document detachObject: obj];
 
 	    // if there are any submenus, detach those as well.
@@ -164,6 +165,7 @@
 	    errorCount++;
 	  }
       }
+    */
 
     /*
      * If there is a view which is not associated with a name, give it one...
@@ -177,6 +179,38 @@
 	while((v = [ven nextObject]) != nil)
 	  {
 	    NSString *name = nil;
+
+	    // skip these...
+	    if([v isKindOfClass: [NSMatrix class]])
+	      {
+		[_repairLog addObject: @"INFO: Skipping NSMatrix view.\n"];
+		continue;
+	      }
+	    else if([v isKindOfClass: [NSScroller class]] &&
+		    [[v superview] isKindOfClass: [NSTextView class]])
+	      {
+		[_repairLog addObject: @"INFO: Skipping NSScroller in an NSTextView.\n"];
+		continue;
+	      }
+	    else if([v isKindOfClass: [NSScroller class]] &&
+		    [[v superview] isKindOfClass: [NSBrowser class]])
+	      {
+		[_repairLog addObject: @"INFO: Skipping NSScroller in an NSTextView.\n"];
+		continue;
+	      }
+	    else if([v isKindOfClass: [NSClipView class]] &&
+		    [[v superview] isKindOfClass: [NSTextView class]])
+	      {
+		[_repairLog addObject: @"INFO: Skipping NSClipView in an NSTextView.\n"];
+		continue;
+	      }
+	    else if([v isKindOfClass: [NSClipView class]] &&
+		    [[v superview] isKindOfClass: [NSBrowser class]])
+	      {
+		[_repairLog addObject: @"INFO: Skipping NSClipView in an NSTextView.\n"];
+		continue;
+	      }
+	       	    
 	    if((name = [document nameForObject: v]) == nil)
 	      {
 		[document attachObject: v toParent: [v superview]];
