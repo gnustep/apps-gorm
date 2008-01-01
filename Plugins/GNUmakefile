@@ -27,7 +27,10 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 # Each palette is a subproject
 #
-SUBPROJECTS = 
+SUBPROJECTS = \
+	Gorm \
+	Nib \
+	GModel 
 
 -include GNUmakefile.preamble
 
