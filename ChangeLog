@@ -1,3 +1,8 @@
+2008-01-01 22:57-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGormWrapperLoader.m: Cleanup array after 
+	display of errors/warnings.
+
 2008-01-01 15:26-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Plugins/GModel/GNUmakefile

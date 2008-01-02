@@ -86,6 +86,8 @@
 
       [panel orderFront: self];
     }
+
+  [_repairLog removeAllObjects];
 }
 
 /** 
