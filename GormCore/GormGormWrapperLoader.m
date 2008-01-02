@@ -256,6 +256,7 @@
     {
       errorMsg = [NSString stringWithFormat: @"%d inconsistencies were found, please save the file.",errorCount]; 
       [self _openMessagePanel: errorMsg];
+      [document touch];
     }
 }
 

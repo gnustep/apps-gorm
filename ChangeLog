@@ -1,3 +1,9 @@
+2008-01-01 23:07-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGormWrapperLoader.m: Touch the document to mark it
+	as modified in the _repairFile method only if corrections have been
+	made.
+
 2008-01-01 22:57-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m: Cleanup array after 
