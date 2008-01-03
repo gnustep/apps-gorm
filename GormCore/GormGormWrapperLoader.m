@@ -44,6 +44,17 @@
 }
 @end
 
+@interface NSWindow (Level)
+- (int) windowLevel;
+@end;
+
+@implementation NSWindow (Level)
+- (int) windowLevel
+{
+  return _windowLevel;
+}
+@end;
+
 @implementation GormGormWrapperLoader
 + (NSString *) type
 {
@@ -177,6 +188,16 @@
 	NSArray *allViews = allSubviews([obj contentView]);
 	NSEnumerator *ven = [allViews objectEnumerator];
 	id v = nil;
+
+	if([obj windowLevel] != NSNormalWindowLevel)
+	  {
+	    [obj setLevel: NSNormalWindowLevel];
+	    [_repairLog addObject: 
+			  [NSString stringWithFormat: 
+				      @"ERROR ==> Found window %@ with an invalid level, correcting.\n", 
+				    obj]];
+	    errorCount++;
+	  }
 	
 	while((v = [ven nextObject]) != nil)
 	  {
@@ -239,14 +260,42 @@
   en = [connections objectEnumerator];
   while((con = [en nextObject]) != nil)
     {
+      id src = [con source];
+      id dst = [con destination];
       if([con isKindOfClass: [NSNibConnector class]])
 	{
-	  if([con source] == nil)
+	  if(src == nil)
 	    {
 	      [_repairLog addObject: 
 			    [NSString stringWithFormat: @"ERROR ==> Removing bad connector with nil source: %@\n",con]];
 	      [document removeConnector: con];
 	      errorCount++;
+	    }
+	  else if([src isKindOfClass: [NSString class]])
+	    {
+	      id obj = [document objectForName: src];
+	      if(obj == nil)
+		{
+		  [_repairLog addObject: 
+				[NSString stringWithFormat: 
+					    @"ERROR ==> Removing bad connector with source that is not in the nametable: %@\n",
+					  con]];
+		  [document removeConnector: con];
+		  errorCount++;
+		}
+	    }
+	  else if([dst isKindOfClass: [NSString class]])
+	    {
+	      id obj = [document objectForName: dst];
+	      if(obj == nil)
+		{
+		  [_repairLog addObject: 
+				[NSString stringWithFormat: 
+					    @"ERROR ==> Removing bad connector with destination that is not in the nametable: %@\n",
+					  con]];
+		  [document removeConnector: con];
+		  errorCount++;
+		}
 	    }
 	}
     }

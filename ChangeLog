@@ -1,3 +1,8 @@
+2008-01-03 14:50-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGormWrapperLoader.m: Correct invalid window level
+	in _repairFile: method.
+
 2008-01-01 23:07-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m: Touch the document to mark it
