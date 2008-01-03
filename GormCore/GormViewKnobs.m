@@ -76,7 +76,7 @@ GormShowFastKnobFills(void)
     }
   if (dkgrayRectCount)
     {
-      PSsetgray(NSDarkGray);
+      PSsetrgbcolor(1,0,0);
       NSRectFillList(dkgrayRectList, dkgrayRectCount);
     }
   blackRectCount = 0;

@@ -1,3 +1,9 @@
+2008-01-03 17:22-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewKnobs.m: Draw initial knobs as red
+	to differentiate them from the black ones which indicates that
+	the inside of a non-simple view is selected.  Corrects bug#21479.
+
 2008-01-03 14:50-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGormWrapperLoader.m: Correct invalid window level
