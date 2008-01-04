@@ -1,3 +1,8 @@
+2008-01-03 20:39-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGenericEditor.m: Reformed and applied patch provided
+	by Sergey Golovin.  Corrects bug#17539.
+
 2008-01-03 20:17-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Added menu shortcut for delete/backspace
