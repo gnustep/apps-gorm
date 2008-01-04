@@ -62,6 +62,8 @@
   [color setColor: [object backgroundColor]];
   [horizontalScroll setState: [object hasHorizontalScroller]?NSOnState:NSOffState];
   [verticalScroll setState: [object hasVerticalScroller]?NSOnState:NSOffState];
+  [horizontalRuler setState: [object hasHorizontalRuler]?NSOnState:NSOffState];
+  [verticalRuler setState: [object hasVerticalRuler]?NSOnState:NSOffState];
 }
 
 - (void) setObject: (id)anObject
@@ -91,6 +93,22 @@
   /* insert your code here */
   [super ok: sender];
   [object setHasHorizontalScroller: ([horizontalScroll state] == NSOnState)];
+}
+
+
+- (void) verticalRuler: (id)sender
+{
+  /* insert your code here */
+  [super ok: sender];
+  [object setHasVerticalRuler: ([verticalRuler state] == NSOnState)];
+}
+
+
+- (void) horizontalRuler: (id)sender
+{
+  /* insert your code here */
+  [super ok: sender];
+  [object setHasHorizontalRuler: ([horizontalRuler state] == NSOnState)];
 }
 
 

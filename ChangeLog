@@ -1,3 +1,12 @@
+2008-01-04 13:22-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Changed delete to require command,
+	it was causing issues with editing text fields.
+	* English.lproj/GormScrollViewAttributesInspector.gorm
+	* GormCore/GormScrollViewAttributesInspector.h
+	* GormCore/GormScrollViewAttributesInspector.m: Added ruler switches
+	to inspector.
+
 2008-01-04 12:05-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m

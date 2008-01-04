@@ -2,11 +2,13 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "orderFrontFontPanel:",
 	    "borderSelected:",
+	    "colorSelected:",
+	    "horizontalRuler:",
 	    "horizontalSelected:",
-	    "verticalSelected:",
-	    "colorSelected:"
+	    "verticalRuler:",
+	    "orderFrontFontPanel:",
+	    "verticalSelected:"
 	);
 	Super = NSObject;
     };
@@ -15,7 +17,9 @@
 	    "borderSelected:",
 	    "horizontalSelected:",
 	    "verticalSelected:",
-	    "colorSelected:"
+	    "colorSelected:",
+	    "horizontalRuler:",
+	    "verticalRuler:"
 	);
 	Outlets = (
 	    borderMatrix,
@@ -23,7 +27,9 @@
 	    verticalScroll,
 	    color,
 	    lineAmount,
-	    pageContext
+	    pageContext,
+	    horizontalRuler,
+	    verticalRuler
 	);
 	Super = IBInspector;
     };

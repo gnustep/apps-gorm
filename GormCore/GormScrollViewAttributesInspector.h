@@ -36,10 +36,14 @@
   id color;
   id verticalScroll;
   id horizontalScroll;
+  id verticalRuler;
+  id horizontalRuler;
   id borderMatrix;
 }
 - (void) colorSelected: (id)sender;
 - (void) verticalSelected: (id)sender;
 - (void) horizontalSelected: (id)sender;
+- (void) verticalRuler: (id)sender;
+- (void) horizontalRuler: (id)sender;
 - (void) borderSelected: (id)sender;
 @end
