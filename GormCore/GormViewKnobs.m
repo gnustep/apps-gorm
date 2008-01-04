@@ -36,9 +36,9 @@ static int KNOB_HEIGHT = 0.0;
 static NSRect	*blackRectList	= NULL;
 static int	blackRectSize	= 0;
 static int	blackRectCount	= 0;
-static NSRect	*dkgrayRectList	= NULL;
-static int	dkgrayRectSize	= 0;
-static int	dkgrayRectCount	= 0;
+static NSRect	*fgcolorRectList= NULL;
+static int	fgcolorRectSize	= 0;
+static int	fgcolorRectCount= 0;
 
 static void _fastKnobFill(NSRect aRect,BOOL isBlack);
 static void _drawKnobsForRect(NSRect aRect,BOOL isBlack);
@@ -74,13 +74,13 @@ GormShowFastKnobFills(void)
       PSsetgray(NSBlack);
       NSRectFillList(blackRectList, blackRectCount);
     }
-  if (dkgrayRectCount)
+  if (fgcolorRectCount)
     {
       PSsetrgbcolor(1,0,0);
-      NSRectFillList(dkgrayRectList, dkgrayRectCount);
+      NSRectFillList(fgcolorRectList, fgcolorRectCount);
     }
   blackRectCount = 0;
-  dkgrayRectCount = 0;
+  fgcolorRectCount = 0;
 }
 
 static void
@@ -368,22 +368,22 @@ _fastKnobFill(NSRect aRect, BOOL isBlack)
     }
   else
     {
-      if (!dkgrayRectList)
+      if (!fgcolorRectList)
 	{
-	  dkgrayRectSize = 16;
-	  dkgrayRectList = NSZoneMalloc(NSDefaultMallocZone(), 
-	    dkgrayRectSize * sizeof(NSRect));
+	  fgcolorRectSize = 16;
+	  fgcolorRectList = NSZoneMalloc(NSDefaultMallocZone(), 
+	    fgcolorRectSize * sizeof(NSRect));
 	}
       else
 	{
-	  while (dkgrayRectCount >= dkgrayRectSize)
+	  while (fgcolorRectCount >= fgcolorRectSize)
 	    {
-	      dkgrayRectSize <<= 1;
+	      fgcolorRectSize <<= 1;
 	    }
-	  dkgrayRectList = NSZoneRealloc(NSDefaultMallocZone(), dkgrayRectList, 
-	    dkgrayRectSize * sizeof(NSRect));
+	  fgcolorRectList = NSZoneRealloc(NSDefaultMallocZone(), fgcolorRectList, 
+	    fgcolorRectSize * sizeof(NSRect));
 	}
-      dkgrayRectList[dkgrayRectCount++] = aRect;
+      fgcolorRectList[fgcolorRectCount++] = aRect;
     }
 }
 
