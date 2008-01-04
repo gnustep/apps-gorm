@@ -167,10 +167,22 @@
   return _view;
 }
 
+- (void) activateEditorForView
+{
+  id obj = [[(id<IB>)NSApp activeDocument] editorForObject: _view create: YES];
+  [obj activate];
+}
+
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   [NSException raise: NSInternalInconsistencyException
 	       format: @"Cannot encode a GormViewWindow"];
+}
+
+- (void) orderFront: (id)sender
+{
+  [super orderFront: sender];
+  [self activateEditorForView];
 }
 
 - (void) dealloc
