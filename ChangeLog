@@ -1,3 +1,8 @@
+2008-01-03 20:02-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Corrections for bug#19792.  
+	Nib loader connector logic modified to correct this issue.
+
 2008-01-03 19:40-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormViewKnobs.m: drkgrey changed to fgcolor.

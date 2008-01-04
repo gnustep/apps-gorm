@@ -259,19 +259,12 @@
 	    {
 	      id dest = [o destination];
 	      id src = [o source];
+
+	      NSLog(@"Connector: %@",o);
+
 	      if([o isKindOfClass: [NSNibControlConnector class]])
 		{
 		  NSString *tag = [o label];
-		  if(dest == nibFilesOwner)
-		    {
-		      [o setDestination: [document filesOwner]];
-		    }
-		  else if(dest == nil)
-		    {
-		      [o setDestination: [document firstResponder]];
-		    }
-
-		  // Correct the missing colon problem...
 		  NSRange colonRange = [tag rangeOfString: @":"];
 		  unsigned int location = colonRange.location;
 		  
@@ -282,18 +275,36 @@
 		    }
 		}
 
+	      if(dest == nibFilesOwner)
+		{
+		  [o setDestination: [document filesOwner]];
+		}
+	      else if(dest == nil)
+		{
+		  [o setDestination: [document firstResponder]];
+		}
+
+	      if(src == nibFilesOwner)
+		{
+		  [o setSource: [document filesOwner]];
+		}
+	      else if(src == nil)
+		{
+		  [o setSource: [document firstResponder]];
+		}
+
 	      // check src/dest for window template...
 	      if([src isKindOfClass: [NSWindowTemplate class]])
 		{
 		  id win = [src realObject];
 		  [o setSource: win];
 		}
-	      else if([dest isKindOfClass: [NSWindowTemplate class]])
+
+	      if([dest isKindOfClass: [NSWindowTemplate class]])
 		{
 		  id win = [dest realObject];
 		  [o setDestination: win];
 		}
-
 
 	      // skip any help connectors...
 	      if([o isKindOfClass: [NSIBHelpConnector class]])
