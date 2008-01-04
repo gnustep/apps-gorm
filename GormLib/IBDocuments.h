@@ -211,6 +211,16 @@ IB_EXTERN NSString *IBWillCloseDocumentNotification;
  * Mark document as having been changed.	
  */
 - (void) touch;		
+
+////  PRIVATE
+/**
+ * Returns a string with the name of the class for the given object.
+ */
+
+- (NSString *) classForObject: (id)obj;
+- (NSArray *) actionsOfClass: (NSString *)className;
+- (NSArray *) outletsOfClass: (NSString *)className;
+
 @end
 
 #endif

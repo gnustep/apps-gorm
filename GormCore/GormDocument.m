@@ -3512,6 +3512,23 @@ static void _real_close(GormDocument *self,
   [super setFileType: type];
   [filePrefsManager setFileTypeName: type];
 }
+
+//// PRIVATE METHODS...
+
+- (NSString *) classForObject: (id)obj
+{
+  return [classManager classNameForObject: obj];
+}
+
+- (NSArray *) actionsOfClass: (NSString *)className
+{
+  return [classManager allActionsForClassNamed: className]; 
+}
+
+- (NSArray *) outletsOfClass: (NSString *)className
+{
+  return [classManager allOutletsForClassNamed: className]; 
+}
 @end
 
 @implementation GormDocument (MenuValidation)

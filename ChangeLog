@@ -1,3 +1,8 @@
+2008-01-04 12:05-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m
+	* GormLib/IBDocuments.h: Addition of private methods for bug#17892.
+
 2008-01-03 20:39-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormGenericEditor.m: Reformed and applied patch provided
