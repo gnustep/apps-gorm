@@ -1,3 +1,8 @@
+2008-01-03 20:17-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Added menu shortcut for delete/backspace
+	to correct bug#15637.
+
 2008-01-03 20:02-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Corrections for bug#19792.  

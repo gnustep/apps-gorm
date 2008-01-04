@@ -1,1 +1,60 @@
-{"## Comment" = "Do NOT change this file, Gorm maintains it"; FirstResponder = {Actions = ("arrangeSelectedObjects:", "exportStrings:", "alignSelectedObjects:", "orderFrontFontPanel:", "translate:"); Super = NSObject; }; Gorm = {Actions = ("editClass:", "createSubclass:", "testInterface:", "setName:", "selectAllItems:", "paste:", "palettes:", "loadSound:", "loadPalette:", "inspector:", "infoPanel:", "endTesting:", "delete:", "cut:", "copy:", "close:", "miniaturize:", "debug:", "loadImage:", "orderFrontFontPanel:", "ungroup:", "groupSelectionInScrollView:", "groupSelectionInBox:", "groupSelectionInSplitView:", "remove:", "addAttributeToClass:", "instantiateClass:", "createClassFiles:", "loadClass:", "preferencesPanel:", "guideline:"); Outlets = (gormMenu, guideLineMenuItem); Super = NSApplication; }; GormDocumentController = {Actions = (); Outlets = (); Super = NSDocumentController; }; }
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "arrangeSelectedObjects:",
+	    "exportStrings:",
+	    "alignSelectedObjects:",
+	    "orderFrontFontPanel:",
+	    "translate:"
+	);
+	Super = NSObject;
+    };
+    Gorm = {
+	Actions = (
+	    "editClass:",
+	    "createSubclass:",
+	    "testInterface:",
+	    "setName:",
+	    "selectAllItems:",
+	    "paste:",
+	    "palettes:",
+	    "loadSound:",
+	    "loadPalette:",
+	    "inspector:",
+	    "infoPanel:",
+	    "endTesting:",
+	    "delete:",
+	    "cut:",
+	    "copy:",
+	    "close:",
+	    "miniaturize:",
+	    "debug:",
+	    "loadImage:",
+	    "orderFrontFontPanel:",
+	    "ungroup:",
+	    "groupSelectionInScrollView:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInSplitView:",
+	    "remove:",
+	    "addAttributeToClass:",
+	    "instantiateClass:",
+	    "createClassFiles:",
+	    "loadClass:",
+	    "preferencesPanel:",
+	    "guideline:"
+	);
+	Outlets = (
+	    gormMenu,
+	    guideLineMenuItem
+	);
+	Super = NSApplication;
+    };
+    GormDocumentController = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSDocumentController;
+    };
+}
