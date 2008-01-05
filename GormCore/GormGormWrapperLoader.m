@@ -345,6 +345,14 @@
       NSString                  *subClassName = nil;
       unsigned int           	version = NSNotFound;
       NSDictionary              *fileWrappers = nil;
+      GSNibContainer            *container;
+      NSArray                   *visible;
+      NSArray                   *deferred;
+      GormFilesOwner            *filesOwner;
+      GormFirstResponder        *firstResponder;
+      NSArray                   *objs;
+      NSMutableArray            *connections;
+      NSDictionary              *nt;
 
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
@@ -419,7 +427,7 @@
 	  
 	  // turn off custom classes.
 	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
-	  GSNibContainer *container = [u decodeObject];
+	  container = [u decodeObject];
 	  if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
 	    {
 	      return NO;
@@ -437,7 +445,7 @@
 	  //
 	  // Get all of the visible objects...
 	  //
-	  NSArray *visible = [container visibleWindows];
+	  visible = [container visibleWindows];
 	  id visObj = nil;
 	  enumerator = [visible objectEnumerator];
 	  while((visObj = [enumerator nextObject]) != nil)
@@ -448,7 +456,7 @@
 	  //
 	  // Get all of the deferred objects...
 	  //
-	  NSArray *deferred = [container deferredWindows];
+	  deferred = [container deferredWindows];
 	  id defObj = nil;
 	  enumerator = [deferred objectEnumerator];
 	  while((defObj = [enumerator nextObject]) != nil)
@@ -461,8 +469,8 @@
 	   * to hold the objects rather than their names (using our own dummy
 	   * object as the 'NSOwner'.
 	   */
-	  GormFilesOwner *filesOwner = [document filesOwner];
-	  GormFirstResponder *firstResponder = [document firstResponder];
+	  filesOwner = [document filesOwner];
+	  firstResponder = [document firstResponder];
 	  ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
 	  if (ownerClass)
 	    {
@@ -481,17 +489,17 @@
 	  //
 	  // Add top level items...
 	  //
-	  NSArray *objs = [[container topLevelObjects] allObjects];
+	  objs = [[container topLevelObjects] allObjects];
 	  [[document topLevelObjects] addObjectsFromArray: objs];
 					
 	  //
 	  // Add connections
 	  //
-	  NSMutableArray *connections = [document connections];
+	  connections = [document connections];
 	  [connections addObjectsFromArray: [container connections]];
 
 	  /* Iterate over the contents of nameTable and create the connections */
-	  NSDictionary *nt = [document nameTable];
+	  nt = [document nameTable];
 	  enumerator = [connections objectEnumerator];
 	  while ((con = [enumerator nextObject]) != nil)
 	    {
