@@ -353,6 +353,8 @@
       NSArray                   *objs;
       NSMutableArray            *connections;
       NSDictionary              *nt;
+      id                        visObj;
+      id                        defObj;
 
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
@@ -446,7 +448,7 @@
 	  // Get all of the visible objects...
 	  //
 	  visible = [container visibleWindows];
-	  id visObj = nil;
+	  visObj = nil;
 	  enumerator = [visible objectEnumerator];
 	  while((visObj = [enumerator nextObject]) != nil)
 	    {
@@ -457,7 +459,7 @@
 	  // Get all of the deferred objects...
 	  //
 	  deferred = [container deferredWindows];
-	  id defObj = nil;
+	  defObj = nil;
 	  enumerator = [deferred objectEnumerator];
 	  while((defObj = [enumerator nextObject]) != nil)
 	    {
