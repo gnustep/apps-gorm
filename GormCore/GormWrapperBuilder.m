@@ -59,6 +59,9 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
 {
   NSMutableDictionary *fileWrappers = [NSMutableDictionary dictionary];
   NSFileWrapper *scmDirWrapper = nil;
+  NSArray       *resources;
+  id            object;
+  NSEnumerator  *en;
 
   // Assign document and don't retain... 
   document = doc; 
@@ -80,10 +83,10 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
   // but only those which they end up with will actually be put into the wrapper
   // when the model/document is saved.
   //
-  NSArray *resources = [[document sounds] arrayByAddingObjectsFromArray: 
+  resources = [[document sounds] arrayByAddingObjectsFromArray: 
 					    [document images]];  
-  id object = nil;
-  NSEnumerator *en = [resources objectEnumerator];
+  object = nil;
+  en = [resources objectEnumerator];
   while ((object = [en nextObject]) != nil)
     {
       if([object isSystemResource] == NO)
