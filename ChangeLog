@@ -1,5 +1,6 @@
 2008-01-04 Riccardo Mottola <riccardo@kaffe.org>
 	* GormCore/GormGormWrapperLoader.m: removed some c99-isms
+	* GormCore/GormNibWrapperLoader.m: removed some c99-isms
 
 2008-01-04 18:38-EST Gregory John Casamento <greg_casamento@yahoo.com>
 

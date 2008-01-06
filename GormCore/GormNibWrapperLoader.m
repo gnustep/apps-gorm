@@ -94,6 +94,13 @@
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
 	  GormClassManager *classManager = [document classManager];
+	  id               docFilesOwner;
+	  NSMapTable       objects;
+	  NSArray          *objs;
+	  NSEnumerator     *en;
+	  id               o;
+	  NSMapTable       *classes;
+	  NSArray          *classKeys;
 
 	  key = nil;
 	  fileWrappers = [wrapper fileWrappers];
@@ -170,11 +177,11 @@
 	    }
 	  nibFilesOwner = [container objectForName: @"File's Owner"];
 
-	  id docFilesOwner = [document filesOwner];
-	  NSMapTable objects = [container names];
-	  NSArray *objs = NSAllMapTableKeys(objects);
-	  NSEnumerator *en = [objs objectEnumerator];
-	  id o = nil;
+	  docFilesOwner = [document filesOwner];
+	  objects = [container names];
+	  objs = NSAllMapTableKeys(objects);
+	  en = [objs objectEnumerator];
+	  o = nil;
 
 	  //
 	  // set the current class on the File's owner...
@@ -233,8 +240,8 @@
 	  //
 	  // Add custom classes...
 	  //
-	  NSMapTable *classes = [container classes];
-	  NSArray *classKeys = NSAllMapTableKeys(classes);
+	  classes = [container classes];
+	  classKeys = NSAllMapTableKeys(classes);
 	  en = [classKeys objectEnumerator];
 	  while((o = [en nextObject]) != nil)
 	    {
@@ -346,12 +353,14 @@
   if([obj isKindOfClass: [NSWindowTemplate class]])
     {
       GormClassManager *classManager = [document classManager];
+      Class clz ;
       NSString *className = [obj className];
+      
       if([classManager isCustomClass: className])
 	{
 	  className = [classManager nonCustomSuperClassOf: className];
 	}
-      Class clz = [unarchiver classForClassName: className];
+      clz = [unarchiver classForClassName: className];
       [obj setBaseWindowClass: clz];
     }
   else if([obj respondsToSelector: @selector(setTarget:)] &&
