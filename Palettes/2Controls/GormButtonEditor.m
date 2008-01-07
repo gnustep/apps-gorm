@@ -426,7 +426,11 @@ static NSRect oldFrame;
   [textContainer setWidthTracksTextView: NO];
   [textContainer setHeightTracksTextView: NO];
 
+  [textView setHorizontallyResizable: NO];
+  [textView setVerticallyResizable: NO];
+
   [textView setMinSize: frame.size];
+  [textView setMaxSize: frame.size];
   [textView setAutoresizingMask: NSViewMinXMargin | NSViewMaxXMargin];
   [textView setSelectable: YES];
   [textView setEditable: YES];
