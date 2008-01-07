@@ -83,11 +83,9 @@
       NSData		        *data = nil;
       NSData                    *classes = nil;
       NSKeyedUnarchiver		*u = nil;
-      NSEnumerator		*enumerator = nil;
       NSString                  *key = nil;
       GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
-      NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
       NSDictionary              *fileWrappers = nil;
 
@@ -99,7 +97,7 @@
 	  NSArray          *objs;
 	  NSEnumerator     *en;
 	  id               o;
-	  NSMapTable       *classes;
+	  NSMapTable       *classesTable;
 	  NSArray          *classKeys;
 
 	  key = nil;
@@ -107,8 +105,8 @@
 	  
 	  // turn off custom classes...
 	  [NSClassSwapper setIsInInterfaceBuilder: YES];	  
-	  enumerator = [fileWrappers keyEnumerator];
-	  while((key = [enumerator nextObject]) != nil)
+	  en = [fileWrappers keyEnumerator];
+	  while((key = [en nextObject]) != nil)
 	    {
 	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
 	      if([fw isRegularFile])
@@ -159,6 +157,7 @@
 	  /*
 	   * Substitute any classes specified by the palettes...
 	   */
+	  en = [substituteClasses keyEnumerator];
 	  while((subClassName = [en nextObject]) != nil)
 	    {
 	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
@@ -240,13 +239,13 @@
 	  //
 	  // Add custom classes...
 	  //
-	  classes = [container classes];
-	  classKeys = NSAllMapTableKeys(classes);
+	  classesTable = [container classes];
+	  classKeys = NSAllMapTableKeys(classesTable);
 	  en = [classKeys objectEnumerator];
 	  while((o = [en nextObject]) != nil)
 	    {
 	      NSString *name = [document nameForObject: o];
-	      NSString *customClass = NSMapGet(classes, o);
+	      NSString *customClass = NSMapGet(classesTable, o);
 	      if(name != nil && customClass != nil)
 		{
 		  [classManager setCustomClass: customClass forName: name];

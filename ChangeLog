@@ -1,3 +1,8 @@
+2008-01-07 18:37-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormNibWrapperLoader.m: Minor issues corrected with c99
+	changes.
+
 2008-01-07 17:40-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormDrawerAttributesInspector.gorm:
