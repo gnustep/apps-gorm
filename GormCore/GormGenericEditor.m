@@ -257,28 +257,23 @@
   unsigned	count = [objects count];
   unsigned	index = 0;
   int		cols = 0;
-  int           rows = 0;
+  int		rows = 0;
   int		width = 0;
-  int           height = 0;
-  int           square = 0;
 
   width = [[self superview] bounds].size.width;
-  cols = width / [self cellSize].width;
-  height = [[self superview] bounds].size.height;
-  rows = height / [self cellSize].height;
-  square = height * width;
-  while(rows * cols <= count)
+  while (width >= 72)
     {
-      int vdiff = square - height * cols * [self cellSize].width;
-      int hdiff = square - width * rows * [self cellSize].height;
-      if( vdiff > hdiff)
- 	{
- 	  cols++;
- 	}
-      else
- 	{
- 	  rows++;
- 	}
+      width -= (72 + 8);
+      cols++;
+    }
+  if (cols == 0)
+    {
+      cols = 1;
+    }
+  rows = count / cols;
+  if (rows == 0 || rows * cols != count)
+    {
+      rows++;
     }
   [self renewRows: rows columns: cols];
 

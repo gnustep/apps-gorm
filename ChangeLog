@@ -1,3 +1,9 @@
+2008-01-07 18:50-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormGenericEditor.m: Removed patch for bug#17539.  Was
+	causing issues on load.
+	* GormCore/GormNibWrapperLoader.m: Removed extra NSLog(...);
+
 2008-01-07 18:37-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormNibWrapperLoader.m: Minor issues corrected with c99

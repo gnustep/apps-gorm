@@ -266,7 +266,7 @@
 	      id dest = [o destination];
 	      id src = [o source];
 
-	      NSLog(@"Connector: %@",o);
+	      // NSLog(@"Connector: %@",o);
 
 	      if([o isKindOfClass: [NSNibControlConnector class]])
 		{
