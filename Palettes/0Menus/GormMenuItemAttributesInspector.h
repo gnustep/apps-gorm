@@ -48,6 +48,10 @@
   id             ctrlBtn;
   id             shiftBtn;
   id             cmdBtn;
+  NSString      *upString;
+  NSString      *dnString;
+  NSString      *ltString;
+  NSString      *rtString;
 }
 @end
 

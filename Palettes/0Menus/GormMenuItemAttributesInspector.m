@@ -39,11 +39,6 @@ const unichar dn[]={NSDownArrowFunctionKey};
 const unichar lt[]={NSLeftArrowFunctionKey};
 const unichar rt[]={NSRightArrowFunctionKey};
 
-NSString *upString = nil;
-NSString *dnString = nil;
-NSString *ltString = nil;
-NSString *rtString = nil;
-
 #define VSTR(str) ({NSString *_str = (NSString *)str; ((NSString *)_str) ? (NSString *)_str : (NSString *)@"";})
 
 @implementation GormMenuItemAttributesInspector
