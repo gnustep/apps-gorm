@@ -1,3 +1,15 @@
+2008-01-10  Nicola Pero  <nicola.pero@meta-innovation.com>
+
+	* GNUmakefile.postamble (LN_S_RECURSIVE): For
+	backwards-compatibility with older versions of gnustep-make,
+	define to be the same as LN_S if not defined yet.	
+	(before-all): Use RM_LN_S to delete the symlink, and use
+	LN_S_RECURSIVE to create it.
+	(after-clean): Use RM_LN_S to delete the symlink.
+
+	* GormPrefs/GormPrefController.m ([-init]): Avoid compiler
+	warning.
+	
 2008-01-07 20:04-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormMenuItemAttributesInspector.h

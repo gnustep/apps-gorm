@@ -24,9 +24,15 @@
 #  USA.
 #
 
+# Define this variable if not defined for backwards-compatibility as
+# it is only available in gnustep-make >= 2.0.5
+ifeq ($(LN_S_RECURSIVE),)
+  LN_S_RECURSIVE = $(LN_S)
+endif
+
 before-all::
-	rm -rf InterfaceBuilder
-	$(LN_S) GormLib InterfaceBuilder
+	$(RM_LN_S) InterfaceBuilder; \
+	$(LN_S_RECURSIVE) GormLib InterfaceBuilder
 
 after-all::
 
@@ -35,4 +41,4 @@ after-clean::
 after-distclean::
 
 after-clean::
-	rm -rf InterfaceBuilder
+	$(RM_LN_S) InterfaceBuilder
