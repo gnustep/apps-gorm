@@ -71,10 +71,10 @@ NSImage *browserImage = nil;
 	  NSRect		 scrollRect = [classesView frame]; //  = {{0, 0}, {340, 188}};
 	  NSRect		 mainRect = NSMakeRect(20,0,scrollRect.size.width-20,
 						       scrollRect.size.height); 
-	  NSColor *salmonColor = [NSColor colorWithCalibratedRed: 0.850980 
-					  green: 0.737255
-					  blue: 0.576471
-					  alpha: 1.0 ];
+	  NSColor *color = [NSColor colorWithCalibratedRed: 0.850980 
+                                    green: 0.737255
+                                    blue: 0.576471
+                                    alpha: 1.0 ];
 	  NSTableColumn         *tableColumn;
 
 	  // setup the view...
@@ -114,7 +114,7 @@ NSImage *browserImage = nil;
 	  [outlineView setAttributeOffset: 30];
 	  [outlineView setRowHeight: 18];
 	  [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
-	  [outlineView setBackgroundColor: salmonColor];
+	  [outlineView setBackgroundColor: color];
 	  
 	  // add the table columns...
 	  tableColumn = [(NSTableColumn *)[NSTableColumn alloc] initWithIdentifier: @"classes"];
@@ -162,7 +162,6 @@ NSImage *browserImage = nil;
 	  // [browserView setDoubleAction: nil]; // @selector(doubleClick:)];
 	  [browserView setRefusesFirstResponder:YES];
 	  [browserView loadColumnZero];
-	  
 	  
 	  // observe certain notifications...
 	  [nc addObserver: self

@@ -316,6 +316,10 @@ static NSMapTable	*docMap = 0;
   if (self != nil)
     {
       NSButtonCell	*proto;
+      NSColor *color = [NSColor colorWithCalibratedRed: 0.850980 
+                                green: 0.737255
+                                blue: 0.576471
+                                alpha: 1.0 ];
 
       document = aDocument;
       
@@ -331,6 +335,9 @@ static NSMapTable	*docMap = 0;
       [self setAction: @selector(changeSelection:)];
       [self setDoubleAction: @selector(raiseSelection:)];
       [self setTarget: self];
+
+      // set the background color.
+      [self setBackgroundColor: color];
 
       objects = [[NSMutableArray alloc] init];
       proto = [[NSButtonCell alloc] init];

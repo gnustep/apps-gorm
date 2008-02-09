@@ -151,7 +151,7 @@
       document = aDocument;
       closed = NO;
       activated = NO;
-      resourceManager = nil;
+      resourceManager = nil;      
     }
   return self;
 }

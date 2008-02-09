@@ -1,3 +1,10 @@
+2008-02-09 12:15-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormClassEditor.m
+	* GormCore/GormGenericEditor.m
+	* GormCore/GormObjectEditor.m: Change background color of 
+	object view.
+
 2008-01-10  Nicola Pero  <nicola.pero@meta-innovation.com>
 
 	* GNUmakefile.postamble (LN_S_RECURSIVE): For
