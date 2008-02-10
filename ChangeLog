@@ -1,3 +1,8 @@
+2008-02-09  Adam Fedor  <fedor@gnu.org>
+
+	* GormCore/GormGenericEditor.m ([GormGenericEditor -refreshCells]): 
+	Avoid segfault on solaris machines.
+
 2008-02-09 12:15-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassEditor.m

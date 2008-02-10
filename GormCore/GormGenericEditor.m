@@ -260,7 +260,8 @@
   int		rows = 0;
   int		width = 0;
 
-  width = [[self superview] bounds].size.width;
+  if ([self superview])
+    width = [[self superview] bounds].size.width;
   while (width >= 72)
     {
       width -= (72 + 8);
