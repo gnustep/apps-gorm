@@ -361,6 +361,7 @@
   NSEnumerator *enumerator = [[_EO subviews] objectEnumerator];
   GormViewEditor *subview;
   NSMutableArray *newSelection = [NSMutableArray array];
+  id thisView = [self editedObject];
   
   [parent makeSubeditorResign];
   
@@ -378,12 +379,7 @@
       [newSelection addObject: v];
     }
   
-  {
-    id thisView = [self editedObject];
-    [self close];
-    [thisView removeFromSuperview];
-    [document detachObject: thisView];
-  }
+  [self close];
   return newSelection;
 }
 @end

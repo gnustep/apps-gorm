@@ -905,43 +905,29 @@ static NSImage *horizontalImage;
 
 - (NSArray *)destroyAndListSubviews
 {
-  if ([parent isKindOfClass: [GormBoxEditor class]]
-      && 
-      ([[parent parent] isKindOfClass: 
-			    [GormViewWithContentViewEditor class]]
-       || [[parent parent] isKindOfClass: 
-			     [GormSplitViewEditor class]]))
+  NSEnumerator *enumerator = [[_editedObject subviews] objectEnumerator];
+  GormViewEditor *subview;
+  NSMutableArray *newSelection = [NSMutableArray array];
+   
+  [[parent parent] makeSubeditorResign];
+  
+  while ((subview = [enumerator nextObject]) != nil)
     {
-      NSEnumerator *enumerator = [[_editedObject subviews] objectEnumerator];
-      GormViewEditor *subview;
-      NSMutableArray *newSelection = [NSMutableArray array];
-
-      [[parent parent] makeSubeditorResign];
-
-      while ((subview = [enumerator nextObject]) != nil)
-	{
-	  id v;
-	  NSRect frame;
-	  v = [subview editedObject];
-	  frame = [v frame];
-	  frame = [[parent parent] convertRect: frame
-				   fromView: _editedObject];
-	  [subview deactivate];
-	  
-	  [v setFrame: frame];
-	  [newSelection addObject: v];
-	}
-
-      {
-	id thisView = [parent editedObject];
-	[parent close];
-	[thisView removeFromSuperview];
-	[document detachObject: thisView];
-      }
+      id v;
+      NSRect frame;
+      v = [subview editedObject];
+      frame = [v frame];
+      frame = [[parent parent] convertRect: frame
+                               fromView: _editedObject];
+      [subview deactivate];
       
-      return newSelection;
+      [v setFrame: frame];
+      [newSelection addObject: v];
     }
-  return nil;
+  
+  [parent close];
+   
+  return newSelection;
 }
 
 - (void) deleteSelection: (id) sender

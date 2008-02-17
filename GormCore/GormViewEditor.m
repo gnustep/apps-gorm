@@ -304,11 +304,13 @@ static BOOL currently_displaying = NO;
       
       // if this window is nil when the editor is created, we know it's a
       // standalone view.
+      /*
       if([anObject window] == nil)
 	{
 	  NSDebugLog(@"#### Stand alone view: %@",_editedObject);
 	  viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
 	}
+      */
     }
 
   return self;

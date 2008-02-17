@@ -187,13 +187,15 @@
   id documentView = [_EO documentView];
   NSArray *subviews = [documentView subviews];
   NSMutableArray *newSelection = [NSMutableArray array];
-  id thisView = nil;
 
   if([documentView conformsToProtocol: @protocol(IBEditors)] == YES)
     {
       id internalView = [subviews objectAtIndex: 0];
       NSEnumerator *enumerator = [[internalView subviews] objectEnumerator];
       GormViewEditor *subview;
+
+      if([[documentView editedObject] isKindOfClass: [NSTextView class]])
+        return newSelection;
 
       [parent makeSubeditorResign];
       while ((subview = [enumerator nextObject]) != nil)
@@ -213,6 +215,9 @@
     {
       NSRect frame = [documentView frame];
 
+      if([documentView isKindOfClass: [NSTextView class]])
+        return newSelection;
+
       // In this case the view editor is the documentView and
       // we need to add the internal view back into the superview
       frame = [parent convertRect: frame fromView: _EO];
@@ -221,11 +226,7 @@
       [_EO setDocumentView: nil];
     }
 
-  thisView = [self editedObject];
   [self close];
-  [thisView removeFromSuperview];
-  [document detachObject: thisView];
-
   return newSelection;
 }
 @end
