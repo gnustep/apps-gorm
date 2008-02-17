@@ -90,11 +90,14 @@
     {
       NSRect newFrame = [_view frame];
 
-      newFrame.origin.x = windowFrame.origin.x;
-      newFrame.origin.y = windowFrame.origin.y;
-      newFrame.size.height += 70;
+      newFrame.origin.x = windowFrame.origin.x+10;
+      newFrame.origin.y = windowFrame.origin.y+20;
+      newFrame.size.height += 100;
       newFrame.size.width += 20;
 
+      [_view setPostsFrameChangedNotifications: NO];
+      [_view setFrame: newFrame];
+      [_view setPostsFrameChangedNotifications: YES];
       [window setFrame: newFrame display: YES];
     }
 
@@ -122,6 +125,7 @@
   else
     {
       [_view setFrame: newFrame];
+      [_view setNeedsDisplay: YES];
     }
 }
 
@@ -169,8 +173,20 @@
 
 - (void) activateEditorForView
 {
-  id obj = [[(id<IB>)NSApp activeDocument] editorForObject: _view create: YES];
-  [obj activate];
+  id editor = [[(id<IB>)NSApp activeDocument] editorForObject: _view create: YES];
+  // NSArray *subviews = [_view subviews];
+  // NSEnumerator *en = [subviews objectEnumerator];
+  // id sub = nil;
+
+  // activate the parent and all subview editors...
+  [editor activate];
+  /*
+  while((sub = [en nextObject]) != nil)
+    {
+      editor = [[(id<IB>)NSApp activeDocument] editorForObject: sub create: YES];
+      [editor activate];
+    }
+  */
 }
 
 - (void) encodeWithCoder: (NSCoder *)coder
