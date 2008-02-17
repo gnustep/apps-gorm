@@ -1,3 +1,12 @@
+2008-02-16 20:54-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormSliderAttributesInspector.m: Cleaned up
+	code to use NSOnState and NSOffState properly, since we can't depend
+	on them always reflecting YES and NO respectively.
+	* Palettes/3Containers/GormTableViewAttributesInspector.m:
+	Corrected call in ok: to use enclosingScrollView instead of 
+	simply getting the superview of the table.  This corrects bug#22333.
+
 2008-02-09  Adam Fedor  <fedor@gnu.org>
 
 	* GormCore/GormGenericEditor.m ([GormGenericEditor -refreshCells]): 

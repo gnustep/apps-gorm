@@ -79,15 +79,15 @@
     }
   else if ( sender == stopOnTicksSwitch ) 
     {
-      [object setAllowsTickMarkValuesOnly: [stopOnTicksSwitch state]];
+      [object setAllowsTickMarkValuesOnly: (([stopOnTicksSwitch state] == NSOnState) ? YES:NO)];
     }
   else if ( sender == continuousSwitch ) 
     {
-      [object setContinuous: [continuousSwitch state]];
+      [object setContinuous: (([continuousSwitch state] == NSOnState) ? YES : NO)];
     }
   else if ( sender == enabledSwitch ) 
     {
-      [object setEnabled: [enabledSwitch state]];
+      [object setEnabled: (([enabledSwitch state] == NSOnState) ? YES : NO)];
     }
   else if (sender == altIncrementForm)
     {
@@ -116,9 +116,9 @@
   [[valuesForm cellAtIndex: 2] setDoubleValue: [object maxValue]];
   [[valuesForm cellAtIndex: 3] setIntValue: [object numberOfTickMarks]];
 
-  [continuousSwitch setState: [object isContinuous]];
-  [enabledSwitch setState: [object isEnabled]];
-  [stopOnTicksSwitch setState: [object allowsTickMarkValuesOnly]];
+  [continuousSwitch setState: ([object isContinuous] ? NSOnState : NSOffState)];
+  [enabledSwitch setState: ([object isEnabled] ? NSOnState : NSOffState)];
+  [stopOnTicksSwitch setState: ([object allowsTickMarkValuesOnly] ? NSOnState : NSOffState)];
 
   [[altIncrementForm cellAtIndex: 0] setDoubleValue:
 				       [[object cell] altIncrementValue]];

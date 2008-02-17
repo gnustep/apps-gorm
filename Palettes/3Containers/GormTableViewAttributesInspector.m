@@ -66,8 +66,8 @@
   BOOL isScrollView;
   id scrollView;
 
-  scrollView = [[object superview] superview];
-  isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
+  scrollView = [object enclosingScrollView];
+  isScrollView = [scrollView isKindOfClass: [NSScrollView class]];
   
   /* Selection */
   if ( sender == multipleSelectionSwitch ) 
