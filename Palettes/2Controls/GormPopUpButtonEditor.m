@@ -64,25 +64,12 @@ Class _gormnspopupbuttonCellClass = 0;
 
 @implementation GormNSPopUpButtonCell 
 
-- (id) initTextCell: (NSString*) stringValue
-          pullsDown: (BOOL) pullDown
+/* Overriden helper method */
+- (void) _initMenu
 {
-  [super _gormInitTextCell: stringValue];
-
-
-  _pbcFlags.pullsDown = pullDown;
-  _pbcFlags.usesItemFromMenu = YES;
-  _pbcFlags.altersStateOfSelectedItem = YES;
-
-  if ([stringValue length] > 0)
-    {
-      [self addItemWithTitle: stringValue]; 
-    }
-
-  _menu = [(id)[NSMenu allocSubstitute] initWithTitle: @""];
-  [_menu _setOwnedByPopUp: self];
-
-  return self;
+  NSMenu *menu = [[NSMenu allocSubstitute] initWithTitle: @""];
+  [self setMenu: menu];
+  RELEASE(menu);
 }
 
 - (NSString *) className
@@ -90,38 +77,6 @@ Class _gormnspopupbuttonCellClass = 0;
   return @"NSPopUpButtonCell";
 }
 @end
-//  @interface GormPopUpNSMenu : NSMenu
-//  - (BOOL)canBecomeMainWindow
-//  {
-//    return YES;
-//  }
-//  - (BOOL)canBecomeKeyWindow
-//  {
-//    return YES;
-//  }
-
-//  - (void) sendEvent: (NSEvent*)theEvent
-//  {
-//    NSEventType   type;
-
-//    type = [theEvent type];
-//    if (type == NSLeftMouseDown)
-//      {
-//        NSLog(@"here");
-//        if (_f.is_main == YES)
-//  	{
-//  	  NSLog(@"already main %@", [NSApp mainWindow]);
-//  	}
-//        [self makeMainWindow];
-//        [self makeKeyWindow];
-//      }
-
-//    [super sendEvent: theEvent];
-//  }
-//  @end
-
-//  @implementation GormPopUpNSMenu
-//  @end
 
 @interface GormPopUpButtonEditor : GormControlEditor
 {
