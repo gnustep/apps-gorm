@@ -62,6 +62,7 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
       NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
       NSMutableArray *images = [NSMutableArray array];
       NSMutableArray *sounds = [NSMutableArray array];
+      NSEnumerator *enumerator = nil;
 
       document = doc; // don't retain...
       key = nil;
@@ -69,7 +70,7 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
       
       [self saveSCMDirectory: fileWrappers];
       
-      NSEnumerator *enumerator = [fileWrappers keyEnumerator];
+      enumerator = [fileWrappers keyEnumerator];
       while((key = [enumerator nextObject]) != nil)
 	{
 	  NSFileWrapper *fw = [fileWrappers objectForKey: key];
