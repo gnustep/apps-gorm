@@ -1,3 +1,13 @@
+2008-04-06 22:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* ChangeLog
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Version: Updating for release.
+
 2008-03-05 20:45-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWrapperLoader.m: Correct c99'ism.
@@ -20,8 +30,8 @@
 	* GormCore/GormScrollViewEditor.m
 	* GormCore/GormSplitViewEditor.m
 	* GormCore/GormViewEditor.m
-	* GormCore/GormViewWithContentViewEditor.m: Corrections for bug#18171.
-	Fixes issues with grouping and ungrouping.
+	* GormCore/GormViewWithContentViewEditor.m: Corrections for
+	bug#18171.  Fixes issues with grouping and ungrouping.
 
 2008-02-16 20:54-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
@@ -194,6 +204,10 @@
 	* Plugins/GNUmakefile: First cut at changes to add Plugin support
 	to Gorm.
 
+2007-11-11 15:40-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version: 1.2.2
+	
 2007-11-11 15:38-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* ANNOUNCE

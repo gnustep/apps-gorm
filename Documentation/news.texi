@@ -4,6 +4,23 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.4}
+
+Requires: gnustep-gui-0.13.2.  
+Reason: Due to changes in popupbutton controller logic.
+
+@itemize @bullet
+@item Corrected bug#'s 19640, 21845, 19792, 15637, 17892, 18171.
+@item Added error panel to show the detected inconsistencies in a file.
+@item Added preference setting to turn on or off the gorm file repair logic.
+@item Added capability to repair logic to fix window level issue.
+@item Added ruler switch to scroll view inspector.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.2}
 
 Requires: gnustep-gui-0.13.0.
@@ -17,10 +34,6 @@ Requires: gnustep-gui-0.13.0.
 @item Fix to allow Gorm's menus to be Mac-style, but not the one being edited.
 @item Other miscellaneous bug corrections.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.1}
 

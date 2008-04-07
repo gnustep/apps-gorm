@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.2.2 of Gorm.
+This is version 1.2.3 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,26 +12,22 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.2.2'
+1.2 Noteworthy changes in version `1.2.4'
 =========================================
 
-Requires: gnustep-gui-0.13.0.
+Requires: gnustep-gui-0.13.2.  Reason: Due to changes in popupbutton
+controller logic.
 
-   * Moved to GPLv3
+   * Corrected bug#'s 19640, 21845, 19792, 15637, 17892, 18171.
 
-   * Added text field to NSTableColumn inspector to allow editing of
-     table column title.
+   * Added error panel to show the detected inconsistencies in a file.
 
-   * Corrected issue with selection.
+   * Added preference setting to turn on or off the gorm file repair
+     logic.
 
-   * Added button modifiers for special keys to button inspectors.
+   * Added capability to repair logic to fix window level issue.
 
-   * Corrected issue with loading of older gorm files.
-
-   * Fix to allow Gorm's menus to be Mac-style, but not the one being
-     edited.
-
-   * Other miscellaneous bug corrections.
+   * Added ruler switch to scroll view inspector.
 
 1.3 How can I get support for this software?
 ============================================
