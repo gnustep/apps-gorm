@@ -1,3 +1,18 @@
+2008-04-14 17:37-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormImageEditor.m
+	* GormCore/GormOutlineView.m
+	* GormCore/GormResourceManager.m
+	* GormCore/GormSoundInspector.m
+	* GormCore/GormSplitViewEditor.m
+	* GormLib/IBInspectorManager.m
+	* Palettes/2Controls/GormBoxAttributesInspector.m
+	* Palettes/4Data/GormDateFormatterAttributesInspector.m
+	* Palettes/4Data/GormImageViewAttributesInspector.m
+	* Palettes/4Data/GormNumberFormatterAttributesInspector.m: General
+	clean up and compilation fixes to allow Gorm to compile without
+	warnings.
+
 2008-04-07 18:59-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormFilePrefsManager.m

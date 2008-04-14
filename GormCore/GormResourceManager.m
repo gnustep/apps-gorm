@@ -118,7 +118,7 @@
 	      NSString *ext = [file pathExtension];
 	      if ([ext isEqual:@"h"])
 	        {
-		  GormDocument *doc = document;
+		  GormDocument *doc = (GormDocument *)document;
 		  GormClassManager *classManager = [doc classManager];
                   NS_DURING
                     {
@@ -148,14 +148,14 @@
 	        }
 	      else if ([imageTypes containsObject:ext])
 	        {
-		  GormDocument *doc = document;
+		  GormDocument *doc = (GormDocument *)document;
 		  [(GormGenericEditor *)[doc viewWithTag:1]
 			  addObject:[GormImage imageForPath:file]]; 
 		  [doc changeToViewWithTag:1];
 		}
 	      else if ([soundTypes containsObject:ext])
 	        {
-		  GormDocument *doc = document;
+		  GormDocument *doc = (GormDocument *)document;
 		  [(GormGenericEditor *)[doc viewWithTag:2]
 			  addObject:[GormSound soundForPath:file]]; 
 		  [doc changeToViewWithTag:2];

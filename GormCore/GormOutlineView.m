@@ -229,7 +229,7 @@ static NSColor *darkGreyBlueColor = nil;
   int i = 0;
   int insertionPoint = 0;
   id object = nil;
-  id sitem = (item == nil)?[NSNull null]:item;
+  id sitem = (item == nil)?((id)[NSNull null]):((id)item);
 
   object = [_dataSource outlineView: self
 		     actionsForItem: sitem];
@@ -271,7 +271,7 @@ static NSColor *darkGreyBlueColor = nil;
   int i = 0;
   int insertionPoint = 0;
   id object = nil;
-  id sitem = (item == nil)?[NSNull null]:item;
+  id sitem = (item == nil)?((id)[NSNull null]):((id)item);
 
   object = [_dataSource outlineView: self
 		     outletsForItem: sitem];

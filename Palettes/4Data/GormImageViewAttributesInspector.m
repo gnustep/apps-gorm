@@ -40,7 +40,7 @@
 #include <AppKit/NSTextField.h>
 
 /* This macro makes sure that the string contains a value, even if @"" */
-#define VSTR(str) ({id _str = str; (_str) ? _str : @"";})
+#define VSTR(str) ({id _str = (id)str; (_str) ? (id)_str : (id)(@"");})
 
 @implementation GormImageViewAttributesInspector
 

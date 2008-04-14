@@ -88,13 +88,13 @@
 - (void) stop: (id)sender
 {
   NSDebugLog(@"Stop");
-  [object stop];
+  [(NSSound *)object stop];
 }
 
 - (void) play: (id)sender
 {
   NSDebugLog(@"Play");
-  [object play];
+  [(NSSound *)object play];
 }
 
 - (void) pause: (id)sender

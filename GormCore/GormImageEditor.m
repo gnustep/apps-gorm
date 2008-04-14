@@ -128,6 +128,7 @@ static NSMapTable *docMap = 0;
 
   RELEASE(objects);
   NSDebugLog(@"Released...");
+  GSNOSUPERDEALLOC;
 }
 
 - (void) close

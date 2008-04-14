@@ -26,6 +26,7 @@
 #include <Foundation/NSString.h>
 #include <Foundation/NSDictionary.h>
 #include <Foundation/NSArray.h>
+#include <Foundation/NSEnumerator.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
 #include <InterfaceBuilder/IBInspectorMode.h>
 #include <math.h>

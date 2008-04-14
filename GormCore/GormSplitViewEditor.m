@@ -361,7 +361,6 @@
   NSEnumerator *enumerator = [[_EO subviews] objectEnumerator];
   GormViewEditor *subview;
   NSMutableArray *newSelection = [NSMutableArray array];
-  id thisView = [self editedObject];
   
   [parent makeSubeditorResign];
   
