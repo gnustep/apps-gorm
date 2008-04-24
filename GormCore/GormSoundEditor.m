@@ -38,7 +38,7 @@ static NSMapTable *docMap = 0;
   if (self == [GormSoundEditor class])
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
-				NSObjectMapValueCallBacks, 2);
+				NSNonRetainedObjectMapValueCallBacks, 2);
     }
 }
 

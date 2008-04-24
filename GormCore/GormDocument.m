@@ -1160,6 +1160,18 @@ static NSImage  *fileImage = nil;
   NSDebugLog(@"Owner changed for %@", sender);
 }
 
+- (void) release
+{
+  [super release];
+}
+
+- (id) retain
+{
+  [super retain];
+  NSLog(@"Retaining document, retain count %d",[self retainCount]);
+  return self;
+}
+
 /**
  * Dealloc all things owned by a GormDocument object.
  */
@@ -1174,8 +1186,6 @@ static NSImage  *fileImage = nil;
   RELEASE(classManager);
   RELEASE(filePrefsManager);
   RELEASE(filePrefsView);
-  RELEASE(savedEditors);
-  RELEASE(openEditors);
   RELEASE(hidden);
 
   if (objToName != 0)
@@ -1196,6 +1206,8 @@ static NSImage  *fileImage = nil;
   RELEASE(topLevelObjects);
   RELEASE(visibleWindows);
   RELEASE(deferredWindows);
+  DESTROY(savedEditors);
+  DESTROY(openEditors);
 
   TEST_RELEASE(scmWrapper);
   [super dealloc];

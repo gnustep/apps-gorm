@@ -1,3 +1,11 @@
+2008-04-24 00:54-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Correct issue with window.
+	* GormCore/GormDocument.m
+	* GormCore/GormImageEditor.m
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormSoundEditor.m: Fix memory leak.
+
 2008-04-23 20:03-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSWindowInspector.gorm: Connected the
