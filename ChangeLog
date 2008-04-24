@@ -1,3 +1,10 @@
+2008-04-23 20:03-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Connected the
+	button for "released when closed" button.
+	* Palettes/1Windows/GormNSWindow.m: Correction for issue where 
+	isReleasedWhenClosed isn't set properly.
+
 2008-04-20 11:47-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormInfo.plist: Minor correction to the plist.

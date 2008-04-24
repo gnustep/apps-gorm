@@ -32,17 +32,6 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSWindow
-/*
-- (void) setFrameForMask: (unsigned int)mask
-{
-  NSRect newFrame;
-
-  // Reset the frame with the style...
-  newFrame = [NSWindow frameRectForContentRect: contentRect styleMask: mask];
-  [window setFrame: newFrame display: NO];
-}
-*/
-
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;
@@ -56,6 +45,21 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   [super encodeWithCoder: aCoder];
   _styleMask = oldStyleMask;
   [self setReleasedWhenClosed: NO];
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  self = [super initWithCoder: coder];
+  if (self == nil)
+    {
+      return nil;
+    }
+  
+  // preserve the setting and set the actual window to NO.
+  _gormReleasedWhenClosed = [self isReleasedWhenClosed];
+  [self setReleasedWhenClosed: NO];
+  
+  return self;
 }
 
 - (id) initWithContentRect: (NSRect)contentRect
