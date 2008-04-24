@@ -1,3 +1,8 @@
+2008-04-24 01:21-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: change to log to debug instead.
+	* GormCore/GormImageEditor.m: properly dealloc the image code.
+
 2008-04-24 00:54-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Correct issue with window.

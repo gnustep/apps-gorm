@@ -1168,7 +1168,7 @@ static NSImage  *fileImage = nil;
 - (id) retain
 {
   [super retain];
-  NSLog(@"Retaining document, retain count %d",[self retainCount]);
+  NSDebugLog(@"Retaining document, retain count %d",[self retainCount]);
   return self;
 }
 
@@ -1179,6 +1179,7 @@ static NSImage  *fileImage = nil;
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   ASSIGN(lastEditor, nil);
+  // [filePrefsWindow close];
 
   // Get rid of the selection box.
   [selectionBox removeFromSuperviewWithoutNeedingDisplay];
