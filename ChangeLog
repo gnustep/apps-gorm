@@ -1,3 +1,8 @@
+2008-04-24 18:06-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Correct resize attributes of 
+	GormDocument.
+
 2008-04-24 01:28-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormScrollViewAttributesInspector.gorm: Correct
