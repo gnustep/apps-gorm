@@ -28,6 +28,7 @@
 #include <InterfaceBuilder/IBInspectorMode.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
+#include <InterfaceBuilder/IBDocuments.h>
 #include "GormPrivate.h"
 #include "GormImage.h"
 #include "GormSound.h"
@@ -273,6 +274,7 @@
   NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
   unsigned	count = [selection count];
   id		obj = [selection lastObject];
+  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
   NSView	*newView = nil;
   NSView	*oldView = nil;
   NSString	*newInspector = nil;
@@ -340,8 +342,9 @@
     }
   else
     {
-      NSString *newTitle = [selectedObject objectNameForInspectorTitle]; 
-      [panel setTitle: [NSString stringWithFormat:_(@"%@ Inspector"), newTitle]];
+      NSString *newTitle = [selectedObject objectNameForInspectorTitle];
+      NSString *objName = [document nameForObject: selectedObject];
+      [panel setTitle: [NSString stringWithFormat:_(@"%@ (%@) Inspector"), newTitle,objName]];
     }
 
   if (newInspector == nil)

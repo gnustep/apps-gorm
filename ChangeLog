@@ -1,3 +1,14 @@
+2008-04-25 17:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormDocument.gorm: Corrected possition.
+	* GormCore/GormInspectorsManager.m: Show the name of the object 
+	which is being edited in the inspector title.
+	* Palettes/1Windows/GormNSWindowInspector.gorm: Added support for 
+	setting the frame save name.
+	* Palettes/1Windows/GormWindowAttributesInspector.h: Added ivar
+	* Palettes/1Windows/GormWindowAttributesInspector.m: Modified ok: and
+	revert:
+
 2008-04-24 18:57-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Correct position of window.

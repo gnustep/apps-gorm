@@ -62,6 +62,11 @@
     {
       [object setTitle: [[sender cellAtIndex: 0] stringValue] ]; 
     }
+  /* title */
+  else if (sender == autosaveName)
+    {
+      [object setFrameAutosaveName: [[sender cellAtIndex: 0] stringValue] ]; 
+    }
   /* backing Type */
   else if (sender == backingMatrix)
     {
@@ -190,6 +195,9 @@
   /* Title */
   [[titleForm cellAtIndex: 0] setStringValue: [object title] ];
   
+  // Autosave name
+  [[autosaveName cellAtIndex: 0] setStringValue: [object frameAutosaveName] ];
+
   /* Backing */
   [backingMatrix selectCellWithTag: [object backingType] ];
 

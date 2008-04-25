@@ -65,6 +65,7 @@
   /* Miniaturized Window Icon */
   NSForm *iconNameForm;
   NSButton *clearButton;
+  NSForm *autosaveName;
 }
 
 @end
