@@ -37,13 +37,16 @@
   NSMatrix		*selectionView;
   NSView		*dragView;
   NSMutableArray	*bundles;
-  NSMutableArray	*palettes;
+  NSMutableDictionary	*palettesDict;
+  NSMutableArray        *palettes;
+  NSMutableArray        *paletteNames;
   int			current;
   BOOL			hiddenDuringTest;
   NSMutableDictionary   *importedClasses;
   NSMutableArray        *importedImages;
   NSMutableArray        *importedSounds;
   NSMutableDictionary   *substituteClasses;
+  NSToolbar             *toolbar;
 }
 
 // methods for loading and display the palette panels
@@ -51,6 +54,7 @@
 - (id) openPalette: (id) sender;
 - (NSPanel*) panel;
 - (void) setCurrentPalette: (id)anObject;
+- (void) setCurrentPaletteWithTag: (int)tag;
 
 // methods for importing stuff from palettes
 - (void) importClasses: (NSArray *)classes withDictionary: (NSDictionary *)dict;

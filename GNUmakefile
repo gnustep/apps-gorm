@@ -149,6 +149,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormInspectorPanel.gorm \
 	GormObjectInspector.gorm \
 	GormNSSplitViewInspector.gorm \
+	GormPalettePanel.gorm \
 	GormPrefColors.gorm \
 	GormPreferences.gorm \
 	GormPrefGeneral.gorm \

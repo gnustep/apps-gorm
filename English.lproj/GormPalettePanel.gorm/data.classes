@@ -1,0 +1,27 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormPalettePanel = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSPanel;
+    };
+    GormPaletteView = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+    GormPalettesManager = {
+	Actions = (
+	);
+	Outlets = (
+	    panel,
+	    dragView,
+	    selectionView
+	);
+	Super = NSObject;
+    };
+}

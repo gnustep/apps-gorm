@@ -1,3 +1,12 @@
+2008-04-27 19:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPalettePanel.gorm: Moved palette window to
+	gorm file.
+	* GNUmakefile: Added new gorm here.
+	* GormCore/GormDocument.m: Made toolbar items smaller
+	* GormCore/GormPalettesManager.[hm]: Added toolbar implementation
+	to this class to allow the user to switch palettes using the toolbar.
+
 2008-04-25 17:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormDocument.gorm: Corrected possition.
