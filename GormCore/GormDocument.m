@@ -341,7 +341,7 @@ static NSImage  *fileImage = nil;
   // set up the toolbar...
   toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormToolbar"];
   [toolbar setAllowsUserCustomization: NO];
-  [toolbar setSizeMode: NSToolbarSizeModeSmall];
+  // [toolbar setSizeMode: NSToolbarSizeModeSmall];
   [toolbar setDelegate: self];
   [window setToolbar: toolbar];
   RELEASE(toolbar);

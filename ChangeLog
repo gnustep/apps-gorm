@@ -1,3 +1,7 @@
+2008-04-28 17:31-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Reinstate large toolbar on document.
+
 2008-04-27 19:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/GormPalettePanel.gorm: Moved palette window to
