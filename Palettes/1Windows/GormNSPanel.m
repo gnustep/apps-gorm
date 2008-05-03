@@ -4,8 +4,7 @@
 
    Author: Gregory John Casamento <greg_casamento@yahoo.com>
    Date: 2003
-   Adapted from GormNSWindow.m
-   
+   (Adapted from GormNSWindow.m)
    This file is part of GNUstep.
    
    This program is free software; you can redistribute it and/or modify
@@ -28,6 +27,7 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormNSPanel.h"
 
+// the default style mask we start with.
 static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
@@ -45,6 +45,21 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   [super encodeWithCoder: aCoder];
   _styleMask = oldStyleMask;
   [self setReleasedWhenClosed: NO];
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  self = [super initWithCoder: coder];
+  if (self == nil)
+    {
+      return nil;
+    }
+  
+  // preserve the setting and set the actual window to NO.
+  _gormReleasedWhenClosed = [self isReleasedWhenClosed];
+  [self setReleasedWhenClosed: NO];
+  
+  return self;
 }
 
 - (id) initWithContentRect: (NSRect)contentRect

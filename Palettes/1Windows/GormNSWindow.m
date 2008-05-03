@@ -69,7 +69,6 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		    screen: (NSScreen*)aScreen
 {
   _gormStyleMask = aStyle;
-  // _originalContentRect = contentRect;
   self = [super initWithContentRect: contentRect
 		styleMask: defaultStyleMask
 		backing: bufferingType
@@ -159,13 +158,4 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 {
   // do nothing... 
 }
-
-/*
-- (void) release
-{
-  NSLog(@"Someone is releasing %@",self);
-  [super release];
-}
-*/
-
 @end
