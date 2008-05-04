@@ -514,11 +514,11 @@ static NSImage	*dragImage = nil;
   // with scrolling.
   if([window styleMask] & NSBorderlessWindowMask)
     {
-      [window setFrame: NSMakeRect(0,0,272,160) display: NO];
+      // [window setFrame: NSMakeRect(0,0,272,160) display: NO];
     }
   else
     {
-      [window setFrame: NSMakeRect(0,0,272,192) display: NO];
+      // [window setFrame: NSMakeRect(0,0,272,192) display: NO];
     }
 
   // manage palette data.
@@ -640,7 +640,7 @@ static NSImage	*dragImage = nil;
       wv = [[palette originalWindow] contentView];
       if(wv)
         {
-          [dragView setFrameSize: [wv frame].size];
+          // [dragView setFrameSize: [wv frame].size];
         }
 
       // iterate over the subviews and add them to the dragview.

@@ -1,3 +1,8 @@
+2008-05-04 18:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.m: Crrrection for issue with palette
+	clipping the top of the controls.
+
 2008-05-03 13:40-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/1Windows/GormNSPanel.m
