@@ -623,6 +623,7 @@ static NSImage	*dragImage = nil;
 				 [palette className]]];
 
       // iterate over the subviews and add them to the dragview.
+      wv = [[palette originalWindow] contentView];
       enumerator = [[wv subviews] objectEnumerator];
       while ((sv = [enumerator nextObject]) != nil)
 	{
