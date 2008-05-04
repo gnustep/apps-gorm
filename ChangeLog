@@ -1,3 +1,7 @@
+2008-05-04 18:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.m: Cleanup
+
 2008-05-04 18:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPalettesManager.m: Crrrection for issue with palette
