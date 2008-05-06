@@ -1,3 +1,8 @@
+2008-05-05 20:08-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/Gorm.gorm: Added Print menu.
+	* Gorm.m: Added print: method to print the current keyWindow.
+
 2008-05-04 18:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPalettesManager.m: Cleanup

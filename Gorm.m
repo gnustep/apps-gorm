@@ -56,11 +56,7 @@
   NSImage               *gormImage;
   NSImage               *testingImage;
   id			connectSource;
-  NSWindow		*connectSWindow;
-  NSRect		connectSRect;
   id			connectDestination;
-  NSWindow		*connectDWindow;
-  NSRect		connectDRect;
   NSPoint               cascadePoint;
   NSMutableArray        *testingWindows;
   NSSet                 *topObjects;
@@ -1274,5 +1270,10 @@
     }
   
   return unique;
+}
+
+- (void) print: (id) sender
+{
+  [[self keyWindow] print: sender];
 }
 @end
