@@ -1,3 +1,8 @@
+2008-05-16 20:46-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPlugin.h
+	* GormCore/GormPlugin.m: plugin class for gorm plugins.
+
 2008-05-16 20:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Added plugins as resources.
