@@ -1,3 +1,8 @@
+2008-05-16 20:47-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPluginManager.h
+	* GormCore/GormPluginManager.m: Added manager class.
+
 2008-05-16 20:46-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPlugin.h
