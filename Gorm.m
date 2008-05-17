@@ -30,6 +30,7 @@
 #include <GormCore/GormFontViewController.h>
 #include <GormCore/GormSetNameController.h>
 #include <GormCore/GormFunctions.h>
+#include <GormCore/GormPluginManager.h>
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <GormPrefs/GormPrefController.h>
 
@@ -39,6 +40,7 @@
   GormClassManager	*classManager;
   GormInspectorsManager	*inspectorsManager;
   GormPalettesManager	*palettesManager;
+  GormPluginManager	*pluginManager;
   id<IBSelectionOwners>	selectionOwner;
   NSMutableArray	*documents;
   BOOL			isConnecting;
@@ -133,10 +135,12 @@
 	}
 
       /*
-       * Make sure the palettes manager exists, so that the editors and
-       * inspectors provided in the standard palettes are available.
+       * Make sure the palettes/plugins managers exist, so that the 
+       * editors and inspectors provided in the standard palettes 
+       * are available.
        */
       [self palettesManager];
+      [self pluginManager];
 
       /*
        * set the delegate.
@@ -953,6 +957,15 @@
       palettesManager = [[GormPalettesManager alloc] init];
     }
   return palettesManager;
+}
+
+- (GormPluginManager*) pluginManager
+{
+  if (pluginManager == nil)
+    {
+      pluginManager = [[GormPluginManager alloc] init];
+    }
+  return pluginManager;
 }
 
 - (id<IBSelectionOwners>) selectionOwner

@@ -8,6 +8,11 @@
 	3Containers.palette,
 	4Data.palette
     );
+    BuiltinPlugins = (
+	Gorm.plugin,
+	Nib.plugin,
+	GModel.plugin
+    );
     CellSizeWidth = 72;
     ClassViewType = Browser;
     GuideColor = {

@@ -64,6 +64,9 @@ Gorm_RESOURCE_FILES = \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
 	Palettes/4Data/4Data.palette \
+	Plugins/Gorm/Gorm.plugin \
+	Plugins/Nib/Nib.plugin \
+	Plugins/GModel/GModel.plugin \
 	Images/GormClass.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \

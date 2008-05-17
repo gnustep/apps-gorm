@@ -1,3 +1,40 @@
+2008-05-16 20:41-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Added plugins as resources.
+	* GormCore/GNUmakefile: Remove classes from file
+	* GormCore/GormGModelWrapperLoader.m
+	* GormCore/GormGormWrapperBuilder.m
+	* GormCore/GormGormWrapperLoader.m
+	* GormCore/GormNibWrapperBuilder.m
+	* GormCore/GormNibWrapperLoader.m: Removed the loaders from GormCore.
+	* GormCore/GormProtocol.h: Added a new method.
+	* GormLib/IBPlugin.m: Added implementations to some of the methods.
+	* Gorm.m: Added a "pluginManager" method.
+	* Palettes/1Windows/GNUmakefile.preamble
+	* Palettes/2Controls/GNUmakefile.preamble
+	* Palettes/3Containers/GNUmakefile.preamble
+	* Palettes/4Data/GNUmakefile.preamble: Corrected issue with all
+	of the palette makefiles pointing to the wrong name.
+	* Plugins/GModel/GNUmakefile
+	* Plugins/GModel/GNUmakefile.preamble
+	* Plugins/GModel/GormGModelPlugin.m
+	* Plugins/GModel/GormGModelWrapperLoader.h
+	* Plugins/GModel/GormGModelWrapperLoader.m
+	* Plugins/Gorm/GNUmakefile
+	* Plugins/Gorm/GNUmakefile.preamble
+	* Plugins/Gorm/GormGormPlugin.m
+	* Plugins/Gorm/GormGormWrapperBuilder.m
+	* Plugins/Gorm/GormGormWrapperLoader.h
+	* Plugins/Gorm/GormGormWrapperLoader.m
+	* Plugins/Nib/GNUmakefile
+	* Plugins/Nib/GNUmakefile.preamble
+	* Plugins/Nib/GormNibPlugin.m
+	* Plugins/Nib/GormNibWrapperBuilder.m
+	* Plugins/Nib/GormNibWrapperLoader.h
+	* Plugins/Nib/GormNibWrapperLoader.m: Added new plugins for each
+	supported file type.
+	* Resources/Defaults.plist: Added the "BuiltinPlugins" default.
+
 2008-05-06 20:04-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* English.lproj/Gorm.gorm: Added shortcut to Page Layout menu.

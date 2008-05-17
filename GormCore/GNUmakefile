@@ -68,6 +68,8 @@ GormCore_HEADER_FILES = \
 	GormOutlineView.h \
 	GormPalettesManager.h \
 	GormPlacementInfo.h \
+	GormPlugin.h \
+	GormPluginManager.h \
 	GormPrivate.h \
 	GormProtocol.h \
 	GormResource.h \
@@ -113,23 +115,20 @@ GormCore_OBJC_FILES = \
 	GormFunctions.m \
 	GormGenericEditor.m \
 	GormHelpInspector.m \
-	GormGormWrapperBuilder.m \
-	GormGormWrapperLoader.m \
-	GormGModelWrapperLoader.m \
 	GormImage.m \
 	GormImageEditor.m \
 	GormImageInspector.m \
 	GormInspectorsManager.m \
 	GormInternalViewEditor.m \
 	GormMatrixEditor.m \
-	GormNibWrapperBuilder.m \
-	GormNibWrapperLoader.m \
 	GormNSSplitViewInspector.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
 	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
+	GormPlugin.m \
+	GormPluginManager.m \
 	GormResource.m \
 	GormResourceEditor.m \
 	GormResourceManager.m \

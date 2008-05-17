@@ -1,4 +1,4 @@
-/* IBPlugin.h
+/* IBPlugin.m
  *
  * Copyright (C) 2007 Free Software Foundation, Inc.
  *
@@ -27,7 +27,18 @@
 #include <AppKit/NSView.h>
 #include <InterfaceBuilder/IBPlugin.h>
 
+static NSMapTable *instanceMap = 0;
+
 @implementation IBPlugin
+
++ (void) initialize
+{
+  if (instanceMap == 0)
+    {
+      instanceMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
+				     NSObjectMapValueCallBacks, 2);
+    }
+}
 
 // Getting the shared plugin...
 /**
@@ -35,7 +46,17 @@
  */
 + (id)sharedInstance
 {
-  return nil;
+  NSString *className = [self className];
+  id instance = NSMapGet(instanceMap, className);
+
+  if(instance == nil)
+    {
+      instance = [[[self class] alloc] init];
+      NSMapInsert(instanceMap, className, instance);
+      RELEASE(instance);
+    }
+
+  return instance;
 }
 
 // Loading and unloading plugin resources.
@@ -71,7 +92,7 @@
  */
 - (NSString *) label
 {
-  return nil;
+  return [self className];
 }
 
 /**
@@ -111,5 +132,10 @@ fromDraggedLibraryView: (NSView *)view
   // do nothing;
 }
 
+- (void) dealloc
+{
+  NSMapRemove(instanceMap,[self className]);  
+  [super dealloc];
+}
 @end
 

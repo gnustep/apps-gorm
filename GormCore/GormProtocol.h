@@ -27,7 +27,7 @@
 
 #include <Foundation/NSObject.h>
 
-@class GormClassManager, GormPalettesManager, GormInspectorsManager, NSString, NSMenu;
+@class GormClassManager, GormPalettesManager, GormInspectorsManager, NSString, NSMenu, GormPluginManager;
 
 @protocol Gorm
 // Connections
@@ -54,6 +54,7 @@
 - (void) loadPalette: (id) sender;
 - (GormPalettesManager*) palettesManager;
 - (GormInspectorsManager*) inspectorsManager;
+- (GormPluginManager*) pluginManager;
 
 // testing the interface
 - (void) testInterface: (id)sender;

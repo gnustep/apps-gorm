@@ -24,7 +24,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <GormCore/GormWrapperLoader.h>
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 #include <GormCore/GormPalettesManager.h>
@@ -35,7 +34,7 @@
 #include <GormCore/NSView+GormExtensions.h>
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormCustomView.h>
-#include <GNUstepGUI/GSNibCompatibility.h>
+#include "GormNibWrapperLoader.h"
 
 @interface NSWindowTemplate (Private)
 - (void) setBaseWindowClass: (Class) clz;
@@ -46,14 +45,6 @@
 {
   _baseWindowClass = clz;
 }
-@end
-
-@interface GormNibWrapperLoader : GormWrapperLoader
-{
-  NSIBObjectData *container;
-  id nibFilesOwner;
-}
-- (BOOL) isTopLevelObject: (id)obj;
 @end
 
 @implementation GormNibWrapperLoader
@@ -342,7 +333,9 @@
   return YES;
 }
 
-- (void) unarchiver: (NSKeyedUnarchiver *)unarchiver willReplaceObject: (id)obj withObject: (id)newObj
+- (void) unarchiver: (NSKeyedUnarchiver *)unarchiver 
+  willReplaceObject: (id)obj 
+	 withObject: (id)newObj
 {
   // Nothing for now...
 }
