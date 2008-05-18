@@ -44,6 +44,10 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
+#define ORDERED_PREVIOUS 0
+#define ORDERED_NEXT     1
+
+
 @implementation GormTabViewAttributesInspector
 
 
@@ -167,6 +171,35 @@
 	  [[object selectedTabViewItem] setIdentifier:[itemIdentifier stringValue]];
 	}
     }
+  else if ( sender == itemPrevious ) 
+    {
+      NSTabViewItem *tbItem = [object selectedTabViewItem];
+      int selectedItem = [object indexOfTabViewItem:tbItem];
+
+      /* We Should disabled UI ? with delegate tabView:didSelectTabViewItem: */
+      if ( selectedItem <= 0 ) { 
+	return;
+      }
+		
+      [object removeTabViewItem:tbItem];
+      [object insertTabViewItem:tbItem atIndex:(selectedItem - 1)];
+      [object selectTabViewItemAtIndex:(selectedItem - 1)];
+    }
+  else if (sender == itemNext ) 
+    {
+      NSTabViewItem *tbItem = [object selectedTabViewItem];
+      int selectedItem = [object indexOfTabViewItem:tbItem];
+
+      /* We Should disabled UI ? with delegate tabView:didSelectTabViewItem: */
+      if ( selectedItem >= ([object numberOfTabViewItems] -1) ) {
+	return;
+      }
+
+      [object removeTabViewItem:tbItem];
+      [object insertTabViewItem:tbItem atIndex:(selectedItem + 1)];
+      [object selectTabViewItemAtIndex:(selectedItem + 1)];
+
+    }
 
   [object setNeedsDisplay: YES];
   
@@ -196,7 +229,6 @@
 {
   [self ok:[aNotification object]];
 }
-
 
 
 @end
