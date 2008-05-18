@@ -9,7 +9,9 @@
 	    allowtruncate,
 	    itemLabel,
 	    itemStepper,
-	    itemIdentifier
+	    itemIdentifier,
+	    itemPrevious,
+	    itemNext
 	);
 	Super = IBInspector;
     };
