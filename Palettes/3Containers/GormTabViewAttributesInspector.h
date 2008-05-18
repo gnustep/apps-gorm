@@ -51,6 +51,8 @@
   NSStepper *itemStepper;
   NSTextField *itemLabel;
   NSForm *itemIdentifier;
+  NSButton *itemPrevious;
+  NSButton *itemNext;
 }
 @end
 
