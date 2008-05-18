@@ -1183,7 +1183,7 @@ static NSImage  *fileImage = nil;
   // [filePrefsWindow close];
 
   // Get rid of the selection box.
-  [selectionBox removeFromSuperviewWithoutNeedingDisplay];
+  // [selectionBox removeFromSuperviewWithoutNeedingDisplay];
   
   RELEASE(classManager);
   RELEASE(filePrefsManager);

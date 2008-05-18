@@ -1,8 +1,17 @@
+2008-05-18 19:16-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Correct segfault.  Remove unecessary
+	call to removeFromSuperview for the selection box from 
+	GormDocument window.
+
 2008-05-18  Fabien Vallon  <fabien@sonappart.net>
 
-	* Palettes/3Containers/GormTabViewAttributesInspector.h: Add itemPrevious and itemNext outlets
-	* Palettes/3Containers/GormTabViewInspector.gorm: Add itemPrevious and itemNext outlets
-	* Palettes/3Containers/GormTabViewInspector.gorm: Implement NSTabView items ordering in ok:
+	* Palettes/3Containers/GormTabViewAttributesInspector.h: 
+	Add itemPrevious and itemNext outlets
+	* Palettes/3Containers/GormTabViewInspector.gorm: 
+	Add itemPrevious and itemNext outlets
+	* Palettes/3Containers/GormTabViewInspector.gorm: 
+	Implement NSTabView items ordering in ok:
 
 2008-05-16 20:47-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
