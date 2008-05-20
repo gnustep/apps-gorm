@@ -30,6 +30,8 @@
 #include "GormFunctions.h"
 #include "GormDocument.h"
 #include "GormClassManager.h"
+
+#include <AppKit/NSClipView.h>
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
@@ -275,6 +277,43 @@ static NSMapTable	*docMap = 0;
     }
 
   return NSDragOperationNone;
+}
+
+
+/**
+ * Used for autoscrolling when you connect IBActions.
+ * FIXME: Maybye there is a better way to do it.
+*/
+- (void)draggingExited:(id < NSDraggingInfo >)sender
+{
+    if (dragType == GormLinkPboardType)
+      {
+	NSRect documentVisibleRect;
+	NSRect documentRect;
+	NSPoint	loc = [sender draggingLocation];
+
+	loc = [self convertPoint:loc fromView:nil];
+	documentVisibleRect = [(NSClipView *)[self superview] documentVisibleRect];
+	documentRect = [(NSClipView *)[self superview] documentRect];
+	
+	/* Down */
+	if ( (loc.y >= documentVisibleRect.size.height) 
+	     && ( ! NSEqualRects(documentVisibleRect,documentRect) ) ) 
+	  {
+	    loc.x = 0;
+	    loc.y = documentRect.origin.y + [self cellSize].height;
+	    [(NSClipView*) [self superview] scrollToPoint:loc];
+	  } 
+	/* up */
+	else if ( (loc.y + 10 >= documentVisibleRect.origin.y ) 
+		  && ( ! NSEqualRects(documentVisibleRect,documentRect) ) ) 
+	{
+	  loc.x = 0;
+	  loc.y = documentRect.origin.y - [self cellSize].height; 
+	  [(NSClipView*) [self superview] scrollToPoint:loc];
+	}
+
+      }
 }
 
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
