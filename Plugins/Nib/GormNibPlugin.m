@@ -24,6 +24,7 @@
 #include <GormCore/GormPlugin.h>
 #include <GormCore/GormWrapperLoader.h>
 #include "GormNibWrapperLoader.h"
+#include <Foundation/NSArray.h>
 
 @interface GormNibPlugin : GormPlugin
 @end

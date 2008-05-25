@@ -1,7 +1,13 @@
+2008-05-25 09:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormObjectEditor.m: Correction for segfault.
+	* Plugins/Nib/GormNibPlugin.m: Correction for compilation error
+	on gcc < 3.1 systems.
+
 2008-05-20  fabien  <fabien@sonappart.net>
 
-	* GormCore/GormObjectEditor.m: add draggingExited: to implement autoscrolling
-	during IBAction connections. 
+	* GormCore/GormObjectEditor.m: add draggingExited: to implement 
+	autoscrolling during IBAction connections. 
 
 2008-05-18 19:16-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 

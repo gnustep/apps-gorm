@@ -409,9 +409,9 @@ static NSMapTable	*docMap = 0;
 
 - (void) close
 {
-  [super close];
+  // [super close];
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  NSMapRemove(docMap,document);
+  // NSMapRemove(docMap,document);
 }
 
 - (void) makeSelectionVisible: (BOOL)flag
