@@ -1,3 +1,11 @@
+2008-06-24 18:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormWrapperLoader.h
+	* Plugins/Gorm/GormGormWrapperLoader.h
+	* Plugins/Nib/GormNibPlugin.m: Call type from here.
+	* Plugins/Nib/GormNibWrapperLoader.h: Move type method to super-class
+	declaration.
+
 2008-05-25 09:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormObjectEditor.m: Correction for segfault.

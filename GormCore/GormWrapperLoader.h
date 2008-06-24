@@ -39,6 +39,7 @@
 {
   GormDocument *document;
 }
++ (NSString *) type;
 - (void) saveSCMDirectory: (NSDictionary *) fileWrappers;
 @end
 

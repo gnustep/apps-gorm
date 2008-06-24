@@ -33,7 +33,6 @@
   NSIBObjectData *container;
   id nibFilesOwner;
 }
-+ (NSString *)type;
 - (BOOL) isTopLevelObject: (id)obj;
 @end
 

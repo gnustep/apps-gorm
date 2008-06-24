@@ -36,7 +36,6 @@
   id textField;
   id panel;
 }
-+ (NSString *) type;
 @end
 
 #endif
