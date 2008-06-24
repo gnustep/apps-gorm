@@ -32,7 +32,7 @@
 @implementation GormGModelPlugin
 - (void) didLoad
 {
-  [self registerDocumentTypeName: [GormGModelWrapperLoader type]
+  [self registerDocumentTypeName: [GormGModelWrapperLoader fileType]
 	humanReadableName: @"GNUstep GModel"
 	forExtensions: [NSArray arrayWithObjects: @"gmodel",nil]];
 }

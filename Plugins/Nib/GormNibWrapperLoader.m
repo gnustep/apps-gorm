@@ -48,7 +48,7 @@
 @end
 
 @implementation GormNibWrapperLoader
-+ (NSString *) type
++ (NSString *) fileType
 {
   return @"GSNibFileType";
 }

@@ -32,7 +32,7 @@
 @implementation GormGormPlugin
 - (void) didLoad
 {
-  [self registerDocumentTypeName: [GormGormWrapperLoader type]
+  [self registerDocumentTypeName: [GormGormWrapperLoader fileType]
 	humanReadableName: @"GNUstep Gorm"
 	forExtensions: [NSArray arrayWithObjects: @"gorm",nil]];
 }

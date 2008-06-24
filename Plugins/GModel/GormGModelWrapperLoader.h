@@ -30,7 +30,6 @@
 @class NSMutableArray, NSString;
 
 @interface GormGModelWrapperLoader : GormWrapperLoader
-+ (NSString *) type;
 @end
 
 #endif

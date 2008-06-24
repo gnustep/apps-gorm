@@ -40,6 +40,7 @@
 {
   GormDocument *document;
 }
++ (NSString *) fileType;
 @end
 
 @interface GormWrapperBuilderFactory : NSObject

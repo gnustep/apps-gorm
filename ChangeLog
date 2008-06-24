@@ -1,3 +1,20 @@
+2008-06-24 19:18-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormWrapperBuilder.h
+	* GormCore/GormWrapperBuilder.m
+	* GormCore/GormWrapperLoader.h
+	* GormCore/GormWrapperLoader.m
+	* Plugins/GModel/GormGModelPlugin.m
+	* Plugins/GModel/GormGModelWrapperLoader.h
+	* Plugins/GModel/GormGModelWrapperLoader.m
+	* Plugins/Gorm/GormGormPlugin.m
+	* Plugins/Gorm/GormGormWrapperBuilder.m
+	* Plugins/Gorm/GormGormWrapperLoader.m
+	* Plugins/Nib/GormNibPlugin.m
+	* Plugins/Nib/GormNibWrapperBuilder.m
+	* Plugins/Nib/GormNibWrapperLoader.m: Change method name from "type"
+	to "fileType" to avoid issues with gcc < 3.0
+
 2008-06-24 18:09-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWrapperLoader.h

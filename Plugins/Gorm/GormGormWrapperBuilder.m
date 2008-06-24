@@ -153,7 +153,7 @@
 @end
 
 @implementation GormGormWrapperBuilder
-+ (NSString *) type
++ (NSString *) fileType
 {
   return @"GSGormFileType";
 }

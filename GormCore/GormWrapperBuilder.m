@@ -38,7 +38,7 @@ static NSMutableDictionary *_wrapperBuilderMap = nil;
 static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
 
 @implementation GormWrapperBuilder
-+ (NSString *) type
++ (NSString *) fileType
 {
   [self subclassResponsibility: _cmd];
   return nil;
@@ -139,7 +139,7 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
       _wrapperBuilderMap = [[NSMutableDictionary alloc] initWithCapacity: 5];
     }
 
-  [_wrapperBuilderMap setObject: aClass forKey: (NSString *)[aClass type]];
+  [_wrapperBuilderMap setObject: aClass forKey: (NSString *)[aClass fileType]];
 }
 
 + (GormWrapperBuilderFactory *) sharedWrapperBuilderFactory

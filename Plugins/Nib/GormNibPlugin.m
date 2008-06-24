@@ -32,7 +32,7 @@
 @implementation GormNibPlugin
 - (void) didLoad
 {
-  [self registerDocumentTypeName: [GormNibWrapperLoader type]
+  [self registerDocumentTypeName: [GormNibWrapperLoader fileType]
 	humanReadableName: @"Cocoa Nib"
 	forExtensions: [NSArray arrayWithObjects: @"nib",nil]];
 }

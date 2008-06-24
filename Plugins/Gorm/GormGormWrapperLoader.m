@@ -56,7 +56,7 @@
 @end;
 
 @implementation GormGormWrapperLoader
-+ (NSString *) type
++ (NSString *) fileType
 {
   return @"GSGormFileType";
 }

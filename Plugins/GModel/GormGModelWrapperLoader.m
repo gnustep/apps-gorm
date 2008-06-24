@@ -433,7 +433,7 @@ static BOOL gormFileOwnerDecoded;
 @end
 
 @implementation GormGModelWrapperLoader
-+ (NSString *) type
++ (NSString *) fileType
 {
   return @"GSGModelFileType";
 }
