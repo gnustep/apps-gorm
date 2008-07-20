@@ -1,3 +1,10 @@
+2008-07-20 09:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormObjCHeaderParser/OCIVar.m
+	* GormObjCHeaderParser/ParserFunctions.h
+	* GormObjCHeaderParser/ParserFunctions.m: Correction for 
+	bug #23889.
+
 2008-06-24 19:18-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWrapperBuilder.h

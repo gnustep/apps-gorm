@@ -32,3 +32,27 @@ BOOL lookAhead(NSString *stringToScan, NSString *stringToFind)
 			NSMakeRange(NSNotFound,0)) == NO);
 }
 
+BOOL lookAheadForToken(NSString *stringToScan, NSString *stringToFind)
+{
+  NSScanner *scanner = [NSScanner scannerWithString: stringToScan];
+  NSString *resultString = [NSString stringWithString: @""];
+  
+  [scanner setCharactersToBeSkipped: nil];
+  [scanner scanString: stringToFind intoString: &resultString];
+  if([resultString isEqualToString: stringToFind])
+    {
+      NSString *postTokenString = [NSString stringWithString: @""];
+      NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+
+      [scanner scanCharactersFromSet: wsnl intoString: &postTokenString];
+      if([postTokenString length] == 0)
+	{
+	  return NO;
+	}
+      
+      return YES;
+    }
+
+  return NO;
+}
+

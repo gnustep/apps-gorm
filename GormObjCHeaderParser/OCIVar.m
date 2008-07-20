@@ -104,7 +104,7 @@
       [scanner scanUpToCharactersFromSet: wsnl intoString: &tempName]; // variable name...
       [self setIsOutlet: YES];
     }
-  else if(lookAhead(ivarString, @"id"))
+  else if(lookAheadForToken(ivarString, @"id"))
     {
       [scanner scanUpToCharactersFromSet: wsnl intoString: NULL];  // id
       [scanner scanCharactersFromSet: wsnl intoString: NULL];        
