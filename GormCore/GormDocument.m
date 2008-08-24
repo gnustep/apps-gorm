@@ -2820,10 +2820,10 @@ static void _real_close(GormDocument *self,
  */
 - (NSString *) description
 {
-  return [NSString stringWithFormat: @"<%s: %lx> = %@",
+  return [NSString stringWithFormat: @"<%s: %lx> = <<name table: %@, connections: %@>>",
 		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
-		   nameTable];
+		   nameTable, connections];
 }
 
 /**

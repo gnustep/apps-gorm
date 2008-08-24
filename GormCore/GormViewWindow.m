@@ -145,7 +145,7 @@
 
       [self setTitle: title];
       [self setFrame: NSMakeRect(0,0,400,300) display: YES];
-      // [self setBackgroundColor: [NSColor redColor]];
+      [self setBackgroundColor: [NSColor darkGrayColor]];
       [self setReleasedWhenClosed: NO];
       [self setView: view];
     }

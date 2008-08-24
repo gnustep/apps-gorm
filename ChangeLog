@@ -1,3 +1,9 @@
+2008-08-24 13:20-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.m
+	* GormCore/GormDocument.m
+	* GormCore/GormViewWindow.m: Fixing handling of standalone views.
+
 2008-07-20 09:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormObjCHeaderParser/OCIVar.m
