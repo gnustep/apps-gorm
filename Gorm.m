@@ -1252,20 +1252,6 @@
   return classMenu;
 }
 
-- (void) unhide: (id)sender
-{
-  [super unhide: sender];
-  if(!isTesting)
-    {
-      id document = [self activeDocument];
-      id window = [document window];
-      [(GormDocument *)document setDocumentActive: NO];
-      [(GormDocument *)document setDocumentActive: YES];
-      [window orderFront: sender];
-      [[self mainMenu] display];
-    }
-}
-
 - (BOOL) documentNameIsUnique: (NSString *)filename
 {
   NSEnumerator *en = [documents objectEnumerator];
