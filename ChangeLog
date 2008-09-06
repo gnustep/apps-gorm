@@ -1,11 +1,19 @@
+2008-09-06 16:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile: Added GNUSTEP_INSTALLATION_DOMAIN
+	* GormCore/GormCustomView.m: Reverted previous change.  Need to
+	write a GormCustomViewEditor instead to handle this case.
+	* GormLib/GNUmakefile: Added GNUSTEP_INSTALLATION_DOMAIN
+
 2008-09-04 08:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Gorm.m: Remove unhide: implementation.  Correction for bug#24146.
 
 2008-08-24 13:20-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormCore/GormCustomView.m
-	* GormCore/GormDocument.m
+	* GormCore/GormCustomView.m: Code to return the best possible
+	superclass.
+	* GormCore/GormDocument.m: More info in the description method
 	* GormCore/GormViewWindow.m: Fixing handling of standalone views.
 
 2008-07-20 09:32-EDT Gregory John Casamento <greg_casamento@yahoo.com>

@@ -105,7 +105,7 @@
   return cls;
 }
 
-- (BOOL) _classNameIsSet
+- (BOOL) classNameIsSet
 {
   if([className isEqualToString: @"CustomView"] || 
      [className isEqualToString: @""] || className == nil)
@@ -115,6 +115,7 @@
   return YES;
 }
 
+/*
 - (Class) classForCoder
 {
   if([self _classNameIsSet]) 
@@ -123,6 +124,7 @@
     }
   return [self class];
 }
+*/
 
 /*
  * This needs to be coded like a GSNibItem. How do we make sure this
@@ -130,8 +132,10 @@
  */
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  if([self _classNameIsSet] && [self superview] != nil)
+  /*
+  if([self _classNameIsSet])
     {
+  */
       if([aCoder allowsKeyedCoding])
 	{
 	  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
@@ -166,6 +170,7 @@
 	  [aCoder encodeValueOfObjCType: @encode(unsigned int) 
 		  at: &_autoresizingMask];
 	}
+      /*
     }
   else
     {
@@ -176,6 +181,7 @@
 	  [(NSArchiver *)aCoder replaceObject: self withObject: temp];
 	}
     }
+      */
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
