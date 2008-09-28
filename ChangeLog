@@ -1,3 +1,9 @@
+2008-09-27 21:10-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormPalettesManager.h
+	* GormCore/GormPalettesManager.m: Reverted the previous change to the 
+	palettes manager.  
+
 2008-09-06 16:12-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GNUmakefile: Added GNUSTEP_INSTALLATION_DOMAIN

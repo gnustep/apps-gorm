@@ -150,6 +150,7 @@ static NSImage	*dragImage = nil;
   return YES;
 }
 
+
 /*
  *	Intercepting events in the view and handling them
  */
@@ -254,7 +255,6 @@ static NSImage	*dragImage = nil;
   RELEASE(panel);
   RELEASE(bundles);
   RELEASE(palettes);
-  RELEASE(palettesDict);
   RELEASE(importedClasses);
   RELEASE(importedImages);
   RELEASE(importedSounds);
@@ -287,88 +287,100 @@ static NSImage	*dragImage = nil;
 - (id) init
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+  NSScrollView	 *scrollView;
   NSArray	 *array;
+  NSRect	 contentRect = {{0, 0}, {272, 266}};
+  NSRect	 selectionRect = {{0, 0}, {52, 52}};
+  NSRect	 scrollRect = {{0, 192}, {272, 74}};
+  NSRect	 dragRect = {{0, 0}, {272, 192}};
+  unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
   
-  self = [super init];
-  if(self != nil)
-    {
-      if([NSBundle loadNibNamed: @"GormPalettePanel" owner: self] == NO)
-        {
-          return nil;
-        }
-    }
-  else
-    {
-      return nil;
-    }
-  
-  //
-  // Initialize dictionary
-  //
-  palettesDict = [[NSMutableDictionary alloc] init];
+  panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
+				     styleMask: style
+				       backing: NSBackingStoreRetained
+					 defer: NO];
+  [panel setTitle: _(@"Palettes")];
+  [panel setMinSize: [panel frame].size];
+
+  // allocate arrays and dictionaries.
+  bundles = [[NSMutableArray alloc] init];
   palettes = [[NSMutableArray alloc] init];
-  paletteNames = [[NSMutableArray alloc] init];
+  importedClasses = [[NSMutableDictionary alloc] init];
+  importedImages = [[NSMutableArray alloc] init];
+  importedSounds = [[NSMutableArray alloc] init];
   substituteClasses = [[NSMutableDictionary alloc] init];
 
-  //
-  // Set frame name
-  //
+  scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  [scrollView setHasHorizontalScroller: YES];
+  [scrollView setHasVerticalScroller: NO];
+  [scrollView setAutoresizingMask: NSViewMinYMargin | NSViewWidthSizable];
+  [scrollView setBorderType: NSBezelBorder];
+
+  selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
+					     mode: NSRadioModeMatrix
+					cellClass: [NSImageCell class]
+				     numberOfRows: 1
+				  numberOfColumns: 0];
+  [selectionView setTarget: self];
+  [selectionView setAction: @selector(setCurrentPalette:)];
+  [selectionView setCellSize: NSMakeSize(52,52)];
+  [selectionView setIntercellSpacing: NSMakeSize(0,0)];
+  [scrollView setDocumentView: selectionView];
+  RELEASE(selectionView);
+  [[panel contentView] addSubview: scrollView]; 
+  RELEASE(scrollView);
+
+  dragView = [[GormPaletteView alloc] initWithFrame: dragRect];
+  [dragView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+  [[panel contentView] addSubview: dragView]; 
+  RELEASE(dragView);
+
   [panel setFrameUsingName: @"Palettes"];
   [panel setFrameAutosaveName: @"Palettes"];
   current = -1;
- 
-  //
-  // Set up the toolbar.
-  //
-  toolbar = [(NSToolbar *)[NSToolbar alloc] initWithIdentifier: @"GormPalettesToolbar"];
-  [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
-  [toolbar setSizeMode: NSToolbarSizeModeSmall];
-  [toolbar setAllowsUserCustomization: NO];
-  [toolbar setDelegate: self];
-  [panel setToolbar: toolbar];
-  RELEASE(toolbar);
-  
+
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"palette"
-                                 inDirectory: nil];
-  if ([array count] > 0)
+					     inDirectory: nil];
+   if ([array count] > 0)
     {
       unsigned	index;
-      
+
       array = [array sortedArrayUsingSelector: @selector(compare:)];
-      
+
       for (index = 0; index < [array count]; index++)
 	{
 	  [self loadPalette: [array objectAtIndex: index]];
 	}
     }
-  
-  // if we have any user palettes load them as well.
-  if(userPalettes != nil)
-    {
-      NSEnumerator *en = [userPalettes objectEnumerator];
-      id paletteName = nil;
-      while((paletteName = [en nextObject]) != nil)
-        {
-          [self loadPalette: paletteName];
-        }
-    }
-  
+
+   // if we have any user palettes load them as well.
+   if(userPalettes != nil)
+     {
+       NSEnumerator *en = [userPalettes objectEnumerator];
+       id paletteName = nil;
+       while((paletteName = [en nextObject]) != nil)
+	 {
+	   [self loadPalette: paletteName];
+	 }
+     }
+
   /*
    * Select initial palette - this should be the standard controls palette.
    */
-  [self setCurrentPaletteWithTag: 2];
-  
+  [selectionView selectCellAtRow: 0 column: 2];
+  [self setCurrentPalette: selectionView];
+
   [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillBeginTestingInterfaceNotification
-      object: nil];
+	 selector: @selector(handleNotification:)
+	     name: IBWillBeginTestingInterfaceNotification
+	   object: nil];
   [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillEndTestingInterfaceNotification
-      object: nil];
-    
+	 selector: @selector(handleNotification:)
+	     name: IBWillEndTestingInterfaceNotification
+	   object: nil];
+
   return self;
 }
 
@@ -399,6 +411,8 @@ static NSImage	*dragImage = nil;
   NSArray       *exportImages;
   NSDictionary  *subClasses;
   IBPalette	*palette;
+  NSImageCell	*cell;
+  int		col;
 
   if([self bundlePathIsLoaded: path])
     {
@@ -510,14 +524,27 @@ static NSImage	*dragImage = nil;
   window = [palette originalWindow];
   [window setExcludedFromWindowsMenu: YES];
 
-  // manage palette data.
-  [palettesDict setObject: palette forKey: className];
-  [palettes addObject: palette];
-  [paletteNames addObject: className];
+  // Resize the window appropriately so that we don't have issues
+  // with scrolling.
+  if([window styleMask] & NSBorderlessWindowMask)
+    {
+      [window setFrame: NSMakeRect(0,0,272,160) display: NO];
+    }
+  else
+    {
+      [window setFrame: NSMakeRect(0,0,272,192) display: NO];
+    }
 
+  [palettes addObject: palette];
   [selectionView addColumn];
-  [toolbar insertItemWithItemIdentifier: className atIndex: ([palettes count] - 1)];
-  [self setCurrentPalette: 0];
+  [[palette paletteIcon] setBackgroundColor: [selectionView backgroundColor]];
+  col = [selectionView numberOfColumns] - 1;
+  cell = [selectionView cellAtRow: 0 column: col];
+  [cell setImageFrameStyle: NSImageFrameButton];
+  [cell setImage: [palette paletteIcon]];
+  [selectionView sizeToCells];
+  [selectionView selectCellAtRow: 0 column: col];
+  [self setCurrentPalette: selectionView];
   RELEASE(palette);
 
   return YES;
@@ -583,12 +610,7 @@ static NSImage	*dragImage = nil;
   return panel;
 }
 
-- (void) setCurrentPalette: (id)anObject
-{
-  [self setCurrentPaletteWithTag: [anObject tag]];
-}
-
-- (void) setCurrentPaletteWithTag: (int)tag
+- (void) setCurrentPalette: (id)anObj
 {
   NSView	*wv;
   NSView	*sv;
@@ -611,7 +633,7 @@ static NSImage	*dragImage = nil;
 	}
     }
 
-  current = tag;
+  current = [anObj selectedColumn];
   if (current >= 0 && current < [palettes count])
     {
       id palette = [palettes objectAtIndex: current];
@@ -622,8 +644,13 @@ static NSImage	*dragImage = nil;
       [panel setTitle: [NSString stringWithFormat: @"Palettes (%@)", 
 				 [palette className]]];
 
-      // iterate over the subviews and add them to the dragview.
+      /*
+       * Move the views from their original window into our drag view.
+       * Resize our drag view to the right size fitrst.
+       */
       wv = [[palette originalWindow] contentView];
+      if (wv)
+        [dragView setFrameSize: [wv frame].size];
       enumerator = [[wv subviews] objectEnumerator];
       while ((sv = [enumerator nextObject]) != nil)
 	{
@@ -635,7 +662,7 @@ static NSImage	*dragImage = nil;
     }
   else
     {
-      NSLog(@"Bad palette selection - %d", tag);
+      NSLog(@"Bad palette selection - %d", [anObj selectedColumn]);
       current = -1;
     }
   [dragView setNeedsDisplay: YES];
@@ -656,10 +683,8 @@ static NSImage	*dragImage = nil;
       NSMethodSignature *signature = [cls instanceMethodSignatureForSelector: sel];
       if([signature numberOfArguments] == 3)
 	{
-	  if([actionSig isEqual: signature] && 
-	     NSEqualRanges([methodName rangeOfString: @"set"], setRange) == NO &&
-	     [methodName isEqual: @"encodeWithCoder:"] == NO && 
-	     [methodName isEqual: @"mouseDown:"] == NO)
+	  if([actionSig isEqual: signature] && NSEqualRanges([methodName rangeOfString: @"set"], setRange) == NO &&
+	     [methodName isEqual: @"encodeWithCoder:"] == NO && [methodName isEqual: @"mouseDown:"] == NO)
 	    {
 	      [actionsArray addObject: methodName];
 	    }
@@ -794,53 +819,5 @@ static NSImage	*dragImage = nil;
 - (NSDictionary *) substituteClasses
 {
   return substituteClasses;
-}
-@end
-
-@implementation GormPalettesManager (NSToolbarDelegate)
-
-- (NSToolbarItem*)toolbar: (NSToolbar*)toolbar
-    itemForItemIdentifier: (NSString*)itemIdentifier
-willBeInsertedIntoToolbar: (BOOL)flag
-{
-  NSToolbarItem *toolbarItem = AUTORELEASE([[NSToolbarItem alloc]
-					     initWithItemIdentifier: itemIdentifier]);
-  id palette = [palettesDict objectForKey: itemIdentifier];
-  NSImage *image = [palette paletteIcon];
-  int tag = [palettes indexOfObject: palette];
-  NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle: itemIdentifier  
-                                             action: @selector(setCurrentPalette:) 
-                                             keyEquivalent: @""];
-
-  // set up the toolbar...
-  [toolbarItem setLabel: itemIdentifier];
-  [toolbarItem setToolTip: itemIdentifier];
-  [toolbarItem setImage: image];
-  [toolbarItem setTarget: self];
-  [toolbarItem setAction: @selector(setCurrentPalette:)];     
-  [toolbarItem setTag: tag];
-  [toolbarItem setMenuFormRepresentation: menuItem];
-
-  // complete setup of menu item.
-  [menuItem setTarget: self];
-  [menuItem setTag: tag];
-  RELEASE(menuItem);
-
-  return toolbarItem;
-}
-
-- (NSArray*) toolbarAllowedItemIdentifiers: (NSToolbar*)toolbar
-{
-  return paletteNames;
-}
-
-- (NSArray*) toolbarDefaultItemIdentifiers: (NSToolbar*)toolbar
-{ 
-  return [NSArray array];
-}
-
-- (NSArray*) toolbarSelectableItemIdentifiers: (NSToolbar*)toolbar
-{ 
-  return paletteNames;
 }
 @end
