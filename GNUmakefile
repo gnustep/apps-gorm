@@ -159,6 +159,7 @@ Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormPrefGuideline.gorm \
 	GormPrefHeaders.gorm \
 	GormPrefPalettes.gorm \
+	GormPrefPlugins.gorm \
 	GormScrollViewAttributesInspector.gorm \
 	GormSetName.gorm \
 	GormShelfPref.gorm \

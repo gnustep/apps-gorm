@@ -1,3 +1,17 @@
+2008-09-27 23:02-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* English.lproj/GormPreferences.gorm
+	* English.lproj/GormPrefPlugins.gorm
+	* GNUmakefile
+	* GormCore/GormPluginManager.m
+	* GormPrefs/GNUmakefile
+	* GormPrefs/GormPalettesPref.h
+	* GormPrefs/GormPluginsPref.h
+	* GormPrefs/GormPluginsPref.m
+	* GormPrefs/GormPrefController.h
+	* GormPrefs/GormPrefController.m: Changes to allow addition of 
+	plugins by users.
+
 2008-09-27 21:10-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormPalettesManager.h

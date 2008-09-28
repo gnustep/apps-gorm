@@ -48,6 +48,7 @@ GormGeneralPref.h \
 GormGuidelinePref.h \
 GormHeadersPref.h \
 GormPalettesPref.h \
+GormPluginsPref.h \
 GormPrefController.h \
 GormShelfPref.h
 
@@ -61,6 +62,7 @@ GormGeneralPref.m \
 GormGuidelinePref.m \
 GormHeadersPref.m \
 GormPalettesPref.m \
+GormPluginsPref.m \
 GormPrefController.m \
 GormShelfPref.m
 

@@ -1,10 +1,10 @@
-/* GormPalettesManager.m
+/* GormPluginManager.m
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2004
+ * Date:	1999, 2004, 2008
  * 
  * This file is part of GNUstep.
  * 
@@ -239,7 +239,7 @@
   pluginClass = [bundle classNamed: className];
   if (pluginClass == 0)
     {
-      NSRunAlertPanel (nil, _(@"Could not load palette class"), 
+      NSRunAlertPanel (nil, _(@"Could not load plugin class"), 
 		       _(@"OK"), nil, nil);
       return NO;
     }

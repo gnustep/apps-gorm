@@ -1,11 +1,11 @@
-#ifndef INCLUDED_GormPalettesPref_h
-#define INCLUDED_GormPalettesPref_h
+#ifndef INCLUDED_GormPluginsPref_h
+#define INCLUDED_GormPluginsPref_h
 
 #include <Foundation/NSObject.h>
 #include <Foundation/NSArray.h>
 #include <AppKit/NSView.h>
 
-@interface GormPalettesPref : NSObject
+@interface GormPluginsPref : NSObject
 {
   id table;
   id addButton;

@@ -40,6 +40,7 @@
   id _shelfView;
   id _colorsView;
   id _palettesView;
+  id _pluginsView;
   id _guidelineView;
 }
 
