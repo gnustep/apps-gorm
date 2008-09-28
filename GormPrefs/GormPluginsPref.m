@@ -27,6 +27,7 @@
 #include <AppKit/NSNibLoading.h>
 
 #include <GormCore/GormPrivate.h>
+#include <GormCore/GormPluginManager.h>
 #include "GormPluginsPref.h"
 
 @class NSTableView;
