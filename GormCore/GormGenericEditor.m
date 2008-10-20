@@ -122,6 +122,11 @@
   return YES;
 }
 
+- (void) willCloseDocument: (NSNotification *)aNotification
+{
+  document = nil;
+}
+
 - (void) close
 {
   if(closed == NO)
@@ -147,11 +152,18 @@
 {
   if((self = [super init]) != nil)
     {
-      // don't retain the document...
+      /* don't retain the document... */
       document = aDocument;
       closed = NO;
       activated = NO;
       resourceManager = nil;      
+      /* since we don't retain the document handle its close notifications */
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+	selector: @selector(willCloseDocument:)
+	name: IBWillCloseDocumentNotification
+	object: document];
+	  
     }
   return self;
 }

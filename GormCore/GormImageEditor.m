@@ -118,8 +118,8 @@ static NSMapTable *docMap = 0;
 
 - (void) dealloc
 {
-  // if(closed == NO)
-  //   [self close];
+  if(closed == NO)
+    [self close];
 
   // It is not necessary to call super dealloc here.
   // images are cached throughout the lifetime of the app.
@@ -130,6 +130,12 @@ static NSMapTable *docMap = 0;
   NSDebugLog(@"Released image editor...");
   // GSNOSUPERDEALLOC;
   [super dealloc];
+}
+
+- (void) willCloseDocument: (NSNotification *)aNotification
+{
+  NSMapRemove(docMap,document);
+  [super willCloseDocument: aNotification];
 }
 
 - (void) close

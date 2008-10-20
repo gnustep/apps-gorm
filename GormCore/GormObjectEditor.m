@@ -407,11 +407,17 @@ static NSMapTable	*docMap = 0;
   return self;
 }
 
+- (void) willCloseDocument: (NSNotification *)aNotification
+{
+  NSMapRemove(docMap,document);
+  [super willCloseDocument: aNotification];
+}
+
 - (void) close
 {
-  // [super close];
+  [super close];
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  // NSMapRemove(docMap,document);
+  NSMapRemove(docMap,document);
 }
 
 - (void) makeSelectionVisible: (BOOL)flag

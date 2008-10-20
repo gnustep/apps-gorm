@@ -116,6 +116,12 @@ static NSMapTable *docMap = 0;
   return self;
 }
 
+- (void) willCloseDocument: (NSNotification *)aNotification
+{
+  NSMapRemove(docMap,document);
+  [super willCloseDocument: aNotification];
+}
+
 - (void) close
 {
   [super close];

@@ -81,6 +81,7 @@
 
 // private methods...
 @interface GormGenericEditor (PrivateMethods)
+- (void) willCloseDocument: (NSNotification *) aNotification;
 - (void) groupSelectionInScrollView;
 - (void) groupSelectionInSplitView;
 - (void) groupSelectionInBox;
