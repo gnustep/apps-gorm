@@ -29,31 +29,12 @@
 // object additions -- object adopts protocol
 @implementation NSObject (IBObjectAdditions)
 /**
-   Returns YES if the reciever can take the
-   place of the class indicated by origClass,
-   NO otherwise.
- */
-+ (BOOL)canSubstituteForClass: (Class)origClass
-{
-  return YES;
-}
-
-/**
    This method is called on all objects after
    they are loaded into the IBDocuments object.
  */
 - (void)awakeFromDocument: (id <IBDocuments>)doc
 {
   // does nothing...
-}
-
-/**
-   Used to provide an image which represents the
-   reciever.
- */
-- (NSImage *)imageForViewer
-{
-  return nil;
 }
 
 /**
@@ -73,54 +54,6 @@
 - (NSString *)objectNameForInspectorTitle
 {
   return [self className];
-}
-
-/**
-   Class name of the attributes inspector for the reciever.
- */
-- (NSString*) inspectorClassName
-{
-  return nil;
-}
-
-/**
-   Class name of the connection inspector for the reciever.
- */
-- (NSString*) connectInspectorClassName
-{
-  return nil;
-}
-
-/**
-   Class name of the size inspector for the reciever.
- */
-- (NSString*) sizeInspectorClassName
-{
-  return nil;
-}
-
-/**
-   Class name of the help inspector for the receiver.
- */
-- (NSString*) helpInspectorClassName
-{
-  return nil;
-}
-
-/**
-   Class name of the class inspector for the receiver.
- */
-- (NSString*) classInspectorClassName
-{
-  return nil;
-}
-
-/**
-   Class name of the editor
- */
-- (NSString*) editorClassName
-{
-  return nil;
 }
 
 /**

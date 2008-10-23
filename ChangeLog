@@ -1,3 +1,9 @@
+2008-10-22 22:30-EDT Wolfgang Lux <wolfgang.lux@gmail.com>
+	Patch committed by: Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormLib/IBObjectAdditions.m: Remove duplicate method implementations
+	from here to fix issues on Darwin.
+
 2008-10-19 21:50-EDT Wolfgang Lux <wolfgang.lux@gmail.com>
 	Patch committed by: Gregory John Casamento <greg_casamento@yahoo.com>
 
