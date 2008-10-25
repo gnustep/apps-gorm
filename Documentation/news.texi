@@ -4,6 +4,21 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.6}
+
+@itemize @bullet
+@item Corrections to allow Gorm to build and run properly on the Darwin operating system.
+@item Corrected sizing of Controls Palette.
+@item Added preliminary support for IBPlugin API.
+@item Added preferences panel to add plugins dynamically.
+@item Moved load/save logic for gorm, gmodel, and nib to plugins.  This change should allow plugins for virtually any format to be read/written by Gorm.
+@item Correction for bug#24146, bug#23889.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.4}
 
 Requires: gnustep-gui-0.13.2.  
@@ -16,10 +31,6 @@ Reason: Due to changes in popupbutton controller logic.
 @item Added capability to repair logic to fix window level issue.
 @item Added ruler switch to scroll view inspector.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.2}
 

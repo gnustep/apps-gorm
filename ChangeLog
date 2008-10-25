@@ -1,3 +1,7 @@
+2008-10-25 18:40-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version: 1.2.6
+	
 2008-10-22 22:30-EDT Wolfgang Lux <wolfgang.lux@gmail.com>
 	Patch committed by: Gregory John Casamento <greg_casamento@yahoo.com>
 
@@ -189,7 +193,7 @@
 
 2008-05-04 18:00-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
-	* GormCore/GormPalettesManager.m: Crrrection for issue with palette
+	* GormCore/GormPalettesManager.m: Correction for issue with palette
 	clipping the top of the controls.
 
 2008-05-03 13:40-EDT Gregory John Casamento <greg_casamento@yahoo.com>
