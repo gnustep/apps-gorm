@@ -1,3 +1,11 @@
+2008-11-13 23:36-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormDocument.m: Change to apply labels in the document
+	to cells in a matrix.
+	* GormCore/GormFilePrefsManager.m: Update version to 1.2.7
+	* GormInfo.plist: Same
+	* Version: Same
+
 2008-10-25 18:40-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version: 1.2.6

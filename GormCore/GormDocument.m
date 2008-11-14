@@ -781,6 +781,20 @@ static NSImage  *fileImage = nil;
       [self attachObject: v toParent: ti];
     }
   /*
+   * If it's a matrix, add the elements of the matrix.
+   */
+  else if ([anObject isKindOfClass: [NSMatrix class]])
+    {
+      NSCell *cell = nil;
+      NSEnumerator *en = [[anObject cells] objectEnumerator];
+      
+      // add all of the cells....
+      while((cell = [en nextObject]) != nil)
+	{
+	  [self attachObject: cell toParent: anObject];
+	}
+    }
+  /*
    * If it's a simple NSView, add it and all of it's subviews.
    */
   else if ([anObject isKindOfClass: [NSView class]])
