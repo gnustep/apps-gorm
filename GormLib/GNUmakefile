@@ -8,9 +8,6 @@
 # GNUmakefile.postamble
 #
 
-# Put in the system directory...
-GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
-
 include $(GNUSTEP_MAKEFILES)/common.make
 
 

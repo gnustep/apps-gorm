@@ -24,9 +24,6 @@
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #
 
-# Put in the system directory...
-GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
-
 include $(GNUSTEP_MAKEFILES)/common.make
 
 
