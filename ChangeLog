@@ -1,3 +1,8 @@
+2008-11-27 11:43-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GNUmakefile: Remove default install to SYSTEM, per bug #24673.
+	* Plugins/Gorm/GormGormWrapperLoader.m: Minor grammatical correction.
+
 2008-11-13 23:36-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormDocument.m: Change to apply labels in the document

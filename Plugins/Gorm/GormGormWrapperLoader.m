@@ -560,7 +560,7 @@
 	  [document rebuildObjToNameMapping];
 	  
 	  /*
-	   * repair the .gorm file, if needed.
+	   * Repair the .gorm file, if needed.
 	   */
 	  if(repairFile)
 	    {
