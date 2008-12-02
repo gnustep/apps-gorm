@@ -31,8 +31,8 @@
 #include <AppKit/NSFont.h>
 #include <AppKit/NSNibLoading.h>
 
-#include <GNUstepGUI/GSNibTemplates.h>
-#include <GNUstepGUI/GSNibCompatibility.h>
+#include <GNUstepGUI/GSGormLoading.h>
+#include <GNUstepGUI/GSNibLoading.h>
 
 @class GSCustomView;
 

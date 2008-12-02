@@ -23,9 +23,10 @@
 */
 
 #include <AppKit/AppKit.h>
-#include <GNUstepGUI/GSNibTemplates.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GNUstepGUI/GSGormLoading.h>
 #include "GormNSPanel.h"
+
 
 // the default style mask we start with.
 static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask

@@ -26,7 +26,7 @@
 #include "GormPrivate.h"
 #include "GormFontViewController.h"
 #include "GormSetNameController.h"
-#include "GNUstepGUI/GSNibCompatibility.h"
+#include "GNUstepGUI/GSNibLoading.h"
 #include "GNUstepBase/GSObjCRuntime.h"
 
 // for templates...

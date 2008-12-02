@@ -41,7 +41,7 @@
 #include <AppKit/NSSound.h>
 #include <AppKit/NSNibConnector.h>
 #include <AppKit/NSNibLoading.h>
-#include <GNUstepGUI/GSNibTemplates.h>
+#include <GNUstepGUI/GSGormLoading.h>
 #include "NSView+GormExtensions.h"
 #include "GormSound.h"
 #include "GormImage.h"

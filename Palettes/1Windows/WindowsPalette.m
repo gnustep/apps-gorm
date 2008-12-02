@@ -29,7 +29,6 @@
 
 #include <GormCore/GormDocument.h>
 #include <GormCore/NSColorWell+GormExtensions.h>
-#include <GNUstepGUI/GSNibTemplates.h>
 
 #include "GormNSPanel.h"
 #include "GormNSWindow.h"

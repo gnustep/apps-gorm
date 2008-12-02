@@ -31,7 +31,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
-#include <GNUstepGUI/GSNibTemplates.h>
+#include <GNUstepGUI/GSGormLoading.h>
 #include "GormFilePrefsManager.h"
 #include "GormFunctions.h"
 #include "GormDocument.h"

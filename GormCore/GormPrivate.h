@@ -36,8 +36,8 @@
 #include <GormCore/GormPalettesManager.h>
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormClassEditor.h>
-#include <GNUstepGUI/GSNibTemplates.h>
-#include <GNUstepGUI/GSNibCompatibility.h>
+#include <GNUstepGUI/GSGormLoading.h>
+#include <GNUstepGUI/GSNibLoading.h>
 
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;

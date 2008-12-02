@@ -36,13 +36,13 @@
 
 #include <Foundation/NSNotification.h>
 
-#include <GNUstepGUI/GSNibTemplates.h>
 #include <AppKit/NSButton.h>
 #include <AppKit/NSForm.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSPanel.h>
 #include <AppKit/NSWindow.h>
 
+#include <GNUstepGUI/GSGormLoading.h>
 
 /*
   IBObjectAdditions category for NSPanel

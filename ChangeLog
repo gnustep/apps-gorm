@@ -1,3 +1,20 @@
+2008-12-02 02:58-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormCustomView.m
+	* GormCore/GormDocument.m
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormHelpInspector.m
+	* GormCore/GormPrivate.h
+	* GormCore/GormPrivate.m
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.m
+	* Palettes/1Windows/GormWindowSizeInspector.m
+	* Palettes/1Windows/WindowsPalette.m
+	* Plugins/Gorm/GormGormWrapperBuilder.m
+	* Plugins/Nib/GormNibWrapperBuilder.m
+	* Plugins/Nib/GormNibWrapperLoader.h: Use new header files for 
+	nib/gorm loading.
+
 2008-11-27 11:43-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GNUmakefile: Remove default install to SYSTEM, per bug #24673.

@@ -26,7 +26,7 @@
 #define GORM_NIBWRAPPERLOADER
 
 #include <GormCore/GormWrapperLoader.h>
-#include <GNUstepGUI/GSNibCompatibility.h>
+#include <GNUstepGUI/GSNibLoading.h>
 
 @interface GormNibWrapperLoader : GormWrapperLoader
 {

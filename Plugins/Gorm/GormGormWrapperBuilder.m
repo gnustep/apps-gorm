@@ -26,7 +26,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include <GNUstepGUI/GSNibTemplates.h>
+#include <GNUstepGUI/GSGormLoading.h>
 #include <GormCore/GormWrapperBuilder.h>
 #include <GormCore/GormClassManager.h>
 #include <GormCore/GormFilePrefsManager.h>

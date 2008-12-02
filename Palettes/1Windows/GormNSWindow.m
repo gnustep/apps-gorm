@@ -23,8 +23,8 @@
 */
 
 #include <AppKit/AppKit.h>
-#include <GNUstepGUI/GSNibTemplates.h>
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GNUstepGUI/GSGormLoading.h>
 #include "GormNSWindow.h"
 
 // the default style mask we start with.
