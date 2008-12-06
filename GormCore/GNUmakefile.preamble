@@ -36,3 +36,5 @@ ADDITIONAL_LIB_DIRS += \
 	-L../GormLib/$(GNUSTEP_OBJ_DIR) \
 	-L../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
 endif
+
+GormCore_LIBRARIES_DEPEND_UPON += -lGormObjCHeaderParser

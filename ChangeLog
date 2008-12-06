@@ -1,3 +1,8 @@
+2008-12-06 11:04-EST Bernard Cafarelli <voyageur>
+	Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GNUmakefile.preamble: Corrects bug #25001.
+
 2008-12-02 02:58-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.m
