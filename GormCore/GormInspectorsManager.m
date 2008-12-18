@@ -388,7 +388,7 @@
 
       oldView = [inspectorView contentView];
       newView = [[inspector window] contentView];
-      if (newView != nil)
+      if (newView != nil && newView != oldView)
 	{   
 	  id initialResponder = [[inspector window] initialFirstResponder];
 	  NSView	*outer = [panel contentView];
@@ -455,7 +455,7 @@
 	  RETAIN(oldView);
 	  [inspectorView setContentView: newView];
 	  [[prevInspector window] setContentView: oldView];
-	  RELEASE(oldView);
+	  // RELEASE(oldView);
 
 	  /* Set the default First responder to the new View */
 	  if ( initialResponder )

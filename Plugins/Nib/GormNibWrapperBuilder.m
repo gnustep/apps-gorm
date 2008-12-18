@@ -165,6 +165,21 @@
 					   wantsToBeColor: wantsToBeColor
 					   autoPositionMask: autoPositionMask];
     }
+  else if([object isKindOfClass: [NSText class]])
+    {
+      template = [[NSTextTemplate alloc] initWithObject: object
+					     className: customClass];
+    }
+  else if([object isKindOfClass: [NSTextView class]])
+    {
+      template = [[NSTextViewTemplate alloc] initWithObject: object
+					     className: customClass];
+    }
+  else if([object isKindOfClass: [NSView class]])
+    {
+      template = [[NSViewTemplate alloc] initWithObject: object
+					 className: customClass];
+    }
   else
     {
       template = [[NSClassSwapper alloc] initWithObject: object
@@ -270,11 +285,12 @@
   id replacementObject = NSMapGet(_objectMap,object);
   id o = object;
 
-  if([o isKindOfClass: [GormFirstResponder class]])
-    {
-      o = nil;
-    }
-  else if(replacementObject != nil)
+  // if([o isKindOfClass: [GormFirstResponder class]])
+  //  {
+  //    o = nil;
+  //  }
+  // else 
+  if(replacementObject != nil)
     {
       o = replacementObject;
     }

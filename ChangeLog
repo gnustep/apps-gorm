@@ -1,3 +1,9 @@
+2008-12-18 00:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormInspectorsManager.m: Fix for bug#25111.
+	* Plugins/Nib/GormNibWrapperBuilder.m: Remove code which adds nil
+	to the map if the object is a GormFirstResponder
+
 2008-12-06 11:04-EST Bernard Cafarelli <voyageur>
 	Gregory John Casamento <greg_casamento@yahoo.com>
 
