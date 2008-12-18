@@ -1,3 +1,8 @@
+2008-12-18 00:52-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Plugins/Nib/GormNibWrapperBuilder.m: -[GormNibWrapperBuilder archiver:
+	willEncodeObject:] add back code to replace GormFirstResponder with nil.
+
 2008-12-18 00:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormInspectorsManager.m: Fix for bug#25111.

@@ -285,16 +285,15 @@
   id replacementObject = NSMapGet(_objectMap,object);
   id o = object;
 
-  // if([o isKindOfClass: [GormFirstResponder class]])
-  //  {
-  //    o = nil;
-  //  }
-  // else 
-  if(replacementObject != nil)
+  if([o isKindOfClass: [GormFirstResponder class]])
+    {
+      o = nil;
+    }
+  else if(replacementObject != nil)
     {
       o = replacementObject;
     }
-
+  
   return o;
 }
 
