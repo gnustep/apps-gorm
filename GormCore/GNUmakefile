@@ -24,6 +24,7 @@
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #
 
+GNUSTEP_CORE_SOFTWARE = YES
 include $(GNUSTEP_MAKEFILES)/common.make
 
 

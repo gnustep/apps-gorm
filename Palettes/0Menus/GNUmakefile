@@ -21,6 +21,7 @@
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+GNUSTEP_CORE_SOFTWARE = YES
 include $(GNUSTEP_MAKEFILES)/common.make
 
 PALETTE_NAME = 0Menus

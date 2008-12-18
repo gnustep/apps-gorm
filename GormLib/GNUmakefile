@@ -2,12 +2,8 @@
 # GNUmakefile 
 # Written by Gregory John Casamento <greg_casamento@yahoo.com>
 #
-# NOTE: Do NOT change this file -- ProjectCenter maintains it!
-#
-# Put all of your customisations in GNUmakefile.preamble and
-# GNUmakefile.postamble
-#
 
+GNUSTEP_CORE_SOFTWARE = YES
 include $(GNUSTEP_MAKEFILES)/common.make
 
 

@@ -24,6 +24,8 @@
 #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 
+GNUSTEP_CORE_SOFTWARE = YES
+export GNUSTEP_CORE_SOFTWARE
 include $(GNUSTEP_MAKEFILES)/common.make
 
 CVS_MODULE_NAME = gorm
