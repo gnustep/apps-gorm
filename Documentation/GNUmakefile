@@ -1,4 +1,4 @@
-GNUSTEP_CORE_SOFTWARE = YES
+PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
 include ../Version

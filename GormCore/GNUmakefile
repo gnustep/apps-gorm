@@ -24,7 +24,7 @@
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #
 
-GNUSTEP_CORE_SOFTWARE = YES
+PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
 

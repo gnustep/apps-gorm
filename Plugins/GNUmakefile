@@ -22,7 +22,7 @@
 #   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 #
 
-GNUSTEP_CORE_SOFTWARE = YES
+PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
 #

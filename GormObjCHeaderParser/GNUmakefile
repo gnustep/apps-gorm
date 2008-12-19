@@ -2,7 +2,7 @@
 # GNUmakefile 
 # Written by Gregory John Casamento <greg_casamento@yahoo.com>
 #
-GNUSTEP_CORE_SOFTWARE = YES
+PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
 

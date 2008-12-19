@@ -24,8 +24,8 @@
 #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 
-GNUSTEP_CORE_SOFTWARE = YES
-export GNUSTEP_CORE_SOFTWARE
+PACKAGE_NAME = gorm
+export PACKAGE_NAME
 include $(GNUSTEP_MAKEFILES)/common.make
 
 CVS_MODULE_NAME = gorm
@@ -33,7 +33,6 @@ SVN_MODULE_NAME = gorm
 SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 
 
-PACKAGE_NAME=gorm
 include ./Version
 
 #
