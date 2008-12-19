@@ -16,7 +16,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Library
 #
 
-PACKAGE_NAME=GormObjCHeaderParser
 LIBRARY_VAR=GMOBJCHEADERPARSER
 LIBRARY_NAME=libGormObjCHeaderParser
 libGormObjCHeaderParser_HEADER_FILES_DIR=.
