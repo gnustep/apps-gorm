@@ -18,7 +18,8 @@
 
 	* Plugins/Nib/GormNibWrapperBuilder.m: -[GormNibWrapperBuilder 
 	archiver: willEncodeObject:] add back code to replace 
-	GormFirstResponder with nil.
+	GormFirstResponder with nil.  Changes to use proper templates when
+	encoding nib files.
 
 2008-12-18 00:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
