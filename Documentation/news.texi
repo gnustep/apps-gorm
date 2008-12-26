@@ -7,7 +7,7 @@
 @section Noteworthy changes in version @samp{1.2.8}
 
 Requires: gnustep-gui-0.16.0.  It will not compile without this version of the library.  
-Reason: Nib and Gorm loading was moved to a more sensible file structure.  Additionally, Nib loading was refactored.
+Reason: Nib and Gorm loading were moved to a more sensible file structure.  Additionally, Nib loading was refactored.
 
 @itemize @bullet
 @item Correction for bug#25001.

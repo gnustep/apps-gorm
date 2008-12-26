@@ -16,7 +16,7 @@ GNUstep.
 =========================================
 
 Requires: gnustep-gui-0.16.0.  It will not compile without this version
-of the library.  Reason: Nib and Gorm loading was moved to a more
+of the library.  Reason: Nib and Gorm loading were moved to a more
 sensible file structure.  Additionally, Nib loading was refactored.
 
    * Correction for bug#25001.
