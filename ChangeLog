@@ -1,3 +1,15 @@
+2008-12-26 13:53-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Version: 1.2.8
+
+2008-12-26 13:53-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS: Update with new version information.
+
 2008-12-19  Nicola Pero <nicola.pero@meta-innovation.com>
 
 	* All GNUmakefiles: removed GNUSTEP_CORE_SOFTWARE=YES and

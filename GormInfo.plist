@@ -34,9 +34,9 @@
     ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "Gorm 1.2.7 (SVN)";
+    ApplicationRelease = "Gorm 1.2.8 (Release)";
     Authors = ("Gregory John Casamento <greg_casamento@yahoo.com>","Richard Frith-Macdonald <rfm@gnu.org>","Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
     Copyright = "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 FSF";
     CopyrightDescription = "Released under the GNU General Public License 3.0";
-    NSBuildVersion = "1.2.7 Nov 13 2008";
+    NSBuildVersion = "1.2.8 Dec 26 2008";
 }
