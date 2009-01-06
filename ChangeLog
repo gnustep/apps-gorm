@@ -1,3 +1,8 @@
+2009-01-06  Fred Kiefer <FredKiefer@gmx.de>
+
+	* GormCore/GormClassManager.m (-nibData): Make sure an action name
+	of ":" gets ignored.
+
 2008-12-26 13:53-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Version: 1.2.8

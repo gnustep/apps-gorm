@@ -1260,8 +1260,8 @@
 	      NSString *actionName = nil;
 	      NSScanner *scanner = [NSScanner scannerWithString: action]; 
 	      
-	      [scanner scanUpToString: @":" intoString: &actionName];
-	      [actionDict setObject: @"id" forKey: actionName];
+	      if ([scanner scanUpToString: @":" intoString: &actionName])
+          [actionDict setObject: @"id" forKey: actionName];
 	    }
 
 	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
@@ -1310,8 +1310,8 @@
 	      NSString *actionName = nil;
 	      NSScanner *scanner = [NSScanner scannerWithString: action]; 
 	      
-	      [scanner scanUpToString: @":" intoString: &actionName];
-	      [actionDict setObject: @"id" forKey: actionName];
+	      if ([scanner scanUpToString: @":" intoString: &actionName])
+          [actionDict setObject: @"id" forKey: actionName];
 	    }
 
 	  [newInfo setObject: actionDict forKey: @"ACTIONS"];
