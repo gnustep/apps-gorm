@@ -1,3 +1,8 @@
+2009-01-06 20:48-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Resources/ClassInformation.plist: Added printDocument: method
+	to FirstResponder
+
 2009-01-06  Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormClassManager.m (-nibData): Make sure an action name

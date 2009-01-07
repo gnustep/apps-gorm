@@ -84,6 +84,7 @@
             "performMiniaturize:", 
             "performZoom:", 
             "print:", 
+            "printDocument:",
             "raiseBaseline:", 
             "redo:", 
             "revertDocumentToSaved:", 
