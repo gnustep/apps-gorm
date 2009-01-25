@@ -1,3 +1,11 @@
+2009-01-25 06:50-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuEditor.m: Display the in certain situations.
+	* Palettes/0Menus/GormNSMenu.m: Remove call to setMenu: in 
+	_createWindow since it's not needed and was causing display issues.
+	* Palettes/0Menus/GormNSMenuView.m: Use new method in NSMenuView
+	to reduce code duplication.  Corrections for bug #25401.
+
 2009-01-06 20:48-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Resources/ClassInformation.plist: Added printDocument: method

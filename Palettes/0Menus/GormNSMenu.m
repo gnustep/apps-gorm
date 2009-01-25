@@ -167,7 +167,7 @@
 		   backing: NSBackingStoreBuffered
 		   defer: YES];
  
-  [win setMenu: self];
+  // [win setMenu: self];
   [win setLevel: NSSubmenuWindowLevel];
   [win setExcludedFromWindowsMenu: YES];
   RETAIN(win); // FIXME: Argh..  this may leak.. temporary fix.
