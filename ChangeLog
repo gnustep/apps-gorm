@@ -1,3 +1,8 @@
+2009-01-25 09:47-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormViewWindow.m: Change the color used for standalone
+	views.
+
 2009-01-25 07:54-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Palettes/0Menus/GormNSMenu.m: Fix memory leak.

@@ -142,10 +142,11 @@
       NSString *objectName = [[(id<IB>)NSApp activeDocument] nameForObject: view];
       NSString *title = [NSString stringWithFormat: @"View Window: (%@, %@)",
 				  className, objectName];
+      NSColor *color = [NSColor lightGrayColor];
 
       [self setTitle: title];
       [self setFrame: NSMakeRect(0,0,400,300) display: YES];
-      [self setBackgroundColor: [NSColor darkGrayColor]];
+      [self setBackgroundColor: color];
       [self setReleasedWhenClosed: NO];
       [self setView: view];
     }
