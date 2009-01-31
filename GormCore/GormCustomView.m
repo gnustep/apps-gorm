@@ -36,6 +36,21 @@
 
 @class GSCustomView;
 
+@interface CustomView : NSView
+@end
+
+@implementation CustomView
+- (id) initWithFrame: (NSRect)frame
+{
+  if((self = [super initWithFrame: frame]) != nil)
+    {
+      // Replace the CustomView with an NSView of the same dimensions.
+      self = [[NSView alloc] initWithFrame: frame];
+    }
+  return self;
+}
+@end
+
 @implementation GormCustomView 
 
 - (id)initWithFrame:(NSRect)frameRect
@@ -105,83 +120,46 @@
   return cls;
 }
 
-- (BOOL) classNameIsSet
-{
-  if([className isEqualToString: @"CustomView"] || 
-     [className isEqualToString: @""] || className == nil)
-    {
-      return NO;
-    }
-  return YES;
-}
-
-/*
-- (Class) classForCoder
-{
-  if([self _classNameIsSet]) 
-    {
-      return [NSView class];
-    }
-  return [self class];
-}
-*/
-
 /*
  * This needs to be coded like a GSNibItem. How do we make sure this
  * tracks changes in GSNibItem coding?
  */
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  /*
-  if([self _classNameIsSet])
+  if([aCoder allowsKeyedCoding])
     {
-  */
-      if([aCoder allowsKeyedCoding])
+      GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+      NSString *extension = nil;
+      
+      ASSIGNCOPY(extension,[classManager nonCustomSuperClassOf: className]);
+      
+      [aCoder encodeObject: className forKey: @"NSClassName"];
+      [aCoder encodeRect: [self frame] forKey: @"NSFrame"];
+      
+      if(extension != nil)
 	{
-	  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
-	  NSString *extension = nil;
-	  
-	  ASSIGNCOPY(extension,[classManager nonCustomSuperClassOf: className]);
-	  
-	  [aCoder encodeObject: className forKey: @"NSClassName"];
-	  [aCoder encodeRect: [self frame] forKey: @"NSFrame"];
-	  
-	  if(extension != nil)
-	    {
-	      [aCoder encodeObject: extension forKey: @"NSExtension"];
-	    }
-	  
-	  if([self nextResponder] != nil)
-	    {
-	      [aCoder encodeObject: [self nextResponder] forKey: @"NSNextResponder"];
-	    }
-	  
-	  if([self superview] != nil)
-	    {
-	      [aCoder encodeObject: [self superview] forKey: @"NSSuperview"];
-	    }
-	  
-	  RELEASE(extension);
+	  [aCoder encodeObject: extension forKey: @"NSExtension"];
 	}
-      else
+      
+      if([self nextResponder] != nil)
 	{
-	  [aCoder encodeObject: [self stringValue]];
-	  [aCoder encodeRect: _frame];
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int) 
-		  at: &_autoresizingMask];
+	  [aCoder encodeObject: [self nextResponder] forKey: @"NSNextResponder"];
 	}
-      /*
+      
+      if([self superview] != nil)
+	{
+	  [aCoder encodeObject: [self superview] forKey: @"NSSuperview"];
+	}
+      
+      RELEASE(extension);
     }
   else
     {
-      if([aCoder allowsKeyedCoding] == NO)
-	{
-	  NSView *temp = [[NSView alloc] initWithFrame: [self frame]];
-	  [temp setNextResponder: [self nextResponder]];
-	  [(NSArchiver *)aCoder replaceObject: self withObject: temp];
-	}
+      [aCoder encodeObject: [self stringValue]];
+      [aCoder encodeRect: _frame];
+      [aCoder encodeValueOfObjCType: @encode(unsigned int) 
+	      at: &_autoresizingMask];
     }
-      */
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
