@@ -98,24 +98,6 @@
     }
 }
 
-- (id) initWithObject: (id)anObject 
-	   inDocument: (id<IBDocuments>)aDocument
-{
-  opened = NO;
-  openedSubeditor = nil;
-
-  if ((self = [super initWithObject: anObject
-		     inDocument: aDocument]) == nil)
-    return nil;
-
-  selection = [[NSMutableArray alloc] initWithCapacity: 5];
-  
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    IBViewPboardType, GormLinkPboardType, IBFormatterPboardType, nil]];
-  
-  return self;
-}
-
 - (void) makeSelectionVisible: (BOOL) value
 {
   

@@ -1,3 +1,10 @@
+2009-02-01 09:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormBoxEditor.m
+	* GormCore/GormInternalViewEditor.m
+	* GormCore/GormViewWithSubviewsEditor.m: Changes to support
+	standalone views.
+
 2009-01-31 18:45-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormCustomView.m: Allow addition of plain NSView to
