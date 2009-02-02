@@ -15,7 +15,8 @@
 	    altMod,
 	    ctrlMod,
 	    shiftMod,
-	    cmdMod
+	    cmdMod,
+	    bezelButton
 	);
 	Super = IBInspector;
     };

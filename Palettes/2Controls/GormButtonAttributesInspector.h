@@ -51,6 +51,7 @@
   NSForm *tagForm;
   NSForm *titleForm;
   NSPopUpButton *typeButton;
+  NSPopUpButton *bezelButton;
   NSPopUpButton *keyEquiv;
   NSSwitch *altMod;
   NSSwitch *shiftMod;

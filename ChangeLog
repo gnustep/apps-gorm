@@ -1,3 +1,10 @@
+2009-02-02 17:13-EST Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/2Controls/GormButtonAttributesInspector.[hm]:
+	Added code to handle button style.
+	* Palettes/2Controls/GormNSButtonInspector.gorm: Added button
+	style popup to the inspector.
+
 2009-02-01 09:20-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormBoxEditor.m

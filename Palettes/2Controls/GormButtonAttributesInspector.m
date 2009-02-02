@@ -136,12 +136,12 @@ NSString *rtString = nil;
 {
   if (sender == alignMatrix)
     {
-      [object setAlignment: (NSTextAlignment)[[sender selectedCell] tag]];
+      [(NSButton *)object setAlignment: (NSTextAlignment)[[sender selectedCell] tag]];
     }
   else if (sender == iconMatrix)
     {
-      [object setImagePosition: 
-	(NSCellImagePosition)[[sender selectedCell] tag]];
+      [(NSButton *)object setImagePosition: 
+		     (NSCellImagePosition)[[sender selectedCell] tag]];
     }
   else if (sender == keyForm)
     {
@@ -222,7 +222,7 @@ NSString *rtString = nil;
     }
   else if (sender == tagForm)
     {
-      [object setTag: [[sender cellAtIndex: 0] intValue]];
+      [(NSButton *)object setTag: [[sender cellAtIndex: 0] intValue]];
     }
   else if (sender == titleForm)
     {
@@ -249,6 +249,10 @@ NSString *rtString = nil;
     {
       [object setButtonType: [[sender selectedItem] tag]];
     }
+  else if (sender == bezelButton) 
+    {
+      [object setBezelStyle: [[sender selectedItem] tag]];
+    }
   else if ([sender isKindOfClass: [NSMenuItem class]] )
     {
       /*
@@ -257,7 +261,7 @@ NSString *rtString = nil;
             * FIXME: Ideally we should also test if the menu item belongs
             * to the 'type button' control. How to do that?
             */
-      [object setButtonType: [sender tag]];
+      [(NSButton *)object setButtonType: [sender tag]];
     }
   else if (sender == altMod)
     {
@@ -369,7 +373,7 @@ NSString *rtString = nil;
       if ([object isTransparent])
 	[optionMatrix selectCellAtRow: 4 column: 0];
       
-      [[tagForm cellAtIndex: 0] setIntValue: [object tag]];
+      [[tagForm cellAtIndex: 0] setIntValue: [(NSButton *)object tag]];
       
       [[titleForm cellAtIndex: 0] setStringValue: VSTR([object title])];
       [[titleForm cellAtIndex: 1] setStringValue: VSTR([object alternateTitle])];
@@ -419,6 +423,9 @@ NSString *rtString = nil;
       [typeButton selectItemAtIndex: 
 		    [typeButton indexOfItemWithTag: 
 				  [self buttonTypeForObject: object]]];
+
+      [bezelButton selectItemAtIndex:
+		     [bezelButton indexOfItemWithTag: [object bezelStyle]]];
     }
 }
 
