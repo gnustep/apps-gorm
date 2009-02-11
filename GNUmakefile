@@ -173,6 +173,8 @@ Gorm_OBJC_FILES = \
 	Gorm.m \
 	main.m 
 
+# Gorm_ADDITIONAL_NATIVE_LIBS = m
+
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 

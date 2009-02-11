@@ -345,7 +345,6 @@ static NSImage  *fileImage = nil;
   [toolbar setDelegate: self];
   [window setToolbar: toolbar];
   RELEASE(toolbar);
-  [toolbar setUsesStandardBackgroundColor: YES];
   [toolbar setSelectedItemIdentifier: @"ObjectsItem"]; // set initial selection.
 
   // set up notifications for window.

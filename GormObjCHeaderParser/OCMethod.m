@@ -95,6 +95,9 @@
   ASSIGN(methodString, resultString);
 }
 
+/**
+ * Parse the method.
+ */ 
 - (void) parse
 {
   NSRange notFound = NSMakeRange(NSNotFound,0);
@@ -124,7 +127,6 @@
      isClassMethod == NO)
     {
       [scanner scanUpToAndIncludingString: @":" intoString: &tempSelector];
-      // [scanner scanUpToAndIncludingString: @"\n" intoString: &argPart];
       argPart = [methodString substringFromIndex: (range.location + 1)]; // the rest of the line...
       if(NSEqualRanges([tempSelector rangeOfString: @"("],notFound) == NO)
 	{

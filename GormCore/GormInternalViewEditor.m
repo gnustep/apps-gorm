@@ -647,9 +647,6 @@ static NSImage *horizontalImage;
   }
 }
 
-
-
-
 - (void) pasteInSelection
 {
   [self pasteInView: _editedObject];
