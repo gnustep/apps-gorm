@@ -715,12 +715,12 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
   return result;
 }
 
-/*
 - (void) tableView: (NSTableView *)tableView
    willDisplayCell: (id)aCell
     forTableColumn: (NSTableColumn *)aTableColumn
 	       row: (int)rowIndex
 {
+/*
   NSString *name = [aCell stringValue];
   NSString *className = [self _currentClass];
 
@@ -749,8 +749,9 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 	  [aCell setTextColor: [NSColor darkGrayColor]];
 	}
     }
-}
 */
+  [(NSTextFieldCell *)aCell setScrollable: YES];
+}
 
 - (BOOL) tableView: (NSTableView *)tv
    shouldSelectRow: (int)rowIndex
