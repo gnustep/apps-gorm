@@ -84,7 +84,7 @@
 	{
 	  GormClassManager *classManager = [document classManager];
 	  id               docFilesOwner;
-	  NSMapTable       objects;
+	  NSMapTable       *objects;
 	  NSArray          *objs;
 	  NSEnumerator     *en;
 	  id               o;

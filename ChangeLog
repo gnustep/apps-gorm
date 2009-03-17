@@ -1,3 +1,7 @@
+2009-03-16 20:18-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Plugins/Nib/GormNibWrapperLoader.m: Correct compilation error.
+
 2009-03-03 18:17-EST Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormClassInspector.m: Change the cell to scrollable
