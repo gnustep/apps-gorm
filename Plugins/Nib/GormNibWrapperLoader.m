@@ -69,6 +69,8 @@
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
 {
+  BOOL result = NO;
+
   NS_DURING
     {
       NSData		        *data = nil;
@@ -126,198 +128,203 @@
 	  // check the data...
 	  if (data == nil || classes == nil)
 	    {
-	      return NO;
+	      result = NO;
 	    }
-	  
-	  /*
-	   * Create an unarchiver, and use it to unarchive the gorm file while
-	   * handling class replacement so that standard objects understood
-	   * by the gui library are converted to their Gorm internal equivalents.
-	   */
-	  u = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
-	  [u setDelegate: self];
-
-	  /*
-	   * Special internal classes
-	   */ 
-	  [u setClass: [GormObjectProxy class]
-	     forClassName: @"NSCustomObject"];
-	  [u setClass: [GormCustomView class] 
-	     forClassName: @"NSCustomView"];
-	  
-	  /*
-	   * Substitute any classes specified by the palettes...
-	   */
-	  en = [substituteClasses keyEnumerator];
-	  while((subClassName = [en nextObject]) != nil)
+	  else
 	    {
-	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
-	      Class substituteClass = NSClassFromString(subClassName);
-	      [u setClass: substituteClass
-		 forClassName: realClassName];
-	    }
-	  
-	  //
-	  // decode
-	  //
-	  container = [u decodeObjectForKey: @"IB.objectdata"];
-	  if (container == nil || [container isKindOfClass: [NSIBObjectData class]] == NO)
-	    {
-	      return NO;
-	    }
-	  nibFilesOwner = [container objectForName: @"File's Owner"];
-
-	  docFilesOwner = [document filesOwner];
-	  objects = [container names];
-	  objs = NSAllMapTableKeys(objects);
-	  en = [objs objectEnumerator];
-	  o = nil;
-
-	  //
-	  // set the current class on the File's owner...
-	  //
-	  if([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
-	    {
-	      [docFilesOwner setClassName: [nibFilesOwner className]];	  
-	    }
-
-	  //
-	  // add objects...
-	  //
-	  while((o = [en nextObject]) != nil)
-	    {
-	      id obj = o;
-	      NSString *customClassName = nil;
-	      NSString *objName = nil;
-
-	      // skip the file's owner, it is handled above...
-	      if(o == nibFilesOwner)
-		continue;
-
-	      //
-	      // if it's a window template, then replace it with an actual window.
-	      //
-	      if([o isKindOfClass: [NSWindowTemplate class]])
+	      /*
+	       * Create an unarchiver, and use it to unarchive the gorm file while
+	       * handling class replacement so that standard objects understood
+	       * by the gui library are converted to their Gorm internal equivalents.
+	       */
+	      u = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
+	      [u setDelegate: self];
+	      
+	      /*
+	       * Special internal classes
+	       */ 
+	      [u setClass: [GormObjectProxy class]
+		 forClassName: @"NSCustomObject"];
+	      [u setClass: [GormCustomView class] 
+		 forClassName: @"NSCustomView"];
+	      
+	      /*
+	       * Substitute any classes specified by the palettes...
+	       */
+	      en = [substituteClasses keyEnumerator];
+	      while((subClassName = [en nextObject]) != nil)
 		{
-		  NSString *className = [o className];
-		  BOOL isDeferred = [o isDeferred];
-		  BOOL isVisible = [[container visibleWindows] containsObject: o];
-
-		  // make the object deferred/visible...
-		  obj = [o nibInstantiate];
-		  
-		  [document setObject: obj isDeferred: isDeferred];
-		  [document setObject: obj isVisibleAtLaunch: isVisible];
-		  // record the custom class...
-		  if([classManager isCustomClass: className])
-		    {
-		      customClassName = className;
-		    }
-		}
-
-	      if([self isTopLevelObject: obj])
-		{		  
-		  [document attachObject: obj toParent: nil];
+		  NSString *realClassName = [substituteClasses objectForKey: subClassName];
+		  Class substituteClass = NSClassFromString(subClassName);
+		  [u setClass: substituteClass
+		     forClassName: realClassName];
 		}
 	      
-	      if(customClassName != nil)
+	      //
+	      // decode
+	      //
+	      container = [u decodeObjectForKey: @"IB.objectdata"];
+	      if (container == nil || [container isKindOfClass: [NSIBObjectData class]] == NO)
 		{
-		  objName = [document nameForObject: obj];
-		  [classManager setCustomClass: customClassName forName: objName];
-		}
-	    }
-
-	  //
-	  // Add custom classes...
-	  //
-	  classesTable = [container classes];
-	  classKeys = NSAllMapTableKeys(classesTable);
-	  en = [classKeys objectEnumerator];
-	  while((o = [en nextObject]) != nil)
-	    {
-	      NSString *name = [document nameForObject: o];
-	      NSString *customClass = NSMapGet(classesTable, o);
-	      if(name != nil && customClass != nil)
-		{
-		  [classManager setCustomClass: customClass forName: name];
+		  result = NO;
 		}
 	      else
 		{
-		  NSLog(@"Name %@ or class %@ for object %@ is nil.", name, customClass, o);
-		}
-	    }
-
-	  //
-	  // add connections...
-	  //
-	  en = [[container connections] objectEnumerator];
-	  o = nil;
-	  while((o = [en nextObject]) != nil)
-	    {
-	      id dest = [o destination];
-	      id src = [o source];
-
-	      // NSLog(@"Connector: %@",o);
-
-	      if([o isKindOfClass: [NSNibControlConnector class]])
-		{
-		  NSString *tag = [o label];
-		  NSRange colonRange = [tag rangeOfString: @":"];
-		  unsigned int location = colonRange.location;
+		  nibFilesOwner = [container objectForName: @"File's Owner"];
 		  
-		  if(location == NSNotFound)
+		  docFilesOwner = [document filesOwner];
+		  objects = [container names];
+		  objs = NSAllMapTableKeys(objects);
+		  en = [objs objectEnumerator];
+		  o = nil;
+		  
+		  //
+		  // set the current class on the File's owner...
+		  //
+		  if([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
-		      NSString *newTag = [NSString stringWithFormat: @"%@:",tag];
-		      [o setLabel: (id)newTag];
+		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
 		    }
+		  
+		  //
+		  // add objects...
+		  //
+		  while((o = [en nextObject]) != nil)
+		    {
+		      id obj = o;
+		      NSString *customClassName = nil;
+		      NSString *objName = nil;
+		      
+		      // skip the file's owner, it is handled above...
+		      if(o == nibFilesOwner)
+			continue;
+		      
+		      //
+		      // if it's a window template, then replace it with an actual window.
+		      //
+		      if([o isKindOfClass: [NSWindowTemplate class]])
+			{
+			  NSString *className = [o className];
+			  BOOL isDeferred = [o isDeferred];
+			  BOOL isVisible = [[container visibleWindows] containsObject: o];
+			  
+			  // make the object deferred/visible...
+			  obj = [o nibInstantiate];
+			  
+			  [document setObject: obj isDeferred: isDeferred];
+			  [document setObject: obj isVisibleAtLaunch: isVisible];
+			  // record the custom class...
+			  if([classManager isCustomClass: className])
+			    {
+			      customClassName = className;
+			    }
+			}
+		      
+		      if([self isTopLevelObject: obj])
+			{		  
+			  [document attachObject: obj toParent: nil];
+			}
+		      
+		      if(customClassName != nil)
+			{
+			  objName = [document nameForObject: obj];
+			  [classManager setCustomClass: customClassName forName: objName];
+			}
+		    }
+		  
+		  //
+		  // Add custom classes...
+		  //
+		  classesTable = [container classes];
+		  classKeys = NSAllMapTableKeys(classesTable);
+		  en = [classKeys objectEnumerator];
+		  while((o = [en nextObject]) != nil)
+		    {
+		      NSString *name = [document nameForObject: o];
+		      NSString *customClass = NSMapGet(classesTable, o);
+		      if(name != nil && customClass != nil)
+			{
+			  [classManager setCustomClass: customClass forName: name];
+			}
+		      else
+			{
+			  NSLog(@"Name %@ or class %@ for object %@ is nil.", name, customClass, o);
+			}
+		    }
+		  
+		  //
+		  // add connections...
+		  //
+		  en = [[container connections] objectEnumerator];
+		  o = nil;
+		  while((o = [en nextObject]) != nil)
+		    {
+		      id dest = [o destination];
+		      id src = [o source];
+		      
+		      // NSLog(@"Connector: %@",o);
+		      
+		      if([o isKindOfClass: [NSNibControlConnector class]])
+			{
+			  NSString *tag = [o label];
+			  NSRange colonRange = [tag rangeOfString: @":"];
+			  unsigned int location = colonRange.location;
+			  
+			  if(location == NSNotFound)
+			    {
+			      NSString *newTag = [NSString stringWithFormat: @"%@:",tag];
+			      [o setLabel: (id)newTag];
+			    }
+			}
+		      
+		      if(dest == nibFilesOwner)
+			{
+			  [o setDestination: [document filesOwner]];
+			}
+		      else if(dest == nil)
+			{
+			  [o setDestination: [document firstResponder]];
+			}
+		      
+		      if(src == nibFilesOwner)
+			{
+			  [o setSource: [document filesOwner]];
+			}
+		      else if(src == nil)
+			{
+			  [o setSource: [document firstResponder]];
+			}
+		      
+		      // check src/dest for window template...
+		      if([src isKindOfClass: [NSWindowTemplate class]])
+			{
+			  id win = [src realObject];
+			  [o setSource: win];
+			}
+		      
+		      if([dest isKindOfClass: [NSWindowTemplate class]])
+			{
+			  id win = [dest realObject];
+			  [o setDestination: win];
+			}
+		      
+		      // skip any help connectors...
+		      if([o isKindOfClass: [NSIBHelpConnector class]])
+			{
+			  continue;
+			}
+		      [document addConnector: o];
+		    }
+		  
+		  // turn on custom classes.
+		  [NSClassSwapper setIsInInterfaceBuilder: NO]; 
+		  
+		  // clear the changes, since we just loaded the document.
+		  [document updateChangeCount: NSChangeCleared];
+		  
+		  result = YES;
 		}
-
-	      if(dest == nibFilesOwner)
-		{
-		  [o setDestination: [document filesOwner]];
-		}
-	      else if(dest == nil)
-		{
-		  [o setDestination: [document firstResponder]];
-		}
-
-	      if(src == nibFilesOwner)
-		{
-		  [o setSource: [document filesOwner]];
-		}
-	      else if(src == nil)
-		{
-		  [o setSource: [document firstResponder]];
-		}
-
-	      // check src/dest for window template...
-	      if([src isKindOfClass: [NSWindowTemplate class]])
-		{
-		  id win = [src realObject];
-		  [o setSource: win];
-		}
-
-	      if([dest isKindOfClass: [NSWindowTemplate class]])
-		{
-		  id win = [dest realObject];
-		  [o setDestination: win];
-		}
-
-	      // skip any help connectors...
-	      if([o isKindOfClass: [NSIBHelpConnector class]])
-		{
-		  continue;
-		}
-	      [document addConnector: o];
 	    }
-
-	  // turn on custom classes.
-	  [NSClassSwapper setIsInInterfaceBuilder: NO]; 
-
-	  // clear the changes, since we just loaded the document.
-	  [document updateChangeCount: NSChangeCleared];
-
-	  return YES;
 	}
     }
   NS_HANDLER
@@ -325,12 +332,12 @@
       NSRunAlertPanel(_(@"Problem Loading"), 
 		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
 		      _(@"OK"), nil, nil);
-      return NO; 
+      result = NO; 
     }
   NS_ENDHANDLER;
 
-  // if we made it here, then it was a success....
-  return YES;
+  // return the result.
+  return result;
 }
 
 - (void) unarchiver: (NSKeyedUnarchiver *)unarchiver 

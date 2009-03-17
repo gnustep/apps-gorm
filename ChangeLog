@@ -1,3 +1,8 @@
+2009-03-17 01:05-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Plugins/Nib/GormNibWrapperLoader.m: Correct the code so that
+	return is not called from within an NS_DURING block.
+
 2009-03-16 20:18-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Plugins/Nib/GormNibWrapperLoader.m: Correct compilation error.
