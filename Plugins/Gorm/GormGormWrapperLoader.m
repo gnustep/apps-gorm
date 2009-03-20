@@ -329,6 +329,8 @@
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
 {
+  BOOL result = NO;
+
   NS_DURING
     {
       NSData		        *data = nil;
@@ -361,234 +363,255 @@
 	  GormClassManager *classManager = [document classManager];
 
 	  key = nil;
-	  fileWrappers = [wrapper fileWrappers];
-
-	  enumerator = [fileWrappers keyEnumerator];
-	  while((key = [enumerator nextObject]) != nil)
+	  if ([wrapper isDirectory])
 	    {
-	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
-	      if([fw isRegularFile])
+	      fileWrappers = [wrapper fileWrappers];
+	      
+	      enumerator = [fileWrappers keyEnumerator];
+	      while((key = [enumerator nextObject]) != nil)
 		{
-		  NSData *fileData = [fw regularFileContents];
-		  if([key isEqual: @"objects.gorm"])
+		  NSFileWrapper *fw = [fileWrappers objectForKey: key];
+		  if([fw isRegularFile])
 		    {
-		      data = fileData;
-		    }
-		  else if([key isEqual: @"data.info"])
-		    {
-		      [document setInfoData: fileData];
-		    }
-		  else if([key isEqual: @"data.classes"])
-		    {
-		      classes = fileData;
-		      
-		      // load the custom classes...
-		      if (![classManager loadCustomClassesWithData: classes]) 
+		      NSData *fileData = [fw regularFileContents];
+		      if([key isEqual: @"objects.gorm"])
 			{
-			  NSRunAlertPanel(_(@"Problem Loading"), 
-					  _(@"Could not open the associated classes file.\n"
-					    @"You won't be able to edit connections on custom classes"), 
-					  _(@"OK"), nil, nil);
+			  data = fileData;
+			}
+		      else if([key isEqual: @"data.info"])
+			{
+			  [document setInfoData: fileData];
+			}
+		      else if([key isEqual: @"data.classes"])
+			{
+			  classes = fileData;
+			  
+			  // load the custom classes...
+			  if (![classManager loadCustomClassesWithData: classes]) 
+			    {
+			      NSRunAlertPanel(_(@"Problem Loading"), 
+					      _(@"Could not open the associated classes file.\n"
+						@"You won't be able to edit connections on custom classes"), 
+					      _(@"OK"), nil, nil);
+			    }
 			}
 		    }
 		}
 	    }
-	  
+	  else if ([wrapper isRegularFile]) // if it's a file...  here we need to handle legacy files.
+	    {
+	      NSString *classesFileName = [[[document documentPath] stringByDeletingPathExtension]
+					    stringByAppendingPathExtension: @"classes"];
+
+	      // dump the contents to the data section...
+	      data = [wrapper regularFileContents];
+	      classes = [NSData dataWithContentsOfFile: classesFileName];
+
+	      // load the custom classes...
+	      if (![classManager loadCustomClassesWithData: classes]) 
+		{
+		  NSRunAlertPanel(_(@"Problem Loading"), 
+				  _(@"Could not open the associated classes file.\n"
+				    @"You won't be able to edit connections on custom classes"), 
+				  _(@"OK"), nil, nil);
+		}
+	    }
+
 	  // check the data...
-	  // NOTE: If info isn't present, then it's an older archive which
-	  //  doesn't contain that file.
 	  if (data == nil || classes == nil)
 	    {
-	      return NO;
+	      result = NO;
 	    }
-	  
-	  /*
-	   * Create an unarchiver, and use it to unarchive the gorm file while
-	   * handling class replacement so that standard objects understood
-	   * by the gui library are converted to their Gorm internal equivalents.
-	   */
-	  u = [[NSUnarchiver alloc] initForReadingWithData: data];
-	  
-	  /*
-	   * Special internal classes
-	   */ 
-	  [u decodeClassName: @"GSNibItem" 
-	     asClassName: @"GormObjectProxy"];
-	  [u decodeClassName: @"GSCustomView" 
-	     asClassName: @"GormCustomView"];
-	  
-	  /*
-	   * Substitute any classes specified by the palettes...
-	   */
-	  while((subClassName = [en nextObject]) != nil)
+	  else
 	    {
-	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
-	      [u decodeClassName: realClassName 
-		 asClassName: subClassName];
-	    }
-	  
-	  // turn off custom classes.
-	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
-	  container = [u decodeObject];
-	  if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
-	    {
-	      return NO;
-	    }
-	  // turn on custom classes.
-	  [GSClassSwapper setIsInInterfaceBuilder: NO]; 
-	  
-	  /*
-	   * Retrieve the custom class data and refresh the classes view...
-	   */
-	  [classManager setCustomClassMap: 
-			  [NSMutableDictionary dictionaryWithDictionary: 
-						 [container customClasses]]];
-	  
-	  //
-	  // Get all of the visible objects...
-	  //
-	  visible = [container visibleWindows];
-	  visObj = nil;
-	  enumerator = [visible objectEnumerator];
-	  while((visObj = [enumerator nextObject]) != nil)
-	    {
-	      [document setObject: visObj isVisibleAtLaunch: YES];
-	    }
-	  
-	  //
-	  // Get all of the deferred objects...
-	  //
-	  deferred = [container deferredWindows];
-	  defObj = nil;
-	  enumerator = [deferred objectEnumerator];
-	  while((defObj = [enumerator nextObject]) != nil)
-	    {
-	      [document setObject: defObj isDeferred: YES];
-	    }
-	  
-	  /*
-	   * In the newly loaded nib container, we change all the connectors
-	   * to hold the objects rather than their names (using our own dummy
-	   * object as the 'NSOwner'.
-	   */
-	  filesOwner = [document filesOwner];
-	  firstResponder = [document firstResponder];
-	  ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
-	  if (ownerClass)
-	    {
-	      [filesOwner setClassName: ownerClass];
-	    }
-	  // [[container nameTable] removeObjectForKey: @"NSOwner"];
-	  // [[container nameTable] removeObjectForKey: @"NSFirst"];
-	  [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
-	  [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
-
-	  //
-	  // Add entries...
-	  //
-	  [[document nameTable] addEntriesFromDictionary: [container nameTable]];
-	  
-	  //
-	  // Add top level items...
-	  //
-	  objs = [[container topLevelObjects] allObjects];
-	  [[document topLevelObjects] addObjectsFromArray: objs];
-					
-	  //
-	  // Add connections
-	  //
-	  connections = [document connections];
-	  [connections addObjectsFromArray: [container connections]];
-
-	  /* Iterate over the contents of nameTable and create the connections */
-	  nt = [document nameTable];
-	  enumerator = [connections objectEnumerator];
-	  while ((con = [enumerator nextObject]) != nil)
-	    {
-	      NSString  *name;
-	      id        obj;
+	      /*
+	       * Create an unarchiver, and use it to unarchive the gorm file while
+	       * handling class replacement so that standard objects understood
+	       * by the gui library are converted to their Gorm internal equivalents.
+	       */
+	      u = [[NSUnarchiver alloc] initForReadingWithData: data];
 	      
-	      name = (NSString*)[con source];
-	      obj = [nt objectForKey: name];
-	      [con setSource: obj];
-	      name = (NSString*)[con destination];
-	      obj = [nt objectForKey: name];
-	      [con setDestination: obj];
-	    }
-	  
-	  /*
-	   * If the GSNibContainer version is 0, we need to add the top level objects
-	   * to the list so that they can be properly processed.
-	   */
-	  version = [u versionForClassName: NSStringFromClass([GSNibContainer class])];
-	  if(version == 0)
-	    {
-	      id obj;
-	      NSEnumerator *en = [nt objectEnumerator];
+	      /*
+	       * Special internal classes
+	       */ 
+	      [u decodeClassName: @"GSNibItem" 
+		 asClassName: @"GormObjectProxy"];
+	      [u decodeClassName: @"GSCustomView" 
+		 asClassName: @"GormCustomView"];
 	      
-	      // get all of the GSNibItem subclasses which could be top level objects
-	      while((obj = [en nextObject]) != nil)
+	      /*
+	       * Substitute any classes specified by the palettes...
+	       */
+	      while((subClassName = [en nextObject]) != nil)
 		{
-		  if([obj isKindOfClass: [GSNibItem class]] &&
-		     [obj isKindOfClass: [GSCustomView class]] == NO)
+		  NSString *realClassName = [substituteClasses objectForKey: subClassName];
+		  [u decodeClassName: realClassName 
+		     asClassName: subClassName];
+		}
+	      
+	      // turn off custom classes.
+	      [GSClassSwapper setIsInInterfaceBuilder: YES]; 
+	      container = [u decodeObject];
+	      if (container == nil || [container isKindOfClass: [GSNibContainer class]] == NO)
+		{
+		  result = NO;
+		}
+	      else
+		{
+		  // turn on custom classes.
+		  [GSClassSwapper setIsInInterfaceBuilder: NO]; 
+		  
+		  //
+		  // Retrieve the custom class data and refresh the classes view...
+		  //
+		  [classManager setCustomClassMap: 
+				  [NSMutableDictionary dictionaryWithDictionary: 
+							 [container customClasses]]];
+		  
+		  //
+		  // Get all of the visible objects...
+		  //
+		  visible = [container visibleWindows];
+		  visObj = nil;
+		  enumerator = [visible objectEnumerator];
+		  while((visObj = [enumerator nextObject]) != nil)
 		    {
-		      [[container topLevelObjects] addObject: obj];
+		      [document setObject: visObj isVisibleAtLaunch: YES];
 		    }
+		  
+		  //
+		  // Get all of the deferred objects...
+		  //
+		  deferred = [container deferredWindows];
+		  defObj = nil;
+		  enumerator = [deferred objectEnumerator];
+		  while((defObj = [enumerator nextObject]) != nil)
+		    {
+		      [document setObject: defObj isDeferred: YES];
+		    }
+		  
+		  //
+		  // In the newly loaded nib container, we change all the connectors
+		  // to hold the objects rather than their names (using our own dummy
+		  // object as the 'NSOwner'.
+		  //
+		  filesOwner = [document filesOwner];
+		  firstResponder = [document firstResponder];
+		  ownerClass = [[container nameTable] objectForKey: @"NSOwner"];
+		  if (ownerClass)
+		    {
+		      [filesOwner setClassName: ownerClass];
+		    }
+		  [[container nameTable] setObject: filesOwner forKey: @"NSOwner"];
+		  [[container nameTable] setObject: firstResponder forKey: @"NSFirst"];
+		  
+		  //
+		  // Add entries...
+		  //
+		  [[document nameTable] addEntriesFromDictionary: [container nameTable]];
+		  
+		  //
+		  // Add top level items...
+		  //
+		  objs = [[container topLevelObjects] allObjects];
+		  [[document topLevelObjects] addObjectsFromArray: objs];
+		  
+		  //
+		  // Add connections
+		  //
+		  connections = [document connections];
+		  [connections addObjectsFromArray: [container connections]];
+		  
+		  /* Iterate over the contents of nameTable and create the connections */
+		  nt = [document nameTable];
+		  enumerator = [connections objectEnumerator];
+		  while ((con = [enumerator nextObject]) != nil)
+		    {
+		      NSString  *name;
+		      id        obj;
+		      
+		      name = (NSString*)[con source];
+		      obj = [nt objectForKey: name];
+		      [con setSource: obj];
+		      name = (NSString*)[con destination];
+		      obj = [nt objectForKey: name];
+		      [con setDestination: obj];
+		    }
+		  
+		  /*
+		   * If the GSNibContainer version is 0, we need to add the top level objects
+		   * to the list so that they can be properly processed.
+		   */
+		  version = [u versionForClassName: NSStringFromClass([GSNibContainer class])];
+		  if(version == 0)
+		    {
+		      id obj;
+		      NSEnumerator *en = [nt objectEnumerator];
+		      
+		      // get all of the GSNibItem subclasses which could be top level objects
+		      while((obj = [en nextObject]) != nil)
+			{
+			  if([obj isKindOfClass: [GSNibItem class]] &&
+			     [obj isKindOfClass: [GSCustomView class]] == NO)
+			    {
+			      [[container topLevelObjects] addObject: obj];
+			    }
+			}
+		      [document setOlderArchive: YES];
+		    }
+		  else if(version == 1)
+		    {
+		      // nothing else, just mark it as older...
+		      [document setOlderArchive: YES];
+		    }
+		  
+		  /*
+		   * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
+		   * an older archive.  Also, if the window template is not in the archive we know
+		   * it was made by an older version of Gorm.
+		   */
+		  version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
+		  if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
+		    {
+		      [document setOlderArchive: YES];
+		    }
+		  
+		  /* 
+		   * Rebuild the mapping from object to name for the nameTable... 
+		   */
+		  [document rebuildObjToNameMapping];
+		  
+		  /*
+		   * Repair the .gorm file, if needed.
+		   */
+		  if(repairFile)
+		    {
+		      [self _repairFile];
+		    }
+		  
+		  NSDebugLog(@"nameTable = %@",[container nameTable]);
+		  
+		  // awaken all elements after the load is completed.
+		  enumerator = [nt keyEnumerator];
+		  while ((key = [enumerator nextObject]) != nil)
+		    {
+		      id o = [nt objectForKey: key];
+		      if ([o respondsToSelector: @selector(awakeFromDocument:)])
+			{
+			  [o awakeFromDocument: document];
+			}
+		    }
+		  
+		  // document opened...
+		  [document setDocumentOpen: YES];
+		  
+		  // release the unarchiver..
+		  RELEASE(u);
+		  
+		  // done...
+		  result = YES;
 		}
-	      [document setOlderArchive: YES];
 	    }
-	  else if(version == 1)
-	    {
-	      // nothing else, just mark it as older...
-	      [document setOlderArchive: YES];
-	    }
-	  
-	  /*
-	   * If the GSWindowTemplate version is 0, we need to let Gorm know that this is
-	   * an older archive.  Also, if the window template is not in the archive we know
-	   * it was made by an older version of Gorm.
-	   */
-	  version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
-	  if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
-	    {
-	      [document setOlderArchive: YES];
-	    }
-
-	  /* 
-	   * Rebuild the mapping from object to name for the nameTable... 
-	   */
-	  [document rebuildObjToNameMapping];
-	  
-	  /*
-	   * Repair the .gorm file, if needed.
-	   */
-	  if(repairFile)
-	    {
-	      [self _repairFile];
-	    }
-	  
-	  NSDebugLog(@"nameTable = %@",[container nameTable]);
-	  
-	  // awaken all elements after the load is completed.
-	  enumerator = [nt keyEnumerator];
-	  while ((key = [enumerator nextObject]) != nil)
-	    {
-	      id o = [nt objectForKey: key];
-	      if ([o respondsToSelector: @selector(awakeFromDocument:)])
-		{
-		  [o awakeFromDocument: document];
-		}
-	    }
-	  
-	  // document opened...
-	  [document setDocumentOpen: YES];
-	  
-	  // release the unarchiver..
-	  RELEASE(u);
-	}
-      else
-	{
-	  return NO;
 	}
     }
   NS_HANDLER
@@ -596,11 +619,11 @@
       NSRunAlertPanel(_(@"Problem Loading"), 
 		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
 		      _(@"OK"), nil, nil);
-      return NO; 
+      result = NO; 
     }
   NS_ENDHANDLER;
 
   // if we made it here, then it was a success....
-  return YES;
+  return result;
 }
 @end

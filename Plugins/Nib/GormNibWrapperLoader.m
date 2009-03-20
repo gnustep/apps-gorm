@@ -82,7 +82,8 @@
       NSString                  *subClassName = nil;
       NSDictionary              *fileWrappers = nil;
 
-      if ([super loadFileWrapper: wrapper withDocument: doc])
+      if ([super loadFileWrapper: wrapper withDocument: doc] &&
+	  [wrapper isDirectory])
 	{
 	  GormClassManager *classManager = [document classManager];
 	  id               docFilesOwner;

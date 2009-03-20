@@ -1,3 +1,14 @@
+2009-03-19 23:39-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* GormCore/GormWrapperLoader.m: Allow handling of wrappers which
+	are not directories.
+	* Plugins/Gorm/GormGormWrapperLoader.m: Change logic to accommodate
+	previous generation of .gorm files which were not packages.  Also
+	correct the code so that a return is not made within the NS_DURING
+	block.
+	* Plugins/Nib/GormNibWrapperLoader.m: Do not load if the
+	wrapper is not a directory.
+
 2009-03-17 01:05-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* Plugins/Nib/GormNibWrapperLoader.m: Correct the code so that

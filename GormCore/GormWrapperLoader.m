@@ -54,52 +54,58 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *)doc
 {
-  if ([wrapper isDirectory])
+  NS_DURING
     {
-      NSDictionary *fileWrappers = nil;
-      NSString *key = nil;
-      NSArray *imageFileTypes = [NSImage imageFileTypes];
-      NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
       NSMutableArray *images = [NSMutableArray array];
       NSMutableArray *sounds = [NSMutableArray array];
-      NSEnumerator *enumerator = nil;
 
       document = doc; // don't retain...
-      key = nil;
-      fileWrappers = [wrapper fileWrappers];
-      
-      [self saveSCMDirectory: fileWrappers];
-      
-      enumerator = [fileWrappers keyEnumerator];
-      while((key = [enumerator nextObject]) != nil)
+      if ([wrapper isDirectory])
 	{
-	  NSFileWrapper *fw = [fileWrappers objectForKey: key];
-	  if([fw isRegularFile])
+	  NSDictionary *fileWrappers = nil;
+	  NSString *key = nil;
+	  NSArray *imageFileTypes = [NSImage imageFileTypes];
+	  NSArray *soundFileTypes = [NSSound soundUnfilteredFileTypes];
+	  NSEnumerator *enumerator = nil;
+	  
+	  key = nil;
+	  fileWrappers = [wrapper fileWrappers];
+	  
+	  [self saveSCMDirectory: fileWrappers];
+	  
+	  enumerator = [fileWrappers keyEnumerator];
+	  while((key = [enumerator nextObject]) != nil)
 	    {
-	      NSData *fileData = [fw regularFileContents];
-	      if ([imageFileTypes containsObject: [key pathExtension]])
+	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
+	      if([fw isRegularFile])
 		{
-		  [images addObject: [GormImage imageForData: fileData 
-						withFileName: key 
-						inWrapper: YES]];
-		}
-	      else if ([soundFileTypes containsObject: [key pathExtension]])
-		{
-		  [sounds addObject: [GormSound soundForData: fileData 
-						withFileName: key 
-						inWrapper: YES]];
+		  NSData *fileData = [fw regularFileContents];
+		  if ([imageFileTypes containsObject: [key pathExtension]])
+		    {
+		      [images addObject: [GormImage imageForData: fileData 
+						    withFileName: key 
+						    inWrapper: YES]];
+		    }
+		  else if ([soundFileTypes containsObject: [key pathExtension]])
+		    {
+		      [sounds addObject: [GormSound soundForData: fileData 
+						    withFileName: key 
+						    inWrapper: YES]];
+		    }
 		}
 	    }
 	}
 
+      // fill in the images and sounds arrays...
       [document setSounds: sounds];
       [document setImages: images];
     }
-  else
+  NS_HANDLER
     {
       return NO;
     }
-  
+  NS_ENDHANDLER;
+
   return YES;
 }
 @end
