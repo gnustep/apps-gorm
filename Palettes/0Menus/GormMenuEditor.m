@@ -502,7 +502,7 @@
       [document detachObjects: d];
 	  
       // remove the items from the menu...
-      while ((i = [e nextObject]) != nil && [edited numberOfItems] > 1)
+      while ((i = [e nextObject]) != nil && [edited numberOfItems] > 0)
 	{
 	  [edited removeItem: i];
 	}

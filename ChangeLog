@@ -1,3 +1,8 @@
+2009-03-24 18:02-EDT Gregory John Casamento <greg_casamento@yahoo.com>
+
+	* Palettes/0Menus/GormMenuEditor.m: -(void)deleteSelection, remove
+	arbitrary limitation which prevents removing all items in a menu.
+
 2009-03-19 23:39-EDT Gregory John Casamento <greg_casamento@yahoo.com>
 
 	* GormCore/GormWrapperLoader.m: Allow handling of wrappers which
