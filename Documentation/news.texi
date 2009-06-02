@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.10}
+
+@itemize @bullet
+@item Correction for bug #25401
+@item Correction for some nib loading issues.
+@item Limited support for standalone views.
+@item Fixes for various bugs.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.8}
 
 Requires: gnustep-gui-0.16.0.  It will not compile without this version of the library.  
@@ -15,10 +28,6 @@ Reason: Nib and Gorm loading were moved to a more sensible file structure.  Addi
 @item Fixes for nib encoding to use the proper template class instances.
 @item Changes to use new headers.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.6}
 

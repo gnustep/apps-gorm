@@ -1,7 +1,7 @@
 1 ANNOUNCE
 **********
 
-This is version 1.2.8 of Gorm.
+This is version 1.2.10 of Gorm.
 
 1.1 What is Gorm?
 =================
@@ -12,20 +12,16 @@ GNUstep Object Relationship Modeler).
    Gorm is a clone of the NeXTstep `Interface Builder' application for
 GNUstep.
 
-1.2 Noteworthy changes in version `1.2.8'
-=========================================
+1.2 Noteworthy changes in version `1.2.10'
+==========================================
 
-Requires: gnustep-gui-0.16.0.  It will not compile without this version
-of the library.  Reason: Nib and Gorm loading were moved to a more
-sensible file structure.  Additionally, Nib loading was refactored.
+   * Correction for bug #25401
 
-   * Correction for bug#25001.
+   * Correction for some nib loading issues.
 
-   * Correction for bug#25111.
+   * Limited support for standalone views.
 
-   * Fixes for nib encoding to use the proper template class instances.
-
-   * Changes to use new headers.
+   * Fixes for various bugs.
 
 1.3 How can I get support for this software?
 ============================================
