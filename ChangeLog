@@ -1,3 +1,9 @@
+2009-06-23 22:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* Version: Update to 1.2.11.
+
 2009-06-01 21:21-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Version: 1.2.10
