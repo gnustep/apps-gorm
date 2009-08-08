@@ -1,3 +1,35 @@
+2009-08-08 03:09-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GNUmakefile: Added reference to new classes.
+	* GormCore/GormBoxEditor.m: Cleanup.
+	* GormCore/GormClassManager.m: Correction for when loading from a
+	nib and there are no custom classes in the nib file.
+	* GormCore/GormDocumentWindow.m: Added awakeFromNib to accept
+	mouse moved events.
+	* GormCore/GormInternalViewEditor.m: Cleanup.
+	* GormCore/GormStandaloneViewEditor.[hm]: Addition of new class.
+	* GormCore/GormViewWithContentViewEditor.[hm]: Removal of
+	handleMouseOnKnob:ofView:withEvent:,
+	handleMouseOnView:withEvent: methods
+	* GormCore/GormViewWithSubviewsEditor.[hm]: Addition of
+	handleMouseOnKnob:ofView:withEvent:,
+	handleMouseOnView:withEvent: methods
+	* Palettes/0Menus/GormNSMenu.m: Cleanup.
+
+2009-07-25 18:47-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GNUmakefile
+	* GormCore/GormBoxEditor.m
+	* GormCore/GormDocumentWindow.m
+	* GormCore/GormInternalViewEditor.m
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormStandaloneViewEditor.[hm]: New classes to handle
+	standalone views.
+	* GormCore/GormViewWithContentViewEditor.[hm]: 
+	* GormCore/GormViewWithContentViewEditor.m
+	* GormCore/GormViewWithSubviewsEditor.h
+	* GormCore/GormViewWithSubviewsEditor.m
+
 2009-06-23 22:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormFilePrefsManager.m

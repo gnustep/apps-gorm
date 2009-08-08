@@ -1503,6 +1503,12 @@
   BOOL result = NO;
   id cls = nil;
 
+  // If there are no classes to add, return gracefully.
+  if([classes count] == 0)
+    {
+      return YES;
+    }
+
   while((cls = [en nextObject]) != nil)
     {
       NSString *className = [cls objectForKey: @"CLASS"];

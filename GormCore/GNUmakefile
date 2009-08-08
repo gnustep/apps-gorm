@@ -84,6 +84,7 @@ GormCore_HEADER_FILES = \
 	GormSoundInspector.h \
 	GormSoundView.h \
 	GormSplitViewEditor.h \
+	GormStandaloneViewEditor.h \
 	GormViewEditor.h \
 	GormViewKnobs.h \
 	GormViewSizeInspector.h \
@@ -142,6 +143,7 @@ GormCore_OBJC_FILES = \
 	GormSoundInspector.m \
 	GormSoundView.m \
 	GormSplitViewEditor.m \
+	GormStandaloneViewEditor.m \
 	GormViewEditor.m \
 	GormViewKnobs.m \
 	GormViewSizeInspector.m \

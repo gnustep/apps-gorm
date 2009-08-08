@@ -37,9 +37,6 @@
 @implementation NSBox (IBObjectAdditions)
 - (NSString*) editorClassName
 {
-  //  if([[self superview] isKindOfClass: [NSClipView class]])
-  //    return @"GormInternalViewEditor";
-
   return @"GormBoxEditor";
 }
 
@@ -55,7 +52,6 @@
 @end
 
 @implementation GormBoxEditor
-
 - (void) setOpened: (BOOL) flag
 {
   [super setOpened: flag];
@@ -70,7 +66,6 @@
   RELEASE(selection);
   [super dealloc];
 }
-
 
 - (BOOL) activate
 {
@@ -87,7 +82,6 @@
   return NO;
 }
 
-
 - (void) deactivate
 {
   if (activated == YES)
@@ -100,14 +94,14 @@
 
 - (void) makeSelectionVisible: (BOOL) value
 {
-  
+  // not implemented here.
 }
 
 - (void) deleteSelection
 {
-  int i;
+  int i = 0;
   int count = [selection count];
-  id temp;
+  id temp = nil;
   
   for (i = count - 1; i >= 0; i--)
     {
@@ -125,35 +119,32 @@
   
 }
 
-
 - (void) mouseDown: (NSEvent *) theEvent
 {
   BOOL onKnob = NO;
 
-
   // if we are on one of our own knob, then this event should be processed
   // by our parent (cause this is a resizing event)
-  {
-    if ([parent respondsToSelector: @selector(selection)] &&
-	[[parent selection] containsObject: _EO])
-      {
-	IBKnobPosition	knob = IBNoneKnobPosition;
-	NSPoint mouseDownPoint = 
-	  [self convertPoint: [theEvent locationInWindow]
-		fromView: nil];
-	knob = GormKnobHitInRect([self bounds], 
-				 mouseDownPoint);
-	if (knob != IBNoneKnobPosition)
-	  onKnob = YES;
-      }
-    if (onKnob == YES)
-      {
-	if (parent)
-	  return [parent mouseDown: theEvent];
-	else
-	  return [self noResponderFor: @selector(mouseDown:)];
-      }
-  }
+  if ([parent respondsToSelector: @selector(selection)] &&
+      [[parent selection] containsObject: _EO])
+    {
+      IBKnobPosition	knob = IBNoneKnobPosition;
+      NSPoint mouseDownPoint = 
+	[self convertPoint: [theEvent locationInWindow]
+	      fromView: nil];
+      knob = GormKnobHitInRect([self bounds], 
+			       mouseDownPoint);
+      if (knob != IBNoneKnobPosition)
+	onKnob = YES;
+    }
+
+  if (onKnob == YES)
+    {
+      if (parent)
+	return [parent mouseDown: theEvent];
+      else
+	return [self noResponderFor: @selector(mouseDown:)];
+    }
 
   if (opened == NO)
     {
@@ -161,22 +152,25 @@
       return;
     }
 
-
   if ([[_EO hitTest: [theEvent locationInWindow]]
 	isDescendantOf: contentViewEditor])
     {
       if ([contentViewEditor isOpened] == NO)
-	[contentViewEditor setOpened: YES];
+	{
+	  [contentViewEditor setOpened: YES];
+	}
       [contentViewEditor mouseDown: theEvent];
     }
   else
     {      
       if ([contentViewEditor isOpened] == YES)
-	[contentViewEditor setOpened: NO];
-      
+	{
+	  [contentViewEditor setOpened: NO];
+	}
+
       if ((NSMouseInRect([_EO convertPoint: [theEvent locationInWindow]
-			     fromView: nil], 
-			[_EO titleRect], NO) == YES)
+			      fromView: nil], 
+			 [_EO titleRect], NO) == YES)
 	  && ([theEvent clickCount] == 2))
 	{
 	  NSTextField *tf = 
@@ -203,7 +197,6 @@
 	  [[NSNotificationCenter defaultCenter] 
 	    postNotificationName: IBSelectionChangedNotification
 	    object: self];
-
 	}
     }  
 }
@@ -226,5 +219,4 @@
       return nil;
     }
 }
-
 @end

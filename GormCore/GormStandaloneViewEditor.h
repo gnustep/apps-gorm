@@ -1,9 +1,9 @@
-/* GormViewWithContentViewEditor.h
+/* GormStandaloneViewEditor.h
  *
- * Copyright (C) 2002 Free Software Foundation, Inc.
+ * Copyright (C) 2009 Free Software Foundation, Inc.
  *
- * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
- * Date:	2002
+ * Author:	Gregory Casamento <greg.casamento@gmail.com>
+ * Date:	2009
  * 
  * This file is part of GNUstep.
  * 
@@ -21,23 +21,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
-#ifndef	INCLUDED_GormViewWithContentViewEditor_h
-#define	INCLUDED_GormViewWithContentViewEditor_h
+#ifndef	INCLUDED_GormStandaloneViewEditor_h
+#define	INCLUDED_GormStandaloneViewEditor_h
 
 #include <GormCore/GormViewWithSubviewsEditor.h>
 
-@class GormInternalViewEditor;
-
-@interface GormViewWithContentViewEditor : GormViewWithSubviewsEditor
-{
-  GormInternalViewEditor *contentViewEditor;
-}
-
-- (void) postDrawForView: (GormViewEditor *) viewEditor;
-- (void) groupSelectionInSplitView;
-- (void) groupSelectionInBox;
-- (void) ungroup;
-- (void) pasteInView: (NSView *)view;
+@interface GormStandaloneViewEditor : GormViewWithSubviewsEditor <IBSelectionOwners>
 @end
 
 #endif

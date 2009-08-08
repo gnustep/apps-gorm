@@ -95,5 +95,10 @@
   dragMgr = nil;
 }
 
+- (void) awakeFromNib
+{
+  [self setAcceptsMouseMovedEvents: YES];
+}
+
 @end
 

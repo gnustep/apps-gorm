@@ -32,7 +32,21 @@
   GormViewWithSubviewsEditor *openedSubeditor;
   NSMutableArray *selection;
   BOOL opened;
+  BOOL _followGuideLine;
 }
+
+/*
+ * Handle mouse click on knob.
+ */
+- (void) handleMouseOnKnob: (IBKnobPosition) knob
+		    ofView: (GormViewEditor *) view
+		 withEvent: (NSEvent *) theEvent;
+
+/*
+ * Handle mouse click on view.
+ */
+- (void) handleMouseOnView: (GormViewEditor *) view
+		 withEvent: (NSEvent *) theEvent;
 
 - (void) setOpenedSubeditor: (GormViewWithSubviewsEditor *) newEditor;
 - (void) openParentEditor;
