@@ -1,10 +1,9 @@
-/* GormNibWrapperLoader
+/* GormNibCustomResource
  *
- *
- * Copyright (C) 2006 Free Software Foundation, Inc.
+ * Copyright (C) 2009 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2006
+ * Date:        2009
  *
  * This file is part of GNUstep.
  * 
@@ -22,19 +21,12 @@
  * along with this program; if not, write to the Free Software
  */
 
-#ifndef GORM_NIBWRAPPERLOADER
-#define GORM_NIBWRAPPERLOADER
+#ifndef GORM_NIBCUSTOMRESOURCE
+#define GORM_NIBCUSTOMRESOURCE
 
-#include <GormCore/GormWrapperLoader.h>
 #include <GNUstepGUI/GSNibLoading.h>
-#include "GormNibCustomResource.h"
 
-@interface GormNibWrapperLoader : GormWrapperLoader
-{
-  NSIBObjectData *container;
-  id nibFilesOwner;
-}
-- (BOOL) isTopLevelObject: (id)obj;
+@interface GormNibNibCustomResource : NSCustomResource
 @end
 
 #endif

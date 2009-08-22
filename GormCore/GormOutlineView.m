@@ -92,13 +92,13 @@ static NSColor *darkGreyBlueColor = nil;
       // initialize images
       [self setVersion: current_version];
       nc = [NSNotificationCenter defaultCenter];
-      collapsed    = [NSImage imageNamed: @"common_outlineCollapsed.tiff"];
-      expanded     = [NSImage imageNamed: @"common_outlineExpanded.tiff"];
-      unexpandable = [NSImage imageNamed: @"common_outlineUnexpandable.tiff"];
-      action       = [NSImage imageNamed: @"GormAction.tiff"];
-      outlet       = [NSImage imageNamed: @"GormOutlet.tiff"];
-      actionSelected = [NSImage imageNamed: @"GormActionSelected.tiff"];
-      outletSelected = [NSImage imageNamed: @"GormOutletSelected.tiff"];
+      collapsed    = [NSImage imageNamed: @"common_outlineCollapsed"];
+      expanded     = [NSImage imageNamed: @"common_outlineExpanded"];
+      unexpandable = [NSImage imageNamed: @"common_outlineUnexpandable"];
+      action       = [NSImage imageNamed: @"GormAction"];
+      outlet       = [NSImage imageNamed: @"GormOutlet"];
+      actionSelected = [NSImage imageNamed: @"GormActionSelected"];
+      outletSelected = [NSImage imageNamed: @"GormOutletSelected"];
 
       // initialize colors
       salmonColor = 

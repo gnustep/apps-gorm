@@ -1,3 +1,12 @@
+2009-08-22 18:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormOutlineView.m: Remove .tiff from the end of the images.
+	This is interfering with theming in gorm since it's not pulling the
+	right images in this case.
+	* Plugins/Nib/GormNibCustomResource.[hm]: Handle custom resources
+	in gorm, currently just images/sounds.
+	* Plugins/Nib/GormNibWrapperLoader.h: Include nib resource header
+
 2009-08-10 10:02-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDefines.h: Move defines for certain things here
