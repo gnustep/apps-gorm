@@ -1,3 +1,11 @@
+2009-09-06 23:55-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* English.lproj/Gorm.gorm
+	* GormCore/GormGenericEditor.h
+	* GormCore/GormViewWithContentViewEditor.h
+	* GormCore/GormViewWithContentViewEditor.m
+	* Gorm.m: Beginning of implementation of groupSelectionInView:
+
 2009-08-22 18:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormOutlineView.m: Remove .tiff from the end of the images.

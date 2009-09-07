@@ -447,6 +447,58 @@ int _sortViews(id view1, id view2, void *context)
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
 
+- (void) groupSelectionInView
+{
+  NSEnumerator *enumerator = nil;
+  GormViewEditor *subview = nil;
+  NSView *view = nil;
+  NSRect rect = NSZeroRect;
+  GormViewEditor *editor = nil;
+  NSView *superview = nil;
+
+  if ([selection count] < 1)
+    {
+      return;
+    }
+  
+  enumerator = [selection objectEnumerator];
+  
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      superview = [subview superview];
+      rect = NSUnionRect(rect, [subview frame]);
+      [subview deactivate];
+    }
+
+  view = [[NSView alloc] initWithFrame: NSZeroRect];
+  [view setFrame: rect];
+  
+  [superview addSubview: view];
+  [document attachObject: view
+	    toParent: _editedObject];
+
+  enumerator = [selection objectEnumerator];
+
+  while ((subview = [enumerator nextObject]) != nil)
+    {
+      NSPoint frameOrigin;
+      [view addSubview: [subview editedObject]];
+      frameOrigin = [[subview editedObject] frame].origin;
+      frameOrigin.x -= rect.origin.x;
+      frameOrigin.y -= rect.origin.y;
+      [[subview editedObject] setFrameOrigin: frameOrigin];
+      [document attachObject: [subview editedObject]
+		toParent: view];
+      [subview close];
+    }
+
+  editor = (GormViewEditor *)[document editorForObject: view
+				       inEditor: self
+				       create: YES];
+  
+  [self selectObjects: [NSArray arrayWithObject: editor]];
+}
+
 - (void) groupSelectionInScrollView
 {
   NSEnumerator *enumerator = nil;

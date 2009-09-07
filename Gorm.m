@@ -716,6 +716,13 @@
   [(GormGenericEditor *)selectionOwner groupSelectionInBox];
 }
 
+- (void) groupSelectionInView: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInView)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInView];
+}
+
 - (void) groupSelectionInScrollView: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)

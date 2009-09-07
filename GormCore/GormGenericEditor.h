@@ -85,6 +85,7 @@
 - (void) groupSelectionInScrollView;
 - (void) groupSelectionInSplitView;
 - (void) groupSelectionInBox;
+- (void) groupSelectionInView;
 - (void) ungroup;
 - (void) setEditor: (id)anEditor forDocument: (id<IBDocuments>)doc;
 - (id) changeSelection: (id)sender;

@@ -36,6 +36,7 @@
 - (void) postDrawForView: (GormViewEditor *) viewEditor;
 - (void) groupSelectionInSplitView;
 - (void) groupSelectionInBox;
+- (void) groupSelectionInView;
 - (void) ungroup;
 - (void) pasteInView: (NSView *)view;
 @end
