@@ -306,7 +306,7 @@
 
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      return [parent draggingEntered: sender];
+      return [super draggingEntered: sender];
     }
 
   if (NSMouseInRect(loc, [_editedObject bounds], NO) == NO)
@@ -342,7 +342,7 @@
   
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [parent draggingExited: sender];
+      [super draggingExited: sender];
       return;
     }
 
@@ -379,7 +379,7 @@
 
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      return [parent draggingUpdated: sender];
+      return [super draggingUpdated: sender];
     }
 
   rect.origin.x += 3;
@@ -430,7 +430,7 @@
   else if ([types containsObject: GormLinkPboardType] == YES)
     {
       dragType = GormLinkPboardType;
-      return [parent prepareForDragOperation: sender];
+      return [super prepareForDragOperation: sender];
     }
   else
     {
