@@ -366,7 +366,7 @@ NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect)
     {
       void *iterator = 0;
 
-      while ((methods = class_nextMethodList(class, &iterator)))
+      while ((methods = NULL)) //class_nextMethodList(class, &iterator)))
 	{
 	  int i;
 

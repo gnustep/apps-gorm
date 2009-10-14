@@ -1,3 +1,10 @@
+2009-10-13 23:52-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormFunctions.m: Temporary change to fix compilation
+	problem.
+	* GormCore/GormViewEditor.m: Added code to show id of the object 
+	as a tooltip.
+
 2009-09-22 16:59-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormViewWithSubviewsEditor.m: Call super instead of

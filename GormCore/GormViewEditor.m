@@ -154,6 +154,7 @@ static BOOL currently_displaying = NO;
   if (activated == NO)
     {
       NSView *superview;
+      NSString *name = [document nameForObject: _editedObject];
 
       // if the view window is not nil, it's a standalone view...
       if(viewWindow != nil)
@@ -185,7 +186,7 @@ static BOOL currently_displaying = NO;
 	}
       
       [self addSubview: _editedObject];
-
+      [self setToolTip: name];
       
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
