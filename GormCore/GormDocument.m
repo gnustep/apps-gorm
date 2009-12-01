@@ -41,6 +41,7 @@
 #include <AppKit/NSSound.h>
 #include <AppKit/NSNibConnector.h>
 #include <AppKit/NSNibLoading.h>
+#include <AppKit/NSScreen.h>
 #include <GNUstepGUI/GSGormLoading.h>
 #include "NSView+GormExtensions.h"
 #include "GormSound.h"
@@ -440,10 +441,10 @@ static NSImage  *fileImage = nil;
     {
       NSRect frame = [window frame];
       NSPoint origin = frame.origin;
-      NSRect menuFrame = [[mainMenu window] frame];
+      NSRect screen = [[NSScreen mainScreen] frame];
       
       // account for the height of the menu we're loading.
-      origin.y += (frame.size.height + menuFrame.size.height + 150);
+      origin.y = (screen.size.height - 100);
       
       // place the main menu appropriately...
       [[mainMenu window] setFrameTopLeftPoint: origin];
@@ -723,8 +724,9 @@ static NSImage  *fileImage = nil;
 	{
 	  NSRect frame = [[self window] frame];
 	  NSPoint origin = frame.origin;
+	  NSRect screen = [[NSScreen mainScreen] frame];
 
-	  origin.y += (frame.size.height + 150);
+	  origin.y = (screen.size.height - 100);
 
 	  // Place the main menu appropriately...
 	  [[menu window] setFrameTopLeftPoint: origin];

@@ -1,3 +1,8 @@
+2009-12-01 German Arias <german@xelalug.org>
+
+	* GormCore/GormDocument.m: Changes to prevent menus placed off screen
+	on screens with low resolutions
+
 2009-11-11 09:27-WIT Hans Baier <hansfbaier@googlemail.com>
 
 	* English.lproj/Gorm.gorm: remove duplicate keyboard shortcut #p
