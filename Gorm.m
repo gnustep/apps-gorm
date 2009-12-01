@@ -175,6 +175,11 @@
     }
 }
 
+- (BOOL)applicationShouldOpenUntitledFile: (NSApplication *)sender
+{
+  return NO;
+}
+
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
