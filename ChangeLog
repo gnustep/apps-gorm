@@ -1,3 +1,14 @@
+2009-12-27 01:17-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Gorm.m
+	* Plugins/Nib/GNUmakefile: Add new class to makefile.
+	* Plugins/Nib/GormNibWrapperLoader.m: Modified to use 
+	GormWindowTemplate.
+	* Plugins/Nib/GormWindowTemplate.[hm]: Replace flags
+	used only at runtime when the template is loaded. This is
+	so, for example, the released when closed flag will not cause
+	issues when editing the window.
+
 2009-12-01 Riccardo Mottola <rmottola@users.sf.net>
 
 	* Gorm.m: do not open untitled document on application start

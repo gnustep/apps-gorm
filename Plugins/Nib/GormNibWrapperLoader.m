@@ -1,7 +1,5 @@
 /* GormNibWrapperLoader
  *
- * This class is a subclass of the NSDocumentController
- *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
@@ -35,17 +33,7 @@
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormCustomView.h>
 #include "GormNibWrapperLoader.h"
-
-@interface NSWindowTemplate (Private)
-- (void) setBaseWindowClass: (Class) clz;
-@end 
-
-@implementation NSWindowTemplate (Private)
-- (void) setBaseWindowClass: (Class) clz
-{
-  _baseWindowClass = clz;
-}
-@end
+#include "GormWindowTemplate.h"
 
 @implementation GormNibWrapperLoader
 + (NSString *) fileType
@@ -148,6 +136,8 @@
 		 forClassName: @"NSCustomObject"];
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
+	      [u setClass: [GormWindowTemplate class] 
+		 forClassName: @"NSWindowTemplate"];
 	      
 	      /*
 	       * Substitute any classes specified by the palettes...
