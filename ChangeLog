@@ -1,3 +1,10 @@
+2009-12-30 23:40-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Plugins/Nib/GormNibWrapperLoader.m: Remove reference to 
+	GSClassSwapper and replace it with NSClassSwapper.
+	* Plugins/Nib/GormWindowTemplate.m: Override the
+	baseWindowClass method to return GormNSWindow as appropriate.
+
 2009-12-27 01:17-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Gorm.m

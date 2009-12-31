@@ -24,6 +24,8 @@
 
 #include "GormWindowTemplate.h"
 
+@class GormNSWindow;
+
 @interface NSWindow (Private)
 - (void) _setReleasedWhenClosed: (BOOL)flags;
 @end
@@ -45,6 +47,11 @@
   [object _setReleasedWhenClosed: flag];
 
   return object;
+}
+
+- (Class) baseWindowClass
+{
+  return [GormNSWindow class];
 }
 @end
 

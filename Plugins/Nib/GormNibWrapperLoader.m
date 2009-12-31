@@ -35,6 +35,8 @@
 #include "GormNibWrapperLoader.h"
 #include "GormWindowTemplate.h"
 
+@class GormNSWindow;
+
 @implementation GormNibWrapperLoader
 + (NSString *) fileType
 {
@@ -126,6 +128,7 @@
 	       * handling class replacement so that standard objects understood
 	       * by the gui library are converted to their Gorm internal equivalents.
 	       */
+
 	      u = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
 	      [u setDelegate: self];
 	      
@@ -138,6 +141,8 @@
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
 		 forClassName: @"NSWindowTemplate"];
+	      [u setClass: [GormNSWindow class] 
+		 forClassName: @"NSWindow"];
 	      
 	      /*
 	       * Substitute any classes specified by the palettes...
@@ -316,6 +321,7 @@
 		  result = YES;
 		}
 	    }
+	  [NSClassSwapper setIsInInterfaceBuilder: NO];      
 	}
     }
   NS_HANDLER
