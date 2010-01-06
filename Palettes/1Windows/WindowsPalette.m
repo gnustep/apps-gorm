@@ -29,9 +29,9 @@
 
 #include <GormCore/GormDocument.h>
 #include <GormCore/NSColorWell+GormExtensions.h>
+#include <GormCore/GormNSPanel.h>
+#include <GormCore/GormNSWindow.h>
 
-#include "GormNSPanel.h"
-#include "GormNSWindow.h"
 #include "GormWindowSizeInspector.h"
 #include "WindowsPalette.h"
 

@@ -1,3 +1,18 @@
+2010-01-06 01:06-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GNUmakefile: Add files here.
+	* GormCore/GormNSPanel.[hm]
+	* GormCore/GormNSWindow.[hm]: Move GormNSPanel.[hm] and 
+	GormWindow.[hm] here.
+	* Palettes/1Windows/GNUmakefile: Remove files from being compiled
+	* Palettes/1Windows/GormNSPanel.h
+	* Palettes/1Windows/GormNSPanel.m
+	* Palettes/1Windows/GormNSWindow.h
+	* Palettes/1Windows/GormNSWindow.m: Remove these from here
+	* Palettes/1Windows/GormWindowAttributesInspector.m
+	* Palettes/1Windows/WindowsPalette.m: Change to include
+	GormNSPanel/GormNSWindow from the correct area.
+
 2009-12-30 23:40-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Plugins/Nib/GormNibWrapperLoader.m: Remove reference to 

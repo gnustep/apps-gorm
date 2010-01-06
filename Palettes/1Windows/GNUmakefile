@@ -29,8 +29,6 @@ PALETTE_NAME = 1Windows
 
 1Windows_OBJC_FILES = \
 	WindowsPalette.m \
-	GormNSWindow.m\
-	GormNSPanel.m\
 	GormDrawerAttributesInspector.m \
 	GormWindowAttributesInspector.m\
 	GormWindowSizeInspector.m \

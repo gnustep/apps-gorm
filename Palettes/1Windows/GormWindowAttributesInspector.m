@@ -33,7 +33,8 @@
 */
 
 #include "GormWindowAttributesInspector.h"
-#include "GormNSWindow.h"
+
+#include <GormCore/GormNSWindow.h>
 #include <GormCore/GormDocument.h>
 #include <GormCore/NSColorWell+GormExtensions.h>
 #include <AppKit/NSNibLoading.h>
