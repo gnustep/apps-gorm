@@ -29,11 +29,15 @@
 #include <AppKit/NSPasteboard.h>
 
 @implementation GormDocumentWindow
+- (BOOL) canBecomeMainWindow
+{
+  return NO;
+}
+
 - (void) setDocument:(id)document
 {
   _document = document;
 }
-
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
 {
