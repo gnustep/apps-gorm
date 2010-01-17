@@ -1,5 +1,9 @@
 2010-01-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* Palettes/2Controls/GormButtonAttributesInspector.m(-ok:, -revert:):
+	Fix the NSButton inspector to use \r as key equivalent for the
+	Return key.
+
 	* GormCore/GormViewWithContentViewEditor.m (-ungroup):
 	* GormCore/GormSplitViewEditor.m (-ungroup, -destroyAndListSubviews):
 	Remove the former container view from its parent after an ungroup

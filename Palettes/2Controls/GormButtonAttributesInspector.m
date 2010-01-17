@@ -160,7 +160,7 @@ NSString *rtString = nil;
 	  break;
 	case 1: // return
 	  {
-	    [object setKeyEquivalent: @"\n"];
+	    [object setKeyEquivalent: @"\r"];
 	  }
 	  break;
 	case 2: // delete 
@@ -324,7 +324,7 @@ NSString *rtString = nil;
       [iconMatrix selectCellWithTag: [object imagePosition]];
       [[keyForm cellAtIndex: 0] setStringValue: key];
       
-      if([key isEqualToString: @"\n"])
+      if([key isEqualToString: @"\r"])
 	{
 	  [keyEquiv selectItemAtIndex: 1];
 	}
