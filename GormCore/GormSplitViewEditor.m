@@ -349,6 +349,7 @@
 					inEditor: self
 				    create: YES]];
 	}
+      [[contentView editedObject] removeFromSuperview];
       [_EO adjustSubviews];
       [self setNeedsDisplay: YES];
     }
@@ -379,6 +380,7 @@
     }
   
   [self close];
+  [document detachObject: self];
   return newSelection;
 }
 @end

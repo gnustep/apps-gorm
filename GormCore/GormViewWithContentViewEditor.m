@@ -649,6 +649,7 @@ int _sortViews(id view1, id view2, void *context)
 
       [contentView close];
       [self selectObjects: newSelection];
+      [document detachObject: eo];
       [eo removeFromSuperview];
     }
 }
