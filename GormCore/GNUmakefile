@@ -80,6 +80,7 @@ GormCore_HEADER_FILES = \
 	GormResourceEditor.h \
 	GormResourceManager.h \
 	GormScrollViewAttributesInspector.h \
+	GormServer.h \
 	GormSetNameController.h \
 	GormSound.h \
 	GormSoundEditor.h \

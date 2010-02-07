@@ -1,3 +1,15 @@
+2010-02-07 05:43-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GNUmakefile: Added GormServer.h to the headers.
+	* GormCore/GormCustomClassInspector.m: Change tooltip when
+	a new custom class is selected from the list.
+	* GormCore/GormPalettesManager.m: Set autoresizing on drag view.
+	* GormCore/GormServer.h: Protocol for GormServer.
+	* GormCore/GormViewEditor.m: Add the class name to the 
+	tooltip.
+	* Gorm.m: Vend the object so that other apps can talk 
+	to Gorm via DO.
+
 2010-01-20  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
 	* Palettes/2Controls/ControlsPalette.gorm:

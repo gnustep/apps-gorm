@@ -32,6 +32,7 @@
 #include "GormClassManager.h"
 #include "GormDocument.h"
 #include "GormPrivate.h"
+#include "GormViewEditor.h"
 
 @implementation GormCustomClassInspector
 + (void) initialize
@@ -312,6 +313,8 @@
   NSString *stringValue = [NSString stringWithString: [cell stringValue]];
   NSString *nameForObject = [_document nameForObject: [self object]];
   NSString *classForObject = [[self object] className]; 
+  GormViewEditor *gve = (GormViewEditor *)[_document editorForObject: [self object]
+						     create: NO];
 
   NSDebugLog(@"selected = %@, class = %@",stringValue,nameForObject);
 
@@ -328,6 +331,11 @@
 	{
 	  [_classManager removeCustomClassForName: nameForObject];
 	}
+
+      [gve setToolTip: [NSString stringWithFormat: @"%@,%@",
+				 nameForObject, 
+				 stringValue]];
+      
       [self _replaceWithCellClassForClassName: stringValue];
     }
   else

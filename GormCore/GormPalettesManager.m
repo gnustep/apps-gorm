@@ -84,6 +84,9 @@ static NSImage	*dragImage = nil;
 	IBCellPboardType, IBMenuPboardType, IBMenuCellPboardType,
 	IBObjectPboardType, IBViewPboardType, IBWindowPboardType,
         IBFormatterPboardType,nil]];
+
+      [self setAutoresizingMask: 
+	      NSViewMinXMargin|NSViewMinYMargin|NSViewMaxXMargin|NSViewMaxYMargin];
     }
   return self;
 }

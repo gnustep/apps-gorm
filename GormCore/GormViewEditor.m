@@ -33,6 +33,8 @@
 #include "GormFunctions.h"
 #include "GormViewWindow.h"
 #include "GormViewKnobs.h"
+#include "GormClassManager.h"
+#include "GormDocument.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -155,6 +157,7 @@ static BOOL currently_displaying = NO;
     {
       NSView *superview;
       NSString *name = [document nameForObject: _editedObject];
+      GormClassManager *cm = [(GormDocument *)document classManager];
 
       // if the view window is not nil, it's a standalone view...
       if(viewWindow != nil)
@@ -186,7 +189,9 @@ static BOOL currently_displaying = NO;
 	}
       
       [self addSubview: _editedObject];
-      [self setToolTip: name];
+      [self setToolTip: [NSString stringWithFormat: @"%@,%@",
+				  name, 
+				  [cm classNameForObject: _editedObject]]];
       
       [[NSNotificationCenter defaultCenter]
 	addObserver: self

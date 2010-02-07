@@ -31,10 +31,12 @@
 #include <GormCore/GormSetNameController.h>
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormPluginManager.h>
+#include <GormCore/GormServer.h>
+
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <GormPrefs/GormPrefController.h>
 
-@interface Gorm : NSApplication <IB, Gorm>
+@interface Gorm : NSApplication <IB, Gorm, GormServer>
 {
   GormPrefController    *preferencesController;
   GormClassManager	*classManager;
@@ -86,6 +88,7 @@
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
+      NSConnection              *conn = [NSConnection defaultConnection];
 
       path = [bundle pathForImageResource: @"GormLinkImage"];
       linkImage = [[NSImage alloc] initWithContentsOfFile: path];
@@ -146,6 +149,15 @@
        * set the delegate.
        */
       [self setDelegate: self];
+
+      /*
+       * Start the server
+       */
+      [conn setRootObject: self];
+      if([conn registerName: @"GormServer"] == NO)
+	{
+	  NSLog(@"Could not register GormServer");
+	}
     }
   return self;
 }
@@ -161,6 +173,21 @@
   RELEASE(documents);
   RELEASE(classManager);
   [super dealloc];
+}
+
+- (void) addClass: (NSDictionary *) dict
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  GormClassManager *cm = [doc classManager];
+  NSArray *outlets = [dict objectForKey: @"outlets"];
+  NSArray *actions = [dict objectForKey: @"actions"];
+  NSString *className = [dict objectForKey: @"className"];
+  NSString *superClassName = [dict objectForKey: @"superClassName"];
+  
+  [cm addClassNamed: className
+      withSuperClassNamed: superClassName
+      withActions: actions
+      withOutlets: outlets];
 }
 
 - (void) stop: (id)sender
