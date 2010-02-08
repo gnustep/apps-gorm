@@ -175,21 +175,6 @@
   [super dealloc];
 }
 
-- (void) addClass: (NSDictionary *) dict
-{
-  GormDocument *doc = (GormDocument *)[self activeDocument];
-  GormClassManager *cm = [doc classManager];
-  NSArray *outlets = [dict objectForKey: @"outlets"];
-  NSArray *actions = [dict objectForKey: @"actions"];
-  NSString *className = [dict objectForKey: @"className"];
-  NSString *superClassName = [dict objectForKey: @"superClassName"];
-  
-  [cm addClassNamed: className
-      withSuperClassNamed: superClassName
-      withActions: actions
-      withOutlets: outlets];
-}
-
 - (void) stop: (id)sender
 {
   if(isTesting == NO)
@@ -1313,5 +1298,37 @@
 - (void) print: (id) sender
 {
   [[self keyWindow] print: sender];
+}
+
+// Method to support external apps adding and deleting 
+// classes from the current document...
+- (void) addClass: (NSDictionary *) dict
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  GormClassManager *cm = [doc classManager];
+  NSArray *outlets = [dict objectForKey: @"outlets"];
+  NSArray *actions = [dict objectForKey: @"actions"];
+  NSString *className = [dict objectForKey: @"className"];
+  NSString *superClassName = [dict objectForKey: @"superClassName"];
+  
+  // If the class is known, delete it before proceeding.
+  if([cm isKnownClass: className])
+    {
+      [cm removeClassNamed: className];
+    }
+
+  // Add the class to the class manager.
+  [cm addClassNamed: className
+      withSuperClassNamed: superClassName
+      withActions: actions
+      withOutlets: outlets];
+}
+
+- (void) deleteClass: (NSString *) className
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  GormClassManager *cm = [doc classManager];
+
+  [cm removeClassNamed: className];  
 }
 @end

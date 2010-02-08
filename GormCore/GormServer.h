@@ -24,6 +24,7 @@
 
 @protocol GormServer
 - (void) addClass: (NSDictionary *)dict;
+- (void) deleteClass: (NSString *)className;
 @end
 
 #endif

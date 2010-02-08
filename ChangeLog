@@ -1,3 +1,8 @@
+2010-02-08 06:46-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormServer.h: Added deleteClass: method
+	* Gorm.m: Added implementation for deleteClass:
+
 2010-02-07 05:43-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GNUmakefile: Added GormServer.h to the headers.
