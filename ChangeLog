@@ -1,3 +1,7 @@
+2010-02-08 07:13-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Gorm.m: Separate out the server methods into a category.
+
 2010-02-08 06:46-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormServer.h: Added deleteClass: method

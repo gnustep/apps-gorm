@@ -36,7 +36,7 @@
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <GormPrefs/GormPrefController.h>
 
-@interface Gorm : NSApplication <IB, Gorm, GormServer>
+@interface Gorm : NSApplication <IB, Gorm>
 {
   GormPrefController    *preferencesController;
   GormClassManager	*classManager;
@@ -68,6 +68,10 @@
 
 // handle notifications the object recieves.
 - (void) handleNotification: (NSNotification*)aNotification;
+@end
+
+// Handle server protocol methods...
+@interface Gorm (GormServer) <GormServer>
 @end
 
 @implementation Gorm
@@ -1299,8 +1303,10 @@
 {
   [[self keyWindow] print: sender];
 }
+@end
 
-// Method to support external apps adding and deleting 
+@implementation Gorm (GormServer)
+// Methods to support external apps adding and deleting 
 // classes from the current document...
 - (void) addClass: (NSDictionary *) dict
 {
