@@ -1,3 +1,8 @@
+2010-02-12 20:01-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormFunctions.m: Correct the function which enumerates
+	over the list of methods in a class when adding from a palette.
+
 2010-02-08 07:13-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Gorm.m: Separate out the server methods into a category.
