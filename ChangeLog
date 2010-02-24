@@ -1,3 +1,9 @@
+2010-02-24 17:55-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/ControlsPalette.tiff
+	* Palettes/4Data/DataPalette.tiff: Remove background and replace
+	with alpha.
+
 2010-02-12 20:01-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormFunctions.m: Correct the function which enumerates
