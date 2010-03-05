@@ -1,3 +1,7 @@
+2010-03-05  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* GormCore/GormFunctions.m: update for latest base library.
+
 2010-02-24 17:55-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/2Controls/ControlsPalette.tiff

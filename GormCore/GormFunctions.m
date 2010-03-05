@@ -349,59 +349,11 @@ NSString *formatOutlet(NSString *outlet)
  */
 NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect)
 {
-  NSMutableSet	*set;
-  NSArray	*array;
-  GSMethodList	 methods;
-
   if (class == nil)
     {
       return nil;
     }
-  /*
-   * Add names to a set so methods declared in superclasses
-   * and then overridden do not appear more than once.
-   */
-  set = [[NSMutableSet alloc] initWithCapacity: 32];
-  while (class != nil)
-    {
-      void *iterator = 0;
-
-      while ((methods = class_nextMethodList(class, &iterator)))
-	{
-	  int i;
-
-	  for (i = 0; i < methods->method_count; i++)
-	    {
-	      GSMethod method = &methods->method_list[i];
-
-	      if (method->method_name != 0)
-		{
-		  NSString	*name;
-                  const char *cName;
-
-                  cName = GSNameFromSelector(method->method_name);
-                  name = [[NSString alloc] initWithUTF8String: cName];
-		  [set addObject: name];
-		  RELEASE(name);
-		}
-	    }
-	}
-      
-      // if we should collect all of the superclass methods, then iterate
-      // up the chain.
-      if(collect)
-	{
-	  class = class->super_class;
-	}
-      else
-	{
-	  class = nil;
-	}
-    }
-
-  array = [set allObjects];
-  RELEASE(set);
-  return array;
+  return GSObjCMethodNames((id)&class, collect);
 }
 
 /**
@@ -412,40 +364,11 @@ NSArray *_GSObjCMethodNamesForClass(Class class, BOOL collect)
  */
 NSArray *_GSObjCVariableNames(Class class, BOOL collect)
 {
-  NSMutableArray	*array;
-  struct objc_ivar_list	*ivars;
-
-  array = [NSMutableArray arrayWithCapacity: 16];
-  while (class != nil)
+  if (class == nil)
     {
-      ivars = class->ivars;
-      if (ivars != 0)
-	{
-	  int		i;
-
-	  for (i = 0; i < ivars->ivar_count; i++)
-	    {
-	      NSString	*name;
-
-	      name = [[NSString alloc] initWithUTF8String:
-		ivars->ivar_list[i].ivar_name];
-	      [array addObject: name];
-	      RELEASE(name);
-	    }
-	}
-
-      // if we should collect all of the superclass methods, then iterate
-      // up the chain.
-      if(collect)
-	{
-	  class = class->super_class;
-	}
-      else
-	{
-	  class = nil;
-	}
+      return nil;
     }
-  return array;
+  return GSObjCVariableNames((id)&class, collect);
 }
 
 
