@@ -502,7 +502,7 @@ This method is called on any custom object which is unarchived from a nib/gorm f
 
 If you have ProjectCenter, you need to open it and create an ``Application'' project.   Create it with the name ``FirstApp''.   From there you can open the MainMenu.gorm by clicking on interfaces and selecting MainMenu.gorm.   If Gorm.app is properly installed, you Gorm should start up.
 
-If you don't have ProjectCenter, you can create the Gorm file by hand.    First you need to start Gorm.  You can either do this by doing @samp{gopen Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer.
+If you don't have ProjectCenter, you can create the Gorm file by hand.    First you need to start Gorm.  You can either do this by doing @samp{gopen -a Gorm.app} from a command line prompt, or you can invoke it from the Dock or from the workspace's file viewer.
  
 You then need to select the @samp{Document} menu, and then @samp{New Application}.  This should produce a new document window, with a menu and an empty window.  This should be the same as with the ProjectCenter gorm file since this is the basic starting point for an application.
 
