@@ -30,7 +30,6 @@
 #include "GormPalettesManager.h"
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBPalette.h>
-#include <GNUstepBase/GSCategories.h>
 #include <Foundation/NSValue.h>
 #include <Foundation/NSException.h>
 

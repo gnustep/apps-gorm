@@ -1,3 +1,8 @@
+2010-05-02 01:11-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	Applied patch submitted by qmathe.
+	* GormCore/GormClassManager.m: Remove include for GSCategories.h
+
 2010-03-07  Richard Frith-Macdonald <rfm@gnu.org>
 
 	* Documentation/gorm.texi: Fixed opening file to say 'gopen -a Gorm.app'
