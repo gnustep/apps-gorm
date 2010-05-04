@@ -573,12 +573,13 @@ objectValueForTableColumn: (NSTableColumn *)tc
   NSString *name = [self _currentClass];
   NSString *newName = [sender stringValue];
   GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
-  BOOL removed = NO;
+  BOOL flag = NO;
 
-  // check to see if the user wants to do this and remove the connections.
-  removed = [document removeConnectionsForClassNamed: name]; 
+  // check to see if the user wants to do this and rename the connections.
+  flag = [document renameConnectionsForClassNamed: name
+		   toName: newName]; 
 
-  if(removed)
+  if(flag)
     {
       [document collapseClass: name];
       [classManager renameClassNamed: name

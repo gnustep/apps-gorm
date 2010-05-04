@@ -1,3 +1,9 @@
+2010-05-04 19:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassInspector.m: Allow a class' name to be changed
+	in the GormClassInspector without it disconnecting all connections
+	for that class.
+
 2010-05-02 01:11-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	Applied patch submitted by qmathe.
