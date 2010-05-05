@@ -1,3 +1,10 @@
+2010-05-05 12:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassInspector.m: 
+	[GormClassInspector selectClass:] Refresh connections so that
+	when the class is reparented only those connections which aren't
+	present anymore get broken.
+
 2010-05-04 19:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassInspector.m: Allow a class' name to be changed

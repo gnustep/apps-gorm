@@ -531,25 +531,40 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	{
 	  NSString *newParent = [list objectAtIndex: row];
 	  NSString *name = [self _currentClass];
-	  BOOL removed = NO;
 	  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
 	  
 	  // if it's a custom class, let it go, if not do nothing.
 	  if(document != nil)
 	    {
 	      if([classManager isCustomClass: name])
-		{     
+		{
+		  NSString *title = [NSString stringWithFormat: _(@"Modifying/Reparenting Class")];
+		  NSString *msg = [NSString stringWithFormat: _(@"This action may break existing connections "
+								@"to instances of class '%@'"
+								@"and it's subclasses.  Continue?"), name];
+		  int retval = -1;
+		  BOOL removed = NO;
+
 		  [super ok: sender];
 		  
-		  // check to see if the user wants to do this and remove the connections.
-		  removed = [document removeConnectionsForClassNamed: name]; 
-		  
+		  // ask the user if he/she wants to continue...
+		  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+		  if (retval == NSAlertDefaultReturn)
+		    {
+		      removed = YES;
+		    }
+		  else
+		    {
+		      removed = NO;
+		    }
+
 		  // if removed, move the class and notify... 
 		  if(removed)
 		    {
 		      NSString *oldSuper = [classManager superClassNameForClassNamed: name];
 		      
 		      [classManager setSuperClassNamed: newParent forClassNamed: name];
+		      [document refreshConnectionsForClassNamed: name];
 		      [nc postNotificationName: IBInspectorDidModifyObjectNotification
 			  object: classManager];
 		      [document collapseClass: oldSuper];
