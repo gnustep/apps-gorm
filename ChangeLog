@@ -1,3 +1,10 @@
+2010-05-05 20:55-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassManager.m: Correct bug#29795: Unable to change
+	superclass of NSOwner...  This bug was due to the owner class name
+	being released and a subsequent set failing on NSOwner in the 
+	parseHeader: method.  
+
 2010-05-05 12:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassInspector.m: 

@@ -1920,6 +1920,9 @@
 			  GormFilesOwner *owner = [document objectForName: @"NSOwner"];
 			  NSString *ownerClassName = [owner className];
 
+			  // Retain this, in case we're dealing with the NSOwner...
+			  RETAIN(ownerClassName);
+
 			  // delete the class..
 			  [self removeClassNamed: className];
 			  
@@ -1929,11 +1932,17 @@
 				withActions: actions
 				withOutlets: outlets];
 			  
+			  // Set the owner back to the class name, if needed.
+			  if([className isEqualToString: ownerClassName])
+			    {
+			      [owner setClassName: className];
+			    }
+			  
 			  // refresh the connections.
 			  [document refreshConnectionsForClassNamed: className];
-
-			  // reset the class name.
-			  [owner setClassName: ownerClassName];
+			  
+			  // Release the owner classname...
+			  RELEASE(ownerClassName);
 			}
 		    }
 		  else
