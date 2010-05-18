@@ -1,3 +1,11 @@
+2010-05-18 19:42-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Documentation/Gorm.texi
+	* Documentation/news.texi
+	* Documentation/readme.texi
+	* GormCore/GormDocument.m: Correction for bug #28643.
+	* Version
+
 2010-05-05 20:55-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassManager.m: Correct bug#29795: Unable to change

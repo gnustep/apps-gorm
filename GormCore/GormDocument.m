@@ -564,6 +564,9 @@ static NSImage  *fileImage = nil;
   NSArray *old;
   BOOL newObject = NO;
 
+  // Modify the document whenever something is added...
+  [self touch];
+
   /*
    * Create a connector that links this object to its parent.
    * A nil parent is the root of the hierarchy so we use a dummy object for it.
@@ -1391,6 +1394,7 @@ static NSImage  *fileImage = nil;
 
       [self setSelectionFromEditor: nil]; // clear the selection.
       RELEASE(name); // retained at beginning of method...
+      [self touch]; // set the document as modified
     }
 }
 

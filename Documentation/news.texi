@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.8}
+
+Requires: gnustep-base-1.20.0, gnustep-gui-0.18.0.   
+Reason: Parts of the runtime which Gorm used were refactored and it was necessary to make corresponding changes in Gorm to use it.
+
+@itemize @bullet
+@item Correction for bug #27295, 
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.10}
 
 @itemize @bullet
@@ -12,10 +25,6 @@
 @item Limited support for standalone views.
 @item Fixes for various bugs.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.8}
 
