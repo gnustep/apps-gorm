@@ -6,6 +6,7 @@
 
 	* ChangeLog
 	* GormCore/GormNSWindow.m
+	* GormCore/GormNSPanel.m
 
 2010-05-18 20:50-EDT Gregory John Casamento <greg.casamento@gmail.com>
 

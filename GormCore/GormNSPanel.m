@@ -67,14 +67,12 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		 styleMask: (unsigned int)aStyle
 		   backing: (NSBackingStoreType)bufferingType
 		     defer: (BOOL)flag
-		    screen: (NSScreen*)aScreen
 {
   _gormStyleMask = aStyle;
   self = [super initWithContentRect: contentRect
-		  styleMask: defaultStyleMask
-		  backing: bufferingType
-		  defer: flag
-		  screen: aScreen];
+		styleMask: defaultStyleMask
+		backing: bufferingType
+		defer: flag];
   if(self != nil)
     {
       // Don't release when the window is closed, a window being edited may
