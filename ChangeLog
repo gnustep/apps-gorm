@@ -1,3 +1,12 @@
+2010-05-18 20:50-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/announce.texi
+	* Documentation/news.texi
+	* Documentation/readme.texi
+	* NEWS
+	* README: Updating for release.
+
 2010-05-18 20:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormFilePrefsManager.m

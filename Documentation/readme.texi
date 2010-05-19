@@ -23,8 +23,7 @@ Documentation for Gorm is located in the Documentation directory.  It's also ava
 
 @section Status
 
-Gorm is now completely usable.  There are some minor bugs, but most of the
-major functionality is now implemented.  Please report bugs to bug-gnustep@@gnu.org
+Gorm is usable and stable.  Please report bugs to bug-gnustep@@gnu.org
 
 Known problems (things to do) -
 
@@ -35,6 +34,7 @@ Known problems (things to do) -
 
 @section Acknowledgements
 
-Icons - Mostly by Andrew Lindsay.   Gorm application icon by Jesse Ross.
-
-Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
+@enumerate
+@item Icons - Mostly by Andrew Lindsay.   Gorm application icon by Jesse Ross.
+@item Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
+@end enumerate

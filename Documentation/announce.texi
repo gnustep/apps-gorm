@@ -11,7 +11,7 @@ This is version @value{GORM-VERSION} of Gorm.
 Gorm is an acronym for Graphic Object Relationship modeler (or perhaps
 GNUstep Object Relationship Modeler).
 
-Gorm is a clone of the NeXTstep `Interface Builder' application for GNUstep.
+Gorm is a clone of the Cocoa (OpenStep/NeXTSTEP) `Interface Builder' application for GNUstep.
 
 @set ANNOUNCE-ONLY
 @include news.texi

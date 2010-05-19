@@ -4,13 +4,16 @@
 @include version.texi
 @end ifset
 
-@section Noteworthy changes in version @samp{1.2.8}
+@section Noteworthy changes in version @samp{1.2.12}
 
 Requires: gnustep-base-1.20.0, gnustep-gui-0.18.0.   
 Reason: Parts of the runtime which Gorm used were refactored and it was necessary to make corresponding changes in Gorm to use it.
 
 @itemize @bullet
-@item Correction for bug #27295, 
+@item Correction for bugs #27295, 28643, 29085.
+@item Added a DO server which allows modification of internal data structures using a simple interface.
+@item Tooltips now show the object name and the object type for informational purposes.
+@item Opens default document when using NSWindows95InterfaceStyle.
 @end itemize
 
 @ifclear ANNOUNCE-ONLY
