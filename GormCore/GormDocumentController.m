@@ -52,13 +52,11 @@
   return result;
 }
 
-- (void) newDocument: (id)sender
+- (void) buildDocumentForType: (GormDocumentType)documentType
 {
   GormDocument *doc = nil;
-  GormDocumentType documentType = (GormDocumentType)[sender tag];
 
   NSDebugLog(@"In gorm document controller...");
-  [super newDocument: sender];
   doc = (GormDocument *)[[self documents] lastObject]; // get the latest document...
 
   switch (documentType)
@@ -190,4 +188,16 @@
   [doc setFileType: @"GSGormFileType"];
 }
 
+- (void) newDocument: (id)sender
+{
+  GormDocumentType documentType = GormApplication;
+
+  if([sender respondsToSelector: @selector(tag)])
+    {
+      documentType = (GormDocumentType)[sender tag];
+    }
+
+  [super newDocument: sender];
+  [self buildDocumentForType: documentType];
+}
 @end

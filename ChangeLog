@@ -1,3 +1,19 @@
+2010-05-18 20:31-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* English.lproj/Gorm.gorm: Remove delegate connection, since it's
+	manually set in the Gorm NSApplication subclass to self.
+	* GormCore/GormDocumentController.[hm]: Added new method 
+	buildDocumentType:
+	* GormCore/GormDocument.m: Added call to touch in setName: so that
+	the document would be set as modified when the user alters
+	the name of an object in the document.
+	* GormCore/GormDocumentWindow.m: Remove methods preventing
+	document window from assuming main/key status.
+	* GormCore/GormPalettesManager.m: Remove methods allowing palette
+	window to assume main/key status
+	* Gorm.m: Added delegate methods to handle opening a document, if
+	in a mode which requires a default document to be created.
+
 2010-05-18 19:42-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Documentation/Gorm.texi

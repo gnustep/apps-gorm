@@ -31,7 +31,8 @@
 
 #include <AppKit/NSDocumentController.h>
 
-typedef enum {
+typedef enum 
+{
   GormApplication = 0,
   GormEmpty = 1,
   GormInspector = 2,
@@ -40,8 +41,10 @@ typedef enum {
 
 @interface GormDocumentController : NSDocumentController
 {
-  // GormDocumentType _documentType;
 }
+
+- (void) buildDocumentForType: (GormDocumentType)documentType;
+
 @end
 
 #endif

@@ -31,6 +31,7 @@
 #include <GormCore/GormSetNameController.h>
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormPluginManager.h>
+#include <GormCore/GormDocumentController.h>
 #include <GormCore/GormServer.h>
 
 #include <GNUstepBase/GSObjCRuntime.h>
@@ -192,8 +193,21 @@
 }
 
 - (BOOL)applicationShouldOpenUntitledFile: (NSApplication *)sender
+{ 
+  if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) == 
+      NSWindows95InterfaceStyle)
+    {      
+      return YES;
+    }
+  
+  return NO;
+}
+
+- (void) applicationOpenUntitledFile: (id)sender
 {
-  return YES;
+  GormDocumentController *dc = [NSDocumentController sharedDocumentController];
+  // open a new document and build an application type document by default...
+  [dc newDocument: sender];
 }
 
 - (void) applicationDidFinishLaunching: (NSApplication*)sender

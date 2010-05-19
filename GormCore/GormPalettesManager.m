@@ -38,6 +38,7 @@
 @end
 
 @implementation	GormPalettePanel
+/*
 - (BOOL) canBecomeKeyWindow
 {
   return NO;
@@ -46,6 +47,7 @@
 {
   return YES;
 }
+*/
 @end
 
 @interface GormPaletteView : NSView

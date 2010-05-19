@@ -2197,6 +2197,9 @@ static void _real_close(GormDocument *self,
     {
       RELEASE(oldName);
     }
+
+  // touch the document...
+  [self touch];
 }
 
 /**

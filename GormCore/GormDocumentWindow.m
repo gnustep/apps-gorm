@@ -29,10 +29,12 @@
 #include <AppKit/NSPasteboard.h>
 
 @implementation GormDocumentWindow
+/*
 - (BOOL) canBecomeMainWindow
 {
   return NO;
 }
+*/
 
 - (void) setDocument:(id)document
 {
