@@ -6,7 +6,7 @@
 
 	* ChangeLog
 	* GormCore/GormNSWindow.m
-	* GormCore/GormNSPanel.m
+	* GormCore/GormNSPanel.m: Update to use new designated initializer.
 
 2010-05-18 20:50-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
