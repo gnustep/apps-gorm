@@ -1,3 +1,11 @@
+2010-05-20 04:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormFilePrefsManager.m: Update version
+	* GormInfo.plist: Update version
+	* Palettes/2Controls/GormPopUpButtonEditor.m: Override
+	method to prevent changes to appearance during editing.
+	* Version: Change to 1.2.13 for SVN version of Gorm.
+
 2010-05-18 21:55-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Version: 1.2.12

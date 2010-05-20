@@ -76,6 +76,56 @@ Class _gormnspopupbuttonCellClass = 0;
 {
   return @"NSPopUpButtonCell";
 }
+
+/**
+ * Override this here, since themes may override it.
+ * Always want to show the menu view since it's editable. 
+ */
+- (void) attachPopUpWithFrame: (NSRect)cellFrame
+                       inView: (NSView *)controlView
+{
+  NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
+  NSWindow              *cvWin = [controlView window];
+  NSMenuView            *mr = [[self menu] menuRepresentation];
+  int                   selectedItem;
+
+  [nc postNotificationName: NSPopUpButtonCellWillPopUpNotification
+                    object: self];
+
+  [nc postNotificationName: NSPopUpButtonWillPopUpNotification
+                    object: controlView];
+
+  // Convert to Screen Coordinates
+  cellFrame = [controlView convertRect: cellFrame toView: nil];
+  cellFrame.origin = [cvWin convertBaseToScreen: cellFrame.origin];
+
+  if (_pbcFlags.pullsDown)
+    selectedItem = -1;
+  else 
+    selectedItem = [self indexOfSelectedItem];
+
+  if (selectedItem > 0)
+    {
+      [mr setHighlightedItemIndex: selectedItem];
+    }
+
+  // Ask the MenuView to attach the menu to this rect
+  [mr setWindowFrameForAttachingToRect: cellFrame
+      onScreen: [cvWin screen]
+      preferredEdge: _pbcFlags.preferredEdge
+      popUpSelectedItem: selectedItem];
+
+  // Set to be above the main window
+  [cvWin addChildWindow: [mr window] ordered: NSWindowAbove];
+
+  // Last, display the window
+  [[mr window] orderFrontRegardless];
+
+  [nc addObserver: self
+      selector: @selector(_handleNotification:)
+      name: NSMenuDidSendActionNotification
+      object: _menu];
+}
 @end
 
 @interface GormPopUpButtonEditor : GormControlEditor
