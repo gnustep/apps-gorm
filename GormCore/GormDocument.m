@@ -711,6 +711,10 @@ static NSImage  *fileImage = nil;
 	    {
 	      [self setWindowsMenu: menu];
 	    }
+	  else if([[menu title] isEqual: @"Open Recent"] && [self recentDocumentsMenu] == nil)
+	    {
+	      [self setRecentDocumentsMenu: menu];
+	    }
 	}
 
       // add all of the items in the menu.
@@ -1339,6 +1343,10 @@ static NSImage  *fileImage = nil;
 	  else if([self servicesMenu] == anObject)
 	    {
 	      [self setServicesMenu: nil];
+	    }
+	  else if([self recentDocumentsMenu] == anObject)
+	    {
+	      [self setRecentDocumentsMenu: nil];
 	    }
 	}
       
@@ -2294,6 +2302,29 @@ static void _real_close(GormDocument *self,
 - (NSMenu *) servicesMenu
 {
   return [nameTable objectForKey: @"NSServicesMenu"];
+}
+
+/**
+ * Set the menu that will be the recent documents menu in the app.
+ */
+- (void) setRecentDocumentsMenu: (NSMenu *)anObject 
+{
+  if(anObject != nil)
+    {
+      [nameTable setObject: anObject forKey: @"NSRecentDocumentsMenu"];
+    }
+  else
+    {
+      [nameTable removeObjectForKey: @"NSRecentDocumentsMenu"];
+    }
+}
+
+/**
+ * Return the object that will be the receent documents menu.
+ */ 
+- (NSMenu *) recentDocumentsMenu
+{
+  return [nameTable objectForKey: @"NSRecentDocumentsMenu"];
 }
 
 /**

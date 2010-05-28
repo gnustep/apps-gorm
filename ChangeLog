@@ -1,3 +1,15 @@
+2010-05-28  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
+	* GormCore/GormDocument.h:
+	* GormCore/GormDocument.m:
+	* Palettes/0Menus/GormMenuAttributesInspector.m:
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm:
+	Add support for a recent documents menu in gorm documents.
+
+	* Palettes/0Menus/MenusPalette.m:
+	Add a recent documents menu to the palette's file menu.
+	Add undo and redo commands to the palette's edit menu.
+
 2010-05-22 02:23-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* English.lproj/GormPreferences.gorm: Correct issue with pop up

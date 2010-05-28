@@ -291,6 +291,16 @@
  */
 - (NSMenu *) windowsMenu;
 
+/**
+ * Sets the recent documents menu.
+ */
+- (void) setRecentDocumentsMenu: (NSMenu *)menu;
+
+/**
+ * Returns the menu which will be the recent documents menu for the document.
+ */
+- (NSMenu *) recentDocumentsMenu;
+
 /*** first responder/font manager ***/
 
 /**

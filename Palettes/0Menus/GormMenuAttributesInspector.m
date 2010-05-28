@@ -44,9 +44,10 @@
 #include <AppKit/NSTextField.h>
 
 
-#define WINDOWSMENUTAG  0
-#define SERVICESMENUTAG 1 
-#define NORMALMENUTAG   2
+#define WINDOWSMENUTAG         0
+#define SERVICESMENUTAG        1 
+#define RECENTDOCUMENTSMENUTAG 2
+#define NORMALMENUTAG          3
 
 @implementation GormMenuAttributesInspector
 
@@ -89,12 +90,16 @@
 	  [doc setWindowsMenu:object];
 	  if ( [doc servicesMenu] == object ) 
 	    [doc setServicesMenu: nil];
+	  else if ( [doc recentDocumentsMenu] == object )	  
+	    [doc setRecentDocumentsMenu: nil];
 	  break;
 	  
 	case SERVICESMENUTAG:
 	  [doc setServicesMenu: object];	  
 	  if ( [doc windowsMenu] == object )	  
 	    [doc setWindowsMenu: nil];
+	  else if ( [doc recentDocumentsMenu] == object )	  
+	    [doc setRecentDocumentsMenu: nil];
 	  break;
 	  
 	case NORMALMENUTAG:
@@ -102,6 +107,14 @@
 	    [doc setWindowsMenu: nil]; 
 	  if ( [doc servicesMenu] == object )
 	    [doc setServicesMenu: nil];
+	  break;
+	  
+	case RECENTDOCUMENTSMENUTAG: 
+	  [doc setRecentDocumentsMenu:object];
+	  if ( [doc servicesMenu] == object ) 
+	    [doc setServicesMenu: nil];
+	  else if ( [doc windowsMenu] == object )	  
+	    [doc setWindowsMenu: nil];
 	  break;
 	}
     }
@@ -132,6 +145,10 @@
     {
       [menuType selectCellAtRow:SERVICESMENUTAG column: 0];
     }
+  else if([doc recentDocumentsMenu] == object)
+    {
+      [menuType selectCellAtRow:RECENTDOCUMENTSMENUTAG column: 0];
+    } 
   else 
     {
       [menuType selectCellAtRow:NORMALMENUTAG column: 0];

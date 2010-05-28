@@ -168,6 +168,15 @@
   [m addItemWithTitle: @"Open..." 
 	       action: @selector(openDocument:)
 	keyEquivalent: @"o"];
+  i = (NSMenuItem *)[m addItemWithTitle: @"Open Recent"
+				 action: NULL
+			  keyEquivalent: @""];
+  s = [[GormNSMenu alloc] init];
+  [s addItemWithTitle: @"Clear List"
+	       action: @selector(clearRecentDocuments:)
+	keyEquivalent: @""];
+  [s setTitle: @"Open Recent"];
+  [i setSubmenu: s];
   [m addItemWithTitle: @"New" 
 	       action: @selector(newDocument:)
 	keyEquivalent: @"n"];
@@ -255,6 +264,12 @@
    * The Edit menu
    */
   m = [[GormNSMenu alloc] init];
+  [m addItemWithTitle: @"Undo" 
+	       action: @selector(undo:) 
+	keyEquivalent: @"z"];
+  [m addItemWithTitle: @"Redo" 
+	       action: @selector(redo:) 
+	keyEquivalent: @"Z"];
   [m addItemWithTitle: @"Cut" 
 	       action: @selector(cut:) 
 	keyEquivalent: @"x"];
