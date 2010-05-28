@@ -33,6 +33,7 @@
 */
 
 #include "GormMenuAttributesInspector.h"
+#include "GormNSMenu.h"
 
 #include <Foundation/NSNotification.h>
 
@@ -134,7 +135,7 @@
   doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
 
   [titleText setStringValue: [object title]];
-  [autoenable setState: ([object autoenablesItems]?NSOnState:NSOffState)];
+  [autoenable setState: ([object realAutoenablesItems]?NSOnState:NSOffState)];
 
   // set up the menu type matrix...
   if([doc windowsMenu] == object)

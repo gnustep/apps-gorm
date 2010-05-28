@@ -28,6 +28,7 @@
 
 @interface GormNSMenu : NSMenu
 + (GormNSMenu *) menuWithMenu: (NSMenu *)menu;
+- (BOOL) realAutoenablesItems;
 @end
 
 #endif

@@ -1,5 +1,12 @@
 2010-05-28  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* Palettes/0Menus/GormNSMenu.h:
+	* Palettes/0Menus/GormNSMenu.m:
+	* Palettes/0Menus/GormMenuAttributesInspector.m: Don't validate
+	menu items in design menus.
+
+2010-05-28  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
 	* GormCore/GormDocument.h:
 	* GormCore/GormDocument.m:
 	* Palettes/0Menus/GormMenuAttributesInspector.m:

@@ -209,6 +209,18 @@
   [super dealloc];
 }
 
+// Override -autoenablesItems to disable menu validation for design menus in
+// Gorm. This avoids disabling menu items by default in Gorm documents.
+- (BOOL) realAutoenablesItems
+{
+  return [super autoenablesItems];
+}
+
+- (BOOL) autoenablesItems
+{
+  return NO;
+}
+
 - (NSString*) _locationKey
 {
   if ([self supermenu] == nil)
