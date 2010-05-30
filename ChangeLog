@@ -1,3 +1,10 @@
+2010-05-30 03:07-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: In 
+	[GormDocument loadFileWrapperRepresentation:ofType:] call
+	updateChangeCount: to clear changes so that the document
+	doesn't show as modified on load.	
+
 2010-05-30 03:02-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GNUmakefile: Added Xib.plugin to resources.

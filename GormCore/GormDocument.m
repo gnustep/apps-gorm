@@ -3338,6 +3338,10 @@ static void _real_close(GormDocument *self,
       [[NSNotificationCenter defaultCenter]
 	postNotificationName: IBDidOpenDocumentNotification
 	object: self];
+
+      // make sure that the newly loaded document does not 
+      // mark itself as modified.
+      [self updateChangeCount: NSChangeCleared];
     }
   
   return result;
