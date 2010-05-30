@@ -1,9 +1,9 @@
-#   GNUmakefile: main makefile for Gorm palettes
+#   GNUmakefile 
 #
 #   Copyright (C) 1999 Free Software Foundation, Inc.
 #
-#   Author:  Gregory John Casamento
-#   Date: 2007
+#   Author:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+#   Date: 1999
 #   
 #   This file is part of GNUstep.
 #   
@@ -19,26 +19,27 @@
 #   
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
-#   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
-#
+#   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
-#
-# Each palette is a subproject
-#
-SUBPROJECTS = \
-	Gorm \
-	Nib \
-	GModel \
-	Xib
+BUNDLE_NAME = Xib
+BUNDLE_EXTENSION = .plugin
+Xib_PRINCIPAL_CLASS = GormXibPlugin
+
+Xib_OBJC_FILES = GormXibPlugin.m \
+GormXibWrapperLoader.m 
+
+Xib_RESOURCE_FILES = 
+
+Xib_STANDARD_INSTALL = no
 
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local
 
-include $(GNUSTEP_MAKEFILES)/aggregate.make
+include $(GNUSTEP_MAKEFILES)/bundle.make
 
 -include GNUmakefile.postamble
 

@@ -1,3 +1,17 @@
+2010-05-30 03:02-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GNUmakefile: Added Xib.plugin to resources.
+	* GormInfo.plist: Added xib to the list of files Gorm can load
+	* Gorm.m: Change to recieve notifications to add/delete classes.
+	* Plugins/GNUmakefile: Added Xib plugin to subprojects list.
+	* Plugins/Xib/GNUmakefile
+	* Plugins/Xib/GNUmakefile.preamble
+	* Plugins/Xib/GormXibCustomResource.h
+	* Plugins/Xib/GormXibCustomResource.m
+	* Plugins/Xib/GormXibPlugin.m
+	* Plugins/Xib/GormXibWrapperLoader.h
+	* Plugins/Xib/GormXibWrapperLoader.m: Initial code for XIB plugin.
+
 2010-05-28  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
 	* Palettes/0Menus/GormNSMenu.h:

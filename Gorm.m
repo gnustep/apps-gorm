@@ -91,6 +91,7 @@
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+      NSNotificationCenter      *ndc = [NSDistributedNotificationCenter defaultCenter];
       NSBundle			*bundle = [NSBundle mainBundle];
       NSString			*path;
       NSConnection              *conn = [NSConnection defaultConnection];
@@ -107,6 +108,7 @@
       testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 
       documents = [[NSMutableArray alloc] init];
+      // regular notifications...
       [nc addObserver: self
 	  selector: @selector(handleNotification:)
 	  name: IBSelectionChangedNotification
@@ -115,6 +117,16 @@
 	  selector: @selector(handleNotification:)
 	  name: IBWillCloseDocumentNotification
 	  object: nil];
+
+      // distibuted notifications...
+      [ndc addObserver: self
+	   selector: @selector(handleNotification:)
+	   name: @"GormAddClassNotification"
+	   object: nil];
+      [ndc addObserver: self
+	   selector: @selector(handleNotification:)
+	   name: @"GormDeleteClassNotification"
+	   object: nil];
 
       /*
        * establish registration domain defaults from file.
@@ -946,6 +958,16 @@
     {
       selectionOwner = nil;
       [documents removeObjectIdenticalTo: obj];
+    }
+  else if ([name isEqual: @"GormAddClassNotification"])
+    {
+      id obj = [notification object];
+      [self addClass: obj];
+    }
+  else if ([name isEqual: @"GormDeleteClassNotification"])
+    {
+      id obj = [notification object];
+      [self deleteClass: obj];
     }
 }
 

@@ -65,6 +65,7 @@ Gorm_RESOURCE_FILES = \
 	Plugins/Gorm/Gorm.plugin \
 	Plugins/Nib/Nib.plugin \
 	Plugins/GModel/GModel.plugin \
+	Plugins/Xib/Xib.plugin \
 	Images/GormClass.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \

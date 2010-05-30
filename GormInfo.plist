@@ -27,6 +27,14 @@
         NSIcon = "FileIcon_gmodel.tiff";
       },
       {
+	NSName = "GSXibFileType";
+	NSHumanReadableName = "Cocoa Xib";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "xib" );
+        NSIcon = "GormNib.tiff";
+      },
+      {
         NSUnixExtensions = ( "palette" );
         NSIcon = "GormPalette.tiff";
       }
