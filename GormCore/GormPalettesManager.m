@@ -118,10 +118,11 @@ static NSImage	*dragImage = nil;
 
       if (active != nil)
 	{
+          /*
 	  if([active objectForName: @"NSMenu"] != nil && 
 	     [type isEqual: IBMenuPboardType] == YES)
 	    return;
-
+	  */
 	  [active pasteType: type fromPasteboard: dragPb parent: nil];
 	}
     }

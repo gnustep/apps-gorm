@@ -1,3 +1,12 @@
+2010-06-02 17:45-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* English.lproj/GormFontView.gorm: Fix problem with popup showing
+	as Button.
+	* GormCore/GormDocument.m: Add the NSMenu as a top level item only
+	if it has filesOwner as it's parent.
+	* GormCore/GormPalettesManager.m: remove the restriction for having
+	just one instance of NSMenu in the document at the top level.
+
 2010-05-30 03:07-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: In 

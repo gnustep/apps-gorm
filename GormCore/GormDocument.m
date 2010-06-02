@@ -715,6 +715,13 @@ static NSImage  *fileImage = nil;
 	    {
 	      [self setRecentDocumentsMenu: menu];
 	    }
+	  // if it doesn't have a supermenu and it's owned by the file's owner, then it's a top level menu....
+	  else if([menu supermenu] == nil && aParent == filesOwner)
+	    {
+	      [objectsView addObject: menu];
+	      [topLevelObjects addObject: menu];
+	      isMainMenu = NO;
+	    }
 	}
 
       // add all of the items in the menu.
