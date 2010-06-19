@@ -82,7 +82,7 @@ IB_EXTERN NSString *IBClassNameChangedNotification;
 /**
  * The IBEditors protocol defines the methods an editor must implement. 
  */
-@protocol IBEditors
+@protocol IBEditors <NSObject>
 /**
  * Decide whether an editor can accept data from the pasteboard.
  */

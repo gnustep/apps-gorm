@@ -1,3 +1,8 @@
+2010-06-19 Riccardo Mottola
+
+	* GormLib/IBEditors.h
+	Make IBEditors implement NSobject protocol to avoid warnings.
+
 2010-06-02 17:45-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* English.lproj/GormFontView.gorm: Fix problem with popup showing
