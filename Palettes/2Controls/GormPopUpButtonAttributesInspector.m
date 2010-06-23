@@ -72,11 +72,16 @@
 {
   if (sender == typeMatrix)
     {
+      BOOL pullsDown = [[sender selectedCell] tag];
       id selectedItem;
-      [object setPullsDown: [[sender selectedCell] tag]];
+      [object setPullsDown: pullsDown];
       selectedItem = [object selectedItem];
       [object selectItem: nil];
       [object selectItem: selectedItem];
+      [pullDownTitleForm setEnabled: pullsDown];
+      [[pullDownTitleForm cellAtIndex: 0]
+	setStringValue: pullsDown ? [object title] : @""];
+      [pullDownArrowPopUp setEnabled: pullsDown];
     }
   else if (sender == autoenableSwitch)
     {
@@ -99,6 +104,14 @@
       index = (index < num && index >= 0) ? index : num;
       [object selectItemAtIndex: index];
     }
+  else if (sender == pullDownTitleForm)
+    {
+      [object setTitle: [[sender cellAtIndex: 0] stringValue]];
+    }
+  else if (sender == pullDownArrowPopUp)
+    {
+      [object setPreferredEdge: [[sender selectedItem] tag]];
+    }
 
   [super ok: sender];
 }
@@ -106,14 +119,21 @@
 /* Sync from object ( NSPopUpButton ) changes to the inspector   */
 - (void) revert: (id)sender
 {
+  BOOL pullsDown;
   if ( object == nil)
     return;
 
-  [typeMatrix selectCellWithTag: [object pullsDown]];
+  pullsDown = [object pullsDown];
+  [typeMatrix selectCellWithTag: pullsDown];
   [autoenableSwitch setState: [object autoenablesItems]];
   [enableSwitch setState: [object isEnabled]];
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [object tag]];
   [[defaultItemForm cellAtRow: 0 column: 0] setIntValue: [object indexOfSelectedItem]];
+  [pullDownTitleForm setEnabled: pullsDown];
+  [[pullDownTitleForm cellAtIndex: 0]
+    setStringValue: pullsDown ? [object title] : @""];
+  [pullDownArrowPopUp setEnabled: pullsDown];
+  [pullDownArrowPopUp selectItemWithTag: [object preferredEdge]];
 
   [super revert:sender];
 }

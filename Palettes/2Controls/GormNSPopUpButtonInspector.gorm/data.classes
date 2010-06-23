@@ -8,7 +8,9 @@
 	    tagForm,
 	    typeMatrix,
 	    defaultItemForm,
-	    enableSwitch
+	    enableSwitch,
+	    pullDownArrowPopUp,
+	    pullDownTitleForm
 	);
 	Super = IBInspector;
     };

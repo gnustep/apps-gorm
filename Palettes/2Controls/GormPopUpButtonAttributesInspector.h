@@ -40,6 +40,7 @@
 @class NSButton;
 @class NSForm;
 @class NSMatrix;
+@class NSPopUpButton;
 
 @interface GormPopUpButtonAttributesInspector:IBInspector
 {
@@ -48,6 +49,8 @@
   NSButton *enableSwitch;
   NSForm *tagForm;
   NSForm *defaultItemForm;
+  NSForm *pullDownTitleForm;
+  NSPopUpButton *pullDownArrowPopUp;
 }
 
 @end
