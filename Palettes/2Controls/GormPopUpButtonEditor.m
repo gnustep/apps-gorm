@@ -84,6 +84,7 @@ Class _gormnspopupbuttonCellClass = 0;
 - (void) attachPopUpWithFrame: (NSRect)cellFrame
                        inView: (NSView *)controlView
 {
+  NSRectEdge            preferredEdge = _pbcFlags.preferredEdge;
   NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
   NSWindow              *cvWin = [controlView window];
   NSMenuView            *mr = [[self menu] menuRepresentation];
@@ -101,18 +102,34 @@ Class _gormnspopupbuttonCellClass = 0;
 
   if (_pbcFlags.pullsDown)
     selectedItem = -1;
-  else 
-    selectedItem = [self indexOfSelectedItem];
+  else
+    {
+      selectedItem = [self indexOfSelectedItem];
+      if (selectedItem = -1)
+	selectedItem = 0;
+    }
 
   if (selectedItem > 0)
     {
       [mr setHighlightedItemIndex: selectedItem];
     }
 
+  if ([controlView isFlipped])
+    {
+      if (preferredEdge == NSMinYEdge)
+	{
+	  preferredEdge = NSMaxYEdge;
+	}
+      else if (preferredEdge == NSMaxYEdge)
+	{
+	  preferredEdge = NSMinYEdge;
+	}
+    }
+
   // Ask the MenuView to attach the menu to this rect
   [mr setWindowFrameForAttachingToRect: cellFrame
       onScreen: [cvWin screen]
-      preferredEdge: _pbcFlags.preferredEdge
+      preferredEdge: preferredEdge
       popUpSelectedItem: selectedItem];
 
   // Set to be above the main window

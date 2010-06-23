@@ -1,5 +1,11 @@
 2010-06-24  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* Palettes/2Controls/GormPopUpButtonEditor.m
+	(-attachPopUpWithFrame:inView:): Copy change from -gui which swaps
+	the meaning of NSMinYEdge and NSMaxYEdge.
+
+2010-06-24  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
 	* Palettes/2Controls/GormPopUpButtonAttributesInspector.h
 	* Palettes/2Controls/GormPopUpButtonAttributesInspector.m
 	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm: Add a form to
