@@ -127,6 +127,10 @@
 	   selector: @selector(handleNotification:)
 	   name: @"GormDeleteClassNotification"
 	   object: nil];
+      [ndc addObserver: self
+	   selector: @selector(handleNotification:)
+	   name: @"GormParseClassNotification"
+	   object: nil];
 
       /*
        * establish registration domain defaults from file.
@@ -968,6 +972,12 @@
     {
       id obj = [notification object];
       [self deleteClass: obj];
+    }
+  else if ([name isEqual: @"GormParseClassNotification"])
+    {
+      NSString *pathToClass = (NSString *)[notification object];
+      GormClassManager *cm = [(GormDocument *)[self activeDocument] classManager];
+      [cm parseHeader: pathToClass];
     }
 }
 

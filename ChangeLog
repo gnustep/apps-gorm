@@ -1,3 +1,10 @@
+2010-07-10 01:22-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormInfo.plist: Simplified copyright portion.  Give a range of
+	years instead of each year individually.
+	* Gorm.m: Implement simple mechanism for recieving notifications
+	to parse a given class file.
+
 2010-06-24  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
 	* Palettes/2Controls/GormPopUpButtonEditor.m
