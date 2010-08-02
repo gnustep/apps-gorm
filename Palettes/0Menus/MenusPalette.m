@@ -306,20 +306,24 @@
    * The Find menu
    */
   m = [[GormNSMenu alloc] init];
-  [m addItemWithTitle: @"Find Panel..." 
-	       action: NULL
-	keyEquivalent: @"f"];
-  [m addItemWithTitle: @"Find Next" 
-	       action: NULL
-	keyEquivalent: @"g"];
-  [m addItemWithTitle: @"Find Previous" 
-	       action: NULL
-	keyEquivalent: @"d"];
-  [m addItemWithTitle: @"Enter Selection" 
-	       action: NULL
-	keyEquivalent: @"e"];
+  i = [m addItemWithTitle: @"Find Panel..." 
+		   action: @selector(performFindPanelAction:)
+	    keyEquivalent: @"f"];
+  [i setTag: NSFindPanelActionShowFindPanel];
+  i = [m addItemWithTitle: @"Find Next" 
+		   action: @selector(performFindPanelAction:)
+	    keyEquivalent: @"g"];
+  [i setTag: NSFindPanelActionNext];
+  i = [m addItemWithTitle: @"Find Previous" 
+		   action: @selector(performFindPanelAction:)
+	    keyEquivalent: @"d"];
+  [i setTag: NSFindPanelActionPrevious];
+  i = [m addItemWithTitle: @"Enter Selection" 
+		   action: @selector(performFindPanelAction:)
+	    keyEquivalent: @"e"];
+  [i setTag: NSFindPanelActionSetFindString];
   [m addItemWithTitle: @"Jump To Selection" 
-	       action: NULL
+	       action: @selector(centerSelectionInVisibleArea:)
 	keyEquivalent: @"j"];
   [m setTitle: @"Find"];
   i = [[NSMenuItem alloc] initWithTitle: @"Find" 

@@ -1,3 +1,13 @@
+2010-08-02  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
+	* Palettes/0Menus/MenusPalette.m (-finishInstantiate):
+	Initialize the find menu items with tags and actions suitable for
+	using the standard NSTextView find panel.
+
+	* Resources/ClassInformation.plist:
+	Add -centerSelectionInVisibleArea: and -performFindPanelAction: to
+	the list of first responder actions.
+
 2010-07-10 01:22-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormInfo.plist: Simplified copyright portion.  Give a range of
