@@ -1851,7 +1851,16 @@
     [NSString defaultCStringEncoding]];
 
   [headerData writeToFile: headerPath atomically: NO];
+
+  [[NSDistributedNotificationCenter defaultCenter]
+    postNotificationName: @"GormCreateFileNotification"
+    object: headerPath];
+
   [sourceData writeToFile: sourcePath atomically: NO];
+
+  [[NSDistributedNotificationCenter defaultCenter]
+    postNotificationName: @"GormCreateFileNotification"
+    object: sourcePath];
 
   return YES;
 }
