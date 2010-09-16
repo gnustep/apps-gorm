@@ -223,17 +223,13 @@ selectCellWithString: (NSString*)title
 
       while (c != nil && c != [NSObject class])
 	{
-	  struct objc_method_list	*mlist = c->methods;
-
-	  while (mlist != 0)
-	    {
-	      struct objc_method	*methods = &mlist->method_list[0];
-	      int			count = mlist->method_count;
+	      unsigned int		count;
+	      Method			*methods = class_copyMethodList(c, &count);
 	      int			i;
 
 	      for (i = 0; i < count; i++)
 		{
-		  SEL		sSel = methods[i].method_name;
+		  SEL		sSel = method_getName(methods[i]);
 		  NSString	*set = NSStringFromSelector(sSel);
 
 		  /*
@@ -246,7 +242,7 @@ selectCellWithString: (NSString*)title
 		    && [sets containsObject: set] == NO)
 		    {
 		      char		tmp[[set cStringLength]+1];
-		      const char	*tInfo = methods[i].method_types;
+		      const char	*tInfo = method_getTypeEncoding(methods[i]);
 		      NSString		*type = nil;
 		      NSString		*get;
 		      SEL		gSel;
@@ -323,8 +319,7 @@ selectCellWithString: (NSString*)title
 			}
 		    }
 		}
-	      mlist = mlist->method_next;
-	    }
+	  free(methods);
 	  c = [c superclass]; 
 	}
       [sets sortUsingSelector: @selector(compare:)];

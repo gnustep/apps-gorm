@@ -1,3 +1,9 @@
+2010-09-15  Eric Wasylishen <ewasylishen@gmail.com>
+
+	* GormCore/GormClassManager.m:
+	* GormCore/GormObjectInspector.m: Tweaks to use ObjectiveC2 runtime
+	API functions. Now Gorm works on libobjc2.
+
 2010-08-04 13:20-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* English.lproj/Gorm.gorm: Add "Recent Documents" to menu.

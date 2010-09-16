@@ -690,7 +690,7 @@
     }
 
   actions = [self allActionsForClassNamed: className];
-  while (actions == nil && (theClass = class_get_super_class(theClass)) != nil
+  while (actions == nil && (theClass = class_getSuperclass(theClass)) != nil
     && theClass != [NSObject class])
     {
       className = NSStringFromClass(theClass);
@@ -813,7 +813,7 @@
     }
 
   outlets = [self allOutletsForClassNamed: className];
-  while (outlets == nil && (theClass = class_get_super_class(theClass)) != nil
+  while (outlets == nil && (theClass = class_getSuperclass(theClass)) != nil
     && theClass != [NSObject class])
     {
       className = NSStringFromClass(theClass);
@@ -885,7 +885,7 @@
 
       if (theClass != nil)
 	{
-	  theClass = class_get_super_class(theClass);
+	  theClass = class_getSuperclass(theClass);
 	  if (theClass != nil && theClass != [NSObject class])
 	    {
 	      NSString			*name;
