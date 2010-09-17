@@ -1,5 +1,11 @@
 2010-09-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* Palettes/2Controls/GormButtonEditor.m (-mouseDown): Fix bug
+	where a button's title was lost when starting editing by double
+	clicking into the button.
+
+2010-09-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
 	* English.lproj/Gorm.gorm: Actually bring the "Recent Documents"
 	menu to life.
 

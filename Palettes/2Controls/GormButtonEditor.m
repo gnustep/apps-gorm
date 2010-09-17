@@ -496,7 +496,7 @@ static NSRect oldFrame;
   		       inView: _EO];
       NSTextView *tv = [self startEditingInFrame: frame];
       [[self superview] addSubview: tv];
-      [tv setText: [_EO stringValue]];
+      [tv setText: [_EO title]];
       [tv setAlignment: [_EO alignment]];
       [tv setFont: [_EO font]];
       [[self window] display];
