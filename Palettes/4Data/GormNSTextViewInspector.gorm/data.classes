@@ -10,7 +10,9 @@
 	    editableButton,
 	    multipleFontsButton,
 	    graphicsButton,
-	    selectableButton
+	    selectableButton,
+	    findPanelButton,
+	    undoButton
 	);
 	Super = IBInspector;
     };

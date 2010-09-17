@@ -1,5 +1,11 @@
 2010-09-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* Palettes/4Data/GormNSTextViewInspector.gorm: Add switches to the
+	text view inspector to control use of an undo manager and the find
+	panel, respectively.
+
+2010-09-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
 	* Palettes/2Controls/GormButtonEditor.m (-mouseDown): Fix bug
 	where a button's title was lost when starting editing by double
 	clicking into the button.
