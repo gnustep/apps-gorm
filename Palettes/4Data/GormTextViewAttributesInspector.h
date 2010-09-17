@@ -47,7 +47,9 @@
   NSButton *selectableButton;
   NSButton *editableButton;
   NSButton *multipleFontsButton;
-  NSButton *graphicsButton;  
+  NSButton *graphicsButton;
+  NSButton *undoButton;
+  NSButton *findPanelButton;
 }
 
 @end

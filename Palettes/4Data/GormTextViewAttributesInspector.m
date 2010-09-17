@@ -102,6 +102,15 @@
     {
       [object setImportsGraphics:[graphicsButton state]];
     }
+  else if ( sender == undoButton )
+    {
+      [object setAllowsUndo:[undoButton state]];
+    }
+  else if ( sender == findPanelButton )
+    {
+      [object setUsesFindPanel:[findPanelButton state]];
+    }
+    
   
   [super ok:sender];
 }
@@ -129,6 +138,8 @@
   [editableButton setState:[object isEditable]];
   [multipleFontsButton setState:[object isRichText]];
   [graphicsButton setState:[object importsGraphics]];
+  [undoButton setState:[object allowsUndo]];
+  [findPanelButton setState:[object usesFindPanel]];
 
   [super revert:sender];
 }
