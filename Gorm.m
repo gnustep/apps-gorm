@@ -5,22 +5,22 @@
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:	1999, 2003, 2004
- * 
+ *
  * This file is part of GNUstep.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111
  * USA.
  */
 
@@ -53,7 +53,7 @@
   NSMenu		*mainMenu; // saves the main menu...
   NSMenu                *servicesMenu; // saves the services menu...
   NSMenu                *classMenu; // so we can set it for the class view
-  NSMenuItem            *guideLineMenuItem; 
+  NSMenuItem            *guideLineMenuItem;
   NSDictionary		*menuLocations;
   NSImage		*linkImage;
   NSImage		*sourceImage;
@@ -82,10 +82,10 @@
   return [[NSDocumentController sharedDocumentController] currentDocument];
 }
 
-/* 
+/*
    NSApp
 */
-- (id) init 
+- (id) init
 {
   self = [super init];
   if (self != nil)
@@ -139,12 +139,12 @@
       if (path != nil)
 	{
 	  NSDictionary	*dict;
-	  
+
 	  dict = [NSDictionary dictionaryWithContentsOfFile: path];
 	  if (dict != nil)
 	    {
 	      NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-	      
+
 	      [defaults registerDefaults: dict];
 	    }
 	}
@@ -159,8 +159,8 @@
 	}
 
       /*
-       * Make sure the palettes/plugins managers exist, so that the 
-       * editors and inspectors provided in the standard palettes 
+       * Make sure the palettes/plugins managers exist, so that the
+       * editors and inspectors provided in the standard palettes
        * are available.
        */
       [self palettesManager];
@@ -209,13 +209,13 @@
 }
 
 - (BOOL)applicationShouldOpenUntitledFile: (NSApplication *)sender
-{ 
-  if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) == 
+{
+  if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) ==
       NSWindows95InterfaceStyle)
-    {      
+    {
       return YES;
     }
-  
+
   return NO;
 }
 
@@ -229,7 +229,7 @@
 - (void) applicationDidFinishLaunching: (NSApplication*)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  
+
   if ( [defaults boolForKey: @"ShowInspectors"] )
     {
       [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
@@ -242,10 +242,10 @@
 
 - (void) applicationWillTerminate: (NSApplication*)sender
 {
-  [[NSUserDefaults standardUserDefaults] 
+  [[NSUserDefaults standardUserDefaults]
     setBool: [[[self inspectorsManager] panel] isVisible]
     forKey: @"ShowInspectors"];
-  [[NSUserDefaults standardUserDefaults] 
+  [[NSUserDefaults standardUserDefaults]
     setBool: [[[self palettesManager] panel] isVisible]
     forKey: @"ShowPalettes"];
 }
@@ -255,14 +255,14 @@
   id document = [self activeDocument];
 
   if (document != nil) return [document classManager];
-  
+
   /* kept in the case one want access to the classManager without document */
   else if (classManager == nil)
     {
       classManager = [[GormClassManager alloc] init];
     }
   return classManager;
-  
+
 }
 
 - (id) connectDestination
@@ -280,7 +280,7 @@
 {
   NSWindow	*window;
   NSRect	rect;
-  
+
 
   if (source != connectSource)
     {
@@ -291,15 +291,15 @@
 	  if (window != nil)
 	    {
 	      NSView	*view = [[window contentView] superview];
- 
+
 	      rect.origin.x --;
 	      rect.size.width ++;
-	      
+
 	      rect.size.height ++;
 
 	      [window disableFlushWindow];
 	      [view displayRect: rect];
-	      
+
 	      [window enableFlushWindow];
 	      [window flushWindow];
 	    }
@@ -345,7 +345,7 @@
 	  [view lockFocus];
 	  [[NSColor greenColor] set];
 	  NSFrameRectWithWidth(rect, 1);
-	  
+
 	  [sourceImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
 	  [view unlockFocus];
@@ -368,7 +368,7 @@
 	  [view lockFocus];
 	  [[NSColor purpleColor] set];
 	  NSFrameRectWithWidth(rect, 1);
-	  
+
 	  imageRect.origin.x += [targetImage size].width;
 	  [targetImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
@@ -391,7 +391,7 @@
 	  [view lockFocus];
 	  [[NSColor purpleColor] set];
 	  NSFrameRectWithWidth(rect, 1);
-	  
+
 	  [targetImage compositeToPoint: imageRect.origin
 			      operation: NSCompositeSourceOver];
 	  [view unlockFocus];
@@ -467,7 +467,7 @@
 	  id                    savedDelegate = [NSApp delegate];
 
 	  // which windows were open when testing started...
-	  testingWindows = [[NSMutableArray alloc] init]; 
+	  testingWindows = [[NSMutableArray alloc] init];
 	  en = [[self windows] objectEnumerator];
 	  while((obj = [en nextObject]) != nil)
 	    {
@@ -478,11 +478,11 @@
 	    }
 
 	  // set here, so that beginArchiving and endArchiving do not use templates.
-	  isTesting = YES; 
+	  isTesting = YES;
 	  [self setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc deactivateEditors];
-	  [archiver encodeClassName: @"GormCustomView" 
+	  [archiver encodeClassName: @"GormCustomView"
 		    intoClassName: @"GormTestCustomView"];
 
 	  // substitute classes from palettes.
@@ -503,27 +503,27 @@
 	    }
 
 	  // do not allow custom classes during testing.
-	  [GSClassSwapper setIsInInterfaceBuilder: YES]; 
+	  [GSClassSwapper setIsInInterfaceBuilder: YES];
 	  [archiver encodeRootObject: activeDoc];
-	  data = RETAIN([archiver archiverData]); // Released below... 
+	  data = RETAIN([archiver archiverData]); // Released below...
 	  [activeDoc reactivateEditors];
 	  RELEASE(archiver);
-	  [GSClassSwapper setIsInInterfaceBuilder: NO]; 
-	  
+	  [GSClassSwapper setIsInInterfaceBuilder: NO];
+
 	  // signal the start of testing...
 	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
 		       object: self];
-	  
+
 	  if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	    {
 	      [selectionOwner makeSelectionVisible: NO];
 	    }
-	  
+
 	  defaults = [NSUserDefaults standardUserDefaults];
 	  menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
 	  [defaults removeObjectForKey: @"NSMenuLocations"];
 	  servicesMenu = [self servicesMenu];
-	  
+
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
 	    {
@@ -533,13 +533,13 @@
 	      [self setMainMenu: aMenu];
 	      // initialize the context.
 	      RETAIN(testContainer);
-	      topObjects = [testContainer topLevelObjects]; 
+	      topObjects = [testContainer topLevelObjects];
 
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
 	      [testContainer awakeWithContext: nil];
 	      [NSApp setDelegate: savedDelegate]; // makes sure the delegate isn't reset.
-	      
+
 	      /*
 	       * If the model didn't have a main menu, create one,
 	       * otherwise, ensure that 'quit' ends testing mode.
@@ -547,11 +547,11 @@
 	      if (aMenu == nil)
 		{
 		  NSMenu	*testMenu;
-		  
+
 		  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu (Gorm)")];
-		  [testMenu addItemWithTitle: _(@"Quit Test") 
+		  [testMenu addItemWithTitle: _(@"Quit Test")
 			    action: @selector(deferredEndTesting:)
-			    keyEquivalent: @"q"];	
+			    keyEquivalent: @"q"];
 		  [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
 		}
 	      else
@@ -568,7 +568,7 @@
 		      if([item isKindOfClass: [NSMenuItem class]])
 			{
 			  SEL action = [item action];
-			  if(sel_eq(action, @selector(terminate:)))
+			  if(sel_isEqual(action, @selector(terminate:)))
 			    {
 			      found = YES;
 			      [item setTitle: _(@"Quit Test")];
@@ -585,14 +585,14 @@
 		  [testMenu setTitle: newTitle];
 		  if(found == NO)
 		    {
-		      [testMenu addItemWithTitle: _(@"Quit Test") 
+		      [testMenu addItemWithTitle: _(@"Quit Test")
 				action: @selector(deferredEndTesting:)
-				keyEquivalent: @"q"];	
+				keyEquivalent: @"q"];
 		    }
 		}
 
 	      // so we don't get the warning...
-	      [self setServicesMenu: nil]; 
+	      [self setServicesMenu: nil];
 	      [[self mainMenu] display];
 	      en = [[self windows] objectEnumerator];
 	      while((obj = [en nextObject]) != nil)
@@ -602,10 +602,10 @@
 		      [obj makeKeyAndOrderFront: self];
 		    }
 		}
-	      
+
 	      // we're now in testing mode.
 	      [notifCenter postNotificationName: IBDidBeginTestingInterfaceNotification
-			   object: self];      
+			   object: self];
 
 	      [NSApp unhide: self];
 	    }
@@ -615,12 +615,12 @@
       NS_HANDLER
 	{
 	  // reset the application after the error.
-	  NSLog(@"Problem while testing interface: %@", 
+	  NSLog(@"Problem while testing interface: %@",
 		[localException reason]);
-	  NSRunAlertPanel(_(@"Problem While Testing Interface"), 
+	  NSRunAlertPanel(_(@"Problem While Testing Interface"),
 			  [NSString stringWithFormat: @"Make sure connections are to appropriate objects.\n"
 				    @"Exception: %@",
-				    [localException reason]], 
+				    [localException reason]],
 			  _(@"OK"), nil, nil);
 	  [self endTesting: self];
 	}
@@ -636,7 +636,7 @@
   if ([[selectionOwner selection] count] == 0
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
     return;
-  
+
   if([self isConnecting])
     {
       [self stopConnecting];
@@ -710,7 +710,7 @@
       panel = [[GormSetNameController alloc] init];
       returnPanel = [panel runAsModal];
       textField = [panel textField];
-      
+
       if (returnPanel == NSAlertDefaultReturn)
 	{
 	  name = [[textField stringValue] stringByTrimmingSpaces];
@@ -727,7 +727,7 @@
 {
   [[NSNotificationCenter defaultCenter] postNotificationName: GormToggleGuidelineNotification
  					object:nil];
-  if ( [guideLineMenuItem tag] == 0 ) 
+  if ( [guideLineMenuItem tag] == 0 )
     {
       [guideLineMenuItem setTitle:_(@"Enable GuideLine")];
       [guideLineMenuItem setTag:1];
@@ -743,7 +743,7 @@
 - (void) orderFrontFontPanel: (id) sender
 {
   NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
-  GormFontViewController *gfvc = 
+  GormFontViewController *gfvc =
     [GormFontViewController sharedGormFontViewController];
   [fontPanel setAccessoryView: [gfvc view]];
   [[NSFontManager sharedFontManager] orderFrontFontPanel: self];
@@ -798,7 +798,7 @@
 
 - (void) loadClass: (id)sender
 {
-  // Call the current document and create the class 
+  // Call the current document and create the class
   // descibed by the header
   [(GormDocument *)[self activeDocument] loadClass: sender];
 }
@@ -814,12 +814,12 @@
 }
 
 - (void) addAttributeToClass: (id)sender
-{  
+{
   [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
 }
 
 - (void) remove: (id)sender
-{  
+{
   [(GormDocument *)[self activeDocument] remove: sender];
 }
 
@@ -890,7 +890,7 @@
       e = [[self windows] objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
-	  if ([testingWindows containsObject: val] == NO && 
+	  if ([testingWindows containsObject: val] == NO &&
 	      [val isKindOfClass: [NSWindow class]] &&
 	      [val isVisible])
 	    {
@@ -928,7 +928,7 @@
 	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
-      
+
 
       DESTROY(testingWindows);
 
@@ -1050,7 +1050,7 @@
 - (id) selectedObject
 {
   return [[selectionOwner selection] lastObject];
-} 
+}
 
 - (id<IBDocuments>) documentForObject: (id)object
 {
@@ -1107,7 +1107,7 @@
 {
   GormDocument	*active = (GormDocument*)[self activeDocument];
   SEL		action = [item action];
-  GormClassManager *cm = nil; 
+  GormClassManager *cm = nil;
   NSArray	*s = nil;
 
   // if we have an active document...
@@ -1117,18 +1117,18 @@
       s = [selectionOwner selection];
     }
 
-  if (sel_eq(action, @selector(close:))
-      || sel_eq(action, @selector(miniaturize:)))
+  if (sel_isEqual(action, @selector(close:))
+      || sel_isEqual(action, @selector(miniaturize:)))
     {
       if (active == nil)
 	return NO;
     }
-  else if (sel_eq(action, @selector(testInterface:)))
+  else if (sel_isEqual(action, @selector(testInterface:)))
     {
       if (active == nil)
 	return NO;
     }
-  else if (sel_eq(action, @selector(copy:)))
+  else if (sel_isEqual(action, @selector(copy:)))
     {
       if ([s count] == 0)
 	return NO;
@@ -1144,7 +1144,7 @@
 
       return [selectionOwner respondsToSelector: @selector(copySelection)];
     }
-  else if (sel_eq(action, @selector(cut:)))
+  else if (sel_isEqual(action, @selector(cut:)))
     {
       if ([s count] == 0)
 	return NO;
@@ -1161,7 +1161,7 @@
       return ([selectionOwner respondsToSelector: @selector(copySelection)]
 	&& [selectionOwner respondsToSelector: @selector(deleteSelection)]);
     }
-  else if (sel_eq(action, @selector(delete:)))
+  else if (sel_isEqual(action, @selector(delete:)))
     {
       if ([s count] == 0)
 	return NO;
@@ -1177,7 +1177,7 @@
 
       return [selectionOwner respondsToSelector: @selector(deleteSelection)];
     }
-  else if (sel_eq(action, @selector(paste:)))
+  else if (sel_isEqual(action, @selector(paste:)))
     {
       if ([s count] == 0)
 	return NO;
@@ -1193,7 +1193,7 @@
 
       return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
     }
-  else if (sel_eq(action, @selector(setName:)))
+  else if (sel_isEqual(action, @selector(setName:)))
     {
       NSString	*n;
       id	o;
@@ -1219,12 +1219,12 @@
 	  return NO;
 	}
     }
-  else if(sel_eq(action, @selector(createSubclass:)) ||
-	  sel_eq(action, @selector(loadClass:)) ||
-	  sel_eq(action, @selector(createClassFiles:)) ||
-	  sel_eq(action, @selector(instantiateClass:)) ||
-	  sel_eq(action, @selector(addAttributeToClass:)) ||
-	  sel_eq(action, @selector(remove:)))
+  else if(sel_isEqual(action, @selector(createSubclass:)) ||
+	  sel_isEqual(action, @selector(loadClass:)) ||
+	  sel_isEqual(action, @selector(createClassFiles:)) ||
+	  sel_isEqual(action, @selector(instantiateClass:)) ||
+	  sel_isEqual(action, @selector(addAttributeToClass:)) ||
+	  sel_isEqual(action, @selector(remove:)))
     {
       if(active == nil)
 	{
@@ -1236,7 +1236,7 @@
 	  return NO;
 	}
 
-      if(sel_eq(action, @selector(createSubclass:)))
+      if(sel_isEqual(action, @selector(createSubclass:)))
 	{
 	  NSArray *s = [selectionOwner selection];
 	  id o = nil;
@@ -1244,7 +1244,7 @@
 
 	  if([s count] == 0 || [s count] > 1)
 	    return NO;
-	  
+
 	  o = [s objectAtIndex: 0];
 	  name = [o className];
 
@@ -1252,13 +1252,13 @@
 	    {
 	      return NO;
 	    }
-	  
+
 	  if([name isEqual: @"FirstResponder"])
 	    return NO;
 	}
-      
-      if(sel_eq(action, @selector(createClassFiles:)) || 
-	 sel_eq(action, @selector(remove:)))
+
+      if(sel_isEqual(action, @selector(createClassFiles:)) ||
+	 sel_isEqual(action, @selector(remove:)))
 	{
 	  id o = nil;
 	  NSString *name = nil;
@@ -1280,7 +1280,7 @@
 	    }
 	}
 
-      if(sel_eq(action, @selector(instantiateClass:)))
+      if(sel_isEqual(action, @selector(instantiateClass:)))
 	{
 	  id o = nil;
 	  NSString *name = nil;
@@ -1293,12 +1293,12 @@
 	    {
 	      return NO;
 	    }
-	  
+
 	  if([active classIsSelected] == NO)
 	    {
 	      return NO;
 	    }
-	  
+
 	  o = [s objectAtIndex: 0];
 	  name = [o className];
 	  if(name != nil)
@@ -1308,9 +1308,9 @@
 	    }
 	}
     }
-  else if(sel_eq(action, @selector(loadSound:)) ||
-	  sel_eq(action, @selector(loadImage:)) ||
-	  sel_eq(action, @selector(debug:)))
+  else if(sel_isEqual(action, @selector(loadSound:)) ||
+	  sel_isEqual(action, @selector(loadImage:)) ||
+	  sel_isEqual(action, @selector(debug:)))
     {
       if(active == nil)
 	{
@@ -1341,7 +1341,7 @@
 	  break;
 	}
     }
-  
+
   return unique;
 }
 
@@ -1352,7 +1352,7 @@
 @end
 
 @implementation Gorm (GormServer)
-// Methods to support external apps adding and deleting 
+// Methods to support external apps adding and deleting
 // classes from the current document...
 - (void) addClass: (NSDictionary *) dict
 {
@@ -1362,7 +1362,7 @@
   NSArray *actions = [dict objectForKey: @"actions"];
   NSString *className = [dict objectForKey: @"className"];
   NSString *superClassName = [dict objectForKey: @"superClassName"];
-  
+
   // If the class is known, delete it before proceeding.
   if([cm isKnownClass: className])
     {
@@ -1381,6 +1381,6 @@
   GormDocument *doc = (GormDocument *)[self activeDocument];
   GormClassManager *cm = [doc classManager];
 
-  [cm removeClassNamed: className];  
+  [cm removeClassNamed: className];
 }
 @end

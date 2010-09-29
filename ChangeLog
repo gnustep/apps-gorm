@@ -1,3 +1,11 @@
+2010-09-39 Niels Grewe <niels.grewe@halbordnung.de>
+
+	* Gorm.m: Replace calls to sel_eq() with sel_isEqual() for
+	compatibility with the Objective-C 2 runtime API. Whitespace
+	cleanup.
+
+	Small tweak for Objective-C 2 runtime API compatibility.
+
 2010-09-17  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
 	* Palettes/4Data/GormTextViewAttributesInspector.h: 
