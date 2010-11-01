@@ -25,6 +25,8 @@
 #define GORM_GORMPLUGIN
 #include <InterfaceBuilder/IBPlugin.h>
 
+@class NSString, NSArray;
+
 @interface GormPlugin : IBPlugin
 - (void) registerDocumentTypeName: (NSString *)name
                 humanReadableName: (NSString *)hrName

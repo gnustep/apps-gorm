@@ -122,6 +122,7 @@
 	    }
 	  else
 	    {
+	      NSEnumerator *en;
 	      //
 	      // Create an unarchiver, and use it to unarchive the gorm file while
 	      // handling class replacement so that standard objects understood
@@ -144,7 +145,7 @@
 	      //
 	      // Substitute any classes specified by the palettes...
 	      //
-	      NSEnumerator *en = [substituteClasses keyEnumerator];
+	      en = [substituteClasses keyEnumerator];
 	      while((subClassName = [en nextObject]) != nil)
 		{
 		  NSString *realClassName = [substituteClasses objectForKey: subClassName];

@@ -1,3 +1,8 @@
+2010-11-01 Riccardo Mottola
+
+	* Plugins/Xib/GormXibWrapperLoader.m
+	Removed c99-ism
+
 2010-09-39 Niels Grewe <niels.grewe@halbordnung.de>
 
 	* Gorm.m: Replace calls to sel_eq() with sel_isEqual() for
