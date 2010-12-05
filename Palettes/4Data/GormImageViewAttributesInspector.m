@@ -80,6 +80,7 @@
 	  if (image)
 	    {
 	      [image setName: name];
+	      [image setArchiveByName: YES];
 	    }
 	  else
 	    {
