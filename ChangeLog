@@ -1,3 +1,11 @@
+2010-12-05 18:12-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/4Data/GormImageViewAttributesInspector.m: Remove check for
+	name so that images which currently do not reference a known image
+	can be saved by name.
+	* Palettes/4Data/GormNSImageViewInspector.gorm: Add connection
+	to ok: from the text field.
+
 2010-11-01 Riccardo Mottola
 
 	* Plugins/Xib/GormXibWrapperLoader.m

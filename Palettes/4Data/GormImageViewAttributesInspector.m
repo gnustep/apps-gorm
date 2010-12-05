@@ -76,13 +76,17 @@
       image = [NSImage imageNamed: name];
       if (image == nil)
 	{
-	  image = [[NSImage alloc] initByReferencingFile: name];
+	  image = [[NSImage alloc] init]; // [[NSImage alloc] initByReferencingFile: name];
 	  if (image)
 	    {
 	      [image setName: name];
 	    }
+	  else
+	    {
+	      // NSBeep();
+	    }
 	}
-      else
+      // else
 	{
 	  [object setImage: image ];
 	}
@@ -132,7 +136,7 @@
 /* delegate method for changing the ImageView Name */
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
-  [self ok:[aNotification object]];
+  // [self ok:[aNotification object]];
 }
 
 @end
