@@ -26,14 +26,12 @@ table which seem intersting:
 * Add Feature for creating more inteligent [mh] file  (for ex. 
   delegate/dataSource method if needs ...)
 
-Features Scheduled for 1.0:
-
 Usability features:
 1) Add outlet/action editing feature to advance the cursor to the next
 outlet/action automatically after the user finishes editing the current
 one. 
 
-2) Make GormClassEditor return a dictionary instead of a proxy object as it's
-selection.
+2) Fix gmodel issue in bug tracker.
 
-3) Better gmodel import.
+Project Center Integration:
+1) image sharing between project and gorm/nib files so that images from the project can be loaded into Gorm's interfaces.
