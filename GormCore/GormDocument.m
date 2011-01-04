@@ -2520,7 +2520,7 @@ static void _real_close(GormDocument *self,
       if ([control isKindOfClass: [NSMatrix class]])
         {
           int row, col;
-          NSMatrix matrix = (NSMatrix *)control;
+          NSMatrix *matrix = (NSMatrix *)control;
 
           if ([matrix getRow: &row column: &col ofCell: cell])
             {
