@@ -2514,6 +2514,21 @@ static void _real_close(GormDocument *self,
     }
   else if([object isKindOfClass: [NSCell class]])
     {
+      NSCell *cell = object;
+      NSView *control = [cell controlView];
+
+      if ([control isKindOfClass: [NSMatrix class]])
+        {
+          int row, col;
+          NSMatrix matrix = (NSMatrix *)control;
+
+          if ([matrix getRow: &row column: &col ofCell: cell])
+            {
+              NSRect cellFrame = [matrix cellFrameAtRow: row column: col];
+              *r = [control convertRect: cellFrame toView: nil];
+              return [control window];
+            }
+        }
     }
 
   // if we get here, then it wasn't any of the above.

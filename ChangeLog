@@ -1,3 +1,14 @@
+2011-01-04  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
+	* GormCore/GormDocument.m (-windowAndRect:forObject:):
+	* GormCore/GormMatrixEditor.m (-draggingEntered:,
+	-performDragOperation:): Allow making connections to individual
+	cells of a matrix.
+
+	* GormCore/GormMatrixEditor.m (-validateFrame:...):
+	Attach added cells and detach removed cells when changing the
+	number of rows or columns in a matrix.
+
 2010-12-05 19:10-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/4Data/GormImageViewAttributesInspector.m: Archive

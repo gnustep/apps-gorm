@@ -583,35 +583,53 @@ static BOOL done_editing;
       int newRows = (frame.size.height - [_EO frame].size.height) /
 	heightIncrement;
       
-      int i;
+      int i, j;
 
       if (newCols > 0)
 	{
-	  for ( i = 0; i < newCols; i++)
+	  for (j = cols; j < cols + newCols; j++)
 	    {
 	      [_EO addColumn];
+	      for (i = 0; i < rows; i++)
+		{
+		  [document attachObject: [_EO cellAtRow: i column: j]
+				toParent: _EO];
+		}
 	    }
 	}
       else if (newCols < 0)
 	{
-	  for ( i = 0; i < -newCols; i++)
+	  for (j = cols - 1; j >= cols - newCols; j--)
 	    {
-	      [_EO removeColumn: cols - i - 1];
+	      for (i = 0; i < rows; i++)
+		{
+		  [document detachObject: [_EO cellAtRow: i column: j]];
+		}
+	      [_EO removeColumn: j];
 	    }
 	}
 
       if (newRows > 0)
 	{
-	  for ( i = 0; i < newRows; i++)
+	  for (i = rows; i < rows + newRows; i++)
 	    {
 	      [_EO addRow];
+	      for (j = 0; j < cols + newCols; j++)
+		{
+		  [document attachObject: [_EO cellAtRow: i column: j]
+				toParent: _EO];
+		}
 	    }
 	}
       else if (newRows < 0)
 	{
-	  for ( i = 0; i < -newRows; i++)
+	  for (i = rows - 1; i >= rows + newRows; i--)
 	    {
-	      [_EO removeRow: rows - i - 1];
+	      for (j = 0; j < cols + newCols; j++)
+		{
+		  [document detachObject: [_EO cellAtRow: i column: j]];
+		}
+	      [_EO removeRow: i];
 	    }
 	}
       [_EO setFrame: frame];
@@ -686,28 +704,61 @@ static BOOL done_editing;
   return;
 }
 
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *dragPb;
+  NSArray      *types;
+
+  dragPb = [sender draggingPasteboard];
+  types = [dragPb types];
+  if ([types containsObject: GormLinkPboardType] == YES)
+    {
+      int     row, col;
+      NSPoint loc = [sender draggingLocation];
+      NSPoint mouseDownPoint = [_EO convertPoint: loc fromView: nil];
+
+      if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
+        {
+          [NSApp displayConnectionBetween: [NSApp connectSource]
+                                      and: [_EO cellAtRow: row column: col]];
+          return NSDragOperationLink;
+        }
+    }
+  return [super draggingEntered: sender];
+}
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
   NSPoint       dropPoint = [sender draggedImageLocation];
-  NSPoint       mouseDownPoint = 
-    [_EO convertPoint: dropPoint fromView: nil];
+  NSPoint       mouseDownPoint = [_EO convertPoint: dropPoint fromView: nil];
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
 
   if ([types containsObject: GormLinkPboardType])
     {
+      int row, col;
+      id object;
+
+      if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
+        {
+          object = [_EO cellAtRow: row column: col];
+        }
+      else
+        {
+          object = _EO;
+        }
       [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: _EO];
+             and: object];
       [NSApp startConnecting];
     }
-  else if([types containsObject: GormImagePboardType] == YES ||
-	  [types containsObject: GormSoundPboardType] == YES)
+  else if ([types containsObject: GormImagePboardType] == YES ||
+	   [types containsObject: GormSoundPboardType] == YES)
     {
       int row, col;
-      if([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
+      if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
 	{
 	  id object = [_EO cellAtRow: row column: col];
 	  if ([types containsObject: GormImagePboardType] == YES)
@@ -715,7 +766,7 @@ static BOOL done_editing;
 	      NSString *name = [dragPb stringForType: GormImagePboardType];
 	      NSImage *image = [NSImage imageNamed: name];
 	      [image setArchiveByName: NO];
-	      if([object respondsToSelector: @selector(setSound:)])
+	      if ([object respondsToSelector: @selector(setSound:)])
 		{
 		  [object setImage: image];
 		}
@@ -726,11 +777,11 @@ static BOOL done_editing;
 
 	      return YES;
 	    }
-	  else if([types containsObject: GormSoundPboardType] == YES)
+	  else if ([types containsObject: GormSoundPboardType] == YES)
 	    {
 	      NSString *name;
 	      name = [dragPb stringForType: GormSoundPboardType];
-	      if([object respondsToSelector: @selector(setSound:)])
+	      if ([object respondsToSelector: @selector(setSound:)])
 		{
 		  [object setSound: [NSSound soundNamed: name]];
 		}
