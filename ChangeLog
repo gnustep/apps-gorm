@@ -1,5 +1,12 @@
 2011-01-04  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
+	* GormCore/GormMatrixEditor.m (-connectTargetAtPoint:,
+	-draggingEntered:, -performDragOperation:): Make connections to
+	the whole matrix possible again for matrixes with small intercell
+	spacing.
+
+2011-01-04  Wolfgang Lux  <wolfgang.lux@gmail.com>
+
 	* GormCore/GormDocument.m (-windowAndRect:forObject:):
 	* GormCore/GormMatrixEditor.m (-draggingEntered:,
 	-performDragOperation:): Allow making connections to individual

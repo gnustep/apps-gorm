@@ -704,6 +704,31 @@ static BOOL done_editing;
   return;
 }
 
+- (id) connectTargetAtPoint: (NSPoint)mouseLoc
+{
+  int row, col;
+
+  if ([_EO getRow: &row column: &col forPoint: mouseLoc] == YES)
+    {
+      /* If a matrix has small intercell spacing (less than 1 pixel), it
+	 becomes impossible to make connections to the whole matrix, since
+	 -getRow:column:forPoint: returns YES for every location within the
+	 matrix's bounds. Therefore, we accept connection to matrix cells
+	 only if the mouse is strictly inside the cell. */
+      NSRect cellFrame = [_EO cellFrameAtRow: row column: col];
+
+      if (mouseLoc.x != NSMinX(cellFrame) &&
+	  mouseLoc.x != NSMaxX(cellFrame) &&
+	  mouseLoc.y != NSMinY(cellFrame) &&
+	  mouseLoc.y != NSMaxY(cellFrame))
+	{
+	  return [_EO cellAtRow: row column: col];
+	}
+    }
+
+  return _EO;
+}
+
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *dragPb;
@@ -713,16 +738,12 @@ static BOOL done_editing;
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      int     row, col;
       NSPoint loc = [sender draggingLocation];
       NSPoint mouseDownPoint = [_EO convertPoint: loc fromView: nil];
 
-      if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
-        {
-          [NSApp displayConnectionBetween: [NSApp connectSource]
-                                      and: [_EO cellAtRow: row column: col]];
-          return NSDragOperationLink;
-        }
+      [NSApp displayConnectionBetween: [NSApp connectSource]
+	     and: [self connectTargetAtPoint: mouseDownPoint]];
+      return NSDragOperationLink;
     }
   return [super draggingEntered: sender];
 }
@@ -739,19 +760,8 @@ static BOOL done_editing;
 
   if ([types containsObject: GormLinkPboardType])
     {
-      int row, col;
-      id object;
-
-      if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
-        {
-          object = [_EO cellAtRow: row column: col];
-        }
-      else
-        {
-          object = _EO;
-        }
       [NSApp displayConnectionBetween: [NSApp connectSource] 
-             and: object];
+             and: [self connectTargetAtPoint: mouseDownPoint]];
       [NSApp startConnecting];
     }
   else if ([types containsObject: GormImagePboardType] == YES ||
