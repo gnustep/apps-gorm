@@ -131,6 +131,11 @@
     {
       [object setTag: [[sender cellAtIndex: 0] intValue]];
     }
+  else if (sender == sendActionMatrix)
+    {
+      BOOL sendActionOnEndEditing = ([[sender cellAtRow: 1 column: 0] state] == NSOnState);
+      [[object cell] setSendsActionOnEndEditing: sendActionOnEndEditing];
+    }
 
   [super ok:sender];
 }
@@ -164,6 +169,11 @@
     }
 
   [[tagForm cellAtIndex: 0] setIntValue: [object tag]];
+
+  if([[object cell] sendsActionOnEndEditing])
+    {
+      [sendActionMatrix selectCellAtRow: 1 column: 0];
+    }
 
   [super revert:sender];
 }

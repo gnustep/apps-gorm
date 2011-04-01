@@ -12,7 +12,8 @@
 	    textColor,
 	    editableSwitch,
 	    scrollableSwitch,
-	    selectableSwitch
+	    selectableSwitch,
+	    sendActionMatrix
 	);
 	Super = IBInspector;
     };

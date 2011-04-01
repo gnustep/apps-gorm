@@ -54,6 +54,7 @@
   NSButton *selectableSwitch;
   NSButton *scrollableSwitch;
   NSForm *tagForm;
+  NSMatrix *sendActionMatrix;
 }
 
 @end

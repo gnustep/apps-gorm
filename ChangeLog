@@ -1,3 +1,18 @@
+2011-04-01 03:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm: Add matrix 
+	for enter/end editing.
+	* Palettes/2Controls/GormTextFieldAttributesInspector.h: Added 
+	ivar to point to new matrix
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Implement 
+	changes to handle "Send Action On Enter/End editing" per task #10799.
+	Added code to ok: method to handle new matrix.
+
+2011-04-01 03:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
+	
+	* GormInfo.plist: Bump version.
+	* Version: Bump version for SVN version.
+
 2011-01-04  Wolfgang Lux  <wolfgang.lux@gmail.com>
 
 	* GormCore/GormMatrixEditor.m (-connectTargetAtPoint:,

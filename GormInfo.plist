@@ -51,4 +51,5 @@
     Copyright = "Copyright (C) 1999-2010 FSF";
     CopyrightDescription = "Released under the GNU General Public License 3.0";
     NSBuildVersion = "1.2.13 May 19 2010";
+    GSDesktopInstallationDomain=SYSTEM;
 }

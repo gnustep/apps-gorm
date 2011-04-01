@@ -2,7 +2,7 @@
 # This file is included in various Makefile's to get version information.
 # Compatible with Bourne shell syntax, so it can included there too.
 
-# The gcc version required to compile the library.
+# The minimum gcc version required to compile the library.
 GNUSTEP_GCC=2.95.0
 
 # GNUstep GUI version required
