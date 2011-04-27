@@ -1,3 +1,8 @@
+2011-04-26 20:24-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Fix issue
+	with refreshing display of enter/end editing when selecting fields.
+
 2011-04-01 03:04-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/2Controls/GormNSTextFieldInspector.gorm: Add matrix 

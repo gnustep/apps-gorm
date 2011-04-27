@@ -174,6 +174,10 @@
     {
       [sendActionMatrix selectCellAtRow: 1 column: 0];
     }
+  else
+    {
+      [sendActionMatrix selectCellAtRow: 0 column: 0];
+    }
 
   [super revert:sender];
 }
