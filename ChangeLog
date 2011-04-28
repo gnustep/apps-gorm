@@ -1,3 +1,9 @@
+2011-04-28 14:44-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Plugins/Xib/GormXibWrapperLoader.m: Correct compilation errors
+	and warnings in Xib loading code.  Correct loading code so that
+	Xib file partially loads.
+
 2011-04-26 20:24-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/2Controls/GormTextFieldAttributesInspector.m: Fix issue
