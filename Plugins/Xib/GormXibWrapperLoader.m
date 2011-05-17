@@ -37,6 +37,9 @@
 #include "GormXibWrapperLoader.h"
 // #include "GormWindowTemplate.h"
 
+/*
+ * Additional methods needed to read xibs into gorm...
+ */
 @interface IBObjectRecord (GormLoading)
 - (id) parent;
 @end
@@ -63,13 +66,7 @@
 - (NSString *) label;
 - (id) source;
 - (id) destination;
-
-// - (void) setLabel: (NSString *)string;
-// - (void) setSource: (id)src;
-// - (void) setDestination: (id)dst;
-
 - (NSNibConnector *) nibConnector;
-
 @end
 
 @implementation IBConnection (GormLoading)
@@ -87,10 +84,6 @@
 {
   return destination;
 }
-
-// - (void) setLabel: (NSString *)string;
-// - (void) setSource: (id)src;
-// - (void) setDestination: (id)dst;
 
 - (NSNibConnector *) nibConnector
 {
@@ -138,8 +131,14 @@
 }
 @end
 
+/*
+ * Forward declarations for classes
+ */
 @class GormNSWindow;
 
+/*
+ * Xib loader...
+ */
 @implementation GormXibWrapperLoader
 + (NSString *) fileType
 {

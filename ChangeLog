@@ -1,3 +1,46 @@
+2011-05-17 17:32-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormLib/COPYING.LIB: Update license text for files.
+	* GormLib/IBApplicationAdditions.h
+	* GormLib/IBApplicationAdditions.m
+	* GormLib/IBCellAdditions.h
+	* GormLib/IBCellProtocol.h
+	* GormLib/IBConnectors.h
+	* GormLib/IBConnectors.m
+	* GormLib/IBDefines.h
+	* GormLib/IBDocuments.h
+	* GormLib/IBDocuments.m
+	* GormLib/IBEditors.h
+	* GormLib/IBEditors.m
+	* GormLib/IBInspector.h
+	* GormLib/IBInspector.m
+	* GormLib/IBInspectorManager.h
+	* GormLib/IBInspectorManager.m
+	* GormLib/IBInspectorMode.h
+	* GormLib/IBInspectorMode.m
+	* GormLib/IBObjectAdditions.h
+	* GormLib/IBObjectAdditions.m
+	* GormLib/IBObjectProtocol.h
+	* GormLib/IBPalette.h
+	* GormLib/IBPalette.m
+	* GormLib/IBPlugin.h
+	* GormLib/IBPlugin.m
+	* GormLib/IBProjectFiles.h
+	* GormLib/IBProjects.h
+	* GormLib/IBResourceManager.h
+	* GormLib/IBResourceManager.m
+	* GormLib/IBSystem.h
+	* GormLib/IBViewAdditions.h
+	* GormLib/IBViewProtocol.h
+	* GormLib/IBViewResourceDragging.h
+	* GormLib/InterfaceBuilder.h
+
+2011-05-17 17:32-EDT Gregory John Casamento <greg.casamento@gmail.com>
+	
+	* Plugins/Xib/GormXibWrapperLoader.m: Various fixes for XIB
+	loading.
+	* English.lproj/GormDocument.gorm: Fix button title.
+
 2011-04-28 14:44-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Plugins/Xib/GormXibWrapperLoader.m: Correct compilation errors
