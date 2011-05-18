@@ -33,6 +33,7 @@ static NSImage *horizontalImage;
 @class GormEditorToParent;
 
 @implementation GormStandaloneViewEditor
+
 - (void) mouseDown: (NSEvent *) theEvent
 {
   BOOL onKnob = NO;
@@ -122,10 +123,10 @@ static NSImage *horizontalImage;
       }
   }
 
+  // get the view we are on
   {
     GormViewEditor *editorView;
 
-    // get the view we are on
     {
       NSPoint mouseDownPoint;
       NSView *result = nil;
@@ -359,4 +360,5 @@ static NSImage *horizontalImage;
     
   }
 }
+
 @end

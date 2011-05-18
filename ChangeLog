@@ -1,3 +1,12 @@
+2011-05-17 20:43-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormStandaloneViewEditor.h: 
+	* GormCore/GormStandaloneViewEditor.m: Improve support for standalone 
+	views.  Correct issue with ungrouping.  Correct issues with editing
+	subviews in a standalone view.
+	* GormCore/GormViewSizeInspector.m: Remove code which 
+	made standalone views uneditable in the size inspector.
+
 2011-05-17 17:32-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormLib/COPYING.LIB: Update license text for files.

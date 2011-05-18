@@ -156,11 +156,13 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
+  /*
   if([[anObject window] isKindOfClass: [GormViewWindow class]])
     {
       [sizeForm setEnabled: NO];
     }
   else
+  */
     {
       [sizeForm setEnabled: YES];
     }
@@ -252,6 +254,7 @@ NSImage	*mVLine = nil;
       [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
       [anObject setPostsFrameChangedNotifications: YES];
 
+      /*
       if([[anObject window] isKindOfClass: [GormViewWindow class]] ||
 	 [anObject window] == nil)
 	{ 
@@ -266,6 +269,7 @@ NSImage	*mVLine = nil;
 	  [[sizeForm cellAtIndex: 3] setEditable: NO]; 
 	}
       else
+      */
 	{
 	  [[sizeForm cellAtIndex: 0] setEnabled: YES]; 
 	  [[sizeForm cellAtIndex: 1] setEnabled: YES]; 

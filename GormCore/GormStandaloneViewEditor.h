@@ -24,9 +24,9 @@
 #ifndef	INCLUDED_GormStandaloneViewEditor_h
 #define	INCLUDED_GormStandaloneViewEditor_h
 
-#include <GormCore/GormViewWithSubviewsEditor.h>
+#include <GormCore/GormViewWithContentViewEditor.h>
 
-@interface GormStandaloneViewEditor : GormViewWithSubviewsEditor <IBSelectionOwners>
+@interface GormStandaloneViewEditor : GormViewWithContentViewEditor <IBSelectionOwners>
 @end
 
 #endif
