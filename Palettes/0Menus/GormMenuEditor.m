@@ -126,7 +126,7 @@
   NSPoint	loc = [theEvent locationInWindow];
   NSView	*hit = [super hitTest: loc];
   
-  [[self window] becomeMainWindow];
+  [[self window] makeMainWindow];
   [[self window] makeFirstResponder: self];
 
   if (hit == rep)
