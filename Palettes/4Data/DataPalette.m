@@ -46,20 +46,6 @@ int defaultNumberFormatIndex = 0;
 
 @implementation NSNumberFormatter (GormAdditions)
 
-+ (void) initialize
-{
-  predefinedNumberFormats = [NSArray arrayWithObjects:
-       [NSArray arrayWithObjects: @"$#,##0.00;0.00;-$#,##0.00",@"9999.99",@"-9999.99",nil],
-       [NSArray arrayWithObjects: @"$#,##0.00;0.00;[Red]($#,##0.00)",@"9999.99",@"-9999.99",nil],
-       [NSArray arrayWithObjects: @"0.00;0.00;-0.00",@"9999.99",@"-9999.99",nil],
-       [NSArray arrayWithObjects: @"0;0;-0",@"100",@"-100",nil],
-       [NSArray arrayWithObjects: @"00000;00000;-00000",@"100",@"-100",nil],
-       [NSArray arrayWithObjects: @"0%;0%;-0%",@"100",@"-100",nil],
-       [NSArray arrayWithObjects: @"0.00%;0.00%;-0.00%",@"99.99",@"-99.99",nil],
-       nil];
-}
-
-
 + (int) formatCount
 {
   return [predefinedNumberFormats count];
@@ -152,14 +138,6 @@ int defaultDateFormatIndex = 3;
 
 @implementation NSDateFormatter (GormAdditions)
 
-+ (void) initialize
-{
-  predefinedDateFormats = [NSArray arrayWithObjects: @"%c",@"%A, %B %e, %Y",
-                         @"%B %e, %Y", @"%e %B %Y", @"%m/%d/%y",
-                         @"%b %d, %Y", @"%B %H", @"%d %b %Y",
-                         @"%H:%M:%S", @"%I:%M",nil];
-}
-
 + (int) formatCount
 {
   return [predefinedDateFormats count];
@@ -174,7 +152,6 @@ int defaultDateFormatIndex = 3;
 {
   return [predefinedDateFormats indexOfObject: format];
 }
-
 
 + (NSString *) defaultFormat
 {
@@ -196,6 +173,24 @@ int defaultDateFormatIndex = 3;
 @end
 
 @implementation DataPalette
+
++ (void) initialize
+{
+  predefinedNumberFormats = [[NSArray alloc] initWithObjects:
+       [NSArray arrayWithObjects: @"$#,##0.00;0.00;-$#,##0.00",@"9999.99",@"-9999.99",nil],
+       [NSArray arrayWithObjects: @"$#,##0.00;0.00;[Red]($#,##0.00)",@"9999.99",@"-9999.99",nil],
+       [NSArray arrayWithObjects: @"0.00;0.00;-0.00",@"9999.99",@"-9999.99",nil],
+       [NSArray arrayWithObjects: @"0;0;-0",@"100",@"-100",nil],
+       [NSArray arrayWithObjects: @"00000;00000;-00000",@"100",@"-100",nil],
+       [NSArray arrayWithObjects: @"0%;0%;-0%",@"100",@"-100",nil],
+       [NSArray arrayWithObjects: @"0.00%;0.00%;-0.00%",@"99.99",@"-99.99",nil],
+       nil];
+
+  predefinedDateFormats = [[NSArray alloc] initWithObjects: @"%c",@"%A, %B %e, %Y",
+                         @"%B %e, %Y", @"%e %B %Y", @"%m/%d/%y",
+                         @"%b %d, %Y", @"%B %H", @"%d %b %Y",
+                         @"%H:%M:%S", @"%I:%M",nil];
+}
 
 - (id) init
 {

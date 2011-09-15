@@ -98,7 +98,6 @@ extern NSArray *predefinedNumberFormats;
               zeroFmt     = [NSNumberFormatter zeroFormatAtIndex:row];
               negativeFmt = [NSNumberFormatter negativeFormatAtIndex:row];
               fullFmt     = [NSNumberFormatter formatAtIndex:row];
-            }
           
           // Update Appearance samples
           [self updateAppearanceFieldsWithFormat: fullFmt];
@@ -109,9 +108,9 @@ extern NSArray *predefinedNumberFormats;
           [[formatForm cellAtIndex:2] setStringValue: VSTR(negativeFmt)];
 
           [fmtr setFormat:fullFmt];
-          
-         }
 
+            }
+         }
       else if (sender == formatForm)
         {
           int idx;

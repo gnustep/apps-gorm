@@ -1,5 +1,14 @@
 2011-09-15  Fred Kiefer <FredKiefer@gmx.de>
 
+	* GormCore/GormPrivate.h ([NSDateFormatter +initialize],
+	[NSNumberFormatter +initialize]): Remove these dangerours methods.
+	* Palettes/4Data/DataPalette.m: Move +initialize method into
+	DataPalette and retain the static objects.
+	* Palettes/4Data/GormNumberFormatterAttributesInspector.m: Clean
+	up compiler warnings.
+
+2011-09-15  Fred Kiefer <FredKiefer@gmx.de>
+
 	* Palettes/0Menu/GormMenuEditor.m: Change becomeMainWindow call
 	to makeMainWindow.
 	Patch by Matt Rice <ratmice@gmail.com>

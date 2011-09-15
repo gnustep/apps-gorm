@@ -97,7 +97,6 @@ extern NSString *GormResizeCellNotification;
 
 @interface NSDateFormatter (GormAdditions)
 
-+ (void) initialize;
 + (int) formatCount;
 + (NSString *) formatAtIndex: (int)index;
 + (int) indexOfFormat: (NSString *) format;
@@ -108,7 +107,6 @@ extern NSString *GormResizeCellNotification;
 
 @interface NSNumberFormatter (GormAdditions)
 
-+ (void) initialize;
 + (int) formatCount;
 + (NSString *) formatAtIndex: (int)index;
 + (NSString *) positiveFormatAtIndex: (int)index;
