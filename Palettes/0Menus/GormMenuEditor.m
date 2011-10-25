@@ -385,7 +385,7 @@
       // Line up submenu with parent menu.
       //
       item = [document parentOfObject: edited];
-      if (item != nil)
+      if (item != nil && [item isKindOfClass: [NSMenuItem class]])
 	{
 	  NSMenu	*parent = [document parentOfObject: item];
 	  NSRect	frame = [[[parent menuRepresentation] window] frame];

@@ -1,3 +1,10 @@
+2011-10-25  Fred Kiefer <FredKiefer@gmx.de>
+
+	* Palettes/0Menu/GormMenuEditor.m: Protect against the menu parent
+	being a popup button cell.
+	* Plugins/Xib/GormXibWrapperLoader.m: Move additional methods into
+	gui and correct handling of file owner.
+
 2011-09-15  Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormPrivate.h ([NSDateFormatter +initialize],
