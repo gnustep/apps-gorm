@@ -39,6 +39,7 @@
 @class NSColorWell;
 @class NSForm;
 @class NSMatrix;
+@class NSPopUpButton;
 
 @interface GormTableViewAttributesInspector: IBInspector
 {
@@ -49,14 +50,17 @@
   /* scrollers */
   NSButton *verticalScrollerSwitch;
   NSButton *horizontalScrollerSwitch;
-
+  /* border and rows */
   NSMatrix *borderMatrix;
   NSForm *rowsHeightForm;
   /* options */
   NSButton *drawgridSwitch;
   NSButton *resizingSwitch;
   NSButton *reorderingSwitch;
-  
+  /* sorting */
+  NSForm *sortMatrix;
+  NSPopUpButton *sortOrder;
+  /* tag */
   NSForm *tagForm;
   NSColorWell *backgroundColor;
 }

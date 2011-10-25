@@ -29,16 +29,17 @@
   Clean up
   Author : Fabien Vallon <fabien@sonappart.net>
 */
-#include "GormTableViewAttributesInspector.h"
-#include "GormNSTableView.h"
-#include <GormCore/NSColorWell+GormExtensions.h>
-#include <GormCore/GormPrivate.h>
-#include <Foundation/NSNotification.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSColorWell.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
+#import "GormTableViewAttributesInspector.h"
+#import "GormNSTableView.h"
+#import <GormCore/NSColorWell+GormExtensions.h>
+#import <GormCore/GormPrivate.h>
+#import <Foundation/NSNotification.h>
+#import <Foundation/NSSortDescriptor.h>
+#import <AppKit/NSButton.h>
+#import <AppKit/NSColorWell.h>
+#import <AppKit/NSForm.h>
+#import <AppKit/NSMatrix.h>
+#import <AppKit/NSNibLoading.h>
 
 
 @implementation GormTableViewAttributesInspector
@@ -173,6 +174,19 @@
     {
       [object setBackgroundColor: [backgroundColor color]];
     }
+  else if( sender == sortMatrix || sender == sortOrder )
+    {
+      NSString *key = [[sortMatrix cellAtIndex: 0] stringValue];
+      SEL selector = NSSelectorFromString([[sortMatrix cellAtIndex: 1] stringValue]);
+      BOOL isAscending = ([sortOrder indexOfSelectedItem] == 0);
+      NSMutableArray *newSortDescriptors = [NSMutableArray array];
+      NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key
+								     ascending:isAscending
+								      selector:selector];
+      [newSortDescriptors addObject: sortDescriptor];
+      [object setSortDescriptors: newSortDescriptors];
+      [sortDescriptor release];
+    }
 
   // #warning always needed ? 
   [scrollView setNeedsDisplay: YES];
@@ -235,7 +249,15 @@
 
   /* background color */
   [backgroundColor setColorWithoutAction: [object backgroundColor]];
-  
+
+  /* sort */
+  NSSortDescriptor *sortDescriptor = [[object sortDescriptors] objectAtIndex: 0];
+  if(sortDescriptor)
+    {
+      [[sortMatrix cellAtIndex: 0] setStringValue: [sortDescriptor key]];
+      [[sortMatrix cellAtIndex: 1] setStringValue: NSStringFromSelector([sortDescriptor selector])];
+      [sortOrder selectItemAtIndex: ([sortDescriptor ascending]?0:1)];
+    }
   [super revert:sender];
 }
 

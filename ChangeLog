@@ -1,3 +1,12 @@
+2011-10-26 Gregory John Casamento <greg.casamento@gmail.com>
+	
+	* Palettes/3Containers/GormTableViewAttributesInspector.h:
+	Add sortMatrix and sortOrder to class for inspector.
+	* Palettes/3Containers/GormTableViewAttributesInspector.m:
+	Add logic to ok:/revert: to handle sort descriptors.
+	* Palettes/3Containers/GormNSTableViewInspector.gorm:
+	Add form and popupbutton for sortMatrix and sortOrder
+
 2011-10-25  Fred Kiefer <FredKiefer@gmx.de>
 
 	* Palettes/0Menu/GormMenuEditor.m: Protect against the menu parent

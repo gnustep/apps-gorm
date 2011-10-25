@@ -16,7 +16,9 @@
 	    columnSelectionSwitch,
 	    drawgridSwitch,
 	    resizingSwitch,
-	    reorderingSwitch
+	    reorderingSwitch,
+	    sortMatrix,
+	    sortOrder
 	);
 	Super = IBInspector;
     };
