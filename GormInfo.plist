@@ -42,7 +42,7 @@
     ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "Gorm 1.2.13 (SVN)";
+    ApplicationRelease = "Gorm 1.2.15 (SVN, Release Candidate)";
     Authors = ("Gregory John Casamento <greg.casamento@gmail.com>",
     	       "Adam Fedor <fedor@gnu.org>",
     	       "Richard Frith-Macdonald <rfm@gnu.org>",
@@ -50,6 +50,6 @@
                "Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
     Copyright = "Copyright (C) 1999-2010 FSF";
     CopyrightDescription = "Released under the GNU General Public License 3.0";
-    NSBuildVersion = "1.2.13 May 19 2010";
+    NSBuildVersion = "1.2.15 Oct 29 2011";
     GSDesktopInstallationDomain=SYSTEM;
 }
