@@ -35,15 +35,17 @@
 */
 
 
-#include "GormTableColumnAttributesInspector.h"
-#include <GormCore/GormPrivate.h>
+#import "GormTableColumnAttributesInspector.h"
+#import <GormCore/GormPrivate.h>
 
-#include <AppKit/NSButton.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTextField.h>
-#include <AppKit/NSTableView.h>
-#include <AppKit/NSTableColumn.h>
+#import <AppKit/NSButton.h>
+#import <AppKit/NSMatrix.h>
+#import <AppKit/NSNibLoading.h>
+#import <AppKit/NSTextField.h>
+#import <AppKit/NSTableView.h>
+#import <AppKit/NSTableColumn.h>
+#import <AppKit/NSForm.h>
+#import <AppKit/NSPopUpButton.h>
 
 /*
   IBObjectAdditions category
@@ -208,7 +210,19 @@
 			     [columnTitle stringValue]];
       [[[object tableView] headerView] setNeedsDisplay: YES];
     }
-
+  // sort descriptor...
+  else if( sender == sortKey || sender == sortSelector || sender == sortOrder )
+    {
+      NSString *selectorString = [sortSelector stringValue];
+      NSString *key = [sortKey stringValue];
+      SEL selector = (([selectorString isEqual: @""]) ? NULL:NSSelectorFromString(selectorString));
+      BOOL isAscending = ([sortOrder indexOfSelectedItem] == 0);
+      NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key
+								     ascending:isAscending
+								      selector:selector];
+      [object setSortDescriptorPrototype: sortDescriptor];
+      [sortDescriptor release];
+    }
   [super ok:sender];
 }
 
@@ -278,6 +292,22 @@
   else
     [editableSwitch setState: NSOffState];
 
+  /* sort */
+  NSSortDescriptor *sortDescriptor = [(NSTableColumn *)object sortDescriptorPrototype];
+  if(sortDescriptor != nil)
+    {
+      SEL sel = [sortDescriptor selector];
+      NSString *selectorString = ((sel == NULL) ? @"" : NSStringFromSelector(sel));
+      [sortKey setStringValue: [sortDescriptor key]];
+      [sortSelector setStringValue: selectorString];
+      [sortOrder selectItemAtIndex: ([sortDescriptor ascending]?0:1)];
+    }
+  else
+    {
+      [sortKey setStringValue: @""];
+      [sortSelector setStringValue: @""];
+      [sortOrder selectItemAtIndex: 0];
+    }
   [super revert:sender];
 }
 

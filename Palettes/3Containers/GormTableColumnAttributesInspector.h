@@ -41,6 +41,8 @@
 @class NSMatrix;
 @class NSTextField;
 @class NSTableView;
+@class NSForm;
+@class NSPopUpButton;
 
 @interface GormTableColumnAttributesInspector : IBInspector
 {
@@ -53,6 +55,11 @@
   NSButton *defaultButton;
   NSTableView *cellTable;
   NSTextField *columnTitle;
+
+  /* sorting */
+  NSTextField *sortKey;
+  NSTextField *sortSelector;
+  NSPopUpButton *sortOrder;
 }
 
 @end

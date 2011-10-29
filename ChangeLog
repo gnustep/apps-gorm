@@ -1,5 +1,16 @@
+2011-10-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/3Containers/GormTableColumnAttributesInspector.h:
+	Add sortMatrix and sortOrder to class for inspector.
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m:
+	Add logic to ok:/revert: to handle sort descriptors.
+	* Palettes/3Containers/GormTableColumnAttributesInspector.gorm:
+	Add fields and popupbutton for sortKey, sortSelector and sortOrder
+	removed previous changes and moved them over to these classes since
+	they didn't belong in the NSTableView inspector.
+
 2011-10-26 Gregory John Casamento <greg.casamento@gmail.com>
-	
+
 	* Palettes/3Containers/GormTableViewAttributesInspector.h:
 	Add sortMatrix and sortOrder to class for inspector.
 	* Palettes/3Containers/GormTableViewAttributesInspector.m:

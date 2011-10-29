@@ -174,19 +174,6 @@
     {
       [object setBackgroundColor: [backgroundColor color]];
     }
-  else if( sender == sortMatrix || sender == sortOrder )
-    {
-      NSString *key = [[sortMatrix cellAtIndex: 0] stringValue];
-      SEL selector = NSSelectorFromString([[sortMatrix cellAtIndex: 1] stringValue]);
-      BOOL isAscending = ([sortOrder indexOfSelectedItem] == 0);
-      NSMutableArray *newSortDescriptors = [NSMutableArray array];
-      NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key
-								     ascending:isAscending
-								      selector:selector];
-      [newSortDescriptors addObject: sortDescriptor];
-      [object setSortDescriptors: newSortDescriptors];
-      [sortDescriptor release];
-    }
 
   // #warning always needed ? 
   [scrollView setNeedsDisplay: YES];
@@ -250,14 +237,6 @@
   /* background color */
   [backgroundColor setColorWithoutAction: [object backgroundColor]];
 
-  /* sort */
-  NSSortDescriptor *sortDescriptor = [[object sortDescriptors] objectAtIndex: 0];
-  if(sortDescriptor)
-    {
-      [[sortMatrix cellAtIndex: 0] setStringValue: [sortDescriptor key]];
-      [[sortMatrix cellAtIndex: 1] setStringValue: NSStringFromSelector([sortDescriptor selector])];
-      [sortOrder selectItemAtIndex: ([sortDescriptor ascending]?0:1)];
-    }
   [super revert:sender];
 }
 

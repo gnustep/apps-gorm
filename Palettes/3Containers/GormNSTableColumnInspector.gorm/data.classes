@@ -12,7 +12,10 @@
 	    cellTable,
 	    defaultButton,
 	    setButton,
-	    columnTitle
+	    columnTitle,
+	    sortOrder,
+	    sortKey,
+	    sortSelector
 	);
 	Super = IBInspector;
     };

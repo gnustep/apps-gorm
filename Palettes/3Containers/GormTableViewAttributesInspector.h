@@ -57,9 +57,6 @@
   NSButton *drawgridSwitch;
   NSButton *resizingSwitch;
   NSButton *reorderingSwitch;
-  /* sorting */
-  NSForm *sortMatrix;
-  NSPopUpButton *sortOrder;
   /* tag */
   NSForm *tagForm;
   NSColorWell *backgroundColor;
