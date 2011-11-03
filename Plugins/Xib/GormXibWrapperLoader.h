@@ -33,7 +33,6 @@
   IBObjectContainer *container;
   id nibFilesOwner;
 }
-- (BOOL) isTopLevelObject: (id)obj;
 @end
 
 #endif

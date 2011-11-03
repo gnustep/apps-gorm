@@ -1,3 +1,8 @@
+2011-11-03  Fred Kiefer <FredKiefer@gmx.de>
+
+	* Plugins/Xib/GormXibWrapperLoader.h,
+	* Plugins/Xib/GormXibWrapperLoader.m: Get XIB files to be loaded.
+
 2011-10-29 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/3Containers/GormTableColumnAttributesInspector.h:

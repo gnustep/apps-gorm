@@ -35,7 +35,7 @@
 #include <GormCore/GormCustomView.h>
 
 #include "GormXibWrapperLoader.h"
-// #include "GormWindowTemplate.h"
+#include "../Nib/GormWindowTemplate.h"
 
 /*
  * Forward declarations for classes
@@ -49,29 +49,6 @@
 + (NSString *) fileType
 {
   return @"GSXibFileType";
-}
-
-- (BOOL) isTopLevelObject: (id)obj
-{
-  NSEnumerator *en = [container objectRecordEnumerator];
-  IBObjectRecord *objectRecord = nil;
-
-  // Iterate through the list of objects... 
-  // if there is no parent for a given object then it is a top level object.
-  while((objectRecord = [en nextObject]) != nil)
-    {
-      id object = [objectRecord object];
-      if(object == obj)
-	{
-	  id parent = [objectRecord parent];
-	  if(parent == nil)
-	    {
-	      return YES;
-	    }
-	}
-    }
-
-  return NO;
 }
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
@@ -97,35 +74,7 @@
 	  id docFilesOwner;
 
 	  // turn off custom classes...
-	  /*
 	  [NSClassSwapper setIsInInterfaceBuilder: YES];	  
-	  en = [fileWrappers keyEnumerator];
-	  while((key = [en nextObject]) != nil)
-	    {
-	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
-	      if([fw isRegularFile])
-		{
-		  NSData *fileData = [fw regularFileContents];
-		  if([key isEqual: @"keyedobjects.nib"])
-		    {
-		      data = fileData;
-		    }
-		  else if([key isEqual: @"classes.nib"])
-		    {
-		      classes = fileData;
-		      
-		      // load the custom classes...
-		      if (![classManager loadXibFormatCustomClassesWithData: classes]) 
-			{
-			  NSRunAlertPanel(_(@"Problem Loading"), 
-					  _(@"Could not open the associated classes file.\n"
-					    @"You won't be able to edit connections on custom classes"), 
-					  _(@"OK"), nil, nil);
-			}
-		    }
-		}
-	    }
-	  */
 	  
 	  // check the data...
 	  if (data == nil) 
@@ -134,14 +83,14 @@
 	    }
 	  else
 	    {
-	      NSEnumerator *en;
+              NSEnumerator *en;
+              GSXibKeyedUnarchiver *u;
 	      //
 	      // Create an unarchiver, and use it to unarchive the gorm file while
 	      // handling class replacement so that standard objects understood
 	      // by the gui library are converted to their Gorm internal equivalents.
 	      //
-	      GSXibKeyedUnarchiver *u = [[GSXibKeyedUnarchiver alloc] initForReadingWithData: data];
-	  
+	      u = [[GSXibKeyedUnarchiver alloc] initForReadingWithData: data];
 	      [u setDelegate: self];
 	      
 	      //
@@ -151,6 +100,8 @@
 		 forClassName: @"NSCustomObject"];
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
+	      [u setClass: [GormWindowTemplate class] 
+		 forClassName: @"NSWindowTemplate"];
 	      [u setClass: [GormNSWindow class] 
 		 forClassName: @"NSWindow"];
 	      
@@ -177,12 +128,18 @@
 	      else
 		{
 		  IBObjectRecord *or = nil;
+		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects;
+                  id firstResponder;
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
+		  firstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [document filesOwner];
 
+		  //
+		  // set the current class on the File's owner...
+		  //
 		  if ([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
 		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
@@ -195,12 +152,12 @@
 		  while ((or = [en nextObject]) != nil)
 		    {
 		      id obj = [or object];
-		      id parent = [or parent];
+                      id o = obj;
 		      NSString *customClassName = nil;
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if (obj == nibFilesOwner)
+		      if ((obj == nibFilesOwner) || (obj == firstResponder))
 			continue;
 		      
 		      //
@@ -213,7 +170,7 @@
 			  BOOL isVisible = YES; // [[container visibleWindows] containsObject: obj];
 			  
 			  // make the object deferred/visible...
-			  id o = [obj nibInstantiate];
+			  o = [obj nibInstantiate];
 
 			  [document setObject: o isDeferred: isDeferred];
 			  [document setObject: o isVisibleAtLaunch: isVisible];
@@ -225,8 +182,13 @@
 			    }
 			}
 		      
-		      [document attachObject: obj toParent: parent];
-		      
+		      if ([rootObjects containsObject: obj])
+			{		  
+                          id parent = [or parent];
+
+                          [document attachObject: o toParent: parent];
+                        }
+
 		      if (customClassName != nil)
 			{
 			  objName = [document nameForObject: obj];
@@ -234,13 +196,13 @@
 			}
 		    }
 		  
+		  /* FIXME: Should use IBDocument.Classes
 		  //
 		  // Add custom classes...
 		  //
-		  // classesTable = [container classes];
-		  // classKeys = NSAllMapTableKeys(classesTable);
-		  // en = [classKeys objectEnumerator];
-		  /*
+		  classesTable = [container classes];
+		  classKeys = NSAllMapTableKeys(classesTable);
+		  en = [classKeys objectEnumerator];
 		  while((o = [en nextObject]) != nil)
 		    {
 		      NSString *name = [document nameForObject: o];
@@ -260,7 +222,6 @@
 		  // add connections...
 		  //
 		  en = [container connectionRecordEnumerator];
-		  IBConnectionRecord *cr = nil;
 		  while ((cr = [en nextObject]) != nil)
 		    {
 		      IBConnection *conn = [cr connection];
@@ -272,7 +233,7 @@
 			{
 			  [o setDestination: [document filesOwner]];
 			}
-		      else if (dest == nil)
+		      else if (dest == firstResponder)
 			{
 			  [o setDestination: [document firstResponder]];
 			}
@@ -281,7 +242,7 @@
 			{
 			  [o setSource: [document filesOwner]];
 			}
-		      else if (src == nil)
+		      else if (src == firstResponder)
 			{
 			  [o setSource: [document firstResponder]];
 			}
