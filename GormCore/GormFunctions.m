@@ -198,7 +198,7 @@ NSDictionary *colorToDict(NSColor *color)
   if(color != nil)
     {
       NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-      float red, green, blue, alpha;
+      CGFloat red, green, blue, alpha;
       NSNumber *fred = nil;
       NSNumber *fgreen = nil;
       NSNumber *fblue = nil;
