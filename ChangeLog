@@ -1,3 +1,13 @@
+2011-10-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Plugins/Xib/GormXibWrapperLoader.m
+	* Plugins/Nib/GormNibWrapperLoader.m: Include GormWindowTemplate
+	from GormCore instead of locally.
+	* Plugins/Nib/GormWindowTemplate.h
+	* Plugins/Nib/GormWindowTemplate.m: Move to GormCore.
+	* Plugins/Nib/GNUmakefile: Remove GormWindowTemplate from here.
+	* GormCore/GNUmakefile: Add GormWindowTemplate.[hm] here.
+
 2011-11-04 Eric Wasylishen  <ewasylishen@gmail.com>
 
 	* GormCore/GormFunctions.m: change float to CGFloat to match

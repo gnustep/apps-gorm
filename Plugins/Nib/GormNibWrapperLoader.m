@@ -32,8 +32,8 @@
 #include <GormCore/NSView+GormExtensions.h>
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormCustomView.h>
+#include <GormCore/GormWindowTemplate.h>
 #include "GormNibWrapperLoader.h"
-#include "GormWindowTemplate.h"
 
 @class GormNSWindow;
 

@@ -95,6 +95,7 @@ GormCore_HEADER_FILES = \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
 	GormWindowEditor.h \
+	GormWindowTemplate.h \
 	GormWrapperBuilder.h \
 	GormWrapperLoader.h \
 	NSCell+GormAdditions.h \
@@ -156,6 +157,7 @@ GormCore_OBJC_FILES = \
 	GormViewWithContentViewEditor.m \
 	GormViewWithSubviewsEditor.m \
 	GormWindowEditor.m \
+	GormWindowTemplate.m \
 	GormWrapperBuilder.m \
 	GormWrapperLoader.m \
 	NSCell+GormAdditions.m \

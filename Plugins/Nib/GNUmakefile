@@ -30,8 +30,7 @@ Nib_PRINCIPAL_CLASS = GormNibPlugin
 
 Nib_OBJC_FILES = GormNibPlugin.m \
 GormNibWrapperBuilder.m \
-GormNibWrapperLoader.m \
-GormWindowTemplate.m
+GormNibWrapperLoader.m 
 
 Nib_RESOURCE_FILES = 
 
