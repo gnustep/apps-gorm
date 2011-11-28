@@ -1,3 +1,10 @@
+2011-11-28 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/0Menus/GormMenuAttributesInspector.m
+	* Palettes/0Menus/GormMenuInspectors.m: Correction for
+	bug #33457, title change should now cause document
+	to be modified.
+
 2011-10-29 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Plugins/Xib/GormXibWrapperLoader.m
