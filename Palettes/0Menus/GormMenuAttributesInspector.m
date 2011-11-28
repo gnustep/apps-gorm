@@ -160,7 +160,9 @@
 /* delegate method used for menu title */
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
+  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
   [object setTitle: [titleText stringValue]];
+  [doc touch];
 }
 
 @end
