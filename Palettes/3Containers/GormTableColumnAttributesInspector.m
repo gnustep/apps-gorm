@@ -178,6 +178,7 @@
 
       // initialize
       cell = [[cls alloc] init];
+      [cell setEditable: [object isEditable]];
       [object setDataCell: cell];
       [[object tableView] setNeedsDisplay: YES];
 

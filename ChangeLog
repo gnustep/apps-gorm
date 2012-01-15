@@ -1,5 +1,12 @@
 2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
 
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m:
+	Set editable state of the data cell to match editable state
+	of the column. (NSTableView now refuses to edit non-editable
+	data cells in editable columns.)
+
+2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
+
 	* Palettes/3Containers/GormTabViewAttributesInspector.m:
 	Add retain/release so tab view item isn't deallocated while
 	being moved from one position to another.
