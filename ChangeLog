@@ -1,3 +1,9 @@
+2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
+
+	* Palettes/3Containers/GormTabViewAttributesInspector.m:
+	Add retain/release so tab view item isn't deallocated while
+	being moved from one position to another.
+
 2011-11-28 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/0Menus/GormMenuAttributesInspector.m

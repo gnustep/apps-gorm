@@ -180,10 +180,12 @@
       if ( selectedItem <= 0 ) { 
 	return;
       }
-		
+
+      [tbItem retain];
       [object removeTabViewItem:tbItem];
       [object insertTabViewItem:tbItem atIndex:(selectedItem - 1)];
       [object selectTabViewItemAtIndex:(selectedItem - 1)];
+      [tbItem release];
     }
   else if (sender == itemNext ) 
     {
@@ -195,10 +197,11 @@
 	return;
       }
 
+      [tbItem retain];
       [object removeTabViewItem:tbItem];
       [object insertTabViewItem:tbItem atIndex:(selectedItem + 1)];
       [object selectTabViewItemAtIndex:(selectedItem + 1)];
-
+      [tbItem release];
     }
 
   [object setNeedsDisplay: YES];
