@@ -1,5 +1,11 @@
 2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
 
+	* English.lproj/GormClassInspector.gorm: Re-save with the
+	last change, so the outlet/action table data cells are
+	editable.
+
+2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
+
 	* Palettes/3Containers/GormTableColumnAttributesInspector.m:
 	Set editable state of the data cell to match editable state
 	of the column. (NSTableView now refuses to edit non-editable
