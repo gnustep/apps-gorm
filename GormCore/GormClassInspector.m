@@ -312,7 +312,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
   NSArray *list = [classManager allClassNames];
   NSString *superClass = [classManager parentOfClass: [self _currentClass]];
-  int index = [list indexOfObject: superClass];
+  NSUInteger index = [list indexOfObject: superClass];
 
   [classField setStringValue: [self _currentClass]];
   [outletTable reloadData];

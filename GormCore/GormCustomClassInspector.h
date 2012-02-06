@@ -39,7 +39,7 @@
   GormClassManager *_classManager;
   NSString *_currentSelectionClassName;
   NSString *_parentClassName;
-  int _rowToSelect;
+  NSUInteger _rowToSelect;
 }
 - (void) select: (id)sender;
 @end

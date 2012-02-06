@@ -181,7 +181,7 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void) _addNewActionToObject: (id)item
 {
-  int insertionPoint = 0;
+  NSUInteger insertionPoint = 0;
   NSString *name = nil;
 
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];

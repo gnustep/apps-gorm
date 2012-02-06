@@ -202,8 +202,8 @@
 
   if (anObject != nil)
     {
-      NSArray	*array;
-      unsigned	pos;
+      NSArray	 *array;
+      NSUInteger pos;
 
       ASSIGN(object, anObject);
       hasConnections = NO;

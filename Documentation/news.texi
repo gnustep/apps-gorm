@@ -4,6 +4,18 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.16}
+
+@itemize @bullet
+@item XIB reading.
+@item Bug fixes for standalone views.
+@item Stability changes.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.12}
 
 Requires: gnustep-base-1.20.0, gnustep-gui-0.18.0.   
@@ -15,10 +27,6 @@ Reason: Parts of the runtime which Gorm used were refactored and it was necessar
 @item Tooltips now show the object name and the object type for informational purposes.
 @item Opens default document when using NSWindows95InterfaceStyle.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.10}
 

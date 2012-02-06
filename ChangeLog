@@ -1,3 +1,16 @@
+2012-02-06 02:02-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Version: 1.2.16
+	* GormInfo.plist
+	* Documentation/news.texi: Update version and documentation.
+
+2012-02-06 02:02-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassInspector.m
+	* GormCore/GormCustomClassInspector.h
+	* GormCore/GormFilesOwner.m
+	* GormCore/GormOutlineView.m
+
 2012-01-15  Eric Wasylishen  <ewasylishen@gmail.com>
 
 	* English.lproj/GormClassInspector.gorm: Re-save with the

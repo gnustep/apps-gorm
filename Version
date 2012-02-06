@@ -6,7 +6,7 @@
 GNUSTEP_GCC=2.95.0
 
 # GNUstep GUI version required
-GNUSTEP_CORE_VERSION=0.18.0
+GNUSTEP_CORE_VERSION=0.23.0
 
 # The version number of this release.
 MAJOR_VERSION=1
