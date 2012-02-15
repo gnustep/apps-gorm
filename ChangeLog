@@ -1,3 +1,11 @@
+2012-02-15 17:59-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormPrivate.m: Remove poseAs: override. Fix for
+	compilation with ObjC2.0 compilers.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm:
+	Correction for tableView column identifiers.   Delegate
+	wasn't connected.
+
 2012-02-06 02:02-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Version: 1.2.16

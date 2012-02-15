@@ -75,16 +75,19 @@ static BOOL _isInInterfaceBuilder = NO;
 @end
 
 @interface NSObject (GormPrivate)
-+ (void) poseAsClass: (Class)aClassObject;
+// + (void) poseAsClass: (Class)aClassObject;
++ (BOOL) canSubstituteForClass: (Class)origClass;
 @end
 
 @implementation NSObject (GormPrivate)
+/*
 + (void) poseAsClass: (Class)aClassObject
 {
   // disable poseAs: while in Gorm.
   class_pose_as(self, aClassObject);
   NSLog(@"WARNING: poseAs: called in Gorm.");
 }
+*/
 
 + (BOOL) canSubstituteForClass: (Class)origClass
 {
