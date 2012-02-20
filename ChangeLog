@@ -1,3 +1,9 @@
+2012-02-19 18:58-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Version
+	* GormInfo.plist
+	* GormCore/GormFilePrefs.m: Update version information.
+
 2012-02-15 17:59-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormPrivate.m: Remove poseAs: override. Fix for
