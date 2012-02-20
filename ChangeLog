@@ -2,7 +2,7 @@
 
 	* Version
 	* GormInfo.plist
-	* GormCore/GormFilePrefs.m: Update version information.
+	* GormCore/GormFilePrefsManager.m: Update version information.
 
 2012-02-15 17:59-EST Gregory John Casamento <greg.casamento@gmail.com>
 
