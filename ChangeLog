@@ -1,3 +1,9 @@
+2012-03-17  German A. Arias  <german@xelalug.org>
+
+	* Gorm.m: Added method -applicationShouldTerminateAfterLastWindowClosed:
+	to avoid terminate Gorm when the user close the last window but have
+	documents minimized at taskbar.
+
 2012-02-19 18:58-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Version

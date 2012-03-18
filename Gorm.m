@@ -250,6 +250,29 @@
     forKey: @"ShowPalettes"];
 }
 
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (id)sender
+{
+  if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) ==
+      NSWindows95InterfaceStyle)
+    {
+      NSDocumentController *docController;
+      docController = [NSDocumentController sharedDocumentController];
+      
+      if ([[docController documents] count] > 0)
+        {
+          return NO;
+        }
+      else
+        {
+          return YES;
+        }
+    }
+  else
+    {
+      return NO;
+    }
+}
+
 - (GormClassManager*) classManager
 {
   id document = [self activeDocument];
