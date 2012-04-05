@@ -1,3 +1,10 @@
+2012-04-05 14:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormMatrixEditor.m: Change modifier to Ctrl+Shift since
+	these two keys are never remapped and Alt does not always exist
+	on european and some US keyboards.   This change should address
+	bug#36096.
+
 2012-03-17  German A. Arias  <german@xelalug.org>
 
 	* Gorm.m: Added method -applicationShouldTerminateAfterLastWindowClosed:

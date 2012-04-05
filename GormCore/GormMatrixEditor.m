@@ -564,7 +564,7 @@ static BOOL done_editing;
 {
   frame = gpi->lastFrame;
 
-  if ([theEvent modifierFlags] & NSAlternateKeyMask)
+  if ([theEvent modifierFlags] & (NSControlKeyMask | NSShiftKeyMask))
     {
       int rows = [_EO numberOfRows];
       int cols = [_EO numberOfColumns];
