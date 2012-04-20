@@ -1,3 +1,9 @@
+2012-04-20 12:16-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/GormNSPopUpButton.h
+	* Palettes/2Controls/GormNSPopUpButton.m: Added new files for
+	Gorm subclass of NSPopUpButton.
+
 2012-04-20 12:03-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormCustomView.m
