@@ -1,3 +1,26 @@
+2012-04-20 02:11-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassInspector.m
+	* GormCore/GormClassManager.m
+	* GormCore/GormDocument.m
+	* GormCore/GormGenericEditor.m
+	* GormCore/GormObjectInspector.m
+	* GormCore/GormOutlineView.m
+	* GormCore/GormPrivate.h
+	* GormCore/GormPrivate.m
+	* Palettes/0Menus/GormMenuEditor.m
+	* Palettes/1Windows/GormDrawerAttributesInspector.m
+	* Palettes/3Containers/GormTableColumnAttributesInspector.m
+	* Palettes/3Containers/GormTableViewEditor.m
+	* Palettes/4Data/DataPalette.m
+	* Palettes/4Data/GormNumberFormatterAttributesInspector.m: Change int/unsigned int to NSInteger
+	and NSUInteger to address 64-bit issues.  Patch by
+	Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Plugins/Gorm/GormGormWrapperLoader.m
+	* Plugins/Nib/GormNibWrapperBuilder.m
+	* Plugins/Nib/GormNibWrapperLoader.m
+	* Plugins/Xib/GormXibWrapperLoader.m: Clean up warnings found by clang.
+
 2012-04-05 14:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormMatrixEditor.m: Change modifier to Ctrl+Shift since

@@ -245,7 +245,7 @@
  */
 - (NSRect) rectForObject: (id)anObject
 {
-  unsigned	pos = [objects indexOfObjectIdenticalTo: anObject];
+  NSUInteger	pos = [objects indexOfObjectIdenticalTo: anObject];
   NSRect	rect;
   int		r;
   int		c;
@@ -266,8 +266,8 @@
 
 - (void) refreshCells
 {
-  unsigned	count = [objects count];
-  unsigned	index = 0;
+  NSUInteger	count = [objects count];
+  NSUInteger	index = 0;
   int		cols = 0;
   int		rows = 0;
   int		width = 0;
@@ -317,7 +317,7 @@
 
 - (void) removeObject: (id)anObject
 {
-  unsigned	pos;
+  NSUInteger	pos;
 
   pos = [objects indexOfObjectIdenticalTo: anObject];
   if (pos == NSNotFound)
@@ -341,7 +341,7 @@
     return [NSArray arrayWithObject: selected];
 }
 
-- (unsigned) selectionCount
+- (NSUInteger) selectionCount
 {
   return (selected == nil) ? 0 : 1;
 }

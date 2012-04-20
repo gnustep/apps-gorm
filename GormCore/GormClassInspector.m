@@ -7,7 +7,7 @@
    Date: March 2003
 
    This file is part of GNUstep.
-
+ 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License as published by the Free Software Foundation; either
@@ -667,7 +667,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
     }
   else
     {
-      NSLog(@"Got %@ set to class edit inspector");
+      NSLog(@"Got %@ set to class edit inspector",anObject);
     }
 }
 

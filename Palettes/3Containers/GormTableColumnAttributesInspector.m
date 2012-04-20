@@ -232,7 +232,7 @@
 {
   NSArray *list;
   NSString *cellClassName;
-  int index;
+  NSUInteger index;
 
   if ( object == nil ) 
     return;
@@ -241,7 +241,7 @@
   cellClassName = [self _getCellClassName];
   index =  [list indexOfObject: cellClassName];
 
-  if(index != NSNotFound && index != -1)
+  if(index != NSNotFound)
     {
       [cellTable selectRow: index byExtendingSelection: NO];
       [cellTable scrollRowToVisible: index];

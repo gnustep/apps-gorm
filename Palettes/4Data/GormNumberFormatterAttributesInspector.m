@@ -113,7 +113,7 @@ extern NSArray *predefinedNumberFormats;
          }
       else if (sender == formatForm)
         {
-          int idx;
+          NSUInteger idx;
           
           positiveFmt = [[sender cellAtIndex:0] stringValue];
           zeroFmt = [[sender cellAtIndex:1] stringValue];
@@ -181,7 +181,7 @@ extern NSArray *predefinedNumberFormats;
 
 - (void) revert: (id)sender
 {
-  int idx;
+  NSUInteger idx;
   NSNumberFormatter *fmtr = [[object cell] formatter];
 
   // Format form

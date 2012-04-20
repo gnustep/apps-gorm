@@ -2490,7 +2490,7 @@ static void _real_close(GormDocument *self,
     {
       NSTableView *tv = (NSTableView *)[[(NSTableColumn*)object dataCell] controlView];
       NSTableHeaderView *th =  [tv headerView];
-      int index;
+      NSUInteger index;
 
       if (th == nil || tv == nil)
 	{

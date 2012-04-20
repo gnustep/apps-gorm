@@ -363,7 +363,7 @@ static NSText *_textObject;
   NSTableColumn *tc;
   NSRect drawingRect;
 
-  int columnIndex = [th columnAtPoint: 
+  NSUInteger columnIndex = [th columnAtPoint: 
 			  [th convertPoint:[theEvent locationInWindow]
 			      fromView: nil]];
   

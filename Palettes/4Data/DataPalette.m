@@ -89,7 +89,7 @@ int defaultNumberFormatIndex = 0;
                 [[predefinedNumberFormats objectAtIndex:i] objectAtIndex:2] ];
 }
 
-+ (int) indexOfFormat: (NSString *) format
++ (NSInteger) indexOfFormat: (NSString *) format
 {
   int i;
   NSString *fmt;
@@ -148,7 +148,7 @@ int defaultDateFormatIndex = 3;
   return [predefinedDateFormats objectAtIndex: index];
 }
 
-+ (int) indexOfFormat: (NSString *) format
++ (NSInteger) indexOfFormat: (NSString *) format
 {
   return [predefinedDateFormats indexOfObject: format];
 }

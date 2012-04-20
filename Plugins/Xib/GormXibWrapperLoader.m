@@ -34,6 +34,7 @@
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormCustomView.h>
 #include <GormCore/GormWindowTemplate.h>
+#include <GormCore/GormNSWindow.h>
 
 #include "GormXibWrapperLoader.h"
 

@@ -345,7 +345,7 @@
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;
-      unsigned int           	version = NSNotFound;
+      NSUInteger           	version = NSNotFound;
       NSDictionary              *fileWrappers = nil;
       GSNibContainer            *container;
       NSArray                   *visible;

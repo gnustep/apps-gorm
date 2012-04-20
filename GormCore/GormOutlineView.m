@@ -199,7 +199,7 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void) _addNewOutletToObject: (id)item
 {
-  int insertionPoint = 0;
+  NSUInteger insertionPoint = 0;
   GormOutletActionHolder *holder = [[GormOutletActionHolder alloc] init];
   NSString *name = nil;
 
@@ -227,7 +227,7 @@ static NSColor *darkGreyBlueColor = nil;
 {
   int numchildren = 0;
   int i = 0;
-  int insertionPoint = 0;
+  NSUInteger insertionPoint = 0;
   id object = nil;
   id sitem = (item == nil)?((id)[NSNull null]):((id)item);
 

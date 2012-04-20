@@ -52,7 +52,7 @@
 - (void) revert: (id) sender
 {
   id drawer = [self object];
-  int i = [preferredEdge indexOfItemWithTag: [drawer preferredEdge]];
+  NSUInteger i = [preferredEdge indexOfItemWithTag: [drawer preferredEdge]];
   if(i != NSNotFound)
     {
       [preferredEdge selectItemAtIndex: i];

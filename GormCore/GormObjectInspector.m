@@ -103,7 +103,7 @@ selectCellWithString: (NSString*)title
 - (void) ok: (id)sender
 {
   NSString	*name = [[browser selectedCell] stringValue];
-  unsigned	pos;
+  NSUInteger	pos;
 
   if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)
     {
@@ -331,7 +331,7 @@ selectCellWithString: (NSString*)title
 - (void) update: (id)sender
 {
   NSString	*name = [[browser selectedCell] stringValue];
-  unsigned	pos;
+  NSUInteger	pos;
 
   isString = NO;
   if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)

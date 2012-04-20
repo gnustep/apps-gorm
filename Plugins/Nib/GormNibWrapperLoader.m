@@ -24,6 +24,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
 #include <GormCore/GormPalettesManager.h>
 #include <GormCore/GormClassManager.h>
 #include <GormCore/GormImage.h>
@@ -33,6 +34,8 @@
 #include <GormCore/GormFunctions.h>
 #include <GormCore/GormCustomView.h>
 #include <GormCore/GormWindowTemplate.h>
+#include <GormCore/GormNSWindow.h>
+
 #include "GormNibWrapperLoader.h"
 
 @class GormNSWindow;
@@ -264,7 +267,7 @@
 			{
 			  NSString *tag = [o label];
 			  NSRange colonRange = [tag rangeOfString: @":"];
-			  unsigned int location = colonRange.location;
+			  NSUInteger location = colonRange.location;
 			  
 			  if(location == NSNotFound)
 			    {

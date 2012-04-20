@@ -1117,7 +1117,7 @@
 
   if (classInfo != nil && [classInformation objectForKey: name] == nil)
     {
-      int index = 0;
+      NSUInteger index = 0;
       NSArray *subclasses = [self subClassesOf: oldName];
 
       RETAIN(classInfo); // prevent loss of the information...

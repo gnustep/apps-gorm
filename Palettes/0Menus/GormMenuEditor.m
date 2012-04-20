@@ -895,7 +895,7 @@ void _attachAll(NSMenu *menu, id document)
 {
   if ([anArray isEqual: selection] == NO)
     {
-      unsigned		count;
+      NSUInteger	count;
       NSMenuItem	*item;
 
       [selection removeAllObjects];
