@@ -1,3 +1,7 @@
+2012-04-20 18:53-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormResourceEditor.m: Correct compiler warnings.
+
 2012-04-20 12:16-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/2Controls/GormNSPopUpButton.h

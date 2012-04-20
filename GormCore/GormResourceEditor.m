@@ -318,7 +318,7 @@
 	  if(!removed)
 	    {
 	      NSString *msg = [NSString stringWithFormat: @"Could not delete file %@", path];
-	      NSLog(msg);
+	      NSLog(@"%@",msg);
 	    }
 	}
       [super deleteSelection];
