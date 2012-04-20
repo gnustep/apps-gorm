@@ -25,8 +25,9 @@
 
 #include <AppKit/NSNibConnector.h>
 #include "GormPrivate.h"
+#include "GormCustomView.h"
 
-@class GormCustomView;
+// @class GormCustomView;
 
 @implementation	GormFilesOwner
 - (NSString*) className

@@ -95,7 +95,7 @@
 - (void) _stripPreProcessor
 {
   NSScanner *scanner = [NSScanner scannerWithString: fileData];
-  NSString *resultString = [NSString stringWithString: @""];
+  NSString *resultString = @""; // [NSString stringWithString: @""];
 
   // strip all of the one line comments out...
   [scanner setCharactersToBeSkipped: nil];

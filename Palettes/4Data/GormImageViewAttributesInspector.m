@@ -38,6 +38,7 @@
 #include <AppKit/NSMatrix.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSTextField.h>
+#include <GormCore/GormImage.h>
 
 /* This macro makes sure that the string contains a value, even if @"" */
 #define VSTR(str) ({id _str = (id)str; (_str) ? (id)_str : (id)(@"");})

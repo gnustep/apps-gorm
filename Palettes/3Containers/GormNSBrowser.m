@@ -59,7 +59,7 @@
            atRow: (int)row
           column: (int)column
 {
-  NSDebugLog(@"<%@ %x>: browser %x will display %@ %x at %d,%d",[self class],self,sender,[cell class],cell,row,column);
+  // NSDebugLog(@"%@: browser %@ will display %@ %@ at %d,%d",self,sender,[cell class],cell,row,column);
   // This code should never be called because there is no row
   // in our browser. But just in case...
   [cell setLeaf:YES];

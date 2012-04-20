@@ -321,7 +321,7 @@ NSString *identifierString(NSString *str)
   // check the result's length.
   if([result length] == 0)
     {
-      result = [NSString stringWithString: @"dummyIdentifier"];
+      result = [@"dummyIdentifier" mutableCopy];
     }
 
   return result;

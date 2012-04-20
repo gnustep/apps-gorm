@@ -1,3 +1,16 @@
+2012-04-20 12:03-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormCustomView.m
+	* GormCore/GormFilesOwner.m
+	* GormCore/GormFunctions.m
+	* GormObjCHeaderParser/OCHeaderParser.m
+	* Palettes/2Controls/ControlsPalette.m
+	* Palettes/2Controls/GNUmakefile
+	* Palettes/2Controls/GormPopUpButtonEditor.m
+	* Palettes/3Containers/GormNSBrowser.m
+	* Palettes/4Data/GormImageViewAttributesInspector.m: Correct
+	compiler warnings found by clang.
+
 2012-04-20 10:34-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormLib/IBObjectAdditions.m

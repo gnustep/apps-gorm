@@ -30,8 +30,7 @@
 #include <AppKit/NSPasteboard.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
-
-@class GormNSPopUpButton;
+#include "GormNSPopUpButton.h"
 
 @interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates>
 @end

@@ -45,7 +45,7 @@
   if((self = [super initWithFrame: frame]) != nil)
     {
       // Replace the CustomView with an NSView of the same dimensions.
-      self = [[NSView alloc] initWithFrame: frame];
+      self = (id)[[NSView alloc] initWithFrame: frame];
     }
   return self;
 }
