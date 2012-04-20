@@ -1,3 +1,14 @@
+2012-04-20 10:34-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormLib/IBObjectAdditions.m
+	* GormObjCHeaderParser/OCClass.m
+	* GormObjCHeaderParser/OCHeaderParser.m
+	* GormObjCHeaderParser/OCIVarDecl.m
+	* GormObjCHeaderParser/OCIVar.m
+	* GormObjCHeaderParser/OCMethod.m
+	* GormObjCHeaderParser/ParserFunctions.m: Fix compiler warnings
+	when building with clang.
+
 2012-04-20 02:11-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassInspector.m

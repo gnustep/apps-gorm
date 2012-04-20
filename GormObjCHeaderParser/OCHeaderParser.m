@@ -64,8 +64,8 @@
 - (void) _stripComments
 {
   NSScanner *scanner = [NSScanner scannerWithString: fileData];
-  NSString *resultString = [NSString stringWithString: @""];
-  NSString *finalString = [NSString stringWithString: @""];
+  NSString *resultString = @"";
+  NSString *finalString = @"";
 
   // strip all of the one line comments out...
   [scanner setCharactersToBeSkipped: nil];

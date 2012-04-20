@@ -69,7 +69,7 @@
 - (void) _strip
 {
   NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
-  NSString *resultString = [NSString stringWithString: @""];
+  NSString *resultString = @""; 
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
   // string whitespace

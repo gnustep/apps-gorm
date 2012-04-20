@@ -35,13 +35,13 @@ BOOL lookAhead(NSString *stringToScan, NSString *stringToFind)
 BOOL lookAheadForToken(NSString *stringToScan, NSString *stringToFind)
 {
   NSScanner *scanner = [NSScanner scannerWithString: stringToScan];
-  NSString *resultString = [NSString stringWithString: @""];
+  NSString *resultString = @""; // [NSString stringWithString: @""];
   
   [scanner setCharactersToBeSkipped: nil];
   [scanner scanString: stringToFind intoString: &resultString];
   if([resultString isEqualToString: stringToFind])
     {
-      NSString *postTokenString = [NSString stringWithString: @""];
+      NSString *postTokenString = @""; // [NSString stringWithString: @""];
       NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
       [scanner scanCharactersFromSet: wsnl intoString: &postTokenString];

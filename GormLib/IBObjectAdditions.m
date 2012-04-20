@@ -28,6 +28,13 @@
 
 // object additions -- object adopts protocol
 @implementation NSObject (IBObjectAdditions)
+
+// Return yes if origClass can substitute for current class, otherwise NO.
++ (BOOL)canSubstituteForClass: (Class)origClass
+{
+  return NO;
+}
+
 /**
    This method is called on all objects after
    they are loaded into the IBDocuments object.
@@ -60,6 +67,41 @@
    Lists all properties if this object not compatible with IB.
  */
 - (NSArray*) ibIncompatibleProperties
+{
+  return nil;
+}
+
+- (NSImage *) imageForViewer
+{
+  return nil;
+}
+
+- (NSString*) connectInspectorClassName
+{
+  return nil;
+}
+
+- (NSString*) sizeInspectorClassName
+{
+  return nil;
+}
+
+- (NSString*) helpInspectorClassName
+{
+  return nil;
+}
+
+- (NSString*) classInspectorClassName
+{
+  return nil;
+}
+
+- (NSString*) inspectorClassName;
+{
+  return nil;
+}
+
+- (NSString*) editorClassName;
 {
   return nil;
 }

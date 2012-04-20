@@ -62,11 +62,11 @@
 {
   NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
   NSString *resultString = nil;
-  NSString *tempString = [NSString stringWithString: @""];
-  NSString *tempString2 = [NSString stringWithString: @""];
+  NSString *tempString = @"";
+  NSString *tempString2 = @"";
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  NSString *typeName = [NSString stringWithString: @""];
-  NSString *varName = [NSString stringWithString: @""];
+  NSString *typeName = @"";
+  NSString *varName = @"";
 
   while(![stripScanner isAtEnd])
     {

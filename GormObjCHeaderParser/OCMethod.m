@@ -78,7 +78,7 @@
 - (void) _strip
 {
   NSScanner *stripScanner = [NSScanner scannerWithString: methodString];
-  NSString *resultString = [NSString stringWithString: @""];
+  NSString *resultString = @""; // [NSString stringWithString: @""];
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
   while(![stripScanner isAtEnd])
