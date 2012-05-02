@@ -135,7 +135,7 @@
 
       if (pos >= 0)
 	{
-	  NSMenuItem	*item = [edited itemAtIndex: pos];
+	  NSMenuItem	*item = (NSMenuItem *)[edited itemAtIndex: pos];
 
 	  if ([theEvent clickCount] == 2)
 	    {
@@ -309,7 +309,7 @@
 	      newPos = [rep indexOfItemAtPoint: point];
 	      if (newPos < pos)
 		{
-		  NSMenuItem	*item = [edited itemAtIndex: pos];
+		  NSMenuItem	*item = (NSMenuItem *)[edited itemAtIndex: pos];
 
 		  RETAIN(item);
 		  if (newPos < 0)
@@ -320,7 +320,7 @@
 		}
 	      else if (newPos > pos)
 		{
-		  NSMenuItem	*item = [edited itemAtIndex: pos];
+		  NSMenuItem	*item = (NSMenuItem *)[edited itemAtIndex: pos];
 
 		  RETAIN(item);
 		  [edited removeItemAtIndex: pos];

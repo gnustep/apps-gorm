@@ -1190,10 +1190,12 @@ static NSImage  *fileImage = nil;
   NSDebugLog(@"Owner changed for %@", sender);
 }
 
-- (void) release
+/*
+- (id) release
 {
-  [super release];
+  return [super release];
 }
+*/
 
 - (id) retain
 {
@@ -3458,7 +3460,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) setSounds: (NSArray *)snds
 {
-  ASSIGN(sounds,snds);
+  ASSIGN(sounds,[snds mutableCopy]);
 }
 
 /**
@@ -3466,7 +3468,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) setImages: (NSArray *)imgs
 {
-  ASSIGN(images,imgs);
+  ASSIGN(images,[imgs mutableCopy]);
 }
 
 /**

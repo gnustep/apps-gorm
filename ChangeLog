@@ -1,3 +1,14 @@
+2012-05-01 23:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormStandaloneViewEditor.m
+	* GormCore/GormViewWithContentViewEditor.m
+	* GormCore/GormWindowTemplate.m
+	* Palettes/0Menus/GormMenuEditor.m
+	* Palettes/0Menus/MenusPalette.m: Eliminate as many of the remaining
+	warnings in the code as possible.
+
 2012-04-20 18:53-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormResourceEditor.m: Correct compiler warnings.

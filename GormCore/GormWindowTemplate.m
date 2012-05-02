@@ -23,8 +23,8 @@
  */
 
 #include "GormWindowTemplate.h"
-
-@class GormNSWindow;
+#include "GormNSWindow.h" 
+// @class GormNSWindow;
 
 @interface NSWindow (Private)
 - (void) _setReleasedWhenClosed: (BOOL)flags;

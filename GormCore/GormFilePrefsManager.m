@@ -235,7 +235,8 @@ NSString *formatVersion(int version)
 
   NS_DURING
     {
-      id object = [NSUnarchiver unarchiveObjectWithData: data];
+      GormFilePrefsManager *object = (GormFilePrefsManager *)
+	[NSUnarchiver unarchiveObjectWithData: data];
       [gormAppVersion setStringValue: formatVersion([object version])];
       version = [object version];
       [targetVersion selectItemWithTitle: [object targetVersionName]];

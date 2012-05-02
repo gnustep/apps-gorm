@@ -26,6 +26,7 @@
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormStandaloneViewEditor.h>
 #include <GormCore/GormDefines.h>
+#include <GormCore/GormViewKnobs.h>
 
 static NSImage *verticalImage;
 static NSImage *horizontalImage;
