@@ -358,7 +358,7 @@ static NSMapTable	*docMap = 0;
       NSColor *color = [NSColor colorWithCalibratedRed: 0.850980 
                                 green: 0.737255
                                 blue: 0.576471
-                                alpha: 1.0 ];
+                                alpha: 0.0 ];
 
       document = aDocument;
       

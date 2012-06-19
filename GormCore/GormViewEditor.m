@@ -313,6 +313,9 @@ static BOOL currently_displaying = NO;
       if([anObject window] == nil && [anObject superview] == nil)
 	{
 	  NSDebugLog(@"#### Stand alone view: %@",_editedObject);
+	  [document attachObject: _editedObject
+		    toParent: nil];
+	  // [document openEditorForObject: _editedObject];
 	  viewWindow = [[GormViewWindow alloc] initWithView: _editedObject];
 	}
     }

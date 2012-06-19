@@ -1,3 +1,16 @@
+2012-06-19 00:44-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormDocument.m
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormViewEditor.m
+	* GormCore/GormViewWindow.m
+	* GormInfo.plist
+	* NEWS
+	* Version: 1.2.18
+
 2012-05-01 23:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m

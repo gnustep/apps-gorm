@@ -140,7 +140,7 @@
     { 
       NSString *className = NSStringFromClass([view class]);
       NSString *objectName = [[(id<IB>)NSApp activeDocument] nameForObject: view];
-      NSString *title = [NSString stringWithFormat: @"View Window: (%@, %@)",
+      NSString *title = [NSString stringWithFormat: @"Standalone View Window: (%@, %@)",
 				  className, objectName];
       NSColor *color = [NSColor lightGrayColor];
 
