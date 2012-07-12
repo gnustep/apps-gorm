@@ -1,3 +1,8 @@
+2012-07-12: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* GormLib/IBObjectAdditions.m
+	* revert change from 2012-04-20, to fix Connection Inspector
+	  on at least a couple of *BSD
+
 2012-06-19 00:44-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE

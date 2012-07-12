@@ -71,40 +71,5 @@
   return nil;
 }
 
-- (NSImage *) imageForViewer
-{
-  return nil;
-}
-
-- (NSString*) connectInspectorClassName
-{
-  return nil;
-}
-
-- (NSString*) sizeInspectorClassName
-{
-  return nil;
-}
-
-- (NSString*) helpInspectorClassName
-{
-  return nil;
-}
-
-- (NSString*) classInspectorClassName
-{
-  return nil;
-}
-
-- (NSString*) inspectorClassName;
-{
-  return nil;
-}
-
-- (NSString*) editorClassName;
-{
-  return nil;
-}
-
 @end
 
