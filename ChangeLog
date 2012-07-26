@@ -1,3 +1,9 @@
+2012-07-25 22:29-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: Apply patch suggested by Sebastian.
+	This appears to correct an issue seen by Sergey causing an out of
+	memory error.
+
 2012-07-12: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 	* GormLib/IBObjectAdditions.m
 	* revert change from 2012-04-20, to fix Connection Inspector

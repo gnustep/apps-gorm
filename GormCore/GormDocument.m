@@ -1915,13 +1915,6 @@ static void _real_close(GormDocument *self,
 	{
 	  [[self openEditorForObject: obj] activate];
 	}
-      else if([obj isKindOfClass: [NSView class]])
-	{
-	  if([obj superview] == nil)
-	    {
-	      [[self openEditorForObject: obj] activate];
-	    }
-	}
     }
 }
 
