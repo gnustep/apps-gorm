@@ -46,6 +46,12 @@
   return @"GSNibFileType";
 }
 
+- (NSDictionary *)defaultClassesDict
+{
+  NSString *defaultClassesString = @"{ IBClasses = ({CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }); IBVersion = 1; }";
+  return [defaultClassesString propertyList];
+}
+
 - (BOOL) isTopLevelObject: (id)obj
 {
   NSMapTable *objects = [container objects];
@@ -75,8 +81,7 @@
       NSString                  *subClassName = nil;
       NSDictionary              *fileWrappers = nil;
 
-      if ([super loadFileWrapper: wrapper withDocument: doc] &&
-	  [wrapper isDirectory])
+      if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
 	  GormClassManager *classManager = [document classManager];
 	  id               docFilesOwner;
@@ -87,40 +92,49 @@
 	  NSMapTable       *classesTable;
 	  NSArray          *classKeys;
 
-	  key = nil;
-	  fileWrappers = [wrapper fileWrappers];
-	  
 	  // turn off custom classes...
 	  [NSClassSwapper setIsInInterfaceBuilder: YES];	  
-	  en = [fileWrappers keyEnumerator];
-	  while((key = [en nextObject]) != nil)
+
+	  if([wrapper isDirectory])
 	    {
-	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
-	      if([fw isRegularFile])
+	      key = nil;
+	      fileWrappers = [wrapper fileWrappers];
+
+	      en = [fileWrappers keyEnumerator];
+	      while((key = [en nextObject]) != nil)
 		{
-		  NSData *fileData = [fw regularFileContents];
-		  if([key isEqual: @"keyedobjects.nib"])
+		  NSFileWrapper *fw = [fileWrappers objectForKey: key];
+		  if([fw isRegularFile])
 		    {
-		      data = fileData;
-		    }
-		  else if([key isEqual: @"classes.nib"])
-		    {
-		      classes = fileData;
-		      
-		      // load the custom classes...
-		      if (![classManager loadNibFormatCustomClassesWithData: classes]) 
+		      NSData *fileData = [fw regularFileContents];
+		      if([key isEqual: @"keyedobjects.nib"])
 			{
-			  NSRunAlertPanel(_(@"Problem Loading"), 
-					  _(@"Could not open the associated classes file.\n"
-					    @"You won't be able to edit connections on custom classes"), 
-					  _(@"OK"), nil, nil);
+			  data = fileData;
+			}
+		      else if([key isEqual: @"classes.nib"])
+			{
+			  classes = fileData;
+			  
+			  // load the custom classes...
+			  if (![classManager loadNibFormatCustomClassesWithData: classes]) 
+			    {
+			      NSRunAlertPanel(_(@"Problem Loading"), 
+					      _(@"Could not open the associated classes file.\n"
+						@"You won't be able to edit connections on custom classes"), 
+					      _(@"OK"), nil, nil);
+			    }
 			}
 		    }
 		}
 	    }
-	  
+	  else
+	    {
+	      data = [wrapper regularFileContents];
+	      classes = nil; // (NSData *)0xdeadbeef;
+	    }
+
 	  // check the data...
-	  if (data == nil || classes == nil)
+	  if (data == nil)// || classes == nil)
 	    {
 	      result = NO;
 	    }

@@ -325,8 +325,14 @@ static BOOL currently_displaying = NO;
 
 - (void) editedObjectFrameDidChange: (id) sender
 {
+  [self setPostsFrameChangedNotifications:NO];
+  [self setPostsBoundsChangedNotifications:NO];
+
   [self setFrame: [_editedObject frame]];
   [self setBounds: [_editedObject frame]];
+
+  [self setPostsFrameChangedNotifications:YES];
+  [self setPostsBoundsChangedNotifications:YES];
 }
 
 - (void) frameDidChange: (id) sender

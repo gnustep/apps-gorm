@@ -1,3 +1,10 @@
+2012-12-12 12:33-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormViewEditor.m: Prevent recursive frame/bounds
+	notifications when resizing a view.
+	* Plugins/Nib/GormNibWrapperLoader.m: Preliminary changes to support
+	reading nibs as files instead of packages.
+
 2012-07-25 22:29-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: Apply patch suggested by Sebastian.
