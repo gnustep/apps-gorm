@@ -1,3 +1,9 @@
+2013-01-13 16:57-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/GormColorWellAttributesInspector.m: NSColorWell
+	inspector was showing inverted settings after the last change.
+	Corrected this in -ok: and -revert:
+
 2012-12-12 12:33-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormViewEditor.m: Prevent recursive frame/bounds

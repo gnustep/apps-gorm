@@ -85,7 +85,7 @@
     }
   else if ( sender == disabledSwitch ) 
     {
-      [object setEnabled: [disabledSwitch state]];
+      [object setEnabled: ([disabledSwitch state] == NSOnState)?NO:YES]; // it's being enabled to show it's disabled!
     }
   else if ( sender == borderedSwitch ) 
     {
@@ -107,7 +107,7 @@
   if ( object == nil )
     return;
 
-  [disabledSwitch setState: [object isEnabled]];
+  [disabledSwitch setState: ([object isEnabled])?NSOffState:NSOnState];  // On = NO and Off = YES, since we're tracking the Disabled state.
   [borderedSwitch setState: [object isBordered]];
   [initialColorWell setColorWithoutAction: [object color]];
   [tagField setIntValue: [object tag]];
