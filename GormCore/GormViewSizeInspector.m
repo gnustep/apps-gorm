@@ -26,6 +26,7 @@
 #include "GormViewKnobs.h"
 #include "GormViewSizeInspector.h"
 #include "GormViewWindow.h"
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 @implementation GormViewSizeInspector
 
@@ -124,7 +125,12 @@ NSImage	*mVLine = nil;
 {
   if (control == sizeForm)
     {
+      id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
       NSRect rect;
+
+      // Update the document as edited...
+      [document touch];
+
       rect = NSMakeRect([[control cellAtIndex: 0] floatValue],
                         [[control cellAtIndex: 1] floatValue],
                         [[control cellAtIndex: 2] floatValue],
@@ -194,7 +200,8 @@ NSImage	*mVLine = nil;
 - (void) setAutosize: (id)sender
 {
   unsigned	mask = [sender tag];
-
+  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  [document touch];
   if ([sender state] == NSOnState)
     {
       mask = [object autoresizingMask] | mask;
