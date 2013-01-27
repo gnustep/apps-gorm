@@ -1,3 +1,9 @@
+2013-01-26 20:42-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: Corrected issue with adding cells to
+	object tree so that the can be properly addressed in connections.
+	Change to -attachObject:toParent:.
+
 2013-01-13 17:45-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormViewSizeInspector.m: Correct bug#30886: Gorm should

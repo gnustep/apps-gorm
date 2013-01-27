@@ -824,6 +824,13 @@ static NSImage  *fileImage = nil;
 	}
     }
 
+  // Attach the cell of an item to the document so that it has a name and
+  // can be addressed.
+  if([anObject respondsToSelector: @selector(cell)])
+    {
+      [self attachObject: [anObject cell] toParent: anObject];
+    }
+
   // Detect and add any connection the object might have.
   // This is done so that any palette items which have predefined connections will be
   // shown in the connections list.
