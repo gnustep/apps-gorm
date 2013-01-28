@@ -508,7 +508,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [classManager allClassNames];
   NSString *stringValue = [searchText stringValue];
-  int index = [list indexOfObject: stringValue];
+  NSInteger index = [list indexOfObject: stringValue];
 
   NSLog(@"Search... %@",[searchText stringValue]);
   if(index != NSNotFound && list != nil && 

@@ -49,7 +49,7 @@ IB_EXTERN NSString *IBClassNameChangedNotification;
 /**
  * The number of currently selected objects.
  */
-- (unsigned) selectionCount;
+- (NSUInteger) selectionCount;
 
 /**
  * Return the selection in an array.

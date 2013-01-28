@@ -465,7 +465,7 @@ NSImage *browserImage = nil;
 }
 
 //--- IBSelectionOwners protocol ---
-- (unsigned) selectionCount
+- (NSUInteger) selectionCount
 {
   return ([outlineView selectedRow] == -1)?0:1;
 }
