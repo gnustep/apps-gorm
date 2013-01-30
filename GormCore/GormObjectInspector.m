@@ -55,28 +55,28 @@
   return self;
 }
 
-- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
+- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
 {
   return [sets count];
 }
 
 - (BOOL) browser: (NSBrowser*)sender
 selectCellWithString: (NSString*)title
-	inColumn: (int)col
+	inColumn: (NSInteger)col
 {
   [self update: self];
   return YES;
 }
 
-- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)col
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)col
 {
   return @"Attribute setters";
 }
 
 - (void) browser: (NSBrowser*)sender
  willDisplayCell: (id)aCell
-	   atRow: (int)row
-	  column: (int)col
+	   atRow: (NSInteger)row
+	  column: (NSInteger)col
 {
   if (row >= 0 && row < [sets count])
     {

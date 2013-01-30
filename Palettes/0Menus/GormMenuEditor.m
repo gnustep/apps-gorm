@@ -976,7 +976,7 @@ void _attachAll(NSMenu *menu, id document)
   return [NSArray arrayWithArray: selection];
 }
 
-- (unsigned) selectionCount
+- (NSUInteger) selectionCount
 {
   return [selection count];
 }

@@ -344,7 +344,7 @@
 
 // Browser delegate
 - (void)    browser: (NSBrowser *)sender 
-createRowsForColumn: (int)column
+createRowsForColumn: (NSInteger)column
 	   inMatrix: (NSMatrix *)matrix
 {
   if (_parentClassName != nil)
@@ -353,7 +353,7 @@ createRowsForColumn: (int)column
       NSEnumerator	*e = nil;
       NSString		*class = nil;
       NSBrowserCell	*cell = nil;
-      int		i = 0;
+      NSInteger		i = 0;
       
       classes = [self _generateClassList]; 
       // [NSMutableArray arrayWithObject: _parentClassName];
@@ -379,7 +379,7 @@ createRowsForColumn: (int)column
 }
 
 - (NSString*) browser: (NSBrowser*)sender 
-	titleOfColumn: (int)column
+	titleOfColumn: (NSInteger)column
 {
   NSDebugLog(@"Delegate called");
   return @"Class";
@@ -387,13 +387,13 @@ createRowsForColumn: (int)column
 
 - (void) browser: (NSBrowser *)sender 
  willDisplayCell: (id)cell 
-	   atRow: (int)row 
-	  column: (int)column
+	   atRow: (NSInteger)row 
+	  column: (NSInteger)column
 {
 }
 
 - (BOOL) browser: (NSBrowser *)sender 
-   isColumnValid: (int)column
+   isColumnValid: (NSInteger)column
 {
   return YES;
 }

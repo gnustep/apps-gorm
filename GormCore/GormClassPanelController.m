@@ -76,20 +76,20 @@
   [[classNameForm cellAtIndex: 0] setStringValue: [[classBrowser selectedCell] stringValue]];
 }
 
-- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
+- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
 {
   return [allClasses count];
 }
 
-- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)column
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)column
 {
   return @"Class";
 }
 
 - (void) browser: (NSBrowser*)sender
  willDisplayCell: (id)aCell
-	   atRow: (int)row
-	  column: (int)col
+	   atRow: (NSInteger)row
+	  column: (NSInteger)col
 {
   if (row >= 0 && row < [allClasses count])
     {

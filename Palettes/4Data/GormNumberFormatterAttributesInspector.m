@@ -134,7 +134,7 @@ extern NSArray *predefinedNumberFormats;
           else
             {
               [formatTable selectRow:idx byExtendingSelection:NO];
-              NSDebugLog(@"format found at index: %d", idx);
+              NSDebugLog(@"format found at index: %d", (int)idx);
             }
 
           // Update Appearance samples
@@ -226,14 +226,14 @@ extern NSArray *predefinedNumberFormats;
 
 /* Positive/Negative Format table data source */
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
   return [NSNumberFormatter formatCount];
 }
 
 - (id)tableView:(NSTableView *)aTableView
   objectValueForTableColumn:(NSTableColumn *)aTableColumn
-  row:(int)rowIndex
+  row:(NSInteger)rowIndex
 {  
   if ( [[aTableColumn identifier] isEqualToString: @"positive"] )
     {
@@ -263,7 +263,7 @@ extern NSArray *predefinedNumberFormats;
 }
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell
-   forTableColumn:(NSTableColumn*)aTableColumn row:(int)rowIndex
+   forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
   NSNumberFormatter *fmtr;
   

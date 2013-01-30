@@ -27,7 +27,7 @@
 #include <InterfaceBuilder/IBObjectAdditions.h>
 
 // object additions -- object adopts protocol
-@implementation NSObject (IBObjectAdditions)
+@implementation NSObject (_IBObjectAdditions)
 
 // Return yes if origClass can substitute for current class, otherwise NO.
 + (BOOL)canSubstituteForClass: (Class)origClass

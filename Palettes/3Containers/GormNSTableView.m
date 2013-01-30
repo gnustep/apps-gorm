@@ -31,8 +31,8 @@
  * NSTableView dataSource
 */
 @interface NSTableViewDataSource: NSObject <NSCoding>
-- (int) numberOfRowsInTableView: (NSTableView *)tv;
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex;
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv;
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
 @end
 
 static NSString* value1[] =
@@ -61,14 +61,14 @@ static NSString* value2[] =
 
 @implementation NSTableViewDataSource
 
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   return 10;
 }
 
 - (id)tableView:(NSTableView *)aTableView 
 objectValueForTableColumn:(NSTableColumn *)aTableColumn 
-	    row:(int)rowIndex
+	    row:(NSInteger)rowIndex
 {
   if ([[aTableColumn identifier] isEqual: @"column1"])
     {

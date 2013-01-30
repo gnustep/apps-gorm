@@ -135,7 +135,7 @@ static BOOL done_editing;
    a text field so the user can edit the title. */
 - (void) editTitleWithEvent: (NSEvent *)theEvent
 {
-  int row, col;
+  NSInteger row, col;
   unsigned eventMask;
   id edit_view;
   BOOL isForm;
@@ -320,7 +320,7 @@ static BOOL done_editing;
   
 
   {
-    int row, col;
+    NSInteger row, col;
     NSPoint mouseDownPoint = 
       [_EO 
 	convertPoint: [theEvent locationInWindow]
@@ -359,7 +359,7 @@ static BOOL done_editing;
 {
   if (selected != nil)
     {
-      int row, col;
+      NSInteger row, col;
       if ([_EO getRow: &row column: &col ofCell: selected])
 	{
 	  NSRect frame = [_EO cellFrameAtRow: row column: col];
@@ -706,7 +706,7 @@ static BOOL done_editing;
 
 - (id) connectTargetAtPoint: (NSPoint)mouseLoc
 {
-  int row, col;
+  NSInteger row, col;
 
   if ([_EO getRow: &row column: &col forPoint: mouseLoc] == YES)
     {
@@ -767,7 +767,7 @@ static BOOL done_editing;
   else if ([types containsObject: GormImagePboardType] == YES ||
 	   [types containsObject: GormSoundPboardType] == YES)
     {
-      int row, col;
+      NSInteger row, col;
       if ([_EO getRow: &row column: &col forPoint: mouseDownPoint] == YES)
 	{
 	  id object = [_EO cellAtRow: row column: col];

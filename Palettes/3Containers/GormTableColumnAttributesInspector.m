@@ -314,7 +314,7 @@
 
 // Data Source 
 // replace by an NSBrowser ? 
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
   return [list count];
@@ -322,7 +322,7 @@
 
 - (id) tableView: (NSTableView *)tv
 objectValueForTableColumn: (NSTableColumn *)tc
-	              row: (int)rowIndex
+	              row: (NSInteger)rowIndex
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
   id value = nil;
@@ -336,13 +336,13 @@ objectValueForTableColumn: (NSTableColumn *)tc
 // delegate
 - (BOOL)    tableView: (NSTableView *)tableView
 shouldEditTableColumn: (NSTableColumn *)aTableColumn
-		  row: (int)rowIndex
+		  row: (NSInteger)rowIndex
 {
   return NO;
 }
 
 - (BOOL) tableView: (NSTableView *)tv
-   shouldSelectRow: (int)rowIndex
+   shouldSelectRow: (NSInteger)rowIndex
 {
   return YES;
 }

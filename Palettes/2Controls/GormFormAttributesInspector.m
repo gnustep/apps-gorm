@@ -76,8 +76,8 @@
 /* Commit changes that the user makes in the Attributes Inspector */
 - (void) ok:(id) sender
 {
-  int	rows;
-  int	cols;
+  NSInteger	rows;
+  NSInteger	cols;
   int	i;
       
   [object getNumberOfRows: &rows columns: &cols];
@@ -181,8 +181,8 @@
 
   // Cells tags = position is not directly stored in the Form so guess it.
   {
-    int		rows;
-    int		cols;
+    NSInteger		rows;
+    NSInteger		cols;
     int		i;
     BOOL	flag;
     
@@ -228,7 +228,7 @@
   highlight = [cell highlightsBy];
   stateby = [cell showsStateBy];
   NSDebugLog(@"highlight = %d, stateby = %d",
-    [cell highlightsBy],[cell showsStateBy]);
+    (int)[cell highlightsBy],(int)[cell showsStateBy]);
   
   type = NSMomentaryPushButton;
   if (highlight == NSChangeBackgroundCellMask)

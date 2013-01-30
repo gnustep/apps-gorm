@@ -1207,7 +1207,7 @@ static NSImage  *fileImage = nil;
 - (id) retain
 {
   [super retain];
-  NSDebugLog(@"Retaining document, retain count %d",[self retainCount]);
+  NSDebugLog(@"Retaining document, retain count %d", (int)[self retainCount]);
   return self;
 }
 
@@ -2528,7 +2528,7 @@ static void _real_close(GormDocument *self,
 
       if ([control isKindOfClass: [NSMatrix class]])
         {
-          int row, col;
+          NSInteger row, col;
           NSMatrix *matrix = (NSMatrix *)control;
 
           if ([matrix getRow: &row column: &col ofCell: cell])
@@ -2617,6 +2617,11 @@ static void _real_close(GormDocument *self,
 				_(@"This will break all connections to '%@'.  Continue?"), name];
 	      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
 	      prompted = YES;
+	    }
+	  else
+	    {
+		removed = NO;
+		break;
 	    }
 
 	  if (retval == NSAlertDefaultReturn)

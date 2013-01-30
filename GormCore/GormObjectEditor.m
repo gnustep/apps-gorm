@@ -251,7 +251,7 @@ static NSMapTable	*docMap = 0;
   if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      int	r, c;
+      NSInteger	r, c;
       int	pos;
       id	obj = nil;
 
@@ -444,7 +444,7 @@ static NSMapTable	*docMap = 0;
     {
       NSPoint	loc = [theEvent locationInWindow];
       NSString	*name;
-      int	r = 0, c = 0;
+      NSInteger	r = 0, c = 0;
       int	pos = 0;
       id	obj = nil;
 
@@ -492,7 +492,7 @@ static NSMapTable	*docMap = 0;
   if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      int	r, c;
+      NSInteger	r, c;
       int	pos;
       id	obj = nil;
 
@@ -529,7 +529,7 @@ static NSMapTable	*docMap = 0;
   if (dragType == GormLinkPboardType)
     {
       NSPoint	loc = [sender draggingLocation];
-      int	r, c;
+      NSInteger	r, c;
       int	pos;
       id	obj = nil;
 

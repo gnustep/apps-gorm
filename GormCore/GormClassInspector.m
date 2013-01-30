@@ -80,7 +80,7 @@ NSNotificationCenter *nc = nil;
 @end
 
 @implementation GormOutletDataSource 
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
   return [list count];
@@ -88,7 +88,7 @@ NSNotificationCenter *nc = nil;
 
 - (id)          tableView: (NSTableView *)tv
 objectValueForTableColumn: (NSTableColumn *)tc
-	              row: (int)rowIndex
+	              row: (NSInteger)rowIndex
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
   id value = nil;
@@ -102,7 +102,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) tableView: (NSTableView *)tv
     setObjectValue: (id)anObject
     forTableColumn: (NSTableColumn *)tc
-	       row: (int)rowIndex
+	       row: (NSInteger)rowIndex
 {
   id classManager = [(id<Gorm>)NSApp classManager];
   NSString *currentClass = [inspector _currentClass];
@@ -140,7 +140,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 @end
 
 @implementation GormActionDataSource
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
   return [list count];
@@ -148,7 +148,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (id)          tableView: (NSTableView *)tv
 objectValueForTableColumn: (NSTableColumn *)tc
-	              row: (int)rowIndex
+	              row: (NSInteger)rowIndex
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
   return [list objectAtIndex: rowIndex];
@@ -157,7 +157,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) tableView: (NSTableView *)tv
     setObjectValue: (id)anObject
     forTableColumn: (NSTableColumn *)tc
-	       row: (int)rowIndex
+	       row: (NSInteger)rowIndex
 {
   id classManager = [(id<Gorm>)NSApp classManager];
   NSString *currentClass = [inspector _currentClass];
@@ -195,7 +195,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 @end
 
 @implementation GormClassesDataSource 
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allClassNames];
   return [list count];
@@ -203,7 +203,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (id)          tableView: (NSTableView *)tv
 objectValueForTableColumn: (NSTableColumn *)tc
-	              row: (int)rowIndex
+	              row: (NSInteger)rowIndex
 {
   NSArray *list = [[(id<Gorm>)NSApp classManager] allClassNames];
   id value = nil;
@@ -217,7 +217,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) tableView: (NSTableView *)tv
     setObjectValue: (id)anObject
     forTableColumn: (NSTableColumn *)tc
-	       row: (int)rowIndex
+	       row: (NSInteger)rowIndex
 {
   // cannot replace any values for this data source...
 }
@@ -354,7 +354,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  NSString *className = [self _currentClass];
 	  NSString *newAction = [classManager addNewActionToClassNamed: className];  
 	  NSArray *list = [classManager allActionsForClassNamed: className];
-	  int row = [list indexOfObject: newAction];
+	  NSInteger row = [list indexOfObject: newAction];
 	  
 	  [document collapseClass: className];
 	  [document reloadClasses];
@@ -384,7 +384,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	  NSString *className = [self _currentClass];
 	  NSString *newOutlet = [classManager addNewOutletToClassNamed: className];  
 	  NSArray *list = [classManager allOutletsForClassNamed: className];
-	  int row = [list indexOfObject: newOutlet];
+	  NSInteger row = [list indexOfObject: newOutlet];
 	  
 	  [document collapseClass: className];
 	  [document reloadClasses];
@@ -408,7 +408,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NS_DURING
     {
-      int i = [actionTable selectedRow];
+      NSInteger i = [actionTable selectedRow];
       NSString *className = [self _currentClass];
       NSArray *list = [classManager allActionsForClassNamed: className];
       BOOL removed = NO;
@@ -459,7 +459,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NS_DURING
     {
-      int i = [outletTable selectedRow];
+      NSInteger i = [outletTable selectedRow];
       NSString *className = [self _currentClass];
       NSArray *list = [classManager allOutletsForClassNamed: className];
       BOOL removed = NO;
@@ -523,7 +523,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) selectClass: (id)sender
 {
   NSArray *list = [classManager allClassNames];
-  int row = [parentClass selectedRow];
+  NSInteger row = [parentClass selectedRow];
 
   NS_DURING
     {
@@ -542,7 +542,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 		  NSString *msg = [NSString stringWithFormat: _(@"This action may break existing connections "
 								@"to instances of class '%@'"
 								@"and it's subclasses.  Continue?"), name];
-		  int retval = -1;
+		  NSInteger retval = -1;
 		  BOOL removed = NO;
 
 		  [super ok: sender];
@@ -609,7 +609,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) selectAction: (id)sender
 {
-  int row = [sender selectedRow];
+  NSInteger row = [sender selectedRow];
   NSArray *actions = [classManager allActionsForClassNamed: currentClass];
   if(row <= [actions count])
     {
@@ -624,7 +624,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) selectOutlet: (id)sender
 {
-  int row = [sender selectedRow];
+  NSInteger row = [sender selectedRow];
   NSArray *outlets = [classManager allOutletsForClassNamed: currentClass];
   if(row <= [outlets count])
     {
@@ -688,7 +688,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 // table delegate/data source methods...
 - (BOOL)    tableView: (NSTableView *)tableView
 shouldEditTableColumn: (NSTableColumn *)aTableColumn
-		  row: (int)rowIndex
+		  row: (NSInteger)rowIndex
 {
   BOOL result = NO;
 
@@ -734,7 +734,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 - (void) tableView: (NSTableView *)tableView
    willDisplayCell: (id)aCell
     forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (int)rowIndex
+	       row: (NSInteger)rowIndex
 {
 /*
   NSString *name = [aCell stringValue];
@@ -770,7 +770,7 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 }
 
 - (BOOL) tableView: (NSTableView *)tv
-   shouldSelectRow: (int)rowIndex
+   shouldSelectRow: (NSInteger)rowIndex
 {
   BOOL result = YES;
   if(tv == parentClass)

@@ -166,7 +166,7 @@
 }
 
 /* TableView dataSource methods */
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
   if (aTableView == itemTableView )
     return [[object objectValues]  count];
@@ -176,7 +176,7 @@
 
 - (id)tableView:(NSTableView *)aTableView 
 objectValueForTableColumn:(NSTableColumn *)aTableColumn
-	    row:(int)rowIndex
+	    row:(NSInteger)rowIndex
 {
   if (aTableView == itemTableView )
     return  [object itemObjectValueAtIndex:rowIndex];
@@ -185,7 +185,7 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
 }
 
 /* TableView delegate methods */
-- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
+- (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(NSInteger)rowIndex
 {
   if ( aTableView == itemTableView ) 
     {

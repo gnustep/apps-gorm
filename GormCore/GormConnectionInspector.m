@@ -66,9 +66,9 @@
   [newBrowser setDoubleAction: @selector(ok:)];
 }
 
-- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
+- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
 {
-  int		rows = 0;
+  NSInteger		rows = 0;
 
   if (sender == newBrowser)
     {
@@ -93,7 +93,7 @@
   return rows;
 }
 
-- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)column
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)column
 {
   if (sender == newBrowser)
     {
@@ -141,7 +141,7 @@
   unsigned	index;
   NSBrowserCell	*cell = [sender selectedCell];
   NSString	*title = [cell stringValue];
-  int		col = [sender selectedColumn];
+  NSInteger		col = [sender selectedColumn];
 
   if (sender == newBrowser)
     {
@@ -309,11 +309,11 @@
 
 - (BOOL) browser: (NSBrowser*)sender
 selectCellWithString: (NSString*)title
-	inColumn: (int)col
+	inColumn: (NSInteger)col
 {
   NSMatrix	*matrix = [sender matrixInColumn: col];
-  int		rows = [matrix numberOfRows];
-  int		i;
+  NSInteger		rows = [matrix numberOfRows];
+  NSInteger		i;
 
   for (i = 0; i < rows; i++)
     {
@@ -330,8 +330,8 @@ selectCellWithString: (NSString*)title
 
 - (void) browser: (NSBrowser*)sender
  willDisplayCell: (id)aCell
-	   atRow: (int)row
-	  column: (int)col
+	   atRow: (NSInteger)row
+	  column: (NSInteger)col
 {
   if (sender == newBrowser)
     {

@@ -188,8 +188,8 @@
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  int row, column;
-  int newRow, newColumn;
+  NSInteger row, column;
+  NSInteger newRow, newColumn;
   unsigned eventMask = NSLeftMouseUpMask | NSLeftMouseDownMask
 			| NSMouseMovedMask | NSLeftMouseDraggedMask
 			| NSPeriodicMask;

@@ -288,7 +288,7 @@
   // doesn nothing.
 }
 
-- (unsigned) selectionCount
+- (NSUInteger) selectionCount
 {
   return [selection count];
 }

@@ -34,30 +34,30 @@
 {
 }
 
-- (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column;
-- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (int)column;
+- (NSInteger) browser: (NSBrowser *)sender numberOfRowsInColumn: (NSInteger)column;
+- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (NSInteger)column;
 - (void) browser: (NSBrowser *)sender willDisplayCell: (id)cell
-           atRow: (int)row column: (int)column;
+           atRow: (NSInteger)row column: (NSInteger)column;
 
 @end
 
 
 @implementation NSBrowserDelegate
 
-- (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column
+- (NSInteger) browser: (NSBrowser *)sender numberOfRowsInColumn: (NSInteger)column
 {
   return 0;
 }
 
-- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (int)column
+- (NSString *) browser: (NSBrowser *)sender titleOfColumn: (NSInteger)column
 {
   return (column==0) ? @"Browser" : @"";
 }
 
 - (void) browser: (NSBrowser *)sender
  willDisplayCell: (id)cell
-           atRow: (int)row
-          column: (int)column
+           atRow: (NSInteger)row
+          column: (NSInteger)column
 {
   // NSDebugLog(@"%@: browser %@ will display %@ %@ at %d,%d",self,sender,[cell class],cell,row,column);
   // This code should never be called because there is no row

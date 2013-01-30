@@ -668,7 +668,7 @@ static NSImage	*dragImage = nil;
     }
   else
     {
-      NSLog(@"Bad palette selection - %d", [anObj selectedColumn]);
+      NSLog(@"Bad palette selection - %d", (int)[anObj selectedColumn]);
       current = -1;
     }
   [dragView setNeedsDisplay: YES];

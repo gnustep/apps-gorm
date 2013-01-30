@@ -172,7 +172,7 @@ static BOOL _isInInterfaceBuilder = NO;
 	}
       else
 	{
-	  NSLog(@"no initWithCoder for version %d", version);
+	  NSLog(@"no initWithCoder for version %d", (int)version);
 	  RELEASE(self);
 	  return nil;
 	}

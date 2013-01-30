@@ -55,8 +55,8 @@ extern NSArray *predefinedDateFormats;
 
 - (void) ok: (id)sender
 {
-  BOOL allowslanguage;
-  NSString *dateFmt;
+  BOOL allowslanguage = NO;
+  NSString *dateFmt = nil;
   NSDateFormatter *fmtr;
     
   if (sender == detachButton)
@@ -81,7 +81,7 @@ extern NSArray *predefinedDateFormats;
         }
       else if (sender == formatField)
         {
-          int idx;
+          NSInteger idx;
           
           dateFmt = [sender stringValue];
 
@@ -118,7 +118,7 @@ extern NSArray *predefinedDateFormats;
 
 - (void) revert: (id)sender
 {
-  int idx;
+  NSInteger idx;
   NSDateFormatter *fmtr = [[object cell] formatter];
   
   // If the string typed is a predefined one then highligh it in
@@ -140,14 +140,14 @@ extern NSArray *predefinedDateFormats;
 
 /* NSDateFormatter inspector: table view delegate and data source */
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
   return [NSDateFormatter formatCount];
 }
 
 - (id)tableView:(NSTableView *)aTableView
   objectValueForTableColumn:(NSTableColumn *)aTableColumn
-  row:(int)rowIndex
+  row:(NSInteger)rowIndex
 {
   NSString *fmt = [NSDateFormatter formatAtIndex:rowIndex];
   

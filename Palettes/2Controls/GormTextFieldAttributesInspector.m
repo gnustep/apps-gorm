@@ -109,7 +109,7 @@
     }
   else if (sender == borderMatrix)
     {
-      BOOL bordered, bezeled;
+      BOOL bordered=NO, bezeled=NO;
 
       if ([[sender cellAtRow: 0 column: 0] state] == NSOnState)
 	{

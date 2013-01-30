@@ -77,8 +77,8 @@
     }
   else if (sender == autotagSwitch)
     {
-      int	rows;
-      int	cols;
+      NSInteger	rows;
+      NSInteger	cols;
       int	i;
 
       [object getNumberOfRows: &rows columns: &cols];
@@ -152,8 +152,8 @@
     ([object autosizesCells]) ? NSOnState : NSOffState];
 
   {
-    int	rows;
-    int cols;
+    NSInteger	rows;
+    NSInteger cols;
 
     [object getNumberOfRows: &rows columns: &cols];
  

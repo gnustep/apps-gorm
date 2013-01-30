@@ -63,7 +63,7 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 }
 
 - (id) initWithContentRect: (NSRect)contentRect
-		 styleMask: (unsigned int)aStyle
+		 styleMask: (NSUInteger)aStyle
 		   backing: (NSBackingStoreType)bufferingType
 		     defer: (BOOL)flag
 {
@@ -133,7 +133,7 @@ static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   autoPositionMask = mask;
 }
 
-- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (int)otherWin
+- (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (NSInteger)otherWin
 {
   id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
   [super orderWindow: place relativeTo: otherWin];

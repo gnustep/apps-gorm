@@ -308,14 +308,14 @@ NSString *formatVersion(int version)
 }
 
 // Data Source
-- (int) numberOfRowsInTableView: (NSTableView *)aTableView
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)aTableView
 {
   return [currentProfile count];
 }
 
 - (id) tableView: (NSTableView *)aTableView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	     row: (int)rowIndex
+	     row: (NSInteger)rowIndex
 {
   id obj = nil;
 
@@ -337,7 +337,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (void) tableView: (NSTableView *)aTableView 
     setObjectValue: (id)anObject 
     forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (int)rowIndex
+	       row: (NSInteger)rowIndex
 {
 }
 

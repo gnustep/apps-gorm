@@ -269,7 +269,7 @@ static NSColor *darkGreyBlueColor = nil;
 {
   int numchildren = 0;
   int i = 0;
-  int insertionPoint = 0;
+  NSInteger insertionPoint = 0;
   id object = nil;
   id sitem = (item == nil)?((id)[NSNull null]):((id)item);
 
@@ -307,7 +307,7 @@ static NSColor *darkGreyBlueColor = nil;
   [self noteNumberOfRowsChanged];
 }
 
-- (void) drawRow: (int)rowIndex clipRect: (NSRect)aRect
+- (void) drawRow: (NSInteger)rowIndex clipRect: (NSRect)aRect
 {
   int startingColumn; 
   int endingColumn;
@@ -638,8 +638,8 @@ static NSColor *darkGreyBlueColor = nil;
   return _edittype;
 }
 
-- (void) editColumn: (int) columnIndex 
-		row: (int) rowIndex 
+- (void) editColumn: (NSInteger) columnIndex 
+		row: (NSInteger) rowIndex 
 	  withEvent: (NSEvent *) theEvent 
 	     select: (BOOL) flag
 {

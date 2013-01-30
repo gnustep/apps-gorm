@@ -96,7 +96,7 @@ NSString *rtString = nil;
   highlight = [cell highlightsBy];
   stateby = [cell showsStateBy];
   NSDebugLog(@"highlight = %d, stateby = %d",
-    [cell highlightsBy],[cell showsStateBy]);
+    (int)[cell highlightsBy],(int)[cell showsStateBy]);
   
   type = NSMomentaryPushButton;
   if (highlight == NSChangeBackgroundCellMask)
@@ -436,6 +436,6 @@ NSString *rtString = nil;
 
 - (void) selectKeyEquivalent: (id)sender
 {
-  NSLog(@"Select key equivalent: %d",[[sender selectedItem] tag]);
+  NSLog(@"Select key equivalent: %d",(int)[[sender selectedItem] tag]);
 }
 @end

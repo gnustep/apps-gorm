@@ -78,7 +78,7 @@
   if ([theEvent modifierFlags] & NSControlKeyMask)
     {
       NSPoint	loc = [theEvent locationInWindow];
-      int	r = 0, c = 0;
+      NSInteger	r = 0, c = 0;
       int	pos = 0;
       id	obj = nil;
 

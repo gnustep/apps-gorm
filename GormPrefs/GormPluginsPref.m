@@ -37,7 +37,7 @@
 @end
 
 @implementation PluginDataSource
-- (int) numberOfRowsInTableView: (NSTableView *)tv
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray *list = [defaults objectForKey: @"UserPlugins"];
@@ -46,7 +46,7 @@
 
 - (id)          tableView: (NSTableView *)tv
 objectValueForTableColumn: (NSTableColumn *)tc
-	              row: (int)rowIndex
+	              row: (NSInteger)rowIndex
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray *list = [defaults objectForKey: @"UserPlugins"];
@@ -117,14 +117,14 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (BOOL)    tableView: (NSTableView *)tableView
 shouldEditTableColumn: (NSTableColumn *)aTableColumn
-		  row: (int)rowIndex
+		  row: (NSInteger)rowIndex
 {
   BOOL result = NO;
   return result;
 }
 
 - (BOOL) tableView: (NSTableView *)tv
-   shouldSelectRow: (int)rowIndex
+   shouldSelectRow: (NSInteger)rowIndex
 {
   BOOL result = YES;
   return result;

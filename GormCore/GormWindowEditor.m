@@ -314,7 +314,7 @@
   return nil;
 }
 
-- (unsigned) selectionCount
+- (NSUInteger) selectionCount
 {
   NSDebugLog(@"selectionCount");
   return  0;
@@ -343,7 +343,7 @@
     }
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+- (NSUInteger) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   NSDebugLog(@"draggingSourceOperationMaskForLocal");
   return NSDragOperationNone;

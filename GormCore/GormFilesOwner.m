@@ -97,20 +97,20 @@
 @end
 
 @implementation GormFilesOwnerInspector
-- (int) browser: (NSBrowser*)sender numberOfRowsInColumn: (int)column
+- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
 {
   return [classes count];
 }
 
-- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (int)column
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)column
 {
   return @"Class";
 }
 
 - (void) browser: (NSBrowser*)sender
  willDisplayCell: (id)aCell
-	   atRow: (int)row
-	  column: (int)col
+	   atRow: (NSInteger)row
+	  column: (NSInteger)col
 {
   if (row >= 0 && row < [classes count])
     {
@@ -234,7 +234,7 @@
 {
   NSString	*title = [[browser selectedCell] stringValue];
 
-  NSDebugLog(@"Selected %d, %@", [browser selectedRowInColumn: 0], title);
+  NSDebugLog(@"Selected %d, %@", (int)[browser selectedRowInColumn: 0], title);
   if (hasConnections > 0 && [title isEqual: [object className]] == NO)
     {
       if (NSRunAlertPanel(nil, _(@"This operation will break existing connection"),

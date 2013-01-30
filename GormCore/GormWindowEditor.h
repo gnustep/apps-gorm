@@ -94,7 +94,7 @@
 /**
  * Returns NSDragOperationNone.
  */
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (NSUInteger) draggingSourceOperationMaskForLocal: (BOOL)flag;
 
 /**
  * Make current selection visible.

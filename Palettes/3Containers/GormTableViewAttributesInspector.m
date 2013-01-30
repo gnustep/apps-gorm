@@ -102,7 +102,7 @@
   /* dimension */
   else if (sender == rowsHeightForm)
     {
-      int numCols = [object numberOfColumns];
+      int numCols = [(NSTableView*)object numberOfColumns];
       int newNumCols = [[sender cellAtIndex: 1] intValue];
       float rowHeight = [[sender cellAtIndex: 0] floatValue];
 
@@ -224,7 +224,7 @@
 
   /* dimension */
   [[rowsHeightForm cellAtIndex: 0] setIntValue: [object rowHeight] ];
-  [[rowsHeightForm cellAtIndex: 1] setIntValue: [object numberOfColumns]];
+  [[rowsHeightForm cellAtIndex: 1] setIntValue: [(NSTableView*)object numberOfColumns]];
 
   /* options */
   [drawgridSwitch setState:[object drawsGrid]];

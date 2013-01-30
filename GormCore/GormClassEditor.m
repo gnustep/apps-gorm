@@ -1334,7 +1334,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 
 @implementation GormClassEditor (NSBrowserDelegate)
 
-- (void)browser:(NSBrowser *)sender createRowsForColumn:(int)column inMatrix:(NSMatrix *)matrix
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(NSInteger)column inMatrix:(NSMatrix *)matrix
 {
   NSArray      *classes = nil;
   NSEnumerator *en = nil;
