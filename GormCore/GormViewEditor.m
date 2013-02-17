@@ -325,14 +325,28 @@ static BOOL currently_displaying = NO;
 
 - (void) editedObjectFrameDidChange: (id) sender
 {
-  [self setPostsFrameChangedNotifications:NO];
-  [self setPostsBoundsChangedNotifications:NO];
+  NSArray *allViews = allSubviews(self);
+  NSEnumerator *en = [allViews objectEnumerator];
+  id v = nil;
 
+  // Set all views under this view to not post changes...
+  while((v = [en nextObject]) != nil)
+    {
+        [v setPostsFrameChangedNotifications:NO];
+	[v setPostsBoundsChangedNotifications:NO];
+    }
+  
+  // Set the frame and the bounds...
   [self setFrame: [_editedObject frame]];
   [self setBounds: [_editedObject frame]];
 
-  [self setPostsFrameChangedNotifications:YES];
-  [self setPostsBoundsChangedNotifications:YES];
+  // Reset all views to post changes as expected...
+  en = [allViews objectEnumerator];
+  while((v = [en nextObject]) != nil)
+    {
+      [v setPostsFrameChangedNotifications:YES];
+      [v setPostsBoundsChangedNotifications:YES];
+    }
 }
 
 - (void) frameDidChange: (id) sender

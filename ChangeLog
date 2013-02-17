@@ -1,3 +1,12 @@
+2013-02-16 20:10-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormViewEditor.m: -editedObjectFrameDidChange:
+	alter code so that allViews under the editor are collected
+	and set to not post notifications.  This change prevents
+	a notification/setFrame cycle which was occurring when
+	certain controls were added as subviews to NSTabView or
+	NSBox.
+
 2013-01-26 20:42-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: Corrected issue with adding cells to
