@@ -66,7 +66,7 @@
 - (void) deleteSelection;
 - (id<IBDocuments>) document;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (id) editedObject;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
@@ -522,7 +522,7 @@
    */
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   if (isLinkSource == YES)
     return NSDragOperationLink;
@@ -530,7 +530,7 @@
     return NSDragOperationCopy;
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSArray	*types;
 
@@ -551,7 +551,7 @@
   return [self draggingUpdated: sender];
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   if (dragType == IBMenuPboardType)
     {

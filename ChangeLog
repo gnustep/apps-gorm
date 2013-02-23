@@ -1,3 +1,16 @@
+2013-02-23 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* GormCore/GormObjectEditor.h
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormPalettesManager.m
+	* GormCore/GormSplitViewEditor.m
+	* GormCore/GormViewEditor.m
+	* GormCore/GormViewWithSubviewsEditor.m
+	* GormCore/GormWindowEditor.m
+	* Palettes/0Menus/GormMenuEditor.m
+	* Palettes/3Containers/GormTableViewEditor.m
+	* Palettes/4Data/GormTextViewEditor.m
+	* adapt to -gui changes for DnD
+
 2013-02-16 20:10-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormViewEditor.m: -editedObjectFrameDidChange:

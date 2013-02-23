@@ -413,12 +413,12 @@ static NSText *_textObject;
   RELEASE(_editedCell);
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   return [self draggingUpdated: sender];
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;

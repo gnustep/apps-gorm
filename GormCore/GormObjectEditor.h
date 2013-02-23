@@ -33,7 +33,7 @@
 }
 + (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag;
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (void) resetObject: (id)anObject;

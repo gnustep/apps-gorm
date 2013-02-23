@@ -293,7 +293,7 @@
   return [selection count];
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSRect rect = [_editedObject bounds];
   NSPoint loc = [sender draggingLocation];
@@ -365,7 +365,7 @@
   [[self window] flushWindow];
 }
 
-- (unsigned int) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   NSPoint loc = [sender draggingLocation];
   NSRect rect = [_editedObject bounds];

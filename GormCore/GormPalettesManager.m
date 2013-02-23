@@ -55,7 +55,7 @@
   NSPasteboard	*dragPb;
 }
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag;
 @end
 
 @implementation	GormPaletteView
@@ -128,7 +128,7 @@ static NSImage	*dragImage = nil;
     }
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   return NSDragOperationCopy;
 }
@@ -143,7 +143,7 @@ static NSImage	*dragImage = nil;
  *	dropped back on the palette (a window is normally created if the
  *	dnd drop is refused).
  */
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   return NSDragOperationCopy;;
 }

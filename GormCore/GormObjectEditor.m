@@ -226,7 +226,7 @@ static NSMapTable	*docMap = 0;
 {
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSArray   *pbTypes = nil;
   
@@ -246,7 +246,7 @@ static NSMapTable	*docMap = 0;
   return [self draggingUpdated: sender];
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   if (dragType == GormLinkPboardType)
     {
@@ -316,7 +316,7 @@ static NSMapTable	*docMap = 0;
       }
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag
 {
   return NSDragOperationLink;
 }

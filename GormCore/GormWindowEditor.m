@@ -349,12 +349,12 @@
   return NSDragOperationNone;
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   return NSDragOperationNone;
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   return NSDragOperationNone;
 }

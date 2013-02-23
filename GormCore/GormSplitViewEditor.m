@@ -121,7 +121,7 @@
     }
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
@@ -165,7 +165,7 @@
     }
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;

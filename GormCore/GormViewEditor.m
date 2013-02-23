@@ -1224,7 +1224,7 @@ static BOOL currently_displaying = NO;
     }
 }
 
-- (unsigned) draggingEntered: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
@@ -1247,7 +1247,7 @@ static BOOL currently_displaying = NO;
     }
 }
 
-- (unsigned) draggingUpdated: (id<NSDraggingInfo>)sender
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   return [self draggingEntered: sender];
 }
@@ -1398,7 +1398,7 @@ static BOOL currently_displaying = NO;
   return NO;
 }
 
-- (unsigned int) draggingSourceOperationMaskForLocal: (BOOL) flag
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL) flag
 {
   return NSDragOperationLink;
 }
