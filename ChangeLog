@@ -1,3 +1,9 @@
+2013-02-25 04:14-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormWindowEditor.m: Check the _firstResponder on
+	the window to see if it is the same as the _initialFirstResponder.
+	If it is, set it to nil as well in -unsetInitialFirstResponder:.
+
 2013-02-23 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 	* GormCore/GormObjectEditor.h
 	* GormCore/GormObjectEditor.m

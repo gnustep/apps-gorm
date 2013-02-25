@@ -91,6 +91,10 @@
  */
 - (void) unsetInitialFirstResponder
 {
+  if(_firstResponder == _initialFirstResponder)
+    {
+      ASSIGN(_firstResponder, nil);
+    }
   ASSIGN(_initialFirstResponder, nil);
 }
 @end
