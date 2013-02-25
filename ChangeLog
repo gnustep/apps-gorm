@@ -1,3 +1,8 @@
+2013-02-25 15:07-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormWindowEditor.m: Second try to fix the previous
+	issue.
+
 2013-02-25 04:14-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormWindowEditor.m: Check the _firstResponder on

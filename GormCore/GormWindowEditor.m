@@ -93,9 +93,9 @@
 {
   if(_firstResponder == _initialFirstResponder)
     {
-      ASSIGN(_firstResponder, nil);
+      _firstResponder = nil;
     }
-  ASSIGN(_initialFirstResponder, nil);
+  _initialFirstResponder = nil;
 }
 @end
 
