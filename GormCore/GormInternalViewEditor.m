@@ -681,6 +681,7 @@ static NSImage *horizontalImage;
   NSEnumerator *enumerator = [[self selection] objectEnumerator];
   id anObject;
   NSFont *newFont;
+  NSUInteger count = 0;
 
   NSDebugLog(@"In %@ changing font for %@",[self className],[self selection]);
   while ((anObject = [enumerator nextObject]))
@@ -688,6 +689,7 @@ static NSImage *horizontalImage;
       if([anObject respondsToSelector: @selector(setTitleFont:)] &&
 	 [anObject respondsToSelector: @selector(setTextFont:)])
 	{
+	  count++;
 	  newFont = [sender convertFont: [anObject font]];
 	  newFont = [[GormFontViewController sharedGormFontViewController] 
 		      convertFont: newFont];
@@ -697,11 +699,18 @@ static NSImage *horizontalImage;
       else if ([anObject respondsToSelector: @selector(font)] &&
 	       [anObject respondsToSelector: @selector(setFont:)])
 	{
+	  count++;
 	  newFont = [sender convertFont: [anObject font]];
 	  newFont = [[GormFontViewController sharedGormFontViewController] 
 		      convertFont: newFont];
 	  [anObject setFont: newFont];
 	}
+    }
+
+  // if the font was changed, mark us as altered...
+  if(count > 0)
+    {
+      [[self document] touch];
     }
 
   return;
