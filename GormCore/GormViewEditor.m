@@ -1563,6 +1563,7 @@ static BOOL done_editing;
   if ([name isEqual: NSControlTextDidEndEditingNotification] == YES)
     {
       done_editing = YES;
+      [[self document] touch];
     }
 }
 

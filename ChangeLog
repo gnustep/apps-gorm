@@ -1,3 +1,9 @@
+2013-03-06 01:44-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormViewEditor.m: -handleNotification: touch document
+	when text editing is completed.
+	Fixes for bug #28643.
+
 2013-03-06 00:05-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: Touch document when aligning views in
@@ -7,7 +13,7 @@
 	* Palettes/4Data/GormDateFormatterAttributesInspector.m
 	* Palettes/4Data/GormNumberFormatterAttributesInspector.m:
 	-ok: touch document when changing formatter.
-	Fixes forbug #28643.
+	Fixes for bug #28643.
 
 2013-03-05 20:23-EST Gregory John Casamento <greg.casamento@gmail.com>
 
