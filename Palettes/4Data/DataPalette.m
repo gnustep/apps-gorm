@@ -375,8 +375,13 @@ int defaultDateFormatIndex = 3;
       if([array count] > 0)
 	{
 	  id formatter = [array objectAtIndex: 0];
+
+	  // Add the formatter if the object accepts one...
 	  if([obj respondsToSelector: @selector(setFormatter:)])
 	    {
+	      // Touch the document...
+	      [[(id<IB>)NSApp activeDocument] touch];
+
 	      [obj setFormatter: formatter];
 	      RETAIN(formatter);
 	      if ([formatter isMemberOfClass: [NSNumberFormatter class]])

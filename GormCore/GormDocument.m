@@ -3250,8 +3250,12 @@ static void _real_close(GormDocument *self,
   int tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
-
   id prev = nil;
+
+  // Mark the document modified.
+  [self touch];
+
+  // Iterate over all in the selection and align them...
   while((v = [en nextObject]) != nil)
     {
       if([v isKindOfClass: [NSView class]])

@@ -58,7 +58,10 @@ extern NSArray *predefinedDateFormats;
   BOOL allowslanguage = NO;
   NSString *dateFmt = nil;
   NSDateFormatter *fmtr;
-    
+  
+  // Set the document as modifed...
+  [[(id<IB>)NSApp activeDocument] touch];
+  
   if (sender == detachButton)
     {
       [[object cell] setFormatter: nil];

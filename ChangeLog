@@ -1,3 +1,14 @@
+2013-03-06 00:05-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: Touch document when aligning views in
+	-alignSelectedObjects:.
+	* Palettes/4Data/DataPalette.m: -depositViewResourceFromPasteboard:..
+	touch document when adding formatter.
+	* Palettes/4Data/GormDateFormatterAttributesInspector.m
+	* Palettes/4Data/GormNumberFormatterAttributesInspector.m:
+	-ok: touch document when changing formatter.
+	Fixes forbug #28643.
+
 2013-03-05 20:23-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormInternalViewEditor.m: touch document when font is

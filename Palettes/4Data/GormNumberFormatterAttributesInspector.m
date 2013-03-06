@@ -80,7 +80,10 @@ extern NSArray *predefinedNumberFormats;
   NSString *minValue, *maxValue;
   NSCell   *cell = [object cell];
   NSNumberFormatter *fmtr = [cell formatter];
-    
+
+  // Mark as changed...
+  [[(id<IB>)NSApp activeDocument] touch];
+
   if (sender == detachButton)
     { 
       [cell setFormatter: nil];
