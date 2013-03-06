@@ -1,3 +1,8 @@
+2013-03-05 20:23-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormInternalViewEditor.m: touch document when font is
+	changed in changeFont:
+
 2013-02-25 15:07-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormWindowEditor.m: Second try to fix the previous
