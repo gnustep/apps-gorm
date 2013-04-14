@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.20}
+
+@itemize @bullet
+@item Bug fixes #28643, #32827
+@item Corrected issues with updating document when there is a change.
+@item Add cells as objects to the document so they can be properly edited.
+@item Changes to prevent recursive frame change notifications.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.18}
 
 @itemize @bullet
@@ -11,10 +24,6 @@
 @item Removal of use of call to objc_poseAs(..) which was preventing building with newer runtimes.
 @item Stability improvements.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.16}
 
