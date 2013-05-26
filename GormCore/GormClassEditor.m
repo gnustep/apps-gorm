@@ -1191,7 +1191,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
   [gov setNeedsDisplay: YES];
 }
 
-- (int) outlineView: (NSOutlineView *)anOutlineView 
+- (NSInteger) outlineView: (NSOutlineView *)anOutlineView 
 numberOfChildrenOfItem: (id)item
 {
   NSArray *subclasses = [classManager subClassesOf: item];
@@ -1213,7 +1213,7 @@ numberOfChildrenOfItem: (id)item
 }
 
 - (id) outlineView: (NSOutlineView *)anOutlineView 
-	     child: (int)index
+	     child: (NSInteger)index
 	    ofItem: (id)item
 {
   NSArray *subclasses = [classManager subClassesOf: item];

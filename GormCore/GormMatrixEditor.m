@@ -51,12 +51,12 @@
 @end
 
 @interface NSForm (GormAdditions)
-- (float) titleWidth;
+- (CGFloat) titleWidth;
 @end
 
 @implementation NSForm (GormAdditions)
 
-- (float)titleWidth
+- (CGFloat)titleWidth
 {
   int i, count = [self numberOfRows];
   float new_title_width = 0;
@@ -244,7 +244,7 @@ static BOOL done_editing;
   if (isForm)
     {
       /* Set the new title and resize the form to match the titles */
-      float oldTitleWidth, titleWidth;
+      CGFloat oldTitleWidth, titleWidth;
       NSRect oldFrame;
       oldTitleWidth = [(NSForm *)_EO titleWidth];
       [(NSFormCell *)selected setTitle: [editField stringValue]];

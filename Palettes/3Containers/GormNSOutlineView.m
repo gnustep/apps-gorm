@@ -32,13 +32,13 @@
 {
 }
 - (id)outlineView: (NSOutlineView *)outlineView
-	    child: (int)index
+	    child: (NSInteger)index
 	   ofItem: (id)item;
 
 - (BOOL)outlineView: (NSOutlineView *)outlineView
    isItemExpandable: (id)item;
 
-- (int)        outlineView: (NSOutlineView *)outlineView 
+- (NSInteger)        outlineView: (NSOutlineView *)outlineView 
     numberOfChildrenOfItem: (id)item;
 
 - (id)         outlineView: (NSOutlineView *)outlineView 
@@ -50,7 +50,7 @@
 @implementation NSOutlineViewDataSource
 // required methods for data source
 - (id)outlineView: (NSOutlineView *)outlineView
-	    child: (int)index
+	    child: (NSInteger)index
 	   ofItem: (id)item
 {
   if([item isEqual: @"NSObject"])
@@ -108,7 +108,7 @@
   return NO;
 }
 
-- (int)        outlineView: (NSOutlineView *)outlineView 
+- (NSInteger)        outlineView: (NSOutlineView *)outlineView 
     numberOfChildrenOfItem: (id)item
 {
   if(item == nil)
