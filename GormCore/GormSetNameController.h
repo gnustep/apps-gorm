@@ -17,7 +17,7 @@
   NSButton *okButton;
   NSButton *cancelButton;
 }
-- (int)runAsModal;
+- (NSInteger)runAsModal;
 
 - (NSTextField *) textField;
 - (void) cancelHit: (id)sender;

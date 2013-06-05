@@ -11,9 +11,9 @@
 #include <AppKit/NSPanel.h>
 
 @implementation GormSetNameController : NSObject
-- (int)runAsModal
+- (NSInteger)runAsModal
 {
-  int result;
+  NSInteger result;
   
   if (!window)
     {

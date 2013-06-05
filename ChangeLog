@@ -1,3 +1,9 @@
+2013-06-05 Riccardo Mottola <rm@gnu.org>
+
+	* GormCore/GormSetNameController.h
+	* GormCore/GormSetNameController.m
+	Make runModal return NSInteger
+
 2013-05-26: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 	* Palettes/3Containers/GormNSOutlineView.m
 	* GormCore/GormMatrixEditor.m
