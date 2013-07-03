@@ -1,3 +1,7 @@
+2013-07-03 Niels Grewe <niels.grewe@halbordnung.de>
+
+	* InterfaceBuilder/InterfaceBuilder.h: Fix incorrect header inclusion guard.
+
 2013-06-05 Riccardo Mottola <rm@gnu.org>
 
 	* GormCore/GormSetNameController.h

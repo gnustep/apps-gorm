@@ -23,7 +23,7 @@
  */
 
 #ifndef INCLUDED_INTERFACEBUILDER_H
-#define INCLUDED_INTERFACEBUIDLER_H
+#define INCLUDED_INTERFACEBUILDER_H
  
 #include <InterfaceBuilder/IBApplicationAdditions.h>
 #include <InterfaceBuilder/IBCellAdditions.h>
