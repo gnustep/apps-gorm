@@ -1,3 +1,27 @@
+2013-10-14  Eric Wasylishen  <ewasylishen@gmail.com>
+
+	*  Palettes/2Controls/GormNSMatrixInspector.gorm:
+	*  Palettes/2Controls/GormNSSliderInspector.gorm:
+	*  Palettes/2Controls/GormNSBoxInspector.gorm:
+	*  Palettes/2Controls/GormNSTextFieldInspector.gorm:
+	*  Palettes/2Controls/GormNSPopUpButtonInspector.gorm:
+	*  Palettes/2Controls/GormNSButtonInspector.gorm:
+	*  Palettes/2Controls/ControlsPalette.gorm:
+	*  Palettes/2Controls/GormNSFormInspector.gorm:
+	*  Palettes/2Controls/GormNSCellInspector.gorm:
+	*  Palettes/0Menus/GormMenuAttributesInspector.gorm:
+	*  Palettes/3Containers/GormNSTableColumnSizeInspector.gorm:
+	*  Palettes/3Containers/GormTabViewInspector.gorm:
+	*  Palettes/3Containers/GormNSTableViewInspector.gorm:
+	*  Palettes/3Containers/GormNSBrowserInspector.gorm:
+	*  Palettes/1Windows/GormNSWindowSizeInspector.gorm:
+	*  Palettes/1Windows/GormNSWindowInspector.gorm:
+	*  Palettes/4Data/GormNSComboBoxInspector.gorm:
+	*  Palettes/4Data/GormNSImageViewInspector.gorm:
+	*  Palettes/4Data/GormNSTextViewInspector.gorm:
+	Turn off "Draws Background" on NSMatrix and NSForms; there's no need
+	to draw backgrounds and it may look bad with themes.
+
 2013-07-03 Niels Grewe <niels.grewe@halbordnung.de>
 
 	* InterfaceBuilder/InterfaceBuilder.h: Fix incorrect header inclusion guard.
