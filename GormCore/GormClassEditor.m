@@ -1065,12 +1065,12 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
     } 
   else if ([identifier isEqualToString: @"outlets"])
     {
-      return [NSString stringWithFormat: @"%d",
+      return [NSString stringWithFormat: @"%"PRIuPTR,
 		       [[classManager allOutletsForClassNamed: className] count]];
     }
   else if ([identifier isEqualToString: @"actions"])
     {
-      return [NSString stringWithFormat: @"%d",
+      return [NSString stringWithFormat: @"%"PRIuPTR,
 		       [[classManager allActionsForClassNamed: className] count]];
     }
 

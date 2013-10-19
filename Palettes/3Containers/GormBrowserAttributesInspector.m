@@ -121,10 +121,10 @@
   [[tagForm cellAtIndex:0] setIntValue: [object tag]];
 
   [minColumnWidthField setStringValue:
-			 [NSString stringWithFormat:@"%i",
+			 [NSString stringWithFormat:@"%f",
 				   [object minColumnWidth]]];
   [maxVisibleColumnsField setStringValue:
-			    [NSString stringWithFormat:@"%i",
+			    [NSString stringWithFormat:@"%"PRIiPTR,
 				      [object maxVisibleColumns]]];
 
   [super revert:sender];

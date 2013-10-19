@@ -1,3 +1,11 @@
+2013-10-19 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+
+	* GormCore/GormClassEditor.m
+	* GormCore/GormFilePrefsManager.m
+	* Palettes/3Containers/GormBrowserAttributesInspector.m
+	* Palettes/3Containers/GormTabViewAttributesInspector.m
+	fix format strings
+
 2013-10-14  Eric Wasylishen  <ewasylishen@gmail.com>
 
 	*  Palettes/2Controls/GormNSMatrixInspector.gorm:

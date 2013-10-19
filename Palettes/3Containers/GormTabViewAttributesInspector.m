@@ -120,7 +120,7 @@
 
       if (newNumber <= 0) 
 	{
-	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%i",[object numberOfTabViewItems]]];
+	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%"PRIiPTR,[object numberOfTabViewItems]]];
 	  return; 
 	}
       if ( newNumber > [object numberOfTabViewItems] ) 
