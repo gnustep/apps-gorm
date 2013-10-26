@@ -1,3 +1,8 @@
+2013-10-26 Riccardo Mottola <rm@gnu.org>
+
+	* Plugins/Nib/GormNibWrapperBuilder.m
+	Write warnings of respectively the proper nil object.
+
 2013-10-19 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 
 	* GormCore/GormClassEditor.m

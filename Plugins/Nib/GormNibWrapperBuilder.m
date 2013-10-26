@@ -2,7 +2,7 @@
  *
  * This class is a subclass of the NSDocumentController
  *
- * Copyright (C) 2006 Free Software Foundation, Inc.
+ * Copyright (C) 2006-2013 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:        2006
@@ -106,14 +106,14 @@
 		  NSLog(@"==> WARNING: value for object %@ is %@ in objects map.",src,dst);
 		}
 	      NSMapInsert(_names, src, name);
-	      if(dst == nil)
+	      if(name == nil)
 		{
-		  NSLog(@"==> WARNING: value for object %@ is %@ in names map.",src,dst);
+		  NSLog(@"==> WARNING: value for object %@ is %@ in names map.",src,name);
 		}
 	      NSMapInsert(_oids, src, currOid);
-	      if(dst == nil)
+	      if(currOid == nil)
 		{
-		  NSLog(@"==> WARNING: value for object %@ is %@ in oids map.",src,dst);
+		  NSLog(@"==> WARNING: value for object %@ is %@ in oids map.",src,currOid);
 		}
 	    }
 	  else
