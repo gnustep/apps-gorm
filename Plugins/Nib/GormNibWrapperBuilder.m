@@ -70,14 +70,14 @@
 	  NSNumber *currOid = [NSNumber numberWithUnsignedInt: oid++];
 	  // NSString *currOid = [NSString stringWithFormat: @"%d", oid++];
 	   
-	  if([o isMemberOfClass: [NSNibConnector class]])
+	  if ([o isMemberOfClass: [NSNibConnector class]])
 	    {
 	      id src = [o source];
 	      id dst = [o destination];
 	      NSString *name = nil;
 
 	      // 
-	      if(src != nil)
+	      if (src != nil)
 		{
 		  name = [document nameForObject: src];
 		}
@@ -86,35 +86,46 @@
 		  continue;
 		}
 
-	      if([name isEqual: @"NSOwner"])
+	      if ([name isEqual: @"NSOwner"])
 		{
 		  name = @"File's Owner";
 		}
-	      if([name isEqual: @"NSMenu"])
+	      if ([name isEqual: @"NSMenu"])
 		{
 		  name = @"MainMenu";
 		}
-	      else if([name isEqual: @"NSFirst"])
+	      else if ([name isEqual: @"NSFirst"])
 		{
 		  // skip it...
 		  continue;
 		}
 
-	      NSMapInsert(_objects, src, dst);
-	      if(dst == nil)
+	      if (dst == nil)
 		{
-		  NSLog(@"==> WARNING: value for object %@ is %@ in objects map.",src,dst);
+		  NSLog(@"==> WARNING: value for object %@ is %@ in objects map.", src, dst);
 		}
-	      NSMapInsert(_names, src, name);
-	      if(name == nil)
+              else
+                {
+                  NSMapInsert(_objects, src, dst);
+                }
+
+	      if (name == nil)
 		{
-		  NSLog(@"==> WARNING: value for object %@ is %@ in names map.",src,name);
-		}
-	      NSMapInsert(_oids, src, currOid);
-	      if(currOid == nil)
+		  NSLog(@"==> WARNING: value for object %@ is %@ in names map.", src, name);
+                }
+              else
+                {
+                  NSMapInsert(_names, src, name);
+                }
+
+	      if (currOid == nil)
 		{
-		  NSLog(@"==> WARNING: value for object %@ is %@ in oids map.",src,currOid);
+		  NSLog(@"==> WARNING: value for object %@ is %@ in oids map.", src, currOid);
 		}
+              else
+                {
+                  NSMapInsert(_oids, src, currOid);
+                }
 	    }
 	  else
 	    {
