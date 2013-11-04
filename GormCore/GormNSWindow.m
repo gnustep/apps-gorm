@@ -28,7 +28,7 @@
 #include "GormNSWindow.h"
 
 // the default style mask we start with.
-static unsigned int defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
+static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSWindow

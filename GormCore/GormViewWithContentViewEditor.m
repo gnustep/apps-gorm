@@ -65,8 +65,8 @@
 - (void) moveSelectionByX: (float)x 
 		     andY: (float)y
 {
-  int i;
-  int count = [selection count];
+  NSInteger i;
+  NSInteger count = [selection count];
 
   for (i = 0; i < count; i++)
     {
@@ -83,8 +83,8 @@
 - (void) resizeSelectionByX: (float)x 
 		       andY: (float)y
 {
-  int i;
-  int count = [selection count];
+  NSInteger i;
+  NSInteger count = [selection count];
 
   for (i = 0; i < count; i++)
     {
@@ -219,8 +219,8 @@
     }
   else if (_displaySelection)
     {
-      int i;
-      int count = [selection count];
+      NSInteger i;
+      NSInteger count = [selection count];
 
       for ( i = 0; i < count ; i++ )
 	{
@@ -246,7 +246,7 @@
 int _sortViews(id view1, id view2, void *context)
 {
   BOOL isVertical = *((BOOL *)context);
-  int order = NSOrderedSame;
+  NSInteger order = NSOrderedSame;
   NSRect rect1 = [[view1 editedObject] frame];
   NSRect rect2 = [[view2 editedObject] frame];
 
@@ -290,7 +290,7 @@ int _sortViews(id view1, id view2, void *context)
   GormViewEditor *editor = nil;
   NSRect prevRect = NSZeroRect;
   NSRect currRect = NSZeroRect;
-  int count = 0;
+  NSInteger count = 0;
 
   // iterate over the list of views...
   while((editor = [enumerator nextObject]) != nil)
@@ -324,7 +324,7 @@ int _sortViews(id view1, id view2, void *context)
       prevRect = currRect;
     }
 
-  NSDebugLog(@"The vote is %d",count);
+  NSDebugLog(@"The vote is %ld",count);
 
   if(count >= 0)
     vertical = YES;
@@ -634,7 +634,7 @@ int _sortViews(id view1, id view2, void *context)
 
       NSMutableArray *newSelection = [NSMutableArray array];
       NSArray *views;
-      int i;
+      NSInteger i;
       views = [contentView destroyAndListSubviews];
       for (i = 0; i < [views count]; i++)
 	{

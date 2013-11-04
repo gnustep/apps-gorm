@@ -202,7 +202,7 @@
     }
   else
     {
-      int version = [aCoder versionForClassName: 
+      NSInteger version = [aCoder versionForClassName: 
 			      NSStringFromClass([GSCustomView class])];
       
       if (version == 1)
@@ -279,12 +279,12 @@
 {
   id		obj;
   Class		cls;
-  unsigned int      mask;
+  NSUInteger    mask;
   GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
   
   [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
   theFrame = [aCoder decodeRect];
-  [aCoder decodeValueOfObjCType: @encode(unsigned int) 
+  [aCoder decodeValueOfObjCType: @encode(NSUInteger) 
 	  at: &mask];
   
   cls = NSClassFromString(theClass);

@@ -100,8 +100,8 @@
 - (int) distanceToFrame: (NSRect) frame
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
-  int halfSpacing = guideSpacing / 2;
+  NSInteger guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  NSInteger halfSpacing = guideSpacing / 2;
   NSRect rect = [self rectWithHalfDistance: (halfSpacing + 1)];
 
   if (NSIntersectsRect(frame, rect) == NO)
@@ -392,13 +392,13 @@ static BOOL currently_displaying = NO;
 
 - (void) _initializeHintWithInfo: (GormPlacementInfo*) gpi
 {
-  int i;
+  NSInteger i;
   NSArray *subviews = [[self superview] subviews];
-  int count = [subviews count];
+  NSInteger count = [subviews count];
   NSView *v;
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
-  int halfSpacing = guideSpacing / 2;
+  NSInteger guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  NSInteger halfSpacing = guideSpacing / 2;
 
   gpi->lastLeftRect = NSZeroRect;
   gpi->lastRightRect = NSZeroRect;
@@ -578,16 +578,16 @@ static BOOL currently_displaying = NO;
 	     withPlacementInfo: (GormPlacementInfo*)gpi
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
-  int halfSpacing = guideSpacing / 2;
+  NSInteger guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  NSInteger halfSpacing = guideSpacing / 2;
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
   float bottomOfFrame = NSMinY(frame);
-  int i;
-  int count;
-  int lastDistance;
-  int minimum = guideSpacing;
+  NSInteger i;
+  NSInteger count;
+  NSInteger lastDistance;
+  NSInteger minimum = guideSpacing;
   BOOL leftEmpty = YES;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;
@@ -884,18 +884,18 @@ static BOOL currently_displaying = NO;
 		      andPlacementInfo: (GormPlacementInfo*)gpi
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  int guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
-  int halfSpacing = guideSpacing / 2;
+  NSInteger guideSpacing = [userDefaults integerForKey: @"GuideSpacing"];
+  NSInteger halfSpacing = guideSpacing / 2;
   float leftOfFrame = NSMinX(frame);
   float rightOfFrame = NSMaxX(frame);
   float topOfFrame = NSMaxY(frame);
   float bottomOfFrame = NSMinY(frame);
   float widthOfFrame = frame.size.width;
   float heightOfFrame = frame.size.height;
-  int i;
-  int count;
-  int lastDistance;
-  int minimum = guideSpacing;
+  NSInteger i;
+  NSInteger count;
+  NSInteger lastDistance;
+  NSInteger minimum = guideSpacing;
   BOOL leftEmpty = YES;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;

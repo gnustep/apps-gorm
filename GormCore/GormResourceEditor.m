@@ -264,7 +264,7 @@
 	  >= 25))
 	{
   	  NSPasteboard	*pb;
-	  int pos;
+	  NSInteger pos;
 	  pos = row * [self numberOfColumns] + column;
 
 	  // don't allow the user to drag empty resources.

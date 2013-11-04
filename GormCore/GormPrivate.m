@@ -132,7 +132,7 @@ static BOOL _isInInterfaceBuilder = NO;
     {
       NSUInteger version = [aCoder versionForClassName: 
 			      NSStringFromClass([GSNibItem class])];
-      int cv = [aCoder versionForClassName:
+      NSInteger cv = [aCoder versionForClassName:
 			 NSStringFromClass([GSNibContainer class])];
 
       if (version == NSNotFound)

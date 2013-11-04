@@ -44,8 +44,8 @@
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
 {
   NSPasteboard *pb = [sender draggingPasteboard];
-  unsigned int mask = [sender draggingSourceOperationMask];
-  unsigned int oper = NSDragOperationNone;
+  NSUInteger mask = [sender draggingSourceOperationMask];
+  NSUInteger oper = NSDragOperationNone;
   dragMgr = [_document resourceManagerForPasteboard:pb];
   
   if (dragMgr)

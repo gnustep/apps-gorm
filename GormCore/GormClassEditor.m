@@ -273,7 +273,7 @@ NSImage *browserImage = nil;
     {
       if([classesView contentView] == scrollView)
 	{
-	  int row =  [outlineView selectedRow];	  
+	  NSInteger row =  [outlineView selectedRow];	  
 	  if ( row == -1 ) 
 	    {
 	      row = 0;
@@ -314,7 +314,7 @@ NSImage *browserImage = nil;
       NSMutableArray *subClassesArray = [NSMutableArray array];
       NSEnumerator	 *en;
       int		 row = 0;
-      int            col = 0;
+      NSInteger            col = 0;
       
       if ( ( className != nil )  
 	   && ( [className isEqual: @"CustomView"] == NO )
@@ -426,7 +426,7 @@ NSImage *browserImage = nil;
 
   if([classesView contentView] == scrollView)
     {
-      int i = [outlineView selectedRow];
+      NSInteger i = [outlineView selectedRow];
       
       if (i >= 0 && i <= ([outlineView numberOfRows] - 1))
 	{
@@ -507,7 +507,7 @@ NSImage *browserImage = nil;
 - (void) deleteSelection
 {
   id anitem;
-  int i = [outlineView selectedRow];
+  NSInteger i = [outlineView selectedRow];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   
   // if no selection, then return.
@@ -820,7 +820,7 @@ NSImage *browserImage = nil;
 					 itemSelected];
 	  if(newClassName != nil)
 	    {
-	      int i = 0;
+	      NSInteger i = 0;
 	      if([classesView contentView] == scrollView)
 		{
 		  [outlineView reloadData];
@@ -1171,7 +1171,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	  rename = [document renameConnectionsForClassNamed: item toName: anObject];
 	  if (rename)
 	    {
-	      int row = 0;
+	      NSInteger row = 0;
 
 	      [classManager renameClassNamed: item newName: anObject];
 	      [gov reloadData];
@@ -1309,7 +1309,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
 - (void) outlineViewSelectionDidChange: (NSNotification *)notification
 {
   id object = [notification object];
-  int row = [object selectedRow];
+  NSInteger row = [object selectedRow];
 
   if(row != -1)
     {
@@ -1339,7 +1339,7 @@ shouldEditTableColumn: (NSTableColumn *)tableColumn
   NSArray      *classes = nil;
   NSEnumerator *en = nil;
   NSString     *className = nil;
-  int          i = 0;
+  NSInteger          i = 0;
 
   if (sender != browserView || !matrix || ![matrix isKindOfClass:[NSMatrix class]])
     {

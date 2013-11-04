@@ -99,8 +99,8 @@
 
 - (void) deleteSelection
 {
-  int i = 0;
-  int count = [selection count];
+  NSInteger i = 0;
+  NSInteger count = [selection count];
   id temp = nil;
   
   for (i = count - 1; i >= 0; i--)

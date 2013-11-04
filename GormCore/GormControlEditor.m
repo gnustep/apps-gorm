@@ -64,8 +64,8 @@
 {
   NSSize size = [self frame].size;
   NSSize constrainedSize;
-  int col;
-  int row;
+  NSInteger col;
+  NSInteger row;
   
   if (gpi->firstPass == NO)
     [gpi->resizingIn displayRect: gpi->oldRect];
@@ -208,10 +208,10 @@
   float rightOfFrame;
   float topOfFrame;
   float bottomOfFrame;
-  int i;
-  int count;
-  int lastDistance;
-  int minimum = 10;
+  NSInteger i;
+  NSInteger count;
+  NSInteger lastDistance;
+  NSInteger minimum = 10;
   BOOL leftEmpty = YES;
   BOOL rightEmpty = YES;
   BOOL topEmpty = YES;
@@ -555,8 +555,8 @@
     {
       NSSize cellSize = [self frame].size;
       id editor;
-      int col;
-      int row;
+      NSInteger col;
+      NSInteger row;
       NSMatrix *matrix;
 
       col = gpi->lastFrame.size.width / cellSize.width;

@@ -13,7 +13,7 @@
   id fileType;
 
   // encoded ivars...
-  int version;
+  NSInteger version;
   NSString *targetVersionName;
   NSString *archiveTypeName;
 

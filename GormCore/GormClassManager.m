@@ -171,11 +171,11 @@
 - (NSString *) uniqueClassNameFrom: (NSString *)name
 {
   NSString *search = [NSString stringWithString: name];
-  int i = 1;
+  NSInteger i = 1;
 
   while([classInformation objectForKey: search])
     {
-      search = [name stringByAppendingString: [NSString stringWithFormat: @"%d",i++]];
+      search = [name stringByAppendingString: [NSString stringWithFormat: @"%ld",i++]];
     }
 
   return search;
@@ -220,11 +220,11 @@
   NSString *newAction = @"newAction";
   NSString *search = [newAction stringByAppendingString: @":"];
   NSString *new = nil; 
-  int i = 1;
+  NSInteger i = 1;
 
   while ([combined containsObject: search])
     {
-      new = [newAction stringByAppendingFormat: @"%d", i++];
+      new = [newAction stringByAppendingFormat: @"%ld", i++];
       search = [new stringByAppendingString: @":"];
     }
 
@@ -237,11 +237,11 @@
   NSArray *combined = [self allOutletsForClassNamed: name];
   NSString *newOutlet = @"newOutlet";
   NSString *new = newOutlet;
-  int i = 1;
+  NSInteger i = 1;
 
   while ([combined containsObject: new])
     {
-      new = [newOutlet stringByAppendingFormat: @"%d", i++];
+      new = [newOutlet stringByAppendingFormat: @"%ld", i++];
     }
 
   [self addOutlet: new forClassNamed: name];
@@ -447,19 +447,19 @@
   // replace the action in the appropriate places.
   if ([extraActions containsObject: oldAction])
     {
-      int extra_index = [extraActions indexOfObject: oldAction];
+      NSInteger extra_index = [extraActions indexOfObject: oldAction];
       [extraActions replaceObjectAtIndex: extra_index withObject: newAction];
     }
 
   if ([actions containsObject: oldAction])
     {
-      int actions_index = [actions indexOfObject: oldAction];
+      NSInteger actions_index = [actions indexOfObject: oldAction];
       [actions replaceObjectAtIndex: actions_index withObject: newAction];
     }
 
   if ([allActions containsObject: oldAction])
     {
-      int all_index = [allActions indexOfObject: oldAction];
+      NSInteger all_index = [allActions indexOfObject: oldAction];
       [allActions replaceObjectAtIndex: all_index withObject: newAction];
     }
 
@@ -498,19 +498,19 @@
   // replace outlets in appropriate places...
   if ([extraOutlets containsObject: oldOutlet])
     {
-      int extraIndex = [extraOutlets indexOfObject: oldOutlet];
+      NSInteger extraIndex = [extraOutlets indexOfObject: oldOutlet];
       [extraOutlets replaceObjectAtIndex: extraIndex withObject: newOutlet];
     }
 
   if ([outlets containsObject: oldOutlet])
     {
-      int outletsIndex = [outlets indexOfObject: oldOutlet];
+      NSInteger outletsIndex = [outlets indexOfObject: oldOutlet];
       [outlets replaceObjectAtIndex: outletsIndex withObject: newOutlet];
     }
 
   if ([allOutlets containsObject: oldOutlet])
     {
-      int allIndex = [allOutlets indexOfObject: oldOutlet];
+      NSInteger allIndex = [allOutlets indexOfObject: oldOutlet];
       [allOutlets replaceObjectAtIndex: allIndex withObject: newOutlet];
     }
 
@@ -1921,7 +1921,7 @@
 						    @"actions/outlets to instances of class '%@' "
 						    @"and it's subclasses.  Continue?"), 
 						className];
-		      int retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+		      NSInteger retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
 
 		      if (retval == NSAlertDefaultReturn)
 			{
@@ -2227,11 +2227,11 @@
   NSArray *classNames = [self allClassNames];
   NSEnumerator *en = [classNames objectEnumerator];
   NSString *className = nil;
-  int namelen = [name length];
+  NSInteger namelen = [name length];
 
   while((className = [en nextObject]) != nil)
     {
-      int classlen = [className length];
+      NSInteger classlen = [className length];
       if(namelen < classlen)
 	{
 	  NSComparisonResult result = 

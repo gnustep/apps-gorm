@@ -106,7 +106,7 @@ NSArray *allSubviews(NSView *view)
 }
 
 // cut the text...  code taken from GWorkspace, by Enrico Sersale
-static inline NSString *cutText(NSString *filename, id label, int lenght)
+static inline NSString *cutText(NSString *filename, id label, NSInteger lenght)
 {
   NSString *cutname = nil;
   NSString *reststr = nil;
@@ -114,7 +114,7 @@ static inline NSString *cutText(NSString *filename, id label, int lenght)
   NSFont *labfont;
   NSDictionary *attr;
   float w, cw, dotslenght;
-  int i;
+  NSInteger i;
   
   cw = 0;
   labfont = [label font];
@@ -164,7 +164,7 @@ static inline NSString *cutText(NSString *filename, id label, int lenght)
   return cutname;
 }
 
-NSString *cutFileLabelText(NSString *filename, id label, int length)
+NSString *cutFileLabelText(NSString *filename, id label, NSInteger length)
 {
   if (length > 0) 
     {
@@ -176,7 +176,7 @@ NSString *cutFileLabelText(NSString *filename, id label, int length)
 NSSize defaultCellSize()
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; 
-  int width = [defaults integerForKey: @"CellSizeWidth"];
+  NSInteger width = [defaults integerForKey: @"CellSizeWidth"];
   NSSize size = NSMakeSize(width, 72);
   return size;
 }

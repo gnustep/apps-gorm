@@ -40,14 +40,14 @@
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <InterfaceBuilder/IBApplicationAdditions.h>
 
-NSString *formatVersion(int version)
+NSString *formatVersion(NSInteger version)
 {
-  int bit16 = 65536;
-  int bit8  = 256;
-  int maj   = 0; 
-  int min   = 0;
-  int pch   = 0;
-  int v     = version;
+  NSInteger bit16 = 65536;
+  NSInteger bit8  = 256;
+  NSInteger maj   = 0; 
+  NSInteger min   = 0;
+  NSInteger pch   = 0;
+  NSInteger v     = version;
 
   // pull the version fromt the number
   maj = (int)((float)v / (float)bit16);
@@ -56,7 +56,7 @@ NSString *formatVersion(int version)
   v -= (bit8 * min);
   pch = v;
   
-  return [NSString stringWithFormat: @"%d.%d.%d / %d",maj,min,pch,version];
+  return [NSString stringWithFormat: @"%ld.%ld.%ld / %ld",maj,min,pch,version];
 }
 
 
@@ -108,8 +108,8 @@ NSString *formatVersion(int version)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [currentProfile objectForKey: className];
-      int v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %d for class %@",v,className);
+      NSInteger v = [[info objectForKey: @"version"] intValue];
+      NSDebugLog(@"Setting version %ld for class %@",v,className);
       [cls setVersion: v];
     }
 }
@@ -126,8 +126,8 @@ NSString *formatVersion(int version)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [latestVersion objectForKey: className];
-      int v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %d for class %@",v,className);
+      NSInteger v = [[info objectForKey: @"version"] intValue];
+      NSDebugLog(@"Setting version %ld for class %@",v,className);
       [cls setVersion: v];
     }
 }
@@ -208,7 +208,7 @@ NSString *formatVersion(int version)
 
 - (int) versionOfClass: (NSString *)className 
 {
-  int result = -1; 
+  NSInteger result = -1; 
 
   NSDictionary *clsProfile = [currentProfile objectForKey: className];
   if(clsProfile != nil)

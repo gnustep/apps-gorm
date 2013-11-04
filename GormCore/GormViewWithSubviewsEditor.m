@@ -79,8 +79,8 @@
   NSArray *subeditorConnections = 
     [NSArray arrayWithArray: [document connectorsForDestination: self
 				       ofClass: [GormEditorToParent class]]];  
-  int count = [subeditorConnections count];
-  int i = 0;
+  NSInteger count = [subeditorConnections count];
+  NSInteger i = 0;
 
   for ( i = 0; i < count; i ++ )
     {
@@ -93,8 +93,8 @@
   NSArray *subeditorConnections = 
     [NSArray arrayWithArray: [document connectorsForDestination: self
 				       ofClass: [GormEditorToParent class]]];
-  int count = [subeditorConnections count];
-  int i = 0;
+  NSInteger count = [subeditorConnections count];
+  NSInteger i = 0;
 
   for ( i = 0; i < count; i ++ )
     {
@@ -210,8 +210,8 @@
 
 - (NSArray*) selection
 {
-  int i;
-  int count = [selection count];
+  NSInteger i;
+  NSInteger count = [selection count];
   NSMutableArray *result = [NSMutableArray arrayWithCapacity: count];
   
   if (count != 0)
@@ -238,8 +238,8 @@
 
 - (void) selectObjects: (NSArray *) objects
 {
-  int i;
-  int count = [objects count];
+  NSInteger i;
+  NSInteger count = [objects count];
   TEST_RELEASE(selection);
   
   selection = [[NSMutableArray alloc] initWithCapacity: [objects count]];

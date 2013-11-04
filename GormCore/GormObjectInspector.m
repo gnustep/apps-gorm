@@ -378,7 +378,7 @@ selectCellWithString: (NSString*)title
 	  unsigned	v;
 	  unsigned	(*imp)();
 
-	  imp = (unsigned int (*)()) [object methodForSelector: get];
+	  imp = (unsigned (*)()) [object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%u", v]];
 	}

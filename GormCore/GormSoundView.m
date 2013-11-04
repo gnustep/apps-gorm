@@ -46,9 +46,9 @@
 static float findMax(NSData *data)
 {
   float max = 0.0;
-  int index = 0;
+  NSInteger index = 0;
   float *array = (float *)[data bytes];
-  int len = [data length];
+  NSInteger len = [data length];
 
   // find the maximum...
   for(index = 0; index < len; index++)
@@ -88,9 +88,9 @@ static float findMax(NSData *data)
   float x1 = 0, x2 = 0, y1 = offset, y2 = offset;
   float max = findMax(soundData);
   float multiplier = h/max;
-  int length = [soundData length];
-  int index = 0;
-  int step = (length/(int)w);
+  NSInteger length = [soundData length];
+  NSInteger index = 0;
+  NSInteger step = (length/(int)w);
 
   [super drawRect: aRect];
   
@@ -104,7 +104,7 @@ static float findMax(NSData *data)
       y1 = offset; 
       for(index = step; index < w; index+=step)
 	{
-	  int i = (int)index;
+	  NSInteger i = (int)index;
 	  float d = data[i];
 	  
 	  // calc new position...

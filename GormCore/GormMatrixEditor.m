@@ -58,7 +58,7 @@
 
 - (CGFloat)titleWidth
 {
-  int i, count = [self numberOfRows];
+  NSInteger i, count = [self numberOfRows];
   float new_title_width = 0;
   float candidate_title_width = 0;
 
@@ -428,22 +428,22 @@ static BOOL done_editing;
 		   withEvent: (NSEvent *)theEvent
 		     andKnob: (IBKnobPosition) knob
 {
-  int width;
-  int height;
+  NSInteger width;
+  NSInteger height;
       
   if ([theEvent modifierFlags] & NSAlternateKeyMask)
     {
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize interSize = [_EO intercellSpacing];
       
-      int colWidth = ([_EO frame].size.width - 
+      NSInteger colWidth = ([_EO frame].size.width - 
 		      (cols - 1) * interSize.width) / cols;
-      int rowHeight = ([_EO frame].size.height - 
+      NSInteger rowHeight = ([_EO frame].size.height - 
 		       (rows - 1) * interSize.height) / rows;
 	
-      int widthIncrement = colWidth + interSize.width;
-      int heightIncrement = rowHeight + interSize.height;
+      NSInteger widthIncrement = colWidth + interSize.width;
+      NSInteger heightIncrement = rowHeight + interSize.height;
       
       if (frame.size.width < colWidth)
 	{
@@ -471,8 +471,8 @@ static BOOL done_editing;
     }
   else if ([theEvent modifierFlags] & NSControlKeyMask)
     {
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize cellSize = [_EO cellSize];
       
       height = width = 0;
@@ -488,8 +488,8 @@ static BOOL done_editing;
     }
   else
     {
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize interSize = [_EO intercellSpacing];
       
       width = ( frame.size.width - interSize.width * (cols - 1) ) /  cols;
@@ -566,24 +566,24 @@ static BOOL done_editing;
 
   if ([theEvent modifierFlags] & (NSControlKeyMask | NSShiftKeyMask))
     {
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize interSize = [_EO intercellSpacing];
       
-      int colWidth = ([_EO frame].size.width - 
+      NSInteger colWidth = ([_EO frame].size.width - 
 		      (cols - 1) * interSize.width) / cols;
-      int rowHeight = ([_EO frame].size.height - 
+      NSInteger rowHeight = ([_EO frame].size.height - 
 		       (rows - 1) * interSize.height) / rows;
 	
-      int widthIncrement = colWidth + interSize.width;
-      int heightIncrement = rowHeight + interSize.height;
+      NSInteger widthIncrement = colWidth + interSize.width;
+      NSInteger heightIncrement = rowHeight + interSize.height;
 
-      int newCols = (frame.size.width - [_EO frame].size.width) /
+      NSInteger newCols = (frame.size.width - [_EO frame].size.width) /
 	widthIncrement;
-      int newRows = (frame.size.height - [_EO frame].size.height) /
+      NSInteger newRows = (frame.size.height - [_EO frame].size.height) /
 	heightIncrement;
       
-      int i, j;
+      NSInteger i, j;
 
       if (newCols > 0)
 	{
@@ -636,10 +636,10 @@ static BOOL done_editing;
     }
   else if ([theEvent modifierFlags] & NSControlKeyMask)
     {
-      int width;
-      int height;
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger width;
+      NSInteger height;
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize cellSize = [_EO cellSize];
       
       
@@ -656,10 +656,10 @@ static BOOL done_editing;
     }
   else
     {
-      int width;
-      int height;
-      int rows = [_EO numberOfRows];
-      int cols = [_EO numberOfColumns];
+      NSInteger width;
+      NSInteger height;
+      NSInteger rows = [_EO numberOfRows];
+      NSInteger cols = [_EO numberOfColumns];
       NSSize interSize = [_EO intercellSpacing];
       
       

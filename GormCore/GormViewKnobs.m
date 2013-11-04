@@ -28,8 +28,8 @@
 #include "GormViewKnobs.h"
 #include <math.h>
 
-static int KNOB_WIDTH = 0.0;
-static int KNOB_HEIGHT = 0.0;
+static NSInteger KNOB_WIDTH = 0.0;
+static NSInteger KNOB_HEIGHT = 0.0;
 
 #define MINSIZE 5.0
 

@@ -29,8 +29,8 @@
 @interface GormMatrixEditor : GormViewWithSubviewsEditor
 {
   NSCell* selected;
-  int selectedRow;
-  int selectedCol;
+  NSInteger selectedRow;
+  NSInteger selectedCol;
 }
 @end
 

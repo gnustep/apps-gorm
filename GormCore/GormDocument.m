@@ -455,12 +455,12 @@ static NSImage  *fileImage = nil;
     {
       if([filePrefsManager loadFromData: infoData])
 	{
-	  int version = [filePrefsManager version];
-	  int currentVersion = [GormFilePrefsManager currentVersion];
+	  NSInteger version = [filePrefsManager version];
+	  NSInteger currentVersion = [GormFilePrefsManager currentVersion];
 	  
 	  if(version > currentVersion)
 	    {
-	      int retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
+	      NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
 					   _(@"The file being loaded was created with a newer build, continue?"), 
 					   _(@"OK"), 
 					   _(@"Cancel"), 
@@ -755,8 +755,8 @@ static NSImage  *fileImage = nil;
       if ([[anObject documentView] isKindOfClass: 
 				    [NSTableView class]])
 	{
-	  int i;
-	  int count;
+	  NSInteger i;
+	  NSInteger count;
 	  NSArray *tc;
 	  id tv = [anObject documentView];
 	  tc = [tv tableColumns];
@@ -2607,7 +2607,7 @@ static void _real_close(GormDocument *self,
 	{
 	  NSString *title;
 	  NSString *msg;
-	  int retval;
+	  NSInteger retval;
 
 	  if(prompted == NO)
 	    {
@@ -2660,7 +2660,7 @@ static void _real_close(GormDocument *self,
   NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
   BOOL removed = YES;
-  int retval = -1;
+  NSInteger retval = -1;
   NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
   NSString *msg;
 
@@ -2773,7 +2773,7 @@ static void _real_close(GormDocument *self,
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
   BOOL renamed = YES;
-  int retval = -1;
+  NSInteger retval = -1;
   NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
   NSString *msg = [NSString stringWithFormat: 
 			      _(@"Change class name '%@' to '%@'.  Continue?"),
@@ -3215,7 +3215,7 @@ static void _real_close(GormDocument *self,
 - (void) arrangeSelectedObjects: (id)sender
 {
   NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
-  int tag = [sender tag];
+  NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
 
@@ -3247,7 +3247,7 @@ static void _real_close(GormDocument *self,
 - (void) alignSelectedObjects: (id)sender
 {
   NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
-  int tag = [sender tag];
+  NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
   id prev = nil;
@@ -3324,7 +3324,7 @@ static void _real_close(GormDocument *self,
    */
   if(isOlderArchive && [filePrefsManager isLatest])
     {
-      int retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
+      NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
 				   _(@"Saving will update this gorm to the latest version \n" 
 				     @"which may not be compatible with some previous versions \n"
 				     @"of GNUstep."),

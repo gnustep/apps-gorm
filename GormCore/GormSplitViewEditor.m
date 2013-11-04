@@ -262,9 +262,9 @@
     }
   
   {
-    int i;
+    NSInteger i;
     NSArray *subs = [_EO subviews];
-    int count = [subs count];
+    NSInteger count = [subs count];
     NSPoint mouseDownPoint = 
       [self convertPoint: [theEvent locationInWindow]
 	    fromView: nil];
@@ -339,7 +339,7 @@
 
       NSMutableArray *newSelection = [NSMutableArray array];
       NSArray *views;
-      int i;
+      NSInteger i;
       views = [contentView destroyAndListSubviews];
       for (i = 0; i < [views count]; i++)
 	{

@@ -274,8 +274,8 @@ static NSImage *horizontalImage;
 
 - (NSArray*) selection
 {
-  int i;
-  int count = [selection count];
+  NSInteger i;
+  NSInteger count = [selection count];
   NSMutableArray *result = [NSMutableArray arrayWithCapacity: count];
   
   if (count != 0)
@@ -295,9 +295,9 @@ static NSImage *horizontalImage;
 
 - (void) deleteSelection
 {
-  int i;
+  NSInteger i;
   NSArray *sel = [selection copy];
-  int count = [sel count];
+  NSInteger count = [sel count];
   
   for (i = count - 1; i >= 0; i--)
     {
@@ -342,8 +342,8 @@ static NSImage *horizontalImage;
 
   // are we on the knob of a selected view ?
   {
-    int count = [selection count];
-    int i;
+    NSInteger count = [selection count];
+    NSInteger i;
     GormViewEditor *knobView = nil;
     IBKnobPosition	knob = IBNoneKnobPosition;
     NSPoint mouseDownPoint;

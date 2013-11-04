@@ -30,7 +30,7 @@
 {
   unsigned _gormStyleMask;
   BOOL     _gormReleasedWhenClosed;
-  unsigned int autoPositionMask;
+  NSUInteger autoPositionMask;
 }
 - (void) _setStyleMask: (unsigned int)newStyleMask;
 - (unsigned int) _styleMask;

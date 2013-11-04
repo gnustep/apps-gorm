@@ -186,7 +186,7 @@ static NSMapTable	*docMap = 0;
 	{
 	  NSString *title = _(@"Removing Main Menu");
 	  NSString *msg = _(@"Are you sure you want to do this?");
-	  int retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+	  NSInteger retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
 	  
 	  // if the user *really* wants to delete the menu, do it.
 	  if(retval != NSAlertDefaultReturn)

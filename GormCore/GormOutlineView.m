@@ -39,7 +39,7 @@
 #include <AppKit/NSImage.h>
 
 static NSNotificationCenter *nc = nil;
-static const int current_version = 1;
+static const NSInteger current_version = 1;
 
 // Cache the arrow images...
 static NSImage *collapsed = nil;
@@ -225,8 +225,8 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void)_openActions: (id)item
 {
-  int numchildren = 0;
-  int i = 0;
+  NSInteger numchildren = 0;
+  NSInteger i = 0;
   NSUInteger insertionPoint = 0;
   id object = nil;
   id sitem = (item == nil)?((id)[NSNull null]):((id)item);
@@ -267,8 +267,8 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void) _openOutlets: (id)item
 {
-  int numchildren = 0;
-  int i = 0;
+  NSInteger numchildren = 0;
+  NSInteger i = 0;
   NSInteger insertionPoint = 0;
   id object = nil;
   id sitem = (item == nil)?((id)[NSNull null]):((id)item);
@@ -309,14 +309,14 @@ static NSColor *darkGreyBlueColor = nil;
 
 - (void) drawRow: (NSInteger)rowIndex clipRect: (NSRect)aRect
 {
-  int startingColumn; 
-  int endingColumn;
+  NSInteger startingColumn; 
+  NSInteger endingColumn;
   NSTableColumn *tb;
   NSRect drawingRect;
   NSCell *cell;
   NSCell *imageCell = nil;
   NSRect imageRect;
-  int i;
+  NSInteger i;
   float x_pos;
 
   if (_dataSource == nil)
@@ -404,7 +404,7 @@ static NSColor *darkGreyBlueColor = nil;
 	  if (tb == _outlineTableColumn && !isOutletAction)
 	    {
 	      NSImage *image = nil;
-	      int level = 0;
+	      NSInteger level = 0;
 	      float indentationFactor = 0.0;
 
 	      // display the correct arrow...
@@ -519,7 +519,7 @@ static NSColor *darkGreyBlueColor = nil;
 
   if ((tb == _actionColumn || tb == _outletColumn) && !_isEditing)
     {
-      int position = 0;      
+      NSInteger position = 0;      
       position += _columnOrigins[_clickedColumn] + 5;
 
       if (location.x >= position
@@ -648,7 +648,7 @@ static NSColor *darkGreyBlueColor = nil;
   NSRect drawingRect, imageRect;
   unsigned length = 0;
   id item = nil;
-  int level = 0;
+  NSInteger level = 0;
   float indentationFactor = 0.0;
   NSImage *image = nil;
   NSCell *imageCell = nil;

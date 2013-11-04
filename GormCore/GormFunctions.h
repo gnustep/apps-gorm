@@ -44,7 +44,7 @@ void subviewsForView(NSView *view, NSMutableArray *array);
 NSArray *allSubviews(NSView *view);
 
 // cut the file label to the appropriate length...
-NSString *cutFileLabelText(NSString *filename, id label, int length);
+NSString *cutFileLabelText(NSString *filename, id label, NSInteger length);
 
 // get the cell size for all editors
 NSSize defaultCellSize();

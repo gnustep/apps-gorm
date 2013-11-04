@@ -68,8 +68,8 @@ static NSImage *horizontalImage;
 
   // are we on the knob of a selected view ?
   {
-    int count = [selection count];
-    int i;
+    NSInteger count = [selection count];
+    NSInteger i;
     GormViewEditor *knobView = nil;
     IBKnobPosition	knob = IBNoneKnobPosition;
     NSPoint mouseDownPoint;

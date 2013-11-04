@@ -80,7 +80,7 @@ extern NSString *GormResizeCellNotification;
 @interface GormClassProxy : NSObject
 {
   NSString *name;
-  int t;
+  NSInteger t;
 }
 
 - initWithClassName: (NSString*)n;

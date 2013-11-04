@@ -249,20 +249,20 @@
 - (void) _refreshPopUp
 {
   NSEnumerator *en = [modes objectEnumerator];
-  int index = 0;
+  NSInteger index = 0;
   id obj = nil;
 
   [popup removeAllItems];
   while((obj = [en nextObject]) != nil)
     {
-      int tag = index + 1;
+      NSInteger tag = index + 1;
       NSMenuItem *item;
       [popup addItemWithTitle: [obj localizedLabel]];
 
       item = (NSMenuItem *)[popup itemAtIndex: index];
       [item setTarget: self];
       [item setAction: @selector(setCurrentInspector:)];
-      [item setKeyEquivalent: [NSString stringWithFormat: @"%d",tag]];
+      [item setKeyEquivalent: [NSString stringWithFormat: @"%ld",tag]];
       [item setTag: tag];
       index++;
     }
@@ -278,7 +278,7 @@
   NSView	*newView = nil;
   NSView	*oldView = nil;
   NSString	*newInspector = nil;
-  int           tag = 0; 
+  NSInteger           tag = 0; 
 
   if (anObj != self)
     {

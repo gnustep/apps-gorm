@@ -1,3 +1,40 @@
+2013-11-04 10:03-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormBoxEditor.m
+	* GormCore/GormClassEditor.m
+	* GormCore/GormClassInspector.m
+	* GormCore/GormClassManager.m
+	* GormCore/GormControlEditor.m
+	* GormCore/GormCustomView.m
+	* GormCore/GormDocument.m
+	* GormCore/GormDocumentWindow.m
+	* GormCore/GormFilePrefsManager.h
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormFunctions.h
+	* GormCore/GormFunctions.m
+	* GormCore/GormInspectorsManager.m
+	* GormCore/GormInternalViewEditor.m
+	* GormCore/GormMatrixEditor.h
+	* GormCore/GormMatrixEditor.m
+	* GormCore/GormNSPanel.h
+	* GormCore/GormNSPanel.m
+	* GormCore/GormNSWindow.h
+	* GormCore/GormNSWindow.m
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormObjectInspector.m
+	* GormCore/GormOutlineView.m
+	* GormCore/GormPrivate.h
+	* GormCore/GormPrivate.m
+	* GormCore/GormResourceEditor.m
+	* GormCore/GormResourceManager.m
+	* GormCore/GormSoundView.m
+	* GormCore/GormSplitViewEditor.m
+	* GormCore/GormStandaloneViewEditor.m
+	* GormCore/GormViewEditor.m
+	* GormCore/GormViewKnobs.m
+	* GormCore/GormViewWithContentViewEditor.m
+	* GormCore/GormViewWithSubviewsEditor.m: int -> NSInteger transition.
+
 2013-10-26 Fred Kiefer <FredKiefer@gmx.de>
 
 	* Plugins/Nib/GormNibWrapperBuilder.m (-initWithDocument:):

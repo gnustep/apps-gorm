@@ -538,7 +538,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	    {
 	      if([classManager isCustomClass: name])
 		{
-		  NSString *title = [NSString stringWithFormat: _(@"Modifying/Reparenting Class")];
+		  NSString *title = _(@"Modifying/Reparenting Class");
 		  NSString *msg = [NSString stringWithFormat: _(@"This action may break existing connections "
 								@"to instances of class '%@'"
 								@"and it's subclasses.  Continue?"), name];
@@ -644,8 +644,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) setObject: (id)anObject
 {
-  int outletsCount = 0;
-  int actionsCount = 0;
+  NSInteger outletsCount = 0;
+  NSInteger actionsCount = 0;
   NSTabViewItem *item = nil;
 
   if([anObject isKindOfClass: [GormClassProxy class]])
@@ -658,9 +658,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
       actionsCount = [[classManager allActionsForClassNamed: currentClass] count];
       
       item = [tabView tabViewItemAtIndex: 1]; // actions;
-      [item setLabel: [NSString stringWithFormat: @"Actions (%d)",actionsCount]];
+      [item setLabel: [NSString stringWithFormat: @"Actions (%ld)",actionsCount]];
       item = [tabView tabViewItemAtIndex: 0]; // outlets;
-      [item setLabel: [NSString stringWithFormat: @"Outlets (%d)",outletsCount]];
+      [item setLabel: [NSString stringWithFormat: @"Outlets (%ld)",outletsCount]];
       [tabView setNeedsDisplay: YES];
       
       [self _refreshView];

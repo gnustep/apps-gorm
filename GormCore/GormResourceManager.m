@@ -51,8 +51,8 @@
   NSArray *types = [pb types];
   NSArray *acceptedTypes = [self resourcePasteboardTypes];
   BOOL flag = YES;
-  int i;
-  int c = [types count];
+  NSInteger i;
+  NSInteger c = [types count];
 
   if (c == 0) return NO; 
   
@@ -66,7 +66,7 @@
         {
 	  NSArray *files = [pb propertyListForType:type];
 	  NSArray *acceptedFiles = [self resourceFileTypes]; 
-	  int j, d;
+	  NSInteger j, d;
   
 	  if (!files)
 	    {
@@ -93,8 +93,8 @@
   NSArray *types = [pb types];
   NSArray *soundTypes = [NSSound soundUnfilteredFileTypes];
   NSArray *imageTypes = [NSImage imageFileTypes];
-  int i;
-  int c = [types count];
+  NSInteger i;
+  NSInteger c = [types count];
   BOOL found = NO;
   
   for (i = 0; i < c; i++)
@@ -103,7 +103,7 @@
       
       if ([type isEqual:NSFilenamesPboardType])
         {
-	  int j, d;
+	  NSInteger j, d;
 	  NSArray *files = [pb propertyListForType:type];
 	  found = YES;
 	  if (!files)
