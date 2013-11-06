@@ -324,7 +324,7 @@ int _sortViews(id view1, id view2, void *context)
       prevRect = currRect;
     }
 
-  NSDebugLog(@"The vote is %ld",count);
+  NSDebugLog(@"The vote is %ld",(long int)count);
 
   if(count >= 0)
     vertical = YES;
