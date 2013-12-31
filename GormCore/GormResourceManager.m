@@ -41,7 +41,7 @@
 
 - (NSArray *) resourcePasteboardTypes
 {
-  return [NSArray arrayWithObjects: IBWindowPboardType, IBViewPboardType,
+  return [NSArray arrayWithObjects: IBWindowPboardType, IBViewPboardType, IBMenuPboardType,
 	 			    NSFilenamesPboardType, GormLinkPboardType,
 				    nil];
 }
