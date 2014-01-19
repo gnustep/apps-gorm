@@ -29,7 +29,7 @@
       {
 	NSName = "GSXibFileType";
 	NSHumanReadableName = "Cocoa Xib";
-	NSRole = Editor;
+	NSRole = Viewer;
 	NSDocumentClass = GormDocument;
         NSUnixExtensions = ( "xib" );
         NSIcon = "GormNib.tiff";
