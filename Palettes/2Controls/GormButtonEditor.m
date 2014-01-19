@@ -332,14 +332,12 @@ static NSRect oldFrame;
   BOOL didDrawBackground;
   NSTextField *editField;
   NSRect                 frame;
-  NSRect originalFrame;
   NSNotificationCenter  *nc = [NSNotificationCenter defaultCenter];
   NSDate		*future = [NSDate distantFuture];
   NSEvent *e;
       
   editField = view;
-  originalFrame = frame = [editField frame];
-
+  frame = [editField frame];
   wasEditable = [editField isEditable];
   [editField setEditable: YES];
   didDrawBackground = [editField drawsBackground];

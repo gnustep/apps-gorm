@@ -71,12 +71,12 @@ GormShowFastKnobFills(void)
 {
   if (blackRectCount)
     {
-      PSsetgray(NSBlack);
+      [[NSColor blackColor] set];
       NSRectFillList(blackRectList, blackRectCount);
     }
   if (fgcolorRectCount)
     {
-      PSsetrgbcolor(1,0,0);
+      [[NSColor redColor] set];
       NSRectFillList(fgcolorRectList, fgcolorRectCount);
     }
   blackRectCount = 0;
@@ -84,7 +84,7 @@ GormShowFastKnobFills(void)
 }
 
 static void
-_showLitKnobForRect(NSGraphicsContext *ctxt, NSRect frame, IBKnobPosition aKnob)
+_showLitKnobForRect(NSRect frame, IBKnobPosition aKnob)
 {
   float		dx, dy;
   BOOL		oddx, oddy;
@@ -102,6 +102,9 @@ _showLitKnobForRect(NSGraphicsContext *ctxt, NSRect frame, IBKnobPosition aKnob)
   frame.size.height = KNOB_HEIGHT;
   frame.origin.x -= ((KNOB_WIDTH - 1.0) / 2.0);
   frame.origin.y -= ((KNOB_HEIGHT - 1.0) / 2.0);
+
+  // Initialize r to keep the compiler happy
+  r = frame;
 
   if (aKnob == IBBottomLeftKnobPosition)
     r = frame;
@@ -143,18 +146,17 @@ _showLitKnobForRect(NSGraphicsContext *ctxt, NSRect frame, IBKnobPosition aKnob)
 
   r.origin.x += 1.0;
   r.origin.y -= 1.0;
-  DPSsetgray(ctxt, NSBlack);
-  DPSrectfill(ctxt, NSMinX(r), NSMinY(r), NSWidth(r), NSHeight(r));
+  [[NSColor blackColor] set];
+  [NSBezierPath fillRect: r];
   r.origin.x -= 1.0;
   r.origin.y += 1.0;
-  DPSsetgray(ctxt, NSWhite);
-  DPSrectfill(ctxt, NSMinX(r), NSMinY(r), NSWidth(r), NSHeight(r));
+  [[NSColor whiteColor] set];
+  [NSBezierPath fillRect: r];
 }
 
 void
 GormShowFrameWithKnob(NSRect aRect, IBKnobPosition aKnob)
 {
-  NSGraphicsContext	*ctxt = [NSGraphicsContext currentContext];
   NSRect		 r = aRect;
 
   /*
@@ -164,20 +166,15 @@ GormShowFrameWithKnob(NSRect aRect, IBKnobPosition aKnob)
   r.origin.y -= 0.5;
   r.size.width += 1.0;
   r.size.height += 1.0;
-  DPSsetgray(ctxt, NSBlack);
-  DPSmoveto(ctxt, NSMinX(r), NSMinY(r));
-  DPSlineto(ctxt, NSMinX(r), NSMaxY(r));
-  DPSlineto(ctxt, NSMaxX(r), NSMaxY(r));
-  DPSlineto(ctxt, NSMaxX(r), NSMinY(r));
-  DPSlineto(ctxt, NSMinX(r), NSMinY(r));
-  DPSstroke(ctxt);
+  [[NSColor blackColor] set];
+  [NSBezierPath strokeRect: r];
 
   if (aKnob != IBNoneKnobPosition)
     {
       /*
        * NB. we use the internal rectangle for calculating the knob position.
        */
-      _showLitKnobForRect(ctxt, aRect, aKnob);
+      _showLitKnobForRect(aRect, aKnob);
     }
 }
 
@@ -357,12 +354,15 @@ _fastKnobFill(NSRect aRect, BOOL isBlack)
 	}
       else
 	{
-	  while (blackRectCount >= blackRectSize)
-	    {
-	      blackRectSize <<= 1;
-	    }
-	  blackRectList = NSZoneRealloc(NSDefaultMallocZone(), blackRectList, 
-	    blackRectSize * sizeof(NSRect));
+          if (blackRectCount >= blackRectSize)
+            {
+              while (blackRectCount >= blackRectSize)
+                {
+                  blackRectSize <<= 1;
+                }
+              blackRectList = NSZoneRealloc(NSDefaultMallocZone(), blackRectList, 
+                                            blackRectSize * sizeof(NSRect));
+            }
         }
       blackRectList[blackRectCount++] = aRect;
     }
@@ -376,12 +376,15 @@ _fastKnobFill(NSRect aRect, BOOL isBlack)
 	}
       else
 	{
-	  while (fgcolorRectCount >= fgcolorRectSize)
+	  if (fgcolorRectCount >= fgcolorRectSize)
 	    {
-	      fgcolorRectSize <<= 1;
-	    }
-	  fgcolorRectList = NSZoneRealloc(NSDefaultMallocZone(), fgcolorRectList, 
-	    fgcolorRectSize * sizeof(NSRect));
+              while (fgcolorRectCount >= fgcolorRectSize)
+                {
+                  fgcolorRectSize <<= 1;
+                }
+              fgcolorRectList = NSZoneRealloc(NSDefaultMallocZone(), fgcolorRectList, 
+                                              fgcolorRectSize * sizeof(NSRect));
+            }
 	}
       fgcolorRectList[fgcolorRectCount++] = aRect;
     }

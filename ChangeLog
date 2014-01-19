@@ -1,5 +1,15 @@
 2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
 
+	* Palettes/2Controls/GormButtonAttributesInspector.h: Use NSButton
+	instead of the non-existign NSSwitch.
+	* GormCore/GormViewKnobs.m: Replace DPS calls. Only realloc
+	rect lists if needed.
+	* Plugins/Gorm/GormGormWrapperBuilder.m,
+	* Palettes/2Controls/GormPopUpButtonAttributesInspector.m,
+	* Palettes/2Controls/GormButtonEditor.m: Remove compiler warnings.
+
+2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
+
 	* GormCore/GormResourceManager.m,
 	* GormCore/GormResource.m,
 	* GormCore/GormOutlineView.m,

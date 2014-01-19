@@ -31,6 +31,7 @@
 #include <GormCore/GormClassManager.h>
 #include <GormCore/GormFilePrefsManager.h>
 #include <GormCore/GormDocument.h>
+#include <GormCore/GormFilesOwner.h>
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormPalettesManager.h>
 

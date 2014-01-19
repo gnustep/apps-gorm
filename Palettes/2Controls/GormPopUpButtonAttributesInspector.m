@@ -33,6 +33,7 @@
 
 #include "GormPopUpButtonAttributesInspector.h"
 
+#include <Foundation/Foundation.h>
 #include <AppKit/NSButton.h>
 #include <AppKit/NSForm.h>
 #include <AppKit/NSMatrix.h>
