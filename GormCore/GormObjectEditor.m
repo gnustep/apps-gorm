@@ -177,10 +177,6 @@ static NSMapTable	*docMap = 0;
       && [[document nameForObject: selected] isEqualToString: @"NSOwner"] == NO
       && [[document nameForObject: selected] isEqualToString: @"NSFirst"] == NO)
     {
-      NSNotificationCenter	*nc;
-
-      nc = [NSNotificationCenter defaultCenter];
-
       if ([selected isKindOfClass: [NSMenu class]] &&
 	  [[document nameForObject: selected] isEqual: @"NSMenu"] == YES)
 	{

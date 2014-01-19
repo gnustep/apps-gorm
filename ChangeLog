@@ -1,5 +1,13 @@
 2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
 
+	* GormCore/GormResourceManager.m,
+	* GormCore/GormResource.m,
+	* GormCore/GormOutlineView.m,
+	* GormCore/GormObjectEditor.m,
+	* GormCore/GormClassManager.m: Remove compiler warnings.
+
+2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
+
 	* GormInfo.plist: Don't clain to be able to write XIB files.
 
 2013-12-31 Fred Kiefer <FredKiefer@gmx.de>

@@ -34,6 +34,7 @@
 #include <AppKit/NSTableColumn.h>
 #include <AppKit/NSCell.h>
 #include <AppKit/NSEvent.h>
+#include <AppKit/NSMenuItem.h>
 #include <AppKit/NSTextFieldCell.h>
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSImage.h>

@@ -124,11 +124,11 @@
                     {
                       if (![classManager parseHeader: file])
                         {
-                          NSString *file = [file lastPathComponent];
+                          NSString *fileName = [file lastPathComponent];
                           NSString *message;
 
 			  message = [NSString stringWithFormat:
-                                      _(@"Unable to parse class in %@"), file];
+                                      _(@"Unable to parse class in %@"), fileName];
 
                           NSRunAlertPanel(_(@"Problem parsing class"),
 	                                  message,

@@ -1457,11 +1457,9 @@
     {
       NSDictionary	    *classInfo = [dict objectForKey: key];
       NSMutableDictionary   *newInfo;
-      NSMutableDictionary   *oldInfo;
       id		    obj;
       
       newInfo = [[NSMutableDictionary alloc] init];
-      oldInfo = [classInformation objectForKey: key];
       
       [classInformation setObject: newInfo forKey: key];
       

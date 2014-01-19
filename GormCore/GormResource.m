@@ -22,6 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/NSData.h>
 #include <Foundation/NSObject.h>
 #include <Foundation/NSString.h>
 #include "GormResource.h"
