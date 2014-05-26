@@ -58,6 +58,8 @@
 
 @implementation GormFormAttributesInspector
 
+NSUInteger numberStepperValue;
+
 - (id) init
 {
   if ([super init] == nil)
@@ -69,6 +71,14 @@
       NSLog(@"Could not gorm GormFormInspector");
       return nil;
     }
+  /* It shouldn't break functionality of field number changing 
+     if someone will decide in the future to change the value
+     of the stepper in the gorm file. So we stores those value 
+     from the gorm file in the auxillary variable to use it 
+     later in -[ok:]. 
+     (It allows us to avoid the value being hardcoded).
+   */
+  numberStepperValue = [numberStepper intValue];
 
   return self;
 }
@@ -152,6 +162,60 @@
       BOOL flag = ([autosizeSwitch state] == NSOnState) ? YES : NO;
       [object setAutosizesCells: flag];
     }
+  /* number of fields */
+  else if(sender == dimensionsForm)
+    {
+      int fields = [[sender cellAtIndex: 0] intValue];
+      
+      if(fields) // make changes only if the user actions do something meaningful
+	{
+	  NSRect rect = [object frame];
+	  NSSize cell = [object cellSize];
+	  NSSize inter = [object intercellSpacing];
+
+	  while(((rows = [object numberOfRows]) != fields))
+	    {
+	      if(rows > fields)
+		{
+		  [object removeEntryAtIndex: rows - 1]; // remove last field
+		}
+	      else
+		{
+		  [object addEntry: [NSString stringWithFormat: @"Field (%i)", rows]];
+		}
+	    }
+	  cell.height = (rect.size.height + inter.height) / fields - inter.height;
+	  [object setCellSize: cell];
+	}
+      [object setNeedsDisplay: YES];
+      [[object superview] setNeedsDisplay: YES];
+    }
+  else if(sender == numberStepper)
+    {
+      int delta = [sender intValue] - numberStepperValue;
+      NSRect rect = [object frame];
+      NSSize cell = [object cellSize];
+      NSSize inter = [object intercellSpacing];
+
+      while(delta > 0)
+	{
+	  [object addEntry: [NSString stringWithFormat: @"Field (%i)", rows]];
+	  delta--;
+	  rows++;
+	}
+      while((delta < 0) && (rows > 1))
+	{
+	  [object removeEntryAtIndex: rows - 1];
+	  rows--;
+	  delta++;
+	}
+      cell.height = (rect.size.height + inter.height) / rows - inter.height;
+      [object setCellSize: cell];
+      [[dimensionsForm cellAtIndex: 0] setIntValue: rows];
+      [sender setIntValue: numberStepperValue];
+      [dimensionsForm setNeedsDisplay: YES];
+      [object setNeedsDisplay: YES];
+    }
 
   [super ok:sender];
 }
@@ -200,6 +264,9 @@
         [cellPositionSwitch setState:NSOnState];
       }
   }
+  
+  /* number of fields */
+  [[dimensionsForm cellAtIndex: 0] setIntValue: [object numberOfRows]];
 
   /* tag */
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [object tag]];
@@ -268,6 +335,5 @@
 {
   [object setButtonType: type];
 }
-
 
 @end

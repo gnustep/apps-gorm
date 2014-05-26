@@ -42,6 +42,7 @@
 @class NSColorWell;
 @class NSForm;
 @class NSMatrix;
+@class NSStepper;
 
 @interface GormFormAttributesInspector: IBInspector
 {
@@ -55,6 +56,8 @@
   id tagForm;
   id textMatrix;
   id titleMatrix;
+  NSForm *dimensionsForm;
+  NSStepper *numberStepper;
 }
 
 @end

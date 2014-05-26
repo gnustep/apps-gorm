@@ -1,3 +1,11 @@
+2014-05-26 18:32-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Palettes/2Controls/GormFormAttributesInspector.h
+	* Palettes/2Controls/GormFormAttributesInspector.m
+	* Palettes/2Controls/GormNSFormInspector.gorm: Accept patch on
+	bug#38477 by Sergei Golovin. Allows user to modify the
+	number of items in an NSForm using the inspector.
+
 2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
 
 	* Palettes/2Controls/GormButtonAttributesInspector.h: Use NSButton

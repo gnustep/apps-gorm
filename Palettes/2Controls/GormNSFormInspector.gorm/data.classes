@@ -13,7 +13,9 @@
 	    editableSwitch,
 	    scrollableSwitch,
 	    selectableSwitch,
-	    autosizeSwitch
+	    autosizeSwitch,
+	    dimensionsForm,
+	    numberStepper
 	);
 	Super = IBInspector;
     };
