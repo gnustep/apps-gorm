@@ -34,7 +34,7 @@
 {
   if((self = [super init]) != nil)
     {
-      ASSIGN(ivarString, string);
+      ASSIGN(ivarString, [string copy]);
     }
   return self;
 }
@@ -68,9 +68,12 @@
 
 - (void) _strip
 {
-  NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
+  NSString *replacementString = [ivarString stringByReplacingOccurrencesOfString:@"*" withString:@" "];
+  NSScanner *stripScanner = [NSScanner scannerWithString: replacementString];
   NSString *resultString = @""; 
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+
+  // [stripScanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @"*"]];
 
   // string whitespace
   while(![stripScanner isAtEnd])
@@ -95,6 +98,7 @@
 
   [self _strip];
   scanner = [NSScanner scannerWithString: ivarString];
+  [scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @"*"]];
   if(lookAhead(ivarString,@"IBOutlet"))
     {
       [scanner scanUpToAndIncludingString: @"IBOutlet" intoString: NULL];  // return type
@@ -121,8 +125,8 @@
   // fix name...
   scanner = [NSScanner scannerWithString: tempName];
   [scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @"*"]];
-  [scanner scanUpToCharactersFromSet: wsnl intoString: &name];
-  name = [name stringByTrimmingCharactersInSet: wsnl];
+  // [scanner scanUpToCharactersFromSet: wsnl intoString: &name];
+  name = [tempName stringByTrimmingCharactersInSet: wsnl];
   RETAIN(name);
 }
 @end

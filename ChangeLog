@@ -1,3 +1,8 @@
+2014-05-26 19:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormObjCHeaderParser/OCIVarDecl.m
+	* GormObjCHeaderParser/OCIVar.m: Fix for bug#30837.
+
 2014-05-26 18:32-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Palettes/2Controls/GormFormAttributesInspector.h

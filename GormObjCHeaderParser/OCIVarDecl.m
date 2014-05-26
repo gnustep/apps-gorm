@@ -60,7 +60,8 @@
 
 - (void) _strip
 {
-  NSScanner *stripScanner = [NSScanner scannerWithString: ivarString];
+  NSString *replacementString = [ivarString stringByReplacingOccurrencesOfString:@"*" withString:@" "];
+  NSScanner *stripScanner = [NSScanner scannerWithString: replacementString];
   NSString *resultString = nil;
   NSString *tempString = @"";
   NSString *tempString2 = @"";
