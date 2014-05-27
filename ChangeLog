@@ -1,3 +1,10 @@
+2014-05-27 03:26-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormInspectorsManager.m
+	* Palettes/2Controls/GormMatrixAttributesInspector.h
+	* Palettes/2Controls/GormMatrixAttributesInspector.m
+	* Palettes/2Controls/GormNSMatrixInspector.gorm: Fix for bug #28646.
+
 2014-05-27 03:15-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: Fix bug #39072: add retain to prevent

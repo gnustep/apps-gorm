@@ -40,6 +40,7 @@
 @class NSColorWell;
 @class NSForm;
 @class NSMatrix;
+@class NSStepper;
 
 @interface GormMatrixAttributesInspector:IBInspector
 {
@@ -52,6 +53,9 @@
   NSMatrix *prototypeMatrix;
   NSButton *selRectSwitch;
   NSForm *tagForm;
+  NSForm *dimensionsForm;
+  NSStepper *rowsStepper;
+  NSStepper *colsStepper;
 }
 @end
 

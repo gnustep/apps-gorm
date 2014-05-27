@@ -53,6 +53,9 @@
 
 @implementation GormMatrixAttributesInspector
 
+NSUInteger rowsStepperValue;
+NSUInteger colsStepperValue;
+
 - (id) init
 {
   if ([super init] == nil)
@@ -64,6 +67,15 @@
       NSLog(@"Could not gorm GormMatrixInspector");
       return nil;
     }
+  /* It shouldn't break functionality of rows/columns number 
+     changing if someone will decide in the future to change 
+     the values of the corresponding steppers in the gorm file. 
+     So we stores those values from the gorm file in the auxillary 
+     variables to use its later in -[ok:]. 
+     (It allows us to avoid the values being hardcoded).
+   */
+  rowsStepperValue = [rowsStepper intValue];
+  colsStepperValue = [colsStepper intValue];
 
   return self;
 }
@@ -123,6 +135,93 @@
     {
       [object setTag: [[sender cellAtIndex: 0] intValue]];
     }
+  else if (sender == dimensionsForm)
+    {
+      int rows = [[sender cellAtIndex: 0] intValue];
+      int cols = [[sender cellAtIndex: 1] intValue];
+      int num;
+
+      while((num = [object numberOfRows]) != rows)
+	{
+	  if(num > rows)
+	    {
+	      [object removeRow: num - 1]; // remove last row
+	    }
+	  else
+	    {
+	      [object addRow];
+	    }
+	}
+      
+      while((num = [object numberOfColumns]) != cols)
+	{
+	  if(num > cols)
+	    {
+	      [object removeColumn: num - 1]; // remove last column
+	    }
+	  else
+	    {
+	      [object addColumn];
+	    }
+	}
+      //      [object sizeToCells];
+      [object setNeedsDisplay: YES];
+      [[object superview] setNeedsDisplay: YES];
+    }
+  else if(sender == rowsStepper)
+    {
+      int delta = [sender intValue] - rowsStepperValue;
+      int num = [object numberOfRows];
+      NSRect rect = [object frame];
+      NSSize cell = [object cellSize];
+      NSSize inter = [object intercellSpacing];
+
+      while(delta > 0)
+	{
+	  [object addRow];
+	  delta--;
+	  num++;
+	}
+      while((delta < 0) && (num > 1))
+	{
+	  [object removeRow: num - 1];
+	  num--;
+	  delta++;
+	}
+      cell.height = (rect.size.height + inter.height) / num - inter.height;
+      [object setCellSize: cell];
+      [[dimensionsForm cellAtIndex: 0] setIntValue: num];
+      [sender setIntValue: rowsStepperValue];
+      [dimensionsForm setNeedsDisplay: YES];
+      [object setNeedsDisplay: YES];
+    }
+  else if(sender == colsStepper)
+    {
+      int delta = [sender intValue] - colsStepperValue;
+      int num = [object numberOfColumns];
+      NSRect rect = [object frame];
+      NSSize cell = [object cellSize];
+      NSSize inter = [object intercellSpacing];
+
+      while(delta > 0)
+	{
+	  [object addColumn];
+	  delta--;
+	  num++;
+	}
+      while((delta < 0) && (num > 1))
+	{
+	  [object removeColumn: num - 1];
+	  num--;
+	  delta++;
+	}
+      cell.width = (rect.size.width + inter.width) / num - inter.width;
+      [object setCellSize: cell];
+      [[dimensionsForm cellAtIndex: 1] setIntValue: num];
+      [sender setIntValue: colsStepperValue];
+      [dimensionsForm setNeedsDisplay: YES];
+      [object setNeedsDisplay: YES];
+    }
 
   /*
    * prototypeMatrix
@@ -172,6 +271,8 @@
   [selRectSwitch setState: 
     ([object isSelectionByRect]) ? NSOnState : NSOffState];
   [[tagForm cellAtIndex: 0] setIntValue: [object tag]];
+  [[dimensionsForm cellAtIndex: 0] setIntValue: [object numberOfRows]];
+  [[dimensionsForm cellAtIndex: 1] setIntValue: [object numberOfColumns]];
 
   [super revert:sender];
 }

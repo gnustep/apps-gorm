@@ -392,8 +392,22 @@
 	{   
 	  id initialResponder = [[inspector window] initialFirstResponder];
 	  NSView	*outer = [panel contentView];
-	  NSRect	rect = [outer bounds];
-	  
+	  NSRect	rect = [panel frame];
+	  /*
+	    We should compute the delta between the heights of the old inspector view 
+	    and the new one. The delta will be used to compute the size of the inspector 
+	    panel. Is is needed because subsequent changes of object selection lead to 
+	    the cluttered inspector's UI otherwise.
+	   */
+	  CGFloat delta = [newView frame].size.height - [oldView frame].size.height;
+
+	  rect.size.height = rect.size.height + delta;
+	  rect.origin.y = [panel frame].origin.y - delta;
+	  //	  [panel setContentSize: rect.size];
+	  [panel setFrame: rect display: YES];
+
+	  rect = [outer bounds];
+
 	  /* Set initialFirstResponder */
 	  if (buttonView != nil)
 	    {
@@ -401,7 +415,7 @@
 	      buttonView = nil;
 	    }
 
-	  rect.size.height = [selectionView frame].origin.y - 3;
+	  rect.size.height = [newView frame].size.height;
 	  if ([inspector wantsButtons] == YES)
 	    {
 	      NSRect	buttonsRect;
@@ -441,7 +455,7 @@
 	    }
 	  else
 	    {
-	      rect.size.height = [selectionView frame].origin.y - 3;
+	      rect.size.height = [newView frame].size.height;
 	      [buttonView removeFromSuperview];
 	    }
 
@@ -455,6 +469,7 @@
 	  RETAIN(oldView);
 	  [inspectorView setContentView: newView];
 	  [[prevInspector window] setContentView: oldView];
+	  [outer setNeedsDisplay: YES];
 	  // RELEASE(oldView);
 
 	  /* Set the default First responder to the new View */

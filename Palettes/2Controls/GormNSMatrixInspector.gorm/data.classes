@@ -12,7 +12,10 @@
 	    propagateSwitch,
 	    prototypeMatrix,
 	    selRectSwitch,
-	    tagForm
+	    tagForm,
+	    dimensionsForm,
+	    colsStepper,
+	    rowsStepper
 	);
 	Super = IBInspector;
     };
