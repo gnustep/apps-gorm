@@ -1,3 +1,8 @@
+2014-05-27 03:15-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: Fix bug #39072: add retain to prevent
+	segmentation fault when renaming object in document view.
+
 2014-05-26 19:25-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormObjCHeaderParser/OCIVarDecl.m
