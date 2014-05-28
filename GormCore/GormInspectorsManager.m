@@ -262,7 +262,7 @@
       item = (NSMenuItem *)[popup itemAtIndex: index];
       [item setTarget: self];
       [item setAction: @selector(setCurrentInspector:)];
-      [item setKeyEquivalent: [NSString stringWithFormat: @"%ld",tag]];
+      [item setKeyEquivalent: [NSString stringWithFormat: @"%ld",(long)tag]];
       [item setTag: tag];
       index++;
     }

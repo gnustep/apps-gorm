@@ -175,7 +175,7 @@
 
   while([classInformation objectForKey: search])
     {
-      search = [name stringByAppendingString: [NSString stringWithFormat: @"%ld",i++]];
+      search = [name stringByAppendingString: [NSString stringWithFormat: @"%ld",(long)i++]];
     }
 
   return search;
@@ -224,7 +224,7 @@
 
   while ([combined containsObject: search])
     {
-      new = [newAction stringByAppendingFormat: @"%ld", i++];
+      new = [newAction stringByAppendingFormat: @"%ld", (long)i++];
       search = [new stringByAppendingString: @":"];
     }
 
@@ -241,7 +241,7 @@
 
   while ([combined containsObject: new])
     {
-      new = [newOutlet stringByAppendingFormat: @"%ld", i++];
+      new = [newOutlet stringByAppendingFormat: @"%ld", (long)i++];
     }
 
   [self addOutlet: new forClassNamed: name];

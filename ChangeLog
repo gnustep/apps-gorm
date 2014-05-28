@@ -1,3 +1,11 @@
+2014-05-28 Riccardo Mottola <rm@gnu.org>
+
+	* GormCore/GormClassInspector.m
+	* GormCore/GormClassManager.m
+	* GormCore/GormFilePrefsManager.m
+	* GormCore/GormInspectorsManager.m
+	Explicitely cast NSIntegers to avoid warning and problems.
+
 2014-05-27 03:26-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormInspectorsManager.m

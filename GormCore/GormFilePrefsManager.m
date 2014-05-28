@@ -56,7 +56,7 @@ NSString *formatVersion(NSInteger version)
   v -= (bit8 * min);
   pch = v;
   
-  return [NSString stringWithFormat: @"%ld.%ld.%ld / %ld",maj,min,pch,version];
+  return [NSString stringWithFormat: @"%ld.%ld.%ld / %ld",(long)maj,(long)min,(long)pch,(long)version];
 }
 
 
@@ -109,7 +109,7 @@ NSString *formatVersion(NSInteger version)
       Class cls = NSClassFromString(className);
       NSDictionary *info = [currentProfile objectForKey: className];
       NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",v,className);
+      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
       [cls setVersion: v];
     }
 }
@@ -127,7 +127,7 @@ NSString *formatVersion(NSInteger version)
       Class cls = NSClassFromString(className);
       NSDictionary *info = [latestVersion objectForKey: className];
       NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",v,className);
+      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
       [cls setVersion: v];
     }
 }

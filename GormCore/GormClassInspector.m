@@ -658,9 +658,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
       actionsCount = [[classManager allActionsForClassNamed: currentClass] count];
       
       item = [tabView tabViewItemAtIndex: 1]; // actions;
-      [item setLabel: [NSString stringWithFormat: @"Actions (%ld)",actionsCount]];
+      [item setLabel: [NSString stringWithFormat: @"Actions (%ld)",(long)actionsCount]];
       item = [tabView tabViewItemAtIndex: 0]; // outlets;
-      [item setLabel: [NSString stringWithFormat: @"Outlets (%ld)",outletsCount]];
+      [item setLabel: [NSString stringWithFormat: @"Outlets (%ld)",(long)outletsCount]];
       [tabView setNeedsDisplay: YES];
       
       [self _refreshView];
