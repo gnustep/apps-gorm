@@ -181,7 +181,7 @@ NSUInteger numberStepperValue;
 		}
 	      else
 		{
-		  [object addEntry: [NSString stringWithFormat: @"Field (%i)", rows]];
+		  [object addEntry: [NSString stringWithFormat: @"Field (%ld)", (long)rows]];
 		}
 	    }
 	  cell.height = (rect.size.height + inter.height) / fields - inter.height;
@@ -199,7 +199,7 @@ NSUInteger numberStepperValue;
 
       while(delta > 0)
 	{
-	  [object addEntry: [NSString stringWithFormat: @"Field (%i)", rows]];
+	  [object addEntry: [NSString stringWithFormat: @"Field (%ld)", (long)rows]];
 	  delta--;
 	  rows++;
 	}
