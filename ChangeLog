@@ -1,3 +1,7 @@
+2014-05-30 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Palettes/2Controls/GormColorWellAttributesInspector.h
+	  fix typo in header guard
+
 2014-05-28 Riccardo Mottola <rm@gnu.org>
 
 	* GormCore/GormClassInspector.m

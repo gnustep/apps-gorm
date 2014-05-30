@@ -34,7 +34,7 @@
 */
 
 #ifndef	INCLUDED_GormColorWellAttributesInspector_h
-#define	INCLUDED_GormColorWelldAttributesInspector_h
+#define	INCLUDED_GormColorWellAttributesInspector_h
 
 #include <InterfaceBuilder/IBInspector.h>
 
@@ -51,4 +51,4 @@
 }
 @end
 
-#endif /* INCLUDED_GormColorWelldAttributesInspector_h */
+#endif /* INCLUDED_GormColorWellAttributesInspector_h */
