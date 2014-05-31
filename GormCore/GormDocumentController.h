@@ -44,6 +44,7 @@ typedef enum
 }
 
 - (void) buildDocumentForType: (GormDocumentType)documentType;
+- (id) openDocumentWithContentsOfURL:(NSURL *)url;
 
 @end
 

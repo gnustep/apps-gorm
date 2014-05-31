@@ -200,4 +200,9 @@
   [super newDocument: sender];
   [self buildDocumentForType: documentType];
 }
+
+- (id) openDocumentWithContentsOfURL:(NSURL *)url
+{
+  return  [self openDocumentWithContentsOfURL:url display:YES];
+}
 @end

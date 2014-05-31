@@ -1,3 +1,12 @@
+2014-05-31 10:58-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocumentController.h: add declaration of
+	openDocumentForContentsOfURL:
+	* GormCore/GormDocumentController.m: add implementation of
+	openDocumentForContentsOfURL:
+	* GormCore/GormDocument.m: Add implementation of revertContentsOfURL:..
+	Fix bug#28644
+
 2014-05-30 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 	* Palettes/2Controls/GormColorWellAttributesInspector.h
 	  fix typo in header guard
@@ -12,6 +21,7 @@
 	* GormCore/GormInspectorsManager.m
 	Explicitely cast NSIntegers to avoid warning and problems.
 
+>>>>>>> .r37930
 2014-05-27 03:26-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormInspectorsManager.m

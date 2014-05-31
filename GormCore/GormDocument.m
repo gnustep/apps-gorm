@@ -54,6 +54,7 @@
 #include "GormWrapperBuilder.h"
 #include "GormWrapperLoader.h"
 #include "GormDocumentWindow.h"
+#include "GormDocumentController.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -3626,6 +3627,19 @@ static void _real_close(GormDocument *self,
 {
   [super setFileType: type];
   [filePrefsManager setFileTypeName: type];
+}
+
+- (BOOL) revertToContentsOfURL: (NSURL *)url
+                        ofType: (NSString *)type
+                         error: (NSError **)error
+{
+  GormDocumentController *dc = [NSDocumentController sharedDocumentController];
+  
+  // [dc performSelector:@selector(openDocumentWithContentsOfURL:) withObject:url afterDelay:2];
+  [self close];
+  [dc openDocumentWithContentsOfURL:url];
+
+  return YES;
 }
 
 //// PRIVATE METHODS...
