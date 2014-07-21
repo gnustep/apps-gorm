@@ -56,37 +56,49 @@
   return AUTORELEASE([[GormImage alloc] initWithData: aData withFileName: aName inWrapper: flag]);
 }
 
+- (void) _resizeSmallImage
+{
+  NSSize originalSize;
+  CGFloat ratioH;
+  CGFloat ratioW;
+
+  originalSize = [smallImage size];
+  ratioW = originalSize.width / 70;
+  ratioH = originalSize.height / 55;
+  
+  if (ratioH > 1 || ratioW > 1)
+    {
+      [smallImage setScalesWhenResized: YES];
+      if (ratioH > ratioW)
+        {
+          [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
+        }
+      else 
+        {
+          [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
+        }
+    }
+}
+
 - (id) initWithData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag
 {
-  if((self = [super initWithData: aData withFileName: aName inWrapper: flag]))
+  if ((self = [super initWithData: aData withFileName: aName inWrapper: flag]) != nil)
     {
-      NSSize originalSize;
-      float ratioH;
-      float ratioW;
+      // FIXME: Why not make one a copy of the other?
+      image = [[NSImage alloc] initWithData: aData];
+      smallImage = [[NSImage alloc] initWithData: aData];
 
-      ASSIGN(image, AUTORELEASE([[NSImage alloc] initWithData: aData]));
-      ASSIGN(smallImage, AUTORELEASE([[NSImage alloc] initWithData: aData]));
-      [image setName: aName];
-
-      originalSize = [smallImage size];
-      ratioW = originalSize.width / 70;
-      ratioH = originalSize.height / 55;
-      
-      if (ratioH > 1 || ratioW > 1)
+      if (smallImage == nil)
 	{
-	  [smallImage setScalesWhenResized: YES];
-	  if (ratioH > ratioW)
-	    {
-	      [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
-	    }
-	  else 
-	    {
-	      [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
-	    }
+	  RELEASE(self);
+	  return nil;
 	}
-
+      
+      [image setName: aName];
+      // FIXME: Not needed
       [image setArchiveByName: NO];
       [smallImage setArchiveByName: NO];
+      [self _resizeSmallImage];
     }
   return self;
 }
@@ -95,15 +107,10 @@
 	       path: (NSString *)aPath
 	  inWrapper: (BOOL)flag
 {
-  if((self = [super initWithName: aName path: aPath inWrapper: flag]))
+  if ((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
     {
-      NSSize originalSize;
-      float ratioH;
-      float ratioW;
-
-      ASSIGN(image, AUTORELEASE([[NSImage alloc] initByReferencingFile: aPath]));
-      ASSIGN(smallImage, AUTORELEASE([[NSImage alloc] initWithContentsOfFile: aPath]));
-      [image setName: aName];
+      image = [[NSImage alloc] initByReferencingFile: aPath];
+      smallImage = [[NSImage alloc] initWithContentsOfFile: aPath];
       
       if (smallImage == nil)
 	{
@@ -111,25 +118,10 @@
 	  return nil;
 	}
       
-      originalSize = [smallImage size];
-      ratioW = originalSize.width / 70;
-      ratioH = originalSize.height / 55;
-      
-      if (ratioH > 1 || ratioW > 1)
-	{
-	  [smallImage setScalesWhenResized: YES];
-	  if (ratioH > ratioW)
-	    {
-	      [smallImage setSize: NSMakeSize(originalSize.width / ratioH, 55)];
-	    }
-	  else 
-	    {
-	      [smallImage setSize: NSMakeSize(70, originalSize.height / ratioW)];
-	    }
-	}
-
+      [image setName: aName];
       [image setArchiveByName: NO];
       [smallImage setArchiveByName: NO];
+      [self _resizeSmallImage];
     }
 
   return self;

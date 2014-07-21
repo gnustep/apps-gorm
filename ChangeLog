@@ -1,3 +1,8 @@
+2014-07-21 Fred Kiefer <FredKiefer@gmx.de>
+
+	* GormCore/GormImage.m: Fix the init issue for the second
+	method as well. Small cleanup.
+
 2014-05-31 10:58-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocumentController.h: add declaration of
