@@ -2114,13 +2114,12 @@ static void _real_close(GormDocument *self,
  * Set aName for object in the document.  If aName is nil,
  * a name is automatically created for object.
  */
-- (void) setName: (NSString*)someName forObject: (id)object
+- (void) setName: (NSString*)aName forObject: (id)object
 {
   id		       oldObject = nil;
   NSString	      *oldName = nil;
   NSMutableDictionary *cc = [classManager customClassMap];
   NSString            *className = nil;
-  NSString            *aName = [someName copy];
 
   if (object == nil)
     {
@@ -2208,16 +2207,15 @@ static void _real_close(GormDocument *self,
 
   // check the custom classes map and replace the appropriate
   // object, if a mapping exists.
-  if(cc != nil)
+  if (cc != nil)
     {
       className = [cc objectForKey: oldName];
-      RETAIN(className);
-      if(className != nil)
+      if (className != nil)
 	{
-	  RETAIN(oldName);
+          RETAIN(className);
 	  [cc removeObjectForKey: oldName];
 	  [cc setObject: className forKey: aName]; 
-	  RELEASE(oldName);
+	  RELEASE(className);
 	}
     }
 

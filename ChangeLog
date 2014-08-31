@@ -1,3 +1,8 @@
+2014-08-31 Fred Kiefer <FredKiefer@gmx.de>
+
+	* GormCore/GormDocument.m: Rewrite fix for bug #39072 to stop
+	leaking memory.
+
 2014-07-21 Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormImage.m: Fix the init issue for the second
@@ -26,7 +31,6 @@
 	* GormCore/GormInspectorsManager.m
 	Explicitely cast NSIntegers to avoid warning and problems.
 
->>>>>>> .r37930
 2014-05-27 03:26-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormInspectorsManager.m
