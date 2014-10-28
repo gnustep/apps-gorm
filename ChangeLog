@@ -1,3 +1,10 @@
+2014-10-28 03:08-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* English.lproj/Gorm.gorm: Change connection to point to
+	new selectAll:
+	* GormCore/GormWrapperLoader.m: Fix for bug #42782
+	* Gorm.m: Add select all method.
+
 2014-08-31 Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormDocument.m: Rewrite fix for bug #39072 to stop

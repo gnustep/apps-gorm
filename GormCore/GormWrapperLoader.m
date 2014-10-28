@@ -77,6 +77,16 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
 	  while((key = [enumerator nextObject]) != nil)
 	    {
 	      NSFileWrapper *fw = [fileWrappers objectForKey: key];
+
+	      //
+	      // Images with .info can be loaded, but we have a file
+	      // called data.info which is metadata for Gorm.  Don't load it.
+	      //
+	      if ( [key isEqualToString: @"data.info"] == YES )
+		{
+		  continue;
+		}
+	      
 	      if([fw isRegularFile])
 		{
 		  NSData *fileData = [fw regularFileContents];

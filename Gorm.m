@@ -713,11 +713,26 @@
   [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
+- (void) selectAll: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];  
+}
+
+/*
 - (void) selectAllItems: (id)sender
 {
-  /* TODO: Select all items in the current selection owner. */
   return;
 }
+*/
 
 - (void) setName: (id)sender
 {
