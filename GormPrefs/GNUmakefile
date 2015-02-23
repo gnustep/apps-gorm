@@ -38,7 +38,6 @@ GormPrefs_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 #
 
 GormPrefs_HEADER_FILES= \
-GormColorsPref.h \
 GormGeneralPref.h \
 GormGuidelinePref.h \
 GormHeadersPref.h \
@@ -52,7 +51,6 @@ GormShelfPref.h
 #
 
 GormPrefs_OBJC_FILES= \
-GormColorsPref.m \
 GormGeneralPref.m \
 GormGuidelinePref.m \
 GormHeadersPref.m \

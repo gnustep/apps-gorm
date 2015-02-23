@@ -14,9 +14,10 @@
 	Outlets = (
 	    spacingSlider,
 	    window,
-	    _view,
+	    "_view",
 	    currentSpacing,
-	    halfSpacing
+	    halfSpacing,
+	    colorWell
 	);
 	Super = NSObject;
     };

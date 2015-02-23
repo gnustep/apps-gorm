@@ -2,7 +2,6 @@
 #include "GormGeneralPref.h"
 #include "GormHeadersPref.h"
 #include "GormShelfPref.h"
-#include "GormColorsPref.h"
 #include "GormPalettesPref.h"
 #include "GormPluginsPref.h"
 #include "GormGuidelinePref.h"
@@ -32,7 +31,6 @@
   _generalView  = [[GormGeneralPref alloc] init];
   _headersView  = [[GormHeadersPref alloc] init];
   _shelfView    = [[GormShelfPref alloc] init];
-  _colorsView   = [[GormColorsPref alloc] init];
   _palettesView = [[GormPalettesPref alloc] init];
   _pluginsView = [[GormPluginsPref alloc] init];
   _guidelineView = [[GormGuidelinePref alloc] init];
@@ -62,9 +60,6 @@
       break;
     case 2:
       [prefBox setContentView: [_shelfView view]];
-      break;
-    case 3:
-      [prefBox setContentView: [_colorsView view]];
       break;
     case 4:
       [prefBox setContentView: [_palettesView view]];

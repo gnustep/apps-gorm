@@ -38,6 +38,7 @@
   id spacingSlider;
   id currentSpacing;
   id halfSpacing;
+  id colorWell;
 }
 /**
  * View to show in prefs panel.
