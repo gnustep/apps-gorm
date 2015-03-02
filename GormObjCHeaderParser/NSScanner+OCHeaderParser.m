@@ -30,25 +30,31 @@
 - (void) scanUpToAndIncludingString: (NSString *)string 
 			 intoString: (NSString **)buffer
 {
-  NSString *buffer2;
+  NSString *buffer2 = nil;
   [self scanUpToString: string intoString: buffer];
   [self scanString: string intoString: &buffer2];
+
   if(buffer != NULL)
     {
-      *buffer = [*buffer stringByAppendingString: buffer2];
+      if(*buffer != NULL)
+	{
+	  *buffer = [*buffer stringByAppendingString: buffer2];
+	}
     }
-
 }
 
 - (void) scanUpToAndIncludingCharactersFromSet: (NSCharacterSet *)set 
 				    intoString: (NSString **)buffer
 {
-  NSString *buffer2;  
+  NSString *buffer2 = nil;  
   [self scanUpToCharactersFromSet: set intoString: buffer];
   [self scanCharactersFromSet: set intoString: &buffer2]; 
   if(buffer != NULL)
     {
-      *buffer = [*buffer stringByAppendingString: buffer2];
+      if(*buffer != NULL)
+	{
+	  *buffer = [*buffer stringByAppendingString: buffer2];
+	}
     }
 }
 @end

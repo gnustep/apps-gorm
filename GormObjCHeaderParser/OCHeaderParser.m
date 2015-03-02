@@ -101,7 +101,7 @@
   [scanner setCharactersToBeSkipped: nil];
   while(![scanner isAtEnd])
     {
-      NSString *tempString = nil;
+      NSString *tempString = @"";
       [scanner scanUpToString: @"#" intoString: &tempString];
       [scanner scanUpToAndIncludingString: @"\n" intoString: NULL];
       resultString = [resultString stringByAppendingString: tempString];
@@ -121,6 +121,8 @@
   while(![scanner isAtEnd])
     {
       NSString *tempString = nil, *aString = nil;
+      // [scanner scanUpToString: @";" intoString: &tempString];
+      // [scanner scanString: @";" intoString: &tempString2];
       [scanner scanUpToAndIncludingString: @";" intoString: &tempString];
       
       // Scan any redundant ";" characters into aString... once it

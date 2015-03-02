@@ -1,5 +1,11 @@
 2015-03-02 00:04-EST Gregory John Casamento <greg.casamento@gmail.com>
 
+	* GormObjCHeaderParser/NSScanner+OCHeaderParser.m
+	* GormObjCHeaderParser/OCHeaderParser.m: Fix for crash seen after
+	last commit.
+
+2015-03-02 00:04-EST Gregory John Casamento <greg.casamento@gmail.com>
+
 	* GormObjCHeaderParser/OCHeaderParser.m: Add _stripRedundantStatements
 	method which eliminates excess empty statements from the code which
 	could confuse the parser.
