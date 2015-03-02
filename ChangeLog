@@ -1,3 +1,9 @@
+2015-03-02 00:04-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormObjCHeaderParser/OCHeaderParser.m: Add _stripRedundantStatements
+	method which eliminates excess empty statements from the code which
+	could confuse the parser.
+
 2015-02-22 21:21-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* English.lproj/GormPreferences.gorm: Removed from pulldown menu

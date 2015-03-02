@@ -111,10 +111,38 @@
   ASSIGN(fileData,resultString);
 }
 
+- (void) _stripRedundantStatements
+{
+  NSScanner *scanner = [NSScanner scannerWithString: fileData];
+  NSString *resultString = @""; // [NSString stringWithString: @""];
+
+  // strip all of the one line comments out...
+  [scanner setCharactersToBeSkipped: nil];
+  while(![scanner isAtEnd])
+    {
+      NSString *tempString = nil, *aString = nil;
+      [scanner scanUpToAndIncludingString: @";" intoString: &tempString];
+      
+      // Scan any redundant ";" characters into aString... once it
+      // returns nil we know we're done.
+      do {
+	aString = nil;
+	[scanner scanString: @";" intoString: &aString];
+      } while([aString isEqualToString:@";"]);
+	
+      [scanner scanUpToAndIncludingString: @"\n" intoString: NULL];
+      resultString = [resultString stringByAppendingString: tempString];
+    }
+
+  // make this our new fileData...
+  ASSIGN(fileData,resultString);
+}
+
 - (void) _preProcessFile
 {
   [self _stripComments];
   [self _stripPreProcessor];
+  [self _stripRedundantStatements];
 }
 
 - (BOOL) _processClasses
