@@ -321,7 +321,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 
   if([[aTableColumn identifier] isEqual: @"item"])
     {
-      obj = [NSString stringWithFormat: @"#%"PRIiPTR,rowIndex+1];
+      obj = [NSString stringWithFormat: @"#%ld",(long int)rowIndex+1];
     }
   else if([[aTableColumn identifier] isEqual: @"description"])
     {

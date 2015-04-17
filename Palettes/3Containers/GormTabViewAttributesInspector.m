@@ -1,7 +1,7 @@
 /*
   GormTabViewAttributesInspector.m
 
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001-2015 Free Software Foundation, Inc.
 
    Author:  Laurent Julliard <laurent@julliard-online.org>
    Author:  Gregory John Casamento <greg_casamento@yahoo.com>
@@ -120,7 +120,7 @@
 
       if (newNumber <= 0) 
 	{
-	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%"PRIiPTR,[object numberOfTabViewItems]]];
+	  [numberOfItemsField setStringValue:[NSString stringWithFormat:@"%ld",(long int)[object numberOfTabViewItems]]];
 	  return; 
 	}
       if ( newNumber > [object numberOfTabViewItems] ) 

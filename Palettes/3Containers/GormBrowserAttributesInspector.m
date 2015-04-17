@@ -1,7 +1,7 @@
 /*
   GormBrowserAttributesInspector.m
 
-   Copyright (C) 2001-2005 Free Software Foundation, Inc.
+   Copyright (C) 2001-2015 Free Software Foundation, Inc.
 
    Author:  Adam Fedor <fedor@gnu.org>
             Laurent Julliard <laurent@julliard-online.org>
@@ -124,8 +124,8 @@
 			 [NSString stringWithFormat:@"%f",
 				   [object minColumnWidth]]];
   [maxVisibleColumnsField setStringValue:
-			    [NSString stringWithFormat:@"%"PRIiPTR,
-				      [object maxVisibleColumns]]];
+			    [NSString stringWithFormat:@"%ld",
+				      (long int)[object maxVisibleColumns]]];
 
   [super revert:sender];
 }

@@ -1,3 +1,10 @@
+2015-04-17 Riccardo Mottola <rm@gnu.org>
+
+	* Palettes/3Containers/GormTabViewAttributesInspector.m
+	* Palettes/3Containers/GormBrowserAttributesInspector.m
+	* GormCore/GormFilePrefsManager.m
+	Use cast to larger type for string formatting to allow compilation on Solaris.
+
 2015-03-02 00:04-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormObjCHeaderParser/NSScanner+OCHeaderParser.m
