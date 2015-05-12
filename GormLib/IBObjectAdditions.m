@@ -30,10 +30,14 @@
 @implementation NSObject (_IBObjectAdditions)
 
 // Return yes if origClass can substitute for current class, otherwise NO.
+/*  NOTE: Some versions of the runtime handle loading of class methods
+          differently and do not replace them with the later loaded version.
+	  For this reason, this method is being removed.  
 + (BOOL)canSubstituteForClass: (Class)origClass
 {
   return NO;
 }
+*/
 
 /**
    This method is called on all objects after

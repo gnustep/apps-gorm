@@ -1,9 +1,18 @@
+2015-05-11 Gregory John Casamento <greg.casamento@gmail.com
+
+	* GormLib/IBObjectAdditions.m: Removed canSubstituteForClass:
+	dummy implementation.  The reason for this is because some objc
+	runtime implementations do not smash categories the same and
+	do not allow replacement of class methods.  For this reason
+	it was failing on some operating systems.  Fixes bug#45040.
+
 2015-04-17 Riccardo Mottola <rm@gnu.org>
 
 	* Palettes/3Containers/GormTabViewAttributesInspector.m
 	* Palettes/3Containers/GormBrowserAttributesInspector.m
 	* GormCore/GormFilePrefsManager.m
-	Use cast to larger type for string formatting to allow compilation on Solaris.
+	Use cast to larger type for string formatting to allow
+	compilation on Solaris.
 
 2015-03-02 00:04-EST Gregory John Casamento <greg.casamento@gmail.com>
 
