@@ -1,3 +1,9 @@
+2015-05-20 06:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* NEWS
+	* Version: 1.2.22
+
 2015-05-20 06:16-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ChangeLog
@@ -238,7 +244,7 @@
 	* GormCore/GormClassEditor.m
 	  some int -> NSInteger and float -> CGFloat transitions
 	  spotted by libobjc2 runtime in debug mode
-	
+
 2013-04-14 13:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE
