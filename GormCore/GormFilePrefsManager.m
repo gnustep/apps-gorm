@@ -85,7 +85,7 @@ NSString *formatVersion(NSInteger version)
 
 + (int) currentVersion
 {
-  return appVersion(1,2,20); 
+  return appVersion(1,2,22); 
 }
 
 - (void) awakeFromNib

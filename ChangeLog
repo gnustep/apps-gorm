@@ -1,3 +1,16 @@
+2015-05-20 06:16-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ChangeLog
+	* Documentation/news.texi
+	* English.lproj/GormPrefGeneral.gorm
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* GormPrefs/GormGeneralPref.m
+	* Plugins/Gorm/GormGormWrapperLoader.m: Remove calls to repairFile:
+	as some of the logic in it is outdated and could cause issues with
+	perfectly good gorm files.  Disabling pending further development.
+	* Version
+
 2015-05-11 Gregory John Casamento <greg.casamento@gmail.com
 
 	* GormLib/IBObjectAdditions.m: Removed canSubstituteForClass:
@@ -123,7 +136,7 @@
 
 2014-01-19 Fred Kiefer <FredKiefer@gmx.de>
 
-	* GormInfo.plist: Don't clain to be able to write XIB files.
+	* GormInfo.plist: Don't claim to be able to write XIB files.
 
 2013-12-31 Fred Kiefer <FredKiefer@gmx.de>
 
@@ -225,6 +238,7 @@
 	* GormCore/GormClassEditor.m
 	  some int -> NSInteger and float -> CGFloat transitions
 	  spotted by libobjc2 runtime in debug mode
+	
 2013-04-14 13:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE

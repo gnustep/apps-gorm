@@ -4,6 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.22}
+
+@itemize @bullet
+@item Fix for bug#45040: Fix allows Gorm custom class functionality to work normally on OpenBSD/NetBSD/FreeBSD.
+@item Fixes for Solaris
+@item Memory leak fixes.
+@item Objective-C parser improvements.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+
 @section Noteworthy changes in version @samp{1.2.20}
 
 @itemize @bullet
@@ -12,10 +25,6 @@
 @item Add cells as objects to the document so they can be properly edited.
 @item Changes to prevent recursive frame change notifications.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
-@c ====================================================================
-@c Keep the next line just below the list of changes in most recent version.
 
 @section Noteworthy changes in version @samp{1.2.18}
 

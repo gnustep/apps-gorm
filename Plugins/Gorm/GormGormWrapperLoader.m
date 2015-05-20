@@ -584,11 +584,12 @@
 		  /*
 		   * Repair the .gorm file, if needed.
 		   */
+		  /*
 		  if(repairFile)
 		    {
 		      [self _repairFile];
 		    }
-		  
+		  */
 		  NSDebugLog(@"nameTable = %@",[container nameTable]);
 		  
 		  // awaken all elements after the load is completed.

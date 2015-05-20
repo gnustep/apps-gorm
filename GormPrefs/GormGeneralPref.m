@@ -60,7 +60,7 @@ static NSString *REPAIRFILE=@"GormRepairFileOnLoad";
     NSString *intType = [defaults stringForKey: INTTYPE];
  
     [backupButton setState: [defaults integerForKey: BACKUPFILE]];
-    [checkConsistency setState: ([defaults boolForKey: REPAIRFILE]?NSOnState:NSOffState)];
+    // [checkConsistency setState: ([defaults boolForKey: REPAIRFILE]?NSOnState:NSOffState)];
     
     // set the interface matrix...
     if([intType isEqual: @"Outline"])
