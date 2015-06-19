@@ -19,22 +19,3 @@ Software Foundation.
 It's also available on the wiki at
 http://wiki.gnustep.org/index.php/Gorm_Manual.
 
-0.2 Status
-==========
-
-Gorm is usable and stable.  Please report bugs to bug-gnustep@gnu.org
-
-   Known problems (things to do) -
-
-  1. Support for IB 3.0 functionality.
-
-  2. More palettes.
-
-0.3 Acknowledgements
-====================
-
-  1. Icons - Mostly by Andrew Lindsay.   Gorm application icon by Jesse
-     Ross.
-
-  2. Code -  GormViewKnobs.m adapted from code by Gerrit van Dyk.
-
