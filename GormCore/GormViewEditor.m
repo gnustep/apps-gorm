@@ -109,13 +109,13 @@
   switch (_border)
     {
     case Top:
-      return abs (_position - NSMaxY(frame));
+      return (int) fabs (_position - NSMaxY(frame));
     case Bottom:
-      return abs (_position - NSMinY(frame));
+      return (int) fabs (_position - NSMinY(frame));
     case Left:
-      return abs (_position - NSMinX(frame));
+      return (int) fabs (_position - NSMinX(frame));
     case Right:
-      return abs (_position - NSMaxX(frame));
+      return (int) fabs (_position - NSMaxX(frame));
     default:
       return guideSpacing;
     }
