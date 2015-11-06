@@ -24,7 +24,10 @@
 
 #include "GormWindowTemplate.h"
 #include "GormNSWindow.h" 
+#include "GormNSPanel.h"
+
 // @class GormNSWindow;
+// @class GormNSPanel;
 
 @interface NSWindow (Private)
 - (void) _setReleasedWhenClosed: (BOOL)flags;
@@ -51,6 +54,11 @@
 
 - (Class) baseWindowClass
 {
+  if([_windowClass isEqualToString:@"NSPanel"])
+    {
+      return [GormNSPanel class];
+    }
+  
   return [GormNSWindow class];
 }
 @end

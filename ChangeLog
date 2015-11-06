@@ -1,3 +1,10 @@
+2015-11-05 20:40-EST Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormWindowTemplate.m: in baseWindowClass return
+	GormNSPanel if _windowClass is NSPanel.   This should probably
+	use GormPalettesManager substituteClasses at some point, but
+	for now this is a workable solution.
+
 2015-05-20 06:19-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE
