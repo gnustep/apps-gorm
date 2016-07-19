@@ -1,0 +1,63 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "alignSelectedObjects:",
+	    "arrangeSelectedObjects:",
+	    "exportStrings:",
+	    "groupSelectionInView:",
+	    "orderFrontFontPanel:",
+	    "translate:"
+	);
+	Super = NSObject;
+    };
+    Gorm = {
+	Actions = (
+	    "editClass:",
+	    "createSubclass:",
+	    "testInterface:",
+	    "setName:",
+	    "selectAllItems:",
+	    "paste:",
+	    "palettes:",
+	    "loadSound:",
+	    "loadPalette:",
+	    "inspector:",
+	    "infoPanel:",
+	    "endTesting:",
+	    "delete:",
+	    "cut:",
+	    "copy:",
+	    "close:",
+	    "miniaturize:",
+	    "debug:",
+	    "loadImage:",
+	    "orderFrontFontPanel:",
+	    "ungroup:",
+	    "groupSelectionInScrollView:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInSplitView:",
+	    "remove:",
+	    "addAttributeToClass:",
+	    "instantiateClass:",
+	    "createClassFiles:",
+	    "loadClass:",
+	    "preferencesPanel:",
+	    "guideline:",
+	    "print:",
+	    "groupSelectionInView:"
+	);
+	Outlets = (
+	    gormMenu,
+	    guideLineMenuItem
+	);
+	Super = NSApplication;
+    };
+    GormDocumentController = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSDocumentController;
+    };
+}

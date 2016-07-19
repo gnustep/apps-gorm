@@ -1,0 +1,55 @@
+{
+    NSIcon = "Gorm.tiff";
+    NSRole = "Editor";
+    NSTypes = (
+      {
+	NSName = "GSGormFileType";
+	NSHumanReadableName = "GNUstep Gorm";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "gorm" );
+        NSIcon = "GormFile.tiff";
+      },
+      {
+	NSName = "GSNibFileType";
+	NSHumanReadableName = "Cocoa Nib";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "nib" );
+        NSIcon = "GormNib.tiff";
+      },
+      {
+	NSName = "GSGModelFileType";
+	NSHumanReadableName = "GNUstep GModel";
+	NSRole = Viewer;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "gmodel" );
+        NSIcon = "FileIcon_gmodel.tiff";
+      },
+      {
+	NSName = "GSXibFileType";
+	NSHumanReadableName = "Cocoa Xib";
+	NSRole = Viewer;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "xib" );
+        NSIcon = "GormNib.tiff";
+      },
+      {
+        NSUnixExtensions = ( "palette" );
+        NSIcon = "GormPalette.tiff";
+      }
+    );
+    ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
+    ApplicationIcon = "Gorm.tiff";
+    ApplicationName = "Gorm";
+    ApplicationRelease = "Gorm 1.2.23 (Release)";
+    Authors = ("Gregory John Casamento <greg.casamento@gmail.com>",
+    	       "Adam Fedor <fedor@gnu.org>",
+    	       "Richard Frith-Macdonald <rfm@gnu.org>",
+	       "Wolfgang Lux <wolfgang.lux@gmail.com>",
+               "Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
+    Copyright = "Copyright (C) 1999-2015 FSF";
+    CopyrightDescription = "Released under the GNU General Public License 3.0";
+    NSBuildVersion = "1.2.22 May 20 2015";
+    GSDesktopInstallationDomain=SYSTEM;
+}
