@@ -42,7 +42,7 @@
     ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "Gorm 1.2.22 (Release)";
+    ApplicationRelease = "Gorm 1.2.23 (Release)";
     Authors = ("Gregory John Casamento <greg.casamento@gmail.com>",
     	       "Adam Fedor <fedor@gnu.org>",
     	       "Richard Frith-Macdonald <rfm@gnu.org>",
