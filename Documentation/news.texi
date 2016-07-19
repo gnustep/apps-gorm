@@ -4,6 +4,14 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.23}
+
+@itemize @bullet
+@item Fix for issue where NSPanel was being saved as an NSWindow in some cases.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{1.2.22}
 
 @itemize @bullet
@@ -13,7 +21,6 @@
 @item Objective-C parser improvements.
 @end itemize
 
-@ifclear ANNOUNCE-ONLY
 @c ====================================================================
 @c Keep the next line just below the list of changes in most recent version.
 
