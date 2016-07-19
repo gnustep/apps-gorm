@@ -50,6 +50,6 @@
                "Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>");
     Copyright = "Copyright (C) 1999-2015 FSF";
     CopyrightDescription = "Released under the GNU General Public License 3.0";
-    NSBuildVersion = "1.2.22 May 20 2015";
+    NSBuildVersion = "1.2.23 Jul 19 2016";
     GSDesktopInstallationDomain=SYSTEM;
 }
