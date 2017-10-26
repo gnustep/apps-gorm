@@ -74,8 +74,6 @@
 - (GormClassManager*) classManager;
 - (NSMenu*) classMenu;
 
-// utility
-- (BOOL) documentNameIsUnique: (NSString *)filename;
 @end
 
 #endif

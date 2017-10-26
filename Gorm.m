@@ -45,7 +45,6 @@
   GormPalettesManager	*palettesManager;
   GormPluginManager	*pluginManager;
   id<IBSelectionOwners>	selectionOwner;
-  NSMutableArray	*documents;
   BOOL			isConnecting;
   BOOL			isTesting;
   id             	testContainer;
@@ -107,7 +106,6 @@
       path = [bundle pathForImageResource: @"GormTesting"];
       testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 
-      documents = [[NSMutableArray alloc] init];
       // regular notifications...
       [nc addObserver: self
 	  selector: @selector(handleNotification:)
@@ -191,7 +189,6 @@
   [nc removeObserver: self];
   RELEASE(inspectorsManager);
   RELEASE(palettesManager);
-  RELEASE(documents);
   RELEASE(classManager);
   [super dealloc];
 }
@@ -999,7 +996,6 @@
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
       selectionOwner = nil;
-      [documents removeObjectIdenticalTo: obj];
     }
   else if ([name isEqual: @"GormAddClassNotification"])
     {
@@ -1092,7 +1088,9 @@
 
 - (id<IBDocuments>) documentForObject: (id)object
 {
-  NSEnumerator *en = [documents objectEnumerator];
+  NSEnumerator *en = [[[NSDocumentController sharedDocumentController]
+			documents]
+		       objectEnumerator];
   id doc = nil;
   id result = nil;
 
@@ -1364,24 +1362,6 @@
   return classMenu;
 }
 
-- (BOOL) documentNameIsUnique: (NSString *)filename
-{
-  NSEnumerator *en = [documents objectEnumerator];
-  id document;
-  BOOL unique = YES;
-
-  while((document = [en nextObject]) != nil)
-    {
-      NSString *docPath = [document documentPath];
-      if([docPath isEqual: filename])
-	{
-	  unique = NO;
-	  break;
-	}
-    }
-
-  return unique;
-}
 
 - (void) print: (id) sender
 {
