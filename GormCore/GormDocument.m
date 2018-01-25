@@ -3091,11 +3091,24 @@ static void _real_close(GormDocument *self,
     {
       NSMutableArray *allObjects = [self _collectAllObjects];
       NSString *filename = [oPanel filename];
-      NSDictionary *dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
-      NSEnumerator *en = [allObjects objectEnumerator];
+      NSDictionary *dictionary = nil;
+      NSEnumerator *en = nil;
       id obj = nil;
 
+      NS_DURING
+	{
+	  dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
+	}
+      NS_HANDLER
+	{
+	  NSString *message = [localException reason];
+	  NSRunAlertPanel(_(@"Problem loading strings"),
+			  message, nil, nil, nil);
+	}
+      NS_ENDHANDLER
+	
       // change to translated values.
+      en = [allObjects objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
 	  NSString *translation = nil; 
@@ -3206,7 +3219,12 @@ static void _real_close(GormDocument *self,
 
       if(touched)
 	{
-	  NSString *stringToWrite = [dictionary descriptionInStringsFileFormat];
+	  NSString *stringToWrite =
+	    @"/* TRANSLATORS: Make sure to quote all translated strings if\n"
+	    @"   they contain spaces or non-ASCII characters.  */\n\n";
+
+	  stringToWrite = [stringToWrite stringByAppendingString:
+					   [dictionary descriptionInStringsFileFormat]];
 	  [stringToWrite writeToFile: filename atomically: YES];
 	}
     } 
