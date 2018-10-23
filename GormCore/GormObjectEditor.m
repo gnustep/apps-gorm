@@ -327,7 +327,7 @@ static NSMapTable	*docMap = 0;
 
   if([name isEqual: GormResizeCellNotification])
     {
-      NSDebugLog(@"Recieved notification");
+      NSDebugLog(@"Received notification");
       [self setCellSize: defaultCellSize()];
     }
 }
