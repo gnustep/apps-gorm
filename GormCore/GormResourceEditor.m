@@ -78,7 +78,7 @@
   NSString *name = [aNotification name];
   if([name isEqual: GormResizeCellNotification])
     {
-      NSDebugLog(@"Recieved notification");
+      NSDebugLog(@"Received notification");
       [self setCellSize: defaultCellSize()];
     }
 }
