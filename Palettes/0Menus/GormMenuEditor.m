@@ -37,7 +37,7 @@
 @implementation NSMenu (GormMenuEditorAdditions)
 - (BOOL) isVisible
 {
-  return [_aWindow isVisible];
+  return [[self window] isVisible];
 }
 @end
 

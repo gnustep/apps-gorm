@@ -102,7 +102,13 @@
 @implementation NSDocument (GormPrivate)
 - (NSWindow *) _docWindow
 {
-  return _window;
+  static Ivar iv;
+  if (!iv)
+    {
+      Ivar iv = class_getInstanceVariable([NSDocument class], @"_window");
+      NSAssert(iv, @"Unable to find _window ivar in NSDocument class");
+    }
+  return object_getIvar(self, iv);
 }
 @end
 

@@ -25,9 +25,22 @@
 #include <Foundation/NSArray.h>
 #include <Foundation/NSEnumerator.h>
 #include <Foundation/NSDebug.h>
+#include <Foundation/NSException.h>
 
 #include "NSView+GormExtensions.h"
 #include <InterfaceBuilder/IBViewResourceDragging.h>
+
+static Ivar subviews_ivar(void)
+{
+  static Ivar iv;
+  if (iv == NULL)
+    {
+      iv = class_getInstanceVariable([NSView class], "_sub_views");
+      NSCAssert(iv, @"Unable to get NSView's _sub_views instance variable");
+    }
+  return iv;
+}
+
 
 @implementation NSView (GormExtensions)
 /**
@@ -72,11 +85,12 @@
 - (void) moveViewToFront: (NSView *)sv
 {
   NSDebugLog(@"move to front %@", sv);
-  if([_sub_views containsObject: sv])
+  NSMutableArray *sub_views = object_getIvar(self, subviews_ivar());
+  if([sub_views containsObject: sv])
     {
       RETAIN(sv); // make sure it doesn't deallocate the view.
-      [_sub_views removeObject: sv];
-      [_sub_views addObject: sv]; // add it to the end.
+      [sub_views removeObject: sv];
+      [sub_views addObject: sv]; // add it to the end.
       RELEASE(sv);
     }
 }
@@ -88,18 +102,19 @@
 - (void) moveViewToBack: (NSView *)sv
 {
   NSDebugLog(@"move to back %@", sv);
-  if([_sub_views containsObject: sv])
+  NSMutableArray *sub_views = object_getIvar(self, subviews_ivar());
+  if([sub_views containsObject: sv])
     {
       RETAIN(sv); // make sure it doesn't deallocate the view.
-      [_sub_views removeObject: sv];
-      if([_sub_views count] > 0)
+      [sub_views removeObject: sv];
+      if([sub_views count] > 0)
 	{
-	  [_sub_views insertObject: sv 
+	  [sub_views insertObject: sv 
 		      atIndex: 0]; // add it to the end.
 	}
       else
 	{
-	  [_sub_views addObject: sv];
+	  [sub_views addObject: sv];
 	}
       RELEASE(sv);
     }

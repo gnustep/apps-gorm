@@ -31,20 +31,31 @@
 - (BOOL) containsDocumentTypeName: (NSString *)tname;
 @end
 
+static Ivar types_ivar(void)
+{
+  static Ivar iv;
+  if (iv == NULL)
+    {
+      iv = class_getInstanceVariable([NSDocumentController class], "_types");
+      NSCAssert(iv, "Unable to find _types instance variable of NSDocumentController");
+    }
+  return iv;
+}
+
 @implementation NSDocumentController (GormPrivate)
 - (NSArray *) types
 {
-  return _types;
+  return object_getIvar(self, types_ivar());
 }
 
 - (void) setTypes: (NSArray *)types
 {
-  ASSIGN(_types, types);
+  object_setIvar(self, types_ivar(), types);
 }
 
 - (BOOL) containsDocumentTypeName: (NSString *)tname
 {
-  NSEnumerator *en = [_types objectEnumerator];
+  NSEnumerator *en = [object_getIvar(self, types_ivar()) objectEnumerator];
   id obj = nil;
   
   while ((obj = [en nextObject]) != nil)
