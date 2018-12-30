@@ -37,7 +37,7 @@ static Ivar types_ivar(void)
   if (iv == NULL)
     {
       iv = class_getInstanceVariable([NSDocumentController class], "_types");
-      NSCAssert(iv, "Unable to find _types instance variable of NSDocumentController");
+      NSCAssert(iv, @"Unable to find _types instance variable of NSDocumentController");
     }
   return iv;
 }
