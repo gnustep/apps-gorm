@@ -1,3 +1,8 @@
+2019-01-25 Fred Kiefer <FredKiefer@gmx.de>
+
+	* GormCore/GormDocument.m: Fix wrong string type in David Chisnall
+	fix for the new libobjc.
+
 2015-11-05 20:40-EST Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormWindowTemplate.m: in baseWindowClass return

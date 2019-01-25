@@ -105,7 +105,7 @@
   static Ivar iv;
   if (!iv)
     {
-      Ivar iv = class_getInstanceVariable([NSDocument class], @"_window");
+      Ivar iv = class_getInstanceVariable([NSDocument class], "_window");
       NSAssert(iv, @"Unable to find _window ivar in NSDocument class");
     }
   return object_getIvar(self, iv);
