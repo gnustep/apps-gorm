@@ -1,3 +1,11 @@
+2019-02-07 02:15-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormInfo.plist
+	* NEWS
+	* Version: 1.2.24
+
 2019-01-25 Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormDocument.m: Fix wrong string type in David Chisnall
