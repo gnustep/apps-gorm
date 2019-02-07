@@ -4,13 +4,19 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.24}
+
+@itemize @bullet
+@item Fix for issue where Gorm was referencing private variables. This caused a crash when built with clang.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{1.2.23}
 
 @itemize @bullet
 @item Fix for issue where NSPanel was being saved as an NSWindow in some cases.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{1.2.22}
 
