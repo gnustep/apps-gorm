@@ -159,7 +159,7 @@
   [editableSwitch setState:[object isEditable]];
   [selectableSwitch setState:[object isSelectable]];
   [scrollableSwitch setState:[[object cell] isScrollable]];
-  [singleLineMode setStat:[[object cell] usesSingleLineMode]];
+  [singleLineMode setState:[[object cell] usesSingleLineMode]];
   
   if ([object isBordered] == YES)
     {
