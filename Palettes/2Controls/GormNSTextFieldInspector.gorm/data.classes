@@ -13,7 +13,8 @@
 	    editableSwitch,
 	    scrollableSwitch,
 	    selectableSwitch,
-	    sendActionMatrix
+	    sendActionMatrix,
+	    singleLineMode
 	);
 	Super = IBInspector;
     };

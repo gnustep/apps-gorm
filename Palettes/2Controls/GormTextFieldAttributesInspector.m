@@ -136,6 +136,10 @@
       BOOL sendActionOnEndEditing = ([[sender cellAtRow: 1 column: 0] state] == NSOnState);
       [[object cell] setSendsActionOnEndEditing: sendActionOnEndEditing];
     }
+  else if (sender == singleLineMode)
+    {
+      [[object cell] setUsesSingleLineMode: [scrollableSwitch state]];
+    }
 
   [super ok:sender];
 }
@@ -155,7 +159,8 @@
   [editableSwitch setState:[object isEditable]];
   [selectableSwitch setState:[object isSelectable]];
   [scrollableSwitch setState:[[object cell] isScrollable]];
-
+  [singleLineMode setStat:[[object cell] usesSingleLineMode]];
+  
   if ([object isBordered] == YES)
     {
       [borderMatrix selectCellAtRow: 0 column: 1];

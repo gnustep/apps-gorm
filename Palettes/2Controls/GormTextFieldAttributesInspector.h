@@ -53,6 +53,7 @@
   NSButton *editableSwitch;
   NSButton *selectableSwitch;
   NSButton *scrollableSwitch;
+  NSButton *singleLineMode;
   NSForm *tagForm;
   NSMatrix *sendActionMatrix;
 }
