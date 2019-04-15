@@ -138,7 +138,7 @@
     }
   else if (sender == singleLineMode)
     {
-      [[object cell] setUsesSingleLineMode: [scrollableSwitch state]];
+      [[object cell] setUsesSingleLineMode: [singleLineMode state]];
     }
 
   [super ok:sender];
