@@ -5,6 +5,8 @@
 	compare function.
 	* Palettes/2Controls/GormFormAttributesInspector.m,
 	* Palettes/2Controls/GormMatrixAttributesInspector.m: Add missing include.
+	* GormCore/GormInspectorsManager.m: Disable menu update during
+	bulk change.
 
 2019-02-07 02:15-EDT Gregory John Casamento <greg.casamento@gmail.com>
 

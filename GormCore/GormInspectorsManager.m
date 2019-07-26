@@ -252,6 +252,7 @@
   NSInteger index = 0;
   id obj = nil;
 
+  [[popup menu] setMenuChangedMessagesEnabled: NO];
   [popup removeAllItems];
   while((obj = [en nextObject]) != nil)
     {
@@ -266,6 +267,7 @@
       [item setTag: tag];
       index++;
     }
+  [[popup menu] setMenuChangedMessagesEnabled: YES];
 }
 
 - (void) setCurrentInspector: (id)anObj
