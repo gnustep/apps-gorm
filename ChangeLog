@@ -1,3 +1,11 @@
+2019-07-26 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Add .gitignore.
+	* GormCode/GormViewWithContentViewEditor.m: Correct return type of
+	compare function.
+	* Palettes/2Controls/GormFormAttributesInspector.m,
+	* Palettes/2Controls/GormMatrixAttributesInspector.m: Add missing include.
+
 2019-02-07 02:15-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE
