@@ -1,0 +1,7 @@
+*.app
+*.debug
+*.profile
+*.palette
+*.plugin
+obj
+InterfaceBuilder

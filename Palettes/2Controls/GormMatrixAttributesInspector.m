@@ -42,6 +42,7 @@
 #include <AppKit/NSForm.h>
 #include <AppKit/NSMatrix.h>
 #include <AppKit/NSNibLoading.h>
+#include <AppKit/NSStepper.h>
 
 
 @implementation	NSMatrix (IBObjectAdditions)

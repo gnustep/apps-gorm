@@ -44,6 +44,7 @@
 #include <AppKit/NSMatrix.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSFormCell.h>
+#include <AppKit/NSStepper.h>
 
 /*
   IBObjectAdditions category
