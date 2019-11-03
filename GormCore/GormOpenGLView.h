@@ -26,7 +26,7 @@
 #ifndef INCLUDED_GormOpenGLView_h
 #define INCLUDED_GormOpenGLView_h
 
-#include <AppKit/NSView.h>
+#include <AppKit/AppKit.h>
 
 @class NSTimer;
 

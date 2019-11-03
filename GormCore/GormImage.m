@@ -22,8 +22,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/NSImage.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormImage.h"
 
 // implementation of category on NSImage.

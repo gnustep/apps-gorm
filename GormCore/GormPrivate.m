@@ -23,15 +23,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+// for templates...
+#include <AppKit/AppKit.h>
+
+#include <GNUstepBase/GSObjCRuntime.h>
+#include <GNUstepGUI/GSNibLoading.h>
+
 #include "GormPrivate.h"
 #include "GormFontViewController.h"
 #include "GormSetNameController.h"
-#include "GNUstepGUI/GSNibLoading.h"
-#include "GNUstepBase/GSObjCRuntime.h"
-
-// for templates...
-#include <AppKit/NSControl.h>
-#include <AppKit/NSButton.h>
 
 NSString *GormToggleGuidelineNotification = @"GormToggleGuidelineNotification";
 NSString *GormDidModifyClassNotification = @"GormDidModifyClassNotification";

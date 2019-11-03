@@ -22,11 +22,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <Foundation/Foundation.h>
 
-#include <Foundation/NSString.h>
-#include <Foundation/NSArray.h>
-#include <Foundation/NSScanner.h>
-#include <Foundation/NSCharacterSet.h>
 #include <GormObjCHeaderParser/OCClass.h>
 #include <GormObjCHeaderParser/OCMethod.h>
 #include <GormObjCHeaderParser/OCIVar.h>

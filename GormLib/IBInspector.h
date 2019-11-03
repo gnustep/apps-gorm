@@ -25,7 +25,8 @@
 #ifndef INCLUDED_IBINSPECTOR_H
 #define INCLUDED_IBINSPECTOR_H
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBObjectProtocol.h>
 
 #define	IVH	388	/* Standard height of inspector view.	*/

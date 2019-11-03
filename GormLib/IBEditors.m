@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSString.h>
+#include <Foundation/Foundation.h>
 
 NSString *IBAttributesChangedNotification
   = @"IBAttributesChangedNotification";

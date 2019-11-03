@@ -22,13 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSArray.h>
-#include <Foundation/NSEnumerator.h>
-#include <Foundation/NSDebug.h>
-#include <Foundation/NSException.h>
+#include <Foundation/Foundation.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "NSView+GormExtensions.h"
-#include <InterfaceBuilder/IBViewResourceDragging.h>
 
 static Ivar subviews_ivar(void)
 {

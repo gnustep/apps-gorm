@@ -34,7 +34,7 @@
 #ifndef INCLUDED_GormTableColumnnSizeInspector_h
 #define INCLUDED_GormTableColumnnSizeInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSForm;
 

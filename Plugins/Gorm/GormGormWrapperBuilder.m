@@ -26,14 +26,10 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
+
 #include <GNUstepGUI/GSGormLoading.h>
-#include <GormCore/GormWrapperBuilder.h>
-#include <GormCore/GormClassManager.h>
-#include <GormCore/GormFilePrefsManager.h>
-#include <GormCore/GormDocument.h>
-#include <GormCore/GormFilesOwner.h>
-#include <GormCore/GormProtocol.h>
-#include <GormCore/GormPalettesManager.h>
 
 @interface GormDocument (BuilderAdditions)
 - (void) prepareConnections;

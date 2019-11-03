@@ -28,8 +28,9 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include <GormCore/GormFunctions.h>
-#include <GormCore/GormPrivate.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormShelfPref.h"
 
 #define BOX_W 197

@@ -35,7 +35,7 @@
 #ifndef	INCLUDED_GormStepperAttributesInspector_h
 #define	INCLUDED_GormStepperAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSTextField;

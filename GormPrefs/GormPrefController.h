@@ -26,8 +26,8 @@
 #ifndef INCLUDED_GormPrefController_h
 #define INCLUDED_GormPrefController_h
 
-#include <Foundation/NSObject.h>
-#include <AppKit/NSWindowController.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 @interface GormPrefController : NSObject
 {

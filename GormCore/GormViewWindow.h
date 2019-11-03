@@ -25,8 +25,7 @@
 #ifndef INCLUDED_GormViewWindow_h
 #define INCLUDED_GormViewWindow_h
 
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSView.h>
+#include <AppKit/AppKit.h>
 
 @interface GormViewWindow : NSWindow
 {

@@ -27,10 +27,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormViewEditor.h>
-#include <GormCore/NSColorWell+GormExtensions.h>
-#include <GormCore/GormViewSizeInspector.h>
+#include <GormCore/GormCore.h>
 
 #include "GormNumberFormatterAttributesInspector.h"
 

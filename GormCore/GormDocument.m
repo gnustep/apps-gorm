@@ -28,6 +28,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
+#include <GNUstepGUI/GSGormLoading.h>
+
 #include "GormPrivate.h"
 #include "GormClassManager.h"
 #include "GormCustomView.h"
@@ -35,14 +42,6 @@
 #include "GormFunctions.h"
 #include "GormFilePrefsManager.h"
 #include "GormViewWindow.h"
-#include <Foundation/NSUserDefaults.h>
-#include <Foundation/NSException.h>
-#include <AppKit/NSImage.h>
-#include <AppKit/NSSound.h>
-#include <AppKit/NSNibConnector.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSScreen.h>
-#include <GNUstepGUI/GSGormLoading.h>
 #include "NSView+GormExtensions.h"
 #include "GormSound.h"
 #include "GormImage.h"

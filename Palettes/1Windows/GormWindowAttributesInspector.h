@@ -37,7 +37,7 @@
 #define	INCLUDED_GormWindowAttributesInspector_h
 
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSColorWell;

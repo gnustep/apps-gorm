@@ -27,7 +27,7 @@
 #ifndef INCLUDED_GormWrapperLoader_h
 #define INCLUDED_GormWrapperLoader_h
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
 
 @class NSFileWrapper, GormDocument, NSString;
 

@@ -25,7 +25,7 @@
 #ifndef IBINSPECTORMODE_H
 #define IBINSPECTORMODE_H
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
 
 @class NSString;
 

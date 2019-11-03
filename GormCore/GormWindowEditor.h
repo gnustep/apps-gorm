@@ -27,8 +27,8 @@
 #ifndef INCLUDED_GormWindowEditor_h
 #define INCLUDED_GormWindowEditor_h
 
-#include <InterfaceBuilder/IBDocuments.h>
-#include <InterfaceBuilder/IBEditors.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include <GormCore/GormViewWithContentViewEditor.h>
 
 @class NSMutableArray, NSString, NSView, NSPasteboard;

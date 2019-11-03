@@ -23,10 +23,12 @@
  */
 
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormCore.h>
+
 #include "GormTableViewEditor.h"
 #include "GormNSTableView.h"
-#include <GormCore/GormViewKnobs.h>
 
 NSString *IBTableColumnPboardType = @"IBTableColumnPboardType";
 

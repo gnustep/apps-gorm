@@ -25,7 +25,8 @@
 #ifndef INCLUDED_IBEDITORS_H
 #define INCLUDED_IBEDITORS_H
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBSystem.h>
 
 // forward references

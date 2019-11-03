@@ -23,6 +23,7 @@
  */
 
 #include <Foundation/Foundation.h>
+
 #include "ParserFunctions.h"
 
 BOOL lookAhead(NSString *stringToScan, NSString *stringToFind)

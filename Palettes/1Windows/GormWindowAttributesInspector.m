@@ -32,12 +32,11 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormWindowAttributesInspector.h"
-
-#include <GormCore/GormNSWindow.h>
-#include <GormCore/GormDocument.h>
-#include <GormCore/NSColorWell+GormExtensions.h>
 #include <AppKit/NSNibLoading.h>
+
+#include <GormCore/GormCore.h>
+
+#include "GormWindowAttributesInspector.h"
 
 @implementation GormWindowAttributesInspector
 

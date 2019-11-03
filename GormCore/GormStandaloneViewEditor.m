@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
+
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormStandaloneViewEditor.h>
 #include <GormCore/GormDefines.h>

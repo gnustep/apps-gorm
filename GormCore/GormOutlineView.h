@@ -29,8 +29,8 @@
 #ifndef INCLUDED_GormOutlineView_h
 #define INCLUDED_GormOutlineView_h
 
-#include <AppKit/NSOutlineView.h>
-#include <Foundation/NSMapTable.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 @class NSTableColumn;
 @class NSMenuItem;

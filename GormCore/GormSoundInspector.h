@@ -27,6 +27,7 @@
 #define	INCLUDED_GormSoundInspector_h
 
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class GormClassManager;

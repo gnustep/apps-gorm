@@ -23,8 +23,9 @@
  */
 
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
-#include <GormCore/GormFunctions.h>
+#include <GormCore/GormCore.h>
 
 /*
  * This method will allow us to check if the menu is

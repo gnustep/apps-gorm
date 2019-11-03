@@ -30,9 +30,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormMenuItemAttributesInspector.h"
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
+#include "GormMenuItemAttributesInspector.h"
 
 const unichar up[]={NSUpArrowFunctionKey};
 const unichar dn[]={NSDownArrowFunctionKey};

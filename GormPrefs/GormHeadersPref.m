@@ -1,13 +1,8 @@
+
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormHeadersPref.h"
-
-#include <Foundation/NSUserDefaults.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSTableView.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSOpenPanel.h>
-#include <AppKit/NSStringDrawing.h>
 
 // data source...
 @interface HeaderDataSource : NSObject

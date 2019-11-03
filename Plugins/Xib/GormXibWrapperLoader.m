@@ -25,16 +25,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <GormCore/GormPalettesManager.h>
-#include <GormCore/GormClassManager.h>
-#include <GormCore/GormImage.h>
-#include <GormCore/GormSound.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/NSView+GormExtensions.h>
-#include <GormCore/GormFunctions.h>
-#include <GormCore/GormCustomView.h>
-#include <GormCore/GormWindowTemplate.h>
-#include <GormCore/GormNSWindow.h>
+#include <GormCore/GormCore.h>
 
 #include "GormXibWrapperLoader.h"
 

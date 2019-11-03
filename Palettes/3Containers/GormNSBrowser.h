@@ -24,7 +24,7 @@
 #ifndef	INCLUDED_GormNSBrowser_h
 #define	INCLUDED_GormNSBrowser_h
 
-#include <AppKit/NSBrowser.h>
+#include <AppKit/AppKit.h>
 
 @interface GormNSBrowser : NSBrowser
 {

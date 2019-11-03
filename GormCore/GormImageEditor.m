@@ -22,11 +22,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <AppKit/AppKit.h>
+
 #include "GormImageEditor.h"
 #include "GormProtocol.h"
 #include "GormFunctions.h"
 #include "GormPalettesManager.h"
-#include <AppKit/NSImage.h>
 #include "GormImage.h"
 
 @implementation	GormImageEditor

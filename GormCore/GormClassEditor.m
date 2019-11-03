@@ -25,6 +25,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
 #include "GormClassEditor.h"
 #include "GormClassManager.h"
 #include "GormFunctions.h"

@@ -25,7 +25,7 @@
 #ifndef INCLUDED_IBVIEWRESOURCEDRAGGING_H
 #define INCLUDED_IBVIEWRESOURCEDRAGGING_H
 
-#include <AppKit/NSView.h>
+#include <AppKit/AppKit.h>
 
 @class NSPasteboard;
 

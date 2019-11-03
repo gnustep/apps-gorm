@@ -26,7 +26,9 @@
 */
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormNSMenu.h"
 
 @interface GormMenuMaker : NSObject <NSCoding>

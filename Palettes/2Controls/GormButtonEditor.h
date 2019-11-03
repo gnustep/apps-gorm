@@ -24,7 +24,7 @@
 #ifndef	INCLUDED_GormButtonEditor_h
 #define	INCLUDED_GormButtonEditor_h
 
-#include <GormCore/GormControlEditor.h>
+#include <GormCore/GormCore.h>
 
 @class NSTextView;
 

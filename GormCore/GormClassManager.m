@@ -23,20 +23,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/Foundation.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormObjCHeaderParser/GormObjCHeaderParser.h>
+
 #include "GormPrivate.h"
 #include "GormCustomView.h"
 #include "GormDocument.h"
 #include "GormFilesOwner.h"
 #include "GormPalettesManager.h"
-#include <InterfaceBuilder/IBEditors.h>
-#include <InterfaceBuilder/IBPalette.h>
-#include <Foundation/NSValue.h>
-#include <Foundation/NSException.h>
-
-#include <GormObjCHeaderParser/OCHeaderParser.h>
-#include <GormObjCHeaderParser/OCClass.h>
-#include <GormObjCHeaderParser/OCMethod.h>
-#include <GormObjCHeaderParser/OCIVar.h>
 
 /**
  * Just a few definitions to start things out.  To increase efficiency,

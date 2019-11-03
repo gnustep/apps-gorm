@@ -22,7 +22,8 @@
  */
 
 #include <Foundation/Foundation.h>
-#include <AppKit/NSDocumentController.h>
+#include <AppKit/AppKit.h>
+
 #include <GormCore/GormPlugin.h>
 
 @interface NSDocumentController (GormPrivate)

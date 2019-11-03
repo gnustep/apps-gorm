@@ -25,8 +25,10 @@
 #ifndef INCLUDED_GormClassEditor_h
 #define INCLUDED_GormClassEditor_h
 
+#include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
-#include <AppKit/NSBox.h>
+
 #include <GormCore/GormOutlineView.h>
 
 @class NSString, NSArray, GormDocument, GormClassManager, NSBrowser;

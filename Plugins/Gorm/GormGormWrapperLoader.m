@@ -24,16 +24,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <GormCore/GormWrapperLoader.h>
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include <GormCore/GormPalettesManager.h>
-#include <GormCore/GormClassManager.h>
-#include <GormCore/GormImage.h>
-#include <GormCore/GormSound.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/NSView+GormExtensions.h>
-#include <GormCore/GormFunctions.h>
+
+#include <GormCore/GormCore.h>
 
 @interface GormGormWrapperLoader : GormWrapperLoader
 {

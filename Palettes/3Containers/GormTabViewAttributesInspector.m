@@ -30,19 +30,13 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormTabViewAttributesInspector.h"
 
-#include <Foundation/NSNotification.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSStepper.h>
-#include <AppKit/NSTabView.h>
-#include <AppKit/NSTabViewItem.h>
-#include <AppKit/NSTextField.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
+
+#include "GormTabViewAttributesInspector.h"
 
 #define ORDERED_PREVIOUS 0
 #define ORDERED_NEXT     1

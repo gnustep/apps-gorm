@@ -28,7 +28,8 @@
 #ifndef INCLUDED_GormSound_h
 #define INCLUDED_GormSound_h
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <GormCore/GormResource.h>
 
 @class NSString;

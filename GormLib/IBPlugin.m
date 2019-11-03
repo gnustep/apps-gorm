@@ -22,9 +22,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSObject.h>
-#include <Foundation/NSString.h>
-#include <AppKit/NSView.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/IBPlugin.h>
 
 static NSMapTable *instanceMap = 0;

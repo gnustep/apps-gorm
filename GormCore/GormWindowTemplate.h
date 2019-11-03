@@ -24,6 +24,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+
 #include <GNUstepGUI/GSNibLoading.h>
 
 @interface NSWindowTemplate (Private)

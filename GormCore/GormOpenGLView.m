@@ -23,9 +23,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include <GormCore/GormOpenGLView.h>
-#include <Foundation/NSTimer.h>
-#include <AppKit/PSOperators.h>
 // #include <AppKit/NSOpenGL.h>
 // #include <GL/gl.h>
 

@@ -31,13 +31,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormTableColumnSizeInspector.h"
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSForm.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTableColumn.h>
 
 #define MINIMUMINDEX 0
 #define CURRENTINDEX 1

@@ -23,8 +23,11 @@
 */
 
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include <GNUstepGUI/GSGormLoading.h>
+
 #include "GormNSPanel.h"
 
 

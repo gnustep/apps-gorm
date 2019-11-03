@@ -22,11 +22,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <AppKit/AppKit.h>
+
 #include "GormSoundEditor.h"
 #include "GormProtocol.h"
 #include "GormFunctions.h"
 #include "GormPalettesManager.h"
-#include <AppKit/NSSound.h>
 #include "GormSound.h"
 
 @implementation	GormSoundEditor

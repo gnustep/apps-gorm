@@ -1,14 +1,9 @@
 // Author: Andrew E. Ruder
 // Copyright (C) 2003 by Free Software Foundation, Inc
 
-#include "GormSetNameController.h"
+#include <AppKit/AppKit.h>
 
-#include <AppKit/NSApplication.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSTextField.h>
-#include <AppKit/NSPanel.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSPanel.h>
+#include "GormSetNameController.h"
 
 @implementation GormSetNameController : NSObject
 - (NSInteger)runAsModal
