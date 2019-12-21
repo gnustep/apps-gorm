@@ -44,6 +44,14 @@
   return self;
 }
 
+- (void)awakeFromNib
+{
+  for (NSCell *cell in [orientation cells])
+    {
+      [cell setRefusesFirstResponder: YES];
+    }
+}
+
 - (void) _getValuesFromObject
 {
   BOOL state = [(NSSplitView *)object isVertical];
