@@ -243,12 +243,11 @@ int defaultDateFormatIndex = 3;
 
 
   // NSScrollView
-  v = [[NSScrollView alloc] initWithFrame: NSMakeRect(20, 22, 113,148)];
+  v = [[NSScrollView alloc] initWithFrame: NSMakeRect(20, 22, 113, 150)];
   [v setHasVerticalScroller: YES];
   [v setHasHorizontalScroller: NO];
-  [v setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
   [[(NSScrollView *)v contentView] setAutoresizingMask: NSViewHeightSizable 
-			    | NSViewWidthSizable];
+        		    | NSViewWidthSizable];
   [[(NSScrollView *)v contentView] setAutoresizesSubviews:YES];
   [v setBorderType: NSBezelBorder];
 
@@ -279,7 +278,7 @@ int defaultDateFormatIndex = 3;
 
 
   // NSImageView
-  v = [[NSImageView alloc] initWithFrame: NSMakeRect(143, 98, 96, 72)];
+  v = [[NSImageView alloc] initWithFrame: NSMakeRect(153, 98, 96, 72)];
   [v setImageFrameStyle: NSImageFramePhoto]; //FramePhoto not implemented
   [v setImageScaling: NSScaleProportionally];
   [v setImageAlignment: NSImageAlignCenter];
@@ -291,7 +290,7 @@ int defaultDateFormatIndex = 3;
      * All other palette objects are views and use the default  IBViewPboardType
      * drag type
      */
-  v = [[NSImageView alloc] initWithFrame: NSMakeRect(143, 48, 43, 43)];
+  v = [[NSImageView alloc] initWithFrame: NSMakeRect(153, 48, 43, 43)];
   [v setImageFrameStyle: NSImageFramePhoto];
   [v setImageScaling: NSScaleProportionally];
   [v setImageAlignment: NSImageAlignCenter];
@@ -304,7 +303,7 @@ int defaultDateFormatIndex = 3;
   [self associateObject: nf type: IBFormatterPboardType with: v];
   RELEASE(v);
 
-  v = [[NSImageView alloc] initWithFrame: NSMakeRect(196, 48, 43, 43)];
+  v = [[NSImageView alloc] initWithFrame: NSMakeRect(206, 48, 43, 43)];
   [v setImageFrameStyle: NSImageFramePhoto];
   [v setImageScaling: NSScaleProportionally];
   [v setImageAlignment: NSImageAlignCenter];
@@ -319,7 +318,7 @@ int defaultDateFormatIndex = 3;
   RELEASE(v);
   
   // NSComboBox
-  v = [[NSComboBox alloc] initWithFrame: NSMakeRect(143, 22, 96, 21)];
+  v = [[NSComboBox alloc] initWithFrame: NSMakeRect(153, 22, 96, 21)];
   [contents addSubview: v];
   RELEASE(v);
 }
