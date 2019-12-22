@@ -553,7 +553,7 @@
    * A whole new menu...
    */
   menu = [[GormMenuMaker alloc] init];
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(148,6,48,48)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(115,0,48,48)];
   [v setBordered: NO];
   [v setImage: dragImage];
   [v setImagePosition: NSImageOverlaps];
