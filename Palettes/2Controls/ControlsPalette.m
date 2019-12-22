@@ -57,17 +57,6 @@
 
 - (void) finishInstantiate
 {
-  NSView	*contents;
-  id		v;
-
-  contents = [originalWindow contentView];
-  [contents setFrame: NSMakeRect(0, 0, 272, 192)];
-  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(118, 139, 87, 22)];
-  [v addItemWithTitle: @"Item 1"];
-  [v addItemWithTitle: @"Item 2"];
-  [v addItemWithTitle: @"Item 3"];
-  [contents addSubview: v];
-  RELEASE(v);
 }
 
 /**
