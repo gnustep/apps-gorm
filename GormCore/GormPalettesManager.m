@@ -340,7 +340,7 @@ static NSImage	*dragImage = nil;
   RELEASE(scrollView);
 
   dragView = [[GormPaletteView alloc] initWithFrame: dragRect];
-  [dragView setAutoresizingMask: (NSViewHeightSizable | NSViewWidthSizable)];
+  [dragView setAutoresizingMask: NSViewMinYMargin];
   [[panel contentView] addSubview: dragView]; 
   RELEASE(dragView);
 
