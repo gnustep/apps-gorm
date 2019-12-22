@@ -297,8 +297,8 @@ static NSImage	*dragImage = nil;
   NSArray	 *array;
   NSRect	 contentRect = {{0, 0}, {272, 266}};
   NSRect	 selectionRect = {{0, 0}, {52, 52}};
-  NSRect	 scrollRect = {{0, 192}, {272, 74}};
-  NSRect	 dragRect = {{0, 0}, {272, 192}};
+  NSRect	 scrollRect = {{-2, 192}, {276, 76}};
+  NSRect	 dragRect = {{0, 0}, {272, 200}};
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
@@ -322,11 +322,12 @@ static NSImage	*dragImage = nil;
   [scrollView setHasHorizontalScroller: YES];
   [scrollView setHasVerticalScroller: NO];
   [scrollView setAutoresizingMask: NSViewMinYMargin | NSViewWidthSizable];
-  [scrollView setBorderType: NSBezelBorder];
+  [scrollView setBorderType: NSGrooveBorder];
+  [[scrollView horizontalScroller] setArrowsPosition: NSScrollerArrowsNone];
 
   selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 					     mode: NSRadioModeMatrix
-					cellClass: [NSImageCell class]
+					cellClass: [NSButtonCell class]
 				     numberOfRows: 1
 				  numberOfColumns: 0];
   [selectionView setTarget: self];
@@ -339,7 +340,7 @@ static NSImage	*dragImage = nil;
   RELEASE(scrollView);
 
   dragView = [[GormPaletteView alloc] initWithFrame: dragRect];
-  [dragView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+  [dragView setAutoresizingMask: (NSViewHeightSizable | NSViewWidthSizable)];
   [[panel contentView] addSubview: dragView]; 
   RELEASE(dragView);
 
@@ -538,7 +539,7 @@ static NSImage	*dragImage = nil;
     }
   else
     {
-      [window setFrame: NSMakeRect(0,0,272,192) display: NO];
+      [window setFrame: NSMakeRect(0,0,272,224) display: NO];
     }
 
   [palettes addObject: palette];
@@ -546,7 +547,9 @@ static NSImage	*dragImage = nil;
   [[palette paletteIcon] setBackgroundColor: [selectionView backgroundColor]];
   col = [selectionView numberOfColumns] - 1;
   cell = [selectionView cellAtRow: 0 column: col];
-  [cell setImageFrameStyle: NSImageFrameButton];
+  // [cell setImageFrameStyle: NSImageFrameButton];
+  [cell setButtonType: NSOnOffButton];
+  [cell setRefusesFirstResponder: YES];
   [cell setImage: [palette paletteIcon]];
   [selectionView sizeToCells];
   [selectionView selectCellAtRow: 0 column: col];
