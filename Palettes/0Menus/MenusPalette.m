@@ -82,6 +82,7 @@
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
+  [originalWindow setTitle: @"Menus"];
   contents = [originalWindow contentView];
 
 

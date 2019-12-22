@@ -235,6 +235,7 @@ int defaultDateFormatIndex = 3;
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
+  [originalWindow setTitle: @"Data Views"];
   contents = [originalWindow contentView];
 
 /*******************/

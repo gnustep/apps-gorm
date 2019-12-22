@@ -418,7 +418,7 @@ static NSImage	*dragImage = nil;
   NSArray       *exportImages;
   NSDictionary  *subClasses;
   IBPalette	*palette;
-  NSImageCell	*cell;
+  NSButtonCell	*cell;
   int		col;
 
   if([self bundlePathIsLoaded: path])
@@ -650,8 +650,7 @@ static NSImage	*dragImage = nil;
       /*
        * Set the window title to reflect the palette selection.
        */
-      [panel setTitle: [NSString stringWithFormat: @"Palettes (%@)", 
-				 [palette className]]];
+      [panel setTitle: [[palette originalWindow] title]];
 
       /*
        * Move the views from their original window into our drag view.
