@@ -324,6 +324,7 @@ static NSImage	*dragImage = nil;
   [scrollView setAutoresizingMask: NSViewMinYMargin | NSViewWidthSizable];
   [scrollView setBorderType: NSGrooveBorder];
   [[scrollView horizontalScroller] setArrowsPosition: NSScrollerArrowsNone];
+  [scrollView setAutohidesScrollers: YES];
 
   selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 					     mode: NSRadioModeMatrix
@@ -333,7 +334,7 @@ static NSImage	*dragImage = nil;
   [selectionView setTarget: self];
   [selectionView setAction: @selector(setCurrentPalette:)];
   [selectionView setCellSize: NSMakeSize(52,52)];
-  [selectionView setIntercellSpacing: NSMakeSize(0,0)];
+  [selectionView setIntercellSpacing: NSMakeSize(15, 0)];
   [scrollView setDocumentView: selectionView];
   RELEASE(selectionView);
   [[panel contentView] addSubview: scrollView]; 
@@ -547,7 +548,6 @@ static NSImage	*dragImage = nil;
   [[palette paletteIcon] setBackgroundColor: [selectionView backgroundColor]];
   col = [selectionView numberOfColumns] - 1;
   cell = [selectionView cellAtRow: 0 column: col];
-  // [cell setImageFrameStyle: NSImageFrameButton];
   [cell setButtonType: NSOnOffButton];
   [cell setRefusesFirstResponder: YES];
   [cell setImage: [palette paletteIcon]];
