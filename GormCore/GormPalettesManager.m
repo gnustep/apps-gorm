@@ -534,14 +534,14 @@ static NSImage	*dragImage = nil;
 
   // Resize the window appropriately so that we don't have issues
   // with scrolling.
-  if([window styleMask] & NSBorderlessWindowMask)
-    {
-      [window setFrame: NSMakeRect(0,0,272,160) display: NO];
-    }
-  else
-    {
-      [window setFrame: NSMakeRect(0,0,272,224) display: NO];
-    }
+  // if([window styleMask] & NSBorderlessWindowMask)
+  //   {
+  //     [window setFrame: NSMakeRect(0,0,272,160) display: NO];
+  //   }
+  // else
+  //   {
+  //     [window setFrame: NSMakeRect(0,0,272,224) display: NO];
+  //   }
 
   [palettes addObject: palette];
   [selectionView addColumn];
