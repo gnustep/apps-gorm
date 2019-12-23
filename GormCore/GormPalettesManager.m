@@ -99,6 +99,16 @@ static NSImage	*dragImage = nil;
   [super dealloc];
 }
 
+- (void) resizeWithOldSuperviewSize: (NSSize)oldSize
+{
+  NSSize newSize = [[self superview] frame].size;
+  NSRect frame = [self frame];
+  
+  frame.origin.x -= floorf((oldSize.width - newSize.width) / 2);
+  frame.origin.y -= floorf((oldSize.height - newSize.height) / 2);
+  [self setFrameOrigin: frame.origin];
+}
+
 /*
  *	Dragging source protocol implementation
  */
@@ -341,7 +351,7 @@ static NSImage	*dragImage = nil;
   RELEASE(scrollView);
 
   dragView = [[GormPaletteView alloc] initWithFrame: dragRect];
-  [dragView setAutoresizingMask: NSViewMinYMargin];
+  [dragView setAutoresizingMask: 0];
   [[panel contentView] addSubview: dragView]; 
   RELEASE(dragView);
 
