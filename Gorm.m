@@ -764,12 +764,12 @@
  					object:nil];
   if ( [guideLineMenuItem tag] == 0 )
     {
-      [guideLineMenuItem setTitle:_(@"Enable GuideLine")];
+      [guideLineMenuItem setTitle:_(@"Turn GuideLine On")];
       [guideLineMenuItem setTag:1];
     }
   else if ( [guideLineMenuItem tag] == 1)
     {
-      [guideLineMenuItem setTitle:_(@"Disable GuideLine")];
+      [guideLineMenuItem setTitle:_(@"Turn GuideLine Off")];
       [guideLineMenuItem setTag:0];
     }
 }
