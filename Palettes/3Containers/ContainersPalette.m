@@ -60,7 +60,7 @@
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
-  [originalWindow setTitle: @"Conatiners"];
+  [originalWindow setTitle: @"Containers"];
   contents = [originalWindow contentView];
 
 /*******************/
