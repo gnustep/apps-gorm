@@ -17,7 +17,8 @@
 	    ctrlBtn,
 	    shiftBtn,
 	    cmdBtn,
-	    keyPopup
+	    keyPopup,
+	    keyType
 	);
 	Super = IBInspector;
     };
