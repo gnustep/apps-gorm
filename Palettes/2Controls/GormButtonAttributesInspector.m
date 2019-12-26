@@ -145,7 +145,7 @@ NSString *rtString = nil;
     }
   else if (sender == keyForm)
     {
-      [keyEquiv selectItem: nil]; // if the user does his own thing, select the default...
+      [keyEquiv selectItemAtIndex: 0]; // if the user does his own thing, select the default...
       [object setKeyEquivalent: [[sender cellAtIndex: 0] stringValue]];
     }
   else if (sender == keyEquiv)
@@ -161,21 +161,25 @@ NSString *rtString = nil;
 	case 1: // return
 	  {
 	    [object setKeyEquivalent: @"\r"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\r"];
 	  }
 	  break;
 	case 2: // delete 
 	  {
 	    [object setKeyEquivalent: @"\b"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\b"];
 	  }
 	  break;
 	case 3: // escape
 	  {
 	    [object setKeyEquivalent: @"\E"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\E"];
 	  }
 	  break;
 	case 4: // tab
 	  {
 	    [object setKeyEquivalent: @"\t"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\t"];
 	  }
 	  break;
 	case 5: // up
@@ -358,7 +362,7 @@ NSString *rtString = nil;
 	}
       else
 	{
-	  [keyEquiv selectItem: nil];
+	  [keyEquiv selectItemAtIndex: 0];
 	}
       
       [optionMatrix deselectAllCells];
