@@ -92,6 +92,9 @@
     {
       // TODO: Use stepper..
       [object setMinColumnWidth: [minColumnWidthField intValue]];
+      [minColumnWidthField setStringValue:
+               [NSString stringWithFormat:@"%.2f",
+                         [object minColumnWidth]]];
     }
   else if ( sender == maxVisibleColumnsField ) 
     {
@@ -121,7 +124,7 @@
   [[tagForm cellAtIndex:0] setIntValue: [object tag]];
 
   [minColumnWidthField setStringValue:
-			 [NSString stringWithFormat:@"%f",
+			 [NSString stringWithFormat:@"%.2f",
 				   [object minColumnWidth]]];
   [maxVisibleColumnsField setStringValue:
 			    [NSString stringWithFormat:@"%ld",
