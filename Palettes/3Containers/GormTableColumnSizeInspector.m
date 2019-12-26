@@ -90,10 +90,14 @@
   [super revert:sender];
 }
 
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
 /* delegate method for the form */
 -(void) controlTextDidChange:(NSNotification *)aNotification
 {
-  [self ok:[aNotification object]];
 }
 
 
