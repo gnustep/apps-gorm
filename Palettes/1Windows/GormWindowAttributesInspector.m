@@ -64,10 +64,6 @@
       [object setTitle: [[sender cellAtIndex: 0] stringValue] ]; 
     }
   /* title */
-  else if (sender == autosaveName)
-    {
-      [object setFrameAutosaveName: [[sender cellAtIndex: 0] stringValue] ]; 
-    }
   /* backing Type */
   else if (sender == backingMatrix)
     {
@@ -150,9 +146,9 @@
     }
 
   /* icon name  */
-  else if (sender == iconNameForm)
+  else if (sender == iconNameField)
     {
-      NSString *string = [[sender cellAtIndex: 0] stringValue];
+      NSString *string = [sender stringValue];
       NSImage *image;
       /* the clearButton is disabled if the form is empty, enabled otherwise */
       // This allows the user to set the icon, if they wish, for the mini window.
@@ -161,22 +157,12 @@
 	{
 	  image = [NSImage imageNamed: string];
 	  [object setMiniwindowImage: image];
-	  [clearButton setEnabled:YES];
 	}
       else
 	{
 	  // use the default, if the string is empty.
 	  [object setMiniwindowImage: nil];
-	  [clearButton setEnabled:NO];
-	  
 	}
-    }
-  /* clear the iconNameForm from clearButton */
-  else if (sender == clearButton)
-    {
-      [[iconNameForm cellAtIndex: 0] setStringValue: nil];
-      [object setMiniwindowImage: nil];
-      [clearButton setEnabled:NO];
     }
 
   [super ok: sender];
@@ -196,9 +182,6 @@
   /* Title */
   [[titleForm cellAtIndex: 0] setStringValue: [object title] ];
   
-  // Autosave name
-  [[autosaveName cellAtIndex: 0] setStringValue: [object frameAutosaveName] ];
-
   /* Backing */
   [backingMatrix selectCellWithTag: [object backingType] ];
 
@@ -217,15 +200,8 @@
   [dynamicDepthButton setState:[object hasDynamicDepthLimit]];
 		 
    /* Icon Name */
-  [[iconNameForm cellAtIndex: 0] setStringValue: 
-				   [[object miniwindowImage] name]];
+  [iconNameField setStringValue: [[object miniwindowImage] name]];
   
-  /* the clearButton is disabled if the form is empty, enabled otherwise */
-  if ( [[object miniwindowImage] name] == nil )
-    [clearButton setEnabled:NO];
-  else
-    [clearButton setEnabled:YES];
-
   /* background color*/
   [colorWell setColorWithoutAction: [object backgroundColor]];
   

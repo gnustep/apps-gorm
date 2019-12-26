@@ -6,8 +6,7 @@
 	Outlets = (
 	    backingMatrix,
 	    titleForm,
-	    iconNameForm,
-	    clearButton,
+	    iconNameField,
 	    colorWell,
 	    releaseButton,
 	    hideButton,

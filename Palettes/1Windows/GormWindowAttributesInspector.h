@@ -63,9 +63,7 @@
   /*Background Color */
   NSColorWell *colorWell;
   /* Miniaturized Window Icon */
-  NSForm *iconNameForm;
-  NSButton *clearButton;
-  NSForm *autosaveName;
+  NSForm *iconNameField;
 }
 
 @end

@@ -110,15 +110,21 @@
 - (void) ok: (id)sender
 {
   /* Size */
-  if (sender == sizeForm)
+  if (sender == sizeForm || sender == originForm)
     {
       NSRect rect;
-      rect = NSMakeRect([[sender cellAtIndex: 0] floatValue],
-			[[sender cellAtIndex: 1] floatValue],
-			[[sender cellAtIndex: 2] floatValue],
-			[[sender cellAtIndex: 3] floatValue]);
+      rect = NSMakeRect([[originForm cellAtIndex: 0] floatValue],
+			[[originForm cellAtIndex: 1] floatValue],
+			[[sizeForm cellAtIndex: 0] floatValue],
+			[[sizeForm cellAtIndex: 1] floatValue]);
 
       [object setFrame: rect display: YES];
+    }
+  /* Autosave Name */
+  else if (sender == autosaveName)
+    {
+      // TODO: is not saved yet (not encoded by object?)
+      [object setFrameAutosaveName: [sender stringValue] ];
     }
   /* Min Size */
   else if (sender == minForm)
@@ -168,6 +174,7 @@
 
   // Abort editing of the fields, so that the new values can be
   // populated.
+  [originForm abortEditing];
   [sizeForm abortEditing];
   [minForm abortEditing];
   [maxForm abortEditing];
@@ -175,10 +182,13 @@
   mask = [object autoPositionMask];
 
   frame = [object frame];
-  [[sizeForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
-  [[sizeForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
-  [[sizeForm cellAtIndex: 2] setFloatValue: NSWidth(frame)];
-  [[sizeForm cellAtIndex: 3] setFloatValue: NSHeight(frame)];
+  [[originForm cellAtIndex: 0] setFloatValue: NSMinX(frame)];
+  [[originForm cellAtIndex: 1] setFloatValue: NSMinY(frame)];
+  [[sizeForm cellAtIndex: 0] setFloatValue: NSWidth(frame)];
+  [[sizeForm cellAtIndex: 1] setFloatValue: NSHeight(frame)];
+
+  // Autosave name
+  [autosaveName setStringValue: [object frameAutosaveName] ];
 
   size = [object minSize];
   [[minForm cellAtIndex: 0] setFloatValue: size.width];

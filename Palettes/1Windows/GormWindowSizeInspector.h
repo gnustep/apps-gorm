@@ -42,7 +42,9 @@
 
 @interface GormWindowSizeInspector : IBInspector
 {
+  NSForm *originForm;
   NSForm *sizeForm;
+  NSForm *autosaveName;
   NSForm *minForm;
   NSForm *maxForm;
 
