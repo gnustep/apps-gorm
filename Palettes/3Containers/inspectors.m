@@ -53,10 +53,17 @@
 @end
 
 @implementation NSTableColumn (IBObjectAdditions)
+
 - (NSString *) inspectorClassName
 {
   return @"GormTableColumnAttributesInspector";
 }
+
+- (NSString*) sizeInspectorClassName
+{
+  return @"GormTableColumnSizeInspector";
+}
+
 @end
 
 @implementation	NSTableView (IBObjectAdditions)
