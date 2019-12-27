@@ -494,6 +494,7 @@ selectCellWithString: (NSString*)title
       NSRunAlertPanel(_(@"Problem making connection"),
 		      _(@"Please select a valid destination."), 
 		      _(@"OK"), nil, nil, nil);
+      return;
     }
   else if ([connectors containsObject: currentConnector] == YES)
     {
@@ -545,6 +546,11 @@ selectCellWithString: (NSString*)title
       [oldBrowser setPath: path];
     }
 
+  // Update image marker in "Outlets" browser
+  NSString *newPath = [newBrowser path];
+  [newBrowser loadColumnZero];
+  [newBrowser setPath:newPath];
+  
   // mark as edited.   
   [super ok: sender];
   [self updateButtons];
