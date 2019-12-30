@@ -25,8 +25,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/NSFileWrapper.h>
-#include <Foundation/NSString.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include <GormCore/GormWrapperLoader.h>
 #include <GormCore/GormDocument.h>
 #include <GormCore/GormPrivate.h>

@@ -25,19 +25,10 @@
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */ 
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormOutlineView.h"
-#include <Foundation/NSNotification.h>
-#include <Foundation/NSNull.h>
-#include <Foundation/NSException.h>
-#include <Foundation/NSDebug.h>
-#include <Foundation/NSIndexSet.h>
-#include <AppKit/NSTableColumn.h>
-#include <AppKit/NSCell.h>
-#include <AppKit/NSEvent.h>
-#include <AppKit/NSMenuItem.h>
-#include <AppKit/NSTextFieldCell.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSImage.h>
 
 static NSNotificationCenter *nc = nil;
 static const NSInteger current_version = 1;

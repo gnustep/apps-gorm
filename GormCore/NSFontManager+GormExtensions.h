@@ -25,7 +25,7 @@
 #ifndef INCLUDED_NSFontManager_GormExtensions_h
 #define INCLUDED_NSFontManager_GormExtensions_h
 
-#include <AppKit/NSFontManager.h>
+#include <AppKit/AppKit.h>
 
 @interface NSFontManager (GormExtensions)
 

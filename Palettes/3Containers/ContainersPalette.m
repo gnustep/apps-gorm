@@ -22,15 +22,14 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 #include <Foundation/Foundation.h>
-#include <AppKit/NSTableColumn.h>
-#include <AppKit/NSTabView.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSTabViewItem.h>
-#include <AppKit/NSScrollView.h>
+#include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormNSBrowser.h"
 #include "GormNSTableView.h"
 #include "GormNSOutlineView.h"
+
 #include <math.h>
 
 

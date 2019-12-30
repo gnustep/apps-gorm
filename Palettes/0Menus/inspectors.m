@@ -25,6 +25,7 @@
  */
 
 #include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 @implementation	NSMenu (IBObjectAdditions)

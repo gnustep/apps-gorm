@@ -22,10 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
 #include <AppKit/AppKit.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormViewWithSubviewsEditor.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormCore.h>
+
 #include "GormButtonEditor.h"
 
 #define _EO ((NSButton *)_editedObject)

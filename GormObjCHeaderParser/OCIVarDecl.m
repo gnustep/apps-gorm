@@ -24,6 +24,7 @@
 
 
 #include <Foundation/Foundation.h>
+
 #include <GormObjCHeaderParser/OCIVar.h>
 #include <GormObjCHeaderParser/OCIVarDecl.h>
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>

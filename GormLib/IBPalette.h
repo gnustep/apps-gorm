@@ -25,8 +25,8 @@
 #ifndef INCLUDED_IBPALETTE_H
 #define INCLUDED_IBPALETTE_H
 
-#include <Foundation/NSMapTable.h>
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBDocuments.h>
 #include <InterfaceBuilder/IBSystem.h>
 

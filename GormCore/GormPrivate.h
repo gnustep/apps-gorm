@@ -26,9 +26,11 @@
 #ifndef INCLUDED_GormPrivate_h
 #define INCLUDED_GormPrivate_h
 
-#include <InterfaceBuilder/IBApplicationAdditions.h>
-#include <InterfaceBuilder/IBInspector.h>
-#include <InterfaceBuilder/IBViewAdditions.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
+#include <GNUstepGUI/GSGormLoading.h>
+#include <GNUstepGUI/GSNibLoading.h>
+
 #include <GormCore/GormFilesOwner.h>
 #include <GormCore/GormDocument.h>
 #include <GormCore/GormInspectorsManager.h>
@@ -36,8 +38,6 @@
 #include <GormCore/GormPalettesManager.h>
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormClassEditor.h>
-#include <GNUstepGUI/GSGormLoading.h>
-#include <GNUstepGUI/GSNibLoading.h>
 
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;

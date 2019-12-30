@@ -22,8 +22,9 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+#include <AppKit/AppKit.h>
+
 #include "GormNSOutlineView.h"
-#include <AppKit/NSTableColumn.h>
 
 /* --------------------------------------------------------------- 
  * NSTableView dataSource

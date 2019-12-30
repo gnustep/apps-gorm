@@ -30,16 +30,11 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormNSComboBoxAttributesInspector.h"
+#include <AppKit/AppKit.h>
 
-#include <AppKit/NSButton.h>
-#include <GormCore/NSColorWell+GormExtensions.h>
-#include <AppKit/NSComboBox.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTableView.h>
-#include <AppKit/NSTextField.h>
+#include <GormCore/GormCore.h>
+
+#include "GormNSComboBoxAttributesInspector.h"
 
 
 /*

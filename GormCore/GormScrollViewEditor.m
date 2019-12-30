@@ -24,7 +24,9 @@
  */
 
 #include <AppKit/AppKit.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormPrivate.h"
 #include "GormBoxEditor.h"
 #include "GormViewKnobs.h"

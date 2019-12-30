@@ -25,7 +25,7 @@
 #ifndef INCLUDED_GormCustomView_h
 #define INCLUDED_GormCustomView_h
 
-#include <AppKit/NSTextField.h>
+#include <AppKit/AppKit.h>
 
 @interface GormCustomView : NSTextField
 {

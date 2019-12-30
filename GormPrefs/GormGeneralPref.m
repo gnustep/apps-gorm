@@ -22,17 +22,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormGeneralPref.h"
-
-#include <Foundation/NSUserDefaults.h>
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSButtonCell.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSMatrix.h>
-
-#include <GormCore/GormClassEditor.h>
 
 static NSString *BACKUPFILE=@"BackupFile";
 static NSString *INTTYPE=@"ClassViewType";

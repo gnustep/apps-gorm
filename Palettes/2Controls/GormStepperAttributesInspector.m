@@ -31,12 +31,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormStepperAttributesInspector.h"
-#include <Foundation/NSNotification.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSStepper.h>
-#include <AppKit/NSTextField.h>
 
 // Some simple inspectors.
 @interface GormStepperCellAttributesInspector : GormStepperAttributesInspector

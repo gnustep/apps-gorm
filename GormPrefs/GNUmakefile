@@ -38,6 +38,7 @@ GormPrefs_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 #
 
 GormPrefs_HEADER_FILES= \
+GormPrefs.h \
 GormGeneralPref.h \
 GormGuidelinePref.h \
 GormHeadersPref.h \

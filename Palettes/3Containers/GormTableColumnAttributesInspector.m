@@ -35,17 +35,11 @@
 */
 
 
-#import "GormTableColumnAttributesInspector.h"
-#import <GormCore/GormPrivate.h>
+#import <AppKit/AppKit.h>
 
-#import <AppKit/NSButton.h>
-#import <AppKit/NSMatrix.h>
-#import <AppKit/NSNibLoading.h>
-#import <AppKit/NSTextField.h>
-#import <AppKit/NSTableView.h>
-#import <AppKit/NSTableColumn.h>
-#import <AppKit/NSForm.h>
-#import <AppKit/NSPopUpButton.h>
+#import <GormCore/GormCore.h>
+
+#import "GormTableColumnAttributesInspector.h"
 
 /*
   IBObjectAdditions category

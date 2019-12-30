@@ -27,8 +27,9 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
-#include "GormSoundView.h"
 #include <AppKit/PSOperators.h>
+
+#include "GormSoundView.h"
 
 // add a data method to the NSSound class...
 @interface NSSound (SoundView)

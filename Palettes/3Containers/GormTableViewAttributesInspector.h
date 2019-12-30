@@ -33,7 +33,7 @@
 #ifndef	INCLUDED_GormTableViewAttributesInspector_h
 #define	INCLUDED_GormTableViewAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSColorWell;

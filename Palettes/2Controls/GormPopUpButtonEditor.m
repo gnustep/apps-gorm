@@ -1,7 +1,7 @@
 #include <AppKit/AppKit.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormControlEditor.h>
-#include <GormCore/GormViewWithSubviewsEditor.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormNSPopUpButton.h"
 
 #define _EO ((NSPopUpButton *)_editedObject)

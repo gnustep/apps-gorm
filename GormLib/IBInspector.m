@@ -22,12 +22,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include <InterfaceBuilder/IBApplicationAdditions.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBDocuments.h>
-#include <Foundation/NSString.h>
-#include <Foundation/NSNotification.h>
-#include <AppKit/NSWindow.h>
 
 static NSNotificationCenter *nc = nil;
 

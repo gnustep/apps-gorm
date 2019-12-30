@@ -24,7 +24,7 @@
 #ifndef	INCLUDED_GormTableViewEditor_h
 #define	INCLUDED_GormTableViewEditor_h
 
-#include <GormCore/GormViewWithSubviewsEditor.h>
+#include <GormCore/GormCore.h>
 
 @class GormNSTableView;
 

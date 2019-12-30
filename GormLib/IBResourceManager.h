@@ -25,8 +25,8 @@
 #ifndef INCLUDED_IBRESOURCEMANAGER_H
 #define INCLUDED_IBRESOURCEMANAGER_H
 
-#include <Foundation/NSObject.h>
-#include <Foundation/NSArray.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBProjectFiles.h>
 #include <InterfaceBuilder/IBDocuments.h>

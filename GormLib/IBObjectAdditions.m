@@ -22,8 +22,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSObject.h>
-#include <Foundation/NSObjCRuntime.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBObjectAdditions.h>
 
 // object additions -- object adopts protocol

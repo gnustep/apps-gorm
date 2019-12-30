@@ -28,7 +28,7 @@
 #define INCLUDED_GormTextViewSizeInspector_h
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
-#include <GormCore/GormViewSizeInspector.h>
+#include <GormCore/GormCore.h>
 
 @interface GormTextViewSizeInspector : GormViewSizeInspector
 @end

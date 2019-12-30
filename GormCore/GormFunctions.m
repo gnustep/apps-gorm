@@ -22,14 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormFunctions.h"
 #include "GormViewEditor.h"
-#include <AppKit/AppKit.h>
-#include <Foundation/NSDictionary.h>
-#include <Foundation/NSUserDefaults.h>
-#include <Foundation/NSFileManager.h>
-#include <Foundation/NSPathUtilities.h>
-#include <Foundation/NSString.h>
 #include "GormClassPanelController.h"
 
 // find all subitems for the given items...

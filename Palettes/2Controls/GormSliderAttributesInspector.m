@@ -31,14 +31,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormSliderAttributesInspector.h"
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSSlider.h>
 
 /* 
    IBObjectAdditions category

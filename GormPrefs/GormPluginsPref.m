@@ -22,12 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSUserDefaults.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSNibLoading.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormPluginManager.h>
+#include <GormCore/GormCore.h>
+
 #include "GormPluginsPref.h"
 
 @class NSTableView;

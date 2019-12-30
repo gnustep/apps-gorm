@@ -31,14 +31,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormProgressIndicatorAttributesInspector.h"
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSProgressIndicator.h>
-#include <AppKit/NSTextField.h>
 
 
 /*

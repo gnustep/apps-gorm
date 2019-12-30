@@ -39,6 +39,7 @@ srcdir = .
 include ../Version
 
 GormCore_HEADER_FILES = \
+	GormCore.h \
 	GormBoxEditor.h \
 	GormClassEditor.h \
 	GormClassInspector.h \

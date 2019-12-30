@@ -28,7 +28,8 @@
 #define	INCLUDED_GormCustomClassInspector_h
 
 #include <AppKit/AppKit.h>
-#include <InterfaceBuilder/IBInspector.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class GormClassManager;
 

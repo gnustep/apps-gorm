@@ -1,8 +1,10 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
-#include "GormHelpInspector.h"
+
 #include <GNUstepGUI/GSNibLoading.h>
+
+#include "GormHelpInspector.h"
 
 @implementation GormHelpInspector
 - (id) init

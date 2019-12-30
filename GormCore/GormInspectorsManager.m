@@ -22,13 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/NSNibConnector.h>
-#include <Foundation/NSException.h>
-#include <InterfaceBuilder/IBInspector.h>
-#include <InterfaceBuilder/IBInspectorMode.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
-#include <InterfaceBuilder/IBInspectorManager.h>
-#include <InterfaceBuilder/IBDocuments.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormPrivate.h"
 #include "GormImage.h"
 #include "GormSound.h"

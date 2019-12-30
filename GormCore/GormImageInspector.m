@@ -1,6 +1,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
 #include "GormImageInspector.h"
 #include "GormPrivate.h"
 #include "GormImage.h"

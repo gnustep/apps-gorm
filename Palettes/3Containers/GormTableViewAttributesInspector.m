@@ -29,17 +29,14 @@
   Clean up
   Author : Fabien Vallon <fabien@sonappart.net>
 */
+
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+#import <GormCore/GormCore.h>
+
 #import "GormTableViewAttributesInspector.h"
 #import "GormNSTableView.h"
-#import <GormCore/NSColorWell+GormExtensions.h>
-#import <GormCore/GormPrivate.h>
-#import <Foundation/NSNotification.h>
-#import <Foundation/NSSortDescriptor.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSColorWell.h>
-#import <AppKit/NSForm.h>
-#import <AppKit/NSMatrix.h>
-#import <AppKit/NSNibLoading.h>
 
 
 @implementation GormTableViewAttributesInspector

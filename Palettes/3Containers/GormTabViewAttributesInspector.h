@@ -34,7 +34,7 @@
 #ifndef	INCLUDED_GormTabViewAttributesInspector_h
 #define	INCLUDED_GormTabViewAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSForm;

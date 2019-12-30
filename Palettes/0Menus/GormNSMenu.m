@@ -22,12 +22,13 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormNSMenuView.h"
 #include "GormNSMenu.h"
-#include <Foundation/NSEnumerator.h>
-#include <AppKit/NSPopUpButton.h>
-#include <AppKit/NSPopUpButtonCell.h>
-#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @interface GormNSMenuWindow : NSPanel
 @end

@@ -35,7 +35,7 @@
 #ifndef	INCLUDED_GormPopUpButtonAttributesInspector_h
 #define	INCLUDED_GormPopUpButtonAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSForm;

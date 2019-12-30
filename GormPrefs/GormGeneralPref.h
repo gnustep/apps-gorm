@@ -1,8 +1,8 @@
 #ifndef INCLUDED_GormGeneralPref_h
 #define INCLUDED_GormGeneralPref_h
 
-#include <Foundation/NSObject.h>
-#include <AppKit/NSView.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 @interface GormGeneralPref : NSObject
 {

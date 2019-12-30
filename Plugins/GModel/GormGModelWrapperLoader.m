@@ -22,17 +22,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSNibConnector.h>
-#include <AppKit/NSFileWrapper.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
+
 #include <GNUstepGUI/GMArchiver.h>
 #include <GNUstepGUI/IMLoading.h>
 #include <GNUstepGUI/IMCustomObject.h>
 #include <GNUstepGUI/GSDisplayServer.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormCustomView.h>
-#include <GormCore/GormDocument.h>
-#include <GormCore/GormFunctions.h>
+
 #include "GormGModelWrapperLoader.h"
 
 static Class gmodel_class(NSString *className);

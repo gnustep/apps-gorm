@@ -1,4 +1,4 @@
-/* GormGModelModule.m
+/* GormGModelPlugin.m
  *
  * Copyright (C) 2007 Free Software Foundation, Inc.
  *
@@ -21,9 +21,10 @@
  * along with this program; if not, write to the Free Software
  */
 
-#include <GormCore/GormPlugin.h>
-#include <GormCore/GormWrapperLoader.h>
-#include <Foundation/NSArray.h>
+#include <Foundation/Foundation.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormGModelWrapperLoader.h"
 
 @interface GormGModelPlugin : GormPlugin

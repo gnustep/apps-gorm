@@ -27,6 +27,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
 #include "GormScrollViewAttributesInspector.h"
 
 @implementation GormScrollViewAttributesInspector
