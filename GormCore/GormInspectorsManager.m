@@ -401,11 +401,15 @@
 	    panel. Is is needed because subsequent changes of object selection lead to 
 	    the cluttered inspector's UI otherwise.
 	   */
-	  // CGFloat delta = [newView frame].size.height - [oldView frame].size.height;
+	  CGFloat delta = [newView frame].size.height - [oldView frame].size.height;
 
-	  // rect.size.height = rect.size.height + delta;
-	  // rect.origin.y = [panel frame].origin.y - delta;
-	  // [panel setFrame: rect display: YES];
+          rect.size.height += delta;
+          if (delta > 0)
+            {
+              rect.origin.y = [panel frame].origin.y - delta;
+              [panel setFrame: rect display: YES];
+            }
+          [panel setMinSize: rect.size];
 
 	  rect = [outer bounds];
 
