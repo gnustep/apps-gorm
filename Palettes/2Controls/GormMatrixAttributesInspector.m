@@ -129,9 +129,11 @@ NSUInteger colsStepperValue;
         {
           for (int r = 0; r < [object numberOfRows]; r++)
             {
-              [object putCell: [object prototype] atRow:r column:c];
+              [object putCell: [[object prototype] copy] atRow:r column:c];
             }          
         }
+      [object deselectAllCells];
+      [object selectCellAtRow: 0 column: 0];
     }
   else if (sender == selRectSwitch)
     {
