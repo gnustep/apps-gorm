@@ -125,8 +125,13 @@ NSUInteger colsStepperValue;
     }
   else if (sender == propagateSwitch)
     {
-      //Nothing for the moment - must implement Prototype
-      // item in the pull down menu
+      for (int c = 0; c < [object numberOfColumns]; c++)
+        {
+          for (int r = 0; r < [object numberOfRows]; r++)
+            {
+              [object putCell: [object prototype] atRow:r column:c];
+            }          
+        }
     }
   else if (sender == selRectSwitch)
     {
@@ -234,7 +239,7 @@ NSUInteger colsStepperValue;
     }
    else
     {
-       [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
+      [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
     }
   
   [super ok:sender];
@@ -265,9 +270,14 @@ NSUInteger colsStepperValue;
 
   [backgroundColorWell setColorWithoutAction: [object backgroundColor]];
   [drawsBackgroundSwitch setState: 
-    ([object drawsBackground]) ? NSOnState : NSOffState];
+                           ([object drawsBackground]) ? NSOnState : NSOffState];
 
   [modeMatrix selectCellWithTag: [(NSMatrix *)object mode]];
+  
+  if ([object prototype] == nil)
+    [prototypeMatrix putCell: [object cellAtRow:0 column:0] atRow:0 column:0];
+  else
+    [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
   
   [selRectSwitch setState: 
     ([object isSelectionByRect]) ? NSOnState : NSOffState];
