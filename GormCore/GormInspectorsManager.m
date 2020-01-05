@@ -392,9 +392,9 @@
       newView = [[inspector window] contentView];
       if (newView != nil && newView != oldView)
 	{   
-	  id initialResponder = [[inspector window] initialFirstResponder];
-	  NSView	*outer = [panel contentView];
-	  NSRect	rect = [panel frame];
+	  id     initialResponder = [[inspector window] initialFirstResponder];
+	  NSView *outer = [panel contentView];
+	  NSRect rect = [panel frame];
 	  /*
 	    We should compute the delta between the heights of the old inspector view 
 	    and the new one. The delta will be used to compute the size of the inspector 
@@ -409,6 +409,7 @@
               rect.origin.y = [panel frame].origin.y - delta;
               [panel setFrame: rect display: YES];
             }
+          rect.size.width = [panel minSize].width;
           [panel setMinSize: rect.size];
 
 	  rect = [outer bounds];
