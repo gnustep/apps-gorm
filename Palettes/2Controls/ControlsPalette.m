@@ -81,7 +81,7 @@
 - (void) willInspectObject: (NSNotification *)notification
 {
   id o = [notification object];
-  if ([o respondsToSelector: @selector(prototype)])
+  if ([o respondsToSelector: @selector(prototype)] && [o prototype])
     {
       id prototype = [o prototype];
       NSString *ident = NSStringFromClass([prototype class]);
