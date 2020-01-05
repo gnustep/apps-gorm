@@ -30,6 +30,8 @@
 #include <AppKit/NSPasteboard.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSSound.h>
+#include <InterfaceBuilder/IBInspectorManager.h>
+#include <InterfaceBuilder/IBInspectorMode.h>
 #include "GormNSPopUpButton.h"
 
 @interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates>
@@ -44,6 +46,13 @@
       // Make ourselves a delegate, so that when the sound/image is dragged in, 
       // this code is called...
       [NSView registerViewResourceDraggingDelegate: self];
+      
+      // subscribe to the notification...      
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+           selector: @selector(willInspectObject:)
+               name: IBWillInspectObjectNotification
+             object: nil];
     }
 
   return self;
@@ -67,6 +76,22 @@
   [v addItemWithTitle: @"Item 3"];
   [contents addSubview: v];
   RELEASE(v);
+}
+
+- (void) willInspectObject: (NSNotification *)notification
+{
+  id o = [notification object];
+  if ([o respondsToSelector: @selector(prototype)])
+    {
+      id prototype = [o prototype];
+      NSString *ident = NSStringFromClass([prototype class]);
+      [[IBInspectorManager sharedInspectorManager]
+		addInspectorModeWithIdentifier: ident
+                                     forObject: o
+                                localizedLabel: _(@"Prototype")
+                            inspectorClassName: [prototype inspectorClassName]
+                                      ordering: -1.0];
+    }
 }
 
 /**
