@@ -82,6 +82,23 @@
 }
 
 /*
+   NSApplication override to make Inspector's shortcuts available globally
+*/
+- (void) sendEvent: (NSEvent *)theEvent
+{
+  if ([theEvent type] == NSKeyDown)
+    {
+      NSPanel *inspector = [[self inspectorsManager] panel];
+      if ([inspector performKeyEquivalent: theEvent] != NO)
+        {
+          [inspector orderFront: self];
+          return;
+        }
+    }
+  [super sendEvent: theEvent];
+}
+
+/*
    NSApp
 */
 - (id) init
