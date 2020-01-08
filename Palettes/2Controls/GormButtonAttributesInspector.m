@@ -102,7 +102,7 @@ NSString *rtString = nil;
   if (highlight == NSChangeBackgroundCellMask)
     {
       if (stateby == NSNoCellMask)
-	type = NSMomentaryLight;
+	type = NSMomentaryLightButton;
       else 
 	type = NSOnOffButton;
     }
