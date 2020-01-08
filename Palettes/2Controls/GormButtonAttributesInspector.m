@@ -98,7 +98,7 @@ NSString *rtString = nil;
   NSDebugLog(@"highlight = %d, stateby = %d",
     (int)[cell highlightsBy],(int)[cell showsStateBy]);
   
-  type = NSMomentaryPushButton;
+  type = NSMomentaryPushInButton;
   if (highlight == NSChangeBackgroundCellMask)
     {
       if (stateby == NSNoCellMask)
@@ -109,7 +109,7 @@ NSString *rtString = nil;
   else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask))
     {
       if (stateby == NSNoCellMask)
-	type = NSMomentaryPushButton;
+	type = NSMomentaryPushInButton;
       else
 	type = NSPushOnPushOffButton;
     }
@@ -451,9 +451,7 @@ NSString *rtString = nil;
 	  [cmdMod setState: NSOnState];
 	}
 
-      [typeButton selectItemAtIndex: 
-		    [typeButton indexOfItemWithTag: 
-				  [self buttonTypeForObject: obj]]];
+      [typeButton selectItemWithTag: [self buttonTypeForObject: obj]];
 
       [bezelButton selectItemAtIndex:
 		     [bezelButton indexOfItemWithTag: [obj bezelStyle]]];
