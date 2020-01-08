@@ -125,12 +125,22 @@ NSUInteger colsStepperValue;
     }
   else if (sender == propagateSwitch)
     {
+      NSButtonCell *cell;
+      NSInteger    tag;
+      NSString     *title;
       for (int c = 0; c < [object numberOfColumns]; c++)
         {
           for (int r = 0; r < [object numberOfRows]; r++)
             {
-              [object putCell: [[object prototype] copy] atRow:r column:c];
-            }          
+              cell = [object cellAtRow: r column: c];
+              tag = [cell tag];
+              title = [cell title];
+              cell = [[object prototype] copy];
+              [cell setTag: tag];
+              [cell setTitle: title];
+              [object putCell:cell atRow:r column:c];
+              [cell release];
+            }
         }
       [object deselectAllCells];
       [object selectCellAtRow: 0 column: 0];
