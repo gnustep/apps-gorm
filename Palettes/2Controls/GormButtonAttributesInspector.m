@@ -265,16 +265,6 @@ NSString *rtString = nil;
     {
       [obj setBezelStyle: [[sender selectedItem] tag]];
     }
-  else if ([sender isKindOfClass: [NSMenuItem class]] )
-    {
-      /*
-       * In old NSPopUpButton implementation we do receive
-       * the selected menu item here. Not the PopUpbutton 'typeButton'
-       * FIXME: Ideally we should also test if the menu item belongs
-       * to the 'type button' control. How to do that?
-       */
-      [(NSButton *)obj setButtonType: [sender tag]];
-    }
   else if (sender == altMod)
     {
       if ([altMod state] == NSOnState)
