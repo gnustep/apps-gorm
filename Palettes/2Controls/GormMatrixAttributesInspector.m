@@ -182,9 +182,10 @@ NSUInteger colsStepperValue;
 	      [object addColumn];
 	    }
 	}
-      //      [object sizeToCells];
+      NSRect oFrame = [[object superview] frame];
+      [object sizeToCells];
       [object setNeedsDisplay: YES];
-      [[object superview] setNeedsDisplay: YES];
+      [[[object window] contentView] setNeedsDisplayInRect: oFrame];
     }
   else if(sender == rowsStepper)
     {
@@ -302,7 +303,7 @@ NSUInteger colsStepperValue;
 
 
 /* delegate method for tag Form */
--(void) controlTextDidChange:(NSNotification*) aNotification
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   [self ok:[aNotification object]];
 }
