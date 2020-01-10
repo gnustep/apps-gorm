@@ -13,9 +13,10 @@
 	    prototypeMatrix,
 	    selRectSwitch,
 	    tagForm,
-	    dimensionsForm,
+	    rowsForm,
 	    colsStepper,
-	    rowsStepper
+	    rowsStepper,
+	    colsForm
 	);
 	Super = IBInspector;
     };

@@ -59,13 +59,25 @@
 NSUInteger rowsStepperValue;
 NSUInteger colsStepperValue;
 
-- (void) _displayObject: (id) obj
+- (void) _displayObject: (id)obj resize: (BOOL)resize
 {
   id     document = [(id<IB>)NSApp documentForObject: obj];
   id     editor = [document editorForObject: obj create: NO];
   NSRect eoFrame = [editor frame];
 
-  [obj sizeToCells];
+  if (resize == NO)
+    {
+      NSRect rect = [obj frame];
+      NSSize cell = [obj cellSize];
+      NSSize inter = [obj intercellSpacing];
+      cell.width = (rect.size.width + inter.width) / colsStepperValue - inter.width;
+      cell.height = (rect.size.height + inter.height) / rowsStepperValue - inter.height;
+      [object setCellSize: cell];
+    }
+  else
+    {
+      [obj sizeToCells];
+    }
   [obj setNeedsDisplay: YES];
   [[editor superview] setNeedsDisplayInRect: GormExtBoundsForRect(eoFrame)];
 }
@@ -166,10 +178,10 @@ NSUInteger colsStepperValue;
     {
       [object setTag: [[sender cellAtIndex: 0] intValue]];
     }
-  else if (sender == dimensionsForm)
+  else if (sender == rowsForm || sender == colsForm)
     {
-      int rows = [[sender cellAtIndex: 0] intValue];
-      int cols = [[sender cellAtIndex: 1] intValue];
+      int rows = [[rowsForm cellAtIndex: 0] intValue];
+      int cols = [[colsForm cellAtIndex: 0] intValue];
       int num;
 
       while((num = [object numberOfRows]) != rows)
@@ -195,15 +207,12 @@ NSUInteger colsStepperValue;
 	      [object addColumn];
 	    }
 	}
-      [self _displayObject: object];
+      [self _displayObject: object resize: YES];
     }
   else if(sender == rowsStepper)
     {
       int delta = [sender intValue] - rowsStepperValue;
       int num = [object numberOfRows];
-      NSRect rect = [object frame];
-      NSSize cell = [object cellSize];
-      NSSize inter = [object intercellSpacing];
 
       while(delta > 0)
 	{
@@ -217,20 +226,15 @@ NSUInteger colsStepperValue;
 	  num--;
 	  delta++;
 	}
-      cell.height = (rect.size.height + inter.height) / num - inter.height;
-      [object setCellSize: cell];
-      [[dimensionsForm cellAtIndex: 0] setIntValue: num];
-      [sender setIntValue: rowsStepperValue];
-      [dimensionsForm setNeedsDisplay: YES];
-      [self _displayObject: object];
+      [[rowsForm cellAtIndex: 0] setIntValue: num];
+      [sender setIntValue: num];
+      rowsStepperValue = num;
+      [self _displayObject: object resize: YES];
     }
   else if(sender == colsStepper)
     {
       int delta = [sender intValue] - colsStepperValue;
       int num = [object numberOfColumns];
-      NSRect rect = [object frame];
-      NSSize cell = [object cellSize];
-      NSSize inter = [object intercellSpacing];
 
       while(delta > 0)
 	{
@@ -244,12 +248,10 @@ NSUInteger colsStepperValue;
 	  num--;
 	  delta++;
 	}
-      cell.width = (rect.size.width + inter.width) / num - inter.width;
-      [object setCellSize: cell];
-      [[dimensionsForm cellAtIndex: 1] setIntValue: num];
-      [sender setIntValue: colsStepperValue];
-      [dimensionsForm setNeedsDisplay: YES];
-      [self _displayObject: object];
+      [[colsForm cellAtIndex: 0] setIntValue: num];
+      [sender setIntValue: num];
+      colsStepperValue = num;
+      [self _displayObject: object resize: YES];
     }
 
   /*
@@ -274,7 +276,6 @@ NSUInteger colsStepperValue;
 {
   if (object == nil)
       return;
-
 
   [autosizeSwitch setState: 
     ([object autosizesCells]) ? NSOnState : NSOffState];
@@ -305,8 +306,12 @@ NSUInteger colsStepperValue;
   [selRectSwitch setState: 
     ([object isSelectionByRect]) ? NSOnState : NSOffState];
   [[tagForm cellAtIndex: 0] setIntValue: [object tag]];
-  [[dimensionsForm cellAtIndex: 0] setIntValue: [object numberOfRows]];
-  [[dimensionsForm cellAtIndex: 1] setIntValue: [object numberOfColumns]];
+  rowsStepperValue = [object numberOfRows];
+  [[rowsForm cellAtIndex: 0] setIntValue: rowsStepperValue];
+  [rowsStepper setIntValue: rowsStepperValue];
+  colsStepperValue = [object numberOfColumns];
+  [[colsForm cellAtIndex: 0] setIntValue: colsStepperValue];
+  [colsStepper setIntValue: colsStepperValue];
 
   [super revert:sender];
 }

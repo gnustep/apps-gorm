@@ -53,7 +53,8 @@
   NSMatrix *prototypeMatrix;
   NSButton *selRectSwitch;
   NSForm *tagForm;
-  NSForm *dimensionsForm;
+  NSForm *rowsForm;
+  NSForm *colsForm;
   NSStepper *rowsStepper;
   NSStepper *colsStepper;
 }
