@@ -25,6 +25,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
 #include "GormClassPanelController.h"
 #include "GormPrivate.h"
 

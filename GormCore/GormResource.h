@@ -28,10 +28,9 @@
 #ifndef INCLUDED_GormResource_h
 #define INCLUDED_GormResource_h
 
-#include <Foundation/NSObject.h>
-#include <InterfaceBuilder/IBProjectFiles.h>
-#include <InterfaceBuilder/IBProjects.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
+#include <Foundation/Foundation.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSString, NSData;
 

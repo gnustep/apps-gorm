@@ -33,7 +33,7 @@
 #ifndef INCLUDED_GormTextViewAttributesInspector_h
 #define INCLUDED_GormTextViewAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSColorWell;
 @class NSMatrix;

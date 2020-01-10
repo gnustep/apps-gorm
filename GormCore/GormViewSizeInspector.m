@@ -22,11 +22,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormPrivate.h"
 #include "GormViewKnobs.h"
 #include "GormViewSizeInspector.h"
 #include "GormViewWindow.h"
-#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 @implementation GormViewSizeInspector
 

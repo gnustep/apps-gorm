@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
 
 #ifndef INCLUDED_OCClass_h
 #define INCLUDED_OCClass_h

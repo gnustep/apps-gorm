@@ -23,20 +23,10 @@
 */
 
 #include <Foundation/Foundation.h>
-#include <Foundation/NSFormatter.h>
-#include <Foundation/NSNotification.h>
-#include <Foundation/NSNumberFormatter.h>
-#include <AppKit/NSComboBox.h>
-#include <AppKit/NSScrollView.h>
-#include <AppKit/NSImage.h>
-#include <AppKit/NSImageView.h>
-#include <AppKit/NSTextContainer.h>
-#include <AppKit/NSTextView.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSClipView.h>
-#include <InterfaceBuilder/IBPalette.h>
-#include <InterfaceBuilder/IBViewResourceDragging.h>
-#include <GormCore/GormPrivate.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormCore.h>
 
 /* -----------------------------------------------------------
  * Some additions to the NSNumberFormatter Class specific to Gorm

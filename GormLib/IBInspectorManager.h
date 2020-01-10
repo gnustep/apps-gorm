@@ -25,7 +25,8 @@
 #ifndef INCLUDED_IBINSPECTORMANAGER_H
 #define INCLUDED_IBINSPECTORMANAGER_H
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBSystem.h>
 
 @class NSString, NSMutableArray;

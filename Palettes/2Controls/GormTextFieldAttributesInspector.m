@@ -31,18 +31,12 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
 
 #include "GormTextFieldAttributesInspector.h"
-
-#include <GormCore/NSColorWell+GormExtensions.h>
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTextField.h>
 
 
 /*

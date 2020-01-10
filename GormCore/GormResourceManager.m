@@ -22,12 +22,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSArray.h>
-#include <Foundation/NSArchiver.h>
-#include <AppKit/NSSound.h>
-#include <AppKit/NSImage.h>
-#include <AppKit/NSPasteboard.h>
-#include <InterfaceBuilder/IBPalette.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormSound.h"
 #include "GormImage.h"

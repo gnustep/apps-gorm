@@ -1,4 +1,5 @@
-#include <GormCore/GormPrivate.h>
+#include <GormCore/GormCore.h>
+
 #include "GormNSPopUpButton.h"
 
 Class _gormnspopupbuttonCellClass = 0;

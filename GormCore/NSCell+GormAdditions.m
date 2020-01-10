@@ -23,7 +23,8 @@
  */
 
 #include <Foundation/Foundation.h>
-#include <AppKit/NSText.h>
+#include <AppKit/AppKit.h>
+
 #include "NSCell+GormAdditions.h"
 
 @implementation NSCell (GormAdditions)

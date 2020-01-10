@@ -25,7 +25,8 @@
 #ifndef INCLUDED_IBPLUGIN_H
 #define INCLUDED_IBPLUGIN_H
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBDocuments.h>
 
 // forward references

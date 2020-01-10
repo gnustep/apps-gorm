@@ -24,6 +24,7 @@
 
 
 #include <Foundation/Foundation.h>
+
 #include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
 
 @implementation NSScanner (OCHeaderParser)

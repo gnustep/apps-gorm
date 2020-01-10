@@ -32,17 +32,12 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormWindowSizeInspector.h"
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSPanel.h>
-#include <AppKit/NSWindow.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 
 #include <GNUstepGUI/GSGormLoading.h>
+
+#include "GormWindowSizeInspector.h"
 
 /*
   IBObjectAdditions category for NSPanel

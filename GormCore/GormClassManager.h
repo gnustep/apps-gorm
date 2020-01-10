@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <InterfaceBuilder/IBPalette.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #ifndef INCLUDED_GormClassManager_h
 #define INCLUDED_GormClassManager_h

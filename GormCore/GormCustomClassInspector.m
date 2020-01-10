@@ -27,6 +27,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
 #include "GormCustomClassInspector.h"
 #include "GormPrivate.h"
 #include "GormClassManager.h"

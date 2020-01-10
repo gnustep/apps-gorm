@@ -24,7 +24,8 @@
 #ifndef	INCLUDED_GormPlacementInfo_h
 #define	INCLUDED_GormPlacementInfo_h
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSView, NSMutableArray;

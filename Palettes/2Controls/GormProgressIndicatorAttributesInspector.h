@@ -35,7 +35,7 @@
 #ifndef	INCLUDED_GormProgressIndicatorAttributesInspector_h
 #define	INCLUDED_GormProgressIndicatorAttributesInspector_h
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSTextField;

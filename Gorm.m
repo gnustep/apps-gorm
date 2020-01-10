@@ -25,17 +25,10 @@
  */
 
 
-#include <GormCore/GormGenericEditor.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormFontViewController.h>
-#include <GormCore/GormSetNameController.h>
-#include <GormCore/GormFunctions.h>
-#include <GormCore/GormPluginManager.h>
-#include <GormCore/GormDocumentController.h>
-#include <GormCore/GormServer.h>
+#include <GormCore/GormCore.h>
+#include <GormPrefs/GormPrefs.h>
 
 #include <GNUstepBase/GSObjCRuntime.h>
-#include <GormPrefs/GormPrefController.h>
 
 @interface Gorm : NSApplication <IB, Gorm>
 {

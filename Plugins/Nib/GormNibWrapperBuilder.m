@@ -26,17 +26,10 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-#include <GNUstepGUI/GSNibLoading.h>
 
-#include <GormCore/GormWrapperBuilder.h>
-#include <GormCore/GormClassManager.h>
-#include <GormCore/GormFilePrefsManager.h>
-#include <GormCore/GormDocument.h>
-#include <GormCore/GormProtocol.h>
-#include <GormCore/GormPalettesManager.h>
-#include <GormCore/GormCustomView.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormFilesOwner.h>
+#include <GormCore/GormCore.h>
+
+#include <GNUstepGUI/GSNibLoading.h>
 
 // allow access to a private category...
 @interface NSIBObjectData (BuilderAdditions)

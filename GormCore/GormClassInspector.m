@@ -27,13 +27,15 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormClassInspector.h"
 #include "GormClassManager.h"
 #include "GormDocument.h"
 #include "GormFunctions.h"
 #include "GormPrivate.h"
 #include "GormProtocol.h"
-#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 NSNotificationCenter *nc = nil;
 

@@ -22,6 +22,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+
+#import <Foundation/Foundation.h>
+
+#ifndef GNUSTEP
+//! Project version number for InterfaceBuilder.
+FOUNDATION_EXPORT double InterfaceBuilderVersionNumber;
+
+//! Project version string for InterfaceBuilder.
+FOUNDATION_EXPORT const unsigned char InterfaceBuilderVersionString[];
+#endif
+
 #ifndef INCLUDED_INTERFACEBUILDER_H
 #define INCLUDED_INTERFACEBUILDER_H
  
@@ -34,12 +45,13 @@
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBInspector.h>
 #include <InterfaceBuilder/IBInspectorManager.h>
+#include <InterfaceBuilder/IBInspectorMode.h>
 #include <InterfaceBuilder/IBObjectAdditions.h>
 #include <InterfaceBuilder/IBObjectProtocol.h>
 #include <InterfaceBuilder/IBPalette.h>
 #include <InterfaceBuilder/IBPlugin.h>
-#include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBProjectFiles.h>
+#include <InterfaceBuilder/IBProjects.h>
 #include <InterfaceBuilder/IBResourceManager.h>
 #include <InterfaceBuilder/IBSystem.h>
 #include <InterfaceBuilder/IBViewAdditions.h>

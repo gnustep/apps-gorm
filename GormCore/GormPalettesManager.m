@@ -23,12 +23,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include "GormPrivate.h"
-#include <Foundation/NSArray.h>
-#include <Foundation/NSSet.h>
-#include <AppKit/NSImage.h>
-#include <AppKit/NSSound.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include <GNUstepBase/GSObjCRuntime.h>
+
+#include "GormPrivate.h"
 #include "GormFunctions.h"
 
 #define BUILTIN_PALETTES @"BuiltinPalettes"

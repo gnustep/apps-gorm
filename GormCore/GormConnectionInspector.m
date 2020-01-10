@@ -24,8 +24,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/NSNibConnector.h>
-#include <InterfaceBuilder/IBInspector.h>
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormPrivate.h"
 #include "GormConnectionInspector.h"

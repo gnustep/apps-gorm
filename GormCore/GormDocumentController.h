@@ -29,7 +29,7 @@
 #ifndef INCLUDED_GormDocumentController_h
 #define INCLUDED_GormDocumentController_h
 
-#include <AppKit/NSDocumentController.h>
+#include <AppKit/AppKit.h>
 
 typedef enum 
 {

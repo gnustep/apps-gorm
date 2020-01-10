@@ -25,7 +25,7 @@
 #ifndef INCLUDED_ParserFunctions_h
 #define INCLUDED_ParserFunctions_h
 
-#include <Foundation/NSString.h>
+#include <Foundation/Foundation.h>
 
 BOOL lookAhead(NSString *stringToScan, NSString *stringToFind);
 BOOL lookAheadForToken(NSString *stringToScan, NSString *stringToFind);

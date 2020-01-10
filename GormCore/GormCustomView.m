@@ -22,17 +22,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <GormCore/GormCustomView.h>
-#include <GormCore/GormPrivate.h>
-#include <GormCore/GormOpenGLView.h>
 
-#include <AppKit/NSColor.h>
-#include <AppKit/NSGraphics.h>
-#include <AppKit/NSFont.h>
+#include <AppKit/AppKit.h>
 #include <AppKit/NSNibLoading.h>
 
 #include <GNUstepGUI/GSGormLoading.h>
 #include <GNUstepGUI/GSNibLoading.h>
+
+#include <GormCore/GormCustomView.h>
+#include <GormCore/GormPrivate.h>
+#include <GormCore/GormOpenGLView.h>
 
 @class GSCustomView;
 

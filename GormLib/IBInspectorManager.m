@@ -22,13 +22,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/NSObject.h>
-#include <Foundation/NSString.h>
-#include <Foundation/NSDictionary.h>
-#include <Foundation/NSArray.h>
-#include <Foundation/NSEnumerator.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBInspectorManager.h>
 #include <InterfaceBuilder/IBInspectorMode.h>
+
 #include <math.h>
 
 static IBInspectorManager *_sharedInspectorManager = nil;

@@ -1,6 +1,7 @@
 /* All Rights reserved */
 
 #include <AppKit/AppKit.h>
+
 #include "GormNSSplitViewInspector.h"
 
 @implementation NSSplitView (IBObjectAdditions)

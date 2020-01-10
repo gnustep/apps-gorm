@@ -33,7 +33,7 @@
 #ifndef INCLUDED_GormMenuAttributesInspector_h_
 #define INCLUDED_GormMenuAttributesInspector_h_
 
-#include <InterfaceBuilder/IBInspector.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSButton;
 @class NSMatrix;

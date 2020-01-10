@@ -31,14 +31,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
-#include "GormPopUpButtonAttributesInspector.h"
-
 #include <Foundation/Foundation.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSPopUpButton.h>
+#include <AppKit/AppKit.h>
+
+#include "GormPopUpButtonAttributesInspector.h"
 
 /*
   IBObjectAdditions category

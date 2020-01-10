@@ -26,7 +26,7 @@
 #ifndef INCLUDED_GormPalettesManager_h
 #define INCLUDED_GormPalettesManager_h
 
-#include <Foundation/NSObject.h>
+#include <Foundation/Foundation.h>
 
 @class NSMutableArray, NSMutableDictionary, NSDictionary, NSArray, NSBundle;
 @class NSPanel, NSMatrix, NSView;

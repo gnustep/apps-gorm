@@ -1,3 +1,5 @@
+#include <AppKit/AppKit.h>
+
 #include "GormPrefController.h"
 #include "GormGeneralPref.h"
 #include "GormHeadersPref.h"
@@ -5,11 +7,6 @@
 #include "GormPalettesPref.h"
 #include "GormPluginsPref.h"
 #include "GormGuidelinePref.h"
-
-#include <AppKit/NSBox.h>
-#include <AppKit/NSPopUpButton.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSWindow.h>
 
 @implementation GormPrefController
 

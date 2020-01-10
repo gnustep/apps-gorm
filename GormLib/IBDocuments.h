@@ -25,7 +25,8 @@
 #ifndef INCLUDED_IBDOCUMENTS_H
 #define INCLUDED_IBDOCUMENTS_H
 
-#include <Foundation/NSGeometry.h>
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBConnectors.h>
 #include <InterfaceBuilder/IBSystem.h>

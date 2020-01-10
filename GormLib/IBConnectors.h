@@ -25,9 +25,10 @@
 #ifndef INCLUDED_IBCONNECTORS_H
 #define INCLUDED_IBCONNECTORS_H
 
-#include <Foundation/NSObject.h>
-#include <AppKit/NSApplication.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 #include <AppKit/NSNibConnector.h>
+
 #include <InterfaceBuilder/IBSystem.h>
 
 // forward declarations

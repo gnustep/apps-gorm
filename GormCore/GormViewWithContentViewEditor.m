@@ -23,6 +23,7 @@
  */
 
 #include <AppKit/AppKit.h>
+
 #include "GormPrivate.h"
 #include "GormViewWithContentViewEditor.h"
 #include "GormPlacementInfo.h"

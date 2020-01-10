@@ -32,15 +32,10 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
 #include "GormBrowserAttributesInspector.h"
-
-#include <Foundation/NSNotification.h>
-
-#include <AppKit/NSBrowser.h>
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSTextField.h>
 
 @implementation GormBrowserAttributesInspector
 

@@ -1,11 +1,10 @@
-#include "GormGuidelinePref.h"
-#include <GormCore/GormFunctions.h>
 
-#include <Foundation/NSUserDefaults.h>
-#include <AppKit/NSWindow.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSColorWell.h>
-#include <AppKit/NSColor.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
+
+#include "GormGuidelinePref.h"
 
 @implementation GormGuidelinePref
 

@@ -21,10 +21,11 @@
  * along with this program; if not, write to the Free Software
  */
 
-#include <GormCore/GormPlugin.h>
-#include <GormCore/GormWrapperLoader.h>
+#include <Foundation/Foundation.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormXibWrapperLoader.h"
-#include <Foundation/NSArray.h>
 
 @interface GormXibPlugin : GormPlugin
 @end

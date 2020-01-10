@@ -23,7 +23,7 @@
  */
 
 
-#include <Foundation/NSScanner.h>
+#include <Foundation/Foundation.h>
 
 #ifndef INCLUDED_NSScanner_OCHeaderParser_h
 #define INCLUDED_NSScanner_OCHeaderParser_h

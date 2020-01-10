@@ -30,16 +30,13 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <AppKit/AppKit.h>
+
+// #warning GNUstep bug ?
+#include <GormCore/GormCore.h>
+
 #include "GormTextViewAttributesInspector.h"
 
-// #warning GNUstep bug ? 
-#include <GormCore/NSColorWell+GormExtensions.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSScrollView.h>
-#include <AppKit/NSTextView.h>
 
 @implementation GormTextViewAttributesInspector
 

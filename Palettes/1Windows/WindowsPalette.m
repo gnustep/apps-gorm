@@ -23,14 +23,8 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
-#include <InterfaceBuilder/IBApplicationAdditions.h>
-#include <InterfaceBuilder/IBInspector.h>
-#include <InterfaceBuilder/IBPalette.h>
-
-#include <GormCore/GormDocument.h>
-#include <GormCore/NSColorWell+GormExtensions.h>
-#include <GormCore/GormNSPanel.h>
-#include <GormCore/GormNSWindow.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
+#include <GormCore/GormCore.h>
 
 #include "GormWindowSizeInspector.h"
 #include "WindowsPalette.h"

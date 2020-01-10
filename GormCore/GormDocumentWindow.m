@@ -21,12 +21,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
+#include <AppKit/AppKit.h>
+
+#include <InterfaceBuilder/InterfaceBuilder.h>
+
 #include "GormDocumentWindow.h"
 #include "GormPrivate.h"
-
-#include <GormLib/IBResourceManager.h>
-#include <AppKit/NSDragging.h>
-#include <AppKit/NSPasteboard.h>
 
 @implementation GormDocumentWindow
 /*

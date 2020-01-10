@@ -25,8 +25,10 @@
 #ifndef INCLUDED_IBVIEWPROTOCOL_H
 #define INCLUDED_IBVIEWPROTOCOL_H
 
+#include <Foundation/Foundation.h>
+
 #include <InterfaceBuilder/IBDefines.h>
-#include <Foundation/NSGeometry.h>
+
 
 // forward references
 @class NSColor;

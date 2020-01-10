@@ -33,18 +33,12 @@
   Author : Fabien Vallon <fabien@sonappart.net>
 */
 
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+
+#include <GormCore/GormCore.h>
+
 #include "GormFormAttributesInspector.h"
-#include <GormCore/NSColorWell+GormExtensions.h>
-
-#include <Foundation/NSNotification.h>
-#include <Foundation/NSDebug.h>
-
-#include <AppKit/NSButton.h>
-#include <AppKit/NSForm.h>
-#include <AppKit/NSMatrix.h>
-#include <AppKit/NSNibLoading.h>
-#include <AppKit/NSFormCell.h>
-#include <AppKit/NSStepper.h>
 
 /*
   IBObjectAdditions category
