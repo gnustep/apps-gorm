@@ -44,6 +44,8 @@
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSStepper.h>
 
+#include <InterfaceBuilder/IBApplicationAdditions.h>
+#include <GormCore/GormViewKnobs.h>
 
 @implementation	NSMatrix (IBObjectAdditions)
 - (NSString*) inspectorClassName
@@ -56,6 +58,17 @@
 
 NSUInteger rowsStepperValue;
 NSUInteger colsStepperValue;
+
+- (void) _displayObject: (id) obj
+{
+  id     document = [(id<IB>)NSApp documentForObject: obj];
+  id     editor = [document editorForObject: obj create: NO];
+  NSRect eoFrame = [editor frame];
+
+  [obj sizeToCells];
+  [obj setNeedsDisplay: YES];
+  [[editor superview] setNeedsDisplayInRect: GormExtBoundsForRect(eoFrame)];
+}
 
 - (id) init
 {
@@ -182,10 +195,7 @@ NSUInteger colsStepperValue;
 	      [object addColumn];
 	    }
 	}
-      NSRect oFrame = [[object superview] frame];
-      [object sizeToCells];
-      [object setNeedsDisplay: YES];
-      [[[object window] contentView] setNeedsDisplayInRect: oFrame];
+      [self _displayObject: object];
     }
   else if(sender == rowsStepper)
     {
@@ -212,7 +222,7 @@ NSUInteger colsStepperValue;
       [[dimensionsForm cellAtIndex: 0] setIntValue: num];
       [sender setIntValue: rowsStepperValue];
       [dimensionsForm setNeedsDisplay: YES];
-      [object setNeedsDisplay: YES];
+      [self _displayObject: object];
     }
   else if(sender == colsStepper)
     {
@@ -239,7 +249,7 @@ NSUInteger colsStepperValue;
       [[dimensionsForm cellAtIndex: 1] setIntValue: num];
       [sender setIntValue: colsStepperValue];
       [dimensionsForm setNeedsDisplay: YES];
-      [object setNeedsDisplay: YES];
+      [self _displayObject: object];
     }
 
   /*
