@@ -44,7 +44,7 @@
   NSImage	*imageToDisplay;
   NSRect	imageRect;
   NSString	*titleToDisplay;
-  NSRect	titleRect;
+  NSRect	titleRect = {{0,0},{0,0}};
   NSSize	imageSize = {0, 0};
   NSSize        titleSize = {0, 0};
   NSColor	*backgroundColor = nil;

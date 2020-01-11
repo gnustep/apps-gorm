@@ -65,6 +65,14 @@ const unichar rt[]={NSRightArrowFunctionKey};
   return self;
 }
 
+- (void) awakeFromNib
+{
+  for (NSCell *cell in [keyType cells])
+    {
+      [cell setRefusesFirstResponder: YES];
+    }
+}
+
 - (void) dealloc
 {
   RELEASE(upString);
@@ -74,7 +82,7 @@ const unichar rt[]={NSRightArrowFunctionKey};
   [super dealloc];
 }
 
-- (void) revert : (id)sender
+- (void) revert: (id)sender
 {
   unsigned int flags = [object keyEquivalentModifierMask];
   NSString *key = VSTR([object keyEquivalent]);
@@ -83,10 +91,9 @@ const unichar rt[]={NSRightArrowFunctionKey};
     return;
 
   [titleText setStringValue: VSTR([object title])];
-  [shortCut setStringValue: key];
-  
   [tagText setIntValue: [object tag]];
 
+  [shortCut setEnabled: NO];
   if([key isEqualToString: @"\n"])
     {
       [keyPopup selectItemAtIndex: 1];
@@ -121,7 +128,11 @@ const unichar rt[]={NSRightArrowFunctionKey};
     }
   else
     {
-      [keyPopup selectItem: nil];
+      [keyPopup selectItemAtIndex: 0];
+      [keyPopup setEnabled: NO];
+      [keyType selectCellWithTag: 0];
+      [shortCut setEnabled: YES];
+      [shortCut setStringValue: key];
     }
   
   // key modifier mask...
@@ -147,7 +158,66 @@ const unichar rt[]={NSRightArrowFunctionKey};
     }  
 }
 
--(void) ok: (id) sender
+- (void) _setFunctionKeyEquivalent
+{
+  unsigned int tag = [[keyPopup selectedItem] tag];
+  switch(tag)
+    {
+    case 0: // none
+      {
+        [object setKeyEquivalent: nil];
+      }
+      break;
+    case 1: // return
+      {
+        [object setKeyEquivalent: @"\n"];
+      }
+      break;
+    case 2: // delete 
+      {
+        [object setKeyEquivalent: @"\b"];
+      }
+      break;
+    case 3: // escape
+      {
+        [object setKeyEquivalent: @"\E"];
+      }
+      break;
+    case 4: // tab
+      {
+        [object setKeyEquivalent: @"\t"];
+      }
+      break;
+    case 5: // up
+      {
+        [object setKeyEquivalent: upString];
+      }
+      break;
+    case 6: // down
+      {
+        [object setKeyEquivalent: dnString];
+      }
+      break;
+    case 7: // left
+      {
+        [object setKeyEquivalent: ltString];
+      }
+      break;
+    case 8: // right
+      {
+        [object setKeyEquivalent: rtString];
+      }
+      break;
+    default: // should never happen..
+      {
+        [object setKeyEquivalent: nil];
+        NSLog(@"This shouldn't happen.");
+      }
+      break;
+    }
+}
+
+-(void) ok: (id)sender
 {
   if (sender == titleText)
     {
@@ -155,7 +225,14 @@ const unichar rt[]={NSRightArrowFunctionKey};
     }
   if (sender == shortCut)
     {
-      [object setKeyEquivalent:[[shortCut stringValue] stringByTrimmingSpaces]];
+      NSString *keyEq = [shortCut stringValue];
+      if ([keyEq length] > 1)
+        {
+          keyEq = [NSString stringWithFormat:@"%c", [keyEq characterAtIndex: 0]];
+          [shortCut setStringValue: keyEq];
+          NSBeep();
+        }
+      [object setKeyEquivalent:[keyEq stringByTrimmingSpaces]];
     }
   if (sender == tagText)
     {
@@ -163,61 +240,25 @@ const unichar rt[]={NSRightArrowFunctionKey};
     }
   else if (sender == keyPopup)
     {
-      unsigned int tag = [[keyPopup selectedItem] tag];
-      switch(tag)
-	{
-	case 0: // none
-	  {
-	    [object setKeyEquivalent: nil];
-	  }
-	  break;
-	case 1: // return
-	  {
-	    [object setKeyEquivalent: @"\n"];
-	  }
-	  break;
-	case 2: // delete 
-	  {
-	    [object setKeyEquivalent: @"\b"];
-	  }
-	  break;
-	case 3: // escape
-	  {
-	    [object setKeyEquivalent: @"\E"];
-	  }
-	  break;
-	case 4: // tab
-	  {
-	    [object setKeyEquivalent: @"\t"];
-	  }
-	  break;
-	case 5: // up
-	  {
-	    [object setKeyEquivalent: upString];
-	  }
-	  break;
-	case 6: // down
-	  {
-	    [object setKeyEquivalent: dnString];
-	  }
-	  break;
-	case 7: // left
-	  {
-	    [object setKeyEquivalent: ltString];
-	  }
-	  break;
-	case 8: // right
-	  {
-	    [object setKeyEquivalent: rtString];
-	  }
-	  break;
-	default: // should never happen..
-	  {
-	    [object setKeyEquivalent: nil];
-	    NSLog(@"This shouldn't happen.");
-	  }
-	  break;
-	}
+      [self _setFunctionKeyEquivalent];
+    }
+  else if (sender == keyType)
+    {
+      switch ([[keyType selectedCell] tag])
+        {
+        case 0:
+          [keyPopup selectItemWithTag: 0];
+          [keyPopup setEnabled: NO];
+          [shortCut setEnabled: YES];
+          [object setKeyEquivalent:[[shortCut stringValue] stringByTrimmingSpaces]];
+          break;
+        case 1:
+          // [shortCut setStringValue: @""];
+          [shortCut setEnabled: NO];
+          [keyPopup setEnabled: YES];
+          [self _setFunctionKeyEquivalent];
+          break;
+        }
     }
   else if (sender == altBtn)
     {
@@ -279,7 +320,7 @@ const unichar rt[]={NSRightArrowFunctionKey};
   [super ok:sender];
 }
 
-- (void)controlTextDidChange:(NSNotification *)aNotification
+- (void) controlTextDidChange: (NSNotification *)aNotification
 {
   [self ok: [aNotification object]];
 }

@@ -11,7 +11,9 @@
 	    left,
 	    maxForm,
 	    right,
-	    top
+	    top,
+	    originForm,
+	    autosaveName
 	);
 	Super = IBInspector;
     };

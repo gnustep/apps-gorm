@@ -23,6 +23,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
+
 #include <AppKit/AppKit.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
@@ -41,6 +42,13 @@
       // Make ourselves a delegate, so that when the sound/image is dragged in, 
       // this code is called...
       [NSView registerViewResourceDraggingDelegate: self];
+      
+      // subscribe to the notification...      
+      [[NSNotificationCenter defaultCenter]
+	addObserver: self
+           selector: @selector(willInspectObject:)
+               name: IBWillInspectObjectNotification
+             object: nil];
     }
 
   return self;
@@ -58,13 +66,28 @@
   id		v;
 
   contents = [originalWindow contentView];
-  [contents setFrame: NSMakeRect(0, 0, 272, 192)];
-  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(118, 139, 87, 22)];
+  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(73, 159, 70, 22)];
   [v addItemWithTitle: @"Item 1"];
   [v addItemWithTitle: @"Item 2"];
   [v addItemWithTitle: @"Item 3"];
   [contents addSubview: v];
   RELEASE(v);
+}
+
+- (void) willInspectObject: (NSNotification *)notification
+{
+  id o = [notification object];
+  if ([o respondsToSelector: @selector(prototype)] && [o prototype])
+    {
+      id prototype = [o prototype];
+      NSString *ident = NSStringFromClass([prototype class]);
+      [[IBInspectorManager sharedInspectorManager]
+		addInspectorModeWithIdentifier: ident
+                                     forObject: o
+                                localizedLabel: _(@"Prototype")
+                            inspectorClassName: [prototype inspectorClassName]
+                                      ordering: -1.0];
+    }
 }
 
 /**

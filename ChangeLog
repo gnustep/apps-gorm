@@ -1,3 +1,244 @@
+2020-01-10 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/ControlsPalette.gorm,
+	* Palettes/2Controls/GormNSFormInspector.gorm: update stepper size.
+	* Palettes/2Controls/GormMatrixAttributesInspector.h,
+	* Palettes/2Controls/GormMatrixAttributesInspector.m
+	(_displayObject:resize): move object refresh code here. Use it where
+	it's appropriate.
+	* Palettes/2Controls/GormNSMatrixInspector.gorm: separate dimensions
+	form into 2 for rows and columns; add steppers again.
+	* Palettes/2Controls/GormButtonEditor.m
+	(gormTitleRectForFrame:inView:): initialize `titleRect` to supress
+	compiler warning.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m: ehnanced
+	redrawing of object after dimension changes.
+	* Palettes/2Controls/GormNSBoxInspector.gorm: ticks to offset sliders
+	were added; "Stop on ticks only" set.
+
+2020-01-09 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/GormMatrixAttributesInspector.m: use ok: on
+	editing finish of textfields objects.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m:(ok:): update window
+	content view on object's dimensions changes.
+	* Palettes/2Controls/GormButtonAttributesInspector.m (ok:): removed unused
+	code.
+	* Palettes/2Controls/GormNSButtonInspector.gorm/objects.gorm:
+	added missed "Disclosure Round" bezel type to popup button.
+	* Palettes/2Controls/GormButtonAttributesInspector.m
+	(buttonTypeForObject:): use NSMomentaryPushInButton for "Momentary Push" type.
+	(rever:): use tag to select button type.
+
+2020-01-08 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/GormButtonAttributesInspector.m:
+	fixed "Momentary Light"	button type value.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m (ok:): preserve tag
+	and title of cells on "Match Prototype" button click.
+	* Palettes/3Containers/GormTableViewAttributesInspector.m: apply changes
+	only after editing has end.
+
+2020-01-06 Sergii Stoian <stoyan255@gmail.com>
+
+	* Gorm.m: Inspector's shortcuts now work across the application.
+
+2020-01-05 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/3Containers/GormNSTableViewInspector.gorm:
+	tiny fix of inspector position.
+	* Palettes/4Data/GormNSDateFormatterInspector.gorm,
+	* Palettes/4Data/GormNSNumberFormatterInspector.gorm:
+	fixed size and positions of UI elements.
+	* Palettes/2Controls/ControlsPalette.m (willInspectObject:):
+	create "Prototype" mode only if selected object's prototype exists.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m (ok:):
+	fixed "Match Prototype" action - make cells as copy of prototype,
+	select first cell.
+	* GormCore/GormInspectorsManager.m (setCurrentInspector:): get width
+	from Inspector's minSize when new minSize is about to be set.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m (revert:):
+	update object in prototype matrix.
+	* Palettes/2Controls/GormMatrixAttributesInspector.m (ok:): implemented
+	"Match Prototype" button action - recreates object's cells.
+	* Palettes/2Controls/GormButtonAttributesInspector.m (ok:),
+	* Palettes/2Controls/GormButtonAttributesInspector.m (revert:): adopt
+	methods to be usable for objects with prototype. This inspector can be
+	called in "Prototype" mode.
+	* Palettes/2Controls/ControlsPalette.m: implement adding "Prototype"
+	mode to Inspector's popup button for objects with prototype available
+	(mainly NSMatrix).
+	* Palettes/2Controls/GormNSMatrixInspector.gorm: reestablish connection
+	to action for "Match Prototype" button.
+	* Palettes/2Controls/GormNSButtonInspector.gorm: set enabled and not
+	selected state "Bordered" button.
+
+2020-01-04 Sergii Stoian <stoyan255@gmail.com>
+
+	* English.lproj/GormConnectionInspector.gorm: fixed window size to prevent
+	inspector panel resizing while switching from the other standard-sized
+	inspectors.
+	* Palettes/4Data/GormNSComboBoxInspector.gorm: fixed sizes and positions
+	of elements.
+	* GormCore/GormInspectorsManager.m (setCurrentInspector:): increase
+	height of inspector panel frame if inspector taller then previous;
+	set minimum size accordingly.
+	* Palettes/2Controls/GormNSMatrixInspector.gorm: made inspector content taller
+	to look better and as a test case for change in GorInspectorManager.
+
+2019-12-27 Sergii Stoian <stoyan255@gmail.com>
+
+	* GormCore/GormConnectionInspector.m (ok:): return on problem with making
+	connection, don't mark document as edited; update "Outlets" browser after
+	makeing changes to connections - updates "connected" image on selected
+	outlet.
+	* Palettes/2Controls/GormNSBoxInspector.gorm,
+	* Palettes/2Controls/GormNSButtonInspector.gorm,
+	* Palettes/2Controls/GormNSCellInspector.gorm,
+	* Palettes/2Controls/GormNSColorWellInspector.gorm,
+	* Palettes/2Controls/GormNSMatrixInspector.gorm,
+	* Palettes/2Controls/GormNSPopUpButtonInspector.gorm,
+	* Palettes/2Controls/GormNSProgressIndicatorInspector.gorm,
+	* Palettes/2Controls/GormNSSliderInspector.gorm,
+	* Palettes/2Controls/GormNSStepperInspector.gorm,
+	* Palettes/2Controls/GormNSTextFieldInspector.gorm:
+	sizing and positions fixes.
+
+2019-12-27 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/GormNSFormInspector.gorm:
+	sizes and positions cleanup and fix.
+	* Palettes/3Containers/GormNSBrowserInspector.gorm:
+	fixed initial first responder.
+	* Palettes/1Windows/GormNSWindowSizeInspector.gorm:
+	fixed initial first responder.
+	* Palettes/1Windows/GormDrawerAttributesInspector.gorm:
+	fixed autosizing.
+	* English.lproj/GormObjectInspector.gorm: fixed initial first responder
+	setting.
+	* English.lproj/GormScrollViewAttributesInspector.gorm: fixed default
+	background color.
+	* English.lproj/GormConnectionInspector.gorm: fixed initial first
+	responder setting.
+	* English.lproj/GormClassInspector.gorm,
+	* English.lproj/GormClassPanel.gorm,
+	* English.lproj/GormScrollViewAttributesInspector.gorm,
+	* English.lproj/GormSetName.gorm,
+	* English.lproj/GormSoundInspector.gorm,
+	* Palettes/4Data/GormNSImageViewInspector.gorm,
+	* Palettes/4Data/GormNSTextViewInspector.gorm: sizing and positioning
+	fixes.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm: fixed textfields
+	height.
+	* GormCore/GormConnectionInspector.m: use custom cell class for "Outlets"
+	browser to draw dimple image on connected outlets.
+	* Palettes/3Containers/GormNSTableColumnSizeInspector.gorm: adjust sizing
+	and position of elements.
+	* Palettes/3Containers/GormTableColumnSizeInspector.m: apply changes only
+	after editing has end.
+	* Palettes/3Containers/inspectors.m: added missed method to return table
+	column sizer class.
+
+2019-12-26 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/3Containers/GormNSTableViewInspector.gorm: fxed sizing and
+	positioning; rearrange inspector elements.
+	* Palettes/3Containers/GormNSTableColumnInspector.gorm: fxed sizing and
+	positioning; rearrange inspector elements.
+	* Palettes/3Containers/GormNSBrowserInspector.gorm/objects.gorm: fixed
+	vertical offset of option butttons.
+	* Palettes/3Containers/GormBrowserAttributesInspector.m (ok:): reduce
+	number of digits of fraction part to 2.
+	* Palettes/3Containers/GormNSBrowserInspector.gorm: fixed sizing and
+	postioning; remove delegate from textfields - attribute is set only after
+	user finished editing (pressed Return or Tab key).
+	* Palettes/1Windows:
+	Window Attributes Inspecor:
+	- Fixed size, postion and autosizing of elements.
+	- "Autosave Name" form was moved into "Window Size Inspector".
+	- "Minwindow Icon Name": removed clear button, form converted into
+	texfield.
+	Window Size Inspector:
+	- "Size" form was splitted into 2 forms to place them horizontally.
+	- "Size" group was renamed into "Frame".
+	- "Autosave Name" form was added and converted into textfield.
+	- Fixed size, postion and autosizing of elements.
+	NOTE: "Autosave Name" field is not saved into model file - is not encoded?
+	* Palettes/2Controls/GotmNSBoxInspector.gorm: minor fixes.
+	* Palettes/2Controls/GormButtonInspector.gorm: recreate broken "Type"
+	popup button.
+	* Palettes/2Controls/GormButtonAttributesInspector.m (ok:): set "Key:"
+	textfield value to after selecting popup button items.
+
+2019-12-23 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/GormNSBoxInspector.gorm: adjust size and positions
+	of elements.
+	* Menu Item Inspector: changed size and positions of UI elements;
+	redesigned key equivalent selection - user can specify either character
+	in text field or special(function) key from popup button; added check for
+	length of key equivalent - only 1 character length allowed.
+	* Palettes/2Controls: return code for NSPopUpButton adding
+	programmatically into palette.
+
+2019-12-23 Sergii Stoian <stoyan255@gmail.com>
+
+	* Palettes/2Controls/ControlsPalette.gorm: adjust some controls position
+	slightly.
+	* Palettes/0Menus/GormMenuAttributesInspector.gorm: fixed positioning
+	and autosizing.
+	* English.lproj/GormConnectionInspector.gorm: adjust splitview height
+	after last change.
+	* GormCore/GormInspectorsManager.m (setCurrentInspector:): do not
+	resize inspector panel on inspector change.
+	* Fixed guideline on/off menu item handling after rearrangement.
+	* GormCore/GormPalettesManager.m (resizeWithOldSuperviewSize:): new
+	method. Fixes correct placement of palette view on panel resize.
+	(init): disable auroresizing of dragView.
+	* GormCore/GormPalettesManager.m (loadPalette): commented out code that
+	leads to issues with scrolling (although, code supposed to fix issues
+	with scrolling :().
+	* GormCore/GormPalettesManager.m (init): autohide scroller of selection
+	ScrollView.
+	* Palettes/3Containers/ContainersPalette.m: fixed typo.
+	* Palette Panel: set window title from original window title of selected
+	palette; window titles were added/fixed for palettes.
+	* GormCore/GormPalettesManager.m (init): made dragView is not
+	autoresizable to omit problems with palettes visibility.
+	* Palettes/4Data/DataPalette.m (finishInstantiate): ScrollView was made
+	not resizable; move controls in right column slightly to the right.
+	* Palettes/2Controls/ControlsPalette.m (finishInstantiate) do not add
+	popup button - it's already in model file of palette.
+	* Controls Palette: minor fixes to controls position and size.
+	* Menus Palette: adjust position of menu image centered in dragged view.
+	* GormPalettesManager: palettes selection icons now display selection
+	with white color of selected icon background; removed arrows from
+	scroller; icons are replaced to make selection color visible.
+
+2019-12-21 Sergii Stoian <stoyan255@gmail.com>
+
+	* Rearrangement of main menu items:
+	- "Layout" renamed into "Format";
+	- "Font" submenu was added into "Format";
+	- "Group" and "Page Layout" were moved into "Format";
+	- shortcuts 'p' and 'i' were removed from "Palletes..." and
+	"Inspector..." because it's standard shortcuts for "Italic" and "Print"
+	menu actions;
+	* ViewSizeInspector: fixed size, position and autosizing properties.
+	* CustomClassInspector: fixed size, position and autosizing properties.
+	* ConnectionInspector: removed horizontal scroller from "Outlets" browser;
+	  adjusted split view frame.
+	* DummyInspector: change text to "Not Applicable" and font size to 18.
+	* CustomClassInspector: autosizing fixes.
+	* ImageInspector: use MSImageView from palette instead of CustomView;
+	autosizing fixes.
+	* ControlsPalette: rearrange controls.
+	* PalettePanel: fixed size and autosize attributes (model file is not
+	used yet).
+	* ObjectInspector: fixed size, position, autosize
+	* NSSplitViewInspector: fixed size, position, autosize; refuse first
+	responder on matrix cells.
+
 2019-07-26 Fred Kiefer <FredKiefer@gmx.de>
 
 	* Add .gitignore.

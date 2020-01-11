@@ -6,7 +6,6 @@
 	Outlets = (
 	    alignmentMatrix,
 	    backgroundColorWell,
-	    itemBrowser,
 	    itemField,
 	    optionMatrix,
 	    textColorWell,

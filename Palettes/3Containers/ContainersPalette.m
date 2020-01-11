@@ -45,7 +45,7 @@
 @implementation ContainersPalette
 
 - (void) finishInstantiate
-{ 
+{
 
   NSView	   *contents;
   NSTableView      *tv;
@@ -59,6 +59,7 @@
 				       styleMask: NSBorderlessWindowMask 
 					 backing: NSBackingStoreRetained
 					   defer: NO];
+  [originalWindow setTitle: @"Containers"];
   contents = [originalWindow contentView];
 
 /*******************/

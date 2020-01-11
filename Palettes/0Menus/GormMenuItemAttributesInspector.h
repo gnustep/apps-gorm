@@ -36,7 +36,7 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
-@class NSTextField, NSPopUpButton;
+@class NSTextField, NSPopUpButton, NSMatrix;
 
 @interface GormMenuItemAttributesInspector : IBInspector
 {
@@ -44,6 +44,7 @@
   NSTextField	*shortCut;
   NSTextField	*tagText;
   NSPopUpButton *keyPopup;
+  NSMatrix	*keyType;
   id             altBtn;
   id             ctrlBtn;
   id             shiftBtn;

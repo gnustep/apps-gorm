@@ -75,6 +75,23 @@
 }
 
 /*
+   NSApplication override to make Inspector's shortcuts available globally
+*/
+- (void) sendEvent: (NSEvent *)theEvent
+{
+  if ([theEvent type] == NSKeyDown)
+    {
+      NSPanel *inspector = [[self inspectorsManager] panel];
+      if ([inspector performKeyEquivalent: theEvent] != NO)
+        {
+          [inspector orderFront: self];
+          return;
+        }
+    }
+  [super sendEvent: theEvent];
+}
+
+/*
    NSApp
 */
 - (id) init
@@ -757,12 +774,12 @@
  					object:nil];
   if ( [guideLineMenuItem tag] == 0 )
     {
-      [guideLineMenuItem setTitle:_(@"Enable GuideLine")];
+      [guideLineMenuItem setTitle:_(@"Turn GuideLine On")];
       [guideLineMenuItem setTag:1];
     }
   else if ( [guideLineMenuItem tag] == 1)
     {
-      [guideLineMenuItem setTitle:_(@"Disable GuideLine")];
+      [guideLineMenuItem setTitle:_(@"Turn GuideLine Off")];
       [guideLineMenuItem setTag:0];
     }
 }

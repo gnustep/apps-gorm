@@ -112,6 +112,7 @@
 				     styleMask: NSBorderlessWindowMask 
 				     backing: NSBackingStoreRetained
 				     defer: NO];
+  [originalWindow setTitle: @"Windows"];
   contents = [originalWindow contentView];
 
   w = [[GormWindowMaker alloc] init];

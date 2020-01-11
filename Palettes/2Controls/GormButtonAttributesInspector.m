@@ -99,18 +99,18 @@ NSString *rtString = nil;
   NSDebugLog(@"highlight = %d, stateby = %d",
     (int)[cell highlightsBy],(int)[cell showsStateBy]);
   
-  type = NSMomentaryPushButton;
+  type = NSMomentaryPushInButton;
   if (highlight == NSChangeBackgroundCellMask)
     {
       if (stateby == NSNoCellMask)
-	type = NSMomentaryLight;
+	type = NSMomentaryLightButton;
       else 
 	type = NSOnOffButton;
     }
   else if (highlight == (NSPushInCellMask | NSChangeGrayCellMask))
     {
       if (stateby == NSNoCellMask)
-	type = NSMomentaryPushButton;
+	type = NSMomentaryPushInButton;
       else
 	type = NSPushOnPushOffButton;
     }
@@ -135,19 +135,26 @@ NSString *rtString = nil;
 
 - (void) ok: (id) sender
 {
+  id obj = object;
+  if ([object respondsToSelector: @selector(prototype)])
+    {
+      obj = [object prototype];
+    }
+  
   if (sender == alignMatrix)
     {
-      [(NSButton *)object setAlignment: (NSTextAlignment)[[sender selectedCell] tag]];
+      [(NSButton *)obj setAlignment: (NSTextAlignment)[[sender selectedCell] tag]];
     }
   else if (sender == iconMatrix)
     {
-      [(NSButton *)object setImagePosition: 
+      [(NSButton *)obj setImagePosition: 
 		     (NSCellImagePosition)[[sender selectedCell] tag]];
     }
   else if (sender == keyForm)
     {
-      [keyEquiv selectItem: nil]; // if the user does his own thing, select the default...
-      [object setKeyEquivalent: [[sender cellAtIndex: 0] stringValue]];
+      // if the user does his own thing, select the default...
+      [keyEquiv selectItemAtIndex: 0];
+      [obj setKeyEquivalent: [[sender cellAtIndex: 0] stringValue]];
     }
   else if (sender == keyEquiv)
     {
@@ -156,52 +163,56 @@ NSString *rtString = nil;
 	{
 	case 0: // none
 	  {
-	    [object setKeyEquivalent: nil];
+	    [obj setKeyEquivalent: nil];
 	  }
 	  break;
 	case 1: // return
 	  {
-	    [object setKeyEquivalent: @"\r"];
+	    [obj setKeyEquivalent: @"\r"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\r"];
 	  }
 	  break;
 	case 2: // delete 
 	  {
-	    [object setKeyEquivalent: @"\b"];
+	    [obj setKeyEquivalent: @"\b"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\b"];
 	  }
 	  break;
 	case 3: // escape
 	  {
-	    [object setKeyEquivalent: @"\E"];
+	    [obj setKeyEquivalent: @"\E"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\E"];
 	  }
 	  break;
 	case 4: // tab
 	  {
-	    [object setKeyEquivalent: @"\t"];
+	    [obj setKeyEquivalent: @"\t"];
+            [[keyForm cellAtIndex: 0] setStringValue: @"\\t"];
 	  }
 	  break;
 	case 5: // up
 	  {
-	    [object setKeyEquivalent: upString];
+	    [obj setKeyEquivalent: upString];
 	  }
 	  break;
 	case 6: // down
 	  {
-	    [object setKeyEquivalent: dnString];
+	    [obj setKeyEquivalent: dnString];
 	  }
 	  break;
 	case 7: // left
 	  {
-	    [object setKeyEquivalent: ltString];
+	    [obj setKeyEquivalent: ltString];
 	  }
 	  break;
 	case 8: // right
 	  {
-	    [object setKeyEquivalent: rtString];
+	    [obj setKeyEquivalent: rtString];
 	  }
 	  break;
 	default: // should never happen..
 	  {
-	    [object setKeyEquivalent: nil];
+	    [obj setKeyEquivalent: nil];
 	    NSLog(@"This shouldn't happen.");
 	  }
 	  break;
@@ -212,101 +223,105 @@ NSString *rtString = nil;
       BOOL flag;
 
       flag = ([[sender cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO;
-      [object setBordered: flag];      flag = ([[sender cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
-      [object setContinuous: flag];
+      [obj setBordered: flag];
+      flag = ([[sender cellAtRow: 1 column: 0] state] == NSOnState) ? YES : NO;
+      [obj setContinuous: flag];
       flag = ([[sender cellAtRow: 2 column: 0] state] == NSOnState) ? YES : NO;
-      [object setEnabled: flag];
+      [obj setEnabled: flag];
 
-      [object setState: [[sender cellAtRow: 3 column: 0] state]];
+      [obj setState: [[sender cellAtRow: 3 column: 0] state]];
       flag = ([[sender cellAtRow: 4 column: 0] state] == NSOnState) ? YES : NO;
-      [object setTransparent: flag];
+      [obj setTransparent: flag];
     }
   else if (sender == tagForm)
     {
-      [(NSButton *)object setTag: [[sender cellAtIndex: 0] intValue]];
+      [(NSButton *)obj setTag: [[sender cellAtIndex: 0] intValue]];
     }
   else if (sender == titleForm)
     {
       NSString *string;
       NSImage *image;
       
-      [object setTitle: [[sender cellAtIndex: 0] stringValue]];
-      [object setAlternateTitle: [[sender cellAtIndex: 1] stringValue]];
+      [obj setTitle: [[sender cellAtIndex: 0] stringValue]];
+      [obj setAlternateTitle: [[sender cellAtIndex: 1] stringValue]];
 
       string = [[sender cellAtIndex: 2] stringValue];
       if ([string length] > 0)
 	{   
 	  image = [NSImage imageNamed: string];
-	  [object setImage: image];
+	  [obj setImage: image];
 	}
       string = [[sender cellAtIndex: 3] stringValue];
       if ([string length] > 0)
 	{
 	  image = [NSImage imageNamed: string];
-	  [object setAlternateImage: image];
+	  [obj setAlternateImage: image];
 	}
     }
   else if (sender == typeButton) 
     {
-      [object setButtonType: [[sender selectedItem] tag]];
+      [obj setButtonType: [[sender selectedItem] tag]];
     }
   else if (sender == bezelButton) 
     {
-      [object setBezelStyle: [[sender selectedItem] tag]];
-    }
-  else if ([sender isKindOfClass: [NSMenuItem class]] )
-    {
-      /*
-            * In old NSPopUpButton implementation we do receive
-            * the selected menu item here. Not the PopUpbutton 'typeButton'
-            * FIXME: Ideally we should also test if the menu item belongs
-            * to the 'type button' control. How to do that?
-            */
-      [(NSButton *)object setButtonType: [sender tag]];
+      [obj setBezelStyle: [[sender selectedItem] tag]];
     }
   else if (sender == altMod)
     {
-      if([altMod state] == NSOnState)
+      if ([altMod state] == NSOnState)
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSAlternateKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] | NSAlternateKeyMask];
 	}
       else
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSAlternateKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] & ~NSAlternateKeyMask];
 	}
     }
   else if (sender == ctrlMod)
     {
-      if([ctrlMod state] == NSOnState)
+      if ([ctrlMod state] == NSOnState)
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSControlKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] | NSControlKeyMask];
 	}
       else
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSControlKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] & ~NSControlKeyMask];
 	}
     }
   else if (sender == shiftMod)
     {
-      if([shiftMod state] == NSOnState)
+      if ([shiftMod state] == NSOnState)
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSShiftKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] | NSShiftKeyMask];
 	}
       else
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSShiftKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] & ~NSShiftKeyMask];
 	}
     }
   else if (sender == cmdMod)
     {
-      if([cmdMod state] == NSOnState)
+      if ([cmdMod state] == NSOnState)
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] | NSCommandKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] | NSCommandKeyMask];
 	}
       else
 	{
-	  [object setKeyEquivalentModifierMask: [object keyEquivalentModifierMask] & ~NSCommandKeyMask];
+	  [obj setKeyEquivalentModifierMask:
+                 [obj keyEquivalentModifierMask] & ~NSCommandKeyMask];
 	}
+    }
+
+  if ([object respondsToSelector: @selector(prototype)])
+    {
+      [object setPrototype: obj];
     }
 
   [super ok: sender];
@@ -315,71 +330,77 @@ NSString *rtString = nil;
 -(void) revert: (id)sender
 {
   NSImage *image;
+  id      obj = object;
+
+  if ([object respondsToSelector: @selector(prototype)])
+    {
+      obj = [object prototype];
+    }
 
   if(sender != nil)
     {
-      NSString *key = VSTR([object keyEquivalent]);
-      unsigned int flags = [object keyEquivalentModifierMask];
+      NSString *key = VSTR([obj keyEquivalent]);
+      unsigned int flags = [obj keyEquivalentModifierMask];
       
-      [alignMatrix selectCellWithTag: [object alignment]];
-      [iconMatrix selectCellWithTag: [object imagePosition]];
+      [alignMatrix selectCellWithTag: [obj alignment]];
+      [iconMatrix selectCellWithTag: [obj imagePosition]];
       [[keyForm cellAtIndex: 0] setStringValue: key];
       
-      if([key isEqualToString: @"\r"])
+      if ([key isEqualToString: @"\r"])
 	{
 	  [keyEquiv selectItemAtIndex: 1];
 	}
-      else if([key isEqualToString: @"\b"])
+      else if ([key isEqualToString: @"\b"])
 	{
 	  [keyEquiv selectItemAtIndex: 2];
 	}
-      else if([key isEqualToString: @"\E"])
+      else if ([key isEqualToString: @"\E"])
 	{
 	  [keyEquiv selectItemAtIndex: 3];
 	}
-      else if([key isEqualToString: @"\t"])
+      else if ([key isEqualToString: @"\t"])
 	{
 	  [keyEquiv selectItemAtIndex: 4];
 	}
-      else if([key isEqualToString: upString])
+      else if ([key isEqualToString: upString])
 	{
 	  [keyEquiv selectItemAtIndex: 5];
 	}
-      else if([key isEqualToString: dnString])
+      else if ([key isEqualToString: dnString])
 	{
 	  [keyEquiv selectItemAtIndex: 6];
 	}
-      else if([key isEqualToString: ltString])
+      else if ([key isEqualToString: ltString])
 	{
 	  [keyEquiv selectItemAtIndex: 7];
 	}
-      else if([key isEqualToString: rtString])
+      else if ([key isEqualToString: rtString])
 	{
 	  [keyEquiv selectItemAtIndex: 8];
 	}
       else
 	{
-	  [keyEquiv selectItem: nil];
+	  [keyEquiv selectItemAtIndex: 0];
 	}
       
       [optionMatrix deselectAllCells];
-      if ([object isBordered])
-	[optionMatrix selectCellAtRow: 0 column: 0];
-      if ([object isContinuous])
-	[optionMatrix selectCellAtRow: 1 column: 0];
-      if ([object isEnabled])
-	[optionMatrix selectCellAtRow: 2 column: 0];
-      if ([object state] == NSOnState)
-	[optionMatrix selectCellAtRow: 3 column: 0];
-      if ([object isTransparent])
-	[optionMatrix selectCellAtRow: 4 column: 0];
+      if ([obj isBordered])
+        [optionMatrix selectCellAtRow: 0 column: 0];
+      if ([obj isContinuous])
+        [optionMatrix selectCellAtRow: 1 column: 0];
+      if ([obj isEnabled])
+        [optionMatrix selectCellAtRow: 2 column: 0];
+      if ([obj state] == NSOnState)
+        [optionMatrix selectCellAtRow: 3 column: 0];
+      if ([obj isTransparent])
+        [optionMatrix selectCellAtRow: 4 column: 0]; 
+     
+      [[tagForm cellAtIndex: 0] setIntValue: [(NSButton *)obj tag]];
       
-      [[tagForm cellAtIndex: 0] setIntValue: [(NSButton *)object tag]];
+      [[titleForm cellAtIndex: 0] setStringValue: VSTR([obj title])];
+      [[titleForm cellAtIndex: 1] setStringValue: VSTR([obj alternateTitle])];
       
-      [[titleForm cellAtIndex: 0] setStringValue: VSTR([object title])];
-      [[titleForm cellAtIndex: 1] setStringValue: VSTR([object alternateTitle])];
-      
-      image = [object image];
+      image = [obj image];
       if (image != nil)
 	{
 	  [[titleForm cellAtIndex: 2] setStringValue: VSTR([image name])];
@@ -389,7 +410,7 @@ NSString *rtString = nil;
 	  [[titleForm cellAtIndex: 2] setStringValue: @""];
 	}
       
-      image = [object alternateImage];
+      image = [obj alternateImage];
       if (image != nil)
 	{
 	  [[titleForm cellAtIndex: 3] setStringValue: VSTR([image name])];
@@ -421,12 +442,10 @@ NSString *rtString = nil;
 	  [cmdMod setState: NSOnState];
 	}
 
-      [typeButton selectItemAtIndex: 
-		    [typeButton indexOfItemWithTag: 
-				  [self buttonTypeForObject: object]]];
+      [typeButton selectItemWithTag: [self buttonTypeForObject: obj]];
 
       [bezelButton selectItemAtIndex:
-		     [bezelButton indexOfItemWithTag: [object bezelStyle]]];
+		     [bezelButton indexOfItemWithTag: [obj bezelStyle]]];
     }
 }
 

@@ -271,14 +271,14 @@
 - (void) setCurrentInspector: (id)anObj
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSArray	*selection = [[(id<IB>)NSApp selectionOwner] selection];
-  unsigned	count = [selection count];
-  id		obj = [selection lastObject];
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
-  NSView	*newView = nil;
-  NSView	*oldView = nil;
-  NSString	*newInspector = nil;
-  NSInteger           tag = 0; 
+  NSArray		*selection = [[(id<IB>)NSApp selectionOwner] selection];
+  unsigned		count = [selection count];
+  id			obj = [selection lastObject];
+  id<IBDocuments>	document = [(id<IB>)NSApp activeDocument];
+  NSView		*newView = nil;
+  NSView		*oldView = nil;
+  NSString		*newInspector = nil;
+  NSInteger		tag = 0; 
 
   if (anObj != self)
     {
@@ -390,9 +390,9 @@
       newView = [[inspector window] contentView];
       if (newView != nil && newView != oldView)
 	{   
-	  id initialResponder = [[inspector window] initialFirstResponder];
-	  NSView	*outer = [panel contentView];
-	  NSRect	rect = [panel frame];
+	  id     initialResponder = [[inspector window] initialFirstResponder];
+	  NSView *outer = [panel contentView];
+	  NSRect rect = [panel frame];
 	  /*
 	    We should compute the delta between the heights of the old inspector view 
 	    and the new one. The delta will be used to compute the size of the inspector 
@@ -401,10 +401,14 @@
 	   */
 	  CGFloat delta = [newView frame].size.height - [oldView frame].size.height;
 
-	  rect.size.height = rect.size.height + delta;
-	  rect.origin.y = [panel frame].origin.y - delta;
-	  //	  [panel setContentSize: rect.size];
-	  [panel setFrame: rect display: YES];
+          rect.size.height += delta;
+          if (delta > 0)
+            {
+              rect.origin.y = [panel frame].origin.y - delta;
+              [panel setFrame: rect display: YES];
+            }
+          rect.size.width = [panel minSize].width;
+          [panel setMinSize: rect.size];
 
 	  rect = [outer bounds];
 
@@ -463,14 +467,15 @@
 	   * Make the inspector view the correct size for the viewable panel,
 	   * and set the frame size for the new contents before adding them.
 	   */
-	  [inspectorView setFrame: rect];
-	  rect.origin = NSZeroPoint;
-	  [newView setFrame: rect];
+	  // [inspectorView setFrame: rect];
+	  // rect.origin = NSZeroPoint;
+	  // [newView setFrame: rect];
+          
 	  RETAIN(oldView);
 	  [inspectorView setContentView: newView];
 	  [[prevInspector window] setContentView: oldView];
 	  [outer setNeedsDisplay: YES];
-	  // RELEASE(oldView);
+	  RELEASE(oldView);
 
 	  /* Set the default First responder to the new View */
 	  if ( initialResponder )

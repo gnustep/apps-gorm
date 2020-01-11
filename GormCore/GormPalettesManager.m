@@ -99,6 +99,16 @@ static NSImage	*dragImage = nil;
   [super dealloc];
 }
 
+- (void) resizeWithOldSuperviewSize: (NSSize)oldSize
+{
+  NSSize newSize = [[self superview] frame].size;
+  NSRect frame = [self frame];
+  
+  frame.origin.x -= floorf((oldSize.width - newSize.width) / 2);
+  frame.origin.y -= floorf((oldSize.height - newSize.height) / 2);
+  [self setFrameOrigin: frame.origin];
+}
+
 /*
  *	Dragging source protocol implementation
  */
@@ -297,8 +307,8 @@ static NSImage	*dragImage = nil;
   NSArray	 *array;
   NSRect	 contentRect = {{0, 0}, {272, 266}};
   NSRect	 selectionRect = {{0, 0}, {52, 52}};
-  NSRect	 scrollRect = {{0, 192}, {272, 74}};
-  NSRect	 dragRect = {{0, 0}, {272, 192}};
+  NSRect	 scrollRect = {{-2, 192}, {276, 76}};
+  NSRect	 dragRect = {{0, 0}, {272, 200}};
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
@@ -322,24 +332,26 @@ static NSImage	*dragImage = nil;
   [scrollView setHasHorizontalScroller: YES];
   [scrollView setHasVerticalScroller: NO];
   [scrollView setAutoresizingMask: NSViewMinYMargin | NSViewWidthSizable];
-  [scrollView setBorderType: NSBezelBorder];
+  [scrollView setBorderType: NSGrooveBorder];
+  [[scrollView horizontalScroller] setArrowsPosition: NSScrollerArrowsNone];
+  [scrollView setAutohidesScrollers: YES];
 
   selectionView = [[NSMatrix alloc] initWithFrame: selectionRect
 					     mode: NSRadioModeMatrix
-					cellClass: [NSImageCell class]
+					cellClass: [NSButtonCell class]
 				     numberOfRows: 1
 				  numberOfColumns: 0];
   [selectionView setTarget: self];
   [selectionView setAction: @selector(setCurrentPalette:)];
   [selectionView setCellSize: NSMakeSize(52,52)];
-  [selectionView setIntercellSpacing: NSMakeSize(0,0)];
+  [selectionView setIntercellSpacing: NSMakeSize(15, 0)];
   [scrollView setDocumentView: selectionView];
   RELEASE(selectionView);
   [[panel contentView] addSubview: scrollView]; 
   RELEASE(scrollView);
 
   dragView = [[GormPaletteView alloc] initWithFrame: dragRect];
-  [dragView setAutoresizingMask: NSViewHeightSizable | NSViewWidthSizable];
+  [dragView setAutoresizingMask: 0];
   [[panel contentView] addSubview: dragView]; 
   RELEASE(dragView);
 
@@ -417,7 +429,7 @@ static NSImage	*dragImage = nil;
   NSArray       *exportImages;
   NSDictionary  *subClasses;
   IBPalette	*palette;
-  NSImageCell	*cell;
+  NSButtonCell	*cell;
   int		col;
 
   if([self bundlePathIsLoaded: path])
@@ -532,21 +544,22 @@ static NSImage	*dragImage = nil;
 
   // Resize the window appropriately so that we don't have issues
   // with scrolling.
-  if([window styleMask] & NSBorderlessWindowMask)
-    {
-      [window setFrame: NSMakeRect(0,0,272,160) display: NO];
-    }
-  else
-    {
-      [window setFrame: NSMakeRect(0,0,272,192) display: NO];
-    }
+  // if([window styleMask] & NSBorderlessWindowMask)
+  //   {
+  //     [window setFrame: NSMakeRect(0,0,272,160) display: NO];
+  //   }
+  // else
+  //   {
+  //     [window setFrame: NSMakeRect(0,0,272,224) display: NO];
+  //   }
 
   [palettes addObject: palette];
   [selectionView addColumn];
   [[palette paletteIcon] setBackgroundColor: [selectionView backgroundColor]];
   col = [selectionView numberOfColumns] - 1;
   cell = [selectionView cellAtRow: 0 column: col];
-  [cell setImageFrameStyle: NSImageFrameButton];
+  [cell setButtonType: NSOnOffButton];
+  [cell setRefusesFirstResponder: YES];
   [cell setImage: [palette paletteIcon]];
   [selectionView sizeToCells];
   [selectionView selectCellAtRow: 0 column: col];
@@ -647,8 +660,7 @@ static NSImage	*dragImage = nil;
       /*
        * Set the window title to reflect the palette selection.
        */
-      [panel setTitle: [NSString stringWithFormat: @"Palettes (%@)", 
-				 [palette className]]];
+      [panel setTitle: [[palette originalWindow] title]];
 
       /*
        * Move the views from their original window into our drag view.

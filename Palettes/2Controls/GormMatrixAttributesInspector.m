@@ -39,6 +39,8 @@
 #include "GormMatrixAttributesInspector.h"
 
 
+#include <InterfaceBuilder/IBApplicationAdditions.h>
+#include <GormCore/GormViewKnobs.h>
 
 @implementation	NSMatrix (IBObjectAdditions)
 - (NSString*) inspectorClassName
@@ -51,6 +53,29 @@
 
 NSUInteger rowsStepperValue;
 NSUInteger colsStepperValue;
+
+- (void) _displayObject: (id)obj resize: (BOOL)resize
+{
+  id     document = [(id<IB>)NSApp documentForObject: obj];
+  id     editor = [document editorForObject: obj create: NO];
+  NSRect eoFrame = [editor frame];
+
+  if (resize == NO)
+    {
+      NSRect rect = [obj frame];
+      NSSize cell = [obj cellSize];
+      NSSize inter = [obj intercellSpacing];
+      cell.width = (rect.size.width + inter.width) / colsStepperValue - inter.width;
+      cell.height = (rect.size.height + inter.height) / rowsStepperValue - inter.height;
+      [object setCellSize: cell];
+    }
+  else
+    {
+      [obj sizeToCells];
+    }
+  [obj setNeedsDisplay: YES];
+  [[editor superview] setNeedsDisplayInRect: GormExtBoundsForRect(eoFrame)];
+}
 
 - (id) init
 {
@@ -120,8 +145,25 @@ NSUInteger colsStepperValue;
     }
   else if (sender == propagateSwitch)
     {
-      //Nothing for the moment - must implement Prototype
-      // item in the pull down menu
+      NSButtonCell *cell;
+      NSInteger    tag;
+      NSString     *title;
+      for (int c = 0; c < [object numberOfColumns]; c++)
+        {
+          for (int r = 0; r < [object numberOfRows]; r++)
+            {
+              cell = [object cellAtRow: r column: c];
+              tag = [cell tag];
+              title = [cell title];
+              cell = [[object prototype] copy];
+              [cell setTag: tag];
+              [cell setTitle: title];
+              [object putCell:cell atRow:r column:c];
+              [cell release];
+            }
+        }
+      [object deselectAllCells];
+      [object selectCellAtRow: 0 column: 0];
     }
   else if (sender == selRectSwitch)
     {
@@ -131,10 +173,10 @@ NSUInteger colsStepperValue;
     {
       [object setTag: [[sender cellAtIndex: 0] intValue]];
     }
-  else if (sender == dimensionsForm)
+  else if (sender == rowsForm || sender == colsForm)
     {
-      int rows = [[sender cellAtIndex: 0] intValue];
-      int cols = [[sender cellAtIndex: 1] intValue];
+      int rows = [[rowsForm cellAtIndex: 0] intValue];
+      int cols = [[colsForm cellAtIndex: 0] intValue];
       int num;
 
       while((num = [object numberOfRows]) != rows)
@@ -160,17 +202,12 @@ NSUInteger colsStepperValue;
 	      [object addColumn];
 	    }
 	}
-      //      [object sizeToCells];
-      [object setNeedsDisplay: YES];
-      [[object superview] setNeedsDisplay: YES];
+      [self _displayObject: object resize: YES];
     }
   else if(sender == rowsStepper)
     {
       int delta = [sender intValue] - rowsStepperValue;
       int num = [object numberOfRows];
-      NSRect rect = [object frame];
-      NSSize cell = [object cellSize];
-      NSSize inter = [object intercellSpacing];
 
       while(delta > 0)
 	{
@@ -184,20 +221,15 @@ NSUInteger colsStepperValue;
 	  num--;
 	  delta++;
 	}
-      cell.height = (rect.size.height + inter.height) / num - inter.height;
-      [object setCellSize: cell];
-      [[dimensionsForm cellAtIndex: 0] setIntValue: num];
-      [sender setIntValue: rowsStepperValue];
-      [dimensionsForm setNeedsDisplay: YES];
-      [object setNeedsDisplay: YES];
+      [[rowsForm cellAtIndex: 0] setIntValue: num];
+      [sender setIntValue: num];
+      rowsStepperValue = num;
+      [self _displayObject: object resize: YES];
     }
   else if(sender == colsStepper)
     {
       int delta = [sender intValue] - colsStepperValue;
       int num = [object numberOfColumns];
-      NSRect rect = [object frame];
-      NSSize cell = [object cellSize];
-      NSSize inter = [object intercellSpacing];
 
       while(delta > 0)
 	{
@@ -211,12 +243,10 @@ NSUInteger colsStepperValue;
 	  num--;
 	  delta++;
 	}
-      cell.width = (rect.size.width + inter.width) / num - inter.width;
-      [object setCellSize: cell];
-      [[dimensionsForm cellAtIndex: 1] setIntValue: num];
-      [sender setIntValue: colsStepperValue];
-      [dimensionsForm setNeedsDisplay: YES];
-      [object setNeedsDisplay: YES];
+      [[colsForm cellAtIndex: 0] setIntValue: num];
+      [sender setIntValue: num];
+      colsStepperValue = num;
+      [self _displayObject: object resize: YES];
     }
 
   /*
@@ -229,7 +259,7 @@ NSUInteger colsStepperValue;
     }
    else
     {
-       [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
+      [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
     }
   
   [super ok:sender];
@@ -241,7 +271,6 @@ NSUInteger colsStepperValue;
 {
   if (object == nil)
       return;
-
 
   [autosizeSwitch setState: 
     ([object autosizesCells]) ? NSOnState : NSOffState];
@@ -260,22 +289,31 @@ NSUInteger colsStepperValue;
 
   [backgroundColorWell setColorWithoutAction: [object backgroundColor]];
   [drawsBackgroundSwitch setState: 
-    ([object drawsBackground]) ? NSOnState : NSOffState];
+                           ([object drawsBackground]) ? NSOnState : NSOffState];
 
   [modeMatrix selectCellWithTag: [(NSMatrix *)object mode]];
+  
+  if ([object prototype] == nil)
+    [prototypeMatrix putCell: [object cellAtRow:0 column:0] atRow:0 column:0];
+  else
+    [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
   
   [selRectSwitch setState: 
     ([object isSelectionByRect]) ? NSOnState : NSOffState];
   [[tagForm cellAtIndex: 0] setIntValue: [object tag]];
-  [[dimensionsForm cellAtIndex: 0] setIntValue: [object numberOfRows]];
-  [[dimensionsForm cellAtIndex: 1] setIntValue: [object numberOfColumns]];
+  rowsStepperValue = [object numberOfRows];
+  [[rowsForm cellAtIndex: 0] setIntValue: rowsStepperValue];
+  [rowsStepper setIntValue: rowsStepperValue];
+  colsStepperValue = [object numberOfColumns];
+  [[colsForm cellAtIndex: 0] setIntValue: colsStepperValue];
+  [colsStepper setIntValue: colsStepperValue];
 
   [super revert:sender];
 }
 
 
 /* delegate method for tag Form */
--(void) controlTextDidChange:(NSNotification*) aNotification
+- (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
   [self ok:[aNotification object]];
 }

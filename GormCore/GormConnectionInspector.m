@@ -31,6 +31,59 @@
 #include "GormPrivate.h"
 #include "GormConnectionInspector.h"
 
+@interface GormConnectionCell : NSBrowserCell
+{
+  BOOL isOutletConnected;
+}
+@end
+@implementation GormConnectionCell : NSBrowserCell
+
+- (void) setIsOutletConnected:(BOOL)yn
+{
+  isOutletConnected = yn;
+}
+
+- (void) drawInteriorWithFrame: (NSRect)cellFrame inView: (NSView *)controlView
+{
+  if (isOutletConnected != NO)
+    {
+      NSImage *dimple_image = [NSImage imageNamed: @"common_Dimple"];
+      NSRect  title_rect = cellFrame;
+      NSRect  imgRect;
+
+      if ([self isHighlighted] != NO)
+        {
+          [[self highlightColorInView: controlView] setFill];
+          NSRectFill(cellFrame);
+        }
+      
+      imgRect.size = [dimple_image size];
+      imgRect.origin.x = MAX(NSMaxX(title_rect) - imgRect.size.width - 4.0, 0.);
+      imgRect.origin.y = MAX(NSMidY(title_rect) - (imgRect.size.height/2.), 0.);
+
+      title_rect.size.width -= imgRect.size.width + 8;
+      [super drawInteriorWithFrame: title_rect inView: controlView];
+      
+      if (controlView != nil)
+        {
+          imgRect = [controlView centerScanRect: imgRect];
+        }
+
+      [dimple_image drawInRect: imgRect
+                      fromRect: NSZeroRect
+                     operation: NSCompositeSourceOver
+                      fraction: 1.0
+                respectFlipped: YES
+                         hints: nil];
+    }
+  else
+    {
+      [super drawInteriorWithFrame: cellFrame inView: controlView];
+    }
+}
+
+@end
+
 @implementation GormConnectionInspector
 
 - (id) init
@@ -64,6 +117,7 @@
 
 - (void) awakeFromNib
 {
+  [newBrowser setCellClass: [GormConnectionCell class]];
   [newBrowser setDoubleAction: @selector(ok:)];
 }
 
@@ -334,6 +388,7 @@ selectCellWithString: (NSString*)title
 	   atRow: (NSInteger)row
 	  column: (NSInteger)col
 {
+  [aCell setRefusesFirstResponder: YES];
   if (sender == newBrowser)
     {
       NSString	*name;
@@ -353,6 +408,14 @@ selectCellWithString: (NSString*)title
 		  [aCell setLeaf: YES];
 		}
 	      [aCell setEnabled: YES];
+
+              // Draws dimple for connected outlets
+              for (id conn in connectors) {
+                if ([name isEqualToString: [conn label]]) {
+                  [aCell setIsOutletConnected: YES];
+                  break;
+                }
+              }
 	    }
 	  else
 	    {
@@ -432,6 +495,7 @@ selectCellWithString: (NSString*)title
       NSRunAlertPanel(_(@"Problem making connection"),
 		      _(@"Please select a valid destination."), 
 		      _(@"OK"), nil, nil, nil);
+      return;
     }
   else if ([connectors containsObject: currentConnector] == YES)
     {
@@ -483,6 +547,11 @@ selectCellWithString: (NSString*)title
       [oldBrowser setPath: path];
     }
 
+  // Update image marker in "Outlets" browser
+  NSString *newPath = [newBrowser path];
+  [newBrowser loadColumnZero];
+  [newBrowser setPath:newPath];
+  
   // mark as edited.   
   [super ok: sender];
   [self updateButtons];
