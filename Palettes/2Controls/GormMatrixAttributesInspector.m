@@ -148,9 +148,11 @@ NSUInteger colsStepperValue;
       NSButtonCell *cell;
       NSInteger    tag;
       NSString     *title;
-      for (int c = 0; c < [object numberOfColumns]; c++)
+      int          c;
+      for (c = 0; c < [object numberOfColumns]; c++)
         {
-          for (int r = 0; r < [object numberOfRows]; r++)
+	  int r;
+          for (r = 0; r < [object numberOfRows]; r++)
             {
               cell = [object cellAtRow: r column: c];
               tag = [cell tag];
