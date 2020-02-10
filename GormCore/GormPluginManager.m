@@ -46,48 +46,14 @@
   [super dealloc];
 }
 
-/*
-- (void) handleNotification: (NSNotification*)aNotification
-{
-  NSString	*name = [aNotification name];
-
-  if ([name isEqual: IBWillBeginTestingInterfaceNotification] == YES)
-    {
-      if ([panel isVisible] == YES)
-	{
-	  hiddenDuringTest = YES;
-	  [panel orderOut: self];
-	}
-    }
-  else if ([name isEqual: IBWillEndTestingInterfaceNotification] == YES)
-    {
-      if (hiddenDuringTest == YES)
-	{
-	  hiddenDuringTest = NO;
-	  [panel orderFront: self];
-	}
-    }
-}
-*/
-
 - (id) init
 {
   NSArray	 *array;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPlugins = [defaults arrayForKey: USER_PLUGINS];
-  // NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
   
   self = [super init];
-  if(self != nil)
-    {
-      /*
-      if([NSBundle loadNibNamed: @"GormPluginPanel" owner: self] == NO)
-        {
-          return nil;
-        }
-      */
-    }
-  else
+  if (self == nil)
     {
       return nil;
     }
@@ -98,12 +64,6 @@
   pluginsDict = [[NSMutableDictionary alloc] init];
   plugins = [[NSMutableArray alloc] init];
   pluginNames = [[NSMutableArray alloc] init];
-
-  //
-  // Set frame name
-  //
-  // [panel setFrameUsingName: @"Plugins"];
-  // [panel setFrameAutosaveName: @"Plugins"];
  
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"plugin"
                                  inDirectory: nil];
@@ -130,17 +90,6 @@
         }
     }
 
-  /*
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillBeginTestingInterfaceNotification
-      object: nil];
-  [nc addObserver: self
-      selector: @selector(handleNotification:)
-      name: IBWillEndTestingInterfaceNotification
-      object: nil];
-  */
-
   return self;
 }
 
@@ -165,12 +114,6 @@
   NSString	*className;
   IBPlugin	*plugin;
   Class		pluginClass;
-  //NSDictionary	*pluginInfo;
-  //NSWindow	*window;
-  //NSArray       *exportClasses;
-  //NSArray       *exportSounds;
-  //NSArray       *exportImages;
-  //NSDictionary  *subClasses;
 
   if([self bundlePathIsLoaded: path])
     {
@@ -185,48 +128,6 @@
 		      _(@"OK"), nil, nil);
       return NO;
     }
-
-  /* May use this later for class description 
-  path = [bundle pathForResource: @"plugin" ofType: @"table"];
-  if (path == nil)
-    {
-      NSRunAlertPanel(nil, _(@"File 'palette.table' missing"),
-		      _(@"OK"), nil, nil);
-      return NO;
-    }
-
-  // attempt to load the palette table in either the strings or plist format.
-  NS_DURING
-    {
-      paletteInfo = [[NSString stringWithContentsOfFile: path] propertyList];
-      if (paletteInfo == nil)
-	{
-	  paletteInfo = [[NSString stringWithContentsOfFile: path] propertyListFromStringsFileFormat];
-	  if(paletteInfo == nil)
-	    {
-	      NSRunAlertPanel(_(@"Problem Loading Palette"), 
-			      _(@"Failed to load 'palette.table' using strings or property list format."),
-			      _(@"OK"), 
-			      nil, 
-			      nil);
-	      return NO;
-	    }
-	}
-    }
-  NS_HANDLER
-    {
-      NSString *message = [NSString stringWithFormat: 
-				      _(@"Encountered exception %@ attempting to load 'palette.table'."),
-				    [localException reason]];
-      NSRunAlertPanel(_(@"Problem Loading Palette"), 
-		      message,
-		      _(@"OK"), 
-		      nil, 
-		      nil);
-      return NO;
-    }
-  NS_ENDHANDLER
-  */
 
   className = [[bundle infoDictionary] objectForKey: @"NSPrincipalClass"];
   if (className == nil)
@@ -255,33 +156,6 @@
 
   // add to the bundles list...
   [bundles addObject: bundle];	
-
-  /*
-  exportClasses = [paletteInfo objectForKey: @"ExportClasses"];
-  if(exportClasses != nil)
-    {
-      [self importClasses: exportClasses withDictionary: nil];
-    }
-
-  exportImages = [paletteInfo objectForKey: @"ExportImages"];
-  if(exportImages != nil)
-    {
-      [self importImages: exportImages withBundle: bundle];
-    }
-
-  exportSounds = [paletteInfo objectForKey: @"ExportSounds"];
-  if(exportSounds != nil)
-    {
-      [self importSounds: exportSounds withBundle: bundle];
-    }
-
-  subClasses = [paletteInfo objectForKey: @"SubstituteClasses"];
-  if(subClasses != nil)
-    {
-      [substituteClasses addEntriesFromDictionary: subClasses];
-    }
-  */
- 
   [plugin didLoad];
 
   // manage plugin data.
@@ -343,10 +217,4 @@
   return nil;
 }
 
-/*
-- (NSPanel*) panel
-{
-  return panel;
-}
-*/
 @end
