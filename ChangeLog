@@ -1,3 +1,8 @@
+2020-03-29 Fred Kiefer <FredKiefer@gmx.de>
+
+	* GormCore/GormDocument.m: Remove NSNibConnector duplicating code
+	in gui. Use [-attachObjects:toParent:] and [-detachObjects:] more often.
+
 2020-01-10 Sergii Stoian <stoyan255@gmail.com>
 
 	* Palettes/2Controls/ControlsPalette.gorm,

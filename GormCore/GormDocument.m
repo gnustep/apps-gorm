@@ -65,35 +65,6 @@
 }
 @end
 
-@interface NSNibConnector (GormExtension)
-- (BOOL) isEqual: (id)object;
-@end
-
-@implementation NSNibConnector (GormExtension)
-- (BOOL) isEqual: (id)object
-{
-  BOOL result = NO;
-
-  if([object isKindOfClass: [NSNibConnector class]] == NO)
-    {
-      return NO;
-    }
-
-  if(self == object)
-    {
-      result = YES;
-    }
-  else if([[self source] isEqual: [object source]] &&
-	  [[self destination] isEqual: [object destination]] &&
-	  [[self label] isEqual: [object label]] &&
-	  ([self class] == [object class]))
-    {
-      result = YES;
-    }
-  return result;
-}
-@end
-
 @interface NSDocument (GormPrivate)
 - (NSWindow *) _docWindow;
 @end
@@ -619,8 +590,6 @@ static NSImage  *fileImage = nil;
 	  NSWindow *win = (NSWindow *)anObject;
 	  NSView *contentView = [win contentView];
 	  NSArray *subviews = [contentView subviews];
-	  NSEnumerator *en = [subviews objectEnumerator];
-	  NSView *view = nil;
 
 	  // Turn off the release when closed flag, add the content view.
 	  [anObject setReleasedWhenClosed: NO];
@@ -628,10 +597,7 @@ static NSImage  *fileImage = nil;
 		toParent: anObject];
 
 	  // Add all subviews from the window, if any.
-	  while((view = [en nextObject]) != nil)
-	    {
-	      [self attachObject: view toParent: win];
-	    }
+          [self attachObjects: subviews toParent: win];
 	}
       [[self openEditorForObject: anObject] activate];
     }
@@ -668,14 +634,9 @@ static NSImage  *fileImage = nil;
   else if([anObject isKindOfClass: [NSPopUpButton class]])
     {
       NSPopUpButton *button = (NSPopUpButton *)anObject;
-      NSEnumerator *en = [[button itemArray] objectEnumerator];
-      id item = nil;
 
       // add all of the items in the popup..
-      while((item = [en nextObject]) != nil)
-	{
-	  [self attachObject: item toParent: button];
-	}      
+      [self attachObjects: [button itemArray] toParent: button];
     }
   /*
    * Add the menu item.
@@ -695,8 +656,6 @@ static NSImage  *fileImage = nil;
     {
       BOOL isMainMenu = NO;
       NSMenu *menu = (NSMenu *)anObject;
-      NSEnumerator *en = [[menu itemArray] objectEnumerator];
-      id item = nil;
 
       // If there is no main menu and a menu gets added, it
       // will become the main menu.
@@ -731,10 +690,7 @@ static NSImage  *fileImage = nil;
 	}
 
       // add all of the items in the menu.
-      while((item = [en nextObject]) != nil)
-	{
-	  [self attachObject: item toParent: menu];
-	}
+      [self attachObjects: [menu itemArray] toParent: menu];
       
       // activate the editor...
       [[self openEditorForObject: menu] activate];
@@ -761,19 +717,11 @@ static NSImage  *fileImage = nil;
       if ([[anObject documentView] isKindOfClass: 
 				    [NSTableView class]])
 	{
-	  NSInteger i;
-	  NSInteger count;
-	  NSArray *tc;
 	  id tv = [anObject documentView];
-	  tc = [tv tableColumns];
-	  count = [tc count];
+
 	  [self attachObject: tv toParent: anObject];
 	  
-	  for (i = 0; i < count; i++)
-	    {
-	      [self attachObject: [tc objectAtIndex: i]
-			toParent: tv];
-	    }
+          [self attachObjects: [tv tableColumns] toParent: tv];
 	}
       else // if ([[anObject documentView] isKindOfClass: [NSTextView class]])
 	{
@@ -785,12 +733,7 @@ static NSImage  *fileImage = nil;
    */
   else if ([anObject isKindOfClass: [NSTabView class]])
     {
-      NSEnumerator *tie = [[anObject tabViewItems] objectEnumerator];
-      NSTabViewItem *ti = nil;
-      while((ti = [tie nextObject]) != nil)
-	{
-	  [self attachObject: ti toParent: anObject];
-	}
+      [self attachObjects: [anObject tabViewItems] toParent: anObject];
     }
   /*
    * If it's a tab view item, then we attach the view.
@@ -806,33 +749,23 @@ static NSImage  *fileImage = nil;
    */
   else if ([anObject isKindOfClass: [NSMatrix class]])
     {
-      NSCell *cell = nil;
-      NSEnumerator *en = [[anObject cells] objectEnumerator];
-      
       // add all of the cells....
-      while((cell = [en nextObject]) != nil)
-	{
-	  [self attachObject: cell toParent: anObject];
-	}
+      [self attachObjects: [anObject cells] toParent: anObject];
     }
   /*
    * If it's a simple NSView, add it and all of it's subviews.
    */
   else if ([anObject isKindOfClass: [NSView class]])
     {
-      NSView *view = (NSView *)anObject, *sv = nil;
-      NSEnumerator *en = [[view subviews] objectEnumerator];
-      
+      NSView *view = (NSView *)anObject;
+
       // Add all subviews from the window, if any.
-      while((sv = [en nextObject]) != nil)
-	{
-	  [self attachObject: sv toParent: view];
-	}
+      [self attachObjects: [view subviews] toParent: view];
     }
 
   // Attach the cell of an item to the document so that it has a name and
   // can be addressed.
-  if([anObject respondsToSelector: @selector(cell)])
+  if ([anObject respondsToSelector: @selector(cell)])
     {
       [self attachObject: [anObject cell] toParent: anObject];
     }
@@ -1203,20 +1136,6 @@ static NSImage  *fileImage = nil;
   NSDebugLog(@"Owner changed for %@", sender);
 }
 
-/*
-- (id) release
-{
-  return [super release];
-}
-*/
-
-- (id) retain
-{
-  [super retain];
-  NSDebugLog(@"Retaining document, retain count %d", (int)[self retainCount]);
-  return self;
-}
-
 /**
  * Dealloc all things owned by a GormDocument object.
  */
@@ -1313,8 +1232,6 @@ static NSImage  *fileImage = nil;
       NSString	       *name = RETAIN([self nameForObject: anObject]); // released at end of method...
       unsigned	       count;
       NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
-      id               obj = nil;
-      NSEnumerator     *en = [objs objectEnumerator];
       id               editor = [self editorForObject: anObject create: NO];
       id               parent = [self parentEditorForEditor: editor];
 
@@ -1414,13 +1331,7 @@ static NSImage  *fileImage = nil;
 	}
       
       // iterate over the list and remove any subordinate objects.
-      if(en != nil)
-	{
-	  while((obj = [en nextObject]) != nil)
-	    {
-	      [self detachObject: obj];
-	    }
-	}
+      [self detachObjects: objs];
 
       [self setSelectionFromEditor: nil]; // clear the selection.
       RELEASE(name); // retained at beginning of method...

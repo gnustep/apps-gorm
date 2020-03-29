@@ -69,8 +69,8 @@
   if (sender == valuesForm)
     {
       [object setMinValue: [[sender cellAtIndex: 0] doubleValue]];
-      [object setDoubleValue: [[sender cellAtIndex: 1] doubleValue]];
       [object setMaxValue: [[sender cellAtIndex: 2] doubleValue]];
+      [object setDoubleValue: [[sender cellAtIndex: 1] doubleValue]];
       [object setNumberOfTickMarks: [[sender cellAtIndex: 3] intValue]];
     }
   else if ( sender == stopOnTicksSwitch ) 
