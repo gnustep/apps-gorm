@@ -1,3 +1,8 @@
+2020-04-14 Riccardo Mottola <rm@gnu.org>
+
+	* Palettes/2Controls/GormProgressIndicatorAttributesInspector.m
+	Cast to NSProgressIndiciator so corret isVertical method is choosen by compiler. Add check before casting.
+
 2020-03-29 Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormDocument.m: Remove NSNibConnector duplicating code
