@@ -1,16 +1,27 @@
-1 Noteworthy changes in version '1.2.24'
+1 Noteworthy changes in version '1.2.26'
+========================================
+
+   * Refactoring of palettes by Sergii Stoian to correct usability
+     issues in Gorm.
+   * Refactoring of handling and rearrangment of controls in inspectors
+     for usuability.
+   * Stability fixes to make Gorm easier to use.
+   * Autosizing of views corrected in many inspectors
+   * Improvements in error handling.
+
+2 Noteworthy changes in version '1.2.24'
 ========================================
 
    * Fix for issue where Gorm was referencing private variables.  This
      caused a crash when built with clang.
 
-2 Noteworthy changes in version '1.2.23'
+3 Noteworthy changes in version '1.2.23'
 ========================================
 
    * Fix for issue where NSPanel was being saved as an NSWindow in some
      cases.
 
-3 Noteworthy changes in version '1.2.22'
+4 Noteworthy changes in version '1.2.22'
 ========================================
 
    * Fix for bug#45040: Fix allows Gorm custom class functionality to
@@ -19,7 +30,7 @@
    * Memory leak fixes.
    * Objective-C parser improvements.
 
-4 Noteworthy changes in version '1.2.20'
+5 Noteworthy changes in version '1.2.20'
 ========================================
 
    * Bug fixes #28643, #32827
@@ -28,7 +39,7 @@
      edited.
    * Changes to prevent recursive frame change notifications.
 
-5 Noteworthy changes in version '1.2.18'
+6 Noteworthy changes in version '1.2.18'
 ========================================
 
    * Code cleanup, removal of warnings when building with clang.
@@ -36,14 +47,14 @@
      building with newer runtimes.
    * Stability improvements.
 
-6 Noteworthy changes in version '1.2.16'
+7 Noteworthy changes in version '1.2.16'
 ========================================
 
    * XIB reading.
    * Bug fixes for standalone views.
    * Stability changes.
 
-7 Noteworthy changes in version '1.2.12'
+8 Noteworthy changes in version '1.2.12'
 ========================================
 
 Requires: gnustep-base-1.20.0, gnustep-gui-0.18.0.  Reason: Parts of the
@@ -57,7 +68,7 @@ corresponding changes in Gorm to use it.
      informational purposes.
    * Opens default document when using NSWindows95InterfaceStyle.
 
-8 Noteworthy changes in version '1.2.10'
+9 Noteworthy changes in version '1.2.10'
 ========================================
 
    * Correction for bug #25401
@@ -65,8 +76,8 @@ corresponding changes in Gorm to use it.
    * Limited support for standalone views.
    * Fixes for various bugs.
 
-9 Noteworthy changes in version '1.2.8'
-=======================================
+10 Noteworthy changes in version '1.2.8'
+========================================
 
 Requires: gnustep-gui-0.16.0.  It will not compile without this version
 of the library.  Reason: Nib and Gorm loading were moved to a more
@@ -77,7 +88,7 @@ sensible file structure.  Additionally, Nib loading was refactored.
    * Fixes for nib encoding to use the proper template class instances.
    * Changes to use new headers.
 
-10 Noteworthy changes in version '1.2.6'
+11 Noteworthy changes in version '1.2.6'
 ========================================
 
    * Corrections to allow Gorm to build and run properly on the Darwin
@@ -90,7 +101,7 @@ sensible file structure.  Additionally, Nib loading was refactored.
      read/written by Gorm.
    * Correction for bug#24146, bug#23889.
 
-11 Noteworthy changes in version '1.2.4'
+12 Noteworthy changes in version '1.2.4'
 ========================================
 
 Requires: gnustep-gui-0.13.2.  Reason: Due to changes in popupbutton
@@ -103,7 +114,7 @@ controller logic.
    * Added capability to repair logic to fix window level issue.
    * Added ruler switch to scroll view inspector.
 
-12 Noteworthy changes in version '1.2.2'
+13 Noteworthy changes in version '1.2.2'
 ========================================
 
 Requires: gnustep-gui-0.13.0.
@@ -118,12 +129,12 @@ Requires: gnustep-gui-0.13.0.
      edited.
    * Other miscellaneous bug corrections.
 
-13 Noteworthy changes in version '1.2.1'
+14 Noteworthy changes in version '1.2.1'
 ========================================
 
    * Minor corrections to previous release.
 
-14 Noteworthy changes in version '1.2.0'
+15 Noteworthy changes in version '1.2.0'
 ========================================
 
    * Corrections to some editors to not change selection if connection
@@ -132,7 +143,7 @@ Requires: gnustep-gui-0.13.0.
    * Correction for memory issue when closing document.
    * Minor bug fixes.
 
-15 Noteworthy changes in version '1.1.0'
+16 Noteworthy changes in version '1.1.0'
 ========================================
 
    * Changed Gorm architecture to use NSDocument classes.
@@ -148,7 +159,7 @@ Requires: gnustep-gui-0.13.0.
    * Updated icon
    * A number of bugs have been addressed in this release.
 
-16 Noteworthy changes in version '1.0.8'
+17 Noteworthy changes in version '1.0.8'
 ========================================
 
 This is a bugfix release.
@@ -156,7 +167,7 @@ This is a bugfix release.
    * Correction for bug#16587.
    * Correction for handling non-string identifiers in tableviews.
 
-17 Noteworthy changes in version '1.0.6'
+18 Noteworthy changes in version '1.0.6'
 ========================================
 
 This is a bugfix release.
@@ -170,7 +181,7 @@ This is a bugfix release.
    * Changed formatting in some of the inspectors so that they are
      easier to navigate.
 
-18 Noteworthy changes in version '1.0.4'
+19 Noteworthy changes in version '1.0.4'
 ========================================
 
 This is a bugfix release.
@@ -182,7 +193,7 @@ This is a bugfix release.
    * Corrected bug #15178.
    * Corrected problem with standalone views
 
-19 Noteworthy changes in version '1.0.2'
+20 Noteworthy changes in version '1.0.2'
 ========================================
 
 This is a bugfix release.
@@ -190,7 +201,7 @@ This is a bugfix release.
    * Fixed some bugs with table column selection.
    * Corrected a minor problem in the custom class inspector.
 
-20 Noteworthy changes in version '1.0.0'
+21 Noteworthy changes in version '1.0.0'
 ========================================
 
 PLEASE NOTE: This version of Gorm requires base 1.11.1 and gui 0.10.1 to
@@ -204,7 +215,7 @@ be installed (gnustep-startup-0.13.0).
      which prompted those changes were fixed long ago.
    * Added documentation to GormCore
 
-21 Noteworthy changes in version '0.11.0'
+22 Noteworthy changes in version '0.11.0'
 =========================================
 
    * Improved implementation of canSubstituteForClass: the default
@@ -235,7 +246,7 @@ be installed (gnustep-startup-0.13.0).
    * Lots of bugfixes and usability changes are also included in this
      release.
 
-22 Noteworthy changes in version '0.9.10'
+23 Noteworthy changes in version '0.9.10'
 =========================================
 
    * Gorm now has a full implementation of canSubstituteForClass: which
@@ -260,7 +271,7 @@ be installed (gnustep-startup-0.13.0).
      into the objects view and have it work.
    * A myriad of bug fixes.
 
-23 Noteworthy changes in version '0.9.2'
+24 Noteworthy changes in version '0.9.2'
 ========================================
 
 NOTE: This is mainly a bugfix release.
@@ -275,7 +286,7 @@ NOTE: This is mainly a bugfix release.
      will now warn the user with a panel.
    * Various improvements in documentation
 
-24 Noteworthy changes in version '0.9.0'
+25 Noteworthy changes in version '0.9.0'
 ========================================
 
    * Images/Sounds can now be dragged into a matrix cell.
@@ -302,7 +313,7 @@ NOTE: This is mainly a bugfix release.
    * All inspectors work perfectly with customized colors.
    * Fixed a number of bugs.
 
-25 Noteworthy changes in version '0.8.0'
+26 Noteworthy changes in version '0.8.0'
 ========================================
 
 PLEASE NOTE: It is important for this release that you upgrade to Gorm
@@ -341,7 +352,7 @@ it is known beyond a reasonable doubt.
      user to easily build a gui using these and reducing the amount of
      time the user needs to spend fiddling with the font panel.
 
-26 Noteworthy changes in version '0.7.7'
+27 Noteworthy changes in version '0.7.7'
 ========================================
 
    * Important bugfixes in editor classes.
@@ -358,7 +369,7 @@ it is known beyond a reasonable doubt.
    * Gorm will now show an alert panel when a model fails to load or
      test properly.
 
-27 Noteworthy changes in version '0.7.6'
+28 Noteworthy changes in version '0.7.6'
 ========================================
 
 This release is mainly a bugfix release for 0.7.5.
@@ -368,7 +379,7 @@ This release is mainly a bugfix release for 0.7.5.
    * Important bugfixes for Menu editing.
    * Important bugfixes for class inspector.
 
-28 Noteworthy changes in version '0.7.5'
+29 Noteworthy changes in version '0.7.5'
 ========================================
 
    * The 'reparent' feature in the class inspector.  This allows the
@@ -384,7 +395,7 @@ This release is mainly a bugfix release for 0.7.5.
    * A way to restore a complete NSMenu if it's deleted (a new palette
      entry for NSMenu, not just an item)
 
-29 Noteworthy changes in version '0.6.0'
+30 Noteworthy changes in version '0.6.0'
 ========================================
 
    * Several major bugs corrected.
@@ -392,7 +403,7 @@ This release is mainly a bugfix release for 0.7.5.
    * Menu items are now properly enabled/disabled when appropriate
    * More descriptive title displayed when a class is being edited.
 
-30 Noteworthy changes in version '0.5.0'
+31 Noteworthy changes in version '0.5.0'
 ========================================
 
    * Enabled defer in NSWindow inspector.
@@ -406,7 +417,7 @@ This release is mainly a bugfix release for 0.7.5.
      custom subclasses.
    * Bug fixes, eliminated memory leak, code cleanup, etc.
 
-31 Noteworthy changes in version '0.4.0'
+32 Noteworthy changes in version '0.4.0'
 ========================================
 
    * New Menu and Menu Item inspectors.
@@ -422,7 +433,7 @@ This release is mainly a bugfix release for 0.7.5.
      creation of custom subclasses.
    * Windows and Services menus now function correctly.
 
-32 Noteworthy changes in version '0.3.1'
+33 Noteworthy changes in version '0.3.1'
 ========================================
 
    * New custom class system.
@@ -430,7 +441,7 @@ This release is mainly a bugfix release for 0.7.5.
    * Fixed DND
    * Various bugfixes
 
-33 Noteworthy changes in version '0.3.0'
+34 Noteworthy changes in version '0.3.0'
 ========================================
 
    * Preferences added.
@@ -448,7 +459,7 @@ This release is mainly a bugfix release for 0.7.5.
    * Removed all warnings from the code.
    * various bug fixes.
 
-34 Noteworthy changes in version '0.2.5'.
+35 Noteworthy changes in version '0.2.5'.
 =========================================
 
 Many fixes and improvements to make the app work better.
@@ -457,7 +468,7 @@ Many fixes and improvements to make the app work better.
    * Interface code redone as gorm files.
    * Re-add multiple selection via mouse drag.
 
-35 Noteworthy changes in version '0.2.0' snapshot.
+36 Noteworthy changes in version '0.2.0' snapshot.
 ==================================================
 
 Gobs of improvements, mostly due to the hard work of Gregory John
@@ -474,7 +485,7 @@ Casamento and Pierre-Yves Rivaille.  Thanks guys!
    * Sound and Image support.
    * gorm files were changed to directory wrappers for more flexibility.
 
-36 Noteworthy changes in version '0.1.0'
+37 Noteworthy changes in version '0.1.0'
 ========================================
 
    * load/parses class files for entry into class list.
@@ -486,7 +497,7 @@ Casamento and Pierre-Yves Rivaille.  Thanks guys!
    * Ability to edit cells in a matrix.
    * Ability to change the font of some objects.
 
-37 Noteworthy changes in version '0.0.3'
+38 Noteworthy changes in version '0.0.3'
 ========================================
 
    * Create stub .m and .h files from new classes
@@ -497,7 +508,7 @@ Casamento and Pierre-Yves Rivaille.  Thanks guys!
    * Edit NSBoxes and add subviews.
    * Support for custom objects.
 
-38 Noteworthy changes in version '0.0.2'
+39 Noteworthy changes in version '0.0.2'
 ========================================
 
    * Add popup and pulldown menu controls
@@ -506,7 +517,7 @@ Casamento and Pierre-Yves Rivaille.  Thanks guys!
    * Some support for connections
    * Much more fleshed out - too numerous to mention.
 
-39 Noteworthy changes in version '0.0.1'
+40 Noteworthy changes in version '0.0.1'
 ========================================
 
    * 8th December 1999

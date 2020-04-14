@@ -1,3 +1,11 @@
+2020-04-17 14:45-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormInfo.plist
+	* NEWS
+	* Version: 1.2.26
+
 2020-03-29 Fred Kiefer <FredKiefer@gmx.de>
 
 	* GormCore/GormDocument.m: Remove NSNibConnector duplicating code

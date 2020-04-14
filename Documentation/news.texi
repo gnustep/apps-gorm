@@ -4,13 +4,23 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.2.26}
+
+@itemize @bullet
+@item Refactoring of palettes by Sergii Stoian to correct usability issues in Gorm.
+@item Refactoring of handling and rearrangment of controls in inspectors for usuability.
+@item Stability fixes to make Gorm easier to use.
+@item Autosizing of views corrected in many inspectors
+@item Improvements in error handling.
+@end itemize
+
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{1.2.24}
 
 @itemize @bullet
 @item Fix for issue where Gorm was referencing private variables. This caused a crash when built with clang.
 @end itemize
-
-@ifclear ANNOUNCE-ONLY
 
 @section Noteworthy changes in version @samp{1.2.23}
 
