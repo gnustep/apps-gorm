@@ -1,7 +1,7 @@
 /*
   GormProgressIndicatorAttributesInspector.m
 
-   Copyright (C) 2001-2005 Free Software Foundation, Inc.
+   Copyright (C) 2001-2020 Free Software Foundation, Inc.
 
    Author:  Adam Fedor <fedor@gnu.org>
               Laurent Julliard <laurent@julliard-online.org>
@@ -94,10 +94,13 @@
 {
   if ( object == nil ) 
     return;
-  [indeterminate setState: [object isIndeterminate]?NSOnState:NSOffState];
-  [vertical setState: [object isVertical] ? NSOnState:NSOffState];
-  [minValue setIntValue: [object minValue]];
-  [maxValue setIntValue: [object maxValue]];
+  if ( ![object isKindOfClass:[NSProgressIndicator class]] )
+    NSLog ( @"GormNSProgressIndicatorInspector: Unexpected class of object; %@", [object class]);
+
+  [indeterminate setState: [(NSProgressIndicator *)object isIndeterminate]?NSOnState:NSOffState];
+  [vertical setState: [(NSProgressIndicator *)object isVertical] ? NSOnState:NSOffState];
+  [minValue setIntValue: [(NSProgressIndicator *)object minValue]];
+  [maxValue setIntValue: [(NSProgressIndicator *)object maxValue]];
 
   [super revert:sender];
 }
