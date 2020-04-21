@@ -1,4 +1,4 @@
-/* All Rights reserved */
+/* All rights reserved */
 
 #include <AppKit/AppKit.h>
 
