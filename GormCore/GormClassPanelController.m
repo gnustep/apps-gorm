@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-/* All Rights reserved */
+/* All rights reserved */
 
 #include <AppKit/AppKit.h>
 

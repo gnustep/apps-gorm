@@ -1796,8 +1796,8 @@
   [actions addObjectsFromArray: [classInfo objectForKey: @"ExtraActions"]]; 
   
   // header file comments...
-  [headerFile appendString: @"/* All Rights reserved */\n\n"];
-  [sourceFile appendString: @"/* All Rights reserved */\n\n"];
+  [headerFile appendString: @"/* All rights reserved */\n\n"];
+  [sourceFile appendString: @"/* All rights reserved */\n\n"];
   [headerFile appendString: @"#include <AppKit/AppKit.h>\n\n"];
   [sourceFile appendString: @"#include <AppKit/AppKit.h>\n"];
   if ([[headerPath stringByDeletingLastPathComponent]
