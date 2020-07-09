@@ -197,6 +197,20 @@
 	  {
 	    NSString *name = nil;
 
+            // Delete old target action settings if they are directly encoded.
+            if ([v respondsToSelector: @selector(setTarget:)])
+              {
+                [v setTarget: nil]; // remove hard set targets or actions.
+		[_repairLog addObject: @"ERROR: Removing hard set target.\n"];
+                NSLog(@"ERROR: Removing hard set target.\n");
+              }
+            if ([v respondsToSelector: @selector(setAction:)])
+              {
+                [v setAction: NULL]; // remove hard set targets or actions.
+		[_repairLog addObject: @"ERROR: Removing hard set action.\n"];
+                NSLog(@"ERROR: Removing hard set action.\n");
+              }
+
 	    // skip these...
 	    if([v isKindOfClass: [NSMatrix class]])
 	      {
@@ -227,7 +241,7 @@
 		[_repairLog addObject: @"INFO: Skipping NSClipView in an NSTextView.\n"];
 		continue;
 	      }
-	       	    
+
 	    if((name = [document nameForObject: v]) == nil)
 	      {
 		[document attachObject: v toParent: [v superview]];
@@ -578,13 +592,11 @@
 		  /*
 		   * Repair the .gorm file, if needed.
 		   */
-		  /*
 		  if(repairFile)
 		    {
 		      [self _repairFile];
 		    }
-		  */
-		  NSDebugLog(@"nameTable = %@",[container nameTable]);
+                  NSDebugLog(@"nameTable = %@",[container nameTable]);
 		  
 		  // awaken all elements after the load is completed.
 		  enumerator = [nt keyEnumerator];
