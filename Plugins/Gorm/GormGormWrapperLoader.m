@@ -57,7 +57,7 @@
 
 - (id) init
 {
-  if((self = [super init]) != nil)
+  if ((self = [super init]) != nil)
     {
       _repairLog = [[NSMutableArray alloc] init];
     }
@@ -75,7 +75,7 @@
   NSEnumerator *en = [_repairLog objectEnumerator];
   id m = nil;
 
-  if([NSBundle loadNibNamed: @"GormInconsistenciesPanel"
+  if ([NSBundle loadNibNamed: @"GormInconsistenciesPanel"
 	       owner: self] == NO)
     {
       NSLog(@"Failed to open message panel...");
@@ -125,10 +125,10 @@
     /*
      * Take care of any dangling menus...
      */
-    if([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
+    if ([obj isKindOfClass: [NSMenu class]] && ![key isEqual: @"NSMenu"])
       {
 	id sm = [obj supermenu];
-	if(sm == nil)
+	if (sm == nil)
 	  {
 	    NSArray *menus = findAll(obj);
 	    [_repairLog addObject: 
@@ -148,42 +148,15 @@
       }
 
     /*
-     * Take care of any dangling menu items...
-     */
-    /*
-    if([obj isKindOfClass: [NSMenuItem class]])
-      {
-	id m = [obj menu];
-	if(m == nil)
-	  {
-	    id sm = [obj submenu];
-
-	    [_repairLog addObject:
-			  [NSString stringWithFormat: @"ERROR ==> Found and removed an unattached menu item %@, %@.\n",
-				    obj, key]];
-	    [document detachObject: obj];
-
-	    // if there are any submenus, detach those as well.
-	    if(sm != nil)
-	      {
-		NSArray *menus = findAll(sm);
-		[document detachObjects: menus];
-	      }
-	    errorCount++;
-	  }
-      }
-    */
-
-    /*
      * If there is a view which is not associated with a name, give it one...
      */
-    if([obj isKindOfClass: [NSWindow class]])
+    if ([obj isKindOfClass: [NSWindow class]])
       {
 	NSArray *allViews = allSubviews([obj contentView]);
 	NSEnumerator *ven = [allViews objectEnumerator];
 	id v = nil;
 
-	if([obj windowLevel] != NSNormalWindowLevel)
+	if ([obj windowLevel] != NSNormalWindowLevel)
 	  {
 	    [obj setLevel: NSNormalWindowLevel];
 	    [_repairLog addObject: 
@@ -201,48 +174,46 @@
             if ([v respondsToSelector: @selector(setTarget:)])
               {
                 [v setTarget: nil]; // remove hard set targets or actions.
-		[_repairLog addObject: @"ERROR: Removing hard set target.\n"];
-                NSLog(@"ERROR: Removing hard set target.\n");
+		[_repairLog addObject: @"ERROR: Removing hard set target on object %@.\n",v];
               }
             if ([v respondsToSelector: @selector(setAction:)])
               {
                 [v setAction: NULL]; // remove hard set targets or actions.
-		[_repairLog addObject: @"ERROR: Removing hard set action.\n"];
-                NSLog(@"ERROR: Removing hard set action.\n");
+		[_repairLog addObject: @"ERROR: Removing hard set action on object %@.\n",v];
               }
 
 	    // skip these...
-	    if([v isKindOfClass: [NSMatrix class]])
+	    if ([v isKindOfClass: [NSMatrix class]])
 	      {
 		[_repairLog addObject: @"INFO: Skipping NSMatrix view.\n"];
 		continue;
 	      }
-	    else if([v isKindOfClass: [NSScroller class]] &&
+	    else if ([v isKindOfClass: [NSScroller class]] &&
 		    [[v superview] isKindOfClass: [NSTextView class]])
 	      {
 		[_repairLog addObject: @"INFO: Skipping NSScroller in an NSTextView.\n"];
 		continue;
 	      }
-	    else if([v isKindOfClass: [NSScroller class]] &&
+	    else if ([v isKindOfClass: [NSScroller class]] &&
 		    [[v superview] isKindOfClass: [NSBrowser class]])
 	      {
 		[_repairLog addObject: @"INFO: Skipping NSScroller in an NSTextView.\n"];
 		continue;
 	      }
-	    else if([v isKindOfClass: [NSClipView class]] &&
+	    else if ([v isKindOfClass: [NSClipView class]] &&
 		    [[v superview] isKindOfClass: [NSTextView class]])
 	      {
 		[_repairLog addObject: @"INFO: Skipping NSClipView in an NSTextView.\n"];
 		continue;
 	      }
-	    else if([v isKindOfClass: [NSClipView class]] &&
+	    else if ([v isKindOfClass: [NSClipView class]] &&
 		    [[v superview] isKindOfClass: [NSBrowser class]])
 	      {
 		[_repairLog addObject: @"INFO: Skipping NSClipView in an NSTextView.\n"];
 		continue;
 	      }
 
-	    if((name = [document nameForObject: v]) == nil)
+	    if ((name = [document nameForObject: v]) == nil)
 	      {
 		[document attachObject: v toParent: [v superview]];
 		name = [document nameForObject: v];
@@ -250,7 +221,7 @@
 			      [NSString stringWithFormat: 
 					  @"ERROR ==> Found view %@ without an associated name, adding to the nametable as %@\n", 
 					v, name]];
-		if([v respondsToSelector: @selector(stringValue)])
+		if ([v respondsToSelector: @selector(stringValue)])
 		  {
 		    [_repairLog addObject: [NSString stringWithFormat: @"INFO: View string value is %@\n",[v stringValue]]];
 		  }
@@ -270,19 +241,19 @@
     {
       id src = [con source];
       id dst = [con destination];
-      if([con isKindOfClass: [NSNibConnector class]])
+      if ([con isKindOfClass: [NSNibConnector class]])
 	{
-	  if(src == nil)
+	  if (src == nil)
 	    {
 	      [_repairLog addObject: 
 			    [NSString stringWithFormat: @"ERROR ==> Removing bad connector with nil source: %@\n",con]];
 	      [document removeConnector: con];
 	      errorCount++;
 	    }
-	  else if([src isKindOfClass: [NSString class]])
+	  else if ([src isKindOfClass: [NSString class]])
 	    {
 	      id obj = [document objectForName: src];
-	      if(obj == nil)
+	      if (obj == nil)
 		{
 		  [_repairLog addObject: 
 				[NSString stringWithFormat: 
@@ -292,10 +263,10 @@
 		  errorCount++;
 		}
 	    }
-	  else if([dst isKindOfClass: [NSString class]])
+	  else if ([dst isKindOfClass: [NSString class]])
 	    {
 	      id obj = [document objectForName: dst];
-	      if(obj == nil)
+	      if (obj == nil)
 		{
 		  [_repairLog addObject: 
 				[NSString stringWithFormat: 
@@ -309,7 +280,7 @@
     }
   
   // report the number of errors...
-  if(errorCount > 0)
+  if (errorCount > 0)
     {
       errorMsg = [NSString stringWithFormat: @"%d inconsistencies were found, please save the file.",errorCount]; 
       [self _openMessagePanel: errorMsg];
@@ -327,7 +298,7 @@
   id obj = nil;
   while((obj = [en nextObject]) != nil)
     {
-      if([obj isKindOfClass: cls])
+      if ([obj isKindOfClass: cls])
 	{
 	  return YES;
 	}
@@ -379,18 +350,18 @@
 	      while((key = [enumerator nextObject]) != nil)
 		{
 		  NSFileWrapper *fw = [fileWrappers objectForKey: key];
-		  if([fw isRegularFile])
+		  if ([fw isRegularFile])
 		    {
 		      NSData *fileData = [fw regularFileContents];
-		      if([key isEqual: @"objects.gorm"])
+		      if ([key isEqual: @"objects.gorm"])
 			{
 			  data = fileData;
 			}
-		      else if([key isEqual: @"data.info"])
+		      else if ([key isEqual: @"data.info"])
 			{
 			  [document setInfoData: fileData];
 			}
-		      else if([key isEqual: @"data.classes"])
+		      else if ([key isEqual: @"data.classes"])
 			{
 			  classes = fileData;
 			  
@@ -551,7 +522,7 @@
 		   * to the list so that they can be properly processed.
 		   */
 		  version = [u versionForClassName: NSStringFromClass([GSNibContainer class])];
-		  if(version == 0)
+		  if (version == 0)
 		    {
 		      id obj;
 		      NSEnumerator *en = [nt objectEnumerator];
@@ -559,7 +530,7 @@
 		      // get all of the GSNibItem subclasses which could be top level objects
 		      while((obj = [en nextObject]) != nil)
 			{
-			  if([obj isKindOfClass: [GSNibItem class]] &&
+			  if ([obj isKindOfClass: [GSNibItem class]] &&
 			     [obj isKindOfClass: [GSCustomView class]] == NO)
 			    {
 			      [[container topLevelObjects] addObject: obj];
@@ -567,7 +538,7 @@
 			}
 		      [document setOlderArchive: YES];
 		    }
-		  else if(version == 1)
+		  else if (version == 1)
 		    {
 		      // nothing else, just mark it as older...
 		      [document setOlderArchive: YES];
@@ -579,7 +550,7 @@
 		   * it was made by an older version of Gorm.
 		   */
 		  version = [u versionForClassName: NSStringFromClass([GSWindowTemplate class])];
-		  if(version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
+		  if (version == NSNotFound && [self _containsKindOfClass: [NSWindow class]])
 		    {
 		      [document setOlderArchive: YES];
 		    }
@@ -592,7 +563,7 @@
 		  /*
 		   * Repair the .gorm file, if needed.
 		   */
-		  if(repairFile)
+		  if (repairFile)
 		    {
 		      [self _repairFile];
 		    }
