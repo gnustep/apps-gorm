@@ -11,6 +11,14 @@
         NSIcon = "GormFile.tiff";
       },
       {
+	NSName = "GSStoryboardFileType";
+	NSHumanReadableName = "Cocoa Storyboard";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "storyboard" );
+        NSIcon = "GormFile.tiff";
+      },
+      {
 	NSName = "GSNibFileType";
 	NSHumanReadableName = "Cocoa Nib";
 	NSRole = Editor;

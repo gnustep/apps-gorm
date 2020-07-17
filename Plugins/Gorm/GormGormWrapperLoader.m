@@ -26,6 +26,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+#include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include <GormCore/GormCore.h>
 
@@ -169,19 +170,39 @@
 	while((v = [ven nextObject]) != nil)
 	  {
 	    NSString *name = nil;
-
+            id target = nil;
+            SEL action = NULL;
+            
             // Delete old target action settings if they are directly encoded.
             if ([v respondsToSelector: @selector(setTarget:)])
               {
+                target = [v target];
                 [v setTarget: nil]; // remove hard set targets or actions.
-		[_repairLog addObject: @"ERROR: Removing hard set target on object %@.\n",v];
+		[_repairLog addObject: [NSString stringWithFormat:
+                                                          @"ERROR: Removing hard set target %@ on object %@.\n",
+                                                 target, v]];
+                errorCount++;                
               }
             if ([v respondsToSelector: @selector(setAction:)])
               {
+                action = [v action];
                 [v setAction: NULL]; // remove hard set targets or actions.
-		[_repairLog addObject: @"ERROR: Removing hard set action on object %@.\n",v];
+		[_repairLog addObject: [NSString stringWithFormat:
+                                                          @"ERROR: Removing hard set action %@ on object %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 v]];
+		errorCount++;                
               }
 
+            if (action != NULL && target != nil)
+              {
+                NSNibControlConnector *con = [[NSNibControlConnector alloc] init];
+                [con setDestination: v];
+                [con setLabel: NSStringFromSelector(action)];
+                [document addConnector: con];
+                [document touch];
+              }
+            
 	    // skip these...
 	    if ([v isKindOfClass: [NSMatrix class]])
 	      {
