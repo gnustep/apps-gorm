@@ -153,13 +153,14 @@
      */
     if ([obj isKindOfClass: [NSWindow class]])
       {
+        NSWindow *w = (NSWindow *)obj;
 	NSArray *allViews = allSubviews([obj contentView]);
 	NSEnumerator *ven = [allViews objectEnumerator];
 	id v = nil;
 
-	if ([obj windowLevel] != NSNormalWindowLevel)
+	if ([w windowLevel] != NSNormalWindowLevel)
 	  {
-	    [obj setLevel: NSNormalWindowLevel];
+	    [w setLevel: NSNormalWindowLevel];
 	    [_repairLog addObject: 
 			  [NSString stringWithFormat: 
 				      @"ERROR ==> Found window %@ with an invalid level, correcting.\n", 
@@ -172,6 +173,7 @@
 	    NSString *name = nil;
             id target = nil;
             SEL action = NULL;
+            BOOL isAction = NO;
             
             // Delete old target action settings if they are directly encoded.
             if ([v respondsToSelector: @selector(setTarget:)])
@@ -183,6 +185,8 @@
                                                  target, v]];
                 errorCount++;                
               }
+
+            // delete action...
             if ([v respondsToSelector: @selector(setAction:)])
               {
                 action = [v action];
@@ -194,15 +198,39 @@
 		errorCount++;                
               }
 
-            if (action != NULL && target != nil)
+            NSString *actionName = NSStringFromSelector(action);
+            isAction = [actionName containsString: @":"];
+            
+            // create control connector...
+            if (action != NULL && target != nil && isAction)
               {
                 NSNibControlConnector *con = [[NSNibControlConnector alloc] init];
                 [con setDestination: v];
-                [con setLabel: NSStringFromSelector(action)];
+                [con setLabel: actionName];
                 [document addConnector: con];
                 [document touch];
+                
+                [_repairLog addObject: [NSString stringWithFormat:
+                                                          @"FIX: Creating outlet connection for %@ on %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 v]];
               }
-            
+
+            // create outlet connector...
+            if (action != NULL && target != nil && !isAction)
+              {
+                NSString *actionName = NSStringFromSelector(action);
+                NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
+                [con setDestination: v];
+                [con setLabel: actionName];
+                [document addConnector: con];
+                [document touch];
+                
+                [_repairLog addObject: [NSString stringWithFormat:
+                                                          @"FIX: Creating control connection for %@ on %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 v]];
+              }
 	    // skip these...
 	    if ([v isKindOfClass: [NSMatrix class]])
 	      {
