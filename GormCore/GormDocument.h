@@ -423,6 +423,26 @@
  * Reactivate all of the editors...
  */
 - (void) reactivateEditors;
+
+/**
+ * Returns the name for the object...
+ */ 
+- (NSString*) nameForObject: (id)anObject;
+
+/**
+ * Returns the object for name.
+ */
+- (id) objectForName: (NSString*)name;
+
+/**
+ * Returns all names for all objects known to Gorm.
+ */
+- (NSArray *) objects;
+
+/**
+ * Add aConnector to the set of connectors in this document.
+ */ 
+- (void) addConnector: (id<IBConnectors>)aConnector;
 @end
 
 @interface GormDocument (MenuValidation)

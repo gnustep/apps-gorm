@@ -67,7 +67,7 @@
   id scrollView;
 
   scrollView = [[object superview] superview];
-  isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
+  isScrollView = [scrollView isKindOfClass: [NSScrollView class]];
 
   if (sender == backgroundColorWell)
     {
@@ -107,7 +107,6 @@
     {
       [object setUsesFindPanel:[findPanelButton state]];
     }
-    
   
   [super ok:sender];
 }
@@ -118,11 +117,11 @@
   BOOL isScrollView;
   id scrollView;
 
-  if ( object == nil)
+  if (object == nil)
     return;
 
   scrollView = [[object superview] superview];
-  isScrollView = [ scrollView isKindOfClass: [NSScrollView class]];
+  isScrollView = [scrollView isKindOfClass: [NSScrollView class]];
 
   [backgroundColorWell setColorWithoutAction: [object backgroundColor]];
   [textColorWell setColorWithoutAction: [object textColor]];
@@ -131,12 +130,12 @@
     [borderMatrix selectCellWithTag: [scrollView borderType]];
 
   /* options*/
-  [selectableButton setState:[object isSelectable]];
-  [editableButton setState:[object isEditable]];
-  [multipleFontsButton setState:[object isRichText]];
-  [graphicsButton setState:[object importsGraphics]];
-  [undoButton setState:[object allowsUndo]];
-  [findPanelButton setState:[object usesFindPanel]];
+  [selectableButton setState: [object isSelectable]];
+  [editableButton setState: [object isEditable]];
+  [multipleFontsButton setState: [object isRichText]];
+  [graphicsButton setState: [object importsGraphics]];
+  [undoButton setState: [object allowsUndo]];
+  [findPanelButton setState: [object usesFindPanel]];
 
   [super revert:sender];
 }

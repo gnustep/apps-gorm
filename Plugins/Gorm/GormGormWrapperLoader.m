@@ -175,62 +175,6 @@
             SEL action = NULL;
             BOOL isAction = NO;
             
-            // Delete old target action settings if they are directly encoded.
-            if ([v respondsToSelector: @selector(setTarget:)])
-              {
-                target = [v target];
-                [v setTarget: nil]; // remove hard set targets or actions.
-		[_repairLog addObject: [NSString stringWithFormat:
-                                                          @"ERROR: Removing hard set target %@ on object %@.\n",
-                                                 target, v]];
-                errorCount++;                
-              }
-
-            // delete action...
-            if ([v respondsToSelector: @selector(setAction:)])
-              {
-                action = [v action];
-                [v setAction: NULL]; // remove hard set targets or actions.
-		[_repairLog addObject: [NSString stringWithFormat:
-                                                          @"ERROR: Removing hard set action %@ on object %@.\n",
-                                                 NSStringFromSelector(action),
-                                                 v]];
-		errorCount++;                
-              }
-
-            NSString *actionName = NSStringFromSelector(action);
-            isAction = [actionName containsString: @":"];
-            
-            // create control connector...
-            if (action != NULL && target != nil && isAction)
-              {
-                NSNibControlConnector *con = [[NSNibControlConnector alloc] init];
-                [con setDestination: v];
-                [con setLabel: actionName];
-                [document addConnector: con];
-                [document touch];
-                
-                [_repairLog addObject: [NSString stringWithFormat:
-                                                          @"FIX: Creating outlet connection for %@ on %@.\n",
-                                                 NSStringFromSelector(action),
-                                                 v]];
-              }
-
-            // create outlet connector...
-            if (action != NULL && target != nil && !isAction)
-              {
-                NSString *actionName = NSStringFromSelector(action);
-                NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
-                [con setDestination: v];
-                [con setLabel: actionName];
-                [document addConnector: con];
-                [document touch];
-                
-                [_repairLog addObject: [NSString stringWithFormat:
-                                                          @"FIX: Creating control connection for %@ on %@.\n",
-                                                 NSStringFromSelector(action),
-                                                 v]];
-              }
 	    // skip these...
 	    if ([v isKindOfClass: [NSMatrix class]])
 	      {
@@ -276,6 +220,67 @@
 		  }
 		errorCount++;
 	      }
+
+            // Delete old target action settings if they are directly encoded.
+            if ([v respondsToSelector: @selector(setTarget:)])
+              {
+                target = [v target];
+                [v setTarget: nil]; // remove hard set targets or actions.
+		[_repairLog addObject: [NSString stringWithFormat:
+                                                          @"ERROR: Removing hard set target %@ on object %@.\n",
+                                                                      target, name]];
+                errorCount++;                
+              }
+
+            // delete action...
+            if ([v respondsToSelector: @selector(setAction:)])
+              {
+                action = [v action];
+                [v setAction: NULL]; // remove hard set targets or actions.
+		[_repairLog addObject: [NSString stringWithFormat:
+                                                          @"ERROR: Removing hard set action %@ on object %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 name]];
+		errorCount++;                
+              }
+            
+            NSString *actionName = NSStringFromSelector(action);
+            isAction = [actionName containsString: @":"];
+            
+            // create control connector...
+            if (action != NULL && target != nil && isAction)
+              {
+                NSNibControlConnector *con = [[NSNibControlConnector alloc] init];
+                [con setDestination: name];
+                [con setLabel: actionName];
+                [document addConnector: con];
+                [document touch];
+                
+                [_repairLog addObject: [NSString stringWithFormat:
+                                                          @"FIX: Creating outlet connection for %@ on %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 name]];
+                errorCount++;
+              }
+
+            // create outlet connector...
+            if (action != NULL && target != nil && !isAction)
+              {
+                NSString *actionName = NSStringFromSelector(action);
+                NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
+                [con setDestination: name];
+                [con setLabel: actionName];
+                [document addConnector: con];
+                [document touch];
+                
+                [_repairLog addObject: [NSString stringWithFormat:
+                                                          @"FIX: Creating control connection for %@ on %@.\n",
+                                                 NSStringFromSelector(action),
+                                                 name]];
+                errorCount++;
+              }
+
+            
 	    [_repairLog addObject: [NSString stringWithFormat: @"INFO: Checking view %@ with name %@\n", v, name]];
 	  }
       }

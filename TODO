@@ -4,8 +4,6 @@ This is a DO list based on feature requests that are being made by
 users of Gorm.   Currently a number of requests are on the
 table which seem intersting:
 
-* Look into automatic "localization" of .gorm files for applications.
-
 * Create an xml output format for Gorm files so that they can be used
   on both MOSX and on GNUstep.   This will be done w/ an extension
   library. (Working on this)
@@ -31,7 +29,7 @@ Usability features:
 outlet/action automatically after the user finishes editing the current
 one. 
 
-2) Fix gmodel issue in bug tracker.
+2) image sharing between project and gorm/nib files so that images from the proj
+ect can be loaded into Gorm's interfaces.
 
-Project Center Integration:
-1) image sharing between project and gorm/nib files so that images from the project can be loaded into Gorm's interfaces.
+3) Add code to keep scrollview setHasVerticalScroller/HasHorizontalScroller in sync with Horiz/Vert resizable in textView object.
