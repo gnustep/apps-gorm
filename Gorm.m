@@ -826,6 +826,13 @@
   [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
 }
 
+- (void) groupSelectionInMatrix: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInMatrix)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInMatrix];
+}
+
 - (void) ungroup: (id)sender
 {
   // NSLog(@"ungroup: selectionOwner %@", selectionOwner);
