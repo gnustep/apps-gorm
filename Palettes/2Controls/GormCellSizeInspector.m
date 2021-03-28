@@ -25,7 +25,7 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include "GormCellSizeInspector.h"
 
-@implementation NSCell (IBObjectAdditions)
+@implementation NSCell (IBObjectAdditions_Matrix)
 - (NSString *) sizeInspectorClassName
 {
   return @"GormCellSizeInspector";
