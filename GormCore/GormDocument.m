@@ -541,6 +541,13 @@ static NSImage  *fileImage = nil;
   NSArray *old;
   BOOL newObject = NO;
 
+  if ([self containsObject: anObject] &&
+      [anObject isKindOfClass: [NSWindow class]] == NO &&
+      [anObject isKindOfClass: [NSPanel class]] == NO)
+    {
+      return;
+    }
+  
   // Modify the document whenever something is added...
   [self touch];
 
@@ -751,6 +758,7 @@ static NSImage  *fileImage = nil;
     {
       // add all of the cells....
       [self attachObjects: [anObject cells] toParent: anObject];
+      [self attachObject: [anObject prototype] toParent: anObject];
     }
   /*
    * If it's a simple NSView, add it and all of it's subviews.

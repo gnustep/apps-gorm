@@ -104,6 +104,7 @@ NSUInteger colsStepperValue;
 /* Commit changes that the user makes in the Attributes Inspector */
 - (void) ok: (id) sender
 {
+  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
   if (sender == autosizeSwitch)
     {
       [object setAutosizesCells: ([sender state] == NSOnState)];
@@ -263,6 +264,9 @@ NSUInteger colsStepperValue;
     {
       [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
     }
+
+  // [document detachObjects: [object cells]];
+  [document attachObjects: [object cells] toParent: object];
   
   [super ok:sender];
 }
