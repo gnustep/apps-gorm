@@ -1379,14 +1379,19 @@
   return classMenu;
 }
 
-
 - (void) print: (id) sender
 {
   [[self keyWindow] print: sender];
 }
+
+- (void) selectAllItems: (id)sender
+{
+}
+
 @end
 
 @implementation Gorm (GormServer)
+
 // Methods to support external apps adding and deleting
 // classes from the current document...
 - (void) addClass: (NSDictionary *) dict
@@ -1418,4 +1423,5 @@
 
   [cm removeClassNamed: className];
 }
+
 @end

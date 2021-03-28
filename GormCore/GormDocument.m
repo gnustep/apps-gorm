@@ -1083,7 +1083,7 @@ static NSImage  *fileImage = nil;
 {
   NSEnumerator	*enumerator;
   NSMutableSet	*editorSet;
-  id		obj;
+  id<IBEditors>	obj;
   NSMutableData	*data;
   NSArchiver    *archiver;
 
@@ -1540,7 +1540,7 @@ static NSImage  *fileImage = nil;
     }
   else
     {
-      [[[links lastObject] destination] activate];
+      [(id<IBEditors>)[[links lastObject] destination] activate];
       return [[links lastObject] destination];
     }
 }
@@ -2588,11 +2588,12 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
+  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
   NSString *msg;
+  NSString *msgFormat = _(@"This will break all connections to "
+                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
 
-  msg = [NSString stringWithFormat: _(@"This will break all connections to "
-    @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?"), className];
+  msg = [NSString stringWithFormat: msgFormat, className];
 
   // ask the user if he/she wants to continue...
   retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
@@ -2701,9 +2702,10 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL renamed = YES;
   NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: _(@"Modifying Class")];
+  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
+  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
   NSString *msg = [NSString stringWithFormat: 
-			      _(@"Change class name '%@' to '%@'.  Continue?"),
+                              msgFormat,
 			    className, newName];
 
   // ask the user if he/she wants to continue...
@@ -3558,7 +3560,7 @@ static void _real_close(GormDocument *self,
   while ((con = [enumerator nextObject]) != nil)
     {
       if ([[con source] isKindOfClass: [NSView class]] == NO)
-	[[con destination] activate];
+	[(id<IBEditors>)[con destination] activate];
     }
   [savedEditors removeAllObjects];
 }
