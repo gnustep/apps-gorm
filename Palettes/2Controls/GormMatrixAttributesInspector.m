@@ -150,19 +150,22 @@ NSUInteger colsStepperValue;
       NSInteger    tag;
       NSString     *title;
       int          c;
-      for (c = 0; c < [object numberOfColumns]; c++)
+      if ([object prototype] != nil)
         {
-	  int r;
-          for (r = 0; r < [object numberOfRows]; r++)
+          for (c = 0; c < [object numberOfColumns]; c++)
             {
-              cell = [object cellAtRow: r column: c];
-              tag = [cell tag];
-              title = [cell title];
-              cell = [[object prototype] copy];
-              [cell setTag: tag];
-              [cell setTitle: title];
-              [object putCell:cell atRow:r column:c];
-              [cell release];
+              int r;
+              for (r = 0; r < [object numberOfRows]; r++)
+                {
+                  cell = [object cellAtRow: r column: c];
+                  tag = [cell tag];
+                  title = [cell title];
+                  cell = [[object prototype] copy];
+                  [cell setTag: tag];
+                  [cell setTitle: title];
+                  [object putCell:cell atRow:r column:c];
+                  [cell release];
+                }
             }
         }
       [object deselectAllCells];

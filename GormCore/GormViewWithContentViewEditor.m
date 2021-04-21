@@ -519,6 +519,8 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       NSCell *cell = [editedObject cell];
       NSRect rect = [editedObject frame];
       NSView *superview = [s superview];
+
+      NSLog(@"cell = %@", cell);
       
       // Create the matrix
       matrix = [[NSMatrix alloc] initWithFrame: rect

@@ -757,8 +757,15 @@ static NSImage  *fileImage = nil;
   else if ([anObject isKindOfClass: [NSMatrix class]])
     {
       // add all of the cells....
-      [self attachObjects: [anObject cells] toParent: anObject];
-      [self attachObject: [anObject prototype] toParent: anObject];
+      if ([[anObject cells] count] > 0) // && [anObject prototype] != nil)
+        {
+          [self attachObjects: [anObject cells] toParent: anObject];
+        }
+
+      if ([anObject prototype] != nil)
+        {
+          [self attachObject: [anObject prototype] toParent: anObject];
+        }
     }
   /*
    * If it's a simple NSView, add it and all of it's subviews.
