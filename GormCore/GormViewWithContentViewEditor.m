@@ -534,7 +534,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       
       NSLog(@"editedObject = %@,\n\nsuperview = %@,\n\nmatrix = %@",editedObject, superview, matrix);
       [matrix setPrototype: cell];
-      [matrix setCellClass: [cell class]];
+      // [matrix setCellClass: [cell class]];
       [editedObject removeFromSuperview];
       
       [document attachObject: matrix
