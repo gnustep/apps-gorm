@@ -260,7 +260,6 @@
     NSMutableArray = {Super = NSArray; }; 
     NSMutableDictionary = {Super = NSDictionary; }; 
     NSNumberFormatter = {Super = NSFormatter; }; 
-    NSObject = {}; 
     NSOpenGLView = {Super = NSView; }; 
     NSOutlineView = {Super = NSTableView; }; 
     NSPanel = {Super = NSWindow; }; 
@@ -416,4 +415,19 @@
         Super = NSArrayController;
     };
     Object = {};
+    }; 
+    NSDatePicker = {
+        Super = NSControl;
+    };
+    NSPathControl = {
+        Super = NSControl;
+    };
+    NSGridView = {
+        Super = NSView;        
+    };
+    NSSwitch = {
+        Super = NSControl;
+    };
+    NSObject = {}; 
+    Object = {}; 
 }
