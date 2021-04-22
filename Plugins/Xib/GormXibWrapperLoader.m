@@ -87,6 +87,8 @@
 	      // 
 	      [u setClass: [GormObjectProxy class]
 		 forClassName: @"NSCustomObject"];
+	      [u setClass: [GormObjectProxy class]
+		 forClassName: @"NSCustomObject5"];
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
@@ -120,6 +122,7 @@
 		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects;
                   id firstResponder;
+                  Class ns_custom_obj_class = NSClassFromString(@"NSCustomObject");
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
@@ -129,7 +132,8 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if ([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if ([nibFilesOwner isKindOfClass: ns_custom_obj_class] ||
+                      [nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
 		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
 		    }
@@ -147,16 +151,19 @@
 		      
 		      // skip the file's owner, it is handled above...
 		      if ((obj == nibFilesOwner) || (obj == firstResponder))
-			continue;
-		      
+                        {
+                          continue;
+                        }
+                      
 		      //
-		      // if it's a window template, then replace it with an actual window.
+		      // if it's a window template, then replace it with an
+                      // actual window.
 		      //
 		      if ([obj isKindOfClass: [NSWindowTemplate class]])
 			{
 			  NSString *className = [obj className];
 			  BOOL isDeferred = [obj isDeferred];
-			  BOOL isVisible = YES; // [[container visibleWindows] containsObject: obj];
+			  BOOL isVisible = YES;
 			  
 			  // make the object deferred/visible...
 			  o = [obj nibInstantiate];
