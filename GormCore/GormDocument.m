@@ -1682,7 +1682,9 @@ static void _real_close(GormDocument *self,
 	      [[self window] setExcludedFromWindowsMenu: YES];
 	      [[self window] orderOut: self];
 	    }
-	  
+
+          [[NSApp mainMenu] close]; // close the menu during test...
+          
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
@@ -1712,6 +1714,8 @@ static void _real_close(GormDocument *self,
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
+          [[NSApp mainMenu] display]; // bring the menu back...
+          
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
