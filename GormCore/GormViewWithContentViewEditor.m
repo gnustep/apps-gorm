@@ -520,8 +520,6 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       NSRect rect = [editedObject frame];
       NSView *superview = [s superview];
 
-      NSLog(@"cell = %@", cell);
-      
       // Create the matrix
       matrix = [[NSMatrix alloc] initWithFrame: rect
                                           mode: NSRadioModeMatrix
@@ -534,7 +532,8 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       
       NSLog(@"editedObject = %@,\n\nsuperview = %@,\n\nmatrix = %@",editedObject, superview, matrix);
       [matrix setPrototype: cell];
-      // [matrix setCellClass: [cell class]];
+      NSLog(@"cell = %@", cell);
+      NSLog(@"prototype = %@", [matrix prototype]);
       [editedObject removeFromSuperview];
       
       [document attachObject: matrix

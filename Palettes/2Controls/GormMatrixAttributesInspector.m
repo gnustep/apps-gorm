@@ -150,6 +150,18 @@ NSUInteger colsStepperValue;
       NSInteger    tag;
       NSString     *title;
       int          c;
+
+      if ([object prototype] == nil)
+        {
+          NSLog(@"prototype is nil, using first cell in matrix");
+          if ([object cells] > 0)
+            {
+              NSCell *acell = [[object cells] objectAtIndex: 0];
+              [object setPrototype: acell];
+              NSLog(@"prototype set %@", acell);
+            }
+        }
+      
       if ([object prototype] != nil)
         {
           for (c = 0; c < [object numberOfColumns]; c++)
