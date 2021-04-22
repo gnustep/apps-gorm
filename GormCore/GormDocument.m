@@ -1238,9 +1238,9 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Deteach anObject from the document.
+ * Detach anObject from the document.  Optionally close the editor
  */
-- (void) detachObject: (id)anObject
+- (void) detachObject: (id)anObject closeEditor: (BOOL)close_editor
 {
   if([self containsObject: anObject])
     {
@@ -1251,7 +1251,11 @@ static NSImage  *fileImage = nil;
       id               parent = [self parentEditorForEditor: editor];
 
       // close the editor...
-      [editor close];
+      if (close_editor)
+        {
+          [editor close];
+        }
+      
       if([parent respondsToSelector: @selector(selectObjects:)])
 	{
 	  [parent selectObjects: [NSArray array]];
@@ -1346,26 +1350,46 @@ static NSImage  *fileImage = nil;
 	}
       
       // iterate over the list and remove any subordinate objects.
-      [self detachObjects: objs];
+      [self detachObjects: objs closeEditors: close_editor];
 
-      [self setSelectionFromEditor: nil]; // clear the selection.
+      if (close_editor)
+        {
+          [self setSelectionFromEditor: nil]; // clear the selection.
+        }
+      
       RELEASE(name); // retained at beginning of method...
       [self touch]; // set the document as modified
     }
 }
 
 /**
- * Detach every object in anArray from the document.
+ * Detach object from document.
+ */ 
+- (void) detachObject: (id)object
+{
+  [self detachObject: object closeEditor: YES];
+}
+
+/**
+ * Detach every object in anArray from the document.  Optionally closing editors.
  */
-- (void) detachObjects: (NSArray*)anArray
+- (void) detachObjects: (NSArray*)anArray closeEditors: (BOOL)close_editors
 {
   NSEnumerator  *enumerator = [anArray objectEnumerator];
   NSObject      *obj;
 
   while ((obj = [enumerator nextObject]) != nil)
     {
-      [self detachObject: obj];
+      [self detachObject: obj closeEditor: close_editors];
     }
+}
+
+/** 
+ * Detach all objects in array from the document.
+ */
+- (void) detachObjects: (NSArray *)array
+{
+  [self detachObjects: array closeEditors: YES];
 }
 
 /**

@@ -101,10 +101,16 @@ NSUInteger colsStepperValue;
   return self;
 }
 
+- (void) _refreshCells
+{
+  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  [document detachObjects: [object cells] closeEditors: NO];
+  [document attachObjects: [object cells] toParent: object]; 
+}
+
 /* Commit changes that the user makes in the Attributes Inspector */
 - (void) ok: (id) sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
   if (sender == autosizeSwitch)
     {
       [object setAutosizesCells: ([sender state] == NSOnState)];
@@ -221,6 +227,7 @@ NSUInteger colsStepperValue;
 	    }
 	}
       [self _displayObject: object resize: YES];
+      [self _refreshCells];
     }
   else if(sender == rowsStepper)
     {
@@ -243,6 +250,7 @@ NSUInteger colsStepperValue;
       [sender setIntValue: num];
       rowsStepperValue = num;
       [self _displayObject: object resize: YES];
+      [self _refreshCells];      
     }
   else if(sender == colsStepper)
     {
@@ -265,6 +273,7 @@ NSUInteger colsStepperValue;
       [sender setIntValue: num];
       colsStepperValue = num;
       [self _displayObject: object resize: YES];
+      [self _refreshCells];      
     }
 
   /*
@@ -280,10 +289,7 @@ NSUInteger colsStepperValue;
       [prototypeMatrix putCell: [object prototype] atRow:0 column:0];
     }
 
-  // [document detachObjects: [object cells]];
-  [document attachObjects: [object cells] toParent: object];
-  
-  [super ok:sender];
+   [super ok:sender];
 }
 
 
