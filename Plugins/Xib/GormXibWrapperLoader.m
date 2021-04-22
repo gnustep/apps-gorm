@@ -49,18 +49,14 @@
 
   NS_DURING
     {
-      // NSData                    *classes = nil;
-      // NSString                  *key = nil;
       GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSString                  *subClassName = nil;
-      // NSDictionary              *fileWrappers = nil;
-
+ 
       if ([super loadFileWrapper: wrapper 
-		 withDocument: doc] &&
+                    withDocument: doc] &&
 	  [wrapper isDirectory] == NO)
 	{
-	  // NSString *path = [[wrapper filename] stringByDeletingLastPathComponent];
 	  NSData *data = [wrapper regularFileContents];
 	  GormClassManager *classManager = [document classManager];
 	  id docFilesOwner;
@@ -76,13 +72,14 @@
 	  else
 	    {
               NSEnumerator *en;
-              GSXibKeyedUnarchiver *u;
+              NSKeyedUnarchiver *u; // using superclass for its interface.
+
 	      //
-	      // Create an unarchiver, and use it to unarchive the gorm file while
+	      // Create an unarchiver, and use it to unarchive the xib file while
 	      // handling class replacement so that standard objects understood
 	      // by the gui library are converted to their Gorm internal equivalents.
 	      //
-	      u = [[GSXibKeyedUnarchiver alloc] initForReadingWithData: data];
+	      u = [GSXibKeyedUnarchiver unarchiverForReadingWithData: data];
 	      [u setDelegate: self];
 	      
 	      //
