@@ -118,11 +118,10 @@
 		}
 	      else
 		{
-		  IBObjectRecord *or = nil;
 		  IBConnectionRecord *cr = nil;
-                  NSArray *rootObjects;
-                  id firstResponder;
-                  Class ns_custom_obj_class = NSClassFromString(@"NSCustomObject");
+                  NSArray *rootObjects = nil;
+                  id firstResponder = nil;
+		  // IBObjectRecord *or = nil;
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
@@ -132,8 +131,7 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if ([nibFilesOwner isKindOfClass: ns_custom_obj_class] ||
-                      [nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if ([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
 		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
 		    }
@@ -141,11 +139,11 @@
 		  //
 		  // add objects...
 		  //
-		  en = [container objectRecordEnumerator];
-		  while ((or = [en nextObject]) != nil)
+		  en = [rootObjects objectEnumerator];
+                  // [container objectRecordEnumerator];
+                  id obj = nil;
+		  while ((obj = [en nextObject]) != nil)
 		    {
-		      id obj = [or object];
-                      id o = obj;
 		      NSString *customClassName = nil;
 		      NSString *objName = nil;
 		      
@@ -154,17 +152,32 @@
                         {
                           continue;
                         }
+
+                      //
+                      // If it's NSApplication (most likely the File's Owner
+                      // skip it...
+                      //
+                      if ([obj isKindOfClass: [GormObjectProxy class]])
+                        {
+                          if ([[obj className] isEqualToString: @"NSApplication"])
+                            {
+                              continue;
+                            }
+
+                          customClassName = [obj className];
+                        }
                       
 		      //
 		      // if it's a window template, then replace it with an
                       // actual window.
 		      //
-		      if ([obj isKindOfClass: [NSWindowTemplate class]])
+                      id o = nil;
+		      if ([obj isKindOfClass: [GormWindowTemplate class]])
 			{
 			  NSString *className = [obj className];
 			  BOOL isDeferred = [obj isDeferred];
 			  BOOL isVisible = YES;
-			  
+                          
 			  // make the object deferred/visible...
 			  o = [obj nibInstantiate];
 
@@ -178,19 +191,22 @@
 			    }
 			}
 		      
-		      if ([rootObjects containsObject: obj])
+		      if ([rootObjects containsObject: obj] && obj != nil)
 			{		  
-                          id parent = [or parent];
-
-                          [document attachObject: o toParent: parent];
+                          [document attachObject: obj
+                                        toParent: nil];
                         }
 
 		      if (customClassName != nil)
 			{
 			  objName = [document nameForObject: obj];
-			  [classManager setCustomClass: customClassName forName: objName];
-			}
-		    }
+                          if (objName != nil)
+                            {
+                              [classManager setCustomClass: customClassName
+                                                   forName: objName];
+                            }
+                        }
+                    }
 		  
 		  /* FIXME: Should use IBDocument.Classes
 		  //

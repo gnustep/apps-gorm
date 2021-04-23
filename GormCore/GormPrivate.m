@@ -220,6 +220,11 @@ static BOOL _isInInterfaceBuilder = NO;
   return image;
 }
 
+- (NSString *) description
+{
+  NSString *desc = [super description];
+  return [NSString stringWithFormat: @"<%@, className = %@>", desc, theClass];
+}
 @end
 
 // define the class proxy...
