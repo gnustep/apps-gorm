@@ -180,9 +180,13 @@
                           
 			  // make the object deferred/visible...
 			  o = [obj nibInstantiate];
-
+                          
 			  [document setObject: o isDeferred: isDeferred];
 			  [document setObject: o isVisibleAtLaunch: isVisible];
+
+                          // Add to the document...
+                          [document attachObject: o
+                                        toParent: nil];
 
 			  // record the custom class...
 			  if ([classManager isCustomClass: className])
@@ -191,7 +195,8 @@
 			    }
 			}
 		      
-		      if ([rootObjects containsObject: obj] && obj != nil)
+		      if ([rootObjects containsObject: obj] && obj != nil &&
+                          [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{		  
                           [document attachObject: obj
                                         toParent: nil];
