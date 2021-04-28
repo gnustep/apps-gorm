@@ -534,9 +534,10 @@ static NSImage  *fileImage = nil;
 }
 
 /**
- * Attach anObject to the document with aParent.
+ * Attach anObject to the document with aParent specifying the name.  To allow
+ * Gorm to generate the name pass in nil for aName parameter
  */
-- (void) attachObject: (id)anObject toParent: (id)aParent
+- (void) attachObject: (id)anObject toParent: (id)aParent withName: (NSString *)aName
 {
   NSArray *old;
   BOOL newObject = NO;
@@ -581,7 +582,7 @@ static NSImage  *fileImage = nil;
   if ([self nameForObject: anObject] == nil)
     {
       newObject = YES;
-      [self setName: nil forObject: anObject];
+      [self setName: aName forObject: anObject];
     }
 
   /*
@@ -668,7 +669,7 @@ static NSImage  *fileImage = nil;
       // will become the main menu.
       if([self objectForName: @"NSMenu"] == nil)
 	{
-	  [self setName: @"NSMenu" forObject: menu];
+          [self setName: @"NSMenu" forObject: menu];
 	  [objectsView addObject: menu];
 	  [topLevelObjects addObject: menu];
 	  isMainMenu = YES;
@@ -853,6 +854,16 @@ static NSImage  *fileImage = nil;
 	  RELEASE(con);
 	}
     }
+}
+
+/**
+ * Attach an object to parent object in document letting Gorm generate the name
+ */ 
+- (void) attachObject: (id)object toParent: (id)parent
+{
+  [self attachObject: object
+            toParent: parent
+            withName: nil];
 }
 
 /**
