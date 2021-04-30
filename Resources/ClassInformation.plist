@@ -394,6 +394,26 @@
         Actions = ("showWindow:"); 
         Outlets = (document, window); 
         Super = NSResponder; 
-    }; 
+    };
+    NSController = {
+        Actions = ();
+        Outlets = ();
+        Super = NSObject;
+    };
+    NSObjectController = {
+        Actions = ();
+        Outlets = (content);
+        Super = NSController;
+    };
+    NSArrayController = {
+        Actions = ("selectNext:","selectPrevious:","insert:");
+        Outlets = (arrangedObjects);
+        Super = NSObjectController;
+    };
+    NSDictionaryController = {
+        Actions = ();
+        Outlets = ();
+        Super = NSArrayController;
+    };    
     Object = {}; 
 }

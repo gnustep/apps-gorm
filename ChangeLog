@@ -1,3 +1,17 @@
+2021-04-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassManager.m: Code cleanup
+	* GormCore/GormDocument.m: Code cleanup
+	* GormCore/GormPrivate.m: Code cleanup
+	* GormCore/GormWrapperLoader.m: Code cleanup.
+	* GormLib/IBDocuments.h: Add some GS specific methods to the
+        protocol.
+	* Gorm.m: Remove unneeded ivar.
+	* Plugins/Nib/GormNibWrapperLoader.m: Code cleanup.
+	* Plugins/Xib/GormXibWrapperLoader.m: Add code to handle connections.
+	* Resources/ClassInformation.plist: Add missing classes to
+        this plist.
+
 2021-04-22 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormScrollViewEditor.m
