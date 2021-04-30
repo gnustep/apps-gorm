@@ -290,12 +290,14 @@
                               id dest = [o destination];
                               id src = [o source];
 
+                              NSLog(@"connector = %@", o);
+
+                              // NSString *dest_name = [document nameForObject: dest];
                               if([o isKindOfClass: [NSNibControlConnector class]])
                                 {
                                   NSString *tag = [o label];
                                   NSRange colonRange = [tag rangeOfString: @":"];
                                   NSUInteger location = colonRange.location;
-                                  // NSString *cc = [classManager customClassForObject: [o target]];
                                   
                                   if(location == NSNotFound)
                                     {
@@ -308,6 +310,7 @@
 
                               if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
+                                  [classManager addOutlet: [o label] forObject: [o destination]];
                                 }
                               
                               if (dest == nibFilesOwner)
@@ -346,6 +349,7 @@
                                 {
                                   continue;
                                 }
+
                               [document addConnector: o];
                             }
                         }
