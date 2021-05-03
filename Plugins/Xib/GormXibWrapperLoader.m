@@ -234,8 +234,15 @@
                   while ((customClassDict = [en nextObject]) != nil)
                     {
                       NSString *theId = [customClassDict objectForKey: @"id"];
+                      if ([theId isEqualToString: @"-1"] ||
+                          [theId isEqualToString: @"-2"] ||
+                          [theId isEqualToString: @"-3"])
+                        {
+                          continue;
+                        }
+                      
                       NSString *customClassName = [customClassDict objectForKey: @"customClassName"];
-                      NSString *className = [customClassDict objectForKey: @"parentClassName"];
+                      NSString *parentClassName = [customClassDict objectForKey: @"parentClassName"];
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
                       
@@ -250,27 +257,21 @@
                           continue;
                         }
 
-                      if (![className isEqualToString: @"NSCustomObject"] &&
-                          ![className isEqualToString: @"NSCustomObject5"] &&
-                          ![className isEqualToString: @"NSApplication"] &&
-                          ![className isEqualToString: @"FirstResponder"] &&
-                          ![className isEqualToString: @"NSWindowTemplate"])
-                        {                      
-                          // Add the class if it is not already known to gorm
-                          if ([classManager isKnownClass: customClassName] == NO)
-                            {
-                              NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName, className);
-                              [classManager addClassNamed: customClassName
-                                      withSuperClassNamed: className
-                                              withActions: nil
-                                              withOutlets: nil
-                                                 isCustom: YES];
-                            }
-                          
-                          NSLog(@"Assigning %@ as customClass = %@", theName, customClassName);
-                          [classManager setCustomClass: customClassName
-                                               forName: theName];
+                      if ([parentClassName isEqualToString: @"NSCustomObject5"])
+                        {
+                          parentClassName = @"NSObject";
                         }
+                      
+                      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName, parentClassName);
+                      [classManager addClassNamed: customClassName
+                              withSuperClassNamed: parentClassName
+                                      withActions: nil
+                                      withOutlets: nil
+                                         isCustom: YES];
+                      
+                      NSLog(@"Assigning %@ as customClass = %@", theName, customClassName);
+                      [classManager setCustomClass: customClassName
+                                           forName: theName];
                     }
                   
 		  //
