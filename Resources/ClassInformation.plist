@@ -414,6 +414,6 @@
         Actions = ();
         Outlets = ();
         Super = NSArrayController;
-    };    
-    Object = {}; 
+    };
+    Object = {};
 }
