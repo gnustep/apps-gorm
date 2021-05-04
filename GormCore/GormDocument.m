@@ -540,14 +540,14 @@ static NSImage  *fileImage = nil;
 {
   NSArray *old;
   BOOL newObject = NO;
-
+  /*
   if ([self containsObject: anObject] &&
       [anObject isKindOfClass: [NSWindow class]] == NO &&
       [anObject isKindOfClass: [NSPanel class]] == NO)
     {
       return;
     }
-  
+  */
   // Modify the document whenever something is added...
   [self touch];
 
