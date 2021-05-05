@@ -60,7 +60,7 @@
       GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSString                  *subClassName = nil;
-      GormClassManager          *classManager = [document classManager];
+      GormClassManager          *classManager = [doc classManager];
 
       if ([super loadFileWrapper: wrapper 
                     withDocument: doc] &&
@@ -136,7 +136,7 @@
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  firstResponder = [rootObjects objectAtIndex: 1];
-		  docFilesOwner = [document filesOwner];
+		  docFilesOwner = [doc filesOwner];
 
 		  //
 		  // set the current class on the File's owner...
@@ -190,11 +190,11 @@
 			  // make the object deferred/visible...
 			  o = [obj nibInstantiate];
                           
-			  [document setObject: o isDeferred: isDeferred];
-			  [document setObject: o isVisibleAtLaunch: isVisible];
+			  [doc setObject: o isDeferred: isDeferred];
+			  [doc setObject: o isVisibleAtLaunch: isVisible];
 
                           // Add to the document...
-                          [document attachObject: o
+                          [doc attachObject: o
                                         toParent: nil];
 
 			  // record the custom class...
@@ -207,13 +207,13 @@
 		      if ([rootObjects containsObject: obj] && obj != nil &&
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{		  
-                          [document attachObject: obj
+                          [doc attachObject: obj
                                         toParent: nil];
                         }
 
 		      if (customClassName != nil)
 			{
-			  objName = [document nameForObject: obj];
+			  objName = [doc nameForObject: obj];
                           if (objName != nil)
                             {
                               [classManager setCustomClass: customClassName
@@ -246,9 +246,9 @@
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
                       
-                      if ([document containsObject: realObject])
+                      if ([doc containsObject: realObject])
                         {
-                          theName = [document nameForObject: realObject];
+                          theName = [doc nameForObject: realObject];
                           NSLog(@"Found name = %@ for realObject = %@", theName, realObject);
                         }
                       else
@@ -291,9 +291,19 @@
                               id dest = [o destination];
                               id src = [o source];
 
+                              if ([src isKindOfClass: [GormObjectProxy class]])
+                                {
+                                  NSString *className = [src className];
+                                  if ([className isEqualToString: @"NSApplication"])
+                                    {
+                                      src = nibFilesOwner;
+                                      [o setSource: src];
+                                    }
+                                }
+
                               NSLog(@"connector = %@", o);
 
-                              // NSString *dest_name = [document nameForObject: dest];
+                              // NSString *dest_name = [doc nameForObject: dest];
                               if([o isKindOfClass: [NSNibControlConnector class]])
                                 {
                                   NSString *tag = [o label];
@@ -306,30 +316,32 @@
                                       [o setLabel: (id)newTag];
                                     }
 
-                                  [classManager addAction: [o label] forObject: [o destination]];
+                                  [classManager addAction: [o label]
+                                                forObject: src];
                                 }
 
                               if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
-                                  [classManager addOutlet: [o label] forObject: [o destination]];
+                                  [classManager addOutlet: [o label]
+                                                forObject: src];
                                 }
                               
                               if (dest == nibFilesOwner)
                                 {
-                                  [o setDestination: [document filesOwner]];
+                                  [o setDestination: [doc filesOwner]];
                                 }
-                              else if (dest == firstResponder)
+                              else if (dest == nil) // == firstResponder)
                                 {
-                                  [o setDestination: [document firstResponder]];
+                                  [o setDestination: [doc firstResponder]];
                                 }
                               
                               if (src == nibFilesOwner)
                                 {
-                                  [o setSource: [document filesOwner]];
+                                  [o setSource: [doc filesOwner]];
                                 }
                               else if (src == firstResponder)
                                 {
-                                  [o setSource: [document firstResponder]];
+                                  [o setSource: [doc firstResponder]];
                                 }
                               
                               // check src/dest for window template...
@@ -351,7 +363,7 @@
                                   continue;
                                 }
 
-                              [document addConnector: o];
+                              [doc addConnector: o];
                             }
                         }
                     }
@@ -360,7 +372,7 @@
 		  [NSClassSwapper setIsInInterfaceBuilder: NO]; 
 		  
 		  // clear the changes, since we just loaded the document.
-		  [document updateChangeCount: NSChangeCleared];
+		  [doc updateChangeCount: NSChangeCleared];
 		  
 		  result = YES;
 		}
