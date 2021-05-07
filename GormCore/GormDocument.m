@@ -3518,26 +3518,6 @@ static void _real_close(GormDocument *self,
 {
   return isOlderArchive;
 }
-
-/*
-- (void) encodeWithCoder: (NSCoder *)coder
-{
-  [coder encodeObject: topLevelObjects];
-  [coder encodeObject: nameTable];
-  [coder encodeObject: visibleWindows];
-  [coder encodeObject: connections];
-}
-
-- (id) initWithCoder: (NSCoder *)coder
-{
-  ASSIGN(topLevelObjects, [coder decodeObject]);
-  ASSIGN(nameTable, [coder decodeObject]);
-  ASSIGN(visibleWindows, [coder decodeObject]);
-  ASSIGN(connections, [coder decodeObject]);
-
-  return self;
-}
-*/
   
 - (void) awakeWithContext: (NSDictionary *)context
 {
