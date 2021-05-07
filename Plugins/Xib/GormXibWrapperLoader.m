@@ -328,12 +328,19 @@
                                       [o setLabel: (id)newTag];
                                     }
 
+                                  [classManager addAction: [o label]
+                                                forObject: src];
+
+                                  // If the src is the first responder, use nil since this
+                                  // tells AppKit to use the First Responder chain.
+                                  //if (src == [doc firstResponder])
+                                  //  {
+                                  //    src = nil;
+                                  //  }
+                                  
                                   // For control connectors these roles are reversed...
                                   [o setSource: dest];
                                   [o setDestination: src];
-                              
-                                  [classManager addAction: [o label]
-                                                forObject: src];
                                 }
                               else if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
