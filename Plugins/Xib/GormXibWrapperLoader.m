@@ -1,9 +1,9 @@
-/* GormNibWrapperLoader
+/* GormXibWrapperLoader
  *
- * Copyright (C) 2010 Free Software Foundation, Inc.
+ * Copyright (C) 2010, 2021 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2010
+ * Date:        2010, 2021
  *
  * This file is part of GNUstep.
  * 
@@ -49,6 +49,27 @@
 + (NSString *) fileType
 {
   return @"GSXibFileType";
+}
+
+- (id) _replaceProxyInstanceWithRealObject: (id)obj
+{
+  if ([obj isKindOfClass: [GormObjectProxy class]])
+    {
+      if ([[obj className] isEqualToString: @"NSApplication"])
+        {
+          return [document filesOwner];
+        }
+
+      if ([[obj className] isEqualToString: @"FirstResponder"])
+        {
+          return [document firstResponder];
+        }
+    }
+  else if (obj == nil)
+    {
+      return [document firstResponder];
+    }
+  return obj;
 }
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
@@ -128,14 +149,11 @@
 		{
 		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects = nil;
-                  id firstResponder = nil;
-
-                  // NSLog(@"%@", [container customClassNames]);
-                  // NSLog(@"%@", container); 
+                  id xibFirstResponder = nil;
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
-		  firstResponder = [rootObjects objectAtIndex: 1];
+		  xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
 
 		  //
@@ -157,7 +175,7 @@
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if ((obj == nibFilesOwner) || (obj == firstResponder))
+		      if ((obj == nibFilesOwner) || (obj == xibFirstResponder))
                         {
                           continue;
                         }
@@ -195,8 +213,8 @@
 
                           // Add to the document...
                           [doc attachObject: o
-                                        toParent: nil];
-
+                                   toParent: nil];
+                          
 			  // record the custom class...
 			  if ([classManager isCustomClass: className])
 			    {
@@ -208,9 +226,9 @@
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{		  
                           [doc attachObject: obj
-                                        toParent: nil];
+                                   toParent: nil];
                         }
-
+                      
 		      if (customClassName != nil)
 			{
 			  objName = [doc nameForObject: obj];
@@ -234,42 +252,39 @@
                   while ((customClassDict = [en nextObject]) != nil)
                     {
                       NSString *theId = [customClassDict objectForKey: @"id"];
-                      if ([theId isEqualToString: @"-1"] ||
-                          [theId isEqualToString: @"-2"] ||
-                          [theId isEqualToString: @"-3"])
-                        {
-                          continue;
-                        }
-                      
                       NSString *customClassName = [customClassDict objectForKey: @"customClassName"];
                       NSString *parentClassName = [customClassDict objectForKey: @"parentClassName"];
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
+
+                      realObject = [self _replaceProxyInstanceWithRealObject: realObject];
+                      NSDebugLog(@"realObject = %@", realObject);
                       
                       if ([doc containsObject: realObject])
                         {
                           theName = [doc nameForObject: realObject];
-                          NSLog(@"Found name = %@ for realObject = %@", theName, realObject);
+                          NSDebugLog(@"Found name = %@ for realObject = %@", theName, realObject);
                         }
                       else
                         {
-                          NSLog(@"realObject = %@ has no name in document", realObject);
+                          NSDebugLog(@"realObject = %@ has no name in document", realObject);
                           continue;
                         }
-
+                      
                       if ([parentClassName isEqualToString: @"NSCustomObject5"])
                         {
                           parentClassName = @"NSObject";
                         }
                       
-                      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName, parentClassName);
+                      NSDebugLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
+                            parentClassName);
                       [classManager addClassNamed: customClassName
                               withSuperClassNamed: parentClassName
                                       withActions: nil
                                       withOutlets: nil
                                          isCustom: YES];
                       
-                      NSLog(@"Assigning %@ as customClass = %@", theName, customClassName);
+                      NSDebugLog(@"Assigning %@ as customClass = %@", theName, customClassName);
                       [classManager setCustomClass: customClassName
                                            forName: theName];
                     }
@@ -281,29 +296,26 @@
 		  while ((cr = [en nextObject]) != nil)
 		    {
 		      IBConnection *conn = [cr connection];
-
+                      
                       if ([conn respondsToSelector: @selector(nibConnector)])
                         {
                           NSNibConnector *o = [conn nibConnector];
-
+                          
                           if (o != nil)
                             {
                               id dest = [o destination];
                               id src = [o source];
 
-                              if ([src isKindOfClass: [GormObjectProxy class]])
-                                {
-                                  NSString *className = [src className];
-                                  if ([className isEqualToString: @"NSApplication"])
-                                    {
-                                      src = nibFilesOwner;
-                                      [o setSource: src];
-                                    }
-                                }
+                              // Replace files owner with the document files owner for loading...
+                              dest = [self _replaceProxyInstanceWithRealObject: dest];
+                              src = [self _replaceProxyInstanceWithRealObject: src];
+                              
+                              // Reset them...
+                              [o setDestination: dest];
+                              [o setSource: src];
 
-                              NSLog(@"connector = %@", o);
+                              NSDebugLog(@"connector = %@", o);
 
-                              // NSString *dest_name = [doc nameForObject: dest];
                               if([o isKindOfClass: [NSNibControlConnector class]])
                                 {
                                   NSString *tag = [o label];
@@ -316,32 +328,17 @@
                                       [o setLabel: (id)newTag];
                                     }
 
+                                  // For control connectors these roles are reversed...
+                                  [o setSource: dest];
+                                  [o setDestination: src];
+                              
                                   [classManager addAction: [o label]
                                                 forObject: src];
                                 }
-
-                              if ([o isKindOfClass: [NSNibOutletConnector class]])
+                              else if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
                                   [classManager addOutlet: [o label]
                                                 forObject: src];
-                                }
-                              
-                              if (dest == nibFilesOwner)
-                                {
-                                  [o setDestination: [doc filesOwner]];
-                                }
-                              else if (dest == nil) // == firstResponder)
-                                {
-                                  [o setDestination: [doc firstResponder]];
-                                }
-                              
-                              if (src == nibFilesOwner)
-                                {
-                                  [o setSource: [doc filesOwner]];
-                                }
-                              else if (src == firstResponder)
-                                {
-                                  [o setSource: [doc firstResponder]];
                                 }
                               
                               // check src/dest for window template...
@@ -423,7 +420,6 @@
       [obj setTarget: nil];
       [obj setAction: NULL];
     }
-
   return obj;
 }
 @end
