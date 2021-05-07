@@ -3519,6 +3519,7 @@ static void _real_close(GormDocument *self,
   return isOlderArchive;
 }
 
+/*
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   [coder encodeObject: topLevelObjects];
@@ -3536,7 +3537,8 @@ static void _real_close(GormDocument *self,
 
   return self;
 }
-
+*/
+  
 - (void) awakeWithContext: (NSDictionary *)context
 {
   NSEnumerator *en = [connections objectEnumerator];
