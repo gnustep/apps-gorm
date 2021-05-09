@@ -1,4 +1,4 @@
-2021-04-29 Gregory John Casamento <greg.casamento@gmail.com>
+2021-05-09 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassManager.m: Code cleanup
 	* GormCore/GormDocument.m: Code cleanup
@@ -11,6 +11,15 @@
 	* Plugins/Xib/GormXibWrapperLoader.m: Add code to handle connections.
 	* Resources/ClassInformation.plist: Add missing classes to
         this plist.
+
+2021-05-09 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Version: Release 1.2.28
 
 2021-04-22 Gregory John Casamento <greg.casamento@gmail.com>
 
