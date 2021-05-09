@@ -3518,6 +3518,29 @@ static void _real_close(GormDocument *self,
 {
   return isOlderArchive;
 }
+
+//
+// Encoding is here for testing the interface.  This allows
+// Gorm to encode the interface and then run it like a regular
+// app.  It needs to act like a container in order to do this.
+//
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  [coder encodeObject: topLevelObjects];
+  [coder encodeObject: nameTable];
+  [coder encodeObject: visibleWindows];
+  [coder encodeObject: connections];
+}
+
+- (id) initWithCoder: (NSCoder *)coder
+{
+  ASSIGN(topLevelObjects, [coder decodeObject]);
+  ASSIGN(nameTable, [coder decodeObject]);
+  ASSIGN(visibleWindows, [coder decodeObject]);
+  ASSIGN(connections, [coder decodeObject]);
+  
+  return self;
+}
   
 - (void) awakeWithContext: (NSDictionary *)context
 {
