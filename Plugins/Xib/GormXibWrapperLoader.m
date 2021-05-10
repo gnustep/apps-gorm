@@ -224,7 +224,8 @@
 		      
 		      if ([rootObjects containsObject: obj] && obj != nil &&
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
-			{		  
+			{
+                          NSLog(@"obj = %@",obj);
                           [doc attachObject: obj
                                    toParent: nil];
                         }

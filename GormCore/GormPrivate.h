@@ -45,6 +45,7 @@ extern NSString *GormDidModifyClassNotification;
 extern NSString *GormDidAddClassNotification;
 extern NSString *GormDidDeleteClassNotification;
 extern NSString *GormWillDetachObjectFromDocumentNotification;
+extern NSString *GormDidDetachObjectFromDocumentNotification;
 extern NSString *GormResizeCellNotification;
 
 @class	GormDocument;

@@ -1253,7 +1253,13 @@ static NSImage  *fileImage = nil;
       NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
       id               editor = [self editorForObject: anObject create: NO];
       id               parent = [self parentEditorForEditor: editor];
+      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
+      RETAIN(anObject); // prevent release of object during notifications...
+      [nc postNotificationName: GormWillDetachObjectFromDocumentNotification
+                        object: anObject
+                      userInfo: nil];
+      
       // close the editor...
       if (close_editor)
         {
@@ -1363,6 +1369,11 @@ static NSImage  *fileImage = nil;
       
       RELEASE(name); // retained at beginning of method...
       [self touch]; // set the document as modified
+
+      [nc postNotificationName: GormDidDetachObjectFromDocumentNotification
+                        object: anObject
+                      userInfo: nil];
+      RELEASE(anObject); // release since notifications are done.
     }
 }
 
