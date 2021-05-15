@@ -127,7 +127,6 @@
    */
   fm = [NSFontManager sharedFontManager];
   m = [GormNSMenu menuWithMenu: [fm fontMenu: YES]];
-  [fm setFontMenu: m];
   
   // Other font menu items
   [m addItemWithTitle: @"Underline" 
@@ -363,7 +362,7 @@
 		       action: NULL
 		       keyEquivalent: @""];
 
-  s = [GormNSMenu menuWithMenu: [[NSFontManager sharedFontManager] fontMenu: YES]];
+  s = [GormNSMenu menuWithMenu: [fm fontMenu: YES]];
 
   // Other font menu items
   [s addItemWithTitle: @"Underline" 

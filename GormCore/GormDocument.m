@@ -499,9 +499,12 @@ static NSImage  *fileImage = nil;
   if ([connections indexOfObjectIdenticalTo: aConnector] == NSNotFound)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
+
       [nc postNotificationName: IBWillAddConnectorNotification
 			object: aConnector];
+
       [connections addObject: aConnector];
+
       [nc postNotificationName: IBDidAddConnectorNotification
 			object: aConnector];
     }
@@ -521,6 +524,7 @@ static NSImage  *fileImage = nil;
 - (void) _instantiateFontManager
 {
   GSNibItem *item = nil;
+  NSMenu *fontMenu = nil;
   
   item = [[GormObjectProxy alloc] initWithClassName: @"NSFontManager"];
   
@@ -531,6 +535,17 @@ static NSImage  *fileImage = nil;
   // set the holder in the document.
   fontManager = (GormObjectProxy *)item;
   [self changeToViewWithTag: 0];
+
+  // Add the connection to the menu from the font manager, if the NSFontMenu exists...
+  fontMenu = [self fontMenu];
+  if (fontMenu != nil)
+    {
+      NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
+      [con setSource: item];
+      [con setDestination: fontMenu];
+      [con setLabel: @"menu"];
+      [self addConnector: con];
+    }
 }
 
 /**
@@ -629,6 +644,7 @@ static NSImage  *fileImage = nil;
       // the proxy instead.
       [self _instantiateFontManager];
     }
+
   /*
    * Add the menu items from the popup.
    */
@@ -680,6 +696,10 @@ static NSImage  *fileImage = nil;
 	  else if([[menu title] isEqual: @"Open Recent"] && [self recentDocumentsMenu] == nil)
 	    {
 	      [self setRecentDocumentsMenu: menu];
+	    }
+	  if([[menu title] isEqual: @"Font"] && [self fontMenu] == nil)
+	    {
+	      [self setFontMenu: menu];
 	    }
 	  // if it doesn't have a supermenu and it's owned by the file's owner, then it's a top level menu....
 	  else if([menu supermenu] == nil && aParent == filesOwner)
@@ -2036,19 +2056,22 @@ static void _real_close(GormDocument *self,
 - (void) removeConnector: (id<IBConnectors>)aConnector
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-
+  
   RETAIN(aConnector); // prevent it from being dealloc'd until the notification is done.
-  // issue pre notification..
- [nc postNotificationName: IBWillRemoveConnectorNotification
-      object: aConnector];
 
+  // issue pre notification..
+  [nc postNotificationName: IBWillRemoveConnectorNotification
+                    object: aConnector];
+  
   // mark the document as changed.
   [self touch];
-
-  // issue post notification..
+  
   [connections removeObjectIdenticalTo: aConnector];
+  
+  // issue post notification..
   [nc postNotificationName: IBDidRemoveConnectorNotification
-      object: aConnector];
+                    object: aConnector];
+  
   RELEASE(aConnector); // NOW we can dealloc it.
 }
 
@@ -2295,6 +2318,29 @@ static void _real_close(GormDocument *self,
 - (NSMenu *) servicesMenu
 {
   return [nameTable objectForKey: @"NSServicesMenu"];
+}
+
+/**
+ * Set the object that will be the font menu in the app.
+ */
+- (void) setFontMenu: (NSMenu *)anObject
+{
+  if(anObject != nil)
+    {
+      [nameTable setObject: anObject forKey: @"NSFontMenu"];
+    }
+  else
+    {
+      [nameTable removeObjectForKey: @"NSFontMenu"];
+    }
+}
+
+/**
+ * Return the object that will be the services menu.
+ */
+- (NSMenu *) fontMenu
+{
+  return [nameTable objectForKey: @"NSFontMenu"];
 }
 
 /**

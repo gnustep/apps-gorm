@@ -284,6 +284,16 @@
 - (NSMenu *) servicesMenu;
 
 /**
+ * Set the font menu.
+ */
+- (void) setFontMenu: (NSMenu *)menu;
+
+/**
+ * Returns the font menu for the document.
+ */
+- (NSMenu *) fontMenu;
+
+/**
  * Sets the windows menu.
  */
 - (void) setWindowsMenu: (NSMenu *)menu;
