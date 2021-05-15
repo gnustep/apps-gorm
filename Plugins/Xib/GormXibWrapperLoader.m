@@ -124,6 +124,8 @@
 		 forClassName: @"NSWindowTemplate"];
 	      [u setClass: [GormNSWindow class] 
 		 forClassName: @"NSWindow"];
+              [u setClass: [IBUserDefinedRuntimeAttribute class]
+                 forClassName: @"IBUserDefinedRuntimeAttribute5"];
 	      
 	      //
 	      // Substitute any classes specified by the palettes...
