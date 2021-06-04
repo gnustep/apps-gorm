@@ -1,8 +1,8 @@
 #   GNUmakefile 
 #
-#   Copyright (C) 1999 Free Software Foundation, Inc.
+#   Copyright (C) 1999, 2021 Free Software Foundation, Inc.
 #
-#   Author:  Laurent Julliard <laurent@julliard-online.org>
+#   Author:  Gregory Casamento <greg.casamento@gmail.com>
 #   Date: Nov 2001
 #   
 #   This file is part of GNUstep.
@@ -37,6 +37,7 @@ PALETTE_NAME = 5Formatters
 	energy_formatter.tiff \
 	measurement_formatter.tiff \
 	date_interval_formatter.tiff \
+	length_formatter.tiff \
 	palette.table
 
 5Formatters_STANDARD_INSTALL = no
