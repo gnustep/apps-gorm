@@ -1,0 +1,1292 @@
+
+Building in gui/NSBezierPath
+Making all for test_tool basic...
+Making all for test_tool bounds...
+Making all for test_tool windingCountAtPoint...
+ Compiling file basic.m ...
+ Compiling file bounds.m ...
+ Compiling file windingCountAtPoint.m ...
+ Linking test_tool bounds ...
+basic.m:9:7: warning: using integer absolute value function 'abs' when argument is of floating point type [-Wabsolute-value]
+  if (abs(d1 - d2) < 0.000001)
+      ^
+basic.m:9:7: note: use function 'fabs' instead
+  if (abs(d1 - d2) < 0.000001)
+      ^~~
+      fabs
+basic.m:96:47: warning: format specifies type 'int' but the argument has type 'NSInteger' (aka 'long') [-Wformat]
+      NSLog(@"different element count %d %d", [self elementCount], [anObject elementCount]);
+                                      ~~      ^~~~~~~~~~~~~~~~~~~
+                                      %ld
+basic.m:96:68: warning: format specifies type 'int' but the argument has type 'NSInteger' (aka 'long') [-Wformat]
+      NSLog(@"different element count %d %d", [self elementCount], [anObject elementCount]);
+                                         ~~                        ^~~~~~~~~~~~~~~~~~~~~~~
+                                         %ld
+3 warnings generated.
+ Linking test_tool basic ...
+ Linking test_tool windingCountAtPoint ...
+
+Testing basic.m...
+Running gui/NSBezierPath/basic.m...
+Passed test:     (2021-07-14 03:57:53.286 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' exists
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' has working alloc
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' alloc gives the correct class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' has working init
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' has working new
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSBezierPath' has working allocWithZone
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... NSBezierPath is a known className
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' conforms to NSObject
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' can return self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' can return own class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' object <NSBezierPath: 0x1b33b68> is of correct class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' can return superclass
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' responds to hash
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' isEqual: to self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' handles retain
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' has working retainCount
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' has NSString description
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSBezierPath' handles performSelector
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' conforms to NSObject
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' can return self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' can return own class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' object <NSBezierPath: 0x1b33e28> is of correct class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' can return superclass
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' responds to hash
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' isEqual: to self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' handles retain
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' has working retainCount
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' has NSString description
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSBezierPath' handles performSelector
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' conforms to NSObject
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' can return self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' can return own class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' object <NSBezierPath: 0x1b341c8> is of correct class
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' can return superclass
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' responds to hash
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' isEqual: to self
+Passed test:     (2021-07-14 03:57:53.306 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:53.307 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' handles retain
+Passed test:     (2021-07-14 03:57:53.307 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' has working retainCount
+Passed test:     (2021-07-14 03:57:53.307 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' has NSString description
+Passed test:     (2021-07-14 03:57:53.307 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSBezierPath' handles performSelector
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 0 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 1 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 2
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.307 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 2 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 2
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.308 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 0 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 1 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 2
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:53.309 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 2 of class 'NSBezierPath' can be encoded
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 2
+Passed test:     (2021-07-14 03:57:53.310 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSBezierPath is a known class
+Passed test:     (2021-07-14 03:57:53.310 -0400) /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSBezierPath is a known class
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' understands -copy
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' copy is of correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' original and copy are equal
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' zCopy has correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSBezierPath' copy and original are equal
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' understands -copy
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' copy is of correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' original and copy are equal
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' zCopy has correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSBezierPath' copy and original are equal
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+Start set:       /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 2
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' understands -copy
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' copy is of correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' original and copy are equal
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' zCopy has correct type
+Passed test:     (2021-07-14 03:57:53.310 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSBezierPath' copy and original are equal
+End set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 2
+Completed file:  basic.m
+
+Testing bounds.m...
+Running gui/NSBezierPath/bounds.m...
+Passed test:     (2021-07-14 03:57:53.499 -0400) empty path gives empty bounds
+Passed test:     (2021-07-14 03:57:53.517 -0400) bounds accuracy (1)
+Passed test:     (2021-07-14 03:57:53.517 -0400) control-point bounds accuracy (1)
+Passed test:     (2021-07-14 03:57:53.517 -0400) empty path gives empty bounds (2)
+Passed test:     (2021-07-14 03:57:53.517 -0400) bounds accuracy (2)
+Passed test:     (2021-07-14 03:57:53.517 -0400) control-point bounds accuracy (2)
+Passed test:     (2021-07-14 03:57:53.517 -0400) bounds accuracy (3)
+Passed test:     (2021-07-14 03:57:53.517 -0400) bounds accuracy (4)
+Passed test:     (2021-07-14 03:57:53.517 -0400) control-point bounds accuracy (3)
+Completed file:  bounds.m
+
+Testing windingCountAtPoint.m...
+Running gui/NSBezierPath/windingCountAtPoint.m...
+Passed test:     (2021-07-14 03:57:53.710 -0400) path 'empty',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000015e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000015e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.729 -0400) path '(u) rect',  2.00000015e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  2.00000015e+02  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  9.99999924e+01  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  1.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  1.00000008e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  9.99999924e+01  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  9.99999924e+01  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(u) rect',  1.00000008e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  2.00000015e+02  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000008e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  9.99999924e+01  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(c) rect',  1.00000008e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  2.00000015e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  2.00000015e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.730 -0400) path '(d) rect',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  2.00000015e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  2.00000015e+02  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  9.99999924e+01  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  1.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  1.00000008e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  9.99999924e+01  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  9.99999924e+01  1.99999985e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(d) rect',  1.00000008e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  0.00000000e+00  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  0.00000000e+00 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  0.00000000e+00 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  0.00000000e+00  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  0.00000000e+00  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect', -9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.731 -0400) path '(u) tilted rect',  5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect', -5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(u) tilted rect',  5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  0.00000000e+00  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  0.00000000e+00 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  0.00000000e+00 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  0.00000000e+00  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  0.00000000e+00  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect', -9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.732 -0400) path '(c) tilted rect',  1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect', -5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(c) tilted rect',  5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  0.00000000e+00  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  0.00000000e+00 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06 -1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  0.00000000e+00 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  0.00000000e+00  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  0.00000000e+00  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect',  4.99999987e-06  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.733 -0400) path '(d) tilted rect', -9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  9.99999924e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  1.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  1.00000008e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  9.99999924e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  1.00000008e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  9.99999924e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  1.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  1.00000008e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000114e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000000e+01  5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000114e+01  5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -4.99999886e+01  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000000e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -4.99999886e+01  4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect', -5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  4.99999886e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000000e+01 -4.99999886e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  4.99999886e+01 -5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000114e+01 -5.00000000e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000000e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(d) tilted rect',  5.00000114e+01 -5.00000114e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  2.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.734 -0400) path '(u) touching rects',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  1.99999985e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  1.99999985e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  1.99999985e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000000e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(u) touching rects',  2.00000015e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  1.99999985e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000000e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.735 -0400) path '(c) touching rects',  2.00000015e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.50000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  2.00000015e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  1.99999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  1.50000015e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  1.99999985e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000000e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) touching rects',  2.00000015e+02  1.49999985e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(c) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(c) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(c) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(c) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(d) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  2.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  1.99999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  2.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  2.00000015e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  1.99999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  2.00000015e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  1.99999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.736 -0400) path '(u) touching triangles',  2.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) touching triangles',  2.00000015e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  1.99999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.00000015e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  1.99999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.00000015e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  1.99999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) touching triangles',  2.00000015e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  1.99999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.00000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.00000015e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  1.99999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.00000015e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  1.99999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.00000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) touching triangles',  2.00000015e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000000e+02  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000000e+02 -5.00000000e+01, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  1.99999985e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000000e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  1.99999985e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  1.99999985e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000000e+02 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(u) self-intersection',  2.00000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000000e+02  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000000e+02 -5.00000000e+01, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  1.99999985e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000000e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  1.99999985e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  1.99999985e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000000e+02 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(c) self-intersection',  2.00000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) self-intersection',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) self-intersection',  2.00000000e+02  5.00000000e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.737 -0400) path '(d) self-intersection',  2.00000000e+02 -5.00000000e+01, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  1.99999985e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  2.00000000e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  2.00000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  1.99999985e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  2.00000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  1.99999985e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  2.00000000e+02 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(d) self-intersection',  2.00000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects',  1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(u) intersecting rects', -9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects',  1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.738 -0400) path '(c) intersecting rects', -9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  0.00000000e+00  0.00000000e+00, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  2.00000000e+02  2.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  1.50000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  0.00000000e+00  1.50000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects',  1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -1.00000008e+02 -9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -9.99999924e+01 -9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -1.00000008e+02 -1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -9.99999924e+01 -1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -1.00000008e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -9.99999924e+01  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -1.00000008e+02  9.99999924e+01, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(d) intersecting rects', -9.99999924e+01  9.99999924e+01, expected 2, got 2
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  2.10000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.90000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.10000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.74999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.75000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.75000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.74999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.75000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.74999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.75000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(u) curve 1',  1.75000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  2.10000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  1.90000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  1.10000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  1.74999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  1.75000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.739 -0400) path '(c) curve 1',  1.75000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(c) curve 1',  1.74999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(c) curve 1',  1.75000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(c) curve 1',  1.74999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(c) curve 1',  1.75000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(c) curve 1',  1.75000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  2.10000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.90000000e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.10000000e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.74999985e+02  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.75000000e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.75000015e+02  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.74999985e+02  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.75000015e+02  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.74999985e+02 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.75000000e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(d) curve 1',  1.75000015e+02 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  0.00000000e+00  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2', -7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.740 -0400) path '(u) curve 2',  7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  0.00000000e+00  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2', -7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(c) curve 2',  7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2',  0.00000000e+00  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2',  9.00000000e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.741 -0400) path '(d) curve 2', -7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800262e+01  4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800359e+01  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800415e+01  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800262e+01  0.00000000e+00, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800415e+01  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800262e+01 -4.99999987e-06, expected -1, got -1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800359e+01 -4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 2',  7.69800415e+01 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.05000000e+02  1.05000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.00000000e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.00000008e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(u) curve 3',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.05000000e+02  1.05000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.00000000e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.00000008e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(c) curve 3',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 3',  0.00000000e+00  0.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 3',  1.05000000e+02  1.05000000e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 3',  9.99999924e+01  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.742 -0400) path '(d) curve 3',  1.00000000e+02  1.00000008e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  1.00000008e+02  1.00000008e+02, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  9.99999924e+01  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  1.00000008e+02  1.00000000e+02, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  9.99999924e+01  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  1.00000000e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  1.00000008e+02  9.99999924e+01, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3', -5.00000000e+00  5.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3',  5.00000000e+00 -5.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3', -4.99999987e-06  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3',  4.99999987e-06  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3',  4.99999987e-06  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3', -4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3',  0.00000000e+00 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(u) curve 3',  4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3', -5.00000000e+00  5.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3',  5.00000000e+00 -5.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3', -4.99999987e-06  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3',  4.99999987e-06  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3',  4.99999987e-06  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3', -4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3',  0.00000000e+00 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(c) curve 3',  4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3', -5.00000000e+00  5.00000000e+00, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  5.00000000e+00 -5.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3', -4.99999987e-06  4.99999987e-06, expected 0, got 0
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  4.99999987e-06  4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  4.99999987e-06  0.00000000e+00, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3', -4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  0.00000000e+00 -4.99999987e-06, expected 1, got 1
+Passed test:     (2021-07-14 03:57:53.743 -0400) path '(d) curve 3',  4.99999987e-06 -4.99999987e-06, expected 1, got 1
+Completed file:  windingCountAtPoint.m
+
+Building in gui/NSBitmapImageRep
+Making all for test_tool testcopy...
+ Compiling file testcopy.m ...
+ Linking test_tool testcopy ...
+
+Testing testcopy.m...
+Running gui/NSBitmapImageRep/testcopy.m...
+Passed test:     (2021-07-14 03:57:54.222 -0400) Copied bitmaps have a different image data pointer - could cause image data corruption.
+Completed file:  testcopy.m
+
+Building in gui/NSCell
+Making all for test_tool basic...
+Making all for test_tool objectValue...
+ Compiling file objectValue.m ...
+ Compiling file basic.m ...
+ Linking test_tool objectValue ...
+ Linking test_tool basic ...
+
+Testing basic.m...
+Running gui/NSCell/basic.m...
+Start set:       basic.m:16 ... NSCell GNUstep basic
+Passed test:     (2021-07-14 03:57:55.073 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' exists
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' has working alloc
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' alloc gives the correct class
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' has working init
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' has working new
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSCell' has working allocWithZone
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... NSCell is a known className
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' conforms to NSObject
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' can return self
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' can return own class
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' object <NSCell: 0x1b43f48> is of correct class
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:55.074 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' can return superclass
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' responds to hash
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' isEqual: to self
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' handles retain
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' has working retainCount
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' has NSString description
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSCell' handles performSelector
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' conforms to NSObject
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' can return self
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' can return own class
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' object <NSCell: 0x1b43fc8> is of correct class
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' can return superclass
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' responds to hash
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' isEqual: to self
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' handles retain
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' has working retainCount
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' has NSString description
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSCell' handles performSelector
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' conforms to NSObject
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' can return self
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' can return own class
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' object <NSCell: 0x1b43c68> is of correct class
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' can return superclass
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' responds to hash
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' isEqual: to self
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' handles retain
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' has working retainCount
+Passed test:     (2021-07-14 03:57:55.075 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' has NSString description
+Passed test:     (2021-07-14 03:57:55.076 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 2 of class 'NSCell' handles performSelector
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 0 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:55.076 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 1 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 2
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 2 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 2
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.077 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.078 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 0 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.078 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.078 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Passed test:     (2021-07-14 03:57:55.078 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.078 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.079 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 1 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.079 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.079 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 2
+Passed test:     (2021-07-14 03:57:55.079 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:55.079 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 2 of class 'NSCell' can be encoded
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 2
+Passed test:     (2021-07-14 03:57:55.080 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSCell is a known class
+Passed test:     (2021-07-14 03:57:55.080 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSCell is a known class
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' understands -copy
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' copy is of correct type
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' original and copy are equal
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' zCopy has correct type
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSCell' copy and original are equal
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' understands -copy
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' copy is of correct type
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' original and copy are equal
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' zCopy has correct type
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSCell' copy and original are equal
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 2
+Passed test:     (2021-07-14 03:57:55.080 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' understands -copy
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' copy is of correct type
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' original and copy are equal
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' zCopy has correct type
+Passed test:     (2021-07-14 03:57:55.081 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 2 of class 'NSCell' copy and original are equal
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 2
+End set:         basic.m:43 ... NSCell GNUstep basic
+Completed file:  basic.m
+
+Testing objectValue.m...
+Running gui/NSCell/objectValue.m...
+Start set:       objectValue.m:16 ... NSCell GNUstep objectValue
+Passed test:     (2021-07-14 03:57:55.432 -0400)   -objectValue with NSNumber works
+Passed test:     (2021-07-14 03:57:55.433 -0400)   -floatValue works
+Passed test:     (2021-07-14 03:57:55.433 -0400)   -intValue works
+Passed test:     (2021-07-14 03:57:55.433 -0400)   -doubleValue works
+Passed test:     (2021-07-14 03:57:55.433 -0400)   -objectValue with NSString works
+Passed test:     (2021-07-14 03:57:55.434 -0400)   -objectValue with NSImage works
+End set:         objectValue.m:45 ... NSCell GNUstep objectValue
+Completed file:  objectValue.m
+
+Building in gui/NSEvent
+Making all for test_tool delta...
+ Compiling file delta.m ...
+ Linking test_tool delta ...
+
+Testing delta.m...
+Running gui/NSEvent/delta.m...
+Start set:       delta.m:15 ... NSEvent GNUstep delta
+Passed test:     (2021-07-14 03:57:56.035 -0400)   -deltaX with NSLeftMouseDown event works
+Passed test:     (2021-07-14 03:57:56.036 -0400)   -deltaY with NSLeftMouseDown event works
+Passed test:     (2021-07-14 03:57:56.036 -0400)   -deltaZ with NSLeftMouseDown event works
+Passed test:     (2021-07-14 03:57:56.036 -0400)   -deltaX with NSKeyDown event works
+Passed test:     (2021-07-14 03:57:56.036 -0400)   -deltaY with NSKeyDown event works
+Passed test:     (2021-07-14 03:57:56.036 -0400)   -deltaZ with NSKeyDown event works
+End set:         delta.m:55 ... NSEvent GNUstep delta
+Completed file:  delta.m
+
+Building in gui/NSImage
+Making all for test_tool basic...
+ Compiling file basic.m ...
+ Linking test_tool basic ...
+
+Testing basic.m...
+Running gui/NSImage/basic.m...
+Start set:       basic.m:15 ... NSImage GNUstep basic
+Passed test:     (2021-07-14 03:57:56.792 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' exists
+Passed test:     (2021-07-14 03:57:56.793 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' has working alloc
+Passed test:     (2021-07-14 03:57:56.793 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' alloc gives the correct class
+Passed test:     (2021-07-14 03:57:56.793 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' has working init
+Passed test:     (2021-07-14 03:57:56.793 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' has working new
+Passed test:     (2021-07-14 03:57:56.793 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:66 ... Class 'NSImage' has working allocWithZone
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... NSImage is a known className
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' conforms to NSObject
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' can return self
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' can return own class
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' object <NSImage 0x15fe1c8 Name=(null) Size={width = 0; height = 0} Reps=()> is of correct class
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' can return superclass
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' responds to hash
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' isEqual: to self
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' handles retain
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' has working retainCount
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' has NSString description
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 0 of class 'NSImage' handles performSelector
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' conforms to NSObject
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' can return self
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' can return own class
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' object <NSImage 0x1721cb8 Name=GNUstep Size={width = 48; height = 48} Reps=("<NSBitmapImageRep: 0x1760718 size: {width = 48; height = 48} pixelsWide: 48 pixelsHigh: 48 is of correct class
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' isMemberOfClass works
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' can return superclass
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' responds to hash
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' isEqual: to self
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' respondsToSelector: 
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' handles retain
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' has working retainCount
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' has NSString description
+Passed test:     (2021-07-14 03:57:56.795 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:175 ... Object 1 of class 'NSImage' handles performSelector
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Passed test:     (2021-07-14 03:57:56.795 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:56.795 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 0 of class 'NSImage' can be encoded
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... I am able to set up an archiver
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... Object 1 of class 'NSImage' can be encoded
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... can be decoded
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:220 ... test_NSCoding object 1
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:56.796 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 0 of class 'NSImage' can be encoded
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... I can extract a class name for object
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... conforms to NSCoding protocol
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... Object 1 of class 'NSImage' can be encoded
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... can be decoded
+Passed test:     (2021-07-14 03:57:56.797 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... decoded object equals the original
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:260 ... test_keyed_NSCoding object 1
+Passed test:     (2021-07-14 03:57:56.798 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSImage is a known class
+Passed test:     (2021-07-14 03:57:56.798 -0400)   /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... NSImage is a known class
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' understands -copy
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' copy is of correct type
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' original and copy are equal
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' zCopy has correct type
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 0 of class 'NSImage' copy and original are equal
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 0
+Start set:         /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... conforms to NSCopying
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' understands -copy
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' copy is of correct type
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' original and copy are equal
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' understands -copyWithZone
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' zCopy has correct type
+Passed test:     (2021-07-14 03:57:56.798 -0400)     /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... Object 1 of class 'NSImage' copy and original are equal
+End set:           /usr/GNUstep/System/Library/Makefiles/TestFramework/ObjectTesting.h:381 ... test_NSCopying object 1
+End set:         basic.m:44 ... NSImage GNUstep basic
+Completed file:  basic.m
+
+Building in gui/NSParagraphStyle
+Making all for test_tool NSParagraphStyle_defaultWritingDirection...
+ Compiling file NSParagraphStyle_defaultWritingDirection.m ...
+ Linking test_tool NSParagraphStyle_defaultWritingDirection ...
+
+Testing NSParagraphStyle_defaultWritingDirection.m...
+Running gui/NSParagraphStyle/NSParagraphStyle_defaultWritingDirection.m...
+Passed test:     (2021-07-14 03:57:57.351 -0400) [NSParagraphStyle defaultWritingDirectionForLanguage:] works
+Completed file:  NSParagraphStyle_defaultWritingDirection.m
+
+Building in gui/NSPasteboard
+Making all for test_tool lazy_copy...
+ Compiling file lazy_copy.m ...
+ Linking test_tool lazy_copy ...
+
+Testing lazy_copy.m...
+Running gui/NSPasteboard/lazy_copy.m...
+Passed test:     (2021-07-14 03:57:57.822 -0400) NSPasteboard handles lazy setting of data
+Completed file:  lazy_copy.m
+
+Building in gui/NSPopUpButton
+Making all for test_tool defaultSelection...
+ Compiling file defaultSelection.m ...
+ Linking test_tool defaultSelection ...
+
+Testing defaultSelection.m...
+Running gui/NSPopUpButton/defaultSelection.m...
+Start set:       defaultSelection.m:15 ... NSPopupButton GNUstep defaultSelection
+Passed test:     (2021-07-14 03:57:58.897 -0400)   first item is selected by default
+End set:         defaultSelection.m:35 ... NSPopupButton GNUstep defaultSelection
+Completed file:  defaultSelection.m
+
+Building in gui/NSPrintInfo
+Making all for test_tool sharedPrintInfo...
+ Compiling file sharedPrintInfo.m ...
+ Linking test_tool sharedPrintInfo ...
+
+Testing sharedPrintInfo.m...
+Running gui/NSPrintInfo/sharedPrintInfo.m...
+2021-07-14 03:57:59.511 sharedPrintInfo[6267:6267] Creating a default printer since no printer has been set in the user defaults (under the GSLPRPrinters key).
+Completed file:  sharedPrintInfo.m
+
+Building in gui/NSSavePanel
+Making all for test_tool setDelegate_reload...
+ Compiling file setDelegate_reload.m ...
+ Linking test_tool setDelegate_reload ...
+
+Testing setDelegate_reload.m...
+Running gui/NSSavePanel/setDelegate_reload.m...
+Start set:       setDelegate_reload.m:49 ... NSSavePanel GNUstep setDelegate
+Passed test:     (2021-07-14 03:58:01.841 -0400)   browser initially contains all files
+Passed test:     (2021-07-14 03:58:01.843 -0400)   browser is reloaded after -setDelegate:
+Dashed hope:     (2021-07-14 03:58:01.843 -0400)   browser contains all files after resetting delegate
+Passed test:     (2021-07-14 03:58:01.843 -0400)   browser is reloaded after -setDelegate: (2)
+End set:         setDelegate_reload.m:97 ... NSSavePanel GNUstep setDelegate
+Completed file:  setDelegate_reload.m
+
+Building in gui/NSSliderCell
+Making all for test_tool minMax...
+ Compiling file minMax.m ...
+ Linking test_tool minMax ...
+
+Testing minMax.m...
+Running gui/NSSliderCell/minMax.m...
+Start set:       minMax.m:15 ... NSSliderCell GNUstep minMax
+Passed test:     (2021-07-14 03:58:02.611 -0400)   slider continuous by default
+Passed test:     (2021-07-14 03:58:02.612 -0400)   default min value is 0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   default max value is 1
+Passed test:     (2021-07-14 03:58:02.612 -0400)   default value is 0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   default objectValue is NSNumber 0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   set min value to 2
+Passed test:     (2021-07-14 03:58:02.612 -0400)   max value is still 1
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   when min < max, value should always be min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   value is still 2.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   changing minimum clamps value to 3.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   changing minimum clamps value to 3.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   changing max clamps value to 9.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   changing max clamps value to 9.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting nonsense string objectValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting nonsense string stringValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting nil objectValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'3.5' objectValue sets value to 3.5
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'3.5' stringValue sets value to 3.5
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 3 intValue sets value to 3.0
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' stringValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting -5 intValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting -5 doubleValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting -5 floatValue sets value to min
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'-5' objectValue sets value to min (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'15' objectValue sets value to max
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'15' objectValue sets value to max (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'15' stringValue sets value to max
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting @'15' stringValue sets value to max (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 intValue sets value to max
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 intValue sets value to max (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 doubleValue sets value to max
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 doubleValue sets value to max (integer)
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 floatValue sets value to max
+Passed test:     (2021-07-14 03:58:02.612 -0400)   setting 15 floatValue sets value to max (integer)
+End set:         minMax.m:135 ... NSSliderCell GNUstep minMax
+Completed file:  minMax.m
+
+Building in gui/NSView
+Making all for test_tool NSView_autoresize_and_rounding...
+Making all for test_tool NSView_bounds_scale...
+Making all for test_tool NSView_convertRect...
+Making all for test_tool NSView_frame_bounds...
+ Compiling file NSView_autoresize_and_rounding.m ...
+ Compiling file NSView_bounds_scale.m ...
+ Compiling file NSView_frame_bounds.m ...
+ Compiling file NSView_convertRect.m ...
+ Linking test_tool NSView_frame_bounds ...
+ Linking test_tool NSView_bounds_scale ...
+ Linking test_tool NSView_convertRect ...
+ Linking test_tool NSView_autoresize_and_rounding ...
+Making all for test_tool NSView_frame_rotation...
+Making all for test_tool NSView_visibleRect...
+ Compiling file NSView_frame_rotation.m ...
+Making all for test_tool scrollRectToVisible...
+ Compiling file NSView_visibleRect.m ...
+ Compiling file scrollRectToVisible.m ...
+ Linking test_tool NSView_visibleRect ...
+ Linking test_tool NSView_frame_rotation ...
+ Linking test_tool scrollRectToVisible ...
+
+Testing NSView_autoresize_and_rounding.m...
+Running gui/NSView/NSView_autoresize_and_rounding.m...
+Start set:       NSView_autoresize_and_rounding.m:59 ... NSView GNUstep autoresize_and_rounding
+Passed test:     (2021-07-14 03:58:03.703 -0400)   NSView autoresizing works
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView autoresizing corner cases work
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView autoresize rounding works
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:232 ... centerScanRect works 1
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:235 ... centerScanRect works 2
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:238 ... centerScanRect works 3
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:241 ... centerScanRect works 4
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:253 ... centerScanRect works 1
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:256 ... centerScanRect works 2
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:259 ... centerScanRect works 3
+Passed test:     (2021-07-14 03:58:03.704 -0400)   NSView_autoresize_and_rounding.m:262 ... centerScanRect works 4
+End set:         NSView_autoresize_and_rounding.m:268 ... NSView GNUstep autoresize_and_rounding
+Completed file:  NSView_autoresize_and_rounding.m
+
+Testing NSView_bounds_scale.m...
+Running gui/NSView/NSView_bounds_scale.m...
+Start set:       NSView_bounds_scale.m:97 ... NView GNUstep bounds_scale
+Dashed hope:     (2021-07-14 03:58:04.065 -0400)   NSView -scaleUnitSquareToSize works
+End set:         NSView_bounds_scale.m:204 ... NView GNUstep bounds_scale
+expected bounds rotation 30 got 30.9153
+(2) expected bounds (39.9801 104.211)+(66.2393 85.2544), got (40.372 105.364)+(66.8473 84.9812)
+expected bounds matrix (2.93813 0.614059 -1.69633 1.06358 104.31 -131.062) got (2.96586 0.574945 -1.71234 1.0729 104.31 -131.062)
+(2) expected bounds (39.9801 104.211)+(66.2393 85.2544), got (40.372 105.364)+(66.8473 84.9812)
+expected bounds rotation 30 got 30.9153
+Completed file:  NSView_bounds_scale.m
+
+Testing NSView_convertRect.m...
+Running gui/NSView/NSView_convertRect.m...
+Start set:       NSView_convertRect.m:100 ... NView GNUstep converRect
+Passed test:     (2021-07-14 03:58:04.414 -0400)   NSView -convertRect:fromView: and -convertRect:toView: work
+End set:         NSView_convertRect.m:145 ... NView GNUstep converRect
+Completed file:  NSView_convertRect.m
+
+Testing NSView_frame_bounds.m...
+Running gui/NSView/NSView_frame_bounds.m...
+Start set:       NSView_frame_bounds.m:57 ... NView GNUstep frame_bounds
+Passed test:     (2021-07-14 03:58:04.761 -0400)   NSView -frame and -bounds work
+End set:         NSView_frame_bounds.m:125 ... NView GNUstep frame_bounds
+Completed file:  NSView_frame_bounds.m
+
+Testing NSView_frame_rotation.m...
+Running gui/NSView/NSView_frame_rotation.m...
+Start set:       NSView_frame_rotation.m:21 ... NView GNUstep frame_rotation
+Passed test:     (2021-07-14 03:58:05.123 -0400)   -frameRotation/-setFrameRotation work
+End set:         NSView_frame_rotation.m:69 ... NView GNUstep frame_rotation
+Completed file:  NSView_frame_rotation.m
+
+Testing NSView_visibleRect.m...
+Running gui/NSView/NSView_visibleRect.m...
+Passed test:     (2021-07-14 03:58:05.348 -0400) NSView -visibleRect works
+Completed file:  NSView_visibleRect.m
+
+Testing scrollRectToVisible.m...
+Running gui/NSView/scrollRectToVisible.m...
+Start set:       scrollRectToVisible.m:33 ... NView GNUstep scrollRectToVisible
+Passed test:     (2021-07-14 03:58:05.686 -0400)   1
+Passed test:     (2021-07-14 03:58:05.688 -0400)   2
+Passed test:     (2021-07-14 03:58:05.688 -0400)   3
+Passed test:     (2021-07-14 03:58:05.688 -0400)   4
+Passed test:     (2021-07-14 03:58:05.688 -0400)   5
+Passed test:     (2021-07-14 03:58:05.688 -0400)   6
+Passed test:     (2021-07-14 03:58:05.688 -0400)   7
+Passed test:     (2021-07-14 03:58:05.688 -0400)   8
+Passed test:     (2021-07-14 03:58:05.688 -0400)   9
+Passed test:     (2021-07-14 03:58:05.688 -0400)   10
+Passed test:     (2021-07-14 03:58:05.688 -0400)   11
+Passed test:     (2021-07-14 03:58:05.688 -0400)   12
+End set:         scrollRectToVisible.m:100 ... NView GNUstep scrollRectToVisible
+Completed file:  scrollRectToVisible.m
+
+Building in gui/TextSystem
+Making all for test_tool deallocation...
+Making all for test_tool repeatedAttachmentCellHeight...
+ Compiling file repeatedAttachmentCellHeight.m ...
+ Compiling file deallocation.m ...
+repeatedAttachmentCellHeight.m:26:32: warning: conflicting parameter types in implementation of 'cellFrameForTextContainer:proposedLineFragment:glyphPosition:characterIndex:': 'NSUInteger' (aka 'unsigned long') vs 'unsigned int' [-Wmismatched-parameter-types]
+        characterIndex: (unsigned int)charIndex
+                         ~~~~~~~~~~~~ ^
+/home/heron/Development/gnustep/libs-gui/Headers/AppKit/NSTextAttachment.h:120:36: note: previous definition is here
+                     characterIndex: (NSUInteger)charIndex;
+                                      ~~~~~~~~~~ ^
+1 warning generated.
+ Linking test_tool repeatedAttachmentCellHeight ...
+ Linking test_tool deallocation ...
+
+Testing deallocation.m...
+Running gui/TextSystem/deallocation.m...
+Start set:       deallocation.m:27 ... TextSystem GNUstep deallocation
+Passed test:     (2021-07-14 03:58:06.393 -0400)   NSTextView -textContainer returns text container
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -layoutManager returns layout manager
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textStorage returns text storage
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textContainer returns text container
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -layoutManager returns layout manager
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textStorage returns nil
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textContainer returns text container
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -layoutManager returns nil
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textStorage returns nil
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textContainer returns nil
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -layoutManager returns nil
+Passed test:     (2021-07-14 03:58:06.394 -0400)   NSTextView -textStorage returns nil
+End set:         deallocation.m:85 ... TextSystem GNUstep deallocation
+Completed file:  deallocation.m
+
+Testing repeatedAttachmentCellHeight.m...
+Running gui/TextSystem/repeatedAttachmentCellHeight.m...
+Start set:       repeatedAttachmentCellHeight.m:47 ... TextSystem GNUstep repeatedAttachmentCellHeight
+End set:         repeatedAttachmentCellHeight.m:79 ... TextSystem GNUstep repeatedAttachmentCellHeight
+Completed file:  repeatedAttachmentCellHeight.m
