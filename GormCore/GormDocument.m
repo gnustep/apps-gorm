@@ -3603,8 +3603,26 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = [connections objectEnumerator];
   id o = nil;
+  
   while((o = [en nextObject]) != nil)
     {
+      id val = nil;
+
+      if ([o destination] == firstResponder)
+	{
+	  val = nil;
+	}
+      else
+	{
+	  val = [nameTable objectForKey: [o destination]];
+	}
+
+      if ([[o label] isEqualToString: @"terminate:"])
+	{
+	  [o setLabel: @"deferredEndTesting:"];
+	}
+      
+      [o setDestination: val];
       [o establishConnection];
     }
 
@@ -3615,6 +3633,7 @@ static void _real_close(GormDocument *self,
       [o orderFront: self];
     }
 }
+/* End of testInterface support code */
 
 /**
  * Deactivate the editors for archiving..
