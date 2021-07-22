@@ -1,3 +1,10 @@
+2021-07-22 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.m: -[GormDocument awakeWithContext:]
+	establish connection properly and catch the case where an object
+	might be connected to terminate and redirect it to the
+	deferredEndTesting: method.
+
 2021-05-15 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* English.lproj/Gorm.rtfd/TXT.rtf: Add help file
