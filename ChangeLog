@@ -1,3 +1,8 @@
+2021-10-19 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormNSSplitViewInspector.m: Correct crash happening
+        in GormNSSplitViewInspector.
+
 2021-07-22 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.m: -[GormDocument awakeWithContext:]

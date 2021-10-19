@@ -47,12 +47,6 @@
 
 - (void)awakeFromNib
 {
-  NSEnumerator *en = [orientation objectEnumerator];
-  NSCell *cell = nil;
-  while ((cell = [en nextObject]) != nil)
-    {
-      [cell setRefusesFirstResponder: YES];
-    }
 }
 
 - (void) _getValuesFromObject
