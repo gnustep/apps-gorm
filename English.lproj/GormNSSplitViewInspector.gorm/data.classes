@@ -10,7 +10,8 @@
 	Actions = (
 	);
 	Outlets = (
-	    orientation
+	    orientation,
+	    divider
 	);
 	Super = IBInspector;
     };

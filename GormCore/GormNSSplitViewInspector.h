@@ -7,5 +7,6 @@
 @interface GormNSSplitViewInspector : IBInspector
 {
   id orientation;
+  id divider;
 }
 @end

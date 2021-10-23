@@ -52,6 +52,8 @@
 - (void) _getValuesFromObject
 {
   BOOL state = [(NSSplitView *)object isVertical];
+  NSUInteger dividerStyle = [(NSSplitView *)object dividerStyle];
+  
   // get the values from the object
   if(state == NO)
     {
@@ -61,6 +63,8 @@
     {
       [orientation selectCellAtRow: 1 column: 0];      
     }
+
+  [divider selectItemWithTag: dividerStyle];
 }
 
 - (void) setObject: (id)anObject
@@ -73,13 +77,17 @@
 {
   id cell = nil;
   BOOL state = NO;
-
+  NSUInteger styleTag = 0;
+  
   // horizontal switch..  if it's active/inactive we 
   // know what the selection is.
   [super ok: sender];
   cell = [orientation cellAtRow: 0 column: 0];
   state = ([cell state] == NSOnState)?NO:YES;
+  styleTag = [divider selectedTag];
+  
   [object setVertical: state];
   [object adjustSubviews];
+  [object setDividerStyle: styleTag];
 }
 @end
