@@ -179,13 +179,17 @@
 - (id) init
 {
   if ([super init] == nil)
-    return nil;
-
-  if ([NSBundle loadNibNamed: @"GormMenuItemAttributesInspector" owner: self] == NO)
+    {
+      return nil;
+    }
+  
+  if ([NSBundle loadNibNamed: @"GormMenuItemAttributesInspector"
+                       owner: self] == NO)
     {
       NSLog(@"Could not gorm GormMenuItemAttributesInspector");
       return nil;
     }
+  
   return self;
 }
 

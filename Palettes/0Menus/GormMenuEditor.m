@@ -57,6 +57,7 @@
   NSPasteboard		*dragPb;
   NSString		*dragType;
 }
+
 - (BOOL) acceptsTypeFromArray: (NSArray*)types;
 - (BOOL) activate;
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument;
@@ -78,6 +79,7 @@
 - (void) validateEditing;
 - (BOOL) wantsSelection;
 - (NSWindow*) window;
+
 @end
 
 @interface      GormMenuEditor (Private)
@@ -1104,6 +1106,8 @@ static BOOL done_editing;
   [[editField currentEditor] resignFirstResponder];
   [self setNeedsDisplay: YES];
 
+  [[self document] touch];
+  
   return e;
 }
 @end
