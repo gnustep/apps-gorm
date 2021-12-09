@@ -40,7 +40,6 @@
 {
   if (self == [GormCustomClassInspector class])
     {
-      // TBD
     }
 }
 
@@ -323,6 +322,7 @@
   if(nameForObject != nil)
     {
       [super ok: sender];
+      
       if (![stringValue isEqualToString: classForObject])
 	{
 	  [_classManager setCustomClass: stringValue
@@ -340,7 +340,9 @@
       [self _replaceWithCellClassForClassName: stringValue];
     }
   else
-    NSLog(@"name for object %@ returned as nil",[self object]);
+    {
+      NSLog(@"name for object %@ returned as nil",[self object]);
+    }
 }
 
 // Browser delegate
@@ -357,10 +359,6 @@ createRowsForColumn: (NSInteger)column
       NSInteger		i = 0;
       
       classes = [self _generateClassList]; 
-      // [NSMutableArray arrayWithObject: _parentClassName];
-      // get a list of all of the classes allowed and the class to be shown.
-      //[classes addObjectsFromArray:
-      // [_classManager allCustomSubclassesOf: _parentClassName]];
       
       // enumerate through the classes...
       e = [classes objectEnumerator];

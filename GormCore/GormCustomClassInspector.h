@@ -42,7 +42,9 @@
   NSString *_parentClassName;
   NSUInteger _rowToSelect;
 }
+
 - (void) select: (id)sender;
+
 @end
 
 #endif

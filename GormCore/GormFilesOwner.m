@@ -272,6 +272,7 @@
 	  hasConnections = NO;
 	}
     }
+  [super ok: sender];
   [object setClassName: title];
 }
 @end
