@@ -43,10 +43,8 @@
 
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
-  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
-
   [object setTitle: [titleText stringValue]];
-  [doc touch];
+  [super ok: self];
 }
 
 - (id) init
@@ -125,6 +123,8 @@
 	  [doc setServicesMenu: nil];
 	}
     }
+
+  [super ok: sender];
 }
 
 - (void) updateAutoenable: (id)sender
@@ -134,7 +134,10 @@
   // look at the values passed back in the matrix.
   flag = ([autoenable state] == NSOnState) ? YES : NO;
   [object setAutoenablesItems: flag];
+
+  [super ok: sender];
 }
+
 @end
 
 

@@ -49,6 +49,7 @@
 {
   return @"GormTextFieldAttributesInspector";
 }
+
 @end
 
 
@@ -185,7 +186,7 @@
 /* delegate method for tagForm */
 -(void) controlTextDidChange:(NSNotification *)aNotification
 {
-  [self ok:[aNotification object]];
+  [self ok: [aNotification object]];
 }
 
 
