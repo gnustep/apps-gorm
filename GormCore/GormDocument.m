@@ -4,10 +4,10 @@
  * protocol plus additional methods which are useful for managing the
  * contents of the document.
  *
- * Copyright (C) 1999,2002,2003,2004,2005 Free Software Foundation, Inc.
+ * Copyright (C) 1999,2002,2003,2004,2005,2020,2021 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2002,2003,2004,2005
+ * Date:        2002,2003,2004,2005,2020,2021
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
  *
@@ -791,11 +791,27 @@ static NSImage  *fileImage = nil;
       // Add all subviews from the window, if any.
       [self attachObjects: [view subviews] toParent: view];
     }
+  /*
+   * Add columns to document hierarchy...
+   */
+  else if ([anObject isKindOfClass: [NSTableView class]]) // this should include outline view
+    {
+      NSTableView *tblView = (NSTableView *)anObject;
+      NSArray *cols = [tblView tableColumns];
 
+      [self attachObjects: cols toParent: tblView];
+    }
+  else if ([anObject isKindOfClass: [NSSplitView class]])
+    {
+      NSSplitView *sp = (NSSplitView *)anObject;
+      [self attachObjects: [sp subviews] toParent: sp];
+    }
+  
   // Attach the cell of an item to the document so that it has a name and
   // can be addressed.
   if ([anObject respondsToSelector: @selector(cell)])
     {
+      [self openEditorForObject: [anObject cell]];
       [self attachObject: [anObject cell] toParent: anObject];
     }
 
@@ -876,6 +892,17 @@ static NSImage  *fileImage = nil;
 {
   [self attachObject: object
             toParent: parent
+            withName: nil];
+}
+
+/**
+ * Attach an object to parent object in document letting Gorm generate the name
+ * this method will add a top level object.
+ */ 
+- (void) attachObject: (id)object
+{
+  [self attachObject: object
+            toParent: nil
             withName: nil];
 }
 
@@ -1181,7 +1208,7 @@ static NSImage  *fileImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
-  ASSIGN(lastEditor, nil);
+  ASSIGN(lastEditor, (id)nil);
   // [filePrefsWindow close];
 
   // Get rid of the selection box.

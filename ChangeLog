@@ -1,3 +1,10 @@
+2022-03-26 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormClassEditor.m: Add coercion to (id) to silence
+        warning.
+	* GormCore/GormDocument.m: Add editor when editing a class
+        with a cell.  This will allow Gorm to bring up an inspector.
+
 2021-10-19 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormNSSplitViewInspector.m: Correct crash happening

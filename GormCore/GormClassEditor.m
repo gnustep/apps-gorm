@@ -608,7 +608,7 @@ NSImage *browserImage = nil;
 		  [self reloadData];
 		  [nc postNotificationName: GormDidModifyClassNotification
 		      object: classManager];
-		  ASSIGN(selectedClass, nil); // don't keep the class we're pointing to.
+		  ASSIGN(selectedClass, (id)nil); // don't keep the class we're pointing to.
 		}
 	    }
 	}
