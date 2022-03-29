@@ -1,3 +1,8 @@
+2022-03-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Plugins/Xib/GormXibWrapperLoader.m: Use new version
+        of custom class dictionary.
+
 2022-03-26 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormClassEditor.m: Add coercion to (id) to silence

@@ -25,6 +25,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
+#include <GNUstepGUI/GSXibKeyedUnarchiver.h>
 #include <GormCore/GormCore.h>
 
 #include "GormXibWrapperLoader.h"
@@ -37,10 +38,12 @@
 /*
  * This allows us to retrieve the customClasses from the XIB unarchiver.
  */
+
 @interface NSKeyedUnarchiver (Private)
-- (NSArray *) customClasses;
+- (NSDictionary *) customClasses;
 - (NSDictionary *) decoded;
 @end
+
 
 /*
  * Xib loader...
@@ -243,19 +246,19 @@
                         }
                     }
 		  
-		  //
-		  // Add custom classes...
-		  //
-                  NSArray *customClasses = [u customClasses];
-                  NSEnumerator *en = [customClasses objectEnumerator];
-                  NSDictionary *customClassDict = nil;
+		  /*
+                   * Add custom classes...
+                   */
+                  NSDictionary *customClasses = [u customClasses];
+                  NSEnumerator *en = [customClasses keyEnumerator];
+                  NSString *customClassName = nil;
                   NSDictionary *decoded = [u decoded];
                   
                   NSDebugLog(@"customClasses = %@", customClasses);
-                  while ((customClassDict = [en nextObject]) != nil)
+                  while ((customClassName = [en nextObject]) != nil)
                     {
+                      NSDictionary *customClassDict = [customClasses objectForKey: customClassName];;
                       NSString *theId = [customClassDict objectForKey: @"id"];
-                      NSString *customClassName = [customClassDict objectForKey: @"customClassName"];
                       NSString *parentClassName = [customClassDict objectForKey: @"parentClassName"];
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
@@ -292,9 +295,9 @@
                                            forName: theName];
                     }
                   
-		  //
-		  // add connections...
-		  //
+		  /*
+                   * add connections...
+                   */
 		  en = [container connectionRecordEnumerator];
 		  while ((cr = [en nextObject]) != nil)
 		    {
@@ -334,13 +337,6 @@
                                   [classManager addAction: [o label]
                                                 forObject: src];
 
-                                  // If the src is the first responder, use nil since this
-                                  // tells AppKit to use the First Responder chain.
-                                  //if (src == [doc firstResponder])
-                                  //  {
-                                  //    src = nil;
-                                  //  }
-                                  
                                   // For control connectors these roles are reversed...
                                   [o setSource: dest];
                                   [o setDestination: src];
