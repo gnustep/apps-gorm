@@ -205,6 +205,12 @@
  */
 - (NSArray *) allManagedPboardTypes;
 
+/**
+ * Open the editor for anObject, with parent object.
+ */
+- (id<IBEditors>) openEditorForObject: (id)anObject
+                     withParentObject: (id)parentObj;
+
 /* Language translation */
 - (void) translate: (id)sender;
 - (void) exportStrings: (id)sender;

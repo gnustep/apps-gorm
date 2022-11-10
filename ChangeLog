@@ -1,3 +1,13 @@
+2022-11-10 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormDocument.h: Add declaration for new method and
+	improve documentation.
+	* GormCore/GormDocument.m: Add new method openEditorForObject:
+	withParentObject: add logic to exclude NSCell sublcasses from
+	appearing in the toplevel editor. NSCells are a special class
+	since they are not views, so they don't need the editor to
+	highlight them in the way a subview does.
+
 2022-03-29 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Plugins/Xib/GormXibWrapperLoader.m: Use new version

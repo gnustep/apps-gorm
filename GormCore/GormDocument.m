@@ -610,7 +610,7 @@ static NSImage  *fileImage = nil;
 	  // Turn off the release when closed flag, add the content view.
 	  [anObject setReleasedWhenClosed: NO];
 	  [self attachObject: contentView
-		toParent: anObject];
+		    toParent: anObject];
 
 	  // Add all subviews from the window, if any.
           [self attachObjects: subviews toParent: win];
@@ -807,17 +807,11 @@ static NSImage  *fileImage = nil;
       [self attachObjects: [sp subviews] toParent: sp];
     }
   
-  // Attach the cell of an item to the document so that it has a name and
-  // can be addressed.
-  if ([anObject respondsToSelector: @selector(cell)])
-    {
-      [self openEditorForObject: [anObject cell]];
-      [self attachObject: [anObject cell] toParent: anObject];
-    }
-
-  // Detect and add any connection the object might have.
-  // This is done so that any palette items which have predefined connections will be
-  // shown in the connections list.
+  /* 
+   * Detect and add any connection the object might have.
+   * This is done so that any palette items which have predefined connections will be
+   * shown in the connections list.
+   */
   if([anObject respondsToSelector: @selector(action)]  &&
      [anObject respondsToSelector: @selector(target)]  &&
      newObject)
@@ -882,6 +876,18 @@ static NSImage  *fileImage = nil;
 	  // release the connection.
 	  RELEASE(con);
 	}
+    }
+
+  /*
+   * Attach the cell of an item to the document so that it has a name and
+   * can be addressed.  Do this last so that all other considerations are taken care
+   * of prior to adding the cell to the document.
+   */
+  if ([anObject respondsToSelector: @selector(cell)])
+    {
+      [self openEditorForObject: [anObject cell]
+	       withParentObject: anObject];
+      [self attachObject: [anObject cell] toParent: anObject];
     }
 }
 
@@ -1607,6 +1613,7 @@ static NSImage  *fileImage = nil;
            */
 	  anEditor = objectsView;
 	}
+      
       if (anEditor != editor)
 	{
 	  /*
@@ -1929,6 +1936,7 @@ static void _real_close(GormDocument *self,
   NSString	*name;
 
   NSDebugLog(@"------ Rebuilding object to name mapping...");
+
   NSResetMapTable(objToName);
   NSMapInsert(objToName, (void*)filesOwner, (void*)@"NSOwner");
   NSMapInsert(objToName, (void*)firstResponder, (void*)@"NSFirst");
@@ -1940,20 +1948,26 @@ static void _real_close(GormDocument *self,
       NSDebugLog(@"%@ --> %@",name, obj);
 
       NSMapInsert(objToName, (void*)obj, (void*)name);
-      if (([obj isKindOfClass: [NSMenu class]] && [name isEqual: @"NSMenu"]) || [obj isKindOfClass: [NSWindow class]])
+      if (([obj isKindOfClass: [NSMenu class]] && [name isEqual: @"NSMenu"]) ||
+	  [obj isKindOfClass: [NSWindow class]])
 	{
 	  [[self openEditorForObject: obj] activate];
 	}
     }
+
+  NSDebugLog(@"------ Done rebuilding object to name mapping...");
 }
 
 /**
- * Open the editor for anObject.
+ * Open the editor for anObject, with parent object.
  */
 - (id<IBEditors>) openEditorForObject: (id)anObject
+		     withParentObject: (id)parentObj
 {
-  id<IBEditors>	e = [self editorForObject: anObject create: YES];
-  id<IBEditors, IBSelectionOwners> p = [self parentEditorForEditor: e];
+  BOOL f = ([anObject isKindOfClass: [NSCell class]] == NO);
+  id<IBEditors> pe = [self editorForObject: parentObj create: NO];
+  id<IBEditors>	e = [self editorForObject: anObject inEditor: pe create: f];
+  id<IBEditors> p = (parentObj == nil) ? [self parentEditorForEditor: e] : pe;
   
   if (p != nil && p != objectsView)
     {
@@ -1968,6 +1982,14 @@ static void _real_close(GormDocument *self,
     }
 
   return e;
+}
+
+/**
+ * Open the editor for anObject.
+ */
+- (id<IBEditors>) openEditorForObject: (id)anObject
+{
+  return [self openEditorForObject: anObject withParentObject: nil];
 }
 
 /**
