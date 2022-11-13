@@ -2,29 +2,37 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "addObject:",
+	    "changeSelection:",
 	    "createClassFiles:",
 	    "createSubclass:",
 	    "instantiateClass:",
 	    "loadClass:",
-	    "toggleView:",
-	    "removeClass:"
+	    "removeClass:",
+	    "removeObject:",
+	    "resetObject:",
+	    "toggleView:"
 	);
 	Super = NSObject;
     };
-    GormClassEditor = {
+    GormGenericEditor = {
 	Actions = (
-	    "instantiateClass:",
-	    "createSubclass:",
-	    "loadClass:",
-	    "createClassFiles:",
-	    "removeClass:",
-	    "toggleView:"
+	    "addObject:",
+	    "removeObject:",
+	    "changeSelection:"
 	);
 	Outlets = (
-	    classesView,
-	    mainView,
-	    viewToggle
+	    document,
+	    selected
 	);
-	Super = NSView;
+	Super = NSMatrix;
+    };
+    GormObjectEditor = {
+	Actions = (
+	    "resetObject:"
+	);
+	Outlets = (
+	);
+	Super = GormGenericEditor;
     };
 }
