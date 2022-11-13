@@ -30,6 +30,8 @@
 + (id) editorForDocument: (id<IBDocuments>)aDocument
 {
   // does nothing here, the subclass must define this.
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
   return nil;
 }
 
@@ -42,6 +44,8 @@
        forDocument: (id<IBDocuments>)aDocument
 {
   // does nothing, defined by subclass.
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 
 - (void) setEditor: (id)editor
@@ -142,10 +146,14 @@
 // provided so that compilation will occur cleanly and to give a warning if called.
 - (void) closeSubeditors
 {
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 
 - (void) resetObject: (id)object
 {
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
@@ -175,6 +183,8 @@
 
 - (void) makeSelectionVisible: (BOOL)flag
 {
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 
 - (void) deactivate
@@ -184,10 +194,14 @@
 
 - (void) copySelection
 {
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 
 - (void) pasteInSelection
 {
+  NSLog(@"WARNING: Abstract version of %@ called on %@", NSStringFromSelector(_cmd),
+	NSStringFromClass(self));
 }
 // end of stubbed methods...
 

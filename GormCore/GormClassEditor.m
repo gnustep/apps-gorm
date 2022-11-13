@@ -95,7 +95,6 @@ NSImage *browserImage = nil;
 	  [outlineView setFrame: scrollRect];
 	  [outlineView setAutoresizingMask: NSViewHeightSizable|NSViewWidthSizable];
 	  [scrollView setDocumentView: outlineView];
-	  // [outlineView sizeToFit];
 	  RELEASE(outlineView);
 	  	  
 	  // weak connections...
