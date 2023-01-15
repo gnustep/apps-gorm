@@ -34,7 +34,8 @@ information regarding GNUstep resources <http://www.gnustep.org/>
 =================================================
 
 You can download sources and rpms (for some machines) from
-<ftp://ftp.gnustep.org/pub/gnustep/dev-apps>.
+<ftp://ftp.gnustep.org/pub/gnustep/dev-apps> or from
+<http://github.com/gnustep/apps-gorm/releases>
 
 1.5 Where do I send bug reports?
 ================================
