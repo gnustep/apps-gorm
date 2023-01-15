@@ -1,3 +1,12 @@
+2023-01-15 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Version: Release 1.3.1
+
 2022-11-10 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/GormDocument.h: Add declaration for new method and
