@@ -38,5 +38,3 @@ Bug reports can be sent to
 
 Check out the GNUstep web site. (@url{http://www.gnustep.org/}), and
 the GNU web site. (@url{http://www.gnu.org/})
-
-
