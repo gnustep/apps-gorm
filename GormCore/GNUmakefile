@@ -102,7 +102,8 @@ GormCore_HEADER_FILES = \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \
-	NSView+GormExtensions.h 
+	NSView+GormExtensions.h \
+	GormBindingsInspector.h
 
 GormCore_OBJC_FILES = \
 	GormBoxEditor.m \
@@ -165,7 +166,8 @@ GormCore_OBJC_FILES = \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
 	NSView+GormExtensions.m \
-        GormPrivate.m
+        GormPrivate.m \
+	GormBindingsInspector.m
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

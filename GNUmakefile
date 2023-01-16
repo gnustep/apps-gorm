@@ -153,6 +153,7 @@ Gorm_RESOURCE_FILES = \
 	Images/browserView.tiff
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
+	GormBindingsInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \
