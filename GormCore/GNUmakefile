@@ -114,13 +114,11 @@ GormCore_HEADER_FILES = \
 	GormPrefs.h \
 	GormShelfPref.h \
 	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
+	GormBindingsInspector.h
 
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
+	GormBindingsInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -189,7 +187,7 @@ GormCore_OBJC_FILES = \
 	GormPluginsPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
-	GormXLIFFDocument.m \
+	GormXLIFFDocument.m
 
 GormCore_RESOURCE_FILES = \
 	Plugins/Gorm/Gorm.plugin \
@@ -263,6 +261,7 @@ GormCore_RESOURCE_FILES = \
 GormCore_LANGUAGES = English
 
 GormCore_LOCALIZED_RESOURCE_FILES = \
+	GormBindingsInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \
