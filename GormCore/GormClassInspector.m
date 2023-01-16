@@ -336,7 +336,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   [parentClass setEnabled: (isEditable && !isFirstResponder)];
   [searchCell setEnabled: (isEditable && !isFirstResponder)];
   [classField setEditable: (isEditable && !isFirstResponder)];
-  [classField setBackgroundColor: ((isEditable && !isFirstResponder)?[NSColor whiteColor]:[NSColor lightGrayColor])];
+  [classField setBackgroundColor: ((isEditable && !isFirstResponder)?[NSColor textBackgroundColor]:[NSColor selectedTextBackgroundColor])];
 
   // select the parent class
   if(index != NSNotFound && list != nil)
@@ -738,36 +738,39 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
     forTableColumn: (NSTableColumn *)aTableColumn
 	       row: (NSInteger)rowIndex
 {
-/*
   NSString *name = [aCell stringValue];
   NSString *className = [self _currentClass];
 
-  if(tableView == actionTable)
+  if (tableView == parentClass)
+    {
+      [aCell setTextColor: [NSColor textColor]];
+    }
+  else if (tableView == actionTable)
     {
       if(([classManager isCustomClass: className] &&
 	  [classManager isAction: name ofClass: className]) ||
 	 [classManager isAction: name onCategoryForClassNamed: className])
 	{
-	  [aCell setTextColor: [NSColor blackColor]];
+	  [aCell setTextColor: [NSColor textColor]];
 	}
       else
 	{
-	  [aCell setTextColor: [NSColor darkGrayColor]];
+	  [aCell setTextColor: [NSColor selectedTextColor]];
 	}
     }
-  else if(tableView == outletTable)
+  else if( tableView == outletTable)
     {
       if([classManager isCustomClass: className] &&
 	 [classManager isOutlet: name ofClass: className])
 	{
-	  [aCell setTextColor: [NSColor blackColor]];
+	  [aCell setTextColor: [NSColor textColor]];
 	}
       else
 	{
-	  [aCell setTextColor: [NSColor darkGrayColor]];
+	  [aCell setTextColor: [NSColor selectedTextColor]];
 	}
     }
-*/
+  
   [(NSTextFieldCell *)aCell setScrollable: YES];
 }
 
