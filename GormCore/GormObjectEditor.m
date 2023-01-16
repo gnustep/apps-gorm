@@ -85,6 +85,11 @@
 {
   return @"GormObjectEditor";
 }
+
+- (NSString*) bindingsInspectorClassName
+{
+  return @"GormBindingsInspector";
+}
 @end
 
 @implementation NSView (GormObjectAdditions)

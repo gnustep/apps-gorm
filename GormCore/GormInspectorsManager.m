@@ -242,6 +242,13 @@
 	localizedLabel: _(@"Custom Class")
 	inspectorClassName: [selectedObject classInspectorClassName]
 	ordering: 4.0];
+  
+  // Bindings inspector...
+  [self addInspectorModeWithIdentifier: @"BindingsInspector"
+	forObject: selectedObject
+	localizedLabel: _(@"Bindings")
+	inspectorClassName: [selectedObject bindingsInspectorClassName]
+	ordering: 4.0];
 }
 
 - (void) _refreshPopUp
