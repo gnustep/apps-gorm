@@ -7,6 +7,7 @@
 
 @interface NSString (Methods)
 
+- (NSString *) capitalizedFirstCharacterString;
 - (NSString *) splitCamelCaseString;
 
 @end
