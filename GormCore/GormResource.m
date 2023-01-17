@@ -53,7 +53,7 @@
 {
   if((self = [self init]))
     {
-      ASSIGN(path, nil);
+      ASSIGN(path, (id)nil);
       ASSIGN(fileName, aFileName);
       ASSIGN(name, [fileName stringByDeletingPathExtension]);
       ASSIGN(fileType, [fileName pathExtension]);

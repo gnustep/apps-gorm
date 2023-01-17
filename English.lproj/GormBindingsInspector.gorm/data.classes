@@ -4,6 +4,8 @@
 	Actions = (
 	);
 	Outlets = (
+	    "_containerView",
+	    "_bindingsPopUp"
 	);
 	Super = IBInspector;
     };

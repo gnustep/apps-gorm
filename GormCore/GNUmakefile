@@ -39,8 +39,9 @@ srcdir = .
 include ../Version
 
 GormCore_HEADER_FILES = \
-	GormCore.h \
+	GormBindingsInspector.h \
 	GormBoxEditor.h \
+	GormCore.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
 	GormClassManager.h \
@@ -101,11 +102,12 @@ GormCore_HEADER_FILES = \
 	GormWrapperLoader.h \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
+	NSString+methods.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h \
-	GormBindingsInspector.h
 
 GormCore_OBJC_FILES = \
+	GormBindingsInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -165,9 +167,9 @@ GormCore_OBJC_FILES = \
 	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
+	NSString+methods.m \
 	NSView+GormExtensions.m \
-        GormPrivate.m \
-	GormBindingsInspector.m
+        GormPrivate.m
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

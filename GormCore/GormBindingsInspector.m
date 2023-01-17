@@ -31,6 +31,7 @@
 #import "GormFunctions.h"
 #import "GormPrivate.h"
 #import "GormProtocol.h"
+#import "NSString+methods.h"
 
 @implementation GormBindingsInspector
 + (void) initialize
@@ -52,12 +53,72 @@
 	  NSLog(@"Could not open gorm file");
 	  return nil;
 	}
+
+      // Initialize the array that holds the inspector names...
+      _bindingsArray = [[NSMutableArray alloc] initWithCapacity: 10];
     }
   return self;
 }
 
+- (void) dealloc
+{
+  RELEASE(_bindingsArray);
+  [super dealloc];
+}
+
 - (void) awakeFromNib
 {
+}
+
+- (NSString *) _mapStringToInspectorName: (NSString *)string
+{
+  NSString *capString = [string capitalizedString];
+  NSString *name = [NSString stringWithFormat: @"GormBindings%@Inspector", capString];
+
+  return name;
+}
+
+- (NSString *) _mapStringToTitle: (NSString *)string
+{
+  NSString *splitString = [string splitCamelCaseString];
+  NSString *title = [splitString capitalizedString];
+  return title;
+}
+
+- (void) _populatePopUp: (NSArray *)array
+{
+  [_bindingsPopUp removeAllItems];
+  [_bindingsArray removeAllObjects];
+  
+  if ([array count] == 0 || array == nil)
+    {      
+      [_bindingsPopUp addItemWithTitle: @"No Bindings"];
+    }
+  else
+    {
+      NSEnumerator *en = [array objectEnumerator];
+      NSString *string = nil;
+
+      while ((string = [en nextObject]) != nil)
+	{
+	  NSString *title = [self _mapStringToTitle: string];
+	  NSString *inspector = [self _mapStringToInspectorName: string];
+
+	  [_bindingsPopUp addItemWithTitle: title];
+	  [_bindingsArray addObject: inspector];
+	}
+    }
+}
+
+- (void) setObject: (id)obj
+{
+  NSArray *array = nil;
+  
+  [super setObject: obj];
+  array = [[self object] exposedBindings];
+  [self _populatePopUp: array];
+
+  NSLog(@"Bindings = %@, inspectors = %@", array, _bindingsArray);
 }
 
 - (void) ok: (id)sender

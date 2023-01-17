@@ -3,10 +3,12 @@
 #ifndef INCLUDED_NSString_methods_H
 #define INCLUDED_NSString_methods_H
 
-@import <Foundation/NSString.h>
+#import <Foundation/NSString.h>
 
-@interface NSString (methods}
+@interface NSString (Methods)
+
 - (NSString *) splitCamelCaseString;
+
 @end
 
 #endif
