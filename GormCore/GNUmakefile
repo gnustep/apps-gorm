@@ -41,7 +41,9 @@ SUBPROJECTS = Plugins
 GormCore_HEADER_FILES = \
 	GormCore.h \
 	GormAbstractDelegate.h \
+	GormBindingsInspector.h \
 	GormBoxEditor.h \
+	GormCore.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
 	GormClassManager.h \
@@ -103,6 +105,7 @@ GormCore_HEADER_FILES = \
 	GormWrapperLoader.h \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
+	NSString+methods.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h \
 	GormGeneralPref.h \
@@ -178,6 +181,7 @@ GormCore_OBJC_FILES = \
 	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
+	NSString+methods.m \
 	NSView+GormExtensions.m \
         GormPrivate.m \
 	GormGeneralPref.m \

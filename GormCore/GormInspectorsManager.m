@@ -250,7 +250,7 @@
 	forObject: selectedObject
 	localizedLabel: _(@"Bindings")
 	inspectorClassName: [selectedObject bindingsInspectorClassName]
-	ordering: 4.0];
+	ordering: 5.0];
 }
 
 - (void) _refreshPopUp

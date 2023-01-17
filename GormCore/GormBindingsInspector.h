@@ -35,7 +35,10 @@
 @interface GormBindingsInspector : IBInspector
 {
   // outlets
-  IBOutlet NSPopUpButton *_bindingsPopup;
+  IBOutlet NSPopUpButton *_bindingsPopUp;
+  IBOutlet NSBox *_containerView;
+
+  NSMutableArray *_bindingsArray;
 }
 
 @end

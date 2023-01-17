@@ -1,8 +1,11 @@
 #import "NSString+methods.h"
 
+#import <Foundation/NSScanner.h>
+#import <Foundation/NSCharacterSet.h>
+
 // NSString category methods to add functionality to NSString
 
-@implementation NSString (methods)
+@implementation NSString (Methods)
 
 // Split a camel case string into a string with spaces
 // e.g. "camelCaseString" becomes "camel Case String"
