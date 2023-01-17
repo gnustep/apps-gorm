@@ -72,7 +72,7 @@
 
 - (NSString *) _mapStringToInspectorName: (NSString *)string
 {
-  NSString *capString = [string capitalizedString];
+  NSString *capString = [string capitalizedFirstCharacterString];
   NSString *name = [NSString stringWithFormat: @"GormBindings%@Inspector", capString];
 
   return name;
@@ -80,8 +80,8 @@
 
 - (NSString *) _mapStringToTitle: (NSString *)string
 {
-  NSString *splitString = [string splitCamelCaseString];
-  NSString *title = [splitString capitalizedString];
+  // NSString *capString = [string capitalizedFirstCharacterString];
+  NSString *title = [string splitCamelCaseString];
   return title;
 }
 
