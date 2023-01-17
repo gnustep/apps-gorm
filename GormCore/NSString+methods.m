@@ -20,6 +20,15 @@
                      [self substringFromIndex: 1]];
 }
 
+- (NSString *) splitCamelCaseStringStartingFromIndex: (NSUInteger)index
+{
+    NSString *newString = [self substringFromIndex: index];
+    NSString *firstPartOfString = [newString substringToIndex: index];
+
+    NSString *result = [newString splitCamelCaseString];
+    return [NSString stringWithFormat: @"%@%@", firstPartOfString, result];
+}
+
 // Split a camel case string into a string with spaces
 // e.g. "camelCaseString" becomes "camel Case String"
 - (NSString *) splitCamelCaseString
