@@ -7,6 +7,19 @@
 
 @implementation NSString (Methods)
 
+// Return a string with the first character capitalized
+- (NSString *) capitalizedFirstCharacterString
+{
+    if ([self length] == 0)
+      {
+        return self;
+      }
+    
+    return [NSString stringWithFormat: @"%@%@", 
+                     [[self substringToIndex: 1] uppercaseString],
+                     [self substringFromIndex: 1]];
+}
+
 // Split a camel case string into a string with spaces
 // e.g. "camelCaseString" becomes "camel Case String"
 - (NSString *) splitCamelCaseString
