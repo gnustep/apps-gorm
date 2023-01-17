@@ -9,6 +9,7 @@
 
 - (NSString *) capitalizedFirstCharacterString;
 - (NSString *) splitCamelCaseString;
+- (NSString *) splitCamelCaseStringStartingFromIndex: (NSUInteger)index;
 
 @end
 
