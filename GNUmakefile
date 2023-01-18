@@ -154,6 +154,7 @@ Gorm_RESOURCE_FILES = \
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormBindingsInspector.gorm \
+	GormBindingsContentInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \

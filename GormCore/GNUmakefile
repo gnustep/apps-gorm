@@ -40,6 +40,7 @@ include ../Version
 
 GormCore_HEADER_FILES = \
 	GormBindingsInspector.h \
+	GormBindingsContentInspector.h \
 	GormBoxEditor.h \
 	GormCore.h \
 	GormClassEditor.h \
@@ -108,6 +109,7 @@ GormCore_HEADER_FILES = \
 
 GormCore_OBJC_FILES = \
 	GormBindingsInspector.m \
+	GormBindingsContentInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \

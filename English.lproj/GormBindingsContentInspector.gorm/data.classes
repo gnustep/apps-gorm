@@ -1,0 +1,16 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormBindingsContentInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    "_bindTo",
+	    "_controllerKey",
+	    "_modelKeyPath",
+	    "_raisesForNotApplicable",
+	    "_valueTransformer",
+	    "_controllerPopUp"
+	);
+	Super = IBInspector;
+    };
+}

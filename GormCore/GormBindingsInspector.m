@@ -97,7 +97,10 @@
       if (![NSBundle loadNibNamed: inspectorName owner: _inspectorObject])
 	{
 	  NSLog(@"Could not load inspector for binding %@", inspectorName);
+	  return;
 	}
+      
+      [_containerView setContentView: [[_inspectorObject window] contentView]];
     }
   else
     {

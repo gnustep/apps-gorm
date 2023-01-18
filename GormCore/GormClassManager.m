@@ -1797,6 +1797,10 @@
   
   // header file comments...
   [headerFile appendString: @"/* All rights reserved */\n\n"];
+
+  [headerFile appendString: [NSString stringWithFormat: @"#ifndef INCLUDED_%@_H", className]];
+  [headerFile appendString: [NSString stringWithFormat: @"#define INCLUDED_%@_H", className]];
+  
   [sourceFile appendString: @"/* All rights reserved */\n\n"];
   [headerFile appendString: @"#import <AppKit/AppKit.h>\n\n"];
   [sourceFile appendString: @"#import <AppKit/AppKit.h>\n"];
@@ -1838,6 +1842,8 @@
   [headerFile appendFormat: @"\n@end\n"];
   [sourceFile appendFormat: @"@end\n"];
 
+  [headerFile appendString: [NSString stringWithFormat: @"#endif // INCLUDED_%@_H", className]];
+  
   headerData = [headerFile dataUsingEncoding:
     [NSString defaultCStringEncoding]];
   sourceData = [sourceFile dataUsingEncoding:
