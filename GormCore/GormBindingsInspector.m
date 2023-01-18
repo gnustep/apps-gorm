@@ -56,6 +56,7 @@
 
       // Initialize the array that holds the inspector names...
       _bindingsArray = [[NSMutableArray alloc] initWithCapacity: 10];
+      _selectedInspectorIndex = 0;
     }
   return self;
 }
@@ -85,10 +86,32 @@
   return title;
 }
 
+- (void) _loadInspector
+{
+  NSString *inspectorName = [_bindingsArray objectAtIndex: _selectedInspectorIndex];
+  Class cls = NSClassFromString(inspectorName);
+  
+  _inspectorObject = [[cls alloc] init];
+  if (_inspectorObject != nil)
+    {
+      if (![NSBundle loadNibNamed: inspectorName owner: _inspectorObject])
+	{
+	  NSLog(@"Could not load inspector for binding %@", inspectorName);
+	  return;
+	}
+    }
+  else
+    {
+      NSLog(@"Could not instantiate class for %@", inspectorName);
+    }
+}
+
 - (void) _populatePopUp: (NSArray *)array
 {
   [_bindingsPopUp removeAllItems];
   [_bindingsArray removeAllObjects];
+
+  _selectedInspectorIndex = 0;
   
   if ([array count] == 0 || array == nil)
     {      
@@ -108,6 +131,8 @@
 	  [_bindingsArray addObject: inspector];
 	}
     }
+
+  [self _loadInspector];
 }
 
 - (void) setObject: (id)obj
@@ -129,6 +154,12 @@
 - (void) revert: (id)sender
 {
   [super revert: sender];
+}
+
+- (IBAction) selectInspector: (id)sender
+{
+  _selectedInspectorIndex = [sender indexOfSelectedItem];
+  [self _loadInspector];
 }
 
 @end
