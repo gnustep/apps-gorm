@@ -97,16 +97,16 @@
       if (![NSBundle loadNibNamed: inspectorName owner: _inspectorObject])
 	{
 	  NSLog(@"Could not load inspector for binding %@", inspectorName);
-	  return;
 	}
     }
   else
     {
+      _inspectorObject = nil; // make certain this is nil, if load failed...
       NSLog(@"Could not instantiate class for %@", inspectorName);
     }
 }
 
-- (void) _populatePopUp: (NSArray *)array
+- (void) _populate: (NSArray *)array
 {
   [_bindingsPopUp removeAllItems];
   [_bindingsArray removeAllObjects];
@@ -141,19 +141,22 @@
   
   [super setObject: obj];
   array = [[self object] exposedBindings];
-  [self _populatePopUp: array];
-
+  [self _populate: array];
+  [_inspectorObject setObject: obj];
+  
   NSLog(@"Bindings = %@, inspectors = %@", array, _bindingsArray);
 }
 
 - (void) ok: (id)sender
 {
   [super ok: sender];
+  [_inspectorObject ok: sender];
 }
 
 - (void) revert: (id)sender
 {
   [super revert: sender];
+  [_inspectorObject revert: sender];
 }
 
 - (IBAction) selectInspector: (id)sender
