@@ -42,6 +42,7 @@ GormCore_HEADER_FILES = \
 	GormCore.h \
 	GormAbstractDelegate.h \
 	GormBindingsInspector.h \
+	GormBindingsContentInspector.h \
 	GormBoxEditor.h \
 	GormCore.h \
 	GormClassEditor.h \
@@ -122,6 +123,7 @@ GormCore_HEADER_FILES = \
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
 	GormBindingsInspector.m \
+	GormBindingsContentInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
