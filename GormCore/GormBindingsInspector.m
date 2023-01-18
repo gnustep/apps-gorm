@@ -80,8 +80,8 @@
 
 - (NSString *) _mapStringToTitle: (NSString *)string
 {
-  // NSString *capString = [string capitalizedFirstCharacterString];
   NSString *title = [string splitCamelCaseString];
+  title = [title capitalizedFirstCharacterString];
   return title;
 }
 
