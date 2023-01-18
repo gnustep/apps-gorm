@@ -38,8 +38,13 @@
   IBOutlet NSPopUpButton *_bindingsPopUp;
   IBOutlet NSBox *_containerView;
 
+  IBInspector *_inspectorObject;
   NSMutableArray *_bindingsArray;
+
+  NSUInteger _selectedInspectorIndex;
 }
+
+- (IBAction) selectInspector: (id)sender;
 
 @end
 
