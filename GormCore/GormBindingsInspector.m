@@ -135,6 +135,7 @@
 	}
     }
 
+  [_bindingsPopUp selectItemAtIndex: _selectedInspectorIndex];
   [self _loadInspector];
 }
 
