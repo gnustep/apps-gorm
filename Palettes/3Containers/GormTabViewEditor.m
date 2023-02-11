@@ -23,7 +23,6 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormCore.h>
 
@@ -71,8 +70,6 @@
       [super deactivate];
     }
 }
-
-
 
 - (void) mouseDown: (NSEvent *) theEvent
 {
@@ -123,7 +120,6 @@
     }
 }
 
-
 @end
 
 
@@ -149,8 +145,6 @@
     }
 }
 
-
-
 - (BOOL)          tabView: (NSTabView *)tabView 
   shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
 {
@@ -171,4 +165,5 @@
 {
   // [tabView selectFirstTabViewItem: self];
 }
+
 @end
