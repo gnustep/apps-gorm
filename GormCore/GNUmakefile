@@ -49,6 +49,7 @@ GormCore_HEADER_FILES = \
 	GormControlEditor.h \
 	GormCustomClassInspector.h \
 	GormCustomView.h \
+	GormDefines.h \
 	GormDocument.h \
 	GormDocumentController.h \
 	GormDocumentWindow.h \
