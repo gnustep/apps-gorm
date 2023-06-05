@@ -3,5 +3,6 @@
 *.profile
 *.palette
 *.plugin
+.gdbinit
 obj
 InterfaceBuilder
