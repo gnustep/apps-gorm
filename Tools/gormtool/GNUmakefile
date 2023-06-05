@@ -11,12 +11,18 @@ gormtool_HEADER_FILES =
 gormtool_OBJC_FILES = main.m AppDelegate.m
 
 ADDITIONAL_TOOL_LIBS = \
+	-lGormObjCHeaderParser \
+	-lGormPrefs \
 	-lGormCore \
-	-IInterfaceBuilder \
+	-IGorm \
 	-lgnustep-base \
 	-lgnustep-gui
 
-ADDITIONAL_LIB_DIRS = -L../../GormCore/obj -L../../InterfaceBuilder/obj
+ADDITIONAL_LIB_DIRS = -L../../GormCore/obj \
+	-L../../InterfaceBuilder/obj \
+	-L../../GormPrefs/obj \
+	-L../../GormObjCHeaderParser/obj
+
 ADDITIONAL_INCLUDE_DIRS = -I../../
 
 -include GNUmakefile.preamble
