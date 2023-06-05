@@ -8,9 +8,14 @@ PACKAGE_NAME = gormtool
 TOOL_NAME = gormtool
 
 gormtool_HEADER_FILES = 
-gormtool_OBJC_FILES = main.m
+gormtool_OBJC_FILES = main.m AppDelegate.m
 
-ADDITIONAL_TOOL_LIBS = -lGormCore -IInterfaceBuilder
+ADDITIONAL_TOOL_LIBS = \
+	-lGormCore \
+	-IInterfaceBuilder \
+	-lgnustep-base \
+	-lgnustep-gui
+
 ADDITIONAL_LIB_DIRS = -L../../GormCore/obj -L../../InterfaceBuilder/obj
 ADDITIONAL_INCLUDE_DIRS = -I../../
 
