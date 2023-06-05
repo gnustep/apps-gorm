@@ -20,6 +20,7 @@
   NSLog(@"== gormtool");
 
   NSLog(@"processInfo: %@", [NSProcessInfo processInfo]);
+  [self process];
   
   [NSApp terminate: nil];
 }
