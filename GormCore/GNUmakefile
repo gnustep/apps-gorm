@@ -29,12 +29,14 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 
 PACKAGE_NAME=GormCore
-LIBRARY_VAR=GORMCORE
-LIBRARY_NAME=GormCore
+FRAMEWORK_VAR=GORMCORE
+FRAMEWORK_NAME=GormCore
 GormCore_HEADER_FILES_DIR=.
 GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
+
+SUBPROJECTS = Plugins
 
 include ../Version
 
@@ -168,10 +170,12 @@ GormCore_OBJC_FILES = \
 	NSView+GormExtensions.m \
         GormPrivate.m
 
+GormCore_RESOURCE_FILES =
+
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/library.make
+include $(GNUSTEP_MAKEFILES)/framework.make
 
 -include GNUmakefile.postamble
