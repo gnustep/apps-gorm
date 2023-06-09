@@ -6,3 +6,5 @@
 .gdbinit
 obj
 InterfaceBuilder
+derived_src
+*.framework
