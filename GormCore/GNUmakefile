@@ -170,7 +170,11 @@ GormCore_OBJC_FILES = \
 	NSView+GormExtensions.m \
         GormPrivate.m
 
-GormCore_RESOURCE_FILES =
+GormCore_RESOURCE_FILES = \
+	Plugins/Gorm/Gorm.plugin \
+	Plugins/Nib/Nib.plugin \
+	Plugins/Xib/Xib.plugin \
+	Plugins/GModel/GModel.plugin
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

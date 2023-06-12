@@ -1,9 +1,8 @@
-#   GNUmakefile: main makefile for GNUstep Object Relationship Modeller
 #
 #   Copyright (C) 2003 Free Software Foundation, Inc.
 #
-#   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
-#   Date: 2003
+#   Author:  Gregory John Casamento <greg,casamento@gmail.com>
+#   Date: 2023
 #   
 #   This file is part of GNUstep.
 #   
@@ -23,16 +22,9 @@
 #   USA.
 #
 
-#ADDITIONAL_TOOL_LIBS += \
-#	-lGormCore \
-#	-lGorm \
-#	-lGormObjCHeaderParser \
-#	-lGormPrefs \
-#	-lgnustep-base \
-#	-lgnustep-gui
-
 ADDITIONAL_INCLUDE_DIRS += \
-	-I../../
+	-I../../ \
+	-I../
 
 ADDITIONAL_LIB_DIRS += \
 	-L../../GormLib/$(GNUSTEP_OBJ_DIR) \

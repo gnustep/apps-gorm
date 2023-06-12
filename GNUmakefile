@@ -61,7 +61,6 @@ SUBPROJECTS = \
 	GormCore \
 	GormPrefs \
 	Palettes \
-	Plugins \
 	Tools
 
 #

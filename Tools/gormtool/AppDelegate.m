@@ -35,12 +35,17 @@
 
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  NSLog(@"== gormtool");
+  puts("== gormtool");
 
   NSLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
   
   [NSApp terminate: nil];
+}
+
+- (void) applicationWillTerminate: (NSNotification *)n
+{
+  puts("== finished...");
 }
 
 @end
