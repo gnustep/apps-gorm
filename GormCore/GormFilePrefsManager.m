@@ -69,7 +69,7 @@ NSString *formatVersion(NSInteger version)
 {
   if((self = [super init]) != nil)
     {
-      NSBundle *bundle = [NSBundle mainBundle];
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForResource: @"VersionProfiles" ofType: @"plist"];
       versionProfiles = RETAIN([[NSString stringWithContentsOfFile: path] propertyList]);
     }

@@ -89,7 +89,7 @@
 
   if (image == nil)
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString	*path = [bundle pathForImageResource: @"GormFirstResponder"];
 
       image = [[NSImage alloc] initWithContentsOfFile: path];
@@ -146,7 +146,7 @@ static NSImage  *fileImage = nil;
       NSBundle	*bundle;
       NSString	*path;
 
-      bundle = [NSBundle mainBundle];
+      bundle = [NSBundle bundleForClass: [self class]];
       path = [bundle pathForImageResource: @"GormObject"];
       if (path != nil)
 	{

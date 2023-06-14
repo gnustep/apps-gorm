@@ -56,8 +56,13 @@ NSImage *browserImage = nil;
 {
   if(self == [GormClassEditor class])
     {
-      outlineImage = [NSImage imageNamed: @"outlineView"];
-      browserImage = [NSImage imageNamed: @"browserView"];
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      NSString *path = nil;
+
+      path = [bundle pathForImageResource: @"outlineView"];
+      outlineImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"browserView"];
+      browserImage = [[NSImage alloc] initWithContentsOfFile: path];
     }
 }
 

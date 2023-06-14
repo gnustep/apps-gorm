@@ -81,16 +81,23 @@ static NSColor *darkGreyBlueColor = nil;
 {
   if (self == [GormOutlineView class])
     {
+      NSBundle *bundle = [NSBundle bundleForClass: self];
+      NSString *path = nil;
+      
       // initialize images
       [self setVersion: current_version];
       nc = [NSNotificationCenter defaultCenter];
       collapsed    = [NSImage imageNamed: @"common_outlineCollapsed"];
       expanded     = [NSImage imageNamed: @"common_outlineExpanded"];
       unexpandable = [NSImage imageNamed: @"common_outlineUnexpandable"];
-      action       = [NSImage imageNamed: @"GormAction"];
-      outlet       = [NSImage imageNamed: @"GormOutlet"];
-      actionSelected = [NSImage imageNamed: @"GormActionSelected"];
-      outletSelected = [NSImage imageNamed: @"GormOutletSelected"];
+      path = [bundle pathForImageResource: @"GormAction"];
+      action       = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormOutlet"];
+      outlet       = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormActionSelected"];
+      actionSelected = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"GormOutletSelected"];
+      outletSelected = [[NSImage alloc] initWithContentsOfFile: path];
 
       // initialize colors
       salmonColor = 

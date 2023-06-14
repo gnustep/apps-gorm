@@ -75,11 +75,21 @@ Gorm_RESOURCE_FILES = \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
 	Palettes/4Data/4Data.palette \
-        Images/Gorm.tiff \
+	Images/FileIcon_gmodel.tiff \
+	Images/GormEHCoil.tiff \
+	Images/GormEHLine.tiff \
+	Images/GormEVCoil.tiff \
+	Images/GormEVLine.tiff \
 	Images/GormFile.tiff \
+	Images/GormMenu.tiff \
+	Images/GormMHCoil.tiff \
+	Images/GormMHLine.tiff \
+	Images/GormMVCoil.tiff \
+	Images/GormMVLine.tiff \
 	Images/GormNib.tiff \
 	Images/GormPalette.tiff \
-	Images/FileIcon_gmodel.tiff \
+        Images/Gorm.tiff \
+
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	GormDocument.gorm \

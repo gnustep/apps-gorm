@@ -186,6 +186,7 @@ GormCore_RESOURCE_FILES = \
 	Images/GormEHLine.tiff \
 	Images/GormEVCoil.tiff \
 	Images/GormEVLine.tiff \
+	Images/GormFile.tiff \
 	Images/GormFilesOwner.tiff \
 	Images/GormFirstResponder.tiff \
 	Images/GormFontManager.tiff \
@@ -236,7 +237,9 @@ GormCore_RESOURCE_FILES = \
 	Images/Sunday_seurat.tiff \
 	Images/tabbot_nib.tiff \
 	Images/tabtop_nib.tiff \
-	Images/titleOnly_nib.tiff
+	Images/titleOnly_nib.tiff \
+	Resources/VersionProfiles.plist \
+	Resources/ClassInformation.plist
 
 
 GormCore_LANGUAGES = English

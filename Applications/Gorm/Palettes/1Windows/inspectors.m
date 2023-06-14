@@ -63,7 +63,7 @@
 
   if (image == nil)
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString	*path = [bundle pathForImageResource: @"GormWindow"];
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
@@ -83,7 +83,7 @@
 
   if (image == nil)
     {
-      NSBundle	*bundle = [NSBundle bundleForClass: [WindowsPalette class]];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString	*path = [bundle pathForImageResource: @"DrawerSmall"];
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
