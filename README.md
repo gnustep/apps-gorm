@@ -1,6 +1,6 @@
 # Gorm
 
-$$ Introduction
+## Introduction
 
 * Gorm is an acronym for Graphic Object Relationship modeler (or perhaps GNUstep Object Relationship Modeler).
 * Gorm is a clone of the Cocoa (OpenStep/NeXTSTEP) 'Interface Builder' application for GNUstep.
