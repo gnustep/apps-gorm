@@ -94,7 +94,7 @@
   self = [super init];
   if (self != nil)
     {
-      NSBundle			*bundle = [NSBundle mainBundle];
+      NSBundle			*bundle = [NSBundle bundleForClass: [self class]];
       NSString			*path;
 
       document = aDocument;  // the document retains us, this is for convenience
