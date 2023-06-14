@@ -173,12 +173,73 @@ GormCore_RESOURCE_FILES = \
 	Plugins/Nib/Nib.plugin \
 	Plugins/Xib/Xib.plugin \
 	Plugins/GModel/GModel.plugin \
+	Images/bezel_nib.tiff \
 	Images/browserView.tiff \
+	Images/button_nib.tiff \
+	Images/centeralign_nib.tiff \
+	Images/date_formatter.tiff \
 	Images/GormActionSelected.tiff \
 	Images/GormAction.tiff \
+	Images/GormClass.tiff \
+	Images/GormCopyImage.tiff \
+	Images/GormEHCoil.tiff \
+	Images/GormEHLine.tiff \
+	Images/GormEVCoil.tiff \
+	Images/GormEVLine.tiff \
+	Images/GormFilesOwner.tiff \
+	Images/GormFirstResponder.tiff \
+	Images/GormFontManager.tiff \
+	Images/GormImage.tiff \
+	Images/GormLinkImage.tiff \
+	Images/GormMenu.tiff \
+	Images/GormMHCoil.tiff \
+	Images/GormMHLine.tiff \
+	Images/GormMVCoil.tiff \
+	Images/GormMVLine.tiff \
+	Images/GormNib.tiff \
+	Images/GormObject.tiff \
 	Images/GormOutletSelected.tiff \
 	Images/GormOutlet.tiff \
-	Images/outlineView.tiff
+	Images/GormPalette.tiff \
+	Images/GormSound.tiff \
+	Images/GormSourceTag.tiff \
+	Images/GormTargetTag.tiff \
+	Images/GormTesting.tiff \
+	Images/GormUnknown.tiff \
+	Images/GormView.tiff \
+	Images/GormWindow.tiff \
+	Images/iconAbove_nib.tiff \
+	Images/iconBelow_nib.tiff \
+	Images/iconBottomLeft_nib.tiff \
+	Images/iconBottom_nib.tiff \
+	Images/iconBottomRight_nib.tiff \
+	Images/iconCenterLeft_nib.tiff \
+	Images/iconCenter_nib.tiff \
+	Images/iconCenterRight_nib.tiff \
+	Images/iconLeft_nib.tiff \
+	Images/iconOnly_nib.tiff \
+	Images/iconRight_nib.tiff \
+	Images/iconTopLeft_nib.tiff \
+	Images/iconTop_nib.tiff \
+	Images/iconTopRight_nib.tiff \
+	Images/justifyalign_nib.tiff \
+	Images/leftalign_nib.tiff \
+	Images/LeftArr.tiff \
+	Images/line_nib.tiff \
+	Images/naturalalign_nib.tiff \
+	Images/noBorder_nib.tiff \
+	Images/number_formatter.tiff \
+	Images/outlineView.tiff \
+	Images/photoframe_nib.tiff \
+	Images/ridge_nib.tiff \
+	Images/rightalign_nib.tiff \
+	Images/RightArr.tiff \
+	Images/shortbutton_nib.tiff \
+	Images/Sunday_seurat.tiff \
+	Images/tabbot_nib.tiff \
+	Images/tabtop_nib.tiff \
+	Images/titleOnly_nib.tiff
+
 
 GormCore_LANGUAGES = English
 
