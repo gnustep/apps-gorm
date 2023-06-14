@@ -48,7 +48,6 @@
 
 # Additional include directories the compiler should search
 ADDITIONAL_INCLUDE_DIRS += -I../InterfaceBuilder
-# INCLUDE_DIRS = -I../InterfaceBuilder $(INCLUDE_DIRS)
 
 # Additional LDFLAGS to pass to the linker
 #ADDITIONAL_LDFLAGS += 
@@ -70,7 +69,7 @@ ADDITIONAL_INSTALL_DIRS +=
 #
 
 ifeq ($(GNUSTEP_TARGET_OS),cygwin)
-libGorm_LIBRARIES_DEPEND_UPON += -lobjc
+InterfaceBuilder_LIBRARIES_DEPEND_UPON += -lobjc
 endif
 
 

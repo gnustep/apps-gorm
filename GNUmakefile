@@ -53,13 +53,11 @@ SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 # Each palette is a subproject
 #
 SUBPROJECTS = \
-	GormObjCHeaderParser \
-	GormLib \
+	InterfaceBuilder \
 	GormCore \
-	GormPrefs \
-	Palettes \
-	Tools \
-	Applications
+	GormObjCHeaderParser \
+	Applications \
+	Tools
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

@@ -3,7 +3,7 @@
 # Written by Gregory John Casamento <greg_casamento@yahoo.com>
 #
 
-PACKAGE_NAME = gorm
+PACKAGE_NAME = InterfaceBuilder
 include $(GNUSTEP_MAKEFILES)/common.make
 
 
@@ -17,11 +17,11 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Library
 #
 
-PACKAGE_NAME=Gorm
-LIBRARY_VAR=GORM
-LIBRARY_NAME=libGorm
-libGorm_HEADER_FILES_DIR=.
-libGorm_HEADER_FILES_INSTALL_DIR=/InterfaceBuilder
+PACKAGE_NAME=InterfaceBuilder
+LIBRARY_VAR=INTERFACEBUILDER
+LIBRARY_NAME=InterfaceBuilder
+InterfaceBuilder_HEADER_FILES_DIR=.
+InterfaceBuilder_HEADER_FILES_INSTALL_DIR=/InterfaceBuilder
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
@@ -31,13 +31,13 @@ include ./Version
 # Additional libraries
 #
 
-libGorm_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
+InterfaceBuilder_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 
 #
 # Header files
 #
 
-libGorm_HEADER_FILES= \
+InterfaceBuilder_HEADER_FILES= \
 IBApplicationAdditions.h \
 IBCellAdditions.h \
 IBCellProtocol.h \
@@ -65,7 +65,7 @@ InterfaceBuilder.h
 # Class files
 #
 
-libGorm_OBJC_FILES= \
+InterfaceBuilder_OBJC_FILES= \
 IBApplicationAdditions.m \
 IBConnectors.m \
 IBDocuments.m \
@@ -82,9 +82,9 @@ IBResourceManager.m
 # C files
 #
 
-libGorm_C_FILES= 
+InterfaceBuilder_C_FILES= 
 
-HEADERS_INSTALL = $(libGorm_HEADER_FILES)
+HEADERS_INSTALL = $(InterfaceBuilder_HEADER_FILES)
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

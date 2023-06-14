@@ -25,8 +25,6 @@ GormPrefs_HEADER_FILES_INSTALL_DIR=/GormPrefs
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-include ../Version
-
 #
 # Additional libraries
 #

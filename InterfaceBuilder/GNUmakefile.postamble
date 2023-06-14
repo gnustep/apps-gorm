@@ -25,5 +25,3 @@
 before-all::
 
 after-clean::
-	rm -rf ../InterfaceBuilder
-	rm -rf ./InterfaceBuilder
