@@ -9,12 +9,14 @@
 @implementation GormHelpInspector
 - (id) init
 {
+  NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
   if ([super init] == nil)
     {
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormHelpInspector" owner: self] == NO)
+  if ([bundle loadNibNamed: @"GormHelpInspector" owner: self topLevelObjects: nil] == NO)
     {
       NSLog(@"Could not gorm GormHelpInspector");
       return nil;

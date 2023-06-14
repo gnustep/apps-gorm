@@ -48,7 +48,9 @@
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormDummyInspector" owner: self])
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if([bundle loadNibNamed: @"GormDummyInspector" owner: self topLevelObjects: nil])
       {
 	  [button setStringValue: [self title]];
       }

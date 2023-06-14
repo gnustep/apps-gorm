@@ -89,8 +89,10 @@
 - (id) init
 {
   if ((self = [super init]) != nil)
-    {
-      if([NSBundle loadNibNamed: @"GormConnectionInspector" owner: self] == NO)
+    {      
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
+      if([bundle loadNibNamed: @"GormConnectionInspector" owner: self topLevelObjects: nil] == NO)
 	{
 	  NSLog(@"Couldn't load GormConnectionInsector");
 	  return nil;

@@ -245,6 +245,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
       // initialize all member variables...
       actionTable = nil;
       addAction = nil;
@@ -260,8 +262,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
       parentClassData = nil;
 
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormClassInspector"
-		     owner: self])
+      if (![bundle loadNibNamed: @"GormClassInspector"
+			  owner: self
+		topLevelObjects: nil])
 	{
 	  NSLog(@"Could not open gorm GormClassInspector");
 	  return nil;

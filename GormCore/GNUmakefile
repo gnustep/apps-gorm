@@ -38,8 +38,6 @@ srcdir = .
 
 SUBPROJECTS = Plugins
 
-include ../Version
-
 GormCore_HEADER_FILES = \
 	GormCore.h \
 	GormBoxEditor.h \
@@ -174,7 +172,33 @@ GormCore_RESOURCE_FILES = \
 	Plugins/Gorm/Gorm.plugin \
 	Plugins/Nib/Nib.plugin \
 	Plugins/Xib/Xib.plugin \
-	Plugins/GModel/GModel.plugin
+	Plugins/GModel/GModel.plugin \
+	Images/browserView.tiff \
+	Images/GormActionSelected.tiff \
+	Images/GormAction.tiff \
+	Images/GormOutletSelected.tiff \
+	Images/GormOutlet.tiff \
+	Images/outlineView.tiff
+
+GormCore_LANGUAGES = English
+
+GormCore_LOCALIZED_RESOURCE_FILES = \
+	GormClassEditor.gorm \
+	GormClassInspector.gorm \
+	GormClassPanel.gorm \
+	GormConnectionInspector.gorm \
+	GormCustomClassInspector.gorm \
+	GormDummyInspector.gorm \
+	GormFontView.gorm \
+	GormHelpInspector.gorm \
+	GormImageInspector.gorm \
+	GormInspectorPanel.gorm \
+	GormNSSplitViewInspector.gorm \
+	GormObjectInspector.gorm \
+	GormScrollViewAttributesInspector.gorm \
+	GormSetName.gorm \
+	GormSoundInspector.gorm \
+	GormViewSizeInspector.gorm
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

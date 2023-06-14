@@ -44,7 +44,7 @@ NSImage	*mVLine = nil;
 {
   if (self == [GormViewSizeInspector class])
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: self];
       NSString	*path;
 
       path = [bundle pathForImageResource: @"GormEHCoil"];
@@ -78,25 +78,14 @@ NSImage	*mVLine = nil;
   self = [super init];
   if (self != nil)
     {
-      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" 
-		    owner: self] == NO)
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
+      if ([bundle loadNibNamed: @"GormViewSizeInspector" 
+			 owner: self
+	       topLevelObjects: nil] == NO)
 	{
-
-	  NSDictionary	*table;
-	  NSBundle	*bundle;
-	  
-	  table = [NSDictionary dictionaryWithObject: self
-				forKey: @"NSOwner"];
-	  bundle = [NSBundle mainBundle];
-
-	  if ( [bundle loadNibFile: @"GormViewSizeInspector"
-		       externalNameTable: table
-		       withZone: [self zone]] == NO)
-	    {
-	      NSLog(@"Could not open gorm GormViewSizeInspector");
-	      NSLog(@"self %@", self);
-	      return nil;
-	    }
+	  NSLog(@"Could not open gorm GormViewSizeInspector");
+	  NSLog(@"self %@", self);
+	  return nil;
 	}
 
       // set the tags...

@@ -48,14 +48,17 @@
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
       // initialize all member variables...
       _classManager = nil;
       _currentSelectionClassName = nil;
       _rowToSelect = 0;
       
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormCustomClassInspector"
-			    owner: self])
+      if (![bundle loadNibNamed: @"GormCustomClassInspector"
+			  owner: self
+		topLevelObjects: nil])
 	{
 	  NSLog(@"Could not open gorm GormCustomClassInspector");
 	  return nil;
