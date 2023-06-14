@@ -196,11 +196,9 @@ GormCore_RESOURCE_FILES = \
 	Images/GormMHLine.tiff \
 	Images/GormMVCoil.tiff \
 	Images/GormMVLine.tiff \
-	Images/GormNib.tiff \
 	Images/GormObject.tiff \
 	Images/GormOutletSelected.tiff \
 	Images/GormOutlet.tiff \
-	Images/GormPalette.tiff \
 	Images/GormSound.tiff \
 	Images/GormSourceTag.tiff \
 	Images/GormTargetTag.tiff \

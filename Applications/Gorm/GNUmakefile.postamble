@@ -31,8 +31,6 @@ ifeq ($(LN_S_RECURSIVE),)
 endif
 
 before-all::
-	$(RM_LN_S) InterfaceBuilder; \
-	$(LN_S_RECURSIVE) GormLib InterfaceBuilder
 
 after-all::
 
@@ -41,4 +39,3 @@ after-clean::
 after-distclean::
 
 after-clean::
-	$(RM_LN_S) InterfaceBuilder
