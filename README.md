@@ -16,7 +16,7 @@
 
 ## Status
 
-Gorm is usable and stable.  Please report bugs to bug-gnustep@gnu.org
+Gorm is usable and stable.  Please report bugs [here](https://github.com/gnustep/apps-gorm/issues)
 
 ## Acknowledgements
 
