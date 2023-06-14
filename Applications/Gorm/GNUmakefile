@@ -88,6 +88,10 @@ Gorm_RESOURCE_FILES = \
 	Images/GormNib.tiff \
 	Images/GormPalette.tiff \
         Images/Gorm.tiff \
+        Images/GormSourceTag.tiff \
+        Images/GormTargetTag.tiff \
+        Images/GormLinkImage.tiff \
+        Images/GormTesting.tiff \
 
 
 Gorm_LOCALIZED_RESOURCE_FILES = \

@@ -206,7 +206,6 @@ GormCore_RESOURCE_FILES = \
 	Images/GormFirstResponder.tiff \
 	Images/GormFontManager.tiff \
 	Images/GormImage.tiff \
-	Images/GormLinkImage.tiff \
 	Images/GormMenu.tiff \
 	Images/GormMHCoil.tiff \
 	Images/GormMHLine.tiff \
@@ -216,9 +215,6 @@ GormCore_RESOURCE_FILES = \
 	Images/GormOutletSelected.tiff \
 	Images/GormOutlet.tiff \
 	Images/GormSound.tiff \
-	Images/GormSourceTag.tiff \
-	Images/GormTargetTag.tiff \
-	Images/GormTesting.tiff \
 	Images/GormUnknown.tiff \
 	Images/GormView.tiff \
 	Images/GormWindow.tiff \

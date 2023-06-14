@@ -100,7 +100,7 @@
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSNotificationCenter      *ndc = [NSDistributedNotificationCenter defaultCenter];
-      NSBundle			*bundle = [NSBundle mainBundle];
+      NSBundle			*bundle = [NSBundle bundleForClass: [self class]];
       NSString			*path;
       NSConnection              *conn = [NSConnection defaultConnection];
 
