@@ -56,7 +56,6 @@ include ./Version
 # Each palette is a subproject
 #
 SUBPROJECTS = \
-	GormPrefs \
 	Palettes
 
 #

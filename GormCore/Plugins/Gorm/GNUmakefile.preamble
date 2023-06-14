@@ -5,7 +5,6 @@ ifeq ($(GNUSTEP_TARGET_OS),mingw32)
 ADDITIONAL_LIB_DIRS += \
         -L../../../GormLib/$(GNUSTEP_OBJ_DIR) \
         -L../../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
-        -L../../../GormPrefs/$(GNUSTEP_OBJ_DIR) \
         -L../../../GormCore/$(GNUSTEP_OBJ_DIR)
 
 ADDITIONAL_GUI_LIBS += -lGorm -lGormCore
@@ -14,8 +13,7 @@ ifeq ($(GNUSTEP_TARGET_OS),cygwin)
 ADDITIONAL_LIB_DIRS += \
         -L../../../GormLib/$(GNUSTEP_OBJ_DIR) \
         -L../../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
-        -L../../../GormPrefs/$(GNUSTEP_OBJ_DIR) \
         -L../../../GormCore/$(GNUSTEP_OBJ_DIR)
 
-Gorm_LIBRARIES_DEPEND_UPON += -lGorm -lGormCore
+$(BUNDLE_NAME)_LIBRARIES_DEPEND_UPON += -lGorm -lGormCore
 endif

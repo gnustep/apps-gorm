@@ -167,7 +167,7 @@ static NSImage  *fileImage = nil;
 	{
 	  classesImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
-      path = [bundle pathForImageResource: @"Gorm"];
+      path = [bundle pathForImageResource: @"GormFile"];
       if (path != nil)
 	{
 	  fileImage = [[NSImage alloc] initWithContentsOfFile: path];

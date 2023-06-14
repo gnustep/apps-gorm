@@ -28,18 +28,15 @@ ADDITIONAL_GUI_LIBS += \
 	-lInterfaceBuilder \
 	-lGormCore \
 	-lGormObjCHeaderParser \
-	-lGormPrefs 
 
 ADDITIONAL_INCLUDE_DIRS += \
 	-I../../InterfaceBuilder \
 	-I../../GormObjCHeaderParser \
 	-I../../GormCore \
 	-I../.. \
-	-IGormPrefs \
 	-I.
 	
 ADDITIONAL_LIB_DIRS += \
 	-L../../InterfaceBuilder/$(GNUSTEP_OBJ_DIR) \
 	-L../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
         -L../../GormCore/GormCore.framework \
-	-LGormPrefs/$(GNUSTEP_OBJ_DIR)

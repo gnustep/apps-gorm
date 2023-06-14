@@ -27,7 +27,6 @@ ADDITIONAL_TOOL_LIBS += \
 	-lGormCore \
 	-lInterfaceBuilder \
 	-lGormObjCHeaderParser \
-	-lGormPrefs \
 	-lgnustep-base \
 	-lgnustep-gui
 
@@ -37,5 +36,4 @@ ADDITIONAL_INCLUDE_DIRS += \
 ADDITIONAL_LIB_DIRS += \
 	-L../../GormLib/$(GNUSTEP_OBJ_DIR) \
 	-L../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) \
-	-L../../GormPrefs/$(GNUSTEP_OBJ_DIR) \
 	-L../../GormCore/GormCore.framework

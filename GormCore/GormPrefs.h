@@ -35,12 +35,12 @@ FOUNDATION_EXPORT const unsigned char GormPrefsVersionString[];
 #ifndef INCLUDED_GORMPREFS_H
 #define INCLUDED_GORMPREFS_H
  
-#include <GormPrefs/GormGeneralPref.h>
-#include <GormPrefs/GormGuidelinePref.h>
-#include <GormPrefs/GormHeadersPref.h>
-#include <GormPrefs/GormPalettesPref.h>
-#include <GormPrefs/GormPluginsPref.h>
-#include <GormPrefs/GormPrefController.h>
-#include <GormPrefs/GormShelfPref.h>
+#include <GormCore/GormGeneralPref.h>
+#include <GormCore/GormGuidelinePref.h>
+#include <GormCore/GormHeadersPref.h>
+#include <GormCore/GormPalettesPref.h>
+#include <GormCore/GormPluginsPref.h>
+#include <GormCore/GormPrefController.h>
+#include <GormCore/GormShelfPref.h>
 
 #endif

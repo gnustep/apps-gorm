@@ -103,7 +103,15 @@ GormCore_HEADER_FILES = \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \
-	NSView+GormExtensions.h 
+	NSView+GormExtensions.h \
+	GormGeneralPref.h \
+	GormGuidelinePref.h \
+	GormHeadersPref.h \
+	GormPalettesPref.h \
+	GormPluginsPref.h \
+	GormPrefController.h \
+	GormPrefs.h \
+	GormShelfPref.h \
 
 GormCore_OBJC_FILES = \
 	GormBoxEditor.m \
@@ -166,7 +174,14 @@ GormCore_OBJC_FILES = \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
 	NSView+GormExtensions.m \
-        GormPrivate.m
+        GormPrivate.m \
+	GormGeneralPref.m \
+	GormGuidelinePref.m \
+	GormHeadersPref.m \
+	GormPalettesPref.m \
+	GormPluginsPref.m \
+	GormPrefController.m \
+	GormShelfPref.m \
 
 GormCore_RESOURCE_FILES = \
 	Plugins/Gorm/Gorm.plugin \
