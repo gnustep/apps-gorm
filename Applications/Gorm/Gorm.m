@@ -26,7 +26,7 @@
 
 
 #include <GormCore/GormCore.h>
-#include <GormPrefs/GormPrefs.h>
+#include <GormCore/GormPrefs.h>
 
 #include <GNUstepBase/GSObjCRuntime.h>
 
