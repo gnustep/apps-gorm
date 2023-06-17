@@ -340,7 +340,7 @@
   NSString              *nibPath = @"keyedobjects.nib";
   NSString              *classesPath = @"classes.nib";
   NSString              *infoPath = @"info.nib";
-  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  GormPalettesManager   *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;

@@ -27,7 +27,7 @@
 
 - (void) ok: (id)sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   NSArray *cons = [document connectorsForDestination: object
 			    ofClass: [NSIBHelpConnector class]];
   NSIBHelpConnector *con = nil;
@@ -67,7 +67,7 @@
 
 - (void) revert: (id)sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   NSArray *cons = [document connectorsForDestination: object
 			    ofClass: [NSIBHelpConnector class]];
 

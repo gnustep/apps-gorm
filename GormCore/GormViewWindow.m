@@ -138,7 +138,7 @@
   if((self = [super init]) != nil)
     { 
       NSString *className = NSStringFromClass([view class]);
-      NSString *objectName = [[(id<IB>)NSApp activeDocument] nameForObject: view];
+      NSString *objectName = [[(id<IB>)[NSApp delegate] activeDocument] nameForObject: view];
       NSString *title = [NSString stringWithFormat: @"Standalone View Window: (%@, %@)",
 				  className, objectName];
       NSColor *color = [NSColor lightGrayColor];
@@ -173,7 +173,7 @@
 
 - (void) activateEditorForView
 {
-  id editor = [[(id<IB>)NSApp activeDocument] editorForObject: _view create: YES];
+  id editor = [[(id<IB>)[NSApp delegate] activeDocument] editorForObject: _view create: YES];
   // NSArray *subviews = [_view subviews];
   // NSEnumerator *en = [subviews objectEnumerator];
   // id sub = nil;
@@ -183,7 +183,7 @@
   /*
   while((sub = [en nextObject]) != nil)
     {
-      editor = [[(id<IB>)NSApp activeDocument] editorForObject: sub create: YES];
+      editor = [[(id<IB>)[NSApp delegate] activeDocument] editorForObject: sub create: YES];
       [editor activate];
     }
   */

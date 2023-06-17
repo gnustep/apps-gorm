@@ -202,11 +202,11 @@
 		[NSArray arrayWithObject: GormLinkPboardType]
 			 owner: self];
 	      [pb setString: name forType: GormLinkPboardType];
-	      [NSApp displayConnectionBetween: item and: nil];
-	      [NSApp startConnecting];
+	      [[NSApp delegate] displayConnectionBetween: item and: nil];
+	      [[NSApp delegate] startConnecting];
 
 	      isLinkSource = YES;
-	      [self dragImage: [NSApp linkImage]
+	      [self dragImage: [[NSApp delegate] linkImage]
 			   at: dragPoint
 		       offset: NSZeroSize
 			event: theEvent
@@ -249,7 +249,7 @@
 	       * in order to avoid excessive amounts of drawing.
 	       */
 	      [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
-	      e = [NSApp nextEventMatchingMask: eventMask
+	      e = [[NSApp delegate] nextEventMatchingMask: eventMask
 				     untilDate: future
 					inMode: NSEventTrackingRunLoopMode
 				       dequeue: YES];
@@ -299,7 +299,7 @@
 			  [[self window] flushWindow];
 			}
 		    }
-		  e = [NSApp nextEventMatchingMask: eventMask
+		  e = [[NSApp delegate] nextEventMatchingMask: eventMask
 					 untilDate: future
 					    inMode: NSEventTrackingRunLoopMode
 					   dequeue: YES];
@@ -415,7 +415,7 @@
   isClosed = YES;
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
-  if ([(id<IB>)NSApp selectionOwner] == self)
+  if ([(id<IB>)[NSApp delegate] selectionOwner] == self)
     {
       [document resignSelectionForEditor: self];
     }
@@ -570,11 +570,11 @@
 	{
 	  item = [edited itemAtIndex: pos];
 	}
-      if (item == [NSApp connectSource])
+      if (item == [[NSApp delegate] connectSource])
 	{
 	  item = nil;
 	}
-      [NSApp displayConnectionBetween: [NSApp connectSource] and: item];
+      [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] and: item];
       return NSDragOperationLink;
     }
   else
@@ -587,7 +587,7 @@
 {
   if (dragType == GormLinkPboardType)
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] 
 	     and: nil];
     }
 }
@@ -833,8 +833,8 @@ void _attachAll(NSMenu *menu, id document)
 	{
 	  id	item = [edited itemAtIndex: pos];
 
-	  [NSApp displayConnectionBetween: [NSApp connectSource] and: item];
-	  [NSApp startConnecting];
+	  [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] and: item];
+	  [[NSApp delegate] startConnecting];
 	}
     }
   else
@@ -1057,7 +1057,7 @@ static BOOL done_editing;
   while (!done_editing)
     {
       NSEventType eType;
-      e = [NSApp nextEventMatchingMask: eventMask
+      e = [[NSApp delegate] nextEventMatchingMask: eventMask
 		 untilDate: future
 		 inMode: NSEventTrackingRunLoopMode
 		 dequeue: YES];

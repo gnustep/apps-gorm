@@ -295,7 +295,7 @@ static NSRect oldFrame;
 {
   [_EO setTitle: [[aNotification object] string]];
   [_EO setNeedsDisplay: NO];
-  [[(id<Gorm>)NSApp inspectorsManager] updateSelection];
+  [[(id<GormAppDelegate>)[NSApp delegate] inspectorsManager] updateSelection];
 }
 
 - (void) textDidEndEditing: (NSNotification *)aNotification
@@ -359,7 +359,7 @@ static NSRect oldFrame;
   while (!done_editing)
     {
       NSEventType eType;
-      e = [NSApp nextEventMatchingMask: eventMask
+      e = [[NSApp delegate] nextEventMatchingMask: eventMask
 		 untilDate: future
 		 inMode: NSEventTrackingRunLoopMode
 		 dequeue: YES];

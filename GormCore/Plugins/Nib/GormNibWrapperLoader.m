@@ -67,7 +67,7 @@
       NSData                    *classes = nil;
       NSKeyedUnarchiver		*u = nil;
       NSString                  *key = nil;
-      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
+      GormPalettesManager       *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSString                  *subClassName = nil;
       NSDictionary              *fileWrappers = nil;

@@ -18,7 +18,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
+   You should have received a copy of the GNU Library General Public	
    License along with this library; see the file COPYING.LIB.
    If not, write to the Free Software Foundation,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -84,7 +84,7 @@ NSNotificationCenter *nc = nil;
 @implementation GormOutletDataSource 
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForClassNamed: [inspector _currentClass]];
   return [list count];
 }
 
@@ -92,7 +92,7 @@ NSNotificationCenter *nc = nil;
 objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (NSInteger)rowIndex
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allOutletsForClassNamed: [inspector _currentClass]];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForClassNamed: [inspector _currentClass]];
   id value = nil;
   if([list count] > 0)
     {
@@ -106,12 +106,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
     forTableColumn: (NSTableColumn *)tc
 	       row: (NSInteger)rowIndex
 {
-  id classManager = [(id<Gorm>)NSApp classManager];
+  id classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allOutletsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedOutlet = formatOutlet( (NSString *)anObject );
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
   
   if(![name isEqual: formattedOutlet])
     {
@@ -144,7 +144,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 @implementation GormActionDataSource
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allActionsForClassNamed: [inspector _currentClass]];
   return [list count];
 }
 
@@ -152,7 +152,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (NSInteger)rowIndex
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allActionsForClassNamed: [inspector _currentClass]];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allActionsForClassNamed: [inspector _currentClass]];
   return [list objectAtIndex: rowIndex];
 }
 
@@ -161,12 +161,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
     forTableColumn: (NSTableColumn *)tc
 	       row: (NSInteger)rowIndex
 {
-  id classManager = [(id<Gorm>)NSApp classManager];
+  id classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allActionsForClassNamed: currentClass];
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedAction = formatAction( (NSString *)anObject );
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
 
   if(![name isEqual: formattedAction])
     {
@@ -199,7 +199,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 @implementation GormClassesDataSource 
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allClassNames];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allClassNames];
   return [list count];
 }
 
@@ -207,7 +207,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (NSInteger)rowIndex
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allClassNames];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allClassNames];
   id value = nil;
   if([list count] > 0)
     {
@@ -353,7 +353,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NS_DURING
     {
-      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
       if(document != nil)
 	{
 	  NSString *className = [self _currentClass];
@@ -383,7 +383,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NS_DURING
     {
-      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
       if(document != nil)
 	{
 	  NSString *className = [self _currentClass];
@@ -419,7 +419,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
       BOOL removed = NO;
       BOOL isCustom = [classManager isCustomClass: className]; 
       NSString *name = nil;
-      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
       
       if(document != nil)
 	{
@@ -469,7 +469,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
       NSArray *list = [classManager allOutletsForClassNamed: className];
       BOOL removed = NO;
       NSString *name = nil;
-      GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+      GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
       
       if(document != nil)
 	{ 
@@ -536,7 +536,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	{
 	  NSString *newParent = [list objectAtIndex: row];
 	  NSString *name = [self _currentClass];
-	  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+	  GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
 	  
 	  // if it's a custom class, let it go, if not do nothing.
 	  if(document != nil)
@@ -592,7 +592,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSString *name = [self _currentClass];
   NSString *newName = [sender stringValue];
-  GormDocument *document = (GormDocument *)[(id <IB>)NSApp activeDocument];
+  GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
   BOOL flag = NO;
 
   // check to see if the user wants to do this and rename the connections.
@@ -656,7 +656,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
   if([anObject isKindOfClass: [GormClassProxy class]])
     {
       [super setObject: anObject];
-      ASSIGN(classManager, [(id<Gorm>)NSApp classManager]);
+      ASSIGN(classManager, [(id<GormAppDelegate>)[NSApp delegate] classManager]);
       ASSIGN(currentClass, [object className]);
       
       outletsCount = [[classManager allOutletsForClassNamed: currentClass] count];
@@ -684,7 +684,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) handleNotification: (NSNotification *)notification
 {
   if([notification object] == classManager &&
-     [(id<IB>)NSApp activeDocument] != nil)
+     [(id<IB>)[[NSApp delegate] delegate] activeDocument] != nil)
     {
       [self _refreshView];
     }

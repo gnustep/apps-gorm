@@ -214,7 +214,7 @@ static BOOL _isInInterfaceBuilder = NO;
   NSImage *image = [super imageForViewer];
   if([theClass isEqual: @"NSFontManager"])
     {
-      NSBundle	*bundle = [NSBundle bundleForClass: [self bundle]];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForImageResource: @"GormFontManager"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }

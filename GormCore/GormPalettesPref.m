@@ -90,7 +90,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addAction: (id)sender
 {
-  [[(id<Gorm>)NSApp palettesManager] openPalette: self];
+  [[(id<GormAppDelegate>)[NSApp delegate] palettesManager] openPalette: self];
   [table reloadData];
 }
 

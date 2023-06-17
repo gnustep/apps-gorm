@@ -184,7 +184,7 @@ NSString *formatVersion(NSInteger version)
   NSMutableDictionary *dict = 
     [NSMutableDictionary dictionary];
   NSRect docLocation = 
-    [[(GormDocument *)[(id<IB>)NSApp activeDocument] window] frame];
+    [[(GormDocument *)[(id<IB>)[NSApp delegate] activeDocument] window] frame];
   NSRect screenRect = [[NSScreen mainScreen] frame];
   NSString *stringRect = [NSString stringWithFormat: @"%d %d %d %d %d %d %d %d",
 				   (int)docLocation.origin.x, (int)docLocation.origin.y, 

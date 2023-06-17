@@ -116,7 +116,7 @@
       if (destination == nil)
 	destination = _editedObject;
 
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] 
 	     and: destination];
       return NSDragOperationLink;
     }

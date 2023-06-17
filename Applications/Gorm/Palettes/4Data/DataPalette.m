@@ -370,7 +370,7 @@ int defaultDateFormatIndex = 3;
 	  if([obj respondsToSelector: @selector(setFormatter:)])
 	    {
 	      // Touch the document...
-	      [[(id<IB>)NSApp activeDocument] touch];
+	      [[(id<IB>)[NSApp delegate] activeDocument] touch];
 
 	      [obj setFormatter: formatter];
 	      RETAIN(formatter);

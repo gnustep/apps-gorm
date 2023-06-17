@@ -73,7 +73,7 @@
 
 - (void) ok: (id)sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   
   id parent = [document parentOfObject: object];
   if ([parent respondsToSelector: @selector(cellSize)])
@@ -108,7 +108,7 @@
 {
   if (anObject != nil && anObject != object)
     {
-      id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+      id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
       id parent = [document parentOfObject: anObject];
 
       ASSIGN(object, anObject);

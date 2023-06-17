@@ -1,81 +1,13 @@
-/* Gorm.m
- *
- * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
- *
- * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2003, 2004
- *
- * This file is part of GNUstep.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111
- * USA.
- */
+/* All rights reserved */
 
+#import <AppKit/AppKit.h>
+#import "GormAppDelegate.h"
 
-#include <GormCore/GormCore.h>
-#include <GormPrefs/GormPrefs.h>
-
-#include <GNUstepBase/GSObjCRuntime.h>
-
-@interface Gorm : NSApplication <IB, Gorm>
-{
-  GormPrefController    *preferencesController;
-  GormClassManager	*classManager;
-  GormInspectorsManager	*inspectorsManager;
-  GormPalettesManager	*palettesManager;
-  GormPluginManager	*pluginManager;
-  id<IBSelectionOwners>	selectionOwner;
-  BOOL			isConnecting;
-  BOOL			isTesting;
-  id             	testContainer;
-  id                    gormMenu;
-  NSMenu		*mainMenu; // saves the main menu...
-  NSMenu                *servicesMenu; // saves the services menu...
-  NSMenu                *classMenu; // so we can set it for the class view
-  NSMenuItem            *guideLineMenuItem;
-  NSDictionary		*menuLocations;
-  NSImage		*linkImage;
-  NSImage		*sourceImage;
-  NSImage		*targetImage;
-  NSImage               *gormImage;
-  NSImage               *testingImage;
-  id			connectSource;
-  id			connectDestination;
-  NSMutableArray        *testingWindows;
-  NSSet                 *topObjects;
-}
-
-// handle notifications the object recieves.
-- (void) handleNotification: (NSNotification*)aNotification;
-@end
-
-// Handle server protocol methods...
-@interface Gorm (GormServer) <GormServer>
-@end
-
-@implementation Gorm
-
-- (id<IBDocuments>) activeDocument
-{
-  return [[NSDocumentController sharedDocumentController] currentDocument];
-}
 
 /*
-   NSApplication override to make Inspector's shortcuts available globally
-*/
+@implementation NSApplication (GormPrivateMethods)
+
+// NSApplication override to make Inspector's shortcuts available globally
 - (void) sendEvent: (NSEvent *)theEvent
 {
   if ([theEvent type] == NSKeyDown)
@@ -90,12 +22,58 @@
   [super sendEvent: theEvent];
 }
 
+- (void) arrangeInFront: (id)sender
+{
+  if([self isTestingInterface] == NO)
+    {
+      [NSApp arrangeInFront: sender];
+    }
+}
+
+@end
+*/
+
+@implementation GormAppDelegate
+
+// Methods to support external apps adding and deleting
+// classes from the current document...
+- (void) addClass: (NSDictionary *) dict
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  GormClassManager *cm = [doc classManager];
+  NSArray *outlets = [dict objectForKey: @"outlets"];
+  NSArray *actions = [dict objectForKey: @"actions"];
+  NSString *className = [dict objectForKey: @"className"];
+  NSString *superClassName = [dict objectForKey: @"superClassName"];
+
+  // If the class is known, delete it before proceeding.
+  if([cm isKnownClass: className])
+    {
+      [cm removeClassNamed: className];
+    }
+
+  // Add the class to the class manager.
+  [cm addClassNamed: className
+      withSuperClassNamed: superClassName
+      withActions: actions
+      withOutlets: outlets];
+}
+
+- (void) deleteClass: (NSString *) className
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  GormClassManager *cm = [doc classManager];
+
+  [cm removeClassNamed: className];
+}
+
 /*
-   NSApp
+   GormAppDelegate
 */
 - (id) init
 {
   self = [super init];
+
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
@@ -157,26 +135,12 @@
 	}
 
       /*
-       * load the interface...
-       */
-      if(![NSBundle loadNibNamed: @"Gorm" owner: self])
-	{
-	  NSLog(@"Failed to load interface");
-	  exit(-1);
-	}
-
-      /*
        * Make sure the palettes/plugins managers exist, so that the
        * editors and inspectors provided in the standard palettes
        * are available.
        */
       [self palettesManager];
       [self pluginManager];
-
-      /*
-       * set the delegate.
-       */
-      [self setDelegate: self];
 
       /*
        * Start the server
@@ -187,9 +151,9 @@
 	  NSLog(@"Could not register GormServer");
 	}
     }
+  
   return self;
 }
-
 
 - (void) dealloc
 {
@@ -202,11 +166,11 @@
   [super dealloc];
 }
 
-- (void) stop: (id)sender
+- (IBAction) stop: (id)sender
 {
   if(isTesting == NO)
     {
-      [super stop: sender];
+      // [super stop: sender];
     }
   else
     {
@@ -225,14 +189,15 @@
   return NO;
 }
 
-- (void) applicationOpenUntitledFile: (id)sender
+- (void) applicationOpenUntitledFile: (NSApplication *)sender
 {
   GormDocumentController *dc = [NSDocumentController sharedDocumentController];
   // open a new document and build an application type document by default...
   [dc newDocument: sender];
 }
 
-- (void) applicationDidFinishLaunching: (NSApplication*)sender
+
+- (void) applicationDidFinishLaunching: (NSNotification *)n
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
@@ -246,7 +211,7 @@
     }
 }
 
-- (void) applicationWillTerminate: (NSApplication*)sender
+- (void) applicationWillTerminate: (NSNotification *)n
 {
   [[NSUserDefaults standardUserDefaults]
     setBool: [[[self inspectorsManager] panel] isVisible]
@@ -256,7 +221,7 @@
     forKey: @"ShowPalettes"];
 }
 
-- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (id)sender
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *)sender
 {
   if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) ==
       NSWindows95InterfaceStyle)
@@ -273,10 +238,16 @@
           return YES;
         }
     }
-  else
-    {
-      return NO;
-    }
+
+  return NO;
+}
+
+// Gorm specific methods...
+
+
+- (id<IBDocuments>) activeDocument
+{
+  return [[NSDocumentController sharedDocumentController] currentDocument];
 }
 
 - (GormClassManager*) classManager
@@ -430,7 +401,7 @@
 }
 
 /** Info Menu Actions */
-- (void) preferencesPanel: (id) sender
+- (IBAction) preferencesPanel: (id) sender
 {
   if(! preferencesController)
     {
@@ -441,7 +412,7 @@
 }
 
 /** Document Menu Actions */
-- (void) close: (id)sender
+- (IBAction) close: (id)sender
 {
   GormDocument  *document = (GormDocument *)[self activeDocument];
   if([document canCloseDocument])
@@ -450,30 +421,22 @@
     }
 }
 
-- (void) debug: (id) sender
+- (IBAction) debug: (id) sender
 {
   [[self activeDocument] performSelector: @selector(printAllEditors)];
 }
 
-- (void) loadSound: (id) sender
+- (IBAction) loadSound: (id) sender
 {
   [(GormDocument *)[self activeDocument] openSound: sender];
 }
 
-- (void) loadImage: (id) sender
+- (IBAction) loadImage: (id) sender
 {
   [(GormDocument *)[self activeDocument] openImage: sender];
 }
 
-- (void) arrangeInFront: (id)sender
-{
-  if([self isTestingInterface] == NO)
-    {
-      [super arrangeInFront: sender];
-    }
-}
-
-- (void) testInterface: (id)sender
+- (IBAction) testInterface: (id)sender
 {
   if (isTesting == YES)
     {
@@ -497,7 +460,7 @@
 
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init];
-	  en = [[self windows] objectEnumerator];
+	  en = [[NSApp windows] objectEnumerator];
 	  while((obj = [en nextObject]) != nil)
 	    {
 	      if([obj isVisible])
@@ -508,7 +471,7 @@
 
 	  // set here, so that beginArchiving and endArchiving do not use templates.
 	  isTesting = YES;
-	  [self setApplicationIconImage: testingImage];
+	  [NSApp setApplicationIconImage: testingImage];
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc deactivateEditors];
 	  [archiver encodeClassName: @"GormCustomView"
@@ -551,7 +514,7 @@
 	  defaults = [NSUserDefaults standardUserDefaults];
 	  menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
 	  [defaults removeObjectForKey: @"NSMenuLocations"];
-	  servicesMenu = [self servicesMenu];
+	  servicesMenu = [NSApp servicesMenu];
 
 	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
 	  if (testContainer != nil)
@@ -559,7 +522,7 @@
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
 	      NSMenu *aMenu = [nameTable objectForKey: @"NSMenu"];
 
-	      [self setMainMenu: aMenu];
+	      [NSApp setMainMenu: aMenu];
 	      // initialize the context.
 	      RETAIN(testContainer);
 	      topObjects = [testContainer topLevelObjects];
@@ -581,11 +544,11 @@
 		  [testMenu addItemWithTitle: _(@"Quit Test")
 			    action: @selector(deferredEndTesting:)
 			    keyEquivalent: @"q"];
-		  [self setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
+		  [NSApp setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
 		}
 	      else
 		{
-		  NSMenu *testMenu = [self mainMenu];
+		  NSMenu *testMenu = [NSApp mainMenu];
 		  NSString  *newTitle = [[testMenu title] stringByAppendingString: @" (Gorm)"];
 		  NSArray *items = findAll(testMenu);
 		  NSEnumerator *en = [items objectEnumerator];
@@ -621,9 +584,9 @@
 		}
 
 	      // so we don't get the warning...
-	      [self setServicesMenu: nil];
-	      [[self mainMenu] display];
-	      en = [[self windows] objectEnumerator];
+	      [NSApp setServicesMenu: nil];
+	      [[NSApp mainMenu] display];
+	      en = [[NSApp windows] objectEnumerator];
 	      while((obj = [en nextObject]) != nil)
 		{
 		  if([obj isVisible])
@@ -660,7 +623,7 @@
 
 /** Edit Menu Actions */
 
-- (void) copy: (id)sender
+- (IBAction) copy: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
@@ -675,7 +638,7 @@
 }
 
 
-- (void) cut: (id)sender
+- (IBAction) cut: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
       || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
@@ -691,7 +654,7 @@
   [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
-- (void) paste: (id)sender
+- (IBAction) paste: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
     return;
@@ -705,7 +668,7 @@
 }
 
 
-- (void) delete: (id)sender
+- (IBAction) delete: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
@@ -719,7 +682,7 @@
   [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
-- (void) selectAll: (id)sender
+- (IBAction) selectAll: (id)sender
 {
   if ([[selectionOwner selection] count] == 0
     || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
@@ -734,13 +697,13 @@
 }
 
 /*
-- (void) selectAllItems: (id)sender
+- (IBAction) selectAllItems: (id)sender
 {
   return;
 }
 */
 
-- (void) setName: (id)sender
+- (IBAction) setName: (id)sender
 {
   GormSetNameController *panel;
   int		returnPanel;
@@ -767,7 +730,7 @@
     }
 }
 
-- (void) guideline: (id) sender
+- (IBAction) guideline: (id) sender
 {
   [[NSNotificationCenter defaultCenter] postNotificationName: GormToggleGuidelineNotification
  					object:nil];
@@ -784,7 +747,7 @@
 }
 
 
-- (void) orderFrontFontPanel: (id) sender
+- (IBAction) orderFrontFontPanel: (id) sender
 {
   NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
   GormFontViewController *gfvc =
@@ -795,7 +758,7 @@
 
 /** Grouping */
 
-- (void) groupSelectionInSplitView: (id)sender
+- (IBAction) groupSelectionInSplitView: (id)sender
 {
   if ([[selectionOwner selection] count] < 2
       || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
@@ -804,35 +767,35 @@
   [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
 }
 
-- (void) groupSelectionInBox: (id)sender
+- (IBAction) groupSelectionInBox: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
     return;
   [(GormGenericEditor *)selectionOwner groupSelectionInBox];
 }
 
-- (void) groupSelectionInView: (id)sender
+- (IBAction) groupSelectionInView: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInView)] == NO)
     return;
   [(GormGenericEditor *)selectionOwner groupSelectionInView];
 }
 
-- (void) groupSelectionInScrollView: (id)sender
+- (IBAction) groupSelectionInScrollView: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
     return;
   [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
 }
 
-- (void) groupSelectionInMatrix: (id)sender
+- (IBAction) groupSelectionInMatrix: (id)sender
 {
   if ([selectionOwner respondsToSelector: @selector(groupSelectionInMatrix)] == NO)
     return;
   [(GormGenericEditor *)selectionOwner groupSelectionInMatrix];
 }
 
-- (void) ungroup: (id)sender
+- (IBAction) ungroup: (id)sender
 {
   // NSLog(@"ungroup: selectionOwner %@", selectionOwner);
   if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
@@ -842,58 +805,58 @@
 
 /** Classes actions */
 
-- (void) createSubclass: (id)sender
+- (IBAction) createSubclass: (id)sender
 {
   [(GormDocument *)[self activeDocument] createSubclass: sender];
 }
 
-- (void) loadClass: (id)sender
+- (IBAction) loadClass: (id)sender
 {
   // Call the current document and create the class
   // descibed by the header
   [(GormDocument *)[self activeDocument] loadClass: sender];
 }
 
-- (void) createClassFiles: (id)sender
+- (IBAction) createClassFiles: (id)sender
 {
   [(GormDocument *)[self activeDocument] createClassFiles: sender];
 }
 
-- (void) instantiateClass: (id)sender
+- (IBAction) instantiateClass: (id)sender
 {
    [(GormDocument *)[self activeDocument] instantiateClass: sender];
 }
 
-- (void) addAttributeToClass: (id)sender
+- (IBAction) addAttributeToClass: (id)sender
 {
   [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
 }
 
-- (void) remove: (id)sender
+- (IBAction) remove: (id)sender
 {
   [(GormDocument *)[self activeDocument] remove: sender];
 }
 
 /** Palettes Actions... */
 
-- (void) inspector: (id) sender
+- (IBAction) inspector: (id) sender
 {
   [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
 }
 
-- (void) palettes: (id) sender
+- (IBAction) palettes: (id) sender
 {
   [[[self palettesManager] panel] makeKeyAndOrderFront: self];
 }
 
-- (void) loadPalette: (id) sender
+- (IBAction) loadPalette: (id) sender
 {
   [[self palettesManager] openPalette: sender];
 }
 
 /** Testing methods... */
 
-- (void) deferredEndTesting: (id) sender
+- (IBAction) deferredEndTesting: (id) sender
 {
   [[NSRunLoop currentRunLoop]
     performSelector: @selector(endTesting:)
@@ -906,13 +869,9 @@
 		    NSEventTrackingRunLoopMode, nil]];
 }
 
-- (id) endTesting: (id)sender
+- (IBAction) endTesting: (id)sender
 {
-  if (isTesting == NO)
-    {
-      return nil;
-    }
-  else
+  if (isTesting)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults		*defaults;
@@ -938,7 +897,7 @@
        * Make sure any peripheral windows: font panels, etc. which are brought
        * up by the interface being tested are also closed.
        */
-      e = [[self windows] objectEnumerator];
+      e = [[NSApp windows] objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
 	  if ([testingWindows containsObject: val] == NO &&
@@ -957,12 +916,12 @@
 	  DESTROY(menuLocations);
 	}
 
-      [self setMainMenu: mainMenu];
-      [self setApplicationIconImage: gormImage];
+      [NSApp setMainMenu: mainMenu];
+      [NSApp setApplicationIconImage: gormImage];
 
       NS_DURING
 	{
-	  [self setServicesMenu: servicesMenu];
+	  [NSApp setServicesMenu: servicesMenu];
 	}
       NS_HANDLER
 	{
@@ -985,10 +944,10 @@
 
       // deallocate
       RELEASE(testContainer);
-
-      return self;
     }
 }
+
+// end of menu actions...
 
 - (void) handleNotification: (NSNotification*)notification
 {
@@ -1376,49 +1335,13 @@
   return classMenu;
 }
 
-- (void) print: (id) sender
+- (IBAction) print: (id) sender
 {
-  [[self keyWindow] print: sender];
+  [[NSApp keyWindow] print: sender];
 }
 
-- (void) selectAllItems: (id)sender
+- (IBAction) selectAllItems: (id)sender
 {
-}
-
-@end
-
-@implementation Gorm (GormServer)
-
-// Methods to support external apps adding and deleting
-// classes from the current document...
-- (void) addClass: (NSDictionary *) dict
-{
-  GormDocument *doc = (GormDocument *)[self activeDocument];
-  GormClassManager *cm = [doc classManager];
-  NSArray *outlets = [dict objectForKey: @"outlets"];
-  NSArray *actions = [dict objectForKey: @"actions"];
-  NSString *className = [dict objectForKey: @"className"];
-  NSString *superClassName = [dict objectForKey: @"superClassName"];
-
-  // If the class is known, delete it before proceeding.
-  if([cm isKnownClass: className])
-    {
-      [cm removeClassNamed: className];
-    }
-
-  // Add the class to the class manager.
-  [cm addClassNamed: className
-      withSuperClassNamed: superClassName
-      withActions: actions
-      withOutlets: outlets];
-}
-
-- (void) deleteClass: (NSString *) className
-{
-  GormDocument *doc = (GormDocument *)[self activeDocument];
-  GormClassManager *cm = [doc classManager];
-
-  [cm removeClassNamed: className];
 }
 
 @end

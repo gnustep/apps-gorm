@@ -133,8 +133,8 @@
       NSMutableArray *classes = nil; 
       
       [super setObject: anObject];
-      _document = [(id<IB>)NSApp activeDocument];
-      _classManager = [(id<Gorm>)NSApp classManager];
+      _document = [(id<IB>)[NSApp delegate] activeDocument];
+      _classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
       
       // get the information...
       NSDebugLog(@"Current selection %@", [self object]);

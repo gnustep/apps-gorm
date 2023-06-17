@@ -115,7 +115,7 @@ NSImage	*mVLine = nil;
 {
   if (control == sizeForm)
     {
-      id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+      id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
       NSRect rect;
 
       // Update the document as edited...
@@ -190,7 +190,7 @@ NSImage	*mVLine = nil;
 - (void) setAutosize: (id)sender
 {
   unsigned	mask = [sender tag];
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   [document touch];
   if ([sender state] == NSOnState)
     {

@@ -197,7 +197,7 @@ selectCellWithString: (NSString*)title
 		}
 	      else
 		{
-		  id	o = [[(id<IB>)NSApp activeDocument] objectForName: v];
+		  id	o = [[(id<IB>)[NSApp delegate] activeDocument] objectForName: v];
 
 		  if (o != nil)
 		    {

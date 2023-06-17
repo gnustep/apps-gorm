@@ -177,13 +177,13 @@
 	addObserver: self
 	selector: @selector(_classAdded:)
 	name: GormDidAddClassNotification
-	object: [(id<Gorm>)NSApp classManager]];
+	object: [(id<GormAppDelegate>)[NSApp delegate] classManager]];
 
       [[NSNotificationCenter defaultCenter]
 	addObserver: self
 	selector: @selector(_classDeleted:)
 	name: GormDidDeleteClassNotification
-	object: [(id<Gorm>)NSApp classManager]];
+	object: [(id<GormAppDelegate>)[NSApp delegate] classManager]];
     }
   return self;
 }
@@ -193,11 +193,11 @@
   // filter the classes to view only when a custom view is selected.
   if([anObject isKindOfClass: [GormCustomView class]])
     {
-      ASSIGN(classes, AUTORELEASE([[[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSView"] mutableCopy]));
+      ASSIGN(classes, AUTORELEASE([[[(id<GormAppDelegate>)[NSApp delegate] classManager] allSubclassesOf: @"NSView"] mutableCopy]));
     }
   else
     {
-      ASSIGN(classes, AUTORELEASE([[[(id<Gorm>)NSApp classManager] allClassNames] mutableCopy]));
+      ASSIGN(classes, AUTORELEASE([[[(id<GormAppDelegate>)[NSApp delegate] classManager] allClassNames] mutableCopy]));
     }
 
   // remove the first responder, since we don't want the user to choose this.
@@ -214,11 +214,11 @@
       /*
        * Create list of existing connections for selected object.
        */
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
+      array = [[(id<IB>)[NSApp delegate] activeDocument] connectorsForSource: object
 					      ofClass: [NSNibOutletConnector class]];
       if ([array count] > 0)
 	hasConnections = YES;
-      array = [[(id<IB>)NSApp activeDocument] connectorsForDestination: object
+      array = [[(id<IB>)[NSApp delegate] activeDocument] connectorsForDestination: object
 					      ofClass: [NSNibControlConnector class]];
       if ([array count] > 0)
 	hasConnections = YES;
@@ -250,7 +250,7 @@
       else
 	{
 	  NSArray	*array;
-	  id		doc = [(id<IB>)NSApp activeDocument];
+	  id		doc = [(id<IB>)[NSApp delegate] activeDocument];
 	  unsigned	i;
 
 	  array = [doc connectorsForSource: object

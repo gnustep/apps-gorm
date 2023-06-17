@@ -310,10 +310,10 @@ static NSText *_textObject;
 		[NSArray arrayWithObject: GormLinkPboardType]
 			 owner: self];
 	      [pb setString: name forType: GormLinkPboardType];
-	      [NSApp displayConnectionBetween: col and: nil];
-	      [NSApp startConnecting];
+	      [[NSApp delegate] displayConnectionBetween: col and: nil];
+	      [[NSApp delegate] startConnecting];
 
-	      [self dragImage: [NSApp linkImage]
+	      [self dragImage: [[NSApp delegate] linkImage]
 			   at: dragPoint
 		       offset: NSZeroSize
 			event: theEvent
@@ -465,7 +465,7 @@ static NSText *_textObject;
 	    }
 	}
 
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] 
 	     and: destination];
       return NSDragOperationLink;
     }

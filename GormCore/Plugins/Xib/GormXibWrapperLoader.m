@@ -81,7 +81,7 @@
 
   NS_DURING
     {
-      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
+      GormPalettesManager       *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSString                  *subClassName = nil;
       GormClassManager          *classManager = [doc classManager];

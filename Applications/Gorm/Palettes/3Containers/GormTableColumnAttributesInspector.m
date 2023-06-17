@@ -71,7 +71,7 @@
 - (NSString *)_getCellClassName
 {
   id cell = [[self object] dataCell];
-  NSString *customClassName = [[(id<Gorm>)NSApp classManager] customClassForObject: cell];
+  NSString *customClassName = [[(id<GormAppDelegate>)[NSApp delegate] classManager] customClassForObject: cell];
   NSString *result = nil;
 
   if(customClassName == nil)
@@ -150,8 +150,8 @@
   /* set Button */
   else if (sender == setButton || sender == cellTable)
     {
-      id classManager = [(id<Gorm>)NSApp classManager];
-      id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
+      id classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
+      id<IBDocuments> doc = [(id<IB>)[NSApp delegate] activeDocument];
       id cell = nil;
       int i = [cellTable selectedRow];
       NSArray *list = [classManager allSubclassesOf: @"NSCell"];
@@ -231,7 +231,7 @@
   if ( object == nil ) 
     return;
 
-  list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
+  list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allSubclassesOf: @"NSCell"];
   cellClassName = [self _getCellClassName];
   index =  [list indexOfObject: cellClassName];
 
@@ -310,7 +310,7 @@
 // replace by an NSBrowser ? 
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)tv
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allSubclassesOf: @"NSCell"];
   return [list count];
 }
 
@@ -318,7 +318,7 @@
 objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (NSInteger)rowIndex
 {
-  NSArray *list = [[(id<Gorm>)NSApp classManager] allSubclassesOf: @"NSCell"];
+  NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allSubclassesOf: @"NSCell"];
   id value = nil;
   if([list count] > 0)
     {

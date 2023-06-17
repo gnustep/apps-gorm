@@ -252,7 +252,8 @@ static NSMapTable	*docMap = 0;
       NSInteger	r, c;
       int	pos;
       id	obj = nil;
-
+      id        delegate = [NSApp delegate];
+      
       loc = [self convertPoint: loc fromView: nil];
       [self getRow: &r column: &c forPoint: loc];
       pos = r * [self numberOfColumns] + c;
@@ -260,12 +261,12 @@ static NSMapTable	*docMap = 0;
 	{
 	  obj = [objects objectAtIndex: pos];
 	}
-      if (obj == [NSApp connectSource])
+      if (obj == [delegate connectSource])
 	{
 	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
 	}
 
-      [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
+      [delegate displayConnectionBetween: [delegate connectSource] and: obj];
       if (obj != nil)
 	{
 	  return NSDragOperationLink;
@@ -467,10 +468,10 @@ static NSMapTable	*docMap = 0;
 	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
 		     owner: self];
 	  [pb setString: name forType: GormLinkPboardType];
-	  [NSApp displayConnectionBetween: obj and: nil];
-	  [NSApp startConnecting];
+	  [[NSApp delegate] displayConnectionBetween: obj and: nil];
+	  [[NSApp delegate] startConnecting];
 
-	  [self dragImage: [NSApp linkImage]
+	  [self dragImage: [[NSApp delegate] linkImage]
 		       at: loc
 		   offset: NSZeroSize
 		    event: theEvent
@@ -507,8 +508,8 @@ static NSMapTable	*docMap = 0;
 	}
       else
 	{
-	  [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-	  [NSApp startConnecting];
+	  [[NSApp delegate] displayConnectionBetween: [NSApp connectSource] and: obj];
+	  [[NSApp delegate] startConnecting];
 	  return YES;
 	}
     }
@@ -564,7 +565,7 @@ static NSMapTable	*docMap = 0;
 - (void) resetObject: (id)anObject
 {
   NSString		*name = [document nameForObject: anObject];
-  GormInspectorsManager	*mgr = [(id<Gorm>)NSApp inspectorsManager];
+  GormInspectorsManager	*mgr = [(id<GormAppDelegate>)[NSApp delegate] inspectorsManager];
 
   if ([name isEqual: @"NSOwner"] == YES)
     {

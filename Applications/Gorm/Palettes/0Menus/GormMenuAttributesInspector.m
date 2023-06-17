@@ -79,7 +79,7 @@
     }
   else if ( sender == menuType ) 
     {
-      GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+      GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
       int tag = [[menuType selectedCell] tag];
       
       switch ( tag ) 
@@ -129,7 +129,7 @@
   if ( object == nil ) 
     return;
 
-  doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
 
   [titleText setStringValue: [object title]];
   [autoenable setState: ([object realAutoenablesItems]?NSOnState:NSOffState)];
@@ -157,7 +157,7 @@
 /* delegate method used for menu title */
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
-  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
   [object setTitle: [titleText stringValue]];
   [doc touch];
 }

@@ -934,7 +934,7 @@ static NSImage  *fileImage = nil;
       {
 	[selectionBox setContentView: scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
-	if (![NSApp isConnecting])
+	if (![[NSApp delegate] isConnecting])
 	  [self setSelectionFromEditor: objectsView];
       }
       break;
@@ -954,7 +954,7 @@ static NSImage  *fileImage = nil;
       break;
     case 3: // classes
       {
-	NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+	NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
 	[selectionBox setContentView: classesView];
 	
 	// if something is selected, in the object view.
@@ -1554,7 +1554,7 @@ static NSImage  *fileImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
-  if ([(id<IB>)NSApp selectionOwner] == 
+  if ([(id<IB>)[NSApp delegate] selectionOwner] == 
       (id<IBSelectionOwners>)anEditor)
     {
       [self resignSelectionForEditor: anEditor];
@@ -1740,7 +1740,7 @@ static void _real_close(GormDocument *self,
     }
   else if ([name isEqual: IBWillBeginTestingInterfaceNotification] && isDocumentOpen)
     {
-      if ([(id<IB>)NSApp activeDocument] == self)
+      if ([(id<IB>)[NSApp delegate] activeDocument] == self)
 	{
 	  NSEnumerator	*enumerator;
 	  id		obj;
@@ -1752,7 +1752,7 @@ static void _real_close(GormDocument *self,
 	      [[self window] orderOut: self];
 	    }
 
-          [[NSApp mainMenu] close]; // close the menu during test...
+          [[[NSApp delegate] mainMenu] close]; // close the menu during test...
           
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
@@ -1783,7 +1783,7 @@ static void _real_close(GormDocument *self,
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
-          [[NSApp mainMenu] display]; // bring the menu back...
+          [[[NSApp delegate] mainMenu] display]; // bring the menu back...
           
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
@@ -2427,12 +2427,12 @@ static void _real_close(GormDocument *self,
       id		obj;
 
       // stop all connection activities.
-      [(id<Gorm>)NSApp stopConnecting];
+      [(id<GormAppDelegate>)[NSApp delegate] stopConnecting];
 
       enumerator = [nameTable objectEnumerator];
       if (flag)
 	{
-	  GormDocument *document = (GormDocument*)[(id<IB>)NSApp activeDocument];
+	  GormDocument *document = (GormDocument*)[(id<IB>)[NSApp delegate] activeDocument];
 
 	  // set the current document active and unset the old one.
 	  [document setDocumentActive: NO];
@@ -2491,7 +2491,7 @@ static void _real_close(GormDocument *self,
 
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
   ASSIGN(lastEditor, anEditor);
-  [(id<Gorm>)NSApp stopConnecting]; // cease any connection
+  [(id<GormAppDelegate>)[NSApp delegate] stopConnecting]; // cease any connection
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeKeyWindow];
@@ -3306,7 +3306,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) arrangeSelectedObjects: (id)sender
 {
-  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
   NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
@@ -3338,7 +3338,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) alignSelectedObjects: (id)sender
 {
-  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
   NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;

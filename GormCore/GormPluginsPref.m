@@ -90,7 +90,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 
 - (void) addAction: (id)sender
 {
-  [[(id<Gorm>)NSApp pluginManager] openPlugin: self];
+  [[(id<GormAppDelegate>)[NSApp delegate] pluginManager] openPlugin: self];
   [table reloadData];
 }
 

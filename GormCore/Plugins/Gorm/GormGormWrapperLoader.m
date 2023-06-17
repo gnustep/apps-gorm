@@ -374,7 +374,7 @@
       NSString                  *ownerClass, *key = nil;
       BOOL                       repairFile = [[NSUserDefaults standardUserDefaults] 
 						boolForKey: @"GormRepairFileOnLoad"];
-      GormPalettesManager       *palettesManager = [(id<Gorm>)NSApp palettesManager];
+      GormPalettesManager       *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSEnumerator              *en = [substituteClasses keyEnumerator];
       NSString                  *subClassName = nil;

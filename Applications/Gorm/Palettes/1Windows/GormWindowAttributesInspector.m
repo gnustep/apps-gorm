@@ -121,14 +121,14 @@
   /* visible at launch time */
   else if ( sender == visibleButton ) 
     {
-      GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+      GormDocument *doc = (GormDocument*)[(id<IB>)[NSApp delegate] activeDocument];
       [doc setObject: object isVisibleAtLaunch: [visibleButton state]];
     }
 
   /* deferred */
   else if ( sender == deferredButton ) 
     {
-      GormDocument *doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+      GormDocument *doc = (GormDocument*)[(id<IB>)[NSApp delegate] activeDocument];
       [doc setObject: object isDeferred: [deferredButton state]];
     }
   
@@ -176,7 +176,7 @@
   if ( object == nil ) 
     return;
     
-  doc = (GormDocument*)[(id<IB>)NSApp activeDocument];
+  doc = (GormDocument*)[(id<IB>)[NSApp delegate] activeDocument];
 
   /* Title */
   [[titleForm cellAtIndex: 0] setStringValue: [object title] ];

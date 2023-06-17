@@ -121,7 +121,7 @@ NSImage *browserImage = nil;
 	  [outlineView setIndentationPerLevel: 10];
 	  [outlineView setAttributeOffset: 30];
 	  [outlineView setRowHeight: 18];
-	  [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
+	  [outlineView setMenu: [(id<GormAppDelegate>)[NSApp delegate] classMenu]]; 
 	  [outlineView setBackgroundColor: color];
 	  
 	  // add the table columns...

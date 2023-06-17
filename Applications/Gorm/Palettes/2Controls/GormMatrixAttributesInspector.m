@@ -56,7 +56,7 @@ NSUInteger colsStepperValue;
 
 - (void) _displayObject: (id)obj resize: (BOOL)resize
 {
-  id     document = [(id<IB>)NSApp documentForObject: obj];
+  id     document = [(id<IB>)[NSApp delegate] documentForObject: obj];
   id     editor = [document editorForObject: obj create: NO];
   NSRect eoFrame = [editor frame];
 
@@ -103,7 +103,7 @@ NSUInteger colsStepperValue;
 
 - (void) _refreshCellsComparingWithOldCells: (NSArray *)oldCells
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   NSArray *newCells = [[self object] cells];
   NSUInteger newCount = [newCells count];
   NSUInteger oldCount = [oldCells count];

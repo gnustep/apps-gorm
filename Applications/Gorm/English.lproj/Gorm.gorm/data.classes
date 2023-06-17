@@ -4,10 +4,27 @@
 	Actions = (
 	    "alignSelectedObjects:",
 	    "arrangeSelectedObjects:",
+	    "endTesting:",
 	    "exportStrings:",
-	    "groupSelectionInView:",
+	    "groupSelectionInBox:",
 	    "groupSelectionInMatrix:",
+	    "groupSelectionInSplitView:",
+	    "groupSelectionInView:",
+	    "inspector:",
+	    "loadImage:",
+	    "loadPallete:",
+	    "loadSound:",
+	    "newAction11:",
+	    "newAction12:",
+	    "newAction13:",
+	    "newAction14:",
+	    "ungroup:",
 	    "orderFrontFontPanel:",
+	    "palettes:",
+	    "preferencesPanel:",
+	    "selectAllItems:",
+	    "setName:",
+	    "testinterface:",
 	    "translate:"
 	);
 	Super = NSObject;
@@ -54,6 +71,32 @@
 	    guideLineMenuItem
 	);
 	Super = NSApplication;
+    };
+    GormAppDelegate = {
+	Actions = (
+	    "copy:",
+	    "cut:",
+	    "delete:",
+	    "endTesting:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInSplitView:",
+	    "inspector:",
+	    "loadImage:",
+	    "loadPallete:",
+	    "loadSound:",
+	    "ungroup:",
+	    "palettes:",
+	    "paste:",
+	    "preferencesPanel:",
+	    "selectAllItems:",
+	    "setName:",
+	    "testinterface:"
+	);
+	Outlets = (
+	    gormMenu,
+	    guideLineMenuItem
+	);
+	Super = NSObject;
     };
     GormDocumentController = {
 	Actions = (

@@ -1,7 +1,9 @@
 {
     NSIcon = "Gorm.tiff";
     NSMainNibFile = "Gorm.gorm";
+    NSPrincipalClass = "NSApplication";
     NSRole = "Editor";
+    
     NSTypes = (
       {
 	NSName = "GSGormFileType";
@@ -48,10 +50,11 @@
         NSIcon = "GormPalette.tiff";
       }
     );
+
     ApplicationDescription = "[GNUstep | Graphical] Object Relationship Modeller";
     ApplicationIcon = "Gorm.tiff";
     ApplicationName = "Gorm";
-    ApplicationRelease = "Gorm 1.3.1 (Release)";
+    ApplicationRelease = "Gorm 1.4.0 (Unrelease)";
     Authors = ("Gregory John Casamento <greg.casamento@gmail.com>",
     	       "Adam Fedor <fedor@gnu.org>",
     	       "Richard Frith-Macdonald <rfm@gnu.org>",
@@ -60,6 +63,6 @@
                "Sergii Stoian <stoyan255@gmail.com>");
     Copyright = "Copyright (C) 1999-2022 FSF";
     CopyrightDescription = "Released under the GNU General Public License 3.0";
-    NSBuildVersion = "1.3.1 Jan 15 2022";
+    NSBuildVersion = "1.4.0 (Unreleased)";
     GSDesktopInstallationDomain=SYSTEM;
 }

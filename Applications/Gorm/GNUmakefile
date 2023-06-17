@@ -66,8 +66,6 @@ Gorm_PRINCIPAL_CLASS=Gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
 	GormInfo.plist \
-	Resources/ClassInformation.plist \
-	Resources/VersionProfiles.plist \
 	Resources/Defaults.plist \
 	Palettes/0Menus/0Menus.palette \
 	Palettes/1Windows/1Windows.palette \
@@ -115,7 +113,7 @@ Gorm_LANGUAGES = \
 Gorm_HEADERS = 
 
 Gorm_OBJC_FILES = \
-	Gorm.m \
+	GormAppDelegate.m \
 	main.m 
 
 -include GNUmakefile.preamble

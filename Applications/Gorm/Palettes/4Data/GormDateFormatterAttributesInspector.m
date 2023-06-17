@@ -59,12 +59,12 @@ extern NSArray *predefinedDateFormats;
   NSDateFormatter *fmtr;
   
   // Set the document as modifed...
-  [[(id<IB>)NSApp activeDocument] touch];
+  [[(id<IB>)[NSApp delegate] activeDocument] touch];
   
   if (sender == detachButton)
     {
       [[object cell] setFormatter: nil];
-      [[(id<IB>)NSApp activeDocument] setSelectionFromEditor: nil];
+      [[(id<IB>)[NSApp delegate] activeDocument] setSelectionFromEditor: nil];
     }
   else
     {

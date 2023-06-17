@@ -221,7 +221,7 @@
   NSString              *gormPath = @"objects.gorm";
   NSString              *classesPath = @"data.classes";
   NSString              *infoPath = @"data.info";
-  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  GormPalettesManager   *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;

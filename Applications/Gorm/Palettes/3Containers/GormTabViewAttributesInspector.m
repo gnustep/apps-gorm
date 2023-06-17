@@ -121,7 +121,7 @@
 	{
 	  int i;
 	  NSTabViewItem *newTabItem;
-	  id document = [(id<IB>)NSApp documentForObject: object];
+	  id document = [(id<IB>)[NSApp delegate] documentForObject: object];
 	      
 	  for (i=([object numberOfTabViewItems]+1);i<=newNumber;i++)
 	    {
@@ -139,7 +139,7 @@
 	  for (i=([object numberOfTabViewItems]-1);i>=newNumber;i--)
 	    {
 	      id item = [object tabViewItemAtIndex:i];
-	      id document = [(id<IB>)NSApp documentForObject: item];
+	      id document = [(id<IB>)[NSApp delegate] documentForObject: item];
 
 	      [object selectFirstTabViewItem: self];
 	      [object removeTabViewItem: item];

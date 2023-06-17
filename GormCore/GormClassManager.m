@@ -106,7 +106,7 @@
 	}
       else
 	{
-	  GormPalettesManager *palettesManager = [(id<Gorm>)NSApp palettesManager];
+	  GormPalettesManager *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
 	  NSDictionary *importedClasses = [palettesManager importedClasses];
 	  NSEnumerator *en = [importedClasses objectEnumerator];
 	  NSDictionary *description = nil;

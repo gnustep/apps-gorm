@@ -62,7 +62,7 @@
 
 - (void) setObject: (id)anObject
 {
-  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
 
   ASSIGN(object, nil); // remove reference to old object...
   [super setObject: anObject];
@@ -87,7 +87,7 @@
 - (void) updateMenuType: (id)sender
 {
   BOOL flag;
-  GormDocument *doc = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
 
   // look at the values passed back in the matrix.
   flag = ([[menuType cellAtRow: 0 column: 0] state] == NSOnState) ? YES : NO; // windows menu...
@@ -155,7 +155,7 @@
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
   id	o = [aNotification object];
-  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> doc = [(id<IB>)[NSApp delegate] activeDocument];
 
   if (o == titleText)
     {
