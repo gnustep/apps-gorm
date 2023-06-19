@@ -249,7 +249,7 @@
 	       * in order to avoid excessive amounts of drawing.
 	       */
 	      [NSEvent startPeriodicEventsAfterDelay: 0.1 withPeriod: 0.05];
-	      e = [[NSApp delegate] nextEventMatchingMask: eventMask
+	      e = [NSApp nextEventMatchingMask: eventMask
 				     untilDate: future
 					inMode: NSEventTrackingRunLoopMode
 				       dequeue: YES];
@@ -299,7 +299,7 @@
 			  [[self window] flushWindow];
 			}
 		    }
-		  e = [[NSApp delegate] nextEventMatchingMask: eventMask
+		  e = [NSApp nextEventMatchingMask: eventMask
 					 untilDate: future
 					    inMode: NSEventTrackingRunLoopMode
 					   dequeue: YES];
@@ -1057,7 +1057,7 @@ static BOOL done_editing;
   while (!done_editing)
     {
       NSEventType eType;
-      e = [[NSApp delegate] nextEventMatchingMask: eventMask
+      e = [NSApp nextEventMatchingMask: eventMask
 		 untilDate: future
 		 inMode: NSEventTrackingRunLoopMode
 		 dequeue: YES];
