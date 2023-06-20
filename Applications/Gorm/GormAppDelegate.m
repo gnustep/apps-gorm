@@ -163,7 +163,8 @@
        */
       [self palettesManager];
       [self pluginManager];
-
+      [GormDocumentController sharedDocumentController];
+      
       /*
        * Start the server
        */
@@ -213,7 +214,7 @@
 
 - (void) applicationOpenUntitledFile: (NSApplication *)sender
 {
-  GormDocumentController *dc = [NSDocumentController sharedDocumentController];
+  GormDocumentController *dc = [GormDocumentController sharedDocumentController];
   // open a new document and build an application type document by default...
   [dc newDocument: sender];
 }
@@ -248,8 +249,8 @@
   if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) ==
       NSWindows95InterfaceStyle)
     {
-      NSDocumentController *docController;
-      docController = [NSDocumentController sharedDocumentController];
+      GormDocumentController *docController;
+      docController = [GormDocumentController sharedDocumentController];
       
       if ([[docController documents] count] > 0)
         {
@@ -269,7 +270,7 @@
 
 - (id<IBDocuments>) activeDocument
 {
-  return [[NSDocumentController sharedDocumentController] currentDocument];
+  return [[GormDocumentController sharedDocumentController] currentDocument];
 }
 
 - (GormClassManager*) classManager
@@ -1083,7 +1084,7 @@
 
 - (id<IBDocuments>) documentForObject: (id)object
 {
-  NSEnumerator *en = [[[NSDocumentController sharedDocumentController]
+  NSEnumerator *en = [[[GormDocumentController sharedDocumentController]
 			documents]
 		       objectEnumerator];
   id doc = nil;

@@ -1,7 +1,5 @@
 /* GormWrapperBuilder
  *
- * This class is a subclass of the NSDocumentController
- *
  * Copyright (C) 2006-2013 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
