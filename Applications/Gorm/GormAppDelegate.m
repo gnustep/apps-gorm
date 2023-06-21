@@ -23,37 +23,14 @@
  * USA.
  */
 
-#import <AppKit/AppKit.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSSet.h>
+
+#import <AppKit/NSImage.h>
+#import <AppKit/NSMenu.h>
+
 #import "GormAppDelegate.h"
-
-/*
-@implementation NSApplication (GormPrivateMethods)
-
-// NSApplication override to make Inspector's shortcuts available globally
-- (void) sendEvent: (NSEvent *)theEvent
-{
-  if ([theEvent type] == NSKeyDown)
-    {
-      NSPanel *inspector = [[self inspectorsManager] panel];
-      if ([inspector performKeyEquivalent: theEvent] != NO)
-        {
-          [inspector orderFront: self];
-          return;
-        }
-    }
-  [super sendEvent: theEvent];
-}
-
-- (void) arrangeInFront: (id)sender
-{
-  if([self isTestingInterface] == NO)
-    {
-      [NSApp arrangeInFront: sender];
-    }
-}
-
-@end
-*/
 
 @implementation GormAppDelegate
 
@@ -164,7 +141,7 @@
       [self palettesManager];
       [self pluginManager];
       [GormDocumentController sharedDocumentController];
-      
+
       /*
        * Start the server
        */
@@ -174,7 +151,7 @@
 	  NSLog(@"Could not register GormServer");
 	}
     }
-  
+
   return self;
 }
 
@@ -251,15 +228,15 @@
     {
       GormDocumentController *docController;
       docController = [GormDocumentController sharedDocumentController];
-      
+
       if ([[docController documents] count] > 0)
-        {
-          return NO;
-        }
+	{
+	  return NO;
+	}
       else
-        {
-          return YES;
-        }
+	{
+	  return YES;
+	}
     }
 
   return NO;
@@ -461,11 +438,7 @@
 
 - (IBAction) testInterface: (id)sender
 {
-  if (isTesting == YES)
-    {
-      return;
-    }
-  else
+  if (isTesting == NO)
     {
       // top level objects
       NS_DURING
@@ -545,6 +518,8 @@
 	      NSMutableDictionary *nameTable = [testContainer nameTable];
 	      NSMenu *aMenu = [nameTable objectForKey: @"NSMenu"];
 
+	      mainMenu = [NSApp mainMenu]; // save the menu before testing...
+	      [[NSApp mainMenu] close];
 	      [NSApp setMainMenu: aMenu];
 	      // initialize the context.
 	      RETAIN(testContainer);
@@ -716,15 +691,13 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];  
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
 }
 
-/*
 - (IBAction) selectAllItems: (id)sender
 {
   return;
 }
-*/
 
 - (IBAction) setName: (id)sender
 {
@@ -756,7 +729,7 @@
 - (IBAction) guideline: (id) sender
 {
   [[NSNotificationCenter defaultCenter] postNotificationName: GormToggleGuidelineNotification
- 					object:nil];
+					object:nil];
   if ( [guideLineMenuItem tag] == 0 )
     {
       [guideLineMenuItem setTitle:_(@"Turn GuideLine On")];
@@ -768,7 +741,6 @@
       [guideLineMenuItem setTag:0];
     }
 }
-
 
 - (IBAction) orderFrontFontPanel: (id) sender
 {
@@ -883,13 +855,13 @@
 {
   [[NSRunLoop currentRunLoop]
     performSelector: @selector(endTesting:)
-    target: self
-    argument: nil
-    order: 5000
-    modes: [NSArray arrayWithObjects:
-		      NSDefaultRunLoopMode,
-		    NSModalPanelRunLoopMode,
-		    NSEventTrackingRunLoopMode, nil]];
+	     target: self
+	   argument: nil
+	      order: 5000
+	      modes: [NSArray arrayWithObjects:
+				NSDefaultRunLoopMode,
+			      NSModalPanelRunLoopMode,
+			      NSEventTrackingRunLoopMode, nil]];
 }
 
 - (IBAction) endTesting: (id)sender
@@ -939,8 +911,16 @@
 	  DESTROY(menuLocations);
 	}
 
+      // Restore windows and menus...
       [NSApp setMainMenu: mainMenu];
       [NSApp setApplicationIconImage: gormImage];
+      [[NSApp mainMenu] display];
+
+      e = [testingWindows objectEnumerator];
+      while ((val = [e nextObject]) != nil)
+	{
+	  [val orderFront: self];
+	}
 
       NS_DURING
 	{
@@ -952,7 +932,6 @@
 	}
       NS_ENDHANDLER
 
-      [mainMenu display]; // bring it to the front...
       isTesting = NO;
 
       if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
@@ -1361,10 +1340,6 @@
 - (IBAction) print: (id) sender
 {
   [[NSApp keyWindow] print: sender];
-}
-
-- (IBAction) selectAllItems: (id)sender
-{
 }
 
 @end
