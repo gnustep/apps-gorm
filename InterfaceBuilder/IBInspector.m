@@ -112,7 +112,18 @@ static NSNotificationCenter *nc = nil;
 
 - (void) touch: (id)sender
 {
-  id<IBDocuments> doc = [(id<IB>)NSApp activeDocument];
+  id delegate = [NSApp delegate];
+  id<IBDocuments> doc = nil;
+  
+  if ([NSApp respondsToSelector: @selector(activeDocument)])
+    {
+      doc = [(id<IB>)NSApp activeDocument];
+    }
+  else if ([delegate respondsToSelector: @selector(activeDocument)])
+    {
+      doc = [delegate activeDocument];
+    }
+
   [doc touch];
 }
 

@@ -453,7 +453,8 @@
 	  NSString              *subClassName;
 	  id                    obj;
 	  id                    savedDelegate = [NSApp delegate];
-
+	  NSMenu                *modelMenu = [activeDoc objectForName: @"NSMenu"];
+	  
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init];
 	  en = [[NSApp windows] objectEnumerator];
@@ -581,6 +582,8 @@
 		    }
 		}
 
+	      [modelMenu close];
+	      
 	      // so we don't get the warning...
 	      [NSApp setServicesMenu: nil];
 	      [[NSApp mainMenu] display];

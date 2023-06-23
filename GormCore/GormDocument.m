@@ -504,6 +504,7 @@ static NSImage  *fileImage = nil;
 			object: aConnector];
 
       [connections addObject: aConnector];
+      [self touch]; // make sure the doc is marked as modified...
 
       [nc postNotificationName: IBDidAddConnectorNotification
 			object: aConnector];
