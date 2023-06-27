@@ -35,11 +35,13 @@
 
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  puts("== gormtool");
+  GormDocumentController *dc = [GormDocumentController sharedDocumentController];
 
+  puts("== gormtool");
+ 
   NSLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
-  
+ 
   [NSApp terminate: nil];
 }
 

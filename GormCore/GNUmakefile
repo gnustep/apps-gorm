@@ -40,6 +40,7 @@ SUBPROJECTS = Plugins
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
+	GormAbstractDelegate.h \
 	GormBoxEditor.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
@@ -114,6 +115,7 @@ GormCore_HEADER_FILES = \
 	GormShelfPref.h \
 
 GormCore_OBJC_FILES = \
+	GormAbstractDelegate.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \

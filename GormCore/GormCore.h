@@ -35,6 +35,7 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #ifndef INCLUDED_GORMCORE_H
 #define INCLUDED_GORMCORE_H
 
+#import <GormCore/GormAbstractDelegate.h>
 #import <GormCore/GormBoxEditor.h>
 #import <GormCore/GormClassEditor.h>
 #import <GormCore/GormClassInspector.h>
