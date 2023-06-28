@@ -263,15 +263,26 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormClassPanel.gorm \
 	GormConnectionInspector.gorm \
 	GormCustomClassInspector.gorm \
+	GormDocument.gorm \
 	GormDummyInspector.gorm \
 	GormFontView.gorm \
 	GormHelpInspector.gorm \
 	GormImageInspector.gorm \
+	GormInconsistenciesPanel.gorm \
 	GormInspectorPanel.gorm \
 	GormNSSplitViewInspector.gorm \
 	GormObjectInspector.gorm \
+	GormPalettePanel.gorm \
+	GormPrefColors.gorm \
+	GormPreferences.gorm \
+	GormPrefGeneral.gorm \
+	GormPrefGuideline.gorm \
+	GormPrefHeaders.gorm \
+	GormPrefPalettes.gorm \
+	GormPrefPlugins.gorm \
 	GormScrollViewAttributesInspector.gorm \
 	GormSetName.gorm \
+	GormShelfPref.gorm \
 	GormSoundInspector.gorm \
 	GormViewSizeInspector.gorm
 

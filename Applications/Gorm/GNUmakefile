@@ -93,24 +93,14 @@ Gorm_RESOURCE_FILES = \
 
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
-	GormDocument.gorm \
 	Gorm.gorm \
-	GormInconsistenciesPanel.gorm \
-	GormPalettePanel.gorm \
-	GormPrefColors.gorm \
-	GormPreferences.gorm \
-	GormPrefGeneral.gorm \
-	GormPrefGuideline.gorm \
-	GormPrefHeaders.gorm \
-	GormPrefPalettes.gorm \
-	GormPrefPlugins.gorm \
-	GormShelfPref.gorm \
 	Gorm.rtfd
 
 Gorm_LANGUAGES = \
 	English
 
-Gorm_HEADERS = 
+Gorm_HEADERS = \
+	GormAppDelegate.h
 
 Gorm_OBJC_FILES = \
 	GormAppDelegate.m \
@@ -123,5 +113,3 @@ include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/application.make
 
 -include GNUmakefile.postamble
-
-include $(GNUSTEP_MAKEFILES)/Master/nsis.make
