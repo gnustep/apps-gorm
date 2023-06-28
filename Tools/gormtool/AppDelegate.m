@@ -1,3 +1,28 @@
+/* AppDelegate.m
+ *
+ * Copyright (C) 2023 Free Software Foundation, Inc.
+ *
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
+ * Date:	2023
+ *
+ * This file is part of GNUstep.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111
+ * USA.
+ */
+
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSNotification.h>
 #import <Foundation/NSProcessInfo.h>
@@ -8,37 +33,30 @@
 
 @implementation AppDelegate
 
-- (NSDictionary *) buildDictionary
-{
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-  NSArray *keys = [dict allKeys];
-  /*
-  FOR_IN(NSString*, k, keys)
-    {
-      
-    }
-  END_FOR_IN(keys);
-  */
-  
-  return dict;
-}
-
 - (void) process
 {
-  NSDictionary *args = [self buildDictionary];
+  NSProcessInfo *pi = [NSProcessInfo processInfo];
+  GormDocumentController *dc = [GormDocumentController sharedDocumentController];
+  
   [NSClassSwapper setIsInInterfaceBuilder: YES];
 
-  NSLog(@"Processing... %@", args);
+  NSLog(@"Processing... %@", [pi arguments]);
+
+  if ([[pi arguments] count] > 1)
+    {
+      NSString *file = [[pi arguments] objectAtIndex: 1];
+
+      NSLog(@"file = %@", file);
+      [dc openDocumentWithContentsOfFile: file display: NO];
+    }
   
   [NSClassSwapper setIsInInterfaceBuilder: NO];
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  GormDocumentController *dc = [GormDocumentController sharedDocumentController];
-
   puts("== gormtool");
- 
+  
   NSLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
  

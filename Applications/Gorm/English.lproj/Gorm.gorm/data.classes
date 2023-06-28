@@ -12,16 +12,16 @@
 	    "groupSelectionInView:",
 	    "inspector:",
 	    "loadImage:",
-	    "loadPallete:",
 	    "loadSound:",
-	    "ungroup:",
+	    "loadPalette:",
 	    "orderFrontFontPanel:",
 	    "palettes:",
 	    "preferencesPanel:",
 	    "selectAllItems:",
 	    "setName:",
 	    "testinterface:",
-	    "translate:"
+	    "translate:",
+	    "ungroup:"
 	);
 	Super = NSObject;
     };
@@ -78,7 +78,6 @@
 	    "groupSelectionInSplitView:",
 	    "inspector:",
 	    "loadImage:",
-	    "loadPallete:",
 	    "loadSound:",
 	    "ungroup:",
 	    "palettes:",
@@ -86,7 +85,8 @@
 	    "preferencesPanel:",
 	    "selectAllItems:",
 	    "setName:",
-	    "testinterface:"
+	    "testinterface:",
+	    "loadPalette:"
 	);
 	Outlets = (
 	    gormMenu,

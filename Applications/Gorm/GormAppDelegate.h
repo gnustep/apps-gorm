@@ -45,7 +45,6 @@
 - (IBAction) paste: (id)sender;
 - (IBAction) delete: (id)sender;
 - (IBAction) selectAllItems: (id)sender;
-- (IBAction) setName: (id)sender;
 
 // palettes/inspectors.
 - (IBAction) inspector: (id) sender;

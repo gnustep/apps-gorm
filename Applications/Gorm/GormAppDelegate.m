@@ -114,21 +114,31 @@
       s = [selectionOwner selection];
     }
 
-  if (sel_isEqual(action, @selector(close:))
+  if(sel_isEqual(action, @selector(loadPalette:)))
+    {
+      return YES;
+    }
+  else if (sel_isEqual(action, @selector(close:))
       || sel_isEqual(action, @selector(miniaturize:)))
     {
       if (active == nil)
-	return NO;
+	{
+	  return NO;
+	}
     }
   else if (sel_isEqual(action, @selector(testInterface:)))
     {
       if (active == nil)
-	return NO;
+	{
+	  return NO;
+	}
     }
   else if (sel_isEqual(action, @selector(copy:)))
     {
       if ([s count] == 0)
-	return NO;
+	{
+	  return NO;
+	}
       else
 	{
 	  id	    o = [s objectAtIndex: 0];
@@ -144,7 +154,9 @@
   else if (sel_isEqual(action, @selector(cut:)))
     {
       if ([s count] == 0)
-	return NO;
+	{
+	  return NO;
+	}
       else
 	{
 	  id	    o = [s objectAtIndex: 0];
@@ -161,7 +173,9 @@
   else if (sel_isEqual(action, @selector(delete:)))
     {
       if ([s count] == 0)
-	return NO;
+	{
+	  return NO;
+	}
       else
 	{
 	  id	    o = [s objectAtIndex: 0];
@@ -177,11 +191,14 @@
   else if (sel_isEqual(action, @selector(paste:)))
     {
       if ([s count] == 0)
-	return NO;
+	{
+	  return NO;
+	}
       else
 	{
 	  id	o = [s objectAtIndex: 0];
 	  NSString *n = [active nameForObject: o];
+
 	  if ([n isEqual: @"NSOwner"] || [n isEqual: @"NSFirst"])
 	    {
 	      return NO;

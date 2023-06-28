@@ -33,4 +33,7 @@
 @class NSSet;
 
 @interface AppDelegate : GormAbstractDelegate
+
+- (void) process;
+
 @end
