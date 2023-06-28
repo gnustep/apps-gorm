@@ -44,38 +44,9 @@
 - (BOOL) isConnecting;
 - (void) stopConnecting;
 
-// preferences
-- (IBAction) preferencesPanel: (id) sender;
-
-// Cut/Paste operations
-- (IBAction) copy: (id)sender;
-- (IBAction) cut: (id)sender;
-- (IBAction) paste: (id)sender;
-- (IBAction) delete: (id)sender;
-- (IBAction) selectAllItems: (id)sender;
-- (IBAction) setName: (id)sender;
-
-// palettes/inspectors.
-- (IBAction) inspector: (id) sender;
-- (IBAction) palettes: (id) sender;
-- (IBAction) loadPalette: (id) sender;
 - (GormPalettesManager*) palettesManager;
 - (GormInspectorsManager*) inspectorsManager;
 - (GormPluginManager*) pluginManager;
-
-// testing the interface
-- (IBAction) testInterface: (id)sender;
-- (IBAction) endTesting: (id)sender;
-
-// sound & images
-- (IBAction) loadSound: (id) sender;
-- (IBAction) loadImage: (id) sender;
-
-// grouping/layout
-- (IBAction) groupSelectionInSplitView: (id)sender;
-- (IBAction) groupSelectionInBox: (id)sender;
-- (IBAction) groupSelectionInScrollView: (id)sender;
-- (IBAction) ungroup: (id)sender;
 
 // added for classes support
 - (GormClassManager*) classManager;

@@ -318,4 +318,246 @@
   return YES;
 }
 
+
+- (IBAction) stop: (id)sender
+{
+  if(isTesting == NO)
+    {
+      // [super stop: sender];
+    }
+  else
+    {
+      [self endTesting: sender];
+    }
+}
+
+- (IBAction) miniaturize: (id)sender
+{
+  NSWindow	*window = [(GormDocument *)[self activeDocument] window];
+
+  [window miniaturize: self];
+}
+
+/** Info Menu Actions */
+- (IBAction) preferencesPanel: (id) sender
+{
+  if(! preferencesController)
+    {
+      preferencesController =  [[GormPrefController alloc] init];
+    }
+
+  [[preferencesController panel] makeKeyAndOrderFront:nil];
+}
+
+/** Document Menu Actions */
+- (IBAction) close: (id)sender
+{
+  GormDocument  *document = (GormDocument *)[self activeDocument];
+  if([document canCloseDocument])
+    {
+      [document close];
+    }
+}
+
+- (IBAction) debug: (id) sender
+{
+  [[self activeDocument] performSelector: @selector(printAllEditors)];
+}
+
+- (IBAction) loadSound: (id) sender
+{
+  [(GormDocument *)[self activeDocument] openSound: sender];
+}
+
+- (IBAction) loadImage: (id) sender
+{
+  [(GormDocument *)[self activeDocument] openImage: sender];
+}
+
+
+/** Edit Menu Actions */
+
+- (IBAction) copy: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
+}
+
+
+- (IBAction) cut: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
+      || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+}
+
+- (IBAction) paste: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner pasteInSelection];
+}
+
+
+- (IBAction) delete: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+}
+
+- (IBAction) selectAll: (id)sender
+{
+  if ([[selectionOwner selection] count] == 0
+    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+    return;
+
+  if([self isConnecting])
+    {
+      [self stopConnecting];
+    }
+
+  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+}
+
+- (IBAction) selectAllItems: (id)sender
+{
+  return;
+}
+
+/** Grouping */
+
+- (IBAction) groupSelectionInSplitView: (id)sender
+{
+  if ([[selectionOwner selection] count] < 2
+      || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
+    return;
+
+  [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
+}
+
+- (IBAction) groupSelectionInBox: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInBox];
+}
+
+- (IBAction) groupSelectionInView: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInView)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInView];
+}
+
+- (IBAction) groupSelectionInScrollView: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
+}
+
+- (IBAction) groupSelectionInMatrix: (id)sender
+{
+  if ([selectionOwner respondsToSelector: @selector(groupSelectionInMatrix)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner groupSelectionInMatrix];
+}
+
+- (IBAction) ungroup: (id)sender
+{
+  // NSLog(@"ungroup: selectionOwner %@", selectionOwner);
+  if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
+    return;
+  [(GormGenericEditor *)selectionOwner ungroup];
+}
+
+/** Classes actions */
+
+- (IBAction) createSubclass: (id)sender
+{
+  [(GormDocument *)[self activeDocument] createSubclass: sender];
+}
+
+- (IBAction) loadClass: (id)sender
+{
+  // Call the current document and create the class
+  // descibed by the header
+  [(GormDocument *)[self activeDocument] loadClass: sender];
+}
+
+- (IBAction) createClassFiles: (id)sender
+{
+  [(GormDocument *)[self activeDocument] createClassFiles: sender];
+}
+
+- (IBAction) instantiateClass: (id)sender
+{
+   [(GormDocument *)[self activeDocument] instantiateClass: sender];
+}
+
+- (IBAction) addAttributeToClass: (id)sender
+{
+  [(GormDocument *)[self activeDocument] addAttributeToClass: sender];
+}
+
+- (IBAction) remove: (id)sender
+{
+  [(GormDocument *)[self activeDocument] remove: sender];
+}
+
+/** Palettes Actions... */
+
+- (IBAction) inspector: (id) sender
+{
+  [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
+}
+
+- (IBAction) palettes: (id) sender
+{
+  [[[self palettesManager] panel] makeKeyAndOrderFront: self];
+}
+
+- (IBAction) loadPalette: (id) sender
+{
+  [[self palettesManager] openPalette: sender];
+}
+
+// Print
+
+- (IBAction) print: (id) sender
+{
+  [[NSApp keyWindow] print: sender];
+}
+
 @end

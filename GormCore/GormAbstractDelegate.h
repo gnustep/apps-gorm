@@ -71,6 +71,11 @@
   NSSet                 *topObjects;
 }
 
+// testing the interface
+- (IBAction) deferredEndTesting: (id) sender;
+- (IBAction) testInterface: (id)sender;
+- (IBAction) endTesting: (id)sender;
+
 @end
 
 #endif // import guard

@@ -35,4 +35,47 @@
 @class NSSet;
 
 @interface GormAppDelegate : GormAbstractDelegate
+
+// preferences
+- (IBAction) preferencesPanel: (id) sender;
+
+// Cut/Paste operations
+- (IBAction) copy: (id)sender;
+- (IBAction) cut: (id)sender;
+- (IBAction) paste: (id)sender;
+- (IBAction) delete: (id)sender;
+- (IBAction) selectAllItems: (id)sender;
+- (IBAction) setName: (id)sender;
+
+// palettes/inspectors.
+- (IBAction) inspector: (id) sender;
+- (IBAction) palettes: (id) sender;
+- (IBAction) loadPalette: (id) sender;
+
+// sound & images
+- (IBAction) loadSound: (id) sender;
+- (IBAction) loadImage: (id) sender;
+
+// grouping/layout
+- (IBAction) groupSelectionInSplitView: (id)sender;
+- (IBAction) groupSelectionInBox: (id)sender;
+- (IBAction) groupSelectionInScrollView: (id)sender;
+- (IBAction) ungroup: (id)sender;
+
+// Classes actions
+- (IBAction) createSubclass: (id)sender;
+- (IBAction) loadClass: (id)sender;
+- (IBAction) createClassFiles: (id)sender;
+- (IBAction) instantiateClass: (id)sender;
+- (IBAction) addAttributeToClass: (id)sender;
+- (IBAction) remove: (id)sender;
+
+// Palettes Actions...
+- (IBAction) inspector: (id) sender;
+- (IBAction) palettes: (id) sender;
+- (IBAction) loadPalette: (id) sender;
+
+// Print
+- (IBAction) print: (id)sender;
+
 @end
