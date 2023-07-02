@@ -138,9 +138,9 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 
 - (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (NSInteger)otherWin
 {
-  id<IBDocuments> document = [(id<IB>)NSApp documentForObject: self];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] documentForObject: self];
   [super orderWindow: place relativeTo: otherWin];
-  if([NSApp isConnecting] == NO)
+  if([[NSApp delegate] isConnecting] == NO)
     { 
       id editor = [document editorForObject: self create: NO];
 

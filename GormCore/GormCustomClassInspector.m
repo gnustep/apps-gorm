@@ -48,14 +48,17 @@
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
       // initialize all member variables...
       _classManager = nil;
       _currentSelectionClassName = nil;
       _rowToSelect = 0;
       
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormCustomClassInspector"
-			    owner: self])
+      if (![bundle loadNibNamed: @"GormCustomClassInspector"
+			  owner: self
+		topLevelObjects: nil])
 	{
 	  NSLog(@"Could not open gorm GormCustomClassInspector");
 	  return nil;
@@ -130,8 +133,8 @@
       NSMutableArray *classes = nil; 
       
       [super setObject: anObject];
-      _document = [(id<IB>)NSApp activeDocument];
-      _classManager = [(id<Gorm>)NSApp classManager];
+      _document = [(id<IB>)[NSApp delegate] activeDocument];
+      _classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
       
       // get the information...
       NSDebugLog(@"Current selection %@", [self object]);

@@ -25,6 +25,7 @@
 #include <AppKit/AppKit.h>
 
 #include <GormCore/GormPlugin.h>
+#include <GormCore/GormDocumentController.h>
 
 @interface NSDocumentController (GormPrivate)
 - (NSArray *) types;
@@ -78,7 +79,7 @@ static Ivar types_ivar(void)
                 humanReadableName: (NSString *)hrName
                     forExtensions: (NSArray *)extensions
 {
-  NSDocumentController *controller = [NSDocumentController sharedDocumentController];
+  NSDocumentController *controller = [GormDocumentController sharedDocumentController];
   NSMutableArray *types = [[controller types] mutableCopy];
   
   if([controller containsDocumentTypeName: name] == NO)

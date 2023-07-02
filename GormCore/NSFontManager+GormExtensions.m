@@ -62,7 +62,7 @@
 
   if(result == NO)
     {
-      id object = [(GormDocument *)[(id<IB>)NSApp activeDocument] lastEditor];
+      id object = [(GormDocument *)[(id<IB>)[NSApp delegate] activeDocument] lastEditor];
       NS_DURING
 	{
 	  if(object != nil)

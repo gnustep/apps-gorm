@@ -27,9 +27,16 @@
 
 #include <Foundation/Foundation.h>
 
-@class GormClassManager, GormPalettesManager, GormInspectorsManager, NSString, NSMenu, GormPluginManager;
+@class GormClassManager;
+@class GormInspectorsManager;
+@class GormPalettesManager;
+@class GormPluginManager;
 
-@protocol Gorm
+@class NSMenu;
+@class NSString;
+
+@protocol GormAppDelegate
+
 // Connections
 - (id) connectSource;
 - (id) connectDestination;
@@ -37,38 +44,9 @@
 - (BOOL) isConnecting;
 - (void) stopConnecting;
 
-// preferences
-- (void) preferencesPanel: (id) sender;
-
-// Cut/Paste operations
-- (void) copy: (id)sender;
-- (void) cut: (id)sender;
-- (void) paste: (id)sender;
-- (void) delete: (id)sender;
-- (void) selectAllItems: (id)sender;
-- (void) setName: (id)sender;
-
-// palettes/inspectors.
-- (void) inspector: (id) sender;
-- (void) palettes: (id) sender;
-- (void) loadPalette: (id) sender;
 - (GormPalettesManager*) palettesManager;
 - (GormInspectorsManager*) inspectorsManager;
 - (GormPluginManager*) pluginManager;
-
-// testing the interface
-- (void) testInterface: (id)sender;
-- (id) endTesting: (id)sender;
-
-// sound & images
-- (void) loadSound: (id) sender;
-- (void) loadImage: (id) sender;
-
-// grouping/layout
-- (void) groupSelectionInSplitView: (id)sender;
-- (void) groupSelectionInBox: (id)sender;
-- (void) groupSelectionInScrollView: (id)sender;
-- (void) ungroup: (id)sender;
 
 // added for classes support
 - (GormClassManager*) classManager;

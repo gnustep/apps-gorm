@@ -94,7 +94,7 @@
   self = [super init];
   if (self != nil)
     {
-      NSBundle			*bundle = [NSBundle mainBundle];
+      NSBundle			*bundle = [NSBundle bundleForClass: [self class]];
       NSString			*path;
 
       document = aDocument;  // the document retains us, this is for convenience
@@ -106,7 +106,7 @@
 	}
       else
 	{
-	  GormPalettesManager *palettesManager = [(id<Gorm>)NSApp palettesManager];
+	  GormPalettesManager *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
 	  NSDictionary *importedClasses = [palettesManager importedClasses];
 	  NSEnumerator *en = [importedClasses objectEnumerator];
 	  NSDictionary *description = nil;

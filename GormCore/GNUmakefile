@@ -29,18 +29,20 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 
 PACKAGE_NAME=GormCore
-LIBRARY_VAR=GORMCORE
-LIBRARY_NAME=GormCore
+FRAMEWORK_VAR=GORMCORE
+FRAMEWORK_NAME=GormCore
 GormCore_HEADER_FILES_DIR=.
 GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-include ../Version
+SUBPROJECTS = Plugins
 
 GormCore_HEADER_FILES = \
 	GormBindingsInspector.h \
 	GormBindingsContentInspector.h \
+	GormCore.h \
+	GormAbstractDelegate.h \
 	GormBoxEditor.h \
 	GormCore.h \
 	GormClassEditor.h \
@@ -51,6 +53,7 @@ GormCore_HEADER_FILES = \
 	GormControlEditor.h \
 	GormCustomClassInspector.h \
 	GormCustomView.h \
+	GormDefines.h \
 	GormDocument.h \
 	GormDocumentController.h \
 	GormDocumentWindow.h \
@@ -110,6 +113,15 @@ GormCore_HEADER_FILES = \
 GormCore_OBJC_FILES = \
 	GormBindingsInspector.m \
 	GormBindingsContentInspector.m \
+	GormGeneralPref.h \
+	GormGuidelinePref.h \
+	GormHeadersPref.h \
+	GormPalettesPref.h \
+	GormPluginsPref.h \
+	GormPrefController.h \
+	GormPrefs.h \
+	GormShelfPref.h \
+	GormAbstractDelegate.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -171,12 +183,120 @@ GormCore_OBJC_FILES = \
 	NSFontManager+GormExtensions.m \
 	NSString+methods.m \
 	NSView+GormExtensions.m \
-        GormPrivate.m
+        GormPrivate.m \
+	GormGeneralPref.m \
+	GormGuidelinePref.m \
+	GormHeadersPref.m \
+	GormPalettesPref.m \
+	GormPluginsPref.m \
+	GormPrefController.m \
+	GormShelfPref.m \
+
+GormCore_RESOURCE_FILES = \
+	Plugins/Gorm/Gorm.plugin \
+	Plugins/Nib/Nib.plugin \
+	Plugins/Xib/Xib.plugin \
+	Plugins/GModel/GModel.plugin \
+	Images/bezel_nib.tiff \
+	Images/browserView.tiff \
+	Images/button_nib.tiff \
+	Images/centeralign_nib.tiff \
+	Images/date_formatter.tiff \
+	Images/GormActionSelected.tiff \
+	Images/GormAction.tiff \
+	Images/GormClass.tiff \
+	Images/GormCopyImage.tiff \
+	Images/GormEHCoil.tiff \
+	Images/GormEHLine.tiff \
+	Images/GormEVCoil.tiff \
+	Images/GormEVLine.tiff \
+	Images/GormFile.tiff \
+	Images/GormFilesOwner.tiff \
+	Images/GormFirstResponder.tiff \
+	Images/GormFontManager.tiff \
+	Images/GormImage.tiff \
+	Images/GormMenu.tiff \
+	Images/GormMHCoil.tiff \
+	Images/GormMHLine.tiff \
+	Images/GormMVCoil.tiff \
+	Images/GormMVLine.tiff \
+	Images/GormObject.tiff \
+	Images/GormOutletSelected.tiff \
+	Images/GormOutlet.tiff \
+	Images/GormSound.tiff \
+	Images/GormUnknown.tiff \
+	Images/GormView.tiff \
+	Images/GormWindow.tiff \
+	Images/iconAbove_nib.tiff \
+	Images/iconBelow_nib.tiff \
+	Images/iconBottomLeft_nib.tiff \
+	Images/iconBottom_nib.tiff \
+	Images/iconBottomRight_nib.tiff \
+	Images/iconCenterLeft_nib.tiff \
+	Images/iconCenter_nib.tiff \
+	Images/iconCenterRight_nib.tiff \
+	Images/iconLeft_nib.tiff \
+	Images/iconOnly_nib.tiff \
+	Images/iconRight_nib.tiff \
+	Images/iconTopLeft_nib.tiff \
+	Images/iconTop_nib.tiff \
+	Images/iconTopRight_nib.tiff \
+	Images/justifyalign_nib.tiff \
+	Images/leftalign_nib.tiff \
+	Images/LeftArr.tiff \
+	Images/line_nib.tiff \
+	Images/naturalalign_nib.tiff \
+	Images/noBorder_nib.tiff \
+	Images/number_formatter.tiff \
+	Images/outlineView.tiff \
+	Images/photoframe_nib.tiff \
+	Images/ridge_nib.tiff \
+	Images/rightalign_nib.tiff \
+	Images/RightArr.tiff \
+	Images/shortbutton_nib.tiff \
+	Images/Sunday_seurat.tiff \
+	Images/tabbot_nib.tiff \
+	Images/tabtop_nib.tiff \
+	Images/titleOnly_nib.tiff \
+	Resources/VersionProfiles.plist \
+	Resources/ClassInformation.plist
+
+
+GormCore_LANGUAGES = English
+
+GormCore_LOCALIZED_RESOURCE_FILES = \
+	GormClassEditor.gorm \
+	GormClassInspector.gorm \
+	GormClassPanel.gorm \
+	GormConnectionInspector.gorm \
+	GormCustomClassInspector.gorm \
+	GormDocument.gorm \
+	GormDummyInspector.gorm \
+	GormFontView.gorm \
+	GormHelpInspector.gorm \
+	GormImageInspector.gorm \
+	GormInconsistenciesPanel.gorm \
+	GormInspectorPanel.gorm \
+	GormNSSplitViewInspector.gorm \
+	GormObjectInspector.gorm \
+	GormPalettePanel.gorm \
+	GormPrefColors.gorm \
+	GormPreferences.gorm \
+	GormPrefGeneral.gorm \
+	GormPrefGuideline.gorm \
+	GormPrefHeaders.gorm \
+	GormPrefPalettes.gorm \
+	GormPrefPlugins.gorm \
+	GormScrollViewAttributesInspector.gorm \
+	GormSetName.gorm \
+	GormShelfPref.gorm \
+	GormSoundInspector.gorm \
+	GormViewSizeInspector.gorm
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/library.make
+include $(GNUSTEP_MAKEFILES)/framework.make
 
 -include GNUmakefile.postamble

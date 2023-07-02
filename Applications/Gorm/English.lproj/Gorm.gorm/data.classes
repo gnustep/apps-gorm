@@ -1,0 +1,104 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "alignSelectedObjects:",
+	    "arrangeSelectedObjects:",
+	    "endTesting:",
+	    "exportStrings:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInMatrix:",
+	    "groupSelectionInSplitView:",
+	    "groupSelectionInView:",
+	    "inspector:",
+	    "loadImage:",
+	    "loadSound:",
+	    "loadPalette:",
+	    "orderFrontFontPanel:",
+	    "palettes:",
+	    "preferencesPanel:",
+	    "selectAllItems:",
+	    "setName:",
+	    "testinterface:",
+	    "translate:",
+	    "ungroup:"
+	);
+	Super = NSObject;
+    };
+    Gorm = {
+	Actions = (
+	    "editClass:",
+	    "createSubclass:",
+	    "testInterface:",
+	    "setName:",
+	    "selectAllItems:",
+	    "paste:",
+	    "palettes:",
+	    "loadSound:",
+	    "loadPalette:",
+	    "inspector:",
+	    "infoPanel:",
+	    "endTesting:",
+	    "delete:",
+	    "cut:",
+	    "copy:",
+	    "close:",
+	    "miniaturize:",
+	    "debug:",
+	    "loadImage:",
+	    "orderFrontFontPanel:",
+	    "ungroup:",
+	    "groupSelectionInScrollView:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInSplitView:",
+	    "remove:",
+	    "addAttributeToClass:",
+	    "instantiateClass:",
+	    "createClassFiles:",
+	    "loadClass:",
+	    "preferencesPanel:",
+	    "guideline:",
+	    "print:",
+	    "groupSelectionInView:",
+	    "groupSelectionInMatrix:"
+	);
+	Outlets = (
+	    gormMenu,
+	    guideLineMenuItem
+	);
+	Super = NSApplication;
+    };
+    GormAppDelegate = {
+	Actions = (
+	    "copy:",
+	    "cut:",
+	    "delete:",
+	    "endTesting:",
+	    "groupSelectionInBox:",
+	    "groupSelectionInSplitView:",
+	    "inspector:",
+	    "loadImage:",
+	    "loadSound:",
+	    "ungroup:",
+	    "palettes:",
+	    "paste:",
+	    "preferencesPanel:",
+	    "selectAllItems:",
+	    "setName:",
+	    "testinterface:",
+	    "loadPalette:"
+	);
+	Outlets = (
+	    gormMenu,
+	    guideLineMenuItem
+	);
+	Super = NSObject;
+    };
+    GormDocumentController = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSDocumentController;
+    };
+}
