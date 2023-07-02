@@ -3142,6 +3142,51 @@ static void _real_close(GormDocument *self,
   return allObjects;
 }
 
+- (void) importStringsFromFile: (NSString *)filename
+{
+  NSMutableArray *allObjects = [self _collectAllObjects];
+  NSDictionary *dictionary = nil;
+  NSEnumerator *en = nil;
+  id obj = nil;
+  
+  dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
+    
+  // change to translated values.
+  en = [allObjects objectEnumerator];
+  while((obj = [en nextObject]) != nil)
+    {
+      NSString *translation = nil; 
+      
+      if([obj respondsToSelector: @selector(setTitle:)] &&
+	 [obj respondsToSelector: @selector(title)])
+	{
+	  translation = [dictionary objectForKey: [obj title]];
+	  if(translation != nil)
+	    {
+	      [obj setTitle: translation];
+	    }
+	}
+      else if([obj respondsToSelector: @selector(setStringValue:)] &&
+	      [obj respondsToSelector: @selector(stringValue)])
+	{
+	  translation = [dictionary objectForKey: [obj stringValue]];
+	  if(translation != nil)
+	    {
+	      [obj setStringValue: translation];
+	    }
+	}
+      else if([obj respondsToSelector: @selector(setLabel:)] &&
+	      [obj respondsToSelector: @selector(label)])
+	{
+	  translation = [dictionary objectForKey: [obj label]];
+	  if(translation != nil)
+	    {
+	      [obj setLabel: translation];
+	    }
+	}
+    }
+}
+
 /**
  * This method is used to translate all of the strings in the file from one language
  * into another.  This is helpful when attempting to translate an application for use
@@ -3163,13 +3208,12 @@ static void _real_close(GormDocument *self,
     {
       NSMutableArray *allObjects = [self _collectAllObjects];
       NSString *filename = [oPanel filename];
-      NSDictionary *dictionary = nil;
       NSEnumerator *en = nil;
       id obj = nil;
 
       NS_DURING
 	{
-	  dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
+	  [self importStringsFromFile: filename];
 	}
       NS_HANDLER
 	{
@@ -3177,50 +3221,17 @@ static void _real_close(GormDocument *self,
 	  NSRunAlertPanel(_(@"Problem loading strings"),
 			  message, nil, nil, nil);
 	}
-      NS_ENDHANDLER
-	
+      NS_ENDHANDLER;
+
+      [self touch]; // mark the document as modified...
+      
       // change to translated values.
       en = [allObjects objectEnumerator];
       while((obj = [en nextObject]) != nil)
 	{
-	  NSString *translation = nil; 
-
-	  if([obj respondsToSelector: @selector(setTitle:)] &&
-	     [obj respondsToSelector: @selector(title)])
+	  if([obj isKindOfClass: [NSView class]])
 	    {
-	      translation = [dictionary objectForKey: [obj title]];
-	      if(translation != nil)
-		{
-		  [obj setTitle: translation];
-		}
-	    }
-	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
-		  [obj respondsToSelector: @selector(stringValue)])
-	    {
-	      translation = [dictionary objectForKey: [obj stringValue]];
-	      if(translation != nil)
-		{
-		  [obj setStringValue: translation];
-		}
-	    }
-	  else if([obj respondsToSelector: @selector(setLabel:)] &&
-		  [obj respondsToSelector: @selector(label)])
-	    {
-	      translation = [dictionary objectForKey: [obj label]];
-	      if(translation != nil)
-		{
-		  [obj setLabel: translation];
-		}
-	    }
-
-	  if(translation != nil)
-	    {
-	      if([obj isKindOfClass: [NSView class]])
-		{
-		  [obj setNeedsDisplay: YES];
-		}
-
-	      [self touch]; 
+	      [obj setNeedsDisplay: YES];
 	    }
 	  
 	  // redisplay/flush, if the object is a window.
@@ -3234,9 +3245,55 @@ static void _real_close(GormDocument *self,
 	      [w enableFlushWindow];
 	      [w flushWindowIfNeeded];
 	    }
-
 	}
     } 
+}
+
+- (void) exportStringsToFile: (NSString *)filename
+{
+  NSMutableArray *allObjects = [self _collectAllObjects];
+  NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+  NSEnumerator *en = [allObjects objectEnumerator];
+  id obj = nil;
+  BOOL touched = NO;
+  
+  // change to translated values.
+  while((obj = [en nextObject]) != nil)
+    {
+      NSString *string = nil;
+      if([obj respondsToSelector: @selector(setTitle:)] &&
+	 [obj respondsToSelector: @selector(title)])
+	{
+	  string = [obj title];
+	}
+      else if([obj respondsToSelector: @selector(setStringValue:)] &&
+	      [obj respondsToSelector: @selector(stringValue)])
+	{
+	  string = [obj stringValue];
+	}
+      else if([obj respondsToSelector: @selector(setLabel:)] &&
+	      [obj respondsToSelector: @selector(label)])
+	{
+	  string = [obj label];
+	}
+      
+      if(string != nil)
+	{
+	  [dictionary setObject: string forKey: string];
+	  touched = YES;
+	}
+    }
+  
+  if(touched)
+    {
+      NSString *stringToWrite =
+	@"/* TRANSLATORS: Make sure to quote all translated strings if\n"
+	@"   they contain spaces or non-ASCII characters.  */\n\n";
+      
+      stringToWrite = [stringToWrite stringByAppendingString:
+				       [dictionary descriptionInStringsFileFormat]];
+      [stringToWrite writeToFile: filename atomically: YES];
+    }
 }
 
 /**
@@ -3255,50 +3312,8 @@ static void _real_close(GormDocument *self,
 	       file: nil];
   if (result == NSOKButton)
     {
-      NSMutableArray *allObjects = [self _collectAllObjects];
       NSString *filename = [sp filename];
-      NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-      NSEnumerator *en = [allObjects objectEnumerator];
-      id obj = nil;
-      BOOL touched = NO;
-
-      // change to translated values.
-      while((obj = [en nextObject]) != nil)
-	{
-	  NSString *string = nil;
-	  if([obj respondsToSelector: @selector(setTitle:)] &&
-	     [obj respondsToSelector: @selector(title)])
-	    {
-	      string = [obj title];
-	    }
-	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
-		  [obj respondsToSelector: @selector(stringValue)])
-	    {
-	      string = [obj stringValue];
-	    }
-	  else if([obj respondsToSelector: @selector(setLabel:)] &&
-		  [obj respondsToSelector: @selector(label)])
-	    {
-	      string = [obj label];
-	    }
-
-	  if(string != nil)
-	    {
-	      [dictionary setObject: string forKey: string];
-	      touched = YES;
-	    }
-	}
-
-      if(touched)
-	{
-	  NSString *stringToWrite =
-	    @"/* TRANSLATORS: Make sure to quote all translated strings if\n"
-	    @"   they contain spaces or non-ASCII characters.  */\n\n";
-
-	  stringToWrite = [stringToWrite stringByAppendingString:
-					   [dictionary descriptionInStringsFileFormat]];
-	  [stringToWrite writeToFile: filename atomically: YES];
-	}
+      [self exportStringsToFile: filename];
     } 
 }
 

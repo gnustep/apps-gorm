@@ -99,6 +99,72 @@ static NSMutableArray *__types = nil;
 
 #pragma GCC diagnostic pop
 
+@interface ArgPair : NSObject <NSCopying>
+{
+  NSString *_argument;
+  NSString *_value;
+}
+
+- (void) setArgument: (NSString *)arg;
+- (NSString *) argument;
+
+- (void) setValue: (NSString *)val;
+- (NSString *) value;
+@end
+
+@implementation ArgPair
+
+- (id) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      _argument = nil;
+      _value = nil;
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(_argument);
+  RELEASE(_value);
+
+  [super dealloc];
+}
+
+- (void) setArgument: (NSString *)arg
+{
+  ASSIGN(_argument, arg);
+}
+
+- (NSString *) argument
+{
+  return _argument;
+}
+
+- (void) setValue: (NSString *)val
+{
+  ASSIGN(_value, val);
+}
+
+- (NSString *) value
+{
+  return _value;
+}
+
+- (id) copyWithZone: (NSZone *)z
+{
+  id obj = [[[self class] allocWithZone: z] init];
+
+  [obj setArgument: _argument];
+  [obj setValue: _value];
+
+  return obj;
+}
+
+@end
+
 // AppDelegate...
 @implementation AppDelegate
 
@@ -108,6 +174,56 @@ static NSMutableArray *__types = nil;
     {
       __types = [NSMutableArray arrayWithCapacity: 10];
     }
+}
+
+- (NSDictionary *) parseArguments
+{
+  GormDocumentController *dc = [GormDocumentController sharedDocumentController];
+  NSMutableDictionary *result = [NSMutableDictionary dictionary];
+  NSProcessInfo *pi = [NSProcessInfo processInfo];
+  NSArray *args = [pi arguments];
+  NSEnumerator *en = [args objectEnumerator];
+  id obj = nil;
+  BOOL parse_val = NO;
+  ArgPair *pair = nil; // [[ArgPair alloc] init];
+  
+  while ((obj = [en nextObject]) != nil)
+    {
+      if (parse_val)
+	{
+	  [pair setValue: obj];
+	  [result setObject: pair forKey: [pair argument]];
+	  parse_val = NO;
+	  continue;
+	}
+      else
+	{
+	  pair = [[ArgPair alloc] init];
+	  if ([dc typeFromFileExtension: [obj pathExtension]] != nil)
+	    {
+	      [pair setArgument: @"--read"];
+	      [pair setValue: obj];
+	      [result setObject: pair forKey: @"--read"];
+	    }
+	  else if ([obj isEqualToString: @"--write"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+	  else if ([obj isEqualToString: @"--export-strings-file"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+	  else if ([obj isEqualToString: @"--import-strings-file"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+	}
+    }
+
+  return result;
 }
 
 - (void) process
@@ -123,10 +239,21 @@ static NSMutableArray *__types = nil;
       NSString *file = [[pi arguments] objectAtIndex: 1];
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
       GormDocument *doc = nil;
+      NSDictionary *args = [self parseArguments];
+      ArgPair *opt = nil;
       
+      NSLog(@"args = %@", args);
       NSLog(@"file = %@", file);
       doc = [dc openDocumentWithContentsOfFile: file display: NO];
-      NSLog(@"Document = %@", doc);
+      NSDebugLog(@"Document = %@", doc);
+
+      opt = [args objectForKey: @"--export-strings-file"];
+      if (opt != nil)
+	{
+	  NSString *stringsFile = [opt value];
+
+	  [doc exportStringsToFile: stringsFile];
+	}      
     }
   
   [NSClassSwapper setIsInInterfaceBuilder: NO];
