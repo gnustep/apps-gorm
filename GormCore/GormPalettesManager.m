@@ -124,7 +124,7 @@ static NSImage	*dragImage = nil;
   if (f == NO && ([type isEqual: IBWindowPboardType] == YES || 
 		  [type isEqual: IBMenuPboardType] == YES))
     {
-      id<IBDocuments>	active = [(id<IB>)NSApp activeDocument];
+      id<IBDocuments>	active = [(id<IB>)[NSApp delegate] activeDocument];
 
       if (active != nil)
 	{
@@ -185,7 +185,7 @@ static NSImage	*dragImage = nil;
   NSPoint	dragPoint = [theEvent locationInWindow];
   NSWindow	*w = [self window];
   NSView	*view;
-  GormDocument	*active = (GormDocument *)[(id<IB>)NSApp activeDocument];
+  GormDocument	*active = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
   NSRect	rect;
   NSString	*type;
   id		obj;
@@ -680,7 +680,7 @@ static NSImage	*dragImage = nil;
     }
   else
     {
-      NSLog(@"Bad palette selection - %d", (int)[anObj selectedColumn]);
+      NSDebugLog(@"Bad palette selection - %d", (int)[anObj selectedColumn]);
       current = -1;
     }
   [dragView setNeedsDisplay: YES];

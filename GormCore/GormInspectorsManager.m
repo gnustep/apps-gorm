@@ -48,7 +48,9 @@
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormDummyInspector" owner: self])
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if([bundle loadNibNamed: @"GormDummyInspector" owner: self topLevelObjects: nil])
       {
 	  [button setStringValue: [self title]];
       }
@@ -182,7 +184,7 @@
 
 - (void) updateSelection
 {
-  if ([NSApp isConnecting] == YES)
+  if ([[NSApp delegate] isConnecting] == YES)
     {
       [popup selectItemAtIndex: 1];
       [popup setNeedsDisplay: YES];
@@ -271,10 +273,10 @@
 - (void) setCurrentInspector: (id)anObj
 {
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  NSArray		*selection = [[(id<IB>)NSApp selectionOwner] selection];
+  NSArray		*selection = [[(id<IB>)[NSApp delegate] selectionOwner] selection];
   unsigned		count = [selection count];
   id			obj = [selection lastObject];
-  id<IBDocuments>	document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments>	document = [(id<IB>)[NSApp delegate] activeDocument];
   NSView		*newView = nil;
   NSView		*oldView = nil;
   NSString		*newInspector = nil;

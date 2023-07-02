@@ -51,6 +51,7 @@
   NSArray	 *array;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPlugins = [defaults arrayForKey: USER_PLUGINS];
+  NSBundle       *bundle = [NSBundle bundleForClass: [self class]];
   
   self = [super init];
   if (self == nil)
@@ -65,8 +66,8 @@
   plugins = [[NSMutableArray alloc] init];
   pluginNames = [[NSMutableArray alloc] init];
  
-  array = [[NSBundle mainBundle] pathsForResourcesOfType: @"plugin"
-                                 inDirectory: nil];
+  array = [bundle pathsForResourcesOfType: @"plugin"
+			      inDirectory: nil];
   if ([array count] > 0)
     {
       unsigned	index;
