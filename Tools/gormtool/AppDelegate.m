@@ -247,13 +247,39 @@ static NSMutableArray *__types = nil;
       doc = [dc openDocumentWithContentsOfFile: file display: NO];
       NSDebugLog(@"Document = %@", doc);
 
+      // Get the file to write out to...
+      NSString *outputFile = file;
+
+      opt = [args objectForKey: @"--write"];
+      if (opt != nil)
+	{
+	  outputFile = [opt value];
+	}
+
+      // Get other options...
       opt = [args objectForKey: @"--export-strings-file"];
       if (opt != nil)
 	{
 	  NSString *stringsFile = [opt value];
 
 	  [doc exportStringsToFile: stringsFile];
-	}      
+	}
+      else
+	{
+	  opt = [args objectForKey: @"--import-strings-file"];
+
+	  if (opt != nil)
+	    {
+	      NSString *stringsFile = [opt value];
+	      
+	      [doc importStringsFromFile: stringsFile];
+	      [doc saveToFile: outputFile
+		saveOperation: NSSaveOperation
+		     delegate: nil
+		   didSaveSelector: NULL
+		  contextInfo: nil];
+	    }
+	}
     }
   
   [NSClassSwapper setIsInInterfaceBuilder: NO];
