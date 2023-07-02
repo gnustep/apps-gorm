@@ -74,6 +74,15 @@ static NSMutableArray *__types = nil;
 
 @end
 
+@implementation GormDocument (ToolPrivate)
+
++ (BOOL) isNativeType: (NSString *)type
+{
+  return YES;
+}
+
+@end
+
 @implementation GormPlugin (ToolPrivate)
 
 - (void) registerDocumentTypeName: (NSString *)name
@@ -89,6 +98,7 @@ static NSMutableArray *__types = nil;
 						     name, @"NSName",
 						   hrName, @"NSHumanReadableName",
 						   extensions, @"NSUnixExtensions",
+						   @"Editor", @"NSRole",
 						   nil];
   [__types addObject: dict];
 
@@ -271,13 +281,25 @@ static NSMutableArray *__types = nil;
 	  if (opt != nil)
 	    {
 	      NSString *stringsFile = [opt value];
+	      BOOL saved = NO;
+	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
+	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
+	      NSError *error = nil;
 	      
 	      [doc importStringsFromFile: stringsFile];
-	      [doc saveToFile: outputFile
-		saveOperation: NSSaveOperation
-		     delegate: nil
-		   didSaveSelector: NULL
-		  contextInfo: nil];
+	      saved = [doc saveToURL: file
+			      ofType: type
+			   forSaveOperation: NSSaveOperation
+			       error: &error];
+	      if (!saved)
+		{
+		  NSLog(@"Document %@ of type %@ was not saved", file, type);
+		}
+
+	      if (error != nil)
+		{
+		  NSLog(@"Error = %@", error);
+		}
 	    }
 	}
     }
