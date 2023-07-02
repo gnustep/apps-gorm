@@ -191,7 +191,9 @@ static NSMutableArray *__types = nil;
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
   NSProcessInfo *pi = [NSProcessInfo processInfo];
-  NSArray *args = [pi arguments];
+  NSMutableArray *args = [NSMutableArray arrayWithArray: [pi arguments]];
+  [args removeObject: [args lastObject]];
+  
   NSEnumerator *en = [args objectEnumerator];
   id obj = nil;
   BOOL parse_val = NO;
@@ -246,7 +248,7 @@ static NSMutableArray *__types = nil;
 
   if ([[pi arguments] count] > 1)
     {
-      NSString *file = [[pi arguments] objectAtIndex: 1];
+      NSString *file = [[pi arguments] lastObject];
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
       GormDocument *doc = nil;
       NSDictionary *args = [self parseArguments];
