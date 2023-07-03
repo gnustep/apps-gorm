@@ -30,6 +30,11 @@
 // AppDelegate...
 @implementation AppDelegate
 
+- (BOOL) isInTool
+{
+  return YES;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];

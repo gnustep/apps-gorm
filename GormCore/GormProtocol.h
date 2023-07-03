@@ -52,6 +52,9 @@
 - (GormClassManager*) classManager;
 - (NSMenu*) classMenu;
 
+// Check if we are in the app or the tool
+- (BOOL) isInTool;
+
 @end
 
 #endif

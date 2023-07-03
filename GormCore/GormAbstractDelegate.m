@@ -55,20 +55,23 @@
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSNotificationCenter      *ndc = [NSDistributedNotificationCenter defaultCenter];
       NSBundle			*bundle = [NSBundle bundleForClass: [self class]];
-      NSString			*path;
       NSConnection              *conn = [NSConnection defaultConnection];
+      NSString			*path = nil;
 
-      path = [bundle pathForImageResource: @"GormLinkImage"];
-      linkImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormSourceTag"];
-      sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormTargetTag"];
-      targetImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"Gorm"];
-      gormImage = [[NSImage alloc] initWithContentsOfFile: path];
-      path = [bundle pathForImageResource: @"GormTesting"];
-      testingImage = [[NSImage alloc] initWithContentsOfFile: path];
-
+      if ([self isInTool] == NO)
+	{
+	  path = [bundle pathForImageResource: @"GormLinkImage"];
+	  linkImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  path = [bundle pathForImageResource: @"GormSourceTag"];
+	  sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  path = [bundle pathForImageResource: @"GormTargetTag"];
+	  targetImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  path = [bundle pathForImageResource: @"Gorm"];
+	  gormImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  path = [bundle pathForImageResource: @"GormTesting"];
+	  testingImage = [[NSImage alloc] initWithContentsOfFile: path];
+	}
+      
       // regular notifications...
       [nc addObserver: self
 	  selector: @selector(handleNotification:)
@@ -144,7 +147,10 @@
 }
 
 // Gorm specific methods...
-
+- (BOOL) isInTool
+{
+  return NO;
+}
 
 - (id<IBDocuments>) activeDocument
 {
