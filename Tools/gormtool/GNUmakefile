@@ -7,8 +7,12 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PACKAGE_NAME = gormtool
 TOOL_NAME = gormtool
 
-gormtool_HEADER_FILES = 
-gormtool_OBJC_FILES = main.m AppDelegate.m
+gormtool_HEADER_FILES = AppDelegate.h
+	GormToolPrivate.h \
+
+gormtool_OBJC_FILES = main.m \
+	AppDelegate.m \
+	GormToolPrivate.m \
 
 -include GNUmakefile.preamble
 
