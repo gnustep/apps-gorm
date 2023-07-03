@@ -141,6 +141,11 @@
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
+	  else if ([obj isEqualToString: @"--export-class"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
 	}
     }
 
@@ -210,6 +215,25 @@
 	      if (error != nil)
 		{
 		  NSLog(@"Error = %@", error);
+		}
+	    }
+	  else
+	    {
+	      opt = [args objectForKey: @"--export-class"];
+	      if (opt != nil)
+		{
+		  NSString *className = [opt value];
+		  BOOL saved = NO;
+		  GormClassManager *cm = [doc classManager];
+
+		  saved = [cm makeSourceAndHeaderFilesForClass: className
+						      withName: [className stringByAppendingPathExtension: @"m"]
+							   and: [className stringByAppendingPathExtension: @"h"]];
+
+		  if (saved == NO)
+		    {
+		      NSLog(@"Class named %@ not saved", className);
+		    }
 		}
 	    }
 	}
