@@ -9,10 +9,12 @@ TOOL_NAME = gormtool
 
 gormtool_HEADER_FILES = AppDelegate.h \
 	GormToolPrivate.h \
+	ArgPair.h
 
 gormtool_OBJC_FILES = main.m \
 	AppDelegate.m \
 	GormToolPrivate.m \
+	ArgPair.m
 
 -include GNUmakefile.preamble
 

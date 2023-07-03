@@ -23,74 +23,9 @@
  * USA.
  */
 
+#import "ArgPair.h"
 #import "GormToolPrivate.h"
 #import "AppDelegate.h"
-
-@interface ArgPair : NSObject <NSCopying>
-{
-  NSString *_argument;
-  NSString *_value;
-}
-
-- (void) setArgument: (NSString *)arg;
-- (NSString *) argument;
-
-- (void) setValue: (NSString *)val;
-- (NSString *) value;
-@end
-
-@implementation ArgPair
-
-- (id) init
-{
-  self = [super init];
-  if (self != nil)
-    {
-      _argument = nil;
-      _value = nil;
-    }
-  return self;
-}
-
-- (void) dealloc
-{
-  RELEASE(_argument);
-  RELEASE(_value);
-
-  [super dealloc];
-}
-
-- (void) setArgument: (NSString *)arg
-{
-  ASSIGN(_argument, arg);
-}
-
-- (NSString *) argument
-{
-  return _argument;
-}
-
-- (void) setValue: (NSString *)val
-{
-  ASSIGN(_value, val);
-}
-
-- (NSString *) value
-{
-  return _value;
-}
-
-- (id) copyWithZone: (NSZone *)z
-{
-  id obj = [[[self class] allocWithZone: z] init];
-
-  [obj setArgument: _argument];
-  [obj setValue: _value];
-
-  return obj;
-}
-
-@end
 
 // AppDelegate...
 @implementation AppDelegate
