@@ -1919,6 +1919,7 @@
 		      if ([self respondsToSelector: @selector(isInTool)])
 			{
 			  retval = NSAlertDefaultReturn;
+			  NSLog(@"Breaking any existing connections with instances of class %@", className);
 			}
 		      else
 			{
