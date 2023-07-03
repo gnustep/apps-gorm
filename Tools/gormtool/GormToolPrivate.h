@@ -33,6 +33,7 @@
 #import <GormCore/GormPlugin.h>
 #import <GormCore/GormDocumentController.h>
 #import <GormCore/GormDocument.h>
+#import <GormCore/GormClassManager.h>
 
 #import <GNUstepGUI/GSNibLoading.h>
 
@@ -45,6 +46,12 @@
 
 - (Class) documentClassForType: (NSString *)type;
 - (NSString *) typeFromFileExtension: (NSString *)fileExtension;
+
+@end
+
+@interface GormClassManager (ToolPrivate)
+
+- (BOOL) isInTool;
 
 @end
 

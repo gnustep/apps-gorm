@@ -1913,9 +1913,18 @@
                                                   @"actions/outlets to instances of class '%@' "
                                                   @"and it's subclasses.  Continue?"); 
                       NSString *msg = [NSString stringWithFormat: messageFormat,
-						className];
-		      NSInteger retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+						className];		      
+		      NSInteger retval = 0;
 
+		      if ([self respondsToSelector: @selector(isInTool)])
+			{
+			  retval = NSAlertDefaultReturn;
+			}
+		      else
+			{
+			  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+			}
+		      
 		      if (retval == NSAlertDefaultReturn)
 			{
 			  // get the owner and reset the class name to NSApplication.

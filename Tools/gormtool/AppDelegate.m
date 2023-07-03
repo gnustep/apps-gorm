@@ -146,6 +146,11 @@
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
+	  else if ([obj isEqualToString: @"--import-class"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
 	}
     }
 
@@ -158,8 +163,6 @@
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
 
-  NSLog(@"Processing... %@", [pi arguments]);
-
   if ([[pi arguments] count] > 1)
     {
       NSString *file = [[pi arguments] lastObject];
@@ -168,8 +171,8 @@
       NSDictionary *args = [self parseArguments];
       ArgPair *opt = nil;
       
-      NSLog(@"args = %@", args);
-      NSLog(@"file = %@", file);
+      NSDebugLog(@"args = %@", args);
+      NSDebugLog(@"file = %@", file);
       doc = [dc openDocumentWithContentsOfFile: file display: NO];
       NSDebugLog(@"Document = %@", doc);
 
@@ -193,7 +196,6 @@
       else
 	{
 	  opt = [args objectForKey: @"--import-strings-file"];
-
 	  if (opt != nil)
 	    {
 	      NSString *stringsFile = [opt value];
@@ -235,6 +237,34 @@
 		      NSLog(@"Class named %@ not saved", className);
 		    }
 		}
+	      else
+		{
+		  opt = [args objectForKey: @"--import-class"];
+		  if (opt != nil)
+		    {
+		      NSString *classFile = [opt value];
+		      BOOL saved = NO;
+		      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
+		      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
+		      NSError *error = nil;
+		      GormClassManager *cm = [doc classManager];
+
+		      [cm parseHeader: classFile];
+		      saved = [doc saveToURL: file
+				      ofType: type
+				   forSaveOperation: NSSaveOperation
+				       error: &error];
+		      if (!saved)
+			{
+			  NSLog(@"Document %@ of type %@ was not saved", file, type);
+			}
+		      
+		      if (error != nil)
+			{
+			  NSLog(@"Error = %@", error);
+			}		      
+		    }
+		}
 	    }
 	}
     }
@@ -246,7 +276,7 @@
 {
   puts("== gormtool");
   
-  NSLog(@"processInfo: %@", [NSProcessInfo processInfo]);
+  NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
  
   [NSApp terminate: nil];
