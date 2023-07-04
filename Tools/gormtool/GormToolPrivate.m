@@ -75,15 +75,6 @@ static NSMutableArray *__types = nil;
 
 @end
 
-@implementation GormClassManager (ToolPrivate)
-
-- (BOOL) isInTool
-{
-  return YES;
-}
-
-@end
-
 @implementation GormPlugin (ToolPrivate)
 
 - (void) registerDocumentTypeName: (NSString *)name

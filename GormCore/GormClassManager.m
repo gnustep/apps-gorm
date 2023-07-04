@@ -23,16 +23,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
-#include <GormObjCHeaderParser/GormObjCHeaderParser.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
+#import <GormObjCHeaderParser/GormObjCHeaderParser.h>
 
-#include "GormPrivate.h"
-#include "GormCustomView.h"
-#include "GormDocument.h"
-#include "GormFilesOwner.h"
-#include "GormPalettesManager.h"
+#import "GormPrivate.h"
+#import "GormCustomView.h"
+#import "GormDocument.h"
+#import "GormFilesOwner.h"
+#import "GormPalettesManager.h"
+#import "GormAbstractDelegate.h"
 
 /**
  * Just a few definitions to start things out.  To increase efficiency,
@@ -1862,7 +1863,7 @@
 {
   OCHeaderParser *ochp = AUTORELEASE([[OCHeaderParser alloc] initWithContentsOfFile: headerPath]);
   BOOL result = NO;
-
+  
   if(ochp != nil)
     {
       result = [ochp parse];
@@ -1907,6 +1908,7 @@
 		{
 		  if([self isKnownClass: className])
 		    {
+		      id<GormAppDelegate> delegate = (id<GormAppDelegate>)[NSApp delegate];		      
 		      NSString *title = [NSString stringWithFormat: @"%@",
 						    _(@"Reparsing Class")];
                       NSString *messageFormat = _(@"This may break connections to "
@@ -1916,7 +1918,7 @@
 						className];		      
 		      NSInteger retval = 0;
 
-		      if ([self respondsToSelector: @selector(isInTool)])
+		      if ([delegate isInTool])
 			{
 			  retval = NSAlertDefaultReturn;
 			  NSLog(@"Breaking any existing connections with instances of class %@", className);

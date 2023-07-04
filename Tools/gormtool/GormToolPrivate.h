@@ -49,12 +49,6 @@
 
 @end
 
-@interface GormClassManager (ToolPrivate)
-
-- (BOOL) isInTool;
-
-@end
-
 @interface GormDocument (ToolPrivate)
 
 + (BOOL) isNativeType: (NSString *)type;
