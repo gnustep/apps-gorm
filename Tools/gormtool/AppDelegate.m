@@ -41,12 +41,22 @@
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
   NSProcessInfo *pi = [NSProcessInfo processInfo];
   NSMutableArray *args = [NSMutableArray arrayWithArray: [pi arguments]];
-  [args removeObject: [args lastObject]];
+  BOOL filenameIsLastObject = NO;
+  NSString *file = nil;
+
+  // If the --read option isn't specified, we assume that the last argument is
+  // the file to be processed.
+  if ([args containsObject: @"--read"] == NO)
+    {
+      file = [args lastObject];
+      filenameIsLastObject = YES;
+      [args removeObject: file];
+    }
   
   NSEnumerator *en = [args objectEnumerator];
   id obj = nil;
   BOOL parse_val = NO;
-  ArgPair *pair = nil; // [[ArgPair alloc] init];
+  ArgPair *pair = AUTORELEASE([[ArgPair alloc] init]);
   
   while ((obj = [en nextObject]) != nil)
     {
@@ -59,34 +69,49 @@
 	}
       else
 	{
-	  pair = [[ArgPair alloc] init];
-	  if ([dc typeFromFileExtension: [obj pathExtension]] != nil)
+	  pair = AUTORELEASE([[ArgPair alloc] init]);
+	  if (filenameIsLastObject == YES)
 	    {
-	      [pair setArgument: @"--read"];
-	      [pair setValue: obj];
-	      [result setObject: pair forKey: @"--read"];
+	      NSString  *type = [dc typeFromFileExtension: [file pathExtension]];
+
+	      if (type != nil)
+		{
+		  [pair setArgument: @"--read"];
+		  [pair setValue: file];
+		  [result setObject: pair forKey: @"--read"];
+		}
 	    }
-	  else if ([obj isEqualToString: @"--write"])
+	  else if ([obj isEqualToString: @"--read"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;	      
+	    }
+
+	  if ([obj isEqualToString: @"--write"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
-	  else if ([obj isEqualToString: @"--export-strings-file"])
+
+	  if ([obj isEqualToString: @"--export-strings-file"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
-	  else if ([obj isEqualToString: @"--import-strings-file"])
+
+	  if ([obj isEqualToString: @"--import-strings-file"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
-	  else if ([obj isEqualToString: @"--export-class"])
+
+	  if ([obj isEqualToString: @"--export-class"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
-	  else if ([obj isEqualToString: @"--import-class"])
+	  
+	  if ([obj isEqualToString: @"--import-class"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;
@@ -105,7 +130,7 @@
 
   if ([[pi arguments] count] > 1)
     {
-      NSString *file = [[pi arguments] lastObject];
+      NSString *file = nil; // [[pi arguments] lastObject];
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
       GormDocument *doc = nil;
       NSDictionary *args = [self parseArguments];
@@ -113,17 +138,32 @@
       
       NSDebugLog(@"args = %@", args);
       NSDebugLog(@"file = %@", file);
-      doc = [dc openDocumentWithContentsOfFile: file display: NO];
-      NSDebugLog(@"Document = %@", doc);
 
       // Get the file to write out to...
-      NSString *outputFile = file;
+      NSString *outputFile = nil;
 
-      opt = [args objectForKey: @"--write"];
+      opt = [args objectForKey: @"--read"];
       if (opt != nil)
 	{
-	  outputFile = [opt value];
+	  file = [opt value];
 	}
+
+      if (file != nil)
+	{
+	  doc = [dc openDocumentWithContentsOfFile: file display: NO];
+	  if (doc == nil)
+	    {
+	      NSLog(@"Unable to load document %@", file);
+	      return;
+	    }
+	}
+      else
+	{
+	  NSLog(@"No document specified");
+	  return;
+	}
+      
+      NSDebugLog(@"Document = %@", doc);
 
       // Get other options...
       opt = [args objectForKey: @"--export-strings-file"];
@@ -133,18 +173,55 @@
 
 	  [doc exportStringsToFile: stringsFile];
 	}
-      else
+
+      opt = [args objectForKey: @"--import-strings-file"];
+      if (opt != nil)
 	{
-	  opt = [args objectForKey: @"--import-strings-file"];
-	  if (opt != nil)
+	  NSString *stringsFile = [opt value];
+	  
+	  [doc importStringsFromFile: stringsFile];
+	}
+
+      opt = [args objectForKey: @"--export-class"];
+      if (opt != nil)
+	{
+	  NSString *className = [opt value];
+	  BOOL saved = NO;
+	  GormClassManager *cm = [doc classManager];
+	  NSString *hFile = [className stringByAppendingPathExtension: @"h"];
+	  NSString *mFile = [className stringByAppendingPathExtension: @"m"];
+	  
+	  saved = [cm makeSourceAndHeaderFilesForClass: className
+					      withName: mFile
+						   and: hFile];
+	  
+	  if (saved == NO)
 	    {
-	      NSString *stringsFile = [opt value];
+	      NSLog(@"Class named %@ not saved", className);
+	    }
+	}
+
+      opt = [args objectForKey: @"--import-class"];
+      if (opt != nil)
+	{
+	  NSString *classFile = [opt value];
+	  GormClassManager *cm = [doc classManager];
+	  
+	  [cm parseHeader: classFile];
+	}
+
+      // These options sound always be processed last...
+      opt = [args objectForKey: @"--write"];
+      if (opt != nil)
+	{
+	  outputFile = [opt value];
+	  if (outputFile != nil)
+	    {	  
 	      BOOL saved = NO;
 	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
 	      NSError *error = nil;
 	      
-	      [doc importStringsFromFile: stringsFile];
 	      saved = [doc saveToURL: file
 			      ofType: type
 			   forSaveOperation: NSSaveOperation
@@ -153,57 +230,10 @@
 		{
 		  NSLog(@"Document %@ of type %@ was not saved", file, type);
 		}
-
+	      
 	      if (error != nil)
 		{
 		  NSLog(@"Error = %@", error);
-		}
-	    }
-	  else
-	    {
-	      opt = [args objectForKey: @"--export-class"];
-	      if (opt != nil)
-		{
-		  NSString *className = [opt value];
-		  BOOL saved = NO;
-		  GormClassManager *cm = [doc classManager];
-
-		  saved = [cm makeSourceAndHeaderFilesForClass: className
-						      withName: [className stringByAppendingPathExtension: @"m"]
-							   and: [className stringByAppendingPathExtension: @"h"]];
-
-		  if (saved == NO)
-		    {
-		      NSLog(@"Class named %@ not saved", className);
-		    }
-		}
-	      else
-		{
-		  opt = [args objectForKey: @"--import-class"];
-		  if (opt != nil)
-		    {
-		      NSString *classFile = [opt value];
-		      BOOL saved = NO;
-		      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
-		      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
-		      NSError *error = nil;
-		      GormClassManager *cm = [doc classManager];
-
-		      [cm parseHeader: classFile];
-		      saved = [doc saveToURL: file
-				      ofType: type
-				   forSaveOperation: NSSaveOperation
-				       error: &error];
-		      if (!saved)
-			{
-			  NSLog(@"Document %@ of type %@ was not saved", file, type);
-			}
-		      
-		      if (error != nil)
-			{
-			  NSLog(@"Error = %@", error);
-			}		      
-		    }
 		}
 	    }
 	}
