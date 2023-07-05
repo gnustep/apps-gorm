@@ -116,6 +116,12 @@
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
+
+	  if ([obj isEqualToString: @"--output-path"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
 	}
     }
 
@@ -131,6 +137,7 @@
   if ([[pi arguments] count] > 1)
     {
       NSString *file = nil; // [[pi arguments] lastObject];
+      NSString *outputPath = @"./";
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
       GormDocument *doc = nil;
       NSDictionary *args = [self parseArguments];
@@ -166,6 +173,12 @@
       NSDebugLog(@"Document = %@", doc);
 
       // Get other options...
+      opt = [args objectForKey: @"--output-path"];
+      if (opt != nil)
+	{
+	  outputPath = [opt value];
+	}
+      
       opt = [args objectForKey: @"--export-strings-file"];
       if (opt != nil)
 	{
@@ -190,10 +203,12 @@
 	  GormClassManager *cm = [doc classManager];
 	  NSString *hFile = [className stringByAppendingPathExtension: @"h"];
 	  NSString *mFile = [className stringByAppendingPathExtension: @"m"];
+	  NSString *hPath = [outputPath stringByAppendingPathComponent: hFile];
+	  NSString *mPath = [outputPath stringByAppendingPathComponent: mFile];
 	  
 	  saved = [cm makeSourceAndHeaderFilesForClass: className
-					      withName: mFile
-						   and: hFile];
+					      withName: mPath
+						   and: hPath];
 	  
 	  if (saved == NO)
 	    {
