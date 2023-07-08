@@ -98,7 +98,7 @@
       NSBundle			*bundle = [NSBundle bundleForClass: [self class]];
       NSString			*path;
 
-      document = aDocument;  // the document retains us, this is for convenience
+      _document = aDocument;  // the _document retains us, this is for convenience
 
       path = [bundle pathForResource: @"ClassInformation" ofType: @"plist"];
       if (path == nil)
@@ -115,15 +115,15 @@
 	  // load the classes, initialize the custom class array and map..
 	  if([self loadFromFile: path])
 	    {
-	      NSMutableDictionary *classDict = [classInformation objectForKey: @"FirstResponder"];
+	      NSMutableDictionary *classDict = [_classInformation objectForKey: @"FirstResponder"];
 	      NSMutableArray *firstResponderActions = [classDict objectForKey: @"Actions"];
 
-	      customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
-	      customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
-	      categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	      _customClasses = [[NSMutableArray alloc] initWithCapacity: 1];
+	      _customClassMap = [[NSMutableDictionary alloc] initWithCapacity: 10]; 
+	      _categoryClasses = [[NSMutableArray alloc] initWithCapacity: 1];
 	      
 	      // add the imported classes to the class information list...
-	      [classInformation addEntriesFromDictionary: importedClasses];
+	      [_classInformation addEntriesFromDictionary: importedClasses];
 	      
 	      // add all of the actions to the FirstResponder
 	      while((description = [en nextObject]) != nil)
@@ -157,12 +157,12 @@
     postNotificationName: GormDidModifyClassNotification
     object: self];
 
-  [document touch];
+  [_document touch];
 }
 
 - (void) convertDictionary: (NSMutableDictionary *)dict
 {
-  [dict removeObjectsForKeys: [classInformation allKeys]];
+  [dict removeObjectsForKeys: [_classInformation allKeys]];
 }
 
 - (NSString *) uniqueClassNameFrom: (NSString *)name
@@ -170,7 +170,7 @@
   NSString *search = [NSString stringWithString: name];
   NSInteger i = 1;
 
-  while([classInformation objectForKey: search])
+  while([_classInformation objectForKey: search])
     {
       search = [name stringByAppendingString: [NSString stringWithFormat: @"%ld",(long)i++]];
     }
@@ -180,7 +180,7 @@
 
 - (NSString *) addClassWithSuperClassName: (NSString*)name
 {
-  if (([self isRootClass: name] || [classInformation objectForKey: name] != nil)
+  if (([self isRootClass: name] || [_classInformation objectForKey: name] != nil)
       && [name isEqual: @"FirstResponder"] == NO)
     {
       NSMutableDictionary	*classInfo;
@@ -196,8 +196,8 @@
       [classInfo setObject: actions forKey: @"Actions"];
       [classInfo setObject: name forKey: @"Super"];
 
-      [classInformation setObject: classInfo forKey: className];
-      [customClasses addObject: className];
+      [_classInformation setObject: classInfo forKey: className];
+      [_customClasses addObject: className];
 
       [self touch];
 
@@ -273,12 +273,12 @@
   // to the original objects from reflecting here. GJC
 
   if ([self isRootClass: superClassNameCopy] ||
-      ([classInformation objectForKey: superClassNameCopy] != nil &&
+      ([_classInformation objectForKey: superClassNameCopy] != nil &&
        [superClassNameCopy isEqualToString: @"FirstResponder"] == NO))
     {
       NSMutableDictionary	*classInfo;
 
-      if (![classInformation objectForKey: classNameCopy])
+      if (![_classInformation objectForKey: classNameCopy])
 	{
 	  NSEnumerator *e = [actionsCopy objectEnumerator];
 	  id action = nil;
@@ -299,12 +299,12 @@
 	    {
 	      [classInfo setObject: superClassNameCopy forKey: @"Super"];
 	    }
-	  [classInformation setObject: classInfo forKey: classNameCopy];
+	  [_classInformation setObject: classInfo forKey: classNameCopy];
 	  
 	  // if it's a custom class add it to the list.
 	  if(isCustom)
 	    {
-	      [customClasses addObject: classNameCopy];
+	      [_customClasses addObject: classNameCopy];
 	    }
 
 	  // copy all actions from the class imported to the first responder
@@ -337,7 +337,7 @@
 
 - (void) addAction: (NSString *)action forClassNamed: (NSString *)className
 {
-  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableDictionary *info = [_classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
   NSString *anAction = [action copy];
@@ -353,9 +353,9 @@
   
   if ([self isNonCustomClass: className])
     {
-      if([categoryClasses containsObject: className] == NO)
+      if([_categoryClasses containsObject: className] == NO)
 	{
-	  [categoryClasses addObject: className];
+	  [_categoryClasses addObject: className];
 	}
     }
   
@@ -375,7 +375,7 @@
   
   while((subclassName = [en nextObject]) != nil)
     {      
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
+      NSDictionary *subInfo = [_classInformation objectForKey: subclassName];
       NSMutableArray *subAll = [subInfo objectForKey: @"AllActions"];
       [subAll mergeObject: anAction];
     }
@@ -390,7 +390,7 @@
 
 - (void) addOutlet: (NSString *)outlet forClassNamed: (NSString *)className 
 {
-  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableDictionary *info = [_classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
   NSString *anOutlet = [outlet copy];
@@ -415,7 +415,7 @@
   
   while((subclassName = [en nextObject]) != nil)
     {
-      NSDictionary *subInfo = [classInformation objectForKey: subclassName];
+      NSDictionary *subInfo = [_classInformation objectForKey: subclassName];
       NSMutableArray *subAll = [subInfo objectForKey: @"AllOutlets"];
       [subAll mergeObject: anOutlet];
     }
@@ -427,7 +427,7 @@
 	    withAction: (NSString *)aNewAction
 	 forClassNamed: (NSString *)className
 {
-  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableDictionary *info = [_classInformation objectForKey: className]; 
   NSMutableArray *extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray *actions = [info objectForKey: @"Actions"];
   NSMutableArray *allActions = [info objectForKey: @"AllActions"];
@@ -478,7 +478,7 @@
 	    withOutlet: (NSString *)aNewOutlet
 	 forClassNamed: (NSString *)className
 {
-  NSMutableDictionary *info = [classInformation objectForKey: className]; 
+  NSMutableDictionary *info = [_classInformation objectForKey: className]; 
   NSMutableArray *extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray *outlets = [info objectForKey: @"Outlets"];
   NSMutableArray *allOutlets = [info objectForKey: @"AllOutlets"];
@@ -528,7 +528,7 @@
 - (void) removeAction: (NSString *)anAction
        fromClassNamed: (NSString *)className
 {
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableDictionary	*info = [_classInformation objectForKey: className];
   NSMutableArray	*extraActions = [info objectForKey: @"ExtraActions"];
   NSMutableArray        *allActions = [info objectForKey: @"AllActions"];
   NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
@@ -569,9 +569,9 @@
       [self touch];
     }
 
-  if([categoryClasses containsObject: className] && [extraActions count] == 0)
+  if([_categoryClasses containsObject: className] && [extraActions count] == 0)
     {
-      [categoryClasses removeObject: className];
+      [_categoryClasses removeObject: className];
     }
 
   if(![className isEqualToString: @"FirstResponder"]) 
@@ -592,7 +592,7 @@
 
 - (void) removeOutlet: (NSString *)anOutlet fromClassNamed: (NSString *)className
 {
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableDictionary	*info = [_classInformation objectForKey: className];
   NSMutableArray	*extraOutlets = [info objectForKey: @"ExtraOutlets"];
   NSMutableArray	*allOutlets = [info objectForKey: @"AllOutlets"];
   NSEnumerator *en = [[self subClassesOf: className] objectEnumerator];
@@ -700,7 +700,7 @@
 
 - (NSArray *) allActionsForClassNamed: (NSString *)className
 {
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableDictionary	*info = [_classInformation objectForKey: className];
 
   if (info != nil)
     {
@@ -752,13 +752,13 @@
 
 - (NSArray *) allCustomClassNames
 {
-  // return [customClassMap allKeys];
-  return customClasses;
+  // return [_customClassMap allKeys];
+  return _customClasses;
 }
 
 - (NSArray *) allClassNames
 {
-  return [[classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)];
+  return [[_classInformation allKeys] sortedArrayUsingSelector: @selector(compare:)];
 }
 
 - (NSArray *) allOutletsForObject: (id)obj
@@ -821,7 +821,7 @@
 
 - (NSArray *) allOutletsForClassNamed: (NSString *)className;
 {
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableDictionary	*info = [_classInformation objectForKey: className];
 
   if (info != nil)
     {
@@ -875,7 +875,7 @@
 {
   NSMutableDictionary	*info;
 
-  info = [classInformation objectForKey: className];
+  info = [_classInformation objectForKey: className];
   if (info == nil)
     {
       Class	theClass = NSClassFromString(className);
@@ -900,7 +900,7 @@
 		  [info setObject: o forKey: @"AllActions"];
 		  o = [[self allOutletsForClassNamed: name] mutableCopy];
 		  [info setObject: o forKey: @"AllOutlets"];
-		  [classInformation setObject: info forKey: className];
+		  [_classInformation setObject: info forKey: className];
 		}
 	    }
 	}
@@ -962,8 +962,8 @@
 
 - (void) dealloc
 {
-  RELEASE(classInformation);
-  RELEASE(customClassMap);
+  RELEASE(_classInformation);
+  RELEASE(_customClassMap);
   [super dealloc];
 }
 
@@ -990,7 +990,7 @@
 
   while ((object = [cen nextObject]))
     {
-      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      NSDictionary *dictForClass = [_classInformation objectForKey: object];
       NSString *superClassName = [dictForClass objectForKey: @"Super"];
       if ([superClassName isEqual: superclass] || 
 	  (superClassName == nil && superclass == nil))
@@ -1008,7 +1008,7 @@
   NSMutableArray *array = [NSMutableArray array];
   
   [self allSubclassesOf: superClass
-	referenceClassList: [classInformation allKeys]
+	referenceClassList: [_classInformation allKeys]
 	intoArray: array];
 
   return [array sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
@@ -1019,7 +1019,7 @@
   NSMutableArray *array = [NSMutableArray array];
   
   [self allSubclassesOf: superClass
-	referenceClassList: customClasses
+	referenceClassList: _customClasses
 	intoArray: array];
 
   return [array sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
@@ -1027,13 +1027,13 @@
 
 - (NSArray *) customSubClassesOf: (NSString *)superclass
 {
-  NSEnumerator *cen   = [customClasses objectEnumerator];
+  NSEnumerator *cen   = [_customClasses objectEnumerator];
   id object = nil;
   NSMutableArray *subclasses = [NSMutableArray array];
 
   while ((object = [cen nextObject]))
     {
-      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      NSDictionary *dictForClass = [_classInformation objectForKey: object];
 
       if ([[dictForClass objectForKey: @"Super"] isEqual: superclass])
 	{
@@ -1046,14 +1046,14 @@
 
 - (NSArray *) subClassesOf: (NSString *)superclass
 {
-  NSArray *allClasses = [classInformation allKeys];
+  NSArray *allClasses = [_classInformation allKeys];
   NSEnumerator *cen   = [allClasses objectEnumerator];
   id object = nil;
   NSMutableArray *subclasses = [NSMutableArray array];
 
   while ((object = [cen nextObject]))
     {
-      NSDictionary *dictForClass = [classInformation objectForKey: object];
+      NSDictionary *dictForClass = [_classInformation objectForKey: object];
       NSString *superClassName = [dictForClass objectForKey: @"Super"];
       if ([superClassName isEqual: superclass] || 
 	  (superClassName == nil && superclass == nil))
@@ -1067,36 +1067,36 @@
 
 - (void) removeClassNamed: (NSString *)className
 {
-  if ([customClasses containsObject: className])
+  if ([_customClasses containsObject: className])
     {
-      NSEnumerator *en = [customClassMap keyEnumerator];
+      NSEnumerator *en = [_customClassMap keyEnumerator];
       id object = nil;
       id owner = nil;
 
-      [customClasses removeObject: className];
+      [_customClasses removeObject: className];
       
       while((object = [en nextObject]) != nil)
 	{
-	  id customClassName = [customClassMap objectForKey: object];
+	  id customClassName = [_customClassMap objectForKey: object];
 	  if(customClassName != nil)
 	    {
 	      if([className isEqualToString: customClassName])
 		{
 		  NSDebugLog(@"Deleting object -> customClass association %@ -> %@",object,customClassName);
-		  [customClassMap removeObjectForKey: object];
+		  [_customClassMap removeObjectForKey: object];
 		}
 	    }
 	}
 
       // get the owner and reset the class name to NSApplication.
-      owner = [document objectForName: @"NSOwner"];
+      owner = [_document objectForName: @"NSOwner"];
       if([className isEqual: [owner className]])
 	{
 	  [owner setClassName: @"NSApplication"];
 	}
     }
 
-  [classInformation removeObjectForKey: className];
+  [_classInformation removeObjectForKey: className];
   [self touch];
 
   [[NSNotificationCenter defaultCenter] 
@@ -1106,48 +1106,48 @@
 
 - (BOOL) renameClassNamed: (NSString *)oldName newName: (NSString *)newName
 {
-  id classInfo = [classInformation objectForKey: oldName];
+  id classInfo = [_classInformation objectForKey: oldName];
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   NSString *name = [newName copy];
 
   NSDebugLog(@"Old name %@, new name %@",oldName,name);
 
-  if (classInfo != nil && [classInformation objectForKey: name] == nil)
+  if (classInfo != nil && [_classInformation objectForKey: name] == nil)
     {
       NSUInteger index = 0;
       NSArray *subclasses = [self subClassesOf: oldName];
 
       RETAIN(classInfo); // prevent loss of the information...
-      [classInformation removeObjectForKey: oldName];
-      [classInformation setObject: classInfo forKey: name];
+      [_classInformation removeObjectForKey: oldName];
+      [_classInformation setObject: classInfo forKey: name];
       RELEASE(classInfo); // release our hold on it.
 
-      if ((index = [customClasses indexOfObject: oldName]) != NSNotFound)
+      if ((index = [_customClasses indexOfObject: oldName]) != NSNotFound)
 	{
-	  NSEnumerator *en = [customClassMap keyEnumerator];
+	  NSEnumerator *en = [_customClassMap keyEnumerator];
 	  NSEnumerator *cen = [subclasses objectEnumerator];
 	  id sc = nil;
 	  id object = nil;
 
-	  NSDebugLog(@"replacing object with %@, %@",name, customClasses);
-	  [customClasses replaceObjectAtIndex: index withObject: name];
-	  NSDebugLog(@"replaced object with %@, %@",name, customClasses);
+	  NSDebugLog(@"replacing object with %@, %@",name, _customClasses);
+	  [_customClasses replaceObjectAtIndex: index withObject: name];
+	  NSDebugLog(@"replaced object with %@, %@",name, _customClasses);
 
 	  // show the class map before...
-	  NSDebugLog(@"customClassMap = %@",customClassMap);
+	  NSDebugLog(@"_customClassMap = %@",_customClassMap);
 	  while((object = [en nextObject]) != nil)
 	    {
-	      id customClassName = [customClassMap objectForKey: object];
+	      id customClassName = [_customClassMap objectForKey: object];
 	      if(customClassName != nil)
 		{
 		  if([oldName isEqualToString: customClassName])
 		    {
 		      NSDebugLog(@"Replacing object -> customClass association %@ -> %@",object,customClassName);
-		      [customClassMap setObject: name forKey: object];
+		      [_customClassMap setObject: name forKey: object];
 		    }
 		}
 	    }
-	  NSDebugLog(@"New customClassMap = %@",customClassMap); // and after
+	  NSDebugLog(@"New _customClassMap = %@",_customClassMap); // and after
 
 	  // Iterate over the list of subclasses and replace their referece with the new
 	  // name.
@@ -1170,7 +1170,7 @@
 
 - (NSString *)parentOfClass: (NSString *)aClass
 {
-  NSDictionary *dictForClass = [classInformation objectForKey: aClass];
+  NSDictionary *dictForClass = [_classInformation objectForKey: aClass];
   return [dictForClass objectForKey: @"Super"];
 }
 
@@ -1179,7 +1179,7 @@
   NSMutableDictionary	*dict = nil;
   NSMutableArray        *classes = nil;
   NSEnumerator		*enumerator = nil;
-  NSMutableArray        *cats = [NSMutableArray arrayWithArray: categoryClasses];
+  NSMutableArray        *cats = [NSMutableArray arrayWithArray: _categoryClasses];
   id			name = nil;
 
   // save all custom classes....
@@ -1188,7 +1188,7 @@
   classes = [NSMutableArray array];
 
   // build IBClasses...
-  enumerator = [customClasses objectEnumerator];
+  enumerator = [_customClasses objectEnumerator];
   while ((name = [enumerator nextObject]) != nil)
     {
       NSDictionary		*classInfo;
@@ -1197,7 +1197,7 @@
       id                        extraObj;
 
       // get the info...
-      classInfo = [classInformation objectForKey: name];
+      classInfo = [_classInformation objectForKey: name];
 
       newInfo = [[NSMutableDictionary alloc] init];
       [newInfo setObject: name forKey: @"CLASS"];
@@ -1282,7 +1282,7 @@
       id obj;
 
       // get the info...
-      classInfo = [classInformation objectForKey: name];
+      classInfo = [_classInformation objectForKey: name];
       newInfo = [NSMutableDictionary dictionary];
       [newInfo setObject: name forKey: @"CLASS"];
 
@@ -1333,7 +1333,7 @@
 
   // save all custom classes....
   ci = [NSMutableDictionary dictionary];
-  enumerator = [customClasses objectEnumerator];
+  enumerator = [_customClasses objectEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
       NSDictionary		*classInfo;
@@ -1342,7 +1342,7 @@
       id                        extraObj;
 
       // get the info...
-      classInfo = [classInformation objectForKey: key];
+      classInfo = [_classInformation objectForKey: key];
       newInfo = [[NSMutableDictionary alloc] init];
       [ci setObject: newInfo forKey: key];
 
@@ -1387,7 +1387,7 @@
     }
 
   // save all categories on existing, non-custom classes....
-  enumerator = [categoryClasses objectEnumerator];
+  enumerator = [_categoryClasses objectEnumerator];
   while((key = [enumerator nextObject]) != nil)
     {
       NSDictionary  *classInfo;
@@ -1395,7 +1395,7 @@
       id obj;
 
       // get the info...
-      classInfo = [classInformation objectForKey: key];
+      classInfo = [_classInformation objectForKey: key];
       newInfo = [NSMutableDictionary dictionary];
       [ci setObject: newInfo forKey: key];
 
@@ -1446,7 +1446,7 @@
   /*
    * Convert property-list data into a mutable structure.
    */
-  ASSIGN(classInformation, [[NSMutableDictionary alloc] init]);
+  ASSIGN(_classInformation, [[NSMutableDictionary alloc] init]);
 
   // iterate over all entries..
   enumerator = [dict keyEnumerator];
@@ -1458,7 +1458,7 @@
       
       newInfo = [[NSMutableDictionary alloc] init];
       
-      [classInformation setObject: newInfo forKey: key];
+      [_classInformation setObject: newInfo forKey: key];
       
       // superclass
       obj = [classInfo objectForKey: @"Super"];
@@ -1568,7 +1568,7 @@
       return NO;
     }
 
-  if (classInformation == nil)
+  if (_classInformation == nil)
     {
       NSLog(@"Default classes file not loaded");
       return NO;
@@ -1597,7 +1597,7 @@
   NSEnumerator *en = nil;
   id            key = nil; 
 
-  // Iterate over the set of classes, if it's in the classInformation 
+  // Iterate over the set of classes, if it's in the _classInformation 
   // list, it's a category, if it's not it's a custom class.
   en = [dict keyEnumerator];
   while((key = [en nextObject]) != nil)
@@ -1609,11 +1609,11 @@
       if([class_dict isKindOfClass: [NSDictionary class]])
 	{
 	  NSMutableDictionary *classDict = (NSMutableDictionary *)class_dict;
-	  NSMutableDictionary *info = [classInformation objectForKey: key]; 
+	  NSMutableDictionary *info = [_classInformation objectForKey: key]; 
 	  if(info == nil)
 	    {
-	      [customClasses addObject: key];
-	      [classInformation setObject: classDict forKey: key];
+	      [_customClasses addObject: key];
+	      [_classInformation setObject: classDict forKey: key];
 	    }
 	  else
 	    {
@@ -1635,7 +1635,7 @@
 	      // add it, otherwise don't.
 	      if([actions count] > 0)
 		{
-		  [categoryClasses addObject: key];
+		  [_categoryClasses addObject: key];
 		  [info setObject: actions forKey: @"ExtraActions"];
 		}
 	    }
@@ -1647,7 +1647,7 @@
 
 - (BOOL) isCustomClass: (NSString *)className
 {
-  return ([customClasses indexOfObject: className] != NSNotFound); 
+  return ([_customClasses indexOfObject: className] != NSNotFound); 
 }
 
 - (BOOL) isNonCustomClass: (NSString *)className
@@ -1657,12 +1657,12 @@
 
 - (BOOL) isCategoryForClass: (NSString *)className
 {
-  return ([categoryClasses indexOfObject: className] != NSNotFound); 
+  return ([_categoryClasses indexOfObject: className] != NSNotFound); 
 }
 
 - (BOOL) isAction: (NSString *)actionName onCategoryForClassNamed: (NSString *)className
 {
-  NSDictionary *info = [classInformation objectForKey: className];
+  NSDictionary *info = [_classInformation objectForKey: className];
   BOOL result = NO;
 
   if([self isCategoryForClass: className])
@@ -1682,7 +1682,7 @@
 
 - (BOOL) isKnownClass: (NSString *)className
 {
-  return ([classInformation objectForKey: className] != nil);
+  return ([_classInformation objectForKey: className] != nil);
 }
 
 - (BOOL) setSuperClassNamed: (NSString *)superclass
@@ -1698,7 +1698,7 @@
     {
       NSMutableDictionary	*info;
 
-      info = [classInformation objectForKey: subclass];
+      info = [_classInformation objectForKey: subclass];
       if (info != nil)
 	{
 	  // remove actions/outlets inherited from superclasses...
@@ -1726,7 +1726,7 @@
 
 - (NSString *) superClassNameForClassNamed: (NSString *)className
 {
-  NSMutableDictionary	*info = [classInformation objectForKey: className];
+  NSMutableDictionary	*info = [_classInformation objectForKey: className];
   NSString		*superName = nil;
 
   if (info != nil)
@@ -1757,7 +1757,7 @@
 
 - (NSDictionary *) dictionaryForClassNamed: (NSString *)className
 {
-  NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: [classInformation objectForKey: className]];
+  NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary: [_classInformation objectForKey: className]];
 
   if(info != nil)
     {
@@ -1785,7 +1785,7 @@
   NSString		*actionName;
   int			i;
   int			n;
-  NSDictionary          *classInfo = [classInformation objectForKey: className];
+  NSDictionary          *classInfo = [_classInformation objectForKey: className];
 
   headerFile = [NSMutableString stringWithCapacity: 200];
   sourceFile = [NSMutableString stringWithCapacity: 200];
@@ -1931,7 +1931,7 @@
 		      if (retval == NSAlertDefaultReturn)
 			{
 			  // get the owner and reset the class name to NSApplication.
-			  GormFilesOwner *owner = [document objectForName: @"NSOwner"];
+			  GormFilesOwner *owner = [_document objectForName: @"NSOwner"];
 			  NSString *ownerClassName = [owner className];
 
 			  // Retain this, in case we're dealing with the NSOwner...
@@ -1953,7 +1953,7 @@
 			    }
 			  
 			  // refresh the connections.
-			  [document refreshConnectionsForClassNamed: className];
+			  [_document refreshConnectionsForClassNamed: className];
 			  
 			  // Release the owner classname...
 			  RELEASE(ownerClassName);
@@ -1988,7 +1988,7 @@
 - (BOOL) isAction: (NSString *)name ofClass: (NSString *)className
 {
   BOOL result = NO;
-  NSDictionary *classInfo = [classInformation objectForKey: className];
+  NSDictionary *classInfo = [_classInformation objectForKey: className];
   
   if (classInfo != nil)
     {
@@ -2007,7 +2007,7 @@
 - (BOOL) isOutlet: (NSString *)name ofClass: (NSString *)className
 {
   BOOL result = NO;
-  NSDictionary *classInfo = [classInformation objectForKey: className];
+  NSDictionary *classInfo = [_classInformation objectForKey: className];
   
   if (classInfo != nil)
     {
@@ -2026,16 +2026,16 @@
 // custom class support...
 - (NSString *) customClassForName: (NSString *)name
 {
-  NSString *result = [customClassMap objectForKey: name];
+  NSString *result = [_customClassMap objectForKey: name];
   return result;
 }
 
 - (NSString *) customClassForObject: (id)object
 {
-  NSString *name = [document nameForObject: object];
+  NSString *name = [_document nameForObject: object];
   NSString *result = [self customClassForName: name];
-  NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, customClassMap = %@",
-	     object, name, result, customClassMap);
+  NSDebugLog(@"in customClassForObject: object = %@, name = %@, result = %@, _customClassMap = %@",
+	     object, name, result, _customClassMap);
   return result;
 }
 
@@ -2052,30 +2052,30 @@
 - (void) setCustomClass: (NSString *)className
                 forName: (NSString *)name
 {
-  [customClassMap setObject: className forKey: name];
+  [_customClassMap setObject: className forKey: name];
 }
 
 - (void) removeCustomClassForName: (NSString *)name
 {
-  [customClassMap removeObjectForKey: name];
+  [_customClassMap removeObjectForKey: name];
 }
 
 - (NSMutableDictionary *) customClassMap
 {
-  return customClassMap;
+  return _customClassMap;
 }
 
 - (void) setCustomClassMap: (NSMutableDictionary *)dict
 {
   // copy the dictionary..
   NSDebugLog(@"dictionary = %@",dict);
-  ASSIGN(customClassMap, [dict mutableCopy]);
-  RETAIN(customClassMap); // released in dealloc
+  ASSIGN(_customClassMap, [dict mutableCopy]);
+  RETAIN(_customClassMap); // released in dealloc
 }
 
 - (BOOL) isCustomClassMapEmpty
 {
-  return ([customClassMap count] == 0);
+  return ([_customClassMap count] == 0);
 }
 
 - (BOOL) isRootClass: (NSString *)className
@@ -2262,18 +2262,18 @@
 
 - (NSDictionary *) classInformation
 {
-  return classInformation;
+  return _classInformation;
 }
 
 - (NSDictionary *) customClassInformation
 {
-  NSEnumerator *en = [customClasses objectEnumerator];
+  NSEnumerator *en = [_customClasses objectEnumerator];
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
   NSString *name = nil;
 
   while ((name = [en nextObject]) != nil)
     {
-      NSDictionary *o = [classInformation objectForKey: name];
+      NSDictionary *o = [_classInformation objectForKey: name];
       [result setObject: o forKey: name];
     }
 
@@ -2285,12 +2285,12 @@
   return [NSString stringWithFormat: @"<%s: %lx> = %@",
  		   GSClassNameFromObject(self), 
 		   (unsigned long)self,
- 		   customClassMap];
+ 		   _customClassMap];
 }
 
 /** Helpful for debugging */
 - (NSString *) dumpClassInformation
 {
-  return [classInformation description];
+  return [_classInformation description];
 }
 @end
