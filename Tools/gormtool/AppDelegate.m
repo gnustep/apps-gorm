@@ -272,21 +272,21 @@
       if (opt != nil)
 	{
 	  NSArray *connections = [doc connections];
-	  NSLog(@"connections = %@", connections);
+	  puts([[NSString stringWithFormat: @"%@", connections] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--classes"];
       if (opt != nil)
 	{
 	  NSDictionary *classes = [[doc classManager] customClassInformation];
-	  NSLog(@"classes = %@", classes);
+	  puts([[NSString stringWithFormat: @"%@", classes] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--objects"];
       if (opt != nil)
 	{
 	  NSSet *objects = [doc topLevelObjects];
-	  NSLog(@"objects = %@", objects);
+	  puts([[NSString stringWithFormat: @"%@", objects] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--errors"];
@@ -294,8 +294,7 @@
 	{
 	  GormFilePrefsManager *mgr = [doc filePrefsManager];
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-	  
-	  NSLog(@"errors = %@", p);
+	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--warnings"];
@@ -303,8 +302,7 @@
 	{
 	  GormFilePrefsManager *mgr = [doc filePrefsManager];
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-
-	  NSLog(@"warnings = %@", p);
+	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--notices"];
@@ -312,8 +310,7 @@
 	{
 	  GormFilePrefsManager *mgr = [doc filePrefsManager]; 
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-
-	  NSLog(@"notices = %@", p);
+	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       // These options sound always be processed last...
@@ -350,7 +347,7 @@
 
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  puts("== gormtool");
+  // puts("== gormtool");
   
   NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
@@ -360,7 +357,7 @@
 
 - (void) applicationWillTerminate: (NSNotification *)n
 {
-  puts("== finished...");
+  // puts("== finished...");
 }
 
 @end

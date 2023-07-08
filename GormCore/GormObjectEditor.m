@@ -24,15 +24,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/AppKit.h>
+#import <AppKit/AppKit.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
-
-#include "GormPrivate.h"
-#include "GormObjectEditor.h"
-#include "GormFunctions.h"
-#include "GormDocument.h"
-#include "GormClassManager.h"
+#import "GormPrivate.h"
+#import "GormObjectEditor.h"
+#import "GormFunctions.h"
+#import "GormDocument.h"
+#import "GormClassManager.h"
+#import "GormAbstractDelegate.h"
 
 /*
  * Method to return the image that should be used to display objects within
@@ -44,9 +44,10 @@
 @implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
-  static NSImage	*image = nil;
+  static NSImage       *image = nil;
+  GormAbstractDelegate *delegate = (GormAbstractDelegate *)[NSApp delegate];
 
-  if (image == nil)
+  if (image == nil && [delegate isInTool] == NO)
     {
       NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
