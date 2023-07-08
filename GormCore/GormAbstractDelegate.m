@@ -125,13 +125,16 @@
       /*
        * Start the server
        */
-      [conn setRootObject: self];
-      if([conn registerName: @"GormServer"] == NO)
+      if ([self isInTool] == NO)
 	{
-	  NSLog(@"Could not register GormServer");
+	  [conn setRootObject: self];
+	  if([conn registerName: @"GormServer"] == NO)
+	    {
+	      NSLog(@"Could not register GormServer");
+	    }
 	}
     }
-
+  
   return self;
 }
 

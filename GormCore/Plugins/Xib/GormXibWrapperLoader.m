@@ -55,18 +55,29 @@
 }
 
 - (id) _replaceProxyInstanceWithRealObject: (id)obj
+			      classManager: (GormClassManager *)classManager
 {
+  NSString *className = [obj className];
+  
   if ([obj isKindOfClass: [GormObjectProxy class]])
     {
-      if ([[obj className] isEqualToString: @"NSApplication"])
+      if ([className isEqualToString: @"NSApplication"])
         {
           return [document filesOwner];
         }
-
-      if ([[obj className] isEqualToString: @"FirstResponder"])
+      else if ([className isEqualToString: @"FirstResponder"])
         {
           return [document firstResponder];
         }
+      else
+	{
+	  [classManager addClassNamed: className
+		  withSuperClassNamed: @"NSObject"
+			  withActions: nil
+			  withOutlets: nil
+			     isCustom: YES];
+	  	  
+	}
     }
   else if (obj == nil)
     {
@@ -254,7 +265,7 @@
                   NSString *customClassName = nil;
                   NSDictionary *decoded = [u decoded];
                   
-                  NSDebugLog(@"customClasses = %@", customClasses);
+                  NSLog(@"customClasses = %@", customClasses);
                   while ((customClassName = [en nextObject]) != nil)
                     {
                       NSDictionary *customClassDict = [customClasses objectForKey: customClassName];;
@@ -263,7 +274,8 @@
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
 
-                      realObject = [self _replaceProxyInstanceWithRealObject: realObject];
+                      realObject = [self _replaceProxyInstanceWithRealObject: realObject
+								classManager: classManager];
                       NSDebugLog(@"realObject = %@", realObject);
                       
                       if ([doc containsObject: realObject])
@@ -282,8 +294,9 @@
                           parentClassName = @"NSObject";
                         }
                       
-                      NSDebugLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
+                      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
                             parentClassName);
+		      
                       [classManager addClassNamed: customClassName
                               withSuperClassNamed: parentClassName
                                       withActions: nil
@@ -313,8 +326,11 @@
                               id src = [o source];
 
                               // Replace files owner with the document files owner for loading...
-                              dest = [self _replaceProxyInstanceWithRealObject: dest];
-                              src = [self _replaceProxyInstanceWithRealObject: src];
+                              dest = [self _replaceProxyInstanceWithRealObject: dest
+								  classManager: classManager];
+                              src = [self _replaceProxyInstanceWithRealObject: src
+								 classManager: classManager];
+
                               
                               // Reset them...
                               [o setDestination: dest];
