@@ -121,6 +121,7 @@
 - (NSString *) classNameForObject: (id)object;
 - (NSString *) findClassByName: (NSString *)name;
 - (NSDictionary *) classInformation;
+- (NSDictionary *) customClassInformation;
 
 /* Parsing and creating classes */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className

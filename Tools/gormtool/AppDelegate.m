@@ -254,7 +254,7 @@
       opt = [args objectForKey: @"--classes"];
       if (opt != nil)
 	{
-	  NSDictionary *classes = [[doc classManager] classInformation];
+	  NSDictionary *classes = [[doc classManager] customClassInformation];
 	  NSLog(@"classes = %@", classes);
 	}
 

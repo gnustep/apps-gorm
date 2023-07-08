@@ -2265,6 +2265,21 @@
   return classInformation;
 }
 
+- (NSDictionary *) customClassInformation
+{
+  NSEnumerator *en = [customClasses objectEnumerator];
+  NSMutableDictionary *result = [NSMutableDictionary dictionary];
+  NSString *name = nil;
+
+  while ((name = [en nextObject]) != nil)
+    {
+      NSDictionary *o = [classInformation objectForKey: name];
+      [result setObject: o forKey: name];
+    }
+
+  return result;
+}
+
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = %@",
