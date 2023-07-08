@@ -2293,4 +2293,5 @@
 {
   return [_classInformation description];
 }
+
 @end

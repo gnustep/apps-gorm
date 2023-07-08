@@ -522,6 +522,12 @@
  * Add aConnector to the set of connectors in this document.
  */ 
 - (void) addConnector: (id<IBConnectors>)aConnector;
+
+/**
+ * Returns a set containing the top level objects for this document.
+ */
+- (NSMutableSet *) topLevelObjects;
+
 @end
 
 @interface GormDocument (MenuValidation)
@@ -544,6 +550,7 @@
  * Returns YES if the document is editing classes.
  */
 - (BOOL) isEditingClasses;
+
 @end
 
 #endif

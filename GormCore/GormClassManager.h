@@ -139,6 +139,7 @@
 - (BOOL) loadCustomClassesWithDict: (NSDictionary *)dict;
 - (BOOL) loadNibFormatCustomClassesWithData: (NSData *)data;
 - (BOOL) loadNibFormatCustomClassesWithDict: (NSDictionary *)dict;
+
 @end
 
 #endif

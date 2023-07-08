@@ -135,6 +135,12 @@
 	      parse_val = NO;
 	    }
 
+	  if ([obj isEqualToString: @"--objects"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -256,6 +262,13 @@
 	{
 	  NSDictionary *classes = [[doc classManager] customClassInformation];
 	  NSLog(@"classes = %@", classes);
+	}
+
+      opt = [args objectForKey: @"--objects"];
+      if (opt != nil)
+	{
+	  NSSet *objects = [doc topLevelObjects];
+	  NSLog(@"objects = %@", objects);
 	}
 
       // These options sound always be processed last...
