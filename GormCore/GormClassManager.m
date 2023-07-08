@@ -2260,6 +2260,11 @@
   return className;
 }
 
+- (NSDictionary *) classInformation
+{
+  return classInformation;
+}
+
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = %@",

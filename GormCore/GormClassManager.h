@@ -120,6 +120,7 @@
 - (BOOL) isAction: (NSString *)actionName  onCategoryForClassNamed: (NSString *)className;
 - (NSString *) classNameForObject: (id)object;
 - (NSString *) findClassByName: (NSString *)name;
+- (NSDictionary *) classInformation;
 
 /* Parsing and creating classes */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className

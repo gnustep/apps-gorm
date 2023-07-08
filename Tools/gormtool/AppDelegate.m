@@ -122,6 +122,24 @@
 	      [pair setArgument: obj];
 	      parse_val = YES;
 	    }
+
+	  if ([obj isEqualToString: @"--connections"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
+	  if ([obj isEqualToString: @"--classes"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
+	  // If there is no parameter for the argument, set it anyway...
+	  if (parse_val == NO)
+	    {
+	      [result setObject: pair forKey: obj];
+	    }
 	}
     }
 
@@ -136,7 +154,7 @@
 
   if ([[pi arguments] count] > 1)
     {
-      NSString *file = nil; // [[pi arguments] lastObject];
+      NSString *file = nil;
       NSString *outputPath = @"./";
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
       GormDocument *doc = nil;
@@ -223,6 +241,21 @@
 	  GormClassManager *cm = [doc classManager];
 	  
 	  [cm parseHeader: classFile];
+	}
+
+
+      opt = [args objectForKey: @"--connections"];
+      if (opt != nil)
+	{
+	  NSArray *connections = [doc connections];
+	  NSLog(@"connections = %@", connections);
+	}
+
+      opt = [args objectForKey: @"--classes"];
+      if (opt != nil)
+	{
+	  NSDictionary *classes = [[doc classManager] classInformation];
+	  NSLog(@"classes = %@", classes);
 	}
 
       // These options sound always be processed last...

@@ -300,6 +300,11 @@
 /* Connections */
 
 /**
+ *
+ */
+- (NSMutableArray *) connections;
+
+/**
  * Build our reverse mapping information and other initialisation
  */
 - (void) rebuildObjToNameMapping;
