@@ -226,6 +226,22 @@ NSString *formatVersion(NSInteger version)
 		      
 }
 
+/**
+ * Current profile for the current model file.
+ */
+- (NSDictionary *) currentProfile;
+{
+  return currentProfile;
+}
+
+/**
+ * Version information for the model file.
+ */
+- (NSDictionary *) versionProfiles;
+{
+  return versionProfiles;
+}
+
 - (BOOL) loadFromFile: (NSString *)path
 {
   return [self loadFromData: [NSData dataWithContentsOfFile: path]];

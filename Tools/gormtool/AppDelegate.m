@@ -141,6 +141,24 @@
 	      parse_val = NO;
 	    }
 
+	  if ([obj isEqualToString: @"--errors"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
+	  if ([obj isEqualToString: @"--warnings"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
+	  if ([obj isEqualToString: @"--notices"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -269,6 +287,33 @@
 	{
 	  NSSet *objects = [doc topLevelObjects];
 	  NSLog(@"objects = %@", objects);
+	}
+
+      opt = [args objectForKey: @"--errors"];
+      if (opt != nil)
+	{
+	  GormFilePrefsManager *mgr = [doc filePrefsManager];
+	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
+	  
+	  NSLog(@"errors = %@", p);
+	}
+
+      opt = [args objectForKey: @"--warnings"];
+      if (opt != nil)
+	{
+	  GormFilePrefsManager *mgr = [doc filePrefsManager];
+	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
+
+	  NSLog(@"warnings = %@", p);
+	}
+
+      opt = [args objectForKey: @"--notices"];
+      if (opt != nil)
+	{
+	  GormFilePrefsManager *mgr = [doc filePrefsManager]; 
+	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
+
+	  NSLog(@"notices = %@", p);
 	}
 
       // These options sound always be processed last...
