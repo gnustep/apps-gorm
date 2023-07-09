@@ -51,6 +51,20 @@
       file = [args lastObject];
       filenameIsLastObject = YES;
       [args removeObject: file];
+      NSDebugLog(@"file = %@", file);
+
+      NSString  *type = [dc typeFromFileExtension: [file pathExtension]];
+      
+      if (type != nil)
+	{
+	  ArgPair *pair = AUTORELEASE([[ArgPair alloc] init]);
+
+	  [pair setArgument: @"--read"];
+	  [pair setValue: file];
+	  
+	  [result setObject: pair forKey: @"--read"];
+	  NSDebugLog(@"Faking read pair %@", file);
+	}      
     }
   
   NSEnumerator *en = [args objectEnumerator];
@@ -70,18 +84,8 @@
       else
 	{
 	  pair = AUTORELEASE([[ArgPair alloc] init]);
-	  if (filenameIsLastObject == YES)
-	    {
-	      NSString  *type = [dc typeFromFileExtension: [file pathExtension]];
 
-	      if (type != nil)
-		{
-		  [pair setArgument: @"--read"];
-		  [pair setValue: file];
-		  [result setObject: pair forKey: @"--read"];
-		}
-	    }
-	  else if ([obj isEqualToString: @"--read"])
+	  if ([obj isEqualToString: @"--read"])
 	    {
 	      [pair setArgument: obj];
 	      parse_val = YES;	      
@@ -159,6 +163,24 @@
 	      parse_val = NO;
 	    }
 
+	  if ([obj isEqualToString: @"--source-language"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+
+	  if ([obj isEqualToString: @"--target-language"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+
+	  if ([obj isEqualToString: @"--export-xliff"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -184,6 +206,8 @@
       GormDocument *doc = nil;
       NSDictionary *args = [self parseArguments];
       ArgPair *opt = nil;
+      NSString *slang = nil;
+      NSString *tlang = nil;
       
       NSDebugLog(@"args = %@", args);
       NSDebugLog(@"file = %@", file);
@@ -233,7 +257,6 @@
       if (opt != nil)
 	{
 	  NSString *stringsFile = [opt value];
-	  
 	  [doc importStringsFromFile: stringsFile];
 	}
 
@@ -266,7 +289,6 @@
 	  
 	  [cm parseHeader: classFile];
 	}
-
 
       opt = [args objectForKey: @"--connections"];
       if (opt != nil)
@@ -311,6 +333,44 @@
 	  GormFilePrefsManager *mgr = [doc filePrefsManager]; 
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
 	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
+	}
+
+      opt = [args objectForKey: @"--source-language"];
+      if (opt != nil)
+	{
+	  slang = [opt value];
+	}
+
+      opt = [args objectForKey: @"--target-language"];
+      if (opt != nil)
+	{
+	  tlang = [opt value];
+	}
+
+      opt = [args objectForKey: @"--export-xliff"];
+      if (opt != nil)
+	{
+	  NSString *xliffDocumentName = [opt value];
+	  BOOL result = NO;
+	  
+	  if (slang == nil)
+	    {
+	      NSLog(@"Please specify a source language");	      
+	    }
+
+	  if (tlang == nil)
+	    {
+	      NSLog(@"Please specify a target language");
+	    }
+
+	  result = [doc exportXLIFFDocumentWithName: xliffDocumentName
+				 withSourceLanguage: slang
+				  andTargetLanguage: tlang];
+
+	  if (result == NO)
+	    {
+	      NSLog(@"File not generated");
+	    }
 	}
 
       // These options sound always be processed last...

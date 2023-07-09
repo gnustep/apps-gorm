@@ -3317,6 +3317,32 @@ static void _real_close(GormDocument *self,
     } 
 }
 
+// Build the XML document from the objects in the mode3l...
+- (void) _collectObjects: (NSXMLNode *)node withDocument: (NSXMLDocument *)document
+{
+}
+
+/**
+ * Exports XLIFF file for CAT.  This method starts the process and calls
+ * another method that recurses through the objects in the model and pulls
+ * any translatable elements.
+ */
+- (BOOL) exportXLIFFDocumentWithName: (NSString *)name
+                  withSourceLanguage: (NSString *)slang
+                   andTargetLanguage: (NSString *)tlang
+{
+  NSXMLDocument *xliffDocument = nil;
+  BOOL result = NO;
+  
+  if (slang != nil)
+    {
+      NSXMLNode *node = nil;
+      [self _collectObjects: node withDocument: xliffDocument];
+    }
+  
+  return result;
+}
+
 /**
  * Arrange views in front or in back of one another.
  */
