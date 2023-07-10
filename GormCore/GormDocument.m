@@ -3317,11 +3317,6 @@ static void _real_close(GormDocument *self,
     } 
 }
 
-// Build the XML document from the objects in the mode3l...
-- (void) _collectObjects: (NSXMLNode *)node withDocument: (NSXMLDocument *)document
-{
-}
-
 /**
  * Exports XLIFF file for CAT.  This method starts the process and calls
  * another method that recurses through the objects in the model and pulls
@@ -3331,13 +3326,22 @@ static void _real_close(GormDocument *self,
                   withSourceLanguage: (NSString *)slang
                    andTargetLanguage: (NSString *)tlang
 {
-  NSXMLDocument *xliffDocument = nil;
   BOOL result = NO;
-  
+
   if (slang != nil)
     {
+      NSXMLDocument *xliffDocument = nil;
+      NSXMLElement *rootElement = AUTORELEASE([[NSXMLElement alloc] initWithName: @"xliff"]);
+      NSXMLElement *header = AUTORELEASE([[NSXMLElement alloc] initWithName: @"header"]);
       NSXMLNode *node = nil;
-      [self _collectObjects: node withDocument: xliffDocument];
+      id obj = nil;
+            
+      // Set up document...
+      xliffDocument = AUTORELEASE([[NSXMLDocument alloc] initWithRootElement: rootElement]);
+
+      [xliffDocument addChild: header];
+      buildXLIFFDocument(obj, &node);
+      [xliffDocument addChild: node];
     }
   
   return result;
