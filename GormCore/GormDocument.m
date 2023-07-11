@@ -3300,7 +3300,7 @@ static void _real_close(GormDocument *self,
  * This method is used to export all strings in a document to a file for Language
  * translation.  This allows the user to see all of the strings which can be translated
  * and allows the user to provide a translateion for each of them.
- */ 
+ */
 - (void) exportStrings: (id)sender
 {
   NSSavePanel	*sp = [NSSavePanel savePanel];
@@ -3317,6 +3317,72 @@ static void _real_close(GormDocument *self,
     } 
 }
 
+- (void) _collectObjectsFromObject: (id)obj
+			  withNode: (NSXMLElement  *)node
+{
+  NSString *name = [self nameForObject: obj];
+
+  if (name != nil)
+    {
+      NSXMLElement *group = [NSXMLNode elementWithName: @"group"];
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"ib:object-id" stringValue: name];
+      NSString *className = nil;
+
+      [group addAttribute: attr];
+      if ([obj isKindOfClass: [NSMenu class]])
+	{
+	  NSString *title = [obj title];
+	  NSXMLElement *transunit = [NSXMLNode elementWithName: @"trans-unit"];
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"ib:key-path-category" stringValue: @"string"];
+
+	  [transunit addAttribute: attr];
+	  attr = [NSXMLNode attributeWithName: @"ib:key-path" stringValue: @"title"];
+	  [transunit addAttribute: attr];
+	  NSXMLElement *source = [NSXMLNode elementWithName: @"source"];
+	  [source setStringValue: title];
+	  
+	  className = @"NSMenu";
+	}
+      else if ([obj isKindOfClass: [NSWindow class]])
+	{
+	  NSString *title = [obj title];
+	  
+	  [self _collectObjectsFromObject: [obj contentView]
+				withNode: node];
+	  className = @"NSWindow";
+	}
+      else if ([obj isKindOfClass: [NSView class]])
+	{
+	  className = @"NSView";
+	}
+      else if ([obj isKindOfClass: [GormObjectProxy class]])
+	{
+	  className = [obj className];
+	}
+      else
+	{
+	  className = NSStringFromClass([obj class]);
+	}
+
+      attr = [NSXMLNode attributeWithName: @"class" stringValue: className];
+      [group addAttribute: attr];
+
+      [node addChild: group];
+    }
+}
+
+- (void) _buildXLIFFDocumentWithParentNode: (NSXMLElement *)parentNode
+{
+  NSEnumerator *en = [topLevelObjects objectEnumerator];
+  id o = nil;
+
+  while ((o = [en nextObject]) != nil)
+    {
+      [self _collectObjectsFromObject: o
+			     withNode: parentNode];
+    }
+}
+
 /**
  * Exports XLIFF file for CAT.  This method starts the process and calls
  * another method that recurses through the objects in the model and pulls
@@ -3327,21 +3393,89 @@ static void _real_close(GormDocument *self,
                    andTargetLanguage: (NSString *)tlang
 {
   BOOL result = NO;
-
+  id delegate = [NSApp delegate];
+  
   if (slang != nil)
     {
-      NSXMLDocument *xliffDocument = nil;
-      NSXMLElement *rootElement = AUTORELEASE([[NSXMLElement alloc] initWithName: @"xliff"]);
-      NSXMLElement *header = AUTORELEASE([[NSXMLElement alloc] initWithName: @"header"]);
-      NSXMLNode *node = nil;
-      id obj = nil;
-            
-      // Set up document...
-      xliffDocument = AUTORELEASE([[NSXMLDocument alloc] initWithRootElement: rootElement]);
+      NSString *toolId = @"gnu.gnustep.Gorm";
+      NSString *toolName = @"Gorm";
+      NSString *toolVersion = [NSString stringWithFormat: @"%d", [GormFilePrefsManager currentVersion]];
 
-      [xliffDocument addChild: header];
-      buildXLIFFDocument(obj, &node);
-      [xliffDocument addChild: node];
+      if ([delegate isInTool])
+	{
+	  toolName = @"gormtool";
+	  toolId = @"gnu.gnustep.gormtool";
+	}
+      
+      // Build root element...
+      NSXMLElement *rootElement = [NSXMLNode elementWithName: @"xliff"];
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"xmlns" stringValue: @"urn:oasis:names:tc:xliff:document:1.2"];
+      [rootElement addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"xmlns:xsi" stringValue: @"http://www.w3.org/2001/XMLSchema-instance"];
+      [rootElement addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"xmlns:ib" stringValue: toolId];
+      [rootElement addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"version" stringValue: @"1.2"];
+      [rootElement addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"xsi:schemaLocation" stringValue: @"urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd"];
+      [rootElement addAttribute: attr];
+      
+      // Build header...
+      NSXMLElement *header = [NSXMLNode elementWithName: @"header"];
+      NSXMLElement *tool = [NSXMLNode elementWithName: @"tool"];
+      attr = [NSXMLNode attributeWithName: @"tool-id" stringValue: toolId];
+      [tool addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"tool-name" stringValue: toolName];
+      [tool addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"tool-version" stringValue: toolVersion];
+      [tool addAttribute: attr];
+      [header addChild: tool];
+
+      // Build "file" element...
+      NSString *filename = [[self fileName] lastPathComponent];
+      NSXMLElement *file = [NSXMLNode elementWithName: @"file"];
+      GormDocumentController *dc = [GormDocumentController sharedDocumentController];
+      NSString *type = [dc typeFromFileExtension: [filename pathExtension]];
+
+      attr = [NSXMLNode attributeWithName: @"original" stringValue: filename];
+      [file addAttribute: attr];      
+      attr = [NSXMLNode attributeWithName: @"datatype" stringValue: type]; // we will have the plugin return a datatype...
+      [file addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"tool-id" stringValue: toolId];
+      [file addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"source-language" stringValue: slang];
+      [file addAttribute: attr];
+      if (tlang != nil)
+	{
+	  attr = [NSXMLNode attributeWithName: @"target-language" stringValue: tlang];
+	  [file addAttribute: attr];
+	}
+      [rootElement addChild: file];
+      
+      // Set up document...
+      NSXMLDocument *xliffDocument = [NSXMLNode documentWithRootElement: rootElement];
+      [file addChild: header];
+      
+      NSXMLElement *body = [NSXMLNode elementWithName: @"body"];
+      NSXMLElement *group = [NSXMLNode elementWithName: @"group"];
+      attr = [NSXMLNode attributeWithName: @"ib:member-type" stringValue: @"objects"];
+      [group addAttribute: attr];
+      [body addChild: group];
+
+      // add body to document...
+      [file addChild: body];
+      
+      // Recursively build the XLIFF document from the GormDocument...
+      [self _buildXLIFFDocumentWithParentNode: group];
+      
+      NSData *data = [xliffDocument XMLData];
+      NSString *xmlString = [NSString stringWithUTF8String: [data bytes]];
+      
+      result = [xmlString writeToFile: name atomically: YES];
+    }
+  else
+    {
+      NSLog(@"Source language not specified");
     }
   
   return result;

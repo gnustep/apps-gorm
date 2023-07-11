@@ -28,9 +28,6 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-// collect all objects in document for XIFF export
-void buildXLIFFDocument(id object, NSXMLNode **node);
-
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array);
 

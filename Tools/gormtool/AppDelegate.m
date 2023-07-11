@@ -358,15 +358,16 @@
 	      NSLog(@"Please specify a source language");	      
 	    }
 
+	  /*
 	  if (tlang == nil)
 	    {
 	      NSLog(@"Please specify a target language");
 	    }
-
+	  */
+	  
 	  result = [doc exportXLIFFDocumentWithName: xliffDocumentName
 				 withSourceLanguage: slang
-				  andTargetLanguage: tlang];
-
+				  andTargetLanguage: tlang];	  
 	  if (result == NO)
 	    {
 	      NSLog(@"File not generated");
