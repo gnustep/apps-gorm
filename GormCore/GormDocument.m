@@ -3335,7 +3335,7 @@ static void _real_close(GormDocument *self,
 	  className = [obj className];
 	}
 	    
-      attr = [NSXMLNode attributeWithName: @"class" stringValue: className];
+      attr = [NSXMLNode attributeWithName: @"ib:class" stringValue: className];
       [group addAttribute: attr];      
       [node addChild: group];
 
@@ -3493,7 +3493,7 @@ static void _real_close(GormDocument *self,
       
       NSXMLElement *body = [NSXMLNode elementWithName: @"body"];
       NSXMLElement *group = [NSXMLNode elementWithName: @"group"];
-      attr = [NSXMLElement attributeWithName: @"member-type" stringValue: @"objects"];
+      attr = [NSXMLNode attributeWithName: @"ib_member-type" stringValue: @"objects"]; // not sure why generates ib_1 when using a colon
       [group addAttribute: attr];
       [body addChild: group];
 
