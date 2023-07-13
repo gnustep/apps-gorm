@@ -3335,7 +3335,7 @@ static void _real_close(GormDocument *self,
 	  className = [obj className];
 	}
 	    
-      attr = [NSXMLNode attributeWithName: @"ib:class" stringValue: className];
+      attr = [NSXMLNode attributeWithName: @"class" stringValue: className];
       [group addAttribute: attr];      
       [node addChild: group];
 
@@ -3371,8 +3371,6 @@ static void _real_close(GormDocument *self,
 	      [self _collectObjectsFromObject: item
 				     withNode: group];
 	    }
-	  
-	  [self _collectObjectsFromObject: obj withNode: group];
 	}
       else if ([obj isKindOfClass: [NSMenuItem class]])
 	{
@@ -3441,15 +3439,20 @@ static void _real_close(GormDocument *self,
       
       // Build root element...
       NSXMLElement *rootElement = [NSXMLNode elementWithName: @"xliff"];
-      NSXMLNode *attr = [NSXMLNode attributeWithName: @"xmlns" stringValue: @"urn:oasis:names:tc:xliff:document:1.2"];
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"xmlns"
+					 stringValue: @"urn:oasis:names:tc:xliff:document:1.2"];
       [rootElement addAttribute: attr];
-      attr = [NSXMLNode attributeWithName: @"xmlns:xsi" stringValue: @"http://www.w3.org/2001/XMLSchema-instance"];
-      [rootElement addAttribute: attr];
-      attr = [NSXMLNode attributeWithName: @"xmlns:ib" stringValue: toolId];
-      [rootElement addAttribute: attr];
+      NSXMLNode *xsi_ns = [NSXMLNode namespaceWithName: @"xsi"
+					   stringValue: @"http://www.w3.org/2001/XMLSchema-instance"];
+      [rootElement addNamespace: xsi_ns];
+      NSXMLNode *ib_ns = [NSXMLNode namespaceWithName: @"ib"
+					  stringValue: @"com.apple.InterfaceBuilder3"];
+      [rootElement addNamespace: ib_ns];
+
       attr = [NSXMLNode attributeWithName: @"version" stringValue: @"1.2"];
       [rootElement addAttribute: attr];
-      attr = [NSXMLNode attributeWithName: @"xsi:schemaLocation" stringValue: @"urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd"];
+      attr = [NSXMLNode attributeWithName: @"xsi:schemaLocation"
+			      stringValue: @"urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd"];
       [rootElement addAttribute: attr];
       
       // Build header...
@@ -3490,7 +3493,7 @@ static void _real_close(GormDocument *self,
       
       NSXMLElement *body = [NSXMLNode elementWithName: @"body"];
       NSXMLElement *group = [NSXMLNode elementWithName: @"group"];
-      attr = [NSXMLNode attributeWithName: @"ib:member-type" stringValue: @"objects"];
+      attr = [NSXMLElement attributeWithName: @"member-type" stringValue: @"objects"];
       [group addAttribute: attr];
       [body addChild: group];
 
