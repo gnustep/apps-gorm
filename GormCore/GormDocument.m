@@ -3343,25 +3343,29 @@ static void _real_close(GormDocument *self,
       if ([obj respondsToSelector: @selector(title)])
 	{
 	  NSString *title = [obj title];
-	  NSXMLElement *transunit = [NSXMLNode elementWithName: @"trans-unit"];
-	  NSString *objId = [NSString stringWithFormat: @"%@.title", name];
-
-	  attr = [NSXMLNode attributeWithName: @"ib:key-path-category"
-				  stringValue: @"string"];
-	  [transunit addAttribute: attr];
-	  attr = [NSXMLNode attributeWithName: @"ib:key-path" stringValue: @"title"];
-	  [transunit addAttribute: attr];
-	  attr = [NSXMLNode attributeWithName: @"id" stringValue: objId];
-	  [transunit addAttribute: attr];
-	  [group addChild: transunit];
-	  
-	  NSXMLElement *source = [NSXMLNode elementWithName: @"source"];
-	  [source setStringValue: title];
-	  [transunit addChild: source];	  
+	  if (title != nil)
+	    {
+	      NSXMLElement *transunit = [NSXMLNode elementWithName: @"trans-unit"];
+	      NSString *objId = [NSString stringWithFormat: @"%@.title", name];
+	      
+	      attr = [NSXMLNode attributeWithName: @"ib:key-path-category"
+				      stringValue: @"string"];
+	      [transunit addAttribute: attr];
+	      attr = [NSXMLNode attributeWithName: @"ib:key-path" stringValue: @"title"];
+	      [transunit addAttribute: attr];
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: objId];
+	      [transunit addAttribute: attr];
+	      [group addChild: transunit];
+	      
+	      NSXMLElement *source = [NSXMLNode elementWithName: @"source"];
+	      [source setStringValue: title];
+	      [transunit addChild: source];	  
+	    }
 	}
 
       // For each different class, recurse through the structure as needed.
-      if ([obj isKindOfClass: [NSMenu class]]) 
+      if ([obj isKindOfClass: [NSMenu class]] ||
+	  [obj isKindOfClass: [NSPopUpButton class]]) 
 	{
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
