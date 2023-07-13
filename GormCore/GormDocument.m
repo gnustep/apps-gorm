@@ -3503,7 +3503,7 @@ static void _real_close(GormDocument *self,
       // Recursively build the XLIFF document from the GormDocument...
       [self _buildXLIFFDocumentWithParentNode: group];
       
-      NSData *data = [xliffDocument XMLData];
+      NSData *data = [xliffDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLNodeCompactEmptyElement ];
       NSString *xmlString = [NSString stringWithUTF8String: [data bytes]];
       
       result = [xmlString writeToFile: name atomically: YES];
