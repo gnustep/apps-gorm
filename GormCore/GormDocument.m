@@ -3324,50 +3324,82 @@ static void _real_close(GormDocument *self,
 
   if (name != nil)
     {
+      NSString *className = NSStringFromClass([obj class]);
       NSXMLElement *group = [NSXMLNode elementWithName: @"group"];
       NSXMLNode *attr = [NSXMLNode attributeWithName: @"ib:object-id" stringValue: name];
-      NSString *className = nil;
-
       [group addAttribute: attr];
-      if ([obj isKindOfClass: [NSMenu class]])
-	{
-	  NSString *title = [obj title];
-	  NSXMLElement *transunit = [NSXMLNode elementWithName: @"trans-unit"];
-	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"ib:key-path-category" stringValue: @"string"];
 
-	  [transunit addAttribute: attr];
-	  attr = [NSXMLNode attributeWithName: @"ib:key-path" stringValue: @"title"];
-	  [transunit addAttribute: attr];
-	  NSXMLElement *source = [NSXMLNode elementWithName: @"source"];
-	  [source setStringValue: title];
-	  
-	  className = @"NSMenu";
-	}
-      else if ([obj isKindOfClass: [NSWindow class]])
-	{
-	  NSString *title = [obj title];
-	  
-	  [self _collectObjectsFromObject: [obj contentView]
-				withNode: node];
-	  className = @"NSWindow";
-	}
-      else if ([obj isKindOfClass: [NSView class]])
-	{
-	  className = @"NSView";
-	}
-      else if ([obj isKindOfClass: [GormObjectProxy class]])
+      if ([obj isKindOfClass: [GormObjectProxy class]] ||
+	  [obj respondsToSelector: @selector(className)])
 	{
 	  className = [obj className];
 	}
-      else
+	    
+      attr = [NSXMLNode attributeWithName: @"ib:class" stringValue: className];
+      [group addAttribute: attr];      
+      [node addChild: group];
+
+      // If the object responds to "title" get that and add it to the XML
+      if ([obj respondsToSelector: @selector(title)])
 	{
-	  className = NSStringFromClass([obj class]);
+	  NSString *title = [obj title];
+	  NSXMLElement *transunit = [NSXMLNode elementWithName: @"trans-unit"];
+	  NSString *objId = [NSString stringWithFormat: @"%@.title", name];
+
+	  attr = [NSXMLNode attributeWithName: @"ib:key-path-category"
+				  stringValue: @"string"];
+	  [transunit addAttribute: attr];
+	  attr = [NSXMLNode attributeWithName: @"ib:key-path" stringValue: @"title"];
+	  [transunit addAttribute: attr];
+	  attr = [NSXMLNode attributeWithName: @"id" stringValue: objId];
+	  [transunit addAttribute: attr];
+	  [group addChild: transunit];
+	  
+	  NSXMLElement *source = [NSXMLNode elementWithName: @"source"];
+	  [source setStringValue: title];
+	  [transunit addChild: source];	  
 	}
 
-      attr = [NSXMLNode attributeWithName: @"class" stringValue: className];
-      [group addAttribute: attr];
+      // For each different class, recurse through the structure as needed.
+      if ([obj isKindOfClass: [NSMenu class]]) 
+	{
+	  NSArray *items = [obj itemArray];
+	  NSEnumerator *en = [items objectEnumerator];
+	  id item = nil;
+	  while ((item = [en nextObject]) != nil)
+	    {
+	      [self _collectObjectsFromObject: item
+				     withNode: group];
+	    }
+	  
+	  [self _collectObjectsFromObject: obj withNode: group];
+	}
+      else if ([obj isKindOfClass: [NSMenuItem class]])
+	{
+	  NSMenu *sm = [obj submenu];
+	  if (sm != nil)
+	    {
+	      [self _collectObjectsFromObject: sm
+				     withNode: group];
+	    }
+	}
+      else if ([obj isKindOfClass: [NSWindow class]])
+	{
+	  [self _collectObjectsFromObject: [obj contentView]
+				 withNode: node];
+	}
+      else if ([obj isKindOfClass: [NSView class]])
+	{
+	  NSArray *subviews = [obj subviews];
+	  NSEnumerator *en = [subviews objectEnumerator];
+	  id v = nil;
 
-      [node addChild: group];
+	  while ((v = [en nextObject]) != nil)
+	    {
+	      [self _collectObjectsFromObject: v
+				     withNode: node];
+	    }
+	}
     }
 }
 
