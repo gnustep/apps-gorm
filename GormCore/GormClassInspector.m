@@ -684,7 +684,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) handleNotification: (NSNotification *)notification
 {
   if([notification object] == classManager &&
-     [(id<IB>)[[NSApp delegate] delegate] activeDocument] != nil)
+     (id<IB>)[[NSApp delegate] activeDocument] != nil)
     {
       [self _refreshView];
     }
