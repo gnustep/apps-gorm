@@ -1799,8 +1799,9 @@
   // header file comments...
   [headerFile appendString: @"/* All rights reserved */\n\n"];
   [sourceFile appendString: @"/* All rights reserved */\n\n"];
+  [headerFile appendString: [NSString stringWithFormat: @"#ifndef %@_H_INCLUDE\n", className]];
+  [headerFile appendString: [NSString stringWithFormat: @"#define %@_H_INCLUDE\n\n", className]];
   [headerFile appendString: @"#import <AppKit/AppKit.h>\n\n"];
-  [sourceFile appendString: @"#import <AppKit/AppKit.h>\n"];
   if ([[headerPath stringByDeletingLastPathComponent]
     isEqualToString: [sourcePath stringByDeletingLastPathComponent]])
     {
@@ -1813,7 +1814,7 @@
 	headerPath];      
     }
   [headerFile appendFormat: @"@interface %@ : %@\n{\n", className,
-    [self superClassNameForClassNamed: className]];
+	      [self superClassNameForClassNamed: className]];
   [sourceFile appendFormat: @"@implementation %@\n\n", className];
   
   n = [outlets count]; 
@@ -1821,7 +1822,7 @@
     {
       [headerFile appendFormat: @"  IBOutlet id %@;\n", [outlets objectAtIndex: i]];
     }
-  [headerFile appendFormat: @"}\n"];
+  [headerFile appendFormat: @"}\n\n"];
 
   n = [actions count]; 
   for (i = 0; i < n; i++)
@@ -1829,14 +1830,14 @@
       actionName = [actions objectAtIndex: i];
       [headerFile appendFormat: @"- (IBAction) %@ (id)sender;\n", actionName];
       [sourceFile appendFormat:
-	@"\n"
 	@"- (IBAction) %@ (id)sender\n"
 	@"{\n"
 	@"}\n"
 	@"\n"
 	, [actions objectAtIndex: i]];
     }
-  [headerFile appendFormat: @"\n@end\n"];
+  [headerFile appendFormat: @"\n@end\n\n"];
+  [headerFile appendString: [NSString stringWithFormat: @"#endif // %@_H_INCLUDE\n", className]];
   [sourceFile appendFormat: @"@end\n"];
 
   headerData = [headerFile dataUsingEncoding:
