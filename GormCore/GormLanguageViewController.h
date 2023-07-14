@@ -1,17 +1,27 @@
 /* All rights reserved */
 
-#ifndef GormLanguageController_H_INCLUDE
-#define GormLanguageController_H_INCLUDE
+#ifndef GormLanguageViewController_H_INCLUDE
+#define GormLanguageViewController_H_INCLUDE
 
 #import <AppKit/NSViewController.h>
-#import <AppKit/NSPopUpButton.h>
+
+@class NSDictionary, NSString;
 
 @interface GormLanguageViewController : NSViewController
 {
-  IBOutlet NSPopUpButton *sourceLanguage;
-  IBOutlet NSPopUpButton *targetLanguage;
+  IBOutlet id targetLanguage;
+  IBOutlet id sourceLanguage;
+
+  NSDictionary *ldict;
 }
+
+- (IBAction) updateTargetLanguage: (id)sender;
+- (IBAction) updateSourceLanguage: (id)sender;
+
+- (NSString *) sourceLanguageIdentifier;
+- (NSString *) targetLanguageIdentifier;
+
 
 @end
 
-#endif  // GormLanguageController_H_INCLUDE
+#endif // GormLanguageViewController_H_INCLUDE
