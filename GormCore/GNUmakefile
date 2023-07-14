@@ -252,7 +252,8 @@ GormCore_RESOURCE_FILES = \
 	Images/tabtop_nib.tiff \
 	Images/titleOnly_nib.tiff \
 	Resources/VersionProfiles.plist \
-	Resources/ClassInformation.plist
+	Resources/ClassInformation.plist \
+	Resources/language-codes.plist
 
 
 GormCore_LANGUAGES = English
@@ -270,6 +271,7 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormImageInspector.gorm \
 	GormInconsistenciesPanel.gorm \
 	GormInspectorPanel.gorm \
+	GormLanguageViewController.gorm \
 	GormNSSplitViewInspector.gorm \
 	GormObjectInspector.gorm \
 	GormPalettePanel.gorm \

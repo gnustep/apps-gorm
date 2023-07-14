@@ -368,6 +368,11 @@
         Super = NSText; 
     }; 
     NSView = {Actions = ("fax:", "print:"); Outlets = (nextKeyView); Super = NSResponder; }; 
+    NSViewController = {
+        Actions = ();
+	Outlets = (view);
+	Super = NSResponder;
+    }; 
     NSWindow = {
         Actions = (
             "deminiaturize:", 
