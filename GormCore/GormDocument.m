@@ -3388,7 +3388,7 @@ static void _real_close(GormDocument *self,
       else if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  [self _collectObjectsFromObject: [obj contentView]
-				 withNode: node];
+				 withNode: group];
 	}
       else if ([obj isKindOfClass: [NSView class]])
 	{
@@ -3399,7 +3399,7 @@ static void _real_close(GormDocument *self,
 	  while ((v = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: v
-				     withNode: node];
+				     withNode: group];
 	    }
 	}
     }
