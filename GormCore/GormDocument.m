@@ -3508,8 +3508,9 @@ static void _real_close(GormDocument *self,
       [self _buildXLIFFDocumentWithParentNode: group];
       
       NSData *data = [xliffDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLNodeCompactEmptyElement ];
-      NSString *xmlString = [NSString stringWithUTF8String: [data bytes]];
-      
+      NSString *xmlString = [[NSString alloc] initWithBytes: [data bytes] length: [data length] encoding: NSUTF8StringEncoding];
+
+      AUTORELEASE(xmlString);
       result = [xmlString writeToFile: name atomically: YES];
     }
   else
