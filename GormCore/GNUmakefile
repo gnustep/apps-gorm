@@ -65,6 +65,7 @@ GormCore_HEADER_FILES = \
 	GormImageInspector.h \
 	GormInspectorsManager.h \
 	GormInternalViewEditor.h \
+	GormLanguageViewController.h \
 	GormMatrixEditor.h \
 	GormNSPanel.h \
 	GormNSSplitViewInspector.h \
@@ -139,6 +140,7 @@ GormCore_OBJC_FILES = \
 	GormImageInspector.m \
 	GormInspectorsManager.m \
 	GormInternalViewEditor.m \
+	GormLanguageViewController.m \
 	GormMatrixEditor.m \
 	GormNSPanel.m \
 	GormNSSplitViewInspector.m \
