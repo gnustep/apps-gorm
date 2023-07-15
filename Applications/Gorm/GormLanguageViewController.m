@@ -4,12 +4,30 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSBundle.h>
+#import <Foundation/NSLocale.h>
 
 #import <AppKit/NSPopUpButton.h>
 
 #import "GormLanguageViewController.h"
 
 @implementation GormLanguageViewController
+
+- (void) selectPreferredLanguage
+{
+  NSString *language = [[NSLocale preferredLanguages] objectAtIndex: 0];
+  NSInteger i = [[ldict allKeys] indexOfObject: language];
+
+  NSDebugLog(@"language = %@", language);
+
+  // Set the default translation to the current language
+  [sourceLanguage selectItemAtIndex: i];
+  [targetLanguage selectItemAtIndex: i];
+
+  // Set them since the above doesn't invoke the method that sets them.
+  [self updateTargetLanguage: self];
+  [self updateSourceLanguage: self];
+}
+
 
 - (void) viewDidLoad
 {
@@ -22,7 +40,7 @@
       [targetLanguage removeAllItems];
       [sourceLanguage removeAllItems];
       
-      NSLog(@"path = %@", path);
+      NSDebugLog(@"path = %@", path);
       
       ldict = [[NSDictionary alloc] initWithContentsOfFile: path];
       if (ldict != nil)
@@ -38,6 +56,9 @@
 	      [targetLanguage addItemWithTitle: itemTitle];
 	      [sourceLanguage addItemWithTitle: itemTitle];
 	    }
+
+	  // Select preferred language in pop up...
+	  [self selectPreferredLanguage];
 	}
     }
   else
@@ -54,24 +75,24 @@
 
 - (IBAction) updateTargetLanguage: (id)sender
 {
-  // Nothing yet...
+  NSInteger i = [targetLanguage indexOfSelectedItem];
+  targetLanguageIdentifier = [[ldict allKeys] objectAtIndex: i];
 }
 
 - (IBAction) updateSourceLanguage: (id)sender
 {
-  // Nothing yet...
+  NSInteger i = [sourceLanguage indexOfSelectedItem];
+  sourceLanguageIdentifier = [[ldict allKeys] objectAtIndex: i];
 }
 
 - (NSString *) sourceLanguageIdentifier
 {
-  NSInteger i = [sourceLanguage indexOfSelectedItem];
-  return [[ldict allKeys] objectAtIndex: i];
+  return sourceLanguageIdentifier;
 }
 
 - (NSString *) targetLanguageIdentifier
 {
-  NSInteger i = [sourceLanguage indexOfSelectedItem];
-  return [[ldict allKeys] objectAtIndex: i];
+  return targetLanguageIdentifier;
 }
 
 @end

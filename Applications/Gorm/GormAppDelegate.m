@@ -577,24 +577,35 @@
   NSSavePanel *savePanel = [NSSavePanel savePanel];
   NSBundle *bundle = [NSBundle bundleForClass: [GormLanguageViewController class]];
   NSModalResponse result = 0;
-  
-  _vc = [[GormLanguageViewController alloc] initWithNibName: @"GormLanguageViewController"
-						     bundle: bundle];
+  GormDocument *doc = (GormDocument *)[self activeDocument];
 
-
-  NSDebugLog(@"view = %@, _vc = %@", [_vc view], _vc);
-
-  [savePanel setTitle: @"Export XLIFF"];
-  [savePanel setAccessoryView: [_vc view]];
-  [savePanel setDelegate: self];
-
-  result = [savePanel runModal];
-  if (NSModalResponseOK == result)
+  if (doc != nil)
     {
-      NSString *filename = [[savePanel URL] path];
-      [(GormDocument *)[self activeDocument] exportXLIFFDocumentWithName: filename
-						      withSourceLanguage: [_vc sourceLanguageIdentifier]
-						       andTargetLanguage: [_vc targetLanguageIdentifier]];
+      NSString *fn = [[doc fileURL] path];
+
+      fn = [[fn lastPathComponent] stringByDeletingPathExtension];
+      fn = [fn stringByAppendingPathExtension: @"xliff"];
+      _vc = [[GormLanguageViewController alloc]
+	      initWithNibName: @"GormLanguageViewController"
+		       bundle: bundle];
+      
+      
+      NSDebugLog(@"view = %@, _vc = %@", [_vc view], _vc);
+      
+      [savePanel setTitle: @"Export XLIFF"];
+      [savePanel setAccessoryView: [_vc view]];
+      [savePanel setDelegate: self];
+      // [savePanel setURL: [NSURL fileURLWithPath: fn]];
+		 
+      result = [savePanel runModalForDirectory: nil
+					  file: fn];
+      if (NSModalResponseOK == result)
+	{
+	  NSString *filename = [[savePanel URL] path];
+	  [doc exportXLIFFDocumentWithName: filename
+			withSourceLanguage: [_vc sourceLanguageIdentifier]
+			 andTargetLanguage: [_vc targetLanguageIdentifier]];
+	}
     }
 }
 
@@ -604,11 +615,11 @@
 {
   if (flag == YES)
     {
-      NSLog(@"Writing the document... %@", filename);
+      NSDebugLog(@"Writing the document... %@", filename);
     }
   else
     {
-      NSLog(@"%@ not saved", filename);
+      NSDebugLog(@"%@ not saved", filename);
     }
   return filename;
 }
