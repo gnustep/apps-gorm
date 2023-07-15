@@ -2,6 +2,7 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "addAttributeToClass:",
 	    "alignSelectedObjects:",
 	    "arrangeSelectedObjects:",
 	    "createClassFiles:",
@@ -20,7 +21,7 @@
 	    "loadImage:",
 	    "loadPalette:",
 	    "loadSound:",
-	    "addAttributeToClass:",
+	    "exportXLIFFDocument:",
 	    "orderFrontFontPanel:",
 	    "palettes:",
 	    "preferencesPanel:",
@@ -103,7 +104,8 @@
 	    "instantiateClass:",
 	    "loadClass:",
 	    "addAttributeToClass:",
-	    "remove:"
+	    "remove:",
+	    "exportXLIFFDocument:"
 	);
 	Outlets = (
 	    gormMenu,

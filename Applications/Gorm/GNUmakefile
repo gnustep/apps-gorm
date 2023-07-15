@@ -67,6 +67,7 @@ Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
 	GormInfo.plist \
 	Resources/Defaults.plist \
+	Resources/language-codes.plist \
 	Palettes/0Menus/0Menus.palette \
 	Palettes/1Windows/1Windows.palette \
 	Palettes/2Controls/2Controls.palette \
@@ -89,21 +90,23 @@ Gorm_RESOURCE_FILES = \
         Images/GormSourceTag.tiff \
         Images/GormTargetTag.tiff \
         Images/GormLinkImage.tiff \
-        Images/GormTesting.tiff \
-
+        Images/GormTesting.tiff
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	Gorm.gorm \
+	GormLanguageViewController.gorm \
 	Gorm.rtfd
 
 Gorm_LANGUAGES = \
 	English
 
 Gorm_HEADERS = \
-	GormAppDelegate.h
+	GormAppDelegate.h \
+	GormLanguageViewController.h
 
 Gorm_OBJC_FILES = \
 	GormAppDelegate.m \
+	GormLanguageViewController.m \
 	main.m 
 
 -include GNUmakefile.preamble

@@ -31,6 +31,7 @@
 #import <AppKit/NSMenu.h>
 
 #import "GormAppDelegate.h"
+#import "GormLanguageViewController.h"
 
 @implementation GormAppDelegate
 
@@ -568,6 +569,48 @@
 - (IBAction) loadPalette: (id) sender
 {
   [[self palettesManager] openPalette: sender];
+}
+
+// Translation
+- (IBAction) exportXLIFFDocument: (id)sender;
+{
+  NSSavePanel *savePanel = [NSSavePanel savePanel];
+  NSBundle *bundle = [NSBundle bundleForClass: [GormLanguageViewController class]];
+  NSModalResponse result = 0;
+  
+  _vc = [[GormLanguageViewController alloc] initWithNibName: @"GormLanguageViewController"
+						     bundle: bundle];
+
+
+  NSDebugLog(@"view = %@, _vc = %@", [_vc view], _vc);
+
+  [savePanel setTitle: @"Export XLIFF"];
+  [savePanel setAccessoryView: [_vc view]];
+  [savePanel setDelegate: self];
+
+  result = [savePanel runModal];
+  if (NSModalResponseOK == result)
+    {
+      NSString *filename = [[savePanel URL] path];
+      [(GormDocument *)[self activeDocument] exportXLIFFDocumentWithName: filename
+						      withSourceLanguage: [_vc sourceLanguageIdentifier]
+						       andTargetLanguage: [_vc targetLanguageIdentifier]];
+    }
+}
+
+- (NSString *) panel: (id)sender
+ userEnteredFilename: (NSString *)filename
+	   confirmed: (BOOL)flag
+{
+  if (flag == YES)
+    {
+      NSLog(@"Writing the document... %@", filename);
+    }
+  else
+    {
+      NSLog(@"%@ not saved", filename);
+    }
+  return filename;
 }
 
 // Print

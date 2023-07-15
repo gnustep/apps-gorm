@@ -65,7 +65,6 @@ GormCore_HEADER_FILES = \
 	GormImageInspector.h \
 	GormInspectorsManager.h \
 	GormInternalViewEditor.h \
-	GormLanguageViewController.h \
 	GormMatrixEditor.h \
 	GormNSPanel.h \
 	GormNSSplitViewInspector.h \
@@ -140,7 +139,6 @@ GormCore_OBJC_FILES = \
 	GormImageInspector.m \
 	GormInspectorsManager.m \
 	GormInternalViewEditor.m \
-	GormLanguageViewController.m \
 	GormMatrixEditor.m \
 	GormNSPanel.m \
 	GormNSSplitViewInspector.m \
@@ -254,9 +252,7 @@ GormCore_RESOURCE_FILES = \
 	Images/tabtop_nib.tiff \
 	Images/titleOnly_nib.tiff \
 	Resources/VersionProfiles.plist \
-	Resources/ClassInformation.plist \
-	Resources/language-codes.plist
-
+	Resources/ClassInformation.plist 
 
 GormCore_LANGUAGES = English
 
@@ -273,7 +269,6 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormImageInspector.gorm \
 	GormInconsistenciesPanel.gorm \
 	GormInspectorPanel.gorm \
-	GormLanguageViewController.gorm \
 	GormNSSplitViewInspector.gorm \
 	GormObjectInspector.gorm \
 	GormPalettePanel.gorm \

@@ -23,18 +23,28 @@
  * USA.
  */
 
-#include <GormCore/GormCore.h>
-#include <GormCore/GormPrefs.h>
+#ifndef GormAppDelegate_H_INCLUDE
+#define GormAppDelegate_H_INCLUDE
 
-#include <GNUstepBase/GSObjCRuntime.h>
+#import <AppKit/NSSavePanel.h>
+
+#import <GormCore/GormCore.h>
+#import <GormCore/GormPrefs.h>
+
+#import <GNUstepBase/GSObjCRuntime.h>
 
 @class NSDictionary;
 @class NSImage;
 @class NSMenu;
 @class NSMutableArray;
 @class NSSet;
+@class GormLanguageViewController;
 
-@interface GormAppDelegate : GormAbstractDelegate
+@interface GormAppDelegate : GormAbstractDelegate <NSOpenSavePanelDelegate>
+{
+  @private
+    GormLanguageViewController *_vc;
+}
 
 // preferences
 - (IBAction) preferencesPanel: (id) sender;
@@ -74,7 +84,12 @@
 - (IBAction) palettes: (id) sender;
 - (IBAction) loadPalette: (id) sender;
 
+// Translation
+- (IBAction) exportXLIFFDocument: (id)sender;
+
 // Print
 - (IBAction) print: (id)sender;
 
 @end
+
+#endif // GormAppDelegate_H_INCLUDE

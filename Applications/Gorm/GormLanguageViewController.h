@@ -12,6 +12,9 @@
   IBOutlet id targetLanguage;
   IBOutlet id sourceLanguage;
 
+  NSString *sourceLanguageIdentifier;
+  NSString *targetLanguageIdentifier;
+  
   NSDictionary *ldict;
 }
 
