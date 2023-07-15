@@ -3410,11 +3410,13 @@ static void _real_close(GormDocument *self,
   NSEnumerator *en = [topLevelObjects objectEnumerator];
   id o = nil;
 
+  [self deactivateEditors];
   while ((o = [en nextObject]) != nil)
     {
       [self _collectObjectsFromObject: o
 			     withNode: parentNode];
     }
+  [self reactivateEditors];
 }
 
 /**
