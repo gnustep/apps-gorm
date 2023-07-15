@@ -3511,9 +3511,16 @@ static void _real_close(GormDocument *self,
       
       NSData *data = [xliffDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLNodeCompactEmptyElement ];
       NSString *xmlString = [[NSString alloc] initWithBytes: [data bytes] length: [data length] encoding: NSUTF8StringEncoding];
+      NSString *fixedString = [xmlString stringByReplacingOccurrencesOfString: @"ib_member-type"
+								   withString: @"ib:member-type"];
 
+      // "fixedString" corrects a rather confusing problem where adding the
+      // ib:member-type attribute, for some reason causes the NSXMLNode to
+      // create a repeated declaration of the "ib" namespace.  I don't understand
+      // why this is happening, but this fixes it in the output for now.
+      
       AUTORELEASE(xmlString);
-      result = [xmlString writeToFile: name atomically: YES];
+      result = [fixedString writeToFile: name atomically: YES];
     }
   else
     {
