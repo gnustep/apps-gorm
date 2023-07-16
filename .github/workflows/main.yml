@@ -13,6 +13,10 @@ on:
         description: "libs-base branch"
         default: "master"
         required: true
+      libs_gui_branch:
+        description: "libs-gui branch"
+        default: "master"
+        required: true	
       libs_back_branch:
         description: "libs-back branch"
         default: "master"
@@ -105,12 +109,12 @@ jobs:
         env:
           TOOLS_MAKE_BRANCH: ${{github.event.inputs.tools_make_branch}}
           LIBS_BASE_BRANCH: ${{github.event.inputs.libs_base_branch}}
-        run: ./.github/scripts/dependencies.sh
+	  LIBS_GUI_BRANCH: ${{github.event.inputs.libs_gui_branch}}
+	  run: ./.github/scripts/dependencies.sh
 
       - name: Build source
         run: |
           . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-          ./configure
           make && make install
 
 ### Building libs-back is disabled due to various test failures. Re-enable when fixed.
@@ -123,10 +127,11 @@ jobs:
 #          ./configure
 #          make && make install
 
-      - name: Run tests
-        run: |
-          . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-          make check
+### There are currently no unit tests for Gorm.
+#      - name: Run tests
+#        run: |
+#          . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
+#          make check
 
       - name: Upload logs
         uses: actions/upload-artifact@v3
