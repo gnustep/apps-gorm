@@ -3187,68 +3187,6 @@ static void _real_close(GormDocument *self,
     }
 }
 
-/**
- * This method is used to translate all of the strings in the file from one language
- * into another.  This is helpful when attempting to translate an application for use
- * in different locales.
- */
-- (void) translate: (id)sender
-{
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
-  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
-  int		result;
-
-  [oPanel setAllowsMultipleSelection: NO];
-  [oPanel setCanChooseFiles: YES];
-  [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: nil
-				   file: nil
-				  types: fileTypes];
-  if (result == NSOKButton)
-    {
-      NSMutableArray *allObjects = [self _collectAllObjects];
-      NSString *filename = [oPanel filename];
-      NSEnumerator *en = nil;
-      id obj = nil;
-
-      NS_DURING
-	{
-	  [self importStringsFromFile: filename];
-	}
-      NS_HANDLER
-	{
-	  NSString *message = [localException reason];
-	  NSRunAlertPanel(_(@"Problem loading strings"),
-			  message, nil, nil, nil);
-	}
-      NS_ENDHANDLER;
-
-      [self touch]; // mark the document as modified...
-      
-      // change to translated values.
-      en = [allObjects objectEnumerator];
-      while((obj = [en nextObject]) != nil)
-	{
-	  if([obj isKindOfClass: [NSView class]])
-	    {
-	      [obj setNeedsDisplay: YES];
-	    }
-	  
-	  // redisplay/flush, if the object is a window.
-	  if([obj isKindOfClass: [NSWindow class]])
-	    {
-	      NSWindow *w = (NSWindow *)obj;
-	      [w setViewsNeedDisplay: YES];
-	      [w disableFlushWindow];
-	      [[w contentView] setNeedsDisplay: YES];
-	      [[w contentView] displayIfNeeded];
-	      [w enableFlushWindow];
-	      [w flushWindowIfNeeded];
-	    }
-	}
-    } 
-}
-
 - (void) exportStringsToFile: (NSString *)filename
 {
   NSMutableArray *allObjects = [self _collectAllObjects];
@@ -3294,27 +3232,6 @@ static void _real_close(GormDocument *self,
 				       [dictionary descriptionInStringsFileFormat]];
       [stringToWrite writeToFile: filename atomically: YES];
     }
-}
-
-/**
- * This method is used to export all strings in a document to a file for Language
- * translation.  This allows the user to see all of the strings which can be translated
- * and allows the user to provide a translateion for each of them.
- */
-- (void) exportStrings: (id)sender
-{
-  NSSavePanel	*sp = [NSSavePanel savePanel];
-  int		result;
-
-  [sp setRequiredFileType: @"strings"];
-  [sp setTitle: _(@"Save strings file as...")];
-  result = [sp runModalForDirectory: NSHomeDirectory()
-	       file: nil];
-  if (result == NSOKButton)
-    {
-      NSString *filename = [sp filename];
-      [self exportStringsToFile: filename];
-    } 
 }
 
 - (void) _collectObjectsFromObject: (id)obj
@@ -3528,6 +3445,14 @@ static void _real_close(GormDocument *self,
     }
   
   return result;
+}
+
+/**
+ * Import XLIFF Document withthe name filename
+ */
+- (BOOL) importXLIFFDocumentWithName: (NSString *)filename
+{
+  return NO;
 }
 
 /**

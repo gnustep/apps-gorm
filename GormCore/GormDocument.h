@@ -213,16 +213,9 @@
 
 /* Language translation */
 /**
- * Load a given file into the reciever using `filename`.
+ * Load a given file into the reciever using `filename'.
  */
 - (void) importStringsFromFile: (NSString *)filename;
-
-/**
- * This method is used to translate all of the strings in the file from one language
- * into another.  This is helpful when attempting to translate an application for use
- * in different locales.
- */
-- (void) translate: (id)sender;
 
 /**
  * Export the strings from receiver to the file indicated by 'filename'.
@@ -230,9 +223,9 @@
 - (void) exportStringsToFile: (NSString *)filename;
 
 /**
- * Bring up a save panel to export the strings from the receiver.
+ * Import XLIFF document into the reciever using filename.
  */
-- (void) exportStrings: (id)sender;
+- (BOOL) importXLIFFDocumentWithName: (NSString *)filename;
 
 /**
  * Exports XLIFF file for CAT.  This method starts the process and calls
