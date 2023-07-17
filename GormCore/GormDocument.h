@@ -57,7 +57,7 @@
 }
 @end
 
-@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding> 
+@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding, NSXMLParserDelegate> 
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;

@@ -3447,11 +3447,47 @@ static void _real_close(GormDocument *self,
   return result;
 }
 
+- (void) parserDidStartDocument: (NSXMLParser *)parser
+{
+  NSLog(@"start of document");
+}
+
+- (void) parser: (NSXMLParser *)parser
+didStartElement: (NSString *)elementName
+   namespaceURI: (NSString *)namespaceURI
+  qualifiedName: (NSString *)qName
+     attributes: (NSDictionary *)attrs
+{
+  NSLog(@"start element %@", elementName);
+}
+
+- (void) parser: (NSXMLParser *)parser
+  didEndElement: (NSString *)elementName
+   namespaceURI: (NSString *)namespaceURI
+  qualifiedName: (NSString *)qName
+{
+  NSLog(@"end element %@", elementName);
+}
+
+- (void) parserDidEndDocument: (NSXMLParser *)parser
+{
+    NSLog(@"end of document");
+}
+
 /**
  * Import XLIFF Document withthe name filename
  */
 - (BOOL) importXLIFFDocumentWithName: (NSString *)filename
 {
+  NSData *xmlData = [NSData dataWithContentsOfFile: filename];
+  NSXMLParser *xmlParser =
+    [[NSXMLParser alloc] initWithData: xmlData];
+
+  [xmlParser setDelegate: self];
+  [xmlParser parse];
+  
+  RELEASE(xmlParser);
+
   return NO;
 }
 
