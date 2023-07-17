@@ -113,6 +113,11 @@ GormCore_HEADER_FILES = \
 	GormPrefController.h \
 	GormPrefs.h \
 	GormShelfPref.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
 
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
@@ -184,6 +189,7 @@ GormCore_OBJC_FILES = \
 	GormPluginsPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
+	GormXLIFFDocument.m \
 
 GormCore_RESOURCE_FILES = \
 	Plugins/Gorm/Gorm.plugin \

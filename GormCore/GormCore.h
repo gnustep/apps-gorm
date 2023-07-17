@@ -96,6 +96,7 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #import <GormCore/GormWindowTemplate.h>
 #import <GormCore/GormWrapperBuilder.h>
 #import <GormCore/GormWrapperLoader.h>
+#import <GormCore/GormXLIFFDocument.h>
 #import <GormCore/NSCell+GormAdditions.h>
 #import <GormCore/NSColorWell+GormExtensions.h>
 #import <GormCore/NSFontManager+GormExtensions.h>

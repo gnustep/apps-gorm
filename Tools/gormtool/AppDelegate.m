@@ -352,22 +352,16 @@
 	{
 	  NSString *xliffDocumentName = [opt value];
 	  BOOL result = NO;
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
 	  
 	  if (slang == nil)
 	    {
 	      NSLog(@"Please specify a source language");	      
 	    }
 
-	  /*
-	  if (tlang == nil)
-	    {
-	      NSLog(@"Please specify a target language");
-	    }
-	  */
-	  
-	  result = [doc exportXLIFFDocumentWithName: xliffDocumentName
-				 withSourceLanguage: slang
-				  andTargetLanguage: tlang];	  
+	  result = [xd exportXLIFFDocumentWithName: xliffDocumentName
+				withSourceLanguage: slang
+				 andTargetLanguage: tlang];	  
 	  if (result == NO)
 	    {
 	      NSLog(@"File not generated");

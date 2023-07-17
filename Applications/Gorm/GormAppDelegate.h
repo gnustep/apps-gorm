@@ -85,7 +85,10 @@
 - (IBAction) loadPalette: (id) sender;
 
 // Translation
+- (IBAction) importXLIFFDocument: (id)sender;
 - (IBAction) exportXLIFFDocument: (id)sender;
+- (IBAction) translate: (id)sender;
+- (IBAction) exportStrings: (id)sender;
 
 // Print
 - (IBAction) print: (id)sender;

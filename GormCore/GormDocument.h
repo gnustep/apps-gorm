@@ -57,7 +57,7 @@
 }
 @end
 
-@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding> 
+@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding, NSXMLParserDelegate> 
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
@@ -213,35 +213,14 @@
 
 /* Language translation */
 /**
- * Load a given file into the reciever using `filename`.
+ * Load a given file into the reciever using `filename'.
  */
 - (void) importStringsFromFile: (NSString *)filename;
-
-/**
- * This method is used to translate all of the strings in the file from one language
- * into another.  This is helpful when attempting to translate an application for use
- * in different locales.
- */
-- (void) translate: (id)sender;
 
 /**
  * Export the strings from receiver to the file indicated by 'filename'.
  */
 - (void) exportStringsToFile: (NSString *)filename;
-
-/**
- * Bring up a save panel to export the strings from the receiver.
- */
-- (void) exportStrings: (id)sender;
-
-/**
- * Exports XLIFF file for CAT.  This method starts the process and calls
- * another method that recurses through the objects in the model and pulls
- * any translatable elements.
- */
-- (BOOL) exportXLIFFDocumentWithName: (NSString *)name
-                  withSourceLanguage: (NSString *)slang
-                   andTargetLanguage: (NSString *)tlang;
 
 /* Managing classes */
 /**
