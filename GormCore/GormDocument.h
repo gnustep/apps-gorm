@@ -222,20 +222,6 @@
  */
 - (void) exportStringsToFile: (NSString *)filename;
 
-/**
- * Import XLIFF document into the reciever using filename.
- */
-- (BOOL) importXLIFFDocumentWithName: (NSString *)filename;
-
-/**
- * Exports XLIFF file for CAT.  This method starts the process and calls
- * another method that recurses through the objects in the model and pulls
- * any translatable elements.
- */
-- (BOOL) exportXLIFFDocumentWithName: (NSString *)name
-                  withSourceLanguage: (NSString *)slang
-                   andTargetLanguage: (NSString *)tlang;
-
 /* Managing classes */
 /**
  * Shared class manager

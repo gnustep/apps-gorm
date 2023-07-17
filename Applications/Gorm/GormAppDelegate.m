@@ -600,7 +600,8 @@
 
       NS_DURING
 	{
-	  [doc importXLIFFDocumentWithName: filename];
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
+	  [xd importXLIFFDocumentWithName: filename];
 	}
       NS_HANDLER
 	{
@@ -666,9 +667,11 @@
       if (NSModalResponseOK == result)
 	{
 	  NSString *filename = [[savePanel URL] path];
-	  [doc exportXLIFFDocumentWithName: filename
-			withSourceLanguage: [_vc sourceLanguageIdentifier]
-			 andTargetLanguage: [_vc targetLanguageIdentifier]];
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
+	  
+	  [xd exportXLIFFDocumentWithName: filename
+		       withSourceLanguage: [_vc sourceLanguageIdentifier]
+			andTargetLanguage: [_vc targetLanguageIdentifier]];
 	}
     }
 }
