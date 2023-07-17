@@ -108,8 +108,8 @@ jobs:
       - name: Install dependencies
         env:
           TOOLS_MAKE_BRANCH: ${{github.event.inputs.tools_make_branch}}
-          LIBS_BASE_BRANCH: ${{github.event.inputs.libs_base_branch}}
-	  LIBS_GUI_BRANCH: ${{github.event.inputs.libs_gui_branch}}
+          #LIBS_BASE_BRANCH: ${{github.event.inputs.libs_base_branch}}
+	  #LIBS_GUI_BRANCH: ${{github.event.inputs.libs_gui_branch}}
 	  run: ./.github/scripts/dependencies.sh
 
       - name: Build source
