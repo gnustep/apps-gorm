@@ -60,13 +60,25 @@
   if (self != nil)
     {
       ASSIGN(_gormDocument, doc);
+
+      _objectId = nil;
+      _source = NO;
+      _target = NO;
+      _sourceString = nil;
+      _targetString = nil;
+      _translationDictionary = [[NSMutableDictionary alloc] init];
     }
   return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(_gormDocument);
+  DESTROY(_gormDocument);
+  _objectId = nil;
+  _sourceString = nil;
+  _targetString = nil;
+  DESTROY(_translationDictionary);
+  
   [super dealloc];
 }
 
@@ -285,7 +297,7 @@
 
 - (void) parserDidStartDocument: (NSXMLParser *)parser
 {
-  NSLog(@"start of document");
+  NSDebugLog(@"start of document");
 }
 
 - (void) parser: (NSXMLParser *)parser
@@ -294,7 +306,39 @@ didStartElement: (NSString *)elementName
   qualifiedName: (NSString *)qName
      attributes: (NSDictionary *)attrs
 {
-  NSLog(@"start element %@", elementName);
+  NSDebugLog(@"start element %@", elementName);
+  if ([elementName isEqualToString: @"trans-unit"])
+    {
+      NSString *objId = [attrs objectForKey: @"id"];
+      _objectId = objId;
+    }
+  else if ([elementName isEqualToString: @"source"])
+    {
+      _source = YES;
+    }
+  else if ([elementName isEqualToString: @"target"])
+    {
+      _target = YES;
+    }
+}
+
+- (void) parser: (NSXMLParser *)parser
+foundCharacters: (NSString *)string
+{
+  if (_objectId != nil)
+    {
+      if (_source)
+	{
+	  NSDebugLog(@"Found source string %@, current id = %@", string, _objectId);
+	}
+
+      if (_target)
+	{
+	  [_translationDictionary setObject: string forKey: _objectId];
+	  
+	  NSDebugLog(@"Found target string %@, current id = %@", string, _objectId);
+	}
+    }
 }
 
 - (void) parser: (NSXMLParser *)parser
@@ -302,12 +346,24 @@ didStartElement: (NSString *)elementName
    namespaceURI: (NSString *)namespaceURI
   qualifiedName: (NSString *)qName
 {
-  NSLog(@"end element %@", elementName);
+  NSDebugLog(@"end element %@", elementName);
+  if ([elementName isEqualToString: @"trans-unit"])
+    {
+      _objectId = nil;
+    }
+  else if ([elementName isEqualToString: @"source"])
+    {
+      _source = NO;
+    }
+  else if ([elementName isEqualToString: @"target"])
+    {
+      _target = NO;
+    }
 }
 
 - (void) parserDidEndDocument: (NSXMLParser *)parser
 {
-  NSLog(@"end of document");
+  NSDebugLog(@"end of document");
 }
 
 /**
@@ -318,13 +374,54 @@ didStartElement: (NSString *)elementName
   NSData *xmlData = [NSData dataWithContentsOfFile: filename];
   NSXMLParser *xmlParser =
     [[NSXMLParser alloc] initWithData: xmlData];
-
+  BOOL result = NO;
+  
   [xmlParser setDelegate: self];
   [xmlParser parse];
+
+  if ([_translationDictionary count] > 0)
+    {
+      NSEnumerator *en = [_translationDictionary keyEnumerator];
+      NSString *oid = nil;
+
+      while ((oid = [en nextObject]) != nil)
+	{
+	  NSString *target = [_translationDictionary objectForKey: oid];
+	  NSArray *c = [oid componentsSeparatedByString: @"."];
+
+	  if ([c count] == 2)
+	    {
+	      NSString *nm = [c objectAtIndex: 0];
+	      NSString *kp = [c objectAtIndex: 1];
+	      id o = nil;
+	      NSString *capName = [kp capitalizedString];
+	      NSString *selName = [NSString stringWithFormat: @"set%@:", capName];
+	      SEL _sel = NSSelectorFromString(selName);
+
+	      NSDebugLog(@"computed selector name = %@", selName);
+	      
+	      // Pull the object that we want to translate and apply the target translation...
+	      o = [_gormDocument objectForName: nm];
+	      if ([o respondsToSelector: _sel])
+		{
+		  NSDebugLog(@"performing %@, with object: %@", selName, target);
+		  [o performSelector: _sel withObject: target];
+		}
+	    }	  
+	  NSDebugLog(@"target = %@, oid = %@", target, oid);
+	}
+
+      result = YES;
+    }
+  else
+    {
+      NSLog(@"Document contains no target translation elements");
+    }
+
   
   RELEASE(xmlParser);
 
-  return NO;
+  return result;
 }
 
 @end

@@ -597,11 +597,12 @@
       NSString *filename = [oPanel filename];
       NSEnumerator *en = nil;
       id obj = nil;
-
+      BOOL result = NO;
+      
       NS_DURING
 	{
 	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
-	  [xd importXLIFFDocumentWithName: filename];
+	  result = [xd importXLIFFDocumentWithName: filename];
 	}
       NS_HANDLER
 	{
@@ -611,30 +612,34 @@
 	}
       NS_ENDHANDLER;
 
-      [doc touch]; // mark the document as modified...
-      
-      // change to translated values.
-      en = [allObjects objectEnumerator];
-      while((obj = [en nextObject]) != nil)
+      // If actual translation was done, then refresh the objects...
+      if (result == YES)
 	{
-	  if([obj isKindOfClass: [NSView class]])
-	    {
-	      [obj setNeedsDisplay: YES];
-	    }
+	  [doc touch]; // mark the document as modified...
 	  
-	  // redisplay/flush, if the object is a window.
-	  if([obj isKindOfClass: [NSWindow class]])
+	  // change to translated values.
+	  en = [allObjects objectEnumerator];
+	  while((obj = [en nextObject]) != nil)
 	    {
-	      NSWindow *w = (NSWindow *)obj;
-	      [w setViewsNeedDisplay: YES];
-	      [w disableFlushWindow];
-	      [[w contentView] setNeedsDisplay: YES];
-	      [[w contentView] displayIfNeeded];
-	      [w enableFlushWindow];
-	      [w flushWindowIfNeeded];
-	    }
-	}      
-    }  
+	      if([obj isKindOfClass: [NSView class]])
+		{
+		  [obj setNeedsDisplay: YES];
+		}
+	      
+	      // redisplay/flush, if the object is a window.
+	      if([obj isKindOfClass: [NSWindow class]])
+		{
+		  NSWindow *w = (NSWindow *)obj;
+		  [w setViewsNeedDisplay: YES];
+		  [w disableFlushWindow];
+		  [[w contentView] setNeedsDisplay: YES];
+		  [[w contentView] displayIfNeeded];
+		  [w enableFlushWindow];
+		  [w flushWindowIfNeeded];
+		}
+	    }      
+	}  
+    }
 }
 
 - (IBAction) exportXLIFFDocument: (id)sender

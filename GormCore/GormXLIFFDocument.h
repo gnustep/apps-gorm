@@ -27,6 +27,7 @@
 
 #import <Foundation/NSObject.h>
 
+@class NSMutableDictionary;
 @class NSString;
 @class NSXMLDocument;
 @class GormDocument;
@@ -34,6 +35,15 @@
 @interface GormXLIFFDocument : NSObject
 {
   GormDocument *_gormDocument;
+
+  NSString *_objectId;
+  NSString *_targetString;
+  NSString *_sourceString;
+  NSMutableDictionary *_translationDictionary;
+  
+  BOOL _source;
+  BOOL _target;
+
 }
 
 /**
