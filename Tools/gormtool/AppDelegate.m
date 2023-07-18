@@ -53,6 +53,12 @@
   return YES;
 }
 
+- (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName
+{
+  NSLog(@"Renaming connections from class %@ to class %@", className, newName);
+  return YES;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];

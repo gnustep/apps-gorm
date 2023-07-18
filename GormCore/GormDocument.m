@@ -2825,24 +2825,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
-  BOOL renamed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
-  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
-  NSString *msg = [NSString stringWithFormat: 
-                              msgFormat,
-			    className, newName];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      renamed = YES;
-    }
-  else
-    {
-      renamed = NO;
-    }
+  id delegate = [NSApp delegate];
+  BOOL renamed = [delegate shouldRenameConnectionsForClassNamed: className
+						    toClassName: newName];
 
   // remove all.
   if(renamed)

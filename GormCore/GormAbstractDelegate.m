@@ -190,6 +190,20 @@
   return (retval == NSAlertDefaultReturn);
 }
 
+- (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName
+{
+  NSInteger retval = -1;
+  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
+  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
+  NSString *msg = [NSString stringWithFormat: 
+                              msgFormat,
+			    className, newName];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+  return (retval == NSAlertDefaultReturn);  
+}
+
 - (BOOL) isInTool
 {
   return NO;

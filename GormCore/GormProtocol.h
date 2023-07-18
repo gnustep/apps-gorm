@@ -57,6 +57,7 @@
 - (BOOL) shouldUpgradeOlderArchive;
 - (BOOL) shouldLoadNewerArchive;
 - (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className;
+- (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName;
 
 @end
 
