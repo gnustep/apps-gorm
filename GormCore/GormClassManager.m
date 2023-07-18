@@ -1910,26 +1910,9 @@
 		  if([self isKnownClass: className])
 		    {
 		      id<GormAppDelegate> delegate = (id<GormAppDelegate>)[NSApp delegate];		      
-		      NSString *title = [NSString stringWithFormat: @"%@",
-						    _(@"Reparsing Class")];
-                      NSString *messageFormat = _(@"This may break connections to "
-                                                  @"actions/outlets to instances of class '%@' "
-                                                  @"and it's subclasses.  Continue?"); 
-                      NSString *msg = [NSString stringWithFormat: messageFormat,
-						className];		      
-		      NSInteger retval = 0;
-
-		      if ([delegate isInTool])
-			{
-			  retval = NSAlertDefaultReturn;
-			  NSLog(@"Breaking any existing connections with instances of class %@", className);
-			}
-		      else
-			{
-			  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-			}
+		      BOOL result = [delegate shouldBreakConnectionsReparsingClass: className];
 		      
-		      if (retval == NSAlertDefaultReturn)
+		      if (result == YES)
 			{
 			  // get the owner and reset the class name to NSApplication.
 			  GormFilesOwner *owner = [_document objectForName: @"NSOwner"];

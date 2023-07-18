@@ -193,6 +193,7 @@ static NSImage  *fileImage = nil;
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      id delegate = [NSApp delegate];
       
       // initialize...
       openEditors = [[NSMutableArray alloc] init];
@@ -271,20 +272,12 @@ static NSImage  *fileImage = nil;
 		{
 		  if(![classManager parseHeader: header])
 		    {
-		      NSString *file = [header lastPathComponent];
-		      NSString *message = [NSString stringWithFormat: 
-						      _(@"Unable to parse class in %@"),file];
-		      NSRunAlertPanel(_(@"Problem parsing class"), 
-				      message,
-				      nil, nil, nil);
+		      [delegate couldNotParseClassAtPath: header];
 		    }
 		}
 	      NS_HANDLER
 		{
-		  NSString *message = [localException reason];
-		  NSRunAlertPanel(_(@"Problem parsing class"), 
-				  message,
-				  nil, nil, nil);
+		  [delegate exceptionWhileParsingClass: localException];
 		}
 	      NS_ENDHANDLER;
 	    }
@@ -435,20 +428,15 @@ static NSImage  *fileImage = nil;
 	{
 	  NSInteger version = [filePrefsManager version];
 	  NSInteger currentVersion = [GormFilePrefsManager currentVersion];
+	  id delegate = [NSApp delegate];
 	  
 	  if(version > currentVersion)
 	    {
-	      NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
-					   _(@"The file being loaded was created with a newer build, continue?"), 
-					   _(@"OK"), 
-					   _(@"Cancel"), 
-					   nil,
-					   nil);
-	      if(retval != NSAlertDefaultReturn)
+	      BOOL result = [delegate shouldLoadNewerArchive];
+	      if (result == NO)
 		{
-		  // close the document, if the user says "NO."
 		  [self close];
-		}
+		}	      
 	    }
 	  DESTROY(infoData);
 	}
@@ -2641,7 +2629,8 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   BOOL prompted = NO;
-
+  id delegate = [NSApp delegate];
+  
   // find connectors to be removed.
   while ((c = [en nextObject]) != nil)
     {
@@ -2679,33 +2668,12 @@ static void _real_close(GormDocument *self,
       if ([label isEqualToString: name] && ([proxyClass isEqualToString: className] ||
 	  [classManager isSuperclass: className linkedToClass: proxyClass]))
 	{
-	  NSString *title;
-	  NSString *msg;
-	  NSInteger retval;
-
-	  if(prompted == NO)
+	  removed = [delegate shouldBreakConnectionsModifyingLabel: name
+							  isAction: action
+							  prompted: prompted];
+	  if (removed)
 	    {
-	      title = [NSString stringWithFormat:
-				  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
-	      msg = [NSString stringWithFormat:
-				_(@"This will break all connections to '%@'.  Continue?"), name];
-	      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-	      prompted = YES;
-	    }
-	  else
-	    {
-		removed = NO;
-		break;
-	    }
-
-	  if (retval == NSAlertDefaultReturn)
-	    {
-	      removed = YES;
 	      [removedConnections addObject: c];
-	    }
-	  else
-	    {
-	      removed = NO;
 	      break;
 	    }
 	}
@@ -2733,26 +2701,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
-  BOOL removed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
-  NSString *msg;
-  NSString *msgFormat = _(@"This will break all connections to "
-                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
-
-  msg = [NSString stringWithFormat: msgFormat, className];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      removed = YES;
-    }
-  else
-    {
-      removed = NO;
-    }
-
+  id delegate = [NSApp delegate];
+  BOOL removed = [delegate shouldBreakConnectionsForClassNamed: className];
+  
   // remove all.
   if(removed)
     {
@@ -2847,24 +2798,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
-  BOOL renamed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
-  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
-  NSString *msg = [NSString stringWithFormat: 
-                              msgFormat,
-			    className, newName];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      renamed = YES;
-    }
-  else
-    {
-      renamed = NO;
-    }
+  id delegate = [NSApp delegate];
+  BOOL renamed = [delegate shouldRenameConnectionsForClassNamed: className
+						    toClassName: newName];
 
   // remove all.
   if(renamed)
