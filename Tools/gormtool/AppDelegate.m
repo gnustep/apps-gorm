@@ -181,6 +181,12 @@
 	      parse_val = YES;
 	    }
 
+	  if ([obj isEqualToString: @"--import-xliff"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = YES;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -365,6 +371,20 @@
 	  if (result == NO)
 	    {
 	      NSLog(@"File not generated");
+	    }
+	}
+
+      opt = [args objectForKey: @"--import-xliff"];
+      if (opt != nil)
+	{
+	  NSString *xliffDocumentName = [opt value];
+	  BOOL result = NO;
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
+	  
+	  result = [xd importXLIFFDocumentWithName: xliffDocumentName];
+	  if (result == NO)
+	    {
+	      NSLog(@"No translation performed.");
 	    }
 	}
 
