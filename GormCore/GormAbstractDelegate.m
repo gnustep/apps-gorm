@@ -149,7 +149,8 @@
   [super dealloc];
 }
 
-// Gorm specific methods...
+// Handle all alerts here...
+
 - (BOOL) shouldUpgradeOlderArchive
 {
   NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
@@ -162,7 +163,100 @@
   return (retval == NSAlertDefaultReturn);
 }
 
+- (BOOL) shouldLoadNewerArchive
+{
+  NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
+				     _(@"The file being loaded was created with a newer build, continue?"), 
+				     _(@"OK"), 
+				     _(@"Cancel"), 
+				     nil,
+				     nil);
 
+  return (retval == NSAlertDefaultReturn);
+}
+
+- (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className
+{
+  NSInteger retval = -1;
+  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
+  NSString *msg;
+  NSString *msgFormat = _(@"This will break all connections to "
+                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
+
+  msg = [NSString stringWithFormat: msgFormat, className];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+
+  return (retval == NSAlertDefaultReturn);
+}
+
+- (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName
+{
+  NSInteger retval = -1;
+  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
+  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
+  NSString *msg = [NSString stringWithFormat: 
+                              msgFormat,
+			    className, newName];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+  return (retval == NSAlertDefaultReturn);  
+}
+
+- (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted
+{
+  NSString *title;
+  NSString *msg;
+  NSInteger retval = -1;
+   
+  if(prompted == NO)
+    {
+      title = [NSString stringWithFormat:
+			  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
+      msg = [NSString stringWithFormat:
+			_(@"This will break all connections to '%@'.  Continue?"), name];
+      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+      // prompted = YES;
+    }
+  
+  return (retval == NSAlertDefaultReturn);
+}
+
+- (void) couldNotParseClassAtPath: (NSString *)path
+{
+  NSString *file = [path lastPathComponent];
+  NSString *message = [NSString stringWithFormat: 
+				  _(@"Unable to parse class in %@"),file];
+  NSRunAlertPanel(_(@"Problem parsing class"), 
+		  message,
+		  nil, nil, nil);
+}
+
+- (void) exceptionWhileParsingClass: (NSException *)localException
+{
+  NSString *message = [localException reason];
+  NSRunAlertPanel(_(@"Problem parsing class"), 
+		  message,
+		  nil, nil, nil);
+}
+
+- (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className
+{
+   NSString *title = [NSString stringWithFormat: @"%@",
+			       _(@"Reparsing Class")];
+   NSString *messageFormat = _(@"This may break connections to "
+			       @"actions/outlets to instances of class '%@' "
+			       @"and it's subclasses.  Continue?"); 
+   NSString *msg = [NSString stringWithFormat: messageFormat,
+			     className];		      
+   NSInteger retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+
+   return (retval == NSAlertDefaultReturn);
+}
+
+// Gorm specific methods...
 - (BOOL) isInTool
 {
   return NO;

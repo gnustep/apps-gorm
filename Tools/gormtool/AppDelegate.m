@@ -30,16 +30,60 @@
 // AppDelegate...
 @implementation AppDelegate
 
+// Are we in a tool?
 - (BOOL) isInTool
 {
   return YES;
 }
+
+// Handle all alerts...
 
 - (BOOL) shouldUpgradeOlderArchive
 {
   NSLog(@"Upgrading archive to latest version of .gorm format");
   return YES;
 }
+
+- (BOOL) shouldLoadNewerArchive
+{
+  NSLog(@"Refusing to load archive since it is from a newer version of Gorm/gormtool");
+  return NO;
+}
+
+- (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className
+{
+  NSLog(@"Breaking connections for instances of class: %@", className);
+  return YES;
+}
+
+- (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName
+{
+  NSLog(@"Renaming connections from class %@ to class %@", className, newName);
+  return YES;
+}
+
+- (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted
+{
+  NSLog(@"Breaking connections for %@ %@", action?@"action":@"outlet", name);
+  return YES;
+}
+
+- (void) couldNotParseClassAtPath: (NSString *)path;
+{
+  NSLog(@"Could not parse class at path: %@", path);
+}
+
+- (void) exceptionWhileParsingClass: (NSException *)localException
+{
+  NSLog(@"Exception while parsing class: %@", [localException reason]);
+}
+
+- (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className
+{
+  NSLog(@"Breaking any existing connections with instances of class %@", className);
+  return YES;
+}
+// Handle arguments
 
 - (NSDictionary *) parseArguments
 {
