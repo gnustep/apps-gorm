@@ -56,6 +56,7 @@
 - (BOOL) isInTool;
 - (BOOL) shouldUpgradeOlderArchive;
 - (BOOL) shouldLoadNewerArchive;
+- (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className;
 
 @end
 

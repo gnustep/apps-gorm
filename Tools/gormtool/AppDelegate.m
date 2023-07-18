@@ -47,6 +47,12 @@
   return NO;
 }
 
+- (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className
+{
+  NSLog(@"Breaking connections for instances of class: %@", className);
+  return YES;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];

@@ -2728,26 +2728,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
-  BOOL removed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
-  NSString *msg;
-  NSString *msgFormat = _(@"This will break all connections to "
-                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
-
-  msg = [NSString stringWithFormat: msgFormat, className];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      removed = YES;
-    }
-  else
-    {
-      removed = NO;
-    }
-
+  id delegate = [NSApp delegate];
+  BOOL removed = [delegate shouldBreakConnectionsForClassNamed: className];
+  
   // remove all.
   if(removed)
     {

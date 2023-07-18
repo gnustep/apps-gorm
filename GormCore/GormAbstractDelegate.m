@@ -170,13 +170,23 @@
 				     _(@"Cancel"), 
 				     nil,
 				     nil);
-  /* 
-  if(retval != NSAlertDefaultReturn)
-    {
-      // close the document, if the user says "NO."
-      [self close];
-    }
-  */
+
+  return (retval == NSAlertDefaultReturn);
+}
+
+- (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className
+{
+  NSInteger retval = -1;
+  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
+  NSString *msg;
+  NSString *msgFormat = _(@"This will break all connections to "
+                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
+
+  msg = [NSString stringWithFormat: msgFormat, className];
+
+  // ask the user if he/she wants to continue...
+  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+
   return (retval == NSAlertDefaultReturn);
 }
 
