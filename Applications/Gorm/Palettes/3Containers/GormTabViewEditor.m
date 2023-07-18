@@ -29,9 +29,14 @@
 
 #include "GormTabViewEditor.h"
 
-#define _EO ((NSTabView *)_editedObject)
+// #define _EO ((NSTabView *)_editedObject)
 
 @implementation GormTabViewEditor
+
+- (NSTabView *) _eo
+{
+  return (NSTabView *)_editedObject;
+}
 
 - (void) setOpened: (BOOL) flag
 {
@@ -44,30 +49,38 @@
 
 - (NSArray *) selection
 {
-  return [NSArray arrayWithObject: _EO];
+  return [NSArray arrayWithObject: [self _eo]];
 }
 
+//
+// ignore this warning since this works... the editor that may be returned in some cases
+// passes on unrecognized selectors to its editedObject, so this will not cause an
+// issue.
+//
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wobjc-method-access"
 - (BOOL) activate
 {
   if ([super activate])
     {
       currentView = nil;
-      [_EO setDelegate: self];
+      [[self _eo] setDelegate: self];
       [self 
-	tabView: _EO
-	didSelectTabViewItem: [_EO selectedTabViewItem]];
+	tabView: [self _eo]
+	didSelectTabViewItem: [[self _eo] selectedTabViewItem]];
       return YES;
     }
 
   return NO;
 }
+#pragma GCC diagnostic pop
 
 - (void) deactivate
 {
   if (activated == YES)
     {
       [self deactivateSubeditors];
-      [_EO setDelegate: nil];
+      [[self _eo] setDelegate: nil];
       [super deactivate];
     }
 }
@@ -80,7 +93,7 @@
 
   {
     if ([parent respondsToSelector: @selector(selection)] &&
-	[[parent selection] containsObject: _EO])
+	[[parent selection] containsObject: [self _eo]])
       {
 	IBKnobPosition	knob = IBNoneKnobPosition;
 	NSPoint mouseDownPoint = 
@@ -106,7 +119,7 @@
       return;
     }
 
-  if ([[_EO hitTest: [theEvent locationInWindow]]
+  if ([[[self _eo] hitTest: [theEvent locationInWindow]]
 	isDescendantOf: currentView])
     {
       NSDebugLog(@"md %@ descendant of", self);
@@ -119,7 +132,7 @@
       NSDebugLog(@"md %@ not descendant of", self);
       if ([currentView isOpened] == YES)
 	[currentView setOpened: NO];
-      [_EO mouseDown: theEvent];
+      [[self _eo] mouseDown: theEvent];
     }
 }
 
