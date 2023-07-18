@@ -30,10 +30,13 @@
 // AppDelegate...
 @implementation AppDelegate
 
+// Are we in a tool?
 - (BOOL) isInTool
 {
   return YES;
 }
+
+// Handle all alerts...
 
 - (BOOL) shouldUpgradeOlderArchive
 {
@@ -64,6 +67,18 @@
   NSLog(@"Breaking connections for %@ %@", action?@"action":@"outlet", name);
   return YES;
 }
+
+- (void) couldNotParseClassAtPath: (NSString *)path;
+{
+  NSLog(@"Could not parse class at path: %@", path);
+}
+
+- (void) exceptionWhileParsingClass: (NSException *)localException
+{
+  NSLog(@"Exception while parsing class: %@", [localException reason]);
+}
+
+// Handle arguments
 
 - (NSDictionary *) parseArguments
 {

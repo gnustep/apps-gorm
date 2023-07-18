@@ -193,6 +193,7 @@ static NSImage  *fileImage = nil;
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      id delegate = [NSApp delegate];
       
       // initialize...
       openEditors = [[NSMutableArray alloc] init];
@@ -271,20 +272,12 @@ static NSImage  *fileImage = nil;
 		{
 		  if(![classManager parseHeader: header])
 		    {
-		      NSString *file = [header lastPathComponent];
-		      NSString *message = [NSString stringWithFormat: 
-						      _(@"Unable to parse class in %@"),file];
-		      NSRunAlertPanel(_(@"Problem parsing class"), 
-				      message,
-				      nil, nil, nil);
+		      [delegate couldNotParseClassAtPath: header];
 		    }
 		}
 	      NS_HANDLER
 		{
-		  NSString *message = [localException reason];
-		  NSRunAlertPanel(_(@"Problem parsing class"), 
-				  message,
-				  nil, nil, nil);
+		  [delegate exceptionWhileParsingClass: localException];
 		}
 	      NS_ENDHANDLER;
 	    }

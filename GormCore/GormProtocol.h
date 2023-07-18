@@ -54,11 +54,15 @@
 
 // Check if we are in the app or the tool
 - (BOOL) isInTool;
+
+// Delegate methods to handle issues that may occur
 - (BOOL) shouldUpgradeOlderArchive;
 - (BOOL) shouldLoadNewerArchive;
 - (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className;
 - (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName;
 - (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted;
+- (void) couldNotParseClassAtPath: (NSString *)path;
+- (void) exceptionWhileParsingClass: (NSException *)localException;
 
 @end
 

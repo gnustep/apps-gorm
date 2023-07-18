@@ -149,7 +149,8 @@
   [super dealloc];
 }
 
-// Gorm specific methods...
+// Handle all alerts here...
+
 - (BOOL) shouldUpgradeOlderArchive
 {
   NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
@@ -208,9 +209,8 @@
 {
   NSString *title;
   NSString *msg;
-  NSInteger retval;
-  BOOL removed = YES;
-  
+  NSInteger retval = -1;
+   
   if(prompted == NO)
     {
       title = [NSString stringWithFormat:
@@ -224,6 +224,25 @@
   return (retval == NSAlertDefaultReturn);
 }
 
+- (void) couldNotParseClassAtPath: (NSString *)path
+{
+  NSString *file = [path lastPathComponent];
+  NSString *message = [NSString stringWithFormat: 
+				  _(@"Unable to parse class in %@"),file];
+  NSRunAlertPanel(_(@"Problem parsing class"), 
+		  message,
+		  nil, nil, nil);
+}
+
+- (void) exceptionWhileParsingClass: (NSException *)localException
+{
+  NSString *message = [localException reason];
+  NSRunAlertPanel(_(@"Problem parsing class"), 
+		  message,
+		  nil, nil, nil);
+}
+
+// Gorm specific methods...
 - (BOOL) isInTool
 {
   return NO;
