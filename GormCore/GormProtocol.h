@@ -63,6 +63,7 @@
 - (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted;
 - (void) couldNotParseClassAtPath: (NSString *)path;
 - (void) exceptionWhileParsingClass: (NSException *)localException;
+- (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className;
 
 @end
 

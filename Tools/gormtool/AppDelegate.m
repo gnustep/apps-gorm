@@ -78,6 +78,11 @@
   NSLog(@"Exception while parsing class: %@", [localException reason]);
 }
 
+- (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className
+{
+  NSLog(@"Breaking any existing connections with instances of class %@", className);
+  return YES;
+}
 // Handle arguments
 
 - (NSDictionary *) parseArguments

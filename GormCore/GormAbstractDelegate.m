@@ -242,6 +242,20 @@
 		  nil, nil, nil);
 }
 
+- (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className
+{
+   NSString *title = [NSString stringWithFormat: @"%@",
+			       _(@"Reparsing Class")];
+   NSString *messageFormat = _(@"This may break connections to "
+			       @"actions/outlets to instances of class '%@' "
+			       @"and it's subclasses.  Continue?"); 
+   NSString *msg = [NSString stringWithFormat: messageFormat,
+			     className];		      
+   NSInteger retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+
+   return (retval == NSAlertDefaultReturn);
+}
+
 // Gorm specific methods...
 - (BOOL) isInTool
 {
