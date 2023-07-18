@@ -59,6 +59,12 @@
   return YES;
 }
 
+- (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted
+{
+  NSLog(@"Breaking connections for %@ %@", action?@"action":@"outlet", name);
+  return YES;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];

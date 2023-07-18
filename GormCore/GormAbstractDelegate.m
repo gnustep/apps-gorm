@@ -204,6 +204,26 @@
   return (retval == NSAlertDefaultReturn);  
 }
 
+- (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted
+{
+  NSString *title;
+  NSString *msg;
+  NSInteger retval;
+  BOOL removed = YES;
+  
+  if(prompted == NO)
+    {
+      title = [NSString stringWithFormat:
+			  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
+      msg = [NSString stringWithFormat:
+			_(@"This will break all connections to '%@'.  Continue?"), name];
+      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
+      // prompted = YES;
+    }
+  
+  return (retval == NSAlertDefaultReturn);
+}
+
 - (BOOL) isInTool
 {
   return NO;

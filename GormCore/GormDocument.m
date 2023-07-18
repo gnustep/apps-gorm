@@ -2636,7 +2636,8 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   BOOL prompted = NO;
-
+  id delegate = [NSApp delegate];
+  
   // find connectors to be removed.
   while ((c = [en nextObject]) != nil)
     {
@@ -2674,33 +2675,12 @@ static void _real_close(GormDocument *self,
       if ([label isEqualToString: name] && ([proxyClass isEqualToString: className] ||
 	  [classManager isSuperclass: className linkedToClass: proxyClass]))
 	{
-	  NSString *title;
-	  NSString *msg;
-	  NSInteger retval;
-
-	  if(prompted == NO)
+	  removed = [delegate shouldBreakConnectionsModifyingLabel: name
+							  isAction: action
+							  prompted: prompted];
+	  if (removed)
 	    {
-	      title = [NSString stringWithFormat:
-				  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
-	      msg = [NSString stringWithFormat:
-				_(@"This will break all connections to '%@'.  Continue?"), name];
-	      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-	      prompted = YES;
-	    }
-	  else
-	    {
-		removed = NO;
-		break;
-	    }
-
-	  if (retval == NSAlertDefaultReturn)
-	    {
-	      removed = YES;
 	      [removedConnections addObject: c];
-	    }
-	  else
-	    {
-	      removed = NO;
 	      break;
 	    }
 	}
