@@ -35,6 +35,12 @@
   return YES;
 }
 
+- (BOOL) shouldUpgradeOlderArchive
+{
+  NSLog(@"Upgrading archive to latest version of .gorm format");
+  return YES;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];

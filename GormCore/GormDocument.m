@@ -3344,26 +3344,23 @@ static void _real_close(GormDocument *self,
   id<GormWrapperBuilder> builder = [[GormWrapperBuilderFactory sharedWrapperBuilderFactory]
 				     wrapperBuilderForType: type];
   NSFileWrapper *result = nil;
+  id delegate = [NSApp delegate];
 
   /*
    * Warn the user, if we are about to upgrade the package.
    */
   if(isOlderArchive && [filePrefsManager isLatest])
     {
-      NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-				   _(@"Saving will update this gorm to the latest version \n" 
-				     @"which may not be compatible with some previous versions \n"
-				     @"of GNUstep."),
-				   _(@"Save"),
-				   _(@"Don't Save"), nil, nil);
-      if (retval != NSAlertDefaultReturn)
-	{
-	  return nil;
-	}
-      else
+      BOOL result = [delegate shouldUpgradeOlderArchive];
+
+      if (result == YES)
 	{
 	  // we're saving anyway... set to new value.
 	  isOlderArchive = NO;
+	}
+      else
+	{
+	  return nil;
 	}
     }
 

@@ -54,6 +54,7 @@
 
 // Check if we are in the app or the tool
 - (BOOL) isInTool;
+- (BOOL) shouldUpgradeOlderArchive;
 
 @end
 

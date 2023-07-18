@@ -150,6 +150,19 @@
 }
 
 // Gorm specific methods...
+- (BOOL) shouldUpgradeOlderArchive
+{
+  NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
+				     _(@"Saving will update this gorm to the latest version \n" 
+				       @"which may not be compatible with some previous versions \n"
+				       @"of GNUstep."),
+				     _(@"Save"),
+				     _(@"Don't Save"), nil, nil);
+
+  return (retval == NSAlertDefaultReturn);
+}
+
+
 - (BOOL) isInTool
 {
   return NO;
