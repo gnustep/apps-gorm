@@ -435,20 +435,15 @@ static NSImage  *fileImage = nil;
 	{
 	  NSInteger version = [filePrefsManager version];
 	  NSInteger currentVersion = [GormFilePrefsManager currentVersion];
+	  id delegate = [NSApp delegate];
 	  
 	  if(version > currentVersion)
 	    {
-	      NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
-					   _(@"The file being loaded was created with a newer build, continue?"), 
-					   _(@"OK"), 
-					   _(@"Cancel"), 
-					   nil,
-					   nil);
-	      if(retval != NSAlertDefaultReturn)
+	      BOOL result = [delegate shouldLoadNewerArchive];
+	      if (result == NO)
 		{
-		  // close the document, if the user says "NO."
 		  [self close];
-		}
+		}	      
 	    }
 	  DESTROY(infoData);
 	}

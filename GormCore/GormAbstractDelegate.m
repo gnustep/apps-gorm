@@ -162,6 +162,23 @@
   return (retval == NSAlertDefaultReturn);
 }
 
+- (BOOL) shouldLoadNewerArchive
+{
+  NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
+				     _(@"The file being loaded was created with a newer build, continue?"), 
+				     _(@"OK"), 
+				     _(@"Cancel"), 
+				     nil,
+				     nil);
+  /* 
+  if(retval != NSAlertDefaultReturn)
+    {
+      // close the document, if the user says "NO."
+      [self close];
+    }
+  */
+  return (retval == NSAlertDefaultReturn);
+}
 
 - (BOOL) isInTool
 {

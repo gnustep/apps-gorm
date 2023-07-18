@@ -41,6 +41,12 @@
   return YES;
 }
 
+- (BOOL) shouldLoadNewerArchive
+{
+  NSLog(@"Refusing to load archive since it is from a newer version of Gorm/gormtool");
+  return NO;
+}
+
 - (NSDictionary *) parseArguments
 {
   GormDocumentController *dc = [GormDocumentController sharedDocumentController];
