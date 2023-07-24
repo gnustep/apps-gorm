@@ -39,6 +39,8 @@ srcdir = .
 SUBPROJECTS = Plugins
 
 GormCore_HEADER_FILES = \
+	GormBindingsInspector.h \
+	GormBindingsContentInspector.h \
 	GormCore.h \
 	GormAbstractDelegate.h \
 	GormBindingsInspector.h \
@@ -109,18 +111,10 @@ GormCore_HEADER_FILES = \
 	NSString+methods.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h \
-	GormGeneralPref.h \
-	GormGuidelinePref.h \
-	GormHeadersPref.h \
-	GormPalettesPref.h \
-	GormPluginsPref.h \
-	GormPrefController.h \
-	GormPrefs.h \
-	GormShelfPref.h \
-	GormXLIFFDocument.h \
-	GormBindingsInspector.h
 
 GormCore_OBJC_FILES = \
+	GormBindingsInspector.m \
+	GormBindingsContentInspector.m \
 	GormAbstractDelegate.m \
 	GormBindingsInspector.m \
 	GormBindingsContentInspector.m \
