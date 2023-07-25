@@ -88,24 +88,32 @@
 
 - (void) _loadInspector
 {
-  NSString *inspectorName = [_bindingsArray objectAtIndex: _selectedInspectorIndex];
-  Class cls = NSClassFromString(inspectorName);
-  
-  _inspectorObject = [[cls alloc] init];
-  if (_inspectorObject != nil)
+  if ([_bindingsArray count] > 0)
     {
-      if (![NSBundle loadNibNamed: inspectorName owner: _inspectorObject])
-	{
-	  NSLog(@"Could not load inspector for binding %@", inspectorName);
-	  return;
-	}
+      NSString *inspectorName = [_bindingsArray objectAtIndex: _selectedInspectorIndex];
+      Class cls = NSClassFromString(inspectorName);
+      NSString *nibName = @"GormBindingsAbstractInspector";
       
+      _inspectorObject = [[cls alloc] init];
+      if (_inspectorObject != nil)
+	{
+	  if (![NSBundle loadNibNamed: nibName owner: _inspectorObject])
+	    {
+	      NSLog(@"Could not load inspector for binding %@", inspectorName);
+	      return;
+	    }
+	  
       [_containerView setContentView: [[_inspectorObject window] contentView]];
+	}
+      else
+	{
+	  _inspectorObject = nil; // make certain this is nil, if load failed...
+	  NSLog(@"Could not instantiate class for %@", inspectorName);
+	}
     }
   else
     {
-      _inspectorObject = nil; // make certain this is nil, if load failed...
-      NSLog(@"Could not instantiate class for %@", inspectorName);
+      NSLog(@"No bindings exposed");
     }
 }
 

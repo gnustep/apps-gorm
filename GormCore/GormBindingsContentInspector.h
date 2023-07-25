@@ -1,20 +1,12 @@
-/* All rights reserved */
+/* All Rights Reserved */
 
-#ifndef INCLUDED_GormBindingsContentInspector_H
-#define INCLUDED_GormBindingsContentInspector_H
+#ifndef GormBindingsContentInspector_H_INCLUDE
+#define GormBindingsContentInspector_H_INCLUDE
 
-#import <InterfaceBuilder/IBInspector.h>
+#import "GormBindingsAbstractInspector.h"
 
-@interface GormBindingsContentInspector : IBInspector
-{
-  IBOutlet id _bindTo;
-  IBOutlet id _controllerKey;
-  IBOutlet id _modelKeyPath;
-  IBOutlet id _raisesForNotApplicable;
-  IBOutlet id _valueTransformer;
-  IBOutlet id _controllerPopUp;
-}
+@interface GormBindingsContentInspector : GormBindingsAbstractInspector
 
 @end
 
-#endif // INCLUDED_GormBindingsContentInspector_H
+#endif

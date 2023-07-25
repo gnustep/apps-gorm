@@ -39,12 +39,12 @@ srcdir = .
 SUBPROJECTS = Plugins
 
 GormCore_HEADER_FILES = \
-	GormBindingsInspector.h \
-	GormBindingsContentInspector.h \
 	GormCore.h \
+	GormBindingsInspector.h \
+	GormBindingsAbstractInspector.h \
+	GormBindingsContentInspector.h \
 	GormAbstractDelegate.h \
 	GormBindingsInspector.h \
-	GormBindingsContentInspector.h \
 	GormBoxEditor.h \
 	GormCore.h \
 	GormClassEditor.h \
@@ -114,10 +114,10 @@ GormCore_HEADER_FILES = \
 
 GormCore_OBJC_FILES = \
 	GormBindingsInspector.m \
+	GormBindingsAbstractInspector.m \
 	GormBindingsContentInspector.m \
 	GormAbstractDelegate.m \
 	GormBindingsInspector.m \
-	GormBindingsContentInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -262,6 +262,7 @@ GormCore_LANGUAGES = English
 
 GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormBindingsInspector.gorm \
+	GormBindingsAbstractInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \

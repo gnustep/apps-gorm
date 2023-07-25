@@ -1,6 +1,6 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    GormBindingsContentInspector = {
+    GormBindingsAbstractInspector = {
 	Actions = (
 	);
 	Outlets = (
