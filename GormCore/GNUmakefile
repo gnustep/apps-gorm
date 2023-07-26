@@ -200,7 +200,6 @@ GormCore_RESOURCE_FILES = \
 	Images/browserView.tiff \
 	Images/button_nib.tiff \
 	Images/centeralign_nib.tiff \
-	Images/date_formatter.tiff \
 	Images/GormActionSelected.tiff \
 	Images/GormAction.tiff \
 	Images/GormClass.tiff \
@@ -246,14 +245,12 @@ GormCore_RESOURCE_FILES = \
 	Images/line_nib.tiff \
 	Images/naturalalign_nib.tiff \
 	Images/noBorder_nib.tiff \
-	Images/number_formatter.tiff \
 	Images/outlineView.tiff \
 	Images/photoframe_nib.tiff \
 	Images/ridge_nib.tiff \
 	Images/rightalign_nib.tiff \
 	Images/RightArr.tiff \
 	Images/shortbutton_nib.tiff \
-	Images/Sunday_seurat.tiff \
 	Images/tabbot_nib.tiff \
 	Images/tabtop_nib.tiff \
 	Images/titleOnly_nib.tiff \

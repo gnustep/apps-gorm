@@ -90,7 +90,10 @@ Gorm_RESOURCE_FILES = \
         Images/GormSourceTag.tiff \
         Images/GormTargetTag.tiff \
         Images/GormLinkImage.tiff \
-        Images/GormTesting.tiff
+        Images/GormTesting.tiff \
+	Images/Sunday_seurat.tiff \
+	Images/number_formatter.tiff \
+	Images/date_formatter.tiff
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	Gorm.gorm \
