@@ -93,7 +93,59 @@ Gorm_RESOURCE_FILES = \
         Images/GormTesting.tiff \
 	Images/Sunday_seurat.tiff \
 	Images/number_formatter.tiff \
-	Images/date_formatter.tiff
+	Images/date_formatter.tiff \
+        Images/iconAbove_nib.tiff \
+        Images/iconBelow_nib.tiff \
+        Images/iconBottomLeft_nib.tiff \
+        Images/iconBottom_nib.tiff \
+        Images/iconBottomRight_nib.tiff \
+        Images/iconCenterLeft_nib.tiff \
+        Images/iconCenter_nib.tiff \
+        Images/iconCenterRight_nib.tiff \
+        Images/iconLeft_nib.tiff \
+        Images/iconOnly_nib.tiff \
+        Images/iconRight_nib.tiff \
+        Images/iconTopLeft_nib.tiff \
+        Images/iconTop_nib.tiff \
+        Images/iconTopRight_nib.tiff \
+        Images/centeralign_nib.tiff \
+        Images/justifyalign_nib.tiff \
+        Images/leftalign_nib.tiff \
+        Images/naturalalign_nib.tiff \
+        Images/rightalign_nib.tiff \
+        Images/bezel_nib.tiff \
+        Images/button_nib.tiff \
+        Images/centeralign_nib.tiff \
+        Images/iconAbove_nib.tiff \
+        Images/iconBelow_nib.tiff \
+        Images/iconBottomLeft_nib.tiff \
+        Images/iconBottom_nib.tiff \
+        Images/iconBottomRight_nib.tiff \
+        Images/iconCenterLeft_nib.tiff \
+        Images/iconCenter_nib.tiff \
+        Images/iconCenterRight_nib.tiff \
+        Images/iconLeft_nib.tiff \
+        Images/iconOnly_nib.tiff \
+        Images/iconRight_nib.tiff \
+        Images/iconTopLeft_nib.tiff \
+        Images/iconTop_nib.tiff \
+        Images/iconTopRight_nib.tiff \
+        Images/justifyalign_nib.tiff \
+        Images/leftalign_nib.tiff \
+        Images/line_nib.tiff \
+        Images/naturalalign_nib.tiff \
+        Images/noBorder_nib.tiff \
+        Images/photoframe_nib.tiff \
+        Images/ridge_nib.tiff \
+        Images/rightalign_nib.tiff \
+        Images/shortbutton_nib.tiff \
+        Images/tabbot_nib.tiff \
+        Images/tabtop_nib.tiff \
+        Images/titleOnly_nib.tiff \
+	Images/browserView.tiff \
+	Images/outlineView.tiff \
+	Images/LeftArr.tiff \
+	Images/RightArr.tiff \
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	Gorm.gorm \
