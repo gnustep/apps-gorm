@@ -214,8 +214,10 @@
 		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
 		    {
 		      RELEASE(actions);
-		      actions = RETAIN([[(id<GormAppDelegate>)[NSApp delegate] classManager]
-			allActionsForObject: [con destination]]);
+		      actions = [[(id<GormAppDelegate>)[NSApp delegate] classManager]
+				  allActionsForObject: [con destination]];
+		      actions = [actions sortedArrayUsingSelector: @selector(compare:)];
+		      RETAIN(actions);
 		      break;
 		    }
 		  else
@@ -227,8 +229,10 @@
 	      if (con == nil) // && [actions containsObject: [currentConnector label]] == NO) 
 		{
 		  RELEASE(actions);
-		  actions = RETAIN([[(id<GormAppDelegate>)[NSApp delegate] classManager]
-		    allActionsForObject: [[NSApp delegate] connectDestination]]);
+		  actions = [[(id<GormAppDelegate>)[NSApp delegate] classManager]
+			      allActionsForObject: [[NSApp delegate] connectDestination]];
+		  actions = [actions sortedArrayUsingSelector: @selector(compare:)];
+		  RETAIN(actions);		  
 		  if ([actions count] > 0)
 		    {
 		      con = [[NSNibControlConnector alloc] init];
@@ -584,7 +588,9 @@ selectCellWithString: (NSString*)title
       [connectors addObjectsFromArray: array];
 
       RELEASE(outlets);
-      outlets = RETAIN([[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForObject: object]); 
+      outlets = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForObject: object];
+      outlets = [outlets sortedArrayUsingSelector: @selector(compare:)];
+      RETAIN(outlets);
       DESTROY(actions);
 
       [oldBrowser loadColumnZero];
