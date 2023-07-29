@@ -24,11 +24,3 @@
 
 ADDITIONAL_GUI_LIBS += \
 	-lInterfaceBuilder
-
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-ADDITIONAL_LIB_DIRS += \
-	-L../InterfaceBuilder/$(GNUSTEP_OBJ_DIR)
-else
-ADDITIONAL_LIB_DIRS += \
-	-L../InterfaceBuilder/$(GNUSTEP_OBJ_DIR) 
-endif
