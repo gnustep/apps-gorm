@@ -25,9 +25,9 @@
 
 # ADDITIONAL_OBJCFLAGS += -Wall -Werror
 ADDITIONAL_GUI_LIBS += \
-	-lInterfaceBuilder \
 	-lGormCore \
 	-lGormObjCHeaderParser \
+	-lInterfaceBuilder \
 
 ADDITIONAL_INCLUDE_DIRS += \
 	-I../../InterfaceBuilder \

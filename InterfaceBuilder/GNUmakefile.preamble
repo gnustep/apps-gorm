@@ -47,7 +47,7 @@
 # ADDITIONAL_CFLAGS += -Wall -Werror
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += -I../InterfaceBuilder
+ADDITIONAL_INCLUDE_DIRS +=
 
 # Additional LDFLAGS to pass to the linker
 #ADDITIONAL_LDFLAGS += 
@@ -67,9 +67,3 @@ ADDITIONAL_INSTALL_DIRS +=
 #
 # Local configuration
 #
-
-ifeq ($(GNUSTEP_TARGET_OS),cygwin)
-InterfaceBuilder_LIBRARIES_DEPEND_UPON += -lobjc
-endif
-
-
