@@ -29,7 +29,8 @@ BUNDLE_EXTENSION = .plugin
 Xib_PRINCIPAL_CLASS = GormXibPlugin
 
 Xib_OBJC_FILES = GormXibPlugin.m \
-GormXibWrapperLoader.m 
+	GormXibWrapperLoader.m \
+	GormXIBModelGenerator.m \
 
 Xib_RESOURCE_FILES = 
 
@@ -42,4 +43,3 @@ Xib_STANDARD_INSTALL = no
 include $(GNUSTEP_MAKEFILES)/bundle.make
 
 -include GNUmakefile.postamble
-
