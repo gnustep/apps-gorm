@@ -232,23 +232,6 @@
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
       GSNibContainer *container = nil;
       
-      //
-      // If we are a nib, currently, and it's not being saved using the Latest, then
-      // flag an error. NOTE: The next time the gorm container version is
-      // changed, it will be necessary to add to the list here...
-      //
-      if([[document fileType] isEqual: @"GSNibFileType"] &&
-	 [[document filePrefsManager] isLatest] == NO)
-	{	      
-	  NSRunAlertPanel(_(@"Incorrect gui version"),
-			  _(@"Nibs cannot be converted to gui-0.10.3 and older"), 
-			  _(@"OK"), 
-			  nil,
-			  nil,
-			  nil);
-	  return nil;
-	}
-
       [document prepareConnections];
       container = [[GSNibContainer alloc] initWithDocument: document];
 
