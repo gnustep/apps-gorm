@@ -46,6 +46,43 @@
 
 #import "GormXIBModelGenerator.h"
 
+@interface NSString (_hex_)
+
+- (NSString *) hexString;
++ (NSString *) randomHex;
+
+@end
+
+@implementation NSString (_hex_)
+
+- (NSString *) hexString
+{
+  NSUInteger l = [self length];
+  unichar *c = malloc(l * sizeof(unichar));
+
+  [self getCharacters: c];
+
+  NSString *result = @"";
+
+  for (NSUInteger i = 0; i < l; i++)
+    {
+      result = [result stringByAppendingString: [NSString stringWithFormat: @"%x", c[i]]];
+    }
+
+  free(c);
+
+  return result;
+}
+
++ (NSString *) randomHex
+{
+  srand((unsigned int)time(NULL));
+  uint32_t r = (uint32_t)rand();
+  return [NSString stringWithFormat: @"%08X", r];
+}
+
+@end
+
 @implementation GormXIBModelGenerator
 
 /**
@@ -98,6 +135,15 @@
   return result;
 }
 
+- (BOOL) _isSameClass: (NSString *)className1
+		  and: (NSString *)className2
+{
+  NSString *cc1 = [self _convertName: className1];
+  NSString *cc2 = [self _convertName: className2];
+
+  return [cc1 isEqualToString: cc2];
+}
+
 - (NSString *) _createIdentifierForObject: (id)obj
 {
   NSString *result = nil; 
@@ -124,6 +170,29 @@
       result = [_gormDocument nameForObject: obj];
     }
 
+  // Encoding
+  NSString *originalName = [result copy];
+  NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
+				      result, result, result];  // kludge...
+  // 
+  result = [stackedResult hexString];
+  result = [result substringFromIndex: [result length] - 8];
+  result = [NSString stringWithFormat: @"%@-%@-%@",
+		     [result substringWithRange: NSMakeRange(0,3)],
+		     [result substringWithRange: NSMakeRange(3,2)],
+		     [result substringWithRange: NSMakeRange(5,3)]];
+
+  // Collision...
+  if ([_mappingDictionary objectForKey: result] != nil)
+    {
+      result = [NSString randomHex];
+    }
+  
+  // Map the name...
+  [_mappingDictionary setObject: originalName
+			 forKey: result];
+
+  
   return result;
 }
 
@@ -152,6 +221,49 @@
   return result;  
 }
 
+- (void) _createPlaceholderObjects: (NSXMLElement *)elem
+{
+  NSXMLElement *co = nil;
+  NSXMLNode *attr = nil; 
+  NSString *ownerClassName = [[_gormDocument filesOwner] className];
+
+  // Application...
+  co = [NSXMLNode elementWithName: @"customObject"];
+  attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-3"];
+  [co addAttribute: attr];
+  
+  attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: @"Application"];
+  [co addAttribute: attr];
+
+  attr = [NSXMLNode attributeWithName: @"customClass" stringValue: @"NSObject"];
+  [co addAttribute: attr];
+  [elem addChild: co];
+
+  // File's Owner...
+  co = [NSXMLNode elementWithName: @"customObject"];
+  attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-2"];
+  [co addAttribute: attr];
+  
+  attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: @"File's Owner"];
+  [co addAttribute: attr];
+
+  attr = [NSXMLNode attributeWithName: @"customClass" stringValue: ownerClassName];
+  [co addAttribute: attr];
+  [elem addChild: co];
+
+  // First Responder
+  co = [NSXMLNode elementWithName: @"customObject"];
+  attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-1"];
+  [co addAttribute: attr];
+
+  attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: @"First Responder"];
+  [co addAttribute: attr];
+
+  attr = [NSXMLNode attributeWithName: @"customClass" stringValue: @"FirstResponder"];
+  [co addAttribute: attr];
+  [elem addChild: co];  
+}
+
 - (void) _collectObjectsFromObject: (id)obj
 			  withNode: (NSXMLElement  *)node
 {
@@ -175,7 +287,7 @@
       if ([obj isKindOfClass: [GormObjectProxy class]] ||
 	  [obj respondsToSelector: @selector(className)])
 	{
-	  if ([className isEqualToString: [obj className]] == NO)
+	  if ([self _isSameClass: className and: [obj className]] == NO)
 	    {
 	      className = [obj className];
 	      attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
@@ -203,6 +315,14 @@
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
 	  id item = nil;
+	  NSString *name = [_gormDocument nameForObject: obj];
+
+	  if ([name isEqualToString: @"NSMenu"])
+	    {
+	      NSXMLNode *systemMenuAttr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"main"];
+	      [elem addAttribute: systemMenuAttr];
+	    }
+	  
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
@@ -254,17 +374,13 @@
 
 - (NSData *) data
 {
-  NSString *plugInId = @"com.apple.InterfaceBuilder.CocoaPlugin"; // @"gnu.gnustep.Gorm";      
-  NSString *typeId = @"com.apple.InterfaceBuilder3.Cocoa.XIB"; // @"gnu.gnustep.Gorm";      
-  // NSString *toolId = @"gnu.gnustep.Gorm";
-  // NSString *toolName = @"Gorm";
-  NSString *toolVersion = @"21507"; // [NSString stringWithFormat: @"%d", [GormFilePrefsManager currentVersion]];
-
-  // id delegate = [NSApp delegate];
+  NSString *plugInId = @"com.apple.InterfaceBuilder.CocoaPlugin";
+  NSString *typeId = @"com.apple.InterfaceBuilder3.Cocoa.XIB";
+  NSString *toolVersion = @"21507";
   
   // Build root element...
   NSXMLElement *rootElement = [NSXMLNode elementWithName: @"document"];
-  NSXMLNode *attr = [NSXMLNode namespaceWithName: @"type"
+  NSXMLNode *attr = [NSXMLNode attributeWithName: @"type"
 				     stringValue: typeId];
   [rootElement addAttribute: attr];
   
@@ -301,15 +417,18 @@
   [dependencies addChild: plugIn];
   
   NSXMLElement *capability = [NSXMLNode elementWithName: @"capability"];
-  attr = [NSXMLNode attributeWithName: @"name" stringValue: plugInId];
+  attr = [NSXMLNode attributeWithName: @"name" stringValue: @"documents saved in the Xcode 8 format"];
   [capability addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"minToolsVersion" stringValue: toolVersion];
+  attr = [NSXMLNode attributeWithName: @"minToolsVersion" stringValue: @"8"];
   [capability addAttribute: attr];
   [dependencies addChild: capability];
   [rootElement addChild: dependencies];
   
   NSXMLDocument *xibDocument = [NSXMLNode documentWithRootElement: rootElement];      
   NSXMLElement *objects = [NSXMLNode elementWithName: @"objects"];
+
+  // Add placeholder objects to XIB
+  [self _createPlaceholderObjects: objects];
   
   // add body to document...
   [rootElement addChild: objects];
