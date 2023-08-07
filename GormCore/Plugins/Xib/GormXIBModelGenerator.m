@@ -38,6 +38,8 @@
 #import <AppKit/NSPopUpButton.h>
 #import <AppKit/NSView.h>
 
+#import <GNUstepBase/GSObjCRuntime.h>
+
 #import "GormDocument.h"
 #import "GormDocumentController.h"
 #import "GormFilePrefsManager.h"
@@ -46,14 +48,39 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSDictionary *_methodReturnTypes = nil;
+
 @interface NSString (_hex_)
 
+- (NSString *) lowercaseFirstCharacter;
+- (NSString *) splitString;
 - (NSString *) hexString;
 + (NSString *) randomHex;
 
 @end
 
 @implementation NSString (_hex_)
+
+- (NSString *) lowercaseFirstCharacter
+{
+  // Lowercase the first letter of the class to make the element name
+  NSString *first = [[self substringToIndex: 1] lowercaseString];
+  NSString *rest = [self substringFromIndex: 1];
+  NSString *result = [NSString stringWithFormat: @"%@%@", first, rest];
+  return result;
+}
+
+- (NSString *) splitString
+{
+  NSString *result = [self substringFromIndex: [self length] - 8];
+
+  result = [NSString stringWithFormat: @"%@-%@-%@",
+		     [result substringWithRange: NSMakeRange(0,3)],
+		     [result substringWithRange: NSMakeRange(3,2)],
+		     [result substringWithRange: NSMakeRange(5,3)]];
+
+  return result;
+}
 
 - (NSString *) hexString
 {
@@ -84,6 +111,28 @@
 @end
 
 @implementation GormXIBModelGenerator
+
++ (void) initialize
+{
+  if (self == [GormXIBModelGenerator class])
+    {
+      _methodReturnTypes =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+				@"NSRect", @"frame",
+			      @"NSImage", @"onStateImage",
+			      @"NSImage", @"offStateImage",
+			      @"NSUInteger", @"keyEquivalentModifierMask",
+			      @"BOOL", @"releaseWhenClosed",
+			      @"NSUInteger", @"windowStyleMask",
+			      @"NSUInteger", @"borderType",
+			      @"CGFloat", @"alphaValue",
+			      @"NSFont", @"font",
+			      @"NSRect", @"bounds",
+			      @"NSUInteger", @"autoresizeMask",
+			      @"NSString", @"toolTip",
+			      nil];
+    }
+}
 
 /**
  * Returns an autoreleast GormXIBDocument object;
@@ -127,11 +176,7 @@
 					     withString: @""];
 
   // Lowercase the first letter of the class to make the element name
-  NSString *first = [[result substringToIndex: 1] lowercaseString];
-  NSString *rest = [result substringFromIndex: 1];
- 
-  result = [NSString stringWithFormat: @"%@%@", first, rest];
-
+  result = [result lowercaseFirstCharacter];
   return result;
 }
 
@@ -176,16 +221,15 @@
 				      result, result, result];  // kludge...
   // 
   result = [stackedResult hexString];
-  result = [result substringFromIndex: [result length] - 8];
-  result = [NSString stringWithFormat: @"%@-%@-%@",
-		     [result substringWithRange: NSMakeRange(0,3)],
-		     [result substringWithRange: NSMakeRange(3,2)],
-		     [result substringWithRange: NSMakeRange(5,3)]];
-
+  result = [result splitString];
+  
   // Collision...
-  if ([_mappingDictionary objectForKey: result] != nil)
+  id o = [_mappingDictionary objectForKey: result];
+  if (o != nil)
     {
-      result = [NSString randomHex];
+      NSLog(@"Collision with %@ for object %@", result, o);
+      result = [[NSString randomHex] splitString];
+      NSLog(@"New id %@", result);
     }
   
   // Map the name...
@@ -264,6 +308,89 @@
   [elem addChild: co];  
 }
 
+- (NSArray *) _propertiesFromMethods: (NSArray *)methods
+{
+  NSEnumerator *en = [methods objectEnumerator];
+  NSString *name = nil;
+  NSMutableArray *result = [NSMutableArray array];
+  
+  while ((name = [en nextObject]) != nil)
+    {
+      NSString *substring = [name substringToIndex: 3];
+      if ([substring isEqualToString: @"set"])
+	{
+	  NSString *s = [name substringFromIndex: 3];
+	  s = [s lowercaseFirstCharacter];
+	  s = [s stringByReplacingOccurrencesOfString: @":" withString: @""];
+	  
+	  if ([methods containsObject: s])
+	    {
+	      SEL sel = NSSelectorFromString(s);
+	      if (sel != NULL)
+		{
+		  [result addObject: s];
+		}
+	    }
+	}
+    }
+
+  return result;
+}
+
+- (void) _addRect: (NSRect)r toElement: (NSXMLElement *)elem withName: (NSString *)name
+{
+  NSXMLElement *rectElem = [NSXMLNode elementWithName: @"rect"];
+  NSXMLNode *attr = nil;
+
+  attr = [NSXMLNode attributeWithName: @"key" stringValue: name];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"x" stringValue: [NSString stringWithFormat: @"%4.1f",r.origin.x]];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%4.1f",r.origin.y]];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%4.0f",r.size.width]];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%4.0f",r.size.height]];
+  [rectElem addAttribute: attr];
+
+  [elem addChild: rectElem];
+}
+
+- (void) _addProperty: (NSString *)name
+	     withType: (NSString *)type
+	       toElem: (NSXMLElement *)elem
+	   fromObject: (id)obj
+{
+  NSLog(@"%@ -> %@: %@", name, type, elem);
+  if ([name isEqualToString: @"frame"])
+    {
+      NSRect f = [obj frame];
+      [self _addRect: f toElement: elem withName: name];
+    }
+}
+
+- (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
+{
+  NSArray *methods = GSObjCMethodNames(obj, NO);
+  NSArray *props = [self _propertiesFromMethods: methods];
+  NSEnumerator *en = [props objectEnumerator];
+  NSString *name = nil;
+  
+  while ((name = [en nextObject]) != nil)
+    {
+      NSString *type = [_methodReturnTypes objectForKey: name];
+      NSDebugLog(@"%@ -> %@", name, type);
+
+      if (type != nil)
+	{
+	  [self _addProperty: name withType: type toElem: elem fromObject: obj];
+	}
+    }
+  
+  NSDebugLog(@"methods = %@", props);
+}
+
+// This method recursively navigates the entire object tree and emits XML
 - (void) _collectObjectsFromObject: (id)obj
 			  withNode: (NSXMLElement  *)node
 {
@@ -295,6 +422,8 @@
 	    }
 	}
       
+      // Add all properties, then add the element to the parent...
+      [self _addAllProperties: elem fromObject: obj];
       [node addChild: elem];
       
       // If the object responds to "title" get that and add it to the XML
@@ -340,6 +469,11 @@
 	}
       else if ([obj isKindOfClass: [NSWindow class]])
 	{
+	  NSRect s = [[NSScreen mainScreen] frame];
+	  NSRect c = [[obj contentView] frame];
+
+	  [self _addRect: c toElement: elem withName: @"contentRect"];
+	  [self _addRect: s toElement: elem withName: @"screenRect"];
 	  [self _collectObjectsFromObject: [obj contentView]
 				 withNode: elem];
 	}
@@ -349,6 +483,12 @@
 	  NSEnumerator *en = [subviews objectEnumerator];
 	  id v = nil;
 
+	  if (obj == [[obj window] contentView])
+	    {
+	      NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
+	      [elem addAttribute: contentViewAttr];
+	    }
+	  
 	  while ((v = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: v

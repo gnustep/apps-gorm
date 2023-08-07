@@ -39,15 +39,13 @@
   return @"GSXibFileType";
 }
 
-- (NSMutableDictionary *)buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
+- (NSFileWrapper *) buildFileWrapperWithDocument: (GormDocument *)doc
 {
   GormXIBModelGenerator *generator = [GormXIBModelGenerator xibWithGormDocument: doc];
   NSData *data = [generator data];
-  NSMutableDictionary   *fileWrappers = [NSMutableDictionary dictionary];
   NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
 
-  [fileWrappers setObject: fileWrapper forKey: @"file.xib"];
-
-  return fileWrappers;
+  return fileWrapper;
 }
+
 @end
