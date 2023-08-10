@@ -49,6 +49,7 @@
 #import "GormXIBModelGenerator.h"
 
 static NSDictionary *_methodReturnTypes = nil;
+static NSUInteger _count = INT_MAX;
 
 @interface NSString (_hex_)
 
@@ -103,7 +104,7 @@ static NSDictionary *_methodReturnTypes = nil;
 
 + (NSString *) randomHex
 {
-  srand((unsigned int)time(NULL));
+  srand((unsigned int)_count--);
   uint32_t r = (uint32_t)rand();
   return [NSString stringWithFormat: @"%08X", r];
 }
@@ -237,9 +238,7 @@ static NSDictionary *_methodReturnTypes = nil;
   id o = [_mappingDictionary objectForKey: result];
   if (o != nil)
     {
-      NSLog(@"Collision with %@ for object %@", result, o);
       result = [[NSString randomHex] splitString];
-      NSLog(@"New id %@", result);
     }
 
   // If the id already exists, but isn't mapped...
@@ -381,8 +380,16 @@ static NSDictionary *_methodReturnTypes = nil;
 {
   if ([ke isEqualToString: @""] == NO)
     {
-      NSXMLNode *attr = [NSXMLNode attributeWithName: @"keyEquivalent" stringValue: ke];
-      [elem addAttribute: attr];
+      NSCharacterSet *cs = [NSCharacterSet alphanumericCharacterSet];
+      unichar c = [ke characterAtIndex: 0];
+
+      if ([cs characterIsMember: c])
+	{
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"keyEquivalent" stringValue: ke];
+	  [elem addAttribute: attr];
+	}
+      
+      NSLog(@"elem = %@", elem);
     }
 }
 
@@ -390,7 +397,7 @@ static NSDictionary *_methodReturnTypes = nil;
 {
   NSXMLNode *attr = nil;
   
-  NSLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
+  NSDebugLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
   if ([elem attributeForName: @"keyEquivalent"] != nil)
     {
       if (mask | NSCommandKeyMask)
@@ -431,7 +438,7 @@ static NSDictionary *_methodReturnTypes = nil;
   else if ([name isEqualToString: @"keyEquivalent"])
     {
       NSString *ke = [obj keyEquivalent];
-      NSLog(@"keyEquivalent %@", ke);
+      NSDebugLog(@"keyEquivalent %@", ke);
       [self _addKeyEquivalent: ke toElement: elem];
     }
   else if ([name isEqualToString: @"keyEquivalentModifierMask"])
@@ -451,7 +458,7 @@ static NSDictionary *_methodReturnTypes = nil;
   while ((name = [en nextObject]) != nil)
     {
       NSString *type = [_methodReturnTypes objectForKey: name];
-      NSLog(@"%@ -> %@", name, type);
+      NSDebugLog(@"%@ -> %@", name, type);
 
       if (type != nil)
 	{
@@ -475,7 +482,8 @@ static NSDictionary *_methodReturnTypes = nil;
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
       NSXMLNode *attr = [NSXMLNode attributeWithName: @"id" stringValue: ident];
       [elem addAttribute: attr];
-      
+
+      NSString *name = [_gormDocument nameForObject:  obj];
       NSString *userLabel = [self _userLabelForObject: obj];
       if (userLabel != nil)
 	{
@@ -496,7 +504,10 @@ static NSDictionary *_methodReturnTypes = nil;
       
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
-      [node addChild: elem];
+      if ([name isEqualToString: @"NSMenu"] == NO)
+	{
+	  [node addChild: elem];
+	}
       
       // If the object responds to "title" get that and add it to the XML
       if ([obj respondsToSelector: @selector(title)])
@@ -516,13 +527,40 @@ static NSDictionary *_methodReturnTypes = nil;
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
 	  id item = nil;
-	  NSString *name = [_gormDocument nameForObject: obj];
 
 	  if ([name isEqualToString: @"NSMenu"])
 	    {
 	      NSXMLNode *systemMenuAttr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"apple"];
 	      [elem addAttribute: systemMenuAttr];
+
+	      NSXMLElement *mainMenuElem = [NSXMLNode elementWithName: @"menu"];
+	      
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];	      
+	      [mainMenuElem addAttribute: attr];
+
+	      attr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"main"];
+	      [mainMenuElem addAttribute: attr];
+
+	      attr = [NSXMLNode attributeWithName: @"title" stringValue: @"Main Menu"];
+	      [mainMenuElem addAttribute: attr];
+
+	      NSXMLElement *mainItemsElem = [NSXMLNode elementWithName: @"items"];
+	      [mainMenuElem addChild: mainItemsElem];
+
+	      NSXMLElement *mainMenuItem = [NSXMLNode elementWithName: @"menuItem"];
+	      [mainItemsElem addChild: mainMenuItem];
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
+	      [mainMenuItem addAttribute: attr];
+	      attr = [NSXMLNode attributeWithName: @"title" stringValue: [obj title]];
+
+	      [mainMenuItem addChild: elem]; // Now add the node, since we have inserted the proper system menu
+
+	      [node addChild: mainMenuElem];
 	    }
+
+	  // Add submenu attribute...
+	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"submenu"];
+	  [elem addAttribute: attr];
 
 	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
 	  while ((item = [en nextObject]) != nil)
