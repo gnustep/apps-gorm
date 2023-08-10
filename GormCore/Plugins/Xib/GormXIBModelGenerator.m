@@ -112,6 +112,14 @@ static NSUInteger _count = INT_MAX;
 
 @end
 
+@interface GormXIBModelGenerator (Private)
+
+- (void) _collectObjectsFromObject: (id)obj
+			  withNode: (NSXMLElement  *)node;
+
+@end
+
+
 @implementation GormXIBModelGenerator
 
 + (void) initialize
@@ -133,6 +141,9 @@ static NSUInteger _count = INT_MAX;
 			      @"NSUInteger", @"autoresizeMask",
 			      @"NSString", @"toolTip",
 			      @"NSString", @"keyEquivalent",
+			      @"NSUInteger", @"windowStyleMask",
+			      @"id", @"cell",
+			      @"NSArray", @"items",
 			      nil];
     }
 }
@@ -426,25 +437,56 @@ static NSUInteger _count = INT_MAX;
       if (mask | NSCommandKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"command" stringValue: @"YES"];
+	  [elem addAttribute: attr];
 	}
       if (mask | NSShiftKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"shift" stringValue: @"YES"];
+	  [elem addAttribute: attr];
 	}
       if (mask | NSControlKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"control" stringValue: @"YES"];
+	  [elem addAttribute: attr];
 	}
       if (mask | NSAlternateKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"option" stringValue: @"YES"];
-	}
-      
-      if (attr != nil)
-	{
 	  [elem addAttribute: attr];
 	}
     }
+}
+
+- (void) _addWindowStyleMask: (NSUInteger)mask toElement: (NSXMLElement *)elem
+{
+  NSXMLNode *attr = nil;
+  
+  NSDebugLog(@"styleMask = %ld, element = %@", mask, elem);
+
+  NSXMLNode *styleMaskElem = [NSXMLNode elementWithName: @"windowStyleMask"];
+  
+  if (mask | NSWindowStyleMaskTitled)
+    {
+      attr = [NSXMLNode attributeWithName: @"windowed" stringValue: @"YES"];
+      [elem addAttribute: attr];
+    }
+  if (mask | NSWindowStyleMaskClosable)
+    {
+      attr = [NSXMLNode attributeWithName: @"closable" stringValue: @"YES"];
+      [elem addAttribute: attr];
+    }
+  if (mask | NSWindowStyleMaskMiniaturizable)
+    {
+      attr = [NSXMLNode attributeWithName: @"miniaturizable" stringValue: @"YES"];
+      [elem addAttribute: attr];
+    }
+  if (mask | NSWindowStyleMaskResizable)
+    {
+      attr = [NSXMLNode attributeWithName: @"resizable" stringValue: @"YES"];
+      [elem addAttribute: attr];
+    }
+
+  [elem addChild: styleMaskElem];
 }
 
 - (void) _addProperty: (NSString *)name
@@ -468,6 +510,17 @@ static NSUInteger _count = INT_MAX;
     {
       NSUInteger k = [obj keyEquivalentModifierMask];
       [self _addKeyEquivalentModifierMask: k toElement: elem];
+    }
+  else if ([name isEqualToString: @"styleMask"])
+    {
+      NSUInteger m = [obj styleMask];
+      [self _addWindowStyleMask: m toElement: elem];
+    }
+  else if ([name isEqualToString: @"cell"])
+    {
+      NSLog(@"cell = %@", [obj cell]);
+      [self _collectObjectsFromObject: [obj cell]
+      		     withNode: elem];
     }
 }
 
@@ -505,7 +558,7 @@ static NSUInteger _count = INT_MAX;
       // Get actions...
       while ((action = [en nextObject]) != nil)
 	{
-	  NSLog(@"action = %@", action);
+	  NSDebugLog(@"action = %@", action);
 	  NSXMLElement *actionElem = [NSXMLNode elementWithName: @"action"];
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"selector"
 					     stringValue: [action label]];
@@ -582,8 +635,7 @@ static NSUInteger _count = INT_MAX;
 	}
 
       // For each different class, recurse through the structure as needed.
-      if ([obj isKindOfClass: [NSMenu class]] ||
-	  [obj isKindOfClass: [NSPopUpButton class]]) 
+      if ([obj isKindOfClass: [NSMenu class]])
 	{
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
@@ -647,6 +699,21 @@ static NSUInteger _count = INT_MAX;
 	      [self _collectObjectsFromObject: sm
 				     withNode: elem];
 	    }
+	}
+
+      if ([obj isKindOfClass: [NSPopUpButtonCell class]])
+	{
+	  NSArray *items = [obj itemArray];
+	  NSEnumerator *en = [items objectEnumerator];
+	  id item = nil;
+
+	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
+	  while ((item = [en nextObject]) != nil)
+	    {
+	      [self _collectObjectsFromObject: item
+				     withNode: itemsElem];
+	    }
+	  [elem addChild: itemsElem]; // Add to parent element...
 	}
 
       if ([obj isKindOfClass: [NSWindow class]])
