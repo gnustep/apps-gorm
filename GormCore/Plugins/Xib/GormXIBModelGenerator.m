@@ -33,6 +33,7 @@
 #import <Foundation/NSXMLNode.h>
 #import <Foundation/NSXMLElement.h>
 #import <Foundation/NSXMLParser.h>
+#import <Foundation/NSMapTable.h>
 
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSPopUpButton.h>
@@ -155,6 +156,7 @@ static NSUInteger _count = INT_MAX;
       ASSIGN(_gormDocument, doc);
       _mappingDictionary = [[NSMutableDictionary alloc] init];
       _allIdentifiers = [[NSMutableArray alloc] init];
+      _objectToIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
     }
   return self;
 }
@@ -164,6 +166,7 @@ static NSUInteger _count = INT_MAX;
   DESTROY(_gormDocument);
   DESTROY(_mappingDictionary);
   DESTROY(_allIdentifiers);
+  DESTROY(_objectToIdentifier);
   
   [super dealloc];
 }
@@ -202,60 +205,80 @@ static NSUInteger _count = INT_MAX;
 
 - (NSString *) _createIdentifierForObject: (id)obj
 {
-  NSString *result = nil; 
+  NSString *result = [_objectToIdentifier objectForKey: obj];
 
-  if ([obj isKindOfClass: [GormObjectProxy class]])
+  if (result == nil)
     {
-      NSString *className = [obj className];
-
-      if ([className isEqualToString: @"NSApplication"])
+      if ([obj isKindOfClass: [GormObjectProxy class]])
 	{
-	  result = @"-3";
+	  NSString *className = [obj className];
+	  
+	  if ([className isEqualToString: @"NSApplication"])
+	    {
+	      result = @"-3";      
+	      return result;
+	    }
+	  else if ([className isEqualToString: @"NSOwner"])
+	    {
+	      result = @"-2";
+	      return result;
+	    }
+	  else if ([className isEqualToString: @"NSFirst"])
+	    {
+	      result = @"-1";
+	      return result;
+	    }
 	}
-      else if ([className isEqualToString: @"NSOwner"])
+      else if([obj isKindOfClass: [GormFilesOwner class]])
 	{
 	  result = @"-2";
+	  return result;
 	}
-      else if ([className isEqualToString: @"NSFirst"])
+      else if([obj isKindOfClass: [GormFirstResponder class]])
 	{
 	  result = @"-1";
+	  return result;
 	}
+      else
+	{
+	  result = [_gormDocument nameForObject: obj];
+	}
+      
+      // Encoding
+      NSString *originalName = [result copy];
+      NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
+					  result, result, result];  // kludge...
+      // 
+      result = [stackedResult hexString];
+      result = [result splitString];
+      
+      // Collision...
+      id o = [_mappingDictionary objectForKey: result];
+      if (o != nil)
+	{
+	  result = [[NSString randomHex] splitString];
+	}
+      
+      // If the id already exists, but isn't mapped...
+      if ([_allIdentifiers containsObject: result])
+	{
+	  result = [[NSString randomHex] splitString];
+	}
+      
+      if (originalName != nil)
+	{
+	  // Map the name...
+	  [_mappingDictionary setObject: originalName
+				 forKey: result];
+	}
+      
+      // Record the id...
+      [_allIdentifiers addObject: result];
+      
+      // Record the mapping of obj -> identifier...
+      [_objectToIdentifier setObject: result
+			      forKey: obj];
     }
-  else
-    {
-      result = [_gormDocument nameForObject: obj];
-    }
-
-  // Encoding
-  NSString *originalName = [result copy];
-  NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
-				      result, result, result];  // kludge...
-  // 
-  result = [stackedResult hexString];
-  result = [result splitString];
-  
-  // Collision...
-  id o = [_mappingDictionary objectForKey: result];
-  if (o != nil)
-    {
-      result = [[NSString randomHex] splitString];
-    }
-
-  // If the id already exists, but isn't mapped...
-  if ([_allIdentifiers containsObject: result])
-    {
-      result = [[NSString randomHex] splitString];
-    }
-  
-  if (originalName != nil)
-    {
-      // Map the name...
-      [_mappingDictionary setObject: originalName
-			     forKey: result];
-    }
-
-  // Record the id...
-  [_allIdentifiers addObject: result];
   
   return result;
 }
@@ -389,7 +412,7 @@ static NSUInteger _count = INT_MAX;
 	  [elem addAttribute: attr];
 	}
       
-      NSLog(@"elem = %@", elem);
+      NSDebugLog(@"elem = %@", elem);
     }
 }
 
@@ -469,6 +492,41 @@ static NSUInteger _count = INT_MAX;
   NSDebugLog(@"methods = %@", props);
 }
 
+- (void) _addAllConnections: (NSXMLElement *)elem fromObject: (id)obj
+{
+  NSArray *connectors = [_gormDocument connectorsForSource: obj
+						   ofClass: [NSNibControlConnector class]];
+  if ([connectors count] > 0)
+    {
+      NSXMLElement *conns = [NSXMLNode elementWithName: @"connections"];
+      NSEnumerator *en = [connectors objectEnumerator];
+      NSNibControlConnector *action = nil;
+
+      // Get actions...
+      while ((action = [en nextObject]) != nil)
+	{
+	  NSLog(@"action = %@", action);
+	  NSXMLElement *actionElem = [NSXMLNode elementWithName: @"action"];
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"selector"
+					     stringValue: [action label]];
+	  [actionElem addAttribute: attr];
+
+	  NSString *targetId = [self _createIdentifierForObject: [action destination]];
+	  attr = [NSXMLNode attributeWithName: @"target"
+				  stringValue: targetId];
+	  [actionElem addAttribute: attr];
+
+	  attr = [NSXMLNode attributeWithName: @"id"
+				  stringValue: [[NSString randomHex] splitString]];
+	  [actionElem addAttribute: attr];
+
+	  [conns addChild: actionElem];
+	}
+
+      [elem addChild: conns];
+    }
+}
+
 // This method recursively navigates the entire object tree and emits XML
 - (void) _collectObjectsFromObject: (id)obj
 			  withNode: (NSXMLElement  *)node
@@ -502,13 +560,16 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
       
+      // Add all of the connections for a given object...
+      [self _addAllConnections: elem fromObject: obj];
+      
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
       if ([name isEqualToString: @"NSMenu"] == NO)
 	{
 	  [node addChild: elem];
 	}
-      
+
       // If the object responds to "title" get that and add it to the XML
       if ([obj respondsToSelector: @selector(title)])
 	{
@@ -562,6 +623,13 @@ static NSUInteger _count = INT_MAX;
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"submenu"];
 	  [elem addAttribute: attr];
 
+	  // Add services menu...
+	  if (obj == [_gormDocument servicesMenu])
+	    {
+	      attr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"services"];
+	      [elem addAttribute: attr];
+	    }
+	  
 	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
 	  while ((item = [en nextObject]) != nil)
 	    {
