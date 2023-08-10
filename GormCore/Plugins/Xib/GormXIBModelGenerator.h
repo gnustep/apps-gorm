@@ -35,11 +35,13 @@
 @class NSMutableDictionary;
 @class NSString;
 @class NSData;
+@class NSMutableArray;
 
 @interface GormXIBModelGenerator : NSObject
 {
   GormDocument *_gormDocument;
   NSMutableDictionary *_mappingDictionary;
+  NSMutableArray *_allIdentifiers;
 }
 
 /**

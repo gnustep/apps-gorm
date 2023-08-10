@@ -130,6 +130,7 @@ static NSDictionary *_methodReturnTypes = nil;
 			      @"NSRect", @"bounds",
 			      @"NSUInteger", @"autoresizeMask",
 			      @"NSString", @"toolTip",
+			      @"NSString", @"keyEquivalent",
 			      nil];
     }
 }
@@ -152,6 +153,7 @@ static NSDictionary *_methodReturnTypes = nil;
     {
       ASSIGN(_gormDocument, doc);
       _mappingDictionary = [[NSMutableDictionary alloc] init];
+      _allIdentifiers = [[NSMutableArray alloc] init];
     }
   return self;
 }
@@ -160,6 +162,7 @@ static NSDictionary *_methodReturnTypes = nil;
 {
   DESTROY(_gormDocument);
   DESTROY(_mappingDictionary);
+  DESTROY(_allIdentifiers);
   
   [super dealloc];
 }
@@ -177,6 +180,13 @@ static NSDictionary *_methodReturnTypes = nil;
 
   // Lowercase the first letter of the class to make the element name
   result = [result lowercaseFirstCharacter];
+
+  // Map certain names to XIB equivalents...
+  if ([result isEqualToString: @"objectProxy"])
+    {
+      result = @"customObject";
+    }  
+  
   return result;
 }
 
@@ -231,11 +241,22 @@ static NSDictionary *_methodReturnTypes = nil;
       result = [[NSString randomHex] splitString];
       NSLog(@"New id %@", result);
     }
-  
-  // Map the name...
-  [_mappingDictionary setObject: originalName
-			 forKey: result];
 
+  // If the id already exists, but isn't mapped...
+  if ([_allIdentifiers containsObject: result])
+    {
+      result = [[NSString randomHex] splitString];
+    }
+  
+  if (originalName != nil)
+    {
+      // Map the name...
+      [_mappingDictionary setObject: originalName
+			     forKey: result];
+    }
+
+  // Record the id...
+  [_allIdentifiers addObject: result];
   
   return result;
 }
@@ -356,22 +377,73 @@ static NSDictionary *_methodReturnTypes = nil;
   [elem addChild: rectElem];
 }
 
+- (void) _addKeyEquivalent: (NSString *)ke toElement: (NSXMLElement *)elem
+{
+  if ([ke isEqualToString: @""] == NO)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"keyEquivalent" stringValue: ke];
+      [elem addAttribute: attr];
+    }
+}
+
+- (void) _addKeyEquivalentModifierMask: (NSUInteger)mask toElement: (NSXMLElement *)elem
+{
+  NSXMLNode *attr = nil;
+  
+  NSLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
+  if ([elem attributeForName: @"keyEquivalent"] != nil)
+    {
+      if (mask | NSCommandKeyMask)
+	{
+	  attr = [NSXMLNode attributeWithName: @"command" stringValue: @"YES"];
+	}
+      if (mask | NSShiftKeyMask)
+	{
+	  attr = [NSXMLNode attributeWithName: @"shift" stringValue: @"YES"];
+	}
+      if (mask | NSControlKeyMask)
+	{
+	  attr = [NSXMLNode attributeWithName: @"control" stringValue: @"YES"];
+	}
+      if (mask | NSAlternateKeyMask)
+	{
+	  attr = [NSXMLNode attributeWithName: @"option" stringValue: @"YES"];
+	}
+      
+      if (attr != nil)
+	{
+	  [elem addAttribute: attr];
+	}
+    }
+}
+
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
 	       toElem: (NSXMLElement *)elem
 	   fromObject: (id)obj
 {
-  NSLog(@"%@ -> %@: %@", name, type, elem);
+  NSDebugLog(@"%@ -> %@: %@", name, type, elem);
   if ([name isEqualToString: @"frame"])
     {
       NSRect f = [obj frame];
       [self _addRect: f toElement: elem withName: name];
     }
+  else if ([name isEqualToString: @"keyEquivalent"])
+    {
+      NSString *ke = [obj keyEquivalent];
+      NSLog(@"keyEquivalent %@", ke);
+      [self _addKeyEquivalent: ke toElement: elem];
+    }
+  else if ([name isEqualToString: @"keyEquivalentModifierMask"])
+    {
+      NSUInteger k = [obj keyEquivalentModifierMask];
+      [self _addKeyEquivalentModifierMask: k toElement: elem];
+    }
 }
 
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
-  NSArray *methods = GSObjCMethodNames(obj, NO);
+  NSArray *methods = GSObjCMethodNames(obj, YES);
   NSArray *props = [self _propertiesFromMethods: methods];
   NSEnumerator *en = [props objectEnumerator];
   NSString *name = nil;
@@ -379,7 +451,7 @@ static NSDictionary *_methodReturnTypes = nil;
   while ((name = [en nextObject]) != nil)
     {
       NSString *type = [_methodReturnTypes objectForKey: name];
-      NSDebugLog(@"%@ -> %@", name, type);
+      NSLog(@"%@ -> %@", name, type);
 
       if (type != nil)
 	{
@@ -448,17 +520,20 @@ static NSDictionary *_methodReturnTypes = nil;
 
 	  if ([name isEqualToString: @"NSMenu"])
 	    {
-	      NSXMLNode *systemMenuAttr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"main"];
+	      NSXMLNode *systemMenuAttr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"apple"];
 	      [elem addAttribute: systemMenuAttr];
 	    }
-	  
+
+	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
-				     withNode: elem];
+				     withNode: itemsElem];
 	    }
+	  [elem addChild: itemsElem]; // Add to parent element...
 	}
-      else if ([obj isKindOfClass: [NSMenuItem class]])
+
+      if ([obj isKindOfClass: [NSMenuItem class]])
 	{
 	  NSMenu *sm = [obj submenu];
 	  if (sm != nil)
@@ -467,7 +542,8 @@ static NSDictionary *_methodReturnTypes = nil;
 				     withNode: elem];
 	    }
 	}
-      else if ([obj isKindOfClass: [NSWindow class]])
+
+      if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
 	  NSRect c = [[obj contentView] frame];
@@ -477,23 +553,31 @@ static NSDictionary *_methodReturnTypes = nil;
 	  [self _collectObjectsFromObject: [obj contentView]
 				 withNode: elem];
 	}
-      else if ([obj isKindOfClass: [NSView class]])
+
+      if ([obj isKindOfClass: [NSView class]])
 	{
 	  NSArray *subviews = [obj subviews];
 	  NSEnumerator *en = [subviews objectEnumerator];
 	  id v = nil;
+
+	  if ([obj respondsToSelector: @selector(contentView)])
+	    {
+	      NSView *sv = [obj superview];
+	    }
 
 	  if (obj == [[obj window] contentView])
 	    {
 	      NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
 	      [elem addAttribute: contentViewAttr];
 	    }
-	  
+
+	  NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
 	  while ((v = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: v
-				     withNode: elem];
+				     withNode: subviewsElement];
 	    }
+	  [elem addChild: subviewsElement];
 	}
     }
 }
