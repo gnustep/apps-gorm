@@ -40,6 +40,7 @@
 #import <AppKit/NSView.h>
 #import <AppKit/NSButton.h>
 #import <AppKit/NSTextField.h>
+#import <AppKit/NSBox.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -249,6 +250,7 @@ static NSUInteger _count = INT_MAX;
 			      @"NSUInteger", @"bezelStyle",
 			      @"BOOL", @"isBordered",
 			      @"NSUInteger", @"autoresizingMask",
+			      //			      @"NSView", @"contentView",
 			      nil];
     }
 }
@@ -788,6 +790,11 @@ static NSUInteger _count = INT_MAX;
       [self _addBorderStyle: bordered 
 		  toElement: elem];
     }
+  /*  else if ([name isEqualToString: @"contentView"])
+    {
+      [self _addContentView: [obj contentView]
+		  toElement: elem];
+		  }*/
   else if ([name isEqualToString: @"cell"])
     {
       NSDebugLog(@"cell = %@", [obj cell]);
@@ -1060,30 +1067,45 @@ static NSUInteger _count = INT_MAX;
 				 withNode: elem];
 	}
 
-      if ([obj isKindOfClass: [NSView class]])
+      if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
-	  NSArray *subviews = [obj subviews];
-	  NSEnumerator *en = [subviews objectEnumerator];
-	  id v = nil;
-
-	  if ([obj respondsToSelector: @selector(contentView)])
-	    {
-	      NSView *sv = [obj superview];
-	    }
-
+	  id sv = [obj superview];
+	  
 	  if (obj == [[obj window] contentView])
 	    {
 	      NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
 	      [elem addAttribute: contentViewAttr];
 	    }
 
-	  NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
-	  while ((v = [en nextObject]) != nil)
+	  if ([sv respondsToSelector: @selector(contentView)])
 	    {
-	      [self _collectObjectsFromObject: v
-				     withNode: subviewsElement];
+	      if ([sv contentView] == obj)
+		{
+		  NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
+		  [elem addAttribute: contentViewAttr];
+		}
 	    }
-	  [elem addChild: subviewsElement];
+
+	  if ([obj respondsToSelector: @selector(contentView)])
+	    {
+	      NSView *cv = [obj contentView];
+	      [self _collectObjectsFromObject: cv
+				     withNode: elem];
+	    }
+	  else
+	    {
+	      NSArray *subviews = [obj subviews];
+	      NSEnumerator *en = [subviews objectEnumerator];
+	      id v = nil;
+	      NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
+
+	      while ((v = [en nextObject]) != nil)
+		{
+		  [self _collectObjectsFromObject: v
+					 withNode: subviewsElement];
+		}
+	      [elem addChild: subviewsElement];
+	    }
 	}
     }
 }
