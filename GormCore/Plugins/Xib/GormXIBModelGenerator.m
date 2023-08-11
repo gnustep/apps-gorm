@@ -248,6 +248,7 @@ static NSUInteger _count = INT_MAX;
 			      @"NSUInteger", @"alignment",
 			      @"NSUInteger", @"bezelStyle",
 			      @"BOOL", @"isBordered",
+			      @"NSUInteger", @"autoresizingMask",
 			      nil];
     }
 }
@@ -589,7 +590,7 @@ static NSUInteger _count = INT_MAX;
   
   if (mask | NSWindowStyleMaskTitled)
     {
-      attr = [NSXMLNode attributeWithName: @"windowed" stringValue: @"YES"];
+      attr = [NSXMLNode attributeWithName: @"titled" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
     }
   if (mask | NSWindowStyleMaskClosable)
@@ -608,6 +609,9 @@ static NSUInteger _count = INT_MAX;
       [styleMaskElem addAttribute: attr];
     }
 
+  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"styleMask"];
+  [styleMaskElem addAttribute: attr];
+  
   [elem addChild: styleMaskElem];
 }
 
@@ -707,6 +711,30 @@ static NSUInteger _count = INT_MAX;
     }
 }
 
+- (void) _addAutoresizingMask: (NSAutoresizingMaskOptions)m toElement: (NSXMLElement *)elem
+{
+  if (m != 0)
+    {
+      NSXMLElement *autoresizingMaskElem = [NSXMLNode elementWithName: @"autoresizingMask"];
+      NSXMLNode *attr = nil;
+
+      if (m | NSViewWidthSizable)
+	{
+	  attr = [NSXMLNode attributeWithName: @"flexibleMaxX" stringValue: @"YES"];
+	}
+      if (m | NSViewHeightSizable)
+	{
+	  attr = [NSXMLNode attributeWithName: @"flexibleMaxY" stringValue: @"YES"];
+	}
+      
+      [autoresizingMaskElem addAttribute: attr];
+      attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizeMask"];
+      [autoresizingMaskElem addAttribute: attr];
+
+      [elem addChild: autoresizingMaskElem];      
+    }
+}
+
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
 	       toElem: (NSXMLElement *)elem
@@ -734,7 +762,13 @@ static NSUInteger _count = INT_MAX;
       NSString *buttonTypeString = [obj buttonTypeString];
       [self _addButtonType: buttonTypeString
 		 toElement: elem];
-    } 
+    }
+  else if ([name isEqualToString: @"autoresizingMask"])
+    {
+      NSAutoresizingMaskOptions m = [obj autoresizingMask];
+      [self _addAutoresizingMask: m
+		       toElement: elem];
+    }
   else if ([name isEqualToString: @"alignment"] && [obj respondsToSelector: @selector(cell)] == NO)
     {
       [self _addAlignment: [obj alignment]
