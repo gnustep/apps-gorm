@@ -38,6 +38,8 @@
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSPopUpButton.h>
 #import <AppKit/NSView.h>
+#import <AppKit/NSButton.h>
+#import <AppKit/NSTextField.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -51,6 +53,104 @@
 
 static NSDictionary *_methodReturnTypes = nil;
 static NSUInteger _count = INT_MAX;
+
+@interface NSButtonCell (_Private_)
+
+- (NSButtonType) buttonType;
+
+@end
+
+@implementation NSButtonCell (_Private_)
+
+- (NSButtonType) buttonType
+{
+  NSButtonType type = 0;
+  NSInteger highlightsBy = [self highlightsBy];
+  NSInteger showsStateBy = [self showsStateBy];
+  BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
+  NSString *imageName = [[self image] name];
+  
+  if ((highlightsBy | NSChangeBackgroundCellMask)
+      && (showsStateBy | NSNoCellMask)
+      && (imageDimsWhenDisabled == YES))
+    {
+      type = NSMomentaryLightButton;
+    }
+  else if ((highlightsBy | (NSPushInCellMask | NSChangeGrayCellMask))
+	   && (showsStateBy | NSNoCellMask)
+	   && (imageDimsWhenDisabled == YES))
+    {
+      type = NSMomentaryPushInButton;
+    }
+  else if ((highlightsBy | NSContentsCellMask)
+	   && (showsStateBy | NSNoCellMask)
+	   && (imageDimsWhenDisabled == YES))
+    {
+      type = NSMomentaryChangeButton;
+    }  
+  else if ((highlightsBy | (NSPushInCellMask | NSChangeGrayCellMask))
+	   && (showsStateBy | NSChangeBackgroundCellMask)
+	   && (imageDimsWhenDisabled == YES))
+    {
+      type = NSPushOnPushOffButton;
+    }  
+  else if ((highlightsBy | (NSPushInCellMask | NSContentsCellMask))
+	   && (showsStateBy | NSContentsCellMask)
+	   && (imageDimsWhenDisabled == YES))
+    {
+      type = NSOnOffButton;
+    }
+  else if ([imageName isEqualToString: @"NSSwitch"])
+    {
+      type = NSSwitchButton;
+    }    
+  else if ([imageName isEqualToString: @"NSRadioButton"])
+    {
+      type = NSRadioButton;
+    }
+
+  return type;
+}
+
+- (NSString *) buttonTypeString
+{
+  NSButtonType type = [self buttonType];
+  NSString *result = @"";
+  
+  switch (type)
+    {
+      case NSMomentaryLightButton: 
+	result = @"push";
+	break;
+      case NSMomentaryPushInButton: 
+	result = @"push"; // @"momentaryPushIn";
+        break;
+      case NSMomentaryChangeButton: 
+	result = @"momentarychange";
+        break;
+      case NSPushOnPushOffButton: 
+	result = @"push"; // @"pushonpushoff";
+        break;
+      case NSOnOffButton: 
+	result = @"onoff";
+        break;
+      case NSToggleButton: 
+	result = @"toggle";
+        break;
+      case NSSwitchButton: 
+	result = @"switch";
+        break;
+      case NSRadioButton: 
+	result = @"radio";
+        break;
+      default:
+        NSLog(@"Using unsupported button type %d", type);
+        break;      
+    }
+
+  return result;
+}
+@end
 
 @interface NSString (_hex_)
 
@@ -144,6 +244,10 @@ static NSUInteger _count = INT_MAX;
 			      @"NSUInteger", @"windowStyleMask",
 			      @"id", @"cell",
 			      @"NSArray", @"items",
+			      @"NSUInteger", @"buttonType",
+			      @"NSUInteger", @"alignment",
+			      @"NSUInteger", @"bezelStyle",
+			      @"BOOL", @"isBordered",
 			      nil];
     }
 }
@@ -363,6 +467,7 @@ static NSUInteger _count = INT_MAX;
 }
 
 - (NSArray *) _propertiesFromMethods: (NSArray *)methods
+			   forObject: (id)obj
 {
   NSEnumerator *en = [methods objectEnumerator];
   NSString *name = nil;
@@ -373,16 +478,33 @@ static NSUInteger _count = INT_MAX;
       NSString *substring = [name substringToIndex: 3];
       if ([substring isEqualToString: @"set"])
 	{
-	  NSString *s = [name substringFromIndex: 3];
-	  s = [s lowercaseFirstCharacter];
-	  s = [s stringByReplacingOccurrencesOfString: @":" withString: @""];
+	  NSString *os = [[name substringFromIndex: 3] stringByReplacingOccurrencesOfString: @":" withString: @""];
+	  NSString *s = [os lowercaseFirstCharacter];
+	  NSString *iss = [NSString stringWithFormat: @"is%@", os];
 	  
 	  if ([methods containsObject: s])
 	    {
 	      SEL sel = NSSelectorFromString(s);
 	      if (sel != NULL)
 		{
-		  [result addObject: s];
+		  NSDebugLog(@"selector = %@",s);
+		  if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
+		    {
+		      [result addObject: s];
+		    }
+		}
+	    }
+	  else if ([methods containsObject: iss])
+	    {
+	      NSDebugLog(@"***** retrying with getter name: %@", iss);
+	      SEL sel = NSSelectorFromString(iss);
+	      if (sel != nil)
+		{
+		  if ([obj respondsToSelector: sel])
+		    {
+		      NSDebugLog(@"Added... %@", iss);
+		      [result addObject: iss];
+		    }
 		}
 	    }
 	}
@@ -402,9 +524,9 @@ static NSUInteger _count = INT_MAX;
   [rectElem addAttribute: attr];
   attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%4.1f",r.origin.y]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%4.0f",r.size.width]];
+  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)r.size.width]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%4.0f",r.size.height]];
+  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)r.size.height]];
   [rectElem addAttribute: attr];
 
   [elem addChild: rectElem];
@@ -463,30 +585,126 @@ static NSUInteger _count = INT_MAX;
   
   NSDebugLog(@"styleMask = %ld, element = %@", mask, elem);
 
-  NSXMLNode *styleMaskElem = [NSXMLNode elementWithName: @"windowStyleMask"];
+  NSXMLElement *styleMaskElem = [NSXMLNode elementWithName: @"windowStyleMask"];
   
   if (mask | NSWindowStyleMaskTitled)
     {
       attr = [NSXMLNode attributeWithName: @"windowed" stringValue: @"YES"];
-      [elem addAttribute: attr];
+      [styleMaskElem addAttribute: attr];
     }
   if (mask | NSWindowStyleMaskClosable)
     {
       attr = [NSXMLNode attributeWithName: @"closable" stringValue: @"YES"];
-      [elem addAttribute: attr];
+      [styleMaskElem addAttribute: attr];
     }
   if (mask | NSWindowStyleMaskMiniaturizable)
     {
       attr = [NSXMLNode attributeWithName: @"miniaturizable" stringValue: @"YES"];
-      [elem addAttribute: attr];
+      [styleMaskElem addAttribute: attr];
     }
   if (mask | NSWindowStyleMaskResizable)
     {
       attr = [NSXMLNode attributeWithName: @"resizable" stringValue: @"YES"];
-      [elem addAttribute: attr];
+      [styleMaskElem addAttribute: attr];
     }
 
   [elem addChild: styleMaskElem];
+}
+
+- (void) _addButtonType: (NSString *)buttonTypeString toElement: (NSXMLElement *)elem
+{
+  NSXMLNode *attr = nil;
+
+  attr = [NSXMLNode attributeWithName: @"type" stringValue: buttonTypeString];
+  [elem addAttribute: attr];
+}
+
+- (void) _addAlignment: (NSUInteger)alignment toElement: (NSXMLElement *)elem
+{
+  NSXMLNode *attr = nil;
+  NSString *string = nil;
+  
+  switch (alignment)
+    {
+    case NSLeftTextAlignment:
+      string = @"left";
+      break;
+    case NSRightTextAlignment:
+      string = @"right";
+      break;
+    case NSCenterTextAlignment:
+      string = @"center";
+      break;
+    case NSJustifiedTextAlignment:
+      string = @"justified";
+      break;
+    case NSNaturalTextAlignment:
+      string = @"natural";
+      break;
+    }
+  
+  attr = [NSXMLNode attributeWithName: @"alignment" stringValue: string];
+  [elem addAttribute: attr];
+}
+
+- (void) _addBezelStyleForObject: (id)obj
+		       toElement: (NSXMLElement *)elem
+{
+  NSString *result = @"rounded";
+  NSXMLNode *attr = nil;
+  
+  if ([obj isKindOfClass: [NSButton class]])
+    {
+      NSBezelStyle bezel = (NSBezelStyle)[obj bezelStyle] - 1;
+      NSArray *bezelTypeArray = [NSArray arrayWithObjects:
+					   @"rounded",
+					 @"regular",
+					 @"thick",
+					 @"thicker",
+					 @"disclosure",
+					 @"shadowlessSquare",
+					 @"circular",
+					 @"texturedSquare",
+					 @"helpButton",
+					 @"smallSquare",
+					 @"texturedRounded",
+					 @"roundRect",
+					 @"recessed",
+					 @"roundedDisclosure",
+					 @"next",
+					 @"pushButton",
+					 @"smallIconButton",
+					 @"mediumIconButton",
+					 @"largeIconButton", nil];
+      if (bezel >= 0 && bezel <= 18)
+	{
+	  result = [bezelTypeArray objectAtIndex: bezel];
+	}
+    }
+  else if ([obj isKindOfClass: [NSTextField class]])
+    {
+      NSTextFieldBezelStyle bezel = (NSTextFieldBezelStyle)[obj bezelStyle];
+      NSArray *bezelTypeArray = [NSArray arrayWithObjects:
+					   @"square",
+					 @"rounded", nil];
+
+      if (bezel >= 0 && bezel <= 1)
+	{
+	  result = [bezelTypeArray objectAtIndex: bezel];
+	}
+    }
+
+  attr = [NSXMLNode attributeWithName: @"bezelStyle" stringValue: result];
+  [elem addAttribute: attr];
+}
+
+- (void) _addBorderStyle: (BOOL)bordered toElement: (NSXMLElement *)elem
+{
+  if (bordered)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"borderStyle" stringValue: @"border"];
+      [elem addAttribute: attr];
+    }
 }
 
 - (void) _addProperty: (NSString *)name
@@ -511,14 +729,32 @@ static NSUInteger _count = INT_MAX;
       NSUInteger k = [obj keyEquivalentModifierMask];
       [self _addKeyEquivalentModifierMask: k toElement: elem];
     }
-  else if ([name isEqualToString: @"styleMask"])
+  else if ([name isEqualToString: @"buttonType"])
     {
-      NSUInteger m = [obj styleMask];
-      [self _addWindowStyleMask: m toElement: elem];
+      NSString *buttonTypeString = [obj buttonTypeString];
+      [self _addButtonType: buttonTypeString
+		 toElement: elem];
+    } 
+  else if ([name isEqualToString: @"alignment"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      [self _addAlignment: [obj alignment]
+		toElement: elem];
+    }
+  else if ([name isEqualToString: @"bezelStyle"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      [self _addBezelStyleForObject: obj 
+			  toElement: elem];
+    }
+  else if ([name isEqualToString: @"isBordered"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      BOOL bordered = [obj isBordered];
+      NSLog(@"Handling isBordered...");
+      [self _addBorderStyle: bordered 
+		  toElement: elem];
     }
   else if ([name isEqualToString: @"cell"])
     {
-      NSLog(@"cell = %@", [obj cell]);
+      NSDebugLog(@"cell = %@", [obj cell]);
       [self _collectObjectsFromObject: [obj cell]
       		     withNode: elem];
     }
@@ -527,7 +763,7 @@ static NSUInteger _count = INT_MAX;
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
   NSArray *methods = GSObjCMethodNames(obj, YES);
-  NSArray *props = [self _propertiesFromMethods: methods];
+  NSArray *props = [self _propertiesFromMethods: methods forObject: obj];
   NSEnumerator *en = [props objectEnumerator];
   NSString *name = nil;
   
@@ -634,6 +870,13 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
 
+      if ([obj isKindOfClass: [NSCell class]])
+	{
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key"
+					     stringValue: @"cell"];
+	  [elem addAttribute: attr];
+	}
+
       // For each different class, recurse through the structure as needed.
       if ([obj isKindOfClass: [NSMenu class]])
 	{
@@ -706,21 +949,36 @@ static NSUInteger _count = INT_MAX;
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
 	  id item = nil;
-
+	  NSXMLElement *menuElem = [NSXMLNode elementWithName: @"menu"];
 	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
+	  NSXMLNode *attr = nil;
+	  
+	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"menu"];
+	  [menuElem addAttribute: attr];
+	  
+	  attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
+	  [menuElem addAttribute: attr];
+
+	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"cell"];
+	  [elem addAttribute: attr];
+	  
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
 				     withNode: itemsElem];
 	    }
-	  [elem addChild: itemsElem]; // Add to parent element...
+
+	  [menuElem addChild: itemsElem];
+	  [elem addChild: menuElem]; // Add to parent element...
 	}
 
       if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
 	  NSRect c = [[obj contentView] frame];
+	  NSUInteger m = [obj styleMask];
 
+	  [self _addWindowStyleMask: m toElement: elem];
 	  [self _addRect: c toElement: elem withName: @"contentRect"];
 	  [self _addRect: s toElement: elem withName: @"screenRect"];
 	  [self _collectObjectsFromObject: [obj contentView]
