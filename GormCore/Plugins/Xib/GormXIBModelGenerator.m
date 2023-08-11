@@ -428,7 +428,8 @@ static NSUInteger _count = INT_MAX;
 {
   NSXMLElement *co = nil;
   NSXMLNode *attr = nil; 
-  NSString *ownerClassName = [[_gormDocument filesOwner] className];
+  GormFilesOwner *filesOwner = [_gormDocument filesOwner];
+  NSString *ownerClassName = [filesOwner className];
 
   // Application...
   co = [NSXMLNode elementWithName: @"customObject"];
@@ -453,7 +454,8 @@ static NSUInteger _count = INT_MAX;
   attr = [NSXMLNode attributeWithName: @"customClass" stringValue: ownerClassName];
   [co addAttribute: attr];
   [elem addChild: co];
-
+  [self _addAllConnections: co fromObject: filesOwner];
+  
   // First Responder
   co = [NSXMLNode elementWithName: @"customObject"];
   attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-1"];
@@ -848,6 +850,41 @@ static NSUInteger _count = INT_MAX;
 
       [elem addChild: conns];
     }
+
+  connectors =[_gormDocument connectorsForSource: obj
+					 ofClass: [NSNibOutletConnector class]];
+
+  NSLog(@"outlet connectors = %@, for obj = %@", connectors, obj);
+
+  if ([connectors count] > 0)
+    {
+      NSXMLElement *conns = [NSXMLNode elementWithName: @"connections"];
+      NSEnumerator *en = [connectors objectEnumerator];
+      NSNibOutletConnector *outlet = nil;
+
+      // Get actions...
+      while ((outlet = [en nextObject]) != nil)
+	{
+	  NSDebugLog(@"outlet = %@", outlet);
+	  NSXMLElement *outletElem = [NSXMLNode elementWithName: @"outlet"];
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"property"
+					     stringValue: [outlet label]];
+	  [outletElem addAttribute: attr];
+
+	  NSString *destinationId = [self _createIdentifierForObject: [outlet destination]];
+	  attr = [NSXMLNode attributeWithName: @"destination"
+				  stringValue: destinationId];
+	  [outletElem addAttribute: attr];
+
+	  attr = [NSXMLNode attributeWithName: @"id"
+				  stringValue: [[NSString randomHex] splitString]];
+	  [outletElem addAttribute: attr];
+
+	  [conns addChild: outletElem];
+	}
+
+      [elem addChild: conns];
+    }
 }
 
 // This method recursively navigates the entire object tree and emits XML
@@ -995,13 +1032,17 @@ static NSUInteger _count = INT_MAX;
 
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"cell"];
 	  [elem addAttribute: attr];
-	  
+
+	  id selectedItem = [obj selectedItem];
+	  NSString *selectedItemId = [self _createIdentifierForObject: selectedItem];
+	  attr = [NSXMLNode attributeWithName: @"selectedItem" stringValue: selectedItemId];
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
 				     withNode: itemsElem];
 	    }
-
+	  [elem addAttribute: attr];
+	  
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
