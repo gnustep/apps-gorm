@@ -250,7 +250,7 @@ static NSUInteger _count = INT_MAX;
 			      @"NSUInteger", @"bezelStyle",
 			      @"BOOL", @"isBordered",
 			      @"NSUInteger", @"autoresizingMask",
-			      //			      @"NSView", @"contentView",
+			      @"NSUInteger", @"titlePosition",
 			      nil];
     }
 }
@@ -739,6 +739,41 @@ static NSUInteger _count = INT_MAX;
     }
 }
 
+- (void) _addTitlePosition: (NSTitlePosition)p toElement: (NSXMLElement *)elem
+{
+  NSString *result = nil;
+  
+  switch (p)
+    {
+    case NSNoTitle:
+      result = @"noTitle";
+      break;
+    case NSAboveTop:
+      result = @"aboveTop";
+      break;
+    case NSAtTop:
+      break;
+    case NSBelowTop:
+      result = @"belowTop";
+      break;
+    case NSAboveBottom:
+      result = @"aboveBottom";
+      break;
+    case NSAtBottom:
+      result = @"atBottom";
+      break;
+    case NSBelowBottom:
+      result = @"belowBottom";
+      break;
+    }
+  
+  if (result != nil)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"titlePosition" stringValue: result];
+      [elem addAttribute: attr];
+    }
+}
+
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
 	       toElem: (NSXMLElement *)elem
@@ -790,11 +825,12 @@ static NSUInteger _count = INT_MAX;
       [self _addBorderStyle: bordered 
 		  toElement: elem];
     }
-  /*  else if ([name isEqualToString: @"contentView"])
+  else if ([name isEqualToString: @"titlePosition"])
     {
-      [self _addContentView: [obj contentView]
-		  toElement: elem];
-		  }*/
+      NSTitlePosition p = [obj titlePosition];
+      [self _addTitlePosition: p
+		    toElement: elem];
+    }
   else if ([name isEqualToString: @"cell"])
     {
       NSDebugLog(@"cell = %@", [obj cell]);
