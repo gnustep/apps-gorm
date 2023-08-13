@@ -54,6 +54,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSArray *_singletonObjects = nil;
 static NSDictionary *_methodToKeyName = nil;
 static NSDictionary *_nonProperties = nil;
 static NSDictionary *_methodReturnTypes = nil;
@@ -238,15 +239,24 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _singletonObjects =
+	[[NSArray alloc] initWithObjects:
+			   @"GSNamedColor",
+			 @"NSFont",
+			 nil];
+      
       _methodToKeyName =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"name", @"colorNameComponent",
 			      @"catalog", @"catalogNameComponent",
+			      @"colorSpace", @"colorSpaceName",
 			      nil];
       
       _nonProperties =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
-			   [NSArray arrayWithObjects: @"colorNameComponent", @"catalogNameComponent", nil],
+			   [NSArray arrayWithObjects: @"colorNameComponent",
+				    @"catalogNameComponent",
+				    @"colorSpaceName", nil],
 			      @"GSNamedColor",
 			      nil];
       
@@ -299,6 +309,8 @@ static NSUInteger _count = INT_MAX;
 			      @"NSColor", @"backgroundColor",
 			      @"NSString", @"colorNameComponent",
 			      @"NSString", @"catalogNameComponent",
+			      @"NSScroller", @"horizontalScroller",
+			      @"NSScroller", @"verticalScroller",
 			      nil];
     }
 }
@@ -914,10 +926,15 @@ static NSUInteger _count = INT_MAX;
 		  
 		  if ([o isKindOfClass: [NSString class]] == NO)
 		    {
-		      NSString *ident = [self _createIdentifierForObject: o];
-		      NSXMLNode *attr = [NSXMLNode attributeWithName: name
-							 stringValue: ident];
-		      [elem addAttribute: attr];
+		      NSString *className = NSStringFromClass([o class]);
+
+		      if ([_singletonObjects containsObject: className] == NO)
+			{
+			  NSString *ident = [self _createIdentifierForObject: o];
+			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
+							     stringValue: ident];
+			  [elem addAttribute: attr];
+			}
 		      
 		      [self _collectObjectsFromObject: o
 					       forKey: name
@@ -1188,9 +1205,15 @@ static NSUInteger _count = INT_MAX;
       NSString *className = NSStringFromClass([obj class]);
       NSString *elementName = [self _convertName: className];
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
-      NSXMLNode *attr = [NSXMLNode attributeWithName: @"id" stringValue: ident];
-      [elem addAttribute: attr];
-
+      NSXMLNode *attr = nil;
+      
+      // If the object is a singleton, then there is no need for the id to be presented.
+      if ([_singletonObjects containsObject: className] == NO)
+	{
+	  attr = [NSXMLNode attributeWithName: @"id" stringValue: ident];
+	  [elem addAttribute: attr];
+	}
+      
       NSString *name = [_gormDocument nameForObject:  obj];
       NSString *userLabel = [self _userLabelForObject: obj];
       if (userLabel != nil)
