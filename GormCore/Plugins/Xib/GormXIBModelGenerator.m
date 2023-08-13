@@ -41,6 +41,8 @@
 #import <AppKit/NSButton.h>
 #import <AppKit/NSTextField.h>
 #import <AppKit/NSBox.h>
+#import <AppKit/NSTableView.h>
+#import <AppKit/NSOutlineView.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -218,6 +220,10 @@ static NSUInteger _count = INT_MAX;
 - (void) _collectObjectsFromObject: (id)obj
 			  withNode: (NSXMLElement  *)node;
 
+- (void) _collectObjectsFromObject: (id)obj
+			    ForKey: (NSString *)keyName
+			  withNode: (NSXMLElement  *)node;
+
 @end
 
 
@@ -251,6 +257,19 @@ static NSUInteger _count = INT_MAX;
 			      @"BOOL", @"isBordered",
 			      @"NSUInteger", @"autoresizingMask",
 			      @"NSUInteger", @"titlePosition",
+			      @"BOOL", @"isEditable", // NSTableColumn
+			      @"BOOL", @"isResizable",
+			      @"BOOL", @"isHidden",
+			      @"CGFloat", @"minWidth",
+			      @"CGFloat", @"maxWidth",
+			      @"CGFloat", @"width",
+			      @"NSString", @"headerToolTip",
+			      @"NSString", @"identifier",
+			      @"NSCell", @"headerCell",
+			      @"NSCell", @"dataCell",
+			      @"NSView", @"headerView",
+			      @"CGFloat", @"rowHeight",
+			      @"NSFont", @"font",
 			      nil];
     }
 }
@@ -480,41 +499,46 @@ static NSUInteger _count = INT_MAX;
   
   while ((name = [en nextObject]) != nil)
     {
-      NSString *substring = [name substringToIndex: 3];
-      if ([substring isEqualToString: @"set"])
+      if ([name isEqualToString: @"set"] == NO) // this is the [NSFont set] method... skip...
 	{
-	  NSString *os = [[name substringFromIndex: 3] stringByReplacingOccurrencesOfString: @":" withString: @""];
-	  NSString *s = [os lowercaseFirstCharacter];
-	  NSString *iss = [NSString stringWithFormat: @"is%@", os];
-	  
-	  if ([methods containsObject: s])
+	  NSString *substring = [name substringToIndex: 3];
+	  if ([substring isEqualToString: @"set"])
 	    {
-	      SEL sel = NSSelectorFromString(s);
-	      if (sel != NULL)
+	      NSString *os = [[name substringFromIndex: 3]
+			       stringByReplacingOccurrencesOfString: @":"
+							 withString: @""];
+	      NSString *s = [os lowercaseFirstCharacter];
+	      NSString *iss = [NSString stringWithFormat: @"is%@", os];
+	      
+	      if ([methods containsObject: s])
 		{
-		  NSDebugLog(@"selector = %@",s);
-		  if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
+		  SEL sel = NSSelectorFromString(s);
+		  if (sel != NULL)
 		    {
-		      [result addObject: s];
+		      NSDebugLog(@"selector = %@",s);
+		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
+			{
+			  [result addObject: s];
+			}
 		    }
 		}
-	    }
-	  else if ([methods containsObject: iss])
-	    {
-	      NSDebugLog(@"***** retrying with getter name: %@", iss);
-	      SEL sel = NSSelectorFromString(iss);
-	      if (sel != nil)
+	      else if ([methods containsObject: iss])
 		{
-		  if ([obj respondsToSelector: sel])
+		  NSDebugLog(@"***** retrying with getter name: %@", iss);
+		  SEL sel = NSSelectorFromString(iss);
+		  if (sel != nil)
 		    {
-		      NSDebugLog(@"Added... %@", iss);
-		      [result addObject: iss];
+		      if ([obj respondsToSelector: sel])
+			{
+			  NSDebugLog(@"Added... %@", iss);
+			  [result addObject: iss];
+			}
 		    }
 		}
 	    }
 	}
     }
-
+  
   return result;
 }
 
@@ -658,7 +682,7 @@ static NSUInteger _count = INT_MAX;
 - (void) _addBezelStyleForObject: (id)obj
 		       toElement: (NSXMLElement *)elem
 {
-  NSString *result = @"rounded";
+  NSString *result = nil;
   NSXMLNode *attr = nil;
   
   if ([obj isKindOfClass: [NSButton class]])
@@ -702,8 +726,11 @@ static NSUInteger _count = INT_MAX;
 	}
     }
 
-  attr = [NSXMLNode attributeWithName: @"bezelStyle" stringValue: result];
-  [elem addAttribute: attr];
+  if (result != nil)
+    {
+      attr = [NSXMLNode attributeWithName: @"bezelStyle" stringValue: result];
+      [elem addAttribute: attr];
+    }
 }
 
 - (void) _addBorderStyle: (BOOL)bordered toElement: (NSXMLElement *)elem
@@ -774,13 +801,84 @@ static NSUInteger _count = INT_MAX;
     }
 }
 
+- (void) _addTableColumns: (NSArray *)cols toElement: (NSXMLElement *)elem
+{
+  if ([cols count] > 0)
+    {
+      NSXMLElement *tblColElem = [NSXMLNode elementWithName: @"tableColumns"];
+      NSEnumerator *en = [cols objectEnumerator];
+      id col = nil;
+      
+      // NSLog(@"cols = %@", cols);
+      while ((col = [en nextObject]) != nil)
+	{
+	  [self _collectObjectsFromObject: col
+				 withNode: tblColElem];
+	}
+
+      [elem addChild: tblColElem];
+    }
+}
+
+- (void) _addBoolean: (BOOL)flag withName: (NSString *)name  toElement: (NSXMLElement *)elem
+{
+  if (flag == YES)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: name
+					 stringValue: @"YES"];
+      [elem addAttribute: attr];
+    }
+}
+
+- (void) _addFloat: (CGFloat)f withName: (NSString *)name  toElement: (NSXMLElement *)elem
+{
+  NSString *val = [NSString stringWithFormat: @"%4.1f",f];
+  NSXMLNode *attr = [NSXMLNode attributeWithName: name
+				     stringValue: val];
+  [elem addAttribute: attr];
+}
+
+- (void) _addString: (NSString *)val withName: (NSString *)name  toElement: (NSXMLElement *)elem
+{
+  if (val != nil && [val isEqualToString: @""] == NO)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: name
+					 stringValue: val];
+      [elem addAttribute: attr];
+    }
+}
+
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
 	       toElem: (NSXMLElement *)elem
 	   fromObject: (id)obj
 {
-  NSDebugLog(@"%@ -> %@: %@", name, type, elem);
-  if ([name isEqualToString: @"frame"])
+  Class clz = NSClassFromString(type);
+  if (clz != nil) // type is a class
+    {
+      if (clz != [NSString class])
+	{
+	  SEL s = NSSelectorFromString(name);
+	  if (s != NULL)
+	    {
+	      if ([obj respondsToSelector: s])
+		{
+		  id o = [obj performSelector: s];
+		  NSString *ident = [self _createIdentifierForObject: o];
+		  NSXMLNode *attr = [NSXMLNode attributeWithName: name
+						     stringValue: ident];
+		  
+		  [elem addAttribute: attr];
+
+		  [self _collectObjectsFromObject: o
+					   forKey: name
+					 withNode: elem];
+
+		}
+	    }
+	}
+    }
+  else if ([name isEqualToString: @"frame"])
     {
       NSRect f = [obj frame];
       [self _addRect: f toElement: elem withName: name];
@@ -821,22 +919,105 @@ static NSUInteger _count = INT_MAX;
   else if ([name isEqualToString: @"isBordered"] && [obj respondsToSelector: @selector(cell)] == NO)
     {
       BOOL bordered = [obj isBordered];
-      NSLog(@"Handling isBordered...");
+      NSDebugLog(@"Handling isBordered...");
       [self _addBorderStyle: bordered 
 		  toElement: elem];
     }
-  else if ([name isEqualToString: @"titlePosition"])
+  else if ([name isEqualToString: @"titlePosition"]) 
     {
       NSTitlePosition p = [obj titlePosition];
       [self _addTitlePosition: p
 		    toElement: elem];
     }
+  else if ([name isEqualToString: @"isHidden"]) 
+    {
+      BOOL f = [obj isHidden];
+      [self _addBoolean: f
+	       withName: @"hidden"
+	      toElement: elem];
+    }
+  else if ([name isEqualToString: @"isResizable"]) 
+    {
+      BOOL f = [obj isResizable];
+      [self _addBoolean: f
+	       withName: @"resizable"
+	      toElement: elem];
+    }
+  else if ([name isEqualToString: @"isEditable"]) 
+    {
+      BOOL f = [obj isEditable];
+      [self _addBoolean: f
+	       withName: @"editable"
+	      toElement: elem];
+    }
+  else if ([name isEqualToString: @"minWidth"]) 
+    {
+      CGFloat f = [obj minWidth];
+      [self _addFloat: f
+	     withName: @"minWidth"
+	    toElement: elem];
+    }
+  else if ([name isEqualToString: @"maxWidth"]) 
+    {
+      CGFloat f = [obj maxWidth];
+      [self _addFloat: f
+	     withName: @"maxWidth"
+	    toElement: elem];
+    }
+  else if ([name isEqualToString: @"width"])
+    {
+      CGFloat f = [obj width];
+      [self _addFloat: f
+	     withName: @"width"
+	    toElement: elem];
+    }
+  else if ([name isEqualToString: @"rowHeight"])
+    {
+      CGFloat f = [obj rowHeight];
+      [self _addFloat: f
+	     withName: @"rowHeight"
+	    toElement: elem];
+    }
+  else if ([name isEqualToString: @"headerToolTip"])
+    {
+      NSString *val = [obj headerToolTip];
+      [self _addString: val
+	      withName: @"headerToolTip"
+	     toElement: elem];
+    }
+  else if ([name isEqualToString: @"identifier"])
+    {
+      NSString *val = [obj identifier];
+      [self _addString: val
+	      withName: @"identifier"
+	     toElement: elem];
+    }
+  /*
+  else if ([name isEqualToString: @"dataCell"])
+    {
+      [self _collectObjectsFromObject: [obj dataCell]
+			       forKey: name
+			     withNode: elem];
+    }
+  else if ([name isEqualToString: @"headerCell"])
+    {
+      [self _collectObjectsFromObject: [obj headerCell]
+			       forKey: name
+			     withNode: elem];
+    }
+  else if ([name isEqualToString: @"headerView"])
+    {
+      [self _collectObjectsFromObject: [obj headerView]
+			       forKey: name
+			     withNode: elem];
+    }
   else if ([name isEqualToString: @"cell"])
     {
-      NSDebugLog(@"cell = %@", [obj cell]);
       [self _collectObjectsFromObject: [obj cell]
-      		     withNode: elem];
+			       forKey: name
+			     withNode: elem];
     }
+  */
 }
 
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
@@ -897,7 +1078,7 @@ static NSUInteger _count = INT_MAX;
   connectors =[_gormDocument connectorsForSource: obj
 					 ofClass: [NSNibOutletConnector class]];
 
-  NSLog(@"outlet connectors = %@, for obj = %@", connectors, obj);
+  NSDebugLog(@"outlet connectors = %@, for obj = %@", connectors, obj);
 
   if ([connectors count] > 0)
     {
@@ -932,7 +1113,8 @@ static NSUInteger _count = INT_MAX;
 
 // This method recursively navigates the entire object tree and emits XML
 - (void) _collectObjectsFromObject: (id)obj
-			  withNode: (NSXMLElement  *)node
+			    forKey: (NSString *)keyName
+			  withNode: (NSXMLElement  *)parentNode
 {
   NSString *ident = [self _createIdentifierForObject: obj];
 
@@ -949,6 +1131,13 @@ static NSUInteger _count = INT_MAX;
       if (userLabel != nil)
 	{
 	  attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: userLabel];
+	  [elem addAttribute: attr];
+	}
+
+      // Add key to elem...
+      if (keyName != nil && [keyName isEqualToString: @""] == NO)
+	{
+	  attr = [NSXMLNode attributeWithName: @"key" stringValue: keyName];
 	  [elem addAttribute: attr];
 	}
       
@@ -970,7 +1159,7 @@ static NSUInteger _count = INT_MAX;
       [self _addAllProperties: elem fromObject: obj];
       if ([name isEqualToString: @"NSMenu"] == NO)
 	{
-	  [node addChild: elem];
+	  [parentNode addChild: elem];
 	}
 
       // If the object responds to "title" get that and add it to the XML
@@ -983,14 +1172,7 @@ static NSUInteger _count = INT_MAX;
 	      [elem addAttribute: attr];
 	    }
 	}
-
-      if ([obj isKindOfClass: [NSCell class]])
-	{
-	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key"
-					     stringValue: @"cell"];
-	  [elem addAttribute: attr];
-	}
-
+      
       // For each different class, recurse through the structure as needed.
       if ([obj isKindOfClass: [NSMenu class]])
 	{
@@ -1025,7 +1207,7 @@ static NSUInteger _count = INT_MAX;
 
 	      [mainMenuItem addChild: elem]; // Now add the node, since we have inserted the proper system menu
 
-	      [node addChild: mainMenuElem];
+	      [parentNode addChild: mainMenuElem];
 	    }
 
 	  // Add submenu attribute...
@@ -1090,6 +1272,12 @@ static NSUInteger _count = INT_MAX;
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
 
+      if ([obj isKindOfClass: [NSTableHeaderView class]])
+	{
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key" stringValue: @"headerView"];
+	  [elem addAttribute: attr];
+	}
+
       if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
@@ -1131,20 +1319,39 @@ static NSUInteger _count = INT_MAX;
 	  else
 	    {
 	      NSArray *subviews = [obj subviews];
-	      NSEnumerator *en = [subviews objectEnumerator];
-	      id v = nil;
-	      NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
 
-	      while ((v = [en nextObject]) != nil)
+	      if ([subviews count] > 0)
 		{
-		  [self _collectObjectsFromObject: v
-					 withNode: subviewsElement];
+		  NSEnumerator *en = [subviews objectEnumerator];
+		  id v = nil;
+		  NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
+		  
+		  while ((v = [en nextObject]) != nil)
+		    {
+		      [self _collectObjectsFromObject: v
+					     withNode: subviewsElement];
+		    }
+		  [elem addChild: subviewsElement];
 		}
-	      [elem addChild: subviewsElement];
 	    }
+	}
+
+      if ([obj respondsToSelector: @selector(tableColumns)])
+	{
+	  [self _addTableColumns: [obj tableColumns]
+		       toElement: elem];
 	}
     }
 }
+
+- (void) _collectObjectsFromObject: (id)obj
+			  withNode: (NSXMLElement  *)node
+{
+  [self _collectObjectsFromObject: obj
+			   forKey: nil
+			 withNode: node];
+}
+
 
 - (void) _buildXIBDocumentWithParentNode: (NSXMLElement *)parentNode
 {
