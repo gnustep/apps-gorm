@@ -54,6 +54,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSArray *_skipCollectionForKey = nil;
 static NSArray *_singletonObjects = nil;
 static NSDictionary *_methodToKeyName = nil;
 static NSDictionary *_nonProperties = nil;
@@ -239,6 +240,12 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _skipCollectionForKey =
+	[[NSArray alloc] initWithObjects:
+			   @"headerView",
+			 @"outlineTableColumn",
+			 nil];
+      
       _singletonObjects =
 	[[NSArray alloc] initWithObjects:
 			   @"GSNamedColor",
@@ -311,6 +318,8 @@ static NSUInteger _count = INT_MAX;
 			      @"NSString", @"catalogNameComponent",
 			      @"NSScroller", @"horizontalScroller",
 			      @"NSScroller", @"verticalScroller",
+			      @"NSTableColumn", @"outlineTableColumn",
+			      @"CGFloat", @"indentationPerLevel",
 			      nil];
     }
 }
@@ -935,10 +944,13 @@ static NSUInteger _count = INT_MAX;
 							     stringValue: ident];
 			  [elem addAttribute: attr];
 			}
-		      
-		      [self _collectObjectsFromObject: o
-					       forKey: name
-					     withNode: elem];
+
+		      if ([_skipCollectionForKey containsObject: name] == NO)
+			{
+			  [self _collectObjectsFromObject: o
+						   forKey: name
+						 withNode: elem];
+			}
 		    }
 		  else
 		    {
@@ -1030,28 +1042,35 @@ static NSUInteger _count = INT_MAX;
     {
       CGFloat f = [obj minWidth];
       [self _addFloat: f
-	     withName: @"minWidth"
+	     withName: name
 	    toElement: elem];
     }
   else if ([name isEqualToString: @"maxWidth"]) 
     {
       CGFloat f = [obj maxWidth];
       [self _addFloat: f
-	     withName: @"maxWidth"
+	     withName: name
 	    toElement: elem];
     }
   else if ([name isEqualToString: @"width"])
     {
       CGFloat f = [obj width];
       [self _addFloat: f
-	     withName: @"width"
+	     withName: name
 	    toElement: elem];
     }
   else if ([name isEqualToString: @"rowHeight"])
     {
       CGFloat f = [obj rowHeight];
       [self _addFloat: f
-	     withName: @"rowHeight"
+	     withName: name
+	    toElement: elem];
+    }
+  else if ([name isEqualToString: @"indentationPerLevel"]) 
+    {
+      CGFloat f = [obj indentationPerLevel];
+      [self _addFloat: f
+	     withName: name
 	    toElement: elem];
     }
   else if ([name isEqualToString: @"headerToolTip"])
@@ -1196,12 +1215,13 @@ static NSUInteger _count = INT_MAX;
 // This method recursively navigates the entire object tree and emits XML
 - (void) _collectObjectsFromObject: (id)obj
 			    forKey: (NSString *)keyName
-			  withNode: (NSXMLElement  *)parentNode
+			  withNode: (NSXMLElement *)pNode
 {
   NSString *ident = [self _createIdentifierForObject: obj];
 
   if (ident != nil)
     {
+      NSXMLElement *parentNode = pNode;
       NSString *className = NSStringFromClass([obj class]);
       NSString *elementName = [self _convertName: className];
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
@@ -1246,9 +1266,30 @@ static NSUInteger _count = INT_MAX;
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
 
+      // Add some items that are not actually properties, but should be reflected in the XML...
       [self _addAllNonProperties: elem fromObject: obj];
-      
-      // Special handling for NSMenu...
+
+      // Move this to its grandfather node... XIB files seem to expect this in the scroll view...
+      if ([obj isKindOfClass: [NSScrollView class]])
+	{
+	  NSClipView *cv = [obj contentView];
+	  NSArray *sv = [cv subviews];
+
+	  if ([sv count] > 0)
+	    {
+	      id view = [[cv subviews] objectAtIndex: 0];
+
+	      if ([view respondsToSelector: @selector(headerView)])
+		{
+		  id hv = [view headerView];
+		  [self _collectObjectsFromObject: hv
+					   forKey: nil
+					 withNode: elem];
+		}
+	    }
+	}
+
+      // Don't add the MainMenu directly, since we need to wrap it.. NSMenu...
       if ([name isEqualToString: @"NSMenu"] == NO)
 	{
 	  [parentNode addChild: elem];
@@ -1367,7 +1408,7 @@ static NSUInteger _count = INT_MAX;
       if ([obj isKindOfClass: [NSTableHeaderView class]])
 	{
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key" stringValue: @"headerView"];
-	  [elem addAttribute: attr];
+	  [elem addAttribute: attr];	  
 	}
 
       if ([obj isKindOfClass: [NSWindow class]])
