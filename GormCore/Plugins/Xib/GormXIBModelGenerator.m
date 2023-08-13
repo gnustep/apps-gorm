@@ -54,7 +54,12 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSDictionary *_methodToKeyName = nil;
+static NSDictionary *_nonProperties = nil;
 static NSDictionary *_methodReturnTypes = nil;
+static NSArray *_excludedKeys = nil;
+static NSDictionary *_mappedClassNames = nil;
+
 static NSUInteger _count = INT_MAX;
 
 @interface NSButtonCell (_Private_)
@@ -210,7 +215,7 @@ static NSUInteger _count = INT_MAX;
 {
   srand((unsigned int)_count--);
   uint32_t r = (uint32_t)rand();
-  return [NSString stringWithFormat: @"%08X", r];
+  return [NSString stringWithFormat: @"%08X", r]; // uppercase so we know it was generated...
 }
 
 @end
@@ -233,6 +238,27 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _methodToKeyName =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+				@"name", @"colorNameComponent",
+			      @"catalog", @"catalogNameComponent",
+			      nil];
+      
+      _nonProperties =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+			   [NSArray arrayWithObjects: @"colorNameComponent", @"catalogNameComponent", nil],
+			      @"GSNamedColor",
+			      nil];
+      
+      _mappedClassNames =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+				@"NSColor", @"GSNamedColor",
+			      nil];
+      _excludedKeys =
+	[[NSArray alloc] initWithObjects:
+			   @"font",
+			 nil];
+      
       _methodReturnTypes =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"NSRect", @"frame",
@@ -269,7 +295,10 @@ static NSUInteger _count = INT_MAX;
 			      @"NSCell", @"dataCell",
 			      @"NSView", @"headerView",
 			      @"CGFloat", @"rowHeight",
-			      @"NSFont", @"font",
+			      // @"NSFont", @"font",
+			      @"NSColor", @"backgroundColor",
+			      @"NSString", @"colorNameComponent",
+			      @"NSString", @"catalogNameComponent",
 			      nil];
     }
 }
@@ -308,8 +337,15 @@ static NSUInteger _count = INT_MAX;
   [super dealloc];
 }
 
-- (NSString *) _convertName: (NSString *)className
+- (NSString *) _convertName: (NSString *)name
 {
+  NSString *className = name;
+
+  if ([_mappedClassNames objectForKey: name])
+    {
+      className = [_mappedClassNames objectForKey: name];
+    }
+  
   NSString *result = [className stringByReplacingOccurrencesOfString: @"NS"
 							  withString: @""];
 
@@ -685,7 +721,7 @@ static NSUInteger _count = INT_MAX;
   NSString *result = nil;
   NSXMLNode *attr = nil;
   
-  if ([obj isKindOfClass: [NSButton class]])
+  if ([obj isKindOfClass: [NSButtonCell class]])
     {
       NSBezelStyle bezel = (NSBezelStyle)[obj bezelStyle] - 1;
       NSArray *bezelTypeArray = [NSArray arrayWithObjects:
@@ -713,7 +749,7 @@ static NSUInteger _count = INT_MAX;
 	  result = [bezelTypeArray objectAtIndex: bezel];
 	}
     }
-  else if ([obj isKindOfClass: [NSTextField class]])
+  else if ([obj isKindOfClass: [NSTextFieldCell class]])
     {
       NSTextFieldBezelStyle bezel = (NSTextFieldBezelStyle)[obj bezelStyle];
       NSArray *bezelTypeArray = [NSArray arrayWithObjects:
@@ -853,27 +889,50 @@ static NSUInteger _count = INT_MAX;
 	       toElem: (NSXMLElement *)elem
 	   fromObject: (id)obj
 {
+  if ([_excludedKeys containsObject: name])
+    {
+      return; // do not process anything in the excluded key list...
+    }
+  
   Class clz = NSClassFromString(type);
   if (clz != nil) // type is a class
     {
-      if (clz != [NSString class])
+      SEL s = NSSelectorFromString(name);
+      if (s != NULL)
 	{
-	  SEL s = NSSelectorFromString(name);
-	  if (s != NULL)
+	  if ([obj respondsToSelector: s])
 	    {
-	      if ([obj respondsToSelector: s])
+	      id o = [obj performSelector: s];
+	      if (o != nil)
 		{
-		  id o = [obj performSelector: s];
-		  NSString *ident = [self _createIdentifierForObject: o];
-		  NSXMLNode *attr = [NSXMLNode attributeWithName: name
-						     stringValue: ident];
+		  NSString *newName = [_methodToKeyName objectForKey: name];
 		  
-		  [elem addAttribute: attr];
-
-		  [self _collectObjectsFromObject: o
-					   forKey: name
-					 withNode: elem];
-
+		  if (newName != nil)
+		    {
+		      name = newName;
+		    }
+		  
+		  if ([o isKindOfClass: [NSString class]] == NO)
+		    {
+		      NSString *ident = [self _createIdentifierForObject: o];
+		      NSXMLNode *attr = [NSXMLNode attributeWithName: name
+							 stringValue: ident];
+		      [elem addAttribute: attr];
+		      
+		      [self _collectObjectsFromObject: o
+					       forKey: name
+					     withNode: elem];
+		    }
+		  else
+		    {
+		      if (o != nil && [o isEqualToString: @""] == NO)
+			{
+			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
+							     stringValue: o];
+			  
+			  [elem addAttribute: attr];
+			}
+		    }
 		}
 	    }
 	}
@@ -992,32 +1051,12 @@ static NSUInteger _count = INT_MAX;
 	      withName: @"identifier"
 	     toElement: elem];
     }
-  /*
-  else if ([name isEqualToString: @"dataCell"])
-    {
-      [self _collectObjectsFromObject: [obj dataCell]
-			       forKey: name
-			     withNode: elem];
-    }
-  else if ([name isEqualToString: @"headerCell"])
-    {
-      [self _collectObjectsFromObject: [obj headerCell]
-			       forKey: name
-			     withNode: elem];
-    }
-  else if ([name isEqualToString: @"headerView"])
-    {
-      [self _collectObjectsFromObject: [obj headerView]
-			       forKey: name
-			     withNode: elem];
-    }
   else if ([name isEqualToString: @"cell"])
     {
       [self _collectObjectsFromObject: [obj cell]
 			       forKey: name
 			     withNode: elem];
     }
-  */
 }
 
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
@@ -1039,6 +1078,32 @@ static NSUInteger _count = INT_MAX;
     }
   
   NSDebugLog(@"methods = %@", props);
+}
+
+- (void) _addAllNonProperties: (NSXMLElement *)elem fromObject: (id)obj
+{
+  NSString *className = NSStringFromClass([obj class]);
+  if (className != nil)
+    {
+      NSArray *props = [_nonProperties objectForKey: className];
+
+      if ([props count] > 0)
+	{
+	  NSEnumerator *en = [props objectEnumerator];
+	  NSString *name = nil;
+	  
+	  while ((name = [en nextObject]) != nil)
+	    {
+	      NSString *type = [_methodReturnTypes objectForKey: name];
+	      NSDebugLog(@"%@ -> %@", name, type);
+	      
+	      if (type != nil)
+		{
+		  [self _addProperty: name withType: type toElem: elem fromObject: obj];
+		}
+	    }
+	}
+    }
 }
 
 - (void) _addAllConnections: (NSXMLElement *)elem fromObject: (id)obj
@@ -1157,6 +1222,10 @@ static NSUInteger _count = INT_MAX;
       
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
+
+      [self _addAllNonProperties: elem fromObject: obj];
+      
+      // Special handling for NSMenu...
       if ([name isEqualToString: @"NSMenu"] == NO)
 	{
 	  [parentNode addChild: elem];
