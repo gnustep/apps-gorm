@@ -972,7 +972,18 @@ static NSUInteger _count = INT_MAX;
 		      name = newName;
 		    }
 		  
-		  if ([o isKindOfClass: [NSString class]] == NO)
+		  if ([o isKindOfClass: [NSString class]])
+		    {
+		      NSLog(@"%@ = %@", name, o);
+		      if (o != nil && [o isEqualToString: @""] == NO)
+			{
+			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
+							     stringValue: o];
+			  
+			  [elem addAttribute: attr];
+			}
+		    }
+		  else
 		    {
 		      NSString *className = NSStringFromClass([o class]);
 
@@ -991,16 +1002,6 @@ static NSUInteger _count = INT_MAX;
 						 withNode: elem];
 			}
 		    }
-		  else
-		    {
-		      if (o != nil && [o isEqualToString: @""] == NO)
-			{
-			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
-							     stringValue: o];
-			  
-			  [elem addAttribute: attr];
-			}
-		    }
 		}
 	    }
 	}
@@ -1009,12 +1010,6 @@ static NSUInteger _count = INT_MAX;
     {
       NSRect f = [obj frame];
       [self _addRect: f toElement: elem withName: name];
-    }
-  else if ([name isEqualToString: @"keyEquivalent"])
-    {
-      NSString *ke = [obj keyEquivalent];
-      NSDebugLog(@"keyEquivalent %@", ke);
-      [self _addKeyEquivalent: ke toElement: elem];
     }
   else if ([name isEqualToString: @"keyEquivalentModifierMask"])
     {
@@ -1056,84 +1051,24 @@ static NSUInteger _count = INT_MAX;
       [self _addTitlePosition: p
 		    toElement: elem];
     }
-  else if ([name isEqualToString: @"isEnabled"]) 
+  else if ([type isEqualToString: @"CGFloat"])
     {
-      BOOL f = [obj isEnabled];
-      [self _addBoolean: f
-	       withName: @"enabled"
-	      toElement: elem];
+      NSString *keyName = name;
+      SEL sel = NSSelectorFromString(name);
+      if (sel != NULL)
+	{
+	  IMP imp = [obj methodForSelector: sel];
+
+	  if (imp != NULL)
+	    {
+	      CGFloat f = ((CGFloat (*)(id, SEL))imp)(obj, sel);
+	      
+	      [self _addFloat: f
+		     withName: keyName
+		    toElement: elem];
+	    }
+	}
     }
-  else if ([name isEqualToString: @"isHidden"]) 
-    {
-      BOOL f = [obj isHidden];
-      [self _addBoolean: f
-	       withName: @"hidden"
-	      toElement: elem];
-    }
-  else if ([name isEqualToString: @"isResizable"]) 
-    {
-      BOOL f = [obj isResizable];
-      [self _addBoolean: f
-	       withName: @"resizable"
-	      toElement: elem];
-    }
-  else if ([name isEqualToString: @"isEditable"]) 
-    {
-      BOOL f = [obj isEditable];
-      [self _addBoolean: f
-	       withName: @"editable"
-	      toElement: elem];
-    }
-  else if ([name isEqualToString: @"minWidth"]) 
-    {
-      CGFloat f = [obj minWidth];
-      [self _addFloat: f
-	     withName: name
-	    toElement: elem];
-    }
-  else if ([name isEqualToString: @"maxWidth"]) 
-    {
-      CGFloat f = [obj maxWidth];
-      [self _addFloat: f
-	     withName: name
-	    toElement: elem];
-    }
-  else if ([name isEqualToString: @"width"])
-    {
-      CGFloat f = [obj width];
-      [self _addFloat: f
-	     withName: name
-	    toElement: elem];
-    }
-  else if ([name isEqualToString: @"rowHeight"])
-    {
-      CGFloat f = [obj rowHeight];
-      [self _addFloat: f
-	     withName: name
-	    toElement: elem];
-    }
-  else if ([name isEqualToString: @"indentationPerLevel"]) 
-    {
-      CGFloat f = [obj indentationPerLevel];
-      [self _addFloat: f
-	     withName: name
-	    toElement: elem];
-    }
-  else if ([name isEqualToString: @"headerToolTip"])
-    {
-      NSString *val = [obj headerToolTip];
-      [self _addString: val
-	      withName: @"headerToolTip"
-	     toElement: elem];
-    } /*
-  else if ([name isEqualToString: @"identifier"])
-    {
-      BOOL f = [obj identifier];
-      [self _addBoolean: f
-	       withName: @"identifier"
-	      toElement: elem];
-    }
-      */
   else if ([type isEqualToString: @"BOOL"])
     {
       NSString *keyName = name;
@@ -1144,15 +1079,20 @@ static NSUInteger _count = INT_MAX;
 	  keyName = [keyName lowercaseString];
 	}
 
-      NSLog(@"keyName = %@, name = %@", keyName, name);
-      
       SEL sel = NSSelectorFromString(name);
-      IMP imp = [obj methodForSelector: sel];
-      BOOL f = ((BOOL (*)(id, SEL))imp)(obj, sel);
+      if (sel != NULL)
+	{
+	  IMP imp = [obj methodForSelector: sel];
 
-      [self _addBoolean: f
-	       withName: keyName
-	      toElement: elem];
+	  if (imp != NULL)
+	    {
+	      BOOL f = ((BOOL (*)(id, SEL))imp)(obj, sel);
+	      
+	      [self _addBoolean: f
+		       withName: keyName
+		      toElement: elem];
+	    }
+	}
     }
   else if ([name isEqualToString: @"cell"])
     {
@@ -1370,19 +1310,10 @@ static NSUInteger _count = INT_MAX;
 	{
 	  [parentNode addChild: elem];
 	}
-
-      // If the object responds to "title" get that and add it to the XML
-      if ([obj respondsToSelector: @selector(title)])
-	{
-	  NSString *title = [obj title];
-	  if (title != nil)
-	    {
-	      attr = [NSXMLNode attributeWithName: @"title" stringValue: title];
-	      [elem addAttribute: attr];
-	    }
-	}
       
       // For each different class, recurse through the structure as needed.
+
+      // For NSMenu, there is a special case, since it needs to be contained in another menu.
       if ([obj isKindOfClass: [NSMenu class]])
 	{
 	  NSArray *items = [obj itemArray];
@@ -1449,6 +1380,8 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
 
+      // Handle special case for popup, we need to add the selected item, and contain them
+      // in a "menu" instance which doesn't exist on GNUstep...
       if ([obj isKindOfClass: [NSPopUpButtonCell class]])
 	{
 	  NSArray *items = [obj itemArray];
