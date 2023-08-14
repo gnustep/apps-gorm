@@ -43,6 +43,7 @@
 #import <AppKit/NSBox.h>
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSOutlineView.h>
+#import <AppKit/NSBrowser.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -54,6 +55,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSArray *_skipClass = nil;
 static NSArray *_skipCollectionForKey = nil;
 static NSArray *_singletonObjects = nil;
 static NSDictionary *_methodToKeyName = nil;
@@ -240,6 +242,11 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _skipClass =
+	[[NSArray alloc] initWithObjects:
+			   @"NSBrowserCell",
+			 nil];
+      
       _skipCollectionForKey =
 	[[NSArray alloc] initWithObjects:
 			   @"headerView",
@@ -320,6 +327,22 @@ static NSUInteger _count = INT_MAX;
 			      @"NSScroller", @"verticalScroller",
 			      @"NSTableColumn", @"outlineTableColumn",
 			      @"CGFloat", @"indentationPerLevel",
+			      @"BOOL", @"isEnabled",
+			      @"BOOL", @"allowsBranchSelection", // NSBrowser
+			      @"BOOL", @"allowsEmptySelection",
+			      @"BOOL", @"allowsMultipleSelection",
+			      @"BOOL", @"reusesColumns",
+			      @"BOOL", @"separatesColumns",
+			      @"BOOL", @"takesTitleFromPreviousColumn",
+			      @"BOOL", @"isTitled",
+			      @"BOOL", @"hasHorizontalScroller",
+			      @"BOOL", @"skipUpdateScroller",
+			      @"BOOL", @"acceptsArrowKeys",
+			      @"BOOL", @"sendsActionOnArrowKeys",
+			      @"BOOL", @"acceptsAlphaNumericalKeys",
+			      @"BOOL", @"sendsActionOnAlphaNumericalKeys",
+			      @"BOOL", @"prefersAllColumnUserResizing",
+			      @"CGFloat", @"minColumnWidth",
 			      nil];
     }
 }
@@ -808,11 +831,27 @@ static NSUInteger _count = INT_MAX;
 
       if (m | NSViewWidthSizable)
 	{
-	  attr = [NSXMLNode attributeWithName: @"flexibleMaxX" stringValue: @"YES"];
+	  attr = [NSXMLNode attributeWithName: @"widthSizable" stringValue: @"YES"];
 	}
       if (m | NSViewHeightSizable)
 	{
+	  attr = [NSXMLNode attributeWithName: @"heightSizable" stringValue: @"YES"];
+	}
+      if (m | NSViewMaxXMargin)
+	{
+	  attr = [NSXMLNode attributeWithName: @"flexibleMaxX" stringValue: @"YES"];
+	}
+      if (m | NSViewMaxYMargin)
+	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMaxY" stringValue: @"YES"];
+	}
+      if (m | NSViewMinXMargin)
+	{
+	  attr = [NSXMLNode attributeWithName: @"flexibleMinX" stringValue: @"YES"];
+	}
+      if (m | NSViewMinYMargin)
+	{
+	  attr = [NSXMLNode attributeWithName: @"flexibleMinY" stringValue: @"YES"];
 	}
       
       [autoresizingMaskElem addAttribute: attr];
@@ -1017,6 +1056,13 @@ static NSUInteger _count = INT_MAX;
       [self _addTitlePosition: p
 		    toElement: elem];
     }
+  else if ([name isEqualToString: @"isEnabled"]) 
+    {
+      BOOL f = [obj isEnabled];
+      [self _addBoolean: f
+	       withName: @"enabled"
+	      toElement: elem];
+    }
   else if ([name isEqualToString: @"isHidden"]) 
     {
       BOOL f = [obj isHidden];
@@ -1079,19 +1125,43 @@ static NSUInteger _count = INT_MAX;
       [self _addString: val
 	      withName: @"headerToolTip"
 	     toElement: elem];
-    }
+    } /*
   else if ([name isEqualToString: @"identifier"])
     {
-      NSString *val = [obj identifier];
-      [self _addString: val
-	      withName: @"identifier"
-	     toElement: elem];
+      BOOL f = [obj identifier];
+      [self _addBoolean: f
+	       withName: @"identifier"
+	      toElement: elem];
+    }
+      */
+  else if ([type isEqualToString: @"BOOL"])
+    {
+      NSString *keyName = name;
+      
+      if ([[name substringToIndex: 2] isEqualToString: @"is"])
+	{
+	  keyName = [name substringFromIndex: 2];
+	  keyName = [keyName lowercaseString];
+	}
+
+      NSLog(@"keyName = %@, name = %@", keyName, name);
+      
+      SEL sel = NSSelectorFromString(name);
+      IMP imp = [obj methodForSelector: sel];
+      BOOL f = ((BOOL (*)(id, SEL))imp)(obj, sel);
+
+      [self _addBoolean: f
+	       withName: keyName
+	      toElement: elem];
     }
   else if ([name isEqualToString: @"cell"])
     {
-      [self _collectObjectsFromObject: [obj cell]
-			       forKey: name
-			     withNode: elem];
+      if ([obj isKindOfClass: [NSBrowserCell class]] == NO)
+	{
+	  [self _collectObjectsFromObject: [obj cell]
+				   forKey: name
+				 withNode: elem];
+	}
     }
 }
 
@@ -1223,6 +1293,12 @@ static NSUInteger _count = INT_MAX;
     {
       NSXMLElement *parentNode = pNode;
       NSString *className = NSStringFromClass([obj class]);
+
+      if ([_skipClass containsObject: className])
+	{
+	  return;
+	}
+      
       NSString *elementName = [self _convertName: className];
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
       NSXMLNode *attr = nil;
