@@ -280,7 +280,7 @@ static NSUInteger _count = INT_MAX;
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
-			   @"font",
+			   @"font", @"alphaValue",
 			 nil];
       
       _methodReturnTypes =
@@ -292,8 +292,8 @@ static NSUInteger _count = INT_MAX;
 			      @"BOOL", @"releaseWhenClosed",
 			      @"NSUInteger", @"windowStyleMask",
 			      @"NSUInteger", @"borderType",
-			      @"CGFloat", @"alphaValue",
-			      @"NSFont", @"font",
+			      //@"CGFloat", @"alphaValue",
+			      //@"NSFont", @"font",
 			      @"NSRect", @"bounds",
 			      @"NSUInteger", @"autoresizeMask",
 			      @"NSString", @"toolTip",
@@ -319,7 +319,6 @@ static NSUInteger _count = INT_MAX;
 			      @"NSCell", @"dataCell",
 			      @"NSView", @"headerView",
 			      @"CGFloat", @"rowHeight",
-			      // @"NSFont", @"font",
 			      @"NSColor", @"backgroundColor",
 			      @"NSString", @"colorNameComponent",
 			      @"NSString", @"catalogNameComponent",
@@ -596,6 +595,9 @@ static NSUInteger _count = INT_MAX;
 		  if (sel != NULL)
 		    {
 		      NSDebugLog(@"selector = %@",s);
+		      NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
+
+		      NSLog(@"methodSignatureForSelector %@ -> %s", s, [sig methodReturnType]);
 		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
 			{
 			  [result addObject: s];
@@ -974,7 +976,7 @@ static NSUInteger _count = INT_MAX;
 		  
 		  if ([o isKindOfClass: [NSString class]])
 		    {
-		      NSLog(@"%@ = %@", name, o);
+		      // NSLog(@"%@ = %@", name, o);
 		      if (o != nil && [o isEqualToString: @""] == NO)
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
