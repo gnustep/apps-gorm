@@ -55,6 +55,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSDictionary *_signatures = nil;
 static NSArray *_skipClass = nil;
 static NSArray *_skipCollectionForKey = nil;
 static NSArray *_singletonObjects = nil;
@@ -242,6 +243,30 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _signatures =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+				@"char", @"c",
+			      @"NSUInteger", @"i", // this might be wrong.. maybe it should be NSInteger or just int
+			      @"short",      @"s",
+			      @"long",       @"l",
+			      @"long long",  @"q",
+			      @"BOOL",       @"C", // unsigned char
+			      @"NSUInteger", @"I",
+			      @"unsigned short",@"S",
+			      @"unsigned long", @"L",
+			      @"long long",  @"Q",
+			      @"float",      @"f",
+			      @"CGFloat",    @"d",
+			      @"bool",       @"B",
+			      @"void",       @"v",
+			      @"char*",      @"*",
+			      @"id",         @"@",
+			      @"Class",      @"#",
+			      @"SEL",        @":",
+			      @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}", @"NSRect",
+			      @"{_NSSize=dd}", @"NSSize",
+			      @"{_NSPoint=dd}", @"NSPoint",
+			      nil];
       _skipClass =
 	[[NSArray alloc] initWithObjects:
 			   @"NSBrowserCell",
