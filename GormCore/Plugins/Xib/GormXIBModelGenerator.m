@@ -61,7 +61,6 @@ static NSArray *_skipCollectionForKey = nil;
 static NSArray *_singletonObjects = nil;
 static NSDictionary *_methodToKeyName = nil;
 static NSDictionary *_nonProperties = nil;
-static NSDictionary *_methodReturnTypes = nil;
 static NSArray *_excludedKeys = nil;
 static NSDictionary *_mappedClassNames = nil;
 
@@ -263,9 +262,9 @@ static NSUInteger _count = INT_MAX;
 			      @"id",         @"@",
 			      @"Class",      @"#",
 			      @"SEL",        @":",
-			      @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}", @"NSRect",
-			      @"{_NSSize=dd}", @"NSSize",
-			      @"{_NSPoint=dd}", @"NSPoint",
+			      @"NSRect",     @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}",
+			      @"NSSize",     @"{_NSSize=dd}",
+			      @"NSPoint",    @"{_NSPoint=dd}",
 			      nil];
       _skipClass =
 	[[NSArray alloc] initWithObjects:
@@ -274,14 +273,18 @@ static NSUInteger _count = INT_MAX;
       
       _skipCollectionForKey =
 	[[NSArray alloc] initWithObjects:
-			   @"headerView",
+			   @"headerView", @"controlView",
 			 @"outlineTableColumn",
+			 @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
 			 nil];
       
       _singletonObjects =
 	[[NSArray alloc] initWithObjects:
 			   @"GSNamedColor",
 			 @"NSFont",
+			 @"NSColor",
+			 @"NSImage",
+			 @"GSCalibratedWhiteColor",
 			 nil];
       
       _methodToKeyName =
@@ -302,12 +305,17 @@ static NSUInteger _count = INT_MAX;
       _mappedClassNames =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"NSColor", @"GSNamedColor",
+			      @"NSColor", @"GSCalibratedWhiteColor",
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
-			   @"font", @"alphaValue",
+			   @"font", @"alphaValue", @"servicesProvider", @"servicesMenu", @"nextResponder", @"supermenu",
+			 // @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
+			 @"attributedStringValue", @"stringValue", @"objectValue", @"menuView", @"menu", 
+			 @"attributedAlternateTitle", @"attributedTitle", @"miniwindowImage", @"menuItem",
+			 @"showsResizeIndicator",
 			 nil];
-      
+      /*
       _methodReturnTypes =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"NSRect", @"frame",
@@ -367,7 +375,7 @@ static NSUInteger _count = INT_MAX;
 			      @"BOOL", @"sendsActionOnAlphaNumericalKeys",
 			      @"BOOL", @"prefersAllColumnUserResizing",
 			      @"CGFloat", @"minColumnWidth",
-			      nil];
+			      nil]; */
     }
 }
 
@@ -620,9 +628,9 @@ static NSUInteger _count = INT_MAX;
 		  if (sel != NULL)
 		    {
 		      NSDebugLog(@"selector = %@",s);
-		      NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
+		      // NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
 
-		      NSLog(@"methodSignatureForSelector %@ -> %s", s, [sig methodReturnType]);
+		      // NSLog(@"methodSignatureForSelector %@ -> %s", s, [sig methodReturnType]);
 		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
 			{
 			  [result addObject: s];
@@ -656,9 +664,9 @@ static NSUInteger _count = INT_MAX;
 
   attr = [NSXMLNode attributeWithName: @"key" stringValue: name];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"x" stringValue: [NSString stringWithFormat: @"%4.1f",r.origin.x]];
+  attr = [NSXMLNode attributeWithName: @"x" stringValue: [NSString stringWithFormat: @"%.1f",r.origin.x]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%4.1f",r.origin.y]];
+  attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%.1f",r.origin.y]];
   [rectElem addAttribute: attr];
   attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)r.size.width]];
   [rectElem addAttribute: attr];
@@ -955,7 +963,7 @@ static NSUInteger _count = INT_MAX;
 
 - (void) _addFloat: (CGFloat)f withName: (NSString *)name  toElement: (NSXMLElement *)elem
 {
-  NSString *val = [NSString stringWithFormat: @"%4.1f",f];
+  NSString *val = [NSString stringWithFormat: @"%.1f",f];
   NSXMLNode *attr = [NSXMLNode attributeWithName: name
 				     stringValue: val];
   [elem addAttribute: attr];
@@ -978,13 +986,16 @@ static NSUInteger _count = INT_MAX;
 {
   if ([_excludedKeys containsObject: name])
     {
+      NSDebugLog(@"skipping %@", name);
       return; // do not process anything in the excluded key list...
     }
-  
-  Class clz = NSClassFromString(type);
-  if (clz != nil) // type is a class
+
+  NSDebugLog(@"name = %@, type = %@", name, type);
+  // Class clz = NSClassFromString(type);
+  if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
+      NSDebugLog(@"selector = %@", name);
       if (s != NULL)
 	{
 	  if ([obj respondsToSelector: s])
@@ -998,10 +1009,10 @@ static NSUInteger _count = INT_MAX;
 		    {
 		      name = newName;
 		    }
-		  
+
 		  if ([o isKindOfClass: [NSString class]])
 		    {
-		      // NSLog(@"%@ = %@", name, o);
+		      NSDebugLog(@"Adding string property %@ = %@", name, o);
 		      if (o != nil && [o isEqualToString: @""] == NO)
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
@@ -1132,24 +1143,52 @@ static NSUInteger _count = INT_MAX;
     }
 }
 
+- (void) _addPropertiesFromArray: (NSArray *)props toElement: (NSXMLElement *)elem fromObject: (id)obj
+{
+  if ([props count] > 0)
+    {
+      NSEnumerator *en = [props objectEnumerator];
+      NSString *name = nil;
+
+      while ((name = [en nextObject]) != nil)
+	{
+	  SEL sel = NSSelectorFromString(name);
+	  if (sel != NULL)
+	    {
+	      if ([obj respondsToSelector: sel] == NO)
+		continue;
+
+	      if ([_excludedKeys containsObject: name])
+		continue;
+	      
+	      NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
+	      if (sig != NULL)
+		{
+		  const char *ctype = [sig methodReturnType];
+		  if (ctype != NULL)
+		    {
+		      NSString *ctypeString = [NSString stringWithCString: ctype
+								 encoding: NSUTF8StringEncoding];
+		      NSString *type = [_signatures objectForKey: ctypeString];
+		      NSLog(@"%@ : %@ -> %@ - %@", obj, name, type, ctypeString);
+		      
+		      if (type != nil)
+			{
+			  [self _addProperty: name withType: type toElem: elem fromObject: obj];
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
   NSArray *methods = GSObjCMethodNames(obj, YES);
   NSArray *props = [self _propertiesFromMethods: methods forObject: obj];
-  NSEnumerator *en = [props objectEnumerator];
-  NSString *name = nil;
   
-  while ((name = [en nextObject]) != nil)
-    {
-      NSString *type = [_methodReturnTypes objectForKey: name];
-      NSDebugLog(@"%@ -> %@", name, type);
-
-      if (type != nil)
-	{
-	  [self _addProperty: name withType: type toElem: elem fromObject: obj];
-	}
-    }
-  
+  [self _addPropertiesFromArray: props toElement: elem fromObject: obj];
   NSDebugLog(@"methods = %@", props);
 }
 
@@ -1159,23 +1198,8 @@ static NSUInteger _count = INT_MAX;
   if (className != nil)
     {
       NSArray *props = [_nonProperties objectForKey: className];
-
-      if ([props count] > 0)
-	{
-	  NSEnumerator *en = [props objectEnumerator];
-	  NSString *name = nil;
-	  
-	  while ((name = [en nextObject]) != nil)
-	    {
-	      NSString *type = [_methodReturnTypes objectForKey: name];
-	      NSDebugLog(@"%@ -> %@", name, type);
-	      
-	      if (type != nil)
-		{
-		  [self _addProperty: name withType: type toElem: elem fromObject: obj];
-		}
-	    }
-	}
+      
+      [self _addPropertiesFromArray: props toElement: elem fromObject: obj];
     }
 }
 
