@@ -63,6 +63,7 @@ static NSDictionary *_methodToKeyName = nil;
 static NSDictionary *_nonProperties = nil;
 static NSArray *_excludedKeys = nil;
 static NSDictionary *_mappedClassNames = nil;
+static NSDictionary *_valueMapping = nil;
 
 static NSUInteger _count = INT_MAX;
 
@@ -242,6 +243,11 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _valueMapping =
+	[[NSDictionary alloc] initWithObjectsAndKeys:
+				@"catalog", @"NSNamedColorSpace",
+			      nil];
+      
       _signatures =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"char", @"c",
@@ -274,7 +280,7 @@ static NSUInteger _count = INT_MAX;
       _skipCollectionForKey =
 	[[NSArray alloc] initWithObjects:
 			   @"headerView", @"controlView",
-			 @"outlineTableColumn",
+			 @"outlineTableColumn", @"documentView",
 			 @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
 			 nil];
       
@@ -313,69 +319,11 @@ static NSUInteger _count = INT_MAX;
 			 // @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
 			 @"attributedStringValue", @"stringValue", @"objectValue", @"menuView", @"menu", 
 			 @"attributedAlternateTitle", @"attributedTitle", @"miniwindowImage", @"menuItem",
-			 @"showsResizeIndicator", @"titleFont",
+			 @"showsResizeIndicator", @"titleFont", @"target", @"action", @"textContainer", @"subviews",
+			 @"selectedRanges", @"linkTextAttributes", @"typingAttributes",
+			 @"defaultParagraphStyle", @"tableView", @"sortDescriptors",
+			 
 			 nil];
-      /*
-      _methodReturnTypes =
-	[[NSDictionary alloc] initWithObjectsAndKeys:
-				@"NSRect", @"frame",
-			      @"NSImage", @"onStateImage",
-			      @"NSImage", @"offStateImage",
-			      @"NSUInteger", @"keyEquivalentModifierMask",
-			      @"BOOL", @"releaseWhenClosed",
-			      @"NSUInteger", @"windowStyleMask",
-			      @"NSUInteger", @"borderType",
-			      //@"CGFloat", @"alphaValue",
-			      //@"NSFont", @"font",
-			      @"NSRect", @"bounds",
-			      @"NSUInteger", @"autoresizeMask",
-			      @"NSString", @"toolTip",
-			      @"NSString", @"keyEquivalent",
-			      @"NSUInteger", @"windowStyleMask",
-			      @"id", @"cell",
-			      @"NSArray", @"items",
-			      @"NSUInteger", @"buttonType",
-			      @"NSUInteger", @"alignment",
-			      @"NSUInteger", @"bezelStyle",
-			      @"BOOL", @"isBordered",
-			      @"NSUInteger", @"autoresizingMask",
-			      @"NSUInteger", @"titlePosition",
-			      @"BOOL", @"isEditable", // NSTableColumn
-			      @"BOOL", @"isResizable",
-			      @"BOOL", @"isHidden",
-			      @"CGFloat", @"minWidth",
-			      @"CGFloat", @"maxWidth",
-			      @"CGFloat", @"width",
-			      @"NSString", @"headerToolTip",
-			      @"NSString", @"identifier",
-			      @"NSCell", @"headerCell",
-			      @"NSCell", @"dataCell",
-			      @"NSView", @"headerView",
-			      @"CGFloat", @"rowHeight",
-			      @"NSColor", @"backgroundColor",
-			      @"NSString", @"colorNameComponent",
-			      @"NSString", @"catalogNameComponent",
-			      @"NSScroller", @"horizontalScroller",
-			      @"NSScroller", @"verticalScroller",
-			      @"NSTableColumn", @"outlineTableColumn",
-			      @"CGFloat", @"indentationPerLevel",
-			      @"BOOL", @"isEnabled",
-			      @"BOOL", @"allowsBranchSelection", // NSBrowser
-			      @"BOOL", @"allowsEmptySelection",
-			      @"BOOL", @"allowsMultipleSelection",
-			      @"BOOL", @"reusesColumns",
-			      @"BOOL", @"separatesColumns",
-			      @"BOOL", @"takesTitleFromPreviousColumn",
-			      @"BOOL", @"isTitled",
-			      @"BOOL", @"hasHorizontalScroller",
-			      @"BOOL", @"skipUpdateScroller",
-			      @"BOOL", @"acceptsArrowKeys",
-			      @"BOOL", @"sendsActionOnArrowKeys",
-			      @"BOOL", @"acceptsAlphaNumericalKeys",
-			      @"BOOL", @"sendsActionOnAlphaNumericalKeys",
-			      @"BOOL", @"prefersAllColumnUserResizing",
-			      @"CGFloat", @"minColumnWidth",
-			      nil]; */
     }
 }
 
@@ -990,12 +938,12 @@ static NSUInteger _count = INT_MAX;
       return; // do not process anything in the excluded key list...
     }
 
-  NSDebugLog(@"name = %@, type = %@", name, type);
   // Class clz = NSClassFromString(type);
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
-      NSDebugLog(@"selector = %@", name);
+      
+      NSLog(@"%@ -> %@", name, type);
       if (s != NULL)
 	{
 	  if ([obj respondsToSelector: s])
@@ -1013,6 +961,11 @@ static NSUInteger _count = INT_MAX;
 		  if ([o isKindOfClass: [NSString class]])
 		    {
 		      NSDebugLog(@"Adding string property %@ = %@", name, o);
+		      if ([_valueMapping objectForKey: o] != nil)
+			{
+			  o = [_valueMapping objectForKey: o];
+			}
+		      
 		      if (o != nil && [o isEqualToString: @""] == NO)
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
@@ -1170,7 +1123,6 @@ static NSUInteger _count = INT_MAX;
 		      NSString *ctypeString = [NSString stringWithCString: ctype
 								 encoding: NSUTF8StringEncoding];
 		      NSString *type = [_signatures objectForKey: ctypeString];
-		      // NSLog(@"%@ : %@ -> %@ - %@", obj, name, type, ctypeString);
 		      
 		      if (type != nil)
 			{
