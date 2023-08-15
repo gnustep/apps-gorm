@@ -313,7 +313,7 @@ static NSUInteger _count = INT_MAX;
 			 // @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
 			 @"attributedStringValue", @"stringValue", @"objectValue", @"menuView", @"menu", 
 			 @"attributedAlternateTitle", @"attributedTitle", @"miniwindowImage", @"menuItem",
-			 @"showsResizeIndicator",
+			 @"showsResizeIndicator", @"titleFont",
 			 nil];
       /*
       _methodReturnTypes =
@@ -1170,7 +1170,7 @@ static NSUInteger _count = INT_MAX;
 		      NSString *ctypeString = [NSString stringWithCString: ctype
 								 encoding: NSUTF8StringEncoding];
 		      NSString *type = [_signatures objectForKey: ctypeString];
-		      NSLog(@"%@ : %@ -> %@ - %@", obj, name, type, ctypeString);
+		      // NSLog(@"%@ : %@ -> %@ - %@", obj, name, type, ctypeString);
 		      
 		      if (type != nil)
 			{
