@@ -395,18 +395,18 @@ static NSUInteger _count = INT_MAX;
 			      @"NSColor", @"GSDeviceRGBColor",
 			      @"NSColor", @"GSCalibratedRGBColor",
 			      @"NSColor", @"GSPatternColor",
+			      @"NSView", @"GSTableCornerView",
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
 			   @"font", @"alphaValue", @"servicesProvider", @"servicesMenu", @"nextResponder", @"supermenu",
-			 // @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
 			 @"attributedStringValue", @"stringValue", @"objectValue", @"menuView", @"menu", 
 			 @"attributedAlternateTitle", @"attributedTitle", @"miniwindowImage", @"menuItem",
 			 @"showsResizeIndicator", @"titleFont", @"target", @"action", @"textContainer", @"subviews",
 			 @"selectedRanges", @"linkTextAttributes", @"typingAttributes",
 			 @"defaultParagraphStyle", @"tableView", @"sortDescriptors", @"previousText", @"nextText",
 			 @"needsDisplay", @"postsFrameChangedNotifications", @"postsBoundsChangedNotifications",
-			 @"menuRepresentation",	@"submenu", 
+			 @"menuRepresentation",	@"submenu", @"initialFirstResponder", @"cornerView",
 			 nil];
     }
 }
@@ -1604,22 +1604,44 @@ static NSUInteger _count = INT_MAX;
 	    }
 	  else
 	    {
-	      NSArray *subviews = [obj subviews];
-
-	      if ([subviews count] > 0)
+	      if ([obj isKindOfClass: [NSTabView class]] == NO)
 		{
-		  NSEnumerator *en = [subviews objectEnumerator];
-		  id v = nil;
-		  NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
+		  NSArray *subviews = [obj subviews];
 		  
-		  while ((v = [en nextObject]) != nil)
+		  if ([subviews count] > 0)
 		    {
-		      [self _collectObjectsFromObject: v
-					     withNode: subviewsElement];
+		      NSEnumerator *en = [subviews objectEnumerator];
+		      id v = nil;
+		      NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
+		      
+		      while ((v = [en nextObject]) != nil)
+			{
+			  [self _collectObjectsFromObject: v
+						 withNode: subviewsElement];
+			}
+		      [elem addChild: subviewsElement];
 		    }
-		  [elem addChild: subviewsElement];
 		}
 	    }
+
+	  if ([obj respondsToSelector: @selector(tabViewItems)])
+	      {
+		NSArray *items = [obj tabViewItems];
+		
+		if ([items count] > 0)
+		  {
+		    NSEnumerator *en = [items objectEnumerator];
+		    id v = nil;
+		    NSXMLElement *itemsElement = [NSXMLNode elementWithName: @"tabViewItems"];
+		    
+		    while ((v = [en nextObject]) != nil)
+		      {
+			[self _collectObjectsFromObject: v
+					       withNode: itemsElement];
+		      }
+		    [elem addChild: itemsElement];
+		  }
+	      }
 	}
 
       if ([obj respondsToSelector: @selector(tableColumns)])
@@ -1717,7 +1739,7 @@ static NSUInteger _count = INT_MAX;
   // Recursively build the XIB document from the GormDocument...
   [self _buildXIBDocumentWithParentNode: objects];
   
-  NSData *data = [xibDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLNodeCompactEmptyElement ];
+  NSData *data = [xibDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLDocumentTidyXML | NSXMLNodeCompactEmptyElement ];
 
   return data;
 }
