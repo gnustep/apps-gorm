@@ -55,6 +55,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSArray *_externallyReferencedClasses = nil;
 static NSDictionary *_signatures = nil;
 static NSArray *_skipClass = nil;
 static NSArray *_skipCollectionForKey = nil;
@@ -243,9 +244,22 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _externallyReferencedClasses =
+	[[NSArray alloc] initWithObjects:
+			   @"NSTableHeaderView",
+			 nil];
+      
       _valueMapping =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"catalog", @"NSNamedColorSpace",
+			      @"white", @"NSWhiteColorSpace",
+			      @"deviceWhite", @"NSDeviceWhiteColorSpace",
+			      @"calibratedWhite", @"NSCalibratedWhiteColorSpace",
+			      @"deviceCMYK", @"NSDeviceCMYKColorSpace",
+			      @"RGB", @"NSRGBColorSpace",
+			      @"deviceRGB", @"NSDeviceRGBColorSpace",
+			      @"calibratedRGB", @"NSCalibratedRGBColorSpace",
+			      @"pattern", @"NSPatternColorSpace",
 			      nil];
       
       _signatures =
@@ -279,9 +293,16 @@ static NSUInteger _count = INT_MAX;
       
       _skipCollectionForKey =
 	[[NSArray alloc] initWithObjects:
-			   @"headerView", @"controlView",
-			 @"outlineTableColumn", @"documentView",
-			 @"menu", @"nextKeyView", @"owner", @"subviews", @"contentView", @"previousKeyView",
+			   @"headerView",
+			 @"controlView",
+			 @"outlineTableColumn",
+			 @"documentView",
+			 @"menu",
+			 @"nextKeyView",
+			 @"owner",
+			 @"subviews",
+			 @"contentView",
+			 @"previousKeyView",
 			 nil];
       
       _singletonObjects =
@@ -298,20 +319,82 @@ static NSUInteger _count = INT_MAX;
 				@"name", @"colorNameComponent",
 			      @"catalog", @"catalogNameComponent",
 			      @"colorSpace", @"colorSpaceName",
+			      @"white", @"whiteComponent",
+			      @"red", @"redComponent",
+			      @"green", @"greenComponent",
+			      @"blue", @"blueComponent",
+			      @"alpha", @"alphaComponent",
+			      @"cyan", @"cyanComponent",
+			      @"magenta", @"magentaComponent",
+			      @"yellow", @"yellowComponent",
+			      @"black", @"blackComponent",
 			      nil];
       
       _nonProperties =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
-			   [NSArray arrayWithObjects: @"colorNameComponent",
+			   [NSArray arrayWithObjects:
+				      @"colorNameComponent",
 				    @"catalogNameComponent",
 				    @"colorSpaceName", nil],
 			      @"GSNamedColor",
+			   [NSArray arrayWithObjects:
+				      @"wjoteComponent",
+				    @"colorSpaceName", nil],
+			      @"GSWhiteColor",
+			   [NSArray arrayWithObjects:
+				      @"whiteComponent",
+				    @"colorSpaceName", nil],
+			      @"GSDeviceWhiteColor",
+			   [NSArray arrayWithObjects:
+				      @"whiteComponent",
+				    @"colorSpaceName", nil],
+			      @"GSCalibratedWhiteColor",
+			   [NSArray arrayWithObjects:
+				      @"cyanComponent",
+				    @"magentaComponent",
+				    @"yellowComponent",
+				    @"blackComponent",
+				    @"alphaComponent",
+				    @"colorSpaceName", nil],
+			      @"GSDeviceCMYKColor",
+			   [NSArray arrayWithObjects:
+				      @"redComponent",
+				    @"blueComponent",
+				    @"greenComponent",
+				    @"alphaComponent",
+				    @"colorSpaceName", nil],
+			      @"GSRGBColor",
+			   [NSArray arrayWithObjects:
+				      @"redComponent",
+				    @"blueComponent",
+				    @"greenComponent",
+				    @"alphaComponent",
+				    @"colorSpaceName", nil],
+			      @"GSDeviceRGBColor",
+			   [NSArray arrayWithObjects:
+				      @"redComponent",
+				    @"blueComponent",
+				    @"greenComponent",
+				    @"alphaComponent",
+				    @"colorSpaceName", nil],
+			      @"GSCalibratedRBGColor",
+			   [NSArray arrayWithObjects:
+				    @"patternImage",
+				    @"colorSpaceName", nil],
+			      @"GSPatternColor",			      
 			      nil];
       
       _mappedClassNames =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"NSColor", @"GSNamedColor",
+			      @"NSColor", @"GSWhiteColor",
+			      @"NSColor", @"GSDeviceWhiteColor",			      
 			      @"NSColor", @"GSCalibratedWhiteColor",
+			      @"NSColor", @"GSDeviceCMYKColor",
+			      @"NSColor", @"GSRGBColor",
+			      @"NSColor", @"GSDeviceRGBColor",
+			      @"NSColor", @"GSCalibratedRGBColor",
+			      @"NSColor", @"GSPatternColor",
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
@@ -321,8 +404,9 @@ static NSUInteger _count = INT_MAX;
 			 @"attributedAlternateTitle", @"attributedTitle", @"miniwindowImage", @"menuItem",
 			 @"showsResizeIndicator", @"titleFont", @"target", @"action", @"textContainer", @"subviews",
 			 @"selectedRanges", @"linkTextAttributes", @"typingAttributes",
-			 @"defaultParagraphStyle", @"tableView", @"sortDescriptors",
-			 
+			 @"defaultParagraphStyle", @"tableView", @"sortDescriptors", @"previousText", @"nextText",
+			 @"needsDisplay", @"postsFrameChangedNotifications", @"postsBoundsChangedNotifications",
+			 @"menuRepresentation",	@"submenu", 
 			 nil];
     }
 }
@@ -624,6 +708,21 @@ static NSUInteger _count = INT_MAX;
   [elem addChild: rectElem];
 }
 
+- (void) _addSize: (NSSize)size toElement: (NSXMLElement *)elem withName: (NSString *)name
+{
+  NSXMLElement *rectElem = [NSXMLNode elementWithName: @"size"];
+  NSXMLNode *attr = nil;
+
+  attr = [NSXMLNode attributeWithName: @"key" stringValue: name];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)size.width]];
+  [rectElem addAttribute: attr];
+  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)size.height]];
+  [rectElem addAttribute: attr];
+
+  [elem addChild: rectElem];
+}
+
 - (void) _addKeyEquivalent: (NSString *)ke toElement: (NSXMLElement *)elem
 {
   if ([ke isEqualToString: @""] == NO)
@@ -751,9 +850,12 @@ static NSUInteger _count = INT_MAX;
   if ([obj isKindOfClass: [NSButtonCell class]])
     {
       NSBezelStyle bezel = (NSBezelStyle)[obj bezelStyle] - 1;
+
+      NSLog(@"bezel = %u", bezel);
+      
       NSArray *bezelTypeArray = [NSArray arrayWithObjects:
 					   @"rounded",
-					 @"regular",
+					 @"regularSquare",
 					 @"thick",
 					 @"thicker",
 					 @"disclosure",
@@ -906,6 +1008,14 @@ static NSUInteger _count = INT_MAX;
       NSXMLNode *attr = [NSXMLNode attributeWithName: name
 					 stringValue: @"YES"];
       [elem addAttribute: attr];
+
+      // Somewhat kludgy fix for button border problem...
+      if ([name isEqualToString: @"bordered"])
+	{
+	  attr = [NSXMLNode attributeWithName: @"borderStyle"
+				  stringValue: @"border"];
+	  [elem addAttribute: attr];
+	}
     }
 }
 
@@ -929,21 +1039,28 @@ static NSUInteger _count = INT_MAX;
 
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
-	       toElem: (NSXMLElement *)elem
+	    toElement: (NSXMLElement *)elem
 	   fromObject: (id)obj
 {
+  NSString *objClassName = NSStringFromClass([obj class]);
+
   if ([_excludedKeys containsObject: name])
     {
       NSDebugLog(@"skipping %@", name);
       return; // do not process anything in the excluded key list...
     }
 
+  if ([_skipClass containsObject: objClassName] || objClassName == nil)
+    {
+      return;
+    }
+  
   // Class clz = NSClassFromString(type);
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
       
-      NSLog(@"%@ -> %@", name, type);
+      // NSLog(@"%@ -> %@", name, type);
       if (s != NULL)
 	{
 	  if ([obj respondsToSelector: s])
@@ -966,7 +1083,12 @@ static NSUInteger _count = INT_MAX;
 			  o = [_valueMapping objectForKey: o];
 			}
 		      
-		      if (o != nil && [o isEqualToString: @""] == NO)
+		      if ([name isEqualToString: @"keyEquivalent"])
+			{
+			  [self _addKeyEquivalent: o
+					toElement: elem];
+			}
+		      else if (o != nil && [o isEqualToString: @""] == NO)
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
 							     stringValue: o];
@@ -978,7 +1100,8 @@ static NSUInteger _count = INT_MAX;
 		    {
 		      NSString *className = NSStringFromClass([o class]);
 
-		      if ([_singletonObjects containsObject: className] == NO)
+		      if ([_singletonObjects containsObject: className] == NO
+			  || [_externallyReferencedClasses containsObject: className])
 			{
 			  NSString *ident = [self _createIdentifierForObject: o];
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
@@ -997,51 +1120,38 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
     }
-  else if ([name isEqualToString: @"frame"])
+  else if ([type isEqualToString: @"NSRect"])
     {
-      NSRect f = [obj frame];
-      [self _addRect: f toElement: elem withName: name];
+      SEL sel = NSSelectorFromString(name);
+      if (sel != NULL)
+	{
+	  IMP imp = [obj methodForSelector: sel];
+
+	  if (imp != NULL)
+	    {
+	      NSRect f = ((NSRect (*)(id, SEL))imp)(obj, sel);
+	      [self _addRect: f toElement: elem withName: name];
+
+	    }
+	}
     }
-  else if ([name isEqualToString: @"keyEquivalentModifierMask"])
+  /*
+  else if ([type isEqualToString: @"NSSize"])
     {
-      NSUInteger k = [obj keyEquivalentModifierMask];
-      [self _addKeyEquivalentModifierMask: k toElement: elem];
+      SEL sel = NSSelectorFromString(name);
+      if (sel != NULL)
+	{
+	  IMP imp = [obj methodForSelector: sel];
+
+	  if (imp != NULL)
+	    {
+	      NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
+	      [self _addSize: s toElement: elem withName: name];
+
+	    }
+	}
     }
-  else if ([name isEqualToString: @"buttonType"])
-    {
-      NSString *buttonTypeString = [obj buttonTypeString];
-      [self _addButtonType: buttonTypeString
-		 toElement: elem];
-    }
-  else if ([name isEqualToString: @"autoresizingMask"])
-    {
-      NSAutoresizingMaskOptions m = [obj autoresizingMask];
-      [self _addAutoresizingMask: m
-		       toElement: elem];
-    }
-  else if ([name isEqualToString: @"alignment"] && [obj respondsToSelector: @selector(cell)] == NO)
-    {
-      [self _addAlignment: [obj alignment]
-		toElement: elem];
-    }
-  else if ([name isEqualToString: @"bezelStyle"] && [obj respondsToSelector: @selector(cell)] == NO)
-    {
-      [self _addBezelStyleForObject: obj 
-			  toElement: elem];
-    }
-  else if ([name isEqualToString: @"isBordered"] && [obj respondsToSelector: @selector(cell)] == NO)
-    {
-      BOOL bordered = [obj isBordered];
-      NSDebugLog(@"Handling isBordered...");
-      [self _addBorderStyle: bordered 
-		  toElement: elem];
-    }
-  else if ([name isEqualToString: @"titlePosition"]) 
-    {
-      NSTitlePosition p = [obj titlePosition];
-      [self _addTitlePosition: p
-		    toElement: elem];
-    }
+  */
   else if ([type isEqualToString: @"CGFloat"])
     {
       NSString *keyName = name;
@@ -1085,15 +1195,46 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
     }
-  else if ([name isEqualToString: @"cell"])
+  else if ([name isEqualToString: @"keyEquivalentModifierMask"])
     {
-      if ([obj isKindOfClass: [NSBrowserCell class]] == NO)
-	{
-	  [self _collectObjectsFromObject: [obj cell]
-				   forKey: name
-				 withNode: elem];
-	}
+      NSUInteger k = [obj keyEquivalentModifierMask];
+      [self _addKeyEquivalentModifierMask: k toElement: elem];
     }
+  else if ([name isEqualToString: @"buttonType"])
+    {
+      NSString *buttonTypeString = [obj buttonTypeString];
+      [self _addButtonType: buttonTypeString
+		 toElement: elem];
+    }
+  else if ([name isEqualToString: @"autoresizingMask"])
+    {
+      NSAutoresizingMaskOptions m = [obj autoresizingMask];
+      [self _addAutoresizingMask: m
+		       toElement: elem];
+    }
+  else if ([name isEqualToString: @"alignment"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      [self _addAlignment: [obj alignment]
+		toElement: elem];
+    }
+  else if ([name isEqualToString: @"bezelStyle"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      [self _addBezelStyleForObject: obj 
+			  toElement: elem];
+    }
+  else if ([name isEqualToString: @"isBordered"] && [obj respondsToSelector: @selector(cell)] == NO)
+    {
+      BOOL bordered = [obj isBordered];
+      NSDebugLog(@"Handling isBordered...");
+      [self _addBorderStyle: bordered 
+		  toElement: elem];
+    }
+  else if ([name isEqualToString: @"titlePosition"]) 
+    {
+      NSTitlePosition p = [obj titlePosition];
+      [self _addTitlePosition: p
+		    toElement: elem];
+    }  
 }
 
 - (void) _addPropertiesFromArray: (NSArray *)props toElement: (NSXMLElement *)elem fromObject: (id)obj
@@ -1126,7 +1267,7 @@ static NSUInteger _count = INT_MAX;
 		      
 		      if (type != nil)
 			{
-			  [self _addProperty: name withType: type toElem: elem fromObject: obj];
+			  [self _addProperty: name withType: type toElement: elem fromObject: obj];
 			}
 		    }
 		}
