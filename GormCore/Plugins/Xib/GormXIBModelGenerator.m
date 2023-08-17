@@ -406,7 +406,8 @@ static NSUInteger _count = INT_MAX;
 			 @"selectedRanges", @"linkTextAttributes", @"typingAttributes",
 			 @"defaultParagraphStyle", @"tableView", @"sortDescriptors", @"previousText", @"nextText",
 			 @"needsDisplay", @"postsFrameChangedNotifications", @"postsBoundsChangedNotifications",
-			 @"menuRepresentation",	@"submenu", @"initialFirstResponder", @"cornerView",
+			 @"menuRepresentation",	@"submenu", @"initialFirstResponder", @"cornerView", @"doubleValue",
+			 @"intValue",
 			 nil];
     }
 }
@@ -1643,12 +1644,15 @@ static NSUInteger _count = INT_MAX;
 		  }
 	      }
 	}
-
+      /* Cheap way to not encoding fake table columns to prevent crash on the mac when reading the XIB.
+	 Not ideal, but it should work for now. */
+      /*
       if ([obj respondsToSelector: @selector(tableColumns)])
 	{
 	  [self _addTableColumns: [obj tableColumns]
 		       toElement: elem];
 	}
+      */
     }
 }
 
