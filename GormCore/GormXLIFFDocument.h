@@ -47,7 +47,7 @@
 }
 
 /**
- * Returns an autoreleast GormXLIFFDocument object;
+ * Returns an autoreleased GormXLIFFDocument object;
  */
 + (instancetype) xliffWithGormDocument: (GormDocument *)doc;
 

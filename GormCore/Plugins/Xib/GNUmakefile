@@ -30,6 +30,7 @@ Xib_PRINCIPAL_CLASS = GormXibPlugin
 
 Xib_OBJC_FILES = GormXibPlugin.m \
 	GormXibWrapperLoader.m \
+	GormXibWrapperBuilder.m \
 	GormXIBModelGenerator.m \
 
 Xib_RESOURCE_FILES = 
