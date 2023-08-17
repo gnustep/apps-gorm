@@ -41,6 +41,7 @@
 @class GormClassManager;
 @class GormPalettesManager;
 @class GormPluginManager;
+@class NSDockTile;
 
 @interface GormAbstractDelegate : NSObject <IB, GormAppDelegate, GormServer>
 {
@@ -69,6 +70,7 @@
   id			 connectDestination;
   NSMutableArray        *testingWindows;
   NSSet                 *topObjects;
+  NSDockTile            *dockTile;
 }
 
 // testing the interface

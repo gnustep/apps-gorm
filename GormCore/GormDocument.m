@@ -97,22 +97,27 @@
     }
   return image;
 }
+
 - (NSString*) inspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) connectInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) sizeInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) classInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) className
 {
   return @"FirstResponder";

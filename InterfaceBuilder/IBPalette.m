@@ -25,7 +25,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <InterfaceBuilder/IBPalette.h>
+#include "IBPalette.h"
 
 NSString	*IBCellPboardType = @"IBCellPboardType";
 NSString	*IBMenuPboardType = @"IBMenuPboardType";

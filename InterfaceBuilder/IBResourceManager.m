@@ -25,9 +25,9 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <InterfaceBuilder/IBResourceManager.h>
-#include <InterfaceBuilder/IBObjectAdditions.h>
-#include <InterfaceBuilder/IBPalette.h>
+#include "IBResourceManager.h"
+#include "IBObjectAdditions.h"
+#include "IBPalette.h"
 
 NSString *IBResourceManagerRegistryDidChangeNotification = @"IBResourceManagerRegistryDidChangeNotification";
 

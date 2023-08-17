@@ -24,8 +24,8 @@
 
 #include <Foundation/Foundation.h>
 
-#include <InterfaceBuilder/IBInspectorManager.h>
-#include <InterfaceBuilder/IBInspectorMode.h>
+#include "IBInspectorManager.h"
+#include "IBInspectorMode.h"
 
 #include <math.h>
 

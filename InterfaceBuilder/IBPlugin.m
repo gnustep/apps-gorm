@@ -25,7 +25,7 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <InterfaceBuilder/IBPlugin.h>
+#include "IBPlugin.h"
 
 static NSMapTable *instanceMap = 0;
 

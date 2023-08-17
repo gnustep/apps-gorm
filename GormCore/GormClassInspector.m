@@ -94,6 +94,9 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForClassNamed: [inspector _currentClass]];
   id value = nil;
+
+  list = [list sortedArrayUsingSelector: @selector(compare:)];
+  
   if([list count] > 0)
     {
       value = [list objectAtIndex: rowIndex];
@@ -109,10 +112,12 @@ objectValueForTableColumn: (NSTableColumn *)tc
   id classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allOutletsForClassNamed: currentClass];
+  list = [list sortedArrayUsingSelector: @selector(compare:)];  
+
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedOutlet = formatOutlet( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
-  
+
   if(![name isEqual: formattedOutlet])
     {
       BOOL removed = [document 
@@ -153,6 +158,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
 	              row: (NSInteger)rowIndex
 {
   NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allActionsForClassNamed: [inspector _currentClass]];
+  list = [list sortedArrayUsingSelector: @selector(compare:)];
   return [list objectAtIndex: rowIndex];
 }
 
@@ -164,6 +170,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
   id classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
   NSString *currentClass = [inspector _currentClass];
   NSArray *list = [classManager allActionsForClassNamed: currentClass];
+  list = [list sortedArrayUsingSelector: @selector(compare:)];
+
   NSString *name = [list objectAtIndex: rowIndex];
   NSString *formattedAction = formatAction( (NSString *)anObject );
   GormDocument *document = (GormDocument *)[(id <IB>)[NSApp delegate] activeDocument];
@@ -209,6 +217,8 @@ objectValueForTableColumn: (NSTableColumn *)tc
 {
   NSArray *list = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allClassNames];
   id value = nil;
+
+  list = [list sortedArrayUsingSelector: @selector(compare:)];
   if([list count] > 0)
     {
       value = [list objectAtIndex: rowIndex];

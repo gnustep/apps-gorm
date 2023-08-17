@@ -435,7 +435,8 @@
 	  id                    obj;
 	  id                    savedDelegate = [NSApp delegate];
 	  NSMenu                *modelMenu = [activeDoc objectForName: @"NSMenu"];
-	  
+
+
 	  // which windows were open when testing started...
 	  testingWindows = [[NSMutableArray alloc] init];
 	  en = [[NSApp windows] objectEnumerator];
@@ -449,7 +450,14 @@
 
 	  // set here, so that beginArchiving and endArchiving do not use templates.
 	  isTesting = YES;
-	  [NSApp setApplicationIconImage: testingImage];
+	  // [NSApp setApplicationIconImage: testingImage];
+
+	  // Set up the dock tile...
+	  dockTile = [[NSDockTile alloc] init];
+	  [dockTile setShowsApplicationBadge: YES];
+	  [dockTile setBadgeLabel: @"Test!"];
+	  
+
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc deactivateEditors];
 	  [archiver encodeClassName: @"GormCustomView"
@@ -720,7 +728,8 @@
       [NSApp setMainMenu: mainMenu];
       [NSApp setApplicationIconImage: gormImage];
       [[NSApp mainMenu] display];
-
+      RELEASE(dockTile);
+      
       e = [testingWindows objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{

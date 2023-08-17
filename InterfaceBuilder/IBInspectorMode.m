@@ -24,7 +24,7 @@
 
 #include <Foundation/Foundation.h>
 
-#include <InterfaceBuilder/IBInspectorMode.h>
+#include "IBInspectorMode.h"
 
 /**
  * IBInspectorMode is an internal class in the InterfaceBuilder framework.

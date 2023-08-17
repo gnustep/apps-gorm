@@ -25,9 +25,9 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
-#include <InterfaceBuilder/IBApplicationAdditions.h>
-#include <InterfaceBuilder/IBInspector.h>
-#include <InterfaceBuilder/IBDocuments.h>
+#include "IBApplicationAdditions.h"
+#include "IBInspector.h"
+#include "IBDocuments.h"
 
 static NSNotificationCenter *nc = nil;
 

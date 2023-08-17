@@ -24,7 +24,7 @@
 
 #include <Foundation/Foundation.h>
 
-#include <InterfaceBuilder/IBObjectAdditions.h>
+#include "IBObjectAdditions.h"
 
 // object additions -- object adopts protocol
 @implementation NSObject (_IBObjectAdditions)
