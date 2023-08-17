@@ -85,6 +85,7 @@ GormCore_HEADER_FILES = \
 	GormScrollViewAttributesInspector.h \
 	GormServer.h \
 	GormSetNameController.h \
+	GormSourceDocument.h \
 	GormSound.h \
 	GormSoundEditor.h \
 	GormSoundInspector.h \
@@ -161,6 +162,7 @@ GormCore_OBJC_FILES = \
 	GormScrollViewAttributesInspector.m \
 	GormScrollViewEditor.m \
 	GormSetNameController.m \
+	GormSourceDocument.m \
 	GormSound.m \
 	GormSoundEditor.m \
 	GormSoundInspector.m \
