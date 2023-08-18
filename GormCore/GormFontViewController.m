@@ -22,9 +22,12 @@ static GormFontViewController *gorm_font_cont = nil;
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormFontView"
-		     owner: self])
+      if (![bundle loadNibNamed: @"GormFontView"
+			  owner: self
+		topLevelObjects: nil])
 	{
 	  NSLog(@"Could not open gorm GormFontView");
 	  return nil;

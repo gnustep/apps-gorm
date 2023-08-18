@@ -28,33 +28,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
-#include <GNUstepGUI/GSGormLoading.h>
+#import <GNUstepGUI/GSGormLoading.h>
 
-#include "GormPrivate.h"
-#include "GormClassManager.h"
-#include "GormCustomView.h"
-#include "GormOutlineView.h"
-#include "GormFunctions.h"
-#include "GormFilePrefsManager.h"
-#include "GormViewWindow.h"
-#include "NSView+GormExtensions.h"
-#include "GormSound.h"
-#include "GormImage.h"
-#include "GormResourceManager.h"
-#include "GormClassEditor.h"
-#include "GormSoundEditor.h"
-#include "GormImageEditor.h"
-#include "GormObjectEditor.h"
-#include "GormWrapperBuilder.h"
-#include "GormWrapperLoader.h"
-#include "GormDocumentWindow.h"
-#include "GormDocumentController.h"
-#include "GormCanvasView.h"
+#import "GormPrivate.h"
+#import "GormClassManager.h"
+#import "GormCustomView.h"
+#import "GormOutlineView.h"
+#import "GormFunctions.h"
+#import "GormFilePrefsManager.h"
+#import "GormViewWindow.h"
+#import "NSView+GormExtensions.h"
+#import "GormSound.h"
+#import "GormImage.h"
+#import "GormResourceManager.h"
+#import "GormClassEditor.h"
+#import "GormSoundEditor.h"
+#import "GormImageEditor.h"
+#import "GormObjectEditor.h"
+#import "GormWrapperBuilder.h"
+#import "GormWrapperLoader.h"
+#import "GormDocumentWindow.h"
+#import "GormDocumentController.h"
+#import "GormXLIFFDocument.h"
+#import "GormCanvasView.h"
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -90,29 +91,34 @@
 
   if (image == nil)
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString	*path = [bundle pathForImageResource: @"GormFirstResponder"];
 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
   return image;
 }
+
 - (NSString*) inspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) connectInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) sizeInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) classInspectorClassName
 {
   return @"GormNotApplicableInspector";
 }
+
 - (NSString*) className
 {
   return @"FirstResponder";
@@ -147,7 +153,7 @@ static NSImage  *fileImage = nil;
       NSBundle	*bundle;
       NSString	*path;
 
-      bundle = [NSBundle mainBundle];
+      bundle = [NSBundle bundleForClass: [self class]];
       path = [bundle pathForImageResource: @"GormObject"];
       if (path != nil)
 	{
@@ -168,7 +174,7 @@ static NSImage  *fileImage = nil;
 	{
 	  classesImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
-      path = [bundle pathForImageResource: @"Gorm"];
+      path = [bundle pathForImageResource: @"GormFile"];
       if (path != nil)
 	{
 	  fileImage = [[NSImage alloc] initWithContentsOfFile: path];
@@ -193,6 +199,7 @@ static NSImage  *fileImage = nil;
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      id delegate = [NSApp delegate];
       
       // initialize...
       openEditors = [[NSMutableArray alloc] init];
@@ -271,20 +278,12 @@ static NSImage  *fileImage = nil;
 		{
 		  if(![classManager parseHeader: header])
 		    {
-		      NSString *file = [header lastPathComponent];
-		      NSString *message = [NSString stringWithFormat: 
-						      _(@"Unable to parse class in %@"),file];
-		      NSRunAlertPanel(_(@"Problem parsing class"), 
-				      message,
-				      nil, nil, nil);
+		      [delegate couldNotParseClassAtPath: header];
 		    }
 		}
 	      NS_HANDLER
 		{
-		  NSString *message = [localException reason];
-		  NSRunAlertPanel(_(@"Problem parsing class"), 
-				  message,
-				  nil, nil, nil);
+		  [delegate exceptionWhileParsingClass: localException];
 		}
 	      NS_ENDHANDLER;
 	    }
@@ -435,20 +434,15 @@ static NSImage  *fileImage = nil;
 	{
 	  NSInteger version = [filePrefsManager version];
 	  NSInteger currentVersion = [GormFilePrefsManager currentVersion];
+	  id delegate = [NSApp delegate];
 	  
 	  if(version > currentVersion)
 	    {
-	      NSInteger retval = NSRunAlertPanel(_(@"Gorm Build Mismatch"),
-					   _(@"The file being loaded was created with a newer build, continue?"), 
-					   _(@"OK"), 
-					   _(@"Cancel"), 
-					   nil,
-					   nil);
-	      if(retval != NSAlertDefaultReturn)
+	      BOOL result = [delegate shouldLoadNewerArchive];
+	      if (result == NO)
 		{
-		  // close the document, if the user says "NO."
 		  [self close];
-		}
+		}	      
 	    }
 	  DESTROY(infoData);
 	}
@@ -505,6 +499,7 @@ static NSImage  *fileImage = nil;
 			object: aConnector];
 
       [connections addObject: aConnector];
+      [self touch]; // make sure the doc is marked as modified...
 
       [nc postNotificationName: IBDidAddConnectorNotification
 			object: aConnector];
@@ -935,7 +930,7 @@ static NSImage  *fileImage = nil;
       {
 	[selectionBox setContentView: scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
-	if (![NSApp isConnecting])
+	if (![[NSApp delegate] isConnecting])
 	  [self setSelectionFromEditor: objectsView];
       }
       break;
@@ -955,7 +950,7 @@ static NSImage  *fileImage = nil;
       break;
     case 3: // classes
       {
-	NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+	NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
 	[selectionBox setContentView: classesView];
 	
 	// if something is selected, in the object view.
@@ -1555,7 +1550,7 @@ static NSImage  *fileImage = nil;
   /*
    * Make sure that this editor is not the selection owner.
    */
-  if ([(id<IB>)NSApp selectionOwner] == 
+  if ([(id<IB>)[NSApp delegate] selectionOwner] == 
       (id<IBSelectionOwners>)anEditor)
     {
       [self resignSelectionForEditor: anEditor];
@@ -1741,7 +1736,7 @@ static void _real_close(GormDocument *self,
     }
   else if ([name isEqual: IBWillBeginTestingInterfaceNotification] && isDocumentOpen)
     {
-      if ([(id<IB>)NSApp activeDocument] == self)
+      if ([(id<IB>)[NSApp delegate] activeDocument] == self)
 	{
 	  NSEnumerator	*enumerator;
 	  id		obj;
@@ -1753,7 +1748,7 @@ static void _real_close(GormDocument *self,
 	      [[self window] orderOut: self];
 	    }
 
-          [[NSApp mainMenu] close]; // close the menu during test...
+          [[[NSApp delegate] mainMenu] close]; // close the menu during test...
           
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
@@ -1784,7 +1779,7 @@ static void _real_close(GormDocument *self,
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
-          [[NSApp mainMenu] display]; // bring the menu back...
+          [[[NSApp delegate] mainMenu] display]; // bring the menu back...
           
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
@@ -2428,12 +2423,12 @@ static void _real_close(GormDocument *self,
       id		obj;
 
       // stop all connection activities.
-      [(id<Gorm>)NSApp stopConnecting];
+      [(id<GormAppDelegate>)[NSApp delegate] stopConnecting];
 
       enumerator = [nameTable objectEnumerator];
       if (flag)
 	{
-	  GormDocument *document = (GormDocument*)[(id<IB>)NSApp activeDocument];
+	  GormDocument *document = (GormDocument*)[(id<IB>)[NSApp delegate] activeDocument];
 
 	  // set the current document active and unset the old one.
 	  [document setDocumentActive: NO];
@@ -2492,7 +2487,7 @@ static void _real_close(GormDocument *self,
 
   NSDebugLog(@"setSelectionFromEditor %@", anEditor);
   ASSIGN(lastEditor, anEditor);
-  [(id<Gorm>)NSApp stopConnecting]; // cease any connection
+  [(id<GormAppDelegate>)[NSApp delegate] stopConnecting]; // cease any connection
   if ([(NSObject *)anEditor respondsToSelector: @selector(window)])
     {
       [[anEditor window] makeKeyWindow];
@@ -2640,7 +2635,8 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   BOOL prompted = NO;
-
+  id delegate = [NSApp delegate];
+  
   // find connectors to be removed.
   while ((c = [en nextObject]) != nil)
     {
@@ -2678,33 +2674,12 @@ static void _real_close(GormDocument *self,
       if ([label isEqualToString: name] && ([proxyClass isEqualToString: className] ||
 	  [classManager isSuperclass: className linkedToClass: proxyClass]))
 	{
-	  NSString *title;
-	  NSString *msg;
-	  NSInteger retval;
-
-	  if(prompted == NO)
+	  removed = [delegate shouldBreakConnectionsModifyingLabel: name
+							  isAction: action
+							  prompted: prompted];
+	  if (removed)
 	    {
-	      title = [NSString stringWithFormat:
-				  @"Modifying %@",(action==YES?@"Action":@"Outlet")];
-	      msg = [NSString stringWithFormat:
-				_(@"This will break all connections to '%@'.  Continue?"), name];
-	      retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-	      prompted = YES;
-	    }
-	  else
-	    {
-		removed = NO;
-		break;
-	    }
-
-	  if (retval == NSAlertDefaultReturn)
-	    {
-	      removed = YES;
 	      [removedConnections addObject: c];
-	    }
-	  else
-	    {
-	      removed = NO;
 	      break;
 	    }
 	}
@@ -2732,26 +2707,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
-  BOOL removed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@",_(@"Modifying Class")];
-  NSString *msg;
-  NSString *msgFormat = _(@"This will break all connections to "
-                          @"actions/outlets to instances of class '%@' and it's subclasses.  Continue?");
-
-  msg = [NSString stringWithFormat: msgFormat, className];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      removed = YES;
-    }
-  else
-    {
-      removed = NO;
-    }
-
+  id delegate = [NSApp delegate];
+  BOOL removed = [delegate shouldBreakConnectionsForClassNamed: className];
+  
   // remove all.
   if(removed)
     {
@@ -2846,24 +2804,9 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
-  BOOL renamed = YES;
-  NSInteger retval = -1;
-  NSString *title = [NSString stringWithFormat: @"%@", _(@"Modifying Class")];
-  NSString *msgFormat = _(@"Change class name '%@' to '%@'.  Continue?");
-  NSString *msg = [NSString stringWithFormat: 
-                              msgFormat,
-			    className, newName];
-
-  // ask the user if he/she wants to continue...
-  retval = NSRunAlertPanel(title, msg,_(@"OK"),_(@"Cancel"), nil, nil);
-  if (retval == NSAlertDefaultReturn)
-    {
-      renamed = YES;
-    }
-  else
-    {
-      renamed = NO;
-    }
+  id delegate = [NSApp delegate];
+  BOOL renamed = [delegate shouldRenameConnectionsForClassNamed: className
+						    toClassName: newName];
 
   // remove all.
   if(renamed)
@@ -3142,164 +3085,96 @@ static void _real_close(GormDocument *self,
   return allObjects;
 }
 
-/**
- * This method is used to translate all of the strings in the file from one language
- * into another.  This is helpful when attempting to translate an application for use
- * in different locales.
- */
-- (void) translate: (id)sender
+- (void) importStringsFromFile: (NSString *)filename
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"strings", nil];
-  NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
-  int		result;
-
-  [oPanel setAllowsMultipleSelection: NO];
-  [oPanel setCanChooseFiles: YES];
-  [oPanel setCanChooseDirectories: NO];
-  result = [oPanel runModalForDirectory: nil
-				   file: nil
-				  types: fileTypes];
-  if (result == NSOKButton)
+  NSMutableArray *allObjects = [self _collectAllObjects];
+  NSDictionary *dictionary = nil;
+  NSEnumerator *en = nil;
+  id obj = nil;
+  
+  dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
+    
+  // change to translated values.
+  en = [allObjects objectEnumerator];
+  while((obj = [en nextObject]) != nil)
     {
-      NSMutableArray *allObjects = [self _collectAllObjects];
-      NSString *filename = [oPanel filename];
-      NSDictionary *dictionary = nil;
-      NSEnumerator *en = nil;
-      id obj = nil;
-
-      NS_DURING
+      NSString *translation = nil; 
+      
+      if([obj respondsToSelector: @selector(setTitle:)] &&
+	 [obj respondsToSelector: @selector(title)])
 	{
-	  dictionary = [[NSString stringWithContentsOfFile: filename] propertyListFromStringsFileFormat];
-	}
-      NS_HANDLER
-	{
-	  NSString *message = [localException reason];
-	  NSRunAlertPanel(_(@"Problem loading strings"),
-			  message, nil, nil, nil);
-	}
-      NS_ENDHANDLER
-	
-      // change to translated values.
-      en = [allObjects objectEnumerator];
-      while((obj = [en nextObject]) != nil)
-	{
-	  NSString *translation = nil; 
-
-	  if([obj respondsToSelector: @selector(setTitle:)] &&
-	     [obj respondsToSelector: @selector(title)])
-	    {
-	      translation = [dictionary objectForKey: [obj title]];
-	      if(translation != nil)
-		{
-		  [obj setTitle: translation];
-		}
-	    }
-	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
-		  [obj respondsToSelector: @selector(stringValue)])
-	    {
-	      translation = [dictionary objectForKey: [obj stringValue]];
-	      if(translation != nil)
-		{
-		  [obj setStringValue: translation];
-		}
-	    }
-	  else if([obj respondsToSelector: @selector(setLabel:)] &&
-		  [obj respondsToSelector: @selector(label)])
-	    {
-	      translation = [dictionary objectForKey: [obj label]];
-	      if(translation != nil)
-		{
-		  [obj setLabel: translation];
-		}
-	    }
-
+	  translation = [dictionary objectForKey: [obj title]];
 	  if(translation != nil)
 	    {
-	      if([obj isKindOfClass: [NSView class]])
-		{
-		  [obj setNeedsDisplay: YES];
-		}
-
-	      [self touch]; 
+	      [obj setTitle: translation];
 	    }
-	  
-	  // redisplay/flush, if the object is a window.
-	  if([obj isKindOfClass: [NSWindow class]])
-	    {
-	      NSWindow *w = (NSWindow *)obj;
-	      [w setViewsNeedDisplay: YES];
-	      [w disableFlushWindow];
-	      [[w contentView] setNeedsDisplay: YES];
-	      [[w contentView] displayIfNeeded];
-	      [w enableFlushWindow];
-	      [w flushWindowIfNeeded];
-	    }
-
 	}
-    } 
+      else if([obj respondsToSelector: @selector(setStringValue:)] &&
+	      [obj respondsToSelector: @selector(stringValue)])
+	{
+	  translation = [dictionary objectForKey: [obj stringValue]];
+	  if(translation != nil)
+	    {
+	      [obj setStringValue: translation];
+	    }
+	}
+      else if([obj respondsToSelector: @selector(setLabel:)] &&
+	      [obj respondsToSelector: @selector(label)])
+	{
+	  translation = [dictionary objectForKey: [obj label]];
+	  if(translation != nil)
+	    {
+	      [obj setLabel: translation];
+	    }
+	}
+    }
 }
 
-/**
- * This method is used to export all strings in a document to a file for Language
- * translation.  This allows the user to see all of the strings which can be translated
- * and allows the user to provide a translateion for each of them.
- */ 
-- (void) exportStrings: (id)sender
+- (void) exportStringsToFile: (NSString *)filename
 {
-  NSSavePanel	*sp = [NSSavePanel savePanel];
-  int		result;
-
-  [sp setRequiredFileType: @"strings"];
-  [sp setTitle: _(@"Save strings file as...")];
-  result = [sp runModalForDirectory: NSHomeDirectory()
-	       file: nil];
-  if (result == NSOKButton)
+  NSMutableArray *allObjects = [self _collectAllObjects];
+  NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+  NSEnumerator *en = [allObjects objectEnumerator];
+  id obj = nil;
+  BOOL touched = NO;
+  
+  // change to translated values.
+  while((obj = [en nextObject]) != nil)
     {
-      NSMutableArray *allObjects = [self _collectAllObjects];
-      NSString *filename = [sp filename];
-      NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-      NSEnumerator *en = [allObjects objectEnumerator];
-      id obj = nil;
-      BOOL touched = NO;
-
-      // change to translated values.
-      while((obj = [en nextObject]) != nil)
+      NSString *string = nil;
+      if([obj respondsToSelector: @selector(setTitle:)] &&
+	 [obj respondsToSelector: @selector(title)])
 	{
-	  NSString *string = nil;
-	  if([obj respondsToSelector: @selector(setTitle:)] &&
-	     [obj respondsToSelector: @selector(title)])
-	    {
-	      string = [obj title];
-	    }
-	  else if([obj respondsToSelector: @selector(setStringValue:)] &&
-		  [obj respondsToSelector: @selector(stringValue)])
-	    {
-	      string = [obj stringValue];
-	    }
-	  else if([obj respondsToSelector: @selector(setLabel:)] &&
-		  [obj respondsToSelector: @selector(label)])
-	    {
-	      string = [obj label];
-	    }
-
-	  if(string != nil)
-	    {
-	      [dictionary setObject: string forKey: string];
-	      touched = YES;
-	    }
+	  string = [obj title];
 	}
-
-      if(touched)
+      else if([obj respondsToSelector: @selector(setStringValue:)] &&
+	      [obj respondsToSelector: @selector(stringValue)])
 	{
-	  NSString *stringToWrite =
-	    @"/* TRANSLATORS: Make sure to quote all translated strings if\n"
-	    @"   they contain spaces or non-ASCII characters.  */\n\n";
-
-	  stringToWrite = [stringToWrite stringByAppendingString:
-					   [dictionary descriptionInStringsFileFormat]];
-	  [stringToWrite writeToFile: filename atomically: YES];
+	  string = [obj stringValue];
 	}
-    } 
+      else if([obj respondsToSelector: @selector(setLabel:)] &&
+	      [obj respondsToSelector: @selector(label)])
+	{
+	  string = [obj label];
+	}
+      
+      if(string != nil)
+	{
+	  [dictionary setObject: string forKey: string];
+	  touched = YES;
+	}
+    }
+  
+  if(touched)
+    {
+      NSString *stringToWrite =
+	@"/* TRANSLATORS: Make sure to quote all translated strings if\n"
+	@"   they contain spaces or non-ASCII characters.  */\n\n";
+      
+      stringToWrite = [stringToWrite stringByAppendingString:
+				       [dictionary descriptionInStringsFileFormat]];
+      [stringToWrite writeToFile: filename atomically: YES];
+    }
 }
 
 /**
@@ -3307,7 +3182,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) arrangeSelectedObjects: (id)sender
 {
-  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
   NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
@@ -3339,7 +3214,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) alignSelectedObjects: (id)sender
 {
-  NSArray *selection =  [[(id<IB>)NSApp selectionOwner] selection];
+  NSArray *selection =  [[(id<IB>)[NSApp delegate] selectionOwner] selection];
   NSInteger tag = [sender tag];
   NSEnumerator *en = [selection objectEnumerator];
   id v = nil;
@@ -3411,26 +3286,23 @@ static void _real_close(GormDocument *self,
   id<GormWrapperBuilder> builder = [[GormWrapperBuilderFactory sharedWrapperBuilderFactory]
 				     wrapperBuilderForType: type];
   NSFileWrapper *result = nil;
+  id delegate = [NSApp delegate];
 
   /*
    * Warn the user, if we are about to upgrade the package.
    */
   if(isOlderArchive && [filePrefsManager isLatest])
     {
-      NSInteger retval = NSRunAlertPanel(_(@"Compatibility Warning"), 
-				   _(@"Saving will update this gorm to the latest version \n" 
-				     @"which may not be compatible with some previous versions \n"
-				     @"of GNUstep."),
-				   _(@"Save"),
-				   _(@"Don't Save"), nil, nil);
-      if (retval != NSAlertDefaultReturn)
-	{
-	  return nil;
-	}
-      else
+      BOOL result = [delegate shouldUpgradeOlderArchive];
+
+      if (result == YES)
 	{
 	  // we're saving anyway... set to new value.
 	  isOlderArchive = NO;
+	}
+      else
+	{
+	  return nil;
 	}
     }
 

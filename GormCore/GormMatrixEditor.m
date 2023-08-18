@@ -734,6 +734,7 @@ static BOOL done_editing;
 {
   NSPasteboard *dragPb;
   NSArray      *types;
+  id             delegate = [NSApp delegate];
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
@@ -742,8 +743,8 @@ static BOOL done_editing;
       NSPoint loc = [sender draggingLocation];
       NSPoint mouseDownPoint = [_EO convertPoint: loc fromView: nil];
 
-      [NSApp displayConnectionBetween: [NSApp connectSource]
-	     and: [self connectTargetAtPoint: mouseDownPoint]];
+      [delegate displayConnectionBetween: [delegate connectSource]
+				     and: [self connectTargetAtPoint: mouseDownPoint]];
       return NSDragOperationLink;
     }
   return [super draggingEntered: sender];
@@ -755,15 +756,16 @@ static BOOL done_editing;
   NSArray	*types;
   NSPoint       dropPoint = [sender draggedImageLocation];
   NSPoint       mouseDownPoint = [_EO convertPoint: dropPoint fromView: nil];
+  id             delegate = [NSApp delegate];
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
 
   if ([types containsObject: GormLinkPboardType])
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-             and: [self connectTargetAtPoint: mouseDownPoint]];
-      [NSApp startConnecting];
+      [delegate displayConnectionBetween: [delegate connectSource] 
+				     and: [self connectTargetAtPoint: mouseDownPoint]];
+      [delegate startConnecting];
     }
   else if ([types containsObject: GormImagePboardType] == YES ||
 	   [types containsObject: GormSoundPboardType] == YES)

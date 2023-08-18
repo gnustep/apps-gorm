@@ -126,12 +126,13 @@
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
+  id            delegate = [NSApp delegate];
   
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [delegate displayConnectionBetween: [delegate connectSource] 
 	     and: _EO];
       return NSDragOperationLink;
     }
@@ -170,12 +171,13 @@
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
+  id            delegate = [NSApp delegate];
   
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [delegate displayConnectionBetween: [delegate connectSource] 
 	     and: _EO];
       return NSDragOperationLink;
     }
@@ -193,15 +195,16 @@
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
+  id            delegate = [NSApp delegate];
   
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   
   if ([types containsObject: GormLinkPboardType])
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
+      [delegate displayConnectionBetween: [delegate connectSource] 
 	     and: _EO];
-      [NSApp startConnecting];
+      [delegate startConnecting];
     }
   else if ([types containsObject: IBViewPboardType] == YES)
     {

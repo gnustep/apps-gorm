@@ -23,10 +23,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
-
 #ifndef INCLUDED_GormClassManager_h
 #define INCLUDED_GormClassManager_h
+
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
 // The custom classes and category arrays will hold only those things which 
 // will be persisted to the .classes file.   Since the overall list of classes will 
@@ -35,11 +35,11 @@
 // list of base classes, in gui, to form the full list of classes.
 @interface GormClassManager : NSObject
 {
-  NSMutableDictionary	*classInformation;
-  NSMutableArray        *customClasses;
-  NSMutableDictionary   *customClassMap;
-  NSMutableArray        *categoryClasses;
-  id                    document;
+  NSMutableDictionary	*_classInformation;
+  NSMutableArray        *_customClasses;
+  NSMutableDictionary   *_customClassMap;
+  NSMutableArray        *_categoryClasses;
+  id                     _document;
 }
 
 - (id) initWithDocument: (id)aDocument;
@@ -120,6 +120,8 @@
 - (BOOL) isAction: (NSString *)actionName  onCategoryForClassNamed: (NSString *)className;
 - (NSString *) classNameForObject: (id)object;
 - (NSString *) findClassByName: (NSString *)name;
+- (NSDictionary *) classInformation;
+- (NSDictionary *) customClassInformation;
 
 /* Parsing and creating classes */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className
@@ -137,6 +139,7 @@
 - (BOOL) loadCustomClassesWithDict: (NSDictionary *)dict;
 - (BOOL) loadNibFormatCustomClassesWithData: (NSData *)data;
 - (BOOL) loadNibFormatCustomClassesWithDict: (NSDictionary *)dict;
+
 @end
 
 #endif

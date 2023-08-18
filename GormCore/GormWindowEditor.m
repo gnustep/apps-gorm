@@ -211,7 +211,7 @@
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
   [self makeSelectionVisible: NO];
-  if ([(id<IB>)NSApp selectionOwner] == self)
+  if ([(id<IB>)[NSApp delegate] selectionOwner] == self)
     {
       [document resignSelectionForEditor: self];
     }

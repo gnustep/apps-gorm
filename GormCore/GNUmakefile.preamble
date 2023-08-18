@@ -22,19 +22,11 @@
 #   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #
 
-# ADDITIONAL_OBJCFLAGS += -Wall -Werror
-ADDITIONAL_GUI_LIBS += \
-	-lGorm \
-	-lGormObjCHeaderParser 
+ADDITIONAL_INCLUDE_DIRS += \
+	-I../InterfaceBuilder
 
-ifeq ($(GNUSTEP_TARGET_OS),mingw32)
-ADDITIONAL_LIB_DIRS += \
-	-L../GormLib/$(GNUSTEP_OBJ_DIR) \
-	-L../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
-else
-ADDITIONAL_LIB_DIRS += \
-	-L../GormLib/$(GNUSTEP_OBJ_DIR) \
-	-L../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
-endif
+# ADDITIONAL_GUI_LIBS += \
+#	-lInterfaceBuilder
 
-GormCore_LIBRARIES_DEPEND_UPON += -lGormObjCHeaderParser
+#ADDITIONAL_LIB_DIRS += \
+#	-L../InterfaceBuilder/$(GNUSTEP_OBJ_DIR)

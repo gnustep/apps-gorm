@@ -17,25 +17,21 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 
 LIBRARY_VAR=GMOBJCHEADERPARSER
-LIBRARY_NAME=libGormObjCHeaderParser
-libGormObjCHeaderParser_HEADER_FILES_DIR=.
-libGormObjCHeaderParser_HEADER_FILES_INSTALL_DIR=/GormObjCHeaderParser
+LIBRARY_NAME=GormObjCHeaderParser
+GormObjCHeaderParser_HEADER_FILES_DIR=.
 ADDITIONAL_INCLUDE_DIRS = -I..
-srcdir = .
-
-include ./Version
 
 #
 # Additional libraries
 #
 
-libGormObjCHeaderParser_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
+GormObjCHeaderParser_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 
 #
 # Header files
 #
 
-libGormObjCHeaderParser_HEADER_FILES= \
+GormObjCHeaderParser_HEADER_FILES= \
 GormObjCHeaderParser.h \
 NSScanner+OCHeaderParser.h \
 OCClass.h \
@@ -50,7 +46,7 @@ ParserFunctions.h
 # Class files
 #
 
-libGormObjCHeaderParser_OBJC_FILES= \
+GormObjCHeaderParser_OBJC_FILES= \
 NSScanner+OCHeaderParser.m \
 OCClass.m \
 OCHeaderParser.m \
@@ -63,9 +59,9 @@ ParserFunctions.m
 # C files
 #
 
-libGormObjCHeaderParser_C_FILES= 
+GormObjCHeaderParser_C_FILES= 
 
-HEADERS_INSTALL = $(libGormObjCHeaderParser_HEADER_FILES)
+HEADERS_INSTALL = $(GormObjCHeaderParser_HEADER_FILES)
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

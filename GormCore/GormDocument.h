@@ -57,7 +57,7 @@
 }
 @end
 
-@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding> 
+@interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding, NSXMLParserDelegate> 
 {
   GormClassManager      *classManager;
   GormFilesOwner	*filesOwner;
@@ -214,19 +214,65 @@
                      withParentObject: (id)parentObj;
 
 /* Language translation */
-- (void) translate: (id)sender;
-- (void) exportStrings: (id)sender;
+/**
+ * Load a given file into the reciever using `filename'.
+ */
+- (void) importStringsFromFile: (NSString *)filename;
+
+/**
+ * Export the strings from receiver to the file indicated by 'filename'.
+ */
+- (void) exportStringsToFile: (NSString *)filename;
 
 /* Managing classes */
+/**
+ * Shared class manager
+ */
 - (GormClassManager*) classManager;
+
+/**
+ * Create a subclass of the selected class
+ */
 - (id) createSubclass: (id)sender;
+
+/**
+ * Instantiate the selected class
+ */
 - (id) instantiateClass: (id)sender;
+
+/**
+ * Generate the class files for the selected class
+ */
 - (id) createClassFiles: (id)sender;
+
+/**
+ * Add attribute to class
+ */
 - (id) addAttributeToClass: (id)sender;
+
+/**
+ * Remove the selected class
+ */
 - (id) remove: (id)sender;
+
+/**
+ * Select class named className
+ */
 - (void) selectClass: (NSString *)className;
+
+/**
+ * Select class named className and edit it if flag is YES
+ */
 - (void) selectClass: (NSString *)className editClass: (BOOL)flag;
+
+/**
+ * Returns YES if a class is selected in the view
+ */ 
 - (BOOL) classIsSelected;
+
+/**
+ * Removes all instances of class named classNamed
+ */
 - (void) removeAllInstancesOfClass: (NSString *)classNamed;
 
 /* Sound & Image support */
@@ -242,6 +288,11 @@
 - (id) openImage: (id)sender;
 
 /* Connections */
+
+/**
+ *
+ */
+- (NSMutableArray *) connections;
 
 /**
  * Build our reverse mapping information and other initialisation
@@ -461,6 +512,12 @@
  * Add aConnector to the set of connectors in this document.
  */ 
 - (void) addConnector: (id<IBConnectors>)aConnector;
+
+/**
+ * Returns a set containing the top level objects for this document.
+ */
+- (NSMutableSet *) topLevelObjects;
+
 @end
 
 @interface GormDocument (MenuValidation)
@@ -483,6 +540,7 @@
  * Returns YES if the document is editing classes.
  */
 - (BOOL) isEditingClasses;
+
 @end
 
 #endif

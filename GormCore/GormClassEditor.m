@@ -56,8 +56,13 @@ NSImage *browserImage = nil;
 {
   if(self == [GormClassEditor class])
     {
-      outlineImage = [NSImage imageNamed: @"outlineView"];
-      browserImage = [NSImage imageNamed: @"browserView"];
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      NSString *path = nil;
+
+      path = [bundle pathForImageResource: @"outlineView"];
+      outlineImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"browserView"];
+      browserImage = [[NSImage alloc] initWithContentsOfFile: path];
     }
 }
 
@@ -66,7 +71,9 @@ NSImage *browserImage = nil;
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormClassEditor" owner: self])
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
+      if([bundle loadNibNamed: @"GormClassEditor" owner: self topLevelObjects: nil])
 	{
 	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 	  NSRect		 scrollRect = [classesView frame]; //  = {{0, 0}, {340, 188}};
@@ -114,7 +121,7 @@ NSImage *browserImage = nil;
 	  [outlineView setIndentationPerLevel: 10];
 	  [outlineView setAttributeOffset: 30];
 	  [outlineView setRowHeight: 18];
-	  [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
+	  [outlineView setMenu: [(id<GormAppDelegate>)[NSApp delegate] classMenu]]; 
 	  [outlineView setBackgroundColor: color];
 	  
 	  // add the table columns...

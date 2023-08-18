@@ -119,4 +119,15 @@
  * The current Gorm version.
  */
 + (int) currentVersion;
+
+/**
+ * Current profile for the current model file.
+ */
+- (NSDictionary *) currentProfile;
+
+/**
+ * Version information for the model file.
+ */
+- (NSDictionary *) versionProfiles;
+
 @end
