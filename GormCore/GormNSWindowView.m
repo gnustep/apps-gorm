@@ -31,15 +31,13 @@
 #include "GormNSWindowView.h"
 
 // the default style mask we start with.
-static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
-		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
+// static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
+//		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSWindowView
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  unsigned oldStyleMask;
-
   // save the old values...
   // oldStyleMask = _styleMask;
 
@@ -51,15 +49,110 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   [self setReleasedWhenClosed: NO];
 }
 
+
+- (id) initResponderWithCoder: (NSCoder *)coder
+{
+  if ((self = [super init]) != nil)
+    {
+      [aDecoder decodeValueOfObjCType: @encode(int) at: &_interface_style];
+      obj = [aDecoder decodeObject];
+      [self setMenu: obj];
+    }
+  return self;
+}
+
 - (id) initWithCoder: (NSCoder *)coder
 {
-  self = [super init]; // WithCoder: coder];
-  if (self != nil)
+  if ((self = [super initResponderWithCoder: aDecoder]) != nil)
     {
-      // preserve the setting and set the actual window to NO.
-      _gormReleasedWhenClosed = [self isReleasedWhenClosed];
-      [self setReleasedWhenClosed: NO];
+      NSSize aSize;
+      NSRect aRect;
+      NSPoint p;
+      NSUInteger aStyle;
+      NSBackingStoreType aBacking;
+      NSInteger level;
+      id obj;
+      int version = [aDecoder versionForClassName: @"NSWindow"];
+
+      aRect = [aDecoder decodeRect];
+      [aDecoder decodeValueOfObjCType: @encode(NSUInteger)
+                                   at: &aStyle];
+      // This used to be int, we need to stay compatible
+      [aDecoder decodeValueOfObjCType: @encode(NSInteger)
+                                   at: &aBacking];
+
+      // call the designated initializer....
+      self = [self initWithContentRect: aRect
+                             styleMask: aStyle
+                               backing: aBacking
+                                 defer: NO];
+
+      p = [aDecoder decodePoint];
+      obj = [aDecoder decodeObject];
+      [self setContentView: obj];
+      obj = [aDecoder decodeObject];
+      [self setBackgroundColor: obj];
+      obj = [aDecoder decodeObject];
+      [self setRepresentedFilename: obj];
+      obj = [aDecoder decodeObject];
+      [self setMiniwindowTitle: obj];
+      obj = [aDecoder decodeObject];
+      [self setTitle: obj];
+
+      if (version < 3)
+        {
+          aSize = [aDecoder decodeSize];
+          [self setMinSize: aSize];
+          aSize = [aDecoder decodeSize];
+          [self setMaxSize: aSize];
+        }
+      else
+        {
+          aSize = [aDecoder decodeSize];
+          [self setContentMinSize: aSize];
+          aSize = [aDecoder decodeSize];
+          [self setContentMaxSize: aSize];
+        }
+
+      [aDecoder decodeValueOfObjCType: @encode(NSInteger)
+                                   at: &level];
+      [self setLevel: level];
+
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setExcludedFromWindowsMenu: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setOneShot: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setAutodisplay: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self useOptimizedDrawing: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setDynamicDepthLimit: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      if (flag)
+        [self enableCursorRects];
+      else
+        [self disableCursorRects];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setReleasedWhenClosed: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setHidesOnDeactivate: flag];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &flag];
+      [self setAcceptsMouseMovedEvents: flag];
+
+      /* If the image has been specified, use it, if not use the default. */
+      obj = [aDecoder decodeObject];
+      if (obj != nil)
+        {
+          ASSIGN(_miniaturizedImage, obj);
+        }
+
+      [aDecoder decodeValueOfObjCType: @encode(id)
+                                   at: &_initialFirstResponder];
+
+      [self setFrameTopLeftPoint: p];
     }
+
   return self;
 }
 
@@ -90,12 +183,12 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   return self;
 }
 
-- (void) _setStyleMask: (unsigned int)newStyleMask
+- (void) setStyleMask: (unsigned int)newStyleMask
 {
   _gormStyleMask = newStyleMask;
 }
 
-- (unsigned int) _styleMask
+- (unsigned int) styleMask
 {
   return _gormStyleMask;
 }
@@ -115,12 +208,12 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
   return @"NSWindow";
 }
 
-- (void) _setReleasedWhenClosed: (BOOL) flag
+- (void) setReleasedWhenClosed: (BOOL) flag
 {
   _gormReleasedWhenClosed = flag;
 }
 
-- (BOOL) _isReleasedWhenClosed
+- (BOOL) isReleasedWhenClosed
 {
   return _gormReleasedWhenClosed;
 }
