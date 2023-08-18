@@ -202,12 +202,13 @@ static NSUInteger _count = INT_MAX;
 {
   NSUInteger l = [self length];
   unichar *c = malloc(l * sizeof(unichar));
-
+  NSUInteger i = 0;
+  
   [self getCharacters: c];
 
   NSString *result = @"";
 
-  for (NSUInteger i = 0; i < l; i++)
+  for (i = 0; i < l; i++)
     {
       result = [result stringByAppendingString: [NSString stringWithFormat: @"%x", c[i]]];
     }
