@@ -28,7 +28,7 @@
 
 @interface GormNSWindowView : NSView
 {
-  NSRect        _frame;
+  //  NSRect        _frame;
   NSSize        _minimumSize;
   NSSize        _maximumSize;
   NSSize        _increments;
@@ -49,7 +49,7 @@ PACKAGE_SCOPE
   id            _lastDragView;
   NSInteger     _lastDragOperationMask;
   NSInteger     _windowNum;
-  NSInteger     _gstate;
+  //  NSInteger     _gstate;
   id            _defaultButtonCell;
   NSGraphicsContext *_context;
 
@@ -74,7 +74,7 @@ PACKAGE_SCOPE
   NSWindowDepth _depthLimit;
   NSWindowController *_windowController;
   NSInteger     _counterpart;
-  CGFloat       _alphaValue;
+  // CGFloat       _alphaValue;
   
   NSMutableArray *_children;
   NSWindow       *_parent;
@@ -83,7 +83,7 @@ PACKAGE_SCOPE
   NSWindow       *_attachedSheet;
 
 PACKAGE_SCOPE
-  struct GSWindowFlagsType {
+  struct GSCanvasWindowFlagsType {
     unsigned	accepts_drag:1;
     unsigned	is_one_shot:1;
     unsigned	needs_flush:1;
@@ -129,10 +129,27 @@ PACKAGE_SCOPE
   void          *_reserved_1;
 }
 
+- (void) setTitle: (NSString *)t;
+- (NSString *) title;
+
+- (void) setMiniwindowTitle: (NSString *)t;
+- (NSString *) miniwindowTitle;
+
+- (void) setRepresentedFilename: (NSString *)rf;
+- (NSString *) representedFilename;
+
+- (void) setBackgroundColor: (NSColor *)bg;
+- (NSColor *) backgroundColor;
+
+- (void) setContentView: (NSView *)v;
+- (NSView *) contentView;
+
 - (void) setStyleMask: (unsigned int)newStyleMask;
 - (unsigned int) styleMask;
+
 - (void) setReleasedWhenClosed: (BOOL) flag;
 - (BOOL) isReleasedWhenClosed;
+
 - (unsigned int) autoPositionMask;
 - (void) setAutoPositionMask: (unsigned int)mask;
 

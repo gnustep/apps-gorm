@@ -43,17 +43,19 @@
 
   // set the values we wish to save.. after save restore.
   // _styleMask = _gormStyleMask;
-  [self setReleasedWhenClosed: _gormReleasedWhenClosed];
+  // [self setReleasedWhenClosed: _gormReleasedWhenClosed];
   [super encodeWithCoder: aCoder];
   // _styleMask = oldStyleMask;
   [self setReleasedWhenClosed: NO];
 }
 
 
-- (id) initResponderWithCoder: (NSCoder *)coder
+- (id) initResponderWithCoder: (NSCoder *)aDecoder
 {
   if ((self = [super init]) != nil)
     {
+      id obj = nil;
+      
       [aDecoder decodeValueOfObjCType: @encode(int) at: &_interface_style];
       obj = [aDecoder decodeObject];
       [self setMenu: obj];
@@ -61,9 +63,9 @@
   return self;
 }
 
-- (id) initWithCoder: (NSCoder *)coder
+- (id) initWithCoder: (NSCoder *)aDecoder
 {
-  if ((self = [super initResponderWithCoder: aDecoder]) != nil)
+  if ((self = [self initResponderWithCoder: aDecoder]) != nil)
     {
       NSSize aSize;
       NSRect aRect;
@@ -73,7 +75,8 @@
       NSInteger level;
       id obj;
       int version = [aDecoder versionForClassName: @"NSWindow"];
-
+      BOOL flag;
+      
       aRect = [aDecoder decodeRect];
       [aDecoder decodeValueOfObjCType: @encode(NSUInteger)
                                    at: &aStyle];
@@ -161,7 +164,7 @@
 		   backing: (NSBackingStoreType)bufferingType
 		     defer: (BOOL)flag
 {
-  _gormStyleMask = aStyle;
+  _styleMask = aStyle;
   self = [super init];
     // initWithContentRect: contentRect
     // styleMask: defaultStyleMask
@@ -183,14 +186,69 @@
   return self;
 }
 
+- (void) setTitle: (NSString *)t
+{
+  ASSIGN(_title, t);
+}
+
+- (NSString *) title
+{
+  return _title;
+}
+
+- (void) setMiniwindowTitle: (NSString *)t
+{
+  ASSIGN(_miniwindowTitle, t);
+}
+
+- (NSString *) miniwindowTitle
+{
+  return _miniwindowTitle;
+}
+
+- (void) setRepresentedFilename: (NSString *)rf
+{
+  ASSIGN(_representedFilename, rf);
+}
+
+- (NSString *) representedFilename
+{
+  return _representedFilename;
+}
+
+- (void) setBackgroundColor: (NSColor *)bg
+{
+  ASSIGN(_backgroundColor, bg);
+}
+
+- (NSColor *) backgroundColor
+{
+  return _backgroundColor;
+}
+
+- (void) setContentView: (NSView *)v
+{
+  NSArray *sv = [NSArray arrayWithObject: v];
+
+  [v removeFromSuperview];
+  [self setSubviews: sv];
+
+  ASSIGN(_contentView, v);
+}
+
+- (NSView *) contentView
+{
+  return _contentView;
+}
+
 - (void) setStyleMask: (unsigned int)newStyleMask
 {
-  _gormStyleMask = newStyleMask;
+  _styleMask = newStyleMask;
 }
 
 - (unsigned int) styleMask
 {
-  return _gormStyleMask;
+  return _styleMask;
 }
 
 - (BOOL) canBecomeMainWindow
@@ -210,22 +268,22 @@
 
 - (void) setReleasedWhenClosed: (BOOL) flag
 {
-  _gormReleasedWhenClosed = flag;
+  // _releasedWhenClosed = flag;
 }
 
 - (BOOL) isReleasedWhenClosed
 {
-  return _gormReleasedWhenClosed;
+  return NO; // _gormReleasedWhenClosed;
 }
 
 - (unsigned int) autoPositionMask
 {
-  return autoPositionMask;
+  return 0L; // autoPositionMask;
 }
 
 - (void) setAutoPositionMask: (unsigned int)mask
 {
-  autoPositionMask = mask;
+  // autoPositionMask = mask;
 }
 
 - (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (NSInteger)otherWin
