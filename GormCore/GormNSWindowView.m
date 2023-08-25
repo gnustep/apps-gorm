@@ -55,8 +55,9 @@
   if ((self = [super init]) != nil)
     {
       id obj = nil;
+      int interface_style = 0;
       
-      [aDecoder decodeValueOfObjCType: @encode(int) at: &_interface_style];
+      [aDecoder decodeValueOfObjCType: @encode(int) at: &interface_style];
       obj = [aDecoder decodeObject];
       [self setMenu: obj];
     }
@@ -188,22 +189,22 @@
 
 - (void) setTitle: (NSString *)t
 {
-  ASSIGN(_title, t);
+  ASSIGN(_windowTitle, t);
 }
 
 - (NSString *) title
 {
-  return _title;
+  return _windowTitle;
 }
 
 - (void) setMiniwindowTitle: (NSString *)t
 {
-  ASSIGN(_miniwindowTitle, t);
+  ASSIGN(_miniaturizedTitle, t);
 }
 
 - (NSString *) miniwindowTitle
 {
-  return _miniwindowTitle;
+  return _miniaturizedTitle;
 }
 
 - (void) setRepresentedFilename: (NSString *)rf

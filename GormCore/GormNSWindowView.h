@@ -124,6 +124,7 @@ PACKAGE_SCOPE
     unsigned ignores_mouse_events: 1;
     unsigned preserves_content_during_live_resize: 1;
   } _f;
+
 @protected 
   NSToolbar     *_toolbar;
   void          *_reserved_1;
