@@ -84,7 +84,15 @@ static NSUInteger _count = INT_MAX;
   BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
   NSString *imageName = [[self image] name];
   
-  if ((highlightsBy | NSChangeBackgroundCellMask)
+  if ([imageName isEqualToString: @"GSSwitch"])
+    {
+      type = NSSwitchButton;
+    }    
+  else if ([imageName isEqualToString: @"NSRadioButton"])
+    {
+      type = NSRadioButton;
+    }
+  else if ((highlightsBy | NSChangeBackgroundCellMask)
       && (showsStateBy | NSNoCellMask)
       && (imageDimsWhenDisabled == YES))
     {
@@ -113,14 +121,6 @@ static NSUInteger _count = INT_MAX;
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSOnOffButton;
-    }
-  else if ([imageName isEqualToString: @"NSSwitch"])
-    {
-      type = NSSwitchButton;
-    }    
-  else if ([imageName isEqualToString: @"NSRadioButton"])
-    {
-      type = NSRadioButton;
     }
 
   return type;
@@ -152,7 +152,7 @@ static NSUInteger _count = INT_MAX;
 	result = @"toggle";
         break;
       case NSSwitchButton: 
-	result = @"switch";
+	result = @"check";
         break;
       case NSRadioButton: 
 	result = @"radio";
@@ -841,6 +841,12 @@ static NSUInteger _count = INT_MAX;
 
   attr = [NSXMLNode attributeWithName: @"type" stringValue: buttonTypeString];
   [elem addAttribute: attr];
+
+  if ([buttonTypeString isEqualToString: @"check"])
+    {
+      attr = [NSXMLNode attributeWithName: @"imagePosition" stringValue: @"left"];
+      [elem addAttribute: attr];
+    }
 }
 
 - (void) _addAlignment: (NSUInteger)alignment toElement: (NSXMLElement *)elem
@@ -880,9 +886,6 @@ static NSUInteger _count = INT_MAX;
   if ([obj isKindOfClass: [NSButtonCell class]])
     {
       NSBezelStyle bezel = (NSBezelStyle)[obj bezelStyle] - 1;
-
-      NSLog(@"bezel = %u", bezel);
-      
       NSArray *bezelTypeArray = [NSArray arrayWithObjects:
 					   @"rounded",
 					 @"regularSquare",
