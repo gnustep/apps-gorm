@@ -55,6 +55,7 @@
 
 #import "GormXIBModelGenerator.h"
 
+static NSArray *_allowedSizeKeys = nil;
 static NSArray *_externallyReferencedClasses = nil;
 static NSDictionary *_signatures = nil;
 static NSArray *_skipClass = nil;
@@ -88,7 +89,7 @@ static NSUInteger _count = INT_MAX;
     {
       type = NSSwitchButton;
     }    
-  else if ([imageName isEqualToString: @"NSRadioButton"])
+  else if ([imageName isEqualToString: @"GSRadio"])
     {
       type = NSRadioButton;
     }
@@ -245,6 +246,12 @@ static NSUInteger _count = INT_MAX;
 {
   if (self == [GormXIBModelGenerator class])
     {
+      _allowedSizeKeys =
+	[[NSArray alloc] initWithObjects:
+			   @"cellSize",
+			 @"intercellSpacing",
+			 nil];
+      
       _externallyReferencedClasses =
 	[[NSArray alloc] initWithObjects:
 			   @"NSTableHeaderView",
@@ -331,6 +338,8 @@ static NSUInteger _count = INT_MAX;
       
       _nonProperties =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
+			    [NSArray arrayWithObject: @"cells"],
+			      @"NSMatrix",
 			   [NSArray arrayWithObjects:
 				      @"colorNameComponent",
 				    @"catalogNameComponent",
@@ -380,7 +389,7 @@ static NSUInteger _count = INT_MAX;
 			   [NSArray arrayWithObjects:
 				    @"patternImage",
 				    @"colorSpaceName", nil],
-			      @"GSPatternColor",			      
+			      @"GSPatternColor",
 			      nil];
       
       _mappedClassNames =
@@ -437,6 +446,8 @@ static NSUInteger _count = INT_MAX;
 			 @"intValue",
 			 @"previousKeyView",
 			 @"nextKeyView",
+			 @"prototype",
+			 @"keyCell",
 			 nil];
     }
 }
@@ -842,7 +853,8 @@ static NSUInteger _count = INT_MAX;
   attr = [NSXMLNode attributeWithName: @"type" stringValue: buttonTypeString];
   [elem addAttribute: attr];
 
-  if ([buttonTypeString isEqualToString: @"check"])
+  if ([buttonTypeString isEqualToString: @"check"]
+      || [buttonTypeString isEqualToString: @"radio"])
     {
       attr = [NSXMLNode attributeWithName: @"imagePosition" stringValue: @"left"];
       [elem addAttribute: attr];
@@ -1070,6 +1082,39 @@ static NSUInteger _count = INT_MAX;
     }
 }
 
+- (void) _addCellsFromMatrix: (NSMatrix *)matrix toElement: (NSXMLElement *)elem
+{
+  NSLog(@"cells = %@\nelem = %@", [matrix cells], elem);
+
+  NSRect rect = [matrix frame];
+  NSSize cellSize = [matrix cellSize];
+  NSSize inter = [matrix intercellSpacing];
+  NSUInteger itemsPerCol = (rect.size.width + inter.width)   / cellSize.width;
+  NSUInteger itemsPerRow = (rect.size.height + inter.height) / cellSize.height;
+  NSUInteger c = 0;
+  NSUInteger r = 0;
+  NSArray *cells = [matrix cells];
+  NSUInteger i = 0;
+  NSXMLElement *cellsElem = [NSXMLNode elementWithName: @"cells"];
+
+  [elem addChild: cellsElem];
+  for (c = 0; c < itemsPerCol; c++)
+    {
+      NSXMLElement *columnElem = [NSXMLNode elementWithName: @"column"];
+
+      for (r = 0; r < itemsPerRow; r++)
+	{
+	  id cell = nil;
+
+	  i = (c * itemsPerCol) + r;
+	  cell = [cells objectAtIndex: i];
+	  [self _collectObjectsFromObject: cell
+				 withNode: columnElem];
+	}
+      [cellsElem addChild: columnElem];
+    }
+}
+
 - (void) _addProperty: (NSString *)name
 	     withType: (NSString *)type
 	    toElement: (NSXMLElement *)elem
@@ -1087,8 +1132,14 @@ static NSUInteger _count = INT_MAX;
     {
       return;
     }
-  
-  // Class clz = NSClassFromString(type);
+
+  if ([name isEqualToString: @"cells"]
+      && [obj isKindOfClass: [NSMatrix class]])
+    {
+      [self _addCellsFromMatrix: obj toElement: elem];
+      return;
+    }
+
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
@@ -1168,23 +1219,24 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
     }
-  /*
   else if ([type isEqualToString: @"NSSize"])
     {
-      SEL sel = NSSelectorFromString(name);
-      if (sel != NULL)
-	{
-	  IMP imp = [obj methodForSelector: sel];
-
-	  if (imp != NULL)
+      if ([_allowedSizeKeys containsObject: name])
+	{	 
+	  SEL sel = NSSelectorFromString(name);
+	  if (sel != NULL)
 	    {
-	      NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
-	      [self _addSize: s toElement: elem withName: name];
-
+	      IMP imp = [obj methodForSelector: sel];
+	      
+	      if (imp != NULL)
+		{
+		  NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
+		  [self _addSize: s toElement: elem withName: name];
+		  
+		}
 	    }
 	}
     }
-  */
   else if ([type isEqualToString: @"CGFloat"])
     {
       NSString *keyName = name;
