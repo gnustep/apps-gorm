@@ -1,30 +1,30 @@
 /** <title>GormXIBKeyedArchiver</title>
 
-   <abstract>Interface of GormXIBKeyedArchiver</abstract>
+    <abstract>Interface of GormXIBKeyedArchiver</abstract>
 
-   Copyright (C) 2023 Free Software Foundation, Inc.
+    Copyright (C) 2023 Free Software Foundation, Inc.
 
-   Author:  Gregory John Casamento <greg.casamento@gmail.com>
-   Date: 2023
-   
-   This file is part of the GNUstep GUI Library.
+    Author:  Gregory John Casamento <greg.casamento@gmail.com>
+    Date: 2023
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+    This file is part of the GNUstep GUI Library.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/ 
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; see the file COPYING.LIB.
+    If not, see <http://www.gnu.org/licenses/> or write to the
+    Free Software Foundation, 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
@@ -84,18 +84,18 @@ static NSUInteger _count = INT_MAX;
   NSInteger showsStateBy = [self showsStateBy];
   BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
   NSString *imageName = [[self image] name];
-  
+
   if ([imageName isEqualToString: @"GSSwitch"])
     {
       type = NSSwitchButton;
-    }    
+    }
   else if ([imageName isEqualToString: @"GSRadio"])
     {
       type = NSRadioButton;
     }
   else if ((highlightsBy | NSChangeBackgroundCellMask)
-      && (showsStateBy | NSNoCellMask)
-      && (imageDimsWhenDisabled == YES))
+	   && (showsStateBy | NSNoCellMask)
+	   && (imageDimsWhenDisabled == YES))
     {
       type = NSMomentaryLightButton;
     }
@@ -110,13 +110,13 @@ static NSUInteger _count = INT_MAX;
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSMomentaryChangeButton;
-    }  
+    }
   else if ((highlightsBy | (NSPushInCellMask | NSChangeGrayCellMask))
 	   && (showsStateBy | NSChangeBackgroundCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSPushOnPushOffButton;
-    }  
+    }
   else if ((highlightsBy | (NSPushInCellMask | NSContentsCellMask))
 	   && (showsStateBy | NSContentsCellMask)
 	   && (imageDimsWhenDisabled == YES))
@@ -131,36 +131,36 @@ static NSUInteger _count = INT_MAX;
 {
   NSButtonType type = [self buttonType];
   NSString *result = @"";
-  
+
   switch (type)
     {
-      case NSMomentaryLightButton: 
-	result = @"push";
-	break;
-      case NSMomentaryPushInButton: 
-	result = @"push"; // @"momentaryPushIn";
-        break;
-      case NSMomentaryChangeButton: 
-	result = @"momentarychange";
-        break;
-      case NSPushOnPushOffButton: 
-	result = @"push"; // @"pushonpushoff";
-        break;
-      case NSOnOffButton: 
-	result = @"onoff";
-        break;
-      case NSToggleButton: 
-	result = @"toggle";
-        break;
-      case NSSwitchButton: 
-	result = @"check";
-        break;
-      case NSRadioButton: 
-	result = @"radio";
-        break;
-      default:
-        NSLog(@"Using unsupported button type %d", type);
-        break;      
+    case NSMomentaryLightButton:
+      result = @"push";
+      break;
+    case NSMomentaryPushInButton:
+      result = @"push"; // @"momentaryPushIn";
+      break;
+    case NSMomentaryChangeButton:
+      result = @"momentarychange";
+      break;
+    case NSPushOnPushOffButton:
+      result = @"push"; // @"pushonpushoff";
+      break;
+    case NSOnOffButton:
+      result = @"onoff";
+      break;
+    case NSToggleButton:
+      result = @"toggle";
+      break;
+    case NSSwitchButton:
+      result = @"check";
+      break;
+    case NSRadioButton:
+      result = @"radio";
+      break;
+    default:
+      NSLog(@"Using unsupported button type %d", type);
+      break;
     }
 
   return result;
@@ -204,7 +204,7 @@ static NSUInteger _count = INT_MAX;
   NSUInteger l = [self length];
   unichar *c = malloc(l * sizeof(unichar));
   NSUInteger i = 0;
-  
+
   [self getCharacters: c];
 
   NSString *result = @"";
@@ -231,11 +231,11 @@ static NSUInteger _count = INT_MAX;
 @interface GormXIBModelGenerator (Private)
 
 - (void) _collectObjectsFromObject: (id)obj
-			  withNode: (NSXMLElement  *)node;
+			withParent: (NSXMLElement  *)node;
 
 - (void) _collectObjectsFromObject: (id)obj
 			    ForKey: (NSString *)keyName
-			  withNode: (NSXMLElement  *)node;
+			withParent: (NSXMLElement  *)node;
 
 @end
 
@@ -251,12 +251,12 @@ static NSUInteger _count = INT_MAX;
 			   @"cellSize",
 			 @"intercellSpacing",
 			 nil];
-      
+
       _externallyReferencedClasses =
 	[[NSArray alloc] initWithObjects:
 			   @"NSTableHeaderView",
 			 nil];
-      
+
       _valueMapping =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"catalog", @"NSNamedColorSpace",
@@ -269,7 +269,7 @@ static NSUInteger _count = INT_MAX;
 			      @"calibratedRGB", @"NSCalibratedRGBColorSpace",
 			      @"pattern", @"NSPatternColorSpace",
 			      nil];
-      
+
       _signatures =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"char", @"c",
@@ -289,7 +289,7 @@ static NSUInteger _count = INT_MAX;
 			      @"char*",      @"*",
 			      @"id",         @"@",
 			      @"Class",      @"#",
-			      @"SEL",        @":",
+				   @"SEL",        @":",
 			      @"NSRect",     @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}",
 			      @"NSSize",     @"{_NSSize=dd}",
 			      @"NSPoint",    @"{_NSPoint=dd}",
@@ -298,7 +298,7 @@ static NSUInteger _count = INT_MAX;
 	[[NSArray alloc] initWithObjects:
 			   @"NSBrowserCell",
 			 nil];
-      
+
       _skipCollectionForKey =
 	[[NSArray alloc] initWithObjects:
 			   @"headerView",
@@ -310,7 +310,7 @@ static NSUInteger _count = INT_MAX;
 			 @"subviews",
 			 @"contentView",
 			 nil];
-      
+
       _singletonObjects =
 	[[NSArray alloc] initWithObjects:
 			   @"GSNamedColor",
@@ -319,7 +319,7 @@ static NSUInteger _count = INT_MAX;
 			 @"NSImage",
 			 @"GSCalibratedWhiteColor",
 			 nil];
-      
+
       _methodToKeyName =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"name", @"colorNameComponent",
@@ -335,7 +335,7 @@ static NSUInteger _count = INT_MAX;
 			      @"yellow", @"yellowComponent",
 			      @"black", @"blackComponent",
 			      nil];
-      
+
       _nonProperties =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 			    [NSArray arrayWithObject: @"cells"],
@@ -387,16 +387,16 @@ static NSUInteger _count = INT_MAX;
 				    @"colorSpaceName", nil],
 			      @"GSCalibratedRBGColor",
 			   [NSArray arrayWithObjects:
-				    @"patternImage",
+				      @"patternImage",
 				    @"colorSpaceName", nil],
 			      @"GSPatternColor",
 			      nil];
-      
+
       _mappedClassNames =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"NSColor", @"GSNamedColor",
 			      @"NSColor", @"GSWhiteColor",
-			      @"NSColor", @"GSDeviceWhiteColor",			      
+			      @"NSColor", @"GSDeviceWhiteColor",
 			      @"NSColor", @"GSCalibratedWhiteColor",
 			      @"NSColor", @"GSDeviceCMYKColor",
 			      @"NSColor", @"GSRGBColor",
@@ -416,7 +416,7 @@ static NSUInteger _count = INT_MAX;
 			 @"attributedStringValue",
 			 @"stringValue",
 			 @"objectValue",
-			 @"menuView", @"menu", 
+			 @"menuView", @"menu",
 			 @"attributedAlternateTitle",
 			 @"attributedTitle",
 			 @"miniwindowImage",
@@ -482,7 +482,7 @@ static NSUInteger _count = INT_MAX;
   DESTROY(_mappingDictionary);
   DESTROY(_allIdentifiers);
   DESTROY(_objectToIdentifier);
-  
+
   [super dealloc];
 }
 
@@ -494,7 +494,7 @@ static NSUInteger _count = INT_MAX;
     {
       className = [_mappedClassNames objectForKey: name];
     }
-  
+
   NSString *result = [className stringByReplacingOccurrencesOfString: @"NS"
 							  withString: @""];
 
@@ -511,8 +511,8 @@ static NSUInteger _count = INT_MAX;
   if ([result isEqualToString: @"objectProxy"])
     {
       result = @"customObject";
-    }  
-  
+    }
+
   return result;
 }
 
@@ -534,10 +534,10 @@ static NSUInteger _count = INT_MAX;
       if ([obj isKindOfClass: [GormObjectProxy class]])
 	{
 	  NSString *className = [obj className];
-	  
+
 	  if ([className isEqualToString: @"NSApplication"])
 	    {
-	      result = @"-3";      
+	      result = @"-3";
 	      return result;
 	    }
 	  else if ([className isEqualToString: @"NSOwner"])
@@ -565,49 +565,49 @@ static NSUInteger _count = INT_MAX;
 	{
 	  result = [_gormDocument nameForObject: obj];
 	}
-      
+
       // Encoding
       NSString *originalName = [result copy];
       NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
 					  result, result, result];  // kludge...
-      // 
+      //
       result = [stackedResult hexString];
       result = [result splitString];
-      
+
       // Collision...
       id o = [_mappingDictionary objectForKey: result];
       if (o != nil)
 	{
 	  result = [[NSString randomHex] splitString];
 	}
-      
+
       // If the id already exists, but isn't mapped...
       if ([_allIdentifiers containsObject: result])
 	{
 	  result = [[NSString randomHex] splitString];
 	}
-      
+
       if (originalName != nil)
 	{
 	  // Map the name...
 	  [_mappingDictionary setObject: originalName
 				 forKey: result];
 	}
-      
+
       // Record the id...
       [_allIdentifiers addObject: result];
-      
+
       // Record the mapping of obj -> identifier...
       [_objectToIdentifier setObject: result
 			      forKey: obj];
     }
-  
+
   return result;
 }
 
 - (NSString *) _userLabelForObject: (id)obj
 {
-  NSString *result = nil; 
+  NSString *result = nil;
 
   if ([obj isKindOfClass: [GormObjectProxy class]])
     {
@@ -627,13 +627,13 @@ static NSUInteger _count = INT_MAX;
 	}
     }
 
-  return result;  
+  return result;
 }
 
 - (void) _createPlaceholderObjects: (NSXMLElement *)elem
 {
   NSXMLElement *co = nil;
-  NSXMLNode *attr = nil; 
+  NSXMLNode *attr = nil;
   GormFilesOwner *filesOwner = [_gormDocument filesOwner];
   NSString *ownerClassName = [filesOwner className];
 
@@ -641,7 +641,7 @@ static NSUInteger _count = INT_MAX;
   co = [NSXMLNode elementWithName: @"customObject"];
   attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-3"];
   [co addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: @"Application"];
   [co addAttribute: attr];
 
@@ -653,7 +653,7 @@ static NSUInteger _count = INT_MAX;
   co = [NSXMLNode elementWithName: @"customObject"];
   attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-2"];
   [co addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"userLabel" stringValue: @"File's Owner"];
   [co addAttribute: attr];
 
@@ -661,7 +661,7 @@ static NSUInteger _count = INT_MAX;
   [co addAttribute: attr];
   [elem addChild: co];
   [self _addAllConnections: co fromObject: filesOwner];
-  
+
   // First Responder
   co = [NSXMLNode elementWithName: @"customObject"];
   attr = [NSXMLNode attributeWithName: @"id" stringValue: @"-1"];
@@ -672,7 +672,7 @@ static NSUInteger _count = INT_MAX;
 
   attr = [NSXMLNode attributeWithName: @"customClass" stringValue: @"FirstResponder"];
   [co addAttribute: attr];
-  [elem addChild: co];  
+  [elem addChild: co];
 }
 
 - (NSArray *) _propertiesFromMethods: (NSArray *)methods
@@ -681,7 +681,7 @@ static NSUInteger _count = INT_MAX;
   NSEnumerator *en = [methods objectEnumerator];
   NSString *name = nil;
   NSMutableArray *result = [NSMutableArray array];
-  
+
   while ((name = [en nextObject]) != nil)
     {
       if ([name isEqualToString: @"set"] == NO) // this is the [NSFont set] method... skip...
@@ -694,7 +694,7 @@ static NSUInteger _count = INT_MAX;
 							 withString: @""];
 	      NSString *s = [os lowercaseFirstCharacter];
 	      NSString *iss = [NSString stringWithFormat: @"is%@", os];
-	      
+
 	      if ([methods containsObject: s])
 		{
 		  SEL sel = NSSelectorFromString(s);
@@ -726,7 +726,7 @@ static NSUInteger _count = INT_MAX;
 	    }
 	}
     }
-  
+
   return result;
 }
 
@@ -776,7 +776,7 @@ static NSUInteger _count = INT_MAX;
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"keyEquivalent" stringValue: ke];
 	  [elem addAttribute: attr];
 	}
-      
+
       NSDebugLog(@"elem = %@", elem);
     }
 }
@@ -784,7 +784,7 @@ static NSUInteger _count = INT_MAX;
 - (void) _addKeyEquivalentModifierMask: (NSUInteger)mask toElement: (NSXMLElement *)elem
 {
   NSXMLNode *attr = nil;
-  
+
   NSDebugLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
   if ([elem attributeForName: @"keyEquivalent"] != nil)
     {
@@ -814,11 +814,11 @@ static NSUInteger _count = INT_MAX;
 - (void) _addWindowStyleMask: (NSUInteger)mask toElement: (NSXMLElement *)elem
 {
   NSXMLNode *attr = nil;
-  
+
   NSDebugLog(@"styleMask = %ld, element = %@", mask, elem);
 
   NSXMLElement *styleMaskElem = [NSXMLNode elementWithName: @"windowStyleMask"];
-  
+
   if (mask | NSWindowStyleMaskTitled)
     {
       attr = [NSXMLNode attributeWithName: @"titled" stringValue: @"YES"];
@@ -842,7 +842,7 @@ static NSUInteger _count = INT_MAX;
 
   attr = [NSXMLNode attributeWithName: @"key" stringValue: @"styleMask"];
   [styleMaskElem addAttribute: attr];
-  
+
   [elem addChild: styleMaskElem];
 }
 
@@ -865,7 +865,7 @@ static NSUInteger _count = INT_MAX;
 {
   NSXMLNode *attr = nil;
   NSString *string = nil;
-  
+
   switch (alignment)
     {
     case NSLeftTextAlignment:
@@ -884,7 +884,7 @@ static NSUInteger _count = INT_MAX;
       string = @"natural";
       break;
     }
-  
+
   attr = [NSXMLNode attributeWithName: @"alignment" stringValue: string];
   [elem addAttribute: attr];
 }
@@ -894,7 +894,7 @@ static NSUInteger _count = INT_MAX;
 {
   NSString *result = nil;
   NSXMLNode *attr = nil;
-  
+
   if ([obj isKindOfClass: [NSButtonCell class]])
     {
       NSBezelStyle bezel = (NSBezelStyle)[obj bezelStyle] - 1;
@@ -983,19 +983,19 @@ static NSUInteger _count = INT_MAX;
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMinY" stringValue: @"YES"];
 	}
-      
+
       [autoresizingMaskElem addAttribute: attr];
       attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizeMask"];
       [autoresizingMaskElem addAttribute: attr];
 
-      [elem addChild: autoresizingMaskElem];      
+      [elem addChild: autoresizingMaskElem];
     }
 }
 
 - (void) _addTitlePosition: (NSTitlePosition)p toElement: (NSXMLElement *)elem
 {
   NSString *result = nil;
-  
+
   switch (p)
     {
     case NSNoTitle:
@@ -1019,7 +1019,7 @@ static NSUInteger _count = INT_MAX;
       result = @"belowBottom";
       break;
     }
-  
+
   if (result != nil)
     {
       NSXMLNode *attr = [NSXMLNode attributeWithName: @"titlePosition" stringValue: result];
@@ -1034,12 +1034,12 @@ static NSUInteger _count = INT_MAX;
       NSXMLElement *tblColElem = [NSXMLNode elementWithName: @"tableColumns"];
       NSEnumerator *en = [cols objectEnumerator];
       id col = nil;
-      
+
       // NSLog(@"cols = %@", cols);
       while ((col = [en nextObject]) != nil)
 	{
 	  [self _collectObjectsFromObject: col
-				 withNode: tblColElem];
+			       withParent: tblColElem];
 	}
 
       [elem addChild: tblColElem];
@@ -1098,7 +1098,7 @@ static NSUInteger _count = INT_MAX;
 
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
   NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
-  
+
   [elem addChild: cellsElem];
   for (c = 0; c < itemsPerCol; c++)
     {
@@ -1114,9 +1114,9 @@ static NSUInteger _count = INT_MAX;
 	    {
 	      cellClass = NSStringFromClass([cell class]);
 	    }
-	  
+
 	  [self _collectObjectsFromObject: cell
-				 withNode: columnElem];
+			       withParent: columnElem];
 	}
       [cellsElem addChild: columnElem];
     }
@@ -1132,6 +1132,24 @@ static NSUInteger _count = INT_MAX;
       NSXMLNode *attr = [NSXMLNode attributeWithName: @"cellClass" stringValue: @"NSButtonCell"];
       [elem addAttribute: attr];
     }
+}
+
+- (void) _addHoldingPrioritiesForSplitView: (NSSplitView *)sv toElement: (NSXMLElement *)elem
+{
+  NSUInteger count = [[sv subviews] count];
+  NSXMLElement *holdingPrioritiesElement = [NSXMLNode elementWithName: @"holdingPriorities"];
+  NSUInteger i = 0;
+
+  for (i = 0; i < count; i++)
+    {
+      NSXMLElement *realElement = [NSXMLNode elementWithName: @"real"];
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"value" stringValue: @"250"]; // default value
+
+      [realElement addAttribute: attr];
+      [holdingPrioritiesElement addChild: realElement];
+    }
+
+  [elem addChild: holdingPrioritiesElement];
 }
 
 - (void) _addProperty: (NSString *)name
@@ -1162,7 +1180,7 @@ static NSUInteger _count = INT_MAX;
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
-      
+
       // NSLog(@"%@ -> %@", name, type);
       if (s != NULL)
 	{
@@ -1172,7 +1190,7 @@ static NSUInteger _count = INT_MAX;
 	      if (o != nil)
 		{
 		  NSString *newName = [_methodToKeyName objectForKey: name];
-		  
+
 		  if (newName != nil)
 		    {
 		      name = newName;
@@ -1185,7 +1203,7 @@ static NSUInteger _count = INT_MAX;
 			{
 			  o = [_valueMapping objectForKey: o];
 			}
-		      
+
 		      if ([name isEqualToString: @"keyEquivalent"])
 			{
 			  [self _addKeyEquivalent: o
@@ -1195,7 +1213,7 @@ static NSUInteger _count = INT_MAX;
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
 							     stringValue: o];
-			  
+
 			  [elem addAttribute: attr];
 			}
 		    }
@@ -1216,7 +1234,7 @@ static NSUInteger _count = INT_MAX;
 			{
 			  [self _collectObjectsFromObject: o
 						   forKey: name
-						 withNode: elem];
+					       withParent: elem];
 			}
 		    }
 		}
@@ -1241,17 +1259,17 @@ static NSUInteger _count = INT_MAX;
   else if ([type isEqualToString: @"NSSize"])
     {
       if ([_allowedSizeKeys containsObject: name])
-	{	 
+	{
 	  SEL sel = NSSelectorFromString(name);
 	  if (sel != NULL)
 	    {
 	      IMP imp = [obj methodForSelector: sel];
-	      
+
 	      if (imp != NULL)
 		{
 		  NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
 		  [self _addSize: s toElement: elem withName: name];
-		  
+
 		}
 	    }
 	}
@@ -1267,7 +1285,7 @@ static NSUInteger _count = INT_MAX;
 	  if (imp != NULL)
 	    {
 	      CGFloat f = ((CGFloat (*)(id, SEL))imp)(obj, sel);
-	      
+
 	      [self _addFloat: f
 		     withName: keyName
 		    toElement: elem];
@@ -1277,7 +1295,7 @@ static NSUInteger _count = INT_MAX;
   else if ([type isEqualToString: @"BOOL"])
     {
       NSString *keyName = name;
-      
+
       if ([[name substringToIndex: 2] isEqualToString: @"is"])
 	{
 	  keyName = [name substringFromIndex: 2];
@@ -1292,7 +1310,7 @@ static NSUInteger _count = INT_MAX;
 	  if (imp != NULL)
 	    {
 	      BOOL f = ((BOOL (*)(id, SEL))imp)(obj, sel);
-	      
+
 	      [self _addBoolean: f
 		       withName: keyName
 		      toElement: elem];
@@ -1323,22 +1341,22 @@ static NSUInteger _count = INT_MAX;
     }
   else if ([name isEqualToString: @"bezelStyle"] && [obj respondsToSelector: @selector(cell)] == NO)
     {
-      [self _addBezelStyleForObject: obj 
+      [self _addBezelStyleForObject: obj
 			  toElement: elem];
     }
   else if ([name isEqualToString: @"isBordered"] && [obj respondsToSelector: @selector(cell)] == NO)
     {
       BOOL bordered = [obj isBordered];
       NSDebugLog(@"Handling isBordered...");
-      [self _addBorderStyle: bordered 
+      [self _addBorderStyle: bordered
 		  toElement: elem];
     }
-  else if ([name isEqualToString: @"titlePosition"]) 
+  else if ([name isEqualToString: @"titlePosition"])
     {
       NSTitlePosition p = [obj titlePosition];
       [self _addTitlePosition: p
 		    toElement: elem];
-    }  
+    }
 }
 
 - (void) _addPropertiesFromArray: (NSArray *)props toElement: (NSXMLElement *)elem fromObject: (id)obj
@@ -1358,7 +1376,7 @@ static NSUInteger _count = INT_MAX;
 
 	      if ([_excludedKeys containsObject: name])
 		continue;
-	      
+
 	      NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
 	      if (sig != NULL)
 		{
@@ -1368,7 +1386,7 @@ static NSUInteger _count = INT_MAX;
 		      NSString *ctypeString = [NSString stringWithCString: ctype
 								 encoding: NSUTF8StringEncoding];
 		      NSString *type = [_signatures objectForKey: ctypeString];
-		      
+
 		      if (type != nil)
 			{
 			  [self _addProperty: name withType: type toElement: elem fromObject: obj];
@@ -1384,7 +1402,7 @@ static NSUInteger _count = INT_MAX;
 {
   NSArray *methods = GSObjCMethodNames(obj, YES);
   NSArray *props = [self _propertiesFromMethods: methods forObject: obj];
-  
+
   [self _addPropertiesFromArray: props toElement: elem fromObject: obj];
   NSDebugLog(@"methods = %@", props);
 }
@@ -1395,7 +1413,7 @@ static NSUInteger _count = INT_MAX;
   if (className != nil)
     {
       NSArray *props = [_nonProperties objectForKey: className];
-      
+
       [self _addPropertiesFromArray: props toElement: elem fromObject: obj];
     }
 }
@@ -1473,7 +1491,7 @@ static NSUInteger _count = INT_MAX;
 // This method recursively navigates the entire object tree and emits XML
 - (void) _collectObjectsFromObject: (id)obj
 			    forKey: (NSString *)keyName
-			  withNode: (NSXMLElement *)pNode
+			withParent: (NSXMLElement *)pNode
 {
   NSString *ident = [self _createIdentifierForObject: obj];
 
@@ -1486,18 +1504,18 @@ static NSUInteger _count = INT_MAX;
 	{
 	  return;
 	}
-      
+
       NSString *elementName = [self _convertName: className];
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
       NSXMLNode *attr = nil;
-      
+
       // If the object is a singleton, then there is no need for the id to be presented.
       if ([_singletonObjects containsObject: className] == NO)
 	{
 	  attr = [NSXMLNode attributeWithName: @"id" stringValue: ident];
 	  [elem addAttribute: attr];
 	}
-      
+
       NSString *name = [_gormDocument nameForObject:  obj];
       NSString *userLabel = [self _userLabelForObject: obj];
       if (userLabel != nil)
@@ -1512,7 +1530,7 @@ static NSUInteger _count = INT_MAX;
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: keyName];
 	  [elem addAttribute: attr];
 	}
-      
+
       if ([obj isKindOfClass: [GormObjectProxy class]] ||
 	  [obj respondsToSelector: @selector(className)])
 	{
@@ -1520,13 +1538,13 @@ static NSUInteger _count = INT_MAX;
 	    {
 	      className = [obj className];
 	      attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
-	      [elem addAttribute: attr];      
+	      [elem addAttribute: attr];
 	    }
 	}
-      
+
       // Add all of the connections for a given object...
       [self _addAllConnections: elem fromObject: obj];
-      
+
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
 
@@ -1548,7 +1566,7 @@ static NSUInteger _count = INT_MAX;
 		  id hv = [view headerView];
 		  [self _collectObjectsFromObject: hv
 					   forKey: nil
-					 withNode: elem];
+				       withParent: elem];
 		}
 	    }
 	}
@@ -1558,7 +1576,7 @@ static NSUInteger _count = INT_MAX;
 	{
 	  [parentNode addChild: elem];
 	}
-      
+
       // For each different class, recurse through the structure as needed.
 
       // For NSMenu, there is a special case, since it needs to be contained in another menu.
@@ -1574,8 +1592,8 @@ static NSUInteger _count = INT_MAX;
 	      [elem addAttribute: systemMenuAttr];
 
 	      NSXMLElement *mainMenuElem = [NSXMLNode elementWithName: @"menu"];
-	      
-	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];	      
+
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
 	      [mainMenuElem addAttribute: attr];
 
 	      attr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"main"];
@@ -1608,12 +1626,12 @@ static NSUInteger _count = INT_MAX;
 	      attr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"services"];
 	      [elem addAttribute: attr];
 	    }
-	  
+
 	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
-				     withNode: itemsElem];
+				   withParent: itemsElem];
 	    }
 	  [elem addChild: itemsElem]; // Add to parent element...
 	}
@@ -1624,7 +1642,7 @@ static NSUInteger _count = INT_MAX;
 	  if (sm != nil)
 	    {
 	      [self _collectObjectsFromObject: sm
-				     withNode: elem];
+				   withParent: elem];
 	    }
 	}
 
@@ -1638,10 +1656,10 @@ static NSUInteger _count = INT_MAX;
 	  NSXMLElement *menuElem = [NSXMLNode elementWithName: @"menu"];
 	  NSXMLElement *itemsElem = [NSXMLNode elementWithName: @"items"];
 	  NSXMLNode *attr = nil;
-	  
+
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"menu"];
 	  [menuElem addAttribute: attr];
-	  
+
 	  attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
 	  [menuElem addAttribute: attr];
 
@@ -1654,10 +1672,10 @@ static NSUInteger _count = INT_MAX;
 	  while ((item = [en nextObject]) != nil)
 	    {
 	      [self _collectObjectsFromObject: item
-				     withNode: itemsElem];
+				   withParent: itemsElem];
 	    }
 	  [elem addAttribute: attr];
-	  
+
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
@@ -1665,7 +1683,7 @@ static NSUInteger _count = INT_MAX;
       if ([obj isKindOfClass: [NSTableHeaderView class]])
 	{
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key" stringValue: @"headerView"];
-	  [elem addAttribute: attr];	  
+	  [elem addAttribute: attr];
 	}
 
       if ([obj isKindOfClass: [NSWindow class]])
@@ -1678,13 +1696,13 @@ static NSUInteger _count = INT_MAX;
 	  [self _addRect: c toElement: elem withName: @"contentRect"];
 	  [self _addRect: s toElement: elem withName: @"screenRect"];
 	  [self _collectObjectsFromObject: [obj contentView]
-				 withNode: elem];
+			       withParent: elem];
 	}
 
       if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
 	  id sv = [obj superview];
-	  
+
 	  if (obj == [[obj window] contentView])
 	    {
 	      NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
@@ -1704,24 +1722,24 @@ static NSUInteger _count = INT_MAX;
 	    {
 	      NSView *cv = [obj contentView];
 	      [self _collectObjectsFromObject: cv
-				     withNode: elem];
+				   withParent: elem];
 	    }
 	  else
 	    {
 	      if ([obj isKindOfClass: [NSTabView class]] == NO)
 		{
 		  NSArray *subviews = [obj subviews];
-		  
+
 		  if ([subviews count] > 0)
 		    {
 		      NSEnumerator *en = [subviews objectEnumerator];
 		      id v = nil;
 		      NSXMLElement *subviewsElement = [NSXMLNode elementWithName: @"subviews"];
-		      
+
 		      while ((v = [en nextObject]) != nil)
 			{
 			  [self _collectObjectsFromObject: v
-						 withNode: subviewsElement];
+					       withParent: subviewsElement];
 			}
 		      [elem addChild: subviewsElement];
 		    }
@@ -1729,42 +1747,49 @@ static NSUInteger _count = INT_MAX;
 	    }
 
 	  if ([obj respondsToSelector: @selector(tabViewItems)])
-	      {
-		NSArray *items = [obj tabViewItems];
-		
-		if ([items count] > 0)
-		  {
-		    NSEnumerator *en = [items objectEnumerator];
-		    id v = nil;
-		    NSXMLElement *itemsElement = [NSXMLNode elementWithName: @"tabViewItems"];
-		    
-		    while ((v = [en nextObject]) != nil)
-		      {
-			[self _collectObjectsFromObject: v
-					       withNode: itemsElement];
-		      }
-		    [elem addChild: itemsElement];
-		  }
-	      }
+	    {
+	      NSArray *items = [obj tabViewItems];
+
+	      if ([items count] > 0)
+		{
+		  NSEnumerator *en = [items objectEnumerator];
+		  id v = nil;
+		  NSXMLElement *itemsElement = [NSXMLNode elementWithName: @"tabViewItems"];
+
+		  while ((v = [en nextObject]) != nil)
+		    {
+		      [self _collectObjectsFromObject: v
+					   withParent: itemsElement];
+		    }
+		  [elem addChild: itemsElement];
+		}
+	    }
 	}
+
+      // Add the holding priorities for NSSplitView.  GNUstep doesn't have these so we need to generate it...
+      if ([obj isKindOfClass: [NSSplitView class]])
+	{
+	  [self _addHoldingPrioritiesForSplitView: obj toElement: elem];
+	}
+
       /* Cheap way to not encoding fake table columns to prevent crash on the mac when reading the XIB.
 	 Not ideal, but it should work for now. */
       /*
-      if ([obj respondsToSelector: @selector(tableColumns)])
+	if ([obj respondsToSelector: @selector(tableColumns)])
 	{
-	  [self _addTableColumns: [obj tableColumns]
-		       toElement: elem];
+	[self _addTableColumns: [obj tableColumns]
+	toElement: elem];
 	}
       */
     }
 }
 
 - (void) _collectObjectsFromObject: (id)obj
-			  withNode: (NSXMLElement  *)node
+			withParent: (NSXMLElement  *)node
 {
   [self _collectObjectsFromObject: obj
 			   forKey: nil
-			 withNode: node];
+		       withParent: node];
 }
 
 
@@ -1777,7 +1802,7 @@ static NSUInteger _count = INT_MAX;
   while ((o = [en nextObject]) != nil)
     {
       [self _collectObjectsFromObject: o
-			     withNode: parentNode];
+			   withParent: parentNode];
     }
   [_gormDocument reactivateEditors];
 }
@@ -1787,45 +1812,45 @@ static NSUInteger _count = INT_MAX;
   NSString *plugInId = @"com.apple.InterfaceBuilder.CocoaPlugin";
   NSString *typeId = @"com.apple.InterfaceBuilder3.Cocoa.XIB";
   NSString *toolVersion = @"21507";
-  
+
   // Build root element...
   NSXMLElement *rootElement = [NSXMLNode elementWithName: @"document"];
   NSXMLNode *attr = [NSXMLNode attributeWithName: @"type"
 				     stringValue: typeId];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"version" stringValue: @"3.0"];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"toolsVersion" stringValue: toolVersion];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"targetRuntime" stringValue: @"MacOSX.Cocoa"];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"useAutolayout" stringValue: @"YES"];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"propertyAccessControl" stringValue: @"none"];
   [rootElement addAttribute: attr];
-  
+
   attr = [NSXMLNode attributeWithName: @"customObjectInstantiationMethod" stringValue: @"direct"];
   [rootElement addAttribute: attr];
-  
+
   // Build dependencies...
   NSXMLElement *dependencies = [NSXMLNode elementWithName: @"dependencies"];
   NSXMLElement *deployment = [NSXMLNode elementWithName: @"deployment"];
   attr = [NSXMLNode attributeWithName: @"identifier" stringValue: @"macosx"];
   [deployment addAttribute: attr];
   [dependencies addChild: deployment];
-  
+
   NSXMLElement *plugIn = [NSXMLNode elementWithName: @"plugIn"];
   attr = [NSXMLNode attributeWithName: @"identifier" stringValue: plugInId];
   [plugIn addAttribute: attr];
   attr = [NSXMLNode attributeWithName: @"version" stringValue: toolVersion];
   [plugIn addAttribute: attr];
   [dependencies addChild: plugIn];
-  
+
   NSXMLElement *capability = [NSXMLNode elementWithName: @"capability"];
   attr = [NSXMLNode attributeWithName: @"name" stringValue: @"documents saved in the Xcode 8 format"];
   [capability addAttribute: attr];
@@ -1833,19 +1858,19 @@ static NSUInteger _count = INT_MAX;
   [capability addAttribute: attr];
   [dependencies addChild: capability];
   [rootElement addChild: dependencies];
-  
-  NSXMLDocument *xibDocument = [NSXMLNode documentWithRootElement: rootElement];      
+
+  NSXMLDocument *xibDocument = [NSXMLNode documentWithRootElement: rootElement];
   NSXMLElement *objects = [NSXMLNode elementWithName: @"objects"];
 
   // Add placeholder objects to XIB
   [self _createPlaceholderObjects: objects];
-  
+
   // add body to document...
   [rootElement addChild: objects];
-  
+
   // Recursively build the XIB document from the GormDocument...
   [self _buildXIBDocumentWithParentNode: objects];
-  
+
   NSData *data = [xibDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLDocumentTidyXML | NSXMLNodeCompactEmptyElement ];
 
   return data;
@@ -1859,11 +1884,11 @@ static NSUInteger _count = INT_MAX;
     {
       NSData *data = [self data];
       NSString *xmlString = [[NSString alloc] initWithBytes: [data bytes] length: [data length] encoding: NSUTF8StringEncoding];
-      
+
       AUTORELEASE(xmlString);
       result = [xmlString writeToFile: name atomically: YES];
     }
-  
+
   return result;
 }
 
