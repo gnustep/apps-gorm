@@ -153,7 +153,7 @@ NSImage *browserImage = nil;
 	  RELEASE(tableColumn); 
 	  
 	  // expand all of the items in the classesView...
-	  [outlineView expandItem: @"NSObject"];
+	  // [outlineView expandItem: @"NSObject"];
 	  [outlineView setFrame: scrollRect];
 	  
 	  // allocate the NSBrowser view.
