@@ -1084,8 +1084,6 @@ static NSUInteger _count = INT_MAX;
 
 - (void) _addCellsFromMatrix: (NSMatrix *)matrix toElement: (NSXMLElement *)elem
 {
-  NSLog(@"cells = %@\nelem = %@", [matrix cells], elem);
-
   NSRect rect = [matrix frame];
   NSSize cellSize = [matrix cellSize];
   NSSize inter = [matrix intercellSpacing];
@@ -1096,7 +1094,11 @@ static NSUInteger _count = INT_MAX;
   NSArray *cells = [matrix cells];
   NSUInteger i = 0;
   NSXMLElement *cellsElem = [NSXMLNode elementWithName: @"cells"];
+  NSString *cellClass = nil;
 
+  NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
+  NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
+  
   [elem addChild: cellsElem];
   for (c = 0; c < itemsPerCol; c++)
     {
@@ -1108,10 +1110,27 @@ static NSUInteger _count = INT_MAX;
 
 	  i = (c * itemsPerCol) + r;
 	  cell = [cells objectAtIndex: i];
+	  if (cellClass == nil)
+	    {
+	      cellClass = NSStringFromClass([cell class]);
+	    }
+	  
 	  [self _collectObjectsFromObject: cell
 				 withNode: columnElem];
 	}
       [cellsElem addChild: columnElem];
+    }
+
+  // Add the cell class, so that it doesn't crash on reload...
+  if (cellClass != nil)
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"cellClass" stringValue: cellClass];
+      [elem addAttribute: attr];
+    }
+  else
+    {
+      NSXMLNode *attr = [NSXMLNode attributeWithName: @"cellClass" stringValue: @"NSButtonCell"];
+      [elem addAttribute: attr];
     }
 }
 
