@@ -432,7 +432,13 @@
 	  className = [classManager nonCustomSuperClassOf: className];
 	}
       clz = [unarchiver classForClassName: className];
-      // [obj setBaseWindowClass: clz];
+    }
+  else if ([obj isKindOfClass: [NSMatrix class]])
+    {
+      if ([obj cellClass] == NULL)
+	{
+	  [obj setCellClass: [NSButtonCell class]];
+	}
     }
   else if ([obj respondsToSelector: @selector(setTarget:)] &&
            [obj respondsToSelector: @selector(setAction:)] &&
