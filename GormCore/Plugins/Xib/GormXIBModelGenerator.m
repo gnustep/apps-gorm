@@ -272,31 +272,33 @@ static NSUInteger _count = INT_MAX;
 
       _signatures =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
-				@"char", @"c",
-			      @"NSUInteger", @"i", // this might be wrong.. maybe it should be NSInteger or just int
-			      @"short",      @"s",
-			      @"long",       @"l",
-			      @"long long",  @"q",
-			      @"BOOL",       @"C", // unsigned char
-			      @"NSUInteger", @"I",
+				@"char",        @"c",
+			      @"NSUInteger",    @"i", // this might be wrong.. maybe it should be NSInteger or just int
+			      @"short",         @"s",
+			      @"long",          @"l",
+			      @"long long",     @"q",
+			      @"BOOL",          @"C", // unsigned char
+			      @"NSUInteger",    @"I",
 			      @"unsigned short",@"S",
 			      @"unsigned long", @"L",
-			      @"long long",  @"Q",
-			      @"float",      @"f",
-			      @"CGFloat",    @"d",
-			      @"bool",       @"B",
-			      @"void",       @"v",
-			      @"char*",      @"*",
-			      @"id",         @"@",
-			      @"Class",      @"#",
-				   @"SEL",        @":",
-			      @"NSRect",     @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}",
-			      @"NSSize",     @"{_NSSize=dd}",
-			      @"NSPoint",    @"{_NSPoint=dd}",
+			      @"long long",     @"Q",
+			      @"float",         @"f",
+			      @"CGFloat",       @"d",
+			      @"bool",          @"B",
+			      @"void",          @"v",
+			      @"char*",         @"*",
+			      @"id",            @"@",
+			      @"Class",         @"#",
+			      @"SEL",           @":",
+			      @"NSRect",        @"{_NSRect={_NSPoint=dd}{_NSSize=dd}}",
+			      @"NSSize",        @"{_NSSize=dd}",
+			      @"NSPoint",       @"{_NSPoint=dd}",
 			      nil];
       _skipClass =
 	[[NSArray alloc] initWithObjects:
 			   @"NSBrowserCell",
+			 @"NSDateFormatter",
+			 @"NSNumberFormatter",
 			 nil];
 
       _skipCollectionForKey =
@@ -309,6 +311,7 @@ static NSUInteger _count = INT_MAX;
 			 @"owner",
 			 @"subviews",
 			 @"contentView",
+			 @"titleCell",
 			 nil];
 
       _singletonObjects =
@@ -448,6 +451,7 @@ static NSUInteger _count = INT_MAX;
 			 @"nextKeyView",
 			 @"prototype",
 			 @"keyCell",
+			 @"isLenient",
 			 nil];
     }
 }
@@ -1092,6 +1096,7 @@ static NSUInteger _count = INT_MAX;
   NSUInteger c = 0;
   NSUInteger r = 0;
   NSArray *cells = [matrix cells];
+  NSUInteger count = [cells count];
   NSUInteger i = 0;
   NSXMLElement *cellsElem = [NSXMLNode elementWithName: @"cells"];
   NSString *cellClass = nil;
@@ -1099,28 +1104,38 @@ static NSUInteger _count = INT_MAX;
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
   NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
 
-  [elem addChild: cellsElem];
-  for (c = 0; c < itemsPerCol; c++)
+  if (count > 0)
     {
-      NSXMLElement *columnElem = [NSXMLNode elementWithName: @"column"];
-
-      for (r = 0; r < itemsPerRow; r++)
+      [elem addChild: cellsElem];
+      for (c = 0; c < itemsPerCol; c++)
 	{
-	  id cell = nil;
-
-	  i = (c * itemsPerCol) + r;
-	  cell = [cells objectAtIndex: i];
-	  if (cellClass == nil)
+	  NSXMLElement *columnElem = [NSXMLNode elementWithName: @"column"];
+	  
+	  for (r = 0; r < itemsPerRow; r++)
 	    {
-	      cellClass = NSStringFromClass([cell class]);
+	      id cell = nil;
+	      
+	      i = (c * itemsPerCol) + r;
+
+	      // If we go past the end of the array...
+	      if (i >= count)
+		{
+		  continue;
+		}
+	      
+	      cell = [cells objectAtIndex: i];
+	      if (cellClass == nil)
+		{
+		  cellClass = NSStringFromClass([cell class]);
+		}
+	      
+	      [self _collectObjectsFromObject: cell
+				   withParent: columnElem];
 	    }
-
-	  [self _collectObjectsFromObject: cell
-			       withParent: columnElem];
+	  [cellsElem addChild: columnElem];
 	}
-      [cellsElem addChild: columnElem];
     }
-
+  
   // Add the cell class, so that it doesn't crash on reload...
   if (cellClass != nil)
     {
