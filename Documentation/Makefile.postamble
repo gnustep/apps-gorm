@@ -15,15 +15,15 @@ before-all:: version.texi
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
-		  ./InterfaceBuilder/*.h 2> /dev/null
+		  ../InterfaceBuilder/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory GormCore \
 		  -Declared GormCore \
-		  ./GormCore/*.h 2> /dev/null
+		  ../GormCore/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory GormObjCHeaderParser \
 		  -Declared GormObjCHeaderParser \
-		  ./GormObjCHeaderParser/*.h 2> /dev/null
+		  ../GormObjCHeaderParser/*.h 2> /dev/null
 
 # Things to do after compiling
 # after-all::
