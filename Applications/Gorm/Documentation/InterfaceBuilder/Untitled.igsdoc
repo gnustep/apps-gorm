@@ -1,0 +1,1092 @@
+{
+    categories = {
+	NSApplication = {
+	    GormSpecific = IBApplicationAdditions;
+	    IBConnections = IBConnectors;
+	};
+	NSCell = {
+	    IBCellAdditions = IBCellAdditions;
+	};
+	NSNibConnector = {
+	    IBConnectorsProtocol = IBConnectors;
+	};
+	NSObject = {
+	    IBNibInstantiation = IBConnectors;
+	    IBObjectAdditions = IBObjectAdditions;
+	};
+	NSView = {
+	    IBViewAdditions = IBViewAdditions;
+	    IBViewResourceDraggingDelegates = IBViewResourceDragging;
+	};
+    };
+    category = {
+	"NSApplication(GormSpecific)" = IBApplicationAdditions;
+	"NSApplication(IBConnections)" = IBConnectors;
+	"NSCell(IBCellAdditions)" = IBCellAdditions;
+	"NSNibConnector(IBConnectorsProtocol)" = IBConnectors;
+	"NSObject(IBNibInstantiation)" = IBConnectors;
+	"NSObject(IBObjectAdditions)" = IBObjectAdditions;
+	"NSView(IBViewAdditions)" = IBViewAdditions;
+	"NSView(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+    };
+    class = {
+	IBInspector = IBInspector;
+	IBInspectorManager = IBInspectorManager;
+	IBInspectorMode = IBInspectorMode;
+	IBPalette = IBPalette;
+	IBPlugin = IBPlugin;
+	IBResourceManager = IBResourceManager;
+    };
+    classvars = {
+	IBInspector = {
+	    object = IBInspector;
+	    okButton = IBInspector;
+	    revertButton = IBInspector;
+	    window = IBInspector;
+	};
+	IBInspectorManager = {
+	    currentMode = IBInspectorManager;
+	    modes = IBInspectorManager;
+	    selectedObject = IBInspectorManager;
+	};
+	IBInspectorMode = {
+	    identifier = IBInspectorMode;
+	    inspectorClassName = IBInspectorMode;
+	    localizedLabel = IBInspectorMode;
+	    object = IBInspectorMode;
+	    ordering = IBInspectorMode;
+	};
+	IBPalette = {
+	    icon = IBPalette;
+	    originalWindow = IBPalette;
+	    paletteDocument = IBPalette;
+	};
+	IBResourceManager = {
+	    document = IBResourceManager;
+	};
+    };
+    ivariable = {
+	currentMode = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	document = {
+	    IBResourceManager = IBResourceManager;
+	};
+	icon = {
+	    IBPalette = IBPalette;
+	};
+	identifier = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	inspectorClassName = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	localizedLabel = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	modes = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	object = {
+	    IBInspector = IBInspector;
+	    IBInspectorMode = IBInspectorMode;
+	};
+	okButton = {
+	    IBInspector = IBInspector;
+	};
+	ordering = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	originalWindow = {
+	    IBPalette = IBPalette;
+	};
+	paletteDocument = {
+	    IBPalette = IBPalette;
+	};
+	revertButton = {
+	    IBInspector = IBInspector;
+	};
+	selectedObject = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	window = {
+	    IBInspector = IBInspector;
+	};
+    };
+    method = {
+	"+acceptedViewResourcePasteboardTypes" = {
+	    "NSView(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"+canSubstituteForClass:" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"+objectForView:" = {
+	    IBPalette = IBPalette;
+	};
+	"+registerResourceManagerClass:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"+registerResourceManagerClass:forFrameworks:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"+registerViewResourceDraggingDelegate:" = {
+	    "NSView(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"+registeredResourceManagerClassesForFramework:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"+registeredViewResourceDraggingDelegates" = {
+	    "NSView(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"+sharedInspectorManager" = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	"+sharedInstance" = {
+	    IBPlugin = IBPlugin;
+	};
+	"+typeForView:" = {
+	    IBPalette = IBPalette;
+	};
+	"+unregisterViewResourceDraggingDelegate:" = {
+	    "NSView(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"-acceptsColor:atPoint:" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-acceptsResourcesFromPasteboard:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-acceptsTypeFromArray:" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-acceptsViewResourceFromPasteboard:forObject:atPoint:" = {
+	    "(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"-actionsOfClass:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-activate" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-activeDocument" = {
+	    "(IB)" = IBApplicationAdditions;
+	};
+	"-addConnector:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-addInspectorModeWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:" = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	"-addResources:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-addResourcesFromPasteboard:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-allConnectors" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-allowsAltDragging" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-application:didModifyFileAtPath:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-applicationIconForInterfaceStyle:inLanguage:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-associateObject:type:with:" = {
+	    IBPalette = IBPalette;
+	};
+	"-attachObject:toParent:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-attachObject:toParent:withName:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-attachObjects:toParent:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-awakeFromDocument:" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-cellWillAltDragWithSize:" = {
+	    "(IBCellProtocol)" = IBCellProtocol;
+	};
+	"-classForObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-classInspectorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-close" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-closeSubeditors" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-connectDestination" = {
+	    "NSApplication(IBConnections)" = IBConnectors;
+	};
+	"-connectInspectorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-connectSource" = {
+	    "NSApplication(IBConnections)" = IBConnectors;
+	};
+	"-connectorsForDestination:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-connectorsForDestination:ofClass:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-connectorsForSource:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-connectorsForSource:ofClass:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-containsFileAtPath:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-containsObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-containsObjectWithName:forParent:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-copyObject:type:toPasteboard:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-copyObjects:type:toPasteboard:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-copySelection" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-deactivate" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-dealloc" = {
+	    IBInspector = IBInspector;
+	    IBPalette = IBPalette;
+	};
+	"-deleteSelection" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-depositColor:atPoint:" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-depositViewResourceFromPasteboard:onObject:atPoint:" = {
+	    "(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"-destination" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-detachObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-detachObject:closeEditor:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-detachObjects:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-detachObjects:closeEditors:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-didLoad" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-displayConnectionBetween:and:" = {
+	    "NSApplication(IBConnections)" = IBConnectors;
+	};
+	"-document" = {
+	    "(IBEditors)" = IBEditors;
+	    IBResourceManager = IBResourceManager;
+	};
+	"-document:didAddDraggedObjects:fromDraggedLibraryView:" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-documentForObject:" = {
+	    "(IB)" = IBApplicationAdditions;
+	};
+	"-documentPath" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-drawSelection" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-editedObject" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-editor:didCloseForObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-editorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-editorForObject:create:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-editorForObject:inEditor:create:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-establishConnection" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-fileName" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-fileType" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-filesForFileType:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-finishInstantiate" = {
+	    IBPalette = IBPalette;
+	};
+	"-helpInspectorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-ibIncompatibleProperties" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-identifier" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-imageForViewer" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-indexOfModeWithIdentifier:" = {
+	    IBInspectorManager = IBInspectorManager;
+	};
+	"-initWithDocument:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-initWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-initWithObject:inDocument:" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-initialFirstResponder" = {
+	    IBInspector = IBInspector;
+	};
+	"-inspectorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-isAncestorOfProject:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-isConnecting" = {
+	    "NSApplication(IBConnections)" = IBConnectors;
+	};
+	"-isDescendantOfProject:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-isLive" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-isLocalized" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-isReadOnly" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-isTestingInterface" = {
+	    "(IB)" = IBApplicationAdditions;
+	};
+	"-label" = {
+	    "(IBConnectors)" = IBConnectors;
+	    IBPlugin = IBPlugin;
+	};
+	"-language" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-languageForFileAtPath:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-libraryNibNames" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-linkImage" = {
+	    "NSApplication(GormSpecific)" = IBApplicationAdditions;
+	};
+	"-localizedLabel" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-mainNibFileForInterfaceStyle:inLanguage:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-makeSelectionVisible:" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-maximumSizeForCellSize:knobPosition:" = {
+	    "(IBCellProtocol)" = IBCellProtocol;
+	};
+	"-maximumSizeFromKnobPosition:" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-minimumSizeForCellSize:knobPosition:" = {
+	    "(IBCellProtocol)" = IBCellProtocol;
+	};
+	"-minimumSizeFromKnobPosition:" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-nameForObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-nibInstantiate" = {
+	    "(IBConnectors)" = IBConnectors;
+	    "NSObject(IBNibInstantiation)" = IBConnectors;
+	};
+	"-nibLabel:" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-object" = {
+	    IBInspector = IBInspector;
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-objectForName:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-objectNameForInspectorTitle" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-objects" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-ok:" = {
+	    IBInspector = IBInspector;
+	};
+	"-okButton" = {
+	    IBInspector = IBInspector;
+	};
+	"-openEditorForObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-openSubeditorForObject:" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-orderFront" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-ordering" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-originalWindow" = {
+	    IBPalette = IBPalette;
+	};
+	"-outletsOfClass:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-paletteDocument" = {
+	    IBPalette = IBPalette;
+	};
+	"-paletteIcon" = {
+	    IBPalette = IBPalette;
+	};
+	"-parentEditorForEditor:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-parentOfObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-pasteInSelection" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-pasteType:fromPasteboard:parent:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-pasteboardObjectsForDraggedLibraryView:" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-path" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-pathForFilename:" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-placeView:" = {
+	    "(IBViewProtocol)" = IBViewProtocol;
+	};
+	"-preferencesView" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-project" = {
+	    "(IBProjectFiles)" = IBProjectFiles;
+	};
+	"-project:didAddFile:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-project:didChangeLocalizationOfFile:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-project:didRemoveFile:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-projectDirectory" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-projectManager" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-projectName" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-removeConnector:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-replaceObject:withObject:" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-requiredFrameworks" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-resetObject:" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-resignSelectionForEditor:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-resourceFileTypes" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-resourcePasteboardTypes" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-resourcesForObjects:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+	"-revert:" = {
+	    IBInspector = IBInspector;
+	};
+	"-revertButton" = {
+	    IBInspector = IBInspector;
+	};
+	"-rootProject" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-selectObjects:" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-selectedObject" = {
+	    "(IB)" = IBApplicationAdditions;
+	};
+	"-selection" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-selectionCount" = {
+	    "(IBSelectionOwners)" = IBEditors;
+	};
+	"-selectionOwner" = {
+	    "(IB)" = IBApplicationAdditions;
+	};
+	"-setDestination:" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-setIdentifier:" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-setInspectorClassName:" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-setLabel:" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-setLocalizedLabel:" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-setName:forObject:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-setObject:" = {
+	    IBInspector = IBInspector;
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-setOrdering:" = {
+	    IBInspectorMode = IBInspectorMode;
+	};
+	"-setSelectionFromEditor:" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-setSource:" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-shouldDrawConnectionFrame" = {
+	    "(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"-sizeInspectorClassName" = {
+	    "(IBObjectProtocol)" = IBObjectProtocol;
+	};
+	"-source" = {
+	    "(IBConnectors)" = IBConnectors;
+	};
+	"-startConnecting" = {
+	    "NSApplication(GormSpecific)" = IBApplicationAdditions;
+	};
+	"-stopConnecting" = {
+	    "NSApplication(IBConnections)" = IBConnectors;
+	};
+	"-subprojects" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-superproject" = {
+	    "(IBProjects)" = IBProjects;
+	};
+	"-textDidBeginEditing:" = {
+	    IBInspector = IBInspector;
+	};
+	"-touch" = {
+	    "(IBDocuments)" = IBDocuments;
+	};
+	"-touch:" = {
+	    IBInspector = IBInspector;
+	};
+	"-validateEditing" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-viewResourcePasteboardTypes" = {
+	    "(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	};
+	"-wantsButtons" = {
+	    IBInspector = IBInspector;
+	};
+	"-wantsSelection" = {
+	    "(IBEditors)" = IBEditors;
+	};
+	"-willUnload" = {
+	    IBPlugin = IBPlugin;
+	};
+	"-window" = {
+	    "(IBEditors)" = IBEditors;
+	    IBInspector = IBInspector;
+	};
+	"-writeToDocumentPath:" = {
+	    IBResourceManager = IBResourceManager;
+	};
+    };
+    output = {
+	"../../../InterfaceBuilder/IBApplicationAdditions.h" = (
+	    "InterfaceBuilder/IBApplicationAdditions.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBCellAdditions.h" = (
+	    "InterfaceBuilder/IBCellAdditions.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBCellProtocol.h" = (
+	    "InterfaceBuilder/IBCellProtocol.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBConnectors.h" = (
+	    "InterfaceBuilder/IBConnectors.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBDefines.h" = (
+	    "InterfaceBuilder/IBDefines.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBDocuments.h" = (
+	    "InterfaceBuilder/IBDocuments.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBEditors.h" = (
+	    "InterfaceBuilder/IBEditors.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBInspector.h" = (
+	    "InterfaceBuilder/IBInspector.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBInspectorManager.h" = (
+	    "InterfaceBuilder/IBInspectorManager.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBInspectorMode.h" = (
+	    "InterfaceBuilder/IBInspectorMode.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBObjectAdditions.h" = (
+	    "InterfaceBuilder/IBObjectAdditions.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBObjectProtocol.h" = (
+	    "InterfaceBuilder/IBObjectProtocol.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBPalette.h" = (
+	    "InterfaceBuilder/IBPalette.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBPlugin.h" = (
+	    "InterfaceBuilder/IBPlugin.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBProjectFiles.h" = (
+	    "InterfaceBuilder/IBProjectFiles.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBProjects.h" = (
+	    "InterfaceBuilder/IBProjects.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBResourceManager.h" = (
+	    "InterfaceBuilder/IBResourceManager.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBSystem.h" = (
+	    "InterfaceBuilder/IBSystem.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBViewAdditions.h" = (
+	    "InterfaceBuilder/IBViewAdditions.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBViewProtocol.h" = (
+	    "InterfaceBuilder/IBViewProtocol.gsdoc"
+	);
+	"../../../InterfaceBuilder/IBViewResourceDragging.h" = (
+	    "InterfaceBuilder/IBViewResourceDragging.gsdoc"
+	);
+	"../../../InterfaceBuilder/InterfaceBuilder.h" = (
+	    "InterfaceBuilder/InterfaceBuilder.gsdoc"
+	);
+    };
+    protocol = {
+	"(IB)" = IBApplicationAdditions;
+	"(IBCellProtocol)" = IBCellProtocol;
+	"(IBConnectors)" = IBConnectors;
+	"(IBDocuments)" = IBDocuments;
+	"(IBEditors)" = IBEditors;
+	"(IBObjectProtocol)" = IBObjectProtocol;
+	"(IBProjectFiles)" = IBProjectFiles;
+	"(IBProjects)" = IBProjects;
+	"(IBSelectionOwners)" = IBEditors;
+	"(IBViewProtocol)" = IBViewProtocol;
+	"(IBViewResourceDraggingDelegates)" = IBViewResourceDragging;
+	"NSObject(IBObjectAdditions)" = IBObjectAdditions;
+    };
+    source = {
+	"../../../InterfaceBuilder/IBApplicationAdditions.h" = (
+	    "../../../InterfaceBuilder/IBApplicationAdditions.m"
+	);
+	"../../../InterfaceBuilder/IBCellAdditions.h" = (
+	    "../../../InterfaceBuilder/IBCellAdditions.h"
+	);
+	"../../../InterfaceBuilder/IBCellProtocol.h" = (
+	    "../../../InterfaceBuilder/IBCellProtocol.h"
+	);
+	"../../../InterfaceBuilder/IBConnectors.h" = (
+	    "../../../InterfaceBuilder/IBConnectors.m"
+	);
+	"../../../InterfaceBuilder/IBDefines.h" = (
+	    "../../../InterfaceBuilder/IBDefines.h"
+	);
+	"../../../InterfaceBuilder/IBDocuments.h" = (
+	    "../../../InterfaceBuilder/IBDocuments.m"
+	);
+	"../../../InterfaceBuilder/IBEditors.h" = (
+	    "../../../InterfaceBuilder/IBEditors.m"
+	);
+	"../../../InterfaceBuilder/IBInspector.h" = (
+	    "../../../InterfaceBuilder/IBInspector.m"
+	);
+	"../../../InterfaceBuilder/IBInspectorManager.h" = (
+	    "../../../InterfaceBuilder/IBInspectorManager.m"
+	);
+	"../../../InterfaceBuilder/IBInspectorMode.h" = (
+	    "../../../InterfaceBuilder/IBInspectorMode.m"
+	);
+	"../../../InterfaceBuilder/IBObjectAdditions.h" = (
+	    "../../../InterfaceBuilder/IBObjectAdditions.m"
+	);
+	"../../../InterfaceBuilder/IBObjectProtocol.h" = (
+	    "../../../InterfaceBuilder/IBObjectProtocol.h"
+	);
+	"../../../InterfaceBuilder/IBPalette.h" = (
+	    "../../../InterfaceBuilder/IBPalette.m"
+	);
+	"../../../InterfaceBuilder/IBPlugin.h" = (
+	    "../../../InterfaceBuilder/IBPlugin.m"
+	);
+	"../../../InterfaceBuilder/IBProjectFiles.h" = (
+	    "../../../InterfaceBuilder/IBProjectFiles.h"
+	);
+	"../../../InterfaceBuilder/IBProjects.h" = (
+	    "../../../InterfaceBuilder/IBProjects.h"
+	);
+	"../../../InterfaceBuilder/IBResourceManager.h" = (
+	    "../../../InterfaceBuilder/IBResourceManager.m"
+	);
+	"../../../InterfaceBuilder/IBSystem.h" = (
+	    "../../../InterfaceBuilder/IBSystem.h"
+	);
+	"../../../InterfaceBuilder/IBViewAdditions.h" = (
+	    "../../../InterfaceBuilder/IBViewAdditions.h"
+	);
+	"../../../InterfaceBuilder/IBViewProtocol.h" = (
+	    "../../../InterfaceBuilder/IBViewProtocol.h"
+	);
+	"../../../InterfaceBuilder/IBViewResourceDragging.h" = (
+	    "../../../InterfaceBuilder/IBViewResourceDragging.h"
+	);
+	"../../../InterfaceBuilder/InterfaceBuilder.h" = (
+	    "../../../InterfaceBuilder/InterfaceBuilder.h"
+	);
+    };
+    super = {
+	IBInspector = NSObject;
+	IBInspectorManager = NSObject;
+	IBInspectorMode = NSObject;
+	IBPalette = NSObject;
+	IBPlugin = NSObject;
+	IBResourceManager = NSObject;
+    };
+    title = {
+	IBApplicationAdditions = "IBApplicationAdditions documentation";
+	IBCellAdditions = "IBCellAdditions documentation";
+	IBCellProtocol = "IBCellProtocol documentation";
+	IBConnectors = "IBConnectors documentation";
+	IBDefines = "IBDefines documentation";
+	IBDocuments = "IBDocuments documentation";
+	IBEditors = "IBEditors documentation";
+	IBInspector = "IBInspector class documentation";
+	IBInspectorManager = "IBInspectorManager class documentation";
+	IBInspectorMode = "IBInspectorMode class documentation";
+	IBObjectAdditions = "IBObjectAdditions documentation";
+	IBObjectProtocol = "IBObjectProtocol documentation";
+	IBPalette = "IBPalette class documentation";
+	IBPlugin = "IBPlugin class documentation";
+	IBProjectFiles = "IBProjectFiles documentation";
+	IBProjects = "IBProjects documentation";
+	IBResourceManager = "IBResourceManager class documentation";
+	IBViewAdditions = "IBViewAdditions documentation";
+	IBViewProtocol = "IBViewProtocol documentation";
+	IBViewResourceDragging = "IBViewResourceDragging documentation";
+    };
+    type = {
+	IBKnobPosition = IBDefines;
+    };
+    unitmethods = {
+	"(IB)" = {
+	    "-activeDocument" = IBApplicationAdditions;
+	    "-documentForObject:" = IBApplicationAdditions;
+	    "-isTestingInterface" = IBApplicationAdditions;
+	    "-selectedObject" = IBApplicationAdditions;
+	    "-selectionOwner" = IBApplicationAdditions;
+	};
+	"(IBCellProtocol)" = {
+	    "-cellWillAltDragWithSize:" = IBCellProtocol;
+	    "-maximumSizeForCellSize:knobPosition:" = IBCellProtocol;
+	    "-minimumSizeForCellSize:knobPosition:" = IBCellProtocol;
+	};
+	"(IBConnectors)" = {
+	    "-destination" = IBConnectors;
+	    "-establishConnection" = IBConnectors;
+	    "-label" = IBConnectors;
+	    "-nibInstantiate" = IBConnectors;
+	    "-replaceObject:withObject:" = IBConnectors;
+	    "-setDestination:" = IBConnectors;
+	    "-setLabel:" = IBConnectors;
+	    "-setSource:" = IBConnectors;
+	    "-source" = IBConnectors;
+	};
+	"(IBDocuments)" = {
+	    "-actionsOfClass:" = IBDocuments;
+	    "-addConnector:" = IBDocuments;
+	    "-allConnectors" = IBDocuments;
+	    "-attachObject:toParent:" = IBDocuments;
+	    "-attachObject:toParent:withName:" = IBDocuments;
+	    "-attachObjects:toParent:" = IBDocuments;
+	    "-classForObject:" = IBDocuments;
+	    "-connectorsForDestination:" = IBDocuments;
+	    "-connectorsForDestination:ofClass:" = IBDocuments;
+	    "-connectorsForSource:" = IBDocuments;
+	    "-connectorsForSource:ofClass:" = IBDocuments;
+	    "-containsObject:" = IBDocuments;
+	    "-containsObjectWithName:forParent:" = IBDocuments;
+	    "-copyObject:type:toPasteboard:" = IBDocuments;
+	    "-copyObjects:type:toPasteboard:" = IBDocuments;
+	    "-detachObject:" = IBDocuments;
+	    "-detachObject:closeEditor:" = IBDocuments;
+	    "-detachObjects:" = IBDocuments;
+	    "-detachObjects:closeEditors:" = IBDocuments;
+	    "-documentPath" = IBDocuments;
+	    "-editor:didCloseForObject:" = IBDocuments;
+	    "-editorForObject:create:" = IBDocuments;
+	    "-editorForObject:inEditor:create:" = IBDocuments;
+	    "-nameForObject:" = IBDocuments;
+	    "-objectForName:" = IBDocuments;
+	    "-objects" = IBDocuments;
+	    "-openEditorForObject:" = IBDocuments;
+	    "-outletsOfClass:" = IBDocuments;
+	    "-parentEditorForEditor:" = IBDocuments;
+	    "-parentOfObject:" = IBDocuments;
+	    "-pasteType:fromPasteboard:parent:" = IBDocuments;
+	    "-removeConnector:" = IBDocuments;
+	    "-resignSelectionForEditor:" = IBDocuments;
+	    "-setName:forObject:" = IBDocuments;
+	    "-setSelectionFromEditor:" = IBDocuments;
+	    "-touch" = IBDocuments;
+	};
+	"(IBEditors)" = {
+	    "-acceptsTypeFromArray:" = IBEditors;
+	    "-activate" = IBEditors;
+	    "-close" = IBEditors;
+	    "-closeSubeditors" = IBEditors;
+	    "-deactivate" = IBEditors;
+	    "-deleteSelection" = IBEditors;
+	    "-document" = IBEditors;
+	    "-editedObject" = IBEditors;
+	    "-initWithObject:inDocument:" = IBEditors;
+	    "-openSubeditorForObject:" = IBEditors;
+	    "-orderFront" = IBEditors;
+	    "-pasteInSelection" = IBEditors;
+	    "-resetObject:" = IBEditors;
+	    "-validateEditing" = IBEditors;
+	    "-wantsSelection" = IBEditors;
+	    "-window" = IBEditors;
+	};
+	"(IBObjectProtocol)" = {
+	    "+canSubstituteForClass:" = IBObjectProtocol;
+	    "-awakeFromDocument:" = IBObjectProtocol;
+	    "-classInspectorClassName" = IBObjectProtocol;
+	    "-connectInspectorClassName" = IBObjectProtocol;
+	    "-editorClassName" = IBObjectProtocol;
+	    "-helpInspectorClassName" = IBObjectProtocol;
+	    "-ibIncompatibleProperties" = IBObjectProtocol;
+	    "-imageForViewer" = IBObjectProtocol;
+	    "-inspectorClassName" = IBObjectProtocol;
+	    "-nibLabel:" = IBObjectProtocol;
+	    "-objectNameForInspectorTitle" = IBObjectProtocol;
+	    "-sizeInspectorClassName" = IBObjectProtocol;
+	};
+	"(IBProjectFiles)" = {
+	    "-fileName" = IBProjectFiles;
+	    "-fileType" = IBProjectFiles;
+	    "-isLocalized" = IBProjectFiles;
+	    "-language" = IBProjectFiles;
+	    "-path" = IBProjectFiles;
+	    "-project" = IBProjectFiles;
+	};
+	"(IBProjects)" = {
+	    "-applicationIconForInterfaceStyle:inLanguage:" = IBProjects;
+	    "-containsFileAtPath:" = IBProjects;
+	    "-filesForFileType:" = IBProjects;
+	    "-isAncestorOfProject:" = IBProjects;
+	    "-isDescendantOfProject:" = IBProjects;
+	    "-isLive" = IBProjects;
+	    "-languageForFileAtPath:" = IBProjects;
+	    "-mainNibFileForInterfaceStyle:inLanguage:" = IBProjects;
+	    "-pathForFilename:" = IBProjects;
+	    "-projectDirectory" = IBProjects;
+	    "-projectManager" = IBProjects;
+	    "-projectName" = IBProjects;
+	    "-rootProject" = IBProjects;
+	    "-subprojects" = IBProjects;
+	    "-superproject" = IBProjects;
+	};
+	"(IBSelectionOwners)" = {
+	    "-copySelection" = IBEditors;
+	    "-drawSelection" = IBEditors;
+	    "-makeSelectionVisible:" = IBEditors;
+	    "-selectObjects:" = IBEditors;
+	    "-selection" = IBEditors;
+	    "-selectionCount" = IBEditors;
+	};
+	"(IBViewProtocol)" = {
+	    "-acceptsColor:atPoint:" = IBViewProtocol;
+	    "-allowsAltDragging" = IBViewProtocol;
+	    "-depositColor:atPoint:" = IBViewProtocol;
+	    "-maximumSizeFromKnobPosition:" = IBViewProtocol;
+	    "-minimumSizeFromKnobPosition:" = IBViewProtocol;
+	    "-placeView:" = IBViewProtocol;
+	};
+	"(IBViewResourceDraggingDelegates)" = {
+	    "-acceptsViewResourceFromPasteboard:forObject:atPoint:" = IBViewResourceDragging;
+	    "-depositViewResourceFromPasteboard:onObject:atPoint:" = IBViewResourceDragging;
+	    "-shouldDrawConnectionFrame" = IBViewResourceDragging;
+	    "-viewResourcePasteboardTypes" = IBViewResourceDragging;
+	};
+	IBInspector = {
+	    "-dealloc" = IBInspector;
+	    "-initialFirstResponder" = IBInspector;
+	    "-object" = IBInspector;
+	    "-ok:" = IBInspector;
+	    "-okButton" = IBInspector;
+	    "-revert:" = IBInspector;
+	    "-revertButton" = IBInspector;
+	    "-setObject:" = IBInspector;
+	    "-textDidBeginEditing:" = IBInspector;
+	    "-touch:" = IBInspector;
+	    "-wantsButtons" = IBInspector;
+	    "-window" = IBInspector;
+	};
+	IBInspectorManager = {
+	    "+sharedInspectorManager" = IBInspectorManager;
+	    "-addInspectorModeWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:" = IBInspectorManager;
+	    "-indexOfModeWithIdentifier:" = IBInspectorManager;
+	};
+	IBInspectorMode = {
+	    "-identifier" = IBInspectorMode;
+	    "-initWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:" = IBInspectorMode;
+	    "-inspectorClassName" = IBInspectorMode;
+	    "-localizedLabel" = IBInspectorMode;
+	    "-object" = IBInspectorMode;
+	    "-ordering" = IBInspectorMode;
+	    "-setIdentifier:" = IBInspectorMode;
+	    "-setInspectorClassName:" = IBInspectorMode;
+	    "-setLocalizedLabel:" = IBInspectorMode;
+	    "-setObject:" = IBInspectorMode;
+	    "-setOrdering:" = IBInspectorMode;
+	};
+	IBPalette = {
+	    "+objectForView:" = IBPalette;
+	    "+typeForView:" = IBPalette;
+	    "-associateObject:type:with:" = IBPalette;
+	    "-dealloc" = IBPalette;
+	    "-finishInstantiate" = IBPalette;
+	    "-originalWindow" = IBPalette;
+	    "-paletteDocument" = IBPalette;
+	    "-paletteIcon" = IBPalette;
+	};
+	IBPlugin = {
+	    "+sharedInstance" = IBPlugin;
+	    "-didLoad" = IBPlugin;
+	    "-document:didAddDraggedObjects:fromDraggedLibraryView:" = IBPlugin;
+	    "-label" = IBPlugin;
+	    "-libraryNibNames" = IBPlugin;
+	    "-pasteboardObjectsForDraggedLibraryView:" = IBPlugin;
+	    "-preferencesView" = IBPlugin;
+	    "-requiredFrameworks" = IBPlugin;
+	    "-willUnload" = IBPlugin;
+	};
+	IBResourceManager = {
+	    "+registerResourceManagerClass:" = IBResourceManager;
+	    "+registerResourceManagerClass:forFrameworks:" = IBResourceManager;
+	    "+registeredResourceManagerClassesForFramework:" = IBResourceManager;
+	    "-acceptsResourcesFromPasteboard:" = IBResourceManager;
+	    "-addResources:" = IBResourceManager;
+	    "-addResourcesFromPasteboard:" = IBResourceManager;
+	    "-application:didModifyFileAtPath:" = IBResourceManager;
+	    "-document" = IBResourceManager;
+	    "-initWithDocument:" = IBResourceManager;
+	    "-isReadOnly" = IBResourceManager;
+	    "-project:didAddFile:" = IBResourceManager;
+	    "-project:didChangeLocalizationOfFile:" = IBResourceManager;
+	    "-project:didRemoveFile:" = IBResourceManager;
+	    "-resourceFileTypes" = IBResourceManager;
+	    "-resourcePasteboardTypes" = IBResourceManager;
+	    "-resourcesForObjects:" = IBResourceManager;
+	    "-writeToDocumentPath:" = IBResourceManager;
+	};
+	"NSApplication(GormSpecific)" = {
+	    "-linkImage" = IBApplicationAdditions;
+	    "-startConnecting" = IBApplicationAdditions;
+	};
+	"NSApplication(IBConnections)" = {
+	    "-connectDestination" = IBConnectors;
+	    "-connectSource" = IBConnectors;
+	    "-displayConnectionBetween:and:" = IBConnectors;
+	    "-isConnecting" = IBConnectors;
+	    "-stopConnecting" = IBConnectors;
+	};
+	"NSObject(IBNibInstantiation)" = {
+	    "-nibInstantiate" = IBConnectors;
+	};
+	"NSView(IBViewResourceDraggingDelegates)" = {
+	    "+acceptedViewResourcePasteboardTypes" = IBViewResourceDragging;
+	    "+registerViewResourceDraggingDelegate:" = IBViewResourceDragging;
+	    "+registeredViewResourceDraggingDelegates" = IBViewResourceDragging;
+	    "+unregisterViewResourceDraggingDelegate:" = IBViewResourceDragging;
+	};
+    };
+    variable = {
+	"enum IBResourceLocation" = IBResourceManager;
+    };
+}

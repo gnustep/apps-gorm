@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.0.4//EN" "http://www.gnustep.org/gsdoc-1_0_4.dtd">
+<gsdoc base="GormCustomClassInspector">
+  <head>
+    <title>GormCustomClassInspector</title>
+    <author name="Gregory John Casamento">
+      <email address="greg_casamento@yahoo.com">
+        greg_casamento@yahoo.com
+      </email>
+    </author>
+    <abstract>allow user to select custom classes</abstract>
+    <copy>2002 Free Software Foundation, Inc.</copy>
+  </head>
+  <body>
+    <front><contents /></front>
+    <chapter>
+      <heading>
+        Software documentation for the
+        GormCustomClassInspector class
+      </heading>
+      <class name="GormCustomClassInspector" super="IBInspector">
+        <declared>GormCore/GormCustomClassInspector.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <ivariable type="GormClassManager*" name="_classManager" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="NSString*" name="_currentSelectionClassName" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="_document" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="NSString*" name="_parentClassName" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="NSUInteger" name="_rowToSelect" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="browser" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <method type="void">
+          <sel>select:</sel>
+          <arg type="id">sender</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </class>
+    </chapter>
+  </body>
+</gsdoc>

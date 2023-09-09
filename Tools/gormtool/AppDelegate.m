@@ -470,6 +470,11 @@
   [NSClassSwapper setIsInInterfaceBuilder: NO];
 }
 
+- (void) exceptionWhileLoadingModel: (NSString *)errorMessage
+{
+  NSLog(@"Exception: %@", errorMessage);
+}
+
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
   // puts("== gormtool");

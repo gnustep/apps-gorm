@@ -516,6 +516,11 @@
  */
 - (NSMutableSet *) topLevelObjects;
 
+/**
+ * Returns an array of issues. If document is valid the array should be empty.
+ */
+- (NSArray *) validate;
+
 @end
 
 @interface GormDocument (MenuValidation)

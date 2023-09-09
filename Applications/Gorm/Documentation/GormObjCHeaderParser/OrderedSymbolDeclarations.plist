@@ -1,0 +1,48 @@
+{
+    "NSScanner(OCHeaderParser)" = (
+	"-scanUpToAndIncludingString:intoString:",
+	"-scanUpToAndIncludingCharactersFromSet:intoString:"
+    );
+    OCClass = (
+	"-initWithString:",
+	"-methods",
+	"-addMethod:isAction:",
+	"-ivars",
+	"-addIVar:isOutlet:",
+	"-className",
+	"-setClassName:",
+	"-superClassName",
+	"-setSuperClassName:",
+	"-isCategory",
+	"-setIsCategory:",
+	"-parse"
+    );
+    OCHeaderParser = (
+	"-initWithContentsOfFile:",
+	"-classes",
+	"-parse"
+    );
+    OCIVar = (
+	"-initWithString:",
+	"-name",
+	"-setName:",
+	"-isOutlet",
+	"-setIsOutlet:",
+	"-parse"
+    );
+    OCIVarDecl = (
+	"-initWithString:",
+	"-ivars",
+	"-parse"
+    );
+    OCMethod = (
+	"-initWithString:",
+	"-name",
+	"-setName:",
+	"-isAction",
+	"-setIsAction:",
+	"-isClassMethod",
+	"-setIsClassMethod:",
+	"-parse"
+    );
+}

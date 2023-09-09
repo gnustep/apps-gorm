@@ -1,0 +1,234 @@
+{
+    "(IB)" = (
+	"-activeDocument",
+	"-isTestingInterface",
+	"-selectionOwner",
+	"-selectedObject",
+	"-documentForObject:"
+    );
+    "(IBCellProtocol)" = (
+	"-cellWillAltDragWithSize:",
+	"-maximumSizeForCellSize:knobPosition:",
+	"-minimumSizeForCellSize:knobPosition:"
+    );
+    "(IBConnectors)" = (
+	"-destination",
+	"-establishConnection",
+	"-label",
+	"-replaceObject:withObject:",
+	"-source",
+	"-setDestination:",
+	"-setLabel:",
+	"-setSource:",
+	"-nibInstantiate"
+    );
+    "(IBDocuments)" = (
+	"-addConnector:",
+	"-allConnectors",
+	"-attachObject:toParent:withName:",
+	"-attachObject:toParent:",
+	"-attachObjects:toParent:",
+	"-connectorsForDestination:",
+	"-connectorsForDestination:ofClass:",
+	"-connectorsForSource:",
+	"-connectorsForSource:ofClass:",
+	"-containsObject:",
+	"-containsObjectWithName:forParent:",
+	"-copyObject:type:toPasteboard:",
+	"-copyObjects:type:toPasteboard:",
+	"-detachObject:",
+	"-detachObject:closeEditor:",
+	"-detachObjects:",
+	"-detachObjects:closeEditors:",
+	"-documentPath",
+	"-editor:didCloseForObject:",
+	"-editorForObject:create:",
+	"-editorForObject:inEditor:create:",
+	"-nameForObject:",
+	"-objectForName:",
+	"-objects",
+	"-openEditorForObject:",
+	"-parentEditorForEditor:",
+	"-parentOfObject:",
+	"-pasteType:fromPasteboard:parent:",
+	"-removeConnector:",
+	"-resignSelectionForEditor:",
+	"-setName:forObject:",
+	"-setSelectionFromEditor:",
+	"-touch",
+	"-classForObject:",
+	"-actionsOfClass:",
+	"-outletsOfClass:"
+    );
+    "(IBEditors)" = (
+	"-acceptsTypeFromArray:",
+	"-activate",
+	"-initWithObject:inDocument:",
+	"-close",
+	"-closeSubeditors",
+	"-deactivate",
+	"-deleteSelection",
+	"-document",
+	"-editedObject",
+	"-orderFront",
+	"-openSubeditorForObject:",
+	"-pasteInSelection",
+	"-resetObject:",
+	"-wantsSelection",
+	"-validateEditing",
+	"-window"
+    );
+    "(IBObjectProtocol)" = (
+	"+canSubstituteForClass:",
+	"-awakeFromDocument:",
+	"-imageForViewer",
+	"-nibLabel:",
+	"-objectNameForInspectorTitle",
+	"-inspectorClassName",
+	"-connectInspectorClassName",
+	"-sizeInspectorClassName",
+	"-helpInspectorClassName",
+	"-classInspectorClassName",
+	"-editorClassName",
+	"-ibIncompatibleProperties"
+    );
+    "(IBProjectFiles)" = (
+	"-fileName",
+	"-fileType",
+	"-isLocalized",
+	"-language",
+	"-path",
+	"-project"
+    );
+    "(IBProjects)" = (
+	"-applicationIconForInterfaceStyle:inLanguage:",
+	"-containsFileAtPath:",
+	"-filesForFileType:",
+	"-isAncestorOfProject:",
+	"-isDescendantOfProject:",
+	"-isLive",
+	"-languageForFileAtPath:",
+	"-mainNibFileForInterfaceStyle:inLanguage:",
+	"-pathForFilename:",
+	"-projectDirectory",
+	"-projectManager",
+	"-projectName",
+	"-rootProject",
+	"-subprojects",
+	"-superproject"
+    );
+    "(IBSelectionOwners)" = (
+	"-selectionCount",
+	"-selection",
+	"-drawSelection",
+	"-makeSelectionVisible:",
+	"-selectObjects:",
+	"-copySelection"
+    );
+    "(IBViewProtocol)" = (
+	"-acceptsColor:atPoint:",
+	"-allowsAltDragging",
+	"-depositColor:atPoint:",
+	"-maximumSizeFromKnobPosition:",
+	"-minimumSizeFromKnobPosition:",
+	"-placeView:"
+    );
+    "(IBViewResourceDraggingDelegates)" = (
+	"-acceptsViewResourceFromPasteboard:forObject:atPoint:",
+	"-depositViewResourceFromPasteboard:onObject:atPoint:",
+	"-shouldDrawConnectionFrame",
+	"-viewResourcePasteboardTypes"
+    );
+    IBInspector = (
+	"-dealloc",
+	"-initialFirstResponder",
+	"-object",
+	"-ok:",
+	"-okButton",
+	"-revert:",
+	"-revertButton",
+	"-setObject:",
+	"-textDidBeginEditing:",
+	"-touch:",
+	"-wantsButtons",
+	"-window"
+    );
+    IBInspectorManager = (
+	"+sharedInspectorManager",
+	"-addInspectorModeWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:",
+	"-indexOfModeWithIdentifier:"
+    );
+    IBInspectorMode = (
+	"-initWithIdentifier:forObject:localizedLabel:inspectorClassName:ordering:",
+	"-setIdentifier:",
+	"-identifier",
+	"-setObject:",
+	"-object",
+	"-setLocalizedLabel:",
+	"-localizedLabel",
+	"-setInspectorClassName:",
+	"-inspectorClassName",
+	"-setOrdering:",
+	"-ordering"
+    );
+    IBPalette = (
+	"+objectForView:",
+	"+typeForView:",
+	"-associateObject:type:with:",
+	"-dealloc",
+	"-finishInstantiate",
+	"-paletteIcon",
+	"-originalWindow",
+	"-paletteDocument"
+    );
+    IBPlugin = (
+	"+sharedInstance",
+	"-didLoad",
+	"-willUnload",
+	"-libraryNibNames",
+	"-label",
+	"-preferencesView",
+	"-requiredFrameworks",
+	"-pasteboardObjectsForDraggedLibraryView:",
+	"-document:didAddDraggedObjects:fromDraggedLibraryView:"
+    );
+    IBResourceManager = (
+	"+registerResourceManagerClass:",
+	"+registerResourceManagerClass:forFrameworks:",
+	"+registeredResourceManagerClassesForFramework:",
+	"-acceptsResourcesFromPasteboard:",
+	"-addResources:",
+	"-addResourcesFromPasteboard:",
+	"-application:didModifyFileAtPath:",
+	"-document",
+	"-initWithDocument:",
+	"-isReadOnly",
+	"-project:didAddFile:",
+	"-project:didChangeLocalizationOfFile:",
+	"-project:didRemoveFile:",
+	"-resourceFileTypes",
+	"-resourcePasteboardTypes",
+	"-resourcesForObjects:",
+	"-writeToDocumentPath:"
+    );
+    "NSApplication(GormSpecific)" = (
+	"-linkImage",
+	"-startConnecting"
+    );
+    "NSApplication(IBConnections)" = (
+	"-connectSource",
+	"-connectDestination",
+	"-isConnecting",
+	"-stopConnecting",
+	"-displayConnectionBetween:and:"
+    );
+    "NSObject(IBNibInstantiation)" = (
+	"-nibInstantiate"
+    );
+    "NSView(IBViewResourceDraggingDelegates)" = (
+	"+acceptedViewResourcePasteboardTypes",
+	"+registeredViewResourceDraggingDelegates",
+	"+registerViewResourceDraggingDelegate:",
+	"+unregisterViewResourceDraggingDelegate:"
+    );
+}

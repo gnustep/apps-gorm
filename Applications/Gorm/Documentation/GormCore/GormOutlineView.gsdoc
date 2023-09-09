@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.0.4//EN" "http://www.gnustep.org/gsdoc-1_0_4.dtd">
+<gsdoc base="GormOutlineView">
+  <head>
+    <title>GormOutlineView</title>
+    <author name="Gregory John Casamento">
+      <email address="greg_casamento@yahoo.com">
+        greg_casamento@yahoo.com
+      </email>
+    </author>
+    <abstract>
+      The NSOutlineView subclass in gorm which handles
+      outlet/action editing
+    </abstract>
+    <copy>2001 Free Software Foundation, Inc.</copy>
+  </head>
+  <body>
+    <front><contents /></front>
+    <chapter>
+      <heading>
+        Software documentation for the GormOutletActionHolder
+        class
+      </heading>
+      <class name="GormOutletActionHolder" super="NSObject">
+        <declared>GormCore/GormOutlineView.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <ivariable type="NSString*" name="_name" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <method type="NSString*">
+          <sel>getName</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="id">
+          <sel>initWithName:</sel>
+          <arg type="NSString*">name</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setName:</sel>
+          <arg type="NSString*">name</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </class>
+    </chapter>
+    <chapter>
+      <heading>
+        Software documentation for the GormOutlineView class
+      </heading>
+      <class name="GormOutlineView" super="NSOutlineView">
+        <declared>GormCore/GormOutlineView.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <ivariable type="NSTableColumn*" name="_actionColumn" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="float" name="_attributeOffset" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="GSAttributeType" name="_edittype" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="BOOL" name="_isEditing" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="_itemBeingEdited" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="NSMenuItem*" name="_menuItem" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <ivariable type="NSTableColumn*" name="_outletColumn" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <method type="NSTableColumn*">
+          <sel>actionColumn</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="float">
+          <sel>attributeOffset</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="GSAttributeType">
+          <sel>editType</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="BOOL">
+          <sel>isEditing</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="id">
+          <sel>itemBeingEdited</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSMenuItem*">
+          <sel>menuItem</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSTableColumn*">
+          <sel>outletColumn</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>removeItemAtRow:</sel>
+          <arg type="int">row</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>reset</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>selectRow:</sel>
+          <arg type="int">rowIndex</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setActionColumn:</sel>
+          <arg type="NSTableColumn*">ac</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setAttributeOffset:</sel>
+          <arg type="float">offset</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setIsEditing:</sel>
+          <arg type="BOOL">flag</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setItemBeingEdited:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setMenuItem:</sel>
+          <arg type="NSMenuItem*">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setOutletColumn:</sel>
+          <arg type="NSTableColumn*">oc</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </class>
+    </chapter>
+    <chapter>
+      <heading>
+        Software documentation for the
+        NSObject(GormOutlineViewDataSource)
+        informal protocol
+      </heading>
+      <category name="GormOutlineViewDataSource" class="NSObject">
+        <declared>GormCore/GormOutlineView.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <method type="NSArray*">
+          <sel>outlineView:</sel>
+          <arg type="GormOutlineView*">ov</arg>
+          <sel>actionsForItem:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>outlineView:</sel>
+          <arg type="NSOutlineView*">anOutlineView</arg>
+          <sel>addAction:</sel>
+          <arg type="NSString*">action</arg>
+          <sel>forClass:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSString*">
+          <sel>outlineView:</sel>
+          <arg type="NSOutlineView*">anOutlineView</arg>
+          <sel>addNewActionForClass:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSString*">
+          <sel>outlineView:</sel>
+          <arg type="NSOutlineView*">anOutlineView</arg>
+          <sel>addNewOutletForClass:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="void">
+          <sel>outlineView:</sel>
+          <arg type="NSOutlineView*">anOutlineView</arg>
+          <sel>addOutlet:</sel>
+          <arg type="NSString*">outlet</arg>
+          <sel>forClass:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSArray*">
+          <sel>outlineView:</sel>
+          <arg type="GormOutlineView*">ov</arg>
+          <sel>outletsForItem:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </category>
+    </chapter>
+    <chapter>
+      <heading>
+        Software documentation for the
+        NSObject(GormOutlineViewDelegate)
+        informal protocol
+      </heading>
+      <category name="GormOutlineViewDelegate" class="NSObject">
+        <declared>GormCore/GormOutlineView.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <method type="BOOL">
+          <sel>outlineView:</sel>
+          <arg type="GormOutlineView*">ov</arg>
+          <sel>shouldDeleteItem:</sel>
+          <arg type="id">item</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </category>
+    </chapter>
+    <chapter>
+      <heading>GormOutlineView types</heading>
+      <p></p>
+      <type type="enum ..." name="GSAttributeType">
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+      </type>
+    </chapter>
+  </body>
+</gsdoc>

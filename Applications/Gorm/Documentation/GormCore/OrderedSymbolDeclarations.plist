@@ -1,0 +1,720 @@
+{
+    "(GormAppDelegate)" = (
+	"-connectSource",
+	"-connectDestination",
+	"-displayConnectionBetween:and:",
+	"-isConnecting",
+	"-stopConnecting",
+	"-palettesManager",
+	"-inspectorsManager",
+	"-pluginManager",
+	"-classManager",
+	"-classMenu",
+	"-isInTool",
+	"-shouldUpgradeOlderArchive",
+	"-shouldLoadNewerArchive",
+	"-shouldBreakConnectionsForClassNamed:",
+	"-shouldRenameConnectionsForClassNamed:toClassName:",
+	"-shouldBreakConnectionsModifyingLabel:isAction:prompted:",
+	"-couldNotParseClassAtPath:",
+	"-exceptionWhileParsingClass:",
+	"-shouldBreakConnectionsReparsingClass:",
+	"-exceptionWhileLoadingModel:"
+    );
+    "(GormServer)" = (
+	"-addClass:",
+	"-deleteClass:"
+    );
+    "(GormWrapperBuilder)" = (
+	"-buildFileWrapperDictionaryWithDocument:",
+	"-buildFileWrapperWithDocument:"
+    );
+    "(GormWrapperLoader)" = (
+	"-loadFileWrapper:withDocument:"
+    );
+    ArrResizer = (
+	"-initForController:withPosition:",
+	"-position"
+    );
+    "GSClassSwapper(GormCustomClassAdditions)" = (
+	"+setIsInInterfaceBuilder:",
+	"-isInInterfaceBuilder"
+    );
+    "GSNibItem(GormAdditions)" = (
+	"-initWithClassName:",
+	"-initWithClassName:frame:",
+	"-className"
+    );
+    GormAbstractDelegate = (
+	"-deferredEndTesting:",
+	"-testInterface:",
+	"-endTesting:"
+    );
+    GormBoxEditor = (
+	"-destroyAndListSubviews"
+    );
+    GormClassEditor = (
+	"-initWithDocument:",
+	"+classEditorForDocument:",
+	"-setSelectedClassName:",
+	"-selectedClassName",
+	"-selectClassWithObject:editClass:",
+	"-selectClassWithObject:",
+	"-selectClass:editClass:",
+	"-selectClass:",
+	"-currentSelectionIsClass",
+	"-editClass",
+	"-addAttributeToClass",
+	"-deleteSelection",
+	"-fileTypes",
+	"-reloadData",
+	"-isEditing",
+	"-instantiateClass:",
+	"-createSubclass:",
+	"-loadClass:",
+	"-createClassFiles:",
+	"-removeClass:"
+    );
+    GormClassInspector = (
+	"-addAction:",
+	"-removeAction:",
+	"-addOutlet:",
+	"-removeOutlet:",
+	"-select:",
+	"-searchForClass:",
+	"-selectClass:",
+	"-_currentClass",
+	"-_refreshView",
+	"-handleNotification:",
+	"-changeClassName:",
+	"-selectAction:",
+	"-selectOutlet:"
+    );
+    GormClassManager = (
+	"-initWithDocument:",
+	"-addAction:forObject:",
+	"-addOutlet:forObject:",
+	"-allActionsForClassNamed:",
+	"-allActionsForObject:",
+	"-extraActionsForObject:",
+	"-allOutletsForClassNamed:",
+	"-allOutletsForObject:",
+	"-extraOutletsForObject:",
+	"-allClassNames",
+	"-removeAction:forObject:",
+	"-removeOutlet:forObject:",
+	"-removeAction:fromClassNamed:",
+	"-removeOutlet:fromClassNamed:",
+	"-addOutlet:forClassNamed:",
+	"-addAction:forClassNamed:",
+	"-addActions:forClassNamed:",
+	"-addOutlets:forClassNamed:",
+	"-addNewActionToClassNamed:",
+	"-addNewOutletToClassNamed:",
+	"-replaceAction:withAction:forClassNamed:",
+	"-replaceOutlet:withOutlet:forClassNamed:",
+	"-renameClassNamed:newName:",
+	"-removeClassNamed:",
+	"-addClassWithSuperClassName:",
+	"-subClassesOf:",
+	"-allSubclassesOf:",
+	"-customSubClassesOf:",
+	"-allCustomSubclassesOf:",
+	"-allCustomClassNames",
+	"-addClassNamed:withSuperClassNamed:withActions:withOutlets:",
+	"-addClassNamed:withSuperClassNamed:withActions:withOutlets:isCustom:",
+	"-setSuperClassNamed:forClassNamed:",
+	"-parentOfClass:",
+	"-superClassNameForClassNamed:",
+	"-isSuperclass:linkedToClass:",
+	"-dictionaryForClassNamed:",
+	"-uniqueClassNameFrom:",
+	"-isRootClass:",
+	"-outletExists:onClassNamed:",
+	"-actionExists:onClassNamed:",
+	"-isCustomClass:",
+	"-isNonCustomClass:",
+	"-isCategoryForClass:",
+	"-isKnownClass:",
+	"-isAction:ofClass:",
+	"-isOutlet:ofClass:",
+	"-allSuperClassesOf:",
+	"-canInstantiateClassNamed:",
+	"-customClassForObject:",
+	"-customClassForName:",
+	"-setCustomClass:forName:",
+	"-removeCustomClassForName:",
+	"-customClassMap",
+	"-setCustomClassMap:",
+	"-isCustomClassMapEmpty",
+	"-nonCustomSuperClassOf:",
+	"-isAction:onCategoryForClassNamed:",
+	"-classNameForObject:",
+	"-findClassByName:",
+	"-classInformation",
+	"-customClassInformation",
+	"-makeSourceAndHeaderFilesForClass:withName:and:",
+	"-parseHeader:",
+	"-saveToFile:",
+	"-data",
+	"-nibData",
+	"-loadFromFile:",
+	"-loadCustomClasses:",
+	"-loadCustomClassesWithData:",
+	"-loadCustomClassesWithDict:",
+	"-loadNibFormatCustomClassesWithData:",
+	"-loadNibFormatCustomClassesWithDict:"
+    );
+    GormClassPanelController = (
+	"-initWithTitle:classList:",
+	"-okButton:",
+	"-browserAction:",
+	"-runModal"
+    );
+    GormClassProxy = (
+	"-initWithClassName:",
+	"-className",
+	"-inspectorClassName",
+	"-connectInspectorClassName",
+	"-sizeInspectorClassName"
+    );
+    GormConnectionInspector = (
+	"-updateButtons"
+    );
+    GormCustomClassInspector = (
+	"-select:"
+    );
+    GormCustomView = (
+	"-setClassName:",
+	"-className"
+    );
+    GormDocument = (
+	"-handleNotification:",
+	"-isActive",
+	"-objectIsVisibleAtLaunch:",
+	"-objectIsDeferred:",
+	"-retrieveObjectsForParent:recursively:",
+	"-setDocumentActive:",
+	"-setObject:isVisibleAtLaunch:",
+	"-setObject:isDeferred:",
+	"-window",
+	"-isTopLevelObject:",
+	"-closeAllEditors",
+	"-createResourceManagers",
+	"-resourceManagers",
+	"-resourceManagerForPasteboard:",
+	"-changeToTopLevelEditorAcceptingTypes:andFileType:",
+	"-changeToViewWithTag:",
+	"-viewWithTag:",
+	"-allManagedPboardTypes",
+	"-openEditorForObject:withParentObject:",
+	"-importStringsFromFile:",
+	"-exportStringsToFile:",
+	"-classManager",
+	"-createSubclass:",
+	"-instantiateClass:",
+	"-createClassFiles:",
+	"-addAttributeToClass:",
+	"-remove:",
+	"-selectClass:",
+	"-selectClass:editClass:",
+	"-classIsSelected",
+	"-removeAllInstancesOfClass:",
+	"-openSound:",
+	"-openImage:",
+	"-connections",
+	"-rebuildObjToNameMapping",
+	"-removeConnectionsWithLabel:forClassNamed:isAction:",
+	"-removeConnectionsForClassNamed:",
+	"-renameConnectionsForClassNamed:toName:",
+	"-refreshConnectionsForClassNamed:",
+	"-loadClass:",
+	"-setServicesMenu:",
+	"-servicesMenu",
+	"-setFontMenu:",
+	"-fontMenu",
+	"-setWindowsMenu:",
+	"-windowsMenu",
+	"-setRecentDocumentsMenu:",
+	"-recentDocumentsMenu",
+	"-fontManager",
+	"-firstResponder",
+	"-arrangeSelectedObjects:",
+	"-alignSelectedObjects:",
+	"-windowAndRect:forObject:",
+	"-setSCMWrapper:",
+	"-scmWrapper",
+	"-images",
+	"-sounds",
+	"-setImages:",
+	"-setSounds:",
+	"-filesOwner",
+	"-filePrefsManager",
+	"-visibleWindows",
+	"-deferredWindows",
+	"-setDocumentOpen:",
+	"-isDocumentOpen",
+	"-setInfoData:",
+	"-infoData",
+	"-setOlderArchive:",
+	"-isOlderArchive",
+	"-deactivateEditors",
+	"-reactivateEditors",
+	"-nameForObject:",
+	"-objectForName:",
+	"-objects",
+	"-addConnector:",
+	"-topLevelObjects",
+	"-validate"
+    );
+    "GormDocument(MenuValidation)" = (
+	"-isEditingObjects",
+	"-isEditingImages",
+	"-isEditingSounds",
+	"-isEditingClasses"
+    );
+    GormDocumentController = (
+	"-buildDocumentForType:",
+	"-openDocumentWithContentsOfURL:"
+    );
+    GormDocumentWindow = (
+	"-setDocument:"
+    );
+    GormFilePrefsManager = (
+	"-showIncompatibilities:",
+	"-selectTargetVersion:",
+	"-selectArchiveType:",
+	"-loadFromData:",
+	"-loadFromFile:",
+	"-data",
+	"-nibDataWithOpenItems:",
+	"-saveToFile:",
+	"-loadProfile:",
+	"-version",
+	"-targetVersionName",
+	"-archiveTypeName",
+	"-isLatest",
+	"-setClassVersions",
+	"-restoreClassVersions",
+	"-versionOfClass:",
+	"-setFileTypeName:",
+	"-fileTypeName",
+	"+currentVersion",
+	"-currentProfile",
+	"-versionProfiles"
+    );
+    GormFilesOwner = (
+	"-className",
+	"-setClassName:"
+    );
+    GormFilesOwnerInspector = (
+	"-takeClassFrom:"
+    );
+    GormFontViewController = (
+	"+sharedGormFontViewController",
+	"-convertFont:",
+	"-selectFont:",
+	"-view"
+    );
+    GormGeneralPref = (
+	"-view",
+	"-backupAction:",
+	"-classesAction:",
+	"-consistencyAction:"
+    );
+    GormGenericEditor = (
+	"+editorForDocument:",
+	"+setEditor:forDocument:",
+	"-selectObjects:",
+	"-wantsSelection",
+	"-copySelection",
+	"-deleteSelection",
+	"-pasteInSelection",
+	"-refreshCells",
+	"-closeSubeditors",
+	"-window",
+	"-addObject:",
+	"-refreshCells",
+	"-removeObject:",
+	"-activate",
+	"-initWithObject:inDocument:",
+	"-close",
+	"-closeSubeditors",
+	"-containsObject:",
+	"-copySelection",
+	"-deleteSelection",
+	"-document",
+	"-editedObject",
+	"-openSubeditorForObject:",
+	"-orderFront",
+	"-pasteInSelection",
+	"-rectForObject:",
+	"-objects",
+	"-isOpened",
+	"-fileTypes"
+    );
+    "GormGenericEditor(PrivateMethods)" = (
+	"-willCloseDocument:",
+	"-groupSelectionInScrollView",
+	"-groupSelectionInSplitView",
+	"-groupSelectionInBox",
+	"-groupSelectionInView",
+	"-groupSelectionInMatrix",
+	"-ungroup",
+	"-setEditor:forDocument:",
+	"-changeSelection:"
+    );
+    GormGuidelinePref = (
+	"-view",
+	"-ok:",
+	"-reset:"
+    );
+    GormHeadersPref = (
+	"-view",
+	"-addAction:",
+	"-removeAction:",
+	"-preloadAction:"
+    );
+    GormImage = (
+	"+imageForPath:",
+	"+imageForPath:inWrapper:",
+	"+imageForData:withFileName:inWrapper:",
+	"-image",
+	"-normalImage"
+    );
+    GormInspectorsManager = (
+	"-panel",
+	"-setClassInspector",
+	"-setCurrentInspector:",
+	"-updateSelection"
+    );
+    GormInternalViewEditor = (
+	"-destroyAndListSubviews",
+	"-changeFont:"
+    );
+    GormNSPanel = (
+	"-_setStyleMask:",
+	"-_styleMask",
+	"-_setReleasedWhenClosed:",
+	"-_isReleasedWhenClosed",
+	"-autoPositionMask",
+	"-setAutoPositionMask:"
+    );
+    GormNSWindow = (
+	"-_setStyleMask:",
+	"-_styleMask",
+	"-_setReleasedWhenClosed:",
+	"-_isReleasedWhenClosed",
+	"-autoPositionMask",
+	"-setAutoPositionMask:"
+    );
+    GormObjectEditor = (
+	"+setEditor:forDocument:",
+	"-draggedImage:endedAt:deposited:",
+	"-draggingSourceOperationMaskForLocal:",
+	"-acceptsTypeFromArray:",
+	"-makeSelectionVisible:",
+	"-resetObject:"
+    );
+    GormObjectInspector = (
+	"-update:"
+    );
+    GormObjectProxy = (
+	"-setClassName:"
+    );
+    GormOutletActionHolder = (
+	"-initWithName:",
+	"-getName",
+	"-setName:"
+    );
+    GormOutlineView = (
+	"-attributeOffset",
+	"-setAttributeOffset:",
+	"-itemBeingEdited",
+	"-setItemBeingEdited:",
+	"-isEditing",
+	"-setIsEditing:",
+	"-actionColumn",
+	"-setActionColumn:",
+	"-outletColumn",
+	"-setOutletColumn:",
+	"-menuItem",
+	"-setMenuItem:",
+	"-editType",
+	"-removeItemAtRow:",
+	"-reset",
+	"-selectRow:"
+    );
+    GormPalettesManager = (
+	"-loadPalette:",
+	"-openPalette:",
+	"-panel",
+	"-setCurrentPalette:",
+	"-importClasses:withDictionary:",
+	"-importedClasses",
+	"-importImages:withBundle:",
+	"-importedImages",
+	"-importSounds:withBundle:",
+	"-importedSounds",
+	"-substituteClasses"
+    );
+    GormPalettesPref = (
+	"-view",
+	"-addAction:",
+	"-removeAction:"
+    );
+    GormPlacementHint = (
+	"-initWithBorder:position:validityStart:validityEnd:frame:",
+	"-rectWithHalfDistance:",
+	"-distanceToFrame:",
+	"-position",
+	"-start",
+	"-end",
+	"-frame",
+	"-border"
+    );
+    GormPlugin = (
+	"-registerDocumentTypeName:humanReadableName:forExtensions:"
+    );
+    GormPluginManager = (
+	"-loadPlugin:",
+	"-openPlugin:"
+    );
+    GormPluginsPref = (
+	"-view",
+	"-addAction:",
+	"-removeAction:"
+    );
+    GormPrefController = (
+	"-popupAction:",
+	"-panel"
+    );
+    GormResource = (
+	"+resourceForPath:",
+	"+resourceForPath:inWrapper:",
+	"-initWithPath:",
+	"-initWithPath:inWrapper:",
+	"-initWithName:path:",
+	"-initWithName:path:inWrapper:",
+	"-initWithData:withFileName:inWrapper:",
+	"-setName:",
+	"-name",
+	"-setSystemResource:",
+	"-isSystemResource",
+	"-setInWrapper:",
+	"-isInWrapper",
+	"-setData:",
+	"-data",
+	"-isEqual:"
+    );
+    GormResourceEditor = (
+	"-draggedImage:endedAt:deposited:",
+	"-draggingSourceOperationMaskForLocal:",
+	"-refreshCells",
+	"-placeHolderWithPath:",
+	"-pbTypes",
+	"-resourceType",
+	"-addSystemResources"
+    );
+    GormScrollViewAttributesInspector = (
+	"-colorSelected:",
+	"-verticalSelected:",
+	"-horizontalSelected:",
+	"-verticalRuler:",
+	"-horizontalRuler:",
+	"-borderSelected:"
+    );
+    GormSetNameController = (
+	"-runAsModal",
+	"-textField",
+	"-cancelHit:",
+	"-okHit:"
+    );
+    GormShelfPref = (
+	"-tile",
+	"-selectionChanged:",
+	"-startMouseEvent:onResizer:",
+	"-setNewWidth:",
+	"-setDefaultWidth:",
+	"-view",
+	"-shelfCellsWidth"
+    );
+    GormSound = (
+	"+soundForPath:",
+	"+soundForPath:inWrapper:",
+	"+soundForData:withFileName:inWrapper:"
+    );
+    GormSoundInspector = (
+	"-stop:",
+	"-play:",
+	"-pause:",
+	"-record:"
+    );
+    GormSoundView = (
+	"-setSound:",
+	"-sound"
+    );
+    GormSplitViewEditor = (
+	"-destroyAndListSubviews"
+    );
+    GormViewEditor = (
+	"-activate",
+	"-initWithObject:inDocument:",
+	"-close",
+	"-deactivate",
+	"-document",
+	"-editedObject",
+	"-detachSubviews",
+	"-postDraw:",
+	"-parent",
+	"-selection",
+	"-makeSelectionVisible:",
+	"-isOpened",
+	"-canBeOpened",
+	"-setOpened:",
+	"-frameDidChange:"
+    );
+    "GormViewEditor(EditingAdditions)" = (
+	"-editTextField:withEvent:"
+    );
+    "GormViewEditor(IntelligentPlacement)" = (
+	"-initializeResizingInFrame:withKnob:",
+	"-updateResizingWithFrame:andEvent:andPlacementInfo:",
+	"-validateFrame:withEvent:andPlacementInfo:"
+    );
+    "GormViewEditor(WindowAndRect)" = (
+	"-windowAndRect:forObject:"
+    );
+    GormViewWindow = (
+	"-initWithView:",
+	"-view",
+	"-setView:"
+    );
+    GormViewWithContentViewEditor = (
+	"-postDrawForView:",
+	"-groupSelectionInSplitView",
+	"-groupSelectionInBox",
+	"-groupSelectionInMatrix",
+	"-groupSelectionInView",
+	"-ungroup",
+	"-pasteInView:"
+    );
+    GormViewWithSubviewsEditor = (
+	"-handleMouseOnKnob:ofView:withEvent:",
+	"-handleMouseOnView:withEvent:",
+	"-setOpenedSubeditor:",
+	"-openParentEditor",
+	"-makeSubeditorResign",
+	"-silentlyResetSelection",
+	"-selectObjects:",
+	"-copySelection",
+	"-closeSubeditors",
+	"-deactivateSubeditors",
+	"-changeFont:"
+    );
+    GormWindowEditor = (
+	"-acceptsTypeFromArray:",
+	"-activate",
+	"-initWithObject:inDocument:",
+	"-changeFont:",
+	"-close",
+	"-closeSubeditors",
+	"-deactivate",
+	"-deleteSelection",
+	"-document",
+	"-draggedImage:endedAt:deposited:",
+	"-draggingSourceOperationMaskForLocal:",
+	"-makeSelectionVisible:",
+	"-openSubeditorForObject:",
+	"-orderFront",
+	"-pasteInSelection",
+	"-resetObject:"
+    );
+    GormWrapperBuilder = (
+	"+fileType"
+    );
+    GormWrapperBuilderFactory = (
+	"+sharedWrapperBuilderFactory",
+	"+registerWrapperBuilderClass:",
+	"-wrapperBuilderForType:"
+    );
+    GormWrapperLoader = (
+	"+fileType",
+	"-saveSCMDirectory:"
+    );
+    GormWrapperLoaderFactory = (
+	"+sharedWrapperLoaderFactory",
+	"+registerWrapperLoaderClass:",
+	"-wrapperLoaderForType:"
+    );
+    GormXLIFFDocument = (
+	"+xliffWithGormDocument:",
+	"-initWithGormDocument:",
+	"-exportXLIFFDocumentWithName:withSourceLanguage:andTargetLanguage:",
+	"-importXLIFFDocumentWithName:"
+    );
+    "IBResourceManager(GormAdditions)" = (
+	"+registerForAllPboardTypes:inDocument:"
+    );
+    "NSCell(GormAdditions)" = (
+	"-setUpFieldEditorAttributes:"
+    );
+    "NSClassSwapper(GormCustomClassAdditions)" = (
+	"+setIsInInterfaceBuilder:",
+	"-isInInterfaceBuilder"
+    );
+    "NSColorWell(GormExtensions)" = (
+	"-setColorWithoutAction:"
+    );
+    "NSDateFormatter(GormAdditions)" = (
+	"+formatCount",
+	"+formatAtIndex:",
+	"+indexOfFormat:",
+	"+defaultFormat",
+	"+defaultFormatValue"
+    );
+    "NSFontManager(GormExtensions)" = (
+	"-sendAction"
+    );
+    "NSImage(GormNSImageAddition)" = (
+	"-setArchiveByName:",
+	"-archiveByName"
+    );
+    "NSNumberFormatter(GormAdditions)" = (
+	"+formatCount",
+	"+formatAtIndex:",
+	"+positiveFormatAtIndex:",
+	"+zeroFormatAtIndex:",
+	"+negativeFormatAtIndex:",
+	"+positiveValueAtIndex:",
+	"+negativeValueAtIndex:",
+	"+indexOfFormat:",
+	"+defaultFormat",
+	"+defaultFormatValue",
+	"-zeroFormat"
+    );
+    "NSObject(GormAdditions)" = (
+	"-allocSubstitute",
+	"-imageForViewer"
+    );
+    "NSObject(GormOutlineViewDataSource)" = (
+	"-outlineView:actionsForItem:",
+	"-outlineView:outletsForItem:",
+	"-outlineView:addAction:forClass:",
+	"-outlineView:addOutlet:forClass:",
+	"-outlineView:addNewActionForClass:",
+	"-outlineView:addNewOutletForClass:"
+    );
+    "NSObject(GormOutlineViewDelegate)" = (
+	"-outlineView:shouldDeleteItem:"
+    );
+    "NSView(GormExtensions)" = (
+	"-superviews",
+	"-hasSuperviewKindOfClass:",
+	"-moveViewToFront:",
+	"-moveViewToBack:"
+    );
+    "NSWindowTemplate(Private)" = (
+	"-setBaseWindowClass:"
+    );
+}

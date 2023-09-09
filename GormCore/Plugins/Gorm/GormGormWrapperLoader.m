@@ -646,9 +646,10 @@
     }
   NS_HANDLER
     {
-      NSRunAlertPanel(_(@"Problem Loading"), 
-		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
-		      _(@"OK"), nil, nil);
+      id delegate = [NSApp delegate];
+      NSString *errorMessage = [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]];
+
+      [delegate exceptionWhileLoadingModel: errorMessage];
       result = NO; 
     }
   NS_ENDHANDLER;

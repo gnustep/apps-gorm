@@ -79,10 +79,16 @@
 	  	  
 	}
     }
+  else if ([obj respondsToSelector: @selector(className)])
+    {
+      NSString *cn = [obj className];
+      NSLog(@"className = %@", cn);
+    }
   else if (obj == nil)
     {
       return [document firstResponder];
     }
+  
   return obj;
 }
 
@@ -166,12 +172,14 @@
 		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects = nil;
                   id xibFirstResponder = nil;
-
+		  id xibFontManager = nil;
+		  
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
-
+		  // xibFontManager = [self _findFontManager: rootObjects];
+		  
 		  //
 		  // set the current class on the File's owner...
 		  //
@@ -191,7 +199,9 @@
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if ((obj == nibFilesOwner) || (obj == xibFirstResponder))
+		      if ((obj == nibFilesOwner)
+			  || (obj == xibFirstResponder)
+			  || (obj == xibFontManager))
                         {
                           continue;
                         }
@@ -242,6 +252,17 @@
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{
                           NSLog(@"obj = %@",obj);
+			  if ([obj respondsToSelector: @selector(className)])
+			    {
+			      NSString *className = nil;
+			      
+			      className = [obj className];
+			      if ([className isEqualToString: @"NSFontManager"])
+				{
+				  continue;
+				}
+			    }
+			  
                           [doc attachObject: obj
                                    toParent: nil];
                         }
@@ -396,6 +417,10 @@
 		  result = YES;
 		}
 	    }
+
+	  NSArray *errors = [doc validate];
+	  NSLog(@"errors = %@", errors);
+	  
 	  [NSClassSwapper setIsInInterfaceBuilder: NO];      
 	}
     }

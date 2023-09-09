@@ -954,4 +954,11 @@
   [cm removeClassNamed: className];
 }
 
+- (void) exceptionWhileLoadingModel: (NSString *)errorMessage
+{
+  NSRunAlertPanel(_(@"Exception"), 
+		  errorMessage,
+		  nil, nil, nil);  
+}
+
 @end

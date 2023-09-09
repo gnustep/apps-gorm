@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.0.4//EN" "http://www.gnustep.org/gsdoc-1_0_4.dtd">
+<gsdoc base="Variables" stylesheeturl="gsdoc_contents">
+  <head>
+    <title>Variables</title>
+  </head>
+  <body>
+    <chapter>
+      <index type="variable" scope="project" target="mainFrame"
+             style="bare" />
+    </chapter>
+  </body>
+</gsdoc>

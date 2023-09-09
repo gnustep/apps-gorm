@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.0.4//EN" "http://www.gnustep.org/gsdoc-1_0_4.dtd">
+<gsdoc base="GormSoundView">
+  <head>
+    <title>GormSoundView</title>
+    <author name="Gregory John Casamento">
+      <email address="greg_casamento@yahoo.com">
+        greg_casamento@yahoo.com
+      </email>
+    </author>
+    <copy>2004 Free Software Foundation, Inc.</copy>
+  </head>
+  <body>
+    <front><contents /></front>
+    <chapter>
+      <heading>
+        Software documentation for the GormSoundView class
+      </heading>
+      <class name="GormSoundView" super="NSView">
+        <declared>GormCore/GormSoundView.h</declared>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <ivariable type="NSSound*" name="_sound" validity="protected">
+          <desc>
+            <em>Warning</em> the underscore at the start of the
+            name of this instance variable indicates that, even
+            though it is not technically <em>private</em>, it is
+            intended for internal use within the package, and
+            you should not use the variable in other code.
+          </desc>
+        </ivariable>
+        <method type="void">
+          <sel>setSound:</sel>
+          <arg type="NSSound*">sound</arg>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+        <method type="NSSound*">
+          <sel>sound</sel>
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </method>
+      </class>
+    </chapter>
+  </body>
+</gsdoc>

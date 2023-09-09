@@ -3641,6 +3641,55 @@ static void _real_close(GormDocument *self,
 {
   return [classManager allOutletsForClassNamed: className]; 
 }
+
+//// Document Validation
+
+- (NSArray *) validate
+{
+  NSMutableArray *results = [NSMutableArray array];
+  NSEnumerator *en = [topLevelObjects objectEnumerator];
+  id o = nil;
+
+  NSLog(@"Validating topLevelObjects: %@", topLevelObjects);
+  while ((o = [en nextObject]) != nil)
+    {
+      // check the type of o...
+      if ([o isKindOfClass: [NSWindow class]]
+	  || [o isKindOfClass: [NSMenu class]]
+	  || [o isKindOfClass: [NSView class]]
+	  || [o isKindOfClass: [GormObjectProxy class]])
+	{
+	  continue;
+	}
+      else
+	{
+	  NSString *className = NSStringFromClass([o class]);
+	  NSString *error = [NSString stringWithFormat: @"%@ has an invalid class of type %@", o, className];
+
+	  [results addObject: error];
+	}
+    }
+
+  NSLog(@"Checking connections..."); // %@", connections);
+  en = [connections objectEnumerator];
+  o = nil;
+  while ((o = [en nextObject]) != nil)
+    {
+      id src = [o source];
+      id dst = [o destination];
+      NSString *lable = [o label];
+      
+      if ([o isKindOfClass: [NSNibControlConnector class]])
+	{
+	}
+      else if ([o isKindOfClass: [NSNibOutletConnector class]])
+	{
+	}
+    }
+  
+  return results;
+}
+
 @end
 
 @implementation GormDocument (MenuValidation)

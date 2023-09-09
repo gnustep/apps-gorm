@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.0.4//EN" "http://www.gnustep.org/gsdoc-1_0_4.dtd">
+<gsdoc base="GormFilePrefsManager">
+  <head>
+    <title>GormFilePrefsManager</title>
+    <author name="Gregory John Casamento">
+    </author>
+    <abstract>
+      Sets the information about the.gorm file's version. This
+      allows a file to be saved as an older version of the.gorm
+      format so that older releases can still use.gorm files
+      created by people who have the latest GNUstep and Gorm
+      version.
+    </abstract>
+    <copy>2003 Free Software Foundation, Inc.</copy>
+  </head>
+  <body>
+    <front><contents /></front>
+    <chapter>
+      <heading>
+        Software documentation for the GormFilePrefsManager
+        class
+      </heading>
+      <class name="GormFilePrefsManager" super="NSObject">
+        <declared>GormCore/GormFilePrefsManager.h</declared>
+        <conform>NSCoding</conform>
+        <desc>
+          <em>Description forthcoming.</em>
+        </desc>
+        <ivariable type="id" name="archiveType" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="NSString*" name="archiveTypeName" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="NSDictionary*" name="currentProfile" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="fileType" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="gormAppVersion" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="itable" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="iwindow" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="showIncompatibilities" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="id" name="targetVersion" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="NSString*" name="targetVersionName" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="NSInteger" name="version" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <ivariable type="NSDictionary*" name="versionProfiles" validity="protected">
+          <desc>
+            <em>Description forthcoming.</em>
+          </desc>
+        </ivariable>
+        <method type="int" factory="yes">
+          <sel>currentVersion</sel>
+          <desc>
+            The current Gorm version.
+          </desc>
+        </method>
+        <method type="NSString*">
+          <sel>archiveTypeName</sel>
+          <desc>
+            Which achive type, by name.
+          </desc>
+        </method>
+        <method type="NSDictionary*">
+          <sel>currentProfile</sel>
+          <desc>
+            Current profile for the current model file.
+          </desc>
+        </method>
+        <method type="NSData*">
+          <sel>data</sel>
+          <desc>
+            Saves the encoded file info.
+          </desc>
+        </method>
+        <method type="NSString*">
+          <sel>fileTypeName</sel>
+          <desc>
+            return file type.
+          </desc>
+        </method>
+        <method type="BOOL">
+          <sel>isLatest</sel>
+          <desc>
+            Are we set to the latest version? Returns
+            <code>YES</code>, if so.
+          </desc>
+        </method>
+        <method type="BOOL">
+          <sel>loadFromData:</sel>
+          <arg type="NSData*">data</arg>
+          <desc>
+            Loads the encoded file info.
+          </desc>
+        </method>
+        <method type="BOOL">
+          <sel>loadFromFile:</sel>
+          <arg type="NSString*">path</arg>
+          <desc>
+            Loads the encoded file info.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>loadProfile:</sel>
+          <arg type="NSString*">version</arg>
+          <desc>
+            Loads the profile.
+          </desc>
+        </method>
+        <method type="NSData*">
+          <sel>nibDataWithOpenItems:</sel>
+          <arg type="NSArray*">openItems</arg>
+          <desc>
+            Saves the encoded file info.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>restoreClassVersions</sel>
+          <desc>
+            Restores the versions to the most current.
+          </desc>
+        </method>
+        <method type="BOOL">
+          <sel>saveToFile:</sel>
+          <arg type="NSString*">path</arg>
+          <desc>
+            Saves the encoded file info.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>selectArchiveType:</sel>
+          <arg type="id">sender</arg>
+          <desc>
+            Action called when the archive type pulldown is
+            selected.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>selectTargetVersion:</sel>
+          <arg type="id">sender</arg>
+          <desc>
+            Action called when the target version pulldown is
+            selected.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setClassVersions</sel>
+          <desc>
+            Sets the version of the classes.
+          </desc>
+        </method>
+        <method type="void">
+          <sel>setFileTypeName:</sel>
+          <arg type="NSString*">ft</arg>
+          <desc>
+            File type name...
+          </desc>
+        </method>
+        <method type="void">
+          <sel>showIncompatibilities:</sel>
+          <arg type="id">sender</arg>
+          <desc>
+            Show incompatibilities in the panel.
+          </desc>
+        </method>
+        <method type="NSString*">
+          <sel>targetVersionName</sel>
+          <desc>
+            Which version of the gui library, by name.
+          </desc>
+        </method>
+        <method type="int">
+          <sel>version</sel>
+          <desc>
+            Gorm Version of the current archive.
+          </desc>
+        </method>
+        <method type="int">
+          <sel>versionOfClass:</sel>
+          <arg type="NSString*">className</arg>
+          <desc>
+            Returns the version of the class in the current
+            profile.
+          </desc>
+        </method>
+        <method type="NSDictionary*">
+          <sel>versionProfiles</sel>
+          <desc>
+            Version information for the model file.
+          </desc>
+        </method>
+      </class>
+    </chapter>
+  </body>
+</gsdoc>

@@ -1,0 +1,301 @@
+{
+    categories = {
+	NSScanner = {
+	    OCHeaderParser = "NSScanner+OCHeaderParser";
+	};
+    };
+    category = {
+	"NSScanner(OCHeaderParser)" = "NSScanner+OCHeaderParser";
+    };
+    class = {
+	OCClass = OCClass;
+	OCHeaderParser = OCHeaderParser;
+	OCIVar = OCIVar;
+	OCIVarDecl = OCIVarDecl;
+	OCMethod = OCMethod;
+    };
+    classvars = {
+	OCClass = {
+	    className = OCClass;
+	    classString = OCClass;
+	    isCategory = OCClass;
+	    ivars = OCClass;
+	    methods = OCClass;
+	    protocols = OCClass;
+	    superClassName = OCClass;
+	};
+	OCHeaderParser = {
+	    classes = OCHeaderParser;
+	    fileData = OCHeaderParser;
+	};
+	OCIVar = {
+	    isOutlet = OCIVar;
+	    ivarString = OCIVar;
+	    name = OCIVar;
+	};
+	OCIVarDecl = {
+	    ivarString = OCIVarDecl;
+	    ivars = OCIVarDecl;
+	};
+	OCMethod = {
+	    isAction = OCMethod;
+	    isClassMethod = OCMethod;
+	    methodString = OCMethod;
+	    name = OCMethod;
+	};
+    };
+    function = {
+	lookAhead = ParserFunctions;
+	lookAheadForToken = ParserFunctions;
+    };
+    ivariable = {
+	className = {
+	    OCClass = OCClass;
+	};
+	classString = {
+	    OCClass = OCClass;
+	};
+	classes = {
+	    OCHeaderParser = OCHeaderParser;
+	};
+	fileData = {
+	    OCHeaderParser = OCHeaderParser;
+	};
+	isAction = {
+	    OCMethod = OCMethod;
+	};
+	isCategory = {
+	    OCClass = OCClass;
+	};
+	isClassMethod = {
+	    OCMethod = OCMethod;
+	};
+	isOutlet = {
+	    OCIVar = OCIVar;
+	};
+	ivarString = {
+	    OCIVar = OCIVar;
+	    OCIVarDecl = OCIVarDecl;
+	};
+	ivars = {
+	    OCClass = OCClass;
+	    OCIVarDecl = OCIVarDecl;
+	};
+	methodString = {
+	    OCMethod = OCMethod;
+	};
+	methods = {
+	    OCClass = OCClass;
+	};
+	name = {
+	    OCIVar = OCIVar;
+	    OCMethod = OCMethod;
+	};
+	protocols = {
+	    OCClass = OCClass;
+	};
+	superClassName = {
+	    OCClass = OCClass;
+	};
+    };
+    method = {
+	"-addIVar:isOutlet:" = {
+	    OCClass = OCClass;
+	};
+	"-addMethod:isAction:" = {
+	    OCClass = OCClass;
+	};
+	"-className" = {
+	    OCClass = OCClass;
+	};
+	"-classes" = {
+	    OCHeaderParser = OCHeaderParser;
+	};
+	"-initWithContentsOfFile:" = {
+	    OCHeaderParser = OCHeaderParser;
+	};
+	"-initWithString:" = {
+	    OCClass = OCClass;
+	    OCIVar = OCIVar;
+	    OCIVarDecl = OCIVarDecl;
+	    OCMethod = OCMethod;
+	};
+	"-isAction" = {
+	    OCMethod = OCMethod;
+	};
+	"-isCategory" = {
+	    OCClass = OCClass;
+	};
+	"-isClassMethod" = {
+	    OCMethod = OCMethod;
+	};
+	"-isOutlet" = {
+	    OCIVar = OCIVar;
+	};
+	"-ivars" = {
+	    OCClass = OCClass;
+	    OCIVarDecl = OCIVarDecl;
+	};
+	"-methods" = {
+	    OCClass = OCClass;
+	};
+	"-name" = {
+	    OCIVar = OCIVar;
+	    OCMethod = OCMethod;
+	};
+	"-parse" = {
+	    OCClass = OCClass;
+	    OCHeaderParser = OCHeaderParser;
+	    OCIVar = OCIVar;
+	    OCIVarDecl = OCIVarDecl;
+	    OCMethod = OCMethod;
+	};
+	"-scanUpToAndIncludingCharactersFromSet:intoString:" = {
+	    "NSScanner(OCHeaderParser)" = "NSScanner+OCHeaderParser";
+	};
+	"-scanUpToAndIncludingString:intoString:" = {
+	    "NSScanner(OCHeaderParser)" = "NSScanner+OCHeaderParser";
+	};
+	"-setClassName:" = {
+	    OCClass = OCClass;
+	};
+	"-setIsAction:" = {
+	    OCMethod = OCMethod;
+	};
+	"-setIsCategory:" = {
+	    OCClass = OCClass;
+	};
+	"-setIsClassMethod:" = {
+	    OCMethod = OCMethod;
+	};
+	"-setIsOutlet:" = {
+	    OCIVar = OCIVar;
+	};
+	"-setName:" = {
+	    OCIVar = OCIVar;
+	    OCMethod = OCMethod;
+	};
+	"-setSuperClassName:" = {
+	    OCClass = OCClass;
+	};
+	"-superClassName" = {
+	    OCClass = OCClass;
+	};
+    };
+    output = {
+	"../../../GormObjCHeaderParser/GormObjCHeaderParser.h" = (
+	    "GormObjCHeaderParser/GormObjCHeaderParser.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/NSScanner+OCHeaderParser.h" = (
+	    "GormObjCHeaderParser/NSScanner+OCHeaderParser.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/OCClass.h" = (
+	    "GormObjCHeaderParser/OCClass.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/OCHeaderParser.h" = (
+	    "GormObjCHeaderParser/OCHeaderParser.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/OCIVar.h" = (
+	    "GormObjCHeaderParser/OCIVar.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/OCIVarDecl.h" = (
+	    "GormObjCHeaderParser/OCIVarDecl.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/OCMethod.h" = (
+	    "GormObjCHeaderParser/OCMethod.gsdoc"
+	);
+	"../../../GormObjCHeaderParser/ParserFunctions.h" = (
+	    "GormObjCHeaderParser/ParserFunctions.gsdoc"
+	);
+    };
+    source = {
+	"../../../GormObjCHeaderParser/GormObjCHeaderParser.h" = (
+	    "../../../GormObjCHeaderParser/GormObjCHeaderParser.h"
+	);
+	"../../../GormObjCHeaderParser/NSScanner+OCHeaderParser.h" = (
+	    "../../../GormObjCHeaderParser/NSScanner+OCHeaderParser.m"
+	);
+	"../../../GormObjCHeaderParser/OCClass.h" = (
+	    "../../../GormObjCHeaderParser/OCClass.m"
+	);
+	"../../../GormObjCHeaderParser/OCHeaderParser.h" = (
+	    "../../../GormObjCHeaderParser/OCHeaderParser.m"
+	);
+	"../../../GormObjCHeaderParser/OCIVar.h" = (
+	    "../../../GormObjCHeaderParser/OCIVar.m"
+	);
+	"../../../GormObjCHeaderParser/OCIVarDecl.h" = (
+	    "../../../GormObjCHeaderParser/OCIVarDecl.m"
+	);
+	"../../../GormObjCHeaderParser/OCMethod.h" = (
+	    "../../../GormObjCHeaderParser/OCMethod.m"
+	);
+	"../../../GormObjCHeaderParser/ParserFunctions.h" = (
+	    "../../../GormObjCHeaderParser/ParserFunctions.m"
+	);
+    };
+    super = {
+	OCClass = NSObject;
+	OCHeaderParser = NSObject;
+	OCIVar = NSObject;
+	OCIVarDecl = NSObject;
+	OCMethod = NSObject;
+    };
+    title = {
+	"NSScanner+OCHeaderParser" = "NSScanner+OCHeaderParser documentation";
+	OCClass = "OCClass class documentation";
+	OCHeaderParser = "OCHeaderParser class documentation";
+	OCIVar = "OCIVar class documentation";
+	OCIVarDecl = "OCIVarDecl class documentation";
+	OCMethod = "OCMethod class documentation";
+	ParserFunctions = "ParserFunctions documentation";
+    };
+    unitmethods = {
+	"NSScanner(OCHeaderParser)" = {
+	    "-scanUpToAndIncludingCharactersFromSet:intoString:" = "NSScanner+OCHeaderParser";
+	    "-scanUpToAndIncludingString:intoString:" = "NSScanner+OCHeaderParser";
+	};
+	OCClass = {
+	    "-addIVar:isOutlet:" = OCClass;
+	    "-addMethod:isAction:" = OCClass;
+	    "-className" = OCClass;
+	    "-initWithString:" = OCClass;
+	    "-isCategory" = OCClass;
+	    "-ivars" = OCClass;
+	    "-methods" = OCClass;
+	    "-parse" = OCClass;
+	    "-setClassName:" = OCClass;
+	    "-setIsCategory:" = OCClass;
+	    "-setSuperClassName:" = OCClass;
+	    "-superClassName" = OCClass;
+	};
+	OCHeaderParser = {
+	    "-classes" = OCHeaderParser;
+	    "-initWithContentsOfFile:" = OCHeaderParser;
+	    "-parse" = OCHeaderParser;
+	};
+	OCIVar = {
+	    "-initWithString:" = OCIVar;
+	    "-isOutlet" = OCIVar;
+	    "-name" = OCIVar;
+	    "-parse" = OCIVar;
+	    "-setIsOutlet:" = OCIVar;
+	    "-setName:" = OCIVar;
+	};
+	OCIVarDecl = {
+	    "-initWithString:" = OCIVarDecl;
+	    "-ivars" = OCIVarDecl;
+	    "-parse" = OCIVarDecl;
+	};
+	OCMethod = {
+	    "-initWithString:" = OCMethod;
+	    "-isAction" = OCMethod;
+	    "-isClassMethod" = OCMethod;
+	    "-name" = OCMethod;
+	    "-parse" = OCMethod;
+	    "-setIsAction:" = OCMethod;
+	    "-setIsClassMethod:" = OCMethod;
+	    "-setName:" = OCMethod;
+	};
+    };
+}
