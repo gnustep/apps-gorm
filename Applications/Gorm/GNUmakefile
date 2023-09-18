@@ -50,7 +50,7 @@ SVN_MODULE_NAME = gorm
 SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 
 
-include ./Version
+include ../../Version
 
 #
 # Each palette is a subproject
