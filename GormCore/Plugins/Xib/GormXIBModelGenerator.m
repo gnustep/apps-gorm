@@ -407,6 +407,8 @@ static NSUInteger _count = INT_MAX;
 			      @"NSColor", @"GSCalibratedRGBColor",
 			      @"NSColor", @"GSPatternColor",
 			      @"NSView", @"GSTableCornerView",
+			      @"NSWindow", @"NSPanel",
+			      @"NSWindow", @"GormNSPanel",
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
@@ -494,9 +496,12 @@ static NSUInteger _count = INT_MAX;
 {
   NSString *className = name;
 
+  NSLog(@"Name = %@", name);
+  
   if ([_mappedClassNames objectForKey: name])
     {
       className = [_mappedClassNames objectForKey: name];
+      NSLog(@"%@ => %@", name, className);
     }
 
   NSString *result = [className stringByReplacingOccurrencesOfString: @"NS"
@@ -517,6 +522,8 @@ static NSUInteger _count = INT_MAX;
       result = @"customObject";
     }
 
+  NSLog(@"Result = %@", result);
+
   return result;
 }
 
@@ -531,79 +538,83 @@ static NSUInteger _count = INT_MAX;
 
 - (NSString *) _createIdentifierForObject: (id)obj
 {
-  NSString *result = [_objectToIdentifier objectForKey: obj];
-
-  if (result == nil)
+  NSString *result = nil;
+  
+  if (obj != nil)
     {
-      if ([obj isKindOfClass: [GormObjectProxy class]])
+      result = [_objectToIdentifier objectForKey: obj];      
+      if (result == nil)
 	{
-	  NSString *className = [obj className];
-
-	  if ([className isEqualToString: @"NSApplication"])
+	  if ([obj isKindOfClass: [GormObjectProxy class]])
 	    {
-	      result = @"-3";
-	      return result;
+	      NSString *className = [obj className];
+	      
+	      if ([className isEqualToString: @"NSApplication"])
+		{
+		  result = @"-3";
+		  return result;
+		}
+	      else if ([className isEqualToString: @"NSOwner"])
+		{
+		  result = @"-2";
+		  return result;
+		}
+	      else if ([className isEqualToString: @"NSFirst"])
+		{
+		  result = @"-1";
+		  return result;
+		}
 	    }
-	  else if ([className isEqualToString: @"NSOwner"])
+	  else if([obj isKindOfClass: [GormFilesOwner class]])
 	    {
 	      result = @"-2";
 	      return result;
-	    }
-	  else if ([className isEqualToString: @"NSFirst"])
+	}
+	  else if([obj isKindOfClass: [GormFirstResponder class]])
 	    {
 	      result = @"-1";
 	      return result;
 	    }
+	  else
+	    {
+	      result = [_gormDocument nameForObject: obj];
+	    }
+	  
+	  // Encoding
+	  NSString *originalName = [result copy];
+	  NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
+					      result, result, result];  // kludge...
+	  //
+	  result = [stackedResult hexString];
+	  result = [result splitString];
+	  
+	  // Collision...
+	  id o = [_mappingDictionary objectForKey: result];
+	  if (o != nil)
+	    {
+	      result = [[NSString randomHex] splitString];
+	    }
+	  
+	  // If the id already exists, but isn't mapped...
+	  if ([_allIdentifiers containsObject: result])
+	    {
+	      result = [[NSString randomHex] splitString];
+	    }
+	  
+	  if (originalName != nil)
+	    {
+	      // Map the name...
+	      [_mappingDictionary setObject: originalName
+				     forKey: result];
+	    }
+	  
+	  // Record the id...
+	  [_allIdentifiers addObject: result];
+	  
+	  // Record the mapping of obj -> identifier...
+	  [_objectToIdentifier setObject: result
+				  forKey: obj];
 	}
-      else if([obj isKindOfClass: [GormFilesOwner class]])
-	{
-	  result = @"-2";
-	  return result;
-	}
-      else if([obj isKindOfClass: [GormFirstResponder class]])
-	{
-	  result = @"-1";
-	  return result;
-	}
-      else
-	{
-	  result = [_gormDocument nameForObject: obj];
-	}
-
-      // Encoding
-      NSString *originalName = [result copy];
-      NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
-					  result, result, result];  // kludge...
-      //
-      result = [stackedResult hexString];
-      result = [result splitString];
-
-      // Collision...
-      id o = [_mappingDictionary objectForKey: result];
-      if (o != nil)
-	{
-	  result = [[NSString randomHex] splitString];
-	}
-
-      // If the id already exists, but isn't mapped...
-      if ([_allIdentifiers containsObject: result])
-	{
-	  result = [[NSString randomHex] splitString];
-	}
-
-      if (originalName != nil)
-	{
-	  // Map the name...
-	  [_mappingDictionary setObject: originalName
-				 forKey: result];
-	}
-
-      // Record the id...
-      [_allIdentifiers addObject: result];
-
-      // Record the mapping of obj -> identifier...
-      [_objectToIdentifier setObject: result
-			      forKey: obj];
     }
 
   return result;
@@ -1521,6 +1532,7 @@ static NSUInteger _count = INT_MAX;
 	}
 
       NSString *elementName = [self _convertName: className];
+      // NSLog(@"elementName = %@", elementName);
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
       NSXMLNode *attr = nil;
 
@@ -1682,15 +1694,18 @@ static NSUInteger _count = INT_MAX;
 	  [elem addAttribute: attr];
 
 	  id selectedItem = [obj selectedItem];
-	  NSString *selectedItemId = [self _createIdentifierForObject: selectedItem];
-	  attr = [NSXMLNode attributeWithName: @"selectedItem" stringValue: selectedItemId];
-	  while ((item = [en nextObject]) != nil)
+	  if (selectedItem != nil)
 	    {
-	      [self _collectObjectsFromObject: item
-				   withParent: itemsElem];
+	      NSString *selectedItemId = [self _createIdentifierForObject: selectedItem];
+	      attr = [NSXMLNode attributeWithName: @"selectedItem" stringValue: selectedItemId];
+	      while ((item = [en nextObject]) != nil)
+		{
+		  [self _collectObjectsFromObject: item
+				       withParent: itemsElem];
+		}
+	      [elem addAttribute: attr];
 	    }
-	  [elem addAttribute: attr];
-
+	  
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
@@ -1714,6 +1729,13 @@ static NSUInteger _count = INT_MAX;
 			       withParent: elem];
 	}
 
+      if ([obj isKindOfClass: [NSPanel class]])
+	{
+	  NSString *className = NSStringFromClass([obj class]);
+	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
+	  [elem addAttribute: attr];
+	}
+      
       if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
 	  id sv = [obj superview];
