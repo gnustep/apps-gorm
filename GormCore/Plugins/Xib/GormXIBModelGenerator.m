@@ -69,6 +69,25 @@ static NSDictionary *_valueMapping = nil;
 
 static NSUInteger _count = INT_MAX;
 
+/*
+NSString* XIBStringFromClass(Class cls)
+{
+  NSString *className = NSStringFromClass(cls);
+
+  if (className != nil)
+    {
+      NSString *newClassName = [_mappedClassNames objectForKey: className];
+      
+      if (newClassName != nil)
+	{
+	  className = newClassName;
+	}
+    }
+  
+  return className;
+}
+*/
+
 @interface NSButtonCell (_Private_)
 
 - (NSButtonType) buttonType;
@@ -496,12 +515,12 @@ static NSUInteger _count = INT_MAX;
 {
   NSString *className = name;
 
-  NSLog(@"Name = %@", name);
+  // NSLog(@"Name = %@", name);
   
   if ([_mappedClassNames objectForKey: name])
     {
       className = [_mappedClassNames objectForKey: name];
-      NSLog(@"%@ => %@", name, className);
+      // NSLog(@"%@ => %@", name, className);
     }
 
   NSString *result = [className stringByReplacingOccurrencesOfString: @"NS"
@@ -522,7 +541,7 @@ static NSUInteger _count = INT_MAX;
       result = @"customObject";
     }
 
-  NSLog(@"Result = %@", result);
+  // NSLog(@"Result = %@", result);
 
   return result;
 }
@@ -1732,6 +1751,12 @@ static NSUInteger _count = INT_MAX;
       if ([obj isKindOfClass: [NSPanel class]])
 	{
 	  NSString *className = NSStringFromClass([obj class]);
+
+	  if ([className isEqualToString: @"GormNSPanel"])
+	    {
+	      className = @"NSPanel";
+	    }
+	  
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
 	  [elem addAttribute: attr];
 	}
