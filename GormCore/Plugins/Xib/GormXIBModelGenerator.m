@@ -1476,22 +1476,26 @@ NSString* XIBStringFromClass(Class cls)
       // Get actions...
       while ((action = [en nextObject]) != nil)
 	{
-	  NSDebugLog(@"action = %@", action);
-	  NSXMLElement *actionElem = [NSXMLNode elementWithName: @"action"];
-	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"selector"
-					     stringValue: [action label]];
-	  [actionElem addAttribute: attr];
-
 	  NSString *targetId = [self _createIdentifierForObject: [action destination]];
-	  attr = [NSXMLNode attributeWithName: @"target"
-				  stringValue: targetId];
-	  [actionElem addAttribute: attr];
 
-	  attr = [NSXMLNode attributeWithName: @"id"
-				  stringValue: [[NSString randomHex] splitString]];
-	  [actionElem addAttribute: attr];
-
-	  [conns addChild: actionElem];
+	  if ([targetId isEqualToString: @""] == NO && targetId != nil)
+	    {
+	      NSDebugLog(@"action = %@", action);
+	      NSXMLElement *actionElem = [NSXMLNode elementWithName: @"action"];
+	      NSXMLNode *attr = [NSXMLNode attributeWithName: @"selector"
+						 stringValue: [action label]];
+	      [actionElem addAttribute: attr];
+	      
+	      attr = [NSXMLNode attributeWithName: @"target"
+				      stringValue: targetId];
+	      [actionElem addAttribute: attr];
+	      
+	      attr = [NSXMLNode attributeWithName: @"id"
+				      stringValue: [[NSString randomHex] splitString]];
+	      [actionElem addAttribute: attr];
+	      
+	      [conns addChild: actionElem];
+	    }
 	}
 
       [elem addChild: conns];
@@ -1511,24 +1515,28 @@ NSString* XIBStringFromClass(Class cls)
       // Get actions...
       while ((outlet = [en nextObject]) != nil)
 	{
-	  NSDebugLog(@"outlet = %@", outlet);
-	  NSXMLElement *outletElem = [NSXMLNode elementWithName: @"outlet"];
-	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"property"
-					     stringValue: [outlet label]];
-	  [outletElem addAttribute: attr];
-
 	  NSString *destinationId = [self _createIdentifierForObject: [outlet destination]];
-	  attr = [NSXMLNode attributeWithName: @"destination"
-				  stringValue: destinationId];
-	  [outletElem addAttribute: attr];
 
-	  attr = [NSXMLNode attributeWithName: @"id"
-				  stringValue: [[NSString randomHex] splitString]];
-	  [outletElem addAttribute: attr];
-
-	  [conns addChild: outletElem];
+	  if([destinationId isEqualToString: @""] == NO && destinationId != nil)
+	    {
+	      NSDebugLog(@"outlet = %@", outlet);
+	      NSXMLElement *outletElem = [NSXMLNode elementWithName: @"outlet"];
+	      NSXMLNode *attr = [NSXMLNode attributeWithName: @"property"
+						 stringValue: [outlet label]];
+	      [outletElem addAttribute: attr];
+	      
+	      attr = [NSXMLNode attributeWithName: @"destination"
+				      stringValue: destinationId];
+	      [outletElem addAttribute: attr];
+	      
+	      attr = [NSXMLNode attributeWithName: @"id"
+				      stringValue: [[NSString randomHex] splitString]];
+	      [outletElem addAttribute: attr];
+	      
+	      [conns addChild: outletElem];
+	    }
 	}
-
+      
       [elem addChild: conns];
     }
 }
