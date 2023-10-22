@@ -47,11 +47,11 @@
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
-#import "GormDocument.h"
-#import "GormDocumentController.h"
-#import "GormFilePrefsManager.h"
-#import "GormProtocol.h"
-#import "GormPrivate.h"
+#import <GormCore/GormDocument.h>
+#import <GormCore/GormDocumentController.h>
+#import <GormCore/GormFilePrefsManager.h>
+#import <GormCore/GormProtocol.h>
+#import <GormCore/GormPrivate.h>
 
 #import "GormXIBModelGenerator.h"
 

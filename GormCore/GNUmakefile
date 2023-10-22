@@ -34,7 +34,7 @@ FRAMEWORK_NAME=GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-SUBPROJECTS = Plugins
+SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \

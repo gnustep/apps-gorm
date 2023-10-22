@@ -55,6 +55,7 @@ SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 SUBPROJECTS = \
 	InterfaceBuilder \
 	GormCore \
+	Plugins \
 	GormObjCHeaderParser \
 	Applications \
 	Tools
