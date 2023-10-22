@@ -40,7 +40,7 @@
       
       if ([bundle loadNibNamed: @"GormScrollViewAttributesInspector" 
 			 owner: self
-	       topLevelObjects: nil] == NO)
+	       topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Could not open gorm GormScrollViewAttributesInspector");
 	  NSLog(@"self %@", self);

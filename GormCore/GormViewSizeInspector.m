@@ -81,7 +81,7 @@ NSImage	*mVLine = nil;
       NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       if ([bundle loadNibNamed: @"GormViewSizeInspector" 
 			 owner: self
-	       topLevelObjects: nil] == NO)
+	       topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Could not open gorm GormViewSizeInspector");
 	  NSLog(@"self %@", self);

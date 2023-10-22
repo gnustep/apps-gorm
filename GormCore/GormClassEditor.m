@@ -73,7 +73,7 @@ NSImage *browserImage = nil;
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
 
-      if([bundle loadNibNamed: @"GormClassEditor" owner: self topLevelObjects: nil])
+      if([bundle loadNibNamed: @"GormClassEditor" owner: self topLevelObjects: NULL])
 	{
 	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 	  NSRect		 scrollRect = [classesView frame]; //  = {{0, 0}, {340, 188}};

@@ -14,7 +14,7 @@
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       
-      if (![bundle loadNibNamed: @"GormSetName" owner: self topLevelObjects: nil])
+      if (![bundle loadNibNamed: @"GormSetName" owner: self topLevelObjects: NULL])
         {
           return NSAlertAlternateReturn;
         }

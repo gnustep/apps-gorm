@@ -274,7 +274,7 @@ objectValueForTableColumn: (NSTableColumn *)tc
       // load the gui...
       if (![bundle loadNibNamed: @"GormClassInspector"
 			  owner: self
-		topLevelObjects: nil])
+		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormClassInspector");
 	  return nil;

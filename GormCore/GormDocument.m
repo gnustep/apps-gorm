@@ -1436,7 +1436,7 @@ static NSImage  *fileImage = nil;
 /**
  * Detach every object in anArray from the document.  Optionally closing editors.
  */
-- (void) detachObjects: (NSArray*)anArray closeEditors: (BOOL)close_editors
+- (void) detachObjects: (/* NSArray* */ id)anArray closeEditors: (BOOL)close_editors
 {
   NSEnumerator  *enumerator = [anArray objectEnumerator];
   NSObject      *obj;
@@ -2924,6 +2924,8 @@ static void _real_close(GormDocument *self,
 /**
  * Return a text description of the document.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = <<name table: %@, connections: %@>>",
@@ -2931,6 +2933,7 @@ static void _real_close(GormDocument *self,
 		   (unsigned long)self,
 		   nameTable, connections];
 }
+#pragma GCC diagnostic pop
 
 /**
  * Returns YES, if obj is a top level object.
@@ -3670,6 +3673,7 @@ static void _real_close(GormDocument *self,
 	}
     }
 
+  /*
   NSLog(@"Checking connections..."); // %@", connections);
   en = [connections objectEnumerator];
   o = nil;
@@ -3677,7 +3681,7 @@ static void _real_close(GormDocument *self,
     {
       id src = [o source];
       id dst = [o destination];
-      NSString *lable = [o label];
+      NSString *label = [o label];
       
       if ([o isKindOfClass: [NSNibControlConnector class]])
 	{
@@ -3686,7 +3690,7 @@ static void _real_close(GormDocument *self,
 	{
 	}
     }
-  
+  */
   return results;
 }
 

@@ -190,10 +190,6 @@ GormCore_OBJC_FILES = \
 	GormXLIFFDocument.m \
 
 GormCore_RESOURCE_FILES = \
-	Plugins/Gorm/Gorm.plugin \
-	Plugins/Nib/Nib.plugin \
-	Plugins/Xib/Xib.plugin \
-	Plugins/GModel/GModel.plugin \
 	Images/GormActionSelected.tiff \
 	Images/GormAction.tiff \
 	Images/GormClass.tiff \

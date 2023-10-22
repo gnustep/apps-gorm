@@ -38,7 +38,7 @@
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       
-      if ( ![bundle loadNibNamed:@"GormClassPanel" owner:self topLevelObjects: nil] )
+      if ( ![bundle loadNibNamed:@"GormClassPanel" owner:self topLevelObjects: NULL] )
 	{
 	  NSLog(@"Can not load bundle GormClassPanel");
 	  return nil;

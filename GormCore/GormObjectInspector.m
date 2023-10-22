@@ -33,7 +33,7 @@
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       
-      if([bundle loadNibNamed: @"GormObjectInspector" owner: self topLevelObjects: nil] == NO)
+      if([bundle loadNibNamed: @"GormObjectInspector" owner: self topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Couldn't load GormObjectInsector");
 	  return nil;

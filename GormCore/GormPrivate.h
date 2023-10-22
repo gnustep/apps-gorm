@@ -39,6 +39,8 @@
 #include <GormCore/GormProtocol.h>
 #include <GormCore/GormClassEditor.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wattributes"
 extern NSString *GormLinkPboardType;
 extern NSString *GormToggleGuidelineNotification;
 extern NSString *GormDidModifyClassNotification;
@@ -47,6 +49,7 @@ extern NSString *GormDidDeleteClassNotification;
 extern NSString *GormWillDetachObjectFromDocumentNotification;
 extern NSString *GormDidDetachObjectFromDocumentNotification;
 extern NSString *GormResizeCellNotification;
+#pragma GCC diagnostic pop
 
 @class	GormDocument;
 @class	GormInspectorsManager;

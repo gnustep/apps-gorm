@@ -24,7 +24,7 @@
       // load the gui...
       if (![bundle loadNibNamed: @"GormImageInspector"
 			  owner: self
-		topLevelObjects: nil])
+		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormImageInspector");
 	  return nil;
