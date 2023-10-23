@@ -23,8 +23,10 @@
 #define	INCLUDED_GormServer_h
 
 @protocol GormServer
+
 - (void) addClass: (NSDictionary *)dict;
 - (void) deleteClass: (NSString *)className;
+
 @end
 
 #endif

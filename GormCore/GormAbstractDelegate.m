@@ -954,6 +954,35 @@
   [cm removeClassNamed: className];
 }
 
+// Add resources...
+- (void) addResource: (NSDictionary *)dict
+{
+  NSString *type = [dict objectForKey: @"type"];
+  
+}
+
+- (void) deleteResource: (NSDictionary *)dict
+{
+  NSString *type = [dict objectForKey: @"type"];
+
+}
+
+- (void) handleResourceNotificaton: (NSNotification *)notification
+{
+  NSDictionary *dict = [notification userInfo];
+  NSString *name = [notification name];
+  
+  if ([name isEqualToString: @"PBAddedResourceNotification"])
+    {
+      [self addResource: dict];
+    }
+  else if ([name isEqualToString: @"PBDeletedResourceNotification"])
+    {
+      [self deleteResource: dict];
+    }
+}
+
+// Handle exception...
 - (void) exceptionWhileLoadingModel: (NSString *)errorMessage
 {
   NSRunAlertPanel(_(@"Exception"), 
