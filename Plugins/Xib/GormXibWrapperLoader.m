@@ -449,7 +449,7 @@
   if ([obj isKindOfClass: [NSWindowTemplate class]])
     {
       GormClassManager *classManager = [document classManager];
-      Class clz ;
+      Class clz;
       NSString *className = [obj className];
       
       if([classManager isCustomClass: className])

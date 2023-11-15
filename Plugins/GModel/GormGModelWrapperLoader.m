@@ -163,11 +163,11 @@ static BOOL gormFileOwnerDecoded;
 
 - (id)initWithModelUnarchiver: (GMUnarchiver*)unarchiver
 {
-  id extension;
+  // id extension;
   id realObject;
 
   theClass = RETAIN([unarchiver decodeStringWithName: @"className"]);
-  extension = [unarchiver decodeObjectWithName: @"extension"];
+  // extension = [unarchiver decodeObjectWithName: @"extension"];
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
 
   //real = [unarchiver representationForName: @"realObject" isLabeled: &label];
@@ -193,10 +193,10 @@ static BOOL gormFileOwnerDecoded;
 {
   NSString *cn;
   id realObject;
-  id extension;
+  // id extension;
 
   cn = [unarchiver decodeStringWithName: @"className"];
-  extension = [unarchiver decodeObjectWithName: @"extension"];
+  // extension = [unarchiver decodeObjectWithName: @"extension"];
   realObject = [unarchiver decodeObjectWithName: @"realObject"];
   [self setFrame: [unarchiver decodeRectWithName: @"frame"]];
   [self setClassName: cn];

@@ -77,13 +77,13 @@ NSString* XIBStringFromClass(Class cls)
   if (className != nil)
     {
       NSString *newClassName = [_mappedClassNames objectForKey: className];
-      
+
       if (newClassName != nil)
 	{
 	  className = newClassName;
 	}
     }
-  
+
   return className;
 }
 */
@@ -104,6 +104,8 @@ NSString* XIBStringFromClass(Class cls)
   BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
   NSString *imageName = [[self image] name];
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
   if ([imageName isEqualToString: @"GSSwitch"])
     {
       type = NSSwitchButton;
@@ -142,6 +144,7 @@ NSString* XIBStringFromClass(Class cls)
     {
       type = NSOnOffButton;
     }
+#pragma GCC diagnostic pop
 
   return type;
 }
@@ -516,7 +519,7 @@ NSString* XIBStringFromClass(Class cls)
   NSString *className = name;
 
   // NSLog(@"Name = %@", name);
-  
+
   if ([_mappedClassNames objectForKey: name])
     {
       className = [_mappedClassNames objectForKey: name];
@@ -558,16 +561,16 @@ NSString* XIBStringFromClass(Class cls)
 - (NSString *) _createIdentifierForObject: (id)obj
 {
   NSString *result = nil;
-  
+
   if (obj != nil)
     {
-      result = [_objectToIdentifier objectForKey: obj];      
+      result = [_objectToIdentifier objectForKey: obj];
       if (result == nil)
 	{
 	  if ([obj isKindOfClass: [GormObjectProxy class]])
 	    {
 	      NSString *className = [obj className];
-	      
+
 	      if ([className isEqualToString: @"NSApplication"])
 		{
 		  result = @"-3";
@@ -598,7 +601,7 @@ NSString* XIBStringFromClass(Class cls)
 	    {
 	      result = [_gormDocument nameForObject: obj];
 	    }
-	  
+
 	  // Encoding
 	  NSString *originalName = [result copy];
 	  NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
@@ -606,30 +609,30 @@ NSString* XIBStringFromClass(Class cls)
 	  //
 	  result = [stackedResult hexString];
 	  result = [result splitString];
-	  
+
 	  // Collision...
 	  id o = [_mappingDictionary objectForKey: result];
 	  if (o != nil)
 	    {
 	      result = [[NSString randomHex] splitString];
 	    }
-	  
+
 	  // If the id already exists, but isn't mapped...
 	  if ([_allIdentifiers containsObject: result])
 	    {
 	      result = [[NSString randomHex] splitString];
 	    }
-	  
+
 	  if (originalName != nil)
 	    {
 	      // Map the name...
 	      [_mappingDictionary setObject: originalName
 				     forKey: result];
 	    }
-	  
+
 	  // Record the id...
 	  [_allIdentifiers addObject: result];
-	  
+
 	  // Record the mapping of obj -> identifier...
 	  [_objectToIdentifier setObject: result
 				  forKey: obj];
@@ -819,6 +822,8 @@ NSString* XIBStringFromClass(Class cls)
 {
   NSXMLNode *attr = nil;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
   NSDebugLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
   if ([elem attributeForName: @"keyEquivalent"] != nil)
     {
@@ -843,6 +848,7 @@ NSString* XIBStringFromClass(Class cls)
 	  [elem addAttribute: attr];
 	}
     }
+#pragma GCC diagnostic pop
 }
 
 - (void) _addWindowStyleMask: (NSUInteger)mask toElement: (NSXMLElement *)elem
@@ -853,6 +859,8 @@ NSString* XIBStringFromClass(Class cls)
 
   NSXMLElement *styleMaskElem = [NSXMLNode elementWithName: @"windowStyleMask"];
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
   if (mask | NSWindowStyleMaskTitled)
     {
       attr = [NSXMLNode attributeWithName: @"titled" stringValue: @"YES"];
@@ -873,6 +881,7 @@ NSString* XIBStringFromClass(Class cls)
       attr = [NSXMLNode attributeWithName: @"resizable" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
     }
+#pragma GCC diagnostic pop
 
   attr = [NSXMLNode attributeWithName: @"key" stringValue: @"styleMask"];
   [styleMaskElem addAttribute: attr];
@@ -993,6 +1002,8 @@ NSString* XIBStringFromClass(Class cls)
       NSXMLElement *autoresizingMaskElem = [NSXMLNode elementWithName: @"autoresizingMask"];
       NSXMLNode *attr = nil;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
       if (m | NSViewWidthSizable)
 	{
 	  attr = [NSXMLNode attributeWithName: @"widthSizable" stringValue: @"YES"];
@@ -1017,6 +1028,7 @@ NSString* XIBStringFromClass(Class cls)
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMinY" stringValue: @"YES"];
 	}
+#pragma GCC diagnostic pop
 
       [autoresizingMaskElem addAttribute: attr];
       attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizeMask"];
@@ -1140,11 +1152,11 @@ NSString* XIBStringFromClass(Class cls)
       for (c = 0; c < itemsPerCol; c++)
 	{
 	  NSXMLElement *columnElem = [NSXMLNode elementWithName: @"column"];
-	  
+
 	  for (r = 0; r < itemsPerRow; r++)
 	    {
 	      id cell = nil;
-	      
+
 	      i = (c * itemsPerCol) + r;
 
 	      // If we go past the end of the array...
@@ -1152,20 +1164,20 @@ NSString* XIBStringFromClass(Class cls)
 		{
 		  continue;
 		}
-	      
+
 	      cell = [cells objectAtIndex: i];
 	      if (cellClass == nil)
 		{
 		  cellClass = NSStringFromClass([cell class]);
 		}
-	      
+
 	      [self _collectObjectsFromObject: cell
 				   withParent: columnElem];
 	    }
 	  [cellsElem addChild: columnElem];
 	}
     }
-  
+
   // Add the cell class, so that it doesn't crash on reload...
   if (cellClass != nil)
     {
@@ -1485,15 +1497,15 @@ NSString* XIBStringFromClass(Class cls)
 	      NSXMLNode *attr = [NSXMLNode attributeWithName: @"selector"
 						 stringValue: [action label]];
 	      [actionElem addAttribute: attr];
-	      
+
 	      attr = [NSXMLNode attributeWithName: @"target"
 				      stringValue: targetId];
 	      [actionElem addAttribute: attr];
-	      
+
 	      attr = [NSXMLNode attributeWithName: @"id"
 				      stringValue: [[NSString randomHex] splitString]];
 	      [actionElem addAttribute: attr];
-	      
+
 	      [conns addChild: actionElem];
 	    }
 	}
@@ -1524,19 +1536,19 @@ NSString* XIBStringFromClass(Class cls)
 	      NSXMLNode *attr = [NSXMLNode attributeWithName: @"property"
 						 stringValue: [outlet label]];
 	      [outletElem addAttribute: attr];
-	      
+
 	      attr = [NSXMLNode attributeWithName: @"destination"
 				      stringValue: destinationId];
 	      [outletElem addAttribute: attr];
-	      
+
 	      attr = [NSXMLNode attributeWithName: @"id"
 				      stringValue: [[NSString randomHex] splitString]];
 	      [outletElem addAttribute: attr];
-	      
+
 	      [conns addChild: outletElem];
 	    }
 	}
-      
+
       [elem addChild: conns];
     }
 }
@@ -1732,7 +1744,7 @@ NSString* XIBStringFromClass(Class cls)
 		}
 	      [elem addAttribute: attr];
 	    }
-	  
+
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
@@ -1764,11 +1776,11 @@ NSString* XIBStringFromClass(Class cls)
 	    {
 	      className = @"NSPanel";
 	    }
-	  
+
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
 	  [elem addAttribute: attr];
 	}
-      
+
       if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
 	  id sv = [obj superview];

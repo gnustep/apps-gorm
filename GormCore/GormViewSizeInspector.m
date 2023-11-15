@@ -152,16 +152,7 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
-  /*
-  if([[anObject window] isKindOfClass: [GormViewWindow class]])
-    {
-      [sizeForm setEnabled: NO];
-    }
-  else
-  */
-    {
-      [sizeForm setEnabled: YES];
-    }
+  [sizeForm setEnabled: YES];
 
   // stop editing so that the new values can be populated.
   [sizeForm abortEditing];
