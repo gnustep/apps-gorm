@@ -78,6 +78,10 @@
 - (IBAction) testInterface: (id)sender;
 - (IBAction) endTesting: (id)sender;
 
+// Testing...
+- (void) setTestingInterface: (BOOL)testing;
+- (BOOL) isTestingInterface;
+
 @end
 
 #endif // import guard

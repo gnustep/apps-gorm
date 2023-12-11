@@ -71,6 +71,9 @@
 	  path = [bundle pathForImageResource: @"GormTesting"];
 	  testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
+
+      // Initialize ivars
+      isTesting = NO;
       
       // regular notifications...
       [nc addObserver: self
@@ -419,7 +422,7 @@
 
 - (IBAction) testInterface: (id)sender
 {
-  if (isTesting == NO)
+  if (isTesting == NO || [self isInTool])
     {
       // top level objects
       NS_DURING
@@ -829,6 +832,11 @@
 - (BOOL) isTestingInterface
 {
   return isTesting;
+}
+
+- (void) setTestingInterface: (BOOL)testing
+{
+  isTesting = testing;
 }
 
 - (NSImage*) linkImage

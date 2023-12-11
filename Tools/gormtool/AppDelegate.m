@@ -91,7 +91,7 @@
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
   NSProcessInfo *pi = [NSProcessInfo processInfo];
   NSMutableArray *args = [NSMutableArray arrayWithArray: [pi arguments]];
-  BOOL filenameIsLastObject = NO;
+  // BOOL filenameIsLastObject = NO;
   NSString *file = nil;
 
   // If the --read option isn't specified, we assume that the last argument is
@@ -99,7 +99,7 @@
   if ([args containsObject: @"--read"] == NO)
     {
       file = [args lastObject];
-      filenameIsLastObject = YES;
+      // filenameIsLastObject = YES;
       [args removeObject: file];
       NSDebugLog(@"file = %@", file);
 
@@ -237,6 +237,12 @@
 	      parse_val = YES;
 	    }
 
+	  if ([obj isEqualToString: @"--test"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -253,7 +259,8 @@
   NSProcessInfo *pi = [NSProcessInfo processInfo];
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
-
+  [self setTestingInterface: NO];
+  
   if ([[pi arguments] count] > 1)
     {
       NSString *file = nil;
@@ -464,6 +471,13 @@
 		  NSLog(@"Error = %@", error);
 		}
 	    }
+	}
+
+      opt = [args objectForKey: @"--test"];
+      if (opt != nil)
+	{
+	  NSLog(@"Control-C to end");
+	  [self testInterface: self];
 	}
     }
   
