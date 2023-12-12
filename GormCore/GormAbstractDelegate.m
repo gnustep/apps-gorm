@@ -463,24 +463,27 @@
 
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc deactivateEditors];
-	  [archiver encodeClassName: @"GormCustomView"
-		    intoClassName: @"GormTestCustomView"];
-
-	  // substitute classes from palettes.
-	  en = [substituteClasses keyEnumerator];
-	  while((subClassName = [en nextObject]) != nil)
+	  if ([self isInTool] == NO)
 	    {
-	      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+	      [archiver encodeClassName: @"GormCustomView"
+			  intoClassName: @"GormTestCustomView"];
 
-	      if([realClassName isEqualToString: @"NSTableView"] ||
-		 [realClassName isEqualToString: @"NSOutlineView"] ||
-		 [realClassName isEqualToString: @"NSBrowser"])
+	      // substitute classes from palettes.
+	      en = [substituteClasses keyEnumerator];
+	      while((subClassName = [en nextObject]) != nil)
 		{
-		  continue;
+		  NSString *realClassName = [substituteClasses objectForKey: subClassName];
+		  
+		  if([realClassName isEqualToString: @"NSTableView"] ||
+		     [realClassName isEqualToString: @"NSOutlineView"] ||
+		     [realClassName isEqualToString: @"NSBrowser"])
+		    {
+		      continue;
+		    }
+		  
+		  [archiver encodeClassName: subClassName
+			      intoClassName: realClassName];
 		}
-
-	      [archiver encodeClassName: subClassName
-			intoClassName: realClassName];
 	    }
 
 	  // do not allow custom classes during testing.
@@ -527,13 +530,23 @@
 	       * If the model didn't have a main menu, create one,
 	       * otherwise, ensure that 'quit' ends testing mode.
 	       */
+
+	      SEL endSelector = NULL;
+
+	      endSelector = @selector(deferredEndTesting:);
+	      if ([self isInTool])
+		{
+		  endSelector = @selector(endTestingNow:);
+		}
+		    
+	      
 	      if (aMenu == nil)
 		{
 		  NSMenu	*testMenu;
 
 		  testMenu = [[NSMenu alloc] initWithTitle: _(@"Test Menu (Gorm)")];
 		  [testMenu addItemWithTitle: _(@"Quit Test")
-			    action: @selector(deferredEndTesting:)
+			    action: endSelector
 			    keyEquivalent: @"q"];
 		  [NSApp setMainMenu: testMenu]; // released, when the menu is reset in endTesting.
 		}
@@ -556,7 +569,7 @@
 			      found = YES;
 			      [item setTitle: _(@"Quit Test")];
 			      [item setTarget: self];
-			      [item setAction: @selector(deferredEndTesting:)];
+			      [item setAction: endSelector];
 			    }
 			}
 		    }
@@ -569,8 +582,8 @@
 		  if(found == NO)
 		    {
 		      [testMenu addItemWithTitle: _(@"Quit Test")
-				action: @selector(deferredEndTesting:)
-				keyEquivalent: @"q"];
+					  action: endSelector
+				   keyEquivalent: @"q"];
 		    }
 		}
 
@@ -666,6 +679,10 @@
 }
 
 /** Testing methods... */
+- (IBAction) endTestingNow: (id)sender
+{
+  [NSApp terminate: self];
+}
 
 - (IBAction) deferredEndTesting: (id) sender
 {

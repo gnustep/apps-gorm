@@ -1735,7 +1735,8 @@ static void _real_close(GormDocument *self,
     }
   else if ([name isEqual: IBWillBeginTestingInterfaceNotification] && isDocumentOpen)
     {
-      if ([(id<IB>)[NSApp delegate] activeDocument] == self)
+      id delegate = [NSApp delegate];
+      if ([delegate activeDocument] == self && [delegate isInTool] == NO)
 	{
 	  NSEnumerator	*enumerator;
 	  id		obj;
