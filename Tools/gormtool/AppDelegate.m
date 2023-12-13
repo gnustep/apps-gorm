@@ -499,8 +499,6 @@
 
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  // puts("== gormtool");
-  
   NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
 
@@ -512,7 +510,6 @@
 
 - (void) applicationWillTerminate: (NSNotification *)n
 {
-  // puts("== finished...");
 }
 
 @end
