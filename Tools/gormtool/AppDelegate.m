@@ -27,6 +27,36 @@
 #import "GormToolPrivate.h"
 #import "AppDelegate.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wobjc-protocol-method-implementation"
+// Smash this method in NSDocument to prevent it from popping up an NSRunAlertPanel
+@interface NSDocument (__ReplaceLoadPrivate__)
+
+- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType;
+
+@end
+  
+@implementation NSDocument (__ReplaceLoadPrivate__)
+
+- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType
+{
+  self = [self init];
+  if (self != nil)
+    {
+      [self setFileType: fileType];
+      [self setFileName: fileName];
+      if (![self readFromFile: fileName ofType: fileType])
+	{
+	  NSLog(@"Load failed, could not load file");
+	  DESTROY(self);
+	}
+    }
+  return self;
+}
+
+@end
+#pragma GCC diagnostic pop
+
 // AppDelegate...
 @implementation AppDelegate
 
@@ -291,20 +321,28 @@
 	  file = [opt value];
 	}
 
-      if (file != nil)
+      NS_DURING
 	{
-	  _doc = [dc openDocumentWithContentsOfFile: file display: NO];
-	  if (_doc == nil)
+	  if (file != nil)
 	    {
-	      NSLog(@"Unable to load document %@", file);
+	      _doc = [dc openDocumentWithContentsOfFile: file display: NO];
+	      if (_doc == nil)
+		{
+		  NSLog(@"Unable to load document %@", file);
+		  return;
+		}
+	    }
+	  else
+	    {
+	      NSLog(@"No document specified");
 	      return;
 	    }
 	}
-      else
+      NS_HANDLER
 	{
-	  NSLog(@"No document specified");
-	  return;
+	  NSLog(@"Exception: %@", [localException reason]);
 	}
+      NS_ENDHANDLER;
       
       NSDebugLog(@"Document = %@", _doc);
 
