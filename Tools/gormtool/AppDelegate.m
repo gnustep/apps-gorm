@@ -114,6 +114,8 @@
   return YES;
 }
 
+// Document
+
 - (id<IBDocuments>) activeDocument
 {
   return _doc;
