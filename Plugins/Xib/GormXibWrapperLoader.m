@@ -162,8 +162,8 @@
 	      //
 	      // decode
 	      //
-	      container = [u decodeObjectForKey: @"IBDocument.Objects"];
-	      if (container == nil || [container isKindOfClass: [IBObjectContainer class]] == NO)
+	      _container = [u decodeObjectForKey: @"IBDocument.Objects"];
+	      if (_container == nil || [_container isKindOfClass: [IBObjectContainer class]] == NO)
 		{
 		  result = NO;
 		}
@@ -175,7 +175,7 @@
 		  id xibFontManager = nil;
 		  
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
-		  nibFilesOwner = [rootObjects objectAtIndex: 0];
+		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
 		  // xibFontManager = [self _findFontManager: rootObjects];
@@ -183,9 +183,9 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if ([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if ([_nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
-		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
+		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
 		  
 		  //
@@ -199,7 +199,7 @@
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if ((obj == nibFilesOwner)
+		      if ((obj == _nibFilesOwner)
 			  || (obj == xibFirstResponder)
 			  || (obj == xibFontManager))
                         {
@@ -332,7 +332,7 @@
 		  /*
                    * add connections...
                    */
-		  en = [container connectionRecordEnumerator];
+		  en = [_container connectionRecordEnumerator];
 		  while ((cr = [en nextObject]) != nil)
 		    {
 		      IBConnection *conn = [cr connection];
@@ -449,14 +449,14 @@
   if ([obj isKindOfClass: [NSWindowTemplate class]])
     {
       GormClassManager *classManager = [document classManager];
-      Class clz;
+      // Class clz;
       NSString *className = [obj className];
       
       if([classManager isCustomClass: className])
 	{
 	  className = [classManager nonCustomSuperClassOf: className];
 	}
-      clz = [unarchiver classForClassName: className];
+      // clz = [unarchiver classForClassName: className];
     }
   else if ([obj isKindOfClass: [NSMatrix class]])
     {

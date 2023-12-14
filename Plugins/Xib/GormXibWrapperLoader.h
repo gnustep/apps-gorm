@@ -31,8 +31,8 @@
 
 @interface GormXibWrapperLoader : GormWrapperLoader
 {
-  IBObjectContainer *container;
-  id nibFilesOwner;
+  IBObjectContainer *_container;
+  id _nibFilesOwner;
 }
 @end
 
