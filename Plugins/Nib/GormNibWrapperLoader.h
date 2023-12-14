@@ -33,8 +33,8 @@
 
 @interface GormNibWrapperLoader : GormWrapperLoader
 {
-  NSIBObjectData *container;
-  id nibFilesOwner;
+  NSIBObjectData *_container;
+  id _nibFilesOwner;
 }
 - (BOOL) isTopLevelObject: (id)obj;
 @end

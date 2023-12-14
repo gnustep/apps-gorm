@@ -45,11 +45,11 @@
 
 - (BOOL) isTopLevelObject: (id)obj
 {
-  NSMapTable *objects = [container objects];
+  NSMapTable *objects = [_container objects];
   id val = NSMapGet(objects,obj);
   BOOL result = NO;
 
-  if(val == nibFilesOwner || val == nil)
+  if(val == _nibFilesOwner || val == nil)
     {
       result = YES;
     }
@@ -167,17 +167,17 @@
 	      //
 	      // decode
 	      //
-	      container = [u decodeObjectForKey: @"IB.objectdata"];
-	      if (container == nil || [container isKindOfClass: [NSIBObjectData class]] == NO)
+	      _container = [u decodeObjectForKey: @"IB.objectdata"];
+	      if (_container == nil || [_container isKindOfClass: [NSIBObjectData class]] == NO)
 		{
 		  result = NO;
 		}
 	      else
 		{
-		  nibFilesOwner = [container objectForName: @"File's Owner"];
+		  _nibFilesOwner = [_container objectForName: @"File's Owner"];
 		  
 		  docFilesOwner = [document filesOwner];
-		  objects = [container names];
+		  objects = [_container names];
 		  objs = NSAllMapTableKeys(objects);
 		  en = [objs objectEnumerator];
 		  o = nil;
@@ -185,9 +185,9 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if([nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if([_nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
-		      [docFilesOwner setClassName: [nibFilesOwner className]];	  
+		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
 		  
 		  //
@@ -200,7 +200,7 @@
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if(o == nibFilesOwner)
+		      if(o == _nibFilesOwner)
 			continue;
 		      
 		      //
@@ -210,7 +210,7 @@
 			{
 			  NSString *className = [o className];
 			  BOOL isDeferred = [o isDeferred];
-			  BOOL isVisible = [[container visibleWindows]
+			  BOOL isVisible = [[_container visibleWindows]
                                              containsObject: o];
 			  
 			  // make the object deferred/visible...
@@ -243,7 +243,7 @@
 		  //
 		  // Add custom classes...
 		  //
-		  classesTable = [container classes];
+		  classesTable = [_container classes];
 		  classKeys = NSAllMapTableKeys(classesTable);
 		  en = [classKeys objectEnumerator];
 		  while((o = [en nextObject]) != nil)
@@ -263,7 +263,7 @@
 		  //
 		  // add connections...
 		  //
-		  en = [[container connections] objectEnumerator];
+		  en = [[_container connections] objectEnumerator];
 		  o = nil;
 		  while((o = [en nextObject]) != nil)
 		    {
@@ -285,7 +285,7 @@
 			    }
 			}
 		      
-		      if(dest == nibFilesOwner)
+		      if(dest == _nibFilesOwner)
 			{
 			  [o setDestination: [document filesOwner]];
 			}
@@ -294,7 +294,7 @@
 			  [o setDestination: [document firstResponder]];
 			}
 		      
-		      if(src == nibFilesOwner)
+		      if(src == _nibFilesOwner)
 			{
 			  [o setSource: [document filesOwner]];
 			}
