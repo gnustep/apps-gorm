@@ -61,19 +61,19 @@
       if ([self isInTool] == NO)
 	{
 	  path = [bundle pathForImageResource: @"GormLinkImage"];
-	  linkImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  _linkImage = [[NSImage alloc] initWithContentsOfFile: path];
 	  path = [bundle pathForImageResource: @"GormSourceTag"];
-	  sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  _sourceImage = [[NSImage alloc] initWithContentsOfFile: path];
 	  path = [bundle pathForImageResource: @"GormTargetTag"];
-	  targetImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  _targetImage = [[NSImage alloc] initWithContentsOfFile: path];
 	  path = [bundle pathForImageResource: @"Gorm"];
-	  gormImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  _gormImage = [[NSImage alloc] initWithContentsOfFile: path];
 	  path = [bundle pathForImageResource: @"GormTesting"];
-	  testingImage = [[NSImage alloc] initWithContentsOfFile: path];
+	  _testingImage = [[NSImage alloc] initWithContentsOfFile: path];
 	}
 
       // Initialize ivars
-      isTesting = NO;
+      _isTesting = NO;
       
       // regular notifications...
       [nc addObserver: self
@@ -146,9 +146,9 @@
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
-  RELEASE(inspectorsManager);
-  RELEASE(palettesManager);
-  RELEASE(classManager);
+  RELEASE(_inspectorsManager);
+  RELEASE(_palettesManager);
+  RELEASE(_classManager);
   [super dealloc];
 }
 
@@ -277,22 +277,22 @@
   if (document != nil) return [document classManager];
 
   /* kept in the case one want access to the classManager without document */
-  else if (classManager == nil)
+  else if (_classManager == nil)
     {
-      classManager = [[GormClassManager alloc] init];
+      _classManager = [[GormClassManager alloc] init];
     }
-  return classManager;
+  return _classManager;
 
 }
 
 - (id) connectDestination
 {
-  return connectDestination;
+  return _connectDestination;
 }
 
 - (id) connectSource
 {
-  return connectSource;
+  return _connectSource;
 }
 
 - (void) displayConnectionBetween: (id)source
@@ -302,12 +302,12 @@
   NSRect	rect;
 
 
-  if (source != connectSource)
+  if (source != _connectSource)
     {
-      if (connectSource != nil)
+      if (_connectSource != nil)
 	{
 	  window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
-				    forObject: connectSource];
+				    forObject: _connectSource];
 	  if (window != nil)
 	    {
 	      NSView	*view = [[window contentView] superview];
@@ -324,14 +324,14 @@
 	      [window flushWindow];
 	    }
 	}
-      connectSource = source;
+      _connectSource = source;
     }
-  if (destination != connectDestination)
+  if (destination != _connectDestination)
     {
-      if (connectDestination != nil)
+      if (_connectDestination != nil)
 	{
 	  window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
-				    forObject: connectDestination];
+				    forObject: _connectDestination];
 	  if (window != nil)
 	    {
 	      NSView	*view = [[window contentView] superview];
@@ -349,11 +349,11 @@
 	      [window flushWindow];
 	    }
 	}
-      connectDestination = destination;
+      _connectDestination = destination;
     }
-  if (connectSource != nil)
+  if (_connectSource != nil)
     {
-      window = [(GormDocument *)[self activeDocument] windowAndRect: &rect forObject: connectSource];
+      window = [(GormDocument *)[self activeDocument] windowAndRect: &rect forObject: _connectSource];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
@@ -366,16 +366,16 @@
 	  [[NSColor greenColor] set];
 	  NSFrameRectWithWidth(rect, 1);
 
-	  [sourceImage compositeToPoint: imageRect.origin
-			      operation: NSCompositeSourceOver];
+	  [_sourceImage compositeToPoint: imageRect.origin
+			       operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];
 	}
     }
-  if (connectDestination != nil && connectDestination == connectSource)
+  if (_connectDestination != nil && _connectDestination == _connectSource)
     {
       window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
-				forObject: connectDestination];
+				forObject: _connectDestination];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
@@ -389,17 +389,17 @@
 	  [[NSColor purpleColor] set];
 	  NSFrameRectWithWidth(rect, 1);
 
-	  imageRect.origin.x += [targetImage size].width;
-	  [targetImage compositeToPoint: imageRect.origin
-			      operation: NSCompositeSourceOver];
+	  imageRect.origin.x += [_targetImage size].width;
+	  [_targetImage compositeToPoint: imageRect.origin
+			       operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];
 	}
     }
-  else if (connectDestination != nil)
+  else if (_connectDestination != nil)
     {
       window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
-				forObject: connectDestination];
+				forObject: _connectDestination];
       if (window != nil)
 	{
 	  NSView	*view = [[window contentView] superview];
@@ -412,8 +412,8 @@
 	  [[NSColor purpleColor] set];
 	  NSFrameRectWithWidth(rect, 1);
 
-	  [targetImage compositeToPoint: imageRect.origin
-			      operation: NSCompositeSourceOver];
+	  [_targetImage compositeToPoint: imageRect.origin
+			       operation: NSCompositeSourceOver];
 	  [view unlockFocus];
 	  [window flushWindow];
 	}
@@ -422,7 +422,7 @@
 
 - (IBAction) testInterface: (id)sender
 {
-  if (isTesting == NO || [self isInTool])
+  if (_isTesting == NO || [self isInTool])
     {
       // top level objects
       NS_DURING
@@ -433,7 +433,7 @@
 	  NSData		*data;
 	  NSArchiver            *archiver;
 	  NSEnumerator          *en;
-	  NSDictionary          *substituteClasses = [palettesManager substituteClasses];
+	  NSDictionary          *substituteClasses = [_palettesManager substituteClasses];
 	  NSString              *subClassName;
 	  id                    obj;
 	  id                    savedDelegate = [NSApp delegate];
@@ -441,24 +441,24 @@
 
 
 	  // which windows were open when testing started...
-	  testingWindows = [[NSMutableArray alloc] init];
+	  _testingWindows = [[NSMutableArray alloc] init];
 	  en = [[NSApp windows] objectEnumerator];
 	  while((obj = [en nextObject]) != nil)
 	    {
 	      if([obj isVisible])
 		{
-		  [testingWindows addObject: obj];
+		  [_testingWindows addObject: obj];
 		}
 	    }
 
 	  // set here, so that beginArchiving and endArchiving do not use templates.
-	  isTesting = YES;
-	  // [NSApp setApplicationIconImage: testingImage];
+	  _isTesting = YES;
+	  // [NSApp setApplicationIconImage: _testingImage];
 
 	  // Set up the dock tile...
-	  dockTile = [[NSDockTile alloc] init];
-	  [dockTile setShowsApplicationBadge: YES];
-	  [dockTile setBadgeLabel: @"Test!"];
+	  _dockTile = [[NSDockTile alloc] init];
+	  [_dockTile setShowsApplicationBadge: YES];
+	  [_dockTile setBadgeLabel: @"Test!"];
 	  
 
 	  archiver = [[NSArchiver alloc] init];
@@ -498,32 +498,32 @@
 	  [notifCenter postNotificationName: IBWillBeginTestingInterfaceNotification
 		       object: self];
 
-	  if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+	  if ([_selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	    {
-	      [selectionOwner makeSelectionVisible: NO];
+	      [_selectionOwner makeSelectionVisible: NO];
 	    }
 
 	  defaults = [NSUserDefaults standardUserDefaults];
-	  menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
+	  _menuLocations = [[defaults objectForKey: @"NSMenuLocations"] copy];
 	  [defaults removeObjectForKey: @"NSMenuLocations"];
-	  servicesMenu = [NSApp servicesMenu];
+	  _servicesMenu = [NSApp servicesMenu];
 
-	  testContainer = [NSUnarchiver unarchiveObjectWithData: data];
-	  if (testContainer != nil)
+	  _testContainer = [NSUnarchiver unarchiveObjectWithData: data];
+	  if (_testContainer != nil)
 	    {
-	      NSMutableDictionary *nameTable = [testContainer nameTable];
+	      NSMutableDictionary *nameTable = [_testContainer nameTable];
 	      NSMenu *aMenu = [nameTable objectForKey: @"NSMenu"];
 
-	      mainMenu = [NSApp mainMenu]; // save the menu before testing...
+	      _mainMenu = [NSApp mainMenu]; // save the menu before testing...
 	      [[NSApp mainMenu] close];
 	      [NSApp setMainMenu: aMenu];
 	      // initialize the context.
-	      RETAIN(testContainer);
-	      topObjects = [testContainer topLevelObjects];
+	      RETAIN(_testContainer);
+	      _topObjects = [_testContainer topLevelObjects];
 
 	      [nameTable removeObjectForKey: @"NSServicesMenu"];
 	      [nameTable removeObjectForKey: @"NSWindowsMenu"];
-	      [testContainer awakeWithContext: nil];
+	      [_testContainer awakeWithContext: nil];
 	      [NSApp setDelegate: savedDelegate]; // makes sure the delegate isn't reset.
 
 	      /*
@@ -631,7 +631,7 @@
   GormSetNameController *panel;
   int		returnPanel;
   NSTextField	*textField;
-  NSArray	*selectionArray = [selectionOwner selection];
+  NSArray	*selectionArray = [_selectionOwner selection];
   id		obj = [selectionArray objectAtIndex: 0];
   NSString	*name;
 
@@ -657,15 +657,15 @@
 {
   [[NSNotificationCenter defaultCenter] postNotificationName: GormToggleGuidelineNotification
 					object:nil];
-  if ( [guideLineMenuItem tag] == 0 )
+  if ( [_guideLineMenuItem tag] == 0 )
     {
-      [guideLineMenuItem setTitle:_(@"Turn GuideLine On")];
-      [guideLineMenuItem setTag:1];
+      [_guideLineMenuItem setTitle:_(@"Turn GuideLine On")];
+      [_guideLineMenuItem setTag:1];
     }
-  else if ( [guideLineMenuItem tag] == 1)
+  else if ( [_guideLineMenuItem tag] == 1)
     {
-      [guideLineMenuItem setTitle:_(@"Turn GuideLine Off")];
-      [guideLineMenuItem setTag:0];
+      [_guideLineMenuItem setTitle:_(@"Turn GuideLine Off")];
+      [_guideLineMenuItem setTag:0];
     }
 }
 
@@ -699,7 +699,7 @@
 
 - (IBAction) endTesting: (id)sender
 {
-  if (isTesting)
+  if (_isTesting)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults		*defaults;
@@ -712,7 +712,7 @@
       /*
        * Make sure windows will go away when the container is destroyed.
        */
-      e = [topObjects objectEnumerator];
+      e = [_topObjects objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
 	  if ([val isKindOfClass: [NSWindow class]] == YES)
@@ -728,7 +728,7 @@
       e = [[NSApp windows] objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
-	  if ([testingWindows containsObject: val] == NO &&
+	  if ([_testingWindows containsObject: val] == NO &&
 	      [val isKindOfClass: [NSWindow class]] &&
 	      [val isVisible])
 	    {
@@ -736,21 +736,21 @@
 	    }
 	}
 
-      // prevent saving of this, if the menuLocations have not previously been set.
-      if(menuLocations != nil)
+      // prevent saving of this, if the _menuLocations have not previously been set.
+      if(_menuLocations != nil)
 	{
 	  defaults = [NSUserDefaults standardUserDefaults];
-	  [defaults setObject: menuLocations forKey: @"NSMenuLocations"];
-	  DESTROY(menuLocations);
+	  [defaults setObject: _menuLocations forKey: @"NSMenuLocations"];
+	  DESTROY(_menuLocations);
 	}
 
       // Restore windows and menus...
-      [NSApp setMainMenu: mainMenu];
-      [NSApp setApplicationIconImage: gormImage];
+      [NSApp setMainMenu: _mainMenu];
+      [NSApp setApplicationIconImage: _gormImage];
       [[NSApp mainMenu] display];
-      RELEASE(dockTile);
+      RELEASE(_dockTile);
       
-      e = [testingWindows objectEnumerator];
+      e = [_testingWindows objectEnumerator];
       while ((val = [e nextObject]) != nil)
 	{
 	  [val orderFront: self];
@@ -758,7 +758,7 @@
 
       NS_DURING
 	{
-	  [NSApp setServicesMenu: servicesMenu];
+	  [NSApp setServicesMenu: _servicesMenu];
 	}
       NS_HANDLER
 	{
@@ -766,20 +766,20 @@
 	}
       NS_ENDHANDLER
 
-      isTesting = NO;
+      _isTesting = NO;
 
-      if ([selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
+      if ([_selectionOwner conformsToProtocol: @protocol(IBEditors)] == YES)
 	{
-	  [selectionOwner makeSelectionVisible: YES];
+	  [_selectionOwner makeSelectionVisible: YES];
 	}
       [nc postNotificationName: IBDidEndTestingInterfaceNotification
 			object: self];
 
 
-      DESTROY(testingWindows);
+      DESTROY(_testingWindows);
 
       // deallocate
-      RELEASE(testContainer);
+      RELEASE(_testContainer);
     }
 }
 
@@ -800,13 +800,13 @@
 	{
 	  [self stopConnecting];
 	}
-      [selectionOwner makeSelectionVisible: NO];
-      selectionOwner = obj;
+      [_selectionOwner makeSelectionVisible: NO];
+      _selectionOwner = obj;
       [[self inspectorsManager] updateSelection];
     }
   else if ([name isEqual: IBWillCloseDocumentNotification])
     {
-      selectionOwner = nil;
+      _selectionOwner = nil;
     }
   else if ([name isEqual: @"GormAddClassNotification"])
     {
@@ -829,64 +829,64 @@
 - (void) awakeFromNib
 {
   // set the menu...
-  mainMenu = (NSMenu *)gormMenu;
+  _mainMenu = (NSMenu *)_gormMenu;
 }
 
 - (GormInspectorsManager*) inspectorsManager
 {
-  if (inspectorsManager == nil)
+  if (_inspectorsManager == nil)
     {
-      inspectorsManager = (GormInspectorsManager *)[GormInspectorsManager sharedInspectorManager];
+      _inspectorsManager = (GormInspectorsManager *)[GormInspectorsManager sharedInspectorManager];
     }
-  return inspectorsManager;
+  return _inspectorsManager;
 }
 
 - (BOOL) isConnecting
 {
-  return isConnecting;
+  return _isConnecting;
 }
 
 - (BOOL) isTestingInterface
 {
-  return isTesting;
+  return _isTesting;
 }
 
 - (void) setTestingInterface: (BOOL)testing
 {
-  isTesting = testing;
+  _isTesting = testing;
 }
 
 - (NSImage*) linkImage
 {
-  return linkImage;
+  return _linkImage;
 }
 
 - (GormPalettesManager*) palettesManager
 {
-  if (palettesManager == nil)
+  if (_palettesManager == nil)
     {
-      palettesManager = [[GormPalettesManager alloc] init];
+      _palettesManager = [[GormPalettesManager alloc] init];
     }
-  return palettesManager;
+  return _palettesManager;
 }
 
 - (GormPluginManager*) pluginManager
 {
-  if (pluginManager == nil)
+  if (_pluginManager == nil)
     {
-      pluginManager = [[GormPluginManager alloc] init];
+      _pluginManager = [[GormPluginManager alloc] init];
     }
-  return pluginManager;
+  return _pluginManager;
 }
 
 - (id<IBSelectionOwners>) selectionOwner
 {
-  return (id<IBSelectionOwners>)selectionOwner;
+  return (id<IBSelectionOwners>)_selectionOwner;
 }
 
 - (id) selectedObject
 {
-  return [[selectionOwner selection] lastObject];
+  return [[_selectionOwner selection] lastObject];
 }
 
 - (id<IBDocuments>) documentForObject: (id)object
@@ -911,40 +911,40 @@
 
 - (void) startConnecting
 {
-  if (isConnecting == YES)
+  if (_isConnecting == YES)
     {
       return;
     }
-  if (connectSource == nil)
+  if (_connectSource == nil)
     {
       return;
     }
-  if (connectDestination
-      && [[self activeDocument] containsObject: connectDestination] == NO)
+  if (_connectDestination
+      && [[self activeDocument] containsObject: _connectDestination] == NO)
     {
-      NSLog(@"Oops - connectDestination not in active document");
+      NSLog(@"Oops - _connectDestination not in active document");
       return;
     }
-  if ([[self activeDocument] containsObject: connectSource] == NO)
+  if ([[self activeDocument] containsObject: _connectSource] == NO)
     {
-      NSLog(@"Oops - connectSource not in active document");
+      NSLog(@"Oops - _connectSource not in active document");
       return;
     }
-  isConnecting = YES;
+  _isConnecting = YES;
   [[self inspectorsManager] updateSelection];
 }
 
 - (void) stopConnecting
 {
   [self displayConnectionBetween: nil and: nil];
-  isConnecting = NO;
-  connectSource = nil;
-  connectDestination = nil;
+  _isConnecting = NO;
+  _connectSource = nil;
+  _connectDestination = nil;
 }
 
 - (NSMenu*) classMenu
 {
-  return classMenu;
+  return _classMenu;
 }
 
 // Methods to support external apps adding and deleting

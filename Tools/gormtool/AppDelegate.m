@@ -298,7 +298,7 @@
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
 
-  isTesting = NO;
+  _isTesting = NO;
   
   if ([[pi arguments] count] > 1)
     {
@@ -524,7 +524,7 @@
       if (opt != nil)
 	{
 	  NSLog(@"Control-C to end");
-	  isTesting = YES;
+	  _isTesting = YES;
 	  [self testInterface: self];
 	}
     }
@@ -542,7 +542,7 @@
   NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
 
-  if (isTesting == NO)
+  if (_isTesting == NO)
     {
       [NSApp terminate: nil];
     }
