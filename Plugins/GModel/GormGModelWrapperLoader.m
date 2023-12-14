@@ -58,10 +58,10 @@ static BOOL gormFileOwnerDecoded;
 
 @interface GModelApplication : NSObject
 {
-  id mainMenu;
-  id windowMenu;
-  id delegate;
-  NSArray *windows;
+  id _mainMenu;
+  id _windowMenu;
+  id _delegate;
+  NSArray *_windows;
 }
 
 + (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver;
@@ -81,10 +81,10 @@ static BOOL gormFileOwnerDecoded;
   NSEnumerator *enumerator;
   NSWindow *win;
 
-  mainMenu = [unarchiver decodeObjectWithName:@"mainMenu"];
+  _mainMenu = [unarchiver decodeObjectWithName:@"mainMenu"];
 
-  windows = [unarchiver decodeObjectWithName:@"windows"];
-  enumerator = [windows objectEnumerator];
+  _windows = [unarchiver decodeObjectWithName:@"windows"];
+  enumerator = [_windows objectEnumerator];
   while ((win = [enumerator nextObject]) != nil)
     {
       /* Fix up window frames */
@@ -98,29 +98,29 @@ static BOOL gormFileOwnerDecoded;
       [win setBackgroundColor: [NSColor windowBackgroundColor]];
     }
 
-  delegate = [unarchiver decodeObjectWithName:@"delegate"];
+  _delegate = [unarchiver decodeObjectWithName:@"delegate"];
 
   return self;
 }
 
 - (NSArray *) windows
 {
-  return windows;
+  return _windows;
 }
 
 - mainMenu
 {
-  return mainMenu;
+  return _mainMenu;
 }
 
 - windowMenu
 {
-  return windowMenu;
+  return _windowMenu;
 }
 
 - delegate
 {
-  return delegate;
+  return _delegate;
 }
 
 + (id)createObjectForModelUnarchiver:(GMUnarchiver*)unarchiver
