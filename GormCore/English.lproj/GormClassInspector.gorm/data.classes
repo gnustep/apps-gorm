@@ -28,18 +28,18 @@
 	    "selectAction:"
 	);
 	Outlets = (
-	    classField,
-	    tabView,
-	    removeOutlet,
-	    addAction,
-	    actionTable,
-	    outletTable,
-	    removeAction,
-	    addOutlet,
-	    selectClass,
-	    parentClass,
-	    search,
-	    searchText
+	    "_classField",
+	    "_tabView",
+	    "_removeOutlet",
+	    "_addAction",
+	    "_actionTable",
+	    "_outletTable",
+	    "_removeAction",
+	    "_addOutlet",
+	    "_selectClass",
+	    "_parentClass",
+	    "_search",
+	    "_searchText"
 	);
 	Super = IBInspector;
     };
