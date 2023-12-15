@@ -448,9 +448,13 @@
 	      if([obj isVisible])
 		{
 		  [_testingWindows addObject: obj];
+		  if ([activeDoc window] != obj)
+		    {
+		      [obj close]; // close the visible windows...
+		    }
 		}
 	    }
-
+	  
 	  // set here, so that beginArchiving and endArchiving do not use templates.
 	  _isTesting = YES;
 	  // [NSApp setApplicationIconImage: _testingImage];
@@ -459,8 +463,8 @@
 	  _dockTile = [[NSDockTile alloc] init];
 	  [_dockTile setShowsApplicationBadge: YES];
 	  [_dockTile setBadgeLabel: @"Test!"];
-	  
 
+	  // Encode palette classes with their equivalent substitutes
 	  archiver = [[NSArchiver alloc] init];
 	  [activeDoc deactivateEditors];
 	  if ([self isInTool] == NO)
@@ -748,6 +752,7 @@
       [NSApp setMainMenu: _mainMenu];
       [NSApp setApplicationIconImage: _gormImage];
       [[NSApp mainMenu] display];
+
       RELEASE(_dockTile);
       
       e = [_testingWindows objectEnumerator];
