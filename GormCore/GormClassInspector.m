@@ -289,6 +289,15 @@ objectValueForTableColumn: (NSTableColumn *)tc
   return self;
 }
 
+- (void) dealloc
+{
+  RELEASE(_actionData);
+  RELEASE(_outletData);
+  RELEASE(_parentClassData);
+
+  [super dealloc];
+}
+
 - (void) awakeFromNib
 {
   // instantiate..
