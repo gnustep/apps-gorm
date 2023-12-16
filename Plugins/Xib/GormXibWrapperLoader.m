@@ -49,9 +49,28 @@
  * Xib loader...
  */
 @implementation GormXibWrapperLoader
+
 + (NSString *) fileType
 {
   return @"GSXibFileType";
+}
+
+- (instancetype) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      _idToName = [[NSMutableDictionary alloc] init];
+      _container = nil;
+      _nibFilesOwner = nil;
+    }
+  return self;
+}
+
+- (void) dealloc
+{
+  RELEASE(_idToName);
+  [super dealloc];
 }
 
 - (id) _replaceProxyInstanceWithRealObject: (id)obj
@@ -70,15 +89,6 @@
         {
           return [document firstResponder];
         }
-      else
-	{
-	  [classManager addClassNamed: className
-		  withSuperClassNamed: @"NSObject"
-			  withActions: nil
-			  withOutlets: nil
-			     isCustom: YES];
-	  	  
-	}
     }
   else if ([obj respondsToSelector: @selector(className)])
     {
@@ -87,7 +97,15 @@
     }
   else if (obj == nil)
     {
-      return [document firstResponder];
+      id o = [_idToName objectForKey: theId];
+      if (o != nil)
+	{
+	  return o;
+	}
+      else
+	{
+	  return [document firstResponder];
+	}
     }
   
   return obj;
@@ -135,12 +153,8 @@
 	      //
 	      // Special internal classes
 	      // 
-	      /*
-	      [u setClass: [GormObjectProxy class]
-		 forClassName: @"NSCustomObject"];
-	      [u setClass: [GormObjectProxy class]
-  	         forClassName: @"NSCustomObject5"];
-	      */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreceiver-forward-class"
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
@@ -151,6 +165,7 @@
 		 forClassName: @"NSMenu"];
               [u setClass: [IBUserDefinedRuntimeAttribute class]
                  forClassName: @"IBUserDefinedRuntimeAttribute5"];
+#pragma GCC diagnostic pop
 	      
 	      //
 	      // Substitute any classes specified by the palettes...
@@ -348,13 +363,13 @@
 			{
 			  theName = [doc instantiateClassNamed: customClassName];
 			}
-		      
-		      /*
-                      NSDebugLog(@"Assigning %@ as customClass = %@", theName, customClassName);
-                      [classManager setCustomClass: customClassName
-                                           forName: theName];
-		      */
-                    }
+
+		      // Set up the mapping...
+		      if (theName != nil)
+			{
+			  [_idToName setObject: theName forKey: theId];
+			}
+		    }
                   
 		  /*
                    * add connections...
