@@ -33,7 +33,7 @@
 /*
  * Forward declarations for classes
  */
-@class GormNSWindow;
+@class GormNSWindow, GormNSMenu;
 
 /*
  * This allows us to retrieve the customClasses from the XIB unarchiver.
@@ -56,10 +56,11 @@
 
 - (id) _replaceProxyInstanceWithRealObject: (id)obj
 			      classManager: (GormClassManager *)classManager
+				    withID: (NSString *)theId
 {
   NSString *className = [obj className];
   
-  if ([obj isKindOfClass: [GormObjectProxy class]])
+  if ([obj isKindOfClass: [NSCustomObject class]])
     {
       if ([className isEqualToString: @"NSApplication"])
         {
@@ -82,7 +83,7 @@
   else if ([obj respondsToSelector: @selector(className)])
     {
       NSString *cn = [obj className];
-      NSLog(@"className = %@", cn);
+      NSDebugLog(@"className = %@", cn);
     }
   else if (obj == nil)
     {
@@ -134,16 +135,20 @@
 	      //
 	      // Special internal classes
 	      // 
+	      /*
 	      [u setClass: [GormObjectProxy class]
 		 forClassName: @"NSCustomObject"];
 	      [u setClass: [GormObjectProxy class]
-		 forClassName: @"NSCustomObject5"];
+  	         forClassName: @"NSCustomObject5"];
+	      */
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
 		 forClassName: @"NSWindowTemplate"];
 	      [u setClass: [GormNSWindow class] 
 		 forClassName: @"NSWindow"];
+	      [u setClass: [GormNSMenu class] 
+		 forClassName: @"NSMenu"];
               [u setClass: [IBUserDefinedRuntimeAttribute class]
                  forClassName: @"IBUserDefinedRuntimeAttribute5"];
 	      
@@ -183,7 +188,7 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if ([_nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if ([_nibFilesOwner isKindOfClass: [NSCustomObject class]])
 		    {
 		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
@@ -210,7 +215,7 @@
                       // If it's NSApplication (most likely the File's Owner)
                       // skip it...
                       //
-                      if ([obj isKindOfClass: [GormObjectProxy class]])
+                      if ([obj isKindOfClass: [NSCustomObject class]])
                         {
                           if ([[obj className] isEqualToString: @"NSApplication"])
                             {
@@ -233,14 +238,15 @@
                           
 			  // make the object deferred/visible...
 			  o = [obj nibInstantiate];
-                          
+                          NSDebugLog(@"Decoding window as %@", o);
+			  
 			  [doc setObject: o isDeferred: isDeferred];
 			  [doc setObject: o isVisibleAtLaunch: isVisible];
 
-                          // Add to the document...
+                          // Add to the document...			  
                           [doc attachObject: o
-                                   toParent: nil];
-                          
+                                   toParent: nil];			  
+			  
 			  // record the custom class...
 			  if ([classManager isCustomClass: className])
 			    {
@@ -254,17 +260,15 @@
                           NSLog(@"obj = %@",obj);
 			  if ([obj respondsToSelector: @selector(className)])
 			    {
-			      NSString *className = nil;
-			      
-			      className = [obj className];
-			      if ([className isEqualToString: @"NSFontManager"])
+			      if ([obj isKindOfClass: [NSCustomObject class]])
 				{
+				  NSLog(@"Skipping NSCustomObject %@ -- adding custom class using GormDocument methods...", obj);
 				  continue;
 				}
 			    }
 			  
                           [doc attachObject: obj
-                                   toParent: nil];
+				   toParent: nil];
                         }
                       
 		      if (customClassName != nil)
@@ -295,8 +299,24 @@
                       id realObject = [decoded objectForKey: theId];
                       NSString *theName = nil;
 
+		      // Set the file's owner correctly...
+		      if ([theId isEqualToString: @"-2"]) // The File's Owner node...
+			{
+			  [[doc filesOwner] setClassName: customClassName];
+			  continue;
+			}
+
+		      // these are preset values
+		      if ([theId isEqualToString: @"-1"]
+			  || [theId isEqualToString: @"-3"]
+			  || [customClassName isEqualToString: @"NSFontManager"]) 
+			{
+			  continue;
+			}
+		      
                       realObject = [self _replaceProxyInstanceWithRealObject: realObject
-								classManager: classManager];
+								classManager: classManager
+								      withID: theId];
                       NSDebugLog(@"realObject = %@", realObject);
                       
                       if ([doc containsObject: realObject])
@@ -307,7 +327,7 @@
                       else
                         {
                           NSDebugLog(@"realObject = %@ has no name in document", realObject);
-                          continue;
+                          // continue;
                         }
                       
                       if ([parentClassName isEqualToString: @"NSCustomObject5"])
@@ -317,16 +337,23 @@
                       
                       NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
                             parentClassName);
-		      
                       [classManager addClassNamed: customClassName
                               withSuperClassNamed: parentClassName
                                       withActions: nil
                                       withOutlets: nil
                                          isCustom: YES];
-                      
+
+		      // If the name of the object does not exist, then create it...
+		      if (theName == nil)
+			{
+			  theName = [doc instantiateClassNamed: customClassName];
+			}
+		      
+		      /*
                       NSDebugLog(@"Assigning %@ as customClass = %@", theName, customClassName);
                       [classManager setCustomClass: customClassName
                                            forName: theName];
+		      */
                     }
                   
 		  /*
@@ -345,13 +372,17 @@
                             {
                               id dest = [o destination];
                               id src = [o source];
-
+			      NSString *destId = [document nameForObject: dest];
+			      NSString *srcId = [document nameForObject: src];
+			      
                               // Replace files owner with the document files owner for loading...
                               dest = [self _replaceProxyInstanceWithRealObject: dest
-								  classManager: classManager];
-                              src = [self _replaceProxyInstanceWithRealObject: src
-								 classManager: classManager];
+								  classManager: classManager
+									withID: destId];
 
+                              src = [self _replaceProxyInstanceWithRealObject: src
+								 classManager: classManager
+								       withID: srcId];
                               
                               // Reset them...
                               [o setDestination: dest];

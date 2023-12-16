@@ -1489,6 +1489,84 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Instantiate the class specified by the parameter className
+ */ 
+- (NSString *) instantiateClassNamed: (NSString *)className
+{
+  NSString *theName = nil;
+  GSNibItem *item = nil;
+
+  if([className isEqualToString: @"FirstResponder"])
+    {
+      return nil;
+    }
+
+  if([classManager canInstantiateClassNamed: className] == NO)
+    {
+      return nil;
+    }
+
+  if([classManager isSuperclass: @"NSView" linkedToClass: className] ||
+     [className isEqualToString: @"NSView"])
+    {
+      Class cls;
+      BOOL isCustom = [classManager isCustomClass: className];
+      id instance;
+
+      // Replace with NON custom class, since we don't have the compiled version
+      // of the custom class available to us in Gorm.
+      if(isCustom)
+	{
+	  className = [classManager nonCustomSuperClassOf: className];
+	}
+      
+      // instantiate the object or it's substitute...
+      cls = NSClassFromString(className);
+      if([cls respondsToSelector: @selector(allocSubstitute)])
+	{
+	  instance = [cls allocSubstitute];
+	}
+      else
+	{
+	  instance = [cls alloc];
+	}
+      
+      // give it some initial dimensions...
+      if([instance respondsToSelector: @selector(initWithFrame:)])
+	{
+	  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
+	}
+      else
+	{
+	  instance = [instance init];
+	}
+      
+      // add it to the top level objects...
+      [self attachObject: instance toParent: nil];
+      
+      // we want to record if it's custom or not and act appropriately...
+      if(isCustom)
+	{
+	  theName = [self nameForObject: instance];
+	  [classManager setCustomClass: className
+			forName: theName];
+	}
+
+      [self changeToViewWithTag: 0];
+      NSLog(@"Instantiate NSView subclass %@",className);	      
+    }
+  else
+    {
+      item = [[GormObjectProxy alloc] initWithClassName: className];
+      [self attachObject: item toParent: nil];      
+      [self changeToViewWithTag: 0];
+      theName = [self nameForObject: item];
+    }
+
+  return theName;
+}
+
+/**
  * Remove a class from the classes view
  */
 - (id) remove: (id)sender

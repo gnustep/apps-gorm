@@ -239,6 +239,12 @@
 - (id) instantiateClass: (id)sender;
 
 /**
+ * Instantiate the class specified by the parameter className and
+ * returns the reference name within the document
+ */ 
+- (NSString *) instantiateClassNamed: (NSString *)className;
+
+/**
  * Generate the class files for the selected class
  */
 - (id) createClassFiles: (id)sender;
