@@ -420,5 +420,4 @@
         Outlets = ();
         Super = NSArrayController;
     };
-    Object = {};
 }

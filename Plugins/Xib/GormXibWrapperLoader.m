@@ -122,7 +122,7 @@
     }
   else
     {
-      NSLog(@"### ID not provided and could not find name for object %@", obj);
+      NSDebugLog(@"### ID not provided and could not find name for object %@", obj);
     }
   
   return result;
@@ -161,15 +161,15 @@
 						      withID: theId];
 
       // Check that it has a name...
-      NSLog(@"realObject = %@", realObject);      
+      NSDebugLog(@"realObject = %@", realObject);      
       if ([doc containsObject: realObject])
 	{
 	  theName = [doc nameForObject: realObject];
-	  NSLog(@"Found name = %@ for realObject = %@", theName, realObject);
+	  NSDebugLog(@"Found name = %@ for realObject = %@", theName, realObject);
 	}
       else
 	{
-	  NSLog(@"realObject = %@ has no name in document", realObject);
+	  NSDebugLog(@"realObject = %@ has no name in document", realObject);
 	}
 
       // If the parent class is "NSCustomObject" or it's derivatives...
@@ -181,7 +181,7 @@
 	}
 
       // Add the custom class to the document
-      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
+      NSDebugLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
 	    parentClassName);
       [classManager addClassNamed: customClassName
 	      withSuperClassNamed: parentClassName
@@ -214,12 +214,12 @@
 	}
       else
 	{
-	  NSLog(@"Instantiated object not found for %@", theName);
+	  NSDebugLog(@"Instantiated object not found for %@", theName);
 	}
     }
   else
     {
-      NSLog(@"%@ is not an instance of NSCustomObject", obj);
+      NSDebugLog(@"%@ is not an instance of NSCustomObject", obj);
     }
 }
 
@@ -387,7 +387,7 @@
 		      if ([rootObjects containsObject: obj] && obj != nil &&
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{
-                          NSLog(@"obj = %@",obj);
+                          NSDebugLog(@"obj = %@",obj);
 			  if ([obj respondsToSelector: @selector(className)])
 			    {
 			      if ([obj isKindOfClass: [NSCustomObject class]])
@@ -416,7 +416,7 @@
 		  /*
                    * add connections...
                    */
-		  NSLog(@"_idToName = %@", _idToName);
+		  NSDebugLog(@"_idToName = %@", _idToName);
 		  en = [_container connectionRecordEnumerator];
 		  while ((cr = [en nextObject]) != nil)
 		    {
@@ -447,7 +447,7 @@
 			      NSString *destName = [document nameForObject: dest];
 			      NSString *srcName = [document nameForObject: src];
 
-			      NSLog(@"destName = %@, srcName = %@", destName, srcName);
+			      NSDebugLog(@"destName = %@, srcName = %@", destName, srcName);
 
 			      // Use tne names, since this is how connectors are
 			      // stored in gorm until they are written out.
@@ -480,7 +480,7 @@
                                 }
                               else if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
-				  NSLog(@"*** Outlet: label = %@ for src = %@, srcName = %@",
+				  NSDebugLog(@"*** Outlet: label = %@ for src = %@, srcName = %@",
 					[o label], src, srcName);
 
                                   [classManager addOutlet: [o label]
@@ -522,7 +522,7 @@
 	    }
 
 	  NSArray *errors = [doc validate];
-	  NSLog(@"errors = %@", errors);
+	  NSDebugLog(@"errors = %@", errors);
 	  
 	  [NSClassSwapper setIsInInterfaceBuilder: NO];      
 	}

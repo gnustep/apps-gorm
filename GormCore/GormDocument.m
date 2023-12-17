@@ -1560,7 +1560,7 @@ static NSImage  *fileImage = nil;
 	}
 
       [self changeToViewWithTag: 0];
-      NSLog(@"Instantiate NSView subclass %@",className);	      
+      NSDebugLog(@"Instantiate NSView subclass %@",className);	      
     }
   else
     {
