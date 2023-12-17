@@ -38,12 +38,17 @@
 /*
  * This allows us to retrieve the customClasses from the XIB unarchiver.
  */
-
 @interface NSKeyedUnarchiver (Private)
 - (NSDictionary *) customClasses;
 - (NSDictionary *) decoded;
 @end
 
+/*
+ * Allow access to the method to instantiate the font manager
+ */
+@interface GormDocument (XibPluginPrivate)
+- (void) _instantiateFontManager;
+@end
 
 /*
  * Xib loader...
@@ -92,6 +97,12 @@
           result = [document firstResponder];
 	  [obj setRealObject: result];
         }
+      else if ([className isEqualToString: @"NSFontManager"])
+	{
+	  [document _instantiateFontManager];
+	  result = [document fontManager];
+	  [obj setRealObject: result];
+	}
       else
 	{
 	  result = [obj realObject];
@@ -139,8 +150,7 @@
       
       // these are preset values
       if ([theId isEqualToString: @"-1"]
-	  || [theId isEqualToString: @"-3"]
-	  || [customClassName isEqualToString: @"NSFontManager"]) 
+	  || [theId isEqualToString: @"-3"])
 	{
 	  return;
 	}
@@ -224,6 +234,7 @@
       NSString                  *subClassName = nil;
       GormClassManager          *classManager = [doc classManager];
 
+      document = doc; // make sure they are the same...
       if ([super loadFileWrapper: wrapper 
                     withDocument: doc] &&
 	  [wrapper isDirectory] == NO)
@@ -325,7 +336,7 @@
 		      // skip the file's owner, it is handled above...
 		      if ((obj == _nibFilesOwner)
 			  || (obj == xibFirstResponder))
-			  // || (obj == xibFontManager))
+			// || (obj == xibFontManager))
                         {
                           continue;
                         }

@@ -518,28 +518,35 @@ static NSImage  *fileImage = nil;
  */
 - (void) _instantiateFontManager
 {
-  GSNibItem *item = nil;
-  NSMenu *fontMenu = nil;
-  
-  item = [[GormObjectProxy alloc] initWithClassName: @"NSFontManager"];
-  
-  [self setName: @"NSFont" forObject: item];
-  [self attachObject: item toParent: nil];
-  RELEASE(item);
-
-  // set the holder in the document.
-  fontManager = (GormObjectProxy *)item;
-  [self changeToViewWithTag: 0];
-
-  // Add the connection to the menu from the font manager, if the NSFontMenu exists...
-  fontMenu = [self fontMenu];
-  if (fontMenu != nil)
+  if (fontManager != nil)
     {
-      NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
-      [con setSource: item];
-      [con setDestination: fontMenu];
-      [con setLabel: @"menu"];
-      [self addConnector: con];
+      return;
+    }
+  else
+    {
+      GSNibItem *item = nil;
+      NSMenu *fontMenu = nil;
+      
+      item = [[GormObjectProxy alloc] initWithClassName: @"NSFontManager"];
+      
+      [self setName: @"NSFont" forObject: item];
+      [self attachObject: item toParent: nil];
+      RELEASE(item);
+      
+      // set the holder in the document.
+      fontManager = (GormObjectProxy *)item;
+      [self changeToViewWithTag: 0];
+      
+      // Add the connection to the menu from the font manager, if the NSFontMenu exists...
+      fontMenu = [self fontMenu];
+      if (fontMenu != nil)
+	{
+	  NSNibOutletConnector *con = [[NSNibOutletConnector alloc] init];
+	  [con setSource: item];
+	  [con setDestination: fontMenu];
+	  [con setLabel: @"menu"];
+	  [self addConnector: con];
+	}
     }
 }
 
