@@ -345,6 +345,13 @@
   NSEnumerator *en = [subClasses objectEnumerator];
   NSString *subclassName = nil;
 
+  if (action == nil
+      || className == nil)
+    {
+      NSLog(@"Attempt to add nil action = %@ or className = %@ to class manager", action, className);
+      return;
+    }
+  
   // check all
   if ([allActions containsObject: anAction])
     {

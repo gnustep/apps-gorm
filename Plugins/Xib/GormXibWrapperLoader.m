@@ -77,38 +77,140 @@
 			      classManager: (GormClassManager *)classManager
 				    withID: (NSString *)theId
 {
-  NSString *className = [obj className];
+  id result = obj;
   
   if ([obj isKindOfClass: [NSCustomObject class]])
     {
+      NSString *className = [obj className];
       if ([className isEqualToString: @"NSApplication"])
         {
-          return [document filesOwner];
+          result = [document filesOwner];
+	  [obj setRealObject: result];
         }
       else if ([className isEqualToString: @"FirstResponder"])
         {
-          return [document firstResponder];
+          result = [document firstResponder];
+	  [obj setRealObject: result];
         }
-    }
-  else if ([obj respondsToSelector: @selector(className)])
-    {
-      NSString *cn = [obj className];
-      NSDebugLog(@"className = %@", cn);
-    }
-  else if (obj == nil)
+      else
+	{
+	  result = [obj realObject];
+	}
+    } 
+  else if (theId != nil)
     {
       id o = [_idToName objectForKey: theId];
       if (o != nil)
 	{
-	  return o;
+	  result = o;
 	}
       else
 	{
-	  return [document firstResponder];
+	  result = [document firstResponder];
 	}
     }
+  else
+    {
+      NSLog(@"### ID not provided and could not find name for object %@", obj);
+    }
   
-  return obj;
+  return result;
+}
+
+- (void) _handleCustomClassWithObject: (id)obj
+			 withDocument: (GormDocument *)doc
+{
+  if ([obj isKindOfClass: [NSCustomObject class]])
+    {
+      NSString *customClassName = [obj className];
+      NSDictionary *customClassDict = [_customClasses objectForKey: customClassName];;
+      NSString *theId = [customClassDict objectForKey: @"id"];
+      NSString *parentClassName = [customClassDict objectForKey: @"parentClassName"];
+      id realObject = [_decoded objectForKey: theId];
+      NSString *theName = nil;
+      GormClassManager *classManager = [doc classManager];
+      
+      // Set the file's owner correctly...
+      if ([theId isEqualToString: @"-2"]) // The File's Owner node...
+	{
+	  [[doc filesOwner] setClassName: customClassName];
+	  return;
+	}
+      
+      // these are preset values
+      if ([theId isEqualToString: @"-1"]
+	  || [theId isEqualToString: @"-3"]
+	  || [customClassName isEqualToString: @"NSFontManager"]) 
+	{
+	  return;
+	}
+      
+      // Get the "real" object...
+      realObject = [self _replaceProxyInstanceWithRealObject: realObject
+						classManager: classManager
+						      withID: theId];
+
+      // Check that it has a name...
+      NSLog(@"realObject = %@", realObject);      
+      if ([doc containsObject: realObject])
+	{
+	  theName = [doc nameForObject: realObject];
+	  NSLog(@"Found name = %@ for realObject = %@", theName, realObject);
+	}
+      else
+	{
+	  NSLog(@"realObject = %@ has no name in document", realObject);
+	}
+
+      // If the parent class is "NSCustomObject" or it's derivatives...
+      // then the parent is NSObject
+      if ([parentClassName isEqualToString: @"NSCustomObject5"]
+	  || [parentClassName isEqualToString: @"NSCustomObject"])
+	{
+	  parentClassName = @"NSObject";
+	}
+
+      // Add the custom class to the document
+      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
+	    parentClassName);
+      [classManager addClassNamed: customClassName
+	      withSuperClassNamed: parentClassName
+		      withActions: nil
+		      withOutlets: nil
+			 isCustom: YES];
+
+      // If the name of the object does not exist, then create it...
+      // the name not existing means the object is not attached or associated
+      // with the document, so we must create it here since it is a
+      // custom object.
+      if (theName == nil)
+	{
+	  theName = [doc instantiateClassNamed: customClassName];
+	}
+
+      // Create a mapping between the name and the id. This way we can look
+      // this up when needed later, if necessary.  It is not done in the above
+      // if since the object might already have a name.
+      if (theName != nil)
+	{
+	  [_idToName setObject: theName forKey: theId];
+	}
+
+      // Add the instantiated object to the NSCustomObject
+      id instantiatedObject = [doc objectForName: theName];
+      if (instantiatedObject != nil)
+	{
+	  [obj setRealObject: instantiatedObject];
+	}
+      else
+	{
+	  NSLog(@"Instantiated object not found for %@", theName);
+	}
+    }
+  else
+    {
+      NSLog(@"%@ is not an instance of NSCustomObject", obj);
+    }
 }
 
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
@@ -192,12 +294,14 @@
 		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects = nil;
                   id xibFirstResponder = nil;
-		  id xibFontManager = nil;
-		  
+		  // id xibFontManager = nil;
+
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
-		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
+		  _customClasses = [u customClasses];
+		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
+		  _decoded = [u decoded];
 		  // xibFontManager = [self _findFontManager: rootObjects];
 		  
 		  //
@@ -220,8 +324,8 @@
 		      
 		      // skip the file's owner, it is handled above...
 		      if ((obj == _nibFilesOwner)
-			  || (obj == xibFirstResponder)
-			  || (obj == xibFontManager))
+			  || (obj == xibFirstResponder))
+			  // || (obj == xibFontManager))
                         {
                           continue;
                         }
@@ -277,7 +381,8 @@
 			    {
 			      if ([obj isKindOfClass: [NSCustomObject class]])
 				{
-				  NSLog(@"Skipping NSCustomObject %@ -- adding custom class using GormDocument methods...", obj);
+				  [self _handleCustomClassWithObject: obj
+							withDocument: doc];
 				  continue;
 				}
 			    }
@@ -298,82 +403,9 @@
                     }
 		  
 		  /*
-                   * Add custom classes...
-                   */
-                  NSDictionary *customClasses = [u customClasses];
-                  NSEnumerator *en = [customClasses keyEnumerator];
-                  NSString *customClassName = nil;
-                  NSDictionary *decoded = [u decoded];
-                  
-                  NSLog(@"customClasses = %@", customClasses);
-                  while ((customClassName = [en nextObject]) != nil)
-                    {
-                      NSDictionary *customClassDict = [customClasses objectForKey: customClassName];;
-                      NSString *theId = [customClassDict objectForKey: @"id"];
-                      NSString *parentClassName = [customClassDict objectForKey: @"parentClassName"];
-                      id realObject = [decoded objectForKey: theId];
-                      NSString *theName = nil;
-
-		      // Set the file's owner correctly...
-		      if ([theId isEqualToString: @"-2"]) // The File's Owner node...
-			{
-			  [[doc filesOwner] setClassName: customClassName];
-			  continue;
-			}
-
-		      // these are preset values
-		      if ([theId isEqualToString: @"-1"]
-			  || [theId isEqualToString: @"-3"]
-			  || [customClassName isEqualToString: @"NSFontManager"]) 
-			{
-			  continue;
-			}
-		      
-                      realObject = [self _replaceProxyInstanceWithRealObject: realObject
-								classManager: classManager
-								      withID: theId];
-                      NSDebugLog(@"realObject = %@", realObject);
-                      
-                      if ([doc containsObject: realObject])
-                        {
-                          theName = [doc nameForObject: realObject];
-                          NSDebugLog(@"Found name = %@ for realObject = %@", theName, realObject);
-                        }
-                      else
-                        {
-                          NSDebugLog(@"realObject = %@ has no name in document", realObject);
-                          // continue;
-                        }
-                      
-                      if ([parentClassName isEqualToString: @"NSCustomObject5"])
-                        {
-                          parentClassName = @"NSObject";
-                        }
-                      
-                      NSLog(@"Adding customClassName = %@ with parent className = %@", customClassName,
-                            parentClassName);
-                      [classManager addClassNamed: customClassName
-                              withSuperClassNamed: parentClassName
-                                      withActions: nil
-                                      withOutlets: nil
-                                         isCustom: YES];
-
-		      // If the name of the object does not exist, then create it...
-		      if (theName == nil)
-			{
-			  theName = [doc instantiateClassNamed: customClassName];
-			}
-
-		      // Set up the mapping...
-		      if (theName != nil)
-			{
-			  [_idToName setObject: theName forKey: theId];
-			}
-		    }
-                  
-		  /*
                    * add connections...
                    */
+		  NSLog(@"_idToName = %@", _idToName);
 		  en = [_container connectionRecordEnumerator];
 		  while ((cr = [en nextObject]) != nil)
 		    {
@@ -387,23 +419,31 @@
                             {
                               id dest = [o destination];
                               id src = [o source];
-			      NSString *destId = [document nameForObject: dest];
-			      NSString *srcId = [document nameForObject: src];
-			      
-                              // Replace files owner with the document files owner for loading...
+
+                              NSDebugLog(@"Initial connector = %@", o);
+
+			      NSDebugLog(@"dest = %@, src = %@", dest, src);
+
+			      // Replace files owner with the document files owner for loading...
                               dest = [self _replaceProxyInstanceWithRealObject: dest
 								  classManager: classManager
-									withID: destId];
+									withID: nil];
 
                               src = [self _replaceProxyInstanceWithRealObject: src
 								 classManager: classManager
-								       withID: srcId];
+								       withID: nil];
                               
-                              // Reset them...
+			      NSString *destName = [document nameForObject: dest];
+			      NSString *srcName = [document nameForObject: src];
+
+			      NSLog(@"destName = %@, srcName = %@", destName, srcName);
+
+			      // Use tne names, since this is how connectors are
+			      // stored in gorm until they are written out.
                               [o setDestination: dest];
                               [o setSource: src];
 
-                              NSDebugLog(@"connector = %@", o);
+                              NSDebugLog(@"*** After connector update = %@", o);
 
                               if([o isKindOfClass: [NSNibControlConnector class]])
                                 {
@@ -416,7 +456,10 @@
                                       NSString *newTag = [NSString stringWithFormat: @"%@:",tag];
                                       [o setLabel: (id)newTag];
                                     }
-
+				  
+				  NSDebugLog(@"*** Action: label = %@ for src = %@, srcName = %@",
+					     [o label], src, srcName);
+				  
                                   [classManager addAction: [o label]
                                                 forObject: src];
 
@@ -426,6 +469,9 @@
                                 }
                               else if ([o isKindOfClass: [NSNibOutletConnector class]])
                                 {
+				  NSLog(@"*** Outlet: label = %@ for src = %@, srcName = %@",
+					[o label], src, srcName);
+
                                   [classManager addOutlet: [o label]
                                                 forObject: src];
                                 }
