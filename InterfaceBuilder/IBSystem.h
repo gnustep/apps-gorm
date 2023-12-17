@@ -29,7 +29,7 @@
 
 #ifdef GNUSTEP_WITH_DLL 
 
-#if BUILD_libGorm_DLL
+#if BUILD_libInterfaceBuilder_DLL
 # if defined(__MINGW32__)
   /* On Mingw, the compiler will export all symbols automatically, so
    * __declspec(dllexport) is not needed.

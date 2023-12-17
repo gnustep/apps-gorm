@@ -31,9 +31,9 @@
 @interface GormGormWrapperLoader : GormWrapperLoader
 {
   NSMutableArray *_repairLog;
-  id message;
-  id textField;
-  id panel;
+  id _message;
+  id _textField;
+  id _panel;
 }
 @end
 
@@ -81,14 +81,14 @@
     }
   else
     {
-      [message setStringValue: msg];
+      [_message setStringValue: msg];
       
       while((m = [en nextObject]) != nil)
 	{
-	  [textField insertText: m];
+	  [_textField insertText: m];
 	}
 
-      [panel orderFront: self];
+      [_panel orderFront: self];
     }
 
   [_repairLog removeAllObjects];
@@ -646,9 +646,10 @@
     }
   NS_HANDLER
     {
-      NSRunAlertPanel(_(@"Problem Loading"), 
-		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
-		      _(@"OK"), nil, nil);
+      id delegate = [NSApp delegate];
+      NSString *errorMessage = [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]];
+
+      [delegate exceptionWhileLoadingModel: errorMessage];
       result = NO; 
     }
   NS_ENDHANDLER;

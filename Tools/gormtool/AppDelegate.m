@@ -27,6 +27,36 @@
 #import "GormToolPrivate.h"
 #import "AppDelegate.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wobjc-protocol-method-implementation"
+// Smash this method in NSDocument to prevent it from popping up an NSRunAlertPanel
+@interface NSDocument (__ReplaceLoadPrivate__)
+
+- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType;
+
+@end
+  
+@implementation NSDocument (__ReplaceLoadPrivate__)
+
+- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType
+{
+  self = [self init];
+  if (self != nil)
+    {
+      [self setFileType: fileType];
+      [self setFileName: fileName];
+      if (![self readFromFile: fileName ofType: fileType])
+	{
+	  NSLog(@"Load failed, could not load file");
+	  DESTROY(self);
+	}
+    }
+  return self;
+}
+
+@end
+#pragma GCC diagnostic pop
+
 // AppDelegate...
 @implementation AppDelegate
 
@@ -83,6 +113,14 @@
   NSLog(@"Breaking any existing connections with instances of class %@", className);
   return YES;
 }
+
+// Document
+
+- (id<IBDocuments>) activeDocument
+{
+  return _doc;
+}
+
 // Handle arguments
 
 - (NSDictionary *) parseArguments
@@ -91,7 +129,7 @@
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
   NSProcessInfo *pi = [NSProcessInfo processInfo];
   NSMutableArray *args = [NSMutableArray arrayWithArray: [pi arguments]];
-  BOOL filenameIsLastObject = NO;
+  // BOOL filenameIsLastObject = NO;
   NSString *file = nil;
 
   // If the --read option isn't specified, we assume that the last argument is
@@ -99,7 +137,7 @@
   if ([args containsObject: @"--read"] == NO)
     {
       file = [args lastObject];
-      filenameIsLastObject = YES;
+      // filenameIsLastObject = YES;
       [args removeObject: file];
       NSDebugLog(@"file = %@", file);
 
@@ -237,6 +275,12 @@
 	      parse_val = YES;
 	    }
 
+	  if ([obj isEqualToString: @"--test"])
+	    {
+	      [pair setArgument: obj];
+	      parse_val = NO;
+	    }
+
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -254,12 +298,14 @@
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
 
+  _isTesting = NO;
+  
   if ([[pi arguments] count] > 1)
     {
       NSString *file = nil;
       NSString *outputPath = @"./";
       GormDocumentController *dc = [GormDocumentController sharedDocumentController];
-      GormDocument *doc = nil;
+      // GormDocument *doc = nil;
       NSDictionary *args = [self parseArguments];
       ArgPair *opt = nil;
       NSString *slang = nil;
@@ -277,22 +323,30 @@
 	  file = [opt value];
 	}
 
-      if (file != nil)
+      NS_DURING
 	{
-	  doc = [dc openDocumentWithContentsOfFile: file display: NO];
-	  if (doc == nil)
+	  if (file != nil)
 	    {
-	      NSLog(@"Unable to load document %@", file);
+	      _doc = [dc openDocumentWithContentsOfFile: file display: NO];
+	      if (_doc == nil)
+		{
+		  NSLog(@"Unable to load document %@", file);
+		  return;
+		}
+	    }
+	  else
+	    {
+	      NSLog(@"No document specified");
 	      return;
 	    }
 	}
-      else
+      NS_HANDLER
 	{
-	  NSLog(@"No document specified");
-	  return;
+	  NSLog(@"Exception: %@", [localException reason]);
 	}
+      NS_ENDHANDLER;
       
-      NSDebugLog(@"Document = %@", doc);
+      NSDebugLog(@"Document = %@", _doc);
 
       // Get other options...
       opt = [args objectForKey: @"--output-path"];
@@ -306,14 +360,14 @@
 	{
 	  NSString *stringsFile = [opt value];
 
-	  [doc exportStringsToFile: stringsFile];
+	  [_doc exportStringsToFile: stringsFile];
 	}
 
       opt = [args objectForKey: @"--import-strings-file"];
       if (opt != nil)
 	{
 	  NSString *stringsFile = [opt value];
-	  [doc importStringsFromFile: stringsFile];
+	  [_doc importStringsFromFile: stringsFile];
 	}
 
       opt = [args objectForKey: @"--export-class"];
@@ -321,7 +375,7 @@
 	{
 	  NSString *className = [opt value];
 	  BOOL saved = NO;
-	  GormClassManager *cm = [doc classManager];
+	  GormClassManager *cm = [_doc classManager];
 	  NSString *hFile = [className stringByAppendingPathExtension: @"h"];
 	  NSString *mFile = [className stringByAppendingPathExtension: @"m"];
 	  NSString *hPath = [outputPath stringByAppendingPathComponent: hFile];
@@ -341,7 +395,7 @@
       if (opt != nil)
 	{
 	  NSString *classFile = [opt value];
-	  GormClassManager *cm = [doc classManager];
+	  GormClassManager *cm = [_doc classManager];
 	  
 	  [cm parseHeader: classFile];
 	}
@@ -349,28 +403,28 @@
       opt = [args objectForKey: @"--connections"];
       if (opt != nil)
 	{
-	  NSArray *connections = [doc connections];
+	  NSArray *connections = [_doc connections];
 	  puts([[NSString stringWithFormat: @"%@", connections] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--classes"];
       if (opt != nil)
 	{
-	  NSDictionary *classes = [[doc classManager] customClassInformation];
+	  NSDictionary *classes = [[_doc classManager] customClassInformation];
 	  puts([[NSString stringWithFormat: @"%@", classes] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--objects"];
       if (opt != nil)
 	{
-	  NSSet *objects = [doc topLevelObjects];
+	  NSSet *objects = [_doc topLevelObjects];
 	  puts([[NSString stringWithFormat: @"%@", objects] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--errors"];
       if (opt != nil)
 	{
-	  GormFilePrefsManager *mgr = [doc filePrefsManager];
+	  GormFilePrefsManager *mgr = [_doc filePrefsManager];
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
 	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
@@ -378,7 +432,7 @@
       opt = [args objectForKey: @"--warnings"];
       if (opt != nil)
 	{
-	  GormFilePrefsManager *mgr = [doc filePrefsManager];
+	  GormFilePrefsManager *mgr = [_doc filePrefsManager];
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
 	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
@@ -386,7 +440,7 @@
       opt = [args objectForKey: @"--notices"];
       if (opt != nil)
 	{
-	  GormFilePrefsManager *mgr = [doc filePrefsManager]; 
+	  GormFilePrefsManager *mgr = [_doc filePrefsManager]; 
 	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
 	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
@@ -408,7 +462,7 @@
 	{
 	  NSString *xliffDocumentName = [opt value];
 	  BOOL result = NO;
-	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: _doc];
 	  
 	  if (slang == nil)
 	    {
@@ -429,7 +483,7 @@
 	{
 	  NSString *xliffDocumentName = [opt value];
 	  BOOL result = NO;
-	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: doc];
+	  GormXLIFFDocument *xd = [GormXLIFFDocument xliffWithGormDocument: _doc];
 	  
 	  result = [xd importXLIFFDocumentWithName: xliffDocumentName];
 	  if (result == NO)
@@ -450,11 +504,11 @@
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
 	      NSError *error = nil;
 	      
-	      saved = [doc saveToURL: file
-			      ofType: type
-			   forSaveOperation: NSSaveOperation
-			       error: &error];
-	      if (!saved)
+	      saved = [_doc saveToURL: file
+			       ofType: type
+			    forSaveOperation: NSSaveOperation
+				error: &error];
+	      if ( !saved )
 		{
 		  NSLog(@"Document %@ of type %@ was not saved", file, type);
 		}
@@ -465,24 +519,37 @@
 		}
 	    }
 	}
+
+      opt = [args objectForKey: @"--test"];
+      if (opt != nil)
+	{
+	  NSLog(@"Control-C to end");
+	  _isTesting = YES;
+	  [self testInterface: self];
+	}
     }
   
   [NSClassSwapper setIsInInterfaceBuilder: NO];
 }
 
+- (void) exceptionWhileLoadingModel: (NSString *)errorMessage
+{
+  NSLog(@"Exception: %@", errorMessage);
+}
+
 - (void) applicationDidFinishLaunching: (NSNotification *)n
 {
-  // puts("== gormtool");
-  
   NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
   [self process];
- 
-  [NSApp terminate: nil];
+
+  if (_isTesting == NO)
+    {
+      [NSApp terminate: nil];
+    }
 }
 
 - (void) applicationWillTerminate: (NSNotification *)n
 {
-  // puts("== finished...");
 }
 
 @end

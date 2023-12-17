@@ -239,6 +239,12 @@
 - (id) instantiateClass: (id)sender;
 
 /**
+ * Instantiate the class specified by the parameter className and
+ * returns the reference name within the document
+ */ 
+- (NSString *) instantiateClassNamed: (NSString *)className;
+
+/**
  * Generate the class files for the selected class
  */
 - (id) createClassFiles: (id)sender;
@@ -515,6 +521,11 @@
  * Returns a set containing the top level objects for this document.
  */
 - (NSMutableSet *) topLevelObjects;
+
+/**
+ * Returns an array of issues. If document is valid the array should be empty.
+ */
+- (NSArray *) validate;
 
 @end
 

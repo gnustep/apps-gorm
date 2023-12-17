@@ -45,38 +45,42 @@
 
 @interface GormAbstractDelegate : NSObject <IB, GormAppDelegate, GormServer>
 {
-  IBOutlet id            gormMenu;
-  IBOutlet id            guideLineMenuItem;
+  IBOutlet id            _gormMenu;
+  IBOutlet id            _guideLineMenuItem;
 
-  GormPrefController    *preferencesController;
-  GormClassManager	*classManager;
-  GormInspectorsManager	*inspectorsManager;
-  GormPalettesManager	*palettesManager;
-  GormPluginManager	*pluginManager;
-  id<IBSelectionOwners>	 selectionOwner;
-  BOOL			 isConnecting;
-  BOOL			 isTesting;
-  id             	 testContainer;
-  NSMenu		*mainMenu; // saves the main menu...
-  NSMenu                *servicesMenu; // saves the services menu...
-  NSMenu                *classMenu; // so we can set it for the class view
-  NSDictionary		*menuLocations;
-  NSImage		*linkImage;
-  NSImage		*sourceImage;
-  NSImage		*targetImage;
-  NSImage               *gormImage;
-  NSImage               *testingImage;
-  id			 connectSource;
-  id			 connectDestination;
-  NSMutableArray        *testingWindows;
-  NSSet                 *topObjects;
-  NSDockTile            *dockTile;
+  GormPrefController    *_preferencesController;
+  GormClassManager	*_classManager;
+  GormInspectorsManager	*_inspectorsManager;
+  GormPalettesManager	*_palettesManager;
+  GormPluginManager	*_pluginManager;
+  id<IBSelectionOwners>	 _selectionOwner;
+  BOOL			 _isConnecting;
+  BOOL			 _isTesting;
+  id             	 _testContainer;
+  NSMenu		*_mainMenu; // saves the main menu...
+  NSMenu                *_servicesMenu; // saves the services menu...
+  NSMenu                *_classMenu; // so we can set it for the class view
+  NSDictionary		*_menuLocations;
+  NSImage		*_linkImage;
+  NSImage		*_sourceImage;
+  NSImage		*_targetImage;
+  NSImage               *_gormImage;
+  NSImage               *_testingImage;
+  id			 _connectSource;
+  id			 _connectDestination;
+  NSMutableArray        *_testingWindows;
+  NSSet                 *_topObjects;
+  NSDockTile            *_dockTile;
 }
 
 // testing the interface
 - (IBAction) deferredEndTesting: (id) sender;
 - (IBAction) testInterface: (id)sender;
 - (IBAction) endTesting: (id)sender;
+
+// Testing...
+- (void) setTestingInterface: (BOOL)testing;
+- (BOOL) isTestingInterface;
 
 @end
 

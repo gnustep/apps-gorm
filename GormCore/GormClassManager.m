@@ -345,6 +345,13 @@
   NSEnumerator *en = [subClasses objectEnumerator];
   NSString *subclassName = nil;
 
+  if (action == nil
+      || className == nil)
+    {
+      NSLog(@"Attempt to add nil action = %@ or className = %@ to class manager", action, className);
+      return;
+    }
+  
   // check all
   if ([allActions containsObject: anAction])
     {
@@ -2270,6 +2277,8 @@
   return result;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"<%s: %lx> = %@",
@@ -2277,6 +2286,7 @@
 		   (unsigned long)self,
  		   _customClassMap];
 }
+#pragma GCC diagnostic pop
 
 /** Helpful for debugging */
 - (NSString *) dumpClassInformation

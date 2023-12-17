@@ -58,7 +58,7 @@
       // load the gui...
       if (![bundle loadNibNamed: @"GormCustomClassInspector"
 			  owner: self
-		topLevelObjects: nil])
+		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormCustomClassInspector");
 	  return nil;

@@ -35,6 +35,8 @@
 
 int main(int argc, char **argv)
 {
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  
   NSApplication *app = [NSApplication sharedApplication];
   AppDelegate *delegate = [[AppDelegate alloc] init];
   extern char **environ;
@@ -51,5 +53,7 @@ int main(int argc, char **argv)
   [app setDelegate: delegate];
   [app run];
 
+  RELEASE(pool);
+  
   return 0;
 }

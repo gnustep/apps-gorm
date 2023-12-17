@@ -55,7 +55,7 @@
       // load the gui...
       if (![bundle loadNibNamed: @"GormSoundInspector"
 			  owner: self
-			topLevelObjects: nil])
+			topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormSoundInspector");
 	  return nil;

@@ -31,12 +31,10 @@ include $(GNUSTEP_MAKEFILES)/common.make
 PACKAGE_NAME=GormCore
 FRAMEWORK_VAR=GORMCORE
 FRAMEWORK_NAME=GormCore
-GormCore_HEADER_FILES_DIR=.
-GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-SUBPROJECTS = Plugins
+SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
@@ -190,10 +188,6 @@ GormCore_OBJC_FILES = \
 	GormXLIFFDocument.m
 
 GormCore_RESOURCE_FILES = \
-	Plugins/Gorm/Gorm.plugin \
-	Plugins/Nib/Nib.plugin \
-	Plugins/Xib/Xib.plugin \
-	Plugins/GModel/GModel.plugin \
 	Images/GormActionSelected.tiff \
 	Images/GormAction.tiff \
 	Images/GormClass.tiff \

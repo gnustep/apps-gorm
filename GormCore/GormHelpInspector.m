@@ -16,7 +16,7 @@
       return nil;
     }
 
-  if ([bundle loadNibNamed: @"GormHelpInspector" owner: self topLevelObjects: nil] == NO)
+  if ([bundle loadNibNamed: @"GormHelpInspector" owner: self topLevelObjects: NULL] == NO)
     {
       NSLog(@"Could not gorm GormHelpInspector");
       return nil;

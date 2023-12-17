@@ -27,6 +27,8 @@
 
 #include "GormPrivate.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 static NSString	*typeId = @"Object";
 static NSString	*typeChar = @"Character or Boolean";
 static NSString	*typeUChar = @"Unsigned character/bool";
@@ -34,7 +36,7 @@ static NSString	*typeInt = @"Integer";
 static NSString	*typeUInt = @"Unsigned integer";
 static NSString	*typeFloat = @"Float";
 static NSString	*typeDouble = @"Double";
-
+#pragma GCC diagnostic pop
 
 @interface GormObjectInspector : IBInspector
 {
