@@ -381,7 +381,8 @@
 			      customClassName = className;
 			    }
 			}
-		      
+
+		      // Handle custom classes
 		      if ([rootObjects containsObject: obj] && obj != nil &&
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{
