@@ -31,6 +31,29 @@
 #include "GormPalettesManager.h"
 #include "GormResource.h"
 
+@interface NSMatrix (GormResourceEditorPrivate)
+- (BOOL **) _selectedCells;
+- (id **) _cells;
+- (void) _setSelectedCell: (id)c;
+@end
+
+@implementation NSMatrix (GormResourceEditorPrivate)
+- (BOOL **) _selectedCells
+{
+  return _selectedCells;
+}
+
+- (id **) _cells
+{
+  return _cells;
+}
+
+- (void) _setSelectedCell: (id)c
+{
+  _selectedCell = c;
+}
+@end
+
 @implementation	GormResourceEditor
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
@@ -197,7 +220,10 @@
   NSPoint lastLocation = [theEvent locationInWindow];
   NSEvent* lastEvent = theEvent;
   NSPoint initialLocation;
-
+  BOOL **selectedCells = [self _selectedCells];
+  id selectedCell = [self selectedCell];
+  id **cells = nil;
+  
   /*
    * Pathological case -- ignore mouse down
    */
@@ -215,21 +241,21 @@
 	    column: &column
 	    forPoint: lastLocation])
     {
-      if ([_cells[row][column] isEnabled])
+      if ([cells[row][column] isEnabled])
 	{
 	  if ((_mode == NSRadioModeMatrix) && _selectedCell != nil)
 	    {
-	      [_selectedCell setState: NSOffState];
+	      [selectedCell setState: NSOffState];
 	      [self drawCellAtRow: _selectedRow column: _selectedColumn];
-	      _selectedCells[_selectedRow][_selectedColumn] = NO;
-	      _selectedCell = nil;
+	      selectedCells[_selectedRow][_selectedColumn] = NO;
+	      selectedCell = nil;
 	      _selectedRow = _selectedColumn = -1;
 	    }
-	  [_cells[row][column] setState: NSOnState];
+	  [cells[row][column] setState: NSOnState];
 	  [self drawCellAtRow: row column: column];
 	  [_window flushWindow];
-	  _selectedCells[row][column] = YES;
-	  _selectedCell = _cells[row][column];
+	  selectedCells[row][column] = YES;
+	  [self _setSelectedCell: cells[row][column]];
 	  _selectedRow = row;
 	  _selectedColumn = column;
 	}
