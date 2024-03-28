@@ -1,0 +1,13 @@
+on:
+  push:
+  pull_request:
+
+jobs:
+  ########### Linux ###########
+  linux:
+    name: ci
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:22.04
+
