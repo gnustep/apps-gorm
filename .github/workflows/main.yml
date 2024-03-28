@@ -109,8 +109,7 @@ jobs:
 
       - name: Build source
         run: |
-	  echo "=== Build Gorm ==="
-          # . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
+       	  # . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
           # ./configure
           # make && make install
 
