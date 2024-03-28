@@ -23,7 +23,6 @@
  */
 
 #include <AppKit/AppKit.h>
-
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormCore.h>
 
@@ -85,8 +84,6 @@
     }
 }
 
-
-
 - (void) mouseDown: (NSEvent *) theEvent
 {
   BOOL onKnob = NO;
@@ -136,7 +133,6 @@
     }
 }
 
-
 @end
 
 
@@ -162,8 +158,6 @@
     }
 }
 
-
-
 - (BOOL)          tabView: (NSTabView *)tabView 
   shouldSelectTabViewItem: (NSTabViewItem *)tabViewItem
 {
@@ -184,4 +178,5 @@
 {
   // [tabView selectFirstTabViewItem: self];
 }
+
 @end
