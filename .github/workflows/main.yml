@@ -108,9 +108,7 @@ jobs:
         run: ./.github/scripts/dependencies.sh
 
       - name: Build source for Gorm
-        run: |
-       	  . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-          make && make install
+        run: . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh && make && make install
 
 ### Building libs-back is disabled due to various test failures. Re-enable when fixed.
 #      - name: Build libs-back # required by some tests
