@@ -66,7 +66,7 @@ install_gnustep_gui() {
     echo "::group::GNUstep GUI"
     cd $DEPS_PATH
     . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-    git clone -q -b ${LIBS_BASE_BRANCH:-master} https://github.com/gnustep/libs-gui.git
+    git clone -q -b ${LIBS_GUI_BRANCH:-master} https://github.com/gnustep/libs-gui.git
     cd libs-gui
     ./configure
     make

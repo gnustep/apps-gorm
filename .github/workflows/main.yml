@@ -105,20 +105,11 @@ jobs:
         env:
           TOOLS_MAKE_BRANCH: ${{github.event.inputs.tools_make_branch}}
           LIBS_BASE_BRANCH: ${{github.event.inputs.libs_base_branch}}
+          LIBS_GUI_BRANCH: ${{github.event.inputs.libs_gui_branch}}
         run: ./.github/scripts/dependencies.sh
 
       - name: Build source for Gorm
         run: . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh && make && make install
-
-### Building libs-back is disabled due to various test failures. Re-enable when fixed.
-#      - name: Build libs-back # required by some tests
-#        working-directory: ${{env.DEPS_PATH}}
-#        run: |
-#          . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-#          git clone -q -b ${LIBS_BACK_BRANCH:-master} https://github.com/gnustep/libs-back.git
-#          cd libs-back
-#          ./configure
-#          make && make install
 
       - name: Run tests
         run: |
