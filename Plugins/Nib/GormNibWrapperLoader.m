@@ -203,7 +203,8 @@
 			{
 			  continue;
 			}
-		                            //
+		      
+		      //
                       // If it's NSApplication (most likely the File's Owner)
                       // skip it...
                       //
@@ -395,6 +396,11 @@
       // blank the target/action for all objects.
       [obj setTarget: nil];
       [obj setAction: NULL];
+    }
+  else if([obj isKindOfClass: [NSCustomObject class]])
+    {
+      GormObjectProxy *o = [[GormObjectProxy alloc] initWithClassName: [obj className]];
+      obj = o; // replace the object if it's an NSCustomObject...
     }
 
   return obj;
