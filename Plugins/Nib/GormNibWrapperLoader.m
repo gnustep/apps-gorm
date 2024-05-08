@@ -143,8 +143,6 @@
 	      /*
 	       * Special internal classes
 	       */ 
-	      [u setClass: [GormObjectProxy class]
-		 forClassName: @"NSCustomObject"];
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
@@ -185,7 +183,7 @@
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if([_nibFilesOwner isKindOfClass: [GormObjectProxy class]])
+		  if([_nibFilesOwner isKindOfClass: [NSCustomObject class]])
 		    {
 		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
@@ -200,9 +198,26 @@
 		      NSString *objName = nil;
 		      
 		      // skip the file's owner, it is handled above...
-		      if(o == _nibFilesOwner)
-			continue;
+		      if(o == _nibFilesOwner
+			 || o == [document firstResponder])
+			{
+			  continue;
+			}
 		      
+		      //
+                      // If it's NSApplication (most likely the File's Owner)
+                      // skip it...
+                      //
+                      if ([o isKindOfClass: [NSCustomObject class]])
+                        {
+                          if ([[o className] isEqualToString: @"NSApplication"])
+                            {
+                              continue;
+                            }
+
+                          customClassName = [o className];
+                        }
+                      
 		      //
 		      // if it's a window template, then replace it with an actual window.
 		      //
@@ -218,14 +233,17 @@
 			  
 			  [document setObject: obj isDeferred: isDeferred];
 			  [document setObject: obj isVisibleAtLaunch: isVisible];
-                          
+
+			  [document attachObject: obj
+					toParent: nil];
+			  
 			  // record the custom class...
 			  if([classManager isCustomClass: className])
 			    {
 			      customClassName = className;
 			    }
 			}
-		      
+
 		      if([self isTopLevelObject: obj])
 			{		  
 			  [document attachObject: obj
@@ -378,6 +396,11 @@
       // blank the target/action for all objects.
       [obj setTarget: nil];
       [obj setAction: NULL];
+    }
+  else if([obj isKindOfClass: [NSCustomObject class]])
+    {
+      GormObjectProxy *o = [[GormObjectProxy alloc] initWithClassName: [obj className]];
+      obj = o; // replace the object if it's an NSCustomObject...
     }
 
   return obj;

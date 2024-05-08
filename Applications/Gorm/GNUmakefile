@@ -142,8 +142,6 @@ Gorm_RESOURCE_FILES = \
         Images/tabbot_nib.tiff \
         Images/tabtop_nib.tiff \
         Images/titleOnly_nib.tiff \
-	Images/browserView.tiff \
-	Images/outlineView.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
 

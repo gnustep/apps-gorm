@@ -31,11 +31,6 @@
 #include "GormXibWrapperLoader.h"
 
 /*
- * Forward declarations for classes
- */
-@class GormNSWindow, GormNSMenu;
-
-/*
  * This allows us to retrieve the customClasses from the XIB unarchiver.
  */
 @interface NSKeyedUnarchiver (Private)
@@ -78,6 +73,11 @@
   [super dealloc];
 }
 
+//
+// This method returns the "real" object that should be used in gorm for either
+// the custom object, its substitute, or a standin object such as file's owner
+// or first responder.
+//
 - (id) _replaceProxyInstanceWithRealObject: (id)obj
 			      classManager: (GormClassManager *)classManager
 				    withID: (NSString *)theId
@@ -128,6 +128,10 @@
   return result;
 }
 
+//
+// This method instantiates the custom class and inserts it into the document
+// so that it can be referenced from elsewhere in the data.
+//
 - (void) _handleCustomClassWithObject: (id)obj
 			 withDocument: (GormDocument *)doc
 {
@@ -266,22 +270,19 @@
 	      //
 	      // Special internal classes
 	      // 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreceiver-forward-class"
 	      [u setClass: [GormCustomView class] 
 		 forClassName: @"NSCustomView"];
 	      [u setClass: [GormWindowTemplate class] 
 		 forClassName: @"NSWindowTemplate"];
 	      [u setClass: [GormNSWindow class] 
 		 forClassName: @"NSWindow"];
-	      [u setClass: [GormNSMenu class] 
-		 forClassName: @"NSMenu"];
               [u setClass: [IBUserDefinedRuntimeAttribute class]
                  forClassName: @"IBUserDefinedRuntimeAttribute5"];
-#pragma GCC diagnostic pop
 	      
 	      //
-	      // Substitute any classes specified by the palettes...
+	      // Substitute any classes specified by the palettes...  Palettes can specify
+	      // substitute classes to use in place of certain classes, among them is
+	      // NSMenu, this is so that their standins can be automatically used.
 	      //
 	      en = [substituteClasses keyEnumerator];
 	      while ((subClassName = [en nextObject]) != nil)
@@ -305,7 +306,6 @@
 		  IBConnectionRecord *cr = nil;
                   NSArray *rootObjects = nil;
                   id xibFirstResponder = nil;
-		  // id xibFontManager = nil;
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
 		  xibFirstResponder = [rootObjects objectAtIndex: 1];
@@ -313,7 +313,6 @@
 		  _customClasses = [u customClasses];
 		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  _decoded = [u decoded];
-		  // xibFontManager = [self _findFontManager: rootObjects];
 		  
 		  //
 		  // set the current class on the File's owner...
@@ -336,7 +335,6 @@
 		      // skip the file's owner, it is handled above...
 		      if ((obj == _nibFilesOwner)
 			  || (obj == xibFirstResponder))
-			// || (obj == xibFontManager))
                         {
                           continue;
                         }
@@ -383,7 +381,8 @@
 			      customClassName = className;
 			    }
 			}
-		      
+
+		      // Handle custom classes
 		      if ([rootObjects containsObject: obj] && obj != nil &&
                           [obj isKindOfClass: [GormWindowTemplate class]] == NO)
 			{
@@ -432,7 +431,6 @@
                               id src = [o source];
 
                               NSDebugLog(@"Initial connector = %@", o);
-
 			      NSDebugLog(@"dest = %@, src = %@", dest, src);
 
 			      // Replace files owner with the document files owner for loading...
