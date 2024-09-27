@@ -86,6 +86,11 @@
 {
   return @"GormObjectEditor";
 }
+
+- (NSString*) bindingsInspectorClassName
+{
+  return @"GormBindingsInspector";
+}
 @end
 
 @implementation NSView (GormObjectAdditions)
@@ -509,8 +514,10 @@ static NSMapTable	*docMap = 0;
 	}
       else
 	{
-	  [[NSApp delegate] displayConnectionBetween: [NSApp connectSource] and: obj];
-	  [[NSApp delegate] startConnecting];
+	  id delegate = [NSApp delegate];
+	  [delegate displayConnectionBetween: [delegate connectSource]
+					 and: obj];
+	  [delegate startConnecting];
 	  return YES;
 	}
     }
