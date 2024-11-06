@@ -56,6 +56,22 @@
 #import "GormDocumentController.h"
 #import "GormXLIFFDocument.h"
 
+@interface NSObject (GormPrivate)
+@end
+
+@implementation NSObject (GormPrivate)
+
+- (instancetype) initWithCoder: (NSCoder *)coder
+{
+  return [self init];
+}
+
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+}
+
+@end
+
 @interface GormDisplayCell : NSButtonCell
 @end
 
@@ -84,6 +100,7 @@
 @end
 
 @implementation	GormFirstResponder
+
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
