@@ -56,10 +56,10 @@
 #import "GormDocumentController.h"
 #import "GormXLIFFDocument.h"
 
-@interface NSObject (GormPrivate)
+@interface NSObject (GormNSCoding)
 @end
 
-@implementation NSObject (GormPrivate)
+@implementation NSObject (GormNSCoding)
 
 - (instancetype) initWithCoder: (NSCoder *)coder
 {
