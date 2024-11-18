@@ -69,8 +69,9 @@
 {
   if (sender == typeMatrix)
     {
-      BOOL pullsDown = [[sender selectedCell] tag];
+      BOOL pullsDown = [[sender selectedCell] tag] == YES ? YES : NO;
       id selectedItem;
+      
       [object setPullsDown: pullsDown];
       selectedItem = [object selectedItem];
       [object selectItem: nil];
@@ -122,7 +123,7 @@
 
   pullsDown = [object pullsDown];
   [typeMatrix selectCellWithTag: pullsDown];
-  [autoenableSwitch setState: [object autoenablesItems]];
+  [autoenableSwitch setState: ([object autoenablesItems] ? NSOnState : NSOffState)];
   [enableSwitch setState: [object isEnabled]];
   [[tagForm cellAtRow: 0 column: 0] setIntValue: [object tag]];
   [[defaultItemForm cellAtRow: 0 column: 0] setIntValue: [object indexOfSelectedItem]];
