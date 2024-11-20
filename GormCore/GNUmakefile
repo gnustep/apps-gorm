@@ -38,8 +38,13 @@ SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
+	GormBindingsInspector.h \
+	GormBindingsAbstractInspector.h \
+	GormBindingsContentInspector.h \
 	GormAbstractDelegate.h \
+	GormBindingsInspector.h \
 	GormBoxEditor.h \
+	GormCore.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
 	GormClassManager.h \
@@ -101,24 +106,16 @@ GormCore_HEADER_FILES = \
 	GormWrapperLoader.h \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
+	NSString+methods.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h \
-	GormGeneralPref.h \
-	GormGuidelinePref.h \
-	GormHeadersPref.h \
-	GormPalettesPref.h \
-	GormPluginsPref.h \
-	GormPrefController.h \
-	GormPrefs.h \
-	GormShelfPref.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
 
 GormCore_OBJC_FILES = \
+	GormBindingsInspector.m \
+	GormBindingsAbstractInspector.m \
+	GormBindingsContentInspector.m \
 	GormAbstractDelegate.m \
+	GormBindingsInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -178,6 +175,7 @@ GormCore_OBJC_FILES = \
 	NSCell+GormAdditions.m \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
+	NSString+methods.m \
 	NSView+GormExtensions.m \
         GormPrivate.m \
 	GormGeneralPref.m \
@@ -187,7 +185,7 @@ GormCore_OBJC_FILES = \
 	GormPluginsPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
-	GormXLIFFDocument.m \
+	GormXLIFFDocument.m
 
 GormCore_RESOURCE_FILES = \
 	Images/GormActionSelected.tiff \
@@ -223,6 +221,8 @@ GormCore_RESOURCE_FILES = \
 GormCore_LANGUAGES = English
 
 GormCore_LOCALIZED_RESOURCE_FILES = \
+	GormBindingsInspector.gorm \
+	GormBindingsAbstractInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \
 	GormClassPanel.gorm \

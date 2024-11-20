@@ -83,6 +83,11 @@
 - (NSString*) classInspectorClassName;
 
 /**
+ * Name of bindings inspector.
+ */
+- (NSString*) bindingsInspectorClassName;
+
+/**
  * Name of the editor for the receiver.
  */
 - (NSString*) editorClassName;

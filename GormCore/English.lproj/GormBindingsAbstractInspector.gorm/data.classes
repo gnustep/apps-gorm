@@ -1,0 +1,27 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormBindingsAbstractInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    "_bindTo",
+	    "_controllerKey",
+	    "_modelKeyPath",
+	    "_raisesForNotApplicable",
+	    "_valueTransformer",
+	    "_controllerPopUp",
+	    "_alwaysPresentAppModalAlerts",
+	    "_raisesForNotApplicableKeys",
+	    "_validatesImmediately",
+	    "_multipleValuesPlaceholder",
+	    "_noSelectionPlaceholder",
+	    "_notApplicablePlaceholder",
+	    "_nullPlaceholder",
+	    "_multipleValuesTitle",
+	    "_noSelectionTitle",
+	    "_notApplicableTitle",
+	    "_nullTitle"
+	);
+	Super = IBInspector;
+    };
+}
