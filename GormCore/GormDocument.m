@@ -4,7 +4,8 @@
  * protocol plus additional methods which are useful for managing the
  * contents of the document.
  *
- * Copyright (C) 1999,2002,2003,2004,2005,2020,2021 Free Software Foundation, Inc.
+ * Copyright (C) 1999,2002,2003,2004,2005,2020,
+ *               2021 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
  * Date:        2002,2003,2004,2005,2020,2021
@@ -3905,3 +3906,89 @@ willBeInsertedIntoToolbar: (BOOL)flag
 }
 @end
 
+@implementation GormDocument (Metadata)
+
+// Core methods..
+
+- (id) outlineView: (NSOutlineView *)ov
+	     child: (NSInteger)index
+	    ofItem: (id)item
+{
+  return nil;
+}
+
+- (BOOL) outlineView: (NSOutlineView *)ov
+    isItemExpandable: (id)item
+{
+  return NO;
+}
+
+- (NSInteger) outlineView: (NSOutlineView *)ov
+   numberOfChildrenOfItem: (id)item
+{
+  return 0;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       objectValueForTableColumn: (NSTableColumn *)tableColumn
+       byItem: (id)tem
+{
+  return nil;
+}
+
+// Other methods...
+
+- (BOOL) outlineView: (NSOutlineView *)ov
+	  acceptDrop: (id<NSDraggingInfo>)info
+		item: (id)item
+	  childIndex: (NSInteger)index
+{
+  return NO;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       itemForPersistentObject: (id)obj
+{
+  return nil;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       persistentObjectForItem: (id)item
+{
+  return nil;
+}
+
+- (NSArray *) outlineView: (NSOutlineView *)ov
+          namesOfPromisedFilesDroppedAtDestination: (NSURL *)dropDestination
+	  forDraggedItems: (NSArray *)items
+{
+  return nil;
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+      setObjectValue: (id)value
+      forTableColumn: (NSTableColumn *)tc
+	      byItem: (id)item
+{
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+         sortDescriptorsDidChange: (NSArray *)oldDescriptors
+{
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+	  writeItems: (NSArray *)items
+	toPasteboard: (NSPasteboard *)pb
+{
+}
+
+- (NSDragOperation) outlineView: (NSOutlineView *)ov
+		   validateDrop: (id<NSDraggingInfo>)info
+		   proposedItem: (id)item
+	     proposedChildIndex: (NSInteger)index
+{
+  return 0;
+}
+
+@end

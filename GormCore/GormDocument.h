@@ -552,4 +552,7 @@
 
 @end
 
+@interface GormDocument (Metadata) <NSOutlineViewDataSource>
+@end
+
 #endif
