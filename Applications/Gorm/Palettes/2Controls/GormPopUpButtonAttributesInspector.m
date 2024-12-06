@@ -71,15 +71,27 @@
     {
       BOOL pullsDown = [[sender selectedCell] tag] == YES ? YES : NO;
       id selectedItem;
+      id cell = [object cell];
       
       [object setPullsDown: pullsDown];
       selectedItem = [object selectedItem];
       [object selectItem: nil];
       [object selectItem: selectedItem];
+      [cell setUsesItemFromMenu: YES];
+      
+      // Set up the form...
       [pullDownTitleForm setEnabled: pullsDown];
       [[pullDownTitleForm cellAtIndex: 0]
 	setStringValue: pullsDown ? [object title] : @""];
       [pullDownArrowPopUp setEnabled: pullsDown];
+
+      if (pullsDown)
+	{
+	  // TODO: This should be configurable in the future
+	  [cell setPreferredEdge: NSMaxYEdge];
+	  [cell setMenuItem: nil];
+	  [cell setMenuItem: selectedItem];
+	}
     }
   else if (sender == autoenableSwitch)
     {
