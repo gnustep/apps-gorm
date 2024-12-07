@@ -72,6 +72,9 @@
       BOOL pullsDown = [[sender selectedCell] tag] == YES ? YES : NO;
       id selectedItem;
       id cell = [object cell];
+
+      NSLog(@"pullDown = %d", pullsDown);
+      NSLog(@"cell = %@", cell);
       
       [object setPullsDown: pullsDown];
       selectedItem = [object selectedItem];
