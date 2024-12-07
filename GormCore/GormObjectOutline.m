@@ -1,11 +1,9 @@
-/* GormObjectEditor.m
+/* GormObjectOutline.m
  *
- * Copyright (C) 1999,2002,2003,2004,2005 Free Software Foundation, Inc.
+ * Copyright (C) 2024 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:        2002,2003,2004,2005
- * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Date:	1999
+ * Date:        2024
  * 
  * This file is part of GNUstep.
  * 
@@ -34,11 +32,11 @@
 #import "GormClassManager.h"
 #import "GormAbstractDelegate.h"
 
-@implementation NSObject (GormObjectAdditions)
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
+@implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage       *image = nil;
@@ -83,7 +81,6 @@
 {
   return @"GormObjectEditor";
 }
-
 @end
 
 @implementation NSView (GormObjectAdditions)
@@ -93,9 +90,10 @@
 }
 @end
 
-@implementation	GormObjectEditor
+// Map top level document editors to their documents...
+static NSMapTable *docMap = 0;
 
-static NSMapTable	*docMap = 0;
+@implementation	GormObjectOutline
 
 + (void) initialize
 {

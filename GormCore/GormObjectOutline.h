@@ -1,10 +1,9 @@
-/* GormObjectEditor.h
+/* GormObjectOutline.h
  *
- * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
+ * Copyright (C) 2024 Free Software Foundation, Inc.
  *
- * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2003, 2004
+ * Date:	2024
  * 
  * This file is part of GNUstep.
  * 
@@ -26,21 +25,11 @@
 #ifndef INCLUDED_GormObjectEditor_h
 #define INCLUDED_GormObjectEditor_h
 
-#include "GormGenericEditor.h"
+#include "GormObjectEditor.h"
 
-@interface NSObject (GormObjectAdditions)
+extern static NSMapTable *docMap;
 
-- (NSImage*) imageForViewer;
-- (NSString*) inspectorClassName;
-- (NSString*) connectInspectorClassName;
-- (NSString*) sizeInspectorClassName;
-- (NSString*) helpInspectorClassName;
-- (NSString*) classInspectorClassName;
-- (NSString*) editorClassName;
-
-@end
-
-@interface GormObjectEditor : GormGenericEditor 
+@interface GormObjectOutline : GormObjectEditor 
 {
 }
 + (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;

@@ -3914,26 +3914,70 @@ willBeInsertedIntoToolbar: (BOOL)flag
 	     child: (NSInteger)index
 	    ofItem: (id)item
 {
+  if (item == nil)
+    {
+      return [[topLevelObjects allObjects] objectAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      return [item contentView];
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      return [[item subviews] objectAtIndex: index];
+    }
+
   return nil;
 }
 
 - (BOOL) outlineView: (NSOutlineView *)ov
     isItemExpandable: (id)item
 {
+  if (item == nil)
+    {
+      return [topLevelObjects count] > 0;
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      return [item contentView] != nil;
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      return [[item subviews] count] > 0; 
+    }
+  
   return NO;
 }
 
 - (NSInteger) outlineView: (NSOutlineView *)ov
    numberOfChildrenOfItem: (id)item
 {
+  if (item == nil)
+    {
+      return [topLevelObjects count];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      return 1; // [[[item contentView] subviews] count];
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      return [[item subviews] count]; 
+    }
+  
   return 0;
 }
 
 - (id) outlineView: (NSOutlineView *)ov
        objectValueForTableColumn: (NSTableColumn *)tableColumn
-       byItem: (id)tem
+       byItem: (id)item
 {
-  return nil;
+  if (item == nil)
+    {
+      return @"Objects";
+    }
+
+  return [self nameForObject: item];
 }
 
 // Other methods...
