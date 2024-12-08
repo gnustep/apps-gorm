@@ -38,6 +38,8 @@
     {
       methods = [[NSMutableArray alloc] init];
       ivars = [[NSMutableArray alloc] init];
+      properties = [[NSMutableArray alloc] init];
+      protocols = [[NSMutableArray alloc] init];
       ASSIGN(classString, string);
     }
   return self;
@@ -47,6 +49,8 @@
 {
   RELEASE(methods);
   RELEASE(ivars);
+  RELEASE(properties);
+  RELEASE(protocols);  
   RELEASE(classString);
   RELEASE(className);
   RELEASE(superClassName);
@@ -107,6 +111,15 @@
 - (void) setIsCategory: (BOOL)flag
 {
   isCategory = flag;
+}
+
+- (NSArray *) properties
+{
+  return properties;
+}
+
+- (void) addProperty: (NSString *)name isOutlet: (BOOL)flag
+{
 }
 
 - (void) _strip

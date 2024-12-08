@@ -34,6 +34,7 @@
   NSMutableArray        *ivars;
   NSMutableArray        *methods;
   NSMutableArray        *protocols;
+  NSMutableArray        *properties;
   NSString              *className;
   NSString              *superClassName;
   NSString              *classString;
@@ -41,15 +42,18 @@
 }
 - (id) initWithString: (NSString *)string;
 - (NSArray *) methods;
-- (void) addMethod: (NSString *)name isAction: (BOOL) flag;
+- (void) addMethod: (NSString *)name isAction: (BOOL)flag;
 - (NSArray *) ivars;
-- (void) addIVar: (NSString *)name isOutlet: (BOOL) flag;
+- (void) addIVar: (NSString *)name isOutlet: (BOOL)flag;
 - (NSString *) className;
 - (void) setClassName: (NSString *)name;
 - (NSString *) superClassName;
 - (void) setSuperClassName: (NSString *)name;
 - (BOOL) isCategory;
 - (void) setIsCategory: (BOOL)flag;
+- (NSArray *) properties;
+- (void) addProperty: (NSString *)name isOutlet: (BOOL)flag;
+
 - (void) parse;
 @end
 
