@@ -1,5 +1,5 @@
 /** 
-   main.m
+   ControlsPalette.m
 
    Copyright (C) 2024 Free Software Foundation, Inc.
 
@@ -23,9 +23,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
-
 #include <AppKit/AppKit.h>
-
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormNSPopUpButton.h"
