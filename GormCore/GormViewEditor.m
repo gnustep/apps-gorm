@@ -1447,7 +1447,7 @@ static BOOL currently_displaying = NO;
 
 - (void) postDraw: (NSRect) rect
 {
-  if (parent != NULL)
+  if (parent != nil)
     {
       if ([parent respondsToSelector: @selector(postDrawForView:)])
 	{
