@@ -1,10 +1,10 @@
 /** 
    main.m
 
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    Author:  Gregory John Casamento <greg_casamento@yahoo.com>
-   Date: 2004
+   Date: 2024, 2004
    
    This file is part of GNUstep.
    
