@@ -34,7 +34,7 @@
 @implementation OCClass
 - (id) initWithString: (NSString *)string
 {
-  if((self = [super init]) != nil)
+  if ((self = [super init]) != nil)
     {
       methods = [[NSMutableArray alloc] init];
       ivars = [[NSMutableArray alloc] init];
@@ -133,7 +133,7 @@
       NSString *string = nil;
       [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
       resultString = [resultString stringByAppendingString: string];
-      if(![stripScanner isAtEnd])
+      if (![stripScanner isAtEnd])
 	{
 	  resultString = [resultString stringByAppendingString: @" "];
 	}
@@ -149,13 +149,14 @@
   NSString *interfaceLine = nil;
   NSString *methodsString = nil;
   NSString *ivarsString = nil;
+  NSString *propertyString = nil;
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
   NSCharacterSet *pmcs = [NSCharacterSet characterSetWithCharactersInString: @"+-"];
 
   // get the interface line... look ahead...  
   [self _strip];
   scanner = [NSScanner scannerWithString: classString];
-  if(lookAhead(classString, @"{")) 
+  if (lookAhead(classString, @"{")) 
     {
       [scanner scanUpToString: @"@interface" intoString: NULL]; 
       [scanner scanUpToString: @"{" intoString: &interfaceLine];
@@ -169,7 +170,7 @@
     }
 
   // look ahead...  
-  if(lookAhead(interfaceLine, @":"))
+  if (lookAhead(interfaceLine, @":"))
     {
       NSString *cn = nil, *scn = nil;
 
@@ -192,22 +193,23 @@
       RETAIN(className);
       
       // check to see if it's a category on an existing interface...
-      if(lookAhead(interfaceLine,@"("))
+      if (lookAhead(interfaceLine,@"("))
 	{
 	  isCategory = YES;
 	}
     }
   
-  if(isCategory == NO)
+  if (isCategory == NO)
     {          
       NSScanner *ivarScan = nil;
-
+      NSScanner *propertyScan = nil;
+      
       // put the ivars into a a string...
       [scanner scanUpToAndIncludingString: @"{" intoString: NULL];
       [scanner scanUpToString: @"}" intoString: &ivarsString];
       [scanner scanString: @"}" intoString: NULL];
       
-      if(ivarsString != nil)
+      if (ivarsString != nil)
 	{
 	  // scan each ivar...
 	  ivarScan = [NSScanner scannerWithString: ivarsString];
@@ -223,10 +225,20 @@
 	      [ivars addObjectsFromArray: [ivarDecl ivars]];
 	    }
 	}
+
+      // Scan properties...
+      /*
+      [scanner 
+      if (lookAhead(@"@property"))
+	{
+	  
+	  propertyScan = [NSScanner scannerWithString: 
+	}
+      */
     }
 
   // put the methods into a string...
-  if(ivarsString != nil)
+  if (ivarsString != nil)
     {
       [scanner scanUpToString: @"@end" intoString: &methodsString];
     }
@@ -238,7 +250,7 @@
     }
   
   // scan each method...
-  if(methodsString != nil)
+  if (methodsString != nil)
     {
       NSScanner *methodScan = [NSScanner scannerWithString: methodsString];
       while(![methodScan isAtEnd])
