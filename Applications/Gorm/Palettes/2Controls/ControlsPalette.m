@@ -65,9 +65,15 @@
 
 - (void) finishInstantiate
 {
+  NSView *contentView = [originalWindow contentView];
+
+  _prototypePopUp = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(71.0, 157.0, 102.0, 24.0)];
   [_prototypePopUp addItemWithTitle: @"Item #0"];
   [_prototypePopUp addItemWithTitle: @"Item #1"];
   [_prototypePopUp addItemWithTitle: @"Item #2"];
+
+  [contentView addSubview: _prototypePopUp];
+  AUTORELEASE(_prototypePopUp);
 }
 
 - (void) willInspectObject: (NSNotification *)notification
