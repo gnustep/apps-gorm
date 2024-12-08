@@ -70,31 +70,17 @@
   if (sender == typeMatrix)
     {
       BOOL pullsDown = [[sender selectedCell] tag] == YES ? YES : NO;
-      id selectedItem;
-      id cell = [object cell];
-
-      NSLog(@"pullDown = %d", pullsDown);
-      NSLog(@"cell = %@", cell);
+      NSArray *itemArray = [[object itemArray] copy];
+      NSEnumerator *en = [itemArray objectEnumerator];
+      id o = nil;
       
+      [object removeAllItems];
       [object setPullsDown: pullsDown];
-      selectedItem = [object selectedItem];
-      [object selectItem: nil];
-      [object selectItem: selectedItem];
-      [cell setUsesItemFromMenu: YES];
-      
-      // Set up the form...
-      [pullDownTitleForm setEnabled: pullsDown];
-      [[pullDownTitleForm cellAtIndex: 0]
-	setStringValue: pullsDown ? [object title] : @""];
-      [pullDownArrowPopUp setEnabled: pullsDown];
-
-      if (pullsDown)
+      while ((o = [en nextObject]) != nil)
 	{
-	  // TODO: This should be configurable in the future
-	  [cell setPreferredEdge: NSMaxYEdge];
-	  [cell setMenuItem: nil];
-	  [cell setMenuItem: selectedItem];
-	}
+	  NSLog(@"o = %@", o);
+	  [object addItemWithTitle: [o title]];
+	}      
     }
   else if (sender == autoenableSwitch)
     {

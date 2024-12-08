@@ -65,6 +65,7 @@ Class _gormnspopupbuttonCellClass = 0;
  * Override this here, since themes may override it.
  * Always want to show the menu view since it's editable. 
  */
+/*
 - (void) attachPopUpWithFrame: (NSRect)cellFrame
                        inView: (NSView *)controlView
 {
@@ -127,4 +128,6 @@ Class _gormnspopupbuttonCellClass = 0;
       name: NSMenuDidSendActionNotification
       object: _menu];
 }
+*/
+
 @end
