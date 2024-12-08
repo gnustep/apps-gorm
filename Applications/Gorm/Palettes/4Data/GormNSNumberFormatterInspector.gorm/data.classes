@@ -4,15 +4,15 @@
 	Actions = (
 	);
 	Outlets = (
+	    formatTable,
+	    detachButton,
 	    addThousandSeparatorSwitch,
 	    commaPointSwitch,
 	    formatForm,
-	    formatTable,
 	    localizeSwitch,
 	    negativeField,
 	    negativeRedSwitch,
-	    positiveField,
-	    detachButton
+	    positiveField
 	);
 	Super = IBInspector;
     };

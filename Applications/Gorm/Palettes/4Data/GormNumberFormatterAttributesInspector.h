@@ -35,11 +35,11 @@
   id commaPointSwitch;
   id formatForm;
   id formatTable;
-  id localizeSwitch;
-  id negativeField;
   id negativeRedSwitch;
-  id positiveField;
   id detachButton;
+  id localizeSwitch;
+  id positiveField;
+  id negativeField;
 }
 @end
 
