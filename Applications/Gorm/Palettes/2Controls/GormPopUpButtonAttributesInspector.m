@@ -78,7 +78,6 @@
       [object setPullsDown: pullsDown];
       while ((o = [en nextObject]) != nil)
 	{
-	  NSLog(@"o = %@", o);
 	  [object addItemWithTitle: [o title]];
 	}      
     }
