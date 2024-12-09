@@ -78,8 +78,13 @@
       [object setPullsDown: pullsDown];
       while ((o = [en nextObject]) != nil)
 	{
+	  id<NSMenuItem> mi = nil;
+	  
 	  [object addItemWithTitle: [o title]];
-	}      
+	  mi = [object lastItem];
+	  [mi setAction: NULL]; // @selector(_popUpItemAction:)];
+	  [mi setTarget: nil];
+	}
     }
   else if (sender == autoenableSwitch)
     {
