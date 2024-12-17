@@ -64,11 +64,24 @@
 - (void) finishInstantiate
 {
   NSView *contentView = [originalWindow contentView];
-
+  NSArray *allItems = nil;
+  NSEnumerator *en = nil;
+  id item = nil;
+  
   _prototypePopUp = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(71.0, 157.0, 102.0, 24.0)];
   [_prototypePopUp addItemWithTitle: @"Item #0"];
   [_prototypePopUp addItemWithTitle: @"Item #1"];
   [_prototypePopUp addItemWithTitle: @"Item #2"];
+  [_prototypePopUp setAutoenablesItems: YES];
+  
+  allItems = [[_prototypePopUp menu] itemArray];
+  en = [allItems objectEnumerator];
+  while ((item = [en nextObject]) != nil)
+    {
+      [item setTarget: nil];
+      [item setAction: NULL]; // @selector(_popUpItemAction:)];
+      [item setEnabled: YES];
+    }
 
   [contentView addSubview: _prototypePopUp];
   AUTORELEASE(_prototypePopUp);
