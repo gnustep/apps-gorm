@@ -36,30 +36,30 @@
 {
   if ((self = [super init]) != nil)
     {
-      methods = [[NSMutableArray alloc] init];
-      ivars = [[NSMutableArray alloc] init];
-      properties = [[NSMutableArray alloc] init];
-      protocols = [[NSMutableArray alloc] init];
-      ASSIGN(classString, string);
+      _methods = [[NSMutableArray alloc] init];
+      _ivars = [[NSMutableArray alloc] init];
+      _properties = [[NSMutableArray alloc] init];
+      _protocols = [[NSMutableArray alloc] init];
+      ASSIGN(_classString, string);
     }
   return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(methods);
-  RELEASE(ivars);
-  RELEASE(properties);
-  RELEASE(protocols);  
-  RELEASE(classString);
-  RELEASE(className);
-  RELEASE(superClassName);
+  RELEASE(_methods);
+  RELEASE(_ivars);
+  RELEASE(_properties);
+  RELEASE(_protocols);  
+  RELEASE(_classString);
+  RELEASE(_className);
+  RELEASE(_superClassName);
   [super dealloc];
 }
 
 - (NSArray *) methods
 {
-  return methods;
+  return _methods;
 }
 
 - (void) addMethod: (NSString *)name isAction: (BOOL) flag
@@ -67,12 +67,12 @@
   OCMethod *method = AUTORELEASE([[OCMethod alloc] init]);
   [method setName: name];
   [method setIsAction: flag];
-  [methods addObject: method];
+  [_methods addObject: method];
 }
 
 - (NSArray *) ivars
 {
-  return ivars;
+  return _ivars;
 }
 
 - (void) addIVar: (NSString *)name isOutlet: (BOOL) flag
@@ -80,27 +80,27 @@
   OCIVar *ivar = AUTORELEASE([[OCIVar alloc] init]);
   [ivar setName: name];
   [ivar setIsOutlet: flag];
-  [ivars addObject: ivar];
+  [_ivars addObject: ivar];
 }
 
 - (NSString *) className
 {
-  return className;
+  return _className;
 }
 
 - (void) setClassName: (NSString *)name
 {
-  ASSIGN(className, name);
+  ASSIGN(_className, name);
 }
 
 - (NSString *) superClassName
 {
-  return superClassName;
+  return _superClassName;
 }
 
 - (void) setSuperClassName: (NSString *)name
 {
-  ASSIGN(superClassName,name);
+  ASSIGN(_superClassName,name);
 }
 
 - (BOOL) isCategory
@@ -115,16 +115,22 @@
 
 - (NSArray *) properties
 {
-  return properties;
+  return _properties;
 }
 
 - (void) addProperty: (NSString *)name isOutlet: (BOOL)flag
 {
 }
 
+// Properties can be declared anywhere within the file, so it's necessary
+// to parse them out separately.
+- (void) _propertiesScan
+{
+}
+
 - (void) _strip
 {
-  NSScanner *stripScanner = [NSScanner scannerWithString: classString];
+  NSScanner *stripScanner = [NSScanner scannerWithString: _classString];
   NSString *resultString = @"";
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
@@ -139,7 +145,7 @@
 	}
     }
   
-  ASSIGN(classString, resultString);
+  ASSIGN(_classString, resultString);
 }
 
 - (void) parse
@@ -155,8 +161,8 @@
 
   // get the interface line... look ahead...  
   [self _strip];
-  scanner = [NSScanner scannerWithString: classString];
-  if (lookAhead(classString, @"{")) 
+  scanner = [NSScanner scannerWithString: _classString];
+  if (lookAhead(_classString, @"{")) 
     {
       [scanner scanUpToString: @"@interface" intoString: NULL]; 
       [scanner scanUpToString: @"{" intoString: &interfaceLine];
@@ -176,12 +182,12 @@
 
       [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
       [iscan scanUpToString: @":" intoString: &cn];
-      className = [cn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(className);
+      _className = [cn stringByTrimmingCharactersInSet: wsnl];
+      RETAIN(_className);
       [iscan scanString: @":" intoString: NULL];
       [iscan scanUpToCharactersFromSet: wsnl intoString: &scn];
-      superClassName = [scn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(superClassName);
+      _superClassName = [scn stringByTrimmingCharactersInSet: wsnl];
+      RETAIN(_superClassName);
     }
   else // category...
     {
@@ -189,8 +195,8 @@
 
       [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
       [iscan scanUpToCharactersFromSet: wsnl intoString: &cn];
-      className = [cn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(className);
+      _className = [cn stringByTrimmingCharactersInSet: wsnl];
+      RETAIN(_className);
       
       // check to see if it's a category on an existing interface...
       if (lookAhead(interfaceLine,@"("))
@@ -222,19 +228,12 @@
 	      [ivarScan scanString: @";" intoString: NULL];
 	      ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
 	      [ivarDecl parse];
-	      [ivars addObjectsFromArray: [ivarDecl ivars]];
+	      [_ivars addObjectsFromArray: [ivarDecl ivars]];
 	    }
 	}
-
-      // Scan properties...
-      /*
-      [scanner 
-      if (lookAhead(@"@property"))
-	{
-	  
-	  propertyScan = [NSScanner scannerWithString: 
-	}
-      */
+    }
+  else // yes, it's a category, but properties can be in categories...
+    {
     }
 
   // put the methods into a string...
@@ -244,7 +243,7 @@
     }
   else // 
     {
-      scanner = [NSScanner scannerWithString: classString];
+      scanner = [NSScanner scannerWithString: _classString];
       [scanner scanUpToAndIncludingString: interfaceLine intoString: NULL];
       [scanner scanUpToString: @"@end" intoString: &methodsString];
     }
@@ -262,7 +261,7 @@
 	  [methodScan scanString: @";" intoString: NULL];
 	  method = AUTORELEASE([[OCMethod alloc] initWithString: methodLine]);       
 	  [method parse];
-	  [methods addObject: method];
+	  [_methods addObject: method];
 	}
     }
 }

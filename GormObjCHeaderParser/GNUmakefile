@@ -5,17 +5,15 @@
 PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make
 
-
 #
 # Subprojects
 #
-
-
+SUBPROJECTS = \
+Tests
 
 #
 # Library
 #
-
 LIBRARY_VAR=GMOBJCHEADERPARSER
 LIBRARY_NAME=GormObjCHeaderParser
 GormObjCHeaderParser_HEADER_FILES_DIR=.
@@ -24,13 +22,11 @@ ADDITIONAL_INCLUDE_DIRS = -I..
 #
 # Additional libraries
 #
-
 GormObjCHeaderParser_LIBRARIES_DEPEND_UPON += -lgnustep-gui -l$(FOUNDATION_LIBRARY_NAME)
 
 #
 # Header files
 #
-
 GormObjCHeaderParser_HEADER_FILES= \
 GormObjCHeaderParser.h \
 NSScanner+OCHeaderParser.h \
@@ -41,11 +37,9 @@ OCIVarDecl.h \
 OCMethod.h \
 ParserFunctions.h
 
-
 #
 # Class files
 #
-
 GormObjCHeaderParser_OBJC_FILES= \
 NSScanner+OCHeaderParser.m \
 OCClass.m \
@@ -58,7 +52,6 @@ ParserFunctions.m
 #
 # C files
 #
-
 GormObjCHeaderParser_C_FILES= 
 
 HEADERS_INSTALL = $(GormObjCHeaderParser_HEADER_FILES)
