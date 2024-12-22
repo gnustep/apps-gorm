@@ -35,6 +35,7 @@ OCHeaderParser.h \
 OCIVar.h \
 OCIVarDecl.h \
 OCMethod.h \
+OCProperty.h \
 ParserFunctions.h
 
 #
@@ -47,6 +48,7 @@ OCHeaderParser.m \
 OCIVar.m \
 OCIVarDecl.m \
 OCMethod.m \
+OCProperty.m \
 ParserFunctions.m
 
 #

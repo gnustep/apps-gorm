@@ -31,15 +31,16 @@
 
 @interface OCClass : NSObject
 {
-  NSMutableArray        *ivars;
-  NSMutableArray        *methods;
-  NSMutableArray        *protocols;
-  NSMutableArray        *properties;
-  NSString              *className;
-  NSString              *superClassName;
-  NSString              *classString;
-  BOOL                  isCategory;
+  NSMutableArray        *_ivars;
+  NSMutableArray        *_methods;
+  NSMutableArray        *_protocols;
+  NSMutableArray        *_properties;
+  NSString              *_className;
+  NSString              *_superClassName;
+  NSString              *_classString;
+  BOOL                   _isCategory;
 }
+
 - (id) initWithString: (NSString *)string;
 - (NSArray *) methods;
 - (void) addMethod: (NSString *)name isAction: (BOOL)flag;
@@ -52,9 +53,9 @@
 - (BOOL) isCategory;
 - (void) setIsCategory: (BOOL)flag;
 - (NSArray *) properties;
-- (void) addProperty: (NSString *)name isOutlet: (BOOL)flag;
 
 - (void) parse;
+
 @end
 
 #endif

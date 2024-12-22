@@ -24,12 +24,13 @@
 
 #include <Foundation/Foundation.h>
 
-#include <GormObjCHeaderParser/OCClass.h>
-#include <GormObjCHeaderParser/OCMethod.h>
-#include <GormObjCHeaderParser/OCIVar.h>
-#include <GormObjCHeaderParser/OCIVarDecl.h>
-#include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
-#include <GormObjCHeaderParser/ParserFunctions.h>
+#include "GormObjCHeaderParser/OCClass.h"
+#include "GormObjCHeaderParser/OCMethod.h"
+#include "GormObjCHeaderParser/OCProperty.h"
+#include "GormObjCHeaderParser/OCIVar.h"
+#include "GormObjCHeaderParser/OCIVarDecl.h"
+#include "GormObjCHeaderParser/NSScanner+OCHeaderParser.h"
+#include "GormObjCHeaderParser/ParserFunctions.h"
 
 @implementation OCClass
 - (id) initWithString: (NSString *)string
@@ -105,27 +106,17 @@
 
 - (BOOL) isCategory
 {
-  return isCategory;
+  return _isCategory;
 }
 
 - (void) setIsCategory: (BOOL)flag
 {
-  isCategory = flag;
+  _isCategory = flag;
 }
 
 - (NSArray *) properties
 {
   return _properties;
-}
-
-- (void) addProperty: (NSString *)name isOutlet: (BOOL)flag
-{
-}
-
-// Properties can be declared anywhere within the file, so it's necessary
-// to parse them out separately.
-- (void) _propertiesScan
-{
 }
 
 - (void) _strip
@@ -155,7 +146,6 @@
   NSString *interfaceLine = nil;
   NSString *methodsString = nil;
   NSString *ivarsString = nil;
-  NSString *propertyString = nil;
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
   NSCharacterSet *pmcs = [NSCharacterSet characterSetWithCharactersInString: @"+-"];
 
@@ -201,14 +191,13 @@
       // check to see if it's a category on an existing interface...
       if (lookAhead(interfaceLine,@"("))
 	{
-	  isCategory = YES;
+	  _isCategory = YES;
 	}
     }
   
-  if (isCategory == NO)
+  if (_isCategory == NO)
     {          
       NSScanner *ivarScan = nil;
-      NSScanner *propertyScan = nil;
       
       // put the ivars into a a string...
       [scanner scanUpToAndIncludingString: @"{" intoString: NULL];
@@ -232,9 +221,6 @@
 	    }
 	}
     }
-  else // yes, it's a category, but properties can be in categories...
-    {
-    }
 
   // put the methods into a string...
   if (ivarsString != nil)
@@ -247,12 +233,28 @@
       [scanner scanUpToAndIncludingString: interfaceLine intoString: NULL];
       [scanner scanUpToString: @"@end" intoString: &methodsString];
     }
+
+  if (_classString != nil)
+    {
+      NSScanner *propertiesScan = [NSScanner scannerWithString: _classString];
+      while ([propertiesScan isAtEnd] == NO)
+	{
+	  NSString *propertiesLine = nil;
+	  OCProperty *property = nil;
+
+	  [propertiesScan scanUpToString: @";" intoString: &propertiesLine];
+	  [propertiesScan scanString: @";" intoString: NULL];
+	  property = AUTORELEASE([[OCProperty alloc] initWithString: propertiesLine]);
+	  [property parse];
+	  [_properties addObject: property];
+	}
+    }
   
   // scan each method...
   if (methodsString != nil)
     {
       NSScanner *methodScan = [NSScanner scannerWithString: methodsString];
-      while(![methodScan isAtEnd])
+      while ([methodScan isAtEnd] == NO)
 	{
 	  NSString *methodLine = nil;
 	  OCMethod *method = nil;
@@ -262,7 +264,7 @@
 	  method = AUTORELEASE([[OCMethod alloc] initWithString: methodLine]);       
 	  [method parse];
 	  [_methods addObject: method];
-	}
+	}      
     }
 }
 @end

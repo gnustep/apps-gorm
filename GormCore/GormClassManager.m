@@ -1885,12 +1885,15 @@
 	    {
 	      NSArray *methods = [cls methods];
 	      NSArray *ivars = [cls ivars];
+	      NSArray *properties = [cls properties];
 	      NSString *superClass = [cls superClassName];
 	      NSString *className = [cls className];
 	      NSEnumerator *ien = [ivars objectEnumerator];
 	      NSEnumerator *men = [methods objectEnumerator];
+	      NSEnumerator *pen = [properties objectEnumerator];
 	      OCMethod *method = nil;
 	      OCIVar *ivar = nil;
+	      OCProperty *property = nil;
 	      NSMutableArray *actions = [NSMutableArray array];
 	      NSMutableArray *outlets = [NSMutableArray array];
 	      
@@ -1910,6 +1913,16 @@
 		      [outlets addObject: [ivar name]];
 		    }
 		}
+	      
+	      while((property = (OCProperty *)[pen nextObject]) != nil)
+		{
+		  if([property isOutlet])
+		    {
+		      [outlets addObject: [property name]];
+		    }
+		}
+
+	      NSLog(@"outlets = %@", outlets);
 	      
 	      if(([self isKnownClass: superClass] || superClass == nil) && 
 		 [cls isCategory] == NO)
