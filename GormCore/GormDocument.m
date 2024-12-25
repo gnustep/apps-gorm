@@ -3961,7 +3961,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
     }
   else if ([item isKindOfClass: [NSWindow class]])
     {
-      return 1; // [[[item contentView] subviews] count];
+      return 1; // We are only counting the contentView...
     }
   else if ([item isKindOfClass: [NSView class]])
     {

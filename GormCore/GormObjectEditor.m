@@ -103,7 +103,7 @@ static NSMapTable	*docMap = 0;
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
 				NSNonRetainedObjectMapValueCallBacks, 
-				2);
+				2); 
     }
 }
 
@@ -124,7 +124,6 @@ static NSMapTable	*docMap = 0;
 {
   NSMapInsert(docMap, (void*)aDocument, (void*)editor);
 }
-
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {

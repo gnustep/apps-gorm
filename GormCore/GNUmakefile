@@ -217,6 +217,7 @@ GormCore_RESOURCE_FILES = \
 	Images/GormWindow.tiff \
 	Images/browserView.tiff \
 	Images/outlineView.tiff \
+	Images/iconView.tiff \
 	Resources/VersionProfiles.plist \
 	Resources/ClassInformation.plist 
 
