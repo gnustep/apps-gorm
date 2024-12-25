@@ -24,9 +24,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include "GormPrivate.h"
 #include <GormCore/GormDocument.h>
 #include <GormCore/GormDocumentController.h>
+
+#include "GormPrivate.h"
 
 @implementation GormDocumentController
 

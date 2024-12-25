@@ -50,7 +50,7 @@ SVN_MODULE_NAME = gorm
 SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 
 
-include ./Version
+include ../../Version
 
 #
 # Each palette is a subproject
@@ -142,8 +142,6 @@ Gorm_RESOURCE_FILES = \
         Images/tabbot_nib.tiff \
         Images/tabtop_nib.tiff \
         Images/titleOnly_nib.tiff \
-	Images/browserView.tiff \
-	Images/outlineView.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
 

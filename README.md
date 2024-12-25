@@ -1,4 +1,6 @@
-# Gorm
+# apps-gorm
+
+[![CI](https://github.com/gnustep/apps-gorm/actions/workflows/main.yml/badge.svg)](https://github.com/gnustep/apps-gorm/actions/workflows/main.yml?query=branch%3Amaster)
 
 ## Introduction
 

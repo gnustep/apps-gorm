@@ -27,7 +27,7 @@
       
       if ([bundle loadNibNamed: @"GormNSSplitViewInspector" 
 			 owner: self
-	       topLevelObjects: nil] == NO)
+	       topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Could not open gorm GormNSSplitViewInspector");
 	  NSLog(@"self %@", self);

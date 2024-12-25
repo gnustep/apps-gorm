@@ -81,7 +81,7 @@ NSImage	*mVLine = nil;
       NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       if ([bundle loadNibNamed: @"GormViewSizeInspector" 
 			 owner: self
-	       topLevelObjects: nil] == NO)
+	       topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Could not open gorm GormViewSizeInspector");
 	  NSLog(@"self %@", self);
@@ -152,16 +152,7 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
-  /*
-  if([[anObject window] isKindOfClass: [GormViewWindow class]])
-    {
-      [sizeForm setEnabled: NO];
-    }
-  else
-  */
-    {
-      [sizeForm setEnabled: YES];
-    }
+  [sizeForm setEnabled: YES];
 
   // stop editing so that the new values can be populated.
   [sizeForm abortEditing];

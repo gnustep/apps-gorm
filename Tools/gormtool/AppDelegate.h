@@ -33,7 +33,11 @@
 @class NSSet;
 
 @interface AppDelegate : GormAbstractDelegate
+{
+  GormDocument *_doc;
+}
 
+- (NSDictionary *) parseArguments;
 - (void) process;
 
 @end

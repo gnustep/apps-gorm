@@ -35,28 +35,28 @@
 @interface GormClassInspector : IBInspector
 {
   // outlets
-  id actionTable; 
-  id addAction;
-  id addOutlet;
-  id classField;
-  id outletTable;
-  id parentClass;
-  id removeAction;
-  id removeOutlet;
-  id selectClass;
-  id search;
-  id searchText;
-  id tabView;
+  id _actionTable; 
+  id _addAction;
+  id _addOutlet;
+  id _classField;
+  id _outletTable;
+  id _parentClass;
+  id _removeAction;
+  id _removeOutlet;
+  id _selectClass;
+  id _search;
+  id _searchText;
+  id _tabView;
 
   // internal vars
-  NSString *currentClass;
-  id theobject;
-  id actionData;
-  id outletData;
-  id parentClassData;
+  NSString *_currentClass;
+  id _theobject;
+  id _actionData;
+  id _outletData;
+  id _parentClassData;
 
   // class manager..
-  GormClassManager *classManager;
+  GormClassManager *_classManager;
 }
 - (void) addAction: (id)sender;
 - (void) removeAction: (id)sender;

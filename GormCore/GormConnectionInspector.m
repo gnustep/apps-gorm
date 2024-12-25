@@ -92,7 +92,7 @@
     {      
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
 
-      if([bundle loadNibNamed: @"GormConnectionInspector" owner: self topLevelObjects: nil] == NO)
+      if([bundle loadNibNamed: @"GormConnectionInspector" owner: self topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Couldn't load GormConnectionInsector");
 	  return nil;

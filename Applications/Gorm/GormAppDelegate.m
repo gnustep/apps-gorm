@@ -118,7 +118,7 @@
   if(active != nil)
     {
       cm = [active classManager];
-      s = [selectionOwner selection];
+      s = [_selectionOwner selection];
     }
 
   if(sel_isEqual(action, @selector(loadPalette:)))
@@ -156,7 +156,7 @@
 	    }
 	}
 
-      return [selectionOwner respondsToSelector: @selector(copySelection)];
+      return [_selectionOwner respondsToSelector: @selector(copySelection)];
     }
   else if (sel_isEqual(action, @selector(cut:)))
     {
@@ -174,8 +174,8 @@
 	    }
 	}
 
-      return ([selectionOwner respondsToSelector: @selector(copySelection)]
-	&& [selectionOwner respondsToSelector: @selector(deleteSelection)]);
+      return ([_selectionOwner respondsToSelector: @selector(copySelection)]
+	&& [_selectionOwner respondsToSelector: @selector(deleteSelection)]);
     }
   else if (sel_isEqual(action, @selector(delete:)))
     {
@@ -193,7 +193,7 @@
 	    }
 	}
 
-      return [selectionOwner respondsToSelector: @selector(deleteSelection)];
+      return [_selectionOwner respondsToSelector: @selector(deleteSelection)];
     }
   else if (sel_isEqual(action, @selector(paste:)))
     {
@@ -212,7 +212,7 @@
 	    }
 	}
 
-      return [selectionOwner respondsToSelector: @selector(pasteInSelection)];
+      return [_selectionOwner respondsToSelector: @selector(pasteInSelection)];
     }
   else if (sel_isEqual(action, @selector(setName:)))
     {
@@ -259,7 +259,7 @@
 
       if(sel_isEqual(action, @selector(createSubclass:)))
 	{
-	  NSArray *s = [selectionOwner selection];
+	  NSArray *s = [_selectionOwner selection];
 	  id o = nil;
 	  NSString *name = nil;
 
@@ -345,7 +345,7 @@
 
 - (IBAction) stop: (id)sender
 {
-  if(isTesting == NO)
+  if(_isTesting == NO)
     {
       // [super stop: sender];
     }
@@ -365,12 +365,12 @@
 /** Info Menu Actions */
 - (IBAction) preferencesPanel: (id) sender
 {
-  if(! preferencesController)
+  if(! _preferencesController)
     {
-      preferencesController =  [[GormPrefController alloc] init];
+      _preferencesController =  [[GormPrefController alloc] init];
     }
 
-  [[preferencesController panel] makeKeyAndOrderFront:nil];
+  [[_preferencesController panel] makeKeyAndOrderFront:nil];
 }
 
 /** Document Menu Actions */
@@ -403,8 +403,8 @@
 
 - (IBAction) copy: (id)sender
 {
-  if ([[selectionOwner selection] count] == 0
-      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO)
+  if ([[_selectionOwner selection] count] == 0
+      || [_selectionOwner respondsToSelector: @selector(copySelection)] == NO)
     return;
 
   if([self isConnecting])
@@ -412,15 +412,15 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner copySelection];
 }
 
 
 - (IBAction) cut: (id)sender
 {
-  if ([[selectionOwner selection] count] == 0
-      || [selectionOwner respondsToSelector: @selector(copySelection)] == NO
-      || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+  if ([[_selectionOwner selection] count] == 0
+      || [_selectionOwner respondsToSelector: @selector(copySelection)] == NO
+      || [_selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
 
   if([self isConnecting])
@@ -428,13 +428,13 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner copySelection];
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner copySelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner deleteSelection];
 }
 
 - (IBAction) paste: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
+  if ([_selectionOwner respondsToSelector: @selector(pasteInSelection)] == NO)
     return;
 
   if([self isConnecting])
@@ -442,14 +442,14 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner pasteInSelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner pasteInSelection];
 }
 
 
 - (IBAction) delete: (id)sender
 {
-  if ([[selectionOwner selection] count] == 0
-    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+  if ([[_selectionOwner selection] count] == 0
+    || [_selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
 
   if([self isConnecting])
@@ -457,13 +457,13 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner deleteSelection];
 }
 
 - (IBAction) selectAll: (id)sender
 {
-  if ([[selectionOwner selection] count] == 0
-    || [selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
+  if ([[_selectionOwner selection] count] == 0
+    || [_selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;
 
   if([self isConnecting])
@@ -471,7 +471,7 @@
       [self stopConnecting];
     }
 
-  [(id<IBSelectionOwners,IBEditors>)selectionOwner deleteSelection];
+  [(id<IBSelectionOwners,IBEditors>)_selectionOwner deleteSelection];
 }
 
 - (IBAction) selectAllItems: (id)sender
@@ -483,47 +483,47 @@
 
 - (IBAction) groupSelectionInSplitView: (id)sender
 {
-  if ([[selectionOwner selection] count] < 2
-      || [selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
+  if ([[_selectionOwner selection] count] < 2
+      || [_selectionOwner respondsToSelector: @selector(groupSelectionInSplitView)] == NO)
     return;
 
-  [(GormGenericEditor *)selectionOwner groupSelectionInSplitView];
+  [(GormGenericEditor *)_selectionOwner groupSelectionInSplitView];
 }
 
 - (IBAction) groupSelectionInBox: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
+  if ([_selectionOwner respondsToSelector: @selector(groupSelectionInBox)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner groupSelectionInBox];
+  [(GormGenericEditor *)_selectionOwner groupSelectionInBox];
 }
 
 - (IBAction) groupSelectionInView: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInView)] == NO)
+  if ([_selectionOwner respondsToSelector: @selector(groupSelectionInView)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner groupSelectionInView];
+  [(GormGenericEditor *)_selectionOwner groupSelectionInView];
 }
 
 - (IBAction) groupSelectionInScrollView: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
+  if ([_selectionOwner respondsToSelector: @selector(groupSelectionInScrollView)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner groupSelectionInScrollView];
+  [(GormGenericEditor *)_selectionOwner groupSelectionInScrollView];
 }
 
 - (IBAction) groupSelectionInMatrix: (id)sender
 {
-  if ([selectionOwner respondsToSelector: @selector(groupSelectionInMatrix)] == NO)
+  if ([_selectionOwner respondsToSelector: @selector(groupSelectionInMatrix)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner groupSelectionInMatrix];
+  [(GormGenericEditor *)_selectionOwner groupSelectionInMatrix];
 }
 
 - (IBAction) ungroup: (id)sender
 {
-  // NSLog(@"ungroup: selectionOwner %@", selectionOwner);
-  if ([selectionOwner respondsToSelector: @selector(ungroup)] == NO)
+  // NSLog(@"ungroup: _selectionOwner %@", _selectionOwner);
+  if ([_selectionOwner respondsToSelector: @selector(ungroup)] == NO)
     return;
-  [(GormGenericEditor *)selectionOwner ungroup];
+  [(GormGenericEditor *)_selectionOwner ungroup];
 }
 
 /** Classes actions */

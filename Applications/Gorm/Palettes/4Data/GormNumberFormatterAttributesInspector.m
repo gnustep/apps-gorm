@@ -51,8 +51,10 @@ extern NSArray *predefinedNumberFormats;
       else
 	{
 	  NSNumberFormatter *fmtr = [[NSNumberFormatter alloc] init];
-	  [fmtr setFormat: [NSNumberFormatter defaultFormat]];
+	  
+	  [fmtr setFormat: [NSNumberFormatter defaultFormat]];	  
 	  [[positiveField cell] setFormatter: fmtr];
+	  [[zeroField cell] setFormatter: fmtr];
 	  [[negativeField cell] setFormatter: fmtr];
 	}
     }  
@@ -61,14 +63,17 @@ extern NSArray *predefinedNumberFormats;
 
 - (void) updateAppearanceFieldsWithFormat: (NSString *)format;
 {
-
   [[[positiveField cell] formatter] setFormat: format];
   [[positiveField cell] setObjectValue:
-        [NSDecimalNumber decimalNumberWithString: @"123456.789"]];
-  
+			  [NSDecimalNumber decimalNumberWithString: @"123456.789"]];
+
+  [[[zeroField cell] formatter] setFormat: format];
+  [[zeroField cell] setObjectValue:
+		      [NSDecimalNumber decimalNumberWithString: @"0.000"]];
+
   [[[negativeField cell] formatter] setFormat: format];
   [[negativeField cell] setObjectValue:
-        [NSDecimalNumber decimalNumberWithString: @"-123456.789"]];
+			  [NSDecimalNumber decimalNumberWithString: @"-123456.789"]];
 }
 
 - (void) ok: (id)sender
@@ -98,28 +103,27 @@ extern NSArray *predefinedNumberFormats;
               zeroFmt     = [NSNumberFormatter zeroFormatAtIndex:row];
               negativeFmt = [NSNumberFormatter negativeFormatAtIndex:row];
               fullFmt     = [NSNumberFormatter formatAtIndex:row];
-          
-          // Update Appearance samples
-          [self updateAppearanceFieldsWithFormat: fullFmt];
-           
-          // Update editable format fields
-          [[formatForm cellAtIndex:0] setStringValue: VSTR(positiveFmt)];
-          [[formatForm cellAtIndex:1] setStringValue: VSTR(zeroFmt)];
-          [[formatForm cellAtIndex:2] setStringValue: VSTR(negativeFmt)];
 
-          [fmtr setFormat:fullFmt];
+	      // Update Appearance samples
+	      [self updateAppearanceFieldsWithFormat: fullFmt];
 
+	      // Update editable format fields
+	      [[formatForm cellAtIndex:0] setStringValue: VSTR(positiveFmt)];
+	      [[formatForm cellAtIndex:1] setStringValue: VSTR(zeroFmt)];
+	      [[formatForm cellAtIndex:2] setStringValue: VSTR(negativeFmt)];
+
+	      [fmtr setFormat:fullFmt];
             }
          }
       else if (sender == formatForm)
         {
           NSUInteger idx;
           
-          positiveFmt = [[sender cellAtIndex:0] stringValue];
-          zeroFmt = [[sender cellAtIndex:1] stringValue];
-          negativeFmt = [[sender cellAtIndex:2] stringValue];
-          minValue = [[sender cellAtIndex:3] stringValue];
-          maxValue = [[sender cellAtIndex:4] stringValue];
+          positiveFmt = [[sender cellAtIndex: 0] stringValue];
+          zeroFmt     = [[sender cellAtIndex: 1] stringValue];
+          negativeFmt = [[sender cellAtIndex: 2] stringValue];
+          minValue    = [[sender cellAtIndex: 3] stringValue];
+          maxValue    = [[sender cellAtIndex: 4] stringValue];
           NSDebugLog(@"min,max: %@, %@", minValue, maxValue);
           
           fullFmt = [NSString stringWithFormat:@"%@;%@;%@",

@@ -50,7 +50,7 @@
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       
-      if([bundle loadNibNamed: @"GormDummyInspector" owner: self topLevelObjects: nil])
+      if([bundle loadNibNamed: @"GormDummyInspector" owner: self topLevelObjects: NULL])
       {
 	  [button setStringValue: [self title]];
       }

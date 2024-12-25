@@ -64,6 +64,7 @@
 - (void) couldNotParseClassAtPath: (NSString *)path;
 - (void) exceptionWhileParsingClass: (NSException *)localException;
 - (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className;
+- (void) exceptionWhileLoadingModel: (NSString *)errorMessage;
 
 @end
 
