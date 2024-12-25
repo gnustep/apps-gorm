@@ -152,7 +152,7 @@
 
   // get the interface line... look ahead...  
   [self _strip];
-  NSLog(@"_classString = %@", _classString);
+  NSDebugLog(@"_classString = %@", _classString);
   scanner = [NSScanner scannerWithString: _classString];
   if (lookAhead(_classString, @"@implementation"))
     {
@@ -162,7 +162,7 @@
       [scanner scanUpToCharactersFromSet: wsnl intoString: &cn];
       _className = [cn stringByTrimmingCharactersInSet: wsnl];
       RETAIN(_className);
-      NSLog(@"className = %@", _className);
+      NSDebugLog(@"_className = %@", _className);
     }
   else
     {
@@ -243,7 +243,7 @@
 	  [cs scanUpToCharactersFromSet: wsnl intoString: &cn];
 	  _className = [cn stringByTrimmingCharactersInSet: wsnl];
 	  RETAIN(_className);
-	  NSLog(@"className = %@", _className);
+	  NSDebugLog(@"_className = %@", _className);
 	}
       
       // put the methods into a string...
