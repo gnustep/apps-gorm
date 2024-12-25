@@ -4,6 +4,7 @@
 	Actions = (
 	);
 	Outlets = (
+	    "_prototypePopUp"
 	);
 	Super = IBPalette;
     };

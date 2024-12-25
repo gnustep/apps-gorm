@@ -31,15 +31,16 @@
 
 @interface GormNumberFormatterAttributesInspector : IBInspector
 {
-  id addThousandSeparatorSwitch;
-  id commaPointSwitch;
-  id formatForm;
-  id formatTable;
-  id localizeSwitch;
-  id negativeField;
-  id negativeRedSwitch;
-  id positiveField;
-  id detachButton;
+  IBOutlet id addThousandSeparatorSwitch;
+  IBOutlet id commaPointSwitch;
+  IBOutlet id formatForm;
+  IBOutlet id formatTable;
+  IBOutlet id negativeRedSwitch;
+  IBOutlet id detachButton;
+  IBOutlet id localizeSwitch;
+  IBOutlet id positiveField;
+  IBOutlet id negativeField;
+  IBOutlet id zeroField;
 }
 @end
 

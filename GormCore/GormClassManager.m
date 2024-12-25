@@ -1869,7 +1869,7 @@
 
 - (BOOL) parseHeader: (NSString *)headerPath
 {
-  OCHeaderParser *ochp = AUTORELEASE([[OCHeaderParser alloc] initWithContentsOfFile: headerPath]);
+  OCHeaderParser *ochp = [[OCHeaderParser alloc] initWithContentsOfFile: headerPath];
   BOOL result = NO;
   
   if(ochp != nil)
@@ -1885,12 +1885,15 @@
 	    {
 	      NSArray *methods = [cls methods];
 	      NSArray *ivars = [cls ivars];
-	      NSString *superClass = [cls superClassName];
+	      NSArray *properties = [cls properties];
+	      NSString *superClass = [cls superClassName]; // == nil) ? @"NSObject":[cls superClassName];
 	      NSString *className = [cls className];
 	      NSEnumerator *ien = [ivars objectEnumerator];
 	      NSEnumerator *men = [methods objectEnumerator];
+	      NSEnumerator *pen = [properties objectEnumerator];
 	      OCMethod *method = nil;
 	      OCIVar *ivar = nil;
+	      OCProperty *property = nil;
 	      NSMutableArray *actions = [NSMutableArray array];
 	      NSMutableArray *outlets = [NSMutableArray array];
 	      
@@ -1910,6 +1913,16 @@
 		      [outlets addObject: [ivar name]];
 		    }
 		}
+	      
+	      while((property = (OCProperty *)[pen nextObject]) != nil)
+		{
+		  if([property isOutlet])
+		    {
+		      [outlets addObject: [property name]];
+		    }
+		}
+
+	      NSLog(@"outlets = %@", outlets);
 	      
 	      if(([self isKnownClass: superClass] || superClass == nil) && 
 		 [cls isCategory] == NO)
@@ -1958,13 +1971,25 @@
 			    withOutlets: outlets];	 
 		    }
 		}
-	      else if([cls isCategory] && [self isKnownClass: className])
+	      else if([cls isCategory])
 		{
-		  [self addActions: actions forClassNamed: className];
+		  if ([self isKnownClass: className])
+		    {
+		      [self addActions: actions forClassNamed: className];
+		      [self addActions: outlets forClassNamed: className];
+		    }
+		  else
+		    {
+		      [self addClassNamed: className
+			    withSuperClassNamed: @"NSObject"
+			      withActions: actions
+			      withOutlets: outlets];
+		    }
 		}
 	      else if(superClass != nil && [self isKnownClass: superClass] == NO)
 		{
 		  result = NO;
+		  RELEASE(ochp);
 		  [NSException raise: NSGenericException
 			       format: @"The superclass %@ of class %@ is not known, please parse it.",
 			       superClass, className];
@@ -1973,6 +1998,7 @@
 	}
     }
 
+  RELEASE(ochp);
   return result;
 }
 

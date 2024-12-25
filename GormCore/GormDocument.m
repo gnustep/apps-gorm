@@ -1851,8 +1851,11 @@ static void _real_close(GormDocument *self,
 	      [[self window] orderOut: self];
 	    }
 
-          [[[NSApp delegate] mainMenu] close]; // close the menu during test...
-          
+	  if ([delegate respondsToSelector: @selector(mainMenu)])
+	    {
+	      [[delegate mainMenu] close]; // close the menu during test...
+	    }
+	  
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
