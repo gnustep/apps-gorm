@@ -34,6 +34,9 @@ extern "C" {
 
 GS_EXPORT_CLASS
 @interface GormObjectMainView : NSView
+{
+  IBOutlet NSBox *contentView;
+}
 
 @end
 
