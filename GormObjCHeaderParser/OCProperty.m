@@ -1,8 +1,8 @@
-/* Definition of class GormObjectMainView
+/* Implementation of class OCProperty
    Copyright (C) 2024 Free Software Foundation, Inc.
    
    By: Gregory John Casamento
-   Date: 25-12-2024
+   Date: 27-12-2024
 
    This file is part of GNUstep.
    
@@ -22,27 +22,9 @@
    Boston, MA 02110 USA.
 */
 
-#ifndef _GormObjectMainView_h_INCLUDE
-#define _GormObjectMainView_h_INCLUDE
+#import "OCProperty.h"
 
-#import <AppKit/AppKit.h>
-#import <GNUstepBase/GSVersionMacros.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
-GS_EXPORT_CLASS
-@interface GormObjectMainView : NSView
-{
-  IBOutlet NSBox *contentView;
-}
+@implementation OCProperty
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
-
-#endif	/* _GormObjectMainView_h_INCLUDE */
 

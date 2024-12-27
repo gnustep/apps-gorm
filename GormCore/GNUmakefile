@@ -71,6 +71,7 @@ GormCore_HEADER_FILES = \
 	GormObjectInspector.h \
 	GormObjectMainView.h \
 	GormObjectOutlineView.h \
+	GormObjectViewController.h \
 	GormOpenGLView.h \
 	GormOutlineView.h \
 	GormPalettesManager.h \
@@ -152,6 +153,7 @@ GormCore_OBJC_FILES = \
 	GormObjectInspector.m \
 	GormObjectMainView.m \
 	GormObjectOutlineView.m \
+	GormObjectViewController.m \
 	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
