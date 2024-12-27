@@ -381,7 +381,9 @@ static NSImage  *fileImage = nil;
   [objectsView setAutoresizingMask:
 		 NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setDocumentView: objectsView];
-  RELEASE(objectsView); 
+  RELEASE(objectsView);
+  [[objectViewController view] setAutoresizingMask:
+				 NSViewHeightSizable|NSViewWidthSizable];
   [objectViewController resetDisplayView: scrollView];
 
   // images...
