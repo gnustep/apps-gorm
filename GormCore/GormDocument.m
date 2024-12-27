@@ -56,6 +56,7 @@
 #import "GormDocumentWindow.h"
 #import "GormDocumentController.h"
 #import "GormXLIFFDocument.h"
+#import "GormObjectViewController.h"
 
 @interface NSObject (GormNSCoding)
 @end
@@ -368,6 +369,11 @@ static NSImage  *fileImage = nil;
   [scrollView setAutoresizingMask:
 		NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setBorderType: NSBezelBorder];
+
+  objectViewController = [[GormObjectViewController alloc] initWithNibName: @"GormObjectOutlineView"
+								    bundle: [NSBundle bundleForClass: [self class]]];
+  [objectViewController setDocument: self];
+  NSLog(@"objectViewController = %@, view = %@", objectViewController, [objectViewController view]);
   
   objectsView = [[GormObjectEditor alloc] initWithObject: nil
 					  inDocument: self];
@@ -376,7 +382,8 @@ static NSImage  *fileImage = nil;
 		 NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setDocumentView: objectsView];
   RELEASE(objectsView); 
-  
+  [objectViewController resetDisplayView: scrollView];
+
   // images...
   mainRect.origin = NSMakePoint(0,0);
   imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -417,7 +424,7 @@ static NSImage  *fileImage = nil;
   /*
    * Set the objects view as the initial view the user's see on startup.
    */
-  [selectionBox setContentView: scrollView];
+  [selectionBox setContentView: [objectViewController view]]; //scrollView];
 
   // add to the objects view...
   [objectsView addObject: filesOwner];
@@ -952,7 +959,7 @@ static NSImage  *fileImage = nil;
     {
     case 0: // objects
       {
-	[selectionBox setContentView: scrollView];
+	[selectionBox setContentView: [objectViewController view]]; //scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
 	if (![[NSApp delegate] isConnecting])
 	  [self setSelectionFromEditor: objectsView];
