@@ -15,10 +15,18 @@
   
   // Document
   GormDocument *_document;
+  id _iconView;
+  id _outlineView;
 }
 
 - (GormDocument *) document;
 - (void) setDocument: (GormDocument *)document;
+
+- (id) iconView;
+- (void) setIconView: (id)iconView;
+
+- (id) outlineView;
+- (void) setOutlineView: (id)outlineView;
 
 - (void) resetDisplayView: (NSView *)view;
 

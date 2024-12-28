@@ -327,7 +327,8 @@ static NSImage  *fileImage = nil;
   NSMenu                *mainMenu = nil;
   NSEnumerator          *en = nil; 
   id                    o = nil;
-
+  NSOutlineView         *outlineView = [[NSOutlineView alloc] init];
+  
   // get the window and cache it...
   window = (GormDocumentWindow *)[self _docWindow];
   [IBResourceManager registerForAllPboardTypes:window
@@ -382,6 +383,15 @@ static NSImage  *fileImage = nil;
 		 NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setDocumentView: objectsView];
   RELEASE(objectsView);
+  
+  [objectViewController setIconView: scrollView];
+  RELEASE(scrollView);
+  
+  [objectViewController setOutlineView: outlineView];
+  [outlineView setDataSource: self];
+  [outlineView reloadData];
+  RELEASE(outlineView);
+  
   [[objectViewController view] setAutoresizingMask:
 				 NSViewHeightSizable|NSViewWidthSizable];
   [objectViewController resetDisplayView: scrollView];
