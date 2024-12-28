@@ -363,6 +363,17 @@ static NSImage  *fileImage = nil;
       object: window];
 
   // objects...
+  NSTableColumn *tb = [[NSTableColumn alloc] initWithIdentifier: @"object"]; 
+  NSScrollView *outlineScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+
+  [tb setTitle: @"Object"];
+  [outlineView addTableColumn: tb];
+  [outlineScrollView setHasVerticalScroller: YES];
+  [outlineScrollView setHasHorizontalScroller: YES];
+  [outlineScrollView setAutoresizingMask:
+		       NSViewHeightSizable|NSViewWidthSizable];
+  [outlineScrollView setBorderType: NSBezelBorder];
+
   mainRect.origin = NSMakePoint(0,0);
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasVerticalScroller: YES];
@@ -386,8 +397,9 @@ static NSImage  *fileImage = nil;
   
   [objectViewController setIconView: scrollView];
   RELEASE(scrollView);
-  
-  [objectViewController setOutlineView: outlineView];
+
+  [outlineScrollView setDocumentView: outlineView];
+  [objectViewController setOutlineView: outlineScrollView];
   [outlineView setDataSource: self];
   [outlineView reloadData];
   RELEASE(outlineView);
@@ -3936,58 +3948,68 @@ willBeInsertedIntoToolbar: (BOOL)flag
 	     child: (NSInteger)index
 	    ofItem: (id)item
 {
+  id result = nil;
+  
+  NSLog(@"index = %ld, item = %@", index, item);
   if (item == nil)
     {
-      return [[topLevelObjects allObjects] objectAtIndex: index];
+     result = [[topLevelObjects allObjects] objectAtIndex: index];
     }
   else if ([item isKindOfClass: [NSWindow class]])
     {
-      return [item contentView];
+      result = [item contentView];
     }
   else if ([item isKindOfClass: [NSView class]])
     {
-      return [[item subviews] objectAtIndex: index];
+      result = [[item subviews] objectAtIndex: index];
     }
-
-  return nil;
+  NSLog(@"result = %@", result);
+  
+  return result;
 }
 
 - (BOOL) outlineView: (NSOutlineView *)ov
     isItemExpandable: (id)item
 {
+  BOOL f = NO;
+  
   if (item == nil)
     {
-      return [topLevelObjects count] > 0;
+      f = [topLevelObjects count] > 0;
     }
   else if ([item isKindOfClass: [NSWindow class]])
     {
-      return [item contentView] != nil;
+      f = [item contentView] != nil;
     }
   else if ([item isKindOfClass: [NSView class]])
     {
-      return [[item subviews] count] > 0; 
+      f = [[item subviews] count] > 0; 
     }
   
-  return NO;
+  NSLog(@"f = %d",f);
+  return f;
 }
 
 - (NSInteger) outlineView: (NSOutlineView *)ov
    numberOfChildrenOfItem: (id)item
 {
+  NSInteger c = 0;
+  
   if (item == nil)
     {
-      return [topLevelObjects count];
+      c = [topLevelObjects count];
     }
   else if ([item isKindOfClass: [NSWindow class]])
     {
-      return 1; // We are only counting the contentView...
+      c = 1; // We are only counting the contentView...
     }
   else if ([item isKindOfClass: [NSView class]])
     {
-      return [[item subviews] count]; 
+      c = [[item subviews] count]; 
     }
   
-  return 0;
+  NSLog(@"c = %ld", c);
+  return c;
 }
 
 - (id) outlineView: (NSOutlineView *)ov

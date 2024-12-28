@@ -54,6 +54,7 @@
 - (IBAction) outlineView: (id)sender
 {
   NSLog(@"Called %@", NSStringFromSelector(_cmd));
+  [[_outlineView documentView] reloadData];
   [self resetDisplayView: _outlineView];
 }
 
