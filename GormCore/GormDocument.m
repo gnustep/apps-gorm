@@ -363,11 +363,16 @@ static NSImage  *fileImage = nil;
       object: window];
 
   // objects...
-  NSTableColumn *tb = [[NSTableColumn alloc] initWithIdentifier: @"object"]; 
   NSScrollView *outlineScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  NSTableColumn *tbo = [[NSTableColumn alloc] initWithIdentifier: @"objects"]; 
+  NSTableColumn *tbc = [[NSTableColumn alloc] initWithIdentifier: @"connections"]; 
 
-  [tb setTitle: @"Object"];
-  [outlineView addTableColumn: tb];
+  [tbo setTitle: @"Objects"];
+  [tbc setTitle: @"Connections"];
+  [outlineView setDrawsGrid: NO];
+  [outlineView setOutlineTableColumn: tbo];
+  [outlineView addTableColumn: tbo];
+  [outlineView addTableColumn: tbc];
   [outlineScrollView setHasVerticalScroller: YES];
   [outlineScrollView setHasHorizontalScroller: YES];
   [outlineScrollView setAutoresizingMask:
@@ -3811,24 +3816,6 @@ static void _real_close(GormDocument *self,
 	}
     }
 
-  /*
-  NSLog(@"Checking connections..."); // %@", connections);
-  en = [connections objectEnumerator];
-  o = nil;
-  while ((o = [en nextObject]) != nil)
-    {
-      id src = [o source];
-      id dst = [o destination];
-      NSString *label = [o label];
-      
-      if ([o isKindOfClass: [NSNibControlConnector class]])
-	{
-	}
-      else if ([o isKindOfClass: [NSNibOutletConnector class]])
-	{
-	}
-    }
-  */
   return results;
 }
 
@@ -4016,12 +4003,24 @@ willBeInsertedIntoToolbar: (BOOL)flag
        objectValueForTableColumn: (NSTableColumn *)tableColumn
        byItem: (id)item
 {
-  if (item == nil)
+  id value = nil;
+  
+  if ([[tableColumn identifier] isEqualToString: @"objects"])
     {
-      return @"Objects";
+      if (item == nil)
+	{
+	  value = @"Objects";
+	}
+      else
+	{
+	  value = [self nameForObject: item];
+	}
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"connections"])
+    {
     }
 
-  return [self nameForObject: item];
+  return value;
 }
 
 // Other methods...
