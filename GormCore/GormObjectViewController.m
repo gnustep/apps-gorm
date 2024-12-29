@@ -6,6 +6,18 @@
 
 @implementation GormObjectViewController
 
+- (instancetype) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      _document = nil;
+      _iconView = nil;
+      _outlineView = nil;
+    }
+  return self;
+}
+
 - (void) dealloc
 {
   RELEASE(_document);
@@ -47,13 +59,13 @@
 
 - (IBAction) iconView: (id)sender
 {
-  NSLog(@"Called %@", NSStringFromSelector(_cmd));
+  NSDebugLog(@"Called %@", NSStringFromSelector(_cmd));
   [self resetDisplayView: _iconView];
 }
 
 - (IBAction) outlineView: (id)sender
 {
-  NSLog(@"Called %@", NSStringFromSelector(_cmd));
+  NSDebugLog(@"Called %@", NSStringFromSelector(_cmd));
   [_document deactivateEditors];
   [[_outlineView documentView] reloadData];
   [_document reactivateEditors];
@@ -63,7 +75,7 @@
 - (void) resetDisplayView: (NSView *)view
 {
   [displayView setContentView: view];
-  NSLog(@"displayView = %@", view);
+  NSDebugLog(@"displayView = %@", view);
 }
 
 @end
