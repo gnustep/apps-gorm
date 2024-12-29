@@ -34,7 +34,7 @@
 #include <GNUstepGUI/GSNibContainer.h>
 
 @class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, 
-  GormFilePrefsManager, GormDocumentWindow;
+  GormFilePrefsManager, GormDocumentWindow, GormObjectViewController;
 
 /*
  * Trivial classes for connections from objects to their editors, and from
@@ -99,6 +99,9 @@
   NSMutableSet          *topLevelObjects;
   NSMutableSet          *visibleWindows;
   NSMutableSet          *deferredWindows;
+
+  // Controllers...
+  GormObjectViewController *objectViewController;
 }
 
 /* Handle notifications */

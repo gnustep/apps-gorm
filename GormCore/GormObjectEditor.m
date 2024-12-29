@@ -34,14 +34,11 @@
 #import "GormClassManager.h"
 #import "GormAbstractDelegate.h"
 
+@implementation NSObject (GormObjectAdditions)
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@interface NSObject (GormObjectAdditions)
-@end
-
-@implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage       *image = nil;
@@ -86,6 +83,7 @@
 {
   return @"GormObjectEditor";
 }
+
 @end
 
 @implementation NSView (GormObjectAdditions)
@@ -105,7 +103,7 @@ static NSMapTable	*docMap = 0;
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
 				NSNonRetainedObjectMapValueCallBacks, 
-				2);
+				2); 
     }
 }
 
@@ -126,7 +124,6 @@ static NSMapTable	*docMap = 0;
 {
   NSMapInsert(docMap, (void*)aDocument, (void*)editor);
 }
-
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {

@@ -31,7 +31,7 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
-@interface	GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
+@interface GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
 {
   NSMutableArray	*objects;
   id<IBDocuments>	document;

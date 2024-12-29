@@ -56,6 +56,7 @@
 #import "GormDocumentWindow.h"
 #import "GormDocumentController.h"
 #import "GormXLIFFDocument.h"
+#import "GormObjectViewController.h"
 
 @interface NSObject (GormNSCoding)
 @end
@@ -326,7 +327,8 @@ static NSImage  *fileImage = nil;
   NSMenu                *mainMenu = nil;
   NSEnumerator          *en = nil; 
   id                    o = nil;
-
+  NSOutlineView         *outlineView = [[NSOutlineView alloc] init];
+  
   // get the window and cache it...
   window = (GormDocumentWindow *)[self _docWindow];
   [IBResourceManager registerForAllPboardTypes:window
@@ -361,6 +363,35 @@ static NSImage  *fileImage = nil;
       object: window];
 
   // objects...
+  NSScrollView *outlineScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  NSTableColumn *tbo  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"objects"]); 
+  NSTableColumn *tbc  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"destination"]); 
+  NSTableColumn *tbs  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"source"]); 
+  NSTableColumn *tbcl = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"class"]);
+  NSTableColumn *tbv  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"version"]);
+
+  // Titles
+  [tbo setTitle: @"Objects"];
+  [tbc setTitle: @"Destination"];
+  [tbs setTitle: @"Source"];
+  [tbcl setTitle: @"Class"];
+  [tbv setTitle: @"Version"];
+
+  // Set up the outline view...
+  [outlineView setDrawsGrid: NO];
+  [outlineView setOutlineTableColumn: tbo];
+  [outlineView addTableColumn: tbo];
+  [outlineView addTableColumn: tbcl];
+  [outlineView addTableColumn: tbv];  
+  [outlineView addTableColumn: tbc];
+  [outlineView addTableColumn: tbs];
+  [outlineScrollView setHasVerticalScroller: YES];
+  [outlineScrollView setHasHorizontalScroller: YES];
+  [outlineScrollView setAutoresizingMask:
+		       NSViewHeightSizable|NSViewWidthSizable];
+  [outlineScrollView setBorderType: NSBezelBorder];
+
+  // Configure the scrollview...
   mainRect.origin = NSMakePoint(0,0);
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasVerticalScroller: YES];
@@ -368,6 +399,11 @@ static NSImage  *fileImage = nil;
   [scrollView setAutoresizingMask:
 		NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setBorderType: NSBezelBorder];
+
+  objectViewController = [[GormObjectViewController alloc] initWithNibName: @"GormObjectOutlineView"
+								    bundle: [NSBundle bundleForClass: [self class]]];
+  [objectViewController setDocument: self];
+  NSDebugLog(@"objectViewController = %@, view = %@", objectViewController, [objectViewController view]);
   
   objectsView = [[GormObjectEditor alloc] initWithObject: nil
 					  inDocument: self];
@@ -375,8 +411,24 @@ static NSImage  *fileImage = nil;
   [objectsView setAutoresizingMask:
 		 NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setDocumentView: objectsView];
-  RELEASE(objectsView); 
+  RELEASE(objectsView);
   
+  [objectViewController setIconView: scrollView];
+  RELEASE(scrollView);
+
+  [outlineScrollView setDocumentView: outlineView];
+  [objectViewController setOutlineView: outlineScrollView];
+  [outlineView setDataSource: self];
+  [self deactivateEditors];
+  [outlineView reloadData];
+  [self reactivateEditors];
+
+  RELEASE(outlineView);
+  
+  [[objectViewController view] setAutoresizingMask:
+				 NSViewHeightSizable|NSViewWidthSizable];
+  [objectViewController resetDisplayView: scrollView];
+
   // images...
   mainRect.origin = NSMakePoint(0,0);
   imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -417,7 +469,7 @@ static NSImage  *fileImage = nil;
   /*
    * Set the objects view as the initial view the user's see on startup.
    */
-  [selectionBox setContentView: scrollView];
+  [selectionBox setContentView: [objectViewController view]]; //scrollView];
 
   // add to the objects view...
   [objectsView addObject: filesOwner];
@@ -952,7 +1004,7 @@ static NSImage  *fileImage = nil;
     {
     case 0: // objects
       {
-	[selectionBox setContentView: scrollView];
+	[selectionBox setContentView: [objectViewController view]]; //scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
 	if (![[NSApp delegate] isConnecting])
 	  [self setSelectionFromEditor: objectsView];
@@ -2608,6 +2660,9 @@ static void _real_close(GormDocument *self,
  */
 - (void) touch
 {
+  [self deactivateEditors];
+  [[[objectViewController outlineView] documentView] reloadData];
+  [self reactivateEditors];
   [self updateChangeCount: NSChangeDone];
 }
 
@@ -3780,24 +3835,6 @@ static void _real_close(GormDocument *self,
 	}
     }
 
-  /*
-  NSLog(@"Checking connections..."); // %@", connections);
-  en = [connections objectEnumerator];
-  o = nil;
-  while ((o = [en nextObject]) != nil)
-    {
-      id src = [o source];
-      id dst = [o destination];
-      NSString *label = [o label];
-      
-      if ([o isKindOfClass: [NSNibControlConnector class]])
-	{
-	}
-      else if ([o isKindOfClass: [NSNibOutletConnector class]])
-	{
-	}
-    }
-  */
   return results;
 }
 
@@ -3917,26 +3954,145 @@ willBeInsertedIntoToolbar: (BOOL)flag
 	     child: (NSInteger)index
 	    ofItem: (id)item
 {
-  return nil;
+  id result = nil;
+
+  [self deactivateEditors];
+  NSDebugLog(@"index = %ld, item = %@", index, item);
+  if (item == nil)
+    {
+     result = [[topLevelObjects allObjects] objectAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      result = [item contentView];
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      result = [[item subviews] objectAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      result = [item itemAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      result = [item submenu];
+    }
+  NSDebugLog(@"result = %@", result);
+  [self reactivateEditors];
+  
+  return result;
 }
 
 - (BOOL) outlineView: (NSOutlineView *)ov
     isItemExpandable: (id)item
 {
-  return NO;
+  BOOL f = NO;
+  
+  [self deactivateEditors];
+  if (item == nil)
+    {
+      f = [topLevelObjects count] > 0;
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      f = [item contentView] != nil;
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      f = [[item subviews] count] > 0; 
+    }  
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      f = [item numberOfItems] > 0; 
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      f = [item hasSubmenu];
+    }
+  [self reactivateEditors];
+  
+  NSDebugLog(@"f = %d",f);
+  return f;
 }
 
 - (NSInteger) outlineView: (NSOutlineView *)ov
    numberOfChildrenOfItem: (id)item
 {
-  return 0;
+  NSInteger c = 0;
+  
+  [self deactivateEditors];
+  if (item == nil)
+    {
+      c = [topLevelObjects count];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      c = 1; // We are only counting the contentView...
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      c = [[item subviews] count]; 
+    }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      c = [item numberOfItems]; 
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      c = 1; // one submenu...
+    }
+  [self reactivateEditors];
+  
+  NSDebugLog(@"c = %ld", c);
+  return c;
 }
 
 - (id) outlineView: (NSOutlineView *)ov
        objectValueForTableColumn: (NSTableColumn *)tableColumn
-       byItem: (id)tem
+       byItem: (id)item
 {
-  return nil;
+  id value = nil;
+  NSString *className = [classManager classNameForObject: item];
+  NSString *name = [self nameForObject: item];
+  NSUInteger version = 0;
+  
+  [self deactivateEditors];
+  if ([[tableColumn identifier] isEqualToString: @"objects"])
+    {
+      NSString *title = @"";
+
+      if ([item respondsToSelector: @selector(title)])
+	{
+	  title = [item title];
+	  value = [NSString stringWithFormat: @"%@ : %@", title, (name != nil)?name:@"*Unnamed*"];
+	}
+      else
+	{
+	  value = [NSString stringWithFormat: @"%@", (name != nil)?name:@"*Unnamed*"];
+	}
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"class"])
+    {
+      value = className;
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"version"])
+    {
+      value = [NSNumber numberWithInteger: version];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"destination"])
+    {
+      NSArray *c = [self connectorsForDestination: item];
+      value = [NSNumber numberWithInteger: [c count]];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"source"])
+    {
+      NSArray *c = [self connectorsForSource: item];
+      value = [NSNumber numberWithInteger: [c count]];
+    }
+  [self reactivateEditors];
+  
+  return value;
 }
 
 // Other methods...
