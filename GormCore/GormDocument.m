@@ -406,7 +406,10 @@ static NSImage  *fileImage = nil;
   [outlineScrollView setDocumentView: outlineView];
   [objectViewController setOutlineView: outlineScrollView];
   [outlineView setDataSource: self];
+  [self deactivateEditors];
   [outlineView reloadData];
+  [self reactivateEditors];
+
   RELEASE(outlineView);
   
   [[objectViewController view] setAutoresizingMask:
