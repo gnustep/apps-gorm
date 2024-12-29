@@ -364,21 +364,34 @@ static NSImage  *fileImage = nil;
 
   // objects...
   NSScrollView *outlineScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
-  NSTableColumn *tbo = [[NSTableColumn alloc] initWithIdentifier: @"objects"]; 
-  NSTableColumn *tbc = [[NSTableColumn alloc] initWithIdentifier: @"connections"]; 
+  NSTableColumn *tbo  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"objects"]); 
+  NSTableColumn *tbc  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"destination"]); 
+  NSTableColumn *tbs  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"source"]); 
+  NSTableColumn *tbcl = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"class"]);
+  NSTableColumn *tbv  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"version"]);
 
+  // Titles
   [tbo setTitle: @"Objects"];
-  [tbc setTitle: @"Connections"];
+  [tbc setTitle: @"Destination"];
+  [tbs setTitle: @"Source"];
+  [tbcl setTitle: @"Class"];
+  [tbv setTitle: @"Version"];
+
+  // Set up the outline view...
   [outlineView setDrawsGrid: NO];
   [outlineView setOutlineTableColumn: tbo];
   [outlineView addTableColumn: tbo];
+  [outlineView addTableColumn: tbcl];
+  [outlineView addTableColumn: tbv];  
   [outlineView addTableColumn: tbc];
+  [outlineView addTableColumn: tbs];
   [outlineScrollView setHasVerticalScroller: YES];
   [outlineScrollView setHasHorizontalScroller: YES];
   [outlineScrollView setAutoresizingMask:
 		       NSViewHeightSizable|NSViewWidthSizable];
   [outlineScrollView setBorderType: NSBezelBorder];
 
+  // Configure the scrollview...
   mainRect.origin = NSMakePoint(0,0);
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasVerticalScroller: YES];
@@ -390,7 +403,7 @@ static NSImage  *fileImage = nil;
   objectViewController = [[GormObjectViewController alloc] initWithNibName: @"GormObjectOutlineView"
 								    bundle: [NSBundle bundleForClass: [self class]]];
   [objectViewController setDocument: self];
-  NSLog(@"objectViewController = %@, view = %@", objectViewController, [objectViewController view]);
+  NSDebugLog(@"objectViewController = %@, view = %@", objectViewController, [objectViewController view]);
   
   objectsView = [[GormObjectEditor alloc] initWithObject: nil
 					  inDocument: self];
@@ -3944,7 +3957,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
   id result = nil;
 
   [self deactivateEditors];
-  NSLog(@"index = %ld, item = %@", index, item);
+  NSDebugLog(@"index = %ld, item = %@", index, item);
   if (item == nil)
     {
      result = [[topLevelObjects allObjects] objectAtIndex: index];
@@ -3965,7 +3978,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
     {
       result = [item submenu];
     }
-  NSLog(@"result = %@", result);
+  NSDebugLog(@"result = %@", result);
   [self reactivateEditors];
   
   return result;
@@ -3999,7 +4012,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
     }
   [self reactivateEditors];
   
-  NSLog(@"f = %d",f);
+  NSDebugLog(@"f = %d",f);
   return f;
 }
 
@@ -4031,7 +4044,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
     }
   [self reactivateEditors];
   
-  NSLog(@"c = %ld", c);
+  NSDebugLog(@"c = %ld", c);
   return c;
 }
 
@@ -4040,17 +4053,42 @@ willBeInsertedIntoToolbar: (BOOL)flag
        byItem: (id)item
 {
   id value = nil;
+  NSString *className = [classManager classNameForObject: item];
+  NSString *name = [self nameForObject: item];
+  NSUInteger version = 0;
   
   [self deactivateEditors];
   if ([[tableColumn identifier] isEqualToString: @"objects"])
     {
-      NSString *className = [classManager classNameForObject: item];
-      NSString *name = [self nameForObject: item];
+      NSString *title = @"";
 
-      value = [NSString stringWithFormat: @"%@ - %@", (name != nil)?name:@"", className];
+      if ([item respondsToSelector: @selector(title)])
+	{
+	  title = [item title];
+	  value = [NSString stringWithFormat: @"%@ : %@", title, (name != nil)?name:@"*Unnamed*"];
+	}
+      else
+	{
+	  value = [NSString stringWithFormat: @"%@", (name != nil)?name:@"*Unnamed*"];
+	}
     }
-  else if ([[tableColumn identifier] isEqualToString: @"connections"])
+  else if ([[tableColumn identifier] isEqualToString: @"class"])
     {
+      value = className;
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"version"])
+    {
+      value = [NSNumber numberWithInteger: version];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"destination"])
+    {
+      NSArray *c = [self connectorsForDestination: item];
+      value = [NSNumber numberWithInteger: [c count]];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"source"])
+    {
+      NSArray *c = [self connectorsForSource: item];
+      value = [NSNumber numberWithInteger: [c count]];
     }
   [self reactivateEditors];
   

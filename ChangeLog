@@ -1,3 +1,20 @@
+2024-12-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/English.lproj/GormObjectOutlineView.gorm/data.classes
+	* GormCore/GNUmakefile
+	* GormCore/GormDocument.h
+	* GormCore/GormDocument.m
+	* GormCore/GormGenericEditor.h
+	* GormCore/GormObjectEditor.h
+	* GormCore/GormObjectEditor.m
+	* GormCore/GormObjectMainView.h
+	* GormCore/GormObjectMainView.m
+	* GormCore/GormObjectOutlineView.h
+	* GormCore/GormObjectOutlineView.m
+	* GormCore/GormObjectViewController.h
+	* GormCore/GormObjectViewController.m: Add support for
+	outline view of objects.
+
 2024-12-25 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormObjCHeaderParser/OCClass.m: Improve parsing
