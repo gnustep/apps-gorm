@@ -2647,6 +2647,9 @@ static void _real_close(GormDocument *self,
  */
 - (void) touch
 {
+  [self deactivateEditors];
+  [[[objectViewController outlineView] documentView] reloadData];
+  [self reactivateEditors];
   [self updateChangeCount: NSChangeDone];
 }
 
@@ -3939,7 +3942,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
 	    ofItem: (id)item
 {
   id result = nil;
-  
+
+  [self deactivateEditors];
   NSLog(@"index = %ld, item = %@", index, item);
   if (item == nil)
     {
@@ -3953,7 +3957,16 @@ willBeInsertedIntoToolbar: (BOOL)flag
     {
       result = [[item subviews] objectAtIndex: index];
     }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      result = [item itemAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      result = [item submenu];
+    }
   NSLog(@"result = %@", result);
+  [self reactivateEditors];
   
   return result;
 }
@@ -3963,6 +3976,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   BOOL f = NO;
   
+  [self deactivateEditors];
   if (item == nil)
     {
       f = [topLevelObjects count] > 0;
@@ -3974,7 +3988,16 @@ willBeInsertedIntoToolbar: (BOOL)flag
   else if ([item isKindOfClass: [NSView class]])
     {
       f = [[item subviews] count] > 0; 
+    }  
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      f = [item numberOfItems] > 0; 
     }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      f = [item hasSubmenu];
+    }
+  [self reactivateEditors];
   
   NSLog(@"f = %d",f);
   return f;
@@ -3985,6 +4008,7 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   NSInteger c = 0;
   
+  [self deactivateEditors];
   if (item == nil)
     {
       c = [topLevelObjects count];
@@ -3997,6 +4021,15 @@ willBeInsertedIntoToolbar: (BOOL)flag
     {
       c = [[item subviews] count]; 
     }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      c = [item numberOfItems]; 
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      c = 1; // one submenu...
+    }
+  [self reactivateEditors];
   
   NSLog(@"c = %ld", c);
   return c;
@@ -4008,21 +4041,19 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   id value = nil;
   
+  [self deactivateEditors];
   if ([[tableColumn identifier] isEqualToString: @"objects"])
     {
-      if (item == nil)
-	{
-	  value = @"Objects";
-	}
-      else
-	{
-	  value = [self nameForObject: item];
-	}
+      NSString *className = [classManager classNameForObject: item];
+      NSString *name = [self nameForObject: item];
+
+      value = [NSString stringWithFormat: @"%@ - %@", (name != nil)?name:@"", className];
     }
   else if ([[tableColumn identifier] isEqualToString: @"connections"])
     {
     }
-
+  [self reactivateEditors];
+  
   return value;
 }
 
