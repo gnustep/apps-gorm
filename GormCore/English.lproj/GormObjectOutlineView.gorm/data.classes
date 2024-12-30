@@ -3,6 +3,7 @@
     FirstResponder = {
 	Actions = (
 	    "iconView:",
+	    "editorButton:",
 	    "outlineView:"
 	);
 	Super = NSObject;
@@ -10,12 +11,14 @@
     GormObjectViewController = {
 	Actions = (
 	    "iconView:",
-	    "outlineView:"
+	    "outlineView:",
+	    "editorButton:"
 	);
 	Outlets = (
 	    displayView,
 	    iconButton,
-	    outlineButton
+	    outlineButton,
+	    editorButton
 	);
 	Super = NSViewController;
     };

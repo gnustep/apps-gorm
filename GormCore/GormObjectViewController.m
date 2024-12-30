@@ -14,6 +14,7 @@
       _document = nil;
       _iconView = nil;
       _outlineView = nil;
+      _editor = NO;
     }
   return self;
 }
@@ -57,6 +58,16 @@
   ASSIGN(_outlineView, outlineView);
 }
 
+- (BOOL) editor
+{
+  return _editor;
+}
+
+- (void) setEditor: (BOOL)f
+{
+  _editor = f;
+}
+
 - (IBAction) iconView: (id)sender
 {
   NSDebugLog(@"Called %@", NSStringFromSelector(_cmd));
@@ -72,10 +83,30 @@
   [self resetDisplayView: _outlineView];
 }
 
+- (IBAction) editorButton: (id)sender
+{
+  _editor = !_editor;
+}
+
 - (void) resetDisplayView: (NSView *)view
 {
   [displayView setContentView: view];
   NSDebugLog(@"displayView = %@", view);
+}
+
+- (void) reloadOutlineView
+{
+  if (_editor == NO)
+    {
+      [_document deactivateEditors];
+    }
+
+  [[_outlineView documentView] reloadData];
+
+  if (_editor == NO)
+    {
+      [_document reactivateEditors];
+    }
 }
 
 @end

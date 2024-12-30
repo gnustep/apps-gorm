@@ -69,8 +69,6 @@ GormCore_HEADER_FILES = \
 	GormNSWindow.h \
 	GormObjectEditor.h \
 	GormObjectInspector.h \
-	GormObjectMainView.h \
-	GormObjectOutlineView.h \
 	GormObjectViewController.h \
 	GormOpenGLView.h \
 	GormOutlineView.h \
@@ -151,8 +149,6 @@ GormCore_OBJC_FILES = \
 	GormNSWindow.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
-	GormObjectMainView.m \
-	GormObjectOutlineView.m \
 	GormObjectViewController.m \
 	GormOpenGLView.m \
 	GormOutlineView.m \
@@ -224,6 +220,7 @@ GormCore_RESOURCE_FILES = \
 	Images/browserView.tiff \
 	Images/outlineView.tiff \
 	Images/iconView.tiff \
+	Images/editor.tiff \
 	Resources/VersionProfiles.plist \
 	Resources/ClassInformation.plist 
 
