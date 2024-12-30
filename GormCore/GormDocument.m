@@ -419,10 +419,8 @@ static NSImage  *fileImage = nil;
   [outlineScrollView setDocumentView: outlineView];
   [objectViewController setOutlineView: outlineScrollView];
   [outlineView setDataSource: self];
-  [self deactivateEditors];
-  [outlineView reloadData];
-  [self reactivateEditors];
-
+  [objectViewController reloadOutlineView];
+  
   RELEASE(outlineView);
   
   [[objectViewController view] setAutoresizingMask:
@@ -2660,9 +2658,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) touch
 {
-  [self deactivateEditors];
-  [[[objectViewController outlineView] documentView] reloadData];
-  [self reactivateEditors];
+  [objectViewController reloadOutlineView];
   [self updateChangeCount: NSChangeDone];
 }
 
@@ -3956,7 +3952,9 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   id result = nil;
 
-  [self deactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
+
   NSDebugLog(@"index = %ld, item = %@", index, item);
   if (item == nil)
     {
@@ -3979,7 +3977,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
       result = [item submenu];
     }
   NSDebugLog(@"result = %@", result);
-  [self reactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
   
   return result;
 }
@@ -3989,7 +3988,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   BOOL f = NO;
   
-  [self deactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
   if (item == nil)
     {
       f = [topLevelObjects count] > 0;
@@ -4010,7 +4010,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
     {
       f = [item hasSubmenu];
     }
-  [self reactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
   
   NSDebugLog(@"f = %d",f);
   return f;
@@ -4021,7 +4022,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
   NSInteger c = 0;
   
-  [self deactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
   if (item == nil)
     {
       c = [topLevelObjects count];
@@ -4042,7 +4044,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
     {
       c = 1; // one submenu...
     }
-  [self reactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
   
   NSDebugLog(@"c = %ld", c);
   return c;
@@ -4057,7 +4060,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
   NSString *name = [self nameForObject: item];
   NSUInteger version = 0;
   
-  [self deactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
   if ([[tableColumn identifier] isEqualToString: @"objects"])
     {
       NSString *title = @"";
@@ -4090,7 +4094,8 @@ willBeInsertedIntoToolbar: (BOOL)flag
       NSArray *c = [self connectorsForSource: item];
       value = [NSNumber numberWithInteger: [c count]];
     }
-  [self reactivateEditors];
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
   
   return value;
 }

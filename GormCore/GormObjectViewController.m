@@ -86,6 +86,7 @@
 - (IBAction) editorButton: (id)sender
 {
   _editor = !_editor;
+  [[_outlineView documentView] reloadData];
 }
 
 - (void) resetDisplayView: (NSView *)view
