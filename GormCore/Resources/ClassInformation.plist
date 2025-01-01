@@ -149,7 +149,7 @@
     }; 
     IBInspector = {
         Actions = ("ok:", "revert:", "touch:"); 
-        Outlets = (window); 
+        Outlets = (window, okButton, revertButton); 
         Super = NSObject; 
     }; 
     IBPalette = {Actions = (); Outlets = (originalWindow); Super = NSObject; }; 

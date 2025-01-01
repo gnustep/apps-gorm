@@ -4069,7 +4069,9 @@ willBeInsertedIntoToolbar: (BOOL)flag
       if ([item respondsToSelector: @selector(title)])
 	{
 	  title = [item title];
-	  value = [NSString stringWithFormat: @"%@ : %@", title, (name != nil)?name:@"*Unnamed*"];
+	  value = [NSString stringWithFormat: @"%@ : %@",
+			    (title != nil && ![title isEqualToString: @""]) ? title : @"*Untitled*",
+		       (name != nil) ? name : @"*Unnamed*"];
 	}
       else
 	{

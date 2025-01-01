@@ -42,12 +42,7 @@
       sets = [[NSMutableArray alloc] init];
       gets = [[NSMutableDictionary alloc] init];
       types = [[NSMutableDictionary alloc] init];
-      
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: _(@"OK")];
+
       [okButton setEnabled: NO];
       
       revertButton = nil;
@@ -96,7 +91,6 @@ selectCellWithString: (NSString*)title
   RELEASE(gets);
   RELEASE(sets);
   RELEASE(types);
-  RELEASE(okButton);
   [super dealloc];
 }
 
