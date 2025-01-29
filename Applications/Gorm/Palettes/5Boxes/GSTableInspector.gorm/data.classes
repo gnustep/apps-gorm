@@ -1,0 +1,11 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GSTableInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    matrix
+	);
+	Super = IBInspector;
+    };
+}
