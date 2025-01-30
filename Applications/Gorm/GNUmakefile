@@ -73,6 +73,7 @@ Gorm_RESOURCE_FILES = \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
 	Palettes/4Data/4Data.palette \
+	Palettes/5Boxes/5Boxes.palette \
 	Images/FileIcon_gmodel.tiff \
 	Images/GormEHCoil.tiff \
 	Images/GormEHLine.tiff \

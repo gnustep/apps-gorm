@@ -1,4 +1,4 @@
-#   GNUmakefile: main makefile for Gorm palettes
+#   GNUmakefile 
 #
 #   Copyright (C) 1999 Free Software Foundation, Inc.
 #
@@ -19,26 +19,31 @@
 #   
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
-#   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
-#
-PACKAGE_NAME = gorm
+#   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 include $(GNUSTEP_MAKEFILES)/common.make
 
-#
-# Each palette is a subproject
-#
-SUBPROJECTS = \
-	0Menus \
-	1Windows \
-	2Controls \
-	3Containers \
-	4Data \
-	5Boxes
+PALETTE_NAME = 5Boxes
+5Boxes_PALETTE_ICON = BoxesPalette
+5Boxes_OBJC_FILES = \
+	BoxesPalette.m \
+	GSTableInspector.m
+
+5Boxes_PRINCIPAL_CLASS = BoxesPalette
+
+5Boxes_RESOURCE_FILES = \
+	BoxesPalette.tiff \
+	BoxesPalette.gorm \
+	GSTableInspector.gorm \
+	palette.table
+
+5Boxes_STANDARD_INSTALL = no
 
 -include GNUmakefile.preamble
 
 -include GNUmakefile.local
 
-include $(GNUSTEP_MAKEFILES)/aggregate.make
+include $(GNUSTEP_MAKEFILES)/palette.make
 
 -include GNUmakefile.postamble
+

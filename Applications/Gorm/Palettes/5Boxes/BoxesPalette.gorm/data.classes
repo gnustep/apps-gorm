@@ -1,0 +1,16 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    BoxesPalette = {
+	Actions = (
+	);
+	Outlets = (
+	    vview,
+	    hview,
+	    tview,
+	    vimage,
+	    himage,
+	    timage
+	);
+	Super = IBPalette;
+    };
+}

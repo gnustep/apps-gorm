@@ -1,0 +1,6 @@
+{
+  NibFile = "BoxesPalette";
+  Class = "BoxesPalette";
+  Icon = "BoxesPalette";
+  ExportClasses = ("GSTable","GSVbox","GSHbox");
+}

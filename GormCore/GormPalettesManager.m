@@ -38,16 +38,6 @@
 @end
 
 @implementation	GormPalettePanel
-/*
-- (BOOL) canBecomeKeyWindow
-{
-  return NO;
-}
-- (BOOL) canBecomeMainWindow
-{
-  return YES;
-}
-*/
 @end
 
 @interface GormPaletteView : NSView
@@ -363,13 +353,16 @@ static NSImage	*dragImage = nil;
 					     inDirectory: nil];
    if ([array count] > 0)
     {
-      unsigned	index;
-
+      NSEnumerator *en = nil;
+      NSString *paletteName = nil;
+      
       array = [array sortedArrayUsingSelector: @selector(compare:)];
+      en = [array objectEnumerator];
 
-      for (index = 0; index < [array count]; index++)
+      while ((paletteName = [en nextObject]) != nil)
 	{
-	  [self loadPalette: [array objectAtIndex: index]];
+	  NSLog(@"Built in palette... %@", paletteName);
+	  [self loadPalette: paletteName];
 	}
     }
 
@@ -380,6 +373,7 @@ static NSImage	*dragImage = nil;
        id paletteName = nil;
        while((paletteName = [en nextObject]) != nil)
 	 {
+	   NSLog(@"User Palettes Loading... %@", paletteName);
 	   [self loadPalette: paletteName];
 	 }
      }
