@@ -12,7 +12,9 @@
   
   if (!window)
     {
-      if (![NSBundle loadNibNamed: @"GormSetName" owner: self])
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if (![bundle loadNibNamed: @"GormSetName" owner: self topLevelObjects: NULL])
         {
           return NSAlertAlternateReturn;
         }

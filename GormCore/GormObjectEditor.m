@@ -24,31 +24,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <AppKit/AppKit.h>
+#import <AppKit/AppKit.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#import "GormPrivate.h"
+#import "GormObjectEditor.h"
+#import "GormFunctions.h"
+#import "GormDocument.h"
+#import "GormClassManager.h"
+#import "GormAbstractDelegate.h"
 
-#include "GormPrivate.h"
-#include "GormObjectEditor.h"
-#include "GormFunctions.h"
-#include "GormDocument.h"
-#include "GormClassManager.h"
-
+@implementation NSObject (GormObjectAdditions)
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@interface NSObject (GormObjectAdditions)
-@end
-
-@implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
-  static NSImage	*image = nil;
+  static NSImage       *image = nil;
+  GormAbstractDelegate *delegate = (GormAbstractDelegate *)[NSApp delegate];
 
-  if (image == nil)
+  if (image == nil && [delegate isInTool] == NO)
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
@@ -85,6 +83,7 @@
 {
   return @"GormObjectEditor";
 }
+
 @end
 
 @implementation NSView (GormObjectAdditions)
@@ -104,7 +103,7 @@ static NSMapTable	*docMap = 0;
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
 				NSNonRetainedObjectMapValueCallBacks, 
-				2);
+				2); 
     }
 }
 
@@ -125,7 +124,6 @@ static NSMapTable	*docMap = 0;
 {
   NSMapInsert(docMap, (void*)aDocument, (void*)editor);
 }
-
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
@@ -252,7 +250,8 @@ static NSMapTable	*docMap = 0;
       NSInteger	r, c;
       int	pos;
       id	obj = nil;
-
+      id        delegate = [NSApp delegate];
+      
       loc = [self convertPoint: loc fromView: nil];
       [self getRow: &r column: &c forPoint: loc];
       pos = r * [self numberOfColumns] + c;
@@ -260,12 +259,12 @@ static NSMapTable	*docMap = 0;
 	{
 	  obj = [objects objectAtIndex: pos];
 	}
-      if (obj == [NSApp connectSource])
+      if (obj == [delegate connectSource])
 	{
 	  return NSDragOperationNone;	/* Can't drag an object onto itsself */
 	}
 
-      [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
+      [delegate displayConnectionBetween: [delegate connectSource] and: obj];
       if (obj != nil)
 	{
 	  return NSDragOperationLink;
@@ -467,10 +466,10 @@ static NSMapTable	*docMap = 0;
 	  [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
 		     owner: self];
 	  [pb setString: name forType: GormLinkPboardType];
-	  [NSApp displayConnectionBetween: obj and: nil];
-	  [NSApp startConnecting];
+	  [[NSApp delegate] displayConnectionBetween: obj and: nil];
+	  [[NSApp delegate] startConnecting];
 
-	  [self dragImage: [NSApp linkImage]
+	  [self dragImage: [[NSApp delegate] linkImage]
 		       at: loc
 		   offset: NSZeroSize
 		    event: theEvent
@@ -507,8 +506,8 @@ static NSMapTable	*docMap = 0;
 	}
       else
 	{
-	  [NSApp displayConnectionBetween: [NSApp connectSource] and: obj];
-	  [NSApp startConnecting];
+	  [[NSApp delegate] displayConnectionBetween: [NSApp connectSource] and: obj];
+	  [[NSApp delegate] startConnecting];
 	  return YES;
 	}
     }
@@ -564,7 +563,7 @@ static NSMapTable	*docMap = 0;
 - (void) resetObject: (id)anObject
 {
   NSString		*name = [document nameForObject: anObject];
-  GormInspectorsManager	*mgr = [(id<Gorm>)NSApp inspectorsManager];
+  GormInspectorsManager	*mgr = [(id<GormAppDelegate>)[NSApp delegate] inspectorsManager];
 
   if ([name isEqual: @"NSOwner"] == YES)
     {

@@ -9,12 +9,14 @@
 @implementation GormHelpInspector
 - (id) init
 {
+  NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
   if ([super init] == nil)
     {
       return nil;
     }
 
-  if ([NSBundle loadNibNamed: @"GormHelpInspector" owner: self] == NO)
+  if ([bundle loadNibNamed: @"GormHelpInspector" owner: self topLevelObjects: NULL] == NO)
     {
       NSLog(@"Could not gorm GormHelpInspector");
       return nil;
@@ -25,7 +27,7 @@
 
 - (void) ok: (id)sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   NSArray *cons = [document connectorsForDestination: object
 			    ofClass: [NSIBHelpConnector class]];
   NSIBHelpConnector *con = nil;
@@ -65,7 +67,7 @@
 
 - (void) revert: (id)sender
 {
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   NSArray *cons = [document connectorsForDestination: object
 			    ofClass: [NSIBHelpConnector class]];
 

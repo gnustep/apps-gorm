@@ -76,19 +76,10 @@ static BOOL _isInInterfaceBuilder = NO;
 @end
 
 @interface NSObject (GormPrivate)
-// + (void) poseAsClass: (Class)aClassObject;
 + (BOOL) canSubstituteForClass: (Class)origClass;
 @end
 
 @implementation NSObject (GormPrivate)
-/*
-+ (void) poseAsClass: (Class)aClassObject
-{
-  // disable poseAs: while in Gorm.
-  class_pose_as(self, aClassObject);
-  NSLog(@"WARNING: poseAs: called in Gorm.");
-}
-*/
 
 + (BOOL) canSubstituteForClass: (Class)origClass
 {
@@ -113,6 +104,7 @@ static BOOL _isInInterfaceBuilder = NO;
 
   return NO;
 }
+
 @end
 
 @implementation GormObjectProxy
@@ -214,7 +206,7 @@ static BOOL _isInInterfaceBuilder = NO;
   NSImage *image = [super imageForViewer];
   if([theClass isEqual: @"NSFontManager"])
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForImageResource: @"GormFontManager"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }

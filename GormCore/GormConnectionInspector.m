@@ -89,8 +89,10 @@
 - (id) init
 {
   if ((self = [super init]) != nil)
-    {
-      if([NSBundle loadNibNamed: @"GormConnectionInspector" owner: self] == NO)
+    {      
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
+      if([bundle loadNibNamed: @"GormConnectionInspector" owner: self topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Couldn't load GormConnectionInsector");
 	  return nil;
@@ -212,8 +214,10 @@
 		  if ([con isKindOfClass: [NSNibControlConnector class]] == YES)
 		    {
 		      RELEASE(actions);
-		      actions = RETAIN([[(id<Gorm>)NSApp classManager]
-			allActionsForObject: [con destination]]);
+		      actions = [[(id<GormAppDelegate>)[NSApp delegate] classManager]
+				  allActionsForObject: [con destination]];
+		      actions = [actions sortedArrayUsingSelector: @selector(compare:)];
+		      RETAIN(actions);
 		      break;
 		    }
 		  else
@@ -225,13 +229,15 @@
 	      if (con == nil) // && [actions containsObject: [currentConnector label]] == NO) 
 		{
 		  RELEASE(actions);
-		  actions = RETAIN([[(id<Gorm>)NSApp classManager]
-		    allActionsForObject: [NSApp connectDestination]]);
+		  actions = [[(id<GormAppDelegate>)[NSApp delegate] classManager]
+			      allActionsForObject: [[NSApp delegate] connectDestination]];
+		  actions = [actions sortedArrayUsingSelector: @selector(compare:)];
+		  RETAIN(actions);		  
 		  if ([actions count] > 0)
 		    {
 		      con = [[NSNibControlConnector alloc] init];
 		      [con setSource: object];
-		      [con setDestination: [NSApp connectDestination]];
+		      [con setDestination: [[NSApp delegate] connectDestination]];
 		      [con setLabel: [actions objectAtIndex: 0]];
 		      AUTORELEASE(con);
 		    }
@@ -275,7 +281,7 @@
 		  RELEASE(currentConnector);
 		  currentConnector = [[NSNibOutletConnector alloc] init];
 		  [currentConnector setSource: object];
-		  [currentConnector setDestination: [NSApp connectDestination]];
+		  [currentConnector setDestination: [[NSApp delegate] connectDestination]];
 		  [currentConnector setLabel: title];
 		}
 	    }
@@ -284,7 +290,7 @@
 	   */
 	  [oldBrowser loadColumnZero];
 	  [oldBrowser selectRow: index inColumn: 0];
-	  [NSApp displayConnectionBetween: object
+	  [[NSApp delegate] displayConnectionBetween: object
 				      and: [currentConnector destination]];
 	}
       else
@@ -312,7 +318,7 @@
 	      RELEASE(currentConnector);
 	      currentConnector = [[NSNibControlConnector alloc] init];
 	      [currentConnector setSource: object];
-	      [currentConnector setDestination: [NSApp connectDestination]];
+	      [currentConnector setDestination: [[NSApp delegate] connectDestination]];
 	      [currentConnector setLabel: title];
 	      [oldBrowser loadColumnZero];
 	    }
@@ -329,10 +335,10 @@
 	  if ([title hasPrefix: label] == YES)
 	    {
 	      NSString	*name;
-	      id	dest = [NSApp connectDestination];
+	      id	dest = [[NSApp delegate] connectDestination];
 
 	      dest = [con destination];
-	      name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+	      name = [[(id<IB>)[NSApp delegate] activeDocument] nameForObject: dest];
 	      name = [label stringByAppendingFormat: @" (%@)", name];
 	      if ([title isEqual: name] == YES)
 		{
@@ -348,7 +354,7 @@
 		      path = [@"/target" stringByAppendingString: path];
 		    }
 		  [newBrowser setPath: path];
-		  [NSApp displayConnectionBetween: object
+		  [[NSApp delegate] displayConnectionBetween: object
 					      and: [con destination]];
 		  break;
 		}
@@ -454,11 +460,11 @@ selectCellWithString: (NSString*)title
 	{
 	  NSString	*label;
 	  NSString	*name;
-	  id		dest = [NSApp connectDestination];
+	  id		dest = [[NSApp delegate] connectDestination];
 
 	  label = [[connectors objectAtIndex: row] label];
 	  dest = [[connectors objectAtIndex: row] destination];
-	  name = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+	  name = [[(id<IB>)[NSApp delegate] activeDocument] nameForObject: dest];
 	  name = [label stringByAppendingFormat: @" (%@)", name];
 
 	  [aCell setStringValue: name];
@@ -505,7 +511,7 @@ selectCellWithString: (NSString*)title
     {
       id con = currentConnector;
 
-      [[(id<IB>)NSApp activeDocument] removeConnector: con];
+      [[(id<IB>)[NSApp delegate] activeDocument] removeConnector: con];
       [connectors removeObject: con];
       [oldBrowser loadColumnZero];
     }
@@ -527,7 +533,7 @@ selectCellWithString: (NSString*)title
 	    {
 	      if ([con isKindOfClass: [NSNibControlConnector class]])
 		{
-		  [[(id<IB>)NSApp activeDocument] removeConnector: con];
+		  [[(id<IB>)[NSApp delegate] activeDocument] removeConnector: con];
 		  [connectors removeObjectIdenticalTo: con];
 		  break;
 		}
@@ -537,14 +543,14 @@ selectCellWithString: (NSString*)title
 	  [self _selectAction: [currentConnector label]];
 	}
       [connectors addObject: currentConnector];
-      [[(id<IB>)NSApp activeDocument] addConnector: currentConnector];
+      [[(id<IB>)[NSApp delegate] activeDocument] addConnector: currentConnector];
       
       /*
        * When we establish a connection, we want to highlight it in
        * the browser so the user can see it has been done.
        */
       dest = [currentConnector destination];
-      path = [[(id<IB>)NSApp activeDocument] nameForObject: dest];
+      path = [[(id<IB>)[NSApp delegate] activeDocument] nameForObject: dest];
       path = [[currentConnector label] stringByAppendingFormat: @" (%@)", path];
       path = [@"/" stringByAppendingString: path];
       [oldBrowser loadColumnZero];
@@ -574,15 +580,17 @@ selectCellWithString: (NSString*)title
        * Create list of existing connections for selected object.
        */
       connectors = [[NSMutableArray alloc] init];
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
+      array = [[(id<IB>)[NSApp delegate] activeDocument] connectorsForSource: object
 	ofClass: [NSNibControlConnector class]];
       [connectors addObjectsFromArray: array];
-      array = [[(id<IB>)NSApp activeDocument] connectorsForSource: object
+      array = [[(id<IB>)[NSApp delegate] activeDocument] connectorsForSource: object
 	ofClass: [NSNibOutletConnector class]];
       [connectors addObjectsFromArray: array];
 
       RELEASE(outlets);
-      outlets = RETAIN([[(id<Gorm>)NSApp classManager] allOutletsForObject: object]); 
+      outlets = [[(id<GormAppDelegate>)[NSApp delegate] classManager] allOutletsForObject: object];
+      outlets = [outlets sortedArrayUsingSelector: @selector(compare:)];
+      RETAIN(outlets);
       DESTROY(actions);
 
       [oldBrowser loadColumnZero];
@@ -590,7 +598,7 @@ selectCellWithString: (NSString*)title
       /*
        * See if we can do initial selection based on pre-existing connections.
        */
-      if ([NSApp isConnecting] == YES)
+      if ([[NSApp delegate] isConnecting] == YES)
 	{
 	  id dest = [currentConnector destination];
 	  unsigned row;
@@ -624,7 +632,7 @@ selectCellWithString: (NSString*)title
 
 
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]] == YES && 
-	  [NSApp isConnecting] == NO)
+	  [[NSApp delegate] isConnecting] == NO)
 	{
 	  [newBrowser setPath: @"/target"];
 	  [newBrowser sendAction];
@@ -642,7 +650,7 @@ selectCellWithString: (NSString*)title
     }
   else
     {
-      GormDocument *active = (GormDocument *)[(id<IB>)NSApp activeDocument];
+      GormDocument *active = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
       id src = [currentConnector source];
       id dest = [currentConnector destination];
 

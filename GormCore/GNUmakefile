@@ -29,17 +29,16 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 
 PACKAGE_NAME=GormCore
-LIBRARY_VAR=GORMCORE
-LIBRARY_NAME=GormCore
-GormCore_HEADER_FILES_DIR=.
-GormCore_HEADER_FILES_INSTALL_DIR=/GormCore
+FRAMEWORK_VAR=GORMCORE
+FRAMEWORK_NAME=GormCore
 ADDITIONAL_INCLUDE_DIRS = -I..
 srcdir = .
 
-include ../Version
+SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
+	GormAbstractDelegate.h \
 	GormBoxEditor.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
@@ -49,6 +48,7 @@ GormCore_HEADER_FILES = \
 	GormControlEditor.h \
 	GormCustomClassInspector.h \
 	GormCustomView.h \
+	GormDefines.h \
 	GormDocument.h \
 	GormDocumentController.h \
 	GormDocumentWindow.h \
@@ -69,6 +69,7 @@ GormCore_HEADER_FILES = \
 	GormNSWindow.h \
 	GormObjectEditor.h \
 	GormObjectInspector.h \
+	GormObjectViewController.h \
 	GormOpenGLView.h \
 	GormOutlineView.h \
 	GormPalettesManager.h \
@@ -102,9 +103,23 @@ GormCore_HEADER_FILES = \
 	NSCell+GormAdditions.h \
 	NSColorWell+GormExtensions.h \
 	NSFontManager+GormExtensions.h \
-	NSView+GormExtensions.h 
+	NSView+GormExtensions.h \
+	GormGeneralPref.h \
+	GormGuidelinePref.h \
+	GormHeadersPref.h \
+	GormPalettesPref.h \
+	GormPluginsPref.h \
+	GormPrefController.h \
+	GormPrefs.h \
+	GormShelfPref.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
 
 GormCore_OBJC_FILES = \
+	GormAbstractDelegate.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -134,6 +149,7 @@ GormCore_OBJC_FILES = \
 	GormNSWindow.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
+	GormObjectViewController.m \
 	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
@@ -165,12 +181,85 @@ GormCore_OBJC_FILES = \
 	NSColorWell+GormExtensions.m \
 	NSFontManager+GormExtensions.m \
 	NSView+GormExtensions.m \
-        GormPrivate.m
+        GormPrivate.m \
+	GormGeneralPref.m \
+	GormGuidelinePref.m \
+	GormHeadersPref.m \
+	GormPalettesPref.m \
+	GormPluginsPref.m \
+	GormPrefController.m \
+	GormShelfPref.m \
+	GormXLIFFDocument.m \
+
+GormCore_RESOURCE_FILES = \
+	Images/GormActionSelected.tiff \
+	Images/GormAction.tiff \
+	Images/GormClass.tiff \
+	Images/GormCopyImage.tiff \
+	Images/GormEHCoil.tiff \
+	Images/GormEHLine.tiff \
+	Images/GormEVCoil.tiff \
+	Images/GormEVLine.tiff \
+	Images/GormFile.tiff \
+	Images/GormFilesOwner.tiff \
+	Images/GormFirstResponder.tiff \
+	Images/GormFontManager.tiff \
+	Images/GormImage.tiff \
+	Images/GormMenu.tiff \
+	Images/GormMHCoil.tiff \
+	Images/GormMHLine.tiff \
+	Images/GormMVCoil.tiff \
+	Images/GormMVLine.tiff \
+	Images/GormObject.tiff \
+	Images/GormOutletSelected.tiff \
+	Images/GormOutlet.tiff \
+	Images/GormSound.tiff \
+	Images/GormUnknown.tiff \
+	Images/GormView.tiff \
+	Images/GormWindow.tiff \
+	Images/browserView.tiff \
+	Images/outlineView.tiff \
+	Images/iconView.tiff \
+	Images/editor.tiff \
+	Resources/VersionProfiles.plist \
+	Resources/ClassInformation.plist 
+
+GormCore_LANGUAGES = English
+
+GormCore_LOCALIZED_RESOURCE_FILES = \
+	GormClassEditor.gorm \
+	GormClassInspector.gorm \
+	GormClassPanel.gorm \
+	GormConnectionInspector.gorm \
+	GormCustomClassInspector.gorm \
+	GormDocument.gorm \
+	GormDummyInspector.gorm \
+	GormFontView.gorm \
+	GormHelpInspector.gorm \
+	GormImageInspector.gorm \
+	GormInconsistenciesPanel.gorm \
+	GormInspectorPanel.gorm \
+	GormNSSplitViewInspector.gorm \
+	GormObjectInspector.gorm \
+	GormObjectOutlineView.gorm \
+	GormPalettePanel.gorm \
+	GormPrefColors.gorm \
+	GormPreferences.gorm \
+	GormPrefGeneral.gorm \
+	GormPrefGuideline.gorm \
+	GormPrefHeaders.gorm \
+	GormPrefPalettes.gorm \
+	GormPrefPlugins.gorm \
+	GormScrollViewAttributesInspector.gorm \
+	GormSetName.gorm \
+	GormShelfPref.gorm \
+	GormSoundInspector.gorm \
+	GormViewSizeInspector.gorm
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/library.make
+include $(GNUSTEP_MAKEFILES)/framework.make
 
 -include GNUmakefile.postamble

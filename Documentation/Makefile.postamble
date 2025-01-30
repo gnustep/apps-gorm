@@ -15,15 +15,11 @@ before-all:: version.texi
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
-		  ../GormLib/*.h 2> /dev/null
+		  ../InterfaceBuilder/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory GormCore \
 		  -Declared GormCore \
 		  ../GormCore/*.h 2> /dev/null
-	autogsdoc -MakeFrames YES \
-		  -DocumentationDirectory GormPrefs \
-		  -Declared GormPrefs \
-		  ../GormPrefs/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -DocumentationDirectory GormObjCHeaderParser \
 		  -Declared GormObjCHeaderParser \
@@ -53,7 +49,6 @@ after-clean::
 	rm -f version.texi
 	rm -rf InterfaceBuilder
 	rm -rf GormCore
-	rm -rf GormPrefs
 	rm -rf GormObjCHeaderParser
 
 # Things to do before distcleaning
@@ -79,5 +74,3 @@ version.texi: ../Version
 
 regenerate:
 	mv ANNOUNCE README INSTALL NEWS ..
-
-

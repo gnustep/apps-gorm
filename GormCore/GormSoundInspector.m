@@ -50,9 +50,12 @@
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormSoundInspector"
-		     owner: self])
+      if (![bundle loadNibNamed: @"GormSoundInspector"
+			  owner: self
+			topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormSoundInspector");
 	  return nil;

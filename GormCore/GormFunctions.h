@@ -25,8 +25,8 @@
 #ifndef	INCLUDED_GormFunctions_h
 #define	INCLUDED_GormFunctions_h
 
-#include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 // find all subitems for the given items...
 void findAllWithArray(id item, NSMutableArray *array);

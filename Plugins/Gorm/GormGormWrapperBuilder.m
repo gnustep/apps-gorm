@@ -1,7 +1,5 @@
 /* GormWrapperBuilder
  *
- * This class is a subclass of the NSDocumentController
- *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
@@ -221,7 +219,7 @@
   NSString              *gormPath = @"objects.gorm";
   NSString              *classesPath = @"data.classes";
   NSString              *infoPath = @"data.info";
-  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  GormPalettesManager   *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;
@@ -234,23 +232,6 @@
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
       GSNibContainer *container = nil;
       
-      //
-      // If we are a nib, currently, and it's not being saved using the Latest, then
-      // flag an error. NOTE: The next time the gorm container version is
-      // changed, it will be necessary to add to the list here...
-      //
-      if([[document fileType] isEqual: @"GSNibFileType"] &&
-	 [[document filePrefsManager] isLatest] == NO)
-	{	      
-	  NSRunAlertPanel(_(@"Incorrect gui version"),
-			  _(@"Nibs cannot be converted to gui-0.10.3 and older"), 
-			  _(@"OK"), 
-			  nil,
-			  nil,
-			  nil);
-	  return nil;
-	}
-
       [document prepareConnections];
       container = [[GSNibContainer alloc] initWithDocument: document];
 

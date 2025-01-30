@@ -19,9 +19,12 @@
   self = [super init];
   if (self != nil)
     {
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
       // load the gui...
-      if (![NSBundle loadNibNamed: @"GormImageInspector"
-		     owner: self])
+      if (![bundle loadNibNamed: @"GormImageInspector"
+			  owner: self
+		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormImageInspector");
 	  return nil;

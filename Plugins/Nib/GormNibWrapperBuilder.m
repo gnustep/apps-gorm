@@ -1,7 +1,5 @@
 /* GormWrapperBuilder
  *
- * This class is a subclass of the NSDocumentController
- *
  * Copyright (C) 2006-2013 Free Software Foundation, Inc.
  *
  * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
@@ -340,7 +338,7 @@
   NSString              *nibPath = @"keyedobjects.nib";
   NSString              *classesPath = @"classes.nib";
   NSString              *infoPath = @"info.nib";
-  GormPalettesManager   *palettesManager = [(id<Gorm>)NSApp palettesManager];
+  GormPalettesManager   *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;

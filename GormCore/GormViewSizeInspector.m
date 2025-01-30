@@ -44,7 +44,7 @@ NSImage	*mVLine = nil;
 {
   if (self == [GormViewSizeInspector class])
     {
-      NSBundle	*bundle = [NSBundle mainBundle];
+      NSBundle	*bundle = [NSBundle bundleForClass: self];
       NSString	*path;
 
       path = [bundle pathForImageResource: @"GormEHCoil"];
@@ -78,25 +78,14 @@ NSImage	*mVLine = nil;
   self = [super init];
   if (self != nil)
     {
-      if ([NSBundle loadNibNamed: @"GormViewSizeInspector" 
-		    owner: self] == NO)
+      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
+      if ([bundle loadNibNamed: @"GormViewSizeInspector" 
+			 owner: self
+	       topLevelObjects: NULL] == NO)
 	{
-
-	  NSDictionary	*table;
-	  NSBundle	*bundle;
-	  
-	  table = [NSDictionary dictionaryWithObject: self
-				forKey: @"NSOwner"];
-	  bundle = [NSBundle mainBundle];
-
-	  if ( [bundle loadNibFile: @"GormViewSizeInspector"
-		       externalNameTable: table
-		       withZone: [self zone]] == NO)
-	    {
-	      NSLog(@"Could not open gorm GormViewSizeInspector");
-	      NSLog(@"self %@", self);
-	      return nil;
-	    }
+	  NSLog(@"Could not open gorm GormViewSizeInspector");
+	  NSLog(@"self %@", self);
+	  return nil;
 	}
 
       // set the tags...
@@ -126,7 +115,7 @@ NSImage	*mVLine = nil;
 {
   if (control == sizeForm)
     {
-      id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+      id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
       NSRect rect;
 
       // Update the document as edited...
@@ -163,16 +152,7 @@ NSImage	*mVLine = nil;
   if (anObject != object)
     return;
 
-  /*
-  if([[anObject window] isKindOfClass: [GormViewWindow class]])
-    {
-      [sizeForm setEnabled: NO];
-    }
-  else
-  */
-    {
-      [sizeForm setEnabled: YES];
-    }
+  [sizeForm setEnabled: YES];
 
   // stop editing so that the new values can be populated.
   [sizeForm abortEditing];
@@ -201,7 +181,7 @@ NSImage	*mVLine = nil;
 - (void) setAutosize: (id)sender
 {
   unsigned	mask = [sender tag];
-  id<IBDocuments> document = [(id<IB>)NSApp activeDocument];
+  id<IBDocuments> document = [(id<IB>)[NSApp delegate] activeDocument];
   [document touch];
   if ([sender state] == NSOnState)
     {

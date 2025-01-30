@@ -24,38 +24,44 @@
 
 #include <Foundation/Foundation.h>
 
-#include <GormObjCHeaderParser/OCClass.h>
-#include <GormObjCHeaderParser/OCMethod.h>
-#include <GormObjCHeaderParser/OCIVar.h>
-#include <GormObjCHeaderParser/OCIVarDecl.h>
-#include <GormObjCHeaderParser/NSScanner+OCHeaderParser.h>
-#include <GormObjCHeaderParser/ParserFunctions.h>
+#include "GormObjCHeaderParser/OCClass.h"
+#include "GormObjCHeaderParser/OCMethod.h"
+#include "GormObjCHeaderParser/OCProperty.h"
+#include "GormObjCHeaderParser/OCIVar.h"
+#include "GormObjCHeaderParser/OCIVarDecl.h"
+#include "GormObjCHeaderParser/NSScanner+OCHeaderParser.h"
+#include "GormObjCHeaderParser/ParserFunctions.h"
 
 @implementation OCClass
 - (id) initWithString: (NSString *)string
 {
-  if((self = [super init]) != nil)
+  if ((self = [super init]) != nil)
     {
-      methods = [[NSMutableArray alloc] init];
-      ivars = [[NSMutableArray alloc] init];
-      ASSIGN(classString, string);
+      _methods = [[NSMutableArray alloc] init];
+      _ivars = [[NSMutableArray alloc] init];
+      _properties = [[NSMutableArray alloc] init];
+      _protocols = [[NSMutableArray alloc] init];
+      _superClassName = nil;
+      ASSIGN(_classString, string);
     }
   return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(methods);
-  RELEASE(ivars);
-  RELEASE(classString);
-  RELEASE(className);
-  RELEASE(superClassName);
+  RELEASE(_methods);
+  RELEASE(_ivars);
+  RELEASE(_properties);
+  RELEASE(_protocols);  
+  RELEASE(_classString);
+  RELEASE(_className);
+  RELEASE(_superClassName);
   [super dealloc];
 }
 
 - (NSArray *) methods
 {
-  return methods;
+  return _methods;
 }
 
 - (void) addMethod: (NSString *)name isAction: (BOOL) flag
@@ -63,12 +69,12 @@
   OCMethod *method = AUTORELEASE([[OCMethod alloc] init]);
   [method setName: name];
   [method setIsAction: flag];
-  [methods addObject: method];
+  [_methods addObject: method];
 }
 
 - (NSArray *) ivars
 {
-  return ivars;
+  return _ivars;
 }
 
 - (void) addIVar: (NSString *)name isOutlet: (BOOL) flag
@@ -76,42 +82,47 @@
   OCIVar *ivar = AUTORELEASE([[OCIVar alloc] init]);
   [ivar setName: name];
   [ivar setIsOutlet: flag];
-  [ivars addObject: ivar];
+  [_ivars addObject: ivar];
 }
 
 - (NSString *) className
 {
-  return className;
+  return _className;
 }
 
 - (void) setClassName: (NSString *)name
 {
-  ASSIGN(className, name);
+  ASSIGN(_className, name);
 }
 
 - (NSString *) superClassName
 {
-  return superClassName;
+  return _superClassName;
 }
 
 - (void) setSuperClassName: (NSString *)name
 {
-  ASSIGN(superClassName,name);
+  ASSIGN(_superClassName,name);
 }
 
 - (BOOL) isCategory
 {
-  return isCategory;
+  return _isCategory;
 }
 
 - (void) setIsCategory: (BOOL)flag
 {
-  isCategory = flag;
+  _isCategory = flag;
+}
+
+- (NSArray *) properties
+{
+  return _properties;
 }
 
 - (void) _strip
 {
-  NSScanner *stripScanner = [NSScanner scannerWithString: classString];
+  NSScanner *stripScanner = [NSScanner scannerWithString: _classString];
   NSString *resultString = @"";
   NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
@@ -120,13 +131,13 @@
       NSString *string = nil;
       [stripScanner scanUpToCharactersFromSet: wsnl intoString: &string];
       resultString = [resultString stringByAppendingString: string];
-      if(![stripScanner isAtEnd])
+      if (![stripScanner isAtEnd])
 	{
 	  resultString = [resultString stringByAppendingString: @" "];
 	}
     }
   
-  ASSIGN(classString, resultString);
+  ASSIGN(_classString, resultString);
 }
 
 - (void) parse
@@ -141,94 +152,134 @@
 
   // get the interface line... look ahead...  
   [self _strip];
-  scanner = [NSScanner scannerWithString: classString];
-  if(lookAhead(classString, @"{")) 
-    {
-      [scanner scanUpToString: @"@interface" intoString: NULL]; 
-      [scanner scanUpToString: @"{" intoString: &interfaceLine];
-      iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
-    }
-  else // if there is no "{", then there are no ivars...
-    {
-      [scanner scanUpToString: @"@interface" intoString: NULL]; 
-      [scanner scanUpToCharactersFromSet: pmcs intoString: &interfaceLine];
-      iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
-    }
-
-  // look ahead...  
-  if(lookAhead(interfaceLine, @":"))
-    {
-      NSString *cn = nil, *scn = nil;
-
-      [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
-      [iscan scanUpToString: @":" intoString: &cn];
-      className = [cn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(className);
-      [iscan scanString: @":" intoString: NULL];
-      [iscan scanUpToCharactersFromSet: wsnl intoString: &scn];
-      superClassName = [scn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(superClassName);
-    }
-  else // category...
+  NSDebugLog(@"_classString = %@", _classString);
+  scanner = [NSScanner scannerWithString: _classString];
+  if (lookAhead(_classString, @"@implementation"))
     {
       NSString *cn = nil;
-
-      [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
-      [iscan scanUpToCharactersFromSet: wsnl intoString: &cn];
-      className = [cn stringByTrimmingCharactersInSet: wsnl];
-      RETAIN(className);
       
-      // check to see if it's a category on an existing interface...
-      if(lookAhead(interfaceLine,@"("))
+      [scanner scanUpToAndIncludingString: @"@implementation" intoString: NULL];
+      [scanner scanUpToCharactersFromSet: wsnl intoString: &cn];
+      _className = [cn stringByTrimmingCharactersInSet: wsnl];
+      RETAIN(_className);
+      NSDebugLog(@"_className = %@", _className);
+    }
+  else
+    {
+      if (lookAhead(_classString, @"{")) 
 	{
-	  isCategory = YES;
+	  [scanner scanUpToString: @"@interface" intoString: NULL]; 
+	  [scanner scanUpToString: @"{" intoString: &interfaceLine];
+	  iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
+	}
+      else // if there is no "{", then there are no ivars...
+	{
+	  [scanner scanUpToString: @"@interface" intoString: NULL]; 
+	  [scanner scanUpToCharactersFromSet: pmcs intoString: &interfaceLine];
+	  iscan = [NSScanner scannerWithString: interfaceLine]; // reset scanner... 
+	}
+      
+      // look ahead...  
+      if (lookAhead(interfaceLine, @":"))
+	{
+	  NSString *cn = nil, *scn = nil;
+	  
+	  [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
+	  [iscan scanUpToString: @":" intoString: &cn];
+	  _className = [cn stringByTrimmingCharactersInSet: wsnl];
+	  RETAIN(_className);
+	  [iscan scanString: @":" intoString: NULL];
+	  [iscan scanUpToCharactersFromSet: wsnl intoString: &scn];
+	  [self setSuperClassName: [scn stringByTrimmingCharactersInSet: wsnl]];
+	}
+      else // category...
+	{
+	  NSString *cn = nil;
+	  
+	  [iscan scanUpToAndIncludingString: @"@interface" intoString: NULL];
+	  [iscan scanUpToCharactersFromSet: wsnl intoString: &cn];
+	  _className = [cn stringByTrimmingCharactersInSet: wsnl];
+	  RETAIN(_className);
+	  
+	  // check to see if it's a category on an existing interface...
+	  if (lookAhead(interfaceLine,@"("))
+	    {
+	      _isCategory = YES;
+	    }
+	}
+      
+      if (_isCategory == NO)
+	{          
+	  NSScanner *ivarScan = nil;
+	  
+	  // put the ivars into a a string...
+	  [scanner scanUpToAndIncludingString: @"{" intoString: NULL];
+	  [scanner scanUpToString: @"}" intoString: &ivarsString];
+	  [scanner scanString: @"}" intoString: NULL];
+	  
+	  if (ivarsString != nil)
+	    {
+	      // scan each ivar...
+	      ivarScan = [NSScanner scannerWithString: ivarsString];
+	      while(![ivarScan isAtEnd])
+		{
+		  NSString *ivarLine = nil;
+		  OCIVarDecl *ivarDecl = nil;
+		  
+		  [ivarScan scanUpToString: @";" intoString: &ivarLine];
+		  [ivarScan scanString: @";" intoString: NULL];
+		  ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
+		  [ivarDecl parse];
+		  [_ivars addObjectsFromArray: [ivarDecl ivars]];
+		}
+	    }
+	}
+      else
+	{
+	  NSString *cn = nil;
+	  NSScanner *cs = [NSScanner scannerWithString: _classString];
+
+	  [cs scanUpToAndIncludingString: @"@interface" intoString: NULL];
+	  [cs scanUpToCharactersFromSet: wsnl intoString: &cn];
+	  _className = [cn stringByTrimmingCharactersInSet: wsnl];
+	  RETAIN(_className);
+	  NSDebugLog(@"_className = %@", _className);
+	}
+      
+      // put the methods into a string...
+      if (ivarsString != nil)
+	{
+	  [scanner scanUpToString: @"@end" intoString: &methodsString];
+	}
+      else // 
+	{
+	  scanner = [NSScanner scannerWithString: _classString];
+	  [scanner scanUpToAndIncludingString: interfaceLine intoString: NULL];
+	  [scanner scanUpToString: @"@end" intoString: &methodsString];
 	}
     }
   
-  if(isCategory == NO)
-    {          
-      NSScanner *ivarScan = nil;
-
-      // put the ivars into a a string...
-      [scanner scanUpToAndIncludingString: @"{" intoString: NULL];
-      [scanner scanUpToString: @"}" intoString: &ivarsString];
-      [scanner scanString: @"}" intoString: NULL];
-      
-      if(ivarsString != nil)
+  if (_classString != nil)
+    {
+      NSScanner *propertiesScan = [NSScanner scannerWithString: _classString];
+      while ([propertiesScan isAtEnd] == NO)
 	{
-	  // scan each ivar...
-	  ivarScan = [NSScanner scannerWithString: ivarsString];
-	  while(![ivarScan isAtEnd])
-	    {
-	      NSString *ivarLine = nil;
-	      OCIVarDecl *ivarDecl = nil;
-	      
-	      [ivarScan scanUpToString: @";" intoString: &ivarLine];
-	      [ivarScan scanString: @";" intoString: NULL];
-	      ivarDecl = AUTORELEASE([[OCIVarDecl alloc] initWithString: ivarLine]); 
-	      [ivarDecl parse];
-	      [ivars addObjectsFromArray: [ivarDecl ivars]];
-	    }
-	}
-    }
+	  NSString *propertiesLine = nil;
+	  OCProperty *property = nil;
 
-  // put the methods into a string...
-  if(ivarsString != nil)
-    {
-      [scanner scanUpToString: @"@end" intoString: &methodsString];
-    }
-  else // 
-    {
-      scanner = [NSScanner scannerWithString: classString];
-      [scanner scanUpToAndIncludingString: interfaceLine intoString: NULL];
-      [scanner scanUpToString: @"@end" intoString: &methodsString];
+	  [propertiesScan scanUpToString: @";" intoString: &propertiesLine];
+	  [propertiesScan scanString: @";" intoString: NULL];
+	  property = AUTORELEASE([[OCProperty alloc] initWithString: propertiesLine]);
+	  [property parse];
+	  [_properties addObject: property];
+	}
     }
   
   // scan each method...
-  if(methodsString != nil)
+  if (methodsString != nil)
     {
       NSScanner *methodScan = [NSScanner scannerWithString: methodsString];
-      while(![methodScan isAtEnd])
+      while ([methodScan isAtEnd] == NO)
 	{
 	  NSString *methodLine = nil;
 	  OCMethod *method = nil;
@@ -237,8 +288,8 @@
 	  [methodScan scanString: @";" intoString: NULL];
 	  method = AUTORELEASE([[OCMethod alloc] initWithString: methodLine]);       
 	  [method parse];
-	  [methods addObject: method];
-	}
+	  [_methods addObject: method];
+	}      
     }
 }
 @end

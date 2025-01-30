@@ -23,25 +23,15 @@
   self = [super init];
   if (self != nil)
     {
-      if ([NSBundle loadNibNamed: @"GormNSSplitViewInspector" 
-		    owner: self] == NO)
-	{	  
-	  NSDictionary	*table = nil;
-	  NSBundle	*bundle = nil;
-          BOOL           loaded = NO;
-          
-	  table = [NSDictionary dictionaryWithObject: self forKey: @"NSOwner"];
-	  bundle = [NSBundle mainBundle];
-          loaded = [bundle loadNibFile: @"GormNSSplitViewInspector"
-                     externalNameTable: table
-                              withZone: [self zone]];
-
-          if (!loaded)
-	    {
-	      NSLog(@"Could not open gorm GormNSSplitViewInspector");
-	      NSLog(@"self %@", self);
-	      return nil;
-	    }
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if ([bundle loadNibNamed: @"GormNSSplitViewInspector" 
+			 owner: self
+	       topLevelObjects: NULL] == NO)
+	{
+	  NSLog(@"Could not open gorm GormNSSplitViewInspector");
+	  NSLog(@"self %@", self);
+	  return nil;
 	}
     }
 

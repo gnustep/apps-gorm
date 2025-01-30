@@ -31,26 +31,21 @@
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormObjectInspector" owner: self] == NO)
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if([bundle loadNibNamed: @"GormObjectInspector" owner: self topLevelObjects: NULL] == NO)
 	{
 	  NSLog(@"Couldn't load GormObjectInsector");
 	  return nil;
 	}
-      else
-	{
-	  sets = [[NSMutableArray alloc] init];
-	  gets = [[NSMutableDictionary alloc] init];
-	  types = [[NSMutableDictionary alloc] init];
 
-	  okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-	  [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-	  [okButton setAction: @selector(ok:)];
-	  [okButton setTarget: self];
-	  [okButton setTitle: _(@"OK")];
-	  [okButton setEnabled: NO];
-	  
-	  revertButton = nil;
-	}
+      sets = [[NSMutableArray alloc] init];
+      gets = [[NSMutableDictionary alloc] init];
+      types = [[NSMutableDictionary alloc] init];
+
+      [okButton setEnabled: NO];
+      
+      revertButton = nil;
     }
   return self;
 }
@@ -96,7 +91,6 @@ selectCellWithString: (NSString*)title
   RELEASE(gets);
   RELEASE(sets);
   RELEASE(types);
-  RELEASE(okButton);
   [super dealloc];
 }
 
@@ -197,7 +191,7 @@ selectCellWithString: (NSString*)title
 		}
 	      else
 		{
-		  id	o = [[(id<IB>)NSApp activeDocument] objectForName: v];
+		  id	o = [[(id<IB>)[NSApp delegate] activeDocument] objectForName: v];
 
 		  if (o != nil)
 		    {

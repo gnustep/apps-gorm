@@ -36,22 +36,15 @@
   self = [super init];
   if (self != nil)
     {
-      if ([NSBundle loadNibNamed: @"GormScrollViewAttributesInspector" 
-		    owner: self] == NO)
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      
+      if ([bundle loadNibNamed: @"GormScrollViewAttributesInspector" 
+			 owner: self
+	       topLevelObjects: NULL] == NO)
 	{
-	  
-	  NSDictionary	*table;
-	  NSBundle	*bundle;
-	  table = [NSDictionary dictionaryWithObject: self forKey: @"NSOwner"];
-	  bundle = [NSBundle mainBundle];
-	  if ([bundle loadNibFile: @"GormScrollViewAttributesInspector"
-		      externalNameTable: table
-		      withZone: [self zone]] == NO)
-	    {
-	      NSLog(@"Could not open gorm GormScrollViewAttributesInspector");
-	      NSLog(@"self %@", self);
-	      return nil;
-	    }
+	  NSLog(@"Could not open gorm GormScrollViewAttributesInspector");
+	  NSLog(@"self %@", self);
+	  return nil;
 	}
     }
 

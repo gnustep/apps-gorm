@@ -41,6 +41,7 @@ ifeq ($(GNUSTEP_MAKEFILES),)
   $(error You need to set GNUSTEP_MAKEFILES before compiling!)
 endif
 
+VERSION = 1.4.0
 PACKAGE_NAME = gorm
 export PACKAGE_NAME
 include $(GNUSTEP_MAKEFILES)/common.make
@@ -49,158 +50,21 @@ CVS_MODULE_NAME = gorm
 SVN_MODULE_NAME = gorm
 SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
 
-
-include ./Version
-
 #
 # Each palette is a subproject
 #
 SUBPROJECTS = \
+	InterfaceBuilder \
 	GormObjCHeaderParser \
-	GormLib \
 	GormCore \
-	GormPrefs \
-	Palettes \
-	Plugins
-
-#
-# MAIN APP
-#
-APP_NAME = Gorm
-Gorm_PRINCIPAL_CLASS=Gorm
-Gorm_APPLICATION_ICON=Gorm.tiff
-Gorm_RESOURCE_FILES = \
-	GormInfo.plist \
-	Resources/ClassInformation.plist \
-	Resources/VersionProfiles.plist \
-	Resources/Defaults.plist \
-	Palettes/0Menus/0Menus.palette \
-	Palettes/1Windows/1Windows.palette \
-	Palettes/2Controls/2Controls.palette \
-	Palettes/3Containers/3Containers.palette \
-	Palettes/4Data/4Data.palette \
-	Palettes/5Formatters/5Formatters.palette \
-	Palettes/6GridStack/6GridStack.palette \
-	Plugins/Gorm/Gorm.plugin \
-	Plugins/Nib/Nib.plugin \
-	Plugins/GModel/GModel.plugin \
-	Plugins/Xib/Xib.plugin \
-	Images/GormClass.tiff \
-	Images/GormFilesOwner.tiff \
-	Images/GormFirstResponder.tiff \
-	Images/GormFontManager.tiff \
-	Images/GormImage.tiff \
-	Images/GormWindow.tiff \
-	Images/GormMenu.tiff \
-	Images/GormObject.tiff \
-	Images/GormSound.tiff \
-	Images/GormUnknown.tiff \
-	Images/GormSourceTag.tiff \
-	Images/GormTargetTag.tiff \
-	Images/GormLinkImage.tiff \
-	Images/GormEHCoil.tiff \
-	Images/GormEHLine.tiff \
-	Images/GormEVCoil.tiff \
-	Images/GormEVLine.tiff \
-	Images/GormMHCoil.tiff \
-	Images/GormMHLine.tiff \
-	Images/GormMVCoil.tiff \
-	Images/GormMVLine.tiff \
-        Images/Gorm.tiff \
-	Images/GormFile.tiff \
-	Images/GormNib.tiff \
-	Images/GormPalette.tiff \
-        Images/leftalign_nib.tiff \
-        Images/rightalign_nib.tiff \
-        Images/centeralign_nib.tiff \
-        Images/justifyalign_nib.tiff \
-        Images/naturalalign_nib.tiff \
-	Images/iconAbove_nib.tiff \
-	Images/iconBelow_nib.tiff \
-	Images/iconLeft_nib.tiff \
-	Images/iconOnly_nib.tiff \
-	Images/iconRight_nib.tiff \
-	Images/titleOnly_nib.tiff \
-	Images/line_nib.tiff \
-	Images/bezel_nib.tiff \
-	Images/noBorder_nib.tiff \
-	Images/ridge_nib.tiff \
-	Images/button_nib.tiff \
-	Images/shortbutton_nib.tiff \
-	Images/photoframe_nib.tiff \
-	Images/date_formatter.tiff \
-	Images/number_formatter.tiff \
-	Images/Sunday_seurat.tiff \
-	Images/iconBottomLeft_nib.tiff \
-	Images/iconBottomRight_nib.tiff \
-	Images/iconBottom_nib.tiff \
-	Images/iconCenterLeft_nib.tiff \
-	Images/iconCenterRight_nib.tiff \
-	Images/iconCenter_nib.tiff \
-	Images/iconTopLeft_nib.tiff \
-	Images/iconTopRight_nib.tiff \
-	Images/iconTop_nib.tiff \
-	Images/GormAction.tiff \
-	Images/GormOutlet.tiff \
-	Images/GormActionSelected.tiff \
-	Images/GormOutletSelected.tiff \
-	Images/FileIcon_gmodel.tiff \
-	Images/tabtop_nib.tiff \
-	Images/tabbot_nib.tiff \
-	Images/GormView.tiff \
-	Images/LeftArr.tiff \
-	Images/RightArr.tiff \
-	Images/GormTesting.tiff \
-	Images/outlineView.tiff \
-	Images/browserView.tiff
-
-Gorm_LOCALIZED_RESOURCE_FILES = \
-	GormClassEditor.gorm \
-	GormClassInspector.gorm \
-	GormClassPanel.gorm \
-	GormConnectionInspector.gorm \
-	GormCustomClassInspector.gorm \
-	GormDocument.gorm \
-	GormDummyInspector.gorm \
-	GormFontView.gorm \
-	GormHelpInspector.gorm \
-	Gorm.gorm \
-	GormImageInspector.gorm \
-	GormInconsistenciesPanel.gorm \
-	GormInspectorPanel.gorm \
-	GormObjectInspector.gorm \
-	GormNSSplitViewInspector.gorm \
-	GormPalettePanel.gorm \
-	GormPrefColors.gorm \
-	GormPreferences.gorm \
-	GormPrefGeneral.gorm \
-	GormPrefGuideline.gorm \
-	GormPrefHeaders.gorm \
-	GormPrefPalettes.gorm \
-	GormPrefPlugins.gorm \
-	GormScrollViewAttributesInspector.gorm \
-	GormSetName.gorm \
-	GormShelfPref.gorm \
-	GormSoundInspector.gorm \
-	GormViewSizeInspector.gorm \
-	Gorm.rtfd
-
-Gorm_LANGUAGES = \
-	English
-
-Gorm_HEADERS = 
-
-Gorm_OBJC_FILES = \
-	Gorm.m \
-	main.m 
-
-# Gorm_ADDITIONAL_NATIVE_LIBS = m
+	Plugins \
+	Applications \
+	Tools
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/application.make
 
 -include GNUmakefile.postamble
 

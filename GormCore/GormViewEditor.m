@@ -1205,6 +1205,7 @@ static BOOL currently_displaying = NO;
   NSPasteboard	*pb;
   NSString	*name = [document nameForObject: anObject];
   NSPoint	dragPoint = [theEvent locationInWindow];
+  id            delegate = [NSApp delegate];
   
   if(name != nil)
     {
@@ -1212,10 +1213,10 @@ static BOOL currently_displaying = NO;
       [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
 	  owner: self];
       [pb setString: name forType: GormLinkPboardType];
-      [NSApp displayConnectionBetween: anObject and: nil];
-      [NSApp startConnecting];
+      [delegate displayConnectionBetween: anObject and: nil];
+      [delegate startConnecting];
       
-      [self dragImage: [NSApp linkImage]
+      [self dragImage: [delegate linkImage]
 	    at: dragPoint
 	    offset: NSZeroSize
 	    event: theEvent
@@ -1229,13 +1230,14 @@ static BOOL currently_displaying = NO;
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
+  id            delegate = [NSApp delegate];
   
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: _editedObject];
+      [delegate displayConnectionBetween: [delegate connectSource] 
+				     and: _editedObject];
       return NSDragOperationLink;
     }
   else if ([types firstObjectCommonWithArray: [NSView acceptedViewResourcePasteboardTypes]] != nil)
@@ -1258,13 +1260,14 @@ static BOOL currently_displaying = NO;
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
-  
+  id            delegate = [NSApp delegate];
+
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: nil];
+      [delegate displayConnectionBetween: [delegate connectSource] 
+				     and: nil];
     }
   
 }
@@ -1359,32 +1362,34 @@ static BOOL currently_displaying = NO;
 {
   NSPasteboard	*dragPb;
   NSArray	*types;
-  id            delegate = nil;
   NSPoint       point = [sender draggingLocation];
-
+  id            delegate = [NSApp delegate];
+  id            viewDelegate = nil;
+  
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   
   if ([types containsObject: GormLinkPboardType])
     {
-      [NSApp displayConnectionBetween: [NSApp connectSource] 
-	     and: _editedObject];
-      [NSApp startConnecting];
+      [delegate displayConnectionBetween: [delegate connectSource] 
+				     and: _editedObject];
+      [delegate startConnecting];
     }
-  else if ((delegate = [self _selectDelegate: sender]) != nil)
+  else if ((viewDelegate = [self _selectDelegate: sender]) != nil)
     {
-      if([delegate respondsToSelector: @selector(shouldDrawConnectionFrame)])
+      if([viewDelegate respondsToSelector: @selector(shouldDrawConnectionFrame)])
 	{
-	  if([delegate shouldDrawConnectionFrame])
+	  if([viewDelegate shouldDrawConnectionFrame])
 	    {      
-	      [NSApp displayConnectionBetween: [NSApp connectSource] 
-		     and: _editedObject];      
+	      [delegate displayConnectionBetween: [delegate connectSource] 
+					     and: _editedObject];      
 	    }
 	}
 
-      if([delegate respondsToSelector: @selector(depositViewResourceFromPasteboard:onObject:atPoint:)])
+      if([viewDelegate respondsToSelector:
+	     @selector(depositViewResourceFromPasteboard:onObject:atPoint:)])
 	{
-	  [delegate depositViewResourceFromPasteboard: dragPb
+	  [viewDelegate depositViewResourceFromPasteboard: dragPb
 		    onObject: _editedObject
 		    atPoint: point];
 	  
@@ -1442,9 +1447,14 @@ static BOOL currently_displaying = NO;
 
 - (void) postDraw: (NSRect) rect
 {
-  if ([parent respondsToSelector: @selector(postDrawForView:)])
-    [parent performSelector: @selector(postDrawForView:)
-	    withObject: self];
+  if (parent != nil)
+    {
+      if ([parent respondsToSelector: @selector(postDrawForView:)])
+	{
+	  [parent performSelector: @selector(postDrawForView:)
+		       withObject: self];
+	}
+    }
 }
 
 - (void) drawRect: (NSRect) rect

@@ -69,7 +69,7 @@ NSString *formatVersion(NSInteger version)
 {
   if((self = [super init]) != nil)
     {
-      NSBundle *bundle = [NSBundle mainBundle];
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
       NSString *path = [bundle pathForResource: @"VersionProfiles" ofType: @"plist"];
       versionProfiles = RETAIN([[NSString stringWithContentsOfFile: path] propertyList]);
     }
@@ -87,7 +87,7 @@ NSString *formatVersion(NSInteger version)
 
 + (int) currentVersion
 {
-  return appVersion(1,3,1); 
+  return appVersion(1, 5, 0); 
 }
 
 - (void) awakeFromNib
@@ -184,7 +184,7 @@ NSString *formatVersion(NSInteger version)
   NSMutableDictionary *dict = 
     [NSMutableDictionary dictionary];
   NSRect docLocation = 
-    [[(GormDocument *)[(id<IB>)NSApp activeDocument] window] frame];
+    [[(GormDocument *)[(id<IB>)[NSApp delegate] activeDocument] window] frame];
   NSRect screenRect = [[NSScreen mainScreen] frame];
   NSString *stringRect = [NSString stringWithFormat: @"%d %d %d %d %d %d %d %d",
 				   (int)docLocation.origin.x, (int)docLocation.origin.y, 
@@ -224,6 +224,22 @@ NSString *formatVersion(NSInteger version)
 
   return result;
 		      
+}
+
+/**
+ * Current profile for the current model file.
+ */
+- (NSDictionary *) currentProfile;
+{
+  return currentProfile;
+}
+
+/**
+ * Version information for the model file.
+ */
+- (NSDictionary *) versionProfiles;
+{
+  return versionProfiles;
 }
 
 - (BOOL) loadFromFile: (NSString *)path

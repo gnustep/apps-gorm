@@ -56,8 +56,13 @@ NSImage *browserImage = nil;
 {
   if(self == [GormClassEditor class])
     {
-      outlineImage = [NSImage imageNamed: @"outlineView"];
-      browserImage = [NSImage imageNamed: @"browserView"];
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+      NSString *path = nil;
+
+      path = [bundle pathForImageResource: @"outlineView"];
+      outlineImage = [[NSImage alloc] initWithContentsOfFile: path];
+      path = [bundle pathForImageResource: @"browserView"];
+      browserImage = [[NSImage alloc] initWithContentsOfFile: path];
     }
 }
 
@@ -66,7 +71,9 @@ NSImage *browserImage = nil;
   self = [super init];
   if (self != nil)
     {
-      if([NSBundle loadNibNamed: @"GormClassEditor" owner: self])
+      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
+      if([bundle loadNibNamed: @"GormClassEditor" owner: self topLevelObjects: NULL])
 	{
 	  NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 	  NSRect		 scrollRect = [classesView frame]; //  = {{0, 0}, {340, 188}};
@@ -114,7 +121,7 @@ NSImage *browserImage = nil;
 	  [outlineView setIndentationPerLevel: 10];
 	  [outlineView setAttributeOffset: 30];
 	  [outlineView setRowHeight: 18];
-	  [outlineView setMenu: [(id<Gorm>)NSApp classMenu]]; 
+	  [outlineView setMenu: [(id<GormAppDelegate>)[NSApp delegate] classMenu]]; 
 	  [outlineView setBackgroundColor: color];
 	  
 	  // add the table columns...
@@ -146,7 +153,7 @@ NSImage *browserImage = nil;
 	  RELEASE(tableColumn); 
 	  
 	  // expand all of the items in the classesView...
-	  [outlineView expandItem: @"NSObject"];
+	  // [outlineView expandItem: @"NSObject"];
 	  [outlineView setFrame: scrollRect];
 	  
 	  // allocate the NSBrowser view.
@@ -852,72 +859,13 @@ NSImage *browserImage = nil;
  */
 - (id) instantiateClass: (id)sender
 {
-  NSString *object = [self selectedClassName];
-  GSNibItem *item = nil;
+  NSString *className = [self selectedClassName];
+  NSString *theName = nil;
   
-  if([object isEqualToString: @"FirstResponder"])
+  theName = [document instantiateClassNamed: className];
+  if (theName == nil)
     {
       return nil;
-    }
-
-  if([classManager canInstantiateClassNamed: object] == NO)
-    {
-      return nil;
-    }
-
-  if([classManager isSuperclass: @"NSView" linkedToClass: object] ||
-     [object isEqual: @"NSView"])
-    {
-      Class cls;
-      NSString *className = object;
-      BOOL isCustom = [classManager isCustomClass: object];
-      id instance;
-      
-      if(isCustom)
-	{
-	  className = [classManager nonCustomSuperClassOf: object];
-	}
-      
-      // instantiate the object or it's substitute...
-      cls = NSClassFromString(className);
-      if([cls respondsToSelector: @selector(allocSubstitute)])
-	{
-	  instance = [cls allocSubstitute];
-	}
-      else
-	{
-	  instance = [cls alloc];
-	}
-      
-      // give it some initial dimensions...
-      if([instance respondsToSelector: @selector(initWithFrame:)])
-	{
-	  instance = [instance initWithFrame: NSMakeRect(10,10,380,280)];
-	}
-      else
-	{
-	  instance = [instance init];
-	}
-      
-      // add it to the top level objects...
-      [document attachObject: instance toParent: nil];
-      
-      // we want to record if it's custom or not and act appropriately...
-      if(isCustom)
-	{
-	  NSString *name = [document nameForObject: instance];
-	  [classManager setCustomClass: object
-			forName: name];
-	}
-
-      [document changeToViewWithTag: 0];
-      NSLog(@"Instantiate NSView subclass %@",object);	      
-    }
-  else
-    {
-      item = [[GormObjectProxy alloc] initWithClassName: object];
-      [document attachObject: item toParent: nil];      
-      [document changeToViewWithTag: 0];
     }
   
   return self;
@@ -937,7 +885,7 @@ NSImage *browserImage = nil;
  */
 - (id) loadClass: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", @"m", @"mm", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
 
@@ -974,7 +922,7 @@ NSImage *browserImage = nil;
 			  message,
 			  nil, nil, nil);
 	}
-      NS_ENDHANDLER
+      NS_ENDHANDLER;
     }
 
   return nil;

@@ -3,8 +3,8 @@
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
- * Date:	1999, 2003, 2004
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
+ * Date:	1999, 2003, 2004, 2024
  * 
  * This file is part of GNUstep.
  * 
@@ -26,17 +26,29 @@
 #ifndef INCLUDED_GormObjectEditor_h
 #define INCLUDED_GormObjectEditor_h
 
-#include "GormGenericEditor.h"
+#import "GormGenericEditor.h"
+
+@interface NSObject (GormObjectAdditions)
+
+- (NSImage *) imageForViewer;
+- (NSString *) inspectorClassName;
+- (NSString *) connectInspectorClassName;
+- (NSString *) sizeInspectorClassName;
+- (NSString *) helpInspectorClassName;
+- (NSString *) classInspectorClassName;
+- (NSString *) editorClassName;
+
+@end
 
 @interface GormObjectEditor : GormGenericEditor 
-{
-}
+
 + (void) setEditor: (id)editor forDocument: (id<IBDocuments>)aDocument;
-- (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+- (void) draggedImage: (NSImage *)i endedAt: (NSPoint)p deposited: (BOOL)f;
 - (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)flag;
-- (BOOL) acceptsTypeFromArray: (NSArray*)types;
+- (BOOL) acceptsTypeFromArray: (NSArray *)types;
 - (void) makeSelectionVisible: (BOOL)flag;
 - (void) resetObject: (id)anObject;
+
 @end
 
 #endif

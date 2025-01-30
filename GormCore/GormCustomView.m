@@ -99,7 +99,7 @@
 - (Class) bestPossibleSuperClass
 {
   Class cls = [NSView class];
-  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+  GormClassManager *classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
 
   if([classManager isSuperclass: @"NSView" linkedToClass: className])
     {
@@ -127,7 +127,7 @@
 {
   if([aCoder allowsKeyedCoding])
     {
-      GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+      GormClassManager *classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
       NSString *extension = nil;
       
       ASSIGNCOPY(extension,[classManager nonCustomSuperClassOf: className]);
@@ -248,7 +248,7 @@
 - (Class) bestPossibleSuperClass
 {
   Class cls = [NSView class];
-  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+  GormClassManager *classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
 
   if([classManager isSuperclass: @"NSOpenGLView" linkedToClass: theClass] ||
      [theClass isEqual: @"NSOpenGLView"])
@@ -279,7 +279,7 @@
   id		obj;
   Class		cls;
   NSUInteger    mask;
-  GormClassManager *classManager = [(id<Gorm>)NSApp classManager];
+  GormClassManager *classManager = [(id<GormAppDelegate>)[NSApp delegate] classManager];
   
   [aCoder decodeValueOfObjCType: @encode(id) at: &theClass];
   theFrame = [aCoder decodeRect];
