@@ -312,6 +312,8 @@ static NSImage	*dragImage = nil;
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
+  NSEnumerator   *en = nil;
+  NSString       *paletteName = nil;
   
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
@@ -359,30 +361,24 @@ static NSImage	*dragImage = nil;
   [panel setFrameAutosaveName: @"Palettes"];
   current = -1;
 
+  // Load the palettes...
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"palette"
 					     inDirectory: nil];
-   if ([array count] > 0)
+  array = [array sortedArrayUsingSelector: @selector(compare:)];
+  en = [array objectEnumerator];
+  while ((paletteName = [en nextObject]) != nil)
     {
-      unsigned	index;
-
-      array = [array sortedArrayUsingSelector: @selector(compare:)];
-
-      for (index = 0; index < [array count]; index++)
-	{
-	  [self loadPalette: [array objectAtIndex: index]];
-	}
+      NSDebugLog(@"Built-in palette name = %@", paletteName);
+      [self loadPalette: paletteName];
     }
 
-   // if we have any user palettes load them as well.
-   if(userPalettes != nil)
-     {
-       NSEnumerator *en = [userPalettes objectEnumerator];
-       id paletteName = nil;
-       while((paletteName = [en nextObject]) != nil)
-	 {
-	   [self loadPalette: paletteName];
-	 }
-     }
+  // if we have any user palettes load them as well.
+  en = [userPalettes objectEnumerator];
+  while ((paletteName = [en nextObject]) != nil)
+    {
+      NSDebugLog(@"User palette name = %@", paletteName);
+      [self loadPalette: paletteName];
+    }
 
   /*
    * Select initial palette - this should be the standard controls palette.
@@ -394,6 +390,7 @@ static NSImage	*dragImage = nil;
 	 selector: @selector(handleNotification:)
 	     name: IBWillBeginTestingInterfaceNotification
 	   object: nil];
+
   [nc addObserver: self
 	 selector: @selector(handleNotification:)
 	     name: IBWillEndTestingInterfaceNotification
