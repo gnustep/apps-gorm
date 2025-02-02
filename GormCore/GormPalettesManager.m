@@ -38,16 +38,6 @@
 @end
 
 @implementation	GormPalettePanel
-/*
-- (BOOL) canBecomeKeyWindow
-{
-  return NO;
-}
-- (BOOL) canBecomeMainWindow
-{
-  return YES;
-}
-*/
 @end
 
 @interface GormPaletteView : NSView
@@ -128,11 +118,6 @@ static NSImage	*dragImage = nil;
 
       if (active != nil)
 	{
-          /*
-	  if([active objectForName: @"NSMenu"] != nil && 
-	     [type isEqual: IBMenuPboardType] == YES)
-	    return;
-	  */
 	  [active pasteType: type fromPasteboard: dragPb parent: nil];
 	}
     }
@@ -155,12 +140,14 @@ static NSImage	*dragImage = nil;
  */
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationCopy;;
+  return NSDragOperationCopy;
 }
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   return YES;
 }
+
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
   return YES;
@@ -390,7 +377,7 @@ static NSImage	*dragImage = nil;
 	 selector: @selector(handleNotification:)
 	     name: IBWillBeginTestingInterfaceNotification
 	   object: nil];
-
+  
   [nc addObserver: self
 	 selector: @selector(handleNotification:)
 	     name: IBWillEndTestingInterfaceNotification
@@ -403,6 +390,7 @@ static NSImage	*dragImage = nil;
 {
   int		col = 0;  
   NSBundle	*bundle;
+
   for (col = 0; col < [bundles count]; col++)
     {
       bundle = [bundles objectAtIndex: col];
@@ -411,6 +399,7 @@ static NSImage	*dragImage = nil;
 	  return YES;
 	}
     }
+  
   return NO;
 }
 
@@ -618,6 +607,7 @@ static NSImage	*dragImage = nil;
       [defaults setObject: newUserPalettes forKey: USER_PALETTES];
       return self;
     }
+
   return nil;
 }
 
