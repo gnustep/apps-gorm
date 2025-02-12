@@ -44,20 +44,18 @@ install_libobjc2() {
 install_libdispatch() {
     echo "::group::libdispatch"
     cd $DEPS_PATH
-    # will reference upstream after https://github.com/apple/swift-corelibs-libdispatch/pull/534 is merged
-    git clone -q -b system-blocksruntime https://github.com/ngrewe/swift-corelibs-libdispatch.git libdispatch
+    git clone -q https://github.com/swiftlang/swift-corelibs-libdispatch.git libdispatch
     mkdir libdispatch/build
     cd libdispatch/build
     # -Wno-error=void-pointer-to-int-cast to work around build error in queue.c due to -Werror
-    # -Wno-error=unused-but-set-variable to work around build error in shims/yield.c due to -Werror
     cmake \
       -DBUILD_TESTING=off \
       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
       -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH \
-      -DCMAKE_C_FLAGS="-Wno-error=void-pointer-to-int-cast -Wno-error=unused-but-set-variable" \
+      -DCMAKE_C_FLAGS="-Wno-error=void-pointer-to-int-cast" \
       -DINSTALL_PRIVATE_HEADERS=1 \
       -DBlocksRuntime_INCLUDE_DIR=$INSTALL_PATH/include \
-      -DBlocksRuntime_LIBRARIES=$INSTALL_PATH/$LIBDIR/libobjc.so \
+      -DBlocksRuntime_LIBRARIES=$INSTALL_PATH/lib/libobjc.so \
       ../
     make install
     echo "::endgroup::"
