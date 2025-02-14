@@ -1,3 +1,12 @@
+2025-02-14 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* ANNOUNCE
+	* Documentation/news.texi
+	* GormCore/GormFilePrefsManager.m
+	* GormInfo.plist
+	* NEWS
+	* Version: Release 1.5.0
+
 2024-12-29 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GormCore/English.lproj/GormObjectOutlineView.gorm/data.classes
