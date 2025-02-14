@@ -4,6 +4,17 @@
 @include version.texi
 @end ifset
 
+@section Noteworthy changes in version @samp{1.5.0}
+
+@itemize @bullet
+@item Add outline view that shows object structure.
+@item Enhance parser to handle prpperties.
+@end itemize
+
+@c ====================================================================
+@c Keep the next line just below the list of changes in most recent version.
+@ifclear ANNOUNCE-ONLY
+
 @section Noteworthy changes in version @samp{1.4.0}
 
 @itemize @bullet
