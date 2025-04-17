@@ -31,8 +31,6 @@
 {
   IBOutlet id _tableView;
 }
-
-
 @end
 
-#endif // GormLayeredInspector_H_INCLUDE
+#endif // GormLayeredInspectorController_H_INCLUDE

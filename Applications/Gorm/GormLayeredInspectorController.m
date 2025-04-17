@@ -22,9 +22,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-
+#import <AppKit/NSTableView.h>
 #import "GormLayeredInspectorController.h"
 
 @implementation GormLayeredInspectorController
+
+// Data source
+
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)tableView
+{
+  return 0; // get all inspectors for the selection...
+}
+
+// Delegate
+
+- (NSView *) tableView: (NSTableView *)tableView
+    viewForTableColumn: (NSTableColumn *)tableColumn
+		   row: (NSInteger)row
+{
+  return nil; // given the class and all subclasses, find all inspectors...
+}
 
 @end
