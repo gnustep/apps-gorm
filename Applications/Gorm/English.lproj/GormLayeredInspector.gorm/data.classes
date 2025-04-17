@@ -1,11 +1,11 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
-    GormLayeredInspector = {
+    GormLayeredInspectorController = {
 	Actions = (
 	);
 	Outlets = (
 	    "_tableView"
 	);
-	Super = NSObject;
+	Super = NSViewController;
     };
 }

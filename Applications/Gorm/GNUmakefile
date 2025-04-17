@@ -156,12 +156,12 @@ Gorm_LANGUAGES = \
 Gorm_HEADERS = \
 	GormAppDelegate.h \
 	GormLanguageViewController.h \
-	GormLayeredInspector.h
+	GormLayeredInspectorController.h
 
 Gorm_OBJC_FILES = \
 	GormAppDelegate.m \
 	GormLanguageViewController.m \
-	GormLayeredInspector.m \
+	GormLayeredInspectorController.m \
 	main.m 
 
 -include GNUmakefile.preamble
