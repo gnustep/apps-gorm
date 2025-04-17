@@ -7,7 +7,7 @@
 
 @interface GormLayeredInspector : NSObject
 {
-  IBOutlet id tableView;
+  IBOutlet id _tableView;
 }
 
 
