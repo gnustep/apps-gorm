@@ -30,17 +30,23 @@
 
 @implementation	NSMenu (IBObjectAdditions)
 
+/**
+ * Inspector for menu attributes
+ */
 - (NSString*) inspectorClassName
 {
   return @"GormMenuAttributesInspector";
 }
 
+/**
+ * Menu editor class
+ */
 - (NSString*) editorClassName
 {
   return @"GormMenuEditor";
 }
 
-/*
+/**
  * Method to return the image that should be used to display menus within
  * the matrix containing the objects in a document.
  */
@@ -61,6 +67,9 @@
 
 @implementation	NSMenuItem (IBObjectAdditions)
 
+/**
+ * Inspector class for NSMenuItem instances.
+ */
 - (NSString*) inspectorClassName
 {
   return @"GormMenuItemAttributesInspector";
