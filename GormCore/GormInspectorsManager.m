@@ -493,4 +493,10 @@
   // inspect the object.
   [inspector setObject: [currentMode object]];
 }
+
+- (NSArray *) inspectorsForObject: (id)anObject mode: (NSString *)mode
+{
+  
+}
+
 @end

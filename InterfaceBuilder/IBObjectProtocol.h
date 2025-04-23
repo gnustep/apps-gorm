@@ -27,6 +27,36 @@
 
 #include <InterfaceBuilder/IBDocuments.h>
 
+/**
+ * GNUstep additions to support layered inspectors.
+ */
+@interface NSObject (IBObjectProtocolAdditions)
+/**
+ * Attributes inspector name
+ */
++ (NSString *) inspectorClassName;
+
+/**
+ * Connections inspector name
+ */
++ (NSString *) connectInspectorClassName;
+
+/**
+ * Help inspector name
+ */
++ (NSString *) helpInspectorClassName;
+
+/**
+ * Size inspector name
+ */
++ (NSString *) sizeInspectorClassName;
+
+/**
+ * Class inspector name
+ */
++ (NSString *) classInspectorClassName;
+@end
+
 @protocol IBObjectProtocol
 /**
  * Returns YES, if receiver can be displayed in 

@@ -84,6 +84,32 @@
   return @"GormObjectEditor";
 }
 
+// Class level inspector methods...
++ (NSString*) inspectorClassName
+{
+  return @"GormObjectInspector";
+}
+
++ (NSString*) connectInspectorClassName
+{
+  return @"GormConnectionInspector";
+}
+
++ (NSString*) sizeInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
++ (NSString*) helpInspectorClassName
+{
+  return @"GormNotApplicableInspector";
+}
+
++ (NSString*) classInspectorClassName
+{
+  return @"GormCustomClassInspector";
+}
+
 @end
 
 @implementation NSView (GormObjectAdditions)
