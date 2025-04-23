@@ -23,10 +23,13 @@ INSTALL_TEXT_MAIN = install.texi
 NEWS_TEXI_FILES = version.texi
 NEWS_TEXT_MAIN = news.texi
 
+MAN1_PAGES = gormtool.1
+
 -include Makefile.preamble
 
 -include GNUmakefile.local
 
+include $(GNUSTEP_MAKEFILES)/aggregate.make
 include $(GNUSTEP_MAKEFILES)/documentation.make
 
 -include Makefile.postamble

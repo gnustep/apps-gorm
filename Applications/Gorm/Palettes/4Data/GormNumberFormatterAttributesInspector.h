@@ -41,7 +41,13 @@
   IBOutlet id positiveField;
   IBOutlet id negativeField;
   IBOutlet id zeroField;
+
+  NSMutableArray *_testData;
 }
+
+- (NSMutableArray *) testData;
+- (void) setTestData: (NSMutableArray *)data;
+
 @end
 
 #endif
