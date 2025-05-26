@@ -43,33 +43,159 @@
 }
 @end
 
-/*
-static float findMax(NSData *data)
-{
-  float max = 0.0;
-  NSInteger index = 0;
-  float *array = (float *)[data bytes];
-  NSInteger len = [data length];
+@implementation GormSoundView
 
-  // find the maximum...
-  for(index = 0; index < len; index++)
+- (void)setSamples:(short *)newSamples
+       sampleCount:(NSUInteger)count
+        sampleRate:(float)rate
+{
+  if (_samples)
     {
-      float d = array[index];
-      if(d > max)
-	{
-	  max = d;
-	}
+      free(_samples);
     }
 
-  return max;
-}
-*/
+  _samples = malloc(sizeof(short) * count);
+  if (_samples && newSamples)
+    {
+      memcpy(_samples, newSamples, sizeof(short) * count);
+    }
 
-@implementation GormSoundView
+  _sampleCount = count;
+  _sampleRate = rate;
+
+  [self setNeedsDisplay:YES];
+}
+
+- (BOOL)loadFromSound:(NSSound *)sound
+{
+  NSData *soundData = [sound valueForKey:@"_data"];
+  if (!soundData)
+    {
+      return NO;
+    }
+
+  const void *bytes = [soundData bytes];
+  NSUInteger length = [soundData length];
+
+  if (length < 44)
+    {
+      return NO;
+    }
+
+  const unsigned char *ptr = (const unsigned char *)bytes;
+  if (memcmp(ptr, "RIFF", 4) != 0
+      || memcmp(ptr + 8, "WAVE", 4) != 0)
+    {
+      return NO;
+    }
+
+  int offset = 12;
+  int fmtFound = 0;
+  int dataFound = 0;
+  unsigned short bitsPerSample = 0;
+  unsigned short numChannels = 0;
+  unsigned int sampleRateRead = 0;
+  unsigned int dataSize = 0;
+  short *pcmStart = NULL;
+
+  while (offset + 8 <= length)
+    {
+      char chunkId[5] = {0};
+      memcpy(chunkId, ptr + offset, 4);
+      unsigned int chunkSize = *(unsigned int *)(ptr + offset + 4);
+
+      if (memcmp(chunkId, "fmt ", 4) == 0)
+        {
+          if (chunkSize < 16)
+            {
+              return NO;
+            }
+
+          numChannels = *(unsigned short *)(ptr + offset + 10);
+          sampleRateRead = *(unsigned int *)(ptr + offset + 12);
+          bitsPerSample = *(unsigned short *)(ptr + offset + 22);
+          fmtFound = 1;
+        }
+      else if (memcmp(chunkId, "data", 4) == 0)
+        {
+          dataSize = chunkSize;
+          pcmStart = (short *)(ptr + offset + 8);
+          dataFound = 1;
+          break;
+        }
+
+      offset += 8 + chunkSize;
+    }
+
+  if (!fmtFound
+      || !dataFound
+      || bitsPerSample != 16
+      || numChannels != 1)
+    {
+      return NO;
+    }
+
+  NSUInteger count = dataSize / 2;
+  short *copy = malloc(dataSize);
+  if (!copy)
+    {
+      return NO;
+    }
+  memcpy(copy, pcmStart, dataSize);
+
+  [self setSamples:copy sampleCount:count
+	sampleRate:(float)sampleRateRead];
+  free(copy);
+
+  return YES;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+  NSRect bounds = [self bounds];
+  [[NSColor blackColor] set];
+  NSRectFill(bounds);
+
+  if (!_samples || _sampleCount == 0)
+    {
+      return;
+    }
+
+  [[NSColor greenColor] set];
+
+  NSBezierPath *path = [NSBezierPath bezierPath];
+
+  float midY = bounds.size.height / 2.0;
+  float xScale = bounds.size.width / (float)_sampleCount;
+  float yScale = midY / 32768.0;
+
+  [path moveToPoint:NSMakePoint(0, midY)];
+
+  for (NSUInteger i = 0; i < _sampleCount; ++i)
+    {
+      float x = (float)i * xScale;
+      float y = midY + _samples[i] * yScale;
+      [path lineToPoint:NSMakePoint(x, y)];
+    }
+
+  [path stroke];
+}
+
+- (void)dealloc
+{
+  if (_samples)
+    {
+      free(_samples);
+    }
+
+  [super dealloc];
+}
+
 - (void) setSound: (NSSound *)sound
 {
   NSLog(@"Set sound...");
-  ASSIGN(_sound,sound);
+  ASSIGN(_sound, sound);
+  [self loadFromSound: sound];
   [self setNeedsDisplay: YES];
 }
 
@@ -78,48 +204,4 @@ static float findMax(NSData *data)
   return _sound;
 }
 
-/*
-- (void) drawRect: (NSRect)aRect
-{
-  float w = aRect.size.width;
-  float h = aRect.size.height;
-  float offset = (h/2);
-  NSData *soundData = [_sound data];
-  float *data = 0;
-  float x1 = 0, x2 = 0, y1 = offset, y2 = offset;
-  float max = findMax(soundData);
-  float multiplier = h/max;
-  NSInteger length = [soundData length];
-  NSInteger index = 0;
-  NSInteger step = (length/(int)w);
-
-  [super drawRect: aRect];
-  
-  PSsetrgbcolor(1.0,0,0); // red
-  data = (float *)[soundData bytes];
-  
-  if( length > 2 )
-    {
-
-      x1 = (data[0] * multiplier);
-      y1 = offset; 
-      for(index = step; index < w; index+=step)
-	{
-	  NSInteger i = (int)index;
-	  float d = data[i];
-	  
-	  // calc new position...
-	  x2 = d * multiplier;
-	  y2 = index + offset;
-
-	  PSmoveto(x1,y1);
-	  PSlineto(x2,y2);
-	  
-	  // move to old vars...
-	  x1 = x2;
-	  y1 = y2;
-	}
-    }
-}
-*/
 @end
