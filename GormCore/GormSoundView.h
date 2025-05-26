@@ -26,12 +26,24 @@
 
 /* All Rights reserved */
 
-#include <AppKit/AppKit.h>
+#include <Cocoa/Cocoa.h>
 
 @interface GormSoundView : NSView
 {
+  short *_samples;
+  NSUInteger _sampleCount;
+  float _sampleRate;
   NSSound *_sound;
 }
-- (void)setSound: (NSSound *)sound;
-- (NSSound *)sound;
+
+- (void)setSamples:(short *)newSamples
+       sampleCount:(NSUInteger)count
+        sampleRate:(float)rate;
+
+- (BOOL)loadFromSound:(NSSound *)sound;
+
+- (void) setSound: (NSSound *)sound;
+
+- (NSSound *) sound;
+
 @end

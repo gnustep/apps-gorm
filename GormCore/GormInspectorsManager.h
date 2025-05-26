@@ -40,21 +40,25 @@
 @interface GormInspectorsManager : IBInspectorManager
 {
   IBOutlet NSPanel	 *panel;
-  NSMutableDictionary	 *cache;
   IBOutlet NSPopUpButton *popup;
   IBOutlet NSBox	 *selectionView;
   IBOutlet NSBox         *inspectorView;
+  IBOutlet IBInspector	 *inspector;
+
+  NSMutableDictionary	 *cache;
   NSView		 *buttonView;
   NSString		 *oldInspector;
-  IBOutlet IBInspector	 *inspector;
   int			 current;
   BOOL			 hiddenDuringTest;
   NSRect                 origFrame;
 }
-- (NSPanel*) panel;
+
+- (NSPanel *) panel;
 - (void) setClassInspector;
 - (void) setCurrentInspector: (id)anObject;
 - (void) updateSelection;
+- (NSArray *) inspectorsForObject: (id)anObject mode: (NSString *)mode;
+
 @end
 
 #endif

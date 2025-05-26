@@ -34,24 +34,36 @@
   NSString *identifier;
   NSString *localizedLabel;
   NSString *inspectorClassName;
-  id object;
-  float ordering;
+  id        object;
+  float     ordering;
 }
+
 - (id) initWithIdentifier: (NSString *)ident
                 forObject: (id)obj
            localizedLabel: (NSString *)lab
        inspectorClassName: (NSString *)cn
 		 ordering: (float)ord;
+
 - (void) setIdentifier: (NSString *)ident;
+
 - (NSString *) identifier;
+
 - (void) setObject: (id)obj;
+
 - (id) object;
+
 - (void) setLocalizedLabel: (NSString *)label;
+
 - (NSString *) localizedLabel;
+
 - (void) setInspectorClassName: (NSString *)className;
+
 - (NSString *) inspectorClassName;
+
 - (void) setOrdering: (float)ord;
+
 - (float) ordering;
+
 @end
 
 #endif
