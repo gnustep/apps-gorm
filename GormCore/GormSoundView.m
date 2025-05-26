@@ -193,7 +193,6 @@
 
 - (void) setSound: (NSSound *)sound
 {
-  NSLog(@"Set sound...");
   ASSIGN(_sound, sound);
   [self loadFromSound: sound];
   [self setNeedsDisplay: YES];
