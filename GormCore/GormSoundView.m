@@ -171,7 +171,8 @@
 
   [path moveToPoint:NSMakePoint(0, midY)];
 
-  for (NSUInteger i = 0; i < _sampleCount; ++i)
+  NSUInteger i;
+  for (i = 0; i < _sampleCount; ++i)
     {
       float x = (float)i * xScale;
       float y = midY + _samples[i] * yScale;
