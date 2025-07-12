@@ -27,4 +27,10 @@ Gorm is usable and stable.  Please report bugs [here](https://github.com/gnustep
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Timeline)](https://www.star-history.com/#gnustep/apps-gorm&Timeline)
+<a href="https://www.star-history.com/#gnustep/apps-gorm&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Timeline" />
+ </picture>
+</a>
