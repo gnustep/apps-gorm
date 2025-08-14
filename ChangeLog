@@ -1,3 +1,9 @@
+2025-08-13 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GNUmakefile.postamble
+	* GormCore/GormImageInspector.m
+	* Plugins/GNUmakefile: Fix the image inspector.
+
 2025-02-14 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* ANNOUNCE
