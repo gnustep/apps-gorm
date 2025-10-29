@@ -17,27 +17,28 @@
 - (id) init
 {
   self = [super init];
+
   if (self != nil)
     {
       NSBundle *bundle = [NSBundle bundleForClass: [self class]];
-      
+
       // load the gui...
       if (![bundle loadNibNamed: @"GormImageInspector"
 			  owner: self
 		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormImageInspector");
-	  return nil;
 	}
       else
 	{
-	  [[NSNotificationCenter defaultCenter] 
+	  [[NSNotificationCenter defaultCenter]
 	    addObserver: self
 	    selector: @selector(handleNotification:)
 	    name: IBSelectionChangedNotification
 	    object: nil];
 	}
     }
+
   return self;
 }
 

@@ -257,6 +257,11 @@
     NSMenu = {Actions = ("submenuAction:"); Super = NSObject; }; 
     NSMenuItem = {Outlets = (target); Super = NSObject; }; 
     NSMenuItemCell = {Super = NSButtonCell; }; 
+    NSMovieView = {
+    	Actions = ("copy:","clear:","cut:","gotoBeginning:","gotoEnd:","gotoPosterFrame:","paste:","start:","stepBack:","stepForward:","stop:","undo:","selectAll:");
+	Outlets = ("_statusField");
+	Super = NSView;
+    };
     NSMutableArray = {Super = NSArray; }; 
     NSMutableDictionary = {Super = NSDictionary; }; 
     NSNumberFormatter = {Super = NSFormatter; }; 

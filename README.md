@@ -24,3 +24,13 @@ Gorm is usable and stable.  Please report bugs [here](https://github.com/gnustep
 
 * Icons - Mostly by Andrew Lindsay.  Gorm application icon by Jesse Ross.
 * Code - GormViewKnobs.m adapted from code by Gerrit van Dyk.
+
+## Star History
+
+<a href="https://www.star-history.com/#gnustep/apps-gorm&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=gnustep/apps-gorm&type=Date" />
+ </picture>
+</a>
