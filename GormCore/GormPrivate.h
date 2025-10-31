@@ -126,8 +126,10 @@ extern NSString *GormResizeCellNotification;
   NSString *name;
   NSInteger t;
 }
-
- initWithClassName: (NSString*)n;
+/**
+ * Initialize a class proxy with the specified class name.
+ */
+- (id) initWithClassName: (NSString*)n;
 /**
  * The base class name represented by this proxy.
  */
