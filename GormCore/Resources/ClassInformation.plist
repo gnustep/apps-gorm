@@ -259,7 +259,7 @@
     NSMenuItemCell = {Super = NSButtonCell; }; 
     NSMovieView = {
     	Actions = ("copy:","clear:","cut:","gotoBeginning:","gotoEnd:","gotoPosterFrame:","paste:","start:","stepBack:","stepForward:","stop:","undo:","selectAll:");
-	Outlets = ("_statusField");
+	Outlets = ("_statusField", "_positionField");
 	Super = NSView;
     };
     NSMutableArray = {Super = NSArray; }; 
