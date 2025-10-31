@@ -33,6 +33,9 @@ extern "C" {
 #endif
 
 GS_EXPORT_CLASS
+/**
+ * OCProperty provides OCProperty class or protocol.
+ */
 @interface OCProperty : OCIVar
 
 @end

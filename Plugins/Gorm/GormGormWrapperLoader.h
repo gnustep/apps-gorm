@@ -29,6 +29,9 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * GormGormWrapperLoader provides GormGormWrapperLoader class or protocol.
+ */
 @interface GormGormWrapperLoader : GormWrapperLoader
 {
   NSMutableArray *_repairLog;

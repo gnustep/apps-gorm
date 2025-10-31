@@ -34,6 +34,11 @@
 @class NSArray;
 @class NSView;
 
+/**
+ * IBPlugin is the base class for Interface Builder plugins. Subclass to
+ * contribute library nibs, preferences UI, and behavior for pasteboard-driven
+ * insertion of components into a document.
+ */
 @interface IBPlugin : NSObject
 
 // Getting the shared plugin...

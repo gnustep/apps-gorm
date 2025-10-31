@@ -36,6 +36,9 @@ IB_EXTERN NSString *IBWillSaveDocumentNotification;
 IB_EXTERN NSString *IBDidSaveDocumentNotification;
 IB_EXTERN NSString *IBWillCloseDocumentNotification;
 
+/**
+ * IBDocuments defines IBDocuments class or protocol.
+ */
 @protocol IBDocuments <NSObject>
 /**
  * Add a connection
@@ -235,7 +238,13 @@ IB_EXTERN NSString *IBWillCloseDocumentNotification;
  */
 
 - (NSString *) classForObject: (id)obj;
+/**
+ * Return the list of action method names declared by the specified class.
+ */
 - (NSArray *) actionsOfClass: (NSString *)className;
+/**
+ * Return the list of outlet names declared by the specified class.
+ */
 - (NSArray *) outletsOfClass: (NSString *)className;
 
 @end

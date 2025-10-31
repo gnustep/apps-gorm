@@ -42,21 +42,42 @@
 
 // Special method category smashes so that we can register types...
 
+/**
+ * NSDocumentController provides NSDocumentController class or protocol.
+ */
 @interface NSDocumentController (ToolPrivate)
 
+/**
+ * Performs documentClassForType  operation.
+ */
 - (Class) documentClassForType: (NSString *)type;
+/**
+ * Performs typeFromFileExtension  operation.
+ */
 - (NSString *) typeFromFileExtension: (NSString *)fileExtension;
 
 @end
 
+/**
+ * GormDocument provides GormDocument class or protocol.
+ */
 @interface GormDocument (ToolPrivate)
 
+/**
+ * Class method - provides Performs isNativeType  operation.
+ */
 + (BOOL) isNativeType: (NSString *)type;
 
 @end
 
+/**
+ * GormPlugin provides GormPlugin class or protocol.
+ */
 @interface GormPlugin (ToolPrivate)
 
+/**
+ * Performs registerDocumentTypeName  operation.
+ */
 - (void) registerDocumentTypeName: (NSString *)name
                 humanReadableName: (NSString *)hrName
                     forExtensions: (NSArray *)extensions;

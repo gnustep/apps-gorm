@@ -30,16 +30,31 @@
 
 @class NSString;
 
+/**
+ * ArgPair provides ArgPair class or protocol.
+ */
 @interface ArgPair : NSObject <NSCopying>
 {
   NSString *_argument;
   NSString *_value;
 }
 
+/**
+ * Sets the property value.
+ */
 - (void) setArgument: (NSString *)arg;
+/**
+ * Returns the argument.
+ */
 - (NSString *) argument;
 
+/**
+ * Sets the property value.
+ */
 - (void) setValue: (NSString *)val;
+/**
+ * Returns the value.
+ */
 - (NSString *) value;
 @end
 

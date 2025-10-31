@@ -29,6 +29,9 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCClass provides OCClass class or protocol.
+ */
 @interface OCClass : NSObject
 {
   NSMutableArray        *_ivars;
@@ -41,19 +44,58 @@
   BOOL                   _isCategory;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithString: (NSString *)string;
+/**
+ * Returns the methods.
+ */
 - (NSArray *) methods;
+/**
+ * Adds an object to the collection.
+ */
 - (void) addMethod: (NSString *)name isAction: (BOOL)flag;
+/**
+ * Returns the ivars.
+ */
 - (NSArray *) ivars;
+/**
+ * Adds an object to the collection.
+ */
 - (void) addIVar: (NSString *)name isOutlet: (BOOL)flag;
+/**
+ * Returns the className.
+ */
 - (NSString *) className;
+/**
+ * Sets the property value.
+ */
 - (void) setClassName: (NSString *)name;
+/**
+ * Returns the superClassName.
+ */
 - (NSString *) superClassName;
+/**
+ * Sets the property value.
+ */
 - (void) setSuperClassName: (NSString *)name;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isCategory;
+/**
+ * Sets the property value.
+ */
 - (void) setIsCategory: (BOOL)flag;
+/**
+ * Returns the properties.
+ */
 - (NSArray *) properties;
 
+/**
+ * Returns the parse.
+ */
 - (void) parse;
 
 @end

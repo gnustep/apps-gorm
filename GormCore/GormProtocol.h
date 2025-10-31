@@ -35,35 +35,118 @@
 @class NSMenu;
 @class NSString;
 
+/**
+ * GormAppDelegate defines the protocol that the Gorm application delegate
+ * must implement. It provides methods for managing connections, accessing
+ * managers, and handling various document operations and error conditions.
+ */
 @protocol GormAppDelegate
 
-// Connections
+/**
+ * Returns the source object for the current connection being created.
+ */
 - (id) connectSource;
+
+/**
+ * Returns the destination object for the current connection being created.
+ */
 - (id) connectDestination;
+
+/**
+ * Displays the connection line between the source and destination objects.
+ */
 - (void) displayConnectionBetween: (id)source and: (id)destination;
+
+/**
+ * Returns YES if the application is currently in connection mode, NO otherwise.
+ */
 - (BOOL) isConnecting;
+
+/**
+ * Stops the current connection operation and exits connection mode.
+ */
 - (void) stopConnecting;
 
+/**
+ * Returns the palettes manager instance.
+ */
 - (GormPalettesManager*) palettesManager;
+
+/**
+ * Returns the inspectors manager instance.
+ */
 - (GormInspectorsManager*) inspectorsManager;
+
+/**
+ * Returns the plugin manager instance.
+ */
 - (GormPluginManager*) pluginManager;
 
-// added for classes support
+/**
+ * Returns the class manager instance for managing custom classes.
+ */
 - (GormClassManager*) classManager;
+
+/**
+ * Returns the class menu for the class editor view.
+ */
 - (NSMenu*) classMenu;
 
-// Check if we are in the app or the tool
+/**
+ * Returns YES if running as the command-line gormtool, NO if running as the
+ * Gorm application.
+ */
 - (BOOL) isInTool;
 
-// Delegate methods to handle issues that may occur
+/**
+ * Asks whether an older archive format should be upgraded to the current format.
+ * Returns YES to proceed with upgrade, NO to cancel.
+ */
 - (BOOL) shouldUpgradeOlderArchive;
+
+/**
+ * Asks whether a newer archive format should be loaded. Returns YES to proceed,
+ * NO to cancel.
+ */
 - (BOOL) shouldLoadNewerArchive;
+
+/**
+ * Asks whether connections should be broken when a class is removed. Returns YES
+ * to break connections, NO to keep them.
+ */
 - (BOOL) shouldBreakConnectionsForClassNamed: (NSString *)className;
+
+/**
+ * Asks whether connections should be renamed when a class is renamed. Returns YES
+ * to rename connections, NO to keep original names.
+ */
 - (BOOL) shouldRenameConnectionsForClassNamed: (NSString *)className toClassName: (NSString *)newName;
+
+/**
+ * Asks whether connections should be broken when modifying an action or outlet
+ * label. Returns YES to break connections, NO to keep them.
+ */
 - (BOOL) shouldBreakConnectionsModifyingLabel: (NSString *)name isAction: (BOOL)action prompted: (BOOL)prompted;
+
+/**
+ * Notifies that a class could not be parsed at the specified path.
+ */
 - (void) couldNotParseClassAtPath: (NSString *)path;
+
+/**
+ * Notifies that an exception occurred while parsing a class.
+ */
 - (void) exceptionWhileParsingClass: (NSException *)localException;
+
+/**
+ * Asks whether connections should be broken when reparsing a class. Returns YES
+ * to break connections, NO to keep them.
+ */
 - (BOOL) shouldBreakConnectionsReparsingClass: (NSString *)className;
+
+/**
+ * Notifies that an exception occurred while loading a model file.
+ */
 - (void) exceptionWhileLoadingModel: (NSString *)errorMessage;
 
 @end

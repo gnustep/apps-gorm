@@ -28,6 +28,10 @@
 #include <InterfaceBuilder/IBObjectProtocol.h>
 
 // object additions -- object adopts protocol
+/**
+ * Adds conformance to IBObjectProtocol for all NSObject instances while in
+ * the Interface Builder context.
+ */
 @interface NSObject (IBObjectAdditions) <IBObjectProtocol>
 @end
 

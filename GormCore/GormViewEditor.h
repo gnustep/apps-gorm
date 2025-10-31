@@ -31,6 +31,9 @@
 @class GormPlacementInfo;
 @class GormViewWindow;
 
+/**
+ * GormViewEditor provides the base editor class for editing NSView and its subclasses within the Gorm interface builder. It handles view selection, manipulation, and subview management.
+ */
 @interface GormViewEditor : NSView <IBEditors>
 {
   id<IBDocuments>	            document;
@@ -40,39 +43,106 @@
   GormViewWithSubviewsEditor        *parent;
   GormViewWindow                    *viewWindow;
 }
+/**
+ * Activates the editor and makes it ready for use.
+ */
 - (BOOL) activate;
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithObject: (id)anObject 
 	   inDocument: (id<IBDocuments>)aDocument;
+/**
+ * Closes the editor and releases its resources.
+ */
 - (void) close;
+/**
+ * Deactivates the editor and removes it from the view hierarchy.
+ */
 - (void) deactivate;
+/**
+ * Returns the document that owns this editor.
+ */
 - (id<IBDocuments>) document;
+/**
+ * Returns the object being edited.
+ */
 - (id) editedObject;
+/**
+ * Detaches subviews from the edited view.
+ */
 - (void) detachSubviews;
+/**
+ * Performs post-draw operations after the view is drawn.
+ */
 - (void) postDraw: (NSRect) rect;
+/**
+ * Returns the parent editor if this is a subeditor.
+ */
 - (id) parent;
+/**
+ * Returns an array of currently selected objects.
+ */
 - (NSArray *) selection;
+/**
+ * Selects the specified object or objects.
+ */
 - (void) makeSelectionVisible: (BOOL) value;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isOpened;
+/**
+ * Returns the canBeOpened.
+ */
 - (BOOL) canBeOpened;
+/**
+ * Sets the property value.
+ */
 - (void) setOpened: (BOOL) value;
+/**
+ * Called when the frame of the edited view changes.
+ */
 - (void) frameDidChange: (id) sender;
 @end
 
+/**
+ * GormViewEditor provides the base editor class for editing NSView and its subclasses within the Gorm interface builder. It handles view selection, manipulation, and subview management.
+ */
 @interface GormViewEditor (EditingAdditions)
+/**
+ * Begins editing a text field in response to an event.
+ */
 - (NSEvent *) editTextField: view withEvent: (NSEvent *)theEvent;
 @end
 
+/**
+ * GormViewEditor provides the base editor class for editing NSView and its subclasses within the Gorm interface builder. It handles view selection, manipulation, and subview management.
+ */
 @interface GormViewEditor (IntelligentPlacement)
+/**
+ * Initializes and returns a new instance.
+ */
 - (GormPlacementInfo *) initializeResizingInFrame: (NSView *)view
 						    withKnob: (IBKnobPosition) knob;
+/**
+ * Updates the object's state.
+ */
 - (void) updateResizingWithFrame: (NSRect) frame
 			andEvent: (NSEvent *)theEvent
 		andPlacementInfo: (GormPlacementInfo*) gpi;
+/**
+ * Validate a proposed frame during interactive placement and update snapping
+ * based on the current placement hints and event state.
+ */
 - (void) validateFrame: (NSRect) frame
 	     withEvent: (NSEvent *) theEvent
       andPlacementInfo: (GormPlacementInfo*)gpi;
 @end
 
+/**
+ * GormViewEditor provides the base editor class for editing NSView and its subclasses within the Gorm interface builder. It handles view selection, manipulation, and subview management.
+ */
 @interface GormViewEditor (WindowAndRect)
 /*
  * Pull the window object and it's rect.

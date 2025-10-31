@@ -40,6 +40,10 @@ typedef enum {
 @class NSEvent;
 @class NSNotification;
 
+/**
+ * ArrResizer is an internal view that draws a grab/arrow handle used to
+ * resize the shelf width in the preferences UI.
+ */
 @interface ArrResizer : NSView
 {
   NSImage *arrow;
@@ -47,13 +51,24 @@ typedef enum {
   id controller;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id)initForController:(id)acontroller 
            withPosition:(ArrowPosition)pos;
 
+/**
+ * The arrow position (left or right) this resizer represents.
+ */
 - (ArrowPosition)position;
 
 @end
 
+/**
+ * GormShelfPref implements the Shelf preferences pane. It provides controls
+ * to adjust the icon shelf width and related appearance settings, and returns
+ * the view embedded in the preferences window.
+ */
 @interface GormShelfPref : NSObject 
 {
   IBOutlet id win;

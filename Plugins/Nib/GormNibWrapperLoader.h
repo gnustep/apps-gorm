@@ -31,11 +31,17 @@
 
 #include "GormNibCustomResource.h"
 
+/**
+ * GormNibWrapperLoader provides GormNibWrapperLoader class or protocol.
+ */
 @interface GormNibWrapperLoader : GormWrapperLoader
 {
   NSIBObjectData *_container;
   id _nibFilesOwner;
 }
+/**
+ * Performs isTopLevelObject  operation.
+ */
 - (BOOL) isTopLevelObject: (id)obj;
 @end
 

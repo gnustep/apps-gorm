@@ -29,14 +29,26 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCHeaderParser provides OCHeaderParser class or protocol.
+ */
 @interface OCHeaderParser : NSObject
 {
   NSMutableArray *classes;
   NSString *fileData;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithContentsOfFile: (NSString *)file;
+/**
+ * Returns the classes.
+ */
 - (NSMutableArray *)classes;
+/**
+ * Returns the parse.
+ */
 - (BOOL) parse;
 @end
 

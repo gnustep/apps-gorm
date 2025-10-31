@@ -30,6 +30,10 @@
 
 @class NSView, NSMutableArray;
 
+/**
+ * GormPlacementInfo stores state used when placing and resizing views. It
+ * tracks hint rectangles and recent frames to compute guideline snaps.
+ */
 @interface GormPlacementInfo : NSObject
 {
 @public
@@ -56,6 +60,10 @@ typedef enum _GormHintBorder
   Top, Bottom, Left, Right
 } GormHintBorder;
 
+/**
+ * GormPlacementHint describes a single alignment hint along a border with a
+ * valid range and frame, used to compute snapping while dragging/resizing.
+ */
 @interface GormPlacementHint : NSObject
 {
   GormHintBorder _border;
@@ -64,17 +72,41 @@ typedef enum _GormHintBorder
   float _end;
   NSRect _frame;
 }
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithBorder: (GormHintBorder) border
 	     position: (float) position
 	validityStart: (float) start
 	  validityEnd: (float) end
 		frame: (NSRect) frame;
+/**
+ * Compute the hint rectangle using the given half-distance value.
+ */
 - (NSRect) rectWithHalfDistance: (int) halfDistance;
+/**
+ * Return the absolute distance from this hint to the specified frame.
+ */
 - (int) distanceToFrame: (NSRect) frame;
+/**
+ * The primary position of this hint along its border.
+ */
 - (float) position;
+/**
+ * The start of the valid range for this hint.
+ */
 - (float) start;
+/**
+ * The end of the valid range for this hint.
+ */
 - (float) end;
+/**
+ * The frame rectangle associated with this hint.
+ */
 - (NSRect) frame;
+/**
+ * The border (top, bottom, left, right) where this hint applies.
+ */
 - (GormHintBorder) border;
 @end
 

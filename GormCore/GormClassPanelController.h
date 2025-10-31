@@ -28,6 +28,11 @@
 
 @class NSMutableArray;
 
+/**
+ * GormClassPanelController manages the modal panel used to pick a class name.
+ * It loads the panel UI, presents the available classes in a browser, and
+ * returns the selected class name when the user confirms.
+ */
 @interface GormClassPanelController : NSObject
 {
   id okButton;
@@ -37,8 +42,21 @@
   NSString *className;
   NSMutableArray *allClasses;
 }
+/**
+ * Initialize the controller with a window title and the list of class names
+ * to display in the browser.
+ */
 - (id) initWithTitle: (NSString *)title classList: (NSArray *)classes;
+/**
+ * Confirm the current selection and close the panel.
+ */
 - (void) okButton: (id)sender;
+/**
+ * Update the text field when the user changes the selection in the browser.
+ */
 - (void) browserAction: (id)sender;
+/**
+ * Run the panel modally and return the chosen class name, or nil if cancelled.
+ */
 - (NSString *)runModal;
 @end

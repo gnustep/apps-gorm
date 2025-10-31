@@ -48,18 +48,42 @@
 - (void) handleMouseOnView: (GormViewEditor *) view
 		 withEvent: (NSEvent *) theEvent;
 
+/**
+ * Sets the currently opened subeditor, which is editing a subview within this editor's view.
+ */
 - (void) setOpenedSubeditor: (GormViewWithSubviewsEditor *) newEditor;
+/**
+ * Opens the parent editor of this editor, switching the editing focus to the containing view.
+ */
 - (void) openParentEditor;
+/**
+ * Makes any opened subeditor resign its editing role, closing the subview editing session.
+ */
 - (void) makeSubeditorResign;
+/**
+ * Resets the selection without triggering selection change notifications or updates.
+ */
 - (void) silentlyResetSelection;
+/**
+ * Selects the specified array of objects within this editor's view, updating the selection handles.
+ */
 - (void) selectObjects: (NSArray *) objects;
+/**
+ * Copies the currently selected objects to the pasteboard.
+ */
 - (void) copySelection;
 
 /*
  * Close subeditors of this editor.
  */
 - (void) closeSubeditors;
+/**
+ * Deactivates all currently opened subeditors, preparing them for the parent editor to deactivate.
+ */
 - (void) deactivateSubeditors;
+/**
+ * Changes the font of any selected text-bearing views in the current selection.
+ */
 - (void) changeFont: (id)sender;
 @end
 
