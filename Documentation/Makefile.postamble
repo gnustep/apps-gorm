@@ -14,19 +14,16 @@ include ../Version
 before-all:: version.texi 
 	autogsdoc -MakeFrames YES \
 		  -Project InterfaceBuilder \
-		  -ProjectDescription "GNUstep Interface Builder framework providing protocols and base classes for GUI design tools" \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
 		  ../InterfaceBuilder/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -Project GormCore \
-		  -ProjectDescription "Gorm core framework implementing the GUI interface builder, editors, inspectors, and document management" \
 		  -DocumentationDirectory GormCore \
 		  -Declared GormCore \
 		  ../GormCore/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
 		  -Project GormObjCHeaderParser \
-		  -ProjectDescription "Objective-C header parser for extracting class definitions, actions, and outlets from source files" \
 		  -DocumentationDirectory GormObjCHeaderParser \
 		  -Declared GormObjCHeaderParser \
 		  ../GormObjCHeaderParser/*.h 2> /dev/null
