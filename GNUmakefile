@@ -69,3 +69,10 @@ include $(GNUSTEP_MAKEFILES)/aggregate.make
 -include GNUmakefile.postamble
 
 include $(GNUSTEP_MAKEFILES)/Master/nsis.make
+
+#
+# Documentation generation
+#
+.PHONY: docs
+docs:
+  $(MAKE) -C Documentation
