@@ -37,6 +37,9 @@
 @class NSBox;
 @class IBInspector;
 
+/**
+ * GormInspectorsManager coordinates the inspector panels that display and edit properties of selected objects. It maintains a cache of inspector instances, manages the inspector panel display, and handles switching between different inspector types based on the current selection.
+ */
 @interface GormInspectorsManager : IBInspectorManager
 {
   IBOutlet NSPanel	 *panel;
@@ -51,9 +54,21 @@
   BOOL			 hiddenDuringTest;
   NSRect                 origFrame;
 }
+/**
+ * Returns the panel window that displays the current palette contents.
+ */
 - (NSPanel*) panel;
+/**
+ * Sets the inspector panel to display the class inspector, which shows class hierarchy and allows class editing.
+ */
 - (void) setClassInspector;
+/**
+ * Sets the currently active inspector to the specified inspector object, updating the panel to display that inspector's view.
+ */
 - (void) setCurrentInspector: (id)anObject;
+/**
+ * Updates the inspector panel to reflect the currently selected object or objects, switching to the appropriate inspector type if needed.
+ */
 - (void) updateSelection;
 @end
 

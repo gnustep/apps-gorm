@@ -26,10 +26,23 @@
 
 #include <GormCore/GormViewWithContentViewEditor.h>
 
+/**
+ * GormInternalViewEditor provides editing capabilities for views that contain
+ * an internal content view, such as scroll views and split views.
+ */
 @interface GormInternalViewEditor: GormViewWithContentViewEditor
 {
 }
+
+/**
+ * Destroys the editor and returns an array of the subviews that were being
+ * edited.
+ */
 - (NSArray*) destroyAndListSubviews;
+
+/**
+ * Changes the font of the edited view.
+ */
 - (void) changeFont: (id)sender;
 @end
 

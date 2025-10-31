@@ -43,6 +43,11 @@
 @class GormPluginManager;
 @class NSDockTile;
 
+/**
+ * GormAbstractDelegate serves as the abstract base class for Gorm's application
+ * delegate. It provides core functionality for managing the interface builder
+ * environment including inspectors, palettes, plugins, and the testing mode.
+ */
 @interface GormAbstractDelegate : NSObject <IB, GormAppDelegate, GormServer>
 {
   IBOutlet id            _gormMenu;
@@ -73,13 +78,30 @@
   NSDockTile            *_dockTile;
 }
 
-// testing the interface
+/**
+ * Defers the end of interface testing to allow proper cleanup.
+ */
 - (IBAction) deferredEndTesting: (id) sender;
+
+/**
+ * Begins testing the interface by simulating the application's runtime
+ * environment.
+ */
 - (IBAction) testInterface: (id)sender;
+
+/**
+ * Ends the interface testing mode and returns to editing mode.
+ */
 - (IBAction) endTesting: (id)sender;
 
-// Testing...
+/**
+ * Sets whether the interface is currently in testing mode.
+ */
 - (void) setTestingInterface: (BOOL)testing;
+
+/**
+ * Returns YES if the interface is currently in testing mode, NO otherwise.
+ */
 - (BOOL) isTestingInterface;
 
 @end

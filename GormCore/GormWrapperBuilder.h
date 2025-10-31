@@ -31,21 +31,52 @@
 
 @class NSFileWrapper, GormDocument, NSString, NSMutableDictionary;
 
+/**
+ * GormWrapperBuilder defines the interface for building NSFileWrapper-based
+ * representations of a Gorm document. Implementors produce wrapper content
+ * for specific file types.
+ */
 @protocol GormWrapperBuilder
+/**
+ * Build the dictionary of file wrappers for the document contents.
+ */
 - (NSMutableDictionary *) buildFileWrapperDictionaryWithDocument: (GormDocument *)document;
+/**
+ * Build a top-level NSFileWrapper for the document.
+ */
 - (NSFileWrapper *) buildFileWrapperWithDocument: (GormDocument *)document;
 @end
 
+/**
+ * GormWrapperBuilder is the default implementation of the builder protocol
+ * and provides utilities common to concrete builders.
+ */
 @interface GormWrapperBuilder : NSObject <GormWrapperBuilder>
 {
   GormDocument *document;
 }
+/**
+ * Return the file type identifier (UTI or extension) handled by this builder.
+ */
 + (NSString *) fileType;
 @end
 
+/**
+ * GormWrapperBuilderFactory registers and creates wrapper builders for file
+ * types, returning the appropriate builder instance on demand.
+ */
 @interface GormWrapperBuilderFactory : NSObject
+/**
+ * Return the shared factory instance.
+ */
 + (GormWrapperBuilderFactory *) sharedWrapperBuilderFactory;
+/**
+ * Register a builder implementation class for its supported file type.
+ */
 + (void) registerWrapperBuilderClass: (Class) aClass;
+/**
+ * Return a builder capable of producing a wrapper for the given type.
+ */
 - (id<GormWrapperBuilder>) wrapperBuilderForType: (NSString *) type;
 @end
 

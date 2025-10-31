@@ -2,6 +2,12 @@
 
 #include <AppKit/AppKit.h>
 
+/**
+ * GormFilePrefsManager manages per-file preferences and versioning metadata
+ * for Gorm documents. It handles loading/saving encoded info, selecting
+ * target library versions and archive formats, and maintaining version
+ * profiles.
+ */
 @interface GormFilePrefsManager : NSObject <NSCoding>
 {
   id showIncompatibilities;
@@ -37,32 +43,33 @@
 - (void) selectArchiveType: (id)sender;
 
 /**
- * Loads the encoded file info.
+ * Loads the encoded file info from raw data and updates the manager state.
  */
 - (BOOL) loadFromData: (NSData *)data;
 
 /**
- * Loads the encoded file info.
+ * Loads the encoded file info from a file at the specified path.
  */
 - (BOOL) loadFromFile: (NSString *)path;
 
 /**
- * Saves the encoded file info.
+ * Returns the encoded file info representing the current preferences.
  */
 - (NSData *) data;
 
 /**
- * Saves the encoded file info.
+ * Returns the encoded file info including the current set of open items.
  */
 - (NSData *) nibDataWithOpenItems: (NSArray *)openItems;
 
 /**
- * Saves the encoded file info.
+ * Saves the encoded file info to a file at the specified path.
  */
 - (BOOL) saveToFile: (NSString *)path;
 
 /**
- * Loads the profile.
+ * Loads the version profile with the specified version key and makes it
+ * current for subsequent operations.
  */
 - (void) loadProfile: (NSString *)version;
 
@@ -79,7 +86,7 @@
 - (NSString *)targetVersionName;
 
 /**
- * Which achive type, by name.
+ * The archive type name for the current document (e.g., format variant).
  */
 - (NSString *)archiveTypeName;
 
@@ -106,12 +113,12 @@
 
 // file type...
 /**
- * File type name...
+ * Sets the file type name to record in the encoded info.
  */
 - (void) setFileTypeName: (NSString *)ft;
 
 /**
- * return file type.
+ * Returns the file type name recorded in the encoded info.
  */
 - (NSString *) fileTypeName;
 

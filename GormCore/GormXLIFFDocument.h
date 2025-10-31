@@ -32,6 +32,11 @@
 @class NSXMLDocument;
 @class GormDocument;
 
+/**
+ * GormXLIFFDocument handles import and export of XLIFF translation files
+ * for a Gorm document. It extracts translatable strings and writes a CAT-
+ * friendly XLIFF, and can read translated XLIFF back into the document.
+ */
 @interface GormXLIFFDocument : NSObject
 {
   GormDocument *_gormDocument;

@@ -33,6 +33,11 @@
 
 @class NSBrowser, NSArray, NSMutableArray;
 
+/**
+ * GormConnectionInspector is the inspector used to connect outlets and actions
+ * between objects. It shows existing connections and lets users create or
+ * remove them.
+ */
 @interface GormConnectionInspector : IBInspector
 {
   id			currentConnector;
@@ -43,6 +48,10 @@
   NSBrowser		*oldBrowser;
 }
 
+/**
+ * Update the enabled state and titles of buttons based on the current
+ * selection and connector state.
+ */
 - (void) updateButtons;
 @end
 

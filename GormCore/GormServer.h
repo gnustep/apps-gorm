@@ -23,7 +23,13 @@
 #define	INCLUDED_GormServer_h
 
 @protocol GormServer
+/**
+ * Adds an object to the collection.
+ */
 - (void) addClass: (NSDictionary *)dict;
+/**
+ * Deletes the specified object.
+ */
 - (void) deleteClass: (NSString *)className;
 @end
 

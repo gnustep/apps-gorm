@@ -38,6 +38,11 @@ static NSString	*typeFloat = @"Float";
 static NSString	*typeDouble = @"Double";
 #pragma GCC diagnostic pop
 
+/**
+ * GormObjectInspector displays key-value properties for the selected object
+ * and lets users edit primitive values. It switches its UI depending on the
+ * detected property types.
+ */
 @interface GormObjectInspector : IBInspector
 {
   NSBrowser		*browser;
@@ -49,6 +54,9 @@ static NSString	*typeDouble = @"Double";
   BOOL			isString;
 }
 
+/**
+ * Updates the inspector panel to reflect the currently selected object or objects, switching to the appropriate inspector type if needed.
+ */
 - (void) update: (id)sender;
 
 @end

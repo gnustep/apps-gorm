@@ -33,9 +33,18 @@
 
 @class NSString, NSArray, GormDocument, GormClassManager, NSBrowser;
 
+/** Pasteboard type for class dragging operations. */
 extern NSString *GormClassPboardType;
+
+/** Notification posted when switching between outline and browser views. */
 extern NSString *GormSwitchViewPreferencesNotification;
 
+/**
+ * GormClassEditor provides the interface for viewing and editing class
+ * definitions within a Gorm document. It supports both outline and browser
+ * views for class hierarchies and allows manipulation of class attributes
+ * such as outlets and actions.
+ */
 @interface GormClassEditor : NSView <IBEditors, IBSelectionOwners>
 {
   GormDocument          *document;
@@ -48,28 +57,106 @@ extern NSString *GormSwitchViewPreferencesNotification;
   id                     mainView;
   id                     viewToggle;
 }
+
+/**
+ * Initializes the class editor with the specified document.
+ */
 - (GormClassEditor*) initWithDocument: (GormDocument*)doc;
+
+/**
+ * Returns a class editor instance for the specified document.
+ */
 + (GormClassEditor*) classEditorForDocument: (GormDocument*)doc;
+
+/**
+ * Sets the currently selected class name.
+ */
 - (void) setSelectedClassName: (NSString*)cn;
+
+/**
+ * Returns the name of the currently selected class.
+ */
 - (NSString *) selectedClassName;
+
+/**
+ * Selects the class associated with the given object and optionally enters
+ * edit mode.
+ */
 - (void) selectClassWithObject: (id)obj editClass: (BOOL)flag;
+
+/**
+ * Selects the class associated with the given object.
+ */
 - (void) selectClassWithObject: (id)obj;
+
+/**
+ * Selects the class with the specified name and optionally enters edit mode.
+ */
 - (void) selectClass: (NSString *)className editClass: (BOOL)flag;
+
+/**
+ * Selects the class with the specified name.
+ */
 - (void) selectClass: (NSString *)className;
+
+/**
+ * Returns YES if the current selection is a class, NO otherwise.
+ */
 - (BOOL) currentSelectionIsClass;
+
+/**
+ * Enters edit mode for the currently selected class.
+ */
 - (void) editClass;
-// - (void) createSubclass;
+
+/**
+ * Adds a new attribute (outlet or action) to the currently selected class.
+ */
 - (void) addAttributeToClass;
+
+/**
+ * Deletes the currently selected class or attribute.
+ */
 - (void) deleteSelection;
+
+/**
+ * Returns an array of file types supported by the class editor.
+ */
 - (NSArray *) fileTypes;
 
+/**
+ * Reloads the class data from the document.
+ */
 - (void) reloadData;
+
+/**
+ * Returns YES if the editor is currently in editing mode, NO otherwise.
+ */
 - (BOOL) isEditing;
 
+/**
+ * Creates an instance of the currently selected class.
+ */
 - (id) instantiateClass: (id)sender;
+
+/**
+ * Creates a new subclass of the currently selected class.
+ */
 - (id) createSubclass: (id)sender;
+
+/**
+ * Loads a class from header files into the document.
+ */
 - (id) loadClass: (id)sender;
+
+/**
+ * Creates header and implementation files for the currently selected class.
+ */
 - (id) createClassFiles: (id)sender;
+
+/**
+ * Removes the currently selected class from the document.
+ */
 - (id) removeClass: (id)sender;
 @end
 

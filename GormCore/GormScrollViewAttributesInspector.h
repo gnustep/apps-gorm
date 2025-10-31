@@ -41,10 +41,29 @@
   id horizontalRuler;
   id borderMatrix;
 }
+/**
+ * Updates the scroll view's color-related attribute based on the user's
+ * selection (such as background color or scroller tint).
+ */
 - (void) colorSelected: (id)sender;
+/**
+ * Toggles or updates vertical scrolling settings for the selected scroll view.
+ */
 - (void) verticalSelected: (id)sender;
+/**
+ * Toggles or updates horizontal scrolling settings for the selected scroll view.
+ */
 - (void) horizontalSelected: (id)sender;
+/**
+ * Toggles the visibility of the vertical ruler for the selected scroll view.
+ */
 - (void) verticalRuler: (id)sender;
+/**
+ * Toggles the visibility of the horizontal ruler for the selected scroll view.
+ */
 - (void) horizontalRuler: (id)sender;
+/**
+ * Changes the border style of the selected scroll view.
+ */
 - (void) borderSelected: (id)sender;
 @end

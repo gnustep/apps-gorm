@@ -4,6 +4,10 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
+/**
+ * GormNSSplitViewInspector provides controls for editing NSSplitView
+ * attributes in the inspector, such as orientation and divider style.
+ */
 @interface GormNSSplitViewInspector : IBInspector
 {
   id orientation;

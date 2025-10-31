@@ -32,24 +32,41 @@
 
 @class NSMutableArray, NSBrowser, NSString;
 
-/*
- * Each document has a GormFilesOwner object that is used as a placeholder
- * for the owner of the document.
+/**
+ * GormFilesOwner serves as a placeholder for the owner of a Gorm document.
+ * Each document has a GormFilesOwner object that represents the File's Owner
+ * proxy object which will be replaced at runtime by the actual document owner.
  */
 @interface	GormFilesOwner : NSObject
 {
   NSString	*className;
 }
+
+/**
+ * Returns the class name of the File's Owner.
+ */
 - (NSString*) className;
+
+/**
+ * Sets the class name for the File's Owner.
+ */
 - (void) setClassName: (NSString*)aName;
 @end
 
+/**
+ * GormFilesOwnerInspector provides an inspector interface for configuring
+ * the File's Owner object, including setting its class and managing connections.
+ */
 @interface GormFilesOwnerInspector : IBInspector
 {
   NSBrowser	        *browser;
   NSMutableArray	*classes;
   BOOL		        hasConnections;
 }
+
+/**
+ * Sets the File's Owner class from the browser selection.
+ */
 - (void) takeClassFrom: (id)sender;
 @end
 

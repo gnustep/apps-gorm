@@ -13,14 +13,17 @@ include ../Version
 # Things to do before compiling
 before-all:: version.texi 
 	autogsdoc -MakeFrames YES \
+		  -Project InterfaceBuilder \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
 		  ../InterfaceBuilder/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
+		  -Project GormCore \
 		  -DocumentationDirectory GormCore \
 		  -Declared GormCore \
 		  ../GormCore/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
+		  -Project GormObjCHeaderParser \
 		  -DocumentationDirectory GormObjCHeaderParser \
 		  -Declared GormObjCHeaderParser \
 		  ../GormObjCHeaderParser/*.h 2> /dev/null

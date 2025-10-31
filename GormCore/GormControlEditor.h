@@ -26,6 +26,11 @@
 
 #include <GormCore/GormViewEditor.h>
 
+/**
+ * GormControlEditor provides editing capabilities for NSControl and its
+ * subclasses within the Gorm interface builder. It extends GormViewEditor
+ * to handle control-specific editing operations.
+ */
 @interface GormControlEditor : GormViewEditor
 
 @end

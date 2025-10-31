@@ -29,14 +29,26 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCIVarDecl provides OCIVarDecl class or protocol.
+ */
 @interface OCIVarDecl : NSObject
 {
   NSString *ivarString;
   NSMutableArray *ivars;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithString: (NSString *)string;
+/**
+ * Returns the ivars.
+ */
 - (NSArray *) ivars;
+/**
+ * Returns the parse.
+ */
 - (void) parse;
 @end
 

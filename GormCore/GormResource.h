@@ -34,6 +34,11 @@
 
 @class NSString, NSData;
 
+/**
+ * GormResource represents a document resource (such as an image or sound)
+ * tracked by Gorm. It stores metadata like name, file type, and location,
+ * along with the raw resource data when available.
+ */
 @interface GormResource : NSObject <IBProjectFiles>
 {
   NSString        *name;
@@ -49,31 +54,84 @@
 }
 
 // factory methods
+/**
+ * Creates and returns a resource placeholder for the specified file path.
+ * The returned instance captures metadata; the raw data may be loaded later.
+ */
 + (GormResource *) resourceForPath: (NSString *)path;
+/**
+ * Creates and returns a resource placeholder for the specified file path and
+ * marks whether it resides inside the document wrapper.
+ */
 + (GormResource *) resourceForPath: (NSString *)path inWrapper: (BOOL)flag;
 
 // initialization methods
+/**
+ * Initializes a resource object with the given path.
+ */
 - (id) initWithPath: (NSString *)aPath;
+/**
+ * Initializes a resource object with the given path and wrapper location flag.
+ */
 - (id) initWithPath: (NSString *)aPath
           inWrapper: (BOOL)flag;
+/**
+ * Initializes a resource object with a display name and path.
+ */
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath;
+/**
+ * Initializes a resource object with a display name, path, and wrapper flag.
+ */
 - (id) initWithName: (NSString *)aName
                path: (NSString *)aPath
           inWrapper: (BOOL)flag;
+/**
+ * Initializes a resource object with raw data, a file name, and wrapper flag.
+ */
 - (id) initWithData: (NSData *)aData 
        withFileName: (NSString *)aFileName 
           inWrapper: (BOOL)flag;
 
 // instances methods
+/**
+ * Sets the display name of the resource.
+ */
 - (void) setName: (NSString *)aName;
+/**
+ * Returns the display name of the resource.
+ */
 - (NSString *) name;
+/**
+ * Marks whether this resource is a system resource (not saved with the
+ * document).
+ */
 - (void) setSystemResource: (BOOL)flag;
+/**
+ * Returns YES if this resource is marked as a system resource; NO otherwise.
+ */
 - (BOOL) isSystemResource;
+/**
+ * Marks whether this resource resides inside the document wrapper directory.
+ */
 - (void) setInWrapper: (BOOL)flag;
+/**
+ * Returns YES if this resource resides inside the document wrapper; NO
+ * otherwise.
+ */
 - (BOOL) isInWrapper;
+/**
+ * Sets the raw data for the resource.
+ */
 - (void) setData: (NSData *)data;
+/**
+ * Returns the raw data for the resource, if available.
+ */
 - (NSData *) data;
+/**
+ * Compares the receiver with another object for equality based on resource
+ * identity (such as path, name, or data).
+ */
 - (BOOL) isEqual: (id)object;
 @end
 

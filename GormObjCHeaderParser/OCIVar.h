@@ -29,6 +29,9 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCIVar provides OCIVar class or protocol.
+ */
 @interface OCIVar : NSObject
 {
   NSString              *name;
@@ -36,11 +39,29 @@
   NSString              *ivarString;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithString: (NSString *)string;
+/**
+ * Returns the name.
+ */
 - (NSString *)name;
+/**
+ * Sets the property value.
+ */
 - (void) setName: (NSString *)aName;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isOutlet;
+/**
+ * Sets the property value.
+ */
 - (void) setIsOutlet: (BOOL)flag;
+/**
+ * Returns the parse.
+ */
 - (void) parse;
 @end
 
