@@ -1701,8 +1701,7 @@ NSString* XIBStringFromClass(Class cls)
 	    }
 	  [elem addChild: itemsElem]; // Add to parent element...
 	}
-
-      if ([obj isKindOfClass: [NSMenuItem class]])
+      else if ([obj isKindOfClass: [NSMenuItem class]])
 	{
 	  NSMenu *sm = [obj submenu];
 	  if (sm != nil)
@@ -1711,10 +1710,9 @@ NSString* XIBStringFromClass(Class cls)
 				   withParent: elem];
 	    }
 	}
-
       // Handle special case for popup, we need to add the selected item, and contain them
       // in a "menu" instance which doesn't exist on GNUstep...
-      if ([obj isKindOfClass: [NSPopUpButtonCell class]])
+      else if ([obj isKindOfClass: [NSPopUpButtonCell class]])
 	{
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
@@ -1748,14 +1746,12 @@ NSString* XIBStringFromClass(Class cls)
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
-
-      if ([obj isKindOfClass: [NSTableHeaderView class]])
+      else if ([obj isKindOfClass: [NSTableHeaderView class]])
 	{
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key" stringValue: @"headerView"];
 	  [elem addAttribute: attr];
 	}
-
-      if ([obj isKindOfClass: [NSWindow class]])
+      else if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
 	  NSRect c = [[obj contentView] frame];
@@ -1767,8 +1763,7 @@ NSString* XIBStringFromClass(Class cls)
 	  [self _collectObjectsFromObject: [obj contentView]
 			       withParent: elem];
 	}
-
-      if ([obj isKindOfClass: [NSPanel class]])
+      else if ([obj isKindOfClass: [NSPanel class]])
 	{
 	  NSString *className = NSStringFromClass([obj class]);
 
@@ -1780,8 +1775,7 @@ NSString* XIBStringFromClass(Class cls)
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
 	  [elem addAttribute: attr];
 	}
-
-      if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
+      else if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
 	  id sv = [obj superview];
 
@@ -1853,9 +1847,8 @@ NSString* XIBStringFromClass(Class cls)
 		}
 	    }
 	}
-
       // Add the holding priorities for NSSplitView.  GNUstep doesn't have these so we need to generate it...
-      if ([obj isKindOfClass: [NSSplitView class]])
+      else if ([obj isKindOfClass: [NSSplitView class]])
 	{
 	  [self _addHoldingPrioritiesForSplitView: obj toElement: elem];
 	}
