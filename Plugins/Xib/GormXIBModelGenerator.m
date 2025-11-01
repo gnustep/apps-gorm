@@ -371,7 +371,7 @@ NSString* XIBStringFromClass(Class cls)
 				    @"colorSpaceName", nil],
 			      @"GSNamedColor",
 			   [NSArray arrayWithObjects:
-				      @"wjoteComponent",
+				      @"whiteComponent",
 				    @"colorSpaceName", nil],
 			      @"GSWhiteColor",
 			   [NSArray arrayWithObjects:
@@ -1798,6 +1798,12 @@ NSString* XIBStringFromClass(Class cls)
 		  NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
 		  [elem addAttribute: contentViewAttr];
 		}
+	    }
+
+	  if ([obj respondsToSelector: @selector(frame)])
+	    {
+	      NSRect f = [obj frame];
+	      [self _addRect: f toElement: elem withName: @"frame"];
 	    }
 
 	  if ([obj respondsToSelector: @selector(contentView)])
