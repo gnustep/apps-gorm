@@ -1847,8 +1847,9 @@ NSString* XIBStringFromClass(Class cls)
 		}
 	    }
 	}
+
       // Add the holding priorities for NSSplitView.  GNUstep doesn't have these so we need to generate it...
-      else if ([obj isKindOfClass: [NSSplitView class]])
+      if ([obj isKindOfClass: [NSSplitView class]])
 	{
 	  [self _addHoldingPrioritiesForSplitView: obj toElement: elem];
 	}

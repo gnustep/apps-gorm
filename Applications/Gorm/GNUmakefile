@@ -73,6 +73,7 @@ Gorm_RESOURCE_FILES = \
 	Palettes/2Controls/2Controls.palette \
 	Palettes/3Containers/3Containers.palette \
 	Palettes/4Data/4Data.palette \
+	Palettes/5Toolbar/5Toolbar.palette \
 	Images/FileIcon_gmodel.tiff \
 	Images/GormEHCoil.tiff \
 	Images/GormEHLine.tiff \
@@ -144,6 +145,7 @@ Gorm_RESOURCE_FILES = \
         Images/titleOnly_nib.tiff \
 	Images/LeftArr.tiff \
 	Images/RightArr.tiff \
+	Images/toolbar_nib.tiff \
 
 Gorm_LOCALIZED_RESOURCE_FILES = \
 	Gorm.gorm \
