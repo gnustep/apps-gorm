@@ -25,6 +25,8 @@
 /* All rights reserved */
 
 #import <AppKit/NSToolbar.h>
+#import <AppKit/NSToolbarItem.h>
+
 #import "ToolbarPalette.h"
 
 @implementation ToolbarPalette
@@ -33,9 +35,9 @@
 {
   NSString *toolbarId = @"gnustep.toolbar";
   NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: toolbarId];
-
+  
   // Instantiate template toolbar...
-  [tb setDelegate: nil];
+  [tb setDelegate: self];
   [tb setDisplayMode: NSToolbarDisplayModeIconAndLabel];
   [tb setSizeMode: NSToolbarSizeModeDefault];
   [tb setAllowsUserCustomization: YES];
@@ -47,4 +49,37 @@
 		   with: toolbarButton];
 }
 
+// Delegate
+- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar
+      itemForItemIdentifier: (NSString *)itemIdentifier
+  willBeInsertedIntoToolbar: (BOOL)flag
+{
+  NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier: itemIdentifier];
+  AUTORELEASE(item);
+  return item;
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *)toolbar
+{
+  NSArray *result = [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
+			     NSToolbarSpaceItemIdentifier,
+			     NSToolbarFlexibleSpaceItemIdentifier,
+			     NSToolbarShowColorsItemIdentifier,
+			     NSToolbarShowFontsItemIdentifier,
+			     NSToolbarCustomizeToolbarItemIdentifier,
+			     NSToolbarPrintItemIdentifier, nil];
+  return result;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
+{
+  NSArray *result = [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
+			     NSToolbarSpaceItemIdentifier,
+			     NSToolbarFlexibleSpaceItemIdentifier,
+			     NSToolbarShowColorsItemIdentifier,
+			     NSToolbarShowFontsItemIdentifier,
+			     NSToolbarCustomizeToolbarItemIdentifier,
+			     NSToolbarPrintItemIdentifier, nil];
+  return result;
+}
 @end

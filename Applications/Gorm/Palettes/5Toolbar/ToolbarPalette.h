@@ -30,12 +30,10 @@
 #import <InterfaceBuilder/IBPalette.h>
 #import <AppKit/AppKit.h>
 
-@interface ToolbarPalette : IBPalette
+@interface ToolbarPalette : IBPalette <NSToolbarDelegate>
 {
   IBOutlet id toolbarButton;
 }
-
-
 @end
 
 #endif // ToolbarPalette_H_INCLUDE
