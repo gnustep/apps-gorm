@@ -886,6 +886,7 @@ static NSImage  *fileImage = nil;
 	  NSToolbar *tb = (NSToolbar *)anObject;
 	  if (tb != nil)
 	    {
+	      [self setName: nil forObject: tb]; // assign a name...
 	      [w setToolbar: tb];
 	    }
 	}
