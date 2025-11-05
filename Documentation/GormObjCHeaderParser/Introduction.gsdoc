@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.1//EN" "http://www.gnustep.org/gsdoc-1.1.dtd">
+<gsdoc>
+  <head>
+    <title>GormObjCHeaderParser – Introduction</title>
+    <author name="GNUstep Team" email="discuss@gnu.org"/>
+    <date>$Date$</date>
+    <version>$GORM-VERSION$</version>
+    <abstract>
+      The Objective‑C header parser extracts class, protocol, action, and
+      outlet information from source headers. Gorm uses this to populate
+      class browsers, build connection lists, and assist code generation.
+    </abstract>
+    <keywords>Objective‑C, parser, headers, actions, outlets, class metadata</keywords>
+  </head>
+  <body>
+    <chapter>
+      <heading>Overview</heading>
+      <p>
+        The parser scans header files to discover public interfaces and
+        Interface Builder specific annotations. It produces structured data
+        that Gorm consumes to present available actions and outlets for
+        connections, and to verify that connections remain valid as source
+        evolves.
+      </p>
+    </chapter>
+
+    <chapter>
+      <heading>Use in Gorm</heading>
+      <p>
+        During editing, Gorm refreshes connection metadata using the parser so
+        renames and removals are reflected immediately. This ensures the
+        connection graph stays synchronized with the underlying codebase.
+      </p>
+    </chapter>
+  </body>
+</gsdoc>

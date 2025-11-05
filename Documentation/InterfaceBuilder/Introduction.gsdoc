@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE gsdoc PUBLIC "-//GNUstep//DTD gsdoc 1.1//EN" "http://www.gnustep.org/gsdoc-1.1.dtd">
+<gsdoc>
+  <head>
+    <title>InterfaceBuilder Framework – Introduction</title>
+    <author name="GNUstep Team" email="discuss@gnu.org"/>
+    <date>$Date$</date>
+    <version>$GORM-VERSION$</version>
+    <abstract>
+      InterfaceBuilder provides the protocols, categories, and common types
+      used by Gorm and palette plug‑ins to build, edit, and persist GUI
+      objects. It defines the contracts for editors and documents, resource
+      management, connection modeling, and palette integration.
+    </abstract>
+    <keywords>Interface Builder, IBEditors, IBDocuments, palettes, inspectors, resources, connections</keywords>
+  </head>
+  <body>
+    <chapter>
+      <heading>Overview</heading>
+      <p>
+        The InterfaceBuilder framework defines the core protocol surface area
+        that GUI editing tools rely on. Its primary roles are:
+      </p>
+      <list>
+        <item>
+          <p><strong>Editor and document contracts</strong>: <code>IBEditors</code>
+          and <code>IBDocuments</code> specify how editors present and mutate
+          objects within a document context, handle selection, validation, and
+          activation, and coordinate with inspectors.</p>
+        </item>
+        <item>
+          <p><strong>Resource management</strong>: <code>IBResourceManager</code>
+          describes how editors register pasteboard types, import/export
+          resources, and participate in drag &amp; drop across the workspace.</p>
+        </item>
+        <item>
+          <p><strong>Connection graph</strong>: connector types and related helpers
+          standardize how actions and outlets are discovered, represented, and
+          validated.</p>
+        </item>
+        <item>
+          <p><strong>Palette integration</strong>: <code>IBPalette</code> and
+          related types enable third‑party component libraries to extend the
+          editor with custom widgets, inspectors, and object templates.</p>
+        </item>
+      </list>
+      <p>
+        These APIs are intentionally narrow: concrete behaviors such as
+        rendering, layout handles, and document persistence are provided by
+        higher‑level frameworks like <code>GormCore</code>.
+      </p>
+    </chapter>
+
+    <chapter>
+      <heading>Typical Usage</heading>
+      <p>
+        Implementors of custom editors or palettes adopt the InterfaceBuilder
+        protocols and categories to integrate seamlessly with Gorm. Editors
+        can register their pasteboard types, expose connection points, and
+        receive lifecycle callbacks from the document controller.
+      </p>
+    </chapter>
+  </body>
+</gsdoc>
