@@ -50,6 +50,7 @@ before-all:: version.texi
 after-clean::
 	rm -f *.bak *.cl *.fns *.pr *.log
 	rm -f version.texi
+	rm -rf Gorm GormCore InterfaceBuilder GormObjCHeaderParser
 
 # Things to do before distcleaning
 # before-distclean::
