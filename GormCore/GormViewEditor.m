@@ -1231,7 +1231,8 @@ static BOOL currently_displaying = NO;
   NSPasteboard	*dragPb;
   NSArray	*types;
   id            delegate = [NSApp delegate];
-  
+
+  NSLog(@"Entered...");
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   if ([types containsObject: GormLinkPboardType] == YES)

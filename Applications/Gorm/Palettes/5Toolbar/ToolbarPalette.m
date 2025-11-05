@@ -43,7 +43,7 @@
 
   // Associate the button
   [self associateObject: tb
-		   type: IBWindowPboardType
+		   type: IBViewPboardType
 		   with: toolbarButton];
 }
 

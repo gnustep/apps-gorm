@@ -4,10 +4,10 @@
  * protocol plus additional methods which are useful for managing the
  * contents of the document.
  *
- * Copyright (C) 1999,2002,2003,2004,2005,2020,
+ * Copyright (C) 1999,2002,2003,2004,2005,2020,2025
  *               2021 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2002,2003,2004,2005,2020,2021
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
@@ -875,6 +875,20 @@ static NSImage  *fileImage = nil;
     {
       NSSplitView *sp = (NSSplitView *)anObject;
       [self attachObjects: [sp subviews] toParent: sp];
+    }
+  else if ([anObject isKindOfClass: [NSToolbar class]])
+    {
+      NSLog(@"Adding a toolbar: %@, %@, %@", anObject, aParent, aName);
+      NSWindow *w = [aParent window];
+
+      if (w != nil)
+	{
+	  NSToolbar *tb = (NSToolbar *)anObject;
+	  if (tb != nil)
+	    {
+	      [w setToolbar: tb];
+	    }
+	}
     }
   
   /* 
@@ -2216,9 +2230,12 @@ static void _real_close(GormDocument *self,
 
       while ((win = [enumerator nextObject]) != nil)
 	{
-	  [win setFrameTopLeftPoint: screenPoint];
-	  screenPoint.x += 10;
-	  screenPoint.y -= 10;
+	  if ([win respondsToSelector: @selector(setFrameTopLeftPoint:)])
+	    {
+	      [win setFrameTopLeftPoint: screenPoint];
+	      screenPoint.x += 10;
+	      screenPoint.y -= 10;
+	    }
 	}
     }
   else if([aType isEqualToString: IBViewPboardType]) 

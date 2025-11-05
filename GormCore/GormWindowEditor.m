@@ -354,11 +354,13 @@
 
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
+  NSLog(@"Entered drag");
   return NSDragOperationNone;
 }
 
 - (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
+  NSLog(@"Entered drag update");
   return NSDragOperationNone;
 }
 @end
