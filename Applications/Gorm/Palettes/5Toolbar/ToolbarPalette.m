@@ -33,7 +33,7 @@
 
 - (void) finishInstantiate
 {
-  NSString *toolbarId = @"gnustep.toolbar";
+  NSString *toolbarId = [[NSUUID UUID] UUIDString];
   NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: toolbarId];
   
   // Instantiate template toolbar...
@@ -47,6 +47,26 @@
   [self associateObject: tb
 		   type: IBViewPboardType
 		   with: toolbarButton];
+
+  _allowedItems = [[NSMutableArray alloc]
+		    initWithObjects:
+		      NSToolbarSpaceItemIdentifier,
+		    NSToolbarFlexibleSpaceItemIdentifier,
+		    NSToolbarSeparatorItemIdentifier,
+		    NSToolbarShowColorsItemIdentifier,
+		    NSToolbarShowFontsItemIdentifier,
+		    NSToolbarCustomizeToolbarItemIdentifier,
+		    NSToolbarPrintItemIdentifier, nil];
+  
+  _defaultItems = [[NSMutableArray alloc]
+		    initWithObjects:
+		      NSToolbarSpaceItemIdentifier,
+		    NSToolbarFlexibleSpaceItemIdentifier,
+		    NSToolbarSeparatorItemIdentifier,
+		    NSToolbarShowColorsItemIdentifier,
+		    NSToolbarShowFontsItemIdentifier,
+		    NSToolbarCustomizeToolbarItemIdentifier,
+		    NSToolbarPrintItemIdentifier, nil];
 }
 
 // Delegate
@@ -61,13 +81,7 @@
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *)toolbar
 {
-  NSArray *result = [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
-			     NSToolbarSpaceItemIdentifier,
-			     NSToolbarFlexibleSpaceItemIdentifier,
-			     NSToolbarShowColorsItemIdentifier,
-			     NSToolbarShowFontsItemIdentifier,
-			     NSToolbarCustomizeToolbarItemIdentifier,
-			     NSToolbarPrintItemIdentifier, nil];
+  NSArray *result = [NSArray arrayWithArray: _allowedItems];
   return result;
 }
 

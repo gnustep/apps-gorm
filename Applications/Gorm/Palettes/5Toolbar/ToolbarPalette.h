@@ -33,6 +33,8 @@
 @interface ToolbarPalette : IBPalette <NSToolbarDelegate>
 {
   IBOutlet id toolbarButton;
+  NSMutableArray *_defaultItems;
+  NSMutableArray *_allowedItems;
 }
 @end
 
