@@ -30,12 +30,18 @@ ifeq ($(LN_S_RECURSIVE),)
   LN_S_RECURSIVE = $(LN_S)
 endif
 
-before-all::
+# Generate GormInfo.plist from template before building
+before-all:: GormInfo.plist
+
+GormInfo.plist: GormInfo.plist.in ../../Version
+	@echo "Generating GormInfo.plist from Version file..."
+	@sed -e 's/@VERSION@/$(VERSION)/g' \
+	     GormInfo.plist.in > GormInfo.plist
 
 after-all::
 
 after-clean::
+	@echo "Removing generated GormInfo.plist..."
+	@rm -f GormInfo.plist
 
 after-distclean::
-
-after-clean::
