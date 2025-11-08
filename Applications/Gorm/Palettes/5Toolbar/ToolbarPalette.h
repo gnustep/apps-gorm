@@ -28,13 +28,10 @@
 #define ToolbarPalette_H_INCLUDE
 
 #import <InterfaceBuilder/IBPalette.h>
-#import <AppKit/AppKit.h>
 
-@interface ToolbarPalette : IBPalette <NSToolbarDelegate>
+@interface ToolbarPalette : IBPalette
 {
   IBOutlet id toolbarButton;
-  NSMutableArray *_defaultItems;
-  NSMutableArray *_allowedItems;
 }
 @end
 

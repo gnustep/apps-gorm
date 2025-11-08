@@ -3,4 +3,7 @@
   NibFile = "ToolbarPalette";
   Class = "ToolbarPalette";
   Icon = "ToolbarPalette";
+  SubstituteClasses = {
+    GormNSToolbar = NSToolbar;
+  };
 }

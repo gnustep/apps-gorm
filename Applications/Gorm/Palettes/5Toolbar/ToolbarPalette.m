@@ -24,9 +24,9 @@
 
 /* All rights reserved */
 
-#import <AppKit/NSToolbar.h>
 #import <AppKit/NSToolbarItem.h>
 
+#import "GormNSToolbar.h"
 #import "ToolbarPalette.h"
 
 @implementation ToolbarPalette
