@@ -41,7 +41,8 @@ ifeq ($(GNUSTEP_MAKEFILES),)
   $(error You need to set GNUSTEP_MAKEFILES before compiling!)
 endif
 
-VERSION = 1.5.0
+include ./Version
+
 PACKAGE_NAME = gorm
 export PACKAGE_NAME
 include $(GNUSTEP_MAKEFILES)/common.make
