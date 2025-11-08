@@ -7,3 +7,4 @@
 obj
 derived_src
 *.framework
+*~
