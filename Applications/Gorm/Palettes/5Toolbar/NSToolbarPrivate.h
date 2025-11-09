@@ -1,4 +1,4 @@
-/* GormNSToolbar
+/* NSToolbarPrivate
 
    Copyright (C) 2025 Free Software Foundation, Inc.
 
@@ -24,19 +24,24 @@
 
 /* All rights reserved */
 
-#ifndef GormNSToolbar_H_INCLUDE
-#define GormNSToolbar_H_INCLUDE
+#ifndef NSToolbarPrivate_H_INCLUDE
+#define NSToolbarPrivate_H_INCLUDE
 
 #import <AppKit/NSToolbar.h>
 #import "GormToolbarDelegateProtocol.h"
 
+@class NSArray;
 @class NSMutableArray;
+@class NSString;
 
-@interface GormNSToolbar : NSToolbar <NSToolbarDelegate, GormToolbarDelegateProtocol>
-{
-  NSMutableArray *_allowedItems;
-  NSMutableArray *_defaultItems;
-}
+@interface NSToolbar (Private)
+
+- (void) setIdentifier: (NSString *)identifier;
+- (NSArray *) allowedItemIdentifiers;
+- (NSArray *) defaultItemIdentifiers;
+- (void) setAllowedItemIdentifiers: (NSMutableArray *)items;
+- (void) setDefaultItemIdentifiers: (NSMutableArray *)items;
+
 @end
 
 #endif

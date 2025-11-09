@@ -26,6 +26,8 @@
 #import <AppKit/NSToolbar.h>
 #import <GormCore/GormResourceEditor.h>
 
+#import "NSToolbarPrivate.h"
+
 /**
  * GormToolbarEditor provides editing capabilities for NSToolbar objects
  * within the Gorm palette. It allows users to add, remove, and configure
@@ -35,24 +37,40 @@
 {
   NSToolbar *toolbar;
 }
+
 /**
  * The toolbar being edited.
  */
 - (NSToolbar *)toolbar;
+
 /**
- * Set the toolbar to be edited.
+ * Set the toolbar being edited.
  */
 - (void)setToolbar:(NSToolbar *)aToolbar;
+
 /**
- * Add a new item to the toolbar.
+ * Add an item to the allowed toolbar items.
  */
-- (void)addToolbarItem:(NSToolbarItem *)item;
+- (void)addAllowedToolbarItem:(NSToolbarItem *)item;
+
 /**
- * Remove an item from the toolbar.
+ * Remove an item to the allowed toolbar items.
  */
-- (void)removeToolbarItem:(NSToolbarItem *)item;
+- (void)removeAllowedToolbarItem:(NSToolbarItem *)item;
+
 /**
- * Configure properties of a toolbar item.
+ * Add an item to the default toolbar items.
+ */
+- (void)addDefaultToolbarItem:(NSToolbarItem *)item;
+
+/**
+ * Remove an item to the default toolbar items.
+ */
+- (void)removeDefaultToolbarItem:(NSToolbarItem *)item;
+
+/**
+ * Configure the toolbar items.
  */
 - (void)configureToolbarItem:(NSToolbarItem *)item;
+
 @end

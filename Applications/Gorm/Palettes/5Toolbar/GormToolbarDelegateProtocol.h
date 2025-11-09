@@ -31,12 +31,10 @@
 
 // Allowed items...
 - (void) addAllowedItemIdentifier: (NSString *)identifier;
-- (NSArray *) allowedItemIdentifiers;
 - (void) removeAllowedItemIdentifier: (NSString *)identifier;
 
 // Default items...
 - (void) addDefaultItemIdentifier: (NSString *)identifier;
-- (NSArray *) defaultItemIdentifiers;
 - (void) removeDefaultItemIdentifier: (NSString *)identifier;
 
 @end

@@ -26,74 +26,51 @@
 
 #import <AppKit/NSToolbarItem.h>
 
-#import "GormNSToolbar.h"
+#import "NSToolbarPrivate.h"
 #import "ToolbarPalette.h"
 
 @implementation ToolbarPalette
 
 - (void) finishInstantiate
 {
-  NSString *toolbarId = [[NSUUID UUID] UUIDString];
-  NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: toolbarId];
-  
+  NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: @"temp"];
+  NSMutableArray *array = nil;
+
   // Instantiate template toolbar...
-  [tb setDelegate: self];
   [tb setDisplayMode: NSToolbarDisplayModeIconAndLabel];
   [tb setSizeMode: NSToolbarSizeModeDefault];
   [tb setAllowsUserCustomization: YES];
   [tb setAutosavesConfiguration: YES];
+  [tb setDelegate: nil];
+
+  // Set allowed identifiers...
+  array = [[NSMutableArray alloc]
+			initWithObjects:
+	      NSToolbarSpaceItemIdentifier,
+	    NSToolbarFlexibleSpaceItemIdentifier,
+	    NSToolbarSeparatorItemIdentifier,
+	    NSToolbarShowColorsItemIdentifier,
+	    NSToolbarShowFontsItemIdentifier,
+	    NSToolbarCustomizeToolbarItemIdentifier,
+	    NSToolbarPrintItemIdentifier, nil];
+  [tb setAllowedItemIdentifiers: array];
+
+  // Set default identifiers...
+  array = [[NSMutableArray alloc]
+			initWithObjects:
+	      NSToolbarSpaceItemIdentifier,
+	    NSToolbarFlexibleSpaceItemIdentifier,
+	    NSToolbarSeparatorItemIdentifier,
+	    NSToolbarShowColorsItemIdentifier,
+	    NSToolbarShowFontsItemIdentifier,
+	    NSToolbarCustomizeToolbarItemIdentifier,
+	    NSToolbarPrintItemIdentifier, nil];
+  [tb setDefaultItemIdentifiers: array];
 
   // Associate the button
   [self associateObject: tb
 		   type: IBViewPboardType
 		   with: toolbarButton];
-
-  _allowedItems = [[NSMutableArray alloc]
-		    initWithObjects:
-		      NSToolbarSpaceItemIdentifier,
-		    NSToolbarFlexibleSpaceItemIdentifier,
-		    NSToolbarSeparatorItemIdentifier,
-		    NSToolbarShowColorsItemIdentifier,
-		    NSToolbarShowFontsItemIdentifier,
-		    NSToolbarCustomizeToolbarItemIdentifier,
-		    NSToolbarPrintItemIdentifier, nil];
-  
-  _defaultItems = [[NSMutableArray alloc]
-		    initWithObjects:
-		      NSToolbarSpaceItemIdentifier,
-		    NSToolbarFlexibleSpaceItemIdentifier,
-		    NSToolbarSeparatorItemIdentifier,
-		    NSToolbarShowColorsItemIdentifier,
-		    NSToolbarShowFontsItemIdentifier,
-		    NSToolbarCustomizeToolbarItemIdentifier,
-		    NSToolbarPrintItemIdentifier, nil];
 }
 
-// Delegate
-- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar
-      itemForItemIdentifier: (NSString *)itemIdentifier
-  willBeInsertedIntoToolbar: (BOOL)flag
-{
-  NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier: itemIdentifier];
-  AUTORELEASE(item);
-  return item;
-}
-
-- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *)toolbar
-{
-  NSArray *result = [NSArray arrayWithArray: _allowedItems];
-  return result;
-}
-
-- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
-{
-  NSArray *result = [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
-			     NSToolbarSpaceItemIdentifier,
-			     NSToolbarFlexibleSpaceItemIdentifier,
-			     NSToolbarShowColorsItemIdentifier,
-			     NSToolbarShowFontsItemIdentifier,
-			     NSToolbarCustomizeToolbarItemIdentifier,
-			     NSToolbarPrintItemIdentifier, nil];
-  return result;
-}
 @end

@@ -29,32 +29,46 @@
 
 - (NSToolbar *)toolbar
 {
-    return toolbar;
+  return toolbar;
 }
 
 - (void)setToolbar:(NSToolbar *)aToolbar
 {
-    toolbar = aToolbar;
+  toolbar = aToolbar;
 }
 
-- (void)addToolbarItem:(NSToolbarItem *)item
+- (void)addAllowedToolbarItem:(NSToolbarItem *)item
 {
-    NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items addObject:item];
-    [toolbar setItems:items];
+  NSMutableArray *items = [[toolbar allowedItemIdentifiers] mutableCopy];
+  [items addObject: item];
+  [toolbar setAllowedItemIdentifiers: items];
 }
 
-- (void)removeToolbarItem:(NSToolbarItem *)item
+- (void)removeAllowedToolbarItem:(NSToolbarItem *)item
 {
-    NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items removeObject:item];
-    [toolbar setItems:items];
+  NSMutableArray *items = [[toolbar allowedItemIdentifiers] mutableCopy];
+  [items removeObject: item];
+  [toolbar setAllowedItemIdentifiers: items];
+}
+
+- (void)addDefaultToolbarItem:(NSToolbarItem *)item
+{
+  NSMutableArray *items = [[toolbar defaultItemIdentifiers] mutableCopy];
+  [items addObject: item];
+  [toolbar setDefaultItemIdentifiers: items];
+}
+
+- (void)removeDefaultToolbarItem:(NSToolbarItem *)item
+{
+  NSMutableArray *items = [[toolbar defaultItemIdentifiers] mutableCopy];
+  [items removeObject: item];
+  [toolbar setDefaultItemIdentifiers: items];
 }
 
 - (void)configureToolbarItem:(NSToolbarItem *)item
 {
-    // Present inspector UI for item properties (label, image, action, etc.)
-    // Implementation would depend on Gorm's inspector infrastructure
+  // Present inspector UI for item properties (label, image, action, etc.)
+  // Implementation would depend on Gorm's inspector infrastructure
 }
 
 @end
