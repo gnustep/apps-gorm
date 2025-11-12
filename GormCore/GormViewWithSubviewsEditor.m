@@ -510,27 +510,30 @@
       enumerator = [views objectEnumerator];
       while ((sub = [enumerator nextObject]) != nil)
 	{
-	  NSRect	rect = [sub frame];
-	  
-	  rect.origin = [_editedObject
-			  convertPoint: [sender draggedImageLocation]
-			  fromView: nil];
-	  rect.origin.x = (int) rect.origin.x;
-	  rect.origin.y = (int) rect.origin.y;
-	  rect.size.width = (int) rect.size.width;
-	  rect.size.height = (int) rect.size.height;
-	  [sub setFrame: rect];
-
-	  [_editedObject addSubview: sub];
-	  
-	  {
-	    id editor;
-	    editor = [document editorForObject: sub 
-			       inEditor: self 
-			       create: YES];
-	    [self selectObjects: 
-		    [NSArray arrayWithObject: editor]];
-	  }
+	  if ([sub respondsToSelector: @selector(frame)])
+	    {
+	      NSRect	rect = [sub frame];
+	      
+	      rect.origin = [_editedObject
+			      convertPoint: [sender draggedImageLocation]
+				  fromView: nil];
+	      rect.origin.x = (int) rect.origin.x;
+	      rect.origin.y = (int) rect.origin.y;
+	      rect.size.width = (int) rect.size.width;
+	      rect.size.height = (int) rect.size.height;
+	      [sub setFrame: rect];
+	      
+	      [_editedObject addSubview: sub];
+	      
+	      {
+		id editor;
+		editor = [document editorForObject: sub 
+					  inEditor: self 
+					    create: YES];
+		[self selectObjects: 
+			[NSArray arrayWithObject: editor]];
+	      }
+	    }
 	}
     }
 

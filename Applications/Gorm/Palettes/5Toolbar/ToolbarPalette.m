@@ -29,13 +29,19 @@
 #import "NSToolbarPrivate.h"
 #import "ToolbarPalette.h"
 
+@interface NSToolbar (GormPrivate)
++ (void) _removeToolbarsWithIdentifier: (NSString *)identifier;
+@end
+
 @implementation ToolbarPalette
 
 - (void) finishInstantiate
 {
-  NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: @"temp"];
+  NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: @"gnustep.toolbar"];
   NSMutableArray *array = nil;
 
+  [NSToolbar _removeToolbarsWithIdentifier: @"gnustep.toolbar"]; // uncache the toolbar...
+  
   // Instantiate template toolbar...
   [tb setDisplayMode: NSToolbarDisplayModeIconAndLabel];
   [tb setSizeMode: NSToolbarSizeModeDefault];

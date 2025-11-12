@@ -878,7 +878,7 @@ static NSImage  *fileImage = nil;
     }
   else if ([anObject isKindOfClass: [NSToolbar class]])
     {
-      NSLog(@"Adding a toolbar: %@, %@, %@", anObject, aParent, aName);
+      NSDebugLog(@"Adding a toolbar: %@, %@, %@", anObject, aParent, aName);
       NSWindow *w = [aParent window];
 
       if (w != nil)
