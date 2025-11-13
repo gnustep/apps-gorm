@@ -33,7 +33,9 @@ PALETTE_NAME = 5Toolbar
 5Toolbar_OBJC_FILES = \
 	ToolbarPalette.m \
 	GormToolbarEditor.m \
+	GormToolbarAttributesInspector.m \
 	NSToolbarPrivate.m \
+	inspectors.m
 
 5Toolbar_RESOURCE_FILES = \
 	ToolbarPalette.tiff \
