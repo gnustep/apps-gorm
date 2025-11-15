@@ -1840,37 +1840,31 @@
 }
 
 /*
- *  Helper method to merge outlets, removing duplicates
+ *  Helper method to merge two arrays, removing duplicates
  */
-- (NSMutableArray *) mergeOutlets: (NSArray *)newOutlets 
-                     withExisting: (NSArray *)existingOutlets
+- (NSMutableArray *) mergeUniqueStringsFromArray: (NSArray *)array1 
+                                        andArray: (NSArray *)array2
 {
-  NSMutableArray *merged = [NSMutableArray arrayWithArray: existingOutlets];
+  NSMutableArray *merged = [NSMutableArray array];
+  NSEnumerator *enum1 = [array1 objectEnumerator];
+  NSEnumerator *enum2 = [array2 objectEnumerator];
+  NSString *item = nil;
   
-  for (NSString *outlet in newOutlets)
+  // Add all items from first array
+  while ((item = [enum1 nextObject]) != nil)
     {
-      if (![merged containsObject: outlet])
+      if (![merged containsObject: item])
         {
-          [merged addObject: outlet];
+          [merged addObject: item];
         }
     }
   
-  return merged;
-}
-
-/*
- *  Helper method to merge actions, removing duplicates
- */
-- (NSMutableArray *) mergeActions: (NSArray *)newActions 
-                     withExisting: (NSArray *)existingActions
-{
-  NSMutableArray *merged = [NSMutableArray arrayWithArray: existingActions];
-  
-  for (NSString *action in newActions)
+  // Add all items from second array
+  while ((item = [enum2 nextObject]) != nil)
     {
-      if (![merged containsObject: action])
+      if (![merged containsObject: item])
         {
-          [merged addObject: action];
+          [merged addObject: item];
         }
     }
   
@@ -1959,9 +1953,9 @@
                         }
                     }
                   
-                  // Merge outlets and actions
-                  outlets = [self mergeOutlets: outlets withExisting: existingOutlets];
-                  actions = [self mergeActions: actions withExisting: existingActions];
+                  // Merge outlets and actions, removing duplicates
+                  outlets = [self mergeUniqueStringsFromArray: outlets andArray: existingOutlets];
+                  actions = [self mergeUniqueStringsFromArray: actions andArray: existingActions];
                   
                   break;
                 }
