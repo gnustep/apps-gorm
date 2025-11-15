@@ -34,7 +34,17 @@ extern "C" {
 
 GS_EXPORT_CLASS
 @interface GormToolbarAttributesInspector : IBInspector
-
+{
+  IBOutlet id _allowedItems;
+  IBOutlet id _allowsCustomization;
+  IBOutlet id _autosaves;
+  IBOutlet id _defaultItems;
+  IBOutlet id _displayMode;
+  IBOutlet id _showsBaselineSeparator;
+  IBOutlet id _sizeMode;
+  IBOutlet id _visible;
+  IBOutlet id _identifier; 
+}
 @end
 
 #if	defined(__cplusplus)

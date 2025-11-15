@@ -1,0 +1,19 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormToolbarAttributesInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    "_allowedItems",
+	    "_allowsCustomization",
+	    "_autosaves",
+	    "_defaultItems",
+	    "_displayMode",
+	    "_showsBaselineSeparator",
+	    "_sizeMode",
+	    "_visible",
+	    "_identifier"
+	);
+	Super = IBInspector;
+    };
+}
