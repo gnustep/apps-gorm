@@ -1777,7 +1777,109 @@
 
 
 /*
+ *  Helper method to extract existing method implementation from source file
+ */
+- (NSString *) extractMethodImplementationForAction: (NSString *)actionName
+                                         fromSource: (NSString *)sourceContent
+{
+  // Find the method signature
+  NSString *methodStart = [NSString stringWithFormat: @"- (IBAction) %@ (id)sender", actionName];
+  NSRange startRange = [sourceContent rangeOfString: methodStart];
+  
+  if (startRange.location == NSNotFound)
+    {
+      // Try with different whitespace variations
+      methodStart = [NSString stringWithFormat: @"-(IBAction)%@(id)sender", actionName];
+      startRange = [sourceContent rangeOfString: methodStart];
+      
+      if (startRange.location == NSNotFound)
+        {
+          return nil;
+        }
+    }
+  
+  // Find the opening brace
+  NSRange searchRange = NSMakeRange(startRange.location, 
+                                    [sourceContent length] - startRange.location);
+  NSRange openBraceRange = [sourceContent rangeOfString: @"{" 
+                                                options: 0 
+                                                  range: searchRange];
+  
+  if (openBraceRange.location == NSNotFound)
+    {
+      return nil;
+    }
+  
+  // Find the matching closing brace
+  NSUInteger pos = openBraceRange.location + 1;
+  NSUInteger braceCount = 1;
+  NSUInteger maxLength = [sourceContent length];
+  
+  while (pos < maxLength && braceCount > 0)
+    {
+      unichar c = [sourceContent characterAtIndex: pos];
+      if (c == '{')
+        {
+          braceCount++;
+        }
+      else if (c == '}')
+        {
+          braceCount--;
+        }
+      pos++;
+    }
+  
+  if (braceCount == 0)
+    {
+      NSRange methodRange = NSMakeRange(startRange.location, 
+                                        pos - startRange.location);
+      return [sourceContent substringWithRange: methodRange];
+    }
+  
+  return nil;
+}
+
+/*
+ *  Helper method to merge outlets, removing duplicates
+ */
+- (NSMutableArray *) mergeOutlets: (NSArray *)newOutlets 
+                     withExisting: (NSArray *)existingOutlets
+{
+  NSMutableArray *merged = [NSMutableArray arrayWithArray: existingOutlets];
+  
+  for (NSString *outlet in newOutlets)
+    {
+      if (![merged containsObject: outlet])
+        {
+          [merged addObject: outlet];
+        }
+    }
+  
+  return merged;
+}
+
+/*
+ *  Helper method to merge actions, removing duplicates
+ */
+- (NSMutableArray *) mergeActions: (NSArray *)newActions 
+                     withExisting: (NSArray *)existingActions
+{
+  NSMutableArray *merged = [NSMutableArray arrayWithArray: existingActions];
+  
+  for (NSString *action in newActions)
+    {
+      if (![merged containsObject: action])
+        {
+          [merged addObject: action];
+        }
+    }
+  
+  return merged;
+}
+
+/*
  *  create .m & .h files for a class
+ *  If files exist, merge with existing content
  */
 - (BOOL) makeSourceAndHeaderFilesForClass: (NSString *)className 
 				 withName: (NSString *)sourcePath
@@ -1793,6 +1895,10 @@
   int			i;
   int			n;
   NSDictionary          *classInfo = [_classInformation objectForKey: className];
+  NSFileManager         *fm = [NSFileManager defaultManager];
+  BOOL                  headerExists = [fm fileExistsAtPath: headerPath];
+  BOOL                  sourceExists = [fm fileExistsAtPath: sourcePath];
+  NSMutableDictionary   *existingMethodImpls = [NSMutableDictionary dictionary];
 
   headerFile = [NSMutableString stringWithCapacity: 200];
   sourceFile = [NSMutableString stringWithCapacity: 200];
@@ -1802,6 +1908,90 @@
   [outlets addObjectsFromArray: [classInfo objectForKey: @"ExtraOutlets"]]; 
   actions = [[classInfo objectForKey: @"Actions"] mutableCopy]; 
   [actions addObjectsFromArray: [classInfo objectForKey: @"ExtraActions"]]; 
+  
+  // If header exists, parse it to get existing outlets and actions
+  if (headerExists)
+    {
+      OCHeaderParser *parser = [[OCHeaderParser alloc] initWithContentsOfFile: headerPath];
+      if (parser && [parser parse])
+        {
+          NSArray *classes = [parser classes];
+          NSEnumerator *classEnum = [classes objectEnumerator];
+          OCClass *cls = nil;
+          
+          while ((cls = [classEnum nextObject]) != nil)
+            {
+              if ([[cls className] isEqualToString: className])
+                {
+                  NSMutableArray *existingOutlets = [NSMutableArray array];
+                  NSMutableArray *existingActions = [NSMutableArray array];
+                  NSEnumerator *ivarEnum = [[cls ivars] objectEnumerator];
+                  NSEnumerator *propEnum = [[cls properties] objectEnumerator];
+                  NSEnumerator *methodEnum = [[cls methods] objectEnumerator];
+                  OCIVar *ivar = nil;
+                  OCProperty *property = nil;
+                  OCMethod *method = nil;
+                  
+                  // Extract existing ivars (outlets)
+                  while ((ivar = [ivarEnum nextObject]) != nil)
+                    {
+                      if ([ivar isOutlet])
+                        {
+                          [existingOutlets addObject: [ivar name]];
+                        }
+                    }
+                  
+                  // Extract existing properties (outlets)
+                  while ((property = [propEnum nextObject]) != nil)
+                    {
+                      if ([property isOutlet])
+                        {
+                          [existingOutlets addObject: [property name]];
+                        }
+                    }
+                  
+                  // Extract existing methods (actions)
+                  while ((method = [methodEnum nextObject]) != nil)
+                    {
+                      if ([method isAction])
+                        {
+                          [existingActions addObject: [method name]];
+                        }
+                    }
+                  
+                  // Merge outlets and actions
+                  outlets = [self mergeOutlets: outlets withExisting: existingOutlets];
+                  actions = [self mergeActions: actions withExisting: existingActions];
+                  
+                  break;
+                }
+            }
+          RELEASE(parser);
+        }
+    }
+  
+  // If source exists, extract existing method implementations
+  if (sourceExists)
+    {
+      NSString *existingSource = [NSString stringWithContentsOfFile: sourcePath
+                                                           encoding: NSUTF8StringEncoding
+                                                              error: NULL];
+      if (existingSource)
+        {
+          NSEnumerator *actionEnum = [actions objectEnumerator];
+          NSString *action = nil;
+          
+          while ((action = [actionEnum nextObject]) != nil)
+            {
+              NSString *implementation = [self extractMethodImplementationForAction: action
+                                                                         fromSource: existingSource];
+              if (implementation)
+                {
+                  [existingMethodImpls setObject: implementation forKey: action];
+                }
+            }
+        }
+    }
   
   // header file comments...
   [headerFile appendString: @"/* All rights reserved */\n\n"];
@@ -1836,12 +2026,22 @@
     {
       actionName = [actions objectAtIndex: i];
       [headerFile appendFormat: @"- (IBAction) %@ (id)sender;\n", actionName];
-      [sourceFile appendFormat:
-	@"- (IBAction) %@ (id)sender\n"
-	@"{\n"
-	@"}\n"
-	@"\n"
-	, [actions objectAtIndex: i]];
+      
+      // Check if we have an existing implementation
+      NSString *existingImpl = [existingMethodImpls objectForKey: actionName];
+      if (existingImpl)
+        {
+          [sourceFile appendFormat: @"%@\n\n", existingImpl];
+        }
+      else
+        {
+          [sourceFile appendFormat:
+            @"- (IBAction) %@ (id)sender\n"
+            @"{\n"
+            @"}\n"
+            @"\n"
+            , actionName];
+        }
     }
   [headerFile appendFormat: @"\n@end\n\n"];
   [headerFile appendString: [NSString stringWithFormat: @"#endif // %@_H_INCLUDE\n", className]];
