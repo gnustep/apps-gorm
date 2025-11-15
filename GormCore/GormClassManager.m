@@ -1840,6 +1840,65 @@
 }
 
 /*
+ *  Helper method to determine the best import statement for a superclass
+ */
+- (NSString *) importStatementForSuperClass: (NSString *)superClassName
+{
+  // Check if it's a standard AppKit class
+  NSArray *appKitClasses = [NSArray arrayWithObjects:
+    @"NSObject", @"NSResponder", @"NSView", @"NSControl", @"NSButton",
+    @"NSTextField", @"NSWindow", @"NSPanel", @"NSWindowController",
+    @"NSViewController", @"NSDocument", @"NSCell", @"NSActionCell",
+    @"NSButtonCell", @"NSTextFieldCell", @"NSMatrix", @"NSBrowser",
+    @"NSTableView", @"NSOutlineView", @"NSScrollView", @"NSClipView",
+    @"NSSplitView", @"NSBox", @"NSTabView", @"NSImageView", @"NSSlider",
+    @"NSProgressIndicator", @"NSColorWell", @"NSDatePicker", @"NSComboBox",
+    @"NSPopUpButton", @"NSSegmentedControl", @"NSSearchField", @"NSSecureTextField",
+    @"NSTextView", @"NSText", @"NSMenu", @"NSMenuItem", @"NSToolbar",
+    @"NSToolbarItem", @"NSDrawer", @"NSStepper", @"NSLevelIndicator",
+    nil];
+  
+  // Check if it's a standard Foundation class
+  NSArray *foundationClasses = [NSArray arrayWithObjects:
+    @"NSArray", @"NSMutableArray", @"NSDictionary", @"NSMutableDictionary",
+    @"NSString", @"NSMutableString", @"NSNumber", @"NSValue", @"NSData",
+    @"NSMutableData", @"NSSet", @"NSMutableSet", @"NSDate", @"NSCalendar",
+    @"NSTimer", @"NSThread", @"NSLock", @"NSCondition", @"NSOperation",
+    @"NSOperationQueue", @"NSNotificationCenter", @"NSUserDefaults",
+    nil];
+  
+  // Check if it's an InterfaceBuilder class
+  NSArray *ibClasses = [NSArray arrayWithObjects:
+    @"IBDocument", @"IBEditor", @"IBInspector", @"IBPalette",
+    @"IBObjectAdditions", @"IBViewAdditions", @"IBEditors",
+    nil];
+  
+  if ([appKitClasses containsObject: superClassName])
+    {
+      return @"#import <AppKit/AppKit.h>\n";
+    }
+  else if ([foundationClasses containsObject: superClassName])
+    {
+      return @"#import <Foundation/Foundation.h>\n";
+    }
+  else if ([ibClasses containsObject: superClassName])
+    {
+      return @"#import <InterfaceBuilder/InterfaceBuilder.h>\n";
+    }
+  else if ([self isKnownClass: superClassName])
+    {
+      // It's a custom class - check if we can find its header
+      // Look for it in the same project
+      return [NSString stringWithFormat: @"#import \"%@.h\"\n", superClassName];
+    }
+  else
+    {
+      // Unknown class, use AppKit as default
+      return @"#import <AppKit/AppKit.h>\n";
+    }
+}
+
+/*
  *  Helper method to merge two arrays, removing duplicates
  */
 - (NSMutableArray *) mergeUniqueStringsFromArray: (NSArray *)array1 
@@ -1992,7 +2051,12 @@
   [sourceFile appendString: @"/* All rights reserved */\n\n"];
   [headerFile appendString: [NSString stringWithFormat: @"#ifndef %@_H_INCLUDE\n", className]];
   [headerFile appendString: [NSString stringWithFormat: @"#define %@_H_INCLUDE\n\n", className]];
-  [headerFile appendString: @"#import <AppKit/AppKit.h>\n\n"];
+  
+  // Add appropriate import for superclass
+  NSString *superClassName = [self superClassNameForClassNamed: className];
+  [headerFile appendString: [self importStatementForSuperClass: superClassName]];
+  [headerFile appendString: @"\n"];
+  
   if ([[headerPath stringByDeletingLastPathComponent]
     isEqualToString: [sourcePath stringByDeletingLastPathComponent]])
     {
@@ -2005,7 +2069,7 @@
 	headerPath];      
     }
   [headerFile appendFormat: @"@interface %@ : %@\n{\n", className,
-	      [self superClassNameForClassNamed: className]];
+	      superClassName];
   [sourceFile appendFormat: @"@implementation %@\n\n", className];
   
   n = [outlets count]; 
