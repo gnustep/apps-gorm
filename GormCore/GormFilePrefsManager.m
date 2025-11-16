@@ -38,6 +38,7 @@
 #include <GNUstepBase/GSObjCRuntime.h>
 #include <GNUstepGUI/GSGormLoading.h>
 
+#include "GormVersion.h"
 #include "GormFilePrefsManager.h"
 #include "GormFunctions.h"
 #include "GormDocument.h"
@@ -87,7 +88,7 @@ NSString *formatVersion(NSInteger version)
 
 + (int) currentVersion
 {
-  return appVersion(1, 5, 0); 
+  return appVersion(GORM_MAJOR_VERSION, GORM_MINOR_VERSION, GORM_SUBMINOR_VERSION); 
 }
 
 - (void) awakeFromNib

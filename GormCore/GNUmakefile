@@ -38,6 +38,7 @@ SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
+	GormVersion.h \
 	GormAbstractDelegate.h \
 	GormBoxEditor.h \
 	GormClassEditor.h \
