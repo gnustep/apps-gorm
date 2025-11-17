@@ -40,6 +40,7 @@ PALETTE_NAME = 5Toolbar
 5Toolbar_RESOURCE_FILES = \
 	ToolbarPalette.tiff \
 	ToolbarPalette.gorm \
+	GormToolbarAttributesInspector.gorm \
 	palette.table
 
 5Toolbar_STANDARD_INSTALL = no

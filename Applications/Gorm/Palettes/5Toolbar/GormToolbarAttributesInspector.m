@@ -26,6 +26,20 @@
 
 @implementation GormToolbarAttributesInspector
 
+- (id) init
+{
+  if ([super init] == nil)
+    return nil;
+
+  if ([NSBundle loadNibNamed: @"GormToolbarAttributesInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not load GormToolbarAttributesInspector");
+      return nil;
+    }
+
+  return self;
+}
+
 - (IBAction) ok: (id)sender
 {
   [super ok: sender];
