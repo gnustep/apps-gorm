@@ -43,7 +43,7 @@ GS_EXPORT_CLASS
   IBOutlet id _showsBaselineSeparator;
   IBOutlet id _sizeMode;
   IBOutlet id _visible;
-  IBOutlet id _identifier; 
+  IBOutlet id _identifier;
 }
 @end
 

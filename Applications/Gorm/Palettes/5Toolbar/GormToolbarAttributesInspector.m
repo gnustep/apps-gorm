@@ -26,5 +26,11 @@
 
 @implementation GormToolbarAttributesInspector
 
+- (IBAction) ok: (id)sender
+{
+  [super ok: sender];
+  NSLog(@"Touched...");
+}
+
 @end
 
