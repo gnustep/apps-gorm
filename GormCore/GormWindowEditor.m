@@ -325,8 +325,8 @@
 
 - (NSUInteger) selectionCount
 {
-  NSDebugLog(@"selectionCount");
-  return  0;
+  // Defer to superclass, which tracks window/editor selection properly.
+  return [super selectionCount];
 }
 
 - (void) selectObjects: (NSArray *)objects
