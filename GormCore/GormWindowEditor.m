@@ -24,15 +24,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
+#import <AppKit/NSToolbar.h>
 
-#include "GormPrivate.h"
-#include "GormViewWithContentViewEditor.h"
-#include "GormInternalViewEditor.h"
-#include "GormViewKnobs.h"
-#include "GormWindowEditor.h"
+#import "GormPrivate.h"
+#import "GormViewWithContentViewEditor.h"
+#import "GormInternalViewEditor.h"
+#import "GormViewKnobs.h"
+#import "GormWindowEditor.h"
 
-#include <math.h>
+#import <math.h>
 
 #define _EO ((NSWindow *)_editedObject)
 
@@ -77,8 +78,13 @@
 
 @end
 
+/*
+ * Private function...
+ */
 @interface NSWindow (GormWindowEditorAdditions)
+
 - (void) unsetInitialFirstResponder;
+
 @end
 
 @implementation NSWindow (GormWindowEditorAdditions)
@@ -321,6 +327,18 @@
 {
   NSDebugLog(@"selectionCount");
   return  0;
+}
+
+- (void) selectObjects: (NSArray *)objects
+{
+  id obj = [objects firstObject];
+
+  if ([obj isKindOfClass: [NSToolbar class]])
+    {
+      NSLog(@"Toolbar = %@", obj);
+    }
+
+  [super selectObjects: objects];
 }
 
 - (void) validateEditing

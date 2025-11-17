@@ -35,6 +35,40 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSWindow
+/*
+ * Intercept mouse events at the window level so we can detect clicks in the
+ * title/toolbar chrome (which views/editors don't receive). When the user
+ * clicks in the area above the contentView and the window has a toolbar,
+ * select the NSToolbar so the toolbar inspector opens.
+ */
+- (void) sendEvent: (NSEvent *)event
+{
+  if ([event type] == NSLeftMouseDown)
+    {
+      NSToolbar *tb = [self toolbar];
+      if (tb != nil)
+        {
+          NSPoint p = [event locationInWindow];
+          NSView *cv = [self contentView];
+          NSRect contentInWindow = [cv convertRect: [cv bounds] toView: nil];
+	  
+          // Clicks at or above the top edge of the content view occur in the window chrome
+          if (p.y >= NSMaxY(contentInWindow))
+            {
+              id<IBDocuments> document = [(id<IB>)[NSApp delegate] documentForObject: self];
+              id editor = [document editorForObject: self create: NO];
+
+              if ([editor respondsToSelector: @selector(selectObjects:)])
+                {
+                  [editor selectObjects: [NSArray arrayWithObject: tb]];
+                }
+            }
+        }
+    }
+
+  [super sendEvent: event];
+}
+
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;
