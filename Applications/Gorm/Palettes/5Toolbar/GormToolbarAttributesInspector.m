@@ -260,6 +260,52 @@
 
 // MARK: - Helper Methods for Managing Items
 
+- (NSString *) stringValueForTag: (NSInteger)tag
+{
+  NSString *result = nil;
+
+  /*
+  APPKIT_EXPORT NSString *NSToolbarSeparatorItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarSpaceItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarFlexibleSpaceItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarShowColorsItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarShowFontsItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarCustomizeToolbarItemIdentifier;
+  APPKIT_EXPORT NSString *NSToolbarPrintItemIdentifier;
+  */
+
+  if (tag == 0)
+    {
+      result = NSToolbarSeparatorItemIdentifier;
+    }
+  else if (tag == 1)
+    {
+      result = NSToolbarSpaceItemIdentifier;
+    }
+  else if (tag == 2)
+    {
+      result = NSToolbarFlexibleSpaceItemIdentifier;
+    }
+  else if (tag == 3)
+    {
+      result = NSToolbarShowColorsItemIdentifier;
+    }
+  else if (tag == 4)
+    {
+      result = NSToolbarShowFontsItemIdentifier;
+    }
+  else if (tag == 5)
+    {
+      result = NSToolbarCustomizeToolbarItemIdentifier;
+    }
+  else if (tag == 6)
+    {
+      result = NSToolbarPrintItemIdentifier;
+    }
+
+  return result;
+}
+
 - (IBAction) addAllowedItem: (id)sender
 {
   NSToolbar *toolbar = (NSToolbar *)object;
@@ -274,9 +320,15 @@
     }
   
   // Add a placeholder item identifier
-  [items addObject: @"NewItemIdentifier"];
-  [toolbar setAllowedItemIdentifiers: items];
-  RELEASE(items);
+  NSInteger tag = [[_defaultButton selectedItem] tag];
+  NSString *identifier = [self stringValueForTag: tag];
+
+  if ([items containsObject: identifier] == NO)
+    {
+      [items addObject: identifier];
+      [toolbar setAllowedItemIdentifiers: items];
+      RELEASE(items);
+    }
   
   [_allowedItems reloadData];
   [self touch: self];
@@ -316,9 +368,15 @@
     }
   
   // Add a placeholder item identifier
-  [items addObject: @"NewItemIdentifier"];
-  [toolbar setDefaultItemIdentifiers: items];
-  RELEASE(items);
+  NSInteger tag = [[_defaultButton selectedItem] tag];
+  NSString *identifier = [self stringValueForTag: tag];
+
+  if ([items containsObject: identifier] == NO)
+    {
+      [items addObject: identifier];
+      [toolbar setDefaultItemIdentifiers: items];
+      RELEASE(items);
+    }
   
   [_defaultItems reloadData];
   [self touch: self];

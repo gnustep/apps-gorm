@@ -26,6 +26,8 @@
 	    "_sizeMode",
 	    "_visible",
 	    "_identifier",
+	    "_allowedButton",
+	    "_defaultButton",
 	    "_allowedItems",
 	    "_allowsCustomization",
 	    "_autosaves",
@@ -34,7 +36,9 @@
 	    "_showsBaselineSeparator",
 	    "_sizeMode",
 	    "_visible",
-	    "_identifier"
+	    "_identifier",
+	    "_allowedButton",
+	    "_defaultButton"
 	);
 	Super = IBInspector;
     };

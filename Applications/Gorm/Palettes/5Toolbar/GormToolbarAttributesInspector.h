@@ -46,6 +46,8 @@ GS_EXPORT_CLASS
   IBOutlet id _sizeMode;
   IBOutlet id _visible;
   IBOutlet id _identifier;
+  IBOutlet id _allowedButton;
+  IBOutlet id _defaultButton;
 }
 
 - (IBAction) addAllowedItem: (id)sender;
