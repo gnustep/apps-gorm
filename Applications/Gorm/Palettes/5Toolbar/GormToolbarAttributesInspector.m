@@ -46,5 +46,11 @@
   NSLog(@"Touched...");
 }
 
+- (IBAction) revert: (id)sender
+{
+  [super revert: sender];
+  NSLog(@"Revert...");
+}
+
 @end
 
