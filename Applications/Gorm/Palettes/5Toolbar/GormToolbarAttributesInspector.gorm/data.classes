@@ -1,9 +1,31 @@
 {
     "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "addAllowedItem:",
+	    "addDefaultItem:",
+	    "removeAllowedItem:",
+	    "removeDefaultItem:"
+	);
+	Super = NSObject;
+    };
     GormToolbarAttributesInspector = {
 	Actions = (
+	    "addAllowedItem:",
+	    "removeAllowedItem:",
+	    "addDefaultItem:",
+	    "removeDefaultItem:"
 	);
 	Outlets = (
+	    "_allowedItems",
+	    "_allowsCustomization",
+	    "_autosaves",
+	    "_defaultItems",
+	    "_displayMode",
+	    "_showsBaselineSeparator",
+	    "_sizeMode",
+	    "_visible",
+	    "_identifier",
 	    "_allowedItems",
 	    "_allowsCustomization",
 	    "_autosaves",
