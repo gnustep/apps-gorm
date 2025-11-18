@@ -275,6 +275,10 @@
 		  NSRect rect = GormExtBoundsForRect([o frame]);
 		  [edit_view displayRect: rect];
 		}
+	      else if ([o isKindOfClass: [NSToolbar class]])
+		{
+		  // Add selection logic for toolbar here...
+		}
 	    }
 	  [[self window] enableFlushWindow];
 	  [[self window] flushWindowIfNeeded];
@@ -337,7 +341,7 @@
 
   if ([obj isKindOfClass: [NSToolbar class]])
     {
-      NSLog(@"Toolbar = %@", obj);
+      NSDebugLog(@"Toolbar = %@", obj);
     }
 
   [super selectObjects: objects];

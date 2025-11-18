@@ -44,11 +44,17 @@
 - (void) awakeFromNib
 {
   // Setup...
+  NSLog(@"_allowedItems = %@", _allowedItems);
+  NSLog(@"_defaultItems = %@", _defaultItems);
+
   [_allowedItems setDelegate: self];
   [_defaultItems setDelegate: self];
 
-  NSLog(@"_allowedItems = %@", _allowedItems);
-  NSLog(@"_defaultItems = %@", _defaultItems);
+  [_allowedItems setDataSource: self];
+  [_defaultItems setDataSource: self];
+
+  [_allowedItems reloadData];
+  [_defaultItems reloadData];
 }
 
 - (void) setObject: (id)anObject
