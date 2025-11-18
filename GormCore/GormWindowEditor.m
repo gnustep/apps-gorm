@@ -264,15 +264,17 @@
     {
       if ([selection count] > 0)
 	{
-	  NSEnumerator	*enumerator = [selection objectEnumerator];
-	  NSView	*view;
+	  NSEnumerator *enumerator = [selection objectEnumerator];
+	  id o = nil;
 
 	  [[self window] disableFlushWindow];
-	  while ((view = [enumerator nextObject]) != nil)
+	  while ((o = [enumerator nextObject]) != nil)
 	    {
-	      NSRect	rect = GormExtBoundsForRect([view frame]);
-
-	      [edit_view displayRect: rect];
+	      if ([o respondsToSelector: @selector(frame)])
+		{
+		  NSRect rect = GormExtBoundsForRect([o frame]);
+		  [edit_view displayRect: rect];
+		}
 	    }
 	  [[self window] enableFlushWindow];
 	  [[self window] flushWindowIfNeeded];
