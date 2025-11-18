@@ -40,6 +40,16 @@
   return self;
 }
 
+- (void) awakeFromNib
+{
+  // Setup...
+  [_allowedItems setDelegate: self];
+  [_defaultItems setDelegate: self];
+
+  NSLog(@"_allowedItems = %@", _allowedItems);
+  NSLog(@"_defaultItems = %@", _defaultItems);
+}
+
 - (IBAction) ok: (id)sender
 {
   [super ok: sender];

@@ -26,6 +26,8 @@
 #define _GormToolbarAttributesInspector_h_INCLUDE
 
 #import <InterfaceBuilder/IBInspector.h>
+#import <AppKit/NSTableView.h>
+
 #import <GNUstepBase/GSVersionMacros.h>
 
 #if	defined(__cplusplus)
@@ -33,7 +35,7 @@ extern "C" {
 #endif
 
 GS_EXPORT_CLASS
-@interface GormToolbarAttributesInspector : IBInspector
+@interface GormToolbarAttributesInspector : IBInspector <NSTableViewDelegate, NSTableViewDataSource>
 {
   IBOutlet id _allowedItems;
   IBOutlet id _allowsCustomization;
