@@ -24,6 +24,7 @@
 
 /* All rights reserved */
 
+#import <AppKit/NSView.h>
 #import "NSToolbarPrivate.h"
 
 @implementation NSToolbar (Private)
@@ -52,6 +53,11 @@
 - (void) setDefaultItemIdentifiers: (NSMutableArray *)items
 {
   ASSIGN(_interfaceBuilderDefaultItemIdentifiers, items);
+}
+
+- (id) toolbarView
+{
+  return _toolbarView;
 }
 
 @end

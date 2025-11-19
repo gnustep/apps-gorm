@@ -41,6 +41,8 @@
   NSMutableArray *array = nil;
 
   [NSToolbar _removeToolbarsWithIdentifier: @"gnustep.toolbar"]; // uncache the toolbar...
+
+  [originalWindow setTitle: @"Toolbar"];
   
   // Instantiate template toolbar...
   [tb setDisplayMode: NSToolbarDisplayModeIconAndLabel];

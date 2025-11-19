@@ -32,6 +32,7 @@
 #import "GormInternalViewEditor.h"
 #import "GormViewKnobs.h"
 #import "GormWindowEditor.h"
+#import "NSToolbarPrivate.h"
 
 #import <math.h>
 
@@ -277,9 +278,9 @@
 		}
 	      else if ([o isKindOfClass: [NSToolbar class]])
 		{
-		  NSView *tbView = nil; // get the toolbar view...
+		  NSView *tbView = [o toolbarView]; // get the toolbar view...
 		  NSRect rect = GormExtBoundsForRect([tbView frame]);
-		  // Add selection logic for toolbar here...
+		  [edit_view displayRect: rect];
 		}
 	    }
 	  [[self window] enableFlushWindow];

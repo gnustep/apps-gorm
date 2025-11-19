@@ -41,6 +41,7 @@
 - (NSArray *) defaultItemIdentifiers;
 - (void) setAllowedItemIdentifiers: (NSMutableArray *)items;
 - (void) setDefaultItemIdentifiers: (NSMutableArray *)items;
+- (id) toolbarView;
 
 @end
 
