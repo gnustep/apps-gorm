@@ -196,16 +196,22 @@
 {
   if (flag == YES && selected != nil)
     {
-      unsigned	pos = [objects indexOfObjectIdenticalTo: selected];
-      int	r = pos / [self numberOfColumns];
-      int	c = pos % [self numberOfColumns];
+      unsigned pos = [objects indexOfObjectIdenticalTo: selected];
+      unsigned num = [self numberOfColumns];
 
-      [self selectCellAtRow: r column: c];
+      if (num > 0)
+	{
+	  int	r = pos / num;
+	  int	c = pos % num;
+
+	  [self selectCellAtRow: r column: c];
+	}
     }
   else
     {
       [self deselectAllCells];
     }
+
   [self displayIfNeeded];
   [[self window] flushWindow];
 }

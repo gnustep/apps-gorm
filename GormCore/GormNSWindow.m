@@ -49,19 +49,42 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
       if (tb != nil)
         {
           NSPoint p = [event locationInWindow];
-          NSView *cv = [self contentView];
-          NSRect contentInWindow = [cv convertRect: [cv bounds] toView: nil];
-	  
-          // Clicks at or above the top edge of the content view occur in the window chrome
-          if (p.y >= NSMaxY(contentInWindow))
+          // Prefer precise hit-testing against the actual toolbar view rect.
+          id tv = nil;
+          if ([tb respondsToSelector: @selector(toolbarView)])
             {
-              id<IBDocuments> document = [(id<IB>)[NSApp delegate] documentForObject: self];
-              id editor = [document editorForObject: self create: NO];
+              tv = [tb performSelector: @selector(toolbarView)];
+            }
 
-              if ([editor respondsToSelector: @selector(selectObjects:)])
+          if ([tv isKindOfClass: [NSView class]])
+            {
+              NSRect toolbarInWindow = [(NSView *)tv convertRect:[(NSView *)tv bounds] toView:nil];
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+              NSDebugLog(@"Toolbar hit-test: click=(%.1f, %.1f) toolbarRect=(%.1f, %.1f, %.1f, %.1f)",
+                         p.x, p.y,
+                         toolbarInWindow.origin.x, toolbarInWindow.origin.y,
+                         toolbarInWindow.size.width, toolbarInWindow.size.height);
+#endif
+              if (NSPointInRect(p, toolbarInWindow))
                 {
-                  [editor selectObjects: [NSArray arrayWithObject: tb]];
+                  id<IBDocuments> document = [(id<IB>)[NSApp delegate] documentForObject: self];
+                  id editor = [document editorForObject: tb create: YES];
+                  if ([editor respondsToSelector: @selector(selectObjects:)])
+                    {
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+                      NSDebugLog(@"Toolbar selection routed to GormToolbarEditor");
+#endif
+                      [editor selectObjects: [NSArray arrayWithObject: tb]];
+                    }
                 }
+            }
+          else
+            {
+              // Fallback: if toolbar view is unavailable, avoid broad chrome selection.
+              // Do nothing to prevent titlebar clicks from selecting the toolbar.
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+              NSDebugLog(@"Toolbar hit-test fallback: toolbar view unavailable");
+#endif
             }
         }
     }
