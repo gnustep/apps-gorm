@@ -42,8 +42,6 @@
 
   [NSToolbar _removeToolbarsWithIdentifier: @"gnustep.toolbar"]; // uncache the toolbar...
 
-  [originalWindow setTitle: @"Toolbar"];
-  
   // Instantiate template toolbar...
   [tb setDisplayMode: NSToolbarDisplayModeIconAndLabel];
   [tb setSizeMode: NSToolbarSizeModeDefault];
@@ -79,6 +77,8 @@
   [self associateObject: tb
 		   type: IBViewPboardType
 		   with: toolbarButton];
+
+  [originalWindow setTitle: @"Toolbar"];
 }
 
 @end
