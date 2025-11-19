@@ -118,6 +118,7 @@ GormCore_HEADER_FILES = \
 	GormXLIFFDocument.h \
 	GormXLIFFDocument.h \
 	GormXLIFFDocument.h \
+	NSToolbarPrivate.h \
 
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
@@ -191,6 +192,7 @@ GormCore_OBJC_FILES = \
 	GormPrefController.m \
 	GormShelfPref.m \
 	GormXLIFFDocument.m \
+	NSToolbarPrivate.m \
 
 GormCore_RESOURCE_FILES = \
 	Images/GormActionSelected.tiff \

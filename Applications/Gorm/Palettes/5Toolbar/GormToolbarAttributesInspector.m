@@ -23,7 +23,7 @@
 */
 
 #import "GormToolbarAttributesInspector.h"
-#import "NSToolbarPrivate.h"
+#import <GormCore/NSToolbarPrivate.h>
 
 @implementation GormToolbarAttributesInspector
 

@@ -277,6 +277,8 @@
 		}
 	      else if ([o isKindOfClass: [NSToolbar class]])
 		{
+		  NSView *tbView = nil; // get the toolbar view...
+		  NSRect rect = GormExtBoundsForRect([tbView frame]);
 		  // Add selection logic for toolbar here...
 		}
 	    }

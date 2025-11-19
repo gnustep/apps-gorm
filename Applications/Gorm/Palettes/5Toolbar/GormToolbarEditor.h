@@ -24,9 +24,9 @@
  */
 
 #import <AppKit/NSToolbar.h>
-#import <GormCore/GormResourceEditor.h>
 
-#import "NSToolbarPrivate.h"
+#import <GormCore/GormResourceEditor.h>
+#import <GormCore/NSToolbarPrivate.h>
 
 /**
  * GormToolbarEditor provides editing capabilities for NSToolbar objects

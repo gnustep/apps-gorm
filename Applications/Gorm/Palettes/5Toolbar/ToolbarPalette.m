@@ -25,8 +25,8 @@
 /* All rights reserved */
 
 #import <AppKit/NSToolbarItem.h>
+#import <GormCore/NSToolbarPrivate.h>
 
-#import "NSToolbarPrivate.h"
 #import "ToolbarPalette.h"
 
 @interface NSToolbar (GormPrivate)
