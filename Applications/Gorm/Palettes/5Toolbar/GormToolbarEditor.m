@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2025 Free Software Foundation, Inc.
  *
- * Author: Your Name <your@email.com>
+ * Author: Gregory Casamento <greg.casamento@gmail.com>
  *
  * This file is part of GNUstep.
  *
