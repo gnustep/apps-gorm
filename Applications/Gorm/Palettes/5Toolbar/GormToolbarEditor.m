@@ -71,4 +71,90 @@
   // Implementation would depend on Gorm's inspector infrastructure
 }
 
+
+- (void) mouseDown: (NSEvent *)theEvent
+{
+  /*
+  // Check if we're clicking on a knob for resizing
+  BOOL onKnob = NO;
+  
+  if ([parent respondsToSelector: @selector(selection)] &&
+      [[parent selection] containsObject: _editedObject])
+    {
+      IBKnobPosition knob = IBNoneKnobPosition;
+      NSPoint mouseDownPoint = [self convertPoint: [theEvent locationInWindow]
+                                         fromView: nil];
+      knob = GormKnobHitInRect([self bounds], mouseDownPoint);
+      if (knob != IBNoneKnobPosition)
+        {
+          onKnob = YES;
+        }
+    }
+  
+  if (onKnob == YES)
+    {
+      if (parent)
+        return [parent mouseDown: theEvent];
+      else
+        return [self noResponderFor: @selector(mouseDown:)];
+    }
+  */
+  // Otherwise handle as a regular selection/connection event
+  [super mouseDown: theEvent];
+}
+
+/*
+- (void) postDraw: (NSRect)rect
+{
+  // Draw selection knobs if this toolbar is selected
+  if ([parent respondsToSelector: @selector(selection)] &&
+      [[parent selection] containsObject: _editedObject])
+    {
+      NSRect bounds = [self bounds];
+      GormDrawKnobsForRect(bounds);
+    }
+  
+  [super postDraw: rect];
+}
+*/
+
+- (BOOL) acceptsTypeFromArray: (NSArray *)types
+{
+  // Accept link types for making connections (outlets, actions, etc.)
+  if ([types containsObject: GormLinkPboardType])
+    {
+      return YES;
+    }
+  
+  return [super acceptsTypeFromArray: types];
+}
+
+- (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *pb = [sender draggingPasteboard];
+  
+  // Check if this is a connection drag
+  if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
+    {
+      return NSDragOperationLink;
+    }
+  
+  return NSDragOperationNone;
+}
+
+- (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
+{
+  NSPasteboard *pb = [sender draggingPasteboard];
+  
+  // Handle connection drags
+  if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
+    {
+      // The connection will be handled by the document's drag handling mechanism
+      // which is inherited from GormViewEditor
+      return YES;
+    }
+  
+  return NO;
+}
+
 @end
