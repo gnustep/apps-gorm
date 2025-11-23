@@ -27,51 +27,6 @@
 
 @implementation GormToolbarEditor
 
-- (NSToolbar *)toolbar
-{
-  return toolbar;
-}
-
-- (void)setToolbar:(NSToolbar *)aToolbar
-{
-  toolbar = aToolbar;
-}
-
-- (void)addAllowedToolbarItem:(NSToolbarItem *)item
-{
-  NSMutableArray *items = [[toolbar allowedItemIdentifiers] mutableCopy];
-  [items addObject: item];
-  [toolbar setAllowedItemIdentifiers: items];
-}
-
-- (void)removeAllowedToolbarItem:(NSToolbarItem *)item
-{
-  NSMutableArray *items = [[toolbar allowedItemIdentifiers] mutableCopy];
-  [items removeObject: item];
-  [toolbar setAllowedItemIdentifiers: items];
-}
-
-- (void)addDefaultToolbarItem:(NSToolbarItem *)item
-{
-  NSMutableArray *items = [[toolbar defaultItemIdentifiers] mutableCopy];
-  [items addObject: item];
-  [toolbar setDefaultItemIdentifiers: items];
-}
-
-- (void)removeDefaultToolbarItem:(NSToolbarItem *)item
-{
-  NSMutableArray *items = [[toolbar defaultItemIdentifiers] mutableCopy];
-  [items removeObject: item];
-  [toolbar setDefaultItemIdentifiers: items];
-}
-
-- (void)configureToolbarItem:(NSToolbarItem *)item
-{
-  // Present inspector UI for item properties (label, image, action, etc.)
-  // Implementation would depend on Gorm's inspector infrastructure
-}
-
-
 - (void) mouseDown: (NSEvent *)theEvent
 {
   /*
@@ -103,10 +58,10 @@
   [super mouseDown: theEvent];
 }
 
-/*
 - (void) postDraw: (NSRect)rect
 {
   // Draw selection knobs if this toolbar is selected
+  /*
   if ([parent respondsToSelector: @selector(selection)] &&
       [[parent selection] containsObject: _editedObject])
     {
@@ -115,8 +70,8 @@
     }
   
   [super postDraw: rect];
+  */
 }
-*/
 
 - (BOOL) acceptsTypeFromArray: (NSArray *)types
 {

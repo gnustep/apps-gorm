@@ -34,43 +34,4 @@
  * toolbar items visually.
  */
 @interface GormToolbarEditor : GormResourceEditor
-{
-  NSToolbar *toolbar;
-}
-
-/**
- * The toolbar being edited.
- */
-- (NSToolbar *)toolbar;
-
-/**
- * Set the toolbar being edited.
- */
-- (void)setToolbar:(NSToolbar *)aToolbar;
-
-/**
- * Add an item to the allowed toolbar items.
- */
-- (void)addAllowedToolbarItem:(NSToolbarItem *)item;
-
-/**
- * Remove an item to the allowed toolbar items.
- */
-- (void)removeAllowedToolbarItem:(NSToolbarItem *)item;
-
-/**
- * Add an item to the default toolbar items.
- */
-- (void)addDefaultToolbarItem:(NSToolbarItem *)item;
-
-/**
- * Remove an item to the default toolbar items.
- */
-- (void)removeDefaultToolbarItem:(NSToolbarItem *)item;
-
-/**
- * Configure the toolbar items.
- */
-- (void)configureToolbarItem:(NSToolbarItem *)item;
-
 @end
