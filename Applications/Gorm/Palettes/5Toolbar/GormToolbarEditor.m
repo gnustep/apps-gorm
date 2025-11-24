@@ -24,53 +24,75 @@
  */
 
 #import "GormToolbarEditor.h"
+#import <GormCore/GormViewKnobs.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
 @implementation GormToolbarEditor
 
+- (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
+{
+  if ((self = [super initWithObject: anObject inDocument: aDocument]) != nil)
+    {
+      toolbar = (NSToolbar *)anObject;
+      toolbarView = [toolbar toolbarView];
+    }
+  return self;
+}
+
+- (NSToolbar *)toolbar
+{
+  return toolbar;
+}
+
+- (void)setToolbar:(NSToolbar *)aToolbar
+{
+  toolbar = aToolbar;
+  toolbarView = [toolbar toolbarView];
+}
+
 - (void) mouseDown: (NSEvent *)theEvent
 {
-  /*
-  // Check if we're clicking on a knob for resizing
-  BOOL onKnob = NO;
+  NSPoint location = [self convertPoint: [theEvent locationInWindow] fromView: nil];
   
-  if ([parent respondsToSelector: @selector(selection)] &&
-      [[parent selection] containsObject: _editedObject])
+  // Check if click is on the toolbar view area
+  if (toolbarView && NSPointInRect(location, [toolbarView frame]))
     {
-      IBKnobPosition knob = IBNoneKnobPosition;
-      NSPoint mouseDownPoint = [self convertPoint: [theEvent locationInWindow]
-                                         fromView: nil];
-      knob = GormKnobHitInRect([self bounds], mouseDownPoint);
-      if (knob != IBNoneKnobPosition)
-        {
-          onKnob = YES;
-        }
+      // Handle selection - select the toolbar
+      [document setSelectionFromEditor: self];
+      [[NSNotificationCenter defaultCenter]
+        postNotificationName: IBSelectionChangedNotification
+        object: self];
+      return;
     }
   
-  if (onKnob == YES)
-    {
-      if (parent)
-        return [parent mouseDown: theEvent];
-      else
-        return [self noResponderFor: @selector(mouseDown:)];
-    }
-  */
-  // Otherwise handle as a regular selection/connection event
+  // Otherwise delegate to super
   [super mouseDown: theEvent];
 }
 
-- (void) postDraw: (NSRect)rect
+- (void) drawRect: (NSRect)rect
 {
-  // Draw selection knobs if this toolbar is selected
-  /*
-  if ([parent respondsToSelector: @selector(selection)] &&
-      [[parent selection] containsObject: _editedObject])
-    {
-      NSRect bounds = [self bounds];
-      GormDrawKnobsForRect(bounds);
-    }
+  [super drawRect: rect];
   
-  [super postDraw: rect];
-  */
+  // Draw selection knobs around the toolbar view if this editor owns selection
+  if (toolbarView && [(id<IB>)[NSApp delegate] selectionOwner] == self)
+    {
+      NSRect toolbarFrame = [toolbarView frame];
+      [self lockFocus];
+      GormDrawKnobsForRect(toolbarFrame);
+      [self unlockFocus];
+    }
+}
+
+- (NSArray *) selection
+{
+  // Return the toolbar as the selected object
+  return [NSArray arrayWithObject: toolbar];
+}
+
+- (void) makeSelectionVisible: (BOOL)flag
+{
+  [self setNeedsDisplay: YES];
+  [super makeSelectionVisible: flag];
 }
 
 - (BOOL) acceptsTypeFromArray: (NSArray *)types
@@ -104,8 +126,7 @@
   // Handle connection drags
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
     {
-      // The connection will be handled by the document's drag handling mechanism
-      // which is inherited from GormViewEditor
+      // The connection will be handled by the document
       return YES;
     }
   
