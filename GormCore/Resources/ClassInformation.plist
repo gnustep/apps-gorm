@@ -425,4 +425,9 @@
         Outlets = ();
         Super = NSArrayController;
     };
+    NSToolbar = {
+    	Actions = ();
+	Outlets = (delegate);
+	Super = NSObject;
+    };
 }
