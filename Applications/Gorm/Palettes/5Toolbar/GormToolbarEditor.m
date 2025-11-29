@@ -336,8 +336,24 @@ GormDrawStippleForRect(NSRect aRect)
 
 - (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  NSLog(@"Updating...");
-  return [self draggingEntered: sender];
+  NSPasteboard *pb = [sender draggingPasteboard];
+  id delegate = [NSApp delegate];
+  
+  // Check if this is a connection drag
+  if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
+    {
+      // Prevent dragging onto itself
+      if (toolbar == [delegate connectSource])
+        {
+          return NSDragOperationNone;
+        }
+      
+      // Update the connection display to show feedback
+      [delegate displayConnectionBetween: [delegate connectSource] and: toolbar];
+      return NSDragOperationLink;
+    }
+  
+  return NSDragOperationNone;
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
