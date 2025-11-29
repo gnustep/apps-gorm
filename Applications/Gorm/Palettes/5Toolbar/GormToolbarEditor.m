@@ -238,7 +238,18 @@ GormDrawStippleForRect(NSRect aRect)
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
+  NSArray *pbTypes = [pb types];
   id delegate = [NSApp delegate];
+  
+  // Set dragType for use in subsequent drag methods
+  if ([pbTypes containsObject: GormLinkPboardType])
+    {
+      dragType = GormLinkPboardType;
+    }
+  else
+    {
+      dragType = nil;
+    }
   
   // Check if this is a connection drag
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
@@ -336,11 +347,10 @@ GormDrawStippleForRect(NSRect aRect)
 
 - (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard *pb = [sender draggingPasteboard];
   id delegate = [NSApp delegate];
   
   // Check if this is a connection drag
-  if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
+  if (dragType == GormLinkPboardType)
     {
       // Prevent dragging onto itself
       if (toolbar == [delegate connectSource])
@@ -356,13 +366,27 @@ GormDrawStippleForRect(NSRect aRect)
   return NSDragOperationNone;
 }
 
+- (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
+{
+  // Tell the source that we will accept the drop if we can
+  if (dragType == GormLinkPboardType)
+    {
+      // We accept connection drags to the toolbar
+      if (toolbar != nil)
+        {
+          return YES;
+        }
+    }
+  
+  return NO;
+}
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard *pb = [sender draggingPasteboard];
   id delegate = [NSApp delegate];
 
   // Handle connection drags
-  if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
+  if (dragType == GormLinkPboardType)
     {
       // Display the connection to the toolbar and let the document handle it
       [delegate displayConnectionBetween: [delegate connectSource] and: toolbar];
