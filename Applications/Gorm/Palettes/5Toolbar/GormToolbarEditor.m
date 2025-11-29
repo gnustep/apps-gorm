@@ -31,6 +31,40 @@
 
 #import "GormToolbarEditor.h"
 
+static void
+GormDrawStippleForRect(NSRect aRect)
+{
+  static NSImage *stipplePattern = nil;
+  
+  if (stipplePattern == nil)
+    {
+      // Create a small stipple pattern (8x8 pixels)
+      stipplePattern = [[NSImage alloc] initWithSize: NSMakeSize(8, 8)];
+      [stipplePattern lockFocus];
+      
+      // Draw a checkerboard pattern
+      [[NSColor colorWithCalibratedWhite: 0.0 alpha: 0.25] set];
+      NSRectFill(NSMakeRect(0, 0, 4, 4));
+      NSRectFill(NSMakeRect(4, 4, 4, 4));
+      
+      [stipplePattern unlockFocus];
+    }
+  
+  // Draw the stipple pattern over the rectangle
+  NSGraphicsContext *context = [NSGraphicsContext currentContext];
+  [context saveGraphicsState];
+  
+  // Set the compositing mode to highlight the selection
+  [[NSColor colorWithPatternImage: stipplePattern] set];
+  NSRectFillUsingOperation(aRect, NSCompositeSourceOver);
+  
+  // Draw a border around the selection
+  [[NSColor colorWithCalibratedRed: 0.0 green: 0.5 blue: 1.0 alpha: 0.8] set];
+  NSFrameRectWithWidth(aRect, 2.0);
+  
+  [context restoreGraphicsState];
+}
+
 @implementation GormToolbarEditor
 
 - (id) initWithObject: (id)anObject inDocument: (id<IBDocuments>)aDocument
@@ -117,13 +151,13 @@
 {
   [super drawRect: rect];
   
-  // Draw selection knobs around the toolbar view if this editor owns selection
+  // Draw stipple pattern over the toolbar view if this editor owns selection
   if (toolbarView && [(id<IB>)[NSApp delegate] selectionOwner] == self)
     {
       NSRect toolbarFrame = [toolbarView frame];
-      NSLog(@"Draw knobs...");
+      NSLog(@"Draw stipple...");
       [self lockFocus];
-      GormDrawKnobsForRect(toolbarFrame);
+      GormDrawStippleForRect(toolbarFrame);
       [self unlockFocus];
     }
 }
