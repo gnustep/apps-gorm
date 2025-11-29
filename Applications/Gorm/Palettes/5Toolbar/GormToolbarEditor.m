@@ -23,9 +23,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#import "GormToolbarEditor.h"
 #import <GormCore/GormViewKnobs.h>
+#import <GormCore/GormClassManager.h>
+#import <GormCore/GormDocument.h>
+
 #import <InterfaceBuilder/InterfaceBuilder.h>
+
+#import "GormToolbarEditor.h"
 
 @implementation GormToolbarEditor
 
@@ -33,10 +37,49 @@
 {
   if ((self = [super initWithObject: anObject inDocument: aDocument]) != nil)
     {
+      NSMutableArray *draggedTypes;
+      
       toolbar = (NSToolbar *)anObject;
       toolbarView = [toolbar toolbarView];
+      activated = NO;
+
+      // Add to selected objects...
+      [objects addObject: anObject];
+      
+      // Register for dragged types to enable connections
+      draggedTypes = [NSMutableArray arrayWithObject: GormLinkPboardType];
+      [self registerForDraggedTypes: draggedTypes];
     }
+
   return self;
+}
+
+- (BOOL) activate
+{
+  if (activated == NO)
+    {
+      NSView *superview = [toolbarView superview];
+      NSString *name = [document nameForObject: toolbar];
+      GormClassManager *cm = [(GormDocument *)document classManager];
+
+      [self setFrame: [toolbarView frame]];
+      [self setBounds: [self frame]];
+
+      [superview replaceSubview: toolbarView
+		 with: self];
+      
+      [self setAutoresizingMask: NSViewMaxXMargin | NSViewMinYMargin];
+      [self setAutoresizesSubviews: YES];      
+      [self addSubview: toolbarView];
+      [self setToolTip: [NSString stringWithFormat: @"%@,%@",
+				  name, 
+				  [cm classNameForObject: toolbar]]];
+
+      [self setNeedsDisplay: YES];
+      activated = YES;
+    }
+
+  return activated;
 }
 
 - (NSToolbar *)toolbar
@@ -44,7 +87,7 @@
   return toolbar;
 }
 
-- (void)setToolbar:(NSToolbar *)aToolbar
+- (void)setToolbar: (NSToolbar *)aToolbar
 {
   toolbar = aToolbar;
   toolbarView = [toolbar toolbarView];
@@ -53,7 +96,8 @@
 - (void) mouseDown: (NSEvent *)theEvent
 {
   NSPoint location = [self convertPoint: [theEvent locationInWindow] fromView: nil];
-  
+
+  NSLog(@"Clicked...");
   // Check if click is on the toolbar view area
   if (toolbarView && NSPointInRect(location, [toolbarView frame]))
     {
@@ -77,6 +121,7 @@
   if (toolbarView && [(id<IB>)[NSApp delegate] selectionOwner] == self)
     {
       NSRect toolbarFrame = [toolbarView frame];
+      NSLog(@"Draw knobs...");
       [self lockFocus];
       GormDrawKnobsForRect(toolbarFrame);
       [self unlockFocus];
@@ -123,7 +168,6 @@
 
 - (void) draggingExited: (id<NSDraggingInfo>)sender
 {
-  NSPasteboard	*dragPb;
   NSArray	*types;
   NSRect         rect;
 
@@ -158,7 +202,6 @@
 {
   NSPoint loc = [sender draggingLocation];
   NSRect rect = [toolbarView bounds];
-  NSPasteboard	*dragPb;
   NSArray	*types;
   
   dragPb = [sender draggingPasteboard];
