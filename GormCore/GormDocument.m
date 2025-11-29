@@ -1950,7 +1950,7 @@ static void _real_close(GormDocument *self,
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
-          // [[[NSApp delegate] mainMenu] display]; // bring the menu back...
+          // Bring back the menu...
           [[NSApp mainMenu] display];
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
