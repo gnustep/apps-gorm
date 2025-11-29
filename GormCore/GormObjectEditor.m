@@ -506,7 +506,7 @@ static NSMapTable	*docMap = 0;
 	}
       else
 	{
-	  [[NSApp delegate] displayConnectionBetween: [NSApp connectSource] and: obj];
+	  [[NSApp delegate] displayConnectionBetween: [[NSApp delegate] connectSource] and: obj];
 	  [[NSApp delegate] startConnecting];
 	  return YES;
 	}

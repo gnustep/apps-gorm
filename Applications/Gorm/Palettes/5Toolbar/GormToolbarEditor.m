@@ -146,6 +146,43 @@ GormDrawStippleForRect(NSRect aRect)
 {
   NSPoint location = [self convertPoint: [theEvent locationInWindow] fromView: nil];
 
+  // Check for Control-click to initiate connections
+  if ([theEvent modifierFlags] & NSControlKeyMask)
+    {
+      NSString *name = [document nameForObject: toolbar];
+      
+      if (name != nil && [name isEqualToString: @"NSFirst"] == NO)
+        {
+          NSPasteboard *pb;
+          id delegate = [NSApp delegate];
+          
+          // Select the toolbar first
+          [document setSelectionFromEditor: self];
+          
+          // Set up drag pasteboard for connection
+          pb = [NSPasteboard pasteboardWithName: NSDragPboard];
+          [pb declareTypes: [NSArray arrayWithObject: GormLinkPboardType]
+                     owner: self];
+          [pb setString: name forType: GormLinkPboardType];
+          
+          // Start the connection process
+          [delegate displayConnectionBetween: toolbar and: nil];
+          [delegate startConnecting];
+          
+          // Drag the link image
+          [self dragImage: [delegate linkImage]
+                       at: location
+                   offset: NSZeroSize
+                    event: theEvent
+               pasteboard: pb
+                   source: self
+                slideBack: YES];
+          
+          [self makeSelectionVisible: YES];
+          return;
+        }
+    }
+  
   // Check if click is on the toolbar view area
   if (toolbarView && NSPointInRect(location, [toolbarView frame]))
     {
@@ -201,9 +238,13 @@ GormDrawStippleForRect(NSRect aRect)
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
+  id delegate = [NSApp delegate];
+  
   // Check if this is a connection drag
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
     {
+      // Display the connection feedback
+      [delegate displayConnectionBetween: [delegate connectSource] and: toolbar];
       return NSDragOperationLink;
     }
   
@@ -212,19 +253,21 @@ GormDrawStippleForRect(NSRect aRect)
 
 - (void) draggingExited: (id<NSDraggingInfo>)sender
 {
-  NSArray	*types;
-  NSRect         rect;
+  NSArray *types;
+  id delegate = [NSApp delegate];
 
   dragPb = [sender draggingPasteboard];
   types = [dragPb types];
   
   if ([types containsObject: GormLinkPboardType] == YES)
     {
-      [super draggingExited: sender];
+      // Clear the connection display
+      [delegate displayConnectionBetween: [delegate connectSource] and: nil];
       return;
     }
 
-  rect = [toolbarView bounds];
+  // Handle other drag types if needed
+  NSRect rect = [toolbarView bounds];
   rect.origin.x += 3;
   rect.origin.y += 2;
   rect.size.width -= 5;
@@ -300,11 +343,14 @@ GormDrawStippleForRect(NSRect aRect)
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
+  id delegate = [NSApp delegate];
 
   // Handle connection drags
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
     {
-      // The connection will be handled by the document
+      // Display the connection to the toolbar and let the document handle it
+      [delegate displayConnectionBetween: [delegate connectSource] and: toolbar];
+      [delegate startConnecting];
       return YES;
     }
   
