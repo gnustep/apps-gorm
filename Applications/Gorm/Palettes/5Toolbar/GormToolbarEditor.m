@@ -38,14 +38,14 @@ GormDrawStippleForRect(NSRect aRect)
   
   if (stipplePattern == nil)
     {
-      // Create a small stipple pattern (8x8 pixels)
+      // Create a stipple pattern (8x8 pixels) with larger dots
       stipplePattern = [[NSImage alloc] initWithSize: NSMakeSize(8, 8)];
       [stipplePattern lockFocus];
       
-      // Draw a checkerboard pattern
-      [[NSColor colorWithCalibratedWhite: 0.0 alpha: 0.25] set];
-      NSRectFill(NSMakeRect(0, 0, 4, 4));
-      NSRectFill(NSMakeRect(4, 4, 4, 4));
+      // Draw larger dots (3x3 pixels) at specific positions
+      [[NSColor colorWithCalibratedRed: 1.0 green: 0.0 blue: 0.0 alpha: 0.4] set];
+      NSRectFill(NSMakeRect(0, 0, 3, 3));  // Top-left dot
+      NSRectFill(NSMakeRect(4, 4, 3, 3));  // Bottom-right dot
       
       [stipplePattern unlockFocus];
     }
@@ -116,6 +116,21 @@ GormDrawStippleForRect(NSRect aRect)
   return activated;
 }
 
+- (void) deactivate
+{
+    if (activated == YES)
+    {
+      NSView *superview = [self superview];
+
+      [self removeSubview: toolbarView];
+      [superview replaceSubview: self
+			   with: toolbarView];
+
+      [[NSNotificationCenter defaultCenter] removeObserver: self];
+      activated = NO;
+    }
+}
+
 - (NSToolbar *)toolbar
 {
   return toolbar;
@@ -131,7 +146,6 @@ GormDrawStippleForRect(NSRect aRect)
 {
   NSPoint location = [self convertPoint: [theEvent locationInWindow] fromView: nil];
 
-  NSLog(@"Clicked...");
   // Check if click is on the toolbar view area
   if (toolbarView && NSPointInRect(location, [toolbarView frame]))
     {
@@ -155,7 +169,6 @@ GormDrawStippleForRect(NSRect aRect)
   if (toolbarView && [(id<IB>)[NSApp delegate] selectionOwner] == self)
     {
       NSRect toolbarFrame = [toolbarView frame];
-      NSLog(@"Draw stipple...");
       [self lockFocus];
       GormDrawStippleForRect(toolbarFrame);
       [self unlockFocus];
@@ -176,7 +189,6 @@ GormDrawStippleForRect(NSRect aRect)
 
 - (BOOL) acceptsTypeFromArray: (NSArray *)types
 {
-  NSLog(@"types = %@", types);
   // Accept link types for making connections (outlets, actions, etc.)
   if ([types containsObject: GormLinkPboardType])
     {
@@ -189,11 +201,9 @@ GormDrawStippleForRect(NSRect aRect)
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
-  NSLog(@"Entered");
   // Check if this is a connection drag
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
     {
-      NSLog(@"Success");
       return NSDragOperationLink;
     }
   
@@ -232,6 +242,7 @@ GormDrawStippleForRect(NSRect aRect)
   [[self window] flushWindow];
 }
 
+/*
 - (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
   NSPoint loc = [sender draggingLocation];
@@ -278,15 +289,21 @@ GormDrawStippleForRect(NSRect aRect)
       return NSDragOperationCopy;
     }
 }
+*/
+
+- (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
+{
+  NSLog(@"Updating...");
+  return [self draggingEntered: sender];
+}
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
-  NSLog(@"Entered2");
+
   // Handle connection drags
   if ([pb availableTypeFromArray: [NSArray arrayWithObject: GormLinkPboardType]])
     {
-      NSLog(@"Success2");
       // The connection will be handled by the document
       return YES;
     }

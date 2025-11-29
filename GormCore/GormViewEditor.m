@@ -1255,7 +1255,6 @@ static BOOL currently_displaying = NO;
   return [self draggingEntered: sender];
 }
 
-
 - (void)  draggingExited: (id<NSDraggingInfo>)sender
 {
   NSPasteboard	*dragPb;
