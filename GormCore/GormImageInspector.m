@@ -54,15 +54,33 @@
 
 - (void) setObject: (id)anObject
 {
-  NSImage *image = [anObject normalImage];
-  NSSize size = [image size];
+  NSImage *normalImage = [anObject normalImage];
+  NSImage *displayImage = [anObject image];
+  NSString *imageName = [normalImage name];
+  NSSize size = [normalImage size];
 
   [super setObject: anObject];
   [imageView setImageAlignment: NSImageAlignCenter];
   [imageView setImageFrameStyle: NSImageFrameGrayBezel];
   [imageView setImageScaling: NSScaleNone];
-  [imageView setImage: [anObject image]];
-  [name setStringValue: [image name]];
+  
+  // Set the display image (small version)
+  if (displayImage != nil)
+    {
+      [imageView setImage: displayImage];
+    }
+  
+  // Set the name from the normal (full-size) image
+  if (imageName != nil)
+    {
+      [name setStringValue: imageName];
+    }
+  else
+    {
+      [name setStringValue: @""];
+    }
+  
+  // Set dimensions from the normal (full-size) image
   [width setDoubleValue: size.width];
   [height setDoubleValue: size.height];
 }
