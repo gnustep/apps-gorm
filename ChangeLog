@@ -1,3 +1,33 @@
+2025-11-30 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GormCore/GormImageInspector.m: Fix image inspector to properly
+	display both image preview and name. Added nil checks and clearer
+	variable naming to prevent display issues.
+
+	* GormCore/GormSoundInspector.m: Fix sound inspector to properly
+	display sound name by passing the GormSound object to parent class
+	instead of the NSSound object.
+
+2025-11-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Plugins/Xib/GormXIBModelGenerator.m: Add support for NSToolbar
+	XML generation when set on NSWindow. Added toolbar properties
+	including identifier, displayMode, sizeMode, visible,
+	allowsUserCustomization, and autosavesConfiguration. Added
+	allowedItemIdentifiers and defaultItemIdentifiers arrays.
+	Fixed button cell encoding to skip image encoding for check
+	and radio button types.
+
+	* GormCore/GormToolbarEditor.m: Fix toolbar editor connection
+	system. Added Control-click support in mouseDown: to initiate
+	outgoing connections. Added draggingUpdated: method for proper
+	drag feedback. Added prepareForDragOperation: to accept valid
+	drop operations for connection handling.
+
+	* GormCore/GormObjectEditor.m: Fix connectSource method call
+	at line 509 to use [[NSApp delegate] connectSource] instead
+	of [NSApp connectSource] to avoid exception.
+
 2025-08-13 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* Plugins/Gmodel: Delete contents
