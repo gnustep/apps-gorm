@@ -32,10 +32,27 @@ PALETTE_NAME = 6Formatters
 
 6Formatters_OBJC_FILES = \
 	FormatterPalette.m \
+	GormByteCountFormatterInspector.m \
+	GormDateComponentsFormatterInspector.m \
+	GormDateIntervalFormatterInspector.m \
+	GormEnergyFormatterInspector.m \
+	GormISO8601DateFormatterInspector.m \
+	GormLengthFormatterInspector.m \
+	GormMassFormatterInspector.m \
+	GormMeasurementFormatterInspector.m \
+	GormPersonNameComponentsFormatterInspector.m \
+	inspectors.m
 
 6Formatters_RESOURCE_FILES = \
 	Resources/FormatterPalette.tiff \
 	Resources/byteCount.tiff \
+	Resources/dateComponents.tiff \
+	Resources/dateInterval.tiff \
+	Resources/energy.tiff \
+	Resources/iso8601date.tiff \
+	Resources/length.tiff \
+	Resources/mass.tiff \
+	Resources/personcomponent.tiff \
 	Resources/FormatterPalette.gorm \
 	palette.table \
 
