@@ -1839,7 +1839,7 @@ static NSUInteger _count = INT_MAX;
 		      NSArray *allowedIdentifiers = [toolbar allowedItemIdentifiers];
 		      if (allowedIdentifiers != nil && [allowedIdentifiers count] > 0)
 			{
-			  NSXMLElement *allowedElem = [NSXMLNode elementWithName: @"allowedItemIdentifiers"];
+			  NSXMLElement *allowedElem = [NSXMLNode elementWithName: @"allowedToolbarItems"];
 			  NSEnumerator *en = [allowedIdentifiers objectEnumerator];
 			  NSString *identifier = nil;
 			  
@@ -1867,7 +1867,7 @@ static NSUInteger _count = INT_MAX;
 		      NSArray *defaultIdentifiers = [toolbar defaultItemIdentifiers];
 		      if (defaultIdentifiers != nil && [defaultIdentifiers count] > 0)
 			{
-			  NSXMLElement *defaultElem = [NSXMLNode elementWithName: @"defaultItemIdentifiers"];
+			  NSXMLElement *defaultElem = [NSXMLNode elementWithName: @"defaultToolbarItems"];
 			  NSEnumerator *en = [defaultIdentifiers objectEnumerator];
 			  NSString *identifier = nil;
 			  
