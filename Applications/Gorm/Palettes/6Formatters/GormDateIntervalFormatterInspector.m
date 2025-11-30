@@ -31,6 +31,12 @@
   if ([super init] == nil)
     return nil;
 
+  if ([NSBundle loadNibNamed: @"GormDateIntervalFormatterInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not load GormDateIntervalFormatterInspector");
+      return nil;
+    }
+
   return self;
 }
 

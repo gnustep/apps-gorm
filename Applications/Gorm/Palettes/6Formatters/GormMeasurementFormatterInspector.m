@@ -31,6 +31,12 @@
   if ([super init] == nil)
     return nil;
 
+  if ([NSBundle loadNibNamed: @"GormMeasurementFormatterInspector" owner: self] == NO)
+    {
+      NSLog(@"Could not load GormMeasurementFormatterInspector");
+      return nil;
+    }
+
   return self;
 }
 
