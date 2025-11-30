@@ -1876,10 +1876,7 @@ static NSUInteger _count = INT_MAX;
 			      NSString *refId = [referencesDictionary objectForKey: identifier];
 			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
 			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"reference" stringValue: refId];
-			      // NSXMLNode *attr = [NSXMLNode attributeWithName: @"id"
-			      //				 stringValue: [[NSString randomHex] splitString]];
 
-			      // [itemElem addAttribute: attr];
 			      [itemElem addAttribute: identElem];
 			      [defaultElem addChild: itemElem];
 			    }
