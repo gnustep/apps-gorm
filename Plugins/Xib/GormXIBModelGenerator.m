@@ -44,6 +44,7 @@
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSOutlineView.h>
 #import <AppKit/NSBrowser.h>
+#import <AppKit/NSToolbar.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -52,6 +53,7 @@
 #import <GormCore/GormFilePrefsManager.h>
 #import <GormCore/GormProtocol.h>
 #import <GormCore/GormPrivate.h>
+#import <GormCore/NSToolbarPrivate.h>
 
 #import "GormXIBModelGenerator.h"
 
@@ -68,25 +70,6 @@ static NSDictionary *_mappedClassNames = nil;
 static NSDictionary *_valueMapping = nil;
 
 static NSUInteger _count = INT_MAX;
-
-/*
-NSString* XIBStringFromClass(Class cls)
-{
-  NSString *className = NSStringFromClass(cls);
-
-  if (className != nil)
-    {
-      NSString *newClassName = [_mappedClassNames objectForKey: className];
-
-      if (newClassName != nil)
-	{
-	  className = newClassName;
-	}
-    }
-
-  return className;
-}
-*/
 
 @interface NSButtonCell (_Private_)
 
@@ -476,6 +459,7 @@ NSString* XIBStringFromClass(Class cls)
 			 @"prototype",
 			 @"keyCell",
 			 @"isLenient",
+			 @"toolbar",
 			 nil];
     }
 }
@@ -1234,6 +1218,17 @@ NSString* XIBStringFromClass(Class cls)
       return;
     }
 
+  // Skip image property for check/radio button cells - type attribute handles this
+  if ([name isEqualToString: @"image"] && [obj isKindOfClass: [NSButtonCell class]])
+    {
+      NSString *buttonTypeString = [obj buttonTypeString];
+      if ([buttonTypeString isEqualToString: @"check"] 
+          || [buttonTypeString isEqualToString: @"radio"])
+        {
+          return; // Don't encode the GSSwitch/GSRadio image for check/radio buttons
+        }
+    }
+
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
@@ -1760,6 +1755,151 @@ NSString* XIBStringFromClass(Class cls)
 	  [self _addWindowStyleMask: m toElement: elem];
 	  [self _addRect: c toElement: elem withName: @"contentRect"];
 	  [self _addRect: s toElement: elem withName: @"screenRect"];
+	  
+	  // Handle toolbar if one is set
+	  if ([obj respondsToSelector: @selector(toolbar)])
+	    {
+	      NSToolbar *toolbar = [obj toolbar];
+	      if (toolbar != nil)
+		{
+		  NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"id"
+						       stringValue: [[NSString randomHex] splitString]];
+		  NSXMLElement *toolbarElem = [NSXMLNode elementWithName: @"toolbar"];
+		  NSXMLNode *keyAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"toolbar"];
+
+		  [toolbarElem addAttribute: idAttr];
+		  [toolbarElem addAttribute: keyAttr];
+		  
+		  NSString *toolbarIdentifier = [toolbar identifier];
+		  if (toolbarIdentifier != nil)
+		    {
+		      NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"identifier" stringValue: toolbarIdentifier];
+		      [toolbarElem addAttribute: idAttr];
+		    }
+		  
+		  // Add toolbar display mode
+		  NSToolbarDisplayMode displayMode = [toolbar displayMode];
+		  NSString *displayModeStr = nil;
+		  switch (displayMode)
+		    {
+		    case NSToolbarDisplayModeDefault:
+		      displayModeStr = @"default";
+		      break;
+		    case NSToolbarDisplayModeIconAndLabel:
+		      displayModeStr = @"iconAndLabel";
+		      break;
+		    case NSToolbarDisplayModeIconOnly:
+		      displayModeStr = @"iconOnly";
+		      break;
+		    case NSToolbarDisplayModeLabelOnly:
+		      displayModeStr = @"labelOnly";
+		      break;
+		    }
+		  if (displayModeStr != nil)
+		    {
+		      NSXMLNode *modeAttr = [NSXMLNode attributeWithName: @"displayMode" stringValue: displayModeStr];
+		      [toolbarElem addAttribute: modeAttr];
+		    }
+		  
+		  // Add toolbar size mode
+		  NSToolbarSizeMode sizeMode = [toolbar sizeMode];
+		  NSString *sizeModeStr = nil;
+		  switch (sizeMode)
+		    {
+		    case NSToolbarSizeModeDefault:
+		      sizeModeStr = @"default";
+		      break;
+		    case NSToolbarSizeModeRegular:
+		      sizeModeStr = @"regular";
+		      break;
+		    case NSToolbarSizeModeSmall:
+		      sizeModeStr = @"small";
+		      break;
+		    }
+		  if (sizeModeStr != nil)
+		    {
+		      NSXMLNode *sizeAttr = [NSXMLNode attributeWithName: @"sizeMode" stringValue: sizeModeStr];
+		      [toolbarElem addAttribute: sizeAttr];
+		    }
+		  
+		  // Add visible flag
+		  if ([toolbar isVisible])
+		    {
+		      NSXMLNode *visibleAttr = [NSXMLNode attributeWithName: @"visible" stringValue: @"YES"];
+		      [toolbarElem addAttribute: visibleAttr];
+		    }
+		  
+		  // Add allows customization flag
+		  if ([toolbar allowsUserCustomization])
+		    {
+		      NSXMLNode *customAttr = [NSXMLNode attributeWithName: @"allowsUserCustomization" stringValue: @"YES"];
+		      [toolbarElem addAttribute: customAttr];
+		    }
+		  
+		  // Add autosaves configuration flag
+		  if ([toolbar autosavesConfiguration])
+		    {
+		      NSXMLNode *autosaveAttr = [NSXMLNode attributeWithName: @"autosavesConfiguration" stringValue: @"YES"];
+		      [toolbarElem addAttribute: autosaveAttr];
+		    }
+		  
+		  // Add allowedItemIdentifiers array
+		  NSMutableDictionary *referencesDictionary = [NSMutableDictionary dictionary];
+		  if ([toolbar respondsToSelector: @selector(allowedItemIdentifiers)])
+		    {
+		      NSArray *allowedIdentifiers = [toolbar allowedItemIdentifiers];
+		      if (allowedIdentifiers != nil && [allowedIdentifiers count] > 0)
+			{
+			  NSXMLElement *allowedElem = [NSXMLNode elementWithName: @"allowedToolbarItems"];
+			  NSEnumerator *en = [allowedIdentifiers objectEnumerator];
+			  NSString *identifier = nil;
+			  
+			  while ((identifier = [en nextObject]) != nil)
+			    {
+			      NSString *theId = [[NSString randomHex] splitString];
+			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
+			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"implicitItemIdentifier" stringValue: identifier];
+			      NSXMLNode *attr = [NSXMLNode attributeWithName: @"id"
+								 stringValue: theId];
+
+			      [referencesDictionary setObject: theId forKey: identifier];
+			      [itemElem addAttribute: attr];
+			      [itemElem addAttribute: identElem];
+			      [allowedElem addChild: itemElem];
+			    }
+			  
+			  [toolbarElem addChild: allowedElem];
+			}
+		    }
+		  
+		  // Add defaultItemIdentifiers array
+		  if ([toolbar respondsToSelector: @selector(defaultItemIdentifiers)])
+		    {
+		      NSArray *defaultIdentifiers = [toolbar defaultItemIdentifiers];
+		      if (defaultIdentifiers != nil && [defaultIdentifiers count] > 0)
+			{
+			  NSXMLElement *defaultElem = [NSXMLNode elementWithName: @"defaultToolbarItems"];
+			  NSEnumerator *en = [defaultIdentifiers objectEnumerator];
+			  NSString *identifier = nil;
+			  
+			  while ((identifier = [en nextObject]) != nil)
+			    {
+			      NSString *refId = [referencesDictionary objectForKey: identifier];
+			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
+			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"reference" stringValue: refId];
+
+			      [itemElem addAttribute: identElem];
+			      [defaultElem addChild: itemElem];
+			    }
+			  
+			  [toolbarElem addChild: defaultElem];
+			}
+		    }
+		  
+		  [elem addChild: toolbarElem];
+		}
+	    }
+	  
 	  [self _collectObjectsFromObject: [obj contentView]
 			       withParent: elem];
 	}
