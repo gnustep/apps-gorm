@@ -25,24 +25,20 @@ PACKAGE_NAME = gorm
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
-PALETTE_NAME = 5Toolbar
+PALETTE_NAME = 6Formatters
 
-5Toolbar_PALETTE_ICON = ToolbarPalette
-5Toolbar_PRINCIPAL_CLASS = ToolbarPalette
+6Formatters_PALETTE_ICON = FormatterPalette
+6Formatters_PRINCIPAL_CLASS = FormatterPalette
 
-5Toolbar_OBJC_FILES = \
-	ToolbarPalette.m \
-	GormToolbarEditor.m \
-	GormToolbarAttributesInspector.m \
-	inspectors.m
+6Formatters_OBJC_FILES = \
+	FormatterPalette.m \
 
-5Toolbar_RESOURCE_FILES = \
-	ToolbarPalette.tiff \
-	ToolbarPalette.gorm \
-	GormToolbarAttributesInspector.gorm \
-	palette.table
+6Formatters_RESOURCE_FILES = \
+	FormatterPalette.tiff \
+	FormatterPalette.gorm \
+	palette.table \
 
-5Toolbar_STANDARD_INSTALL = no
+6Formatters_STANDARD_INSTALL = no
 
 -include GNUmakefile.preamble
 
