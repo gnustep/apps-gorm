@@ -1218,6 +1218,17 @@ static NSUInteger _count = INT_MAX;
       return;
     }
 
+  // Skip image property for check/radio button cells - type attribute handles this
+  if ([name isEqualToString: @"image"] && [obj isKindOfClass: [NSButtonCell class]])
+    {
+      NSString *buttonTypeString = [obj buttonTypeString];
+      if ([buttonTypeString isEqualToString: @"check"] 
+          || [buttonTypeString isEqualToString: @"radio"])
+        {
+          return; // Don't encode the GSSwitch/GSRadio image for check/radio buttons
+        }
+    }
+
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
