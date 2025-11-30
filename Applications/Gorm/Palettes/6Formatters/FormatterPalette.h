@@ -30,6 +30,17 @@
 #import <InterfaceBuilder/IBPalette.h>
 
 @interface FormatterPalette : IBPalette
+{
+  IBOutlet id _byteCount;
+  IBOutlet id _dateComponents;
+  IBOutlet id _dateInterval;
+  IBOutlet id _energy;
+  IBOutlet id _iso1806date;
+  IBOutlet id _length;
+  IBOutlet id _mass;
+  IBOutlet id _measurement;
+  IBOutlet id _personNameComponents;
+}  
 @end
 
 #endif // FormatterPalette_H_INCLUDE

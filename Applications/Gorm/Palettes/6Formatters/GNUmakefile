@@ -34,8 +34,9 @@ PALETTE_NAME = 6Formatters
 	FormatterPalette.m \
 
 6Formatters_RESOURCE_FILES = \
-	FormatterPalette.tiff \
-	FormatterPalette.gorm \
+	Resources/FormatterPalette.tiff \
+	Resources/byteCount.tiff \
+	Resources/FormatterPalette.gorm \
 	palette.table \
 
 6Formatters_STANDARD_INSTALL = no
