@@ -24,12 +24,60 @@
 
 /* All rights reserved */
 
+#import <Foundation/Foundation.h>
 #import "FormatterPalette.h"
 
 @implementation FormatterPalette
 
 - (void) finishInstantiate
 {
+  NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];
+  NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+  NSDateIntervalFormatter *dateIntervalFormatter = [[NSDateIntervalFormatter alloc] init];
+  NSEnergyFormatter *energyFormatter = [[NSEnergyFormatter alloc] init];
+  NSISO8601DateFormatter *iso8601DateFormatter = [[NSISO8601DateFormatter alloc] init];
+  NSLengthFormatter *lengthFormatter = [[NSLengthFormatter alloc] init];
+  NSMassFormatter *massFormatter = [[NSMassFormatter alloc] init];
+  NSMeasurementFormatter *measurementFormatter = [[NSMeasurementFormatter alloc] init];
+  NSPersonNameComponentsFormatter *personNameFormatter = [[NSPersonNameComponentsFormatter alloc] init];
+  
+  // Associate formatters with their buttons
+  [self associateObject: byteCountFormatter
+                   type: IBFormatterPboardType
+                   with: _byteCount];
+  
+  [self associateObject: dateComponentsFormatter
+                   type: IBFormatterPboardType
+                   with: _dateComponents];
+  
+  [self associateObject: dateIntervalFormatter
+                   type: IBFormatterPboardType
+                   with: _dateInterval];
+  
+  [self associateObject: energyFormatter
+                   type: IBFormatterPboardType
+                   with: _energy];
+  
+  [self associateObject: iso8601DateFormatter
+                   type: IBFormatterPboardType
+                   with: _iso1806date];
+  
+  [self associateObject: lengthFormatter
+                   type: IBFormatterPboardType
+                   with: _length];
+  
+  [self associateObject: massFormatter
+                   type: IBFormatterPboardType
+                   with: _mass];
+  
+  [self associateObject: measurementFormatter
+                   type: IBFormatterPboardType
+                   with: _measurement];
+  
+  [self associateObject: personNameFormatter
+                   type: IBFormatterPboardType
+                   with: _personNameComponents];
+  
   [originalWindow setTitle: @"Formatters"];
 }
 
