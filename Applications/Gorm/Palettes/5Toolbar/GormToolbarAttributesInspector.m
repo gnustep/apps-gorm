@@ -44,8 +44,8 @@
 - (void) awakeFromNib
 {
   // Setup...
-  NSLog(@"_allowedItems = %@", _allowedItems);
-  NSLog(@"_defaultItems = %@", _defaultItems);
+  NSDebugLog(@"_allowedItems = %@", _allowedItems);
+  NSDebugLog(@"_defaultItems = %@", _defaultItems);
 
   [_allowedItems setDelegate: self];
   [_defaultItems setDelegate: self];
@@ -254,8 +254,8 @@
   NSTableView *tableView = [notification object];
   NSInteger selectedRow = [tableView selectedRow];
   
-  NSLog(@"Selected row %ld in table %@", (long)selectedRow, 
-        tableView == _allowedItems ? @"allowed items" : @"default items");
+  NSDebugLog(@"Selected row %ld in table %@", (long)selectedRow, 
+	     tableView == _allowedItems ? @"allowed items" : @"default items");
 }
 
 // MARK: - Helper Methods for Managing Items
