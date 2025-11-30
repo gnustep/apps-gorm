@@ -1218,14 +1218,17 @@ static NSUInteger _count = INT_MAX;
       return;
     }
 
-  // Skip image property for check/radio button cells - type attribute handles this
-  if ([name isEqualToString: @"image"] && [obj isKindOfClass: [NSButtonCell class]])
+  // Skip image and alternateImage properties for check/radio button cells - type attribute handles this
+  if (([name isEqualToString: @"image"] || [name isEqualToString: @"alternateImage"]) 
+      && [obj isKindOfClass: [NSButtonCell class]])
     {
       NSString *buttonTypeString = [obj buttonTypeString];
       if ([buttonTypeString isEqualToString: @"check"] 
           || [buttonTypeString isEqualToString: @"radio"])
         {
-          return; // Don't encode the GSSwitch/GSRadio image for check/radio buttons
+          // Ensure the type attribute is set correctly in the XML
+          [self _addButtonType: buttonTypeString toElement: elem];
+          return; // Don't encode the GSSwitch/GSRadio images for check/radio buttons
         }
     }
 
