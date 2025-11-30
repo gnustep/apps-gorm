@@ -41,6 +41,17 @@
   NSMeasurementFormatter *measurementFormatter = [[NSMeasurementFormatter alloc] init];
   NSPersonNameComponentsFormatter *personNameFormatter = [[NSPersonNameComponentsFormatter alloc] init];
   
+  // Set tooltips for each button
+  [_byteCount setToolTip: @"NSByteCountFormatter"];
+  [_dateComponents setToolTip: @"NSDateComponentsFormatter"];
+  [_dateInterval setToolTip: @"NSDateIntervalFormatter"];
+  [_energy setToolTip: @"NSEnergyFormatter"];
+  [_iso1806date setToolTip: @"NSISO8601DateFormatter"];
+  [_length setToolTip: @"NSLengthFormatter"];
+  [_mass setToolTip: @"NSMassFormatter"];
+  [_measurement setToolTip: @"NSMeasurementFormatter"];
+  [_personNameComponents setToolTip: @"NSPersonNameComponentsFormatter"];
+  
   // Associate formatters with their buttons
   [self associateObject: byteCountFormatter
                    type: IBFormatterPboardType
