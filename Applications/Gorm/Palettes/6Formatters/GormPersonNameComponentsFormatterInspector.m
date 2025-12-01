@@ -40,4 +40,10 @@
   return self;
 }
 
+- (void) ok: (id)sender
+{
+  // TODO: Implement saving formatter properties
+  [super ok: sender];
+}
+
 @end

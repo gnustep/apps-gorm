@@ -54,6 +54,15 @@ PALETTE_NAME = 6Formatters
 	Resources/mass.tiff \
 	Resources/personcomponent.tiff \
 	Resources/FormatterPalette.gorm \
+	Resources/GormByteCountFormatterInspector.gorm \
+	Resources/GormDateComponentsFormatterInspector.gorm \
+	Resources/GormDateIntervalFormatterInspector.gorm \
+	Resources/GormEnergyFormatterInspector.gorm \
+	Resources/GormISO8601DateFormatterInspector.gorm \
+	Resources/GormLengthFormatterInspector.gorm \
+	Resources/GormMassFormatterInspector.gorm \
+	Resources/GormMeasurementFormatterInspector.gorm \
+	Resources/GormPersonNameComponentsFormatterInspector.gorm \
 	palette.table \
 
 6Formatters_STANDARD_INSTALL = no
