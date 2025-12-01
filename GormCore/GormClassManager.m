@@ -1840,6 +1840,137 @@
 }
 
 /*
+ *  Helper method to extract all non-IBAction methods from source file
+ *  This preserves custom methods that were added directly to the source
+ */
+- (NSString *) extractAdditionalMethodsFromSource: (NSString *)sourceContent
+                                         forClass: (NSString *)className
+                                  excludingActions: (NSArray *)actionNames
+{
+  if (!sourceContent || [sourceContent length] == 0)
+    {
+      return nil;
+    }
+  
+  // Find @implementation section
+  NSString *implStart = [NSString stringWithFormat: @"@implementation %@", className];
+  NSRange implRange = [sourceContent rangeOfString: implStart];
+  
+  if (implRange.location == NSNotFound)
+    {
+      return nil;
+    }
+  
+  // Find @end
+  NSRange searchRange = NSMakeRange(implRange.location + implRange.length,
+                                    [sourceContent length] - implRange.location - implRange.length);
+  NSRange endRange = [sourceContent rangeOfString: @"@end" options: 0 range: searchRange];
+  
+  if (endRange.location == NSNotFound)
+    {
+      return nil;
+    }
+  
+  // Extract the implementation section
+  NSRange implBodyRange = NSMakeRange(implRange.location + implRange.length,
+                                      endRange.location - implRange.location - implRange.length);
+  NSString *implBody = [sourceContent substringWithRange: implBodyRange];
+  
+  // Now extract all methods
+  NSMutableString *additionalMethods = [NSMutableString string];
+  NSScanner *scanner = [NSScanner scannerWithString: implBody];
+  [scanner setCharactersToBeSkipped: nil];
+  
+  while (![scanner isAtEnd])
+    {      
+      if ([scanner scanUpToString: @"\n-" intoString: NULL] ||
+          [scanner scanUpToString: @"\n+" intoString: NULL])
+        {
+          NSUInteger methodStart = [scanner scanLocation];
+          
+          // Skip the newline and method marker
+          if (methodStart < [implBody length])
+            {
+              methodStart++; // skip newline
+              
+              if (methodStart >= [implBody length])
+                break;
+              
+              unichar marker = [implBody characterAtIndex: methodStart];
+              if (marker != '-' && marker != '+')
+                continue;
+              
+              // Find opening brace
+              NSRange braceSearchRange = NSMakeRange(methodStart, [implBody length] - methodStart);
+              NSRange openBraceRange = [implBody rangeOfString: @"{" options: 0 range: braceSearchRange];
+              
+              if (openBraceRange.location == NSNotFound)
+                {
+                  [scanner setScanLocation: methodStart + 1];
+                  continue;
+                }
+              
+              // Find matching closing brace
+              NSUInteger pos = openBraceRange.location + 1;
+              NSUInteger braceCount = 1;
+              
+              while (pos < [implBody length] && braceCount > 0)
+                {
+                  unichar c = [implBody characterAtIndex: pos];
+                  if (c == '{')
+                    braceCount++;
+                  else if (c == '}')
+                    braceCount--;
+                  pos++;
+                }
+              
+              if (braceCount == 0)
+                {
+                  // Extract the complete method
+                  NSRange methodRange = NSMakeRange(methodStart, pos - methodStart);
+                  NSString *method = [implBody substringWithRange: methodRange];
+                  
+                  // Check if this is an IBAction that we're managing
+                  BOOL isKnownAction = NO;
+                  NSEnumerator *actionEnum = [actionNames objectEnumerator];
+                  NSString *action = nil;
+                  
+                  while ((action = [actionEnum nextObject]) != nil)
+                    {
+                      NSString *actionSig = [NSString stringWithFormat: @"(IBAction) %@ (id)sender", action];
+                      if ([method rangeOfString: actionSig].location != NSNotFound ||
+                          [method rangeOfString: [NSString stringWithFormat: @"(IBAction)%@(id)sender", action]].location != NSNotFound)
+                        {
+                          isKnownAction = YES;
+                          break;
+                        }
+                    }
+                  
+                  // Only include if it's not a known IBAction
+                  if (!isKnownAction)
+                    {
+                      [additionalMethods appendString: method];
+                      [additionalMethods appendString: @"\n\n"];
+                    }
+                  
+                  [scanner setScanLocation: pos];
+                }
+              else
+                {
+                  [scanner setScanLocation: methodStart + 1];
+                }
+            }
+        }
+      else
+        {
+          break;
+        }
+    }
+  
+  return [additionalMethods length] > 0 ? additionalMethods : nil;
+}
+
+/*
  *  Helper method to determine the best import statement for a superclass
  */
 - (NSString *) importStatementForSuperClass: (NSString *)superClassName
@@ -1952,6 +2083,8 @@
   BOOL                  headerExists = [fm fileExistsAtPath: headerPath];
   BOOL                  sourceExists = [fm fileExistsAtPath: sourcePath];
   NSMutableDictionary   *existingMethodImpls = [NSMutableDictionary dictionary];
+  NSString              *existingSource = nil;
+  NSString              *additionalMethods = nil;
 
   headerFile = [NSMutableString stringWithCapacity: 200];
   sourceFile = [NSMutableString stringWithCapacity: 200];
@@ -2026,14 +2159,15 @@
   // If source exists, extract existing method implementations
   if (sourceExists)
     {
-      NSString *existingSource = [NSString stringWithContentsOfFile: sourcePath
-                                                           encoding: NSUTF8StringEncoding
-                                                              error: NULL];
+      existingSource = [NSString stringWithContentsOfFile: sourcePath
+                                                 encoding: NSUTF8StringEncoding
+                                                    error: NULL];
       if (existingSource)
         {
           NSEnumerator *actionEnum = [actions objectEnumerator];
           NSString *action = nil;
           
+          // Extract existing implementations for known actions
           while ((action = [actionEnum nextObject]) != nil)
             {
               NSString *implementation = [self extractMethodImplementationForAction: action
@@ -2043,6 +2177,11 @@
                   [existingMethodImpls setObject: implementation forKey: action];
                 }
             }
+          
+          // Extract all additional methods (non-IBAction methods)
+          additionalMethods = [self extractAdditionalMethodsFromSource: existingSource
+                                                              forClass: className
+                                                       excludingActions: actions];
         }
     }
   
@@ -2101,6 +2240,13 @@
             , actionName];
         }
     }
+  
+  // Add any additional methods that were in the original source file
+  if (additionalMethods)
+    {
+      [sourceFile appendString: additionalMethods];
+    }
+  
   [headerFile appendFormat: @"\n@end\n\n"];
   [headerFile appendString: [NSString stringWithFormat: @"#endif // %@_H_INCLUDE\n", className]];
   [sourceFile appendFormat: @"@end\n"];

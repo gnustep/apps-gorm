@@ -4,6 +4,18 @@
 	Actions = (
 	);
 	Outlets = (
+	    allowFractional,
+	    allowedUnits,
+	    collapseLargestUnit,
+	    includeApproximation,
+	    includeTimeRemaining,
+	    maxUnits,
+	    pad,
+	    dropTrailing,
+	    dropMiddle,
+	    dropLeading,
+	    style,
+	    zeroFormat
 	);
 	Super = IBInspector;
     };
