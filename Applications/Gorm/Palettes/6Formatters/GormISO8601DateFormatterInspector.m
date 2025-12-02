@@ -18,9 +18,20 @@
   return self;
 }
 
+- (void) awakeFromNib
+{ 
+  // Populate time zone popup with known time zones
+  [timeZone removeAllItems];
+  NSArray *timeZoneNames = [NSTimeZone knownTimeZoneNames];
+  for (NSString *tzName in timeZoneNames)
+    {
+      [timeZone addItemWithTitle: tzName];
+    }
+}
+
 - (void) revert: (id)sender
 {
-  NSISO8601DateFormatter *formatter = (NSISO8601DateFormatter *)object;
+  NSISO8601DateFormatter *formatter = (NSISO8601DateFormatter *)[object formatter];
   
   if (formatter == nil)
     return;
@@ -42,16 +53,19 @@
   [colonSeparatorTime setState: (options & NSISO8601DateFormatWithColonSeparatorInTime) ? NSOnState : NSOffState];
   [colonSeparatorTZ setState: (options & NSISO8601DateFormatWithColonSeparatorInTimeZone) ? NSOnState : NSOffState];
   
-  // Set time zone display
-  NSTimeZone *tz = [formatter timeZone];
-  [timeZone setStringValue: tz ? [tz name] : @""];
+  // Set time zone popup selection
+  NSTimeZone *t = [formatter timeZone];
+  if (t != nil)
+    {
+      [timeZone selectItemWithTitle: [t name]];
+    }
   
   [super revert: sender];
 }
 
 - (void) ok: (id)sender
 {
-  NSISO8601DateFormatter *formatter = (NSISO8601DateFormatter *)object;
+  NSISO8601DateFormatter *formatter = (NSISO8601DateFormatter *)[object formatter];
   
   if (formatter == nil)
     return;
@@ -85,6 +99,17 @@
     options |= NSISO8601DateFormatWithColonSeparatorInTimeZone;
   
   [formatter setFormatOptions: options];
+  
+  // Set time zone from popup selection
+  if (sender == timeZone || sender == self)
+    {
+      NSString *tzName = [timeZone titleOfSelectedItem];
+      if (tzName != nil)
+        {
+          NSTimeZone *t = [NSTimeZone timeZoneWithName: tzName];
+          [formatter setTimeZone: t];
+        }
+    }
   
   [super ok: sender];
 }
