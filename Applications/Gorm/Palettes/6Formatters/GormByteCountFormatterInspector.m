@@ -20,7 +20,7 @@
 
 - (void) revert: (id)sender
 {
-  NSByteCountFormatter *formatter = (NSByteCountFormatter *)object;
+  NSByteCountFormatter *formatter = (NSByteCountFormatter *)[object formatter];
   
   if (formatter == nil)
     return;
@@ -48,7 +48,7 @@
 
 - (void) ok: (id)sender
 {
-  NSByteCountFormatter *formatter = (NSByteCountFormatter *)object;
+  NSByteCountFormatter *formatter = (NSByteCountFormatter *)[object formatter];
   
   if (formatter == nil)
     return;
