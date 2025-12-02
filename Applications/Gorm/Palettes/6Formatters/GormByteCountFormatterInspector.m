@@ -18,6 +18,34 @@
   return self;
 }
 
+- (void) revert: (id)sender
+{
+  NSByteCountFormatter *formatter = (NSByteCountFormatter *)object;
+  
+  if (formatter == nil)
+    return;
+  
+  // Get current values from formatter and update UI
+  
+  // Set count style popup
+  NSByteCountFormatterCountStyle style = [formatter countStyle];
+  [countStyle selectItemWithTag: (NSInteger)style];
+  
+  // Set allowed units popup
+  NSByteCountFormatterUnits units = [formatter allowedUnits];
+  [allowUnits selectItemWithTag: (NSInteger)units];
+  
+  // Set boolean properties
+  [allowsNumeric setState: [formatter allowsNonnumericFormatting] ? NSOnState : NSOffState];
+  [includesByteCount setState: [formatter includesActualByteCount] ? NSOnState : NSOffState];
+  [isAdaptive setState: [formatter isAdaptive] ? NSOnState : NSOffState];
+  [includesCount setState: [formatter includesCount] ? NSOnState : NSOffState];
+  [includesUnit setState: [formatter includesUnit] ? NSOnState : NSOffState];
+  [zeroPads setState: [formatter zeroPadsFractionDigits] ? NSOnState : NSOffState];
+  
+  [super revert: sender];
+}
+
 - (void) ok: (id)sender
 {
   NSByteCountFormatter *formatter = (NSByteCountFormatter *)object;
