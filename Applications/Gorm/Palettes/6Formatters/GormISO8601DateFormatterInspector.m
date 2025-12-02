@@ -60,6 +60,14 @@
       [timeZone selectItemWithTitle: [t name]];
     }
   
+  // Set sample input to current date
+  NSDate *now = [NSDate date];
+  [sampleInput setObjectValue: now];
+  
+  // Generate and display sample output
+  NSString *sample = [formatter stringFromDate: now];
+  [sampleOutput setStringValue: sample ? sample : @""];
+  
   [super revert: sender];
 }
 
@@ -109,6 +117,14 @@
           NSTimeZone *t = [NSTimeZone timeZoneWithName: tzName];
           [formatter setTimeZone: t];
         }
+    }
+  
+  // Update sample output when any control changes
+  NSDate *inputDate = [sampleInput objectValue];
+  if (inputDate != nil)
+    {
+      NSString *sample = [formatter stringFromDate: inputDate];
+      [sampleOutput setStringValue: sample ? sample : @""];
     }
   
   [super ok: sender];

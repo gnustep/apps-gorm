@@ -17,7 +17,9 @@
 	    internetDateAndTime,
 	    dashSeparatorDate,
 	    colonSeparatorTime,
-	    colonSeparatorTZ
+	    colonSeparatorTZ,
+	    sampleInput,
+	    sampleOutput
 	);
 	Super = IBInspector;
     };

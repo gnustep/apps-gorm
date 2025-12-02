@@ -17,10 +17,12 @@
   IBOutlet id day;
   IBOutlet id tz;
   IBOutlet id spaceBetweenDateAndTime;
-  IBOutlet id newOutlet6;
+  IBOutlet id internetDateAndTime;
   IBOutlet id dashSeparatorDate;
   IBOutlet id colonSeparatorTime;
   IBOutlet id colonSeparatorTZ;
+  IBOutlet id sampleInput;
+  IBOutlet id sampleOutput;
 }
 
 
