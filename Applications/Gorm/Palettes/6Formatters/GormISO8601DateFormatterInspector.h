@@ -1,36 +1,29 @@
-/* Definition of class GormISO8601DateFormatterInspector
-   Copyright (C) 2025 Free Software Foundation, Inc.
+/* All rights reserved */
 
-   By: Gregory John Casamento
-   Date: 30-11-2025
+#ifndef GormISO8601DateFormatterInspector_H_INCLUDE
+#define GormISO8601DateFormatterInspector_H_INCLUDE
 
-   This file is part of GNUstep.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/
-
-#ifndef _GormISO8601DateFormatterInspector_h_INCLUDE
-#define _GormISO8601DateFormatterInspector_h_INCLUDE
-
-#import <InterfaceBuilder/IBInspector.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
 @interface GormISO8601DateFormatterInspector : IBInspector
 {
+  IBOutlet id timeZone;
+  IBOutlet id fractionalSeconds;
+  IBOutlet id year;
+  IBOutlet id fullDate;
+  IBOutlet id month;
+  IBOutlet id woy;
+  IBOutlet id fullTime;
+  IBOutlet id day;
+  IBOutlet id tz;
+  IBOutlet id spaceBetweenDateAndTime;
+  IBOutlet id newOutlet6;
+  IBOutlet id dashSeparatorDate;
+  IBOutlet id colonSeparatorTime;
+  IBOutlet id colonSeparatorTZ;
 }
+
 
 @end
 
-#endif	/* _GormISO8601DateFormatterInspector_h_INCLUDE */
+#endif // GormISO8601DateFormatterInspector_H_INCLUDE

@@ -1,26 +1,4 @@
-/* Implementation of class GormEnergyFormatterInspector
-   Copyright (C) 2025 Free Software Foundation, Inc.
-   
-   By: Gregory John Casamento
-   Date: 30-11-2025
-
-   This file is part of GNUstep.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/
+/* All rights reserved */
 
 #import "GormEnergyFormatterInspector.h"
 
@@ -40,9 +18,62 @@
   return self;
 }
 
+- (void) revert: (id)sender
+{
+  NSEnergyFormatter *formatter = (NSEnergyFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Get current values from formatter and update UI
+  
+  // Set unit style popup
+  NSFormattingUnitStyle style = [formatter unitStyle];
+  [unitStyle selectItemWithTag: (NSInteger)style];
+  
+  // Set food energy use checkbox
+  BOOL foodUse = [formatter isForFoodEnergyUse];
+  [forFoodEnergyUse setState: foodUse ? NSOnState : NSOffState];
+  
+  // Set sample input to a default value (1000 joules)
+  [sampleInput setDoubleValue: 1000.0];
+  
+  // Generate sample output
+  NSString *sample = [formatter stringFromJoules: 1000.0];
+  [sampleOutput setStringValue: sample ? sample : @""];
+  
+  [super revert: sender];
+}
+
 - (void) ok: (id)sender
 {
-  // TODO: Implement saving formatter properties
+  NSEnergyFormatter *formatter = (NSEnergyFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Set unit style from popup
+  if (sender == unitStyle || sender == self)
+    {
+      NSFormattingUnitStyle style = (NSFormattingUnitStyle)[[unitStyle selectedItem] tag];
+      [formatter setUnitStyle: style];
+    }
+  
+  // Set food energy use from checkbox
+  if (sender == forFoodEnergyUse || sender == self)
+    {
+      BOOL foodUse = ([forFoodEnergyUse state] == NSOnState);
+      [formatter setForFoodEnergyUse: foodUse];
+    }
+  
+  // Update sample output when any control changes
+  if (sender == unitStyle || sender == forFoodEnergyUse || sender == sampleInput || sender == self)
+    {
+      double joules = [sampleInput doubleValue];
+      NSString *sample = [formatter stringFromJoules: joules];
+      [sampleOutput setStringValue: sample ? sample : @""];
+    }
+  
   [super ok: sender];
 }
 
