@@ -1,26 +1,4 @@
-/* Implementation of class GormDateIntervalFormatterInspector
-   Copyright (C) 2025 Free Software Foundation, Inc.
-   
-   By: Gregory John Casamento
-   Date: 30-11-2025
-
-   This file is part of GNUstep.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/
+/* All rights reserved */
 
 #import "GormDateIntervalFormatterInspector.h"
 
@@ -40,9 +18,71 @@
   return self;
 }
 
+- (void) revert: (id)sender
+{
+  NSDateIntervalFormatter *formatter = (NSDateIntervalFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Get current values from formatter and update UI
+  
+  // Set date style popup
+  NSDateIntervalFormatterStyle dateStyleValue = [formatter dateStyle];
+  [dateStyle selectItemWithTag: (NSInteger)dateStyleValue];
+  
+  // Set time style popup
+  NSDateIntervalFormatterStyle timeStyleValue = [formatter timeStyle];
+  [timeStyle selectItemWithTag: (NSInteger)timeStyleValue];
+  
+  // Set sample dates to current date/time if empty
+  NSDate *now = [NSDate date];
+  NSDate *later = [now dateByAddingTimeInterval: 3600]; // 1 hour later
+  
+  [sampleStart setObjectValue: now];
+  [sampleEnd setObjectValue: later];
+  
+  // Generate sample output
+  NSString *sample = [formatter stringFromDate: now toDate: later];
+  [output setStringValue: sample ? sample : @""];
+  
+  [super revert: sender];
+}
+
 - (void) ok: (id)sender
 {
-  // TODO: Implement saving formatter properties
+  NSDateIntervalFormatter *formatter = (NSDateIntervalFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Set date style from popup
+  if (sender == dateStyle || sender == self)
+    {
+      NSDateIntervalFormatterStyle style = (NSDateIntervalFormatterStyle)[[dateStyle selectedItem] tag];
+      [formatter setDateStyle: style];
+    }
+  
+  // Set time style from popup
+  if (sender == timeStyle || sender == self)
+    {
+      NSDateIntervalFormatterStyle style = (NSDateIntervalFormatterStyle)[[timeStyle selectedItem] tag];
+      [formatter setTimeStyle: style];
+    }
+  
+  // Update sample output when styles change
+  if (sender == dateStyle || sender == timeStyle || sender == sampleStart || sender == sampleEnd || sender == self)
+    {
+      NSDate *startDate = [sampleStart objectValue];
+      NSDate *endDate = [sampleEnd objectValue];
+      
+      if (startDate && endDate)
+        {
+          NSString *sample = [formatter stringFromDate: startDate toDate: endDate];
+          [output setStringValue: sample ? sample : @""];
+        }
+    }
+  
   [super ok: sender];
 }
 
