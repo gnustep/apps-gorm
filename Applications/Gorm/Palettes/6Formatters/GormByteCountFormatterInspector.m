@@ -43,6 +43,13 @@
   [includesUnit setState: [formatter includesUnit] ? NSOnState : NSOffState];
   [zeroPads setState: [formatter zeroPadsFractionDigits] ? NSOnState : NSOffState];
   
+  // Set sample input to a default value (1024000000 bytes = ~1GB)
+  [sampleInput setDoubleValue: 1024000000.0];
+  
+  // Generate sample output
+  NSString *sample = [formatter stringFromByteCount: 1024000000];
+  [sampleOutput setStringValue: sample ? sample : @""];
+  
   [super revert: sender];
 }
 
@@ -96,6 +103,16 @@
   if (sender == zeroPads || sender == self)
     {
       [formatter setZeroPadsFractionDigits: ([zeroPads state] == NSOnState)];
+    }
+  
+  // Update sample output when any control changes
+  if (sender == countStyle || sender == allowUnits || sender == allowsNumeric || 
+      sender == includesByteCount || sender == isAdaptive || sender == includesCount ||
+      sender == includesUnit || sender == zeroPads || sender == sampleInput || sender == self)
+    {
+      long long byteCount = (long long)[sampleInput doubleValue];
+      NSString *sample = [formatter stringFromByteCount: byteCount];
+      [sampleOutput setStringValue: sample ? sample : @""];
     }
   
   [super ok: sender];

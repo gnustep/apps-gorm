@@ -15,6 +15,8 @@
   IBOutlet id includesCount;
   IBOutlet id includesUnit;
   IBOutlet id zeroPads;
+  IBOutlet id sampleInput;
+  IBOutlet id sampleOutput;
 }
 
 @end

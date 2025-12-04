@@ -11,7 +11,9 @@
 	    isAdaptive,
 	    includesCount,
 	    includesUnit,
-	    zeroPads
+	    zeroPads,
+	    sampleInput,
+	    sampleOutput
 	);
 	Super = IBInspector;
     };
