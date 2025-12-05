@@ -5,6 +5,12 @@
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
 
+/**
+ * Inspector for NSMassFormatter instances.
+ *
+ * Provides a user interface for configuring NSMassFormatter properties
+ * including unit style and person mass use formatting options.
+ */
 @interface GormMassFormatterInspector : IBInspector
 {
   IBOutlet id unitStyle;

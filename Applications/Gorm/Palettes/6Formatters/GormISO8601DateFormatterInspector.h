@@ -5,6 +5,13 @@
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
 
+/**
+ * Inspector for NSISO8601DateFormatter instances.
+ *
+ * Provides a user interface for configuring NSISO8601DateFormatter properties
+ * including format options for year, month, day, week of year, time zone,
+ * fractional seconds, separators, and spacing between date and time components.
+ */
 @interface GormISO8601DateFormatterInspector : IBInspector
 {
   IBOutlet id timeZone;

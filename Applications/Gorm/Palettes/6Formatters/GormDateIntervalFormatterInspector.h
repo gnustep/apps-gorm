@@ -5,6 +5,12 @@
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
 
+/**
+ * Inspector for NSDateIntervalFormatter instances.
+ *
+ * Provides a user interface for configuring NSDateIntervalFormatter properties
+ * including date style and time style for formatting date intervals.
+ */
 @interface GormDateIntervalFormatterInspector : IBInspector
 {
   IBOutlet id dateStyle;

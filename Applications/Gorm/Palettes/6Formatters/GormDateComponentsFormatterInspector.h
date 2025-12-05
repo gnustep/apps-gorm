@@ -5,6 +5,13 @@
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
 
+/**
+ * Inspector for NSDateComponentsFormatter instances.
+ *
+ * Provides a user interface for configuring NSDateComponentsFormatter properties
+ * including allowed units, formatting style, maximum unit count, zero formatting
+ * behavior, and padding options.
+ */
 @interface GormDateComponentsFormatterInspector : IBInspector
 {
   IBOutlet id allowFractional;

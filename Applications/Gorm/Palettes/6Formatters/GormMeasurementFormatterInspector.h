@@ -27,6 +27,12 @@
 
 #import <InterfaceBuilder/IBInspector.h>
 
+/**
+ * Inspector for NSMeasurementFormatter instances.
+ *
+ * Provides a user interface for configuring NSMeasurementFormatter properties
+ * for formatting unit measurements.
+ */
 @interface GormMeasurementFormatterInspector : IBInspector
 {
 }

@@ -27,6 +27,12 @@
 
 #import <InterfaceBuilder/IBInspector.h>
 
+/**
+ * Inspector for NSPersonNameComponentsFormatter instances.
+ *
+ * Provides a user interface for configuring NSPersonNameComponentsFormatter
+ * properties for formatting person names according to locale conventions.
+ */
 @interface GormPersonNameComponentsFormatterInspector : IBInspector
 {
 }
