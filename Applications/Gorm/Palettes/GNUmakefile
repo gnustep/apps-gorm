@@ -33,7 +33,8 @@ SUBPROJECTS = \
 	2Controls \
 	3Containers \
 	4Data \
-	5Toolbar
+	5Toolbar \
+	6Formatters \
 
 -include GNUmakefile.preamble
 

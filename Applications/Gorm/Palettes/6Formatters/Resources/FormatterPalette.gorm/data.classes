@@ -1,0 +1,28 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FormatterPalette = {
+	Actions = (
+	);
+	Outlets = (
+	    "_byteCount",
+	    "_dateComponents",
+	    "_dateInterval",
+	    "_energy",
+	    "_iso1806date",
+	    "_length",
+	    "_mass",
+	    "_measurement",
+	    "_personNameComponents",
+	    "_byteCount",
+	    "_dateComponents",
+	    "_dateInterval",
+	    "_energy",
+	    "_iso1806date",
+	    "_length",
+	    "_mass",
+	    "_measurement",
+	    "_personNameComponents"
+	);
+	Super = IBPalette;
+    };
+}

@@ -1,0 +1,26 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormISO8601DateFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    timeZone,
+	    fractionalSeconds,
+	    year,
+	    fullDate,
+	    month,
+	    woy,
+	    fullTime,
+	    day,
+	    tz,
+	    spaceBetweenDateAndTime,
+	    internetDateAndTime,
+	    dashSeparatorDate,
+	    colonSeparatorTime,
+	    colonSeparatorTZ,
+	    sampleInput,
+	    sampleOutput
+	);
+	Super = IBInspector;
+    };
+}

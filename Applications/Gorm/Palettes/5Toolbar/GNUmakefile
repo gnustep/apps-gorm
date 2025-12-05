@@ -2,8 +2,8 @@
 #
 #   Copyright (C) 1999 Free Software Foundation, Inc.
 #
-#   Author:  Laurent Julliard <laurent@julliard-online.org>
-#   Date: Nov 2001
+#   Author: Gregory Casamento <greg.casamento@gmail.com>
+#   Date: Nov 2025
 #   
 #   This file is part of GNUstep.
 #   

@@ -1,0 +1,20 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormByteCountFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    countStyle,
+	    allowUnits,
+	    allowsNumeric,
+	    includesByteCount,
+	    isAdaptive,
+	    includesCount,
+	    includesUnit,
+	    zeroPads,
+	    sampleInput,
+	    sampleOutput
+	);
+	Super = IBInspector;
+    };
+}
