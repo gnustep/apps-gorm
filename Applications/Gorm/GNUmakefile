@@ -65,7 +65,7 @@ APP_NAME = Gorm
 Gorm_PRINCIPAL_CLASS=Gorm
 Gorm_APPLICATION_ICON=Gorm.tiff
 Gorm_RESOURCE_FILES = \
-	GormInfo.plist \
+	GormInfo.plist.in \
 	Resources/Defaults.plist \
 	Resources/language-codes.plist \
 	Palettes/0Menus/0Menus.palette \
