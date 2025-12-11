@@ -40,9 +40,58 @@
   return self;
 }
 
+- (void) revert: (id)sender
+{
+  NSMeasurementFormatter *formatter = (NSMeasurementFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Get current values from formatter and update UI
+  
+  // Set unit style popup
+  NSFormattingUnitStyle style = [formatter unitStyle];
+  [unitStyle selectItemWithTag: (NSInteger)style];
+  
+  // Set natural scale checkbox
+  BOOL useNaturalScale = [[formatter numberFormatter] usesSignificantDigits];
+  [naturalScale setState: useNaturalScale ? NSOnState : NSOffState];
+  
+  // Set provided unit text field (display as string for reference)
+  NSUnit *unit = [formatter providedUnit];
+  [providedUnit setStringValue: unit ? [unit symbol] : @""];
+  
+  [super revert: sender];
+}
+
 - (void) ok: (id)sender
 {
-  // TODO: Implement saving formatter properties
+  NSMeasurementFormatter *formatter = (NSMeasurementFormatter *)[object formatter];
+  
+  if (formatter == nil)
+    return;
+  
+  // Set unit style from popup
+  if (sender == unitStyle || sender == self)
+    {
+      NSFormattingUnitStyle style = (NSFormattingUnitStyle)[[unitStyle selectedItem] tag];
+      [formatter setUnitStyle: style];
+    }
+  
+  // Set natural scale from checkbox
+  if (sender == naturalScale || sender == self)
+    {
+      BOOL useNaturalScale = ([naturalScale state] == NSOnState);
+      NSNumberFormatter *numFormatter = [formatter numberFormatter];
+      if (numFormatter == nil)
+        {
+          numFormatter = [[NSNumberFormatter alloc] init];
+          [formatter setNumberFormatter: numFormatter];
+          RELEASE(numFormatter);
+        }
+      [numFormatter setUsesSignificantDigits: useNaturalScale];
+    }
+  
   [super ok: sender];
 }
 
