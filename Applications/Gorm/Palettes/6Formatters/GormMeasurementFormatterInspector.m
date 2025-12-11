@@ -58,8 +58,8 @@
   [naturalScale setState: useNaturalScale ? NSOnState : NSOffState];
   
   // Set provided unit text field (display as string for reference)
-  NSUnit *unit = [formatter providedUnit];
-  [providedUnit setStringValue: unit ? [unit symbol] : @""];
+  // NSUnit *unit = [formatter providedUnit];
+  // [providedUnit setStringValue: unit ? [unit symbol] : @""];
   
   [super revert: sender];
 }
