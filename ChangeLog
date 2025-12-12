@@ -1,3 +1,95 @@
+2025-12-12 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/Palettes/6Formatters/GormByteCountFormatterInspector.m:
+* Applications/Gorm/Palettes/6Formatters/GormDateComponentsFormatterInspector.m:
+* Applications/Gorm/Palettes/6Formatters/GormDateIntervalFormatterInspector.m:
+* Applications/Gorm/Palettes/6Formatters/GormEnergyFormatterInspector.m:
+* Applications/Gorm/Palettes/6Formatters/GormLengthFormatterInspector.m:
+* Applications/Gorm/Palettes/6Formatters/GormMassFormatterInspector.m: Ensure
+ all formatter inspectors always update sample output when any control changes.
+ Removed conditional checks and implemented consistent behavior across all
+ inspectors for immediate visual feedback.
+
+2025-12-11 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/GormInfo.plist: Renamed to GormInfo.plist.in to support
+ version variable substitution from Version file.
+
+* Applications/Gorm/GormInfo.plist.in: Updated ApplicationRelease and
+ NSBuildVersion to use @VERSION@ placeholder that gets replaced during
+ build process with actual version from Version file.
+
+* Applications/Gorm/GNUmakefile: Updated to reference GormInfo.plist.in
+ instead of GormInfo.plist in resource files.
+
+* Applications/Gorm/GNUmakefile.postamble: Already contains rules to
+ generate GormInfo.plist from .plist.in template using sed to replace
+ @VERSION@ with actual version number.
+
+2025-12-10 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/Palettes/6Formatters/GormPersonNameComponentsFormatterInspector.m:
+ Implemented ok: and revert: methods for NSPersonNameComponentsFormatter
+ inspector. Added support for style (short/medium/long/abbreviated) and
+ phonetic display options.
+
+2025-12-06 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/Palettes/6Formatters/GormMeasurementFormatterInspector.m:
+ Implemented ok: and revert: methods for NSMeasurementFormatter inspector.
+ Added support for unit style and natural scale (significant digits) options.
+
+2025-12-04 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/Palettes/6Formatters/GormByteCountFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormDateComponentsFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormDateIntervalFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormEnergyFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormISO8601DateFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormLengthFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormMassFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormMeasurementFormatterInspector.h:
+* Applications/Gorm/Palettes/6Formatters/GormPersonNameComponentsFormatterInspector.h:
+ Added autogsdoc documentation to all formatter inspector header files.
+
+* Applications/Gorm/Palettes/6Formatters/GormLengthFormatterInspector.m:
+ Implemented ok: and revert: methods for NSLengthFormatter inspector.
+ Added support for unit style and person height use options with
+ sample output in meters.
+
+2025-12-02 Gregory John Casamento <greg.casamento@gmail.com>
+
+* Applications/Gorm/Palettes/6Formatters/GormISO8601DateFormatterInspector.m:
+ Implemented ok: and revert: methods for NSISO8601DateFormatter inspector.
+ Added comprehensive support for all ISO 8601 format options including
+ year, month, day, week of year, time zone, fractional seconds, and
+ various separator options. Added time zone popup populated with all
+ known time zones. Added sample input/output fields to preview formatted
+ dates.
+
+* Applications/Gorm/Palettes/6Formatters/GormEnergyFormatterInspector.m:
+ Implemented ok: and revert: methods for NSEnergyFormatter inspector.
+ Added support for unit style and food energy use options with sample
+ output in joules.
+
+* Applications/Gorm/Palettes/6Formatters/GormDateIntervalFormatterInspector.m:
+ Implemented ok: and revert: methods for NSDateIntervalFormatter inspector.
+ Added support for date style and time style options with sample date
+ range preview.
+
+* Applications/Gorm/Palettes/6Formatters/GormDateComponentsFormatterInspector.m:
+ Implemented ok: and revert: methods for NSDateComponentsFormatter inspector.
+ Added comprehensive support for allowed units, maximum unit count, units
+ style, zero formatting behavior (using bitwise operations), padding options,
+ and boolean flags for fractional units, collapse largest unit, and
+ approximation phrase.
+
+* Applications/Gorm/Palettes/6Formatters/GormByteCountFormatterInspector.m:
+ Implemented ok: and revert: methods for NSByteCountFormatter inspector.
+ Added support for count style, allowed units, and six boolean properties
+ (numeric formatting, actual byte count, adaptive, includes count/unit,
+ zero padding). Sample output shows formatted byte count.
+
 2025-11-30 Gregory John Casamento <greg.casamento@gmail.com>
 
 * GormCore/GormImageInspector.m: Fix image inspector to properly
