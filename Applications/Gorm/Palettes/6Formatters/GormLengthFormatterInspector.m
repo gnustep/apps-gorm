@@ -66,13 +66,10 @@
       [formatter setForPersonHeightUse: heightUse];
     }
   
-  // Update sample output when any control changes
-  if (sender == unitStyle || sender == forPersonHeightUse || sender == sampleInput || sender == self)
-    {
-      double meters = [sampleInput doubleValue];
-      NSString *sample = [formatter stringFromMeters: meters];
-      [sampleOutput setStringValue: sample ? sample : @""];
-    }
+  // Always update sample output
+  double meters = [sampleInput doubleValue];
+  NSString *sample = [formatter stringFromMeters: meters];
+  [sampleOutput setStringValue: sample ? sample : @""];
   
   [super ok: sender];
 }

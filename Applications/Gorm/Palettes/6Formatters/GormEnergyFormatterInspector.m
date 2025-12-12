@@ -66,13 +66,10 @@
       [formatter setForFoodEnergyUse: foodUse];
     }
   
-  // Update sample output when any control changes
-  if (sender == unitStyle || sender == forFoodEnergyUse || sender == sampleInput || sender == self)
-    {
-      double joules = [sampleInput doubleValue];
-      NSString *sample = [formatter stringFromJoules: joules];
-      [sampleOutput setStringValue: sample ? sample : @""];
-    }
+  // Always update sample output
+  double joules = [sampleInput doubleValue];
+  NSString *sample = [formatter stringFromJoules: joules];
+  [sampleOutput setStringValue: sample ? sample : @""];
   
   [super ok: sender];
 }

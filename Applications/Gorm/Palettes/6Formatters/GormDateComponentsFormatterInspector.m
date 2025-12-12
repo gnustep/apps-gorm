@@ -152,6 +152,16 @@
     }
   */
   
+  // Always update sample output when any control changes
+  // Create a sample date components (1 hour, 30 minutes, 45 seconds)
+  NSDateComponents *components = [[NSDateComponents alloc] init];
+  [components setHour: 1];
+  [components setMinute: 30];
+  [components setSecond: 45];
+  NSString *sample = [formatter stringFromDateComponents: components];
+  RELEASE(components);
+  [zeroFormat setStringValue: sample ? sample : @""];
+  
   [super ok: sender];
 }
 

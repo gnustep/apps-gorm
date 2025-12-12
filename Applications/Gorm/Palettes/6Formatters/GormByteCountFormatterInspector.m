@@ -105,15 +105,10 @@
       [formatter setZeroPadsFractionDigits: ([zeroPads state] == NSOnState)];
     }
   
-  // Update sample output when any control changes
-  if (sender == countStyle || sender == allowUnits || sender == allowsNumeric || 
-      sender == includesByteCount || sender == isAdaptive || sender == includesCount ||
-      sender == includesUnit || sender == zeroPads || sender == sampleInput || sender == self)
-    {
-      long long byteCount = (long long)[sampleInput doubleValue];
-      NSString *sample = [formatter stringFromByteCount: byteCount];
-      [sampleOutput setStringValue: sample ? sample : @""];
-    }
+  // Always update sample output when any control changes
+  long long byteCount = (long long)[sampleInput doubleValue];
+  NSString *sample = [formatter stringFromByteCount: byteCount];
+  [sampleOutput setStringValue: sample ? sample : @""];
   
   [super ok: sender];
 }

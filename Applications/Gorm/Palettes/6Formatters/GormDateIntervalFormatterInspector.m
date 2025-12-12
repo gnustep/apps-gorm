@@ -70,17 +70,14 @@
       [formatter setTimeStyle: style];
     }
   
-  // Update sample output when styles change
-  if (sender == dateStyle || sender == timeStyle || sender == sampleStart || sender == sampleEnd || sender == self)
+  // Always update sample output
+  NSDate *startDate = [sampleStart objectValue];
+  NSDate *endDate = [sampleEnd objectValue];
+  
+  if (startDate && endDate)
     {
-      NSDate *startDate = [sampleStart objectValue];
-      NSDate *endDate = [sampleEnd objectValue];
-      
-      if (startDate && endDate)
-        {
-          NSString *sample = [formatter stringFromDate: startDate toDate: endDate];
-          [output setStringValue: sample ? sample : @""];
-        }
+      NSString *sample = [formatter stringFromDate: startDate toDate: endDate];
+      [output setStringValue: sample ? sample : @""];
     }
   
   [super ok: sender];
