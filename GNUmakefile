@@ -48,8 +48,12 @@ export PACKAGE_NAME
 include $(GNUSTEP_MAKEFILES)/common.make
 
 CVS_MODULE_NAME = gorm
+
 SVN_MODULE_NAME = gorm
 SVN_BASE_URL = svn+ssh://svn.gna.org/svn/gnustep/apps
+
+GIT_MODULE_NAME = apps-gorm
+GIT_BASE_URL = git@github.com:gnustep
 
 #
 # Each palette is a subproject
