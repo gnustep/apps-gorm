@@ -111,7 +111,7 @@ selectCellWithString: (NSString*)title
       NSString	*type = [types objectForKey: name];
       
       [super ok: sender];
-      if (type == typeChar)
+      if (type == typeCharOrBool)
 	{
 	  char	v = [value intValue];
 	  void	(*imp)(id,SEL,char);
@@ -281,7 +281,7 @@ selectCellWithString: (NSString*)title
 			    type = typeId;
 			    break;
 			  case _C_CHR:
-			    type = typeChar;
+			    type = typeCharOrBool;
 			    break;
 			  case _C_UCHR:
 			    type = typeUChar;
@@ -340,7 +340,7 @@ selectCellWithString: (NSString*)title
       NSString	*type = [types objectForKey: name];
 
       [label setTitle: type];
-      if (type == typeChar)
+      if (type == typeCharOrBool)
 	{
 	  char	v;
 	  char	(*imp)();
