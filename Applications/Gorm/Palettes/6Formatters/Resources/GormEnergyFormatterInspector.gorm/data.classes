@@ -1,0 +1,14 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormEnergyFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    unitStyle,
+	    forFoodEnergyUse,
+	    sampleInput,
+	    sampleOutput
+	);
+	Super = IBInspector;
+    };
+}

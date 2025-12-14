@@ -1,0 +1,14 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormLengthFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    forPersonHeightUse,
+	    sampleOutput,
+	    sampleInput,
+	    unitStyle
+	);
+	Super = IBInspector;
+    };
+}

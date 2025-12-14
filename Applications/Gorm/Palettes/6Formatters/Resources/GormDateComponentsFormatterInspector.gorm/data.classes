@@ -1,0 +1,22 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormDateComponentsFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    allowFractional,
+	    allowedUnits,
+	    collapseLargestUnit,
+	    includeApproximation,
+	    includeTimeRemaining,
+	    maxUnits,
+	    pad,
+	    dropTrailing,
+	    dropMiddle,
+	    dropLeading,
+	    style,
+	    zeroFormat
+	);
+	Super = IBInspector;
+    };
+}

@@ -1,0 +1,14 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormMeasurementFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    unitStyle,
+	    naturalScale,
+	    providedUnit,
+	    temperatureWithoutUnit
+	);
+	Super = IBInspector;
+    };
+}
