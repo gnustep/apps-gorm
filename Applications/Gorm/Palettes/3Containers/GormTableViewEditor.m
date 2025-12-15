@@ -133,6 +133,7 @@ static NSText *_textObject;
 		  [tableView gormAllowsColumnReordering]];
       [tableView setGormDelegate: nil];
       [tableView setNeedsDisplay: YES];
+      RELEASE(tableView); // Release the retained tableView from activate
       [super deactivate];
     }
 }
