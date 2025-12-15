@@ -279,6 +279,11 @@ static NSText *_textObject;
 	{
 	  [tableView deselectColumn: [tableView selectedColumn]];
 	}
+      else
+	{
+	  // Allow clicking on table view to select it
+	  [super mouseDown: theEvent];
+	}
     }
   else if (hitView == self && [theEvent modifierFlags] & NSControlKeyMask)
     {
