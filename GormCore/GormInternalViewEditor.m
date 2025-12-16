@@ -306,7 +306,7 @@ static NSImage *horizontalImage;
       id ed = [sel objectAtIndex: i];
       id temp = [ed editedObject];
 
-      [ed detachSubviews];
+      // detachObject: already handles child objects recursively
       [document detachObject: temp];
     }
 }

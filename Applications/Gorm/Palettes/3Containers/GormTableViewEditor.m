@@ -74,7 +74,7 @@ static NSText *_textObject;
       else
 	tableView = (GormNSTableView *)_editedObject;
 
-      RETAIN(tableView); // FIXME: Temporary fix.
+      RETAIN(tableView);
       [tableView setAllowsColumnResizing: YES];
       [tableView setAllowsColumnSelection: YES];
       [tableView setAllowsMultipleSelection: NO];

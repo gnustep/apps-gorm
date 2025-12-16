@@ -233,6 +233,9 @@ static NSImage  *fileImage = nil;
       // for saving the editors when the gorm file is persisted.
       savedEditors = [[NSMutableArray alloc] init];	  
       
+      // guard against recursive detachment
+      detachingObjects = [[NSMutableSet alloc] init];
+      
       // observe certain notifications...
       [nc addObserver: self
 	  selector: @selector(handleNotification:)
@@ -1384,8 +1387,16 @@ static NSImage  *fileImage = nil;
  */
 - (void) detachObject: (id)anObject closeEditor: (BOOL)close_editor
 {
+  // Guard against recursive detachment
+  if ([detachingObjects containsObject: anObject])
+    {
+      return; // Already being detached, prevent recursion
+    }
+  
   if([self containsObject: anObject])
     {
+      [detachingObjects addObject: anObject]; // Mark as being detached
+      
       NSString	       *name = RETAIN([self nameForObject: anObject]); // released at end of method...
       unsigned	       count;
       NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
@@ -1511,6 +1522,8 @@ static NSImage  *fileImage = nil;
       [nc postNotificationName: GormDidDetachObjectFromDocumentNotification
                         object: anObject
                       userInfo: nil];
+      
+      [detachingObjects removeObject: anObject]; // Remove from detaching set
       RELEASE(anObject); // release since notifications are done.
     }
 }

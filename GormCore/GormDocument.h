@@ -109,6 +109,7 @@
   NSMutableSet          *topLevelObjects;
   NSMutableSet          *visibleWindows;
   NSMutableSet          *deferredWindows;
+  NSMutableSet          *detachingObjects; // Guard against recursive detachment
 
   // Controllers...
   GormObjectViewController *objectViewController;

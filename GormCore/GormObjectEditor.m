@@ -190,23 +190,11 @@ static NSMapTable	*docMap = 0;
 	}
 
       [document detachObject: selected];
+      // detachObject: already handles child objects recursively,
+      // so we don't need to manually detach subviews or menu items
       if ([selected isKindOfClass: [NSWindow class]] == YES)
 	{
-	  NSArray *subviews = allSubviews([(NSWindow *)selected contentView]);
-	  [document detachObjects: subviews];
 	  [selected close];
-	}
-      
-      if ([selected isKindOfClass: [NSMenu class]] == YES)
-	{
-	  NSArray *items = findAll( selected );
-	  NSEnumerator *en = [items objectEnumerator];
-	  id obj = nil;
-	  
-	  while((obj = [en nextObject]) != nil)
-	    {
-	      [document detachObject: obj];
-	    }
 	}
       
       [objects removeObjectIdenticalTo: selected];
