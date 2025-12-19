@@ -152,7 +152,10 @@
 @implementation	GormEditorToParent
 @end
 
-
+//
+// GormDocument, this is the central store of
+// all of the information about the model.
+//
 @implementation GormDocument
 
 static NSImage	*objectsImage = nil;

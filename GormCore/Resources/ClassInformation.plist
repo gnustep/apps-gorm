@@ -152,8 +152,14 @@
         Outlets = (window, okButton, revertButton); 
         Super = NSObject; 
     }; 
-    IBPalette = {Actions = (); Outlets = (originalWindow); Super = NSObject; }; 
-    NSActionCell = {Super = NSCell; }; 
+    IBPalette = {
+        Actions = (); 
+        Outlets = (originalWindow); 
+        Super = NSObject; 
+    }; 
+    NSActionCell = {
+        Super = NSCell; 
+    }; 
     NSApplication = {
         Actions = (
             "arrangeInFront:", 
@@ -174,17 +180,38 @@
         Outlets = (delegate); 
         Super = NSResponder; 
     }; 
-    NSArray = {Super = NSObject; }; 
-    NSBox = {Super = NSView; }; 
+    NSArray = {
+        Super = NSObject; 
+    }; 
+    NSArrayController = {
+        Actions = ("add:", "insert:", "remove:", "selectNext:", "selectPrevious:");
+        Outlets = (arrangedObjects, content);
+        Super = NSObjectController;
+    };
+    NSBox = {
+        Outlets = (contentView);
+        Super = NSView; 
+    }; 
     NSBrowser = {
         Actions = ("doClick:", "doDoubleClick:", "selectAll:"); 
         Outlets = (delegate); 
         Super = NSControl; 
     }; 
-    NSBrowserCell = {Super = NSCell; }; 
-    NSButton = {Actions = ("performClick:"); Super = NSControl; }; 
-    NSButtonCell = {Actions = ("performClick:"); Super = NSActionCell; }; 
-    NSCStringText = {Actions = ("clear:", "selectText:"); Super = NSText; }; 
+    NSBrowserCell = {
+        Super = NSCell; 
+    }; 
+    NSButton = {
+        Actions = ("performClick:"); 
+        Super = NSControl; 
+    }; 
+    NSButtonCell = {
+        Actions = ("performClick:"); 
+        Super = NSActionCell; 
+    }; 
+    NSCStringText = {
+        Actions = ("clear:", "selectText:"); 
+        Super = NSText; 
+    }; 
     NSCell = {
         Actions = (
             "takeDoubleValueFrom:", 
@@ -194,8 +221,18 @@
         ); 
         Super = NSObject; 
     }; 
-    NSColorWell = {Actions = ("takeColorFrom:"); Super = NSControl; }; 
-    NSComboBox = {Outlets = (dataSource); Super = NSTextField; }; 
+    NSClipView = {
+        Outlets = (documentView);
+        Super = NSView;
+    };
+    NSColorWell = {
+        Actions = ("takeColorFrom:"); 
+        Super = NSControl; 
+    }; 
+    NSComboBox = {
+        Outlets = (dataSource, delegate); 
+        Super = NSTextField; 
+    }; 
     NSControl = {
         Actions = (
             "takeDoubleValueFrom:", 
@@ -207,9 +244,29 @@
         Outlets = (target); 
         Super = NSView; 
     }; 
-    NSCursor = {Super = NSObject; }; 
-    NSDateFormatter = {Super = NSFormatter; }; 
-    NSDictionary = {Super = NSObject; }; 
+    NSController = {
+        Actions = ();
+        Outlets = ();
+        Super = NSObject;
+    };
+    NSCursor = {
+        Super = NSObject; 
+    }; 
+    NSDateFormatter = {
+        Super = NSFormatter; 
+    }; 
+    NSDatePicker = {
+        Outlets = (delegate);
+        Super = NSControl;
+    };
+    NSDictionary = {
+        Super = NSObject; 
+    }; 
+    NSDictionaryController = {
+        Actions = ();
+        Outlets = ();
+        Super = NSArrayController;
+    };
     NSDocument = {
         Actions = (
             "printDocument:", 
@@ -242,52 +299,141 @@
         Outlets = (menu); 
         Super = NSObject; 
     }; 
-    NSForm = {Super = NSMatrix; }; 
-    NSFormCell = {Super = NSActionCell; }; 
-    NSFormatter = {Super = NSObject; }; 
-    NSHelpManager = {Actions = ("activateContextHelpMode:", "showHelp:"); Super = NSObject; }; 
-    NSImage = {Super = NSObject; }; 
-    NSImageCell = {Super = NSCell; }; 
-    NSImageView = {Super = NSControl; }; 
+    NSForm = {
+        Super = NSMatrix; 
+    }; 
+    NSFormCell = {
+        Super = NSActionCell; 
+    }; 
+    NSFormatter = {
+        Super = NSObject; 
+    }; 
+    NSHelpManager = {
+        Actions = ("activateContextHelpMode:", "showHelp:"); 
+        Super = NSObject; 
+    }; 
+    NSImage = {
+        Super = NSObject; 
+    }; 
+    NSImageCell = {
+        Super = NSCell; 
+    };LevelIndicator = {
+        Super = NSControl;
+    };
+    NSImageView = {
+        Super = NSControl; 
+    }; 
     NSMatrix = {
         Actions = ("selectAll:", "selectText:"); 
         Outlets = (delegate); 
         Super = NSControl; 
     }; 
-    NSMenu = {Actions = ("submenuAction:"); Super = NSObject; }; 
-    NSMenuItem = {Outlets = (target); Super = NSObject; }; 
-    NSMenuItemCell = {Super = NSButtonCell; }; 
-    NSMovieView = {
-    	Actions = ("copy:","clear:","cut:","gotoBeginning:","gotoEnd:","gotoPosterFrame:","paste:","start:","stepBack:","stepForward:","stop:","undo:","selectAll:");
-	Outlets = ("_statusField", "_positionField");
-	Super = NSView;
-    };
-    NSMutableArray = {Super = NSArray; }; 
-    NSMutableDictionary = {Super = NSDictionary; }; 
-    NSNumberFormatter = {Super = NSFormatter; }; 
-    NSObject = {}; 
-    NSOpenGLView = {Super = NSView; }; 
-    NSOutlineView = {Super = NSTableView; }; 
-    NSPanel = {Super = NSWindow; }; 
-    NSPopUpButton = {Super = NSButton; }; 
-    NSPopUpButtonCell = {Super = NSMenuItemCell; }; 
-    NSProgressIndicator = {Actions = ("animate:", "startAnimation:", "stopAnimation:"); Super = NSView; }; 
-    NSResponder = {Outlets = (menu); Super = NSObject; }; 
-    NSRulerView = {Super = NSView; }; 
-    NSScrollView = {Super = NSView; }; 
-    NSScroller = {Super = NSControl; }; 
-    NSSearchField = {Super = NSTextField; }; 
-    NSSearchFieldCell = {Super = NSTextFieldCell; }; 
-    NSSecureTextField = {Super = NSTextField; }; 
-    NSSecureTextFieldCell = {Super = NSTextFieldCell; }; 
-    NSSlider = {Super = NSControl; }; 
-    NSSliderCell = {Super = NSActionCell; }; 
-    NSSplitView = {
-        Outlets = (delegate); 
-        Super = NSView;
+    NSMenu = {
+        Actions = ("submenuAction:"); 
+        Outlets = (delegate);
+        Super = NSObject; 
     }; 
-    NSStepper = {Super = NSControl; }; 
-    NSStepperCell = {Super = NSActionCell; }; 
+    NSMenuItem = {
+        Outlets = (target); 
+        Super = NSObject; 
+    }; 
+    NSMenuItemCell = {
+        Super = NSButtonCell; 
+    }; 
+    NSMovieView = {
+        Actions = ("clear:", "copy:", "cut:", "gotoBeginning:", "gotoEnd:", "gotoPosterFrame:", "paste:", "selectAll:", "start:", "stepBack:", "stepForward:", "stop:", "undo:");
+        Outlets = ("_positionField", "_statusField");
+        Super = NSView;
+    };
+    NSMutableArray = {
+        Super = NSArray; 
+    }; 
+    NSMutableDictionary = {
+        Super = NSDictionary; 
+    }; 
+    NSNumberFormatter = {
+        Super = NSFormatter; 
+    }; 
+    NSObject = {
+    }; 
+    NSObjectController = {
+        Actions = ();
+        Outlets = (content);
+        Super = NSController;
+    };
+    NSOpenGLView = {
+        Super = NSView; 
+    }; 
+    NSOutlineView = {
+        Outlets = (dataSource, delegate);
+        Super = NSTableView; 
+    }; 
+    NSPageController = {
+        Actions = ("navigateBack:", "navigateForward:", "takeSelectedIndexFrom:");
+        Outlets = (delegate);
+        Super = NSViewController;
+    };
+    NSPanel = {
+        Super = NSWindow; 
+    }; 
+    NSPopUpButton = {
+        Super = NSButton; 
+    }; 
+    NSPopUpButtonCell = {
+        Super = NSMenuItemCell; 
+    }; 
+    NSProgressIndicator = {
+        Actions = ("animate:", "startAnimation:", "stopAnimation:"); 
+        Super = NSView; 
+    }; 
+    NSResponder = {
+        Outlets = (menu); 
+        Super = NSObject; 
+    }; 
+    NSRulerView = {
+        Super = NSView; 
+    }; 
+    NSScrollView = {
+        Outlets = (contentView, documentView);
+        Super = NSView; 
+    }; 
+    NSScroller = {
+        Super = NSControl; 
+    }; 
+    NSSearchField = {
+        Super = NSTextField; 
+    }; 
+    NSSearchFieldCellCell = {
+        Super = NSTextFieldCell; 
+    }; 
+    NSSegmentedCell = {
+        Super = NSActionCell;
+    };
+    NSSegmentedControl = {
+        Super = NSControl;
+    };
+    NSSecureTextField = {
+        Super = NSTextField;
+    };
+    NSSecureTextFieldCell = {
+        Super = NSTextFieldCell;
+    };
+    NSSlider = {
+        Super = NSControl;
+    };
+    NSSliderCell = {
+        Super = NSActionCell;
+    };
+    NSSplitView = {
+        Outlets = (delegate);
+        Super = NSView;
+    };
+    NSStepper = {
+        Super = NSControl;
+    };
+    NSStepperCell = {
+        Super = NSActionCell;
+    };
     NSTabView = {
         Actions = (
             "selectFirstTabViewItem:", 
@@ -295,18 +441,25 @@
             "selectNextTabViewItem:", 
             "selectPreviousTabViewItem:", 
             "takeSelectedTabViewItemFromSender:"
-        ); 
-        Outlets = (delegate); 
-        Super = NSView; 
-    }; 
-    NSTableColumn = {Super = NSObject; }; 
-    NSTableHeaderCell = {Super = NSTextFieldCell; }; 
-    NSTableHeaderView = {Super = NSView; }; 
+        );
+        Outlets = (delegate);
+        Super = NSView;
+    };
+    NSTableColumn = {
+        Outlets = (dataCell, headerCell);
+        Super = NSObject;
+    };
+    NSTableHeaderCell = {
+        Super = NSTextFieldCell;
+    };
+    NSTableHeaderView = {
+        Super = NSView;
+    };
     NSTableView = {
-        Actions = ("deselectAll:", "selectAll:"); 
-        Outlets = (dataSource, delegate); 
-        Super = NSControl; 
-    }; 
+        Actions = ("deselectAll:", "selectAll:");
+        Outlets = (dataSource, delegate);
+        Super = NSControl;
+    };
     NSText = {
         Actions = (
             "alignCenter:", 
@@ -331,53 +484,89 @@
             "toggleRuler:", 
             "underline:", 
             "unscript:"
-        ); 
-        Outlets = (delegate); 
-        Super = NSView; 
-    }; 
-    NSTextField = {Actions = ("selectText:"); Outlets = (delegate); Super = NSControl; }; 
-    NSTextFieldCell = {Super = NSActionCell; }; 
+        );
+        Outlets = (delegate);
+        Super = NSView;
+    };
+    NSTextField = {
+        Actions = ("selectText:");
+        Outlets = (delegate);
+        Super = NSControl;
+    };
+    NSTextFieldCell = {
+        Super = NSActionCell;
+    };
     NSTextView = {
         Actions = (
-            "alignJustified:", 
-            "changeColor:", 
-            "deleteBackwards:", 
-            "insertBacktab:", 
-            "insertNewLine:", 
-            "insertParagraphSeparator:", 
-            "insertTab:", 
-            "loosenKerning:", 
-            "lowerBaseline:", 
-            "moveBackward:", 
-            "moveDown:", 
-            "moveForward:", 
-            "moveLeft:", 
-            "moveRight:", 
-            "moveUp:", 
-            "pasteAsPlainText:", 
-            "pasteAsRichText:", 
-            "raiseBaseline:", 
-            "tightenKerning:", 
-            "toggleContinuousSpellChecking:", 
-            "toggleTraditionalCharacterShape:", 
-            "turnOffKerning:", 
-            "turnOffLigatures:", 
-            "useAllLigatures:", 
-            "useDefaultBaseline:", 
-            "useDefaultKerning:", 
-            "useDefaultLigatures:", 
-            "useStandardBaseline:", 
-            "useStandardKerning:", 
+            "alignJustified:",
+            "changeColor:",
+            "deleteBackwards:",
+            "insertBacktab:",
+            "insertNewLine:",
+            "insertParagraphSeparator:",
+            "insertTab:",
+            "loosenKerning:",
+            "lowerBaseline:",
+            "moveBackward:",
+            "moveDown:",
+            "moveForward:",
+            "moveLeft:",
+            "moveRight:",
+            "moveUp:",
+            "pasteAsPlainText:",
+            "pasteAsRichText:",
+            "raiseBaseline:",
+            "tightenKerning:",
+            "toggleContinuousSpellChecking:",
+            "toggleTraditionalCharacterShape:",
+            "turnOffKerning:",
+            "turnOffLigatures:",
+            "useAllLigatures:",
+            "useDefaultBaseline:",
+            "useDefaultKerning:",
+            "useDefaultLigatures:",
+            "useStandardBaseline:",
+            "useStandardKerning:",
             "useStandardLigatures:"
-        ); 
-        Super = NSText; 
-    }; 
-    NSView = {Actions = ("fax:", "print:"); Outlets = (nextKeyView); Super = NSResponder; }; 
+        );
+        Super = NSText;
+    };
+    NSTokenField = {
+        Outlets = (delegate);
+        Super = NSTextField;
+    };
+    NSTokenFieldCell = {
+        Super = NSTextFieldCell;
+    };
+    NSToolbar = {
+        Actions = ();
+        Outlets = (delegate);
+        Super = NSObject;
+    };
+    NSToolbarItem = {
+        Outlets = (target, view);
+        Super = NSObject;
+    };
+    NSTreeController = {
+        Actions = ("add:", "addChild:", "insert:", "insertChild:", "remove:");
+        Outlets = (content);
+        Super = NSObjectController;
+    };
+    NSUserDefaultsController = {
+        Actions = ("revert:", "save:");
+        Outlets = (defaults, initialValues);
+        Super = NSController;
+    };
+    NSView = {
+        Actions = ("fax:", "print:");
+        Outlets = (nextKeyView);
+        Super = NSResponder;
+    };
     NSViewController = {
         Actions = ();
-	Outlets = (view);
-	Super = NSResponder;
-    }; 
+        Outlets = (view, delegate);
+        Super = NSResponder;
+    };
     NSWindow = {
         Actions = (
             "deminiaturize:", 
@@ -396,38 +585,13 @@
             "selectPreviousKeyView:", 
             "toggleToolbarShown:", 
             "zoom:"
-        ); 
-        Outlets = (delegate, initialFirstResponder, windowController); 
-        Super = NSResponder; 
-    }; 
+        );
+        Outlets = (delegate, initialFirstResponder, windowController);
+        Super = NSResponder;
+    };
     NSWindowController = {
-        Actions = ("showWindow:"); 
-        Outlets = (document, window); 
-        Super = NSResponder; 
-    };
-    NSController = {
-        Actions = ();
-        Outlets = ();
-        Super = NSObject;
-    };
-    NSObjectController = {
-        Actions = ();
-        Outlets = (content);
-        Super = NSController;
-    };
-    NSArrayController = {
-        Actions = ("selectNext:","selectPrevious:","insert:");
-        Outlets = (arrangedObjects);
-        Super = NSObjectController;
-    };
-    NSDictionaryController = {
-        Actions = ();
-        Outlets = ();
-        Super = NSArrayController;
-    };
-    NSToolbar = {
-    	Actions = ();
-	Outlets = (delegate);
-	Super = NSObject;
+        Actions = ("showWindow:");
+        Outlets = (document, window, delegate);
+        Super = NSResponder;
     };
 }

@@ -544,6 +544,21 @@
  */
 - (NSArray *) validate;
 
+/**
+ * Detach object from document.
+ */ 
+- (void) detachObject: (id)object;
+
+/**
+ * Detach every object in anArray from the document.  Optionally closing editors.
+ */
+- (void) detachObjects: (/* NSArray* */ id)anArray closeEditors: (BOOL)close_editors;
+
+/**
+ * Detach all objects in array from the document.
+ */ 
+- (void) detachObjects: (NSArray *)array;
+
 @end
 
 /**

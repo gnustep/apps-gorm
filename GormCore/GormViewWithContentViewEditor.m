@@ -383,9 +383,17 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   while ((subview = [enumerator nextObject]) != nil)
     {
       id eO = [subview editedObject];
-      [splitView addSubview: [subview editedObject]];
-      [document attachObject: [subview editedObject]
-		toParent: splitView];
+      
+      // Update the parent connector to point to the new split view
+      NSArray *old = [document connectorsForSource: eO ofClass: [NSNibConnector class]];
+      if ([old count] > 0)
+        {
+          [[old objectAtIndex: 0] setDestination: splitView];
+        }
+      
+      // Remove from old superview before adding to split view
+      [eO removeFromSuperview];
+      [splitView addSubview: eO];
       [subview close];
       [document editorForObject: eO
 	  inEditor: editor
@@ -398,55 +406,75 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 - (void) groupSelectionInBox
 {
   NSEnumerator *enumerator = nil;
-  GormViewEditor *subview = nil;
+  GormViewEditor *subviewEditor = nil;
   NSBox *box = nil;
-  NSRect rect = NSZeroRect;
-  GormViewEditor *editor = nil;
-  NSView *superview = nil;
+  NSRect unionRect = NSZeroRect;
+  GormViewEditor *boxEditor = nil;
+  NSView *parentView = nil;
+  NSMutableArray *viewsToGroup = [NSMutableArray array];
 
+  // Need at least one view to group
   if ([selection count] < 1)
     {
       return;
     }
   
+  // First pass: calculate bounding rect and collect the actual views
   enumerator = [selection objectEnumerator];
-  
-  while ((subview = [enumerator nextObject]) != nil)
+  while ((subviewEditor = [enumerator nextObject]) != nil)
     {
-      superview = [subview superview];
-      rect = NSUnionRect(rect, [subview frame]);
-      [subview deactivate];
+      NSView *view = [subviewEditor editedObject];
+      parentView = [view superview];
+      unionRect = NSUnionRect(unionRect, [view frame]);
+      [viewsToGroup addObject: view];
     }
 
-  box = [[NSBox alloc] initWithFrame: NSZeroRect];
-  [box setFrameFromContentFrame: rect];
+  // Create the box with frame matching the content area we need
+  box = [[NSBox alloc] initWithFrame: unionRect];
+  [box setTitlePosition: NSNoTitle];
   
+  // Add box to the parent view
+  [parentView addSubview: box];
+  
+  // Attach box to the document structure
   [document attachObject: box
-	    toParent: _editedObject];
+                toParent: _editedObject];
 
-  [superview addSubview: box];
-
-
-  enumerator = [selection objectEnumerator];
-
-  while ((subview = [enumerator nextObject]) != nil)
+  // Second pass: move each view into the box's content view
+  for (NSView *view in viewsToGroup)
     {
-      NSPoint frameOrigin;
-      [box addSubview: [subview editedObject]];
-      frameOrigin = [[subview editedObject] frame].origin;
-      frameOrigin.x -= rect.origin.x;
-      frameOrigin.y -= rect.origin.y;
-      [[subview editedObject] setFrameOrigin: frameOrigin];
-      [document attachObject: [subview editedObject]
-		toParent: box];
-      [subview close];
+      NSRect viewFrame = [view frame];
+      
+      // Remove from current superview
+      [view removeFromSuperview];
+      
+      // Add to box's content view (not the box itself)
+      [[box contentView] addSubview: view];
+      
+      // Adjust frame to be relative to box's content view coordinate system
+      viewFrame.origin.x -= unionRect.origin.x;
+      viewFrame.origin.y -= unionRect.origin.y;
+      [view setFrame: viewFrame];
+      
+      // Update document structure: view is now child of box
+      [document attachObject: view
+                    toParent: box];
+    }
+  
+  // Close all the old editors for the grouped views
+  enumerator = [selection objectEnumerator];
+  while ((subviewEditor = [enumerator nextObject]) != nil)
+    {
+      [subviewEditor close];
     }
 
-  editor = (GormViewEditor *)[document editorForObject: box
-				       inEditor: self
-				       create: YES];
+  // Create editor for the new box
+  boxEditor = (GormViewEditor *)[document editorForObject: box
+                                                 inEditor: self
+                                                   create: YES];
   
-  [self selectObjects: [NSArray arrayWithObject: editor]];
+  // Select the new box editor
+  [self selectObjects: [NSArray arrayWithObject: boxEditor]];
 }
 
 - (void) groupSelectionInView
@@ -472,25 +500,37 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       [subview deactivate];
     }
 
-  view = [[NSView alloc] initWithFrame: NSZeroRect];
-  [view setFrame: rect];
+  view = [[NSView alloc] initWithFrame: rect];
   
-  [superview addSubview: view];
   [document attachObject: view
 	    toParent: _editedObject];
+  [superview addSubview: view];
 
   enumerator = [selection objectEnumerator];
 
   while ((subview = [enumerator nextObject]) != nil)
     {
       NSPoint frameOrigin;
-      [view addSubview: [subview editedObject]];
-      frameOrigin = [[subview editedObject] frame].origin;
+      id subviewObj = [subview editedObject];
+      
+      // Capture the original frame origin before removing from superview
+      frameOrigin = [subviewObj frame].origin;
+      
+      // Update the parent connector to point to the new view
+      NSArray *old = [document connectorsForSource: subviewObj ofClass: [NSNibConnector class]];
+      if ([old count] > 0)
+        {
+          [[old objectAtIndex: 0] setDestination: view];
+        }
+      
+      // Remove from old superview before adding to new view
+      [subviewObj removeFromSuperview];
+      [view addSubview: subviewObj];
+      
+      // Adjust position relative to the new container
       frameOrigin.x -= rect.origin.x;
       frameOrigin.y -= rect.origin.y;
-      [[subview editedObject] setFrameOrigin: frameOrigin];
-      [document attachObject: [subview editedObject]
-		toParent: view];
+      [subviewObj setFrameOrigin: frameOrigin];
       [subview close];
     }
 
