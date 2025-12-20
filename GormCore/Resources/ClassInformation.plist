@@ -316,13 +316,14 @@
         Super = NSObject; 
     }; 
     NSImageCell = {
-        Super = NSCell; 
-    };LevelIndicator = {
-        Super = NSControl;
+        Super = NSCell;
     };
     NSImageView = {
-        Super = NSControl; 
-    }; 
+        Super = NSControl;
+    };
+    NSLevelIndicator = {
+        Super = NSControl;
+    };
     NSMatrix = {
         Actions = ("selectAll:", "selectText:"); 
         Outlets = (delegate); 

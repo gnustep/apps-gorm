@@ -389,7 +389,14 @@ static NSColor *darkGreyBlueColor = nil;
 			 item: item];
 	    }
 	  
-	  [cell setObjectValue: valueforcell]; 
+	  [cell setObjectValue: valueforcell];
+	  
+	  // Set text color to black for all cells
+	  if ([cell respondsToSelector: @selector(setTextColor:)])
+	    {
+	      [(NSCell *)cell setTextColor: [NSColor blackColor]];
+	    }
+	  
 	  drawingRect = [self frameOfCellAtColumn: i
 			      row: rowIndex];	      
 	  
