@@ -394,7 +394,7 @@ static NSColor *darkGreyBlueColor = nil;
 	  // Set text color to black for all cells
 	  if ([cell respondsToSelector: @selector(setTextColor:)])
 	    {
-	      [(NSCell *)cell setTextColor: [NSColor blackColor]];
+        [(id)cell setTextColor: [NSColor blackColor]]; // setTextColor: is declared on subclasses like NSTextFieldCell
 	    }
 	  
 	  drawingRect = [self frameOfCellAtColumn: i

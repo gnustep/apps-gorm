@@ -412,6 +412,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   GormViewEditor *boxEditor = nil;
   NSView *parentView = nil;
   NSMutableArray *viewsToGroup = [NSMutableArray array];
+  NSMutableArray *editorsToClose = [NSMutableArray array];
 
   // Need at least one view to group
   if ([selection count] < 1)
@@ -424,9 +425,19 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   while ((subviewEditor = [enumerator nextObject]) != nil)
     {
       NSView *view = [subviewEditor editedObject];
-      parentView = [view superview];
+      if (parentView == nil)
+        {
+          parentView = [view superview];
+        }
+      else if (parentView != [view superview])
+        {
+          return;
+        }
+
       unionRect = NSUnionRect(unionRect, [view frame]);
       [viewsToGroup addObject: view];
+      [editorsToClose addObject: subviewEditor];
+      [subviewEditor deactivate];
     }
 
   // Create the box with frame matching the content area we need
@@ -444,6 +455,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   for (NSView *view in viewsToGroup)
     {
       NSRect viewFrame = [view frame];
+      NSPoint contentOrigin = [[box contentView] frame].origin;
       
       // Remove from current superview
       [view removeFromSuperview];
@@ -454,6 +466,8 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       // Adjust frame to be relative to box's content view coordinate system
       viewFrame.origin.x -= unionRect.origin.x;
       viewFrame.origin.y -= unionRect.origin.y;
+      viewFrame.origin.x -= contentOrigin.x;
+      viewFrame.origin.y -= contentOrigin.y;
       [view setFrame: viewFrame];
       
       // Update document structure: view is now child of box
@@ -462,10 +476,9 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
     }
   
   // Close all the old editors for the grouped views
-  enumerator = [selection objectEnumerator];
-  while ((subviewEditor = [enumerator nextObject]) != nil)
+  for (id editorToClose in editorsToClose)
     {
-      [subviewEditor close];
+      [editorToClose close];
     }
 
   // Create editor for the new box
@@ -480,63 +493,78 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 - (void) groupSelectionInView
 {
   NSEnumerator *enumerator = nil;
-  GormViewEditor *subview = nil;
-  NSView *view = nil;
-  NSRect rect = NSZeroRect;
+  NSMutableArray *viewsToGroup = [NSMutableArray array];
+  NSMutableArray *editorsToClose = [NSMutableArray array];
+  NSView *containerView = nil;
+  NSView *parentView = nil;
+  NSRect unionRect = NSZeroRect;
   GormViewEditor *editor = nil;
-  NSView *superview = nil;
 
   if ([selection count] < 1)
     {
       return;
     }
   
+  // First pass: collect the actual NSView instances and compute the union rect
   enumerator = [selection objectEnumerator];
-  
-  while ((subview = [enumerator nextObject]) != nil)
+  GormViewEditor *subviewEditor = nil;
+  while ((subviewEditor = [enumerator nextObject]) != nil)
     {
-      superview = [subview superview];
-      rect = NSUnionRect(rect, [subview frame]);
-      [subview deactivate];
+      NSView *childView = [subviewEditor editedObject];
+
+      // Keep a consistent parent; if selection spans multiple parents, bail out
+      if (parentView == nil)
+        {
+          parentView = [childView superview];
+        }
+      else if (parentView != [childView superview])
+        {
+          return;
+        }
+
+      unionRect = NSUnionRect(unionRect, [childView frame]);
+      [viewsToGroup addObject: childView];
+      [editorsToClose addObject: subviewEditor];
+      [subviewEditor deactivate];
     }
 
-  view = [[NSView alloc] initWithFrame: rect];
-  
-  [document attachObject: view
-	    toParent: _editedObject];
-  [superview addSubview: view];
+  // Create the container view covering the union rect in parent coordinates
+  containerView = [[NSView alloc] initWithFrame: unionRect];
 
-  enumerator = [selection objectEnumerator];
+  [document attachObject: containerView
+                toParent: _editedObject];
+  [parentView addSubview: containerView];
 
-  while ((subview = [enumerator nextObject]) != nil)
+  // Move each child into the new container and update positions/connectors
+  for (NSView *childView in viewsToGroup)
     {
-      NSPoint frameOrigin;
-      id subviewObj = [subview editedObject];
-      
-      // Capture the original frame origin before removing from superview
-      frameOrigin = [subviewObj frame].origin;
-      
-      // Update the parent connector to point to the new view
-      NSArray *old = [document connectorsForSource: subviewObj ofClass: [NSNibConnector class]];
+      NSPoint origin = [childView frame].origin;
+
+      // Update the parent connector to point to the new container
+      NSArray *old = [document connectorsForSource: childView ofClass: [NSNibConnector class]];
       if ([old count] > 0)
         {
-          [[old objectAtIndex: 0] setDestination: view];
+          [[old objectAtIndex: 0] setDestination: containerView];
         }
-      
-      // Remove from old superview before adding to new view
-      [subviewObj removeFromSuperview];
-      [view addSubview: subviewObj];
-      
+
+      [childView removeFromSuperview];
+      [containerView addSubview: childView];
+
       // Adjust position relative to the new container
-      frameOrigin.x -= rect.origin.x;
-      frameOrigin.y -= rect.origin.y;
-      [subviewObj setFrameOrigin: frameOrigin];
-      [subview close];
+      origin.x -= unionRect.origin.x;
+      origin.y -= unionRect.origin.y;
+      [childView setFrameOrigin: origin];
     }
 
-  editor = (GormViewEditor *)[document editorForObject: view
-				       inEditor: self
-				       create: YES];
+  // Close the old editors for the grouped views
+  for (id editorToClose in editorsToClose)
+    {
+      [editorToClose close];
+    }
+
+  editor = (GormViewEditor *)[document editorForObject: containerView
+                                             inEditor: self
+                                               create: YES];
   
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
@@ -591,97 +619,80 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 - (void) groupSelectionInScrollView
 {
   NSEnumerator *enumerator = nil;
-  GormViewEditor *subview = nil;
-  NSView *view = nil;
+  NSMutableArray *viewsToGroup = [NSMutableArray array];
+  NSMutableArray *editorsToClose = [NSMutableArray array];
+  NSView *contentView = nil;
   NSScrollView *scrollView = nil;
-  NSRect rect = NSZeroRect;
+  NSRect unionRect = NSZeroRect;
   GormViewEditor *editor = nil;
-  NSView *superview = nil;
+  NSView *parentView = nil;
 
   if ([selection count] < 1)
     {
       return;
     }
   
-  // if there is more than one view we must join them together.
-  if([selection count] > 1)
+  // Collect views and compute union rect in parent coordinates
+  enumerator = [selection objectEnumerator];
+  GormViewEditor *subviewEditor = nil;
+  while ((subviewEditor = [enumerator nextObject]) != nil)
     {
-      // deactivate the editor for each subview.
-      enumerator = [selection objectEnumerator];
-      while ((subview = [enumerator nextObject]) != nil)
-	{
-	  superview = [subview superview];
-	  rect = NSUnionRect(rect, [subview frame]);
-	  [subview deactivate];
-	}
+      NSView *childView = [subviewEditor editedObject];
 
-      // create the containing view.
-      view = [[NSView alloc] initWithFrame: 
-			       NSMakeRect(0, 0, rect.size.width, rect.size.height)];
-      // create scroll view now.
-      scrollView = [[NSScrollView alloc] initWithFrame: rect];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setBorderType: NSBezelBorder];
+      if (parentView == nil)
+        {
+          parentView = [childView superview];
+        }
+      else if (parentView != [childView superview])
+        {
+          return;
+        }
 
-      // attach the scroll view...
-      [document attachObject: scrollView
-		toParent: _editedObject];
-      [superview addSubview: scrollView];
-      [scrollView setDocumentView: view];
-
-      // add the views.
-      enumerator = [selection objectEnumerator];
-      while ((subview = [enumerator nextObject]) != nil)
-	{
-	  NSPoint frameOrigin;
-	  [view addSubview: [subview editedObject]];
-	  frameOrigin = [[subview editedObject] frame].origin;
-	  frameOrigin.x -= rect.origin.x;
-	  frameOrigin.y -= rect.origin.y;
-	  [[subview editedObject] setFrameOrigin: frameOrigin];
-	  [document attachObject: [subview editedObject]
-		    toParent: scrollView];
-	  [subview close];
-	}
+      unionRect = NSUnionRect(unionRect, [childView frame]);
+      [viewsToGroup addObject: childView];
+      [editorsToClose addObject: subviewEditor];
+      [subviewEditor deactivate];
     }
-  else if([selection count] == 1)
+
+  // Create the scroll view and a content view sized to the union rect
+  scrollView = [[NSScrollView alloc] initWithFrame: unionRect];
+  [scrollView setHasHorizontalScroller: YES];
+  [scrollView setHasVerticalScroller: YES];
+  [scrollView setBorderType: NSBezelBorder];
+
+  contentView = [[NSView alloc] initWithFrame:
+                 NSMakeRect(0, 0, unionRect.size.width, unionRect.size.height)];
+  [scrollView setDocumentView: contentView];
+
+  [document attachObject: scrollView
+                toParent: _editedObject];
+  [parentView addSubview: scrollView];
+
+  // Move grouped views into the scroll view's document view
+  for (NSView *childView in viewsToGroup)
     {
-      NSPoint frameOrigin;
-      id v = nil;
+      NSPoint origin = [childView frame].origin;
 
-      // since we have one view, it will be used as the document view.
-      subview = [selection objectAtIndex: 0];
-      superview = [subview superview];
-      rect = NSUnionRect(rect, [subview frame]);
-      [subview deactivate];
+      [childView removeFromSuperview];
+      [contentView addSubview: childView];
 
-      // create scroll view now.
-      scrollView = [[NSScrollView alloc] initWithFrame: rect];
-      [scrollView setHasHorizontalScroller: YES];
-      [scrollView setHasVerticalScroller: YES];
-      [scrollView setBorderType: NSBezelBorder];
+      origin.x -= unionRect.origin.x;
+      origin.y -= unionRect.origin.y;
+      [childView setFrameOrigin: origin];
 
-      // attach the scroll view...
-      [document attachObject: scrollView
-		toParent: _editedObject];
-      [superview addSubview: scrollView];
+      [document attachObject: childView
+                    toParent: scrollView];
+    }
 
-      // add the view
-      v = [subview editedObject];
-      [scrollView setDocumentView: v];
-
-      // set the origin..
-      frameOrigin = [v frame].origin;
-      frameOrigin.x -= rect.origin.x;
-      frameOrigin.y -= rect.origin.y;
-      [v setFrameOrigin: frameOrigin];
-      [subview close];
+  // Close the editors for the moved views
+  for (id editorToClose in editorsToClose)
+    {
+      [editorToClose close];
     }
   
   editor = (GormViewEditor *)[document editorForObject: scrollView
-				       inEditor: self
-				       create: YES];
+                                             inEditor: self
+                                               create: YES];
   
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
