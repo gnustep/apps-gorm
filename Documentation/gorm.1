@@ -1,0 +1,86 @@
+.TH GORM 1 "December 21, 2025" "Gorm 1.5.0" "GNUstep User Commands"
+.SH NAME
+gorm \- GNUstep interface builder
+.SH SYNOPSIS
+.B openapp Gorm
+.RI [ file.gorm ]
+.br
+.B gorm
+.RI [ file.gorm ]
+.br
+.B gormtool
+.RI [ options ] " inputfile"
+.SH DESCRIPTION
+Gorm (GNUstep Object Relationship Modeler) is a graphical interface builder for GNUstep. It lets you compose windows, menus, controllers, and other interface objects, connect outlets and actions, and save the resulting interface archive as .gorm or .nib style resources. Gorm mirrors the functionality of the NeXTSTEP/OpenStep/Cocoa Interface Builder while targeting the GNUstep frameworks.
+.PP
+Launch Gorm without arguments to start a new untitled interface document. Passing a .gorm file opens an existing document. The application participates in the standard GNUstep document architecture, so files passed on the command line or via the workspace are opened in-place.
+.SH OPTIONS
+Gorm is typically started without special options; any argument ending in .gorm (or another supported interface extension) is opened as a document. Standard GNUstep GUI options (such as backend selection) are also honored.
+.SS gormtool options
+The accompanying gormtool command provides headless import/export tasks for interface archives. Its primary options are:
+.TP
+.B --read \fIpath\fR
+Open the specified interface archive. If omitted, the last argument is treated as the input file.
+.TP
+.B --write \fIpath\fR
+Write the processed archive to the given path instead of replacing the input.
+.TP
+.B --import-strings-file \fIpath\fR
+Import a Cocoa/GNUstep .strings file and replace matching text in the interface archive.
+.TP
+.B --export-strings-file \fIpath\fR
+Export all user-visible strings from the interface archive to the specified .strings file.
+.TP
+.B --export-xliff \fIpath\fR
+Export an XLIFF 1.2 translation file from the interface archive.
+.TP
+.B --import-xliff \fIpath\fR
+Import translations from an XLIFF 1.2 file into the interface archive.
+.TP
+.B --import-class \fIheader\fR
+Parse the Objective-C header, adding the class to the archive; existing instances may have their connections broken when re-imported.
+.TP
+.B --export-class \fIname\fR
+Export the named class from the archive to a header in the current directory.
+.SH FILES
+.TP
+.I *.gorm
+Primary interface documents produced by Gorm.
+.TP
+.I *.nib
+Legacy Interface Builder archives that can be opened and saved by Gorm.
+.TP
+.I ~/.GNUstepDefaults
+NSUserDefaults database where Gorm preferences are stored on GNUstep systems.
+.SH EXAMPLES
+Start a new document:
+.PP
+.RS
+.B openapp Gorm
+.RE
+.PP
+Open an existing archive from the shell:
+.PP
+.RS
+.B gorm MyWindow.gorm
+.RE
+.PP
+Export localizable strings from an interface archive:
+.PP
+.RS
+.B gormtool --export-strings-file MyWindow.strings MyWindow.gorm
+.RE
+.PP
+Round-trip translations with XLIFF:
+.PP
+.RS
+.B gormtool --export-xliff MyWindow.xliff MyWindow.gorm
+.br
+.B gormtool --import-xliff MyWindow.xliff MyWindow.gorm
+.RE
+.SH BUGS
+Report issues at https://github.com/gnustep/apps-gorm/issues or via email to bug-gnustep@gnu.org.
+.SH AUTHORS
+Gorm is maintained by the GNUstep community; primary author: Gregory John Casamento.
+.SH SEE ALSO
+openapp(1), ProjectCenter(1), gormtool(1)
