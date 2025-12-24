@@ -56,7 +56,7 @@ GIT_MODULE_NAME = apps-gorm
 GIT_BASE_URL = git@github.com:gnustep
 
 #
-# Each palette is a subproject
+# Subprojects
 #
 SUBPROJECTS = \
 	InterfaceBuilder \
