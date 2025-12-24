@@ -81,6 +81,14 @@ Round-trip translations with XLIFF:
 .br
 .B gormtool --import-xliff MyWindow.xliff MyWindow.gorm
 .RE
+.PP
+Translations between formats:
+.PP
+.RS
+.B gormtool --read MyWindow.gorm --write MyWindow.xib
+.br
+.B gormtool --read MyWindow.nib --write MyWindow.gorm
+.RE
 .SH BUGS
 Report issues at https://github.com/gnustep/apps-gorm/issues or via email to bug-gnustep@gnu.org.
 .SH AUTHORS
