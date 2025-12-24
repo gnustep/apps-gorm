@@ -11,7 +11,7 @@ gorm \- GNUstep interface builder
 .B gormtool
 .RI [ options ] " inputfile"
 .SH DESCRIPTION
-Gorm (GNUstep Object Relationship Modeler) is a graphical interface builder for GNUstep. It lets you compose windows, menus, controllers, and other interface objects, connect outlets and actions, and save the resulting interface archive as .gorm or .nib style resources. Gorm mirrors the functionality of the NeXTSTEP/OpenStep/Cocoa Interface Builder while targeting the GNUstep frameworks.
+Gorm (GNUstep Object Relationship Modeler) is a graphical interface builder for GNUstep. It lets you compose windows, menus, controllers, and other interface objects, connect outlets and actions, and save the resulting interface archive as .gorm, .xib or .nib style resources. Gorm mirrors the functionality of the NeXTSTEP/OpenStep/Cocoa Interface Builder while targeting the GNUstep frameworks.
 .PP
 Launch Gorm without arguments to start a new untitled interface document. Passing a .gorm file opens an existing document. The application participates in the standard GNUstep document architecture, so files passed on the command line or via the workspace are opened in-place.
 .SH OPTIONS
@@ -49,6 +49,9 @@ Primary interface documents produced by Gorm.
 .TP
 .I *.nib
 Legacy Interface Builder archives that can be opened and saved by Gorm.
+.TP
+.I *.xib
+Modern Interface Builder archives that can be opened and saved by Gorm.
 .TP
 .I ~/.GNUstepDefaults
 NSUserDefaults database where Gorm preferences are stored on GNUstep systems.
