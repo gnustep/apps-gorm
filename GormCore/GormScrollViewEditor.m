@@ -133,34 +133,83 @@
       // return;
     }
 
-  if ([[_EO hitTest: [theEvent locationInWindow]]
-	isDescendantOf: documentViewEditor])
+  NSView *clickedView = [_EO hitTest: [theEvent locationInWindow]];
+
+  // If click landed directly on a table view, select it and forward the event
+  if ([clickedView isKindOfClass: [NSTableView class]])
+    {
+      id<IBEditors> ed = [document editorForObject: clickedView create: YES];
+      id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
+      if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
+        {
+          [edSel selectObjects: [NSArray arrayWithObject: clickedView]];
+          [document setSelectionFromEditor: ed];
+        }
+      [clickedView mouseDown: theEvent];
+      opened = NO;
+      return;
+    }
+
+  // If click is on a table header, select the column (if any) and forward
+  if ([clickedView isKindOfClass: [NSTableHeaderView class]])
+    {
+      NSTableHeaderView *hv = (NSTableHeaderView *)clickedView;
+      NSTableView *tv = [hv tableView];
+      NSPoint ptInHeader = [hv convertPoint:[theEvent locationInWindow] fromView:nil];
+      NSInteger col = [hv columnAtPoint: ptInHeader];
+      if (col != -1 && col != NSNotFound)
+        {
+          NSTableColumn *column = [[tv tableColumns] objectAtIndex: col];
+          id<IBEditors> ed = [document editorForObject: tv create: YES];
+          id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
+          if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
+            {
+              [edSel selectObjects: [NSArray arrayWithObject: column]];
+              [document setSelectionFromEditor: ed];
+            }
+        }
+      else
+        {
+          id<IBEditors> ed = [document editorForObject: tv create: YES];
+          id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
+          if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
+            {
+              [edSel selectObjects: [NSArray arrayWithObject: tv]];
+              [document setSelectionFromEditor: ed];
+            }
+        }
+      [clickedView mouseDown: theEvent];
+      opened = NO;
+      return;
+    }
+
+  if ([clickedView isDescendantOf: documentViewEditor])
     {
       if (([self isOpened] == YES) && ([documentViewEditor isOpened] == NO))
-	{
-	  [documentViewEditor setOpened: YES];
-	}
+        {
+          [documentViewEditor setOpened: YES];
+        }
       if ([documentViewEditor isOpened])
-	{
-	  [documentViewEditor mouseDown: theEvent];
-	}
+        {
+          [documentViewEditor mouseDown: theEvent];
+        }
     }
   else
     {
-      NSView *v = [_EO hitTest: [theEvent locationInWindow]];
+      NSView *v = clickedView;
       id r = [v nextResponder];
-      
+
       if([v respondsToSelector: @selector(setNextResponder:)])
-	{
-	  // this is done to prevent a responder loop.
-	  [v setNextResponder: nil];
-	  [v mouseDown: theEvent];	  
-	  [v setNextResponder: r];
-	}
+        {
+          // prevent responder loop
+          [v setNextResponder: nil];
+          [v mouseDown: theEvent];
+          [v setNextResponder: r];
+        }
       else
-	{
-	  [v mouseDown: theEvent];	  
-	}
+        {
+          [v mouseDown: theEvent];
+        }
     }
 
   opened = NO;
