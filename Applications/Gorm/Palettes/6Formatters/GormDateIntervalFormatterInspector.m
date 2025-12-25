@@ -25,7 +25,15 @@
   NSDateIntervalFormatter *formatter = (NSDateIntervalFormatter *)[object formatter];
   
   if (formatter == nil)
-    return;
+    {
+      [dateStyle selectItemAtIndex: 0];
+      [timeStyle selectItemAtIndex: 0];
+      [sampleStart setObjectValue: nil];
+      [sampleEnd setObjectValue: nil];
+      [output setStringValue: @""];
+      [super revert: sender];
+      return;
+    }
   
   // Get current values from formatter and update UI
   
@@ -63,12 +71,18 @@
       id<IB> ibApp = (id<IB>)[NSApp delegate];
       GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
-      [document detachObject: formatter closeEditor: YES];
+      if (formatter != nil)
+        {
+          [document detachObject: formatter closeEditor: YES];
+        }
+
       if ([object respondsToSelector: @selector(setFormatter:)])
         {
           [object setFormatter: nil];
         }
+
       [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
       return;
     }
   

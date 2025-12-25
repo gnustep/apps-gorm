@@ -28,6 +28,7 @@
 #include <AppKit/AppKit.h>
 
 #include <GormCore/GormCore.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 #include "GormNumberFormatterAttributesInspector.h"
 
@@ -82,14 +83,22 @@ extern NSArray *predefinedNumberFormats;
   NSString *minValue, *maxValue;
   NSCell   *cell = [object cell];
   NSNumberFormatter *fmtr = [cell formatter];
+  id<IB> ibApp = (id<IB>)[NSApp delegate];
+  GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
   // Mark as changed...
-  [[(id<IB>)[NSApp delegate] activeDocument] touch];
+  [document touch];
 
   if (sender == detachButton)
     { 
+      if (fmtr != nil)
+        {
+          [document detachObject: fmtr closeEditor: YES];
+        }
       [cell setFormatter: nil];
-      [[(id<IB>)[NSApp delegate] activeDocument] setSelectionFromEditor: nil];
+      [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
+      return;
     }
   else
     {

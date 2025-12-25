@@ -25,7 +25,20 @@
   NSByteCountFormatter *formatter = (NSByteCountFormatter *)[object formatter];
   
   if (formatter == nil)
-    return;
+    {
+      [countStyle selectItemAtIndex: 0];
+      [allowUnits selectItemAtIndex: 0];
+      [allowsNumeric setState: NSOffState];
+      [includesByteCount setState: NSOffState];
+      [isAdaptive setState: NSOffState];
+      [includesCount setState: NSOffState];
+      [includesUnit setState: NSOffState];
+      [zeroPads setState: NSOffState];
+      [sampleInput setDoubleValue: 0.0];
+      [sampleOutput setStringValue: @""];
+      [super revert: sender];
+      return;
+    }
   
   // Get current values from formatter and update UI
   
@@ -67,12 +80,18 @@
       id<IB> ibApp = (id<IB>)[NSApp delegate];
       GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
-      [document detachObject: formatter closeEditor: YES];
+      if (formatter != nil)
+        {
+          [document detachObject: formatter closeEditor: YES];
+        }
+
       if ([object respondsToSelector: @selector(setFormatter:)])
         {
           [object setFormatter: nil];
         }
+
       [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
       return;
     }
   

@@ -25,7 +25,21 @@
   NSDateComponentsFormatter *formatter = (NSDateComponentsFormatter *)[object formatter];
   
   if (formatter == nil)
-    return;
+    {
+      [allowedUnits selectItemAtIndex: 0];
+      [maxUnits setIntegerValue: 0];
+      [style selectItemAtIndex: 0];
+      [pad setState: NSOffState];
+      [dropLeading setState: NSOffState];
+      [dropMiddle setState: NSOffState];
+      [dropTrailing setState: NSOffState];
+      [allowFractional setState: NSOffState];
+      [collapseLargestUnit setState: NSOffState];
+      [includeApproximation setState: NSOffState];
+      [zeroFormat setStringValue: @""];
+      [super revert: sender];
+      return;
+    }
   
   // Get current values from formatter and update UI
   
@@ -77,12 +91,18 @@
       id<IB> ibApp = (id<IB>)[NSApp delegate];
       GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
-      [document detachObject: formatter closeEditor: YES];
+      if (formatter != nil)
+        {
+          [document detachObject: formatter closeEditor: YES];
+        }
+
       if ([object respondsToSelector: @selector(setFormatter:)])
         {
           [object setFormatter: nil];
         }
+
       [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
       return;
     }
   

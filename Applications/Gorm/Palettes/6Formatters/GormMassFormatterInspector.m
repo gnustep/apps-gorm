@@ -22,10 +22,17 @@
 
 - (void) revert: (id)sender
 {
-  NSMassFormatter *formatter = (NSMassFormatter *)object;
+  NSMassFormatter *formatter = (NSMassFormatter *)[object formatter];
   
   if (formatter == nil)
-    return;
+    {
+      [unitStyle selectItemAtIndex: 0];
+      [forPersonMassUse setState: NSOffState];
+      [sample setDoubleValue: 0.0];
+      [output setStringValue: @""];
+      [super revert: sender];
+      return;
+    }
   
   // Get current values from formatter and update UI
   
@@ -49,7 +56,7 @@
 
 - (void) ok: (id)sender
 {
-  NSMassFormatter *formatter = (NSMassFormatter *)object;
+  NSMassFormatter *formatter = (NSMassFormatter *)[object formatter];
   
   if (formatter == nil)
     return;
@@ -59,12 +66,18 @@
       id<IB> ibApp = (id<IB>)[NSApp delegate];
       GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
-      [document detachObject: formatter closeEditor: YES];
+      if (formatter != nil)
+        {
+          [document detachObject: formatter closeEditor: YES];
+        }
+
       if ([object respondsToSelector: @selector(setFormatter:)])
         {
           [object setFormatter: nil];
         }
+
       [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
       return;
     }
   

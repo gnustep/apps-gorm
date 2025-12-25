@@ -25,7 +25,14 @@
   NSEnergyFormatter *formatter = (NSEnergyFormatter *)[object formatter];
   
   if (formatter == nil)
-    return;
+    {
+      [unitStyle selectItemAtIndex: 0];
+      [forFoodEnergyUse setState: NSOffState];
+      [sampleInput setDoubleValue: 0.0];
+      [sampleOutput setStringValue: @""];
+      [super revert: sender];
+      return;
+    }
   
   // Get current values from formatter and update UI
   
@@ -59,12 +66,18 @@
       id<IB> ibApp = (id<IB>)[NSApp delegate];
       GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
-      [document detachObject: formatter closeEditor: YES];
+      if (formatter != nil)
+        {
+          [document detachObject: formatter closeEditor: YES];
+        }
+
       if ([object respondsToSelector: @selector(setFormatter:)])
         {
           [object setFormatter: nil];
         }
+
       [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
       return;
     }
   
