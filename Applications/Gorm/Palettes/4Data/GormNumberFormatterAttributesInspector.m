@@ -205,6 +205,18 @@ extern NSArray *predefinedNumberFormats;
   [[formatForm cellAtIndex:3] setObjectValue: [fmtr minimum]];
   [[formatForm cellAtIndex:4] setObjectValue: [fmtr maximum]];
 
+  // Refresh sample preview fields with current formatter settings
+  [self updateAppearanceFieldsWithFormat: [fmtr format]];
+
+  // Ensure the inspected field shows a representative numeric sample
+  NSCell *cell = [object cell];
+  id currentValue = [cell objectValue];
+  if (currentValue == nil)
+    {
+      currentValue = [NSDecimalNumber decimalNumberWithString: @"123456.789"];
+    }
+  [cell setObjectValue: currentValue];
+
   // If the string typed is a predefined one then highligh it in
   // Number Format table view above  
   if ( (idx = [NSNumberFormatter indexOfFormat: [fmtr format]]) == NSNotFound)

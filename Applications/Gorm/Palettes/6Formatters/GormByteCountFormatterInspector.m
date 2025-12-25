@@ -64,6 +64,18 @@
   // Generate sample output
   NSString *sample = [formatter stringFromByteCount: 1024000000];
   [sampleOutput setStringValue: sample ? sample : @""];
+
+  // Seed the inspected object with a representative sample value if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      NSNumber *value = [NSNumber numberWithLongLong: 1024000000];
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : value];
+    }
   
   [super revert: sender];
 }

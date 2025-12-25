@@ -125,7 +125,13 @@ extern NSArray *predefinedDateFormats;
       [cell setFormatter:fmtr];
       RELEASE(fmtr);
       
-      [cell setObjectValue: [cell objectValue]];
+      // Ensure the inspected field shows a live sample value
+      id currentValue = [cell objectValue];
+      if (currentValue == nil)
+        {
+          currentValue = [NSDate date];
+        }
+      [cell setObjectValue: currentValue];
       
     }
 
@@ -150,6 +156,15 @@ extern NSArray *predefinedDateFormats;
 
   [formatField setStringValue: VSTR([fmtr dateFormat]) ];
   [languageSwitch setState: [fmtr allowsNaturalLanguage]];
+
+  // Populate inspected field with a sample date so the formatter is visible
+  NSCell *cell = [object cell];
+  id currentValue = [cell objectValue];
+  if (currentValue == nil)
+    {
+      currentValue = [NSDate date];
+    }
+  [cell setObjectValue: currentValue];
   
   [super revert: sender]; 
 }

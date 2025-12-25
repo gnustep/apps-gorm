@@ -50,6 +50,18 @@
   // Generate sample output
   NSString *sample = [formatter stringFromJoules: 1000.0];
   [sampleOutput setStringValue: sample ? sample : @""];
+
+  // Seed the inspected object with a representative sample value if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      NSNumber *value = [NSNumber numberWithDouble: 1000.0];
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : value];
+    }
   
   [super revert: sender];
 }

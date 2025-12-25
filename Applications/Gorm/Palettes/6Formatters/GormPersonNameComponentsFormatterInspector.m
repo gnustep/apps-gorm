@@ -41,6 +41,23 @@
   // Set phonetic checkbox
   BOOL isPhonetic = [formatter isPhonetic];
   [phonetic setState: isPhonetic ? NSOnState : NSOffState];
+
+  // Seed the inspected object with a sample formatted name if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      NSPersonNameComponents *components = [[NSPersonNameComponents alloc] init];
+      [components setGivenName: @"John"];
+      [components setFamilyName: @"Appleseed"];
+      NSString *sample = [formatter stringFromPersonNameComponents: components];
+      RELEASE(components);
+
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : sample];
+    }
   
   [super revert: sender];
 }

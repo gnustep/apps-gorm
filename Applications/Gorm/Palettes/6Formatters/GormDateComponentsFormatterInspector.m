@@ -75,6 +75,26 @@
   /*
   [includeTimeRemaining setState: [formatter includesTimeRemainingPhrase] ? NSOnState : NSOffState];
   */
+
+  // Populate sample output with a representative components string
+  NSDateComponents *components = [[NSDateComponents alloc] init];
+  [components setHour: 1];
+  [components setMinute: 30];
+  [components setSecond: 45];
+  NSString *sample = [formatter stringFromDateComponents: components];
+  RELEASE(components);
+  [zeroFormat setStringValue: sample ? sample : @""];
+
+  // Seed the inspected object with the sample string if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : sample];
+    }
   
   [super revert: sender];
 }

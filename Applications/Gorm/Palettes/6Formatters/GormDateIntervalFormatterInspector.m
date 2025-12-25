@@ -55,6 +55,17 @@
   // Generate sample output
   NSString *sample = [formatter stringFromDate: now toDate: later];
   [output setStringValue: sample ? sample : @""];
+
+  // Seed the inspected object with the formatted interval text if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : sample];
+    }
   
   [super revert: sender];
 }

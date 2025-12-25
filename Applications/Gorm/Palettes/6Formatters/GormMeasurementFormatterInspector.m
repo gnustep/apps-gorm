@@ -46,6 +46,22 @@
   // Set provided unit text field (display as string for reference)
   // NSUnit *unit = [formatter providedUnit];
   // [providedUnit setStringValue: unit ? [unit symbol] : @""];
+
+  // Seed the inspected object with a sample measurement string if possible
+  if ([object respondsToSelector: @selector(setObjectValue:)])
+    {
+      NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue: 1.0
+                                                                          unit: [NSUnitLength meters]];
+      NSString *sample = [formatter stringFromMeasurement: measurement];
+      RELEASE(measurement);
+
+      id current = nil;
+      if ([object respondsToSelector: @selector(objectValue)])
+        {
+          current = [object objectValue];
+        }
+      [object setObjectValue: (current != nil) ? current : sample];
+    }
   
   [super revert: sender];
 }
