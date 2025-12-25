@@ -52,6 +52,19 @@ after-clean::
 	rm -f version.texi
 	rm -rf Gorm GormCore InterfaceBuilder GormObjCHeaderParser
 
+# Generate gorm.1 from gorm.1.in using version info
+VERSION := $(shell . ../Version; echo $$VERSION)
+DATE := $(shell date +"%B %d, %Y")
+
+gorm.1: gorm.1.in ../Version
+	@echo "Generating gorm.1 with VERSION=$(VERSION) and DATE=$(DATE)"
+	sed -e "s/@VERSION@/$(VERSION)/g" -e "s/@DATE@/$(DATE)/g" gorm.1.in > gorm.1
+
+after-all:: gorm.1
+
+after-clean::
+	rm -f gorm.1
+
 # Things to do before distcleaning
 # before-distclean::
 
