@@ -19,7 +19,8 @@
 	    colonSeparatorTime,
 	    colonSeparatorTZ,
 	    sampleInput,
-	    sampleOutput
+	    sampleOutput,
+	    detach
 	);
 	Super = IBInspector;
     };

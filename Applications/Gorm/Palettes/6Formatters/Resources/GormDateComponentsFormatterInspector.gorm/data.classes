@@ -15,7 +15,8 @@
 	    dropMiddle,
 	    dropLeading,
 	    style,
-	    zeroFormat
+	    zeroFormat,
+	    detach
 	);
 	Super = IBInspector;
     };

@@ -5,7 +5,8 @@
 	);
 	Outlets = (
 	    style,
-	    phonetic
+	    phonetic,
+	    detach
 	);
 	Super = IBInspector;
     };

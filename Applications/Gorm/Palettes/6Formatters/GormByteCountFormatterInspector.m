@@ -1,6 +1,8 @@
 /* All rights reserved */
 
 #import "GormByteCountFormatterInspector.h"
+#include <GormCore/GormDocument.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 @implementation GormByteCountFormatterInspector
 
@@ -59,6 +61,20 @@
   
   if (formatter == nil)
     return;
+
+  if (sender == detach)
+    {
+      id<IB> ibApp = (id<IB>)[NSApp delegate];
+      GormDocument *document = (GormDocument *)[ibApp activeDocument];
+
+      [document detachObject: formatter closeEditor: YES];
+      if ([object respondsToSelector: @selector(setFormatter:)])
+        {
+          [object setFormatter: nil];
+        }
+      [document setSelectionFromEditor: nil];
+      return;
+    }
   
   // Set count style from popup
   if (sender == countStyle || sender == self)

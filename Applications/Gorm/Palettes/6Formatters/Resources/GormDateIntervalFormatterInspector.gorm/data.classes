@@ -8,7 +8,8 @@
 	    timeStyle,
 	    sampleEnd,
 	    sampleStart,
-	    output
+	    output,
+	    detach
 	);
 	Super = IBInspector;
     };

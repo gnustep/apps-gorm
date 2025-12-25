@@ -9,6 +9,7 @@
 {
   IBOutlet id style;
   IBOutlet id phonetic;
+  IBOutlet id detach;
 }
 
 

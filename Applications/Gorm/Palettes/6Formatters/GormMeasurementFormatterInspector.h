@@ -11,6 +11,8 @@
   IBOutlet id naturalScale;
   IBOutlet id providedUnit;
   IBOutlet id temperatureWithoutUnit;
+  IBOutlet id revert;
+  IBOutlet id detach;
 }
 
 
