@@ -16,20 +16,27 @@
 
 - (id)initWithDocument:(GormDocument *)doc
 {
-  if ((self = [super init]) != nil)
+  NSArray *allObjects = [doc _collectAllObjects];
+  NSUInteger count = [allObjects count];
+  CGFloat cols = 4;
+  CGFloat spacing = 12.0;
+  CGFloat tileW = 220.0;
+  CGFloat tileH = 120.0;
+  CGFloat width = cols * (tileW + spacing) + spacing;
+  CGFloat rows = (count + cols - 1) / cols;
+  CGFloat height = rows * (tileH + spacing) + spacing;
+
+  unsigned style = NSTitledWindowMask | NSClosableWindowMask
+    | NSResizableWindowMask | NSMiniaturizableWindowMask;
+
+  if ((self = [super initWithContentRect: NSMakeRect(0,0,width,height)
+                               styleMask: style
+                                 backing: NSBackingStoreBuffered
+                                   defer: NO]) != nil)
     {
-      NSArray *allObjects = [doc _collectAllObjects];
-      NSUInteger count = [allObjects count];
-      CGFloat cols = 4;
-      CGFloat spacing = 12.0;
-      CGFloat tileW = 220.0;
-      CGFloat tileH = 120.0;
-      CGFloat width = cols * (tileW + spacing) + spacing;
-      CGFloat rows = (count + cols - 1) / cols;
-      CGFloat height = rows * (tileH + spacing) + spacing;
+      NSLog(@"GormCanvasWindow: created (size %.0fx%.0f) with %u objects", width, height, (unsigned)count);
 
       [self setTitle: @"Gorm Canvas"];
-      [self setFrame: NSMakeRect(0, 0, width, height) display: NO];
       [self center];
       [self setReleasedWhenClosed: NO];
 

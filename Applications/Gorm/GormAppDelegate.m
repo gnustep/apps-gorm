@@ -132,7 +132,7 @@
 
   GormCanvasWindow *w = [[GormCanvasWindow alloc] initWithDocument: doc];
   [w makeKeyAndOrderFront: sender];
-  RELEASE(w);
+  // RELEASE(w);
 }
 
 
