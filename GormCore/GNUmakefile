@@ -41,6 +41,7 @@ GormCore_HEADER_FILES = \
 	GormVersion.h \
 	GormAbstractDelegate.h \
 	GormBoxEditor.h \
+	GormCanvasWindow.h \
 	GormClassEditor.h \
 	GormClassInspector.h \
 	GormClassManager.h \
@@ -123,6 +124,7 @@ GormCore_HEADER_FILES = \
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
 	GormBoxEditor.m \
+	GormCanvasWindow.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
 	GormClassManager.m \

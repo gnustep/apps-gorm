@@ -1,0 +1,101 @@
+/* GormCanvasWindow.m
+ *
+ * Simple canvas window that lays out basic representations of
+ * all document objects (windows, views, menus) as boxes.
+ */
+
+#import "GormCanvasWindow.h"
+#import "GormDocument.h"
+#import "GormFunctions.h"
+
+@interface GormDocument (CanvasAdditions)
+- (NSArray *) _collectAllObjects;
+@end
+
+@implementation GormCanvasWindow
+
+- (id)initWithDocument:(GormDocument *)doc
+{
+  if ((self = [super init]) != nil)
+    {
+      NSArray *allObjects = [doc _collectAllObjects];
+      NSUInteger count = [allObjects count];
+      CGFloat cols = 4;
+      CGFloat spacing = 12.0;
+      CGFloat tileW = 220.0;
+      CGFloat tileH = 120.0;
+      CGFloat width = cols * (tileW + spacing) + spacing;
+      CGFloat rows = (count + cols - 1) / cols;
+      CGFloat height = rows * (tileH + spacing) + spacing;
+
+      [self setTitle: @"Gorm Canvas"];
+      [self setFrame: NSMakeRect(0, 0, width, height) display: NO];
+      [self center];
+      [self setReleasedWhenClosed: NO];
+
+      NSView *content = [[NSView alloc] initWithFrame: NSMakeRect(0,0,width,height)];
+      [self setContentView: content];
+
+      NSUInteger i = 0;
+      for (id obj in allObjects)
+        {
+          NSUInteger col = i % (NSUInteger)cols;
+          NSUInteger row = i / (NSUInteger)cols;
+          NSRect r = NSMakeRect(spacing + col * (tileW + spacing),
+                                height - spacing - (row+1) * (tileH + spacing) + spacing,
+                                tileW, tileH);
+
+          NSBox *box = [[NSBox alloc] initWithFrame: r];
+          [box setBoxType: NSBoxPrimary];
+          NSString *className = NSStringFromClass([obj class]);
+          NSString *name = nil;
+          @try {
+            name = [doc nameForObject: obj];
+          } @catch (id e) {
+            name = nil;
+          }
+
+          if (name == nil) name = @"";
+          NSString *title = [NSString stringWithFormat: @"%@ — %@", className, name];
+          [box setTitle: title];
+          [content addSubview: box];
+
+          // small label with a short description inside
+          NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(r, 8, 28)];
+          [label setEditable: NO];
+          [label setBordered: NO];
+          [label setBackgroundColor: [NSColor clearColor]];
+          [label setSelectable: NO];
+          NSString *desc = @"";
+          if ([obj isKindOfClass: [NSWindow class]])
+            {
+              NSWindow *w = (NSWindow *)obj;
+              NSRect wf = [w frame];
+              desc = [NSString stringWithFormat: @"Window frame: (%.0f,%.0f) %.0fx%.0f", wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
+            }
+          else if ([obj isKindOfClass: [NSView class]])
+            {
+              NSView *v = (NSView *)obj;
+              NSRect vf = [v frame];
+              desc = [NSString stringWithFormat: @"View frame: %.0fx%.0f", vf.size.width, vf.size.height];
+            }
+          [label setStringValue: desc];
+          [box addSubview: label];
+
+          RELEASE(label);
+          RELEASE(box);
+          i++;
+        }
+
+      RELEASE(content);
+    }
+
+  return self;
+}
+
+- (void)orderFront:(id)sender
+{
+  [super orderFront: sender];
+}
+
+@end

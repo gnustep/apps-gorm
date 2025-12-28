@@ -32,11 +32,10 @@
 
 #import "GormAppDelegate.h"
 #import "GormLanguageViewController.h"
+#import "GormCanvasWindow.h"
 
 @interface GormDocument (Private)
-
 - (NSMutableArray *) _collectAllObjects;
-
 @end
 
 @implementation GormAppDelegate
@@ -73,6 +72,26 @@
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
     }
+
+  // Add "Open Canvas" to the Window menu if present
+  /*
+  NSMenu *mainMenu = [NSApp mainMenu];
+  if (mainMenu != nil)
+    {
+      NSMenuItem *windowMenuItem = [mainMenu itemWithTitle: @"Document"];
+      if (windowMenuItem != nil)
+        {
+          NSMenu *windowMenu = [windowMenuItem submenu];
+          if (windowMenu != nil)
+            {
+              NSMenuItem *mi = [[NSMenuItem alloc] initWithTitle: @"Open Canvas" action: @selector(openCanvasMode:) keyEquivalent: @"C"];
+              [mi setTarget: self];
+              [windowMenu addItem: mi];
+              RELEASE(mi);
+            }
+        }
+    }
+  */
 }
 
 - (void) applicationWillTerminate: (NSNotification *)n
@@ -104,6 +123,16 @@
     }
 
   return NO;
+}
+
+- (IBAction) openCanvasMode: (id)sender
+{
+  GormDocument *doc = (GormDocument *)[self activeDocument];
+  if (doc == nil) return;
+
+  GormCanvasWindow *w = [[GormCanvasWindow alloc] initWithDocument: doc];
+  [w makeKeyAndOrderFront: sender];
+  RELEASE(w);
 }
 
 
