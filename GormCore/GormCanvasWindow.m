@@ -7,6 +7,7 @@
 #import "GormCanvasWindow.h"
 #import "GormDocument.h"
 #import "GormFunctions.h"
+#import "GormWindowReplica.h"
 
 @interface GormDocument (CanvasAdditions)
 - (NSArray *) _collectAllObjects;
@@ -51,9 +52,6 @@
           NSRect r = NSMakeRect(spacing + col * (tileW + spacing),
                                 height - spacing - (row+1) * (tileH + spacing) + spacing,
                                 tileW, tileH);
-
-          NSBox *box = [[NSBox alloc] initWithFrame: r];
-          [box setBoxType: NSBoxPrimary];
           NSString *className = NSStringFromClass([obj class]);
           NSString *name = nil;
           @try {
@@ -63,34 +61,52 @@
           }
 
           if (name == nil) name = @"";
-          NSString *title = [NSString stringWithFormat: @"%@ — %@", className, name];
-          [box setTitle: title];
-          [content addSubview: box];
 
-          // small label with a short description inside
-          NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(r, 8, 28)];
-          [label setEditable: NO];
-          [label setBordered: NO];
-          [label setBackgroundColor: [NSColor clearColor]];
-          [label setSelectable: NO];
-          NSString *desc = @"";
           if ([obj isKindOfClass: [NSWindow class]])
             {
               NSWindow *w = (NSWindow *)obj;
+              GormWindowReplica *rep = [[GormWindowReplica alloc] initWithWindow: w frame: r];
+              [content addSubview: rep];
+              // small label with a short description inside the replica
+              NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(rep.bounds, 8, 28)];
+              [label setEditable: NO];
+              [label setBordered: NO];
+              [label setBackgroundColor: [NSColor clearColor]];
+              [label setSelectable: NO];
               NSRect wf = [w frame];
-              desc = [NSString stringWithFormat: @"Window frame: (%.0f,%.0f) %.0fx%.0f", wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
+              NSString *desc = [NSString stringWithFormat: @"Window frame: (%.0f,%.0f) %.0fx%.0f", wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
+              [label setStringValue: desc];
+              [rep addSubview: label];
+              RELEASE(label);
+              RELEASE(rep);
             }
-          else if ([obj isKindOfClass: [NSView class]])
+          else
             {
-              NSView *v = (NSView *)obj;
-              NSRect vf = [v frame];
-              desc = [NSString stringWithFormat: @"View frame: %.0fx%.0f", vf.size.width, vf.size.height];
-            }
-          [label setStringValue: desc];
-          [box addSubview: label];
+              NSBox *box = [[NSBox alloc] initWithFrame: r];
+              [box setBoxType: NSBoxPrimary];
+              NSString *title = [NSString stringWithFormat: @"%@ — %@", className, name];
+              [box setTitle: title];
+              [content addSubview: box];
 
-          RELEASE(label);
-          RELEASE(box);
+              // small label with a short description inside
+              NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(r, 8, 28)];
+              [label setEditable: NO];
+              [label setBordered: NO];
+              [label setBackgroundColor: [NSColor clearColor]];
+              [label setSelectable: NO];
+              NSString *desc = @"";
+              if ([obj isKindOfClass: [NSView class]])
+                {
+                  NSView *v = (NSView *)obj;
+                  NSRect vf = [v frame];
+                  desc = [NSString stringWithFormat: @"View frame: %.0fx%.0f", vf.size.width, vf.size.height];
+                }
+              [label setStringValue: desc];
+              [box addSubview: label];
+
+              RELEASE(label);
+              RELEASE(box);
+            }
           i++;
         }
 

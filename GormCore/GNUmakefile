@@ -98,7 +98,7 @@ GormCore_HEADER_FILES = \
 	GormViewWindow.h \
 	GormViewWithContentViewEditor.h \
 	GormViewWithSubviewsEditor.h \
-	GormWindowEditor.h \
+	GormWindowReplica.h \
 	GormWindowTemplate.h \
 	GormWrapperBuilder.h \
 	GormWrapperLoader.h \
@@ -177,7 +177,7 @@ GormCore_OBJC_FILES = \
 	GormViewWindow.m \
 	GormViewWithContentViewEditor.m \
 	GormViewWithSubviewsEditor.m \
-	GormWindowEditor.m \
+	GormWindowReplica.m \
 	GormWindowTemplate.m \
 	GormWrapperBuilder.m \
 	GormWrapperLoader.m \
