@@ -21,12 +21,42 @@
   _originalWindow = [window retain];
   _title = [[window title] copy];
 
-  // hide the original window so the canvas owns the visual
+  // move the original window's content view into this replica
+  NSView *origContent = nil;
   @try {
-    [_originalWindow orderOut: nil];
+    origContent = [_originalWindow contentView];
   } @catch (id e) {
-    // ignore
+    origContent = nil;
   }
+
+  if (origContent != nil)
+    {
+      // detach from original window
+      @try {
+        [origContent retain];
+        [origContent removeFromSuperview];
+      } @catch (id e) {
+        // ignore
+      }
+
+      // place origContent into replica's content area
+      NSRect bounds = [self bounds];
+      NSRect contentArea = NSMakeRect(6, 6, bounds.size.width - 12, bounds.size.height - 30);
+      // convert to replica coords and set frame
+      [origContent setFrame: contentArea];
+      [origContent setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+      [self addSubview: origContent];
+      // keep a reference but do not release here; dealloc will release window and content if needed
+    }
+  else
+    {
+      // hide the original window if no content available
+      @try {
+        [_originalWindow orderOut: nil];
+      } @catch (id e) {
+        // ignore
+      }
+    }
 
   [self setAutoresizingMask: NSViewNotSizable];
   return self;
@@ -34,6 +64,31 @@
 
 - (void)dealloc
 {
+  // if we still hold the original window, ensure its content is restored
+  NSView *maybeContent = nil;
+  @try {
+    maybeContent = [_originalWindow contentView];
+  } @catch (id e) {
+    maybeContent = nil;
+  }
+
+  // If original window has no content and we have a subview, move it back
+  if (_originalWindow != nil && maybeContent == nil)
+    {
+      NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
+      if (first != nil)
+        {
+          @try {
+            [first retain];
+            [first removeFromSuperview];
+            [_originalWindow setContentView: first];
+            [first release];
+          } @catch (id e) {
+            // ignore
+          }
+        }
+    }
+
   RELEASE(_originalWindow);
   RELEASE(_title);
   [super dealloc];
@@ -67,12 +122,15 @@
       [_title drawAtPoint: pt withAttributes: attrs];
     }
 
-  // content area placeholder
-  NSRect content = NSMakeRect(6, 6, bounds.size.width - 12, bounds.size.height - 30);
-  [[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] setFill];
-  NSRectFill(content);
-  [[NSColor grayColor] setStroke];
-  NSFrameRect(content);
+  // content area placeholder only if we have no real content
+  if ([[self subviews] count] == 0)
+    {
+      NSRect content = NSMakeRect(6, 6, bounds.size.width - 12, bounds.size.height - 30);
+      [[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] setFill];
+      NSRectFill(content);
+      [[NSColor grayColor] setStroke];
+      NSFrameRect(content);
+    }
 }
 
 - (void)mouseDown: (NSEvent *)event
@@ -100,6 +158,20 @@
 {
   if (_originalWindow == nil)
     return;
+
+  // If we've moved a content view into the replica, move it back first
+  NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
+  if (first != nil)
+    {
+      @try {
+        [first retain];
+        [first removeFromSuperview];
+        [_originalWindow setContentView: first];
+        [first release];
+      } @catch (id e) {
+        // ignore
+      }
+    }
 
   // bring the original window back on screen
   @try {

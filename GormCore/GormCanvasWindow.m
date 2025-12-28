@@ -45,7 +45,10 @@
       [self setContentView: content];
 
       NSUInteger i = 0;
-      for (id obj in allObjects)
+      NSEnumerator *en = [allObjects objectEnumerator];
+      id obj = nil;
+
+      while ((obj = [en nextObject]) != nil)
         {
           NSUInteger col = i % (NSUInteger)cols;
           NSUInteger row = i / (NSUInteger)cols;
@@ -54,58 +57,36 @@
                                 tileW, tileH);
           NSString *className = NSStringFromClass([obj class]);
           NSString *name = nil;
-          @try {
-            name = [doc nameForObject: obj];
-          } @catch (id e) {
-            name = nil;
-          }
 
-          if (name == nil) name = @"";
+	  name = [doc nameForObject: obj];
+          if (name == nil)
+	    {
+	      name = @"";
+	    }
 
           if ([obj isKindOfClass: [NSWindow class]])
             {
               NSWindow *w = (NSWindow *)obj;
-              GormWindowReplica *rep = [[GormWindowReplica alloc] initWithWindow: w frame: r];
+	      NSRect wf = [w frame];
+              GormWindowReplica *rep = [[GormWindowReplica alloc] initWithWindow: w frame: wf];
+
               [content addSubview: rep];
-              // small label with a short description inside the replica
+
+	      // Small label with a short description inside the replica
               NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(rep.bounds, 8, 28)];
               [label setEditable: NO];
               [label setBordered: NO];
               [label setBackgroundColor: [NSColor clearColor]];
               [label setSelectable: NO];
-              NSRect wf = [w frame];
-              NSString *desc = [NSString stringWithFormat: @"Window frame: (%.0f,%.0f) %.0fx%.0f", wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
+
+	      // Description
+	      NSString *desc = [NSString stringWithFormat:
+					   @"Window frame: (%.0f,%.0f) %.0fx%.0f",
+					 wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
               [label setStringValue: desc];
               [rep addSubview: label];
               RELEASE(label);
               RELEASE(rep);
-            }
-          else
-            {
-              NSBox *box = [[NSBox alloc] initWithFrame: r];
-              [box setBoxType: NSBoxPrimary];
-              NSString *title = [NSString stringWithFormat: @"%@ — %@", className, name];
-              [box setTitle: title];
-              [content addSubview: box];
-
-              // small label with a short description inside
-              NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(r, 8, 28)];
-              [label setEditable: NO];
-              [label setBordered: NO];
-              [label setBackgroundColor: [NSColor clearColor]];
-              [label setSelectable: NO];
-              NSString *desc = @"";
-              if ([obj isKindOfClass: [NSView class]])
-                {
-                  NSView *v = (NSView *)obj;
-                  NSRect vf = [v frame];
-                  desc = [NSString stringWithFormat: @"View frame: %.0fx%.0f", vf.size.width, vf.size.height];
-                }
-              [label setStringValue: desc];
-              [box addSubview: label];
-
-              RELEASE(label);
-              RELEASE(box);
             }
           i++;
         }
