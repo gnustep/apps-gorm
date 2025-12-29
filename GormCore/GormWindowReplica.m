@@ -6,13 +6,6 @@
 
 @implementation GormWindowReplica
 
-{
-  NSWindow *_originalWindow;
-  NSString *_title;
-  NSPoint _mouseDownPoint;
-  NSRect _startFrame;
-}
-
 - (id)initWithWindow: (NSWindow *)window frame: (NSRect)frameRect
 {
   if ((self = [super initWithFrame: frameRect]) == nil)

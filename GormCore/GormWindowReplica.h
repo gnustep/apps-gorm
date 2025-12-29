@@ -6,6 +6,13 @@
 
 @interface GormWindowReplica : NSView
 
+{
+	NSWindow *_originalWindow;
+	NSString *_title;
+	NSPoint _mouseDownPoint;
+	NSRect _startFrame;
+}
+
 - (id)initWithWindow: (NSWindow *)window frame: (NSRect)frameRect;
 - (void)restoreOriginalWindow: (id)sender;
 

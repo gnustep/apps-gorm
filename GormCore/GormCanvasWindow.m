@@ -41,14 +41,19 @@
       [self center];
       [self setReleasedWhenClosed: NO];
 
-      NSView *content = [[NSView alloc] initWithFrame: NSMakeRect(0,0,width,height)];
-      [self setContentView: content];
+      // create a scrollable document view so the canvas can be larger than the window
+      NSView *documentView = [[NSView alloc] initWithFrame: NSMakeRect(0,0,width,height)];
+      NSScrollView *scroll = [[NSScrollView alloc] initWithFrame: [[self contentView] bounds]];
+      [scroll setHasVerticalScroller: YES];
+      [scroll setHasHorizontalScroller: YES];
+      [scroll setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+      [scroll setDocumentView: documentView];
+      [self setContentView: scroll];
 
       NSUInteger i = 0;
-      NSEnumerator *en = [allObjects objectEnumerator];
-      id obj = nil;
-
-      while ((obj = [en nextObject]) != nil)
+      CGFloat contentWidth = width;
+      CGFloat contentHeight = height;
+      for (id obj in allObjects)
         {
           NSUInteger col = i % (NSUInteger)cols;
           NSUInteger row = i / (NSUInteger)cols;
@@ -57,41 +62,58 @@
                                 tileW, tileH);
           NSString *className = NSStringFromClass([obj class]);
           NSString *name = nil;
+          @try {
+            name = [doc nameForObject: obj];
+          } @catch (id e) {
+            name = nil;
+          }
 
-	  name = [doc nameForObject: obj];
-          if (name == nil)
-	    {
-	      name = @"";
-	    }
+          if (name == nil) name = @"";
 
           if ([obj isKindOfClass: [NSWindow class]])
             {
               NSWindow *w = (NSWindow *)obj;
-	      NSRect wf = [w frame];
-              GormWindowReplica *rep = [[GormWindowReplica alloc] initWithWindow: w frame: wf];
+              NSRect wf = [w frame];
+              // make the replica the same size as the original window
+              r.size.width = wf.size.width;
+              r.size.height = wf.size.height;
 
-              [content addSubview: rep];
+              // create replica and add to documentView
+              GormWindowReplica *rep = [[GormWindowReplica alloc] initWithWindow: w frame: r];
+              [documentView addSubview: rep];
 
-	      // Small label with a short description inside the replica
-              NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect(rep.bounds, 8, 28)];
-              [label setEditable: NO];
-              [label setBordered: NO];
-              [label setBackgroundColor: [NSColor clearColor]];
-              [label setSelectable: NO];
+              // small label with a short description inside the replica (only if replica has no real content)
+              if ([[rep subviews] count] == 0)
+                {
+                  NSTextField *label = [[NSTextField alloc] initWithFrame: NSInsetRect([rep bounds], 8, 28)];
+                  [label setEditable: NO];
+                  [label setBordered: NO];
+                  [label setBackgroundColor: [NSColor clearColor]];
+                  [label setSelectable: NO];
+                  NSString *desc = [NSString stringWithFormat: @"Window frame: (%.0f,%.0f) %.0fx%.0f", wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
+                  [label setStringValue: desc];
+                  [rep addSubview: label];
+                  RELEASE(label);
+                }
 
-	      // Description
-	      NSString *desc = [NSString stringWithFormat:
-					   @"Window frame: (%.0f,%.0f) %.0fx%.0f",
-					 wf.origin.x, wf.origin.y, wf.size.width, wf.size.height];
-              [label setStringValue: desc];
-              [rep addSubview: label];
-              RELEASE(label);
+              // expand documentView frame if replica extends beyond current bounds
+              if (NSMaxX(r) > contentWidth) contentWidth = NSMaxX(r);
+              if (NSMaxY(r) > contentHeight) contentHeight = NSMaxY(r);
+
               RELEASE(rep);
             }
+          /* No box/placeholder for non-window objects in canvas; skip */
           i++;
         }
 
-      RELEASE(content);
+      // if content size changed due to varying window sizes, adjust documentView
+      if (contentWidth != width || contentHeight != height)
+        {
+          [documentView setFrame: NSMakeRect(0,0, contentWidth, contentHeight)];
+        }
+
+      RELEASE(documentView);
+      RELEASE(scroll);
     }
 
   return self;
