@@ -37,6 +37,7 @@ srcdir = .
 SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
+	GormCanvasView.h \
 	GormCore.h \
 	GormVersion.h \
 	GormAbstractDelegate.h \
@@ -124,6 +125,7 @@ GormCore_HEADER_FILES = \
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
 	GormBoxEditor.m \
+	GormCanvasView.m \
 	GormCanvasWindow.m \
 	GormClassEditor.m \
 	GormClassInspector.m \

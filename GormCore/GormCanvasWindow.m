@@ -8,6 +8,7 @@
 #import "GormDocument.h"
 #import "GormFunctions.h"
 #import "GormWindowReplica.h"
+#import "GormCanvasView.h"
 
 @interface GormDocument (CanvasAdditions)
 - (NSArray *) _collectAllObjects;
@@ -42,7 +43,7 @@
       [self setReleasedWhenClosed: NO];
 
       // create a scrollable document view so the canvas can be larger than the window
-      NSView *documentView = [[NSView alloc] initWithFrame: NSMakeRect(0,0,width,height)];
+      GormCanvasView *documentView = [[GormCanvasView alloc] initWithFrame: NSMakeRect(0,0,width,height)];
       NSScrollView *scroll = [[NSScrollView alloc] initWithFrame: [[self contentView] bounds]];
       [scroll setHasVerticalScroller: YES];
       [scroll setHasHorizontalScroller: YES];
