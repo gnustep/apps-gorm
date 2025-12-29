@@ -2,6 +2,7 @@
  *
  * Implementation of a simple window-like view used in the canvas.
  */
+#import <InterfaceBuilder/InterfaceBuilder.h>
 #import "GormWindowReplica.h"
 
 @implementation GormWindowReplica
@@ -134,6 +135,54 @@
   if ([event clickCount] == 2)
     {
       [self restoreOriginalWindow: self];
+    }
+  else
+    {
+      // Route selection to the document/editor system so the object becomes editable
+      id doc = nil;
+      @try {
+        doc = [(id<IB>)[NSApp delegate] documentForObject: _originalWindow];
+      } @catch (id e) {
+        doc = nil;
+      }
+
+      if (doc != nil)
+        {
+          id editor = nil;
+          @try {
+            editor = [doc editorForObject: _originalWindow create: YES];
+          } @catch (id e) {
+            editor = nil;
+          }
+
+          if (editor != nil)
+            {
+              if ([editor respondsToSelector: @selector(selectObjects:)])
+                {
+                  [editor selectObjects: [NSArray arrayWithObject: _originalWindow]];
+                }
+
+              if ([editor respondsToSelector: @selector(makeSelectionVisible:)])
+                {
+                  [editor makeSelectionVisible: YES];
+                }
+
+              if ([doc respondsToSelector: @selector(setSelectionFromEditor:)])
+                {
+                  [doc setSelectionFromEditor: editor];
+                }
+
+              // If the editor is a view, forward the mouse event so drag/connect operations work
+              if ([editor isKindOfClass: [NSView class]] && [editor respondsToSelector: @selector(mouseDown:)])
+                {
+                  @try {
+                    [(NSView *)editor mouseDown: event];
+                  } @catch (id e) {
+                    // ignore forwarding errors
+                  }
+                }
+            }
+        }
     }
 }
 

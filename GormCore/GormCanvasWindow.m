@@ -51,6 +51,12 @@
       [scroll setDocumentView: documentView];
       [self setContentView: scroll];
 
+      // observe window resize so we can expand the documentView to fill
+      [[NSNotificationCenter defaultCenter] addObserver: self
+                                               selector: @selector(windowDidResize:)
+                                                   name: NSWindowDidResizeNotification
+                                                 object: self];
+
       NSUInteger i = 0;
       CGFloat contentWidth = width;
       CGFloat contentHeight = height;
@@ -118,6 +124,35 @@
     }
 
   return self;
+}
+
+- (void)windowDidResize: (NSNotification *)note
+{
+  NSScrollView *scroll = (NSScrollView *)[self contentView];
+  if (scroll == nil)
+    return;
+
+  NSView *doc = [scroll documentView];
+  if (doc == nil)
+    return;
+
+  NSRect docFrame = [doc frame];
+  NSRect clip = [[scroll contentView] bounds];
+  CGFloat newW = docFrame.size.width;
+  CGFloat newH = docFrame.size.height;
+  if (clip.size.width > newW) newW = clip.size.width;
+  if (clip.size.height > newH) newH = clip.size.height;
+
+  if (newW != docFrame.size.width || newH != docFrame.size.height)
+    {
+      [doc setFrame: NSMakeRect(docFrame.origin.x, docFrame.origin.y, newW, newH)];
+    }
+}
+
+- (void)dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self name: NSWindowDidResizeNotification object: self];
+  [super dealloc];
 }
 
 - (void)orderFront:(id)sender
