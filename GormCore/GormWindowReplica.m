@@ -26,12 +26,16 @@
   if (origContent != nil)
     {
       // detach from original window
-      @try {
-        [origContent retain];
-        [origContent removeFromSuperview];
-      } @catch (id e) {
-        // ignore
-      }
+      NS_DURING
+	{
+	  [origContent retain];
+	  [origContent removeFromSuperview];
+	}
+      NS_HANDLER
+	{
+	  // ignore
+	}
+      NS_ENDHANDLER;
 
       // place origContent into replica's content area
       NSRect bounds = [self bounds];
@@ -45,11 +49,15 @@
   else
     {
       // hide the original window if no content available
-      @try {
-        [_originalWindow orderOut: nil];
-      } @catch (id e) {
-        // ignore
-      }
+      NS_DURING
+	{
+	  [_originalWindow orderOut: nil];
+	}
+      NS_HANDLER
+	{
+	  // ignore
+	}
+      NS_ENDHANDLER;
     }
 
   [self setAutoresizingMask: NSViewNotSizable];
@@ -72,14 +80,18 @@
       NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
       if (first != nil)
         {
-          @try {
-            [first retain];
-            [first removeFromSuperview];
-            [_originalWindow setContentView: first];
-            [first release];
-          } @catch (id e) {
-            // ignore
-          }
+	  NS_DURING
+	    {
+	      [first retain];
+	      [first removeFromSuperview];
+	      [_originalWindow setContentView: first];
+	      [first release];
+	    }
+	  NS_HANDLER
+	    {
+	      // ignore
+	    }
+	  NS_ENDHANDLER;
         }
     }
 
@@ -140,20 +152,29 @@
     {
       // Route selection to the document/editor system so the object becomes editable
       id doc = nil;
-      @try {
-        doc = [(id<IB>)[NSApp delegate] documentForObject: _originalWindow];
-      } @catch (id e) {
-        doc = nil;
-      }
+
+      NS_DURING
+	{
+	  doc = [(id<IB>)[NSApp delegate] documentForObject: _originalWindow];
+	}
+      NS_HANDLER
+	{
+	  doc = nil;
+	}
+      NS_ENDHANDLER;
 
       if (doc != nil)
         {
           id editor = nil;
-          @try {
-            editor = [doc editorForObject: _originalWindow create: YES];
-          } @catch (id e) {
-            editor = nil;
-          }
+	  NS_DURING
+	    {
+	      editor = [doc editorForObject: _originalWindow create: YES];
+	    }
+	  NS_HANDLER
+	    {
+	      editor = nil;
+	    }
+	  NS_ENDHANDLER;
 
           if (editor != nil)
             {
@@ -175,11 +196,15 @@
               // If the editor is a view, forward the mouse event so drag/connect operations work
               if ([editor isKindOfClass: [NSView class]] && [editor respondsToSelector: @selector(mouseDown:)])
                 {
-                  @try {
-                    [(NSView *)editor mouseDown: event];
-                  } @catch (id e) {
-                    // ignore forwarding errors
-                  }
+		  NS_DURING
+		    {
+		      [(NSView *)editor mouseDown: event];
+		    }
+		  NS_HANDLER
+		    {
+		      // ignore forwarding errors
+		    }
+		  NS_ENDHANDLER;
                 }
             }
         }
@@ -205,22 +230,30 @@
   NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
   if (first != nil)
     {
-      @try {
-        [first retain];
-        [first removeFromSuperview];
-        [_originalWindow setContentView: first];
-        [first release];
-      } @catch (id e) {
-        // ignore
-      }
+      NS_DURING
+	{
+	  [first retain];
+	  [first removeFromSuperview];
+	  [_originalWindow setContentView: first];
+	  [first release];
+	}
+      NS_HANDLER
+	{
+	  // ignore
+	}
+      NS_ENDHANDLER;
     }
 
   // bring the original window back on screen
-  @try {
-    [_originalWindow makeKeyAndOrderFront: nil];
-  } @catch (id e) {
-    // ignore
-  }
+  NS_DURING
+    {
+      [_originalWindow makeKeyAndOrderFront: nil];
+    }
+  NS_HANDLER
+    {
+      // ignore
+    }
+  NS_ENDHANDLER;
 }
 
 @end
