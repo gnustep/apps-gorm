@@ -2,6 +2,7 @@
  *
  * Implementation of a simple window-like view used in the canvas.
  */
+
 #import <InterfaceBuilder/InterfaceBuilder.h>
 #import "GormWindowReplica.h"
 
@@ -26,16 +27,12 @@
   if (origContent != nil)
     {
       // detach from original window
-      NS_DURING
-	{
-	  [origContent retain];
-	  [origContent removeFromSuperview];
-	}
-      NS_HANDLER
-	{
-	  // ignore
-	}
-      NS_ENDHANDLER;
+      @try {
+        [origContent retain];
+        [origContent removeFromSuperview];
+      } @catch (id e) {
+        // ignore
+      }
 
       // place origContent into replica's content area
       NSRect bounds = [self bounds];
@@ -49,15 +46,11 @@
   else
     {
       // hide the original window if no content available
-      NS_DURING
-	{
-	  [_originalWindow orderOut: nil];
-	}
-      NS_HANDLER
-	{
-	  // ignore
-	}
-      NS_ENDHANDLER;
+      @try {
+        [_originalWindow orderOut: nil];
+      } @catch (id e) {
+        // ignore
+      }
     }
 
   [self setAutoresizingMask: NSViewNotSizable];
@@ -80,18 +73,14 @@
       NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
       if (first != nil)
         {
-	  NS_DURING
-	    {
-	      [first retain];
-	      [first removeFromSuperview];
-	      [_originalWindow setContentView: first];
-	      [first release];
-	    }
-	  NS_HANDLER
-	    {
-	      // ignore
-	    }
-	  NS_ENDHANDLER;
+          @try {
+            [first retain];
+            [first removeFromSuperview];
+            [_originalWindow setContentView: first];
+            [first release];
+          } @catch (id e) {
+            // ignore
+          }
         }
     }
 
@@ -141,40 +130,39 @@
 
 - (void)mouseDown: (NSEvent *)event
 {
-  _mouseDownPoint = [self convertPoint: [event locationInWindow] fromView: nil];
+  // record mouse location in superview coordinates so dragging remains
+  // consistent even when the scroll view scrolls
+  NSView *superv = [self superview];
+  if (superv != nil)
+    _mouseDownPoint = [superv convertPoint: [event locationInWindow] fromView: nil];
+  else
+    _mouseDownPoint = [self convertPoint: [event locationInWindow] fromView: nil];
+
   _startFrame = [self frame];
 
   if ([event clickCount] == 2)
     {
       [self restoreOriginalWindow: self];
+      return;
     }
   else
     {
       // Route selection to the document/editor system so the object becomes editable
       id doc = nil;
-
-      NS_DURING
-	{
-	  doc = [(id<IB>)[NSApp delegate] documentForObject: _originalWindow];
-	}
-      NS_HANDLER
-	{
-	  doc = nil;
-	}
-      NS_ENDHANDLER;
+      @try {
+        doc = [(id<IB>)[NSApp delegate] documentForObject: _originalWindow];
+      } @catch (id e) {
+        doc = nil;
+      }
 
       if (doc != nil)
         {
           id editor = nil;
-	  NS_DURING
-	    {
-	      editor = [doc editorForObject: _originalWindow create: YES];
-	    }
-	  NS_HANDLER
-	    {
-	      editor = nil;
-	    }
-	  NS_ENDHANDLER;
+          @try {
+            editor = [doc editorForObject: _originalWindow create: YES];
+          } @catch (id e) {
+            editor = nil;
+          }
 
           if (editor != nil)
             {
@@ -196,15 +184,11 @@
               // If the editor is a view, forward the mouse event so drag/connect operations work
               if ([editor isKindOfClass: [NSView class]] && [editor respondsToSelector: @selector(mouseDown:)])
                 {
-		  NS_DURING
-		    {
-		      [(NSView *)editor mouseDown: event];
-		    }
-		  NS_HANDLER
-		    {
-		      // ignore forwarding errors
-		    }
-		  NS_ENDHANDLER;
+                  @try {
+                    [(NSView *)editor mouseDown: event];
+                  } @catch (id e) {
+                    // ignore forwarding errors
+                  }
                 }
             }
         }
@@ -213,12 +197,31 @@
 
 - (void)mouseDragged: (NSEvent *)event
 {
-  NSPoint p = [self convertPoint: [event locationInWindow] fromView: nil];
-  NSPoint delta = NSMakePoint(p.x - _mouseDownPoint.x, p.y - _mouseDownPoint.y);
+  // compute drag delta in superview coordinates so movement is stable
+  NSView *superv = [self superview];
+  NSPoint current;
+  if (superv != nil)
+    current = [superv convertPoint: [event locationInWindow] fromView: nil];
+  else
+    current = [self convertPoint: [event locationInWindow] fromView: nil];
+
+  NSPoint delta = NSMakePoint(current.x - _mouseDownPoint.x, current.y - _mouseDownPoint.y);
   NSRect f = _startFrame;
   f.origin.x += delta.x;
   f.origin.y += delta.y;
   [self setFrame: f];
+
+  // autoscroll the enclosing scroll view when near edges
+  NSScrollView *sv = [self enclosingScrollView];
+  if (sv != nil)
+    {
+      // let the scroll view autoscroll in response to the original event
+      @try {
+        [sv autoscroll: event];
+      } @catch (id e) {
+        // ignore
+      }
+    }
 }
 
 - (void)restoreOriginalWindow: (id)sender
@@ -230,30 +233,22 @@
   NSView *first = [[self subviews] count] ? [[self subviews] objectAtIndex:0] : nil;
   if (first != nil)
     {
-      NS_DURING
-	{
-	  [first retain];
-	  [first removeFromSuperview];
-	  [_originalWindow setContentView: first];
-	  [first release];
-	}
-      NS_HANDLER
-	{
-	  // ignore
-	}
-      NS_ENDHANDLER;
+      @try {
+        [first retain];
+        [first removeFromSuperview];
+        [_originalWindow setContentView: first];
+        [first release];
+      } @catch (id e) {
+        // ignore
+      }
     }
 
   // bring the original window back on screen
-  NS_DURING
-    {
-      [_originalWindow makeKeyAndOrderFront: nil];
-    }
-  NS_HANDLER
-    {
-      // ignore
-    }
-  NS_ENDHANDLER;
+  @try {
+    [_originalWindow makeKeyAndOrderFront: nil];
+  } @catch (id e) {
+    // ignore
+  }
 }
 
 @end

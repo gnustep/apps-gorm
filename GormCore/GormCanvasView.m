@@ -12,7 +12,7 @@
     return nil;
 
   _gridSize = 20.0;
-  _majorInterval = 5;
+  _majorInterval = 2;
   // use light-gray grid lines so the pattern is subtle and not dark
   _minorLineColor = [[NSColor colorWithCalibratedWhite:0.85 alpha:1.0] retain];
   _majorLineColor = [[NSColor colorWithCalibratedWhite:0.75 alpha:1.0] retain];
