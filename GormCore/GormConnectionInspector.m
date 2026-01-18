@@ -630,6 +630,12 @@ selectCellWithString: (NSString*)title
 	    }
 	}
 
+      // Perform intelligent connection selection if we're actively connecting
+      // and no specific connection was already selected
+      if ([[NSApp delegate] isConnecting] == YES && currentConnector == nil)
+	{
+	  [self performIntelligentConnectionSelection];
+	}
 
       if ([currentConnector isKindOfClass: [NSNibControlConnector class]] == YES && 
 	  [[NSApp delegate] isConnecting] == NO)
@@ -682,4 +688,483 @@ selectCellWithString: (NSString*)title
 {
   return YES;
 }
+
+- (void) performIntelligentConnectionSelection
+{
+  // Only perform intelligent selection when actively connecting
+  if (![[NSApp delegate] isConnecting])
+    {
+      return;
+    }
+  
+  id destination = [[NSApp delegate] connectDestination];
+  if (destination == nil)
+    {
+      return;
+    }
+  
+  // Check if a connection already exists for this destination
+  NSEnumerator *connectorEnum = [connectors objectEnumerator];
+  id<IBConnectors> connector;
+  while ((connector = [connectorEnum nextObject]) != nil)
+    {
+      if ([connector destination] == destination)
+        {
+          // Connection already exists, select it
+          ASSIGN(currentConnector, connector);
+          [oldBrowser selectRow: [connectors indexOfObject: connector] inColumn: 0];
+          return;
+        }
+    }
+  
+  // No existing connection found, find the best new connection
+  // Get available actions directly from the class manager
+  NSArray *availableActions = [[(id<GormAppDelegate>)[NSApp delegate] classManager] 
+                               allActionsForObject: destination];
+  NSString *bestAction = [self findBestActionForDestination: destination withActions: availableActions];
+  NSString *bestOutlet = [self findBestOutletForDestination: destination];
+  
+  // Determine if we should prefer actions over outlets
+  BOOL preferActions = [self shouldPreferActionsForDestination: destination];
+  
+  if (preferActions && bestAction != nil && [outlets containsObject: @"target"])
+    {
+      // Select target and then the best action
+      NSInteger targetIndex = [outlets indexOfObject: @"target"];
+      if (targetIndex != NSNotFound)
+        {
+          [newBrowser selectRow: targetIndex inColumn: 0];
+          [newBrowser sendAction]; // This will populate the actions
+          
+          // Now select the best action in column 1
+          NSInteger actionIndex = [actions indexOfObject: bestAction];
+          if (actionIndex != NSNotFound)
+            {
+              [newBrowser selectRow: actionIndex inColumn: 1];
+              [newBrowser sendAction];
+            }
+        }
+    }
+  else if (bestOutlet != nil)
+    {
+      // Select the best outlet
+      NSInteger outletIndex = [outlets indexOfObject: bestOutlet];
+      if (outletIndex != NSNotFound)
+        {
+          [newBrowser selectRow: outletIndex inColumn: 0];
+          [newBrowser sendAction]; // Trigger the selection handler
+        }
+    }
+  else if (bestAction != nil && [outlets containsObject: @"target"])
+    {
+      // Fallback: select target and action even if we don't prefer actions
+      NSInteger targetIndex = [outlets indexOfObject: @"target"];
+      if (targetIndex != NSNotFound)
+        {
+          [newBrowser selectRow: targetIndex inColumn: 0];
+          [newBrowser sendAction]; // This will populate the actions
+          
+          // Now select the best action in column 1
+          NSInteger actionIndex = [actions indexOfObject: bestAction];
+          if (actionIndex != NSNotFound)
+            {
+              [newBrowser selectRow: actionIndex inColumn: 1];
+              [newBrowser sendAction];
+            }
+        }
+    }
+}
+
+- (BOOL) isDestinationCompatibleWithOutletType: (NSString *)outletType
+{
+  id destination = [[NSApp delegate] connectDestination];
+  if (destination == nil || outletType == nil)
+    {
+      return NO;
+    }
+  
+  NSString *destinationClass = NSStringFromClass([destination class]);
+  
+  // Common outlet type to class mappings
+  static NSDictionary *typeMapping = nil;
+  if (typeMapping == nil)
+    {
+      typeMapping = [[NSDictionary alloc] initWithObjectsAndKeys:
+        // UI Controls
+        [NSArray arrayWithObjects: @"NSButton", @"GormNSButton", nil], @"button",
+        [NSArray arrayWithObjects: @"NSTextField", @"GormNSTextField", @"NSSecureTextField", nil], @"textField",
+        [NSArray arrayWithObjects: @"NSTextView", @"GormNSTextView", nil], @"textView",
+        [NSArray arrayWithObjects: @"NSImageView", @"GormNSImageView", nil], @"imageView",
+        [NSArray arrayWithObjects: @"NSScrollView", @"GormNSScrollView", nil], @"scrollView",
+        [NSArray arrayWithObjects: @"NSTableView", @"GormNSTableView", nil], @"tableView",
+        [NSArray arrayWithObjects: @"NSOutlineView", @"GormNSOutlineView", nil], @"outlineView",
+        [NSArray arrayWithObjects: @"NSPopUpButton", @"GormNSPopUpButton", nil], @"popUpButton",
+        [NSArray arrayWithObjects: @"NSComboBox", @"GormNSComboBox", nil], @"comboBox",
+        [NSArray arrayWithObjects: @"NSSlider", @"GormNSSlider", nil], @"slider",
+        [NSArray arrayWithObjects: @"NSStepper", @"GormNSStepper", nil], @"stepper",
+        [NSArray arrayWithObjects: @"NSProgressIndicator", @"GormNSProgressIndicator", nil], @"progressIndicator",
+        [NSArray arrayWithObjects: @"NSColorWell", @"GormNSColorWell", nil], @"colorWell",
+        [NSArray arrayWithObjects: @"NSDatePicker", @"GormNSDatePicker", nil], @"datePicker",
+        [NSArray arrayWithObjects: @"NSTabView", @"GormNSTabView", nil], @"tabView",
+        [NSArray arrayWithObjects: @"NSSplitView", @"GormNSSplitView", nil], @"splitView",
+        [NSArray arrayWithObjects: @"NSBox", @"GormNSBox", nil], @"box",
+        [NSArray arrayWithObjects: @"NSMatrix", @"GormNSMatrix", nil], @"matrix",
+        [NSArray arrayWithObjects: @"NSBrowser", @"GormNSBrowser", nil], @"browser",
+        
+        // Views and containers
+        [NSArray arrayWithObjects: @"NSView", @"GormNSView", @"NSControl", @"NSButton", @"NSTextField", @"NSImageView", nil], @"view",
+        [NSArray arrayWithObjects: @"NSControl", @"NSButton", @"NSTextField", @"NSSlider", @"NSPopUpButton", nil], @"control",
+        [NSArray arrayWithObjects: @"NSCell", @"NSButtonCell", @"NSTextFieldCell", @"NSImageCell", nil], @"cell",
+        
+        // Window and menu items
+        [NSArray arrayWithObjects: @"NSWindow", @"GormNSWindow", @"NSPanel", @"GormNSPanel", nil], @"window",
+        [NSArray arrayWithObjects: @"NSPanel", @"GormNSPanel", nil], @"panel",
+        [NSArray arrayWithObjects: @"NSMenu", @"GormNSMenu", nil], @"menu",
+        [NSArray arrayWithObjects: @"NSMenuItem", @"GormNSMenuItem", nil], @"menuItem",
+        nil];
+    }
+  
+  // Try exact outlet name match first
+  NSArray *compatibleClasses = [typeMapping objectForKey: outletType];
+  if (compatibleClasses != nil)
+    {
+      NSEnumerator *classEnum = [compatibleClasses objectEnumerator];
+      NSString *className;
+      while ((className = [classEnum nextObject]) != nil)
+        {
+          if ([destinationClass isEqualToString: className] || 
+              [destination isKindOfClass: NSClassFromString(className)])
+            {
+              return YES;
+            }
+        }
+    }
+  
+  // Try partial matches for compound outlet names
+  NSEnumerator *keyEnum = [[typeMapping allKeys] objectEnumerator];
+  NSString *type;
+  while ((type = [keyEnum nextObject]) != nil)
+    {
+      if ([[outletType lowercaseString] rangeOfString: type].location != NSNotFound || 
+          [type rangeOfString: [outletType lowercaseString]].location != NSNotFound)
+        {
+          NSArray *classes = [typeMapping objectForKey: type];
+          NSEnumerator *classEnum = [classes objectEnumerator];
+          NSString *className;
+          while ((className = [classEnum nextObject]) != nil)
+            {
+              if ([destination isKindOfClass: NSClassFromString(className)])
+                {
+                  return YES;
+                }
+            }
+        }
+    }
+  
+  return NO;
+}
+
+- (NSString *) expectedClassForOutlet: (NSString *)outletName
+{
+  if (outletName == nil)
+    {
+      return nil;
+    }
+  
+  NSString *lowerName = [outletName lowercaseString];
+  
+  // Common outlet naming patterns
+  if ([lowerName rangeOfString: @"button"].location != NSNotFound)
+    return @"NSButton";
+  if ([lowerName rangeOfString: @"textfield"].location != NSNotFound || [lowerName rangeOfString: @"field"].location != NSNotFound)
+    return @"NSTextField";
+  if ([lowerName rangeOfString: @"textview"].location != NSNotFound)
+    return @"NSTextView";
+  if ([lowerName rangeOfString: @"imageview"].location != NSNotFound || [lowerName rangeOfString: @"image"].location != NSNotFound)
+    return @"NSImageView";
+  if ([lowerName rangeOfString: @"scrollview"].location != NSNotFound)
+    return @"NSScrollView";
+  if ([lowerName rangeOfString: @"tableview"].location != NSNotFound || [lowerName rangeOfString: @"table"].location != NSNotFound)
+    return @"NSTableView";
+  if ([lowerName rangeOfString: @"outlineview"].location != NSNotFound || [lowerName rangeOfString: @"outline"].location != NSNotFound)
+    return @"NSOutlineView";
+  if ([lowerName rangeOfString: @"popupbutton"].location != NSNotFound || [lowerName rangeOfString: @"popup"].location != NSNotFound)
+    return @"NSPopUpButton";
+  if ([lowerName rangeOfString: @"combobox"].location != NSNotFound || [lowerName rangeOfString: @"combo"].location != NSNotFound)
+    return @"NSComboBox";
+  if ([lowerName rangeOfString: @"slider"].location != NSNotFound)
+    return @"NSSlider";
+  if ([lowerName rangeOfString: @"stepper"].location != NSNotFound)
+    return @"NSStepper";
+  if ([lowerName rangeOfString: @"progress"].location != NSNotFound)
+    return @"NSProgressIndicator";
+  if ([lowerName rangeOfString: @"colorwell"].location != NSNotFound || [lowerName rangeOfString: @"color"].location != NSNotFound)
+    return @"NSColorWell";
+  if ([lowerName rangeOfString: @"datepicker"].location != NSNotFound || [lowerName rangeOfString: @"date"].location != NSNotFound)
+    return @"NSDatePicker";
+  if ([lowerName rangeOfString: @"tabview"].location != NSNotFound || [lowerName rangeOfString: @"tab"].location != NSNotFound)
+    return @"NSTabView";
+  if ([lowerName rangeOfString: @"splitview"].location != NSNotFound || [lowerName rangeOfString: @"split"].location != NSNotFound)
+    return @"NSSplitView";
+  if ([lowerName rangeOfString: @"box"].location != NSNotFound)
+    return @"NSBox";
+  if ([lowerName rangeOfString: @"matrix"].location != NSNotFound)
+    return @"NSMatrix";
+  if ([lowerName rangeOfString: @"browser"].location != NSNotFound)
+    return @"NSBrowser";
+  if ([lowerName rangeOfString: @"window"].location != NSNotFound)
+    return @"NSWindow";
+  if ([lowerName rangeOfString: @"panel"].location != NSNotFound)
+    return @"NSPanel";
+  if ([lowerName rangeOfString: @"menu"].location != NSNotFound)
+    return @"NSMenu";
+  if ([lowerName rangeOfString: @"view"].location != NSNotFound)
+    return @"NSView";
+  
+  return @"NSView"; // Default fallback
+}
+
+- (NSInteger) matchingScoreForName: (NSString *)name withDestination: (id)destination
+{
+  if (name == nil || destination == nil)
+    {
+      return 0;
+    }
+  
+  NSString *destinationClass = NSStringFromClass([destination class]);
+  NSString *lowerName = [name lowercaseString];
+  NSString *lowerClass = [destinationClass lowercaseString];
+  
+  NSInteger score = 0;
+  
+  // Remove common prefixes from class name for better matching
+  if ([lowerClass hasPrefix: @"gorm"])
+    {
+      lowerClass = [lowerClass substringFromIndex: 4];
+    }
+  if ([lowerClass hasPrefix: @"ns"])
+    {
+      lowerClass = [lowerClass substringFromIndex: 2];
+    }
+  
+  // Exact class name match in outlet name gets highest score
+  if ([lowerName rangeOfString: lowerClass].location != NSNotFound)
+    {
+      score += 100;
+    }
+  
+  // Common naming patterns
+  if ([lowerName hasSuffix: @"button"] && [lowerClass isEqualToString: @"button"])
+    score += 80;
+  if ([lowerName hasSuffix: @"field"] && [lowerClass isEqualToString: @"textfield"])
+    score += 80;
+  if ([lowerName hasSuffix: @"view"] && [lowerClass hasSuffix: @"view"])
+    score += 70;
+  if ([lowerName hasSuffix: @"textview"] && [lowerClass isEqualToString: @"textview"])
+    score += 80;
+  if ([lowerName hasSuffix: @"imageview"] && [lowerClass isEqualToString: @"imageview"])
+    score += 80;
+  if ([lowerName hasSuffix: @"scrollview"] && [lowerClass isEqualToString: @"scrollview"])
+    score += 80;
+  if ([lowerName hasSuffix: @"tableview"] && [lowerClass isEqualToString: @"tableview"])
+    score += 80;
+  
+  // Action name heuristics (for actions like "print", "save", etc.)
+  if ([lowerName hasPrefix: @"print"] || [lowerName rangeOfString: @"print"].location != NSNotFound)
+    {
+      if ([lowerClass isEqualToString: @"button"])
+        score += 60;
+    }
+  if ([lowerName hasPrefix: @"save"] || [lowerName rangeOfString: @"save"].location != NSNotFound)
+    {
+      if ([lowerClass isEqualToString: @"button"])
+        score += 60;
+    }
+  if ([lowerName hasPrefix: @"cancel"] || [lowerName rangeOfString: @"cancel"].location != NSNotFound)
+    {
+      if ([lowerClass isEqualToString: @"button"])
+        score += 60;
+    }
+  if ([lowerName hasPrefix: @"ok"] || [lowerName rangeOfString: @"ok"].location != NSNotFound)
+    {
+      if ([lowerClass isEqualToString: @"button"])
+        score += 60;
+    }
+  
+  // Partial matches get some points
+  NSArray *nameComponents = [lowerName componentsSeparatedByCharactersInSet:
+    [NSCharacterSet characterSetWithCharactersInString: @"_-"]];
+  NSEnumerator *compEnum = [nameComponents objectEnumerator];
+  NSString *component;
+  while ((component = [compEnum nextObject]) != nil)
+    {
+      if ([lowerClass rangeOfString: component].location != NSNotFound && [component length] > 2)
+        {
+          score += 30;
+        }
+    }
+  
+  return score;
+}
+
+- (NSString *) findBestOutletForDestination: (id)destination
+{
+  if (destination == nil || outlets == nil || [outlets count] == 0)
+    {
+      return nil;
+    }
+  
+  NSString *bestOutlet = nil;
+  NSInteger bestScore = 0;
+  NSString *bestTypeMatchOutlet = nil;
+  
+  NSEnumerator *outletEnum = [outlets objectEnumerator];
+  NSString *outlet;
+  while ((outlet = [outletEnum nextObject]) != nil)
+    {
+      // Skip target outlet as it's for actions, not outlets
+      if ([outlet isEqualToString: @"target"])
+        {
+          continue;
+        }
+      
+      // Check type compatibility first
+      if ([self isDestinationCompatibleWithOutletType: outlet])
+        {
+          if (bestTypeMatchOutlet == nil)
+            {
+              bestTypeMatchOutlet = outlet;
+            }
+          
+          // Calculate name matching score
+          NSInteger score = [self matchingScoreForName: outlet withDestination: destination];
+          if (score > bestScore)
+            {
+              bestScore = score;
+              bestOutlet = outlet;
+            }
+        }
+    }
+  
+  // Return the best scoring outlet, or the first type-compatible one if no good name match
+  return bestOutlet != nil ? bestOutlet : bestTypeMatchOutlet;
+}
+
+- (NSString *) findBestActionForDestination: (id)destination
+{
+  if (destination == nil || actions == nil || [actions count] == 0)
+    {
+      return nil;
+    }
+  
+  NSString *bestAction = nil;
+  NSInteger bestScore = 0;
+  
+  // Get the destination's class name for heuristic matching
+  NSString *destinationClass = NSStringFromClass([destination class]);
+  NSString *lowerClass = [destinationClass lowercaseString];
+  
+  NSEnumerator *actionEnum = [actions objectEnumerator];
+  NSString *action;
+  while ((action = [actionEnum nextObject]) != nil)
+    {
+      NSInteger score = [self matchingScoreForName: action withDestination: destination];
+      
+      // Bonus for common action patterns on buttons
+      if ([lowerClass rangeOfString: @"button"].location != NSNotFound)
+        {
+          NSString *lowerAction = [action lowercaseString];
+          if ([lowerAction hasPrefix: @"print"] || [lowerAction hasPrefix: @"save"] ||
+              [lowerAction hasPrefix: @"cancel"] || [lowerAction hasPrefix: @"ok"] ||
+              [lowerAction hasPrefix: @"apply"] || [lowerAction hasPrefix: @"close"] ||
+              [lowerAction hasPrefix: @"show"] || [lowerAction hasPrefix: @"hide"])
+            {
+              score += 40;
+            }
+        }
+      
+      if (score > bestScore)
+        {
+          bestScore = score;
+          bestAction = action;
+        }
+    }
+  
+  return bestAction;
+}
+
+- (NSString *) findBestActionForDestination: (id)destination withActions: (NSArray *)actionList
+{
+  if (destination == nil || actionList == nil || [actionList count] == 0)
+    {
+      return nil;
+    }
+  
+  NSString *bestAction = nil;
+  NSInteger bestScore = 0;
+  
+  // Get the destination's class name for heuristic matching
+  NSString *destinationClass = NSStringFromClass([destination class]);
+  NSString *lowerClass = [destinationClass lowercaseString];
+  
+  NSEnumerator *actionEnum = [actionList objectEnumerator];
+  NSString *action;
+  while ((action = [actionEnum nextObject]) != nil)
+    {
+      NSInteger score = [self matchingScoreForName: action withDestination: destination];
+      
+      // Bonus for common action patterns on buttons
+      if ([lowerClass rangeOfString: @"button"].location != NSNotFound)
+        {
+          NSString *lowerAction = [action lowercaseString];
+          if ([lowerAction hasPrefix: @"print"] || [lowerAction hasPrefix: @"save"] ||
+              [lowerAction hasPrefix: @"cancel"] || [lowerAction hasPrefix: @"ok"] ||
+              [lowerAction hasPrefix: @"apply"] || [lowerAction hasPrefix: @"close"] ||
+              [lowerAction hasPrefix: @"show"] || [lowerAction hasPrefix: @"hide"])
+            {
+              score += 40;
+            }
+        }
+      
+      if (score > bestScore)
+        {
+          bestScore = score;
+          bestAction = action;
+        }
+    }
+  
+  return bestAction;
+}
+
+- (BOOL) shouldPreferActionsForDestination: (id)destination
+{
+  if (destination == nil)
+    {
+      return NO;
+    }
+  
+  NSString *destinationClass = NSStringFromClass([destination class]);
+  NSString *lowerClass = [destinationClass lowercaseString];
+  
+  // Remove common prefixes
+  if ([lowerClass hasPrefix: @"gorm"])
+    {
+      lowerClass = [lowerClass substringFromIndex: 4];
+    }
+  if ([lowerClass hasPrefix: @"ns"])
+    {
+      lowerClass = [lowerClass substringFromIndex: 2];
+    }
+  
+  // Prefer actions for interactive controls
+  if ([lowerClass isEqualToString: @"button"] || 
+      [lowerClass isEqualToString: @"menuitem"] ||
+      [lowerClass hasPrefix: @"button"])
+    {
+      return YES;
+    }
+  
+  return NO;
+}
+
 @end

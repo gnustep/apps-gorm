@@ -53,6 +53,56 @@
  * selection and connector state.
  */
 - (void) updateButtons;
+
+/**
+ * Perform intelligent connection selection based on type information and name heuristics.
+ * This method is called when a connection drag is completed to automatically select
+ * the most appropriate outlet or action.
+ */
+- (void) performIntelligentConnectionSelection;
+
+/**
+ * Check if the destination object is compatible with the given outlet type.
+ * Returns YES if the destination can be connected to an outlet of the specified type.
+ */
+- (BOOL) isDestinationCompatibleWithOutletType: (NSString *)outletType;
+
+/**
+ * Get the expected class name for an outlet based on its name and type.
+ * Returns the most likely class that should be connected to this outlet.
+ */
+- (NSString *) expectedClassForOutlet: (NSString *)outletName;
+
+/**
+ * Calculate a matching score between an outlet/action name and a destination object.
+ * Higher scores indicate better matches. Uses name heuristics like substring matching.
+ */
+- (NSInteger) matchingScoreForName: (NSString *)name withDestination: (id)destination;
+
+/**
+ * Find the best outlet to connect based on type compatibility and name heuristics.
+ * Returns the outlet name that should be automatically selected, or nil if none found.
+ */
+- (NSString *) findBestOutletForDestination: (id)destination;
+
+/**
+ * Find the best action to connect based on name heuristics.
+ * Returns the action name that should be automatically selected, or nil if none found.
+ */
+- (NSString *) findBestActionForDestination: (id)destination;
+
+/**
+ * Find the best action to connect based on name heuristics with a provided action list.
+ * Returns the action name that should be automatically selected, or nil if none found.
+ */
+- (NSString *) findBestActionForDestination: (id)destination withActions: (NSArray *)actionList;
+
+/**
+ * Determine whether actions should be preferred over outlets for the given destination.
+ * Returns YES for interactive controls like buttons where actions are more common.
+ */
+- (BOOL) shouldPreferActionsForDestination: (id)destination;
+
 @end
 
 #endif
