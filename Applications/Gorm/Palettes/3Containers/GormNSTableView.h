@@ -1,9 +1,10 @@
 /* GormNSTableView.h
 
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2026 Free Software Foundation, Inc.
 
+   Author: Gregory John Casamento <greg.casamento@gmail.com>
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
-   Date: 2001
+   Date: 2001, 2026
    
    This file is part of GNUstep.
    
@@ -21,6 +22,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
+
 #ifndef	INCLUDED_GormNSTableView_h
 #define	INCLUDED_GormNSTableView_h
 
@@ -31,26 +33,34 @@
 {
   id _gormDataSource;
   id _gormDelegate;
+
   BOOL _gormAllowsColumnReordering;
   BOOL _gormAllowsColumnResizing;
   BOOL _gormAllowsColumnSelection;
   BOOL _gormAllowsMultipleSelection;
   BOOL _gormAllowsEmptySelection;
+  BOOL _gormViewBased;
 }
 
 - (void) setGormDelegate: (id)anObject;
+
 - (void) setGormAllowsColumnReordering: (BOOL)flag;
 - (BOOL) gormAllowsColumnReordering;
+
 - (void) setGormAllowsColumnResizing: (BOOL)flag;
 - (BOOL) gormAllowsColumnResizing;
+
 - (void) setGormAllowsMultipleSelection: (BOOL)flag;
 - (BOOL) gormAllowsMultipleSelection;
+
 - (void) setGormAllowsEmptySelection: (BOOL)flag;
 - (BOOL) gormAllowsEmptySelection;
+
 - (void) setGormAllowsColumnSelection: (BOOL)flag;
 - (BOOL) gormAllowsColumnSelection;
-- (void) setViewBased: (BOOL)flag;
-- (BOOL) viewBased;
+
+- (void) setGormViewBased: (BOOL)flag;
+- (BOOL) gormViewBased;
 
 @end
 

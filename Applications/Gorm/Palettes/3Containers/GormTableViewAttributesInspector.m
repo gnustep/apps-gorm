@@ -99,6 +99,8 @@
   /* view based */
   else if (sender == viewBased)
     {
+      flag = ([sender state] == NSOnState) ? YES : NO;
+      [object setGormViewBased: flag];
     }
   /* dimension */
   else if (sender == rowsHeightForm)
@@ -197,8 +199,8 @@
 
   /* selection */
   [multipleSelectionSwitch setState: [object gormAllowsMultipleSelection]];
-  [emptySelectionSwith setState:[object gormAllowsEmptySelection]];
-  [columnSelectionSwitch setState:[object gormAllowsColumnSelection]];
+  [emptySelectionSwith setState: [object gormAllowsEmptySelection]];
+  [columnSelectionSwitch setState: [object gormAllowsColumnSelection]];
 
   
   if (isScrollView)
@@ -228,9 +230,10 @@
   [[rowsHeightForm cellAtIndex: 1] setIntValue: [(NSTableView*)object numberOfColumns]];
 
   /* options */
-  [drawgridSwitch setState:[object drawsGrid]];
-  [resizingSwitch setState:[object gormAllowsColumnResizing]];
-  [reorderingSwitch setState:[object gormAllowsColumnReordering]];
+  [drawgridSwitch setState: [object drawsGrid]];
+  [resizingSwitch setState: [object gormAllowsColumnResizing]];
+  [reorderingSwitch setState: [object gormAllowsColumnReordering]];
+  [viewBased setState: [object gormViewBased]];
 
   /* tag */
   [[tagForm cellAtIndex:0] setIntValue:[object tag]];

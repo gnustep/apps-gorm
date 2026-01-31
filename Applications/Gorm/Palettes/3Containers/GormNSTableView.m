@@ -1,9 +1,10 @@
 /* GormNSTableView.m
 
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2026 Free Software Foundation, Inc.
 
+   Author: Gregory John Casamento <greg.casamento@gmail.com>
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
-   Date: 2001
+   Date: 2001, 2026
    
    This file is part of GNUstep.
    
@@ -29,9 +30,9 @@
 
 #include "GormNSTableView.h"
 
-/* --------------------------------------------------------------- 
+/* ------------------------
  * NSTableView dataSource
-*/
+ */
 @interface NSTableViewDataSource: NSObject <NSCoding>
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)tv;
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
@@ -100,6 +101,7 @@ static id _sharedDataSource = nil;
 @end
 
 @implementation GormNSTableView
+
 + (id) sharedDataSource
 {
   if (_sharedDataSource == nil)
@@ -114,7 +116,6 @@ static id _sharedDataSource = nil;
   self = [super initWithFrame: aRect];
   [super setDataSource: [GormNSTableView sharedDataSource]];
   _gormDataSource = nil;
-  // ASSIGN(_savedColor, [NSColor controlBackgroundColor]);
   return self;
 }
 
@@ -153,6 +154,8 @@ static id _sharedDataSource = nil;
   _allowsColumnSelection = _gormAllowsColumnSelection;
   _allowsMultipleSelection = _gormAllowsMultipleSelection;
   _allowsEmptySelection = _gormAllowsEmptySelection;  
+  _viewBased = _gormViewBased;
+
   _dataSource = _gormDataSource;
   oldDelegate = _delegate;
   _delegate = _gormDelegate;
@@ -167,6 +170,7 @@ static id _sharedDataSource = nil;
   _allowsColumnSelection = YES;
   _allowsMultipleSelection = NO;
   _allowsEmptySelection = YES;
+  _viewBased = NO;
 
   _delegate = oldDelegate;
   _dataSource = _sharedDataSource;
@@ -182,6 +186,7 @@ static id _sharedDataSource = nil;
   _gormAllowsColumnSelection = _allowsColumnSelection;
   _gormAllowsMultipleSelection = _allowsMultipleSelection;
   _gormAllowsEmptySelection = _allowsEmptySelection;
+  _gormViewBased = _viewBased;
   _gormDelegate = _delegate;
   _delegate = nil;
   
@@ -238,18 +243,19 @@ static id _sharedDataSource = nil;
   return _gormAllowsColumnSelection;
 }
 
-- (BOOL) viewBased
+- (BOOL) gormViewBased
 {
-  return _viewBased;
+  return _gormViewBased;
 }
 
-- (void) setViewBased: (BOOL)flag
+- (void) setGormViewBased: (BOOL)flag
 {
-  _viewBased = flag;
+  _gormViewBased = flag;
 }
 
 - (NSString *) className
 {
   return @"NSTableView";
 }
+
 @end
