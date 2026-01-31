@@ -49,6 +49,9 @@
 - (BOOL) gormAllowsEmptySelection;
 - (void) setGormAllowsColumnSelection: (BOOL)flag;
 - (BOOL) gormAllowsColumnSelection;
+- (void) setViewBased: (BOOL)flag;
+- (BOOL) viewBased;
+
 @end
 
 #endif

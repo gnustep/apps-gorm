@@ -60,6 +60,8 @@
   /* tag */
   NSForm *tagForm;
   NSColorWell *backgroundColor;
+  /* view based */
+  id viewBased;
 }
 
 @end

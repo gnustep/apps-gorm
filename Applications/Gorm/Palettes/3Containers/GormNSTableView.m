@@ -238,6 +238,16 @@ static id _sharedDataSource = nil;
   return _gormAllowsColumnSelection;
 }
 
+- (BOOL) viewBased
+{
+  return _viewBased;
+}
+
+- (void) setViewBased: (BOOL)flag
+{
+  _viewBased = flag;
+}
+
 - (NSString *) className
 {
   return @"NSTableView";

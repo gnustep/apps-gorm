@@ -96,6 +96,10 @@
     {
       [scrollView setBorderType: [[sender selectedCell] tag]];
     }
+  /* view based */
+  else if (sender == viewBased)
+    {
+    }
   /* dimension */
   else if (sender == rowsHeightForm)
     {
