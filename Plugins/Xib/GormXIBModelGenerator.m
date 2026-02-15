@@ -460,6 +460,7 @@ static NSUInteger _count = INT_MAX;
 			 @"keyCell",
 			 @"isLenient",
 			 @"toolbar",
+			 @"cellBackgroundColor",
 			 nil];
     }
 }
@@ -1117,8 +1118,10 @@ static NSUInteger _count = INT_MAX;
   NSRect rect = [matrix frame];
   NSSize cellSize = [matrix cellSize];
   NSSize inter = [matrix intercellSpacing];
-  NSUInteger itemsPerCol = (rect.size.width + inter.width)   / cellSize.width;
-  NSUInteger itemsPerRow = (rect.size.height + inter.height) / cellSize.height;
+  CGFloat iw = (inter.width < 0.0) ? 0.0:inter.width;
+  CGFloat ih = (inter.height < 0.0) ? 0.0:inter.height;
+  NSUInteger itemsPerCol = (rect.size.width + iw) / cellSize.width;
+  NSUInteger itemsPerRow = (rect.size.height + ih) / cellSize.height;
   NSUInteger c = 0;
   NSUInteger r = 0;
   NSArray *cells = [matrix cells];
@@ -1128,6 +1131,7 @@ static NSUInteger _count = INT_MAX;
   NSString *cellClass = nil;
 
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
+  NSLog(@"INFO: col = %ld x row = %ld", itemsPerCol, itemsPerRow);
   NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
 
   if (count > 0)
