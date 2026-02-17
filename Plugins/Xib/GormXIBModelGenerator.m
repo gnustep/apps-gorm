@@ -576,7 +576,7 @@ static NSUInteger _count = INT_MAX;
 	    {
 	      result = @"-2";
 	      return result;
-	}
+	    }
 	  else if([obj isKindOfClass: [GormFirstResponder class]])
 	    {
 	      result = @"-1";
@@ -723,9 +723,6 @@ static NSUInteger _count = INT_MAX;
 		  if (sel != NULL)
 		    {
 		      NSDebugLog(@"selector = %@",s);
-		      // NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
-
-		      // NSLog(@"methodSignatureForSelector %@ -> %s", s, [sig methodReturnType]);
 		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
 			{
 			  [result addObject: s];
@@ -1223,24 +1220,23 @@ static NSUInteger _count = INT_MAX;
     }
 
   // Skip image and alternateImage properties for check/radio button cells - type attribute handles this
-  if (([name isEqualToString: @"image"] || [name isEqualToString: @"alternateImage"]) 
+  if (([name isEqualToString: @"image"] || [name isEqualToString: @"alternateImage"])
       && [obj isKindOfClass: [NSButtonCell class]])
     {
       NSString *buttonTypeString = [obj buttonTypeString];
-      if ([buttonTypeString isEqualToString: @"check"] 
-          || [buttonTypeString isEqualToString: @"radio"])
-        {
-          // Ensure the type attribute is set correctly in the XML
-          [self _addButtonType: buttonTypeString toElement: elem];
-          return; // Don't encode the GSSwitch/GSRadio images for check/radio buttons
-        }
+      if ([buttonTypeString isEqualToString: @"check"]
+	  || [buttonTypeString isEqualToString: @"radio"])
+	{
+	  // Ensure the type attribute is set correctly in the XML
+	  [self _addButtonType: buttonTypeString toElement: elem];
+	  return; // Don't encode the GSSwitch/GSRadio images for check/radio buttons
+	}
     }
 
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
 
-      // NSLog(@"%@ -> %@", name, type);
       if (s != NULL)
 	{
 	  if ([obj respondsToSelector: s])
@@ -1257,7 +1253,6 @@ static NSUInteger _count = INT_MAX;
 
 		  if ([o isKindOfClass: [NSString class]])
 		    {
-		      NSDebugLog(@"Adding string property %@ = %@", name, o);
 		      if ([_valueMapping objectForKey: o] != nil)
 			{
 			  o = [_valueMapping objectForKey: o];
@@ -1272,7 +1267,6 @@ static NSUInteger _count = INT_MAX;
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
 							     stringValue: o];
-
 			  [elem addAttribute: attr];
 			}
 		    }
@@ -1762,7 +1756,7 @@ static NSUInteger _count = INT_MAX;
 	  [self _addWindowStyleMask: m toElement: elem];
 	  [self _addRect: c toElement: elem withName: @"contentRect"];
 	  [self _addRect: s toElement: elem withName: @"screenRect"];
-	  
+
 	  // Handle toolbar if one is set
 	  if ([obj respondsToSelector: @selector(toolbar)])
 	    {
@@ -1776,14 +1770,14 @@ static NSUInteger _count = INT_MAX;
 
 		  [toolbarElem addAttribute: idAttr];
 		  [toolbarElem addAttribute: keyAttr];
-		  
+
 		  NSString *toolbarIdentifier = [toolbar identifier];
 		  if (toolbarIdentifier != nil)
 		    {
 		      NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"identifier" stringValue: toolbarIdentifier];
 		      [toolbarElem addAttribute: idAttr];
 		    }
-		  
+
 		  // Add toolbar display mode
 		  NSToolbarDisplayMode displayMode = [toolbar displayMode];
 		  NSString *displayModeStr = nil;
@@ -1807,7 +1801,7 @@ static NSUInteger _count = INT_MAX;
 		      NSXMLNode *modeAttr = [NSXMLNode attributeWithName: @"displayMode" stringValue: displayModeStr];
 		      [toolbarElem addAttribute: modeAttr];
 		    }
-		  
+
 		  // Add toolbar size mode
 		  NSToolbarSizeMode sizeMode = [toolbar sizeMode];
 		  NSString *sizeModeStr = nil;
@@ -1828,28 +1822,28 @@ static NSUInteger _count = INT_MAX;
 		      NSXMLNode *sizeAttr = [NSXMLNode attributeWithName: @"sizeMode" stringValue: sizeModeStr];
 		      [toolbarElem addAttribute: sizeAttr];
 		    }
-		  
+
 		  // Add visible flag
 		  if ([toolbar isVisible])
 		    {
 		      NSXMLNode *visibleAttr = [NSXMLNode attributeWithName: @"visible" stringValue: @"YES"];
 		      [toolbarElem addAttribute: visibleAttr];
 		    }
-		  
+
 		  // Add allows customization flag
 		  if ([toolbar allowsUserCustomization])
 		    {
 		      NSXMLNode *customAttr = [NSXMLNode attributeWithName: @"allowsUserCustomization" stringValue: @"YES"];
 		      [toolbarElem addAttribute: customAttr];
 		    }
-		  
+
 		  // Add autosaves configuration flag
 		  if ([toolbar autosavesConfiguration])
 		    {
 		      NSXMLNode *autosaveAttr = [NSXMLNode attributeWithName: @"autosavesConfiguration" stringValue: @"YES"];
 		      [toolbarElem addAttribute: autosaveAttr];
 		    }
-		  
+
 		  // Add allowedItemIdentifiers array
 		  NSMutableDictionary *referencesDictionary = [NSMutableDictionary dictionary];
 		  if ([toolbar respondsToSelector: @selector(allowedItemIdentifiers)])
@@ -1860,7 +1854,7 @@ static NSUInteger _count = INT_MAX;
 			  NSXMLElement *allowedElem = [NSXMLNode elementWithName: @"allowedToolbarItems"];
 			  NSEnumerator *en = [allowedIdentifiers objectEnumerator];
 			  NSString *identifier = nil;
-			  
+
 			  while ((identifier = [en nextObject]) != nil)
 			    {
 			      NSString *theId = [[NSString randomHex] splitString];
@@ -1874,11 +1868,11 @@ static NSUInteger _count = INT_MAX;
 			      [itemElem addAttribute: identElem];
 			      [allowedElem addChild: itemElem];
 			    }
-			  
+
 			  [toolbarElem addChild: allowedElem];
 			}
 		    }
-		  
+
 		  // Add defaultItemIdentifiers array
 		  if ([toolbar respondsToSelector: @selector(defaultItemIdentifiers)])
 		    {
@@ -1888,7 +1882,7 @@ static NSUInteger _count = INT_MAX;
 			  NSXMLElement *defaultElem = [NSXMLNode elementWithName: @"defaultToolbarItems"];
 			  NSEnumerator *en = [defaultIdentifiers objectEnumerator];
 			  NSString *identifier = nil;
-			  
+
 			  while ((identifier = [en nextObject]) != nil)
 			    {
 			      NSString *refId = [referencesDictionary objectForKey: identifier];
@@ -1898,15 +1892,15 @@ static NSUInteger _count = INT_MAX;
 			      [itemElem addAttribute: identElem];
 			      [defaultElem addChild: itemElem];
 			    }
-			  
+
 			  [toolbarElem addChild: defaultElem];
 			}
 		    }
-		  
+
 		  [elem addChild: toolbarElem];
 		}
 	    }
-	  
+
 	  [self _collectObjectsFromObject: [obj contentView]
 			       withParent: elem];
 	}
