@@ -93,15 +93,31 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
 		  NSData *fileData = [fw regularFileContents];
 		  if ([imageFileTypes containsObject: [key pathExtension]])
 		    {
-		      [images addObject: [GormImage imageForData: fileData 
-						    withFileName: key 
-						    inWrapper: YES]];
+		      id image = [GormImage imageForData: fileData 
+					    withFileName: key 
+					       inWrapper: YES];
+		      if (image != nil)
+			{
+			  [images addObject: image];
+			}
+		      else
+			{
+			  NSLog(@"Could not load image %@", image);
+			}
 		    }
 		  else if ([soundFileTypes containsObject: [key pathExtension]])
 		    {
-		      [sounds addObject: [GormSound soundForData: fileData 
-						    withFileName: key 
-						    inWrapper: YES]];
+		      id sound = [GormSound soundForData: fileData 
+					    withFileName: key 
+					       inWrapper: YES];
+		      if (sound != nil)
+			{
+			  [sounds addObject: sound];
+			}
+		      else
+			{
+			  NSLog(@"Could not load sound %@", sound);
+			}
 		    }
 		}
 	    }
