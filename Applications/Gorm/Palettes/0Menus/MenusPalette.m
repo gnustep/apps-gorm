@@ -504,7 +504,6 @@
   RELEASE(b);
   RELEASE(i);
 
-
   /*
    * The Services menu
    */
@@ -528,6 +527,19 @@
   RELEASE(i);
   RELEASE(m);
 
+  /*
+   * The separator item
+   */
+  i = (NSMenuItem *)[NSMenuItem separatorItem]; // coerce to remove the protocol...
+  b = [[NSButton alloc] initWithFrame: NSMakeRect(30, 40, 100, 20)];
+  [b setAlignment: NSLeftTextAlignment];
+  [b setTitle: nil];
+  [contents addSubview: b];
+  [self associateObject: i
+		   type: IBMenuPboardType
+		   with: b];
+  RELEASE(b);
+  // RELEASE(i); // separator is autoreleased...
 
   /*
    * The general submenu
@@ -559,7 +571,7 @@
    * A whole new menu...
    */
   menu = [[GormMenuMaker alloc] init];
-  v = [[NSButton alloc] initWithFrame: NSMakeRect(115,0,48,48)];
+  v = [[NSButton alloc] initWithFrame: NSMakeRect(115,0,32,32)];
   [v setBordered: NO];
   [v setImage: dragImage];
   [v setImagePosition: NSImageOverlaps];
