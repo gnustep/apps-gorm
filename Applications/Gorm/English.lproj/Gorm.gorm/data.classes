@@ -23,7 +23,7 @@
 	    "loadImage:",
 	    "loadPalette:",
 	    "loadSound:",
-	    "newAction:",
+	    "libraries:",
 	    "orderFrontFontPanel:",
 	    "palettes:",
 	    "preferencesPanel:",
@@ -110,7 +110,8 @@
 	    "exportXLIFFDocument:",
 	    "importXLIFFDocument:",
 	    "exportStrings:",
-	    "translate:"
+	    "translate:",
+	    "libraries:"
 	);
 	Outlets = (
 	    gormMenu,
