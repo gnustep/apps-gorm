@@ -363,47 +363,49 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 }
 
 - (BOOL) _validateCount: (NSUInteger)count
-	       forClass: (Class)cls
+		forView: (id)view
 {
-  NSLog(@"Class = %@, count = %ld", NSStringFromClass(cls), count);
-  if (cls == [NSSplitView class])
+  NSLog(@"View = %@, count = %ld", view, count);
+
+  if ([view isKindOfClass: [NSSplitView class]])
     {
       if (count >= 2)
 	{
 	  return YES;
 	}
     }
-  else if (cls == [NSBox class])
+  else if ([view isKindOfClass: [NSBox class]])
     {
       if (count >= 1)
 	{
 	  return YES;
 	}
     }
-  else if (cls == [NSMatrix class])
+  else if ([view isKindOfClass: [NSMatrix class]])
     {
       if (count >= 1)
 	{
 	  return YES;
 	}
     }
-  else if (cls == [NSView class])
+  else if ([view isKindOfClass: [NSView class]])
     {
       if (count >= 1)
 	{
 	  return YES;
 	}
     }
+
   return NO;
 }
 
 - (NSRect) _computeRectWithViews: (NSArray *)views
-			forClass: (Class)cls
+			 forView: (id)view
 {
   NSEnumerator *en = [views objectEnumerator];
   NSRect rect = NSZeroRect;
 
-  if ([cls isKindOfClass: [NSSplitView class]])
+  if ([view isKindOfClass: [NSSplitView class]])
     {
       id subview = nil;
       while ((subview = [en nextObject]) != nil)
@@ -412,10 +414,10 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 	  [subview deactivate];
 	}
     }
-  else if ([cls isKindOfClass: [NSBox class]])
+  else if ([view isKindOfClass: [NSBox class]])
     {
     }
-  else if ([cls isKindOfClass: [NSView class]])
+  else if ([view isKindOfClass: [NSView class]])
     {
     }
 
@@ -423,11 +425,11 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 }
 
 - (NSArray *) _orderSelection: (BOOL *)vertical
-		     forClass: (Class)cls
+		      forView: (id)view
 {
   NSArray *array = [NSArray arrayWithArray: selection];
 
-  if ([cls isKindOfClass: [NSSplitView class]])
+  if ([view isKindOfClass: [NSSplitView class]])
     {
       *vertical = [self _shouldBeVertical: selection];
       array = [self _sortByPosition: selection
@@ -446,30 +448,26 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
     }
 }
 
-- (void) _groupSelectionInClass: (Class)cls
+- (void) _groupSelectionInView: (id)view
 {
-  id view = nil;
   NSRect rect = NSZeroRect;
   BOOL vertical = NO;
 
   // Validate count...
   if (![self _validateCount: [selection count]
-		   forClass: cls])
+		    forView: view])
     {
       return;
     }
 
   // Compute rect...
   rect = [self _computeRectWithViews: selection
-			    forClass: cls];
-  
-
-  // Instantiate class...
-  view = [[cls alloc] initWithFrame: rect];
+			     forView: view];  
+  [view setFrame: rect];
 
   // Order views...
   NSArray *sortedViews = [self _orderSelection: &vertical
-			     forClass: cls];
+				       forView: view];
   [self _setVertical: vertical
 	   forObject: view];
   
@@ -513,7 +511,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 
 - (void) groupSelectionInSplitView
 {
-  [self _groupSelectionInClass: [NSSplitView class]];
+  [self _groupSelectionInView: [[NSSplitView alloc] initWithFrame: NSZeroRect]];
 }
 
 - (void) groupSelectionInBox
