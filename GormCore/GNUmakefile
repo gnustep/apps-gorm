@@ -58,6 +58,7 @@ GormCore_HEADER_FILES = \
 	GormFontViewController.h \
 	GormFunctions.h \
 	GormGenericEditor.h \
+	GormGroupProtocol.h \
 	GormHelpInspector.h \
 	GormImage.h \
 	GormImageEditor.h \
