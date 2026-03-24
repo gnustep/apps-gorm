@@ -1,4 +1,4 @@
-/* GormGroupProtocol.h
+/* GormGroupViews.h
  *
  * Copyright (C) 2026 Free Software Foundation, Inc.
  *
@@ -22,21 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#ifndef	INCLUDED_GormGroupProtocol_h
-#define	INCLUDED_GormGroupProtocol_h
+#import "GormGroupViews.h"
 
-#import <AppKit/AppKit.h>
-
-@interface NSView (GormGroupProtocol)
-
-- (BOOL) validateCount: (NSUInteger)count;
-
-- (NSRect) computeRectForViews: (NSArray *)subviews;
-
-- (NSArray *) orderSelectionForViews: (NSArray *)subviews;
-
-- (void) setVertical: (BOOL)flag;
-
+@implementation NSSplitView (GormGroupProtocol)
 @end
-
-#endif

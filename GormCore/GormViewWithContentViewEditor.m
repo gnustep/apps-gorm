@@ -31,6 +31,7 @@
 #import "GormViewKnobs.h"
 #import "GormInternalViewEditor.h"
 #import "GormDocument.h"
+#import "GormGroupProtocol.h"
 
 @interface GormViewEditor (Private)
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame
