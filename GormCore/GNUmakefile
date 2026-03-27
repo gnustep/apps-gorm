@@ -141,7 +141,6 @@ GormCore_OBJC_FILES = \
 	GormFontViewController.m \
 	GormFunctions.m \
 	GormGenericEditor.m \
-	GormGroupViews.m \
 	GormHelpInspector.m \
 	GormImage.m \
 	GormImageEditor.m \

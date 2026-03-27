@@ -25,13 +25,6 @@
 #ifndef	INCLUDED_GormGroupViews_h
 #define	INCLUDED_GormGroupViews_h
 
-#import <AppKit/NSSplitView.h>
-#import <AppKit/NSBox.h>
-#import <AppKit/NSScrollView.h>
-#import <AppKit/NSView.h>
-
-#import "GormGroupProtocol.h"
-
 // definitions specific to grouping...
 
 #endif
