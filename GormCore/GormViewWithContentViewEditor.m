@@ -236,10 +236,6 @@
 
 }
 
-
-
-
-
 #undef MAX
 #undef MIN
 
@@ -363,114 +359,20 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   return result;
 }
 
-- (BOOL) _validateCount: (NSUInteger)count
-		forView: (id)view
-{
-  NSLog(@"View = %@, count = %ld", view, count);
-
-  if ([view isKindOfClass: [NSSplitView class]])
-    {
-      if (count >= 2)
-	{
-	  return YES;
-	}
-    }
-  else if ([view isKindOfClass: [NSBox class]])
-    {
-      if (count >= 1)
-	{
-	  return YES;
-	}
-    }
-  else if ([view isKindOfClass: [NSMatrix class]])
-    {
-      if (count >= 1)
-	{
-	  return YES;
-	}
-    }
-  else if ([view isKindOfClass: [NSView class]])
-    {
-      if (count >= 1)
-	{
-	  return YES;
-	}
-    }
-
-  return NO;
-}
-
-- (NSRect) _computeRectWithViews: (NSArray *)views
-			 forView: (id)view
-{
-  NSEnumerator *en = [views objectEnumerator];
-  NSRect rect = NSZeroRect;
-
-  if ([view isKindOfClass: [NSSplitView class]])
-    {
-      id subview = nil;
-      while ((subview = [en nextObject]) != nil)
-	{
-	  rect = NSUnionRect(rect, [subview frame]);
-	  [subview deactivate];
-	}
-    }
-  else if ([view isKindOfClass: [NSBox class]])
-    {
-    }
-  else if ([view isKindOfClass: [NSView class]])
-    {
-    }
-
-  return rect;
-}
-
-- (NSArray *) _orderSelection: (BOOL *)vertical
-		      forView: (id)view
-{
-  NSArray *array = [NSArray arrayWithArray: selection];
-
-  if ([view isKindOfClass: [NSSplitView class]])
-    {
-      *vertical = [self _shouldBeVertical: selection];
-      array = [self _sortByPosition: selection
-			 isVertical: *vertical];
-    }
-
-  return array;
-}
-
-- (void) _setVertical: (BOOL)vertical
-	    forObject: (id)view
-{
-  if ([view respondsToSelector: @selector(setVertical:)])
-    {
-      [view setVertical: vertical];
-    }
-}
-
 - (void) _groupSelectionInView: (id)view
 {
-  NSRect rect = NSZeroRect;
-  BOOL vertical = NO;
-
   // Validate count...
-  if (![self _validateCount: [selection count]
-		    forView: view])
+  if (![view validateCount: [selection count]])
     {
       return;
     }
 
   // Compute rect...
-  rect = [self _computeRectWithViews: selection
-			     forView: view];  
+  NSRect rect = [view computeRectForViews: selection];
   [view setFrame: rect];
 
   // Order views...
-  NSArray *sortedViews = [self _orderSelection: &vertical
-				       forView: view];
-  [self _setVertical: vertical
-	   forObject: view];
+  NSArray *sortedViews = [view orderSelectionForViews: selection];
   
   // Add back into the main view...
   NSEnumerator *en = [sortedViews objectEnumerator];

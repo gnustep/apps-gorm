@@ -35,8 +35,6 @@
 
 - (NSArray *) orderSelectionForViews: (NSArray *)subviews;
 
-- (void) setVertical: (BOOL)flag;
-
 @end
 
 #endif
