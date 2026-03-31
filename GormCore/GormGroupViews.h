@@ -25,6 +25,42 @@
 #ifndef	INCLUDED_GormGroupViews_h
 #define	INCLUDED_GormGroupViews_h
 
-// definitions specific to grouping...
+#import <AppKit/AppKit.h>
+#import "GormGroupProtocol.h"
+
+@class GormViewEditor;
+
+/**
+ * Category on NSView providing utility methods for view grouping operations.
+ * These methods support determining layout orientation and sorting views.
+ */
+@interface NSView (GormGroupUtils)
+
+/**
+ * Determines whether views should be arranged vertically based on their positions.
+ * @param subviews Array of GormViewEditor objects to analyze
+ * @return YES if views should be arranged vertically, NO for horizontal
+ */
+- (BOOL) shouldBeVertical: (NSArray *)subviews;
+
+/**
+ * Sorts views by their position according to the specified orientation.
+ * @param subviews Array of GormViewEditor objects to sort
+ * @param isVertical YES to sort by horizontal position, NO to sort by vertical position
+ * @return Sorted array of views
+ */
+- (NSArray *) sortByPosition: (NSArray *)subviews 
+                  isVertical: (BOOL)isVertical;
+
+/**
+ * Adjusts view frames relative to a union rectangle and content origin.
+ * @param views Array of NSView objects to adjust
+ * @param unionRect The bounding rectangle to use as reference
+ * @return Array of adjusted views
+ */
+- (NSArray *) buildFramesForViews: (NSArray *)views
+                    withUnionRect: (NSRect)unionRect;
+
+@end
 
 #endif

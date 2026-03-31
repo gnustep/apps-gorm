@@ -32,6 +32,7 @@
 #import "GormInternalViewEditor.h"
 #import "GormDocument.h"
 #import "GormGroupProtocol.h"
+#import "GormGroupViews.h"
 
 @interface GormViewEditor (Private)
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame
@@ -236,62 +237,89 @@
 
 }
 
-- (void) _groupSelectionInView: (id)view
+- (NSArray *) editedViewsFromSelection
 {
-  // Validate count...
-  if (![view validateCount: [selection count]])
+  NSMutableArray *sel = [NSMutableArray arrayWithCapacity: [selection count]];
+  NSEnumerator *en = [selection objectEnumerator];
+  id e = nil;
+
+  while ((e = [en nextObject]) != nil)
     {
-      return;
+      id v = [e editedObject];
+      [e deactivate];
+      [sel addObject: v];
     }
 
+  return sel;
+}
+
+- (NSRect) computeBoundingRectForViews: (NSArray *)views
+{
+  NSRect boundingRect = NSZeroRect;
+  NSEnumerator *en = [views objectEnumerator];
+  id view = nil;
+  
+  while ((view = [en nextObject]) != nil)
+    {
+      if ([view isKindOfClass: [NSView class]])
+        {
+          NSRect viewFrame = [view frame];
+          if (NSIsEmptyRect(boundingRect))
+            {
+              boundingRect = viewFrame;
+            }
+          else
+            {
+              boundingRect = NSUnionRect(boundingRect, viewFrame);
+            }
+        }
+    }
+    
+  return boundingRect;
+}
+
+- (void) groupSelectionInView: (id)view
+{
+  // Validate count...
+  if ([view respondsToSelector: @selector(validateCount:)])
+    {
+      if (![view validateCount: [selection count]])
+        {
+          return;
+        }
+    }
+
+  NSArray *viewSelection = [self editedViewsFromSelection];
+
   // Compute rect...
-  NSRect rect = [view computeRectForViews: selection];
+  NSRect rect = NSZeroRect;
+  if ([view respondsToSelector: @selector(computeRectForViews:)])
+    {
+      rect = [view computeRectForViews: viewSelection];
+    }
+  else
+    {
+      // Fallback: compute bounding rect manually
+      rect = [self computeBoundingRectForViews: viewSelection];
+    }
   [view setFrame: rect];
 
   // Order views...
-  NSArray *sortedViews = [view orderSelectionForViews: selection];
+  NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
   
   // Add back into the main view...
   NSEnumerator *en = [sortedViews objectEnumerator];
-  GormViewEditor *subview = nil;
-
-  // Restart editor...
-  GormViewEditor *editor = (GormViewEditor *)[document editorForObject: view
-							      inEditor: self
-								create: YES];
-
-  // Iterate over subviews...
-  while ((subview = [en nextObject]) != nil)
-    {
-      id eO = [subview editedObject];
-      
-      // Update the parent connector to point to the new split view
-      NSArray *old = [document connectorsForSource: eO ofClass: [NSNibConnector class]];
-      if ([old count] > 0)
-        {
-          [[old objectAtIndex: 0] setDestination: view];
-        }
-      
-      // Remove from old superview before adding to split view
-      [eO removeFromSuperview];
-      [view addSubview: eO];
-      [subview close];
-      [document editorForObject: eO
-		       inEditor: editor
-			 create: YES];
-    }
-
-  // Reattach objects...
+cts...
   [document attachObject: view 
 		toParent: _editedObject];
 
   // Select objects...
-  [self selectObjects: [NSArray arrayWithObject: editor]];
+  [self selectObjects: [NSArray arrayWithObject: view]];
 }
 
 - (void) groupSelectionInSplitView
 {
-  [self _groupSelectionInView: [[NSSplitView alloc] initWithFrame: NSZeroRect]];
+  [self groupSelectionInView: [[NSSplitView alloc] initWithFrame: NSZeroRect]];
 }
 
 - (void) groupSelectionInBox
