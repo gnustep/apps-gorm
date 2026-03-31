@@ -309,7 +309,12 @@
   
   // Add back into the main view...
   NSEnumerator *en = [sortedViews objectEnumerator];
-cts...
+  id v = nil;
+  while ((v = [en nextObject]) != )
+    {
+      [view addObject: v];
+    }
+
   [document attachObject: view 
 		toParent: _editedObject];
 
