@@ -24,7 +24,6 @@
 
 #import <AppKit/AppKit.h>
 
-#import "GormGroupViews.h"
 #import "GormGroupProtocol.h"
 #import "GormViewEditor.h"
 
@@ -209,6 +208,23 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 
 @implementation NSBox (GormGroupProtocol)
 
+// NSBox adds directly to its contentView...
+- (void) addViews: (NSArray *)subviews
+{
+  NSView *contentView = [(NSBox *)self contentView];
+  NSEnumerator *en = [subviews objectEnumerator];
+  id v = nil;
+
+  while ((v = [en nextObject]) != nil)
+    {
+      [contentView addSubview: v];
+    }
+}
+
+@end
+
+@implementation NSView (GormGroupProtocol)
+
 - (BOOL) validateCount: (NSUInteger)count
 {
   // Box can contain any number of views
@@ -246,9 +262,18 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 
 - (NSArray *) orderSelectionForViews: (NSArray *)selection
 {
-  BOOL vertical = [[self contentView] shouldBeVertical: selection];
-  return [[self contentView] sortByPosition: selection
-                                 isVertical: vertical];
+  return [selection copy];
+}
+
+- (void) addViews: (NSArray *)subviews
+{
+  // Add back into the main view...
+  NSEnumerator *en = [subviews objectEnumerator];
+  id v = nil;
+  while ((v = [en nextObject]) != nil)
+    {
+      [self addSubview: v];
+    }
 }
 
 @end

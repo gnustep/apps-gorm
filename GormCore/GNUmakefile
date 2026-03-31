@@ -59,7 +59,6 @@ GormCore_HEADER_FILES = \
 	GormFunctions.h \
 	GormGenericEditor.h \
 	GormGroupProtocol.h \
-	GormGroupViews.h \
 	GormHelpInspector.h \
 	GormImage.h \
 	GormImageEditor.h \

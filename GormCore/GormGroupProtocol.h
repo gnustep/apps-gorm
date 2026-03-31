@@ -36,26 +36,31 @@
 
 /**
  * Validates whether the given count of views is acceptable for this container type.
- * @param count The number of views to be grouped
- * @return YES if the count is valid for this container type, NO otherwise
+ * Count The number of views to be grouped
+ * return YES if the count is valid for this container type, NO otherwise
  */
 - (BOOL) validateCount: (NSUInteger)count;
 
 /**
  * Computes the bounding rectangle that encompasses all the given views
  * and configures them for inclusion in this container.
- * @param subviews Array of views to be grouped
- * @return The bounding rectangle containing all views
+ * subviews Array of views to be grouped
+ * return The bounding rectangle containing all views
  */
 - (NSRect) computeRectForViews: (NSArray *)subviews;
 
 /**
  * Orders the selection of views according to their spatial arrangement
  * and the container's preferred layout.
- * @param subviews Array of views to be ordered
- * @return Array of views in the proper order for grouping
+ * Subviews Array of views to be ordered
+ * return Array of views in the proper order for grouping
  */
 - (NSArray *) orderSelectionForViews: (NSArray *)subviews;
+
+/**
+ * Subviews Array of views to be added to the view.
+ */
+- (void) addViews: (NSArray *)subviews;
 
 @end
 
