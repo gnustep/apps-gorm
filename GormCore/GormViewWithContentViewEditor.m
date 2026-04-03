@@ -183,10 +183,8 @@
     {
       return YES;
     }
-  else
-    {
-      return [types containsObject: IBViewPboardType];
-    }
+
+  return [types containsObject: IBViewPboardType];
 }
 
 - (void) postDrawForView: (GormViewEditor *) viewEditor
@@ -195,6 +193,7 @@
     {
       return;
     }
+
   if (((id)openedSubeditor == (id)viewEditor) 
       && (openedSubeditor != nil)
       && ![openedSubeditor isKindOfClass: [GormInternalViewEditor class]])

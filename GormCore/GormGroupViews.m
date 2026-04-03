@@ -151,6 +151,76 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   return result;
 }
 
+/**
+ * Computes the bounding rectangle that should contain all the given views.
+ * This determines the position and size of the new container view.
+ */
+- (NSRect) _computeContainerRectForViews: (NSArray *)views
+{
+  NSEnumerator *en = [views objectEnumerator];
+  NSRect containerRect = NSZeroRect;
+  NSView *view = nil;
+
+  // Calculate the union of all view frames to determine container bounds
+  while ((view = [en nextObject]) != nil)
+    {
+      containerRect = NSUnionRect(containerRect, [view frame]);
+    }
+
+  return containerRect;
+}
+
+/**
+ * Prepares views for grouping by deactivating any editors and 
+ * collecting them into a mutable array.
+ */
+- (NSMutableArray *) _prepareViewsForGrouping: (NSArray *)views
+{
+  NSMutableArray *preparedViews = [NSMutableArray arrayWithCapacity: [views count]];
+  NSEnumerator *en = [views objectEnumerator];
+  id view = nil;
+
+  while ((view = [en nextObject]) != nil)
+    {
+      // Deactivate any editors associated with this view
+      if ([view respondsToSelector: @selector(deactivate)]) 
+        {
+          [view deactivate];
+        }
+      [preparedViews addObject: view];
+    }
+
+  return preparedViews;
+}
+
+/**
+ * Positions the subviews within the container by adjusting their frames
+ * relative to the container's coordinate system.
+ */
+- (void) _positionSubviewsInContainer: (NSArray *)views
+                        containerRect: (NSRect)containerRect
+{
+  NSEnumerator *en = [views objectEnumerator];
+  NSView *view = nil;
+  NSPoint containerOrigin = containerRect.origin;
+  NSPoint selfOrigin = [self frame].origin;
+
+  while ((view = [en nextObject]) != nil)
+    {
+      NSRect viewFrame = [view frame];
+      
+      // Convert view frame to be relative to the container's coordinate system
+      viewFrame.origin.x -= containerOrigin.x;
+      viewFrame.origin.y -= containerOrigin.y;
+      
+      // Adjust relative to self's frame if needed
+      viewFrame.origin.x -= selfOrigin.x;
+      viewFrame.origin.y -= selfOrigin.y;
+      
+      [view setFrame: viewFrame];
+    }
+}
+
 @end
 
 // MARK: - Protocol implementations for different view types
@@ -165,33 +235,29 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 
 - (NSRect) computeRectForViews: (NSArray *)views
 {
-  NSEnumerator *en = [views objectEnumerator];
-  NSRect unionRect = NSZeroRect;
-  NSMutableArray *subviews = [NSMutableArray array];
-  id subview = nil;
-
-  // Calculate union of all view frames and collect processed views
-  while ((subview = [en nextObject]) != nil)
-    {
-      unionRect = NSUnionRect(unionRect, [subview frame]);
-      if ([subview respondsToSelector: @selector(deactivate)]) {
-        [subview deactivate];
-      }
-      [subviews addObject: subview];
-    }
+  if ([views count] == 0) {
+    return NSZeroRect;
+  }
   
-  // Build frames for the subviews
-  NSArray *processedViews = [self buildFramesForViews: subviews 
-                                        withUnionRect: unionRect];
+  // Step 1: Determine the position and size of the new container view
+  NSRect newViewRect = [self _computeContainerRectForViews: views];
   
-  // Add processed views to this split view
-  NSEnumerator *processedEnum = [processedViews objectEnumerator];
-  while ((subview = [processedEnum nextObject]) != nil)
+  // Step 2: Prepare views for grouping (deactivate editors, etc.)
+  NSMutableArray *preparedViews = [self _prepareViewsForGrouping: views];
+  
+  // Step 3: Calculate and set positions of subviews relative to container
+  [self _positionSubviewsInContainer: preparedViews 
+                       containerRect: newViewRect];
+  
+  // Step 4: Add processed views to this split view
+  NSEnumerator *viewEnum = [preparedViews objectEnumerator];
+  NSView *subview = nil;
+  while ((subview = [viewEnum nextObject]) != nil)
     {
       [self addSubview: subview];
     }
   
-  return unionRect;
+  return newViewRect;
 }
 
 - (NSArray *) orderSelectionForViews: (NSArray *)selection
@@ -207,6 +273,35 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 @end
 
 @implementation NSBox (GormGroupProtocol)
+
+- (NSRect) computeRectForViews: (NSArray *)views
+{
+  if ([views count] == 0) {
+    return NSZeroRect;
+  }
+  
+  NSView *contentView = [self contentView];
+  
+  // Step 1: Determine the position and size of the new container view
+  NSRect newViewRect = [self _computeContainerRectForViews: views];
+  
+  // Step 2: Prepare views for grouping (deactivate editors, etc.)
+  NSMutableArray *preparedViews = [self _prepareViewsForGrouping: views];
+  
+  // Step 3: Calculate and set positions of subviews relative to container
+  [contentView _positionSubviewsInContainer: preparedViews 
+                              containerRect: newViewRect];
+  
+  // Step 4: Add processed views to content view
+  NSEnumerator *viewEnum = [preparedViews objectEnumerator];
+  NSView *subview = nil;
+  while ((subview = [viewEnum nextObject]) != nil)
+    {
+      [contentView addSubview: subview];
+    }
+
+  return newViewRect;
+}
 
 // NSBox adds directly to its contentView...
 - (void) addViews: (NSArray *)subviews
@@ -233,31 +328,31 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 
 - (NSRect) computeRectForViews: (NSArray *)views
 {
-  NSEnumerator *en = [views objectEnumerator];
-  NSRect unionRect = NSZeroRect;
-  NSView *contentView = [self contentView];
-  id subview = nil;
-
-  // Calculate union rect and prepare views
-  while ((subview = [en nextObject]) != nil)
-    {
-      unionRect = NSUnionRect(unionRect, [subview frame]); 
-      if ([subview respondsToSelector: @selector(deactivate)]) {
-        [subview deactivate];
-      }
-    }
-
-  // Build frames and add to content view
-  NSArray *processedViews = [contentView buildFramesForViews: views
-                                               withUnionRect: unionRect];
+  if ([views count] == 0) {
+    return NSZeroRect;
+  }
   
-  NSEnumerator *processedEnum = [processedViews objectEnumerator];
-  while ((subview = [processedEnum nextObject]) != nil)
+  NSView *contentView = self;
+  
+  // Step 1: Determine the position and size of the new container view
+  NSRect newViewRect = [self _computeContainerRectForViews: views];
+  
+  // Step 2: Prepare views for grouping (deactivate editors, etc.)
+  NSMutableArray *preparedViews = [self _prepareViewsForGrouping: views];
+  
+  // Step 3: Calculate and set positions of subviews relative to container
+  [contentView _positionSubviewsInContainer: preparedViews 
+                              containerRect: newViewRect];
+  
+  // Step 4: Add processed views to content view
+  NSEnumerator *viewEnum = [preparedViews objectEnumerator];
+  NSView *subview = nil;
+  while ((subview = [viewEnum nextObject]) != nil)
     {
       [contentView addSubview: subview];
     }
 
-  return unionRect;
+  return newViewRect;
 }
 
 - (NSArray *) orderSelectionForViews: (NSArray *)selection
