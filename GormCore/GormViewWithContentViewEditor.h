@@ -37,33 +37,40 @@
 }
 
 /**
+ * Add the view to the current document.
+ */
+- (void) addViewToDocument: (NSView *)view;
+
+/**
  * Performs post-drawing operations for the specified view editor, such as drawing selection handles.
  */
 - (void) postDrawForView: (GormViewEditor *) viewEditor;
+
 /**
  * Groups the currently selected views by placing them into a new NSSplitView container.
  */
 - (void) groupSelectionInSplitView;
+
 /**
  * Groups the currently selected views by placing them into a new NSBox container.
  */
 - (void) groupSelectionInBox;
-/**
- * Groups the currently selected views by placing them into a new NSMatrix container.
- */
-- (void) groupSelectionInMatrix;
+
 /**
  * Groups the currently selected views by placing them into a new generic NSView container.
  */
 - (void) groupSelectionInView;
+
 /**
  * Ungroups the selected container view, removing the container and promoting its subviews to the parent.
  */
 - (void) ungroup;
+
 /**
  * Pastes objects from the pasteboard into the specified view as new subviews.
  */
 - (void) pasteInView: (NSView *)view;
+
 @end
 
 #endif

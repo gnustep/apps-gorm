@@ -56,6 +56,18 @@
   return self;
 }
 
+- (void) addViewToDocument: (NSView *)view
+{
+  NSView *par = [view superview];
+
+  if([par isKindOfClass: [GormViewEditor class]])
+    {
+      par = [(GormViewEditor *)par editedObject];
+    }
+
+  [document attachObject: view toParent: par];
+}
+
 -(void) guideline:(NSNotification *)notification
 {
   if ( _followGuideLine )
@@ -63,8 +75,6 @@
   else 
     _followGuideLine = YES;
 }
-
-
 
 - (void) moveSelectionByX: (float)x 
 		     andY: (float)y
@@ -321,313 +331,22 @@
 
 - (void) groupSelectionInBox
 {
-  NSEnumerator *enumerator = nil;
-  NSMutableArray *viewsToGroup = [NSMutableArray array];
-  NSMutableArray *editorsToClose = [NSMutableArray array];
-  NSBox *box = nil;
-  NSRect unionRect = NSZeroRect;
-  GormViewEditor *editor = nil;
-  NSView *parentView = nil;
-  NSView *contentView = nil;
-
-  if ([selection count] < 1)
-    {
-      return;
-    }
-
-  // First pass: collect actual NSView instances and compute the union rect
-  enumerator = [selection objectEnumerator];
-  GormViewEditor *subviewEditor = nil;
-  while ((subviewEditor = [enumerator nextObject]) != nil)
-    {
-      NSView *childView = [subviewEditor editedObject];
-
-      if (parentView == nil)
-        {
-          parentView = [childView superview];
-        }
-      else if (parentView != [childView superview])
-        {
-          return;
-        }
-
-      unionRect = NSUnionRect(unionRect, [childView frame]);
-      [viewsToGroup addObject: childView];
-      [editorsToClose addObject: subviewEditor];
-      [subviewEditor deactivate];
-    }
-
-  box = [[NSBox alloc] initWithFrame: unionRect];
-  [document attachObject: box toParent: _editedObject];
-  [parentView addSubview: box];
-  contentView = [box contentView];
-
-  editor = (GormViewEditor *)[document editorForObject: box
-                                             inEditor: self
-                                               create: YES];
-
-  NSRect contentFrame = [contentView frame];
-
-  // Move each child into the box's content view, adjusting its origin
-  for (NSView *childView in viewsToGroup)
-    {
-      NSRect frame = [childView frame];
-
-      // Update the parent connector to point to the new box
-      NSArray *old = [document connectorsForSource: childView
-                                           ofClass: [NSNibConnector class]];
-      if ([old count] > 0)
-        {
-          [[old objectAtIndex: 0] setDestination: box];
-        }
-
-      [childView removeFromSuperview];
-      [contentView addSubview: childView];
-
-      // Adjust position relative to contentView origin
-      frame.origin.x -= unionRect.origin.x;
-      frame.origin.y -= unionRect.origin.y;
-      frame.origin.x -= contentFrame.origin.x;
-      frame.origin.y -= contentFrame.origin.y;
-      [childView setFrame: frame];
-
-      [document editorForObject: childView
-                       inEditor: editor
-                         create: YES];
-    }
-
-  // Close the old editors for the grouped views
-  for (id editorToClose in editorsToClose)
-    {
-      [editorToClose close];
-    }
-
-  [self selectObjects: [NSArray arrayWithObject: editor]];
+  [self groupSelectionInView: [[NSBox alloc] initWithFrame: NSZeroRect]];
 }
 
 - (void) groupSelectionInView
 {
-  NSEnumerator *enumerator = nil;
-  NSMutableArray *viewsToGroup = [NSMutableArray array];
-  NSMutableArray *editorsToClose = [NSMutableArray array];
-  NSView *containerView = nil;
-  NSView *parentView = nil;
-  NSRect unionRect = NSZeroRect;
-  GormViewEditor *editor = nil;
-
-  if ([selection count] < 1)
-    {
-      return;
-    }
-  
-  // First pass: collect the actual NSView instances and compute the union rect
-  enumerator = [selection objectEnumerator];
-  GormViewEditor *subviewEditor = nil;
-  while ((subviewEditor = [enumerator nextObject]) != nil)
-    {
-      NSView *childView = [subviewEditor editedObject];
-
-      // Keep a consistent parent; if selection spans multiple parents, bail out
-      if (parentView == nil)
-        {
-          parentView = [childView superview];
-        }
-      else if (parentView != [childView superview])
-        {
-          return;
-        }
-
-      unionRect = NSUnionRect(unionRect, [childView frame]);
-      [viewsToGroup addObject: childView];
-      [editorsToClose addObject: subviewEditor];
-      [subviewEditor deactivate];
-    }
-
-  // Create the container view covering the union rect in parent coordinates
-  containerView = [[NSView alloc] initWithFrame: unionRect];
-
-  [document attachObject: containerView
-                toParent: _editedObject];
-  [parentView addSubview: containerView];
-
-  // Move each child into the new container and update positions/connectors
-  for (NSView *childView in viewsToGroup)
-    {
-      NSPoint origin = [childView frame].origin;
-
-      // Update the parent connector to point to the new container
-      NSArray *old = [document connectorsForSource: childView ofClass: [NSNibConnector class]];
-      if ([old count] > 0)
-        {
-          [[old objectAtIndex: 0] setDestination: containerView];
-        }
-
-      [childView removeFromSuperview];
-      [containerView addSubview: childView];
-
-      // Adjust position relative to the new container
-      origin.x -= unionRect.origin.x;
-      origin.y -= unionRect.origin.y;
-      [childView setFrameOrigin: origin];
-    }
-
-  // Close the old editors for the grouped views
-  for (id editorToClose in editorsToClose)
-    {
-      [editorToClose close];
-    }
-
-  editor = (GormViewEditor *)[document editorForObject: containerView
-                                             inEditor: self
-                                               create: YES];
-  
-  [self selectObjects: [NSArray arrayWithObject: editor]];
-}
-
-- (void) groupSelectionInMatrix
-{
-  GormViewEditor *editor = nil;
-  NSMatrix *matrix = nil;
-  
-  if ([selection count] < 1)
-    {
-      return;
-    }
-
-  // For an NSMatrix there can only be one prototype cell.
-  if ([selection count] == 1)
-    {
-      GormViewEditor *s = [selection objectAtIndex: 0];
-      id editedObject = [s editedObject];
-      NSCell *cell = [editedObject cell];
-      NSRect rect = [editedObject frame];
-      NSView *superview = [s superview];
-
-      // Create the matrix
-      matrix = [[NSMatrix alloc] initWithFrame: rect
-                                          mode: NSRadioModeMatrix
-                                     prototype: cell
-                                  numberOfRows: 1
-                               numberOfColumns: 1];
-      
-      rect = NSUnionRect(rect, [s frame]);
-      [s deactivate];
-      
-      NSDebugLog(@"editedObject = %@,\n\nsuperview = %@,\n\nmatrix = %@",editedObject, superview, matrix);
-      NSDebugLog(@"cell = %@", cell);
-
-      [matrix setPrototype: cell];
-      [editedObject removeFromSuperview];
-      
-      [document attachObject: matrix
-                    toParent: _editedObject];
-
-      [superview addSubview: matrix];
-    }
-
-  editor = (GormViewEditor *)[document editorForObject: matrix
-                                              inEditor: self
-                                                create: YES];
-  
-  [self selectObjects: [NSArray arrayWithObject: editor]];
+  [self groupSelectionInView: [[NSView alloc] initWithFrame: NSZeroRect]];
 }
 
 - (void) groupSelectionInScrollView
 {
-  NSEnumerator *enumerator = nil;
-  NSMutableArray *viewsToGroup = [NSMutableArray array];
-  NSMutableArray *editorsToClose = [NSMutableArray array];
-  NSView *contentView = nil;
-  NSScrollView *scrollView = nil;
-  NSRect unionRect = NSZeroRect;
-  GormViewEditor *editor = nil;
-  NSView *parentView = nil;
-
-  if ([selection count] < 1)
-    {
-      return;
-    }
-  
-  // Collect views and compute union rect in parent coordinates
-  enumerator = [selection objectEnumerator];
-  GormViewEditor *subviewEditor = nil;
-  while ((subviewEditor = [enumerator nextObject]) != nil)
-    {
-      NSView *childView = [subviewEditor editedObject];
-
-      if (parentView == nil)
-        {
-          parentView = [childView superview];
-        }
-      else if (parentView != [childView superview])
-        {
-          return;
-        }
-
-      unionRect = NSUnionRect(unionRect, [childView frame]);
-      [viewsToGroup addObject: childView];
-      [editorsToClose addObject: subviewEditor];
-      [subviewEditor deactivate];
-    }
-
-  // Create the scroll view and a content view sized to the union rect
-  scrollView = [[NSScrollView alloc] initWithFrame: unionRect];
-  [scrollView setHasHorizontalScroller: YES];
-  [scrollView setHasVerticalScroller: YES];
-  [scrollView setBorderType: NSBezelBorder];
-
-  contentView = [[NSView alloc] initWithFrame:
-                 NSMakeRect(0, 0, unionRect.size.width, unionRect.size.height)];
-  [scrollView setDocumentView: contentView];
-
-  [document attachObject: scrollView
-                toParent: _editedObject];
-  [parentView addSubview: scrollView];
-
-  // Move grouped views into the scroll view's document view
-  for (NSView *childView in viewsToGroup)
-    {
-      NSPoint origin = [childView frame].origin;
-
-      [childView removeFromSuperview];
-      [contentView addSubview: childView];
-
-      origin.x -= unionRect.origin.x;
-      origin.y -= unionRect.origin.y;
-      [childView setFrameOrigin: origin];
-
-      [document attachObject: childView
-                    toParent: scrollView];
-    }
-
-  // Close the editors for the moved views
-  for (id editorToClose in editorsToClose)
-    {
-      [editorToClose close];
-    }
-  
-  editor = (GormViewEditor *)[document editorForObject: scrollView
-                                             inEditor: self
-                                               create: YES];
-  
-  [self selectObjects: [NSArray arrayWithObject: editor]];
+  [self groupSelectionInView: [[NSScrollView alloc] initWithFrame: NSZeroRect]];
 }
 
 @class GormBoxEditor;
 @class GormSplitViewEditor;
 @class GormScrollViewEditor;
-
-- (void) _addViewToDocument: (NSView *)view
-{
-  NSView *par = [view superview];
-
-  if([par isKindOfClass: [GormViewEditor class]])
-    {
-      par = [(GormViewEditor *)par editedObject];
-    }
-
-  [document attachObject: view toParent: par];
-}
 
 - (void) ungroup
 {
@@ -655,7 +374,7 @@
 	{
 	  id v = [views objectAtIndex: i];
 	  [_editedObject addSubview: v];
-	  [self _addViewToDocument: v];
+	  [self addViewToDocument: v];
 
 	  [newSelection addObject:
 			  [document editorForObject: v
@@ -707,7 +426,7 @@
 	    }
 
 	  [view addSubview: sub];
-	  [self _addViewToDocument: sub];
+	  [self addViewToDocument: sub];
 	  [array addObject:
 		   [document editorForObject: sub 
 			     inEditor: self 
