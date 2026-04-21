@@ -34,6 +34,11 @@
 #import "GormGroupProtocol.h"
 #import "GormGroupViews.h"
 
+// Forward declaration...
+@class GormBoxEditor;
+@class GormSplitViewEditor;
+@class GormScrollViewEditor;
+
 @interface GormViewEditor (Private)
 - (NSRect) _displayMovingFrameWithHint: (NSRect) frame
                      andPlacementInfo: (GormPlacementInfo *)gpi;
@@ -316,7 +321,16 @@
   // Order views...
   NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
   [view addViews: sortedViews];
-  
+
+  // Add view to parent...
+  id parentObject = [parent editedObject];
+  if ([parentObject respondsToSelector: @selector(contentView)])
+    {
+      id contentView = [parentObject contentView];
+      [contentView addSubview: view];
+      NSLog(@"**** added subview %@ to parent %@", view, contentView);
+    }
+
   [document attachObject: view 
 		toParent: _editedObject];
 
@@ -344,13 +358,9 @@
   [self groupSelectionInView: [[NSScrollView alloc] initWithFrame: NSZeroRect]];
 }
 
-@class GormBoxEditor;
-@class GormSplitViewEditor;
-@class GormScrollViewEditor;
-
 - (void) ungroup
 {
-  NSView *toUngroup;
+  NSView *toUngroup = nil;
 
   if ([selection count] != 1)
     return;
@@ -393,9 +403,9 @@
 {
   NSPasteboard	 *pb = [NSPasteboard generalPasteboard];
   NSMutableArray *array = [NSMutableArray array];
-  NSArray	 *views;
-  NSEnumerator	 *enumerator;
-  NSView         *sub;
+  NSArray	 *views = nil;
+  NSEnumerator	 *enumerator = nil;
+  NSView         *sub = nil;
 
   /*
    * Ask the document to get the copied views from the pasteboard and add
