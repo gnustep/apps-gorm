@@ -50,7 +50,7 @@
  * @return Sorted array of views
  */
 - (NSArray *) sortByPosition: (NSArray *)subviews 
-                  isVertical: (BOOL)isVertical;
+                  isVertical: (BOOL *)isVertical;
 
 /**
  * Adjusts view frames relative to a union rectangle and content origin.

@@ -542,7 +542,8 @@
 - (NSArray *) validate;
 
 /**
- * Returns the editor for an object, it does not create a new editor.
+ * Returns the editor for an object, it create a new editor if none
+ * exists.
  */
 - (id<IBEditors>) editorForObject: (id)anObject;
 

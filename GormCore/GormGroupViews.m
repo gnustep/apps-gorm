@@ -64,7 +64,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 @implementation NSView (GormGroupUtils)
 
 - (NSArray *) sortByPosition: (NSArray *)subviews
-                  isVertical: (BOOL)isVertical
+                  isVertical: (BOOL *)isVertical
 {
   NSMutableArray *array = [subviews mutableCopy];
   NSArray *result = [array sortedArrayUsingFunction: _sortViews
@@ -118,7 +118,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
       prevRect = currRect;
     }
 
-  NSDebugLog(@"Vertical orientation vote count: %ld", (long)count);
+  NSLog(@"Vertical orientation vote count: %ld", (long)count);
 
   // Positive count suggests horizontal layout (vertical arrangement)
   vertical = (count >= 0);
@@ -264,7 +264,7 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 {
   BOOL vertical = [self shouldBeVertical: selection];
   NSArray *array = [self sortByPosition: selection
-                             isVertical: vertical];
+                             isVertical: &vertical];
 
   [self setVertical: vertical];
   return array;
