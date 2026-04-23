@@ -27,7 +27,8 @@
 #import "GormGroupProtocol.h"
 #import "GormViewEditor.h"
 
-// Utility function for sorting views
+// MARK: - Utility function for sorting views
+
 NSComparisonResult _sortViews(id view1, id view2, void *context)
 {
   BOOL isVertical = *((BOOL *)context);

@@ -369,38 +369,44 @@
 
   if ([selection count] != 1)
     return;
-  
+
   NSDebugLog(@"ungroup called");
 
   toUngroup = [selection objectAtIndex: 0];
 
-  NSDebugLog(@"toUngroup = %@",[toUngroup description]);
+  NSDebugLog(@"toUngroup = %@", [toUngroup description]);
 
   if ([toUngroup respondsToSelector: @selector(destroyAndListSubviews)])
     {
       id contentView = toUngroup;
+      // Save the edited object reference before the editor is closed.
       id eo = [contentView editedObject];
 
+      // destroyAndListSubviews converts each subview's frame into the
+      // parent editor's coordinate system, deactivates all sub-editors,
+      // and closes the container editor itself.  Do NOT call
+      // [contentView close] afterwards — it is already closed.
+      NSArray *views = [contentView destroyAndListSubviews];
       NSMutableArray *newSelection = [NSMutableArray array];
-      NSArray *views;
       NSInteger i;
-      views = [contentView destroyAndListSubviews];
+
       for (i = 0; i < [views count]; i++)
-	{
-	  id v = [views objectAtIndex: i];
-	  [_editedObject addSubview: v];
-	  [self addViewToDocument: v];
+        {
+          id v = [views objectAtIndex: i];
+          [_editedObject addSubview: v];
+          [self addViewToDocument: v];
+          [newSelection addObject: [document editorForObject: v
+                                              inEditor: self
+                                              create: YES]];
+        }
 
-	  [newSelection addObject:
-			  [document editorForObject: v
-				    inEditor: self
-				    create: YES]];
-	}
-
-      [contentView close];
-      [self selectObjects: newSelection];
+      // Detach the container object from the document registry and remove
+      // it from the view hierarchy before updating the selection.
       [document detachObject: eo];
       [eo removeFromSuperview];
+
+      [self selectObjects: newSelection];
+      [self setNeedsDisplay: YES];
     }
 }
 
