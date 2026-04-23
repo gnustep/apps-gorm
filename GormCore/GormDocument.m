@@ -1741,6 +1741,15 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Returns the editor for an object, it create a new editor if none
+ * exists.
+ */
+- (id<IBEditors>) editorForObject: (id)anObject
+{
+  return [self editorForObject: anObject create: YES];
+}
+
+/**
  * Returns an editor for anObject, if flag is YES, it creates a new
  * editor, if one doesn't currently exist.
  */

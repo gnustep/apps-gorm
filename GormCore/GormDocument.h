@@ -308,9 +308,6 @@
 /* Connections */
 
 /**
- *
- */
-/**
  * Returns the list of connections in this document.
  */
 - (NSMutableArray *) connections;
@@ -543,6 +540,11 @@
  * Returns an array of issues. If document is valid the array should be empty.
  */
 - (NSArray *) validate;
+
+/**
+ * Returns the editor for an object, it does not create a new editor.
+ */
+- (id<IBEditors>) editorForObject: (id)anObject;
 
 /**
  * Detach object from document.

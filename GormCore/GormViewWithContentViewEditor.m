@@ -294,6 +294,8 @@
 
 - (void) groupSelectionInView: (id)view
 {
+  GormDocument *doc = (GormDocument *)document;
+
   // Validate count...
   if ([view respondsToSelector: @selector(validateCount:)])
     {
@@ -322,20 +324,20 @@
   NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
   [view addViews: sortedViews];
 
-  // Add view to parent...
-  id parentObject = [parent editedObject];
-  if ([parentObject respondsToSelector: @selector(contentView)])
-    {
-      id contentView = [parentObject contentView];
-      [contentView addSubview: view];
-      NSLog(@"**** added subview %@ to parent %@", view, contentView);
-    }
+  // Add view to the edited object directly. We must NOT use
+  // [parentObject contentView] here because after editor activation
+  // [window contentView] returns the GormInternalViewEditor itself,
+  // not the original NSView. Adding view there would put it outside
+  // the subtree searched by mouseDown:'s [_editedObject hitTest:],
+  // making the grouped view unselectable.
+  [_editedObject addSubview: view];
+  [doc attachObject: view toParent: _editedObject];
 
-  [document attachObject: view 
-		toParent: _editedObject];
+  // Get the editor for the object...
+  id editor = [doc editorForObject: view inEditor: self create: YES];
 
   // Select objects...
-  [self selectObjects: [NSArray arrayWithObject: view]];
+  [self selectObjects: [NSArray arrayWithObject: editor]];
 }
 
 - (void) groupSelectionInSplitView
