@@ -381,3 +381,69 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 }
 
 @end
+
+@implementation NSScrollView (GormGroupProtocol)
+
+- (BOOL) validateCount: (NSUInteger)count
+{
+  // A scroll view wraps exactly one document view; only single-view grouping
+  // makes sense, but we allow any count — the views are placed in an NSView
+  // that becomes the documentView.
+  return (count >= 1);
+}
+
+- (NSRect) computeRectForViews: (NSArray *)views
+{
+  if ([views count] == 0)
+    return NSZeroRect;
+
+  // Step 1: Compute the bounding rect of all selected views (parent coords).
+  NSRect newViewRect = [self _computeContainerRectForViews: views];
+
+  // Step 2: Deactivate editors and collect the raw views.
+  NSMutableArray *preparedViews = [self _prepareViewsForGrouping: views];
+
+  // Step 3: Temporarily size the scroll view to get the true contentSize
+  // (i.e. the clip view's frame after accounting for scrollers/border).
+  [self setFrame: (NSRect){{0, 0}, newViewRect.size}];
+  NSSize contentSize = [self contentSize];
+
+  // Expand the outer rect so the content area fits all views.
+  newViewRect.size.width  += newViewRect.size.width  - contentSize.width;
+  newViewRect.size.height += newViewRect.size.height - contentSize.height;
+
+  // Step 4: Create a plain container view sized to the content area and
+  // set it as the documentView.  Views are positioned relative to it.
+  NSView *documentView = [[NSView alloc] initWithFrame:
+                            (NSRect){{0, 0}, contentSize}];
+  [self setDocumentView: documentView];
+
+  // Position each view relative to the container.
+  NSRect boundingRect = [self _computeContainerRectForViews: preparedViews];
+  NSEnumerator *en = [preparedViews objectEnumerator];
+  NSView *subview = nil;
+  while ((subview = [en nextObject]) != nil)
+    {
+      NSRect f = [subview frame];
+      f.origin.x -= NSMinX(boundingRect);
+      f.origin.y -= NSMinY(boundingRect);
+      [subview setFrame: f];
+      [documentView addSubview: subview];
+    }
+
+  [documentView autorelease];
+  return newViewRect;
+}
+
+- (NSArray *) orderSelectionForViews: (NSArray *)selection
+{
+  return [selection copy];
+}
+
+- (void) addViews: (NSArray *)subviews
+{
+  // Views are already added to the documentView inside computeRectForViews:.
+  // Nothing more to do here.
+}
+
+@end
