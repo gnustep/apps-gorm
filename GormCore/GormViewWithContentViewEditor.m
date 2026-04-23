@@ -365,49 +365,77 @@
 
 - (void) ungroup
 {
-  NSView *toUngroup = nil;
-
   if ([selection count] != 1)
     return;
 
-  NSDebugLog(@"ungroup called");
+  id containerEditor = [selection objectAtIndex: 0];
+  if (![containerEditor respondsToSelector: @selector(destroyAndListSubviews)])
+    return;
 
-  toUngroup = [selection objectAtIndex: 0];
+  id eo = [containerEditor editedObject];
 
-  NSDebugLog(@"toUngroup = %@", [toUngroup description]);
+  // destroyAndListSubviews deactivates all sub-editors, converts each
+  // subview's frame to self's coordinate space, and closes the container
+  // editor itself.  The returned array contains the raw views only.
+  NSArray *views = [containerEditor destroyAndListSubviews];
 
-  if ([toUngroup respondsToSelector: @selector(destroyAndListSubviews)])
+  if (!views || [views count] == 0)
     {
-      id contentView = toUngroup;
-      // Save the edited object reference before the editor is closed.
-      id eo = [contentView editedObject];
-
-      // destroyAndListSubviews converts each subview's frame into the
-      // parent editor's coordinate system, deactivates all sub-editors,
-      // and closes the container editor itself.  Do NOT call
-      // [contentView close] afterwards — it is already closed.
-      NSArray *views = [contentView destroyAndListSubviews];
-      NSMutableArray *newSelection = [NSMutableArray array];
-      NSInteger i;
-
-      for (i = 0; i < [views count]; i++)
-        {
-          id v = [views objectAtIndex: i];
-          [_editedObject addSubview: v];
-          [self addViewToDocument: v];
-          [newSelection addObject: [document editorForObject: v
-                                              inEditor: self
-                                              create: YES]];
-        }
-
-      // Detach the container object from the document registry and remove
-      // it from the view hierarchy before updating the selection.
-      [document detachObject: eo];
+      // Container was empty; just remove it from document and redisplay.
       [eo removeFromSuperview];
-
-      [self selectObjects: newSelection];
+      [document detachObject: eo closeEditor: NO];
       [self setNeedsDisplay: YES];
+      return;
     }
+
+  NSInteger i;
+  NSInteger count = [views count];
+
+  // ── Pass 1 ──────────────────────────────────────────────────────────
+  // Move every extracted view into _editedObject (the outer editing
+  // view) and update its NSNibConnector so the document parent pointer
+  // changes from the container's internal content-view to _editedObject.
+  // This must happen BEFORE detachObject: so that the recursive detach
+  // of the container's internal views finds an empty child list for each
+  // of those views and never calls removeFromSuperview on them.
+  for (i = 0; i < count; i++)
+    {
+      id v = [views objectAtIndex: i];
+      [_editedObject addSubview: v];
+      [self addViewToDocument: v];
+    }
+
+  // Remove the container from the view hierarchy explicitly before
+  // detaching it from the document.  The extracted views are already
+  // siblings in _editedObject at this point, so removing eo is safe.
+  [eo removeFromSuperview];
+
+  // Detach the container (and its now-empty internal structure, e.g. the
+  // NSBox content-view placeholder) from the document.  Because Pass 1
+  // already re-pointed every extracted view's NSNibConnector to
+  // _editedObject, the recursive detachment finds no "our" views and
+  // will only clean up the container's own bookkeeping entries.
+  [document detachObject: eo closeEditor: NO];
+
+  // ── Pass 2 ──────────────────────────────────────────────────────────
+  // Now that all container state has been cleaned up, create editors for
+  // the extracted views.  Doing this after detachObject: avoids any
+  // chance that the connections-removal sweep in detachObject: touches
+  // connectors belonging to the freshly created editors.
+  NSMutableArray *newSelection = [NSMutableArray arrayWithCapacity: count];
+  for (i = 0; i < count; i++)
+    {
+      id v = [views objectAtIndex: i];
+      id e = [document editorForObject: v
+			      inEditor: self
+				create: YES];
+
+      [_editedObject addSubview: e];
+      [newSelection addObject: e];
+    }
+
+  [self selectObjects: newSelection];
+  [self setNeedsDisplay: YES];
 }
 
 - (void) pasteInView: (NSView *)view

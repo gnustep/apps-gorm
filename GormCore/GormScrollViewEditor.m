@@ -265,7 +265,9 @@
 
 	  v = [subview editedObject];
 	  frame = [v frame];
-	  frame = [parent convertRect: frame fromView: _EO];
+	  // Convert frame from scrollView coordinates to outer view coordinates
+	  frame.origin.x += [_EO frame].origin.x;
+	  frame.origin.y += [_EO frame].origin.y;
 	  [subview deactivate];      
 	  [v setFrame: frame];
 	  [newSelection addObject: v];
@@ -280,7 +282,8 @@
 
       // In this case the view editor is the documentView and
       // we need to add the internal view back into the superview
-      frame = [parent convertRect: frame fromView: _EO];
+      frame.origin.x += [_EO frame].origin.x;
+      frame.origin.y += [_EO frame].origin.y;
       [documentView setFrame: frame];
       [newSelection addObject: documentView];
       [_EO setDocumentView: nil];

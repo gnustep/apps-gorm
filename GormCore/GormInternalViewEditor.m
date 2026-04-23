@@ -660,8 +660,10 @@ static NSImage *horizontalImage;
       NSRect frame;
       v = [subview editedObject];
       frame = [v frame];
-      frame = [[parent parent] convertRect: frame
-                               fromView: _editedObject];
+      // Convert frame from contentView coordinates to outer view coordinates
+      // by offsetting by the container's position.
+      frame.origin.x += [parent frame].origin.x;
+      frame.origin.y += [parent frame].origin.y;
       [subview deactivate];
       
       [v setFrame: frame];
