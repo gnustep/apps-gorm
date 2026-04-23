@@ -318,10 +318,13 @@
       // Fallback: compute bounding rect manually
       rect = [self computeBoundingRectForViews: viewSelection];
     }
+  // Order views and set orientation BEFORE setting the frame.
+  // Setting the frame on NSSplitView triggers adjustSubviews internally;
+  // isVertical must already be set at that point so the layout is correct.
+  NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
+
   [view setFrame: rect];
 
-  // Order views...
-  NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
   [view addViews: sortedViews];
 
   // Add view to the edited object directly. We must NOT use
