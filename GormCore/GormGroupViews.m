@@ -68,62 +68,46 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
 {
   NSMutableArray *array = [subviews mutableCopy];
   NSArray *result = [array sortedArrayUsingFunction: _sortViews
-                                            context: &isVertical];
+                                            context: isVertical];
   [array release];
   return result;
 }
 
 - (BOOL) shouldBeVertical: (NSArray *)subviews
 {
-  BOOL vertical = NO;
   NSEnumerator *enumerator = [subviews objectEnumerator];
   id subview = nil;
 
   NSRect prevRect = NSZeroRect;
-  NSRect currRect = NSZeroRect;
-
   NSInteger count = 0;
 
   // Iterate over the list of views to determine orientation
   while ((subview = [enumerator nextObject]) != nil)
     {
-      currRect = [subview frame];
+      NSRect currRect = [subview frame];
 
       if (!NSEqualRects(prevRect, NSZeroRect))
         {
-          CGFloat x1 = prevRect.origin.x;
-          CGFloat x2 = currRect.origin.x;
-          CGFloat y1 = prevRect.origin.y;
-          CGFloat y2 = currRect.origin.y;
-          CGFloat h1 = prevRect.size.height;
-          CGFloat w1 = prevRect.size.width;
+          // Use strict range-overlap tests so that touching views
+          // (gap == 0) are not misclassified.
+          BOOL xOverlap = (NSMinX(prevRect) < NSMaxX(currRect)) &&
+                          (NSMinX(currRect) < NSMaxX(prevRect));
+          BOOL yOverlap = (NSMinY(prevRect) < NSMaxY(currRect)) &&
+                          (NSMinY(currRect) < NSMaxY(prevRect));
 
-          // Check for horizontal alignment (views are side by side)
-          if ((x1 < x2 || x1 > x2) && 
-              ((y2 >= y1 && y2 <= (y1 + h1)) || 
-               (y2 <= y1 && y2 >= (y1 - h1))))
-            { 
-              count++;
-            }
-
-          // Check for vertical alignment (views are stacked)
-          if ((y1 < y2 || y1 > y2) && 
-              ((x2 >= x1 && x2 <= (x1 + w1)) ||
-               (x2 <= x1 && x2 >= (x1 - w1))))
-            {
-              count--;
-            }
+          if (yOverlap && !xOverlap)
+            count++;  // side-by-side: y-ranges overlap, x-ranges don't
+          else if (xOverlap && !yOverlap)
+            count--;  // stacked: x-ranges overlap, y-ranges don't
+          // else: ambiguous (diagonal or fully overlapping) — no vote
         }
-      
+
       prevRect = currRect;
     }
 
-  NSLog(@"Vertical orientation vote count: %ld", (long)count);
-
-  // Positive count suggests horizontal layout (vertical arrangement)
-  vertical = (count >= 0);
-
-  return vertical;
+  // Positive count → side-by-side → NSSplitView vertical=YES (vertical dividers)
+  // Negative count → stacked     → NSSplitView vertical=NO  (horizontal dividers)
+  return (count >= 0);
 }
 
 - (NSArray *) buildFramesForViews: (NSArray *)views
