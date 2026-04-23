@@ -1,9 +1,10 @@
 /* GormViewWithContentViewEditor.m
  *
- * Copyright (C) 2002 Free Software Foundation, Inc.
+ * Copyright (C) 2002, 2026 Free Software Foundation, Inc.
  *
  * Author:	Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
- * Date:	2002
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
+ * Date:	2002, 2026
  * 
  * This file is part of GNUstep.
  * 
@@ -434,6 +435,8 @@
       [newSelection addObject: e];
     }
 
+  // ── Finalize ──────────────────────────────────────────────────────────
+  // Select objects that have been ungrouped and update the display.
   [self selectObjects: newSelection];
   [self setNeedsDisplay: YES];
 }
