@@ -263,20 +263,45 @@ NSComparisonResult _sortViews(id view1, id view2, void *context)
   if ([views count] == 0) {
     return NSZeroRect;
   }
-  
+
   NSView *contentView = [self contentView];
-  
-  // Step 1: Determine the position and size of the new container view
-  NSRect newViewRect = [self _computeContainerRectForViews: views];
-  
+
+  // Step 1: Bounding rect of the views in parent coordinates.
+  NSRect viewsBoundingRect = [self _computeContainerRectForViews: views];
+
   // Step 2: Prepare views for grouping (deactivate editors, etc.)
   NSMutableArray *preparedViews = [self _prepareViewsForGrouping: views];
-  
-  // Step 3: Calculate and set positions of subviews relative to container
-  [contentView _positionSubviewsInContainer: preparedViews 
-                              containerRect: newViewRect];
-  
-  // Step 4: Add processed views to content view
+
+  // Step 3: Temporarily set the box frame so the contentView reports its
+  // actual insets (title height + border widths).  These insets are used to
+  // expand the outer rect so the views fit exactly inside the contentView.
+  [self setFrame: (NSRect){{0, 0}, viewsBoundingRect.size}];
+  NSRect contentFrame  = [contentView frame];
+  CGFloat topInset    = viewsBoundingRect.size.height - NSMaxY(contentFrame);
+  CGFloat bottomInset = NSMinY(contentFrame);
+  CGFloat leftInset   = NSMinX(contentFrame);
+  CGFloat rightInset  = viewsBoundingRect.size.width - NSMaxX(contentFrame);
+
+  // Expand the outer box rect to contain all views within the contentView.
+  NSRect newViewRect = viewsBoundingRect;
+  newViewRect.size.width  += leftInset + rightInset;
+  newViewRect.size.height += topInset  + bottomInset;
+
+  // Step 4: Position views relative to the contentView's local origin
+  // (simply subtract the original bounding-rect origin; no y-shift is
+  // needed because the contentView is already placed below the title by
+  // NSBox itself once the outer frame is set).
+  NSEnumerator *posEnum = [preparedViews objectEnumerator];
+  NSView *posView = nil;
+  while ((posView = [posEnum nextObject]) != nil)
+    {
+      NSRect f = [posView frame];
+      f.origin.x -= NSMinX(viewsBoundingRect);
+      f.origin.y -= NSMinY(viewsBoundingRect);
+      [posView setFrame: f];
+    }
+
+  // Step 5: Add processed views to content view
   NSEnumerator *viewEnum = [preparedViews objectEnumerator];
   NSView *subview = nil;
   while ((subview = [viewEnum nextObject]) != nil)
