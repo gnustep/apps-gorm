@@ -75,6 +75,10 @@ openapp Gorm
 ```
 
 ```sh
+gopen -a Gorm
+```
+
+```sh
 Gorm
 ```
 
