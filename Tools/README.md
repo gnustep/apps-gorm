@@ -43,9 +43,10 @@ gormtool --read inputfile [options]
  Save the possibly modified document to `FILE`.
 
  Notes:
- 	- The document type is inferred from `FILE`'s extension.
- 	- If the save fails, the tool logs an error.
- 	- This does not happen automatically after an import. Use `--write` when you
+
+- The document type is inferred from `FILE`'s extension.
+- If the save fails, the tool logs an error.
+- This does not happen automatically after an import. Use `--write` when you
   want modifications persisted.
 
 - `--output-path DIR`
@@ -62,8 +63,9 @@ gormtool --read inputfile [options]
  document.
 
  Notes:
- 	- This updates the in-memory document.
- 	- Use `--write` as well if you want the modified `.gorm` saved.
+
+- This updates the in-memory document.
+- Use `--write` as well if you want the modified `.gorm` saved.
 
 ### XLIFF Export and Import
 
@@ -80,10 +82,11 @@ gormtool --read inputfile [options]
  Optional target language passed to XLIFF export.
 
  Notes:
- 	- `--source-language` is effectively required for `--export-xliff`.
- 	- If no source language is supplied, the tool logs `Please specify a source language`.
- 	- `--import-xliff` does not require language flags.
- 	- As with strings import, `--import-xliff` only changes the in-memory document
+
+- `--source-language` is effectively required for `--export-xliff`.
+- If no source language is supplied, the tool logs `Please specify a source language`.
+- `--import-xliff` does not require language flags.
+- As with strings import, `--import-xliff` only changes the in-memory document
   unless `--write` is also supplied.
 
 ### Class Import and Export
@@ -93,21 +96,24 @@ gormtool --read inputfile [options]
  the document's class manager.
 
  Notes:
- 	- The delegate is implemented to allow breaking existing connections when a
+
+- The delegate is implemented to allow breaking existing connections when a
   reparsed class changes incompatibly.
- 	- Parse failures are logged.
+- Parse failures are logged.
 
 - `--export-class CLASSNAME`
  Generate source files for `CLASSNAME` using the document's class information.
 
  Output:
- 	- `CLASSNAME.h`
- 	- `CLASSNAME.m`
+
+- `CLASSNAME.h`
+- `CLASSNAME.m`
 
  Notes:
- 	- Files are written into `--output-path` if supplied, otherwise the current
+
+- Files are written into `--output-path` if supplied, otherwise the current
   directory.
- 	- If the class cannot be exported, the tool logs `Class named ... not saved`.
+- If the class cannot be exported, the tool logs `Class named ... not saved`.
 
 ### Inspection and Reporting
 
@@ -132,9 +138,10 @@ These flags print internal document data structures to standard output.
  Print the current file preferences profile.
 
  Important:
- 	- In the current implementation, `--errors`, `--warnings`, and `--notices`
+
+- In the current implementation, `--errors`, `--warnings`, and `--notices`
   all print the same profile dictionary from `GormFilePrefsManager`.
- 	- They are not currently filtered into separate categories by `gormtool`.
+- They are not currently filtered into separate categories by `gormtool`.
 
 ### Interactive Test Mode
 
@@ -142,8 +149,9 @@ These flags print internal document data structures to standard output.
  Enter test mode after processing all other options.
 
  Behavior:
- 	- The tool logs `Control-C to end`.
- 	- The application remains running instead of terminating immediately.
+
+- The tool logs `Control-C to end`.
+- The application remains running instead of terminating immediately.
 
 ## Examples
 

@@ -1,0 +1,146 @@
+.TH GORMTOOL 1 "@DATE@" "Gorm @VERSION@" "GNUstep User Commands"
+.SH NAME
+gormtool \- headless utility for GNUstep Gorm documents
+.SH SYNOPSIS
+.B gormtool
+.RI [ options ] " inputfile"
+.br
+.B gormtool
+.B --read
+.I inputfile
+.RI [ options ]
+.SH DESCRIPTION
+gormtool is a command-line front end for selected Gorm document operations.
+It runs as a headless AppKit process, opens a Gorm document, performs one or
+more operations, optionally writes the modified document, and exits.
+.PP
+The tool is intended for automation and batch workflows such as localization
+import/export, class metadata import/export, and archive conversion.
+.SH INPUT SELECTION
+.TP
+.B --read \fIpath\fR
+Use \fIpath\fR as the input document.
+.TP
+.I inputfile
+If \fB--read\fR is omitted, the last command-line argument is treated as the
+input file.
+.PP
+If no valid input document is resolved, the tool exits with an error.
+.SH OPTIONS
+.SS Document I/O
+.TP
+.B --read \fIpath\fR
+Open the input archive from \fIpath\fR.
+.TP
+.B --write \fIpath\fR
+Write the processed archive to \fIpath\fR. The output type is inferred from
+the file extension.
+.TP
+.B --output-path \fIdirectory\fR
+Directory used when exporting class source files with \fB--export-class\fR.
+Default is the current directory.
+.SS Strings and XLIFF
+.TP
+.B --export-strings-file \fIpath\fR
+Export localizable strings from the document to a .strings file.
+.TP
+.B --import-strings-file \fIpath\fR
+Import translated strings from a .strings file into the in-memory document.
+.TP
+.B --export-xliff \fIpath\fR
+Export localizable strings to an XLIFF 1.2 file.
+.TP
+.B --import-xliff \fIpath\fR
+Import translations from an XLIFF 1.2 file into the in-memory document.
+.TP
+.B --source-language \fIcode\fR
+Source language used during XLIFF export.
+.TP
+.B --target-language \fIcode\fR
+Optional target language used during XLIFF export.
+.SS Class Import and Export
+.TP
+.B --import-class \fIheader\fR
+Parse an Objective-C header and import class metadata into the document.
+.TP
+.B --export-class \fIname\fR
+Export class \fIname\fR to generated source files.
+.SS Inspection and Reporting
+.TP
+.B --connections
+Print connection objects from the document.
+.TP
+.B --classes
+Print custom class metadata.
+.TP
+.B --objects
+Print top-level objects.
+.TP
+.B --errors
+Print the current file preferences profile.
+.TP
+.B --warnings
+Print the current file preferences profile.
+.TP
+.B --notices
+Print the current file preferences profile.
+.SS Interactive Mode
+.TP
+.B --test
+Enter test mode after processing options and keep the process running until
+interrupted.
+.SH NOTES
+Operations that modify document state in memory (for example, string or XLIFF
+imports) are not persisted unless \fB--write\fR is also provided.
+.PP
+Although option flags can appear in any order, processing follows the internal
+execution order of gormtool.
+.SH FILES
+.TP
+.I *.gorm
+Gorm interface documents.
+.TP
+.I *.nib
+Legacy interface archives accepted by Gorm document handling.
+.TP
+.I *.xib
+XML interface archives accepted by Gorm document handling.
+.SH EXAMPLES
+Export strings from a document:
+.PP
+.RS
+.B gormtool --export-strings-file Localizable.strings MyWindow.gorm
+.RE
+.PP
+Import translated strings and save to a new file:
+.PP
+.RS
+.B gormtool --read MyWindow.gorm --import-strings-file fr.strings --write MyWindow-fr.gorm
+.RE
+.PP
+Export XLIFF with explicit source and target languages:
+.PP
+.RS
+.B gormtool MyWindow.gorm --source-language en --target-language fr --export-xliff MyWindow.xliff
+.RE
+.PP
+Import XLIFF and persist changes:
+.PP
+.RS
+.B gormtool --read MyWindow.gorm --import-xliff MyWindow-fr.xliff --write MyWindow-fr.gorm
+.RE
+.PP
+Convert archive format:
+.PP
+.RS
+.B gormtool --read MyWindow.gorm --write MyWindow.xib
+.RE
+.SH EXIT STATUS
+gormtool returns 0 on success and non-zero on failure.
+.SH BUGS
+Report bugs at https://github.com/gnustep/apps-gorm/issues or by email to
+bug-gnustep@gnu.org.
+.SH AUTHORS
+Gorm is maintained by the GNUstep community.
+.SH SEE ALSO
+gorm(1), openapp(1)
