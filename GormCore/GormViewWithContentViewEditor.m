@@ -45,6 +45,59 @@
                      andPlacementInfo: (GormPlacementInfo *)gpi;
 @end
 
+static void _gormNormalizeEditorSubviews(NSView *root)
+{
+  NSArray *subviews = [NSArray arrayWithArray: [root subviews]];
+  NSEnumerator *en = [subviews objectEnumerator];
+  id sub = nil;
+
+  while ((sub = [en nextObject]) != nil)
+    {
+      if ([sub respondsToSelector: @selector(editedObject)] &&
+          [sub isKindOfClass: [NSView class]])
+        {
+          id raw = [sub editedObject];
+          if (raw != nil && [raw isKindOfClass: [NSView class]])
+            {
+              [root replaceSubview: sub with: raw];
+              sub = raw;
+            }
+        }
+
+      if ([sub isKindOfClass: [NSView class]])
+        {
+          _gormNormalizeEditorSubviews((NSView *)sub);
+        }
+    }
+}
+
+static void _gormDeactivateEditorWrappers(NSView *root)
+{
+  NSArray *subviews = [NSArray arrayWithArray: [root subviews]];
+  NSEnumerator *en = [subviews objectEnumerator];
+  id sub = nil;
+
+  while ((sub = [en nextObject]) != nil)
+    {
+      if ([sub respondsToSelector: @selector(editedObject)] &&
+          [sub respondsToSelector: @selector(deactivate)])
+        {
+          NSView *wrapped = [sub editedObject];
+          [sub deactivate];
+          if (wrapped != nil && [wrapped isKindOfClass: [NSView class]])
+            {
+              _gormDeactivateEditorWrappers(wrapped);
+              continue;
+            }
+        }
+
+      if ([sub isKindOfClass: [NSView class]])
+        {
+          _gormDeactivateEditorWrappers((NSView *)sub);
+        }
+    }
+}
+
 @implementation GormViewWithContentViewEditor
 
 - (id) initWithObject: (id) anObject
@@ -64,6 +117,15 @@
 
 - (void) addViewToDocument: (NSView *)view
 {
+  if ([view respondsToSelector: @selector(editedObject)])
+    {
+      id raw = [(id)view editedObject];
+      if (raw != nil && [raw isKindOfClass: [NSView class]])
+        {
+          view = (NSView *)raw;
+        }
+    }
+
   NSView *par = [view superview];
 
   if([par isKindOfClass: [GormViewEditor class]])
@@ -258,11 +320,40 @@
   NSEnumerator *en = [selection objectEnumerator];
   id e = nil;
 
+  [self makeSubeditorResign];
+
   while ((e = [en nextObject]) != nil)
     {
       id v = [e editedObject];
-      [e deactivate];
-      [sel addObject: v];
+
+      // Close nested subeditors first so wrapper views are removed from
+      // the real view hierarchy all the way down.
+      if ([e respondsToSelector: @selector(closeSubeditors)])
+        {
+          [e closeSubeditors];
+        }
+
+      // Deactivate nested subeditors first, then deactivate wrapper.
+      if ([e respondsToSelector: @selector(deactivateSubeditors)])
+        {
+          [e deactivateSubeditors];
+        }
+
+      if ([e respondsToSelector: @selector(deactivate)])
+        {
+          [e deactivate];
+        }
+
+      // Defensive unwrap in case an editor wrapper slips through.
+      if ([v respondsToSelector: @selector(editedObject)])
+        {
+          v = [v editedObject];
+        }
+
+      if ([v isKindOfClass: [NSView class]])
+        {
+          [sel addObject: v];
+        }
     }
 
   return sel;
@@ -296,6 +387,9 @@
 - (void) groupSelectionInView: (id)view
 {
   GormDocument *doc = (GormDocument *)document;
+  NSMutableArray *cleanSelection = nil;
+  NSEnumerator *en = nil;
+  id candidate = nil;
 
   // Validate count...
   if ([view respondsToSelector: @selector(validateCount:)])
@@ -306,27 +400,69 @@
         }
     }
 
-  NSArray *viewSelection = [self editedViewsFromSelection];
+  // Ensure no nested/open subeditor remains active while regrouping.
+  [self makeSubeditorResign];
+
+  // Start from deactivated edited objects.
+  cleanSelection = [NSMutableArray arrayWithCapacity: [selection count]];
+  en = [[self editedViewsFromSelection] objectEnumerator];
+
+  // Defensive normalization: never allow editor wrappers to be grouped.
+  while ((candidate = [en nextObject]) != nil)
+    {
+      if ([candidate respondsToSelector: @selector(editedObject)])
+        {
+          if ([candidate respondsToSelector: @selector(deactivate)])
+            {
+              [candidate deactivate];
+            }
+          candidate = [candidate editedObject];
+        }
+
+      if ([candidate isKindOfClass: [NSView class]])
+        {
+          [cleanSelection addObject: candidate];
+        }
+    }
+
+  if ([cleanSelection count] == 0)
+    {
+      return;
+    }
+
+  // Ensure selected subtrees are free of active editor wrappers.
+  en = [cleanSelection objectEnumerator];
+  while ((candidate = [en nextObject]) != nil)
+    {
+      if ([candidate isKindOfClass: [NSView class]])
+        {
+          _gormDeactivateEditorWrappers((NSView *)candidate);
+          _gormNormalizeEditorSubviews((NSView *)candidate);
+        }
+    }
 
   // Compute rect...
   NSRect rect = NSZeroRect;
   if ([view respondsToSelector: @selector(computeRectForViews:)])
     {
-      rect = [view computeRectForViews: viewSelection];
+      rect = [view computeRectForViews: cleanSelection];
     }
   else
     {
       // Fallback: compute bounding rect manually
-      rect = [self computeBoundingRectForViews: viewSelection];
+      rect = [self computeBoundingRectForViews: cleanSelection];
     }
   // Order views and set orientation BEFORE setting the frame.
   // Setting the frame on NSSplitView triggers adjustSubviews internally;
   // isVertical must already be set at that point so the layout is correct.
-  NSArray *sortedViews = [view orderSelectionForViews: viewSelection];
+  NSArray *sortedViews = [view orderSelectionForViews: cleanSelection];
 
   [view setFrame: rect];
 
   [view addViews: sortedViews];
+
+  // Defensive pass: ensure no editor wrappers leaked into grouped subtree.
+  _gormNormalizeEditorSubviews(view);
 
   // Add view to the edited object directly. We must NOT use
   // [parentObject contentView] here because after editor activation
@@ -336,6 +472,10 @@
   // making the grouped view unselectable.
   [_editedObject addSubview: view];
   [doc attachObject: view toParent: _editedObject];
+
+  // Also sanitize the parent subtree that will be archived.
+  _gormDeactivateEditorWrappers(_editedObject);
+  _gormNormalizeEditorSubviews(_editedObject);
 
   // Get the editor for the object...
   id editor = [doc editorForObject: view inEditor: self create: YES];
@@ -409,6 +549,16 @@
           continue;
         }
 
+      if ([view respondsToSelector: @selector(editedObject)])
+        {
+          view = [view editedObject];
+        }
+
+      if (![view isKindOfClass: [NSView class]])
+        {
+          continue;
+        }
+
       // Add to edited object's view hierarchy
       [_editedObject addSubview: view];
 
@@ -425,6 +575,14 @@
           [newSelection addObject: viewEditor];
         }
     }
+
+  // Remove old container from document model now that children were
+  // reattached under _editedObject.
+  [document detachObject: containerView closeEditor: NO];
+
+  // Defensive pass after ungrouping.
+  _gormDeactivateEditorWrappers(_editedObject);
+  _gormNormalizeEditorSubviews(_editedObject);
 
   // Step 4: Select and display the extracted views
   [self selectObjects: newSelection];
