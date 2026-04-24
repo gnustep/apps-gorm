@@ -367,76 +367,66 @@
 - (void) ungroup
 {
   if ([selection count] != 1)
-    return;
+    {
+      return;
+    }
 
   id containerEditor = [selection objectAtIndex: 0];
   if (![containerEditor respondsToSelector: @selector(destroyAndListSubviews)])
-    return;
-
-  id eo = [containerEditor editedObject];
-
-  // destroyAndListSubviews deactivates all sub-editors, converts each
-  // subview's frame to self's coordinate space, and closes the container
-  // editor itself.  The returned array contains the raw views only.
-  NSArray *views = [containerEditor destroyAndListSubviews];
-
-  if (!views || [views count] == 0)
     {
-      // Container was empty; just remove it from document and redisplay.
-      [eo removeFromSuperview];
-      [document detachObject: eo closeEditor: NO];
+      return;
+    }
+
+  id containerView = [containerEditor editedObject];
+
+  // Step 1: destroyAndListSubviews deactivates sub-editors, converts frames
+  // back to our coordinate space, closes the container editor, and returns
+  // the extracted views. The views are now detached from the container's
+  // view hierarchy but still exist in the document model.
+  NSArray *extractedViews = [containerEditor destroyAndListSubviews];
+
+  if (!extractedViews || [extractedViews count] == 0)
+    {
+      // Container was empty. Just remove it from view hierarchy and done.
+      [containerView removeFromSuperview];
       [self setNeedsDisplay: YES];
       return;
     }
 
-  NSInteger i;
-  NSInteger count = [views count];
+  // Step 2: Immediately remove the container from the view hierarchy so it
+  // doesn't interfere with the extracted views' attachment.
+  [containerView removeFromSuperview];
 
-  // ── Pass 1 ──────────────────────────────────────────────────────────
-  // Move every extracted view into _editedObject (the outer editing
-  // view) and update its NSNibConnector so the document parent pointer
-  // changes from the container's internal content-view to _editedObject.
-  // This must happen BEFORE detachObject: so that the recursive detach
-  // of the container's internal views finds an empty child list for each
-  // of those views and never calls removeFromSuperview on them.
-  for (i = 0; i < count; i++)
+  // Step 3: Add extracted views to _editedObject and update document parents.
+  NSMutableArray *newSelection = [NSMutableArray arrayWithCapacity: [extractedViews count]];
+  NSEnumerator *en = [extractedViews objectEnumerator];
+  id view = nil;
+
+  while ((view = [en nextObject]) != nil)
     {
-      id v = [views objectAtIndex: i];
-      [_editedObject addSubview: v];
-      [self addViewToDocument: v];
+      if (![view isKindOfClass: [NSView class]])
+        {
+          continue;
+        }
+
+      // Add to edited object's view hierarchy
+      [_editedObject addSubview: view];
+
+      // Update document parent connector. This adjusts the view's parent
+      // to point to _editedObject instead of the old container.
+      [self addViewToDocument: view];
+
+      // Create/activate editor for the extracted view
+      id viewEditor = [document editorForObject: view
+                                       inEditor: self
+                                         create: YES];
+      if (viewEditor != nil)
+        {
+          [newSelection addObject: viewEditor];
+        }
     }
 
-  // Remove the container from the view hierarchy explicitly before
-  // detaching it from the document.  The extracted views are already
-  // siblings in _editedObject at this point, so removing eo is safe.
-  [eo removeFromSuperview];
-
-  // Detach the container (and its now-empty internal structure, e.g. the
-  // NSBox content-view placeholder) from the document.  Because Pass 1
-  // already re-pointed every extracted view's NSNibConnector to
-  // _editedObject, the recursive detachment finds no "our" views and
-  // will only clean up the container's own bookkeeping entries.
-  [document detachObject: eo closeEditor: NO];
-
-  // ── Pass 2 ──────────────────────────────────────────────────────────
-  // Now that all container state has been cleaned up, create editors for
-  // the extracted views.  Doing this after detachObject: avoids any
-  // chance that the connections-removal sweep in detachObject: touches
-  // connectors belonging to the freshly created editors.
-  NSMutableArray *newSelection = [NSMutableArray arrayWithCapacity: count];
-  for (i = 0; i < count; i++)
-    {
-      id v = [views objectAtIndex: i];
-      id e = [document editorForObject: v
-			      inEditor: self
-				create: YES];
-
-      [parent addSubview: v];
-      [newSelection addObject: e];
-    }
-
-  // ── Finalize ──────────────────────────────────────────────────────────
-  // Select objects that have been ungrouped and update the display.
+  // Step 4: Select and display the extracted views
   [self selectObjects: newSelection];
   [self setNeedsDisplay: YES];
 }
