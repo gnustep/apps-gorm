@@ -431,7 +431,7 @@
 			      inEditor: self
 				create: YES];
 
-      [_editedObject addSubview: e];
+      [parent addSubview: v];
       [newSelection addObject: e];
     }
 
