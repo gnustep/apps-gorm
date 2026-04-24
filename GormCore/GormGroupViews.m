@@ -24,6 +24,7 @@
 
 #import <AppKit/AppKit.h>
 
+#import "GormGroupViews.h"
 #import "GormGroupProtocol.h"
 #import "GormViewEditor.h"
 

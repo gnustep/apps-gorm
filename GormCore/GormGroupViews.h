@@ -61,6 +61,22 @@
 - (NSArray *) buildFramesForViews: (NSArray *)views
                     withUnionRect: (NSRect)unionRect;
 
+/**
+ * Computes the union rectangle that encloses the supplied views.
+ */
+- (NSRect) _computeContainerRectForViews: (NSArray *)views;
+
+/**
+ * Returns a mutable list of views prepared for grouping operations.
+ */
+- (NSMutableArray *) _prepareViewsForGrouping: (NSArray *)views;
+
+/**
+ * Repositions views into the coordinate space of the supplied container rect.
+ */
+- (void) _positionSubviewsInContainer: (NSArray *)views
+                        containerRect: (NSRect)containerRect;
+
 @end
 
 #endif
