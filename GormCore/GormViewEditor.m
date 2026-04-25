@@ -130,13 +130,13 @@ static BOOL currently_displaying = NO;
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   [NSException raise: NSInternalInconsistencyException
-	      format: @"Cannot encode a GormViewEditor."];
+	      format: @"Cannot encode a GormViewEditor, subclass: %@, editedObject: %@", [self class], _editedObject];
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
   [NSException raise: NSInternalInconsistencyException
-	      format: @"Cannot decode a GormViewEditor."];
+	      format: @"Cannot encode a GormViewEditor, subclass: %@, editedObject: %@", [self class], _editedObject];
   return nil;
 }
 
