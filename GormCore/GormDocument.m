@@ -3760,6 +3760,104 @@ static void _real_close(GormDocument *self,
 }
 /* End of testInterface support code */
 
+- (void) _deactivateEditorsInViewHierarchy: (NSView *)rootView
+                                  tracking: (NSMutableSet *)deactivatedEditors
+{
+  NSMutableArray *stack = nil;
+
+  if (rootView == nil)
+    {
+      return;
+    }
+
+  stack = [NSMutableArray arrayWithObject: rootView];
+  while ([stack count] > 0)
+    {
+      NSView *node = [stack lastObject];
+      [stack removeLastObject];
+
+      if ([node respondsToSelector: @selector(editedObject)] &&
+          [node respondsToSelector: @selector(deactivate)])
+        {
+          id raw = [(id)node performSelector: @selector(editedObject)];
+
+          if ([deactivatedEditors containsObject: node] == NO)
+            {
+              [(id)node performSelector: @selector(deactivate)];
+              [deactivatedEditors addObject: node];
+            }
+
+          /*
+           * If deactivate was a no-op (e.g. stale activated flag),
+           * force unwrap to keep editor wrappers out of the archive.
+           */
+          if (raw != nil && [raw isKindOfClass: [NSView class]] &&
+              [(NSView *)raw superview] == node)
+            {
+              NSView *rawView = (NSView *)raw;
+              id superview = [node superview];
+
+              [node removeSubview: rawView];
+
+              if ([superview isKindOfClass: [NSBox class]])
+                {
+                  [(NSBox *)superview setContentView: rawView];
+                }
+              else if ([superview isKindOfClass: [NSClipView class]])
+                {
+                  [(NSClipView *)superview setDocumentView: rawView];
+                }
+              else if ([superview isKindOfClass: [NSView class]])
+                {
+                  [(NSView *)superview replaceSubview: node with: rawView];
+                }
+              else if ([node window] != nil && [[node window] contentView] == node)
+                {
+                  [[node window] setContentView: rawView];
+                }
+            }
+
+          if (raw != nil && [raw isKindOfClass: [NSView class]])
+            {
+              [stack addObject: raw];
+            }
+          continue;
+        }
+
+      {
+        NSEnumerator *subEnum = [[node subviews] objectEnumerator];
+        NSView *sub = nil;
+        while ((sub = [subEnum nextObject]) != nil)
+          {
+            [stack addObject: sub];
+          }
+      }
+    }
+}
+
+- (void) _deactivateEditorsInTopLevelViewHierarchies: (NSMutableSet *)deactivatedEditors
+{
+  NSEnumerator *topEnum = [topLevelObjects objectEnumerator];
+  id topObj = nil;
+
+  while ((topObj = [topEnum nextObject]) != nil)
+    {
+      NSView *rootView = nil;
+
+      if ([topObj isKindOfClass: [NSWindow class]])
+        {
+          rootView = [(NSWindow *)topObj contentView];
+        }
+      else if ([topObj isKindOfClass: [NSView class]])
+        {
+          rootView = (NSView *)topObj;
+        }
+
+      [self _deactivateEditorsInViewHierarchy: rootView
+                                     tracking: deactivatedEditors];
+    }
+}
+
 /**
  * Deactivate the editors for archiving..
  */
@@ -3767,25 +3865,43 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
+  NSMutableSet *deactivatedEditors = [NSMutableSet set];
 
   /*
    * Map all connector sources and destinations to their name strings.
    * Deactivate editors so they won't be archived.
    */
-
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if ([con isKindOfClass: [GormObjectToEditor class]])
 	{
+	  id editor = [con destination];
+
 	  [savedEditors addObject: con];
-	  [[con destination] deactivate];
+
+	  if (editor != nil && [deactivatedEditors containsObject: editor] == NO)
+	    {
+	      if ([editor respondsToSelector: @selector(deactivateSubeditors)])
+	        {
+            [editor performSelector: @selector(deactivateSubeditors)];
+	        }
+	      [editor deactivate];
+	      [deactivatedEditors addObject: editor];
+	    }
 	}
       else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [savedEditors addObject: con];
 	}
     }
+
+  /*
+   * Fallback for wrappers that are present in view trees but not reachable
+   * from connector bookkeeping (for example missing parent editor link).
+   */
+  [self _deactivateEditorsInTopLevelViewHierarchies: deactivatedEditors];
+
   [connections removeObjectsInArray: savedEditors];
 }
 

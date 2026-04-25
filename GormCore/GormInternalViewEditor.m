@@ -183,10 +183,10 @@ static NSImage *horizontalImage;
 
 - (void) deactivate
 {
+  NSDebugLog(@"%@ called deactivate", [self class]);
   if (activated == YES)
     {
       id superview = [self superview];
-      // NSView *superview = [self superview];
       
       [self deactivateSubeditors];
       
