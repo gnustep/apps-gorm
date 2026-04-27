@@ -917,8 +917,11 @@
     }
 
   superview = [view superview];
-  [superview lockFocus];
-  
+  if (superview != nil)
+    {
+      [superview lockFocus];
+    }
+
   {
     NSRect	vf = [view frame];
     NSRect	sf = [superview bounds];
