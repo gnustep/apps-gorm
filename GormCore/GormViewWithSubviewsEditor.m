@@ -849,10 +849,8 @@
 - (void) handleMouseOnView: (GormViewEditor *) view
 		 withEvent: (NSEvent *) theEvent
 {
-  NSPoint	mouseDownPoint = [[view superview]
-				   convertPoint: [theEvent locationInWindow]
-				   fromView: nil];
-  NSDate	*future = [NSDate distantFuture];
+  NSPoint	mouseDownPoint;
+  NSDate	*future;
   NSView	*subview;
   BOOL		acceptsMouseMoved;
   BOOL		dragStarted = NO;
@@ -862,8 +860,8 @@
   NSRect	r;
   NSPoint	maxMouse;
   NSPoint	minMouse;
-  NSPoint	lastPoint = mouseDownPoint;
-  NSPoint	point = mouseDownPoint;
+  NSPoint	lastPoint;
+  NSPoint	point;
   NSView        *superview;
   NSEnumerator		*enumerator;
   NSRect        oldMovingFrame;
@@ -872,17 +870,25 @@
   BOOL shouldUpdateSelection = YES;
   BOOL mouseDidMove = NO;
 
+  // Guard against nil view before any message sends that return structs.
+  if (view == nil)
+    {
+      return;
+    }
+
+  mouseDownPoint = [[view superview]
+			   convertPoint: [theEvent locationInWindow]
+			   fromView: nil];
+  future = [NSDate distantFuture];
+  lastPoint = mouseDownPoint;
+  point = mouseDownPoint;
+
   eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
     | NSMouseMovedMask | NSPeriodicMask;
   
   // Save window state info.
   acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
   [[self window] setAcceptsMouseMovedEvents: YES];
-
-  if (view == nil)
-    {
-      return;
-    }
 
   if ([theEvent modifierFlags] & NSShiftKeyMask)
     {
@@ -917,10 +923,12 @@
     }
 
   superview = [view superview];
-  if (superview != nil)
+  if (superview == nil)
     {
-      [superview lockFocus];
+      [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
+      return;
     }
+  [superview lockFocus];
 
   {
     NSRect	vf = [view frame];
