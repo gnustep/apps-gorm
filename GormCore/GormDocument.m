@@ -31,9 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
 #import <GNUstepGUI/GSGormLoading.h>
 
 #import "NSView+GormExtensions.h"
