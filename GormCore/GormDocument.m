@@ -36,6 +36,8 @@
 
 #import <GNUstepGUI/GSGormLoading.h>
 
+#import "NSView+GormExtensions.h"
+
 #import "GormPrivate.h"
 #import "GormClassManager.h"
 #import "GormCustomView.h"
@@ -43,7 +45,8 @@
 #import "GormFunctions.h"
 #import "GormFilePrefsManager.h"
 #import "GormViewWindow.h"
-#import "NSView+GormExtensions.h"
+#import "GormViewEditor.h"
+
 #import "GormSound.h"
 #import "GormImage.h"
 #import "GormResourceManager.h"
@@ -633,6 +636,14 @@ static NSImage  *fileImage = nil;
   NSArray *old;
   BOOL newObject = NO;
 
+  NSDebugLog(@"Attaching %@, to parent: %@, with name %@", anObject, aParent, aName);
+
+  if ([anObject isKindOfClass: [GormViewEditor class]])
+    {
+      NSDebugLog(@"Warning, %@ is a subclass of GormViewEditor, rejecting", anObject);
+      return;
+    }
+  
   // Modify the document whenever something is added...
   [self touch];
 
@@ -1769,6 +1780,26 @@ static NSImage  *fileImage = nil;
 {
   NSArray	*links;
 
+#define GORM_ENSURE_EDITOR_PARENT_LINK(ed, parentEd) \
+  do { \
+    id<IBEditors> _editor = (ed); \
+    id<IBEditors> _parent = (parentEd); \
+    NSArray *_parentLinks = [self connectorsForSource: _editor \
+                                             ofClass: [GormEditorToParent class]]; \
+    NSUInteger _idx = [_parentLinks count]; \
+    while (_idx-- > 0) \
+      { \
+        [connections removeObjectIdenticalTo: [_parentLinks objectAtIndex: _idx]]; \
+      } \
+    if (_parent != nil && _parent != _editor) \
+      { \
+        id<IBConnectors> _parentLink = AUTORELEASE([[GormEditorToParent alloc] init]); \
+        [_parentLink setSource: _editor]; \
+        [_parentLink setDestination: _parent]; \
+        [connections addObject: _parentLink]; \
+      } \
+  } while (0)
+
   /*
    * Look up the editor links for the object to see if it already has an
    * editor.  If it does return it, otherwise create a new editor and a
@@ -1801,21 +1832,8 @@ static NSImage  *fileImage = nil;
            */
 	  anEditor = objectsView;
 	}
-      
-      if (anEditor != editor)
-	{
-	  /*
-	   * Link to the parent of the editor.
-	   */
-	  link = AUTORELEASE([[GormEditorToParent alloc] init]);
-	  [link setSource: editor];
-	  [link setDestination: anEditor];
-	  [connections addObject: link];
-	}
-      else
-	{
-	  NSDebugLog(@"WARNING anEditor = editor");
-	}
+
+      GORM_ENSURE_EDITOR_PARENT_LINK(editor, anEditor);
 
       [editor activate];
       RELEASE((NSObject *)editor);
@@ -1828,9 +1846,18 @@ static NSImage  *fileImage = nil;
     }
   else
     {
-      [(id<IBEditors>)[[links lastObject] destination] activate];
-      return [[links lastObject] destination];
+      id<IBEditors> editor = [[links lastObject] destination];
+
+      if (anEditor != nil)
+        {
+          GORM_ENSURE_EDITOR_PARENT_LINK(editor, anEditor);
+        }
+
+      [editor activate];
+      return editor;
     }
+
+#undef GORM_ENSURE_EDITOR_PARENT_LINK
 }
 
 /**

@@ -390,6 +390,34 @@
   // Get the editor for the object...
   id editor = [doc editorForObject: view inEditor: self create: YES];
 
+  /*
+   * Grouping into container views like NSBox/NSScrollView can auto-create an
+   * internal editor for content/document view. Keep only the container editor
+   * active here to avoid leaving an untracked internal editor in the tree.
+   */
+  {
+    NSView *internalRoot = nil;
+
+    if ([view respondsToSelector: @selector(contentView)])
+      {
+        internalRoot = [(id)view contentView];
+      }
+    else if ([view respondsToSelector: @selector(documentView)])
+      {
+        internalRoot = [(id)view documentView];
+      }
+
+    if (internalRoot != nil)
+      {
+        id internalEditor = [doc editorForObject: internalRoot create: NO];
+        if (internalEditor != nil && internalEditor != editor &&
+            [internalEditor respondsToSelector: @selector(close)])
+          {
+            [internalEditor close];
+          }
+      }
+  }
+
   // Select objects...
   [self selectObjects: [NSArray arrayWithObject: editor]];
 }
