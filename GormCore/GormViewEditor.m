@@ -22,23 +22,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#import "GormGenericEditor.h"
+#import "GormViewEditor.h"
+#import "GormViewWithSubviewsEditor.h"
+#import "GormPlacementInfo.h"
+#import "GormFunctions.h"
+#import "GormViewWindow.h"
+#import "GormViewKnobs.h"
+#import "GormClassManager.h"
+#import "GormDocument.h"
+#import "GormAbstractDelegate.h"
 
-#include "GormGenericEditor.h"
-#include "GormViewEditor.h"
-#include "GormViewWithSubviewsEditor.h"
-#include "GormPlacementInfo.h"
-#include "GormFunctions.h"
-#include "GormViewWindow.h"
-#include "GormViewKnobs.h"
-#include "GormClassManager.h"
-#include "GormDocument.h"
-
-#include <math.h>
-#include <stdlib.h>
+#import <math.h>
+#import <stdlib.h>
 
 @implementation GormPlacementInfo
 @end
@@ -126,6 +126,21 @@
 static BOOL currently_displaying = NO;
 
 @implementation	GormViewEditor
+
+- (NSImage*) imageForViewer
+{
+  static NSImage       *image = nil;
+  GormAbstractDelegate *delegate = (GormAbstractDelegate *)[NSApp delegate];
+
+  if (image == nil && [delegate isInTool] == NO)
+    {
+      NSBundle	*bundle = [NSBundle bundleForClass: [GormViewEditor class]];
+      NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+
+  return image;
+}
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {

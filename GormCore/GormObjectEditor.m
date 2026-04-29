@@ -46,7 +46,7 @@
 
   if (image == nil && [delegate isInTool] == NO)
     {
-      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
+      NSBundle	*bundle = [NSBundle bundleForClass: [GormObjectEditor class]];
       NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
