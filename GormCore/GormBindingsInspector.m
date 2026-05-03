@@ -180,6 +180,7 @@
 
 - (IBAction) selectInspector: (id)sender
 {
+  NSLog(@"selectInspector called");
   _selectedInspectorIndex = [sender indexOfSelectedItem];
   [self _loadInspector];
 }
