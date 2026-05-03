@@ -40,7 +40,6 @@ GormCore_HEADER_FILES = \
 	GormCore.h \
 	GormBindingsInspector.h \
 	GormBindingsAbstractInspector.h \
-	GormBindingsContentInspector.h \
 	GormVersion.h \
 	GormAbstractDelegate.h \
 	GormBindingsInspector.h \
@@ -130,7 +129,6 @@ GormCore_HEADER_FILES = \
 GormCore_OBJC_FILES = \
 	GormBindingsInspector.m \
 	GormBindingsAbstractInspector.m \
-	GormBindingsContentInspector.m \
 	GormAbstractDelegate.m \
 	GormBindingsInspector.m \
 	GormBoxEditor.m \
