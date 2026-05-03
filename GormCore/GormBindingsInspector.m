@@ -2,9 +2,9 @@
 
    <abstract>allow user to select custom classes</abstract>
 
-   Copyright (C) 2003 Free Software Foundation, Inc.
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
-   Date: March 2003
+   Copyright (C) 2003, 2026 Free Software Foundation, Inc.
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
+   Date: March 2003, 2026
 
    This file is part of GNUstep.
  
