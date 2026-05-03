@@ -34,6 +34,9 @@
 
 @class NSString;
 
+/**
+ * GormSound represents a sound resource within a Gorm document, encapsulating sound data that can be referenced by interface elements. It manages sound file loading, storage, and provides access to the sound data for playback or export.
+ */
 @interface GormSound : GormResource
 
 /**
@@ -48,6 +51,10 @@
 + (GormSound*) soundForPath: (NSString *)path inWrapper: (BOOL)flag;
 
 
+/**
+ * Create a GormSound from raw sound data and an associated file name, and
+ * indicate whether the sound resides inside the document wrapper.
+ */
 + (GormSound*) soundForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag;
 @end
 

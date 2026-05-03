@@ -44,6 +44,7 @@
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSOutlineView.h>
 #import <AppKit/NSBrowser.h>
+#import <AppKit/NSToolbar.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 
@@ -52,6 +53,7 @@
 #import <GormCore/GormFilePrefsManager.h>
 #import <GormCore/GormProtocol.h>
 #import <GormCore/GormPrivate.h>
+#import <GormCore/NSToolbarPrivate.h>
 
 #import "GormXIBModelGenerator.h"
 
@@ -68,25 +70,6 @@ static NSDictionary *_mappedClassNames = nil;
 static NSDictionary *_valueMapping = nil;
 
 static NSUInteger _count = INT_MAX;
-
-/*
-NSString* XIBStringFromClass(Class cls)
-{
-  NSString *className = NSStringFromClass(cls);
-
-  if (className != nil)
-    {
-      NSString *newClassName = [_mappedClassNames objectForKey: className];
-
-      if (newClassName != nil)
-	{
-	  className = newClassName;
-	}
-    }
-
-  return className;
-}
-*/
 
 @interface NSButtonCell (_Private_)
 
@@ -371,7 +354,7 @@ NSString* XIBStringFromClass(Class cls)
 				    @"colorSpaceName", nil],
 			      @"GSNamedColor",
 			   [NSArray arrayWithObjects:
-				      @"wjoteComponent",
+				      @"whiteComponent",
 				    @"colorSpaceName", nil],
 			      @"GSWhiteColor",
 			   [NSArray arrayWithObjects:
@@ -476,6 +459,8 @@ NSString* XIBStringFromClass(Class cls)
 			 @"prototype",
 			 @"keyCell",
 			 @"isLenient",
+			 @"toolbar",
+			 @"cellBackgroundColor",
 			 nil];
     }
 }
@@ -591,7 +576,7 @@ NSString* XIBStringFromClass(Class cls)
 	    {
 	      result = @"-2";
 	      return result;
-	}
+	    }
 	  else if([obj isKindOfClass: [GormFirstResponder class]])
 	    {
 	      result = @"-1";
@@ -738,9 +723,6 @@ NSString* XIBStringFromClass(Class cls)
 		  if (sel != NULL)
 		    {
 		      NSDebugLog(@"selector = %@",s);
-		      // NSMethodSignature *sig = [obj methodSignatureForSelector: sel];
-
-		      // NSLog(@"methodSignatureForSelector %@ -> %s", s, [sig methodReturnType]);
 		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
 			{
 			  [result addObject: s];
@@ -1133,8 +1115,10 @@ NSString* XIBStringFromClass(Class cls)
   NSRect rect = [matrix frame];
   NSSize cellSize = [matrix cellSize];
   NSSize inter = [matrix intercellSpacing];
-  NSUInteger itemsPerCol = (rect.size.width + inter.width)   / cellSize.width;
-  NSUInteger itemsPerRow = (rect.size.height + inter.height) / cellSize.height;
+  CGFloat iw = (inter.width < 0.0) ? 0.0:inter.width;
+  CGFloat ih = (inter.height < 0.0) ? 0.0:inter.height;
+  NSUInteger itemsPerCol = (rect.size.width + iw) / cellSize.width;
+  NSUInteger itemsPerRow = (rect.size.height + ih) / cellSize.height;
   NSUInteger c = 0;
   NSUInteger r = 0;
   NSArray *cells = [matrix cells];
@@ -1144,6 +1128,7 @@ NSString* XIBStringFromClass(Class cls)
   NSString *cellClass = nil;
 
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
+  NSLog(@"INFO: col = %ld x row = %ld", itemsPerCol, itemsPerRow);
   NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
 
   if (count > 0)
@@ -1234,11 +1219,24 @@ NSString* XIBStringFromClass(Class cls)
       return;
     }
 
+  // Skip image and alternateImage properties for check/radio button cells - type attribute handles this
+  if (([name isEqualToString: @"image"] || [name isEqualToString: @"alternateImage"])
+      && [obj isKindOfClass: [NSButtonCell class]])
+    {
+      NSString *buttonTypeString = [obj buttonTypeString];
+      if ([buttonTypeString isEqualToString: @"check"]
+	  || [buttonTypeString isEqualToString: @"radio"])
+	{
+	  // Ensure the type attribute is set correctly in the XML
+	  [self _addButtonType: buttonTypeString toElement: elem];
+	  return; // Don't encode the GSSwitch/GSRadio images for check/radio buttons
+	}
+    }
+
   if ([type isEqualToString: @"id"]) // clz != nil) // type is a class
     {
       SEL s = NSSelectorFromString(name);
 
-      // NSLog(@"%@ -> %@", name, type);
       if (s != NULL)
 	{
 	  if ([obj respondsToSelector: s])
@@ -1255,7 +1253,6 @@ NSString* XIBStringFromClass(Class cls)
 
 		  if ([o isKindOfClass: [NSString class]])
 		    {
-		      NSDebugLog(@"Adding string property %@ = %@", name, o);
 		      if ([_valueMapping objectForKey: o] != nil)
 			{
 			  o = [_valueMapping objectForKey: o];
@@ -1270,7 +1267,6 @@ NSString* XIBStringFromClass(Class cls)
 			{
 			  NSXMLNode *attr = [NSXMLNode attributeWithName: name
 							     stringValue: o];
-
 			  [elem addAttribute: attr];
 			}
 		    }
@@ -1701,8 +1697,7 @@ NSString* XIBStringFromClass(Class cls)
 	    }
 	  [elem addChild: itemsElem]; // Add to parent element...
 	}
-
-      if ([obj isKindOfClass: [NSMenuItem class]])
+      else if ([obj isKindOfClass: [NSMenuItem class]])
 	{
 	  NSMenu *sm = [obj submenu];
 	  if (sm != nil)
@@ -1711,10 +1706,9 @@ NSString* XIBStringFromClass(Class cls)
 				   withParent: elem];
 	    }
 	}
-
       // Handle special case for popup, we need to add the selected item, and contain them
       // in a "menu" instance which doesn't exist on GNUstep...
-      if ([obj isKindOfClass: [NSPopUpButtonCell class]])
+      else if ([obj isKindOfClass: [NSPopUpButtonCell class]])
 	{
 	  NSArray *items = [obj itemArray];
 	  NSEnumerator *en = [items objectEnumerator];
@@ -1748,14 +1742,12 @@ NSString* XIBStringFromClass(Class cls)
 	  [menuElem addChild: itemsElem];
 	  [elem addChild: menuElem]; // Add to parent element...
 	}
-
-      if ([obj isKindOfClass: [NSTableHeaderView class]])
+      else if ([obj isKindOfClass: [NSTableHeaderView class]])
 	{
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"key" stringValue: @"headerView"];
 	  [elem addAttribute: attr];
 	}
-
-      if ([obj isKindOfClass: [NSWindow class]])
+      else if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
 	  NSRect c = [[obj contentView] frame];
@@ -1764,11 +1756,155 @@ NSString* XIBStringFromClass(Class cls)
 	  [self _addWindowStyleMask: m toElement: elem];
 	  [self _addRect: c toElement: elem withName: @"contentRect"];
 	  [self _addRect: s toElement: elem withName: @"screenRect"];
+
+	  // Handle toolbar if one is set
+	  if ([obj respondsToSelector: @selector(toolbar)])
+	    {
+	      NSToolbar *toolbar = [obj toolbar];
+	      if (toolbar != nil)
+		{
+		  NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"id"
+						       stringValue: [[NSString randomHex] splitString]];
+		  NSXMLElement *toolbarElem = [NSXMLNode elementWithName: @"toolbar"];
+		  NSXMLNode *keyAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"toolbar"];
+
+		  [toolbarElem addAttribute: idAttr];
+		  [toolbarElem addAttribute: keyAttr];
+
+		  NSString *toolbarIdentifier = [toolbar identifier];
+		  if (toolbarIdentifier != nil)
+		    {
+		      NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"identifier" stringValue: toolbarIdentifier];
+		      [toolbarElem addAttribute: idAttr];
+		    }
+
+		  // Add toolbar display mode
+		  NSToolbarDisplayMode displayMode = [toolbar displayMode];
+		  NSString *displayModeStr = nil;
+		  switch (displayMode)
+		    {
+		    case NSToolbarDisplayModeDefault:
+		      displayModeStr = @"default";
+		      break;
+		    case NSToolbarDisplayModeIconAndLabel:
+		      displayModeStr = @"iconAndLabel";
+		      break;
+		    case NSToolbarDisplayModeIconOnly:
+		      displayModeStr = @"iconOnly";
+		      break;
+		    case NSToolbarDisplayModeLabelOnly:
+		      displayModeStr = @"labelOnly";
+		      break;
+		    }
+		  if (displayModeStr != nil)
+		    {
+		      NSXMLNode *modeAttr = [NSXMLNode attributeWithName: @"displayMode" stringValue: displayModeStr];
+		      [toolbarElem addAttribute: modeAttr];
+		    }
+
+		  // Add toolbar size mode
+		  NSToolbarSizeMode sizeMode = [toolbar sizeMode];
+		  NSString *sizeModeStr = nil;
+		  switch (sizeMode)
+		    {
+		    case NSToolbarSizeModeDefault:
+		      sizeModeStr = @"default";
+		      break;
+		    case NSToolbarSizeModeRegular:
+		      sizeModeStr = @"regular";
+		      break;
+		    case NSToolbarSizeModeSmall:
+		      sizeModeStr = @"small";
+		      break;
+		    }
+		  if (sizeModeStr != nil)
+		    {
+		      NSXMLNode *sizeAttr = [NSXMLNode attributeWithName: @"sizeMode" stringValue: sizeModeStr];
+		      [toolbarElem addAttribute: sizeAttr];
+		    }
+
+		  // Add visible flag
+		  if ([toolbar isVisible])
+		    {
+		      NSXMLNode *visibleAttr = [NSXMLNode attributeWithName: @"visible" stringValue: @"YES"];
+		      [toolbarElem addAttribute: visibleAttr];
+		    }
+
+		  // Add allows customization flag
+		  if ([toolbar allowsUserCustomization])
+		    {
+		      NSXMLNode *customAttr = [NSXMLNode attributeWithName: @"allowsUserCustomization" stringValue: @"YES"];
+		      [toolbarElem addAttribute: customAttr];
+		    }
+
+		  // Add autosaves configuration flag
+		  if ([toolbar autosavesConfiguration])
+		    {
+		      NSXMLNode *autosaveAttr = [NSXMLNode attributeWithName: @"autosavesConfiguration" stringValue: @"YES"];
+		      [toolbarElem addAttribute: autosaveAttr];
+		    }
+
+		  // Add allowedItemIdentifiers array
+		  NSMutableDictionary *referencesDictionary = [NSMutableDictionary dictionary];
+		  if ([toolbar respondsToSelector: @selector(allowedItemIdentifiers)])
+		    {
+		      NSArray *allowedIdentifiers = [toolbar allowedItemIdentifiers];
+		      if (allowedIdentifiers != nil && [allowedIdentifiers count] > 0)
+			{
+			  NSXMLElement *allowedElem = [NSXMLNode elementWithName: @"allowedToolbarItems"];
+			  NSEnumerator *en = [allowedIdentifiers objectEnumerator];
+			  NSString *identifier = nil;
+
+			  while ((identifier = [en nextObject]) != nil)
+			    {
+			      NSString *theId = [[NSString randomHex] splitString];
+			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
+			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"implicitItemIdentifier" stringValue: identifier];
+			      NSXMLNode *attr = [NSXMLNode attributeWithName: @"id"
+								 stringValue: theId];
+
+			      [referencesDictionary setObject: theId forKey: identifier];
+			      [itemElem addAttribute: attr];
+			      [itemElem addAttribute: identElem];
+			      [allowedElem addChild: itemElem];
+			    }
+
+			  [toolbarElem addChild: allowedElem];
+			}
+		    }
+
+		  // Add defaultItemIdentifiers array
+		  if ([toolbar respondsToSelector: @selector(defaultItemIdentifiers)])
+		    {
+		      NSArray *defaultIdentifiers = [toolbar defaultItemIdentifiers];
+		      if (defaultIdentifiers != nil && [defaultIdentifiers count] > 0)
+			{
+			  NSXMLElement *defaultElem = [NSXMLNode elementWithName: @"defaultToolbarItems"];
+			  NSEnumerator *en = [defaultIdentifiers objectEnumerator];
+			  NSString *identifier = nil;
+
+			  while ((identifier = [en nextObject]) != nil)
+			    {
+			      NSString *refId = [referencesDictionary objectForKey: identifier];
+			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
+			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"reference" stringValue: refId];
+
+			      [itemElem addAttribute: identElem];
+			      [defaultElem addChild: itemElem];
+			    }
+
+			  [toolbarElem addChild: defaultElem];
+			}
+		    }
+
+		  [elem addChild: toolbarElem];
+		}
+	    }
+
 	  [self _collectObjectsFromObject: [obj contentView]
 			       withParent: elem];
 	}
-
-      if ([obj isKindOfClass: [NSPanel class]])
+      else if ([obj isKindOfClass: [NSPanel class]])
 	{
 	  NSString *className = NSStringFromClass([obj class]);
 
@@ -1780,8 +1916,7 @@ NSString* XIBStringFromClass(Class cls)
 	  NSXMLNode *attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
 	  [elem addAttribute: attr];
 	}
-
-      if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
+      else if ([obj isKindOfClass: [NSView class]]) // && [obj resondsToSelect: @selector(contentView)] == NO)
 	{
 	  id sv = [obj superview];
 
@@ -1798,6 +1933,12 @@ NSString* XIBStringFromClass(Class cls)
 		  NSXMLNode *contentViewAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"contentView"];
 		  [elem addAttribute: contentViewAttr];
 		}
+	    }
+
+	  if ([obj respondsToSelector: @selector(frame)])
+	    {
+	      NSRect f = [obj frame];
+	      [self _addRect: f toElement: elem withName: @"frame"];
 	    }
 
 	  if ([obj respondsToSelector: @selector(contentView)])

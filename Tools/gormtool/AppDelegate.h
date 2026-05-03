@@ -32,12 +32,21 @@
 @class NSMutableArray;
 @class NSSet;
 
+/**
+ * AppDelegate provides AppDelegate class or protocol.
+ */
 @interface AppDelegate : GormAbstractDelegate
 {
   GormDocument *_doc;
 }
 
+/**
+ * Returns the parseArguments.
+ */
 - (NSDictionary *) parseArguments;
+/**
+ * Returns the process.
+ */
 - (void) process;
 
 @end

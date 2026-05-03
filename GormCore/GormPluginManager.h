@@ -31,6 +31,9 @@
 @class NSMutableArray, NSMutableDictionary, NSDictionary, NSArray, NSBundle;
 @class NSPanel, NSMatrix, NSView;
 
+/**
+ * GormPluginManager handles loading and managing Gorm plugin bundles. Plugins extend Gorm's functionality by providing additional palettes, inspectors, or custom object types.
+ */
 @interface GormPluginManager : NSObject
 {
   NSMutableArray	*bundles;
@@ -39,8 +42,17 @@
   NSMutableArray        *pluginNames;
 }
 
-// methods for loading and display the palette panels
+// methods for loading and managing plugins
+/**
+ * Loads a plugin bundle from the specified file system path and registers it
+ * with Gorm so that any provided palettes, inspectors, or extensions become
+ * available.
+ */
 - (BOOL) loadPlugin: (NSString*)path;
+/**
+ * Opens the plugin management UI or triggers the default action for plugins,
+ * depending on the sender.
+ */
 - (id) openPlugin: (id) sender;
 @end
 

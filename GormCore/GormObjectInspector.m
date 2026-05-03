@@ -42,12 +42,7 @@
       sets = [[NSMutableArray alloc] init];
       gets = [[NSMutableDictionary alloc] init];
       types = [[NSMutableDictionary alloc] init];
-      
-      okButton = [[NSButton alloc] initWithFrame: NSMakeRect(0,0,90,20)];
-      [okButton setAutoresizingMask: NSViewMaxYMargin | NSViewMinXMargin];
-      [okButton setAction: @selector(ok:)];
-      [okButton setTarget: self];
-      [okButton setTitle: _(@"OK")];
+
       [okButton setEnabled: NO];
       
       revertButton = nil;
@@ -96,7 +91,6 @@ selectCellWithString: (NSString*)title
   RELEASE(gets);
   RELEASE(sets);
   RELEASE(types);
-  RELEASE(okButton);
   [super dealloc];
 }
 
@@ -117,7 +111,7 @@ selectCellWithString: (NSString*)title
       NSString	*type = [types objectForKey: name];
       
       [super ok: sender];
-      if (type == typeChar)
+      if (type == typeCharOrBool)
 	{
 	  char	v = [value intValue];
 	  void	(*imp)(id,SEL,char);
@@ -287,7 +281,7 @@ selectCellWithString: (NSString*)title
 			    type = typeId;
 			    break;
 			  case _C_CHR:
-			    type = typeChar;
+			    type = typeCharOrBool;
 			    break;
 			  case _C_UCHR:
 			    type = typeUChar;
@@ -346,7 +340,7 @@ selectCellWithString: (NSString*)title
       NSString	*type = [types objectForKey: name];
 
       [label setTitle: type];
-      if (type == typeChar)
+      if (type == typeCharOrBool)
 	{
 	  char	v;
 	  char	(*imp)();

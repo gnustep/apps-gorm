@@ -166,9 +166,10 @@
 	  
 	  if(classString != nil && [classString length] != 0)
 	    {
-	      cls = AUTORELEASE([[OCClass alloc] initWithString: classString]);
+	      cls = [[OCClass alloc] initWithString: classString];
 	      [cls parse];
 	      [classes addObject: cls];
+	      RELEASE(cls);
 	    }
 	}
 

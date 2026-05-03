@@ -33,6 +33,9 @@
 
 @class NSMutableArray, NSString, NSView, NSPasteboard;
 
+/**
+ * GormWindowEditor handles the editing of NSWindow objects, managing their content view and window-level properties.
+ */
 @interface GormWindowEditor : GormViewWithContentViewEditor
 {
   NSView                *edit_view;
@@ -101,6 +104,9 @@
  */
 - (void) makeSelectionVisible: (BOOL)flag;
 
+/**
+ * Opens the specified resource or editor.
+ */
 - (id<IBEditors>) openSubeditorForObject: (id)anObject;
 
 /**

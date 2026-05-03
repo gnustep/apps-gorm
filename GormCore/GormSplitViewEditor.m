@@ -375,8 +375,9 @@
       NSRect frame;
       v = [subview editedObject];
       frame = [v frame];
-      frame = [parent convertRect: frame
-		      fromView: _EO];
+      // Convert frame from splitView coordinates to outer view coordinates
+      frame.origin.x += [_EO frame].origin.x;
+      frame.origin.y += [_EO frame].origin.y;
       [subview deactivate];
       
       [v setFrame: frame];

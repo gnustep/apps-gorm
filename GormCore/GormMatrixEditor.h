@@ -26,6 +26,11 @@
 
 #include <GormCore/GormViewWithSubviewsEditor.h>
 
+/**
+ * GormMatrixEditor provides editing capabilities for NSMatrix views within
+ * the Gorm interface builder. It manages selection and manipulation of
+ * individual cells within the matrix.
+ */
 @interface GormMatrixEditor : GormViewWithSubviewsEditor
 {
   NSCell* selected;

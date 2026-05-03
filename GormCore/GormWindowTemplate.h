@@ -28,9 +28,17 @@
 #include <GNUstepGUI/GSNibLoading.h>
 
 @interface NSWindowTemplate (Private)
+/**
+ * Set the base window class used when instantiating a window from this
+ * template.
+ */
 - (void) setBaseWindowClass: (Class) clz;
 @end 
 
+/**
+ * GormWindowTemplate customizes NSWindowTemplate behavior for Gorm archives,
+ * allowing control over the class used for instantiated windows.
+ */
 @interface GormWindowTemplate : NSWindowTemplate
 {
   BOOL _tempFlag;

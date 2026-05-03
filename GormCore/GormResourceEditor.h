@@ -28,12 +28,40 @@
 #include "GormGenericEditor.h"
 
 @interface GormResourceEditor : GormGenericEditor
+/**
+ * Notifies the editor when a drag operation of an image ends, including the
+ * final position and whether the drop was accepted.
+ */
 - (void) draggedImage: (NSImage*)i endedAt: (NSPoint)p deposited: (BOOL)f;
+/**
+ * Returns the drag operation mask (copy, move, etc.) supported by the editor
+ * for local or external drags depending on the flag.
+ */
 - (unsigned int) draggingSourceOperationMaskForLocal: (BOOL)flag;
+/**
+ * Refreshes the resource cells to reflect any changes in the underlying data
+ * or selection.
+ */
 - (void) refreshCells;
+/**
+ * Creates and returns a GormResource placeholder object for the specified
+ * path.
+ */
 - (id) placeHolderWithPath: (NSString *)path;
+/**
+ * Returns the array of supported pasteboard types for resources handled by
+ * this editor.
+ */
 - (NSArray *) pbTypes;
+/**
+ * Returns a string identifier for the type of resources managed by this
+ * editor.
+ */
 - (NSString *) resourceType;
+/**
+ * Adds built‑in system resources to the editor so they are available for use
+ * within the document.
+ */
 - (void) addSystemResources;
 @end
 

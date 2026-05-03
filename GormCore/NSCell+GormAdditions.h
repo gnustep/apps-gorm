@@ -29,6 +29,10 @@
 
 @class NSText;
 
+/**
+ * Adds a convenience method used by Gorm to configure the field editor for
+ * a cell without letting the Font Panel take over font changes.
+ */
 @interface NSCell (GormAdditions)
 /**
  *  This methods is comes directly from NSCell.m

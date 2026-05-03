@@ -16,7 +16,8 @@
 	    columnSelectionSwitch,
 	    drawgridSwitch,
 	    resizingSwitch,
-	    reorderingSwitch
+	    reorderingSwitch,
+	    viewBased
 	);
 	Super = IBInspector;
     };

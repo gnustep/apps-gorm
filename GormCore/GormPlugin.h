@@ -28,7 +28,17 @@
 
 @class NSString, NSArray;
 
+/**
+ * GormPlugin is the base plugin interface used by Gorm to extend functionality.
+ * Plugins can register document types, contribute palettes and inspectors, and
+ * provide additional behaviors to the editor.
+ */
 @interface GormPlugin : IBPlugin
+/**
+ * Registers a document type with a human‑readable name and the associated file
+ * extensions, allowing Gorm to present the type in open/save panels and to map
+ * files to the correct document class.
+ */
 - (void) registerDocumentTypeName: (NSString *)name
                 humanReadableName: (NSString *)hrName
                     forExtensions: (NSArray *)extensions;

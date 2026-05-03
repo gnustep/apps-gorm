@@ -30,6 +30,11 @@
 
 @class NSTimer;
 
+/**
+ * GormOpenGLView provides a demo view that displays a rotating triangle
+ * when an NSOpenGLView is being tested in the interface builder. This serves
+ * as a visual placeholder during testing mode only.
+ */
 @interface GormOpenGLView : NSView
 {
   float rtri;

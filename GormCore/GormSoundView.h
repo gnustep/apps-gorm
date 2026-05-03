@@ -26,12 +26,38 @@
 
 /* All Rights reserved */
 
-#include <AppKit/AppKit.h>
+#include <Cocoa/Cocoa.h>
 
 @interface GormSoundView : NSView
 {
+  short *_samples;
+  NSUInteger _sampleCount;
+  float _sampleRate;
   NSSound *_sound;
 }
-- (void)setSound: (NSSound *)sound;
-- (NSSound *)sound;
+
+/**
+ * Supplies PCM sample data to visualize. The samples buffer is not retained;
+ * callers are responsible for its lifetime.
+ */
+- (void)setSamples:(short *)newSamples
+       sampleCount:(NSUInteger)count
+        sampleRate:(float)rate;
+
+/**
+ * Loads sample data from the specified NSSound and prepares it for display.
+ * Returns YES on success; NO otherwise.
+ */
+- (BOOL)loadFromSound:(NSSound *)sound;
+
+/**
+ * Sets the NSSound backing this view. May trigger a redraw of the waveform.
+ */
+- (void) setSound: (NSSound *)sound;
+
+/**
+ * Returns the NSSound currently visualized by the view.
+ */
+- (NSSound *) sound;
+
 @end

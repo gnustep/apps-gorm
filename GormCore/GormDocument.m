@@ -4,9 +4,10 @@
  * protocol plus additional methods which are useful for managing the
  * contents of the document.
  *
- * Copyright (C) 1999,2002,2003,2004,2005,2020,2021 Free Software Foundation, Inc.
+ * Copyright (C) 1999,2002,2003,2004,2005,2020,2025
+ *               2021 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2002,2003,2004,2005,2020,2021
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
@@ -30,10 +31,10 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
 #import <GNUstepGUI/GSGormLoading.h>
+
+#import "NSView+GormExtensions.h"
 
 #import "GormPrivate.h"
 #import "GormClassManager.h"
@@ -42,7 +43,8 @@
 #import "GormFunctions.h"
 #import "GormFilePrefsManager.h"
 #import "GormViewWindow.h"
-#import "NSView+GormExtensions.h"
+#import "GormViewEditor.h"
+
 #import "GormSound.h"
 #import "GormImage.h"
 #import "GormResourceManager.h"
@@ -55,6 +57,23 @@
 #import "GormDocumentWindow.h"
 #import "GormDocumentController.h"
 #import "GormXLIFFDocument.h"
+#import "GormObjectViewController.h"
+
+@interface NSObject (GormNSCoding)
+@end
+
+@implementation NSObject (GormNSCoding)
+
+- (instancetype) initWithCoder: (NSCoder *)coder
+{
+  return [self init];
+}
+
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+}
+
+@end
 
 @interface GormDisplayCell : NSButtonCell
 @end
@@ -84,6 +103,7 @@
 @end
 
 @implementation	GormFirstResponder
+
 - (NSImage*) imageForViewer
 {
   static NSImage	*image = nil;
@@ -133,7 +153,10 @@
 @implementation	GormEditorToParent
 @end
 
-
+//
+// GormDocument, this is the central store of
+// all of the information about the model.
+//
 @implementation GormDocument
 
 static NSImage	*objectsImage = nil;
@@ -213,6 +236,9 @@ static NSImage  *fileImage = nil;
       
       // for saving the editors when the gorm file is persisted.
       savedEditors = [[NSMutableArray alloc] init];	  
+      
+      // guard against recursive detachment
+      detachingObjects = [[NSMutableSet alloc] init];
       
       // observe certain notifications...
       [nc addObserver: self
@@ -308,7 +334,8 @@ static NSImage  *fileImage = nil;
   NSMenu                *mainMenu = nil;
   NSEnumerator          *en = nil; 
   id                    o = nil;
-
+  NSOutlineView         *outlineView = [[NSOutlineView alloc] init];
+  
   // get the window and cache it...
   window = (GormDocumentWindow *)[self _docWindow];
   [IBResourceManager registerForAllPboardTypes:window
@@ -343,6 +370,35 @@ static NSImage  *fileImage = nil;
       object: window];
 
   // objects...
+  NSScrollView *outlineScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
+  NSTableColumn *tbo  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"objects"]); 
+  NSTableColumn *tbc  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"destination"]); 
+  NSTableColumn *tbs  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"source"]); 
+  NSTableColumn *tbcl = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"class"]);
+  NSTableColumn *tbv  = AUTORELEASE([[NSTableColumn alloc] initWithIdentifier: @"version"]);
+
+  // Titles
+  [tbo setTitle: @"Objects"];
+  [tbc setTitle: @"Destination"];
+  [tbs setTitle: @"Source"];
+  [tbcl setTitle: @"Class"];
+  [tbv setTitle: @"Version"];
+
+  // Set up the outline view...
+  [outlineView setDrawsGrid: NO];
+  [outlineView setOutlineTableColumn: tbo];
+  [outlineView addTableColumn: tbo];
+  [outlineView addTableColumn: tbcl];
+  [outlineView addTableColumn: tbv];  
+  [outlineView addTableColumn: tbc];
+  [outlineView addTableColumn: tbs];
+  [outlineScrollView setHasVerticalScroller: YES];
+  [outlineScrollView setHasHorizontalScroller: YES];
+  [outlineScrollView setAutoresizingMask:
+		       NSViewHeightSizable|NSViewWidthSizable];
+  [outlineScrollView setBorderType: NSBezelBorder];
+
+  // Configure the scrollview...
   mainRect.origin = NSMakePoint(0,0);
   scrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
   [scrollView setHasVerticalScroller: YES];
@@ -350,6 +406,11 @@ static NSImage  *fileImage = nil;
   [scrollView setAutoresizingMask:
 		NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setBorderType: NSBezelBorder];
+
+  objectViewController = [[GormObjectViewController alloc] initWithNibName: @"GormObjectOutlineView"
+								    bundle: [NSBundle bundleForClass: [self class]]];
+  [objectViewController setDocument: self];
+  NSDebugLog(@"objectViewController = %@, view = %@", objectViewController, [objectViewController view]);
   
   objectsView = [[GormObjectEditor alloc] initWithObject: nil
 					  inDocument: self];
@@ -357,8 +418,22 @@ static NSImage  *fileImage = nil;
   [objectsView setAutoresizingMask:
 		 NSViewHeightSizable|NSViewWidthSizable];
   [scrollView setDocumentView: objectsView];
-  RELEASE(objectsView); 
+  RELEASE(objectsView);
   
+  [objectViewController setIconView: scrollView];
+  RELEASE(scrollView);
+
+  [outlineScrollView setDocumentView: outlineView];
+  [objectViewController setOutlineView: outlineScrollView];
+  [outlineView setDataSource: self];
+  [objectViewController reloadOutlineView];
+  
+  RELEASE(outlineView);
+  
+  [[objectViewController view] setAutoresizingMask:
+				 NSViewHeightSizable|NSViewWidthSizable];
+  [objectViewController resetDisplayView: scrollView];
+
   // images...
   mainRect.origin = NSMakePoint(0,0);
   imagesScrollView = [[NSScrollView alloc] initWithFrame: scrollRect];
@@ -399,7 +474,7 @@ static NSImage  *fileImage = nil;
   /*
    * Set the objects view as the initial view the user's see on startup.
    */
-  [selectionBox setContentView: scrollView];
+  [selectionBox setContentView: [objectViewController view]]; //scrollView];
 
   // add to the objects view...
   [objectsView addObject: filesOwner];
@@ -559,6 +634,14 @@ static NSImage  *fileImage = nil;
   NSArray *old;
   BOOL newObject = NO;
 
+  NSDebugLog(@"Attaching %@, to parent: %@, with name %@", anObject, aParent, aName);
+
+  if ([anObject isKindOfClass: [GormViewEditor class]])
+    {
+      NSDebugLog(@"Warning, %@ is a subclass of GormViewEditor, rejecting", anObject);
+      return;
+    }
+  
   // Modify the document whenever something is added...
   [self touch];
 
@@ -808,6 +891,21 @@ static NSImage  *fileImage = nil;
       NSSplitView *sp = (NSSplitView *)anObject;
       [self attachObjects: [sp subviews] toParent: sp];
     }
+  else if ([anObject isKindOfClass: [NSToolbar class]])
+    {
+      NSDebugLog(@"Adding a toolbar: %@, %@, %@", anObject, aParent, aName);
+      NSWindow *w = [aParent window];
+
+      if (w != nil)
+	{
+	  NSToolbar *tb = (NSToolbar *)anObject;
+	  if (tb != nil)
+	    {
+	      [self setName: nil forObject: tb]; // assign a name...
+	      [w setToolbar: tb];
+	    }
+	}
+    }
   
   /* 
    * Detect and add any connection the object might have.
@@ -934,7 +1032,7 @@ static NSImage  *fileImage = nil;
     {
     case 0: // objects
       {
-	[selectionBox setContentView: scrollView];
+	[selectionBox setContentView: [objectViewController view]]; //scrollView];
 	[toolbar setSelectedItemIdentifier: @"ObjectsItem"];
 	if (![[NSApp delegate] isConnecting])
 	  [self setSelectionFromEditor: objectsView];
@@ -1301,8 +1399,16 @@ static NSImage  *fileImage = nil;
  */
 - (void) detachObject: (id)anObject closeEditor: (BOOL)close_editor
 {
+  // Guard against recursive detachment
+  if ([detachingObjects containsObject: anObject])
+    {
+      return; // Already being detached, prevent recursion
+    }
+  
   if([self containsObject: anObject])
     {
+      [detachingObjects addObject: anObject]; // Mark as being detached
+      
       NSString	       *name = RETAIN([self nameForObject: anObject]); // released at end of method...
       unsigned	       count;
       NSArray          *objs = [self retrieveObjectsForParent: anObject recursively: NO];
@@ -1428,6 +1534,8 @@ static NSImage  *fileImage = nil;
       [nc postNotificationName: GormDidDetachObjectFromDocumentNotification
                         object: anObject
                       userInfo: nil];
+      
+      [detachingObjects removeObject: anObject]; // Remove from detaching set
       RELEASE(anObject); // release since notifications are done.
     }
 }
@@ -1642,6 +1750,15 @@ static NSImage  *fileImage = nil;
 }
 
 /**
+ * Returns the editor for an object, it create a new editor if none
+ * exists.
+ */
+- (id<IBEditors>) editorForObject: (id)anObject
+{
+  return [self editorForObject: anObject create: YES];
+}
+
+/**
  * Returns an editor for anObject, if flag is YES, it creates a new
  * editor, if one doesn't currently exist.
  */
@@ -1660,6 +1777,26 @@ static NSImage  *fileImage = nil;
                            create: (BOOL)flag
 {
   NSArray	*links;
+
+#define GORM_ENSURE_EDITOR_PARENT_LINK(ed, parentEd) \
+  do { \
+    id<IBEditors> _editor = (ed); \
+    id<IBEditors> _parent = (parentEd); \
+    NSArray *_parentLinks = [self connectorsForSource: _editor \
+                                             ofClass: [GormEditorToParent class]]; \
+    NSUInteger _idx = [_parentLinks count]; \
+    while (_idx-- > 0) \
+      { \
+        [connections removeObjectIdenticalTo: [_parentLinks objectAtIndex: _idx]]; \
+      } \
+    if (_parent != nil && _parent != _editor) \
+      { \
+        id<IBConnectors> _parentLink = AUTORELEASE([[GormEditorToParent alloc] init]); \
+        [_parentLink setSource: _editor]; \
+        [_parentLink setDestination: _parent]; \
+        [connections addObject: _parentLink]; \
+      } \
+  } while (0)
 
   /*
    * Look up the editor links for the object to see if it already has an
@@ -1693,21 +1830,8 @@ static NSImage  *fileImage = nil;
            */
 	  anEditor = objectsView;
 	}
-      
-      if (anEditor != editor)
-	{
-	  /*
-	   * Link to the parent of the editor.
-	   */
-	  link = AUTORELEASE([[GormEditorToParent alloc] init]);
-	  [link setSource: editor];
-	  [link setDestination: anEditor];
-	  [connections addObject: link];
-	}
-      else
-	{
-	  NSDebugLog(@"WARNING anEditor = editor");
-	}
+
+      GORM_ENSURE_EDITOR_PARENT_LINK(editor, anEditor);
 
       [editor activate];
       RELEASE((NSObject *)editor);
@@ -1720,9 +1844,18 @@ static NSImage  *fileImage = nil;
     }
   else
     {
-      [(id<IBEditors>)[[links lastObject] destination] activate];
-      return [[links lastObject] destination];
+      id<IBEditors> editor = [[links lastObject] destination];
+
+      if (anEditor != nil)
+        {
+          GORM_ENSURE_EDITOR_PARENT_LINK(editor, anEditor);
+        }
+
+      [editor activate];
+      return editor;
     }
+
+#undef GORM_ENSURE_EDITOR_PARENT_LINK
 }
 
 /**
@@ -1833,8 +1966,11 @@ static void _real_close(GormDocument *self,
 	      [[self window] orderOut: self];
 	    }
 
-          [[[NSApp delegate] mainMenu] close]; // close the menu during test...
-          
+	  if ([delegate respondsToSelector: @selector(mainMenu)])
+	    {
+	      [[delegate mainMenu] close]; // close the menu during test...
+	    }
+	  
 	  enumerator = [nameTable objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
@@ -1864,8 +2000,8 @@ static void _real_close(GormDocument *self,
 	  NSEnumerator	*enumerator;
 	  id		obj;
 
-          [[[NSApp delegate] mainMenu] display]; // bring the menu back...
-          
+          // Bring back the menu...
+          [[NSApp mainMenu] display];
 	  enumerator = [hidden objectEnumerator];
 	  while ((obj = [enumerator nextObject]) != nil)
 	    {
@@ -2145,9 +2281,12 @@ static void _real_close(GormDocument *self,
 
       while ((win = [enumerator nextObject]) != nil)
 	{
-	  [win setFrameTopLeftPoint: screenPoint];
-	  screenPoint.x += 10;
-	  screenPoint.y -= 10;
+	  if ([win respondsToSelector: @selector(setFrameTopLeftPoint:)])
+	    {
+	      [win setFrameTopLeftPoint: screenPoint];
+	      screenPoint.x += 10;
+	      screenPoint.y -= 10;
+	    }
 	}
     }
   else if([aType isEqualToString: IBViewPboardType]) 
@@ -2587,6 +2726,7 @@ static void _real_close(GormDocument *self,
  */
 - (void) touch
 {
+  [objectViewController reloadOutlineView];
   [self updateChangeCount: NSChangeDone];
 }
 
@@ -3645,6 +3785,104 @@ static void _real_close(GormDocument *self,
 }
 /* End of testInterface support code */
 
+- (void) _deactivateEditorsInViewHierarchy: (NSView *)rootView
+                                  tracking: (NSMutableSet *)deactivatedEditors
+{
+  NSMutableArray *stack = nil;
+
+  if (rootView == nil)
+    {
+      return;
+    }
+
+  stack = [NSMutableArray arrayWithObject: rootView];
+  while ([stack count] > 0)
+    {
+      NSView *node = [stack lastObject];
+      [stack removeLastObject];
+
+      if ([node respondsToSelector: @selector(editedObject)] &&
+          [node respondsToSelector: @selector(deactivate)])
+        {
+          id raw = [(id)node performSelector: @selector(editedObject)];
+
+          if ([deactivatedEditors containsObject: node] == NO)
+            {
+              [(id)node performSelector: @selector(deactivate)];
+              [deactivatedEditors addObject: node];
+            }
+
+          /*
+           * If deactivate was a no-op (e.g. stale activated flag),
+           * force unwrap to keep editor wrappers out of the archive.
+           */
+          if (raw != nil && [raw isKindOfClass: [NSView class]] &&
+              [(NSView *)raw superview] == node)
+            {
+              NSView *rawView = (NSView *)raw;
+              id superview = [node superview];
+
+              [node removeSubview: rawView];
+
+              if ([superview isKindOfClass: [NSBox class]])
+                {
+                  [(NSBox *)superview setContentView: rawView];
+                }
+              else if ([superview isKindOfClass: [NSClipView class]])
+                {
+                  [(NSClipView *)superview setDocumentView: rawView];
+                }
+              else if ([superview isKindOfClass: [NSView class]])
+                {
+                  [(NSView *)superview replaceSubview: node with: rawView];
+                }
+              else if ([node window] != nil && [[node window] contentView] == node)
+                {
+                  [[node window] setContentView: rawView];
+                }
+            }
+
+          if (raw != nil && [raw isKindOfClass: [NSView class]])
+            {
+              [stack addObject: raw];
+            }
+          continue;
+        }
+
+      {
+        NSEnumerator *subEnum = [[node subviews] objectEnumerator];
+        NSView *sub = nil;
+        while ((sub = [subEnum nextObject]) != nil)
+          {
+            [stack addObject: sub];
+          }
+      }
+    }
+}
+
+- (void) _deactivateEditorsInTopLevelViewHierarchies: (NSMutableSet *)deactivatedEditors
+{
+  NSEnumerator *topEnum = [topLevelObjects objectEnumerator];
+  id topObj = nil;
+
+  while ((topObj = [topEnum nextObject]) != nil)
+    {
+      NSView *rootView = nil;
+
+      if ([topObj isKindOfClass: [NSWindow class]])
+        {
+          rootView = [(NSWindow *)topObj contentView];
+        }
+      else if ([topObj isKindOfClass: [NSView class]])
+        {
+          rootView = (NSView *)topObj;
+        }
+
+      [self _deactivateEditorsInViewHierarchy: rootView
+                                     tracking: deactivatedEditors];
+    }
+}
+
 /**
  * Deactivate the editors for archiving..
  */
@@ -3652,25 +3890,43 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
+  NSMutableSet *deactivatedEditors = [NSMutableSet set];
 
   /*
    * Map all connector sources and destinations to their name strings.
    * Deactivate editors so they won't be archived.
    */
-
   enumerator = [connections objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
       if ([con isKindOfClass: [GormObjectToEditor class]])
 	{
+	  id editor = [con destination];
+
 	  [savedEditors addObject: con];
-	  [[con destination] deactivate];
+
+	  if (editor != nil && [deactivatedEditors containsObject: editor] == NO)
+	    {
+	      if ([editor respondsToSelector: @selector(deactivateSubeditors)])
+	        {
+            [editor performSelector: @selector(deactivateSubeditors)];
+	        }
+	      [editor deactivate];
+	      [deactivatedEditors addObject: editor];
+	    }
 	}
       else if ([con isKindOfClass: [GormEditorToParent class]])
 	{
 	  [savedEditors addObject: con];
 	}
     }
+
+  /*
+   * Fallback for wrappers that are present in view trees but not reachable
+   * from connector bookkeeping (for example missing parent editor link).
+   */
+  [self _deactivateEditorsInTopLevelViewHierarchies: deactivatedEditors];
+
   [connections removeObjectsInArray: savedEditors];
 }
 
@@ -3759,24 +4015,6 @@ static void _real_close(GormDocument *self,
 	}
     }
 
-  /*
-  NSLog(@"Checking connections..."); // %@", connections);
-  en = [connections objectEnumerator];
-  o = nil;
-  while ((o = [en nextObject]) != nil)
-    {
-      id src = [o source];
-      id dst = [o destination];
-      NSString *label = [o label];
-      
-      if ([o isKindOfClass: [NSNibControlConnector class]])
-	{
-	}
-      else if ([o isKindOfClass: [NSNibOutletConnector class]])
-	{
-	}
-    }
-  */
   return results;
 }
 
@@ -3888,3 +4126,219 @@ willBeInsertedIntoToolbar: (BOOL)flag
 }
 @end
 
+@implementation GormDocument (Metadata)
+
+// Core methods..
+
+- (id) outlineView: (NSOutlineView *)ov
+	     child: (NSInteger)index
+	    ofItem: (id)item
+{
+  id result = nil;
+
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
+
+  NSDebugLog(@"index = %ld, item = %@", index, item);
+  if (item == nil)
+    {
+     result = [[topLevelObjects allObjects] objectAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      result = [item contentView];
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      result = [[item subviews] objectAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      result = [item itemAtIndex: index];
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      result = [item submenu];
+    }
+  NSDebugLog(@"result = %@", result);
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
+  
+  return result;
+}
+
+- (BOOL) outlineView: (NSOutlineView *)ov
+    isItemExpandable: (id)item
+{
+  BOOL f = NO;
+  
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
+  if (item == nil)
+    {
+      f = [topLevelObjects count] > 0;
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      f = [item contentView] != nil;
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      f = [[item subviews] count] > 0; 
+    }  
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      f = [item numberOfItems] > 0; 
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      f = [item hasSubmenu];
+    }
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
+  
+  NSDebugLog(@"f = %d",f);
+  return f;
+}
+
+- (NSInteger) outlineView: (NSOutlineView *)ov
+   numberOfChildrenOfItem: (id)item
+{
+  NSInteger c = 0;
+  
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
+  if (item == nil)
+    {
+      c = [topLevelObjects count];
+    }
+  else if ([item isKindOfClass: [NSWindow class]])
+    {
+      c = 1; // We are only counting the contentView...
+    }
+  else if ([item isKindOfClass: [NSView class]])
+    {
+      c = [[item subviews] count]; 
+    }
+  else if ([item isKindOfClass: [NSMenu class]])
+    {
+      c = [item numberOfItems]; 
+    }
+  else if ([item isKindOfClass: [NSMenuItem class]])
+    {
+      c = 1; // one submenu...
+    }
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
+  
+  NSDebugLog(@"c = %ld", c);
+  return c;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       objectValueForTableColumn: (NSTableColumn *)tableColumn
+       byItem: (id)item
+{
+  id value = nil;
+  NSString *className = [classManager classNameForObject: item];
+  NSString *name = [self nameForObject: item];
+  NSUInteger version = 0;
+  
+  if ([objectViewController editor] == NO)
+    [self deactivateEditors];
+  if ([[tableColumn identifier] isEqualToString: @"objects"])
+    {
+      NSString *title = @"";
+
+      if ([item respondsToSelector: @selector(title)])
+	{
+	  title = [item title];
+	  value = [NSString stringWithFormat: @"%@ : %@",
+			    (title != nil && ![title isEqualToString: @""]) ? title : @"*Untitled*",
+		       (name != nil) ? name : @"*Unnamed*"];
+	}
+      else
+	{
+	  value = [NSString stringWithFormat: @"%@", (name != nil)?name:@"*Unnamed*"];
+	}
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"class"])
+    {
+      value = className;
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"version"])
+    {
+      value = [NSNumber numberWithInteger: version];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"destination"])
+    {
+      NSArray *c = [self connectorsForDestination: item];
+      value = [NSNumber numberWithInteger: [c count]];
+    }
+  else if ([[tableColumn identifier] isEqualToString: @"source"])
+    {
+      NSArray *c = [self connectorsForSource: item];
+      value = [NSNumber numberWithInteger: [c count]];
+    }
+  if ([objectViewController editor] == NO)
+    [self reactivateEditors];
+  
+  return value;
+}
+
+// Other methods...
+
+- (BOOL) outlineView: (NSOutlineView *)ov
+	  acceptDrop: (id<NSDraggingInfo>)info
+		item: (id)item
+	  childIndex: (NSInteger)index
+{
+  return NO;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       itemForPersistentObject: (id)obj
+{
+  return nil;
+}
+
+- (id) outlineView: (NSOutlineView *)ov
+       persistentObjectForItem: (id)item
+{
+  return nil;
+}
+
+- (NSArray *) outlineView: (NSOutlineView *)ov
+          namesOfPromisedFilesDroppedAtDestination: (NSURL *)dropDestination
+	  forDraggedItems: (NSArray *)items
+{
+  return nil;
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+      setObjectValue: (id)value
+      forTableColumn: (NSTableColumn *)tc
+	      byItem: (id)item
+{
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+         sortDescriptorsDidChange: (NSArray *)oldDescriptors
+{
+}
+
+- (void) outlineView: (NSOutlineView *)ov
+	  writeItems: (NSArray *)items
+	toPasteboard: (NSPasteboard *)pb
+{
+}
+
+- (NSDragOperation) outlineView: (NSOutlineView *)ov
+		   validateDrop: (id<NSDraggingInfo>)info
+		   proposedItem: (id)item
+	     proposedChildIndex: (NSInteger)index
+{
+  return 0;
+}
+
+@end

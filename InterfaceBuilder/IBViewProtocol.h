@@ -33,6 +33,9 @@
 // forward references
 @class NSColor;
 
+/**
+ * IBViewProtocol defines IBViewProtocol class or protocol.
+ */
 @protocol IBViewProtocol
 /**
  * Returns YES, if color can be set at the given point in the view.

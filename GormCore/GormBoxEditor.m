@@ -108,7 +108,7 @@
     {
       temp = [[selection objectAtIndex: i] editedObject];
 
-      [[selection objectAtIndex: i] detachSubviews];
+      // detachObject: already handles child objects recursively
       [document detachObject: temp];
       [[selection objectAtIndex: i] close];
 

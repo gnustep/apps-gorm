@@ -41,7 +41,6 @@
 {
   if (self == [GormSoundInspector class])
     {
-      // TBD
     }
 }
 
@@ -55,7 +54,7 @@
       // load the gui...
       if (![bundle loadNibNamed: @"GormSoundInspector"
 			  owner: self
-			topLevelObjects: NULL])
+		topLevelObjects: NULL])
 	{
 	  NSLog(@"Could not open gorm GormSoundInspector");
 	  return nil;
@@ -80,8 +79,9 @@
 	  id snd;
 
 	  NSDebugLog(@"Sound inspector notified: %@",anObject);
-	  snd = AUTORELEASE([[NSSound alloc] initWithContentsOfFile: [anObject path]
-					     byReference: YES]);
+	  snd = AUTORELEASE([[NSSound alloc]
+			      initWithContentsOfFile: [anObject path]
+					 byReference: YES]);
 	  [super setObject: snd];
 	  [soundView setSound: snd];
 	  NSDebugLog(@"Loaded sound");

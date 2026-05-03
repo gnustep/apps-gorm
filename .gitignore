@@ -7,3 +7,6 @@
 obj
 derived_src
 *.framework
+*~
+GormVersion.h
+.DS_Store

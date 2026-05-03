@@ -33,11 +33,32 @@
   BOOL     _gormReleasedWhenClosed;
   NSUInteger autoPositionMask;
 }
+/**
+ * Sets the style mask tracked by Gorm for this panel, used when serializing
+ * and restoring panel attributes in the editor.
+ */
 - (void) _setStyleMask: (unsigned int)newStyleMask;
+/**
+ * Returns the style mask tracked by Gorm for this panel.
+ */
 - (unsigned int) _styleMask;
+/**
+ * Sets whether the panel is released when closed in the running application.
+ */
 - (void) _setReleasedWhenClosed: (BOOL) flag;
+/**
+ * Returns YES if the panel is released when closed; NO otherwise.
+ */
 - (BOOL) _isReleasedWhenClosed;
+/**
+ * Returns the bitmask controlling automatic positioning behavior when the
+ * panel opens.
+ */
 - (unsigned int) autoPositionMask;
+/**
+ * Sets the bitmask controlling automatic positioning behavior when the panel
+ * opens.
+ */
 - (void) setAutoPositionMask: (unsigned int)mask;
 @end
 

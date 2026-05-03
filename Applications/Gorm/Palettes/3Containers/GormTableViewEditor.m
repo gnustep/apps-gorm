@@ -74,7 +74,7 @@ static NSText *_textObject;
       else
 	tableView = (GormNSTableView *)_editedObject;
 
-      RETAIN(tableView); // FIXME: Temporary fix.
+      RETAIN(tableView);
       [tableView setAllowsColumnResizing: YES];
       [tableView setAllowsColumnSelection: YES];
       [tableView setAllowsMultipleSelection: NO];
@@ -133,6 +133,7 @@ static NSText *_textObject;
 		  [tableView gormAllowsColumnReordering]];
       [tableView setGormDelegate: nil];
       [tableView setNeedsDisplay: YES];
+      RELEASE(tableView); // Release the retained tableView from activate
       [super deactivate];
     }
 }
@@ -245,25 +246,35 @@ static NSText *_textObject;
     }
 
 
-  hitView = 
-    [[tableView enclosingScrollView] 
-      hitTest: 
-	[[[tableView enclosingScrollView] superview]
-	  convertPoint: [theEvent locationInWindow]
-	  fromView: nil]];
+  hitView = [[tableView enclosingScrollView]
+             hitTest:[[[tableView enclosingScrollView] superview]
+                     convertPoint: [theEvent locationInWindow]
+                     fromView: nil]];
 
+  // Header clicked: select column or table and forward click
   if (hitView == [tableView headerView])
     {
-      if ([theEvent clickCount] == 2)
-	{
-  	  [self editHeader: hitView
-  		withEvent: theEvent];
-	  
-	}
+      NSTableHeaderView *hv = [tableView headerView];
+      NSPoint pt = [hv convertPoint:[theEvent locationInWindow] fromView:nil];
+      NSInteger columnIndex = [hv columnAtPoint: pt];
+      if (columnIndex != NSNotFound && columnIndex != -1)
+        {
+          NSTableColumn *col = [[tableView tableColumns] objectAtIndex: columnIndex];
+          [self selectObjects: [NSArray arrayWithObject: col]];
+        }
       else
-	{
-	  [hitView mouseDown: theEvent];
-	}
+        {
+          [self selectObjects: [NSArray arrayWithObject: tableView]];
+        }
+
+      if ([theEvent clickCount] == 2)
+        {
+          [self editHeader: hitView withEvent: theEvent];
+        }
+      else
+        {
+          [hitView mouseDown: theEvent];
+        }
     }
   else if ([hitView isKindOfClass: [NSScroller class]])
     {
@@ -271,14 +282,20 @@ static NSText *_textObject;
     }
   else if (hitView == tableView)
     {
+      // Clicked on the table body: select table
+      [self selectObjects: [NSArray arrayWithObject: tableView]];
       if ([theEvent modifierFlags] & NSControlKeyMask)
         {
-	  [super mouseDown: theEvent];
-	}
+          [super mouseDown: theEvent];
+        }
       else if ([tableView selectedColumn] != -1)
-	{
-	  [tableView deselectColumn: [tableView selectedColumn]];
-	}
+        {
+          [tableView deselectColumn: [tableView selectedColumn]];
+        }
+      else
+        {
+          [super mouseDown: theEvent];
+        }
     }
   else if (hitView == self && [theEvent modifierFlags] & NSControlKeyMask)
     {

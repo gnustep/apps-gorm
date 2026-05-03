@@ -28,6 +28,7 @@
 #include <AppKit/AppKit.h>
 
 #include <GormCore/GormCore.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 #include "GormNumberFormatterAttributesInspector.h"
 
@@ -51,8 +52,10 @@ extern NSArray *predefinedNumberFormats;
       else
 	{
 	  NSNumberFormatter *fmtr = [[NSNumberFormatter alloc] init];
-	  [fmtr setFormat: [NSNumberFormatter defaultFormat]];
+	  
+	  [fmtr setFormat: [NSNumberFormatter defaultFormat]];	  
 	  [[positiveField cell] setFormatter: fmtr];
+	  [[zeroField cell] setFormatter: fmtr];
 	  [[negativeField cell] setFormatter: fmtr];
 	}
     }  
@@ -61,14 +64,17 @@ extern NSArray *predefinedNumberFormats;
 
 - (void) updateAppearanceFieldsWithFormat: (NSString *)format;
 {
-
   [[[positiveField cell] formatter] setFormat: format];
   [[positiveField cell] setObjectValue:
-        [NSDecimalNumber decimalNumberWithString: @"123456.789"]];
-  
+			  [NSDecimalNumber decimalNumberWithString: @"123456.789"]];
+
+  [[[zeroField cell] formatter] setFormat: format];
+  [[zeroField cell] setObjectValue:
+		      [NSDecimalNumber decimalNumberWithString: @"0.000"]];
+
   [[[negativeField cell] formatter] setFormat: format];
   [[negativeField cell] setObjectValue:
-        [NSDecimalNumber decimalNumberWithString: @"-123456.789"]];
+			  [NSDecimalNumber decimalNumberWithString: @"-123456.789"]];
 }
 
 - (void) ok: (id)sender
@@ -77,14 +83,22 @@ extern NSArray *predefinedNumberFormats;
   NSString *minValue, *maxValue;
   NSCell   *cell = [object cell];
   NSNumberFormatter *fmtr = [cell formatter];
+  id<IB> ibApp = (id<IB>)[NSApp delegate];
+  GormDocument *document = (GormDocument *)[ibApp activeDocument];
 
   // Mark as changed...
-  [[(id<IB>)[NSApp delegate] activeDocument] touch];
+  [document touch];
 
   if (sender == detachButton)
     { 
+      if (fmtr != nil)
+        {
+          [document detachObject: fmtr closeEditor: YES];
+        }
       [cell setFormatter: nil];
-      [[(id<IB>)[NSApp delegate] activeDocument] setSelectionFromEditor: nil];
+      [document setSelectionFromEditor: nil];
+      [self setObject: [self object]];
+      return;
     }
   else
     {
@@ -98,28 +112,27 @@ extern NSArray *predefinedNumberFormats;
               zeroFmt     = [NSNumberFormatter zeroFormatAtIndex:row];
               negativeFmt = [NSNumberFormatter negativeFormatAtIndex:row];
               fullFmt     = [NSNumberFormatter formatAtIndex:row];
-          
-          // Update Appearance samples
-          [self updateAppearanceFieldsWithFormat: fullFmt];
-           
-          // Update editable format fields
-          [[formatForm cellAtIndex:0] setStringValue: VSTR(positiveFmt)];
-          [[formatForm cellAtIndex:1] setStringValue: VSTR(zeroFmt)];
-          [[formatForm cellAtIndex:2] setStringValue: VSTR(negativeFmt)];
 
-          [fmtr setFormat:fullFmt];
+	      // Update Appearance samples
+	      [self updateAppearanceFieldsWithFormat: fullFmt];
 
+	      // Update editable format fields
+	      [[formatForm cellAtIndex:0] setStringValue: VSTR(positiveFmt)];
+	      [[formatForm cellAtIndex:1] setStringValue: VSTR(zeroFmt)];
+	      [[formatForm cellAtIndex:2] setStringValue: VSTR(negativeFmt)];
+
+	      [fmtr setFormat:fullFmt];
             }
          }
       else if (sender == formatForm)
         {
           NSUInteger idx;
           
-          positiveFmt = [[sender cellAtIndex:0] stringValue];
-          zeroFmt = [[sender cellAtIndex:1] stringValue];
-          negativeFmt = [[sender cellAtIndex:2] stringValue];
-          minValue = [[sender cellAtIndex:3] stringValue];
-          maxValue = [[sender cellAtIndex:4] stringValue];
+          positiveFmt = [[sender cellAtIndex: 0] stringValue];
+          zeroFmt     = [[sender cellAtIndex: 1] stringValue];
+          negativeFmt = [[sender cellAtIndex: 2] stringValue];
+          minValue    = [[sender cellAtIndex: 3] stringValue];
+          maxValue    = [[sender cellAtIndex: 4] stringValue];
           NSDebugLog(@"min,max: %@, %@", minValue, maxValue);
           
           fullFmt = [NSString stringWithFormat:@"%@;%@;%@",
@@ -191,6 +204,18 @@ extern NSArray *predefinedNumberFormats;
   [[formatForm cellAtIndex:2] setStringValue: [fmtr negativeFormat]];
   [[formatForm cellAtIndex:3] setObjectValue: [fmtr minimum]];
   [[formatForm cellAtIndex:4] setObjectValue: [fmtr maximum]];
+
+  // Refresh sample preview fields with current formatter settings
+  [self updateAppearanceFieldsWithFormat: [fmtr format]];
+
+  // Ensure the inspected field shows a representative numeric sample
+  NSCell *cell = [object cell];
+  id currentValue = [cell objectValue];
+  if (currentValue == nil)
+    {
+      currentValue = [NSDecimalNumber decimalNumberWithString: @"123456.789"];
+    }
+  [cell setObjectValue: currentValue];
 
   // If the string typed is a predefined one then highligh it in
   // Number Format table view above  

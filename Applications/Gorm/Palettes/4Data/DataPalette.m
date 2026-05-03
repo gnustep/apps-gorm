@@ -211,7 +211,6 @@ int defaultDateFormatIndex = 3;
 
 - (void) finishInstantiate
 { 
-
   NSView	*contents;
   NSTextView	*tv;
   id		v;

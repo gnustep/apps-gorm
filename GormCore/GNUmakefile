@@ -41,6 +41,7 @@ GormCore_HEADER_FILES = \
 	GormBindingsInspector.h \
 	GormBindingsAbstractInspector.h \
 	GormBindingsContentInspector.h \
+	GormVersion.h \
 	GormAbstractDelegate.h \
 	GormBindingsInspector.h \
 	GormBoxEditor.h \
@@ -62,6 +63,7 @@ GormCore_HEADER_FILES = \
 	GormFontViewController.h \
 	GormFunctions.h \
 	GormGenericEditor.h \
+	GormGroupProtocol.h \
 	GormHelpInspector.h \
 	GormImage.h \
 	GormImageEditor.h \
@@ -74,6 +76,7 @@ GormCore_HEADER_FILES = \
 	GormNSWindow.h \
 	GormObjectEditor.h \
 	GormObjectInspector.h \
+	GormObjectViewController.h \
 	GormOpenGLView.h \
 	GormOutlineView.h \
 	GormPalettesManager.h \
@@ -109,6 +112,20 @@ GormCore_HEADER_FILES = \
 	NSString+methods.h \
 	NSFontManager+GormExtensions.h \
 	NSView+GormExtensions.h \
+	GormGeneralPref.h \
+	GormGuidelinePref.h \
+	GormHeadersPref.h \
+	GormPalettesPref.h \
+	GormPluginsPref.h \
+	GormPrefController.h \
+	GormPrefs.h \
+	GormShelfPref.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	GormXLIFFDocument.h \
+	NSToolbarPrivate.h \
 
 GormCore_OBJC_FILES = \
 	GormBindingsInspector.m \
@@ -133,6 +150,7 @@ GormCore_OBJC_FILES = \
 	GormFontViewController.m \
 	GormFunctions.m \
 	GormGenericEditor.m \
+	GormGroupViews.m \
 	GormHelpInspector.m \
 	GormImage.m \
 	GormImageEditor.m \
@@ -145,6 +163,7 @@ GormCore_OBJC_FILES = \
 	GormNSWindow.m \
 	GormObjectEditor.m \
 	GormObjectInspector.m \
+	GormObjectViewController.m \
 	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
@@ -185,7 +204,8 @@ GormCore_OBJC_FILES = \
 	GormPluginsPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
-	GormXLIFFDocument.m
+	GormXLIFFDocument.m \
+	NSToolbarPrivate.m
 
 GormCore_RESOURCE_FILES = \
 	Images/GormActionSelected.tiff \
@@ -215,6 +235,8 @@ GormCore_RESOURCE_FILES = \
 	Images/GormWindow.tiff \
 	Images/browserView.tiff \
 	Images/outlineView.tiff \
+	Images/iconView.tiff \
+	Images/editor.tiff \
 	Resources/VersionProfiles.plist \
 	Resources/ClassInformation.plist 
 
@@ -237,6 +259,7 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormInspectorPanel.gorm \
 	GormNSSplitViewInspector.gorm \
 	GormObjectInspector.gorm \
+	GormObjectOutlineView.gorm \
 	GormPalettePanel.gorm \
 	GormPrefColors.gorm \
 	GormPreferences.gorm \

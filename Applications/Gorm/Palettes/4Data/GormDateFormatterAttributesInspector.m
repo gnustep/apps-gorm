@@ -29,6 +29,7 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormCore.h>
+#include <InterfaceBuilder/IBApplicationAdditions.h>
 
 #include "GormDateFormatterAttributesInspector.h"
 
@@ -57,14 +58,27 @@ extern NSArray *predefinedDateFormats;
   BOOL allowslanguage = NO;
   NSString *dateFmt = nil;
   NSDateFormatter *fmtr;
+  id<IB> ibApp = (id<IB>)[NSApp delegate];
+  GormDocument *document = (GormDocument *)[ibApp activeDocument];
   
   // Set the document as modifed...
-  [[(id<IB>)[NSApp delegate] activeDocument] touch];
+  [document touch];
   
   if (sender == detachButton)
     {
-      [[object cell] setFormatter: nil];
-      [[(id<IB>)[NSApp delegate] activeDocument] setSelectionFromEditor: nil];
+      NSCell *cell = [object cell];
+      NSDateFormatter *currentFormatter = [cell formatter];
+
+      if (currentFormatter != nil)
+        {
+          [document detachObject: currentFormatter closeEditor: YES];
+        }
+
+      [cell setFormatter: nil];
+      [document setSelectionFromEditor: nil];
+
+      [self setObject: [self object]];
+      return;
     }
   else
     {
@@ -111,7 +125,13 @@ extern NSArray *predefinedDateFormats;
       [cell setFormatter:fmtr];
       RELEASE(fmtr);
       
-      [cell setObjectValue: [cell objectValue]];
+      // Ensure the inspected field shows a live sample value
+      id currentValue = [cell objectValue];
+      if (currentValue == nil)
+        {
+          currentValue = [NSDate date];
+        }
+      [cell setObjectValue: currentValue];
       
     }
 
@@ -136,6 +156,15 @@ extern NSArray *predefinedDateFormats;
 
   [formatField setStringValue: VSTR([fmtr dateFormat]) ];
   [languageSwitch setState: [fmtr allowsNaturalLanguage]];
+
+  // Populate inspected field with a sample date so the formatter is visible
+  NSCell *cell = [object cell];
+  id currentValue = [cell objectValue];
+  if (currentValue == nil)
+    {
+      currentValue = [NSDate date];
+    }
+  [cell setObjectValue: currentValue];
   
   [super revert: sender]; 
 }

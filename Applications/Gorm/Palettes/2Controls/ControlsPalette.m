@@ -1,10 +1,10 @@
 /** 
-   main.m
+   ControlsPalette.m
 
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2024 Free Software Foundation, Inc.
 
    Author:  Gregory John Casamento <greg_casamento@yahoo.com>
-   Date: 2004
+   Date: 2024, 2004
    
    This file is part of GNUstep.
    
@@ -23,14 +23,15 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
 */
 
-
 #include <AppKit/AppKit.h>
-
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormNSPopUpButton.h"
 
 @interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates>
+{
+  IBOutlet NSPopUpButton *_prototypePopUp;
+}
 @end
 
 
@@ -62,16 +63,28 @@
 
 - (void) finishInstantiate
 {
-  NSView	*contents;
-  id		v;
+  NSView *contentView = [originalWindow contentView];
+  NSArray *allItems = nil;
+  NSEnumerator *en = nil;
+  id item = nil;
+  
+  _prototypePopUp = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(71.0, 157.0, 102.0, 24.0)];
+  [_prototypePopUp addItemWithTitle: @"Item #0"];
+  [_prototypePopUp addItemWithTitle: @"Item #1"];
+  [_prototypePopUp addItemWithTitle: @"Item #2"];
+  [_prototypePopUp setAutoenablesItems: YES];
+  
+  allItems = [[_prototypePopUp menu] itemArray];
+  en = [allItems objectEnumerator];
+  while ((item = [en nextObject]) != nil)
+    {
+      [item setTarget: nil];
+      [item setAction: NULL]; // @selector(_popUpItemAction:)];
+      [item setEnabled: YES];
+    }
 
-  contents = [originalWindow contentView];
-  v = [[GormNSPopUpButton alloc] initWithFrame: NSMakeRect(73, 159, 70, 22)];
-  [v addItemWithTitle: @"Item 1"];
-  [v addItemWithTitle: @"Item 2"];
-  [v addItemWithTitle: @"Item 3"];
-  [contents addSubview: v];
-  RELEASE(v);
+  [contentView addSubview: _prototypePopUp];
+  AUTORELEASE(_prototypePopUp);
 }
 
 - (void) willInspectObject: (NSNotification *)notification

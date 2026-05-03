@@ -31,8 +31,17 @@
 {
   NSView *_view;
 }
+/**
+ * Initializes a window that hosts the specified view for editing or preview.
+ */
 - (id) initWithView: (NSView *)view;
+/**
+ * Returns the hosted view displayed by the window.
+ */
 - (NSView *)view; 
+/**
+ * Sets the hosted view displayed by the window.
+ */
 - (void) setView: (NSView *)view;
 @end
 

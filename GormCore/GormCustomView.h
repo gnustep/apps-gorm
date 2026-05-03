@@ -27,12 +27,24 @@
 
 #include <AppKit/AppKit.h>
 
+/**
+ * GormCustomView provides a visual representation of a custom view placeholder
+ * within the Gorm interface builder. It displays the class name of the custom
+ * view that will replace it at runtime.
+ */
 @interface GormCustomView : NSTextField
 {
   NSString *className;
 }
 
+/**
+ * Sets the class name for the custom view placeholder.
+ */
 - (void) setClassName: (NSString *)aName;
+
+/**
+ * Returns the class name of the custom view this placeholder represents.
+ */
 - (NSString *) className;
 @end
 

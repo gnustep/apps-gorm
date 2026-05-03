@@ -159,6 +159,5 @@
       [ivar parse];
       [ivars addObject: ivar];
     }
-
 }
 @end

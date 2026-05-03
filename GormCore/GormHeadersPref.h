@@ -4,6 +4,11 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
+/**
+ * GormHeadersPref implements the Headers preferences pane. It lets users
+ * manage a list of headers to preload and exposes the view for the
+ * preferences window.
+ */
 @interface GormHeadersPref : NSObject
 {
   id preloadButton;

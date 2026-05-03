@@ -29,28 +29,75 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCClass provides OCClass class or protocol.
+ */
 @interface OCClass : NSObject
 {
-  NSMutableArray        *ivars;
-  NSMutableArray        *methods;
-  NSMutableArray        *protocols;
-  NSString              *className;
-  NSString              *superClassName;
-  NSString              *classString;
-  BOOL                  isCategory;
+  NSMutableArray        *_ivars;
+  NSMutableArray        *_methods;
+  NSMutableArray        *_protocols;
+  NSMutableArray        *_properties;
+  NSString              *_className;
+  NSString              *_superClassName;
+  NSString              *_classString;
+  BOOL                   _isCategory;
 }
+
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithString: (NSString *)string;
+/**
+ * Returns the methods.
+ */
 - (NSArray *) methods;
-- (void) addMethod: (NSString *)name isAction: (BOOL) flag;
+/**
+ * Adds an object to the collection.
+ */
+- (void) addMethod: (NSString *)name isAction: (BOOL)flag;
+/**
+ * Returns the ivars.
+ */
 - (NSArray *) ivars;
-- (void) addIVar: (NSString *)name isOutlet: (BOOL) flag;
+/**
+ * Adds an object to the collection.
+ */
+- (void) addIVar: (NSString *)name isOutlet: (BOOL)flag;
+/**
+ * Returns the className.
+ */
 - (NSString *) className;
+/**
+ * Sets the property value.
+ */
 - (void) setClassName: (NSString *)name;
+/**
+ * Returns the superClassName.
+ */
 - (NSString *) superClassName;
+/**
+ * Sets the property value.
+ */
 - (void) setSuperClassName: (NSString *)name;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isCategory;
+/**
+ * Sets the property value.
+ */
 - (void) setIsCategory: (BOOL)flag;
+/**
+ * Returns the properties.
+ */
+- (NSArray *) properties;
+
+/**
+ * Returns the parse.
+ */
 - (void) parse;
+
 @end
 
 #endif

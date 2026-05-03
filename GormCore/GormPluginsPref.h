@@ -4,6 +4,11 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
+/**
+ * GormPluginsPref implements the Plugins preferences pane. It lets users
+ * view, add, and remove installed plugins or palettes and provides the view
+ * shown inside the preferences window.
+ */
 @interface GormPluginsPref : NSObject
 {
   id table;

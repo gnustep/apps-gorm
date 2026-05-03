@@ -196,16 +196,22 @@
 {
   if (flag == YES && selected != nil)
     {
-      unsigned	pos = [objects indexOfObjectIdenticalTo: selected];
-      int	r = pos / [self numberOfColumns];
-      int	c = pos % [self numberOfColumns];
+      unsigned pos = [objects indexOfObjectIdenticalTo: selected];
+      unsigned num = [self numberOfColumns];
 
-      [self selectCellAtRow: r column: c];
+      if (num > 0)
+	{
+	  int	r = pos / num;
+	  int	c = pos % num;
+
+	  [self selectCellAtRow: r column: c];
+	}
     }
   else
     {
       [self deselectAllCells];
     }
+
   [self displayIfNeeded];
   [[self window] flushWindow];
 }
@@ -222,7 +228,6 @@
   NSPoint initialLocation;
   BOOL **selectedCells = [self _selectedCells];
   id selectedCell = [self selectedCell];
-  id **cells = nil;
   
   /*
    * Pathological case -- ignore mouse down
@@ -241,7 +246,7 @@
 	    column: &column
 	    forPoint: lastLocation])
     {
-      if ([cells[row][column] isEnabled])
+      if ([_cells[row][column] isEnabled])
 	{
 	  if ((_mode == NSRadioModeMatrix) && _selectedCell != nil)
 	    {
@@ -251,11 +256,11 @@
 	      selectedCell = nil;
 	      _selectedRow = _selectedColumn = -1;
 	    }
-	  [cells[row][column] setState: NSOnState];
+	  [_cells[row][column] setState: NSOnState];
 	  [self drawCellAtRow: row column: column];
 	  [_window flushWindow];
 	  selectedCells[row][column] = YES;
-	  [self _setSelectedCell: cells[row][column]];
+	  [self _setSelectedCell: _cells[row][column]];
 	  _selectedRow = row;
 	  _selectedColumn = column;
 	}

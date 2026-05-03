@@ -1,5 +1,5 @@
 #
-#  Tests Makefile for Gorm ObjC Parser Library.
+#  Tests Makefile for GNUstep GUI Library.
 #  
 #  Copyright (C) 2011 Free Software Foundation, Inc.
 #
@@ -45,21 +45,24 @@ include $(GNUSTEP_MAKEFILES)/common.make
 TOP_DIR := $(shell dirname $(CURDIR))
 
 all::
-	@(echo If you want to run the gnustep-gui testsuite, please type \'make check\')
+	@(echo If you want to run the gorm-objcheaderparser testsuite, please type \'make check\')
 
 check::
 	(\
-	ADDITIONAL_INCLUDE_DIRS="-I$(TOP_DIR)/."
-	ADDITIONAL_LIB_DIRS="-L$(TOP_DIR)/$(GNUSTEP_OBJ_DIR)";\
-	LD_LIBRARY_PATH="$(TOP_DIR)/$(GNUSTEP_OBJ_DIR):${LD_LIBRARY_PATH}";\
+	ADDITIONAL_INCLUDE_DIRS="-I$(TOP_DIR)/Headers -I$(TOP_DIR)/Source/$(GNUSTEP_TARGET_DIR) -I$(TOP_DIR)/Headers/Additions";\
+	ADDITIONAL_LIB_DIRS="-L$(TOP_DIR)/Source/$(GNUSTEP_OBJ_DIR)";\
+	LD_LIBRARY_PATH="$(TOP_DIR)/Source/$(GNUSTEP_OBJ_DIR):${LD_LIBRARY_PATH}";\
+	PATH="$(TOP_DIR)/Tools/$(GNUSTEP_OBJ_DIR):${PATH}";\
+	export GNUSTEP_LOCAL_ADDITIONAL_MAKEFILES;\
 	export ADDITIONAL_INCLUDE_DIRS;\
 	export ADDITIONAL_LIB_DIRS;\
 	export LD_LIBRARY_PATH;\
 	export PATH;\
+	env;\
 	if [ "$(DEBUG)" = "" ]; then \
-	  gnustep-tests GormObjCHeaderParser;\
+	  gnustep-tests parser;\
         else \
-	  gnustep-tests --debug GormObjCHeaderParser;\
+	  gnustep-tests --debug parser;\
         fi; \
 	)
 

@@ -36,19 +36,28 @@
   BOOL _gormAllowsColumnSelection;
   BOOL _gormAllowsMultipleSelection;
   BOOL _gormAllowsEmptySelection;
+  BOOL _gormViewBased;
 }
 
 - (void) setGormDelegate: (id)anObject;
+
 - (void) setGormAllowsColumnReordering: (BOOL)flag;
 - (BOOL) gormAllowsColumnReordering;
+
 - (void) setGormAllowsColumnResizing: (BOOL)flag;
 - (BOOL) gormAllowsColumnResizing;
+
 - (void) setGormAllowsMultipleSelection: (BOOL)flag;
 - (BOOL) gormAllowsMultipleSelection;
+
 - (void) setGormAllowsEmptySelection: (BOOL)flag;
 - (BOOL) gormAllowsEmptySelection;
+
 - (void) setGormAllowsColumnSelection: (BOOL)flag;
 - (BOOL) gormAllowsColumnSelection;
+
+- (void) setGormViewBased: (BOOL)flag;
+- (BOOL) gormViewBased;
 @end
 
 #endif

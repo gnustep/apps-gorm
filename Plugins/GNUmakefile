@@ -31,7 +31,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 SUBPROJECTS = \
 	Gorm \
 	Nib \
-	GModel \
 	Xib
 
 -include GNUmakefile.preamble

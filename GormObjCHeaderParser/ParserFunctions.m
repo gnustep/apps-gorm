@@ -23,7 +23,6 @@
  */
 
 #include <Foundation/Foundation.h>
-
 #include "ParserFunctions.h"
 
 BOOL lookAhead(NSString *stringToScan, NSString *stringToFind)
@@ -36,13 +35,13 @@ BOOL lookAhead(NSString *stringToScan, NSString *stringToFind)
 BOOL lookAheadForToken(NSString *stringToScan, NSString *stringToFind)
 {
   NSScanner *scanner = [NSScanner scannerWithString: stringToScan];
-  NSString *resultString = @""; // [NSString stringWithString: @""];
+  NSString *resultString = @"";
   
   [scanner setCharactersToBeSkipped: nil];
   [scanner scanString: stringToFind intoString: &resultString];
   if([resultString isEqualToString: stringToFind])
     {
-      NSString *postTokenString = @""; // [NSString stringWithString: @""];
+      NSString *postTokenString = @"";
       NSCharacterSet *wsnl = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 
       [scanner scanCharactersFromSet: wsnl intoString: &postTokenString];

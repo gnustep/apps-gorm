@@ -31,21 +31,52 @@
 
 @class NSFileWrapper, GormDocument, NSString;
 
+/**
+ * GormWrapperLoader defines the interface for loading a document from an
+ * NSFileWrapper-based bundle. Implementors parse wrappers for specific file
+ * types and populate a Gorm document.
+ */
 @protocol GormWrapperLoader
+/**
+ * Load the document from the given file wrapper.
+ */
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *)document;
 @end
 
+/**
+ * GormWrapperLoader is the default implementation of the loader protocol and
+ * provides helpers shared by concrete loaders.
+ */
 @interface GormWrapperLoader : NSObject <GormWrapperLoader>
 {
   GormDocument *document;
 }
+/**
+ * Return the file type identifier (UTI or extension) handled by this loader.
+ */
 + (NSString *) fileType;
+/**
+ * Save the SCM metadata directory contained in the given wrapper map.
+ */
 - (void) saveSCMDirectory: (NSDictionary *) fileWrappers;
 @end
 
+/**
+ * GormWrapperLoaderFactory registers and returns wrapper loaders suitable for
+ * specific file types.
+ */
 @interface GormWrapperLoaderFactory : NSObject
+/**
+ * Return the shared factory instance.
+ */
 + (GormWrapperLoaderFactory *) sharedWrapperLoaderFactory;
+/**
+ * Register a loader implementation class for its supported file type.
+ */
 + (void) registerWrapperLoaderClass: (Class) aClass;
+/**
+ * Return a loader capable of handling the given file type.
+ */
 - (id<GormWrapperLoader>) wrapperLoaderForType: (NSString *) type;
 @end
 

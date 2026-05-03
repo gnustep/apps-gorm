@@ -35,10 +35,10 @@
 
 #include "GormMenuItemAttributesInspector.h"
 
-const unichar up[]={NSUpArrowFunctionKey};
-const unichar dn[]={NSDownArrowFunctionKey};
-const unichar lt[]={NSLeftArrowFunctionKey};
-const unichar rt[]={NSRightArrowFunctionKey};
+static const unichar up[]={NSUpArrowFunctionKey};
+static const unichar dn[]={NSDownArrowFunctionKey};
+static const unichar lt[]={NSLeftArrowFunctionKey};
+static const unichar rt[]={NSRightArrowFunctionKey};
 
 #define VSTR(str) ({NSString *_str = (NSString *)str; ((NSString *)_str) ? (NSString *)_str : (NSString *)@"";})
 

@@ -34,7 +34,7 @@
 #include <GNUstepGUI/GSNibContainer.h>
 
 @class GormClassManager, GormClassEditor, GormObjectProxy, GormFilesOwner, 
-  GormFilePrefsManager, GormDocumentWindow;
+  GormFilePrefsManager, GormDocumentWindow, GormObjectViewController;
 
 /*
  * Trivial classes for connections from objects to their editors, and from
@@ -45,6 +45,11 @@
 @interface	GormObjectToEditor : NSNibConnector
 @end
 
+/**
+ * Connector representing the relationship from a child editor to its parent
+ * editor. This is used to distinguish editor-parent links in the connection
+ * graph.
+ */
 @interface	GormEditorToParent : NSNibConnector
 @end
 
@@ -57,6 +62,11 @@
 }
 @end
 
+/**
+ * GormDocument is the central model/controller for an open Gorm file. It
+ * manages classes, resources, top-level objects, editors and inspectors,
+ * connection graphs, and persistence to/from Gorm archives.
+ */
 @interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding, NSXMLParserDelegate> 
 {
   GormClassManager      *classManager;
@@ -99,6 +109,10 @@
   NSMutableSet          *topLevelObjects;
   NSMutableSet          *visibleWindows;
   NSMutableSet          *deferredWindows;
+  NSMutableSet          *detachingObjects; // Guard against recursive detachment
+
+  // Controllers...
+  GormObjectViewController *objectViewController;
 }
 
 /* Handle notifications */
@@ -113,24 +127,24 @@
 /* Document management */
 
 /**
- * Returns YES, if document is active.
+ * Returns YES if the document is currently active.
  */
 - (BOOL) isActive;
 
 /**
- * Return YES, if anObject is visible at launch time.
+ * Returns YES if the given object is visible at launch time.
  */
 - (BOOL) objectIsVisibleAtLaunch: (id)anObject;
 
 
 /**
- * Return YES, if anObject is deferred.
+ * Returns YES if the given object is deferred.
  */
 - (BOOL) objectIsDeferred: (id)anObject;
 
 /**
- * Retrieve all objects which have parent as thier parent.  If flag is YES,
- * then retrieve the entire graph of objects starting with the parent.
+ * Retrieves all objects which have parent as their parent. If flag is YES,
+ * retrieves the entire graph of objects starting with the parent.
  */
 - (NSArray *) retrieveObjectsForParent: (id)parent recursively: (BOOL)flag;
 
@@ -146,7 +160,7 @@
 - (void) setObject: (id)anObject isVisibleAtLaunch: (BOOL)flag;
 
 /**
- * Add object to the defferred list.
+ * Add object to the deferred list.
  */
 - (void) setObject: (id)anObject isDeferred: (BOOL)flag;
 
@@ -156,7 +170,7 @@
 - (NSWindow*) window;
 
 /**
- * Returns YES, if obj is a top level object.
+ * Returns YES if obj is a top-level object.
  */
 - (BOOL) isTopLevelObject: (id)obj;
 
@@ -195,7 +209,7 @@
 - (void) changeToViewWithTag: (int)tag;
 
 /**
- * returns the view using the specified tag.  
+ * Returns the view with the specified tag.
  * They are 0=objects, 1=images, 2=sounds, 3=classes, 4=file prefs.
  */
 - (NSView *)viewWithTag:(int)tag;
@@ -213,7 +227,7 @@
 
 /* Language translation */
 /**
- * Load a given file into the reciever using `filename'.
+ * Load a given file into the receiver using `filename'.
  */
 - (void) importStringsFromFile: (NSString *)filename;
 
@@ -294,18 +308,18 @@
 /* Connections */
 
 /**
- *
+ * Returns the list of connections in this document.
  */
 - (NSMutableArray *) connections;
 
 /**
- * Build our reverse mapping information and other initialisation
+ * Builds the reverse mapping information and other initialization.
  */
 - (void) rebuildObjToNameMapping;
 
 /**
- * Removes all connections given action or outlet with the specified label 
- * (paramter name) class name (parameter className). 
+ * Removes all connections for the given action or outlet with the specified label
+ * (parameter name) and class name (parameter className).
  */
 - (BOOL) removeConnectionsWithLabel: (NSString *)name
                       forClassNamed: (NSString *)className
@@ -391,8 +405,8 @@
 /* Layout */
 
 /**
- * Arrages selected objects based on the either in front of or in
- * back of the view stack.
+ * Arranges selected objects either in front of or behind the
+ * view stack.
  */ 
 - (void) arrangeSelectedObjects: (id)sender;
 
@@ -408,12 +422,12 @@
 - (NSWindow*) windowAndRect: (NSRect*)r forObject: (id)object;
 
 /**
- * Save the SCM directory.
+ * Sets the SCM directory wrapper.
  */
 - (void) setSCMWrapper: (NSFileWrapper *) wrapper;
 
 /**
- * Save the SCM directory.
+ * Returns the SCM directory wrapper.
  */
 - (NSFileWrapper *) scmWrapper;
 
@@ -448,32 +462,32 @@
 - (GormFilePrefsManager *) filePrefsManager;
 
 /**
- * Windows visible at launch...
+ * Returns the set of windows visible at launch.
  */ 
 - (NSSet *) visibleWindows;
 
 /**
- * Windows deferred.
+ * Returns the set of windows deferred until activation.
  */ 
 - (NSSet *) deferredWindows;
 
 /**
- * Set the document open flag.
+ * Sets the document open flag.
  */
 - (void) setDocumentOpen: (BOOL) flag;
 
 /**
- * Return the document open flag.
+ * Returns the document open flag.
  */
 - (BOOL) isDocumentOpen;
 
 /**
- * Set the file info for this document.
+ * Sets the file info for this document.
  */
 - (void) setInfoData: (NSData *)data;
 
 /**
- * return the file info.
+ * Returns the file info.
  */
 - (NSData *) infoData;
 
@@ -488,17 +502,17 @@
 - (BOOL) isOlderArchive;
 
 /**
- * Deactivate the editors for archiving..
+ * Deactivates editors in preparation for archiving.
  */
 - (void) deactivateEditors;
 
 /**
- * Reactivate all of the editors...
+ * Reactivates all editors after archiving.
  */
 - (void) reactivateEditors;
 
 /**
- * Returns the name for the object...
+ * Returns the name for the given object.
  */ 
 - (NSString*) nameForObject: (id)anObject;
 
@@ -527,8 +541,33 @@
  */
 - (NSArray *) validate;
 
+/**
+ * Returns the editor for an object, it create a new editor if none
+ * exists.
+ */
+- (id<IBEditors>) editorForObject: (id)anObject;
+
+/**
+ * Detach object from document.
+ */ 
+- (void) detachObject: (id)object;
+
+/**
+ * Detach every object in anArray from the document.  Optionally closing editors.
+ */
+- (void) detachObjects: (/* NSArray* */ id)anArray closeEditors: (BOOL)close_editors;
+
+/**
+ * Detach all objects in array from the document.
+ */ 
+- (void) detachObjects: (NSArray *)array;
+
 @end
 
+/**
+ * MenuValidation groups helper methods used to validate menu items depending
+ * on the current editing mode of the document.
+ */
 @interface GormDocument (MenuValidation)
 /**
  * Returns YES if the document is editing instance/objects.
@@ -550,6 +589,13 @@
  */
 - (BOOL) isEditingClasses;
 
+@end
+
+/**
+ * Metadata provides the outline view data source backing for the document's
+ * metadata browser.
+ */
+@interface GormDocument (Metadata) <NSOutlineViewDataSource>
 @end
 
 #endif

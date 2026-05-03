@@ -28,10 +28,20 @@
 #include <GormCore/GormViewWithContentViewEditor.h>
 #include <GormCore/GormInternalViewEditor.h>
 
+/**
+ * GormBoxEditor provides editing capabilities for NSBox views within the
+ * Gorm interface builder. It manages the content view of the box and handles
+ * subview manipulation.
+ */
 @interface GormBoxEditor : GormViewWithSubviewsEditor
 {
   GormInternalViewEditor *contentViewEditor;
 }
+
+/**
+ * Destroys the editor and returns an array of the subviews that were being
+ * edited.
+ */
 - (NSArray *)destroyAndListSubviews;
 @end
 

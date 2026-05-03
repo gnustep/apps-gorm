@@ -510,27 +510,30 @@
       enumerator = [views objectEnumerator];
       while ((sub = [enumerator nextObject]) != nil)
 	{
-	  NSRect	rect = [sub frame];
-	  
-	  rect.origin = [_editedObject
-			  convertPoint: [sender draggedImageLocation]
-			  fromView: nil];
-	  rect.origin.x = (int) rect.origin.x;
-	  rect.origin.y = (int) rect.origin.y;
-	  rect.size.width = (int) rect.size.width;
-	  rect.size.height = (int) rect.size.height;
-	  [sub setFrame: rect];
-
-	  [_editedObject addSubview: sub];
-	  
-	  {
-	    id editor;
-	    editor = [document editorForObject: sub 
-			       inEditor: self 
-			       create: YES];
-	    [self selectObjects: 
-		    [NSArray arrayWithObject: editor]];
-	  }
+	  if ([sub respondsToSelector: @selector(frame)])
+	    {
+	      NSRect	rect = [sub frame];
+	      
+	      rect.origin = [_editedObject
+			      convertPoint: [sender draggedImageLocation]
+				  fromView: nil];
+	      rect.origin.x = (int) rect.origin.x;
+	      rect.origin.y = (int) rect.origin.y;
+	      rect.size.width = (int) rect.size.width;
+	      rect.size.height = (int) rect.size.height;
+	      [sub setFrame: rect];
+	      
+	      [_editedObject addSubview: sub];
+	      
+	      {
+		id editor;
+		editor = [document editorForObject: sub 
+					  inEditor: self 
+					    create: YES];
+		[self selectObjects: 
+			[NSArray arrayWithObject: editor]];
+	      }
+	    }
 	}
     }
 
@@ -846,10 +849,8 @@
 - (void) handleMouseOnView: (GormViewEditor *) view
 		 withEvent: (NSEvent *) theEvent
 {
-  NSPoint	mouseDownPoint = [[view superview]
-				   convertPoint: [theEvent locationInWindow]
-				   fromView: nil];
-  NSDate	*future = [NSDate distantFuture];
+  NSPoint	mouseDownPoint;
+  NSDate	*future;
   NSView	*subview;
   BOOL		acceptsMouseMoved;
   BOOL		dragStarted = NO;
@@ -859,8 +860,8 @@
   NSRect	r;
   NSPoint	maxMouse;
   NSPoint	minMouse;
-  NSPoint	lastPoint = mouseDownPoint;
-  NSPoint	point = mouseDownPoint;
+  NSPoint	lastPoint;
+  NSPoint	point;
   NSView        *superview;
   NSEnumerator		*enumerator;
   NSRect        oldMovingFrame;
@@ -869,17 +870,25 @@
   BOOL shouldUpdateSelection = YES;
   BOOL mouseDidMove = NO;
 
+  // Guard against nil view before any message sends that return structs.
+  if (view == nil)
+    {
+      return;
+    }
+
+  mouseDownPoint = [[view superview]
+			   convertPoint: [theEvent locationInWindow]
+			   fromView: nil];
+  future = [NSDate distantFuture];
+  lastPoint = mouseDownPoint;
+  point = mouseDownPoint;
+
   eventMask = NSLeftMouseUpMask | NSLeftMouseDraggedMask
     | NSMouseMovedMask | NSPeriodicMask;
   
   // Save window state info.
   acceptsMouseMoved = [[self window] acceptsMouseMovedEvents];
   [[self window] setAcceptsMouseMovedEvents: YES];
-
-  if (view == nil)
-    {
-      return;
-    }
 
   if ([theEvent modifierFlags] & NSShiftKeyMask)
     {
@@ -914,8 +923,13 @@
     }
 
   superview = [view superview];
+  if (superview == nil)
+    {
+      [[self window] setAcceptsMouseMovedEvents: acceptsMouseMoved];
+      return;
+    }
   [superview lockFocus];
-  
+
   {
     NSRect	vf = [view frame];
     NSRect	sf = [superview bounds];

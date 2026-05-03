@@ -40,6 +40,13 @@ static NSImage *horizontalImage;
 @implementation NSView (IBObjectAdditions)
 - (NSString*) editorClassName
 {
+	// Any unattached view is treated as a standalone top-level view,
+	// regardless of subclass.
+	if ([self superview] == nil && [self window] == nil)
+		{
+			return @"GormStandaloneViewEditor";
+		}
+
   // using NSBox gets rid of compiler warning, should be safe for all classes. 
   if ([self superview] && (([[self superview] respondsToSelector: @selector(contentView)] &&
 			    [(NSBox *)[self superview] contentView] == self) ||
@@ -183,10 +190,10 @@ static NSImage *horizontalImage;
 
 - (void) deactivate
 {
+  NSDebugLog(@"%@ called deactivate", [self class]);
   if (activated == YES)
     {
       id superview = [self superview];
-      // NSView *superview = [self superview];
       
       [self deactivateSubeditors];
       
@@ -306,7 +313,7 @@ static NSImage *horizontalImage;
       id ed = [sel objectAtIndex: i];
       id temp = [ed editedObject];
 
-      [ed detachSubviews];
+      // detachObject: already handles child objects recursively
       [document detachObject: temp];
     }
 }
@@ -660,8 +667,10 @@ static NSImage *horizontalImage;
       NSRect frame;
       v = [subview editedObject];
       frame = [v frame];
-      frame = [[parent parent] convertRect: frame
-                               fromView: _editedObject];
+      // Convert frame from contentView coordinates to outer view coordinates
+      // by offsetting by the container's position.
+      frame.origin.x += [parent frame].origin.x;
+      frame.origin.y += [parent frame].origin.y;
       [subview deactivate];
       
       [v setFrame: frame];

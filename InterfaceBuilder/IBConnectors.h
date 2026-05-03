@@ -92,9 +92,17 @@ IB_EXTERN NSString *IBDidRemoveConnectorNotification;
 - (id) nibInstantiate;
 @end
 
+/**
+ * Adopt the IBConnectors protocol on NSNibConnector so standard nib
+ * connectors can be queried and manipulated uniformly by Gorm.
+ */
 @interface NSNibConnector (IBConnectorsProtocol) <IBConnectors>
 @end
 
+/**
+ * Provide a post-unarchive hook used by Gorm to finalize objects after nib
+ * loading.
+ */
 @interface NSObject (IBNibInstantiation)
 /**
  * Invoked after loading.
@@ -102,6 +110,10 @@ IB_EXTERN NSString *IBDidRemoveConnectorNotification;
 - (id) nibInstantiate;
 @end
 
+/**
+ * Add helpers for visualizing and controlling the connection process during
+ * interactive outlet/action linking.
+ */
 @interface NSApplication (IBConnections)
 /**
  * [NSApp -connectSource] returns the source object as set by the most recent

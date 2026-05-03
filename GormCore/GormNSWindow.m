@@ -35,6 +35,63 @@ static NSUInteger defaultStyleMask = NSTitledWindowMask | NSClosableWindowMask
 		  | NSResizableWindowMask | NSMiniaturizableWindowMask;
 
 @implementation GormNSWindow
+/*
+ * Intercept mouse events at the window level so we can detect clicks in the
+ * title/toolbar chrome (which views/editors don't receive). When the user
+ * clicks in the area above the contentView and the window has a toolbar,
+ * select the NSToolbar so the toolbar inspector opens.
+ */
+- (void) sendEvent: (NSEvent *)event
+{
+  if ([event type] == NSLeftMouseDown)
+    {
+      NSToolbar *tb = [self toolbar];
+      if (tb != nil)
+        {
+          NSPoint p = [event locationInWindow];
+          // Prefer precise hit-testing against the actual toolbar view rect.
+          id tv = nil;
+          if ([tb respondsToSelector: @selector(toolbarView)])
+            {
+              tv = [tb performSelector: @selector(toolbarView)];
+            }
+
+          if ([tv isKindOfClass: [NSView class]])
+            {
+              NSRect toolbarInWindow = [(NSView *)tv convertRect:[(NSView *)tv bounds] toView:nil];
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+              NSDebugLog(@"Toolbar hit-test: click=(%.1f, %.1f) toolbarRect=(%.1f, %.1f, %.1f, %.1f)",
+                         p.x, p.y,
+                         toolbarInWindow.origin.x, toolbarInWindow.origin.y,
+                         toolbarInWindow.size.width, toolbarInWindow.size.height);
+#endif
+              if (NSPointInRect(p, toolbarInWindow))
+                {
+                  id<IBDocuments> document = [(id<IB>)[NSApp delegate] documentForObject: self];
+                  id editor = [document editorForObject: tb create: YES];
+                  if ([editor respondsToSelector: @selector(selectObjects:)])
+                    {
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+                      NSDebugLog(@"Toolbar selection routed to GormToolbarEditor");
+#endif
+                      [editor selectObjects: [NSArray arrayWithObject: tb]];
+                    }
+                }
+            }
+          else
+            {
+              // Fallback: if toolbar view is unavailable, avoid broad chrome selection.
+              // Do nothing to prevent titlebar clicks from selecting the toolbar.
+#ifdef GORM_DEBUG_TOOLBAR_HITTEST
+              NSDebugLog(@"Toolbar hit-test fallback: toolbar view unavailable");
+#endif
+            }
+        }
+    }
+
+  [super sendEvent: event];
+}
+
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
   unsigned oldStyleMask;

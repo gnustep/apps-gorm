@@ -232,6 +232,8 @@ static id _sharedDataSource = nil;
   _allowsColumnSelection = _gormAllowsColumnSelection;
   _allowsMultipleSelection = _gormAllowsMultipleSelection;
   _allowsEmptySelection = _gormAllowsEmptySelection;
+  _viewBased = _gormViewBased;
+
   _dataSource = _gormDataSource;
   oldDelegate = _delegate;
   _delegate = _gormDelegate;
@@ -247,6 +249,7 @@ static id _sharedDataSource = nil;
   _allowsColumnSelection = YES;
   _allowsMultipleSelection = NO;
   _allowsEmptySelection = YES;
+  _viewBased = NO;
 
   _delegate = oldDelegate;
   _dataSource = _sharedDataSource;
@@ -262,6 +265,8 @@ static id _sharedDataSource = nil;
   _gormAllowsColumnSelection = _allowsColumnSelection;
   _gormAllowsMultipleSelection = _allowsMultipleSelection;
   _gormAllowsEmptySelection = _allowsEmptySelection;
+  _gormViewBased = _viewBased;
+
   _gormDelegate = _delegate;
   _delegate = nil;
 
@@ -316,6 +321,16 @@ static id _sharedDataSource = nil;
 - (BOOL) gormAllowsColumnSelection
 {
   return _gormAllowsColumnSelection;
+}
+
+- (void) setGormViewBased: (BOOL)flag;
+{
+  _gormViewBased = flag;
+}
+
+- (BOOL) gormViewBased
+{
+  return _gormViewBased;
 }
 
 - (NSString *) className

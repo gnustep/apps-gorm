@@ -41,6 +41,7 @@ FOUNDATION_EXPORT const unsigned char GormObjCHeaderParserVersionString[];
 #include <GormObjCHeaderParser/OCIVar.h>
 #include <GormObjCHeaderParser/OCIVarDecl.h>
 #include <GormObjCHeaderParser/OCMethod.h>
+#include <GormObjCHeaderParser/OCProperty.h>
 #include <GormObjCHeaderParser/ParserFunctions.h>
 
 #endif

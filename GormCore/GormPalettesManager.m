@@ -38,16 +38,6 @@
 @end
 
 @implementation	GormPalettePanel
-/*
-- (BOOL) canBecomeKeyWindow
-{
-  return NO;
-}
-- (BOOL) canBecomeMainWindow
-{
-  return YES;
-}
-*/
 @end
 
 @interface GormPaletteView : NSView
@@ -128,11 +118,6 @@ static NSImage	*dragImage = nil;
 
       if (active != nil)
 	{
-          /*
-	  if([active objectForName: @"NSMenu"] != nil && 
-	     [type isEqual: IBMenuPboardType] == YES)
-	    return;
-	  */
 	  [active pasteType: type fromPasteboard: dragPb parent: nil];
 	}
     }
@@ -155,12 +140,14 @@ static NSImage	*dragImage = nil;
  */
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationCopy;;
+  return NSDragOperationCopy;
 }
+
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
   return YES;
 }
+
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
   return YES;
@@ -312,6 +299,8 @@ static NSImage	*dragImage = nil;
   unsigned int	 style = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSArray        *userPalettes = [defaults arrayForKey: USER_PALETTES];
+  NSEnumerator   *en = nil;
+  NSString       *paletteName = nil;
   
   panel = [[GormPalettePanel alloc] initWithContentRect: contentRect
 				     styleMask: style
@@ -359,30 +348,24 @@ static NSImage	*dragImage = nil;
   [panel setFrameAutosaveName: @"Palettes"];
   current = -1;
 
+  // Load the palettes...
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"palette"
 					     inDirectory: nil];
-   if ([array count] > 0)
+  array = [array sortedArrayUsingSelector: @selector(compare:)];
+  en = [array objectEnumerator];
+  while ((paletteName = [en nextObject]) != nil)
     {
-      unsigned	index;
-
-      array = [array sortedArrayUsingSelector: @selector(compare:)];
-
-      for (index = 0; index < [array count]; index++)
-	{
-	  [self loadPalette: [array objectAtIndex: index]];
-	}
+      NSDebugLog(@"Built-in palette name = %@", paletteName);
+      [self loadPalette: paletteName];
     }
 
-   // if we have any user palettes load them as well.
-   if(userPalettes != nil)
-     {
-       NSEnumerator *en = [userPalettes objectEnumerator];
-       id paletteName = nil;
-       while((paletteName = [en nextObject]) != nil)
-	 {
-	   [self loadPalette: paletteName];
-	 }
-     }
+  // if we have any user palettes load them as well.
+  en = [userPalettes objectEnumerator];
+  while ((paletteName = [en nextObject]) != nil)
+    {
+      NSDebugLog(@"User palette name = %@", paletteName);
+      [self loadPalette: paletteName];
+    }
 
   /*
    * Select initial palette - this should be the standard controls palette.
@@ -394,6 +377,7 @@ static NSImage	*dragImage = nil;
 	 selector: @selector(handleNotification:)
 	     name: IBWillBeginTestingInterfaceNotification
 	   object: nil];
+  
   [nc addObserver: self
 	 selector: @selector(handleNotification:)
 	     name: IBWillEndTestingInterfaceNotification
@@ -406,6 +390,7 @@ static NSImage	*dragImage = nil;
 {
   int		col = 0;  
   NSBundle	*bundle;
+
   for (col = 0; col < [bundles count]; col++)
     {
       bundle = [bundles objectAtIndex: col];
@@ -414,6 +399,7 @@ static NSImage	*dragImage = nil;
 	  return YES;
 	}
     }
+  
   return NO;
 }
 
@@ -621,6 +607,7 @@ static NSImage	*dragImage = nil;
       [defaults setObject: newUserPalettes forKey: USER_PALETTES];
       return self;
     }
+
   return nil;
 }
 

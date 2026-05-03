@@ -32,11 +32,32 @@
   BOOL     _gormReleasedWhenClosed;
   NSUInteger autoPositionMask;
 }
+/**
+ * Sets the style mask tracked by Gorm for this window, used when serializing
+ * and restoring window attributes in the editor.
+ */
 - (void) _setStyleMask: (unsigned int)newStyleMask;
+/**
+ * Returns the style mask tracked by Gorm for this window.
+ */
 - (unsigned int) _styleMask;
+/**
+ * Sets whether the window is released when closed in the running application.
+ */
 - (void) _setReleasedWhenClosed: (BOOL) flag;
+/**
+ * Returns YES if the window is released when closed; NO otherwise.
+ */
 - (BOOL) _isReleasedWhenClosed;
+/**
+ * Returns the bitmask controlling automatic positioning behavior when the
+ * window opens.
+ */
 - (unsigned int) autoPositionMask;
+/**
+ * Sets the bitmask controlling automatic positioning behavior when the window
+ * opens.
+ */
 - (void) setAutoPositionMask: (unsigned int)mask;
 @end
 

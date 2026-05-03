@@ -31,6 +31,10 @@
   id _document;
   IBResourceManager *dragMgr;
 }
+/**
+ * Associates the given document with this window. Used by the editor to manage
+ * drag-and-drop and validation tied to the document context.
+ */
 - (void) setDocument:(id)document;
 @end
 

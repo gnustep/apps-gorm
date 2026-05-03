@@ -30,6 +30,11 @@
 
 @class NSWindow;
 
+/**
+ * GormGuidelinePref implements the alignment guideline preferences. It lets
+ * users set spacing and color for layout guides and supplies the view that
+ * appears in the preferences window.
+ */
 @interface GormGuidelinePref : NSObject
 {
   NSWindow *window;

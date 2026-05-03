@@ -29,6 +29,9 @@
 
 @class NSString;
 
+/**
+ * IBProjectFiles defines IBProjectFiles class or protocol.
+ */
 @protocol IBProjectFiles <NSObject>
 /**
  * The file name.

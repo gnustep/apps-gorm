@@ -33,13 +33,29 @@
 @class GormClassManager;
 @class GormSoundView;
 
+/**
+ * GormSoundInspector lets the user preview and record sound resources within
+ * Gorm. It hosts playback controls wired to the document's selected sound.
+ */
 @interface GormSoundInspector : IBInspector
 {
   GormSoundView *soundView;
 }
+/**
+ * Stop playback or recording.
+ */
 - (void) stop: (id)sender;
+/**
+ * Start or resume playback.
+ */
 - (void) play: (id)sender;
+/**
+ * Pause playback.
+ */
 - (void) pause: (id)sender;
+/**
+ * Begin recording from the configured input.
+ */
 - (void) record: (id)sender;
 @end
 

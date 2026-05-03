@@ -34,6 +34,10 @@ IB_EXTERN NSString *IBDidBeginTestingInterfaceNotification;
 IB_EXTERN NSString *IBWillEndTestingInterfaceNotification;
 IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
 
+/**
+ * IB defines methods that the Interface Builder environment provides to
+ * query the active document, selection, and testing state.
+ */
 @protocol IB <NSObject>
 /**
  * Returns the document which is currently being edited.
@@ -62,6 +66,10 @@ IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
 - (id<IBDocuments>) documentForObject: (id)object;
 @end
 
+/**
+ * Add Gorm-specific conveniences to NSApplication used during connection
+ * creation and link display.
+ */
 @interface NSApplication (GormSpecific)
 /**
  * Image to be displayed with making a link.

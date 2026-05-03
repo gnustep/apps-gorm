@@ -30,6 +30,9 @@
 
 @class NSString, NSArray;
 
+/**
+ * IBProjects defines IBProjects class or protocol.
+ */
 @protocol IBProjects <NSObject>
 
 /**

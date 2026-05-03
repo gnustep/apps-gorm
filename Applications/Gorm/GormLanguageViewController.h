@@ -29,6 +29,11 @@
 
 @class NSDictionary, NSString;
 
+/**
+ * GormLanguageViewController manages the language selection UI used for
+ * translation features. It tracks the current source and target language
+ * identifiers and updates them in response to user input.
+ */
 @interface GormLanguageViewController : NSViewController
 {
   IBOutlet id targetLanguage;
@@ -40,10 +45,22 @@
   NSDictionary *ldict;
 }
 
+/**
+ * Update the target language based on the sender’s current selection.
+ */
 - (IBAction) updateTargetLanguage: (id)sender;
+/**
+ * Update the source language based on the sender’s current selection.
+ */
 - (IBAction) updateSourceLanguage: (id)sender;
 
+/**
+ * The currently selected source language identifier.
+ */
 - (NSString *) sourceLanguageIdentifier;
+/**
+ * The currently selected target language identifier.
+ */
 - (NSString *) targetLanguageIdentifier;
 
 

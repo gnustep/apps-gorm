@@ -1,0 +1,13 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormPersonNameComponentsFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    style,
+	    phonetic,
+	    detach
+	);
+	Super = IBInspector;
+    };
+}

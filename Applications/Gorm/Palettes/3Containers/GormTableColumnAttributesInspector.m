@@ -204,6 +204,10 @@
       [[object headerCell] setStringValue:
 			     [columnTitle stringValue]];
       [[[object tableView] headerView] setNeedsDisplay: YES];
+      if ([columnTitle currentEditor] != nil)
+	{
+	  return;
+	}
     }
   // sort descriptor...
   else if( sender == sortKey || sender == sortSelector || sender == sortOrder )
@@ -344,6 +348,11 @@ shouldEditTableColumn: (NSTableColumn *)aTableColumn
 
 /* delegate method for identifier */
 -(void) controlTextDidChange:(NSNotification *)aNotification
+{
+  [self ok:[aNotification object]];
+}
+
+-(void) controlTextDidEndEditing:(NSNotification *)aNotification
 {
   [self ok:[aNotification object]];
 }

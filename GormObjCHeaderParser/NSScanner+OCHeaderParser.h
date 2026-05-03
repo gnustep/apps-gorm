@@ -30,9 +30,18 @@
 
 @class NSString, NSCharacterSet;
 
+/**
+ * NSScanner provides NSScanner class or protocol.
+ */
 @interface NSScanner (OCHeaderParser)
+/**
+ * Performs scanUpToAndIncludingString  operation.
+ */
 - (void) scanUpToAndIncludingString: (NSString *)string 
                          intoString: (NSString **)buffer;
+/**
+ * Sets the property value.
+ */
 - (void) scanUpToAndIncludingCharactersFromSet: (NSCharacterSet *)set 
                                     intoString: (NSString **)buffer;
 @end

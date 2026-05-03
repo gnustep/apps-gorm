@@ -29,6 +29,10 @@
 
 @class NSArray;
 
+/**
+ * GormExtensions category provides additional view hierarchy manipulation
+ * methods for NSView within the Gorm interface builder environment.
+ */
 @interface NSView (GormExtensions)
 /**
  * All superviews of the receiver.

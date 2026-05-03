@@ -26,6 +26,7 @@
 
 /* All rights reserved */
 
+#import "GormBindingsAbstractInspector.h"
 #import "GormBindingsInspector.h"
 #import "GormDocument.h"
 #import "GormFunctions.h"
@@ -93,22 +94,28 @@
       NSString *inspectorName = [_bindingsArray objectAtIndex: _selectedInspectorIndex];
       Class cls = NSClassFromString(inspectorName);
       NSString *nibName = @"GormBindingsAbstractInspector";
-      
+
+      // If we can bring up an inspector that is specific to a given class, then do so...
       _inspectorObject = [[cls alloc] init];
+      if (_inspectorObject == nil)
+	{
+	  _inspectorObject = [[GormBindingsAbstractInspector alloc] init];
+	}
+
+      // If the abstract inspector cannot be instantiated, then issue a warning...
       if (_inspectorObject != nil)
 	{
 	  if (![NSBundle loadNibNamed: nibName owner: _inspectorObject])
 	    {
-	      NSLog(@"Could not load inspector for binding %@", inspectorName);
+	      NSLog(@"Could not load inspector for binding %@, falling back to abstract inspector", inspectorName);
 	      return;
 	    }
 	  
-      [_containerView setContentView: [[_inspectorObject window] contentView]];
+	  [_containerView setContentView: [[_inspectorObject window] contentView]];
 	}
       else
 	{
-	  _inspectorObject = nil; // make certain this is nil, if load failed...
-	  NSLog(@"Could not instantiate class for %@", inspectorName);
+	  NSLog(@"No inspector loaded for binding %@", inspectorName);
 	}
     }
   else

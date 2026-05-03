@@ -34,6 +34,11 @@
 
 @class NSString, NSImage;
 
+/**
+ * GormImage represents an image resource tracked by a Gorm document. It
+ * provides convenient factory methods and access to a thumbnail and the full
+ * size image.
+ */
 @interface GormImage : GormResource
 {
   NSImage  *image;
@@ -41,29 +46,30 @@
 }
 
 /**
- * Initialize with image data located at path.
+ * Creates and returns an image resource for the image located at the specified
+ * path.
  */
 + (GormImage *) imageForPath: (NSString *)path;
 
 /**
- * Initialize with image data located at path.  Mark it as in the
- * wrapper depending on the value of flag.
+ * Creates and returns an image resource for the image located at the specified
+ * path and marks whether it resides in the document wrapper.
  */
 + (GormImage *) imageForPath: (NSString *)path inWrapper: (BOOL)flag;
 
 /**
- * Initialize with image data.  Mark it as in the
- * wrapper depending on the value of flag.
+ * Creates and returns an image resource from raw data and a file name, and
+ * marks whether it resides in the document wrapper.
  */
 + (GormImage*)imageForData: (NSData *)aData withFileName: (NSString *)aName inWrapper: (BOOL)flag;
 
 /**
- * A thumbnail of the image.
+ * Returns the thumbnail image.
  */
 - (NSImage *)image;
 
 /**
- * The full sized image.
+ * Returns the full‑size image.
  */
 - (NSImage *)normalImage;
 @end

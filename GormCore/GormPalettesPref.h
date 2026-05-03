@@ -4,6 +4,11 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
+/**
+ * GormPalettesPref implements the Palettes preferences pane. It shows the
+ * available palettes and lets users add or remove entries, providing the
+ * view used within the preferences window.
+ */
 @interface GormPalettesPref : NSObject
 {
   id table;

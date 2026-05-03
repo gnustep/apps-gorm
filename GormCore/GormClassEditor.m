@@ -885,7 +885,7 @@ NSImage *browserImage = nil;
  */
 - (id) loadClass: (id)sender
 {
-  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", nil];
+  NSArray	*fileTypes = [NSArray arrayWithObjects: @"h", @"H", @"m", @"mm", nil];
   NSOpenPanel	*oPanel = [NSOpenPanel openPanel];
   int		result;
 
@@ -922,7 +922,7 @@ NSImage *browserImage = nil;
 			  message,
 			  nil, nil, nil);
 	}
-      NS_ENDHANDLER
+      NS_ENDHANDLER;
     }
 
   return nil;

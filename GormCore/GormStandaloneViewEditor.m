@@ -28,6 +28,7 @@
 #include <GormCore/GormStandaloneViewEditor.h>
 #include <GormCore/GormDefines.h>
 #include <GormCore/GormViewKnobs.h>
+#include <GormCore/GormAbstractDelegate.h>
 
 static NSImage *verticalImage;
 static NSImage *horizontalImage;
@@ -35,6 +36,21 @@ static NSImage *horizontalImage;
 @class GormEditorToParent;
 
 @implementation GormStandaloneViewEditor
+
+- (NSImage*) imageForViewer
+{
+  static NSImage       *image = nil;
+  GormAbstractDelegate *delegate = (GormAbstractDelegate *)[NSApp delegate];
+
+  if (image == nil && [delegate isInTool] == NO)
+    {
+      NSBundle	*bundle = [NSBundle bundleForClass: [GormStandaloneViewEditor class]];
+      NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
+      image = [[NSImage alloc] initWithContentsOfFile: path];
+    }
+
+  return image;
+}
 
 - (void) mouseDown: (NSEvent *) theEvent
 {
@@ -134,7 +150,8 @@ static NSImage *horizontalImage;
       NSView *result = nil;
       GormViewEditor *theParent = nil;
       
-      mouseDownPoint = [self
+	// hitTest expects a point in _editedObject's coordinates.
+	mouseDownPoint = [_editedObject
 			 convertPoint: [theEvent locationInWindow]
 			 fromView: nil];
       

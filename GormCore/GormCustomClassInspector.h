@@ -33,6 +33,11 @@
 
 @class GormClassManager;
 
+/**
+ * GormCustomClassInspector lets the user assign a custom class to the
+ * selected object. It displays classes from the class manager and updates
+ * the selection accordingly.
+ */
 @interface GormCustomClassInspector : IBInspector
 {
   id browser;
@@ -43,6 +48,9 @@
   NSUInteger _rowToSelect;
 }
 
+/**
+ * Selects the specified object or objects.
+ */
 - (void) select: (id)sender;
 
 @end

@@ -50,7 +50,7 @@
 - (void) popupAction: (id)sender;
 
 /**
- * Return the preferences panel.
+ * Returns the panel window that displays the current palette contents.
  */
 - (id) panel;
 @end

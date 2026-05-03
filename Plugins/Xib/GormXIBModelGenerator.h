@@ -38,6 +38,9 @@
 @class NSMutableArray;
 @class NSMapTable;
 
+/**
+ * GormXIBModelGenerator provides GormXIBModelGenerator class or protocol.
+ */
 @interface GormXIBModelGenerator : NSObject
 {
   GormDocument *_gormDocument;

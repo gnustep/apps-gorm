@@ -4,6 +4,11 @@
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
 
+/**
+ * GormGeneralPref implements the General preferences pane. It hosts common
+ * options like creating backups, and whether classes are shown as a browser
+ * or outline, and exposes the view for the preferences window.
+ */
 @interface GormGeneralPref : NSObject
 {
   id window;
@@ -28,6 +33,9 @@
  */
 - (void) classesAction: (id)sender;
 
+/**
+ * Toggle consistency checking of loaded documents and update the preference.
+ */
 - (void) consistencyAction: (id)sender;
 @end
 

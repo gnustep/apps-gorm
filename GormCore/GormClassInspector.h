@@ -32,6 +32,11 @@
 
 @class GormClassManager;
 
+/**
+ * GormClassInspector provides an inspector interface that allows users to
+ * select and modify custom classes, their actions, and outlets within a
+ * Gorm document.
+ */
 @interface GormClassInspector : IBInspector
 {
   // outlets
@@ -58,17 +63,69 @@
   // class manager..
   GormClassManager *_classManager;
 }
+
+/**
+ * Adds a new action to the currently selected class.
+ */
 - (void) addAction: (id)sender;
+
+/**
+ * Removes the selected action from the currently selected class.
+ */
 - (void) removeAction: (id)sender;
+
+/**
+ * Adds a new outlet to the currently selected class.
+ */
 - (void) addOutlet: (id)sender;
+
+/**
+ * Removes the selected outlet from the currently selected class.
+ */
 - (void) removeOutlet: (id)sender;
+
+/**
+ * Selects the class for the current object.
+ */
 - (void) select: (id)sender;
+
+/**
+ * Initiates a search for a class by name.
+ */
 - (void) searchForClass: (id)sender;
+
+/**
+ * Selects a class from the class list.
+ */
 - (void) selectClass: (id)sender;
+
+/**
+ * Returns the name of the currently selected class.
+ */
 - (NSString *) _currentClass;
+
+/**
+ * Refreshes the inspector view to reflect current class information.
+ */
 - (void) _refreshView;
+
+/**
+ * Handles notifications related to class changes.
+ */
 - (void) handleNotification: (NSNotification *)notification;
+
+/**
+ * Changes the class name of the inspected object.
+ */
 - (void) changeClassName: (id)sender;
+
+/**
+ * Handles selection of an action in the action table.
+ */
 - (void) selectAction: (id)sender;
+
+/**
+ * Handles selection of an outlet in the outlet table.
+ */
 - (void) selectOutlet: (id)sender;
 @end

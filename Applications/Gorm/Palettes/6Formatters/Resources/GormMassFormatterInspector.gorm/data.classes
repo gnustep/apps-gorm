@@ -1,0 +1,15 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormMassFormatterInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    unitStyle,
+	    output,
+	    forPersonMassUse,
+	    sample,
+	    detach
+	);
+	Super = IBInspector;
+    };
+}

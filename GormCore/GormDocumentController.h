@@ -39,11 +39,23 @@ typedef enum
   GormPalette = 3
 } GormDocumentType;
 
+/**
+ * GormDocumentController extends NSDocumentController with Gorm-specific
+ * behavior. It creates new documents of predefined templates and opens
+ * existing resources, delegating to the appropriate editor when needed.
+ */
 @interface GormDocumentController : NSDocumentController
 {
 }
 
+/**
+ * Create and initialize a new document of the given Gorm document type.
+ */
 - (void) buildDocumentForType: (GormDocumentType)documentType;
+/**
+ * Open the document or resource at the given URL and return the editor or
+ * document instance responsible for it.
+ */
 - (id) openDocumentWithContentsOfURL:(NSURL *)url;
 
 @end

@@ -69,6 +69,10 @@ IB_EXTERN NSString      *GormLinkPboardType;
  * associated with a particular view.
  */
 + (id) objectForView: (NSView*)aView;
+/**
+ * Return the pasteboard type string associated with the given view when
+ * dragged from the palette.
+ */
 + (NSString*) typeForView: (NSView*)aView;
 
 /**

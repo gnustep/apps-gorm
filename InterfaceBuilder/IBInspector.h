@@ -40,6 +40,11 @@
 @class NSView;
 @class NSNotification;
 
+/**
+ * IBInspector is the abstract base for inspectors. Implement subclasses to
+ * edit properties of the currently selected object, provide optional OK and
+ * Revert buttons, and manage the inspector panel UI.
+ */
 @interface IBInspector : NSObject
 {
   id		object;

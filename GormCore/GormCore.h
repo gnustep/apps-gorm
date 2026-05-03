@@ -54,6 +54,8 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #import <GormCore/GormFontViewController.h>
 #import <GormCore/GormFunctions.h>
 #import <GormCore/GormGenericEditor.h>
+#import <GormCore/GormGroupProtocol.h>
+#import <GormCore/GormGroupViews.h>
 #import <GormCore/GormHelpInspector.h>
 #import <GormCore/GormImage.h>
 #import <GormCore/GormImageEditor.h>

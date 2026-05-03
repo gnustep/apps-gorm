@@ -10,6 +10,11 @@
 
 @class NSButton, NSPanel, NSTextField;
 
+/**
+ * GormSetNameController presents a simple modal panel to collect a name from
+ * the user (e.g., for renaming). It exposes the text field and returns the
+ * modal response when run.
+ */
 @interface GormSetNameController : NSObject
 {
   NSPanel *window;
@@ -17,10 +22,22 @@
   NSButton *okButton;
   NSButton *cancelButton;
 }
+/**
+ * Run the window as a modal session and return the modal response code.
+ */
 - (NSInteger)runAsModal;
 
+/**
+ * Access the editable text field used to input the name.
+ */
 - (NSTextField *) textField;
+/**
+ * Cancel the dialog without applying changes.
+ */
 - (void) cancelHit: (id)sender;
+/**
+ * Accept the current value and close the dialog.
+ */
 - (void) okHit: (id)sender;
 @end
 

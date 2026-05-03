@@ -29,6 +29,9 @@
 @interface GormSplitViewEditor : GormViewWithSubviewsEditor
 {
 }
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (NSArray *)destroyAndListSubviews;
 @end
 

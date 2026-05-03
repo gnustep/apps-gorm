@@ -24,15 +24,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02111 USA.
  */
 
-#include <InterfaceBuilder/InterfaceBuilder.h>
+#import <InterfaceBuilder/InterfaceBuilder.h>
+#import <AppKit/NSToolbar.h>
 
-#include "GormPrivate.h"
-#include "GormViewWithContentViewEditor.h"
-#include "GormInternalViewEditor.h"
-#include "GormViewKnobs.h"
-#include "GormWindowEditor.h"
+#import "GormPrivate.h"
+#import "GormViewWithContentViewEditor.h"
+#import "GormInternalViewEditor.h"
+#import "GormViewKnobs.h"
+#import "GormWindowEditor.h"
+#import "NSToolbarPrivate.h"
 
-#include <math.h>
+#import <math.h>
 
 #define _EO ((NSWindow *)_editedObject)
 
@@ -77,8 +79,13 @@
 
 @end
 
+/*
+ * Private function...
+ */
 @interface NSWindow (GormWindowEditorAdditions)
+
 - (void) unsetInitialFirstResponder;
+
 @end
 
 @implementation NSWindow (GormWindowEditorAdditions)
@@ -258,15 +265,23 @@
     {
       if ([selection count] > 0)
 	{
-	  NSEnumerator	*enumerator = [selection objectEnumerator];
-	  NSView	*view;
+	  NSEnumerator *enumerator = [selection objectEnumerator];
+	  id o = nil;
 
 	  [[self window] disableFlushWindow];
-	  while ((view = [enumerator nextObject]) != nil)
+	  while ((o = [enumerator nextObject]) != nil)
 	    {
-	      NSRect	rect = GormExtBoundsForRect([view frame]);
-
-	      [edit_view displayRect: rect];
+	      if ([o respondsToSelector: @selector(frame)])
+		{
+		  NSRect rect = GormExtBoundsForRect([o frame]);
+		  [edit_view displayRect: rect];
+		}
+	      else if ([o isKindOfClass: [NSToolbar class]])
+		{
+		  NSView *tbView = [o toolbarView]; // get the toolbar view...
+		  NSRect rect = GormExtBoundsForRect([tbView frame]);
+		  [edit_view displayRect: rect];
+		}
 	    }
 	  [[self window] enableFlushWindow];
 	  [[self window] flushWindowIfNeeded];
@@ -319,8 +334,20 @@
 
 - (NSUInteger) selectionCount
 {
-  NSDebugLog(@"selectionCount");
-  return  0;
+  // Defer to superclass, which tracks window/editor selection properly.
+  return [super selectionCount];
+}
+
+- (void) selectObjects: (NSArray *)objects
+{
+  id obj = [objects firstObject];
+
+  if ([obj isKindOfClass: [NSToolbar class]])
+    {
+      NSDebugLog(@"Toolbar = %@", obj);
+    }
+
+  [super selectObjects: objects];
 }
 
 - (void) validateEditing

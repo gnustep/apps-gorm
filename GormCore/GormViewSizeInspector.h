@@ -32,6 +32,10 @@
 
 @class NSButton, NSForm;
 
+/**
+ * GormViewSizeInspector displays size and autoresizing options for the
+ * selected view, allowing users to adjust anchors and dimensions.
+ */
 @interface GormViewSizeInspector : IBInspector
 {
   NSButton	*top;

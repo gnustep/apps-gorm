@@ -29,6 +29,9 @@
 
 @class NSMutableArray, NSString;
 
+/**
+ * OCMethod provides OCMethod class or protocol.
+ */
 @interface OCMethod : NSObject
 {
   NSString              *name;
@@ -37,13 +40,37 @@
   BOOL                  isClassMethod;
 }
 
+/**
+ * Initializes and returns a new instance.
+ */
 - (id) initWithString: (NSString *)string;
+/**
+ * Returns the name.
+ */
 - (NSString *)name;
+/**
+ * Sets the property value.
+ */
 - (void) setName: (NSString *)aName;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isAction;
+/**
+ * Sets the property value.
+ */
 - (void) setIsAction: (BOOL)flag;
+/**
+ * Returns YES if the condition is true, NO otherwise.
+ */
 - (BOOL) isClassMethod;
+/**
+ * Sets the property value.
+ */
 - (void) setIsClassMethod: (BOOL) flag;
+/**
+ * Returns the parse.
+ */
 - (void) parse;
 @end
 

@@ -34,14 +34,11 @@
 #import "GormClassManager.h"
 #import "GormAbstractDelegate.h"
 
+@implementation NSObject (GormObjectAdditions)
 /*
  * Method to return the image that should be used to display objects within
  * the matrix containing the objects in a document.
  */
-@interface NSObject (GormObjectAdditions)
-@end
-
-@implementation NSObject (GormObjectAdditions)
 - (NSImage*) imageForViewer
 {
   static NSImage       *image = nil;
@@ -49,7 +46,7 @@
 
   if (image == nil && [delegate isInTool] == NO)
     {
-      NSBundle	*bundle = [NSBundle bundleForClass: [self class]];
+      NSBundle	*bundle = [NSBundle bundleForClass: [GormObjectEditor class]];
       NSString *path = [bundle pathForImageResource: @"GormUnknown"]; 
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
@@ -110,7 +107,7 @@ static NSMapTable	*docMap = 0;
     {
       docMap = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
 				NSNonRetainedObjectMapValueCallBacks, 
-				2);
+				2); 
     }
 }
 
@@ -131,7 +128,6 @@ static NSMapTable	*docMap = 0;
 {
   NSMapInsert(docMap, (void*)aDocument, (void*)editor);
 }
-
 
 - (BOOL) acceptsTypeFromArray: (NSArray*)types
 {
@@ -198,23 +194,11 @@ static NSMapTable	*docMap = 0;
 	}
 
       [document detachObject: selected];
+      // detachObject: already handles child objects recursively,
+      // so we don't need to manually detach subviews or menu items
       if ([selected isKindOfClass: [NSWindow class]] == YES)
 	{
-	  NSArray *subviews = allSubviews([(NSWindow *)selected contentView]);
-	  [document detachObjects: subviews];
 	  [selected close];
-	}
-      
-      if ([selected isKindOfClass: [NSMenu class]] == YES)
-	{
-	  NSArray *items = findAll( selected );
-	  NSEnumerator *en = [items objectEnumerator];
-	  id obj = nil;
-	  
-	  while((obj = [en nextObject]) != nil)
-	    {
-	      [document detachObject: obj];
-	    }
 	}
       
       [objects removeObjectIdenticalTo: selected];
@@ -592,7 +576,4 @@ static NSMapTable	*docMap = 0;
   [(GormDocument *)document changeToViewWithTag:0];
 }
 
-
 @end
-
-
