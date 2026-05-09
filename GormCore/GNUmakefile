@@ -114,12 +114,9 @@ GormCore_HEADER_FILES = \
 	GormPrefController.h \
 	GormPrefs.h \
 	GormShelfPref.h \
+	GormViewAttributesInspector.h \
 	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	GormXLIFFDocument.h \
-	NSToolbarPrivate.h \
+	NSToolbarPrivate.h
 
 GormCore_OBJC_FILES = \
 	GormAbstractDelegate.m \
@@ -193,6 +190,7 @@ GormCore_OBJC_FILES = \
 	GormPluginsPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
+	GormViewAttributesInspector.m \
 	GormXLIFFDocument.m \
 	NSToolbarPrivate.m \
 
@@ -259,7 +257,8 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormSetName.gorm \
 	GormShelfPref.gorm \
 	GormSoundInspector.gorm \
-	GormViewSizeInspector.gorm
+	GormViewSizeInspector.gorm \
+	GormViewAttributesInspector.gorm
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local
