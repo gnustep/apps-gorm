@@ -248,6 +248,6 @@
 /* delegate for tag and Forms */
 - (void) controlTextDidEndEditing: (NSNotification*)aNotification
 {
-  [self ok:[aNotification object]];
+  [self ok: [aNotification object]];
 }
 @end

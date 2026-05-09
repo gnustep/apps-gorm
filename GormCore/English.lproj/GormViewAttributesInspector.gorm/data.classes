@@ -1,0 +1,19 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    GormViewAttributesInspector = {
+	Actions = (
+	);
+	Outlets = (
+	    height,
+	    identifier,
+	    flipped,
+	    opaque,
+	    tag,
+	    theClass,
+	    width,
+	    xpos,
+	    ypos
+	);
+	Super = IBInspector;
+    };
+}
