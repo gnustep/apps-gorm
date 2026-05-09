@@ -109,9 +109,11 @@
 	  [identifier setStringValue: @"N/A"];
 	}
 
+      // Set properties
       [flipped setState: ([object isFlipped] == YES) ? NSOnState : NSOffState];
-      [flipped setState: ([object isOpaque] == YES) ? NSOnState : NSOffState];
+      [opaque setState: ([object isOpaque] == YES) ? NSOnState : NSOffState];
 
+      // Set the frame information...
       [xpos setFloatValue: frame.origin.x];
       [ypos setFloatValue: frame.origin.y];
       [width setFloatValue: frame.size.width];
