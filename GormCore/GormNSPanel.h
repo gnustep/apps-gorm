@@ -26,6 +26,7 @@
 #define	INCLUDED_GormNSPanel_h
 
 #include <AppKit/AppKit.h>
+
 GS_EXPORT_CLASS
 @interface GormNSPanel : NSPanel
 {
