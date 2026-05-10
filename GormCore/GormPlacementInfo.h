@@ -34,6 +34,7 @@
  * GormPlacementInfo stores state used when placing and resizing views. It
  * tracks hint rectangles and recent frames to compute guideline snaps.
  */
+GS_EXPORT_CLASS
 @interface GormPlacementInfo : NSObject
 {
 @public
@@ -64,6 +65,7 @@ typedef enum _GormHintBorder
  * GormPlacementHint describes a single alignment hint along a border with a
  * valid range and frame, used to compute snapping while dragging/resizing.
  */
+GS_EXPORT_CLASS
 @interface GormPlacementHint : NSObject
 {
   GormHintBorder _border;

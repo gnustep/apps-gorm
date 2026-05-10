@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2004
  * 
  * This file is part of GNUstep.
@@ -26,7 +26,7 @@
 #define INCLUDED_GormViewWindow_h
 
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormViewWindow : NSWindow
 {
   NSView *_view;

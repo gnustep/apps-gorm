@@ -27,7 +27,7 @@
 #define INCLUDED_GormCellSizeInspector_h
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormCellSizeInspector : IBInspector
 {
   NSTextField	*width;

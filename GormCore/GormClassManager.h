@@ -3,7 +3,7 @@
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2002
  *
  * This file is part of GNUstep.
@@ -36,6 +36,7 @@
  * "delta" (custom classes) is saved. Once loaded, they can be merged with
  * the list of base classes to form the full list of classes.
  */
+GS_EXPORT_CLASS
 @interface GormClassManager : NSObject
 {
   NSMutableDictionary	*_classInformation;

@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2006
  *
  * This file is part of GNUstep.
@@ -47,6 +47,7 @@
  * GormWrapperLoader is the default implementation of the loader protocol and
  * provides helpers shared by concrete loaders.
  */
+GS_EXPORT_CLASS
 @interface GormWrapperLoader : NSObject <GormWrapperLoader>
 {
   GormDocument *document;
@@ -65,6 +66,7 @@
  * GormWrapperLoaderFactory registers and returns wrapper loaders suitable for
  * specific file types.
  */
+GS_EXPORT_CLASS
 @interface GormWrapperLoaderFactory : NSObject
 /**
  * Return the shared factory instance.

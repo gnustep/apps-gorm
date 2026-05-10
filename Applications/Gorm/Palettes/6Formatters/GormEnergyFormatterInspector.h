@@ -4,7 +4,7 @@
 #define GormEnergyFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormEnergyFormatterInspector : IBInspector
 {
   IBOutlet id unitStyle;

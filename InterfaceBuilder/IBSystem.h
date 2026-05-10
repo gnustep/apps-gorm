@@ -2,7 +2,7 @@
     Platform specific definitions for externs
     Copyright (C) 2001 Free Software Foundation, Inc.
 
-    Written by: Gregory John Casamento <greg_casamento@yahoo.com>
+    Written by: Gregory John Casamento <greg.casamento@gmail.com>
     Based on AppKitDefines.h by: Adam Fedor <fedor@gnu.org>
     Date: Dec, 2004
     
@@ -20,8 +20,7 @@
     
     You should have received a copy of the GNU Library General Public
     License along with this library; if not, write to the Free
-    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
-    MA 02111 USA.
+    Software Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA.
 */ 
 
 #ifndef IBSystem_INCLUDE

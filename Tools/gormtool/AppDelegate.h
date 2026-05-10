@@ -35,6 +35,7 @@
 /**
  * AppDelegate provides AppDelegate class or protocol.
  */
+GS_EXPORT_CLASS
 @interface AppDelegate : GormAbstractDelegate
 {
   GormDocument *_doc;

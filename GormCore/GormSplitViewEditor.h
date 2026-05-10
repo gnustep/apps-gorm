@@ -25,7 +25,7 @@
 #define	INCLUDED_GormSplitViewEditor_h
 
 #include <GormCore/GormViewWithSubviewsEditor.h>
-
+GS_EXPORT_CLASS
 @interface GormSplitViewEditor : GormViewWithSubviewsEditor
 {
 }

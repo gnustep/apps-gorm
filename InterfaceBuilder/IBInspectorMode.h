@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2004
  * 
  * This file is part of GNUstep.
@@ -34,6 +34,7 @@
  * including an identifier, localized label, the inspector class to use, and
  * an ordering value to control presentation.
  */
+GS_EXPORT_CLASS
 @interface IBInspectorMode : NSObject
 {
   NSString *identifier;

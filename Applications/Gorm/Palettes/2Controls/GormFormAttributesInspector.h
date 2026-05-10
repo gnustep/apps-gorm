@@ -2,11 +2,10 @@
   GormFormAttributesInspector.h
 
    Copyright (C) 2001-2005 Free Software Foundation, Inc.
-
    Author: Adam Fedor <fedor@gnu.org>
            Laurent Julliard <laurent@julliard-online.org>
    Date: Aug 2001
-   Author: Gregory John Casamento <greg_casamento@yahoo.com>
+   Author: Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2003,2004,2005
      
    This file is part of GNUstep.
@@ -43,7 +42,7 @@
 @class NSForm;
 @class NSMatrix;
 @class NSStepper;
-
+GS_EXPORT_CLASS
 @interface GormFormAttributesInspector: IBInspector
 {
   NSButton *cellPositionSwitch;

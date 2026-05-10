@@ -43,6 +43,7 @@ static NSString	*typeDouble = @"Double";
  * and lets users edit primitive values. It switches its UI depending on the
  * detected property types.
  */
+GS_EXPORT_CLASS
 @interface GormObjectInspector : IBInspector
 {
   NSBrowser		*browser;

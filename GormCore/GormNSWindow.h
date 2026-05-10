@@ -1,7 +1,6 @@
 /* GormWindow.h
 
    Copyright (C) 2001 Free Software Foundation, Inc.
-
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
    Date: 2001
    
@@ -25,7 +24,7 @@
 #define	INCLUDED_GormNSWindow_h
 
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSWindow : NSWindow
 {
   unsigned _gormStyleMask;

@@ -3,7 +3,7 @@
    <abstract>allow user to edit attributes of a scroll view</abstract>
 
    Copyright (C) 2003 Free Software Foundation, Inc.
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: June 2003
 
    This file is part of GNUstep.
@@ -21,7 +21,7 @@
    You should have received a copy of the GNU Library General Public
    License along with this library; see the file COPYING.LIB.
    If not, write to the Free Software Foundation,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   31 Milk St # 960789 Boston, MA 02196 USA
 */
 
 /* All Rights reserved */
@@ -29,7 +29,7 @@
 #include <AppKit/AppKit.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormScrollViewAttributesInspector : IBInspector
 {
   id pageContext;

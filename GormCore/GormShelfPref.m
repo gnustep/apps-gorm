@@ -2,7 +2,7 @@
  *  
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author: Gregory Casamento <greg_casamento@yahoo.com>
+ * Author: Gregory Casamento <greg.casamento@gmail.com>
  * Date: February 2004
  *
  * Author: Enrico Sersale <enrico@imago.ro>
@@ -23,7 +23,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
  */
 
 #include <Foundation/Foundation.h>

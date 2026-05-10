@@ -33,7 +33,6 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-
 GS_EXPORT_CLASS
 @interface GormToolbarAttributesInspector : IBInspector <NSTableViewDelegate, NSTableViewDataSource>
 {

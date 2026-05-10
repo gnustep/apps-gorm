@@ -3,7 +3,7 @@
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003
  * 
  * This file is part of GNUstep.
@@ -109,6 +109,7 @@ extern NSString *GormResizeCellNotification;
  * GormObjectProxy is used in Gorm documents but encodes as a GSNibItem when
  * archived. This allows Gorm to control instantiation at load time.
  */
+GS_EXPORT_CLASS
 @interface GormObjectProxy : GSNibItem 
 /*
  * Use a GormObjectProxy in Gorm, but encode a GSNibItem in the archive.
@@ -121,6 +122,7 @@ extern NSString *GormResizeCellNotification;
  * GormClassProxy is a lightweight holder for class-related names used by
  * inspectors for a given class.
  */
+GS_EXPORT_CLASS
 @interface GormClassProxy : NSObject
 {
   NSString *name;

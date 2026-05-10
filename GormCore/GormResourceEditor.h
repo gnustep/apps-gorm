@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2005
  * 
  * This file is part of GNUstep.
@@ -26,7 +26,7 @@
 #define INCLUDED_GormResourceEditor_h
 
 #include "GormGenericEditor.h"
-
+GS_EXPORT_CLASS
 @interface GormResourceEditor : GormGenericEditor
 /**
  * Notifies the editor when a drag operation of an image ends, including the

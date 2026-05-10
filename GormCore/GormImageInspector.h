@@ -8,6 +8,7 @@
  * GormImageInspector provides an inspector panel for editing image resource
  * attributes such as name and size, and for previewing the selected image.
  */
+GS_EXPORT_CLASS
 @interface GormImageInspector : IBInspector
 {
   id name;

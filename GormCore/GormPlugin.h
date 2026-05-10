@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2007 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2007
  * 
  * This file is part of GNUstep.
@@ -33,6 +33,7 @@
  * Plugins can register document types, contribute palettes and inspectors, and
  * provide additional behaviors to the editor.
  */
+GS_EXPORT_CLASS
 @interface GormPlugin : IBPlugin
 /**
  * Registers a document type with a human‑readable name and the associated file

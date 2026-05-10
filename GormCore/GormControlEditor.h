@@ -31,6 +31,7 @@
  * subclasses within the Gorm interface builder. It extends GormViewEditor
  * to handle control-specific editing operations.
  */
+GS_EXPORT_CLASS
 @interface GormControlEditor : GormViewEditor
 
 @end

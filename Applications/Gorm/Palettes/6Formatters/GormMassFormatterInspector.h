@@ -4,7 +4,7 @@
 #define GormMassFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormMassFormatterInspector : IBInspector
 {
   IBOutlet id unitStyle;

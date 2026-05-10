@@ -2,7 +2,6 @@
    GormImageViewAttributesInspector.h
 
    Copyright (C) 2001-2005 Free Software Foundation, Inc.
-
    Author:  Laurent Julliard <laurent@julliard-online.org>
    Date: Nov 2001
    
@@ -38,7 +37,7 @@
 @class NSButton;
 @class NSMatrix;
 @class NSTextField;
-
+GS_EXPORT_CLASS
 @interface GormImageViewAttributesInspector : IBInspector
 {
   NSTextField *iconField;

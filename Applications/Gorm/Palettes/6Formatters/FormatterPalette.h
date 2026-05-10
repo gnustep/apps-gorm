@@ -1,7 +1,6 @@
 /* ToolbarPalette
 
    Copyright (C) 2025 Free Software Foundation, Inc.
-
    Author: Gregory Casamento <greg.casamento@gmail.com>
    Date: Nov 2025
    
@@ -28,7 +27,7 @@
 #define FormatterPalette_H_INCLUDE
 
 #import <InterfaceBuilder/IBPalette.h>
-
+GS_EXPORT_CLASS
 @interface FormatterPalette : IBPalette
 {
   IBOutlet id _byteCount;

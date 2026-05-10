@@ -4,8 +4,7 @@
    The outline class.
    
    Copyright (C) 2001 Free Software Foundation, Inc.
-
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: July 2002
    
    This file is part of the GNUstep GUI Library.
@@ -23,7 +22,7 @@
    You should have received a copy of the GNU Library General Public
    License along with this library; see the file COPYING.LIB.
    If not, write to the Free Software Foundation,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   31 Milk St # 960789 Boston, MA 02196 USA
 */ 
 
 #ifndef INCLUDED_GormOutlineView_h
@@ -42,6 +41,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
  * in the inspector. It tracks the editing state and provides accessors for the columns used
  * to present actions and outlets in the outline view.
  */
+GS_EXPORT_CLASS
 @interface GormOutlineView : NSOutlineView
 {
   float _attributeOffset;
@@ -179,6 +179,7 @@ typedef enum {None, Outlets, Actions} GSAttributeType;
  * GormOutletActionHolder is a simple value object that stores the display
  * name of an outlet or action row for rendering in the outline view.
  */
+GS_EXPORT_CLASS
 @interface GormOutletActionHolder : NSObject
 {
   NSString *_name;

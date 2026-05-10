@@ -9,6 +9,7 @@
  * view, add, and remove installed plugins or palettes and provides the view
  * shown inside the preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormPluginsPref : NSObject
 {
   id table;

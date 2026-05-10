@@ -3,7 +3,7 @@
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003
  * 
  * This file is part of GNUstep.
@@ -40,6 +40,7 @@
 /**
  * GormInspectorsManager coordinates the inspector panels that display and edit properties of selected objects. It maintains a cache of inspector instances, manages the inspector panel display, and handles switching between different inspector types based on the current selection.
  */
+GS_EXPORT_CLASS
 @interface GormInspectorsManager : IBInspectorManager
 {
   IBOutlet NSPanel	 *panel;

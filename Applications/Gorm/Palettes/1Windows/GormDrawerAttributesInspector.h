@@ -2,8 +2,7 @@
    GormDrawerAttributesInspector.m
    
    Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2006
    
    This file is part of GNUstep.
@@ -28,7 +27,7 @@
 #include <AppKit/AppKit.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormDrawerAttributesInspector : IBInspector
 {
   id preferredEdge;

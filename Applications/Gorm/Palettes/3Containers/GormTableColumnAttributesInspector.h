@@ -2,7 +2,6 @@
   GormTableColumnAttributesInspector.h
 
    Copyright (C) 2001-2005 Free Software Foundation, Inc.
-
    Author:  Adam Fedor <fedor@gnu.org>
               Laurent Julliard <laurent@julliard-online.org>
    Date: Aug 2001
@@ -43,7 +42,7 @@
 @class NSTableView;
 @class NSForm;
 @class NSPopUpButton;
-
+GS_EXPORT_CLASS
 @interface GormTableColumnAttributesInspector : IBInspector
 {
   NSMatrix *titleAlignmentMatrix;

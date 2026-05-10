@@ -2,7 +2,6 @@
   GormBrowserAttributesInspector.h
 
    Copyright (C) 2001-2005 Free Software Foundation, Inc.
-
    Author:  Adam Fedor <fedor@gnu.org>
               Laurent Julliard <laurent@julliard-online.org>
    Date: Aug 2001
@@ -39,7 +38,7 @@
 @class NSButton;
 @class NSForm;
 @class NSTextField;
-
+GS_EXPORT_CLASS
 @interface GormBrowserAttributesInspector : IBInspector
 {
   /* options */

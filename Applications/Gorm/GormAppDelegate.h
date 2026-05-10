@@ -46,6 +46,7 @@
  * importing images and sounds, grouping/ungrouping views, class-related
  * utilities, translation workflows (XLIFF/strings), and printing.
  */
+GS_EXPORT_CLASS
 @interface GormAppDelegate : GormAbstractDelegate <NSOpenSavePanelDelegate>
 {
   @private

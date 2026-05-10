@@ -12,6 +12,7 @@
  * including format options for year, month, day, week of year, time zone,
  * fractional seconds, separators, and spacing between date and time components.
  */
+GS_EXPORT_CLASS
 @interface GormISO8601DateFormatterInspector : IBInspector
 {
   IBOutlet id timeZone;

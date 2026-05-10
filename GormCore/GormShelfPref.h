@@ -2,7 +2,7 @@
  *  
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author: Gregory Casamento <greg_casamento@yahoo.com>
+ * Author: Gregory Casamento <greg.casamento@gmail.com>
  * Date: February 2004
  *
  * Author: Enrico Sersale <enrico@imago.ro>
@@ -23,7 +23,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
  */
 
 #ifndef GORMSHELFPREF_H
@@ -44,6 +44,7 @@ typedef enum {
  * ArrResizer is an internal view that draws a grab/arrow handle used to
  * resize the shelf width in the preferences UI.
  */
+GS_EXPORT_CLASS
 @interface ArrResizer : NSView
 {
   NSImage *arrow;
@@ -69,6 +70,7 @@ typedef enum {
  * to adjust the icon shelf width and related appearance settings, and returns
  * the view embedded in the preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormShelfPref : NSObject 
 {
   IBOutlet id win;

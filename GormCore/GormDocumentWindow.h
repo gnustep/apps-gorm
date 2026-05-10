@@ -25,7 +25,7 @@
 #include <AppKit/AppKit.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormDocumentWindow : NSWindow
 {
   id _document;

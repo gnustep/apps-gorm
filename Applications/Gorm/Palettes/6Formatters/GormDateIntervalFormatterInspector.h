@@ -4,7 +4,7 @@
 #define GormDateIntervalFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormDateIntervalFormatterInspector : IBInspector
 {
   IBOutlet id dateStyle;

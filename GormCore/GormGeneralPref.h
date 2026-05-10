@@ -9,6 +9,7 @@
  * options like creating backups, and whether classes are shown as a browser
  * or outline, and exposes the view for the preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormGeneralPref : NSObject
 {
   id window;

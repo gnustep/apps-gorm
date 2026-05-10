@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003, 2005
  * 
  * This file is part of GNUstep.
@@ -35,6 +35,7 @@
  * users set spacing and color for layout guides and supplies the view that
  * appears in the preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormGuidelinePref : NSObject
 {
   NSWindow *window;

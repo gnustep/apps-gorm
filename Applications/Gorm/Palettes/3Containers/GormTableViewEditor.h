@@ -27,7 +27,7 @@
 #include <GormCore/GormCore.h>
 
 @class GormNSTableView;
-
+GS_EXPORT_CLASS
 @interface GormTableViewEditor : GormViewWithSubviewsEditor
 {
   GormNSTableView *tableView;

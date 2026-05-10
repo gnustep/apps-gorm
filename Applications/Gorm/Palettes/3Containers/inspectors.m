@@ -3,7 +3,7 @@
    Copyright (C) 2001 Free Software Foundation, Inc.
 
    Author:  Laurent Julliard <laurent@julliard-online.org>
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: Aug 2001. 2003, 2004
    
    This file is part of GNUstep.

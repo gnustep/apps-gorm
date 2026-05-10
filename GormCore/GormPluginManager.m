@@ -3,7 +3,7 @@
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2004, 2008
  * 
  * This file is part of GNUstep.

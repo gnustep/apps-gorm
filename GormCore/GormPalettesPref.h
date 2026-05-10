@@ -9,6 +9,7 @@
  * available palettes and lets users add or remove entries, providing the
  * view used within the preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormPalettesPref : NSObject
 {
   id table;

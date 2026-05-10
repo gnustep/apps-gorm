@@ -2,7 +2,7 @@
 
    Copyright (C) 2001 Free Software Foundation, Inc.
 
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2005
    
    This file is part of GNUstep.

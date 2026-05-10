@@ -2,7 +2,7 @@
 
 #include <AppKit/AppKit.h>
 #include "WinController.h"
-
+GS_EXPORT_CLASS
 @interface MyController : NSObject
 {
   id value;

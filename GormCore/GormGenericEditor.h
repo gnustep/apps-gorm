@@ -3,7 +3,7 @@
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003, 2004
  * 
  * This file is part of GNUstep.
@@ -37,6 +37,7 @@
  * for displaying and managing lists of objects such as images, sounds, and
  * custom classes.
  */
+GS_EXPORT_CLASS
 @interface GormGenericEditor : NSMatrix <IBEditors, IBSelectionOwners>
 {
   NSMutableArray	*objects;

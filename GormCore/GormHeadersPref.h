@@ -9,6 +9,7 @@
  * manage a list of headers to preload and exposes the view for the
  * preferences window.
  */
+GS_EXPORT_CLASS
 @interface GormHeadersPref : NSObject
 {
   id preloadButton;

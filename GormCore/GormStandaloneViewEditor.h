@@ -25,7 +25,7 @@
 #define	INCLUDED_GormStandaloneViewEditor_h
 
 #include <GormCore/GormViewWithContentViewEditor.h>
-
+GS_EXPORT_CLASS
 @interface GormStandaloneViewEditor : GormViewWithContentViewEditor <IBSelectionOwners>
 @end
 

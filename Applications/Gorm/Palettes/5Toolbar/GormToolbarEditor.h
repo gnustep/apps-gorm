@@ -33,6 +33,7 @@
  * within the Gorm palette. It allows users to add, remove, and configure
  * toolbar items visually. This editor supports selection and connections.
  */
+GS_EXPORT_CLASS
 @interface GormToolbarEditor : GormGenericEditor
 {
   NSToolbar *toolbar;

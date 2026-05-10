@@ -8,6 +8,7 @@
  * GormNSSplitViewInspector provides controls for editing NSSplitView
  * attributes in the inspector, such as orientation and divider style.
  */
+GS_EXPORT_CLASS
 @interface GormNSSplitViewInspector : IBInspector
 {
   id orientation;

@@ -3,7 +3,6 @@
    <abstract>Interface of GormXIBKeyedArchiver</abstract>
 
    Copyright (C) 2023 Free Software Foundation, Inc.
-
    Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2023
    
@@ -41,6 +40,7 @@
 /**
  * GormXIBModelGenerator provides GormXIBModelGenerator class or protocol.
  */
+GS_EXPORT_CLASS
 @interface GormXIBModelGenerator : NSObject
 {
   GormDocument *_gormDocument;

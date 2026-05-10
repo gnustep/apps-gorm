@@ -4,7 +4,7 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  *              Separated out into header.
  * Date:	2005
  * 
@@ -36,6 +36,7 @@
  * GormViewSizeInspector displays size and autoresizing options for the
  * selected view, allowing users to adjust anchors and dimensions.
  */
+GS_EXPORT_CLASS
 @interface GormViewSizeInspector : IBInspector
 {
   NSButton	*top;

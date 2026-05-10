@@ -2,7 +2,6 @@
    GormNSComboBoxAttributesInspector.h
 
    Copyright (C) 2001-2005 Free Software Foundation, Inc.
-
    Author:  Laurent Julliard <laurent@julliard-online.org>
    Date: Nov 2001
    
@@ -42,7 +41,7 @@
 @class NSForm;
 @class NSTableView;
 @class NSTextField;
-
+GS_EXPORT_CLASS
 @interface GormNSComboBoxAttributesInspector: IBInspector
 {
    NSMatrix *alignmentMatrix;

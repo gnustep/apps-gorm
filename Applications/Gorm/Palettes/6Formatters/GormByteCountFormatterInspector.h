@@ -4,7 +4,7 @@
 #define GormByteCountFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormByteCountFormatterInspector : IBInspector
 {
   IBOutlet id countStyle;

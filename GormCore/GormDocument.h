@@ -3,7 +3,7 @@
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003
  * 
  * This file is part of GNUstep.
@@ -42,6 +42,7 @@
  * use the fact that it's a different class to search for it in the connections
  * array.
  */
+GS_EXPORT_CLASS
 @interface	GormObjectToEditor : NSNibConnector
 @end
 
@@ -50,6 +51,7 @@
  * editor. This is used to distinguish editor-parent links in the connection
  * graph.
  */
+GS_EXPORT_CLASS
 @interface	GormEditorToParent : NSNibConnector
 @end
 
@@ -57,6 +59,7 @@
  * Each document has a GormFirstResponder object that is used as a placeholder
  * for the first responder at any instant.
  */
+GS_EXPORT_CLASS
 @interface GormFirstResponder : NSObject
 {
 }
@@ -67,6 +70,7 @@
  * manages classes, resources, top-level objects, editors and inspectors,
  * connection graphs, and persistence to/from Gorm archives.
  */
+GS_EXPORT_CLASS
 @interface GormDocument : NSDocument <IBDocuments, GSNibContainer, NSCoding, NSXMLParserDelegate> 
 {
   GormClassManager      *classManager;

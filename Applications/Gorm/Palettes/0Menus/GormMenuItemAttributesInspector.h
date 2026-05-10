@@ -2,7 +2,6 @@
    GormMenuItemAttributesInspector.h
 
    Copyright (C) 1999-2005 Free Software Foundation, Inc.
-
    Author:  Richard frith-Macdonald (richard@brainstorm.co.uk>
    Date: 1999
    
@@ -37,7 +36,7 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 @class NSTextField, NSPopUpButton, NSMatrix;
-
+GS_EXPORT_CLASS
 @interface GormMenuItemAttributesInspector : IBInspector
 {
   NSTextField	*titleText;

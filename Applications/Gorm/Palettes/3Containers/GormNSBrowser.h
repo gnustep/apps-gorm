@@ -1,7 +1,6 @@
 /* GormNSBrowser.h
 
    Copyright (C) 2001 Free Software Foundation, Inc.
-
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
    Date: 2001
    
@@ -25,7 +24,7 @@
 #define	INCLUDED_GormNSBrowser_h
 
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSBrowser : NSBrowser
 {
   id _gormDelegate;

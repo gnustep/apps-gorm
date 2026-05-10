@@ -34,6 +34,7 @@
 /**
  * GormViewEditor provides the base editor class for editing NSView and its subclasses within the Gorm interface builder. It handles view selection, manipulation, and subview management.
  */
+GS_EXPORT_CLASS
 @interface GormViewEditor : NSView <IBEditors>
 {
   id<IBDocuments>	            document;

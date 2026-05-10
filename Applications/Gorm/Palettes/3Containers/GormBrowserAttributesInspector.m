@@ -5,7 +5,7 @@
 
    Author:  Adam Fedor <fedor@gnu.org>
             Laurent Julliard <laurent@julliard-online.org>
-            Gregory John Casamento <greg_casamento@yahoo.com>
+            Gregory John Casamento <greg.casamento@gmail.com>
    Date: Aug 2001
    
    This file is part of GNUstep.

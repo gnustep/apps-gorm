@@ -30,6 +30,7 @@
  * GormInternalViewEditor provides editing capabilities for views that contain
  * an internal content view, such as scroll views and split views.
  */
+GS_EXPORT_CLASS
 @interface GormInternalViewEditor: GormViewWithContentViewEditor
 {
 }

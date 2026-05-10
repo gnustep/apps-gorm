@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2006
  *
  * This file is part of GNUstep.
@@ -32,6 +32,7 @@
 /**
  * GormGormWrapperLoader provides GormGormWrapperLoader class or protocol.
  */
+GS_EXPORT_CLASS
 @interface GormGormWrapperLoader : GormWrapperLoader
 {
   NSMutableArray *_repairLog;

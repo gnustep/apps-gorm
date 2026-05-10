@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999, 2003
  * 
@@ -30,7 +30,7 @@
 
 @class NSMutableArray, NSMutableDictionary, NSDictionary, NSArray, NSBundle;
 @class NSPanel, NSMatrix, NSView;
-
+GS_EXPORT_CLASS
 @interface GormPalettesManager : NSObject
 {
   NSPanel		*panel;

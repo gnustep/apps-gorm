@@ -33,6 +33,7 @@
 /**
  * ArgPair provides ArgPair class or protocol.
  */
+GS_EXPORT_CLASS
 @interface ArgPair : NSObject <NSCopying>
 {
   NSString *_argument;

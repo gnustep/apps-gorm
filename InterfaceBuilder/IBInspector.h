@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2003
  * 
  * This file is part of GNUstep.
@@ -45,6 +45,7 @@
  * edit properties of the currently selected object, provide optional OK and
  * Revert buttons, and manage the inspector panel UI.
  */
+GS_EXPORT_CLASS
 @interface IBInspector : NSObject
 {
   id		object;

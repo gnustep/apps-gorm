@@ -8,6 +8,7 @@
  * target library versions and archive formats, and maintaining version
  * profiles.
  */
+GS_EXPORT_CLASS
 @interface GormFilePrefsManager : NSObject <NSCoding>
 {
   id showIncompatibilities;

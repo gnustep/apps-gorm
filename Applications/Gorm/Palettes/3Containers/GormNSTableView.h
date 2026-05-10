@@ -1,7 +1,6 @@
 /* GormNSTableView.h
 
    Copyright (C) 2001, 2026 Free Software Foundation, Inc.
-
    Author: Gregory John Casamento <greg.casamento@gmail.com>
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
    Date: 2001, 2026
@@ -28,7 +27,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSTableView : NSTableView
 {
   id _gormDataSource;

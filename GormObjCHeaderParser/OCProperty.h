@@ -31,11 +31,10 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-
-GS_EXPORT_CLASS
 /**
  * OCProperty provides OCProperty class or protocol.
  */
+GS_EXPORT_CLASS
 @interface OCProperty : OCIVar
 
 @end

@@ -1,10 +1,9 @@
 /* inspectors - Various inspectors for data elements
 
    Copyright (C) 2001 Free Software Foundation, Inc.
-
    Author:  Laurent Julliard <laurent@julliard-online.org>
    Date: Nov 2001   
-   Author:  Gregory Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory Casamento <greg.casamento@gmail.com>
    Date: Nov 2003,2004,2005
    
    This file is part of GNUstep.
@@ -32,7 +31,7 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 #include <GormCore/GormCore.h>
-
+GS_EXPORT_CLASS
 @interface GormTextViewEditor : GormViewEditor
 {
   NSTextView *textView;

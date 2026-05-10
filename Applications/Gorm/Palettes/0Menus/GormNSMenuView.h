@@ -1,7 +1,6 @@
 /** <title>GormNSMenuView</title>
 
    Copyright (C) 1999 Free Software Foundation, Inc.
-
    Author: Fred Kiefer <FredKiefer@gmx.de>
    Date: Sep 2001
    Author: David Lazaro Saz <khelekir@encomix.es>
@@ -29,7 +28,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSMenuView : NSMenuView
 @end
 

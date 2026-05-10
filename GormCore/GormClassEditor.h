@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1999, 2003, 2005 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2003, 2005
  * 
  * This file is part of GNUstep.
@@ -45,6 +45,7 @@ extern NSString *GormSwitchViewPreferencesNotification;
  * views for class hierarchies and allows manipulation of class attributes
  * such as outlets and actions.
  */
+GS_EXPORT_CLASS
 @interface GormClassEditor : NSView <IBEditors, IBSelectionOwners>
 {
   GormDocument          *document;

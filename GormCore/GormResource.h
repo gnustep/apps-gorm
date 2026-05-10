@@ -3,8 +3,7 @@
    <abstract>This class is a placeholder for a real resource.</abstract>
    
    Copyright (C) 2005 Free Software Foundation, Inc.
-
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: Mar 2005
    
    This file is part of the GNUstep GUI Library.
@@ -22,7 +21,7 @@
    You should have received a copy of the GNU Library General Public
    License along with this library; see the file COPYING.LIB.
    If not, write to the Free Software Foundation,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   31 Milk St # 960789 Boston, MA 02196 USA
 */ 
 
 #ifndef INCLUDED_GormResource_h
@@ -39,6 +38,7 @@
  * tracked by Gorm. It stores metadata like name, file type, and location,
  * along with the raw resource data when available.
  */
+GS_EXPORT_CLASS
 @interface GormResource : NSObject <IBProjectFiles>
 {
   NSString        *name;

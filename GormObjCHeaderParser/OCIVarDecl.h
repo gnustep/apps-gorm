@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2002
  *
  * This file is part of GNUstep.
@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
  */
 
 #include <Foundation/Foundation.h>
@@ -32,6 +32,7 @@
 /**
  * OCIVarDecl provides OCIVarDecl class or protocol.
  */
+GS_EXPORT_CLASS
 @interface OCIVarDecl : NSObject
 {
   NSString *ivarString;

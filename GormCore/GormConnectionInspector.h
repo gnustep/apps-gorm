@@ -4,7 +4,7 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2003,2005
  *
  * This file is part of GNUstep.
@@ -38,6 +38,7 @@
  * between objects. It shows existing connections and lets users create or
  * remove them.
  */
+GS_EXPORT_CLASS
 @interface GormConnectionInspector : IBInspector
 {
   id			currentConnector;

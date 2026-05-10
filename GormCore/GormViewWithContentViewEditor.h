@@ -31,6 +31,7 @@
 /**
  * GormViewWithContentViewEditor handles editing of views that have a dedicated content view, such as NSScrollView and NSSplitView.
  */
+GS_EXPORT_CLASS
 @interface GormViewWithContentViewEditor : GormViewWithSubviewsEditor
 {
   GormInternalViewEditor *contentViewEditor;

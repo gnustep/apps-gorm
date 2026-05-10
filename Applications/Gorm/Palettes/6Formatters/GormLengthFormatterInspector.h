@@ -4,7 +4,7 @@
 #define GormLengthFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormLengthFormatterInspector : IBInspector
 {
   IBOutlet id forPersonHeightUse;

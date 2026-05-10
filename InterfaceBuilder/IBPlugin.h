@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2007 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2007
  * 
  * This file is part of GNUstep.
@@ -39,6 +39,7 @@
  * contribute library nibs, preferences UI, and behavior for pasteboard-driven
  * insertion of components into a document.
  */
+GS_EXPORT_CLASS
 @interface IBPlugin : NSObject
 
 // Getting the shared plugin...

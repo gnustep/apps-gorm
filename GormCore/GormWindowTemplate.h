@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2009 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2009
  *
  * This file is part of GNUstep.
@@ -39,6 +39,7 @@
  * GormWindowTemplate customizes NSWindowTemplate behavior for Gorm archives,
  * allowing control over the class used for instantiated windows.
  */
+GS_EXPORT_CLASS
 @interface GormWindowTemplate : NSWindowTemplate
 {
   BOOL _tempFlag;

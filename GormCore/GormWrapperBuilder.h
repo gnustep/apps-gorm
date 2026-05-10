@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2006
  *
  * This file is part of GNUstep.
@@ -51,6 +51,7 @@
  * GormWrapperBuilder is the default implementation of the builder protocol
  * and provides utilities common to concrete builders.
  */
+GS_EXPORT_CLASS
 @interface GormWrapperBuilder : NSObject <GormWrapperBuilder>
 {
   GormDocument *document;
@@ -65,6 +66,7 @@
  * GormWrapperBuilderFactory registers and creates wrapper builders for file
  * types, returning the appropriate builder instance on demand.
  */
+GS_EXPORT_CLASS
 @interface GormWrapperBuilderFactory : NSObject
 /**
  * Return the shared factory instance.

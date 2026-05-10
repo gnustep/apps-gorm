@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2004
  * 
  * This file is part of GNUstep.
@@ -36,7 +36,7 @@
  */ 
 IB_EXTERN NSString *IBWillInspectObjectNotification;
 IB_EXTERN NSString *IBWillInspectWithModeNotification;
-
+GS_EXPORT_CLASS
 @interface IBInspectorManager : NSObject
 {
   NSMutableArray        *modes;

@@ -25,7 +25,7 @@
 #define	INCLUDED_GormViewWithSubviewsEditor_h
 
 #include <GormCore/GormViewEditor.h>
-
+GS_EXPORT_CLASS
 @interface GormViewWithSubviewsEditor : GormViewEditor <IBSelectionOwners>
 {
   BOOL _displaySelection;

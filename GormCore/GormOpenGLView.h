@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2005 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2005
  * 
  * This file is part of GNUstep.
@@ -35,6 +35,7 @@
  * when an NSOpenGLView is being tested in the interface builder. This serves
  * as a visual placeholder during testing mode only.
  */
+GS_EXPORT_CLASS
 @interface GormOpenGLView : NSView
 {
   float rtri;

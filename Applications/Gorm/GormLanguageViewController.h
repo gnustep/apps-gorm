@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2023 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2023
  * 
  * This file is part of GNUstep.
@@ -34,6 +34,7 @@
  * translation features. It tracks the current source and target language
  * identifiers and updates them in response to user input.
  */
+GS_EXPORT_CLASS
 @interface GormLanguageViewController : NSViewController
 {
   IBOutlet id targetLanguage;

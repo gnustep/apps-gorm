@@ -64,6 +64,7 @@
 /**
  * GormObjectEditor provides the main objects panel editor that displays and manages all top-level objects in a Gorm document.
  */
+GS_EXPORT_CLASS
 @interface GormObjectEditor : GormGenericEditor 
 
 /**

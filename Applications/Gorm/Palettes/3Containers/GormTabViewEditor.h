@@ -26,7 +26,7 @@
 
 #import <AppKit/NSTabView.h>
 #include <GormCore/GormCore.h>
-
+GS_EXPORT_CLASS
 @interface GormTabViewEditor : GormViewWithSubviewsEditor <NSTabViewDelegate>
 {
   int selectedSubview;

@@ -1,6 +1,6 @@
 #
 # GNUmakefile 
-# Written by Gregory John Casamento <greg_casamento@yahoo.com>
+# Written by Gregory John Casamento <greg.casamento@gmail.com>
 #
 PACKAGE_NAME = gorm
 include $(GNUSTEP_MAKEFILES)/common.make

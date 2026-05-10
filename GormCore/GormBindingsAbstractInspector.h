@@ -4,7 +4,7 @@
 #define INCLUDED_GormBindingsAbstractInspector_H
 
 #import <InterfaceBuilder/IBInspector.h>
-
+GS_EXPORT_CLASS
 @interface GormBindingsAbstractInspector : IBInspector
 {
   IBOutlet id _bindTo;

@@ -15,6 +15,7 @@
  * the user (e.g., for renaming). It exposes the text field and returns the
  * modal response when run.
  */
+GS_EXPORT_CLASS
 @interface GormSetNameController : NSObject
 {
   NSPanel *window;

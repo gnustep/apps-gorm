@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1999, 2003 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999, 2003
  * 
@@ -34,6 +34,7 @@
 /**
  * GormPluginManager handles loading and managing Gorm plugin bundles. Plugins extend Gorm's functionality by providing additional palettes, inspectors, or custom object types.
  */
+GS_EXPORT_CLASS
 @interface GormPluginManager : NSObject
 {
   NSMutableArray	*bundles;

@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2006 Free Software Foundation, Inc.
  *
- * Author:      Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:      Gregory John Casamento <greg.casamento@gmail.com>
  * Date:        2006
  *
  * This file is part of GNUstep.
@@ -28,7 +28,7 @@
 #include <GormCore/GormCore.h>
 
 #include <GNUstepGUI/GSXibLoading.h>
-
+GS_EXPORT_CLASS
 @interface GormXibWrapperLoader : GormWrapperLoader
 {
   NSMutableDictionary *_idToName;

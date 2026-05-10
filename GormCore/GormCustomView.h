@@ -32,6 +32,7 @@
  * within the Gorm interface builder. It displays the class name of the custom
  * view that will replace it at runtime.
  */
+GS_EXPORT_CLASS
 @interface GormCustomView : NSTextField
 {
   NSString *className;

@@ -3,7 +3,7 @@
  * Copyright (C) 1999 Free Software Foundation, Inc.
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	1999, 2004
  * 
  * This file is part of GNUstep.
@@ -37,6 +37,7 @@
  * Each document has a GormFilesOwner object that represents the File's Owner
  * proxy object which will be replaced at runtime by the actual document owner.
  */
+GS_EXPORT_CLASS
 @interface	GormFilesOwner : NSObject
 {
   NSString	*className;
@@ -57,6 +58,7 @@
  * GormFilesOwnerInspector provides an inspector interface for configuring
  * the File's Owner object, including setting its class and managing connections.
  */
+GS_EXPORT_CLASS
 @interface GormFilesOwnerInspector : IBInspector
 {
   NSBrowser	        *browser;

@@ -4,7 +4,7 @@
 #define GormPersonNameComponentsFormatterInspector_H_INCLUDE
 
 #import <InterfaceBuilder/InterfaceBuilder.h>
-
+GS_EXPORT_CLASS
 @interface GormPersonNameComponentsFormatterInspector : IBInspector
 {
   IBOutlet id style;

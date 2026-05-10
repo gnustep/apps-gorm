@@ -2,7 +2,7 @@
 #
 #   Copyright (C) 1999,2002,2003 Free Software Foundation, Inc.
 #
-#   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+#   Author:  Gregory John Casamento <greg.casamento@gmail.com>
 #   Date: 2003
 #   Author:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
 #   Date: 1999
@@ -21,7 +21,7 @@
 #   
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#   Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
 #
 
 ifeq ($(GNUSTEP_MAKEFILES),)

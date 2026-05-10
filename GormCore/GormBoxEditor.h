@@ -33,6 +33,7 @@
  * Gorm interface builder. It manages the content view of the box and handles
  * subview manipulation.
  */
+GS_EXPORT_CLASS
 @interface GormBoxEditor : GormViewWithSubviewsEditor
 {
   GormInternalViewEditor *contentViewEditor;

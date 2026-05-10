@@ -6,7 +6,7 @@
    Author:  Adam Fedor <fedor@gnu.org>
             Laurent Julliard <laurent@julliard-online.org>
    Date: Aug 2001
-   Author:  Gregory Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory Casamento <greg.casamento@gmail.com>
             Added custom class handling for table column.
    Date: 2004
    

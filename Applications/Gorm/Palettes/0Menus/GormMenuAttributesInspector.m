@@ -5,7 +5,7 @@
 
    Author:  Richard frith-Macdonald (richard@brainstorm.co.uk>
    Date: 1999
-   Author:  Gregory John Casamento <greg_casamento@yahoo.com>
+   Author:  Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2003
    
    This file is part of GNUstep.

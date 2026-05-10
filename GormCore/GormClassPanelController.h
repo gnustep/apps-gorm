@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2004
  * 
  * This file is part of GNUstep.
@@ -33,6 +33,7 @@
  * It loads the panel UI, presents the available classes in a browser, and
  * returns the selected class name when the user confirms.
  */
+GS_EXPORT_CLASS
 @interface GormClassPanelController : NSObject
 {
   id okButton;

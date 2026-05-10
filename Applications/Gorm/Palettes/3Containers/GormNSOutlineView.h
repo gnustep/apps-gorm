@@ -1,8 +1,7 @@
 /* GormNSOutlineView.h
 
    Copyright (C) 2002 Free Software Foundation, Inc.
-
-   Author: Gregory John Casamento <greg_casamento@yahoo.com>
+   Author: Gregory John Casamento <greg.casamento@gmail.com>
    Date: 2002
    
    This file is part of GNUstep.
@@ -26,7 +25,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSOutlineView : NSOutlineView
 {
   id _gormDataSource;

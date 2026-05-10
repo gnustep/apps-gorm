@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2023 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2023
  * 
  * This file is part of GNUstep.
@@ -37,6 +37,7 @@
  * for a Gorm document. It extracts translatable strings and writes a CAT-
  * friendly XLIFF, and can read translated XLIFF back into the document.
  */
+GS_EXPORT_CLASS
 @interface GormXLIFFDocument : NSObject
 {
   GormDocument *_gormDocument;

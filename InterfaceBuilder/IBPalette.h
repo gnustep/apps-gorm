@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2003
  * 
  * This file is part of GNUstep.
@@ -57,7 +57,7 @@ IB_EXTERN NSString	*IBFormatterPboardType;
 IB_EXTERN NSString	*GormImagePboardType;
 IB_EXTERN NSString	*GormSoundPboardType;
 IB_EXTERN NSString      *GormLinkPboardType;
-
+GS_EXPORT_CLASS
 @interface IBPalette : NSObject
 {
   NSWindow	  *originalWindow;

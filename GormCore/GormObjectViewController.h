@@ -12,6 +12,7 @@
  * icon and outline representations, switches the displayed view, and forwards
  * editor actions to the underlying document/editor.
  */
+GS_EXPORT_CLASS
 @interface GormObjectViewController : NSViewController
 {
   IBOutlet id displayView;

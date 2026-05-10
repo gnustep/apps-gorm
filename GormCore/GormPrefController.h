@@ -2,7 +2,7 @@
  *  
  * Copyright (C) 2003 Free Software Foundation, Inc.
  *
- * Author: Gregory Casamento <greg_casamento@yahoo.com>
+ * Author: Gregory Casamento <greg.casamento@gmail.com>
  * Date: February 2004
  *
  * This class is heavily based on work done by Enrico Sersale
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
  */
 
 #ifndef INCLUDED_GormPrefController_h
@@ -28,7 +28,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormPrefController : NSObject
 {
   id panel;

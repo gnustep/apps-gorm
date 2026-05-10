@@ -4,7 +4,7 @@
  *
  * Author:	Richard Frith-Macdonald <richard@brainstrom.co.uk>
  * Date:	1999
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2004,2005
  *
  * This file is part of GNUstep.
@@ -36,6 +36,7 @@
 /**
  * GormWindowEditor handles the editing of NSWindow objects, managing their content view and window-level properties.
  */
+GS_EXPORT_CLASS
 @interface GormWindowEditor : GormViewWithContentViewEditor
 {
   NSView                *edit_view;

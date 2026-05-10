@@ -48,6 +48,7 @@
  * delegate. It provides core functionality for managing the interface builder
  * environment including inspectors, palettes, plugins, and the testing mode.
  */
+GS_EXPORT_CLASS
 @interface GormAbstractDelegate : NSObject <IB, GormAppDelegate, GormServer>
 {
   IBOutlet id            _gormMenu;

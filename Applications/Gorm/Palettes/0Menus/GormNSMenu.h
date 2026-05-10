@@ -1,7 +1,6 @@
 /* GormNSMenu.h
 
    Copyright (C) 2002 Free Software Foundation, Inc.
-
    Author: Pierre-Yves Rivaille <pyrivail@ens-lyon.fr>
    Date: 2002
    
@@ -25,7 +24,7 @@
 #define	INCLUDED_GormNSMenu_h
 
 #include <AppKit/AppKit.h>
-
+GS_EXPORT_CLASS
 @interface GormNSMenu : NSMenu
 + (GormNSMenu *) menuWithMenu: (NSMenu *)menu;
 - (BOOL) realAutoenablesItems;

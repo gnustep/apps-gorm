@@ -31,6 +31,7 @@
  * the Gorm interface builder. It manages selection and manipulation of
  * individual cells within the matrix.
  */
+GS_EXPORT_CLASS
 @interface GormMatrixEditor : GormViewWithSubviewsEditor
 {
   NSCell* selected;

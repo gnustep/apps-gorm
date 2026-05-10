@@ -6,6 +6,7 @@
  * GormFontViewController coordinates a small font selection UI used by Gorm
  * to preview and apply fonts in inspectors and editors.
  */
+GS_EXPORT_CLASS
 @interface GormFontViewController : NSObject
 {
   id fontSelector;

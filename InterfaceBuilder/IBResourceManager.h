@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2005 Free Software Foundation, Inc.
  *
- * Author:	Gregory John Casamento <greg_casamento@yahoo.com>
+ * Author:	Gregory John Casamento <greg.casamento@gmail.com>
  * Date:	2005
  * 
  * This file is part of GNUstep.
@@ -50,7 +50,7 @@ enum IBResourceLocation {
   kSystemResource, 
   kUnknownResource 
 };
-
+GS_EXPORT_CLASS
 @interface IBResourceManager : NSObject
 {
   id<IBDocuments> document;
