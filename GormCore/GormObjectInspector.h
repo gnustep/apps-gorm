@@ -42,6 +42,11 @@ static NSString	*typeDouble = @"Double";
  * GormObjectInspector displays key-value properties for the selected object
  * and lets users edit primitive values. It switches its UI depending on the
  * detected property types.
+ *
+ * The purpose of this inspector is to act as a stand-in when an inspector
+ * is not available for a given object.  This is so that it's obvious when
+ * an inspector needs to be implemented.  It works well for setting primitive
+ * types, but does not for objects.
  */
 GS_EXPORT_CLASS
 @interface GormObjectInspector : IBInspector
@@ -56,7 +61,8 @@ GS_EXPORT_CLASS
 }
 
 /**
- * Updates the inspector panel to reflect the currently selected object or objects, switching to the appropriate inspector type if needed.
+ * Updates the inspector panel to reflect the currently selected object or
+ * objects, switching to the appropriate inspector type if needed.
  */
 - (void) update: (id)sender;
 

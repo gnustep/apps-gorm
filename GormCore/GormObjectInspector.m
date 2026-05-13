@@ -24,6 +24,14 @@
 
 #include "GormObjectInspector.h"
 
+//
+// Disable the warning here since we are deliberately violating this rule
+// so that we can make the generic calls that this inspector needs to
+// call.
+//
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-non-prototype"
+
 @implementation GormObjectInspector
 
 - (id) init
@@ -343,54 +351,54 @@ selectCellWithString: (NSString*)title
       if (type == typeCharOrBool)
 	{
 	  char	v;
-	  char	(*imp)();
+	  char	(*imp)(id, SEL);
 
-	  imp = (char (*)())[object methodForSelector: get];
+	  imp = (char (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
 	}
       else if (type == typeUChar)
 	{
 	  unsigned char	v;
-	  unsigned char	(*imp)();
+	  unsigned char	(*imp)(id, SEL);
 
-	  imp = (unsigned char (*)())[object methodForSelector: get];
+	  imp = (unsigned char (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
 	}
       else if (type == typeInt)
 	{
 	  int	v;
-	  int	(*imp)();
+	  int	(*imp)(id, SEL);
 
-	  imp = (int (*)())[object methodForSelector: get];
+	  imp = (int (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
 	}
       else if (type == typeUInt)
 	{
 	  unsigned	v;
-	  unsigned	(*imp)();
+	  unsigned	(*imp)(id, SEL);
 
-	  imp = (unsigned (*)()) [object methodForSelector: get];
+	  imp = (unsigned (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%u", v]];
 	}
       else if (type == typeFloat)
 	{
 	  float	v;
-	  float	(*imp)();
+	  float	(*imp)(id, SEL);
 
-	  imp = (float (*)())[object methodForSelector: get];
+	  imp = (float (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%f", v]];
 	}
       else if (type == typeDouble)
 	{
 	  double	v;
-	  double	(*imp)();
+	  double	(*imp)(id, SEL);
 
-	  imp = (double (*)())[object methodForSelector: get];
+	  imp = (double (*)(id, SEL))[object methodForSelector: get];
 	  v = (*imp)(object, get);
 	  [value setStringValue: [NSString stringWithFormat: @"%g", v]];
 	}
@@ -423,3 +431,4 @@ selectCellWithString: (NSString*)title
 }
 @end
 
+#pragma clang diagnostic pop
