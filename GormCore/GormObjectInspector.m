@@ -27,7 +27,7 @@
 //
 // Disable the warning here since we are deliberately violating this rule
 // so that we can make the generic calls that this inspector needs to
-// call.
+// make.
 //
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-non-prototype"
