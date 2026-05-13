@@ -94,7 +94,11 @@
       NSString *inspectorName = [_bindingsArray objectAtIndex: _selectedInspectorIndex];
       Class cls = NSClassFromString(inspectorName);
       NSString *nibName = @"GormBindingsAbstractInspector";
+      id<NSMenuItem> item = [_bindingsPopUp itemAtIndex: _selectedInspectorIndex];
+      NSString *title = [item title];
+      NSString *bindingName = [title lowercaseFirstCharacterString]; // hacky...
 
+      NSLog(@"binding = %@", bindingName);
       // If we can bring up an inspector that is specific to a given class, then do so...
       _inspectorObject = [[cls alloc] init];
       if (_inspectorObject == nil)
@@ -110,7 +114,8 @@
 	      NSLog(@"Could not load inspector for binding %@, falling back to abstract inspector", inspectorName);
 	      return;
 	    }
-	  
+
+	  [(GormBindingsAbstractInspector *)_inspectorObject setBindingName: bindingName];
 	  [_containerView setContentView: [[_inspectorObject window] contentView]];
 	}
       else

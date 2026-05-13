@@ -729,7 +729,6 @@ static NSImage  *fileImage = nil;
       // the proxy instead.
       [self _instantiateFontManager];
     }
-
   /*
    * Add the menu items from the popup.
    */

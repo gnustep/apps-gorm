@@ -40,13 +40,13 @@ static NSImage *horizontalImage;
 @implementation NSView (IBObjectAdditions)
 - (NSString*) editorClassName
 {
-	// Any unattached view is treated as a standalone top-level view,
-	// regardless of subclass.
-	if ([self superview] == nil && [self window] == nil)
-		{
-			return @"GormStandaloneViewEditor";
-		}
-
+  // Any unattached view is treated as a standalone top-level view,
+  // regardless of subclass.
+  if ([self superview] == nil && [self window] == nil)
+    {
+      return @"GormStandaloneViewEditor";
+    }
+  
   // using NSBox gets rid of compiler warning, should be safe for all classes. 
   if ([self superview] && (([[self superview] respondsToSelector: @selector(contentView)] &&
 			    [(NSBox *)[self superview] contentView] == self) ||
@@ -89,6 +89,12 @@ static NSImage *horizontalImage;
 {
   return @"GormCustomClassInspector";
 }
+
+- (NSString *) inspectorClassName
+{
+  return @"GormViewAttributesInspector";
+}
+
 @end
 
 

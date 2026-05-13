@@ -65,4 +65,16 @@
     return result;
 }
 
+- (NSString *) lowercaseFirstCharacterString
+{
+    if ([self length] == 0)
+      {
+        return self;
+      }
+    
+    return [NSString stringWithFormat: @"%@%@", 
+                     [[self substringToIndex: 1] lowercaseString],
+                     [self substringFromIndex: 1]];
+}
+
 @end

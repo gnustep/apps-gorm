@@ -24,15 +24,7 @@
 
 #import "GormViewAttributesInspector.h"
 
-/**
- * Category to allow loading of the inspector
- */
-@implementation NSView (IBObjectAdditions)
-- (NSString *) inspectorClassName
-{
-  return @"GormViewAttributesInspector";
-}
-@end
+// - (NSString *) inspectorClassName defined in GormInternalViewEditor.m
 
 /**
  * View attributes inspector
