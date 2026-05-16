@@ -28,6 +28,10 @@
 #import "GormBindingsAbstractInspector.h"
 #import "GormDocument.h"
 
+@interface GormBindingsAbstractInspector (Extras)
+- (void) _initDefaults;
+@end
+
 @implementation GormBindingsAbstractInspector
 
 - (instancetype) init
@@ -35,7 +39,7 @@
   self = [super init];
   if (self != nil)
     {
-      // No initialization...
+      [self _initDefaults];
     }
   return self;
 }
@@ -47,6 +51,39 @@
 }
 
 // Private methods...
+
+- (void) _setSourceFromPopUp
+{
+  NSString *title = [_controllerPopUp titleOfSelectedItem];
+  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+  id o = [doc objectForName: title];
+
+  _source = o;
+  NSLog(@"Source set to %@", _source);
+}
+
+- (void) _initDefaults
+{
+  // Make sure all fields show...
+  [_multipleValuesPlaceholder setHidden: YES];
+  [_noSelectionPlaceholder setHidden: YES];
+  [_notApplicablePlaceholder setHidden: YES];
+  [_nullPlaceholder setHidden: YES];
+
+  [_multipleValuesTitle setHidden: YES];
+  [_noSelectionTitle setHidden: YES];
+  [_notApplicableTitle setHidden: YES];
+  [_nullTitle setHidden: YES];
+
+  [_alwaysPresentsAppModalAlerts setHidden: YES];
+  [_raisesForNotApplicableKeys setHidden: YES];
+  [_validatesImmediately setHidden: YES];
+  
+  [_controllerKey setStringValue: @""];
+  [_modelKeyPath setStringValue: @""];
+
+  [self _setSourceFromPopUp];
+}
 
 - (void) _addTopLevelObjectsToPopUp
 {
@@ -78,23 +115,6 @@
   [_controllerPopUp addItemWithTitle: @"NSFirst"];
 }
 
-- (void) _initDefaults
-{
-  // Make sure all fields show...
-  [_multipleValuesPlaceholder setHidden: NO];
-  [_noSelectionPlaceholder setHidden: NO];
-  [_notApplicablePlaceholder setHidden: NO];
-  [_nullPlaceholder setHidden: NO];
-
-  [_multipleValuesTitle setHidden: NO];
-  [_noSelectionTitle setHidden: NO];
-  [_notApplicableTitle setHidden: NO];
-  [_nullTitle setHidden: NO];
-
-  [_controllerKey setStringValue: @""];
-  [_modelKeyPath setStringValue: @""];
-}
-
 - (NSMutableArray *) _bindingConnections
 {
   GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
@@ -122,13 +142,10 @@
   NSString *srcName = [[_controllerPopUp selectedItem] title];
   id src = [doc objectForName: srcName];
 
-  // Set class instance...
-  _source = src;
-  
   // Build connection...
   [keyPath stringByAppendingFormat: @".%@", [_modelKeyPath stringValue]];
   [conn setDestination: object];
-  [conn setSource: _source];
+  [conn setSource: src];
   [conn setBinding: _bindingName];
   [conn setKeyPath: keyPath];
 
@@ -150,15 +167,22 @@
   NSEnumerator *en = [c objectEnumerator];
   id o = nil;
 
+  NSLog(@"in locateAndSetBinding c=%@", c);
   while (o = [en nextObject])
     {
-      if ([o isEqualToString: _bindingName])
+      NSString *n = [o binding];
+      
+      NSLog(@"o = %@, n=%@, _bindingName = %@, source = %@, _source = %@", o, n, _bindingName, [o source], _source);
+      if ([n isEqualToString: _bindingName]
+	  && [o source] == _source)
 	{
 	  NSString *keyPath = [o keyPath];
 	  NSArray *array = [keyPath componentsSeparatedByString: @"."];
 
+	  NSLog(@"located = %@, keyPath = %@", o, keyPath);
 	  if ([array count] > 1)
 	    {
+	      NSLog(@"Array > 1");
 	      NSString *controllerKey = [array objectAtIndex: 0];
 	      [_controllerKey setStringValue: controllerKey];
 
@@ -183,6 +207,7 @@
       NSString *title = [item title];
 
       _source = [doc objectForName: title];
+      NSLog(@"_source set to = %@", _source);
     }
   else if (sender == _bindTo)
     {

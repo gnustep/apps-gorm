@@ -7,7 +7,6 @@
 	    "_bindTo",
 	    "_controllerKey",
 	    "_modelKeyPath",
-	    "_raisesForNotApplicable",
 	    "_valueTransformer",
 	    "_controllerPopUp",
 	    "_alwaysPresentAppModalAlerts",

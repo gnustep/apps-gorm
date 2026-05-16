@@ -36,7 +36,6 @@ GS_EXPORT_CLASS
   IBOutlet id _controllerPopUp;
   IBOutlet id _controllerKey;
   IBOutlet id _modelKeyPath;
-  IBOutlet id _raisesForNotApplicable;
   IBOutlet id _valueTransformer;
 
   IBOutlet id _alwaysPresentsAppModalAlerts;
