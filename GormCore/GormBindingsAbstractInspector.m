@@ -30,6 +30,7 @@
 
 @interface GormBindingsAbstractInspector (Extras)
 - (void) _initDefaults;
+- (GormDocument *) _activeDocument;
 @end
 
 @implementation GormBindingsAbstractInspector
@@ -52,10 +53,22 @@
 
 // Private methods...
 
+- (GormDocument *) _activeDocument
+{
+  id<IBDocuments> doc = [(id<IB>)[NSApp delegate] activeDocument];
+
+  if ([doc isKindOfClass: [GormDocument class]])
+    {
+      return (GormDocument *)doc;
+    }
+
+  return nil;
+}
+
 - (void) _setSourceFromPopUp
 {
   NSString *title = [_controllerPopUp titleOfSelectedItem];
-  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+  GormDocument *doc = [self _activeDocument];
   id o = [doc objectForName: title];
 
   _source = o;
@@ -87,7 +100,12 @@
 
 - (void) _addTopLevelObjectsToPopUp
 {
-  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+  GormDocument *doc = [self _activeDocument];
+  if (doc == nil)
+    {
+      return;
+    }
+
   NSSet *tlo = [doc topLevelObjects];
   NSEnumerator *en = [tlo objectEnumerator];
   NSUInteger index = 0;
@@ -117,7 +135,12 @@
 
 - (NSMutableArray *) _bindingConnections
 {
-  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+  GormDocument *doc = [self _activeDocument];
+  if (doc == nil)
+    {
+      return [NSMutableArray array];
+    }
+
   NSMutableArray *conn = [doc connections];
   NSMutableArray *result = [NSMutableArray array];
   NSEnumerator *en = [conn objectEnumerator];
@@ -138,7 +161,13 @@
 {
   NSNibBindingConnector *conn = [[NSNibBindingConnector alloc] init];
   NSString *keyPath = [_controllerKey stringValue];
-  GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+  GormDocument *doc = [self _activeDocument];
+  if (doc == nil)
+    {
+      RELEASE(conn);
+      return;
+    }
+
   NSString *srcName = [[_controllerPopUp selectedItem] title];
   id src = [doc objectForName: srcName];
 
@@ -202,7 +231,13 @@
 {
   if (sender == _controllerPopUp)
     {
-      GormDocument *doc = (GormDocument *)[(id<IB>)[NSApp delegate] activeDocument];
+      GormDocument *doc = [self _activeDocument];
+      if (doc == nil)
+        {
+          [super ok: sender];
+          return;
+        }
+
       id item = [_controllerPopUp selectedItem];
       NSString *title = [item title];
 
