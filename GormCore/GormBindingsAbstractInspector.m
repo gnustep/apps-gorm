@@ -31,6 +31,7 @@
 @interface GormBindingsAbstractInspector (Extras)
 - (void) _initDefaults;
 - (GormDocument *) _activeDocument;
+- (void) _removeBindingConnectorAndRefresh: (BOOL)refresh;
 @end
 
 @implementation GormBindingsAbstractInspector
@@ -69,6 +70,12 @@
 {
   NSString *title = [_controllerPopUp titleOfSelectedItem];
   GormDocument *doc = [self _activeDocument];
+  if (doc == nil)
+    {
+      _source = nil;
+      return;
+    }
+
   id o = [doc objectForName: title];
 
   _source = o;
@@ -91,7 +98,8 @@
   [_alwaysPresentsAppModalAlerts setHidden: YES];
   [_raisesForNotApplicableKeys setHidden: YES];
   [_validatesImmediately setHidden: YES];
-  
+  [_valueTransformer setHidden: YES];
+
   [_controllerKey setStringValue: @""];
   [_modelKeyPath setStringValue: @""];
 
@@ -160,7 +168,9 @@
 - (void) _createBindingConnector
 {
   NSNibBindingConnector *conn = [[NSNibBindingConnector alloc] init];
-  NSString *keyPath = [_controllerKey stringValue];
+  NSString *controllerKey = [_controllerKey stringValue];
+  NSString *modelKeyPath = [_modelKeyPath stringValue];
+  NSString *keyPath = nil;
   GormDocument *doc = [self _activeDocument];
   if (doc == nil)
     {
@@ -171,8 +181,23 @@
   NSString *srcName = [[_controllerPopUp selectedItem] title];
   id src = [doc objectForName: srcName];
 
+  if (src == nil || [controllerKey length] == 0)
+    {
+      RELEASE(conn);
+      return;
+    }
+
   // Build connection...
-  [keyPath stringByAppendingFormat: @".%@", [_modelKeyPath stringValue]];
+  if ([modelKeyPath length] > 0)
+    {
+      keyPath = [NSString stringWithFormat: @"%@.%@", controllerKey, modelKeyPath];
+    }
+  else
+    {
+      keyPath = controllerKey;
+    }
+
+  [self _removeBindingConnectorAndRefresh: NO];
   [conn setDestination: object];
   [conn setSource: src];
   [conn setBinding: _bindingName];
@@ -187,41 +212,130 @@
 
 - (void) _removeBindingConnector
 {
-  NSLog(@"Remove...");
+  [self _removeBindingConnectorAndRefresh: YES];
+}
+
+- (void) _removeBindingConnectorAndRefresh: (BOOL)refresh
+{
+  GormDocument *doc = [self _activeDocument];
+  NSArray *connections = [self _bindingConnections];
+  NSEnumerator *en = [connections objectEnumerator];
+  NSMutableArray *toRemove = [NSMutableArray array];
+  id o = nil;
+
+  if (doc == nil)
+    {
+      return;
+    }
+
+  while ((o = [en nextObject]) != nil)
+    {
+      NSString *binding = [o binding];
+
+      if ([o destination] != object)
+        {
+          continue;
+        }
+
+      if ([binding isEqualToString: _bindingName] == NO)
+        {
+          continue;
+        }
+
+      if (_source != nil && [o source] != _source)
+        {
+          continue;
+        }
+
+      [toRemove addObject: o];
+    }
+
+  en = [toRemove objectEnumerator];
+  while ((o = [en nextObject]) != nil)
+    {
+      [doc removeConnector: o];
+    }
+
+  if (refresh)
+    {
+      [self _locateAndSetBinding];
+    }
 }
 
 - (void) _locateAndSetBinding
 {
   NSArray *c = [self _bindingConnections];
   NSEnumerator *en = [c objectEnumerator];
+  GormDocument *doc = [self _activeDocument];
+  id preferred = nil;
+  id fallback = nil;
   id o = nil;
 
-  NSLog(@"in locateAndSetBinding c=%@", c);
-  while (o = [en nextObject])
+  if (doc == nil)
+    {
+      return;
+    }
+
+  [_bindTo setState: NSOffState];
+
+  while ((o = [en nextObject]) != nil)
     {
       NSString *n = [o binding];
-      
-      NSLog(@"o = %@, n=%@, _bindingName = %@, source = %@, _source = %@", o, n, _bindingName, [o source], _source);
-      if ([n isEqualToString: _bindingName]
-	  && [o source] == _source)
-	{
-	  NSString *keyPath = [o keyPath];
-	  NSArray *array = [keyPath componentsSeparatedByString: @"."];
 
-	  NSLog(@"located = %@, keyPath = %@", o, keyPath);
-	  if ([array count] > 1)
-	    {
-	      NSLog(@"Array > 1");
-	      NSString *controllerKey = [array objectAtIndex: 0];
-	      [_controllerKey setStringValue: controllerKey];
+      if ([o destination] != object)
+        {
+          continue;
+        }
 
-	      // remove controller key...
-	      NSString *modelKeyPath = [keyPath stringByReplacingOccurrencesOfString:
-					      [controllerKey stringByAppendingString: @"."]
-									  withString: @""];
-	      [_modelKeyPath setStringValue: modelKeyPath];
-	    }
-	}
+      if ([n isEqualToString: _bindingName] == NO)
+        {
+          continue;
+        }
+
+      if (fallback == nil)
+        {
+          fallback = o;
+        }
+
+      if (_source != nil && [o source] == _source)
+        {
+          preferred = o;
+          break;
+        }
+    }
+
+  o = (preferred != nil) ? preferred : fallback;
+  if (o != nil)
+    {
+      NSString *keyPath = [o keyPath];
+      NSRange dot = [keyPath rangeOfString: @"."];
+      NSString *sourceName = nil;
+
+      _source = [o source];
+      [_bindTo setState: NSOnState];
+
+      if (doc != nil && _source != nil)
+        {
+          sourceName = [doc nameForObject: _source];
+          if (sourceName != nil)
+            {
+              [_controllerPopUp selectItemWithTitle: sourceName];
+            }
+        }
+
+      if (dot.location == NSNotFound)
+        {
+          [_controllerKey setStringValue: keyPath ?: @""];
+          [_modelKeyPath setStringValue: @""];
+        }
+      else
+        {
+          NSString *controllerKey = [keyPath substringToIndex: dot.location];
+          NSString *modelKeyPath = [keyPath substringFromIndex: dot.location + 1];
+
+          [_controllerKey setStringValue: controllerKey];
+          [_modelKeyPath setStringValue: modelKeyPath];
+        }
     }
 }
 
@@ -243,17 +357,34 @@
 
       _source = [doc objectForName: title];
       NSLog(@"_source set to = %@", _source);
+
+      if ([_bindTo state] == NSOnState)
+        {
+          [self _createBindingConnector];
+        }
+      [self _locateAndSetBinding];
     }
   else if (sender == _bindTo)
     {
       if ([_bindTo state] == NSOnState)
 	{
 	  [self _createBindingConnector];
+	  [self _locateAndSetBinding];
 	}
       else
 	{
 	  [self _removeBindingConnector];
 	}
+    }
+  else if (sender == _controllerKey
+           || sender == _modelKeyPath
+           || sender == _valueTransformer)
+    {
+      if ([_bindTo state] == NSOnState)
+        {
+          [self _createBindingConnector];
+          [self _locateAndSetBinding];
+        }
     }
 
   [super ok: sender];
