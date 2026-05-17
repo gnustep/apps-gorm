@@ -248,6 +248,7 @@
   NSString *modelKeyPath = [_modelKeyPath stringValue];
   NSString *keyPath = nil;
   GormDocument *doc = [self _activeDocument];
+  NSDictionary *opts = [NSDictionary dictionary];
 
   if (doc == nil)
     {
@@ -259,6 +260,7 @@
   NSString *srcName = [[_sourcePopUp selectedItem] title];
   id src = [self _objectForPopUpTitle: srcName inDocument: doc];
 
+  [conn setOptions: opts];
   if (src == nil || [controllerKey length] == 0)
     {
       NSLog(@"src or controllerKey is not set");
