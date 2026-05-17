@@ -214,7 +214,6 @@
     }
 
   // Add placeholder...
-  [_sourcePopUp addItemWithTitle: @"NSFirst"];
   [_sourcePopUp addItemWithTitle: @"NSOwner"];
 }
 
@@ -531,6 +530,7 @@
   [super setObject: obj];
   array = [[self object] exposedBindings];
   [self _populate: array];
+  [self _locateAndSetBinding];
 }
 
 
