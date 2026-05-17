@@ -53,8 +53,6 @@ GS_EXPORT_CLASS
   IBOutlet id _nullTitle;
   IBOutlet id _valueTransformerTitle;
   IBOutlet id _bindingsPopUp;
-
-  id _source;
 }
 
 @end

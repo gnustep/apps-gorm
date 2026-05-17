@@ -34,7 +34,8 @@
 - (void) _initDefaults;
 - (GormDocument *) _activeDocument;
 - (void) _removeBindingConnectorAndRefresh: (BOOL)refresh;
-- (void) _locateAndSetBindingPreservingFields: (BOOL)preserveFields;
+- (void) _locateAndSetBinding;
+//- (void) _locateAndSetBindingPreservingFields: (BOOL)preserveFields;
 - (id) _objectForPopUpTitle: (NSString *)title inDocument: (GormDocument *)doc;
 @end
 
@@ -102,19 +103,13 @@
 
 - (void) _setSourceFromPopUp
 {
-  NSString *title = [_sourcePopUp titleOfSelectedItem];
   GormDocument *doc = [self _activeDocument];
 
   if (doc == nil)
     {
-      _source = nil;
       return;
     }
 
-  id o = [self _objectForPopUpTitle: title inDocument: doc];
-
-  _source = o;
-  NSLog(@"Source set to %@", _source);
   [self _locateAndSetBinding];
 }
 
@@ -328,11 +323,6 @@
           continue;
         }
 
-      if (_source != nil && [o source] != _source)
-        {
-          continue;
-        }
-
       [toRemove addObject: o];
     }
 
@@ -350,14 +340,9 @@
 
 - (void) _locateAndSetBinding
 {
-  [self _locateAndSetBindingPreservingFields: YES];
-}
-
-- (void) _locateAndSetBindingPreservingFields: (BOOL)preserveFields
-{
-  NSArray *c = [self _bindingConnections];
-  NSEnumerator *en = [c objectEnumerator];
   GormDocument *doc = [self _activeDocument];
+  NSArray *c = nil; // [self _bindingConnections];
+  NSEnumerator *en = nil; // [c objectEnumerator];
   id preferred = nil;
   id fallback = nil;
   id o = nil;
@@ -367,10 +352,15 @@
       return;
     }
 
+  // Get the connections...
+  c = [self _bindingConnections];
+  en = [c objectEnumerator];
+  
+  // Clear / Reset fields...
   [_bindTo setState: NSOffState];
   [_controllerKey setStringValue: @""];
   [_modelKeyPath setStringValue: @""];
-  
+
   while ((o = [en nextObject]) != nil)
     {
       NSString *n = [o binding];
@@ -392,13 +382,6 @@
         {
           fallback = o;
         }
-
-      NSLog(@"_source = %@, connection source = %@", _source, [o source]);
-      if (_source != nil && [o source] == _source)
-        {
-          preferred = o;
-          break;
-        }
     }
 
   o = (preferred != nil) ? preferred : fallback;
@@ -407,14 +390,13 @@
     {
       NSString *keyPath = [o keyPath];
       NSRange dot = [keyPath rangeOfString: @"."];
-      NSString *sourceName = nil;
+      id src = [o source];
+      NSString *sourceName = [doc nameForObject: src];
 
-      _source = [o source];
       [_bindTo setState: NSOnState];
 
-      if (doc != nil && _source != nil)
+      if (doc != nil)
         {
-          sourceName = [doc nameForObject: _source];
           if (sourceName != nil)
             {
               [_sourcePopUp selectItemWithTitle: sourceName];
@@ -435,10 +417,52 @@
           [_modelKeyPath setStringValue: modelKeyPath];
         }
     }
-  else if (preserveFields == NO)
+}
+
+- (void) _updateSourceForBinding
+{
+  NSArray *c = [self _bindingConnections];
+  NSEnumerator *en = [c objectEnumerator];
+  GormDocument *doc = [self _activeDocument];
+  id preferred = nil;
+  id fallback = nil;
+  id o = nil;
+
+  if (doc == nil)
     {
-      [_controllerKey setStringValue: @""];
-      [_modelKeyPath setStringValue: @""];
+      return;
+    }
+
+  while ((o = [en nextObject]) != nil)
+    {
+      NSString *n = [o binding];
+      NSString *currentBinding = [self _currentBindingName];
+
+      NSLog(@"n = %@", n);
+      if ([o destination] != object)
+        {
+	  NSLog(@"Destination is not %@", object);
+          continue;
+        }
+
+      if (currentBinding == nil || [n isEqualToString: currentBinding] == NO)
+        {
+          continue;
+        }
+
+      if (fallback == nil)
+        {
+          fallback = o;
+        }
+    }
+
+  o = (preferred != nil) ? preferred : fallback;
+  NSLog(@"o = %@", o);
+  if (o != nil)
+    {
+      NSString *sourceName = [_sourcePopUp titleOfSelectedItem];
+      id src = [self _objectForPopUpTitle: sourceName inDocument: doc];
+      [o setSource: src];
     }
 }
 
@@ -455,12 +479,7 @@
           return;
         }
 
-      id item = [_sourcePopUp selectedItem];
-      NSString *title = [item title];
-
-      _source = [self _objectForPopUpTitle: title inDocument: doc];
-      NSLog(@"_source set to = %@", _source);
-      [self _locateAndSetBindingPreservingFields: NO];
+      [self _updateSourceForBinding];
     }
   else if (sender == _bindTo)
     {
@@ -480,7 +499,6 @@
     }
   else if (sender == _controllerKey
            || sender == _modelKeyPath)
-           // || sender == _valueTransformer)
     {
       // Update connection when editing is finished
       if ([_bindTo state] == NSOnState)
