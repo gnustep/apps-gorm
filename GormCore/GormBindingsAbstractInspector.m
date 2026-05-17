@@ -252,7 +252,7 @@
 
   if (doc == nil)
     {
-      NSLog(@"Document is nil");
+      NSDebugLog(@"Document is nil");
       RELEASE(conn);
       return;
     }
@@ -263,7 +263,7 @@
   [conn setOptions: opts];
   if (src == nil || [controllerKey length] == 0)
     {
-      NSLog(@"src or controllerKey is not set");
+      NSDebugLog(@"src or controllerKey is not set");
       RELEASE(conn);
       return;
     }
@@ -286,7 +286,7 @@
 
   [doc addConnector: conn];
 
-  NSLog(@"connectors = %@", [self _bindingConnections]);
+  NSDebugLog(@"connectors = %@", [self _bindingConnections]);
   
   RELEASE(conn);
 }
@@ -367,10 +367,10 @@
       NSString *n = [o binding];
       NSString *currentBinding = [self _currentBindingName];
 
-      NSLog(@"n = %@", n);
+      NSDebugLog(@"n = %@", n);
       if ([o destination] != object)
         {
-	  NSLog(@"Destination is not %@", object);
+	  NSDebugLog(@"Destination is not %@", object);
           continue;
         }
 
@@ -386,7 +386,7 @@
     }
 
   o = (preferred != nil) ? preferred : fallback;
-  NSLog(@"o = %@", o);
+  NSDebugLog(@"o = %@", o);
   if (o != nil)
     {
       NSString *keyPath = [o keyPath];
@@ -439,10 +439,10 @@
       NSString *n = [o binding];
       NSString *currentBinding = [self _currentBindingName];
 
-      NSLog(@"n = %@", n);
+      NSDebugLog(@"n = %@", n);
       if ([o destination] != object)
         {
-	  NSLog(@"Destination is not %@", object);
+	  NSDebugLog(@"Destination is not %@", object);
           continue;
         }
 
@@ -458,7 +458,7 @@
     }
 
   o = (preferred != nil) ? preferred : fallback;
-  NSLog(@"o = %@", o);
+  NSDebugLog(@"o = %@", o);
   if (o != nil)
     {
       NSString *sourceName = [_sourcePopUp titleOfSelectedItem];
@@ -518,7 +518,7 @@
 - (IBAction) revert: (id)sender
 {
   NSMutableArray *conn = [self _bindingConnections];
-  NSLog(@"connections = %@", conn);
+  NSDebugLog(@"connections = %@", conn);
   [self _addTopLevelObjectsToPopUp];
   [self _locateAndSetBinding];
 
