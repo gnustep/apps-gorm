@@ -33,12 +33,12 @@ GS_EXPORT_CLASS
 @interface GormBindingsAbstractInspector : IBInspector
 {
   IBOutlet id _bindTo;
-  IBOutlet id _controllerPopUp;
+  IBOutlet id _sourcePopUp;
   IBOutlet id _controllerKey;
   IBOutlet id _modelKeyPath;
   IBOutlet id _valueTransformer;
 
-  IBOutlet id _alwaysPresentsAppModalAlerts;
+  IBOutlet id _alwaysPresentAppModalAlerts;
   IBOutlet id _raisesForNotApplicableKeys;
   IBOutlet id _validatesImmediately;
 
@@ -51,6 +51,8 @@ GS_EXPORT_CLASS
   IBOutlet id _noSelectionTitle;
   IBOutlet id _notApplicableTitle;
   IBOutlet id _nullTitle;
+  IBOutlet id _valueTransformerTitle;
+  IBOutlet id _bindingsPopUp;
 
   id _source;
   NSString *_bindingName;

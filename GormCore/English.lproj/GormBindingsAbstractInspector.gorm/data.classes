@@ -8,7 +8,7 @@
 	    "_controllerKey",
 	    "_modelKeyPath",
 	    "_valueTransformer",
-	    "_controllerPopUp",
+	    "_sourcePopUp",
 	    "_alwaysPresentAppModalAlerts",
 	    "_raisesForNotApplicableKeys",
 	    "_validatesImmediately",
@@ -19,7 +19,9 @@
 	    "_multipleValuesTitle",
 	    "_noSelectionTitle",
 	    "_notApplicableTitle",
-	    "_nullTitle"
+	    "_nullTitle",
+	    "_valueTransformerTitle",
+	    "_bindingsPopUp"
 	);
 	Super = IBInspector;
     };

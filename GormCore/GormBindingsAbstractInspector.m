@@ -28,10 +28,14 @@
 #import "GormBindingsAbstractInspector.h"
 #import "GormDocument.h"
 
+#import "NSString+methods.h"
+
 @interface GormBindingsAbstractInspector (Extras)
 - (void) _initDefaults;
 - (GormDocument *) _activeDocument;
 - (void) _removeBindingConnectorAndRefresh: (BOOL)refresh;
+- (void) _locateAndSetBindingPreservingFields: (BOOL)preserveFields;
+- (id) _objectForPopUpTitle: (NSString *)title inDocument: (GormDocument *)doc;
 @end
 
 @implementation GormBindingsAbstractInspector
@@ -39,10 +43,21 @@
 - (instancetype) init
 {
   self = [super init];
+
   if (self != nil)
     {
+      // load the gui...
+      if (![NSBundle loadNibNamed: @"GormBindingsAbstractInspector"
+			    owner: self])
+	{
+	  NSLog(@"Could not open gorm file");
+	  return nil;
+	}
+
+      // Initialize
       [self _initDefaults];
     }
+
   return self;
 }
 
@@ -53,6 +68,26 @@
 }
 
 // Private methods...
+
+- (void) _populate: (NSArray *)array
+{
+  [_bindingsPopUp removeAllItems];
+
+  if ([array count] == 0 || array == nil)
+    {      
+      [_bindingsPopUp addItemWithTitle: @"No Bindings"];
+    }
+  else
+    {
+      NSEnumerator *en = [array objectEnumerator];
+      NSString *string = nil;
+
+      while ((string = [en nextObject]) != nil)
+	{
+	  [_bindingsPopUp addItemWithTitle: string];
+	}
+    }
+}
 
 - (GormDocument *) _activeDocument
 {
@@ -68,23 +103,54 @@
 
 - (void) _setSourceFromPopUp
 {
-  NSString *title = [_controllerPopUp titleOfSelectedItem];
+  NSString *title = [_sourcePopUp titleOfSelectedItem];
   GormDocument *doc = [self _activeDocument];
+
   if (doc == nil)
     {
       _source = nil;
       return;
     }
 
-  id o = [doc objectForName: title];
+  id o = [self _objectForPopUpTitle: title inDocument: doc];
 
+  // _bindingName = [title lowercaseFirstCharacterString];
   _source = o;
+  NSLog(@"Binding %@ - %@", _bindingName, title);
   NSLog(@"Source set to %@", _source);
+  [self _locateAndSetBinding];
+}
+
+- (id) _objectForPopUpTitle: (NSString *)title inDocument: (GormDocument *)doc
+{
+  id o = nil;
+
+  if (doc == nil || title == nil)
+    {
+      return nil;
+    }
+
+  o = [doc objectForName: title];
+  if (o != nil)
+    {
+      return o;
+    }
+  else
+    {
+      NSString *lowercaseTitle = [title lowercaseFirstCharacterString];
+      o = [doc objectForName: lowercaseTitle];
+      if (o != nil)
+	{
+	  return o;
+	}
+    }
+
+  return nil;
 }
 
 - (void) _initDefaults
 {
-  // Make sure all fields show...
+  // Hide these fields for now, future use
   [_multipleValuesPlaceholder setHidden: YES];
   [_noSelectionPlaceholder setHidden: YES];
   [_notApplicablePlaceholder setHidden: YES];
@@ -93,16 +159,19 @@
   [_multipleValuesTitle setHidden: YES];
   [_noSelectionTitle setHidden: YES];
   [_notApplicableTitle setHidden: YES];
+  [_valueTransformerTitle setHidden: YES];
   [_nullTitle setHidden: YES];
 
-  [_alwaysPresentsAppModalAlerts setHidden: YES];
+  [_alwaysPresentAppModalAlerts setHidden: YES];
   [_raisesForNotApplicableKeys setHidden: YES];
   [_validatesImmediately setHidden: YES];
   [_valueTransformer setHidden: YES];
 
+  // Initialize these to be empty...
   [_controllerKey setStringValue: @""];
   [_modelKeyPath setStringValue: @""];
 
+  // Set the source from the popup...
   [self _setSourceFromPopUp];
 }
 
@@ -120,7 +189,7 @@
   id o = nil;
 
   // Update the pop up...
-  [_controllerPopUp removeAllItems];
+  [_sourcePopUp removeAllItems];
 
   // Add TLO...
   while ((o = [en nextObject]) != nil)
@@ -130,15 +199,16 @@
 	{
 	  id<NSMenuItem> item = nil;
 
-	  [_controllerPopUp addItemWithTitle: name];
-	  item = [_controllerPopUp itemWithTitle: name];
+	  [_sourcePopUp addItemWithTitle: name];
+	  item = [_sourcePopUp itemWithTitle: name];
 	  [item setTag: index];
 	  index++;
 	}
     }
 
   // Add placeholder...
-  [_controllerPopUp addItemWithTitle: @"NSFirst"];
+  [_sourcePopUp addItemWithTitle: @"NSFirst"];
+  [_sourcePopUp addItemWithTitle: @"NSOwner"];
 }
 
 - (NSMutableArray *) _bindingConnections
@@ -178,8 +248,8 @@
       return;
     }
 
-  NSString *srcName = [[_controllerPopUp selectedItem] title];
-  id src = [doc objectForName: srcName];
+  NSString *srcName = [[_sourcePopUp selectedItem] title];
+  id src = [self _objectForPopUpTitle: srcName inDocument: doc];
 
   if (src == nil || [controllerKey length] == 0)
     {
@@ -264,6 +334,11 @@
 
 - (void) _locateAndSetBinding
 {
+  [self _locateAndSetBindingPreservingFields: YES];
+}
+
+- (void) _locateAndSetBindingPreservingFields: (BOOL)preserveFields
+{
   NSArray *c = [self _bindingConnections];
   NSEnumerator *en = [c objectEnumerator];
   GormDocument *doc = [self _activeDocument];
@@ -284,6 +359,7 @@
 
       if ([o destination] != object)
         {
+	  NSLog(@"Destination is not %@", object);
           continue;
         }
 
@@ -307,6 +383,7 @@
   o = (preferred != nil) ? preferred : fallback;
   if (o != nil)
     {
+      NSLog(@"o = %@",o);
       NSString *keyPath = [o keyPath];
       NSRange dot = [keyPath rangeOfString: @"."];
       NSString *sourceName = nil;
@@ -319,7 +396,7 @@
           sourceName = [doc nameForObject: _source];
           if (sourceName != nil)
             {
-              [_controllerPopUp selectItemWithTitle: sourceName];
+              [_sourcePopUp selectItemWithTitle: sourceName];
             }
         }
 
@@ -337,13 +414,18 @@
           [_modelKeyPath setStringValue: modelKeyPath];
         }
     }
+  else if (preserveFields == NO)
+    {
+      [_controllerKey setStringValue: @""];
+      [_modelKeyPath setStringValue: @""];
+    }
 }
 
 // Methods to set and revert information...
 
 - (IBAction) ok: (id)sender
-{
-  if (sender == _controllerPopUp)
+{  
+  if (sender == _sourcePopUp)
     {
       GormDocument *doc = [self _activeDocument];
       if (doc == nil)
@@ -352,17 +434,12 @@
           return;
         }
 
-      id item = [_controllerPopUp selectedItem];
+      id item = [_sourcePopUp selectedItem];
       NSString *title = [item title];
 
-      _source = [doc objectForName: title];
+      _source = [self _objectForPopUpTitle: title inDocument: doc];
       NSLog(@"_source set to = %@", _source);
-
-      if ([_bindTo state] == NSOnState)
-        {
-          [self _createBindingConnector];
-        }
-      [self _locateAndSetBinding];
+      [self _locateAndSetBindingPreservingFields: NO];
     }
   else if (sender == _bindTo)
     {
@@ -376,9 +453,13 @@
 	  [self _removeBindingConnector];
 	}
     }
+  else if (sender == _bindingsPopUp)
+    {
+      [self _setSourceFromPopUp];
+    }
   else if (sender == _controllerKey
-           || sender == _modelKeyPath
-           || sender == _valueTransformer)
+           || sender == _modelKeyPath)
+           // || sender == _valueTransformer)
     {
       if ([_bindTo state] == NSOnState)
         {
@@ -400,6 +481,16 @@
   [super revert: sender];
 }
 
+- (void) setObject: (id)obj
+{
+  NSArray *array = nil;
+  
+  [super setObject: obj];
+  array = [[self object] exposedBindings];
+  [self _populate: array];
+}
+
+
 - (void) awakeFromNib
 {
   [self _addTopLevelObjectsToPopUp];
@@ -411,6 +502,7 @@
 - (void) setBindingName: (NSString *)name
 {
   ASSIGN(_bindingName, name);
+  [self _setSourceFromPopUp];
   [self _locateAndSetBinding];
 }
 

@@ -86,7 +86,7 @@
 
 - (NSString*) bindingsInspectorClassName
 {
-  return @"GormBindingsInspector";
+  return @"GormBindingsAbstractInspector";
 }
 @end
 
