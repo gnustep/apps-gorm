@@ -38,11 +38,9 @@ SUBPROJECTS =
 
 GormCore_HEADER_FILES = \
 	GormCore.h \
-	GormBindingsInspector.h \
 	GormBindingsAbstractInspector.h \
 	GormVersion.h \
 	GormAbstractDelegate.h \
-	GormBindingsInspector.h \
 	GormBoxEditor.h \
 	GormCore.h \
 	GormClassEditor.h \
@@ -124,10 +122,8 @@ GormCore_HEADER_FILES = \
 	NSToolbarPrivate.h
 
 GormCore_OBJC_FILES = \
-	GormBindingsInspector.m \
 	GormBindingsAbstractInspector.m \
 	GormAbstractDelegate.m \
-	GormBindingsInspector.m \
 	GormBoxEditor.m \
 	GormClassEditor.m \
 	GormClassInspector.m \
@@ -239,7 +235,6 @@ GormCore_RESOURCE_FILES = \
 GormCore_LANGUAGES = English
 
 GormCore_LOCALIZED_RESOURCE_FILES = \
-	GormBindingsInspector.gorm \
 	GormBindingsAbstractInspector.gorm \
 	GormClassEditor.gorm \
 	GormClassInspector.gorm \

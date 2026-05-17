@@ -63,7 +63,6 @@
 
 - (void) dealloc
 {
-  RELEASE(_bindingName);
   [super dealloc];
 }
 
@@ -114,10 +113,23 @@
 
   id o = [self _objectForPopUpTitle: title inDocument: doc];
 
-  // _bindingName = [title lowercaseFirstCharacterString];
   _source = o;
-  NSLog(@"Binding %@ - %@", _bindingName, title);
   NSLog(@"Source set to %@", _source);
+  [self _locateAndSetBinding];
+}
+
+- (NSString *) _currentBindingName
+{
+  NSString *title = [_bindingsPopUp titleOfSelectedItem];
+  if (title != nil && ![title isEqualToString: @"No Bindings"])
+    {
+      return title;
+    }
+  return nil;
+}
+
+- (void) _setBindingFromPopUp
+{
   [self _locateAndSetBinding];
 }
 
@@ -242,8 +254,10 @@
   NSString *modelKeyPath = [_modelKeyPath stringValue];
   NSString *keyPath = nil;
   GormDocument *doc = [self _activeDocument];
+
   if (doc == nil)
     {
+      NSLog(@"Document is nil");
       RELEASE(conn);
       return;
     }
@@ -253,6 +267,7 @@
 
   if (src == nil || [controllerKey length] == 0)
     {
+      NSLog(@"src or controllerKey is not set");
       RELEASE(conn);
       return;
     }
@@ -270,7 +285,7 @@
   [self _removeBindingConnectorAndRefresh: NO];
   [conn setDestination: object];
   [conn setSource: src];
-  [conn setBinding: _bindingName];
+  [conn setBinding: [self _currentBindingName]];
   [conn setKeyPath: keyPath];
 
   [doc addConnector: conn];
@@ -301,13 +316,14 @@
   while ((o = [en nextObject]) != nil)
     {
       NSString *binding = [o binding];
+      NSString *currentBinding = [self _currentBindingName];
 
       if ([o destination] != object)
         {
           continue;
         }
 
-      if ([binding isEqualToString: _bindingName] == NO)
+      if (currentBinding == nil || [binding isEqualToString: currentBinding] == NO)
         {
           continue;
         }
@@ -352,18 +368,22 @@
     }
 
   [_bindTo setState: NSOffState];
-
+  [_controllerKey setStringValue: @""];
+  [_modelKeyPath setStringValue: @""];
+  
   while ((o = [en nextObject]) != nil)
     {
       NSString *n = [o binding];
+      NSString *currentBinding = [self _currentBindingName];
 
+      NSLog(@"n = %@", n);
       if ([o destination] != object)
         {
 	  NSLog(@"Destination is not %@", object);
           continue;
         }
 
-      if ([n isEqualToString: _bindingName] == NO)
+      if (currentBinding == nil || [n isEqualToString: currentBinding] == NO)
         {
           continue;
         }
@@ -373,6 +393,7 @@
           fallback = o;
         }
 
+      NSLog(@"_source = %@, connection source = %@", _source, [o source]);
       if (_source != nil && [o source] == _source)
         {
           preferred = o;
@@ -381,9 +402,9 @@
     }
 
   o = (preferred != nil) ? preferred : fallback;
+  NSLog(@"o = %@", o);
   if (o != nil)
     {
-      NSLog(@"o = %@",o);
       NSString *keyPath = [o keyPath];
       NSRange dot = [keyPath rangeOfString: @"."];
       NSString *sourceName = nil;
@@ -455,16 +476,20 @@
     }
   else if (sender == _bindingsPopUp)
     {
-      [self _setSourceFromPopUp];
+      [self _setBindingFromPopUp];
     }
   else if (sender == _controllerKey
            || sender == _modelKeyPath)
            // || sender == _valueTransformer)
     {
+      // Update connection when editing is finished
       if ([_bindTo state] == NSOnState)
         {
-          [self _createBindingConnector];
-          [self _locateAndSetBinding];
+          if ([[_controllerKey stringValue] length] > 0)
+            {
+              [self _createBindingConnector];
+              [self _locateAndSetBinding];
+            }
         }
     }
 
@@ -497,13 +522,17 @@
   [self _initDefaults];
 }
 
+- (void) selectBindingNamed: (NSString *)name
+{
+  if (name != nil)
+    {
+      [_bindingsPopUp selectItemWithTitle: name];
+      [self _setBindingFromPopUp];
+    }
+}
+
 // Setters and getters...
 
-- (void) setBindingName: (NSString *)name
-{
-  ASSIGN(_bindingName, name);
-  [self _setSourceFromPopUp];
-  [self _locateAndSetBinding];
-}
+
 
 @end

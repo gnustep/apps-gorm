@@ -55,10 +55,7 @@ GS_EXPORT_CLASS
   IBOutlet id _bindingsPopUp;
 
   id _source;
-  NSString *_bindingName;
 }
-
-- (void) setBindingName: (NSString *)bindings;
 
 @end
 
