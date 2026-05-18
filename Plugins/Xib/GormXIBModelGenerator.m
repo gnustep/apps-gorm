@@ -1554,7 +1554,7 @@ static NSUInteger _count = INT_MAX;
   connectors = [_gormDocument connectorsForSource: obj
 					  ofClass: [NSNibBindingConnector class]];
 
-  NSLog(@"binding connectors = %@, for obj = %@", connectors, obj);
+  NSDebugLog(@"binding connectors = %@, for obj = %@", connectors, obj);
   if ([connectors count] > 0)
     {
       NSXMLElement *conns = [NSXMLNode elementWithName: @"connections"];
