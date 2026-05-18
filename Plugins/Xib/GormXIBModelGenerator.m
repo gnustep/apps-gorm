@@ -47,6 +47,7 @@
 #import <AppKit/NSToolbar.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
+#import <GNUstepGUI/GSNibLoading.h>
 
 #import <GormCore/GormDocument.h>
 #import <GormCore/GormDocumentController.h>
@@ -1473,6 +1474,7 @@ static NSUInteger _count = INT_MAX;
 
 - (void) _addAllConnections: (NSXMLElement *)elem fromObject: (id)obj
 {
+  // Action / Control connectors...
   NSArray *connectors = [_gormDocument connectorsForSource: obj
 						   ofClass: [NSNibControlConnector class]];
   if ([connectors count] > 0)
@@ -1509,18 +1511,18 @@ static NSUInteger _count = INT_MAX;
       [elem addChild: conns];
     }
 
-  connectors =[_gormDocument connectorsForSource: obj
-					 ofClass: [NSNibOutletConnector class]];
+  // Outlets...
+  connectors = [_gormDocument connectorsForSource: obj
+					  ofClass: [NSNibOutletConnector class]];
 
   NSDebugLog(@"outlet connectors = %@, for obj = %@", connectors, obj);
-
   if ([connectors count] > 0)
     {
       NSXMLElement *conns = [NSXMLNode elementWithName: @"connections"];
       NSEnumerator *en = [connectors objectEnumerator];
       NSNibOutletConnector *outlet = nil;
 
-      // Get actions...
+      // Get outlets...
       while ((outlet = [en nextObject]) != nil)
 	{
 	  NSString *destinationId = [self _createIdentifierForObject: [outlet destination]];
@@ -1542,6 +1544,55 @@ static NSUInteger _count = INT_MAX;
 	      [outletElem addAttribute: attr];
 
 	      [conns addChild: outletElem];
+	    }
+	}
+
+      [elem addChild: conns];
+    }
+
+  // Get binding connectors...
+  connectors = [_gormDocument connectorsForSource: obj
+					  ofClass: [NSNibBindingConnector class]];
+
+  NSLog(@"binding connectors = %@, for obj = %@", connectors, obj);
+  if ([connectors count] > 0)
+    {
+      NSXMLElement *conns = [NSXMLNode elementWithName: @"connections"];
+      NSEnumerator *en = [connectors objectEnumerator];
+      NSNibBindingConnector *binding = nil;
+
+      // Get bindings...
+      while ((binding = [en nextObject]) != nil)
+	{
+	  NSString *destinationId = [self _createIdentifierForObject: [binding destination]];
+
+	  if([destinationId isEqualToString: @""] == NO && destinationId != nil)
+	    {
+	      NSDebugLog(@"binding = %@", binding);
+	      // Connector
+	      NSXMLElement *elem = [NSXMLNode elementWithName: @"binding"];
+
+	      // Name
+	      NSXMLNode *attr = [NSXMLNode attributeWithName: @"name"
+						 stringValue: [binding binding]];
+	      [elem addAttribute: attr];
+
+	      // Destination..
+	      attr = [NSXMLNode attributeWithName: @"destination"
+				      stringValue: destinationId];
+	      [elem addAttribute: attr];
+
+	      // KeyPath..
+	      attr = [NSXMLNode attributeWithName: @"keyPath"
+				      stringValue: [binding keyPath]];
+	      [elem addAttribute: attr];
+
+	      // id...
+	      attr = [NSXMLNode attributeWithName: @"id"
+				      stringValue: [[NSString randomHex] splitString]];
+	      [elem addAttribute: attr];
+
+	      [conns addChild: elem];
 	    }
 	}
 

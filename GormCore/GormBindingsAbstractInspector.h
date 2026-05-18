@@ -33,7 +33,7 @@ GS_EXPORT_CLASS
 @interface GormBindingsAbstractInspector : IBInspector
 {
   IBOutlet id _bindTo;
-  IBOutlet id _sourcePopUp;
+  IBOutlet id _destinationPopUp;
   IBOutlet id _controllerKey;
   IBOutlet id _modelKeyPath;
   IBOutlet id _valueTransformer;

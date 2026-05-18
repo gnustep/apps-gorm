@@ -196,7 +196,7 @@
   id o = nil;
 
   // Update the pop up...
-  [_sourcePopUp removeAllItems];
+  [_destinationPopUp removeAllItems];
 
   // Add TLO...
   while ((o = [en nextObject]) != nil)
@@ -206,15 +206,15 @@
 	{
 	  id<NSMenuItem> item = nil;
 
-	  [_sourcePopUp addItemWithTitle: name];
-	  item = [_sourcePopUp itemWithTitle: name];
+	  [_destinationPopUp addItemWithTitle: name];
+	  item = [_destinationPopUp itemWithTitle: name];
 	  [item setTag: index];
 	  index++;
 	}
     }
 
   // Add placeholder...
-  [_sourcePopUp addItemWithTitle: @"NSOwner"];
+  [_destinationPopUp addItemWithTitle: @"NSOwner"];
 }
 
 - (NSMutableArray *) _bindingConnections
@@ -257,13 +257,13 @@
       return;
     }
 
-  NSString *srcName = [[_sourcePopUp selectedItem] title];
-  id src = [self _objectForPopUpTitle: srcName inDocument: doc];
+  NSString *dstName = [[_destinationPopUp selectedItem] title];
+  id dst = [self _objectForPopUpTitle: dstName inDocument: doc];
 
   [conn setOptions: opts];
-  if (src == nil || [controllerKey length] == 0)
+  if (dst == nil || [controllerKey length] == 0)
     {
-      NSDebugLog(@"src or controllerKey is not set");
+      NSDebugLog(@"dst or controllerKey is not set");
       RELEASE(conn);
       return;
     }
@@ -279,8 +279,8 @@
     }
 
   [self _removeBindingConnectorAndRefresh: NO];
-  [conn setDestination: object];
-  [conn setSource: src];
+  [conn setSource: object];
+  [conn setDestination: dst];
   [conn setBinding: [self _currentBindingName]];
   [conn setKeyPath: keyPath];
 
@@ -314,7 +314,7 @@
       NSString *binding = [o binding];
       NSString *currentBinding = [self _currentBindingName];
 
-      if ([o destination] != object)
+      if ([o source] != object)
         {
           continue;
         }
@@ -342,8 +342,8 @@
 - (void) _locateAndSetBinding
 {
   GormDocument *doc = [self _activeDocument];
-  NSArray *c = nil; // [self _bindingConnections];
-  NSEnumerator *en = nil; // [c objectEnumerator];
+  NSArray *c = nil;
+  NSEnumerator *en = nil;
   id preferred = nil;
   id fallback = nil;
   id o = nil;
@@ -368,9 +368,9 @@
       NSString *currentBinding = [self _currentBindingName];
 
       NSDebugLog(@"n = %@", n);
-      if ([o destination] != object)
+      if ([o source] != object)
         {
-	  NSDebugLog(@"Destination is not %@", object);
+	  NSDebugLog(@"Source is not %@", object);
           continue;
         }
 
@@ -391,16 +391,16 @@
     {
       NSString *keyPath = [o keyPath];
       NSRange dot = [keyPath rangeOfString: @"."];
-      id src = [o source];
-      NSString *sourceName = [doc nameForObject: src];
+      id dst = [o destination];
+      NSString *destinationName = [doc nameForObject: dst];
 
       [_bindTo setState: NSOnState];
 
       if (doc != nil)
         {
-          if (sourceName != nil)
+          if (destinationName != nil)
             {
-              [_sourcePopUp selectItemWithTitle: sourceName];
+              [_destinationPopUp selectItemWithTitle: destinationName];
             }
         }
 
@@ -420,7 +420,7 @@
     }
 }
 
-- (void) _updateSourceForBinding
+- (void) _updateDestinationForBinding
 {
   NSArray *c = [self _bindingConnections];
   NSEnumerator *en = [c objectEnumerator];
@@ -440,9 +440,9 @@
       NSString *currentBinding = [self _currentBindingName];
 
       NSDebugLog(@"n = %@", n);
-      if ([o destination] != object)
+      if ([o source] != object)
         {
-	  NSDebugLog(@"Destination is not %@", object);
+	  NSDebugLog(@"Source is not %@", object);
           continue;
         }
 
@@ -461,9 +461,9 @@
   NSDebugLog(@"o = %@", o);
   if (o != nil)
     {
-      NSString *sourceName = [_sourcePopUp titleOfSelectedItem];
-      id src = [self _objectForPopUpTitle: sourceName inDocument: doc];
-      [o setSource: src];
+      NSString *destinationName = [_destinationPopUp titleOfSelectedItem];
+      id dst = [self _objectForPopUpTitle: destinationName inDocument: doc];
+      [o setDestination: dst];
     }
 }
 
@@ -471,7 +471,7 @@
 
 - (IBAction) ok: (id)sender
 {  
-  if (sender == _sourcePopUp)
+  if (sender == _destinationPopUp)
     {
       GormDocument *doc = [self _activeDocument];
       if (doc == nil)
@@ -480,7 +480,7 @@
           return;
         }
 
-      [self _updateSourceForBinding];
+      [self _updateDestinationForBinding];
     }
   else if (sender == _bindTo)
     {
