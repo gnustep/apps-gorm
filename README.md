@@ -71,6 +71,10 @@ Notes:
 Typical launch methods:
 
 ```sh
+gopen path/to/MyInterface.gorm
+```
+
+```sh
 openapp Gorm
 ```
 
