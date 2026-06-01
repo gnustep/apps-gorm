@@ -448,6 +448,11 @@
 
 - (IBAction) delete: (id)sender
 {
+  NSLog(@"_selectionOwner = %@, selection = %@, count = %ld",
+	_selectionOwner,
+	[_selectionOwner selection],
+	[[_selectionOwner selection] count]);
+
   if ([[_selectionOwner selection] count] == 0
     || [_selectionOwner respondsToSelector: @selector(deleteSelection)] == NO)
     return;

@@ -517,13 +517,8 @@ NSImage *browserImage = nil;
   id anitem;
   NSInteger i = [outlineView selectedRow];
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
-  
-  // if no selection, then return.
-  if (i == -1)
-    {
-      return;
-    }
 
+  NSDebugLog(@"In deleteSelection");
   // get the item, and catch the exception, if there's a problem.
   if([classesView contentView] == outlineView)
     {
@@ -542,6 +537,7 @@ NSImage *browserImage = nil;
       anitem = [[browserView selectedCell] stringValue];
     }
 
+  NSDebugLog(@"anitem = %@", anitem);
   if(anitem == nil)
     return;
   
