@@ -72,6 +72,7 @@ static NSString *CONNECTIONLINE=@"DrawConnectionLine";
       }
   }
 
+  /* Add the connection line button to the preferences manually...
   connectionLineButton = [[NSButton alloc] initWithFrame:
     NSMakeRect(20.0, 76.0, 260.0, 24.0)];
   [connectionLineButton setButtonType: NSSwitchButton];
@@ -82,8 +83,17 @@ static NSString *CONNECTIONLINE=@"DrawConnectionLine";
     ([[NSUserDefaults standardUserDefaults] boolForKey: CONNECTIONLINE]
       ? NSOnState : NSOffState)];
   [_view addSubview: connectionLineButton];
+  */
 
   return self;
+}
+
+- (void) awakeFromNib
+{
+  // Set states
+  [connectionLineButton setState:
+    ([[NSUserDefaults standardUserDefaults] boolForKey: CONNECTIONLINE]
+      ? NSOnState : NSOffState)];
 }
 
 - (void) dealloc
@@ -107,7 +117,6 @@ static NSString *CONNECTIONLINE=@"DrawConnectionLine";
 - (void) classesAction: (id)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  // NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   
   if([[interfaceMatrix cellAtRow: 0 column: 0] state] == NSOnState)
     {
@@ -117,11 +126,6 @@ static NSString *CONNECTIONLINE=@"DrawConnectionLine";
     {
       [defaults setObject: @"Browser" forKey: INTTYPE];
     }
-  
-  // let the world know it's changed.
-  // [nc postNotificationName: GormSwitchViewPreferencesNotification
-  //     object: nil];
-  
 }
 
 - (void) consistencyAction: (id)sender

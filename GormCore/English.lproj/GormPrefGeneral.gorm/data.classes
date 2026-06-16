@@ -5,6 +5,7 @@
 	    "archiveAction:",
 	    "classesAction:",
 	    "consistencyAction:",
+	    "connectionLineAction:",
 	    "orderFrontFontPanel:"
 	);
 	Super = NSObject;
@@ -16,7 +17,8 @@
 	    "backupAction:",
 	    "archiveAction:",
 	    "classesAction:",
-	    "consistencyAction:"
+	    "consistencyAction:",
+	    "connectionLineAction:"
 	);
 	Outlets = (
 	    window,
@@ -25,7 +27,8 @@
 	    backupButton,
 	    archiveMatrix,
 	    interfaceMatrix,
-	    checkConsistency
+	    checkConsistency,
+	    connectionLineButton
 	);
 	Super = NSObject;
     };
