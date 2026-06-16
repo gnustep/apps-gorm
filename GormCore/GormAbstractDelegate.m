@@ -27,8 +27,12 @@
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSSet.h>
 
+#import <AppKit/NSBezierPath.h>
+#import <AppKit/NSColor.h>
 #import <AppKit/NSImage.h>
 #import <AppKit/NSMenu.h>
+#import <AppKit/NSView.h>
+#import <AppKit/NSWindow.h>
 
 #import "GormAbstractDelegate.h"
 #import "GormDocument.h"
@@ -40,6 +44,64 @@
 #import "GormPrefController.h"
 #import "GormPrivate.h"
 #import "GormSetNameController.h"
+
+static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
+
+@interface GormConnectionLineView : NSView
+{
+  NSPoint _sourcePoint;
+  NSPoint _destinationPoint;
+}
+
+- (void) setSourcePoint: (NSPoint)sourcePoint
+       destinationPoint: (NSPoint)destinationPoint;
+@end
+
+@implementation GormConnectionLineView
+
+- (id) initWithFrame: (NSRect)frame
+{
+  self = [super initWithFrame: frame];
+  if (self != nil)
+    {
+      [self setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+    }
+  return self;
+}
+
+- (BOOL) isOpaque
+{
+  return NO;
+}
+
+- (void) setSourcePoint: (NSPoint)sourcePoint
+       destinationPoint: (NSPoint)destinationPoint
+{
+  _sourcePoint = sourcePoint;
+  _destinationPoint = destinationPoint;
+  [self setNeedsDisplay: YES];
+}
+
+- (void) drawRect: (NSRect)rect
+{
+  NSBezierPath *path = [NSBezierPath bezierPath];
+  NSPoint cornerPoint;
+
+  [[NSColor clearColor] set];
+  NSRectFill(rect);
+
+  cornerPoint = NSMakePoint(_destinationPoint.x, _sourcePoint.y);
+
+  [path moveToPoint: _sourcePoint];
+  [path lineToPoint: cornerPoint];
+  [path lineToPoint: _destinationPoint];
+  [path setLineWidth: 2.0];
+
+  [[NSColor darkGrayColor] set];
+  [path stroke];
+}
+
+@end
 
 @implementation GormAbstractDelegate
 
@@ -146,6 +208,8 @@
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
+  [_connectionLineWindow close];
+  RELEASE(_connectionLineWindow);
   RELEASE(_inspectorsManager);
   RELEASE(_palettesManager);
   RELEASE(_classManager);
@@ -295,6 +359,105 @@
   return _connectSource;
 }
 
+- (NSPoint) _connectionLinePointForObject: (id)object
+{
+  NSWindow *window;
+  NSView *view;
+  NSRect rect;
+  NSPoint point;
+
+  window = [(GormDocument *)[self activeDocument] windowAndRect: &rect
+						      forObject: object];
+  if (window == nil)
+    {
+      return NSZeroPoint;
+    }
+
+  view = [[window contentView] superview];
+  point = NSMakePoint(NSMidX(rect), NSMidY(rect));
+  point = [view convertPoint: point toView: nil];
+  return [window convertBaseToScreen: point];
+}
+
+- (void) _hideConnectionLine
+{
+  [_connectionLineWindow orderOut: nil];
+}
+
+- (void) _updateConnectionLine
+{
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSPoint sourcePoint;
+  NSPoint destinationPoint;
+  NSRect lineFrame;
+  NSRect viewFrame;
+  NSPoint localSourcePoint;
+  NSPoint localDestinationPoint;
+  CGFloat margin = 8.0;
+
+  if ([defaults boolForKey: GormDrawConnectionLineDefault] == NO
+      || _connectSource == nil
+      || _connectDestination == nil
+      || _connectSource == _connectDestination)
+    {
+      [self _hideConnectionLine];
+      return;
+    }
+
+  sourcePoint = [self _connectionLinePointForObject: _connectSource];
+  destinationPoint = [self _connectionLinePointForObject: _connectDestination];
+  if (NSEqualPoints(sourcePoint, NSZeroPoint)
+      || NSEqualPoints(destinationPoint, NSZeroPoint))
+    {
+      [self _hideConnectionLine];
+      return;
+    }
+
+  lineFrame = NSMakeRect(MIN(sourcePoint.x, destinationPoint.x),
+			 MIN(sourcePoint.y, destinationPoint.y),
+			 fabs(sourcePoint.x - destinationPoint.x),
+			 fabs(sourcePoint.y - destinationPoint.y));
+  lineFrame = NSInsetRect(lineFrame, -margin, -margin);
+  if (lineFrame.size.width < 1.0)
+    {
+      lineFrame.size.width = 1.0;
+    }
+  if (lineFrame.size.height < 1.0)
+    {
+      lineFrame.size.height = 1.0;
+    }
+
+  if (_connectionLineWindow == nil)
+    {
+      _connectionLineWindow = [[NSWindow alloc] initWithContentRect: lineFrame
+							  styleMask: NSBorderlessWindowMask
+							    backing: NSBackingStoreBuffered
+							      defer: NO];
+      [_connectionLineWindow setReleasedWhenClosed: NO];
+      [_connectionLineWindow setBackgroundColor: [NSColor clearColor]];
+      [_connectionLineWindow setOpaque: NO];
+      [_connectionLineWindow setIgnoresMouseEvents: YES];
+      [_connectionLineWindow setLevel: NSFloatingWindowLevel];
+
+      viewFrame = NSMakeRect(0.0, 0.0, lineFrame.size.width, lineFrame.size.height);
+      _connectionLineView = [[GormConnectionLineView alloc] initWithFrame: viewFrame];
+      [_connectionLineWindow setContentView: _connectionLineView];
+      RELEASE(_connectionLineView);
+    }
+  else
+    {
+      [_connectionLineWindow setFrame: lineFrame display: NO];
+    }
+
+  localSourcePoint = NSMakePoint(sourcePoint.x - lineFrame.origin.x,
+				 sourcePoint.y - lineFrame.origin.y);
+  localDestinationPoint = NSMakePoint(destinationPoint.x - lineFrame.origin.x,
+				      destinationPoint.y - lineFrame.origin.y);
+  [(GormConnectionLineView *)_connectionLineView setSourcePoint: localSourcePoint
+                                               destinationPoint: localDestinationPoint];
+  [_connectionLineWindow orderFront: nil];
+}
+
 - (void) displayConnectionBetween: (id)source
 			      and: (id)destination
 {
@@ -418,6 +581,8 @@
 	  [window flushWindow];
 	}
     }
+
+  [self _updateConnectionLine];
 }
 
 - (IBAction) testInterface: (id)sender

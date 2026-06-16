@@ -15,6 +15,7 @@
     );
     CellSizeWidth = 72;
     ClassViewType = Browser;
+    DrawConnectionLine = YES;
     GuideColor = {
 	alpha = 1;
 	blue = 0;

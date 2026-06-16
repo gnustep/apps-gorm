@@ -33,6 +33,7 @@
 static NSString *BACKUPFILE=@"BackupFile";
 static NSString *INTTYPE=@"ClassViewType";
 static NSString *REPAIRFILE=@"GormRepairFileOnLoad";
+static NSString *CONNECTIONLINE=@"DrawConnectionLine";
 
 @implementation GormGeneralPref
 
@@ -71,11 +72,23 @@ static NSString *REPAIRFILE=@"GormRepairFileOnLoad";
       }
   }
 
+  connectionLineButton = [[NSButton alloc] initWithFrame:
+    NSMakeRect(20.0, 76.0, 260.0, 24.0)];
+  [connectionLineButton setButtonType: NSSwitchButton];
+  [connectionLineButton setTitle: _(@"Draw connection line")];
+  [connectionLineButton setTarget: self];
+  [connectionLineButton setAction: @selector(connectionLineAction:)];
+  [connectionLineButton setState:
+    ([[NSUserDefaults standardUserDefaults] boolForKey: CONNECTIONLINE]
+      ? NSOnState : NSOffState)];
+  [_view addSubview: connectionLineButton];
+
   return self;
 }
 
 - (void) dealloc
 {
+  TEST_RELEASE(connectionLineButton);
   TEST_RELEASE(_view);
   [super dealloc];
 }
@@ -117,5 +130,11 @@ static NSString *REPAIRFILE=@"GormRepairFileOnLoad";
   [defaults setBool: (([checkConsistency state] == NSOnState)?YES:NO) 
 	    forKey: REPAIRFILE];
 }
-@end
 
+- (void) connectionLineAction: (id)sender
+{
+  NSUserDefaults *defaults =  [NSUserDefaults standardUserDefaults];
+  [defaults setBool: (([connectionLineButton state] == NSOnState)?YES:NO)
+	    forKey: CONNECTIONLINE];
+}
+@end

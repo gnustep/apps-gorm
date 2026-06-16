@@ -16,6 +16,7 @@ GS_EXPORT_CLASS
   id backupButton;
   id interfaceMatrix;
   id checkConsistency;
+  id connectionLineButton;
   id _view;
 }
 
@@ -38,6 +39,11 @@ GS_EXPORT_CLASS
  * Toggle consistency checking of loaded documents and update the preference.
  */
 - (void) consistencyAction: (id)sender;
+
+/**
+ * Toggle rectilinear connection line drawing while connecting objects.
+ */
+- (void) connectionLineAction: (id)sender;
 @end
 
 

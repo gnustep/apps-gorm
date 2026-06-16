@@ -37,6 +37,8 @@
 @class NSMenu;
 @class NSMutableArray;
 @class NSSet;
+@class NSView;
+@class NSWindow;
 @class GormPrefController;
 @class GormClassManager;
 @class GormPalettesManager;
@@ -74,6 +76,8 @@ GS_EXPORT_CLASS
   NSImage               *_testingImage;
   id			 _connectSource;
   id			 _connectDestination;
+  NSWindow              *_connectionLineWindow;
+  NSView                *_connectionLineView;
   NSMutableArray        *_testingWindows;
   NSSet                 *_topObjects;
   NSDockTile            *_dockTile;
