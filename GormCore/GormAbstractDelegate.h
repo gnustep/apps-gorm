@@ -76,8 +76,7 @@ GS_EXPORT_CLASS
   NSImage               *_testingImage;
   id			 _connectSource;
   id			 _connectDestination;
-  NSWindow              *_connectionLineWindow;
-  NSView                *_connectionLineView;
+  NSMutableArray        *_connectionLineWindows;
   NSMutableArray        *_testingWindows;
   NSSet                 *_topObjects;
   NSDockTile            *_dockTile;
