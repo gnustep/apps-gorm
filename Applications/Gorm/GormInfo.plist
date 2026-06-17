@@ -1,7 +1,7 @@
 {
     NSIcon = "Gorm.tiff";
     NSMainNibFile = "Gorm.gorm";
-    NSPrincipalClass = "NSApplication";
+    NSPrincipalClass = "Gorm";
     NSRole = "Editor";
     
     NSTypes = (
