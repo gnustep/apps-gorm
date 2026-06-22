@@ -25,11 +25,15 @@
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
+#import <Foundation/NSRunLoop.h>
 #import <Foundation/NSSet.h>
+#import <Foundation/NSTimer.h>
 
 #import <AppKit/NSColor.h>
+#import <AppKit/NSEvent.h>
 #import <AppKit/NSImage.h>
 #import <AppKit/NSMenu.h>
+#import <AppKit/NSPanel.h>
 #import <AppKit/NSView.h>
 #import <AppKit/NSWindow.h>
 
@@ -151,6 +155,8 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
   NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
 
   [nc removeObserver: self];
+  [_connectionLineTimer invalidate];
+  RELEASE(_connectionLineTimer);
   [_connectionLineWindows makeObjectsPerformSelector: @selector(close)];
   RELEASE(_connectionLineWindows);
   RELEASE(_inspectorsManager);
@@ -328,6 +334,36 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 					  withObject: nil];
 }
 
+- (void) _drawConnectionLineWindow: (NSWindow *)window
+{
+  NSRect frame = NSMakeRect(0.0, 0.0,
+			    [[window contentView] bounds].size.width,
+			    [[window contentView] bounds].size.height);
+  NSRect innerFrame;
+
+  [[window contentView] lockFocus];
+  [[NSColor lightGrayColor] set];
+  NSRectFill(frame);
+
+  innerFrame = frame;
+  if (frame.size.width >= frame.size.height)
+    {
+      innerFrame.origin.y += 1.0;
+      innerFrame.size.height -= 2.0;
+    }
+  else
+    {
+      innerFrame.origin.x += 1.0;
+      innerFrame.size.width -= 2.0;
+    }
+  if (innerFrame.size.width > 0.0 && innerFrame.size.height > 0.0)
+    {
+      [[NSColor blackColor] set];
+      NSRectFill(innerFrame);
+    }
+  [[window contentView] unlockFocus];
+}
+
 - (NSWindow *) _connectionLineWindowAtIndex: (NSUInteger)index
 {
   NSWindow *window;
@@ -344,7 +380,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 					    backing: NSBackingStoreBuffered
 					      defer: NO];
       [window setReleasedWhenClosed: NO];
-      [window setBackgroundColor: [NSColor darkGrayColor]];
+      [window setBackgroundColor: [NSColor clearColor]];
       [window setOpaque: YES];
       [window setIgnoresMouseEvents: YES];
       [window setLevel: NSFloatingWindowLevel];
@@ -361,7 +397,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 {
   NSWindow *window;
   NSRect frame;
-  CGFloat thickness = 2.0;
+  CGFloat thickness = 4.0;
 
   if (fabs(startPoint.x - endPoint.x) < 1.0
       && fabs(startPoint.y - endPoint.y) < 1.0)
@@ -385,10 +421,16 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
     }
 
   window = [self _connectionLineWindowAtIndex: index];
-  [window setFrame: frame display: YES];
+  [window setFrame: frame display: NO];
+  [self _drawConnectionLineWindow: window];
   [window orderFront: nil];
 
   return YES;
+}
+
+- (void) _connectionLineTimerFired: (NSTimer *)timer
+{
+  [self _updateConnectionLine];
 }
 
 - (void) _updateConnectionLine
@@ -403,7 +445,6 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 
   if ([defaults boolForKey: GormDrawConnectionLineDefault] == NO
       || _connectSource == nil
-      || _connectDestination == nil
       || _connectSource == _connectDestination)
     {
       [self _hideConnectionLine];
@@ -411,7 +452,20 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
     }
 
   sourcePoint = [self _connectionLinePointForObject: _connectSource];
-  destinationPoint = [self _connectionLinePointForObject: _connectDestination];
+  if (_connectDestination == nil)
+    {
+      if (_isConnecting == NO)
+	{
+	  [self _hideConnectionLine];
+	  return;
+	}
+      destinationPoint = [NSEvent mouseLocation];
+    }
+  else
+    {
+      destinationPoint = [self _connectionLinePointForObject: _connectDestination];
+    }
+
   if (NSEqualPoints(sourcePoint, NSZeroPoint)
       || NSEqualPoints(destinationPoint, NSZeroPoint))
     {
@@ -1083,11 +1137,24 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
       return;
     }
   _isConnecting = YES;
+  if (_connectionLineTimer == nil)
+    {
+      _connectionLineTimer = [[NSTimer scheduledTimerWithTimeInterval: 0.02
+							       target: self
+							     selector: @selector(_connectionLineTimerFired:)
+							     userInfo: nil
+							      repeats: YES] retain];
+      [[NSRunLoop currentRunLoop] addTimer: _connectionLineTimer
+				   forMode: NSEventTrackingRunLoopMode];
+    }
+  [self _updateConnectionLine];
   [[self inspectorsManager] updateSelection];
 }
 
 - (void) stopConnecting
 {
+  [_connectionLineTimer invalidate];
+  DESTROY(_connectionLineTimer);
   [self displayConnectionBetween: nil and: nil];
   _isConnecting = NO;
   _connectSource = nil;

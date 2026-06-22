@@ -37,6 +37,7 @@
 @class NSMenu;
 @class NSMutableArray;
 @class NSSet;
+@class NSTimer;
 @class NSView;
 @class NSWindow;
 @class GormPrefController;
@@ -77,6 +78,7 @@ GS_EXPORT_CLASS
   id			 _connectSource;
   id			 _connectDestination;
   NSMutableArray        *_connectionLineWindows;
+  NSTimer              *_connectionLineTimer;
   NSMutableArray        *_testingWindows;
   NSSet                 *_topObjects;
   NSDockTile            *_dockTile;
