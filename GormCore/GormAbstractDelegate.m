@@ -342,7 +342,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
   NSRect innerFrame;
 
   [[window contentView] lockFocus];
-  [[NSColor lightGrayColor] set];
+  [[NSColor darkGrayColor] set];
   NSRectFill(frame);
 
   innerFrame = frame;
