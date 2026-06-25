@@ -50,6 +50,12 @@
 
 static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 
+static NSColor *
+GormConnectionLineColor(void)
+{
+  return [NSColor colorWithCalibratedWhite: 0.45 alpha: 1.0];
+}
+
 @implementation GormAbstractDelegate
 
 /*
@@ -341,7 +347,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 			    [[window contentView] bounds].size.height);
 
   [[window contentView] lockFocus];
-  [[NSColor colorWithCalibratedWhite: 0.25 alpha: 1.0] set];
+  [GormConnectionLineColor() set];
   NSRectFill(frame);
   [[window contentView] unlockFocus];
 }
@@ -425,7 +431,8 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
   NSUInteger count;
   NSUInteger index;
 
-  if ([defaults boolForKey: GormDrawConnectionLineDefault] == NO
+  if (_isTesting == YES
+      || [defaults boolForKey: GormDrawConnectionLineDefault] == NO
       || _connectSource == nil
       || _connectSource == _connectDestination)
     {
@@ -544,7 +551,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 	  //rect.size.width--;
 	  //rect.size.height--;
 	  [view lockFocus];
-	  [[NSColor greenColor] set];
+	  [GormConnectionLineColor() set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  [_sourceImage compositeToPoint: imageRect.origin
@@ -567,7 +574,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 	  // rect.size.width -= 5;
 	  // rect.size.height -= 5;
 	  [view lockFocus];
-	  [[NSColor purpleColor] set];
+	  [GormConnectionLineColor() set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  imageRect.origin.x += [_targetImage size].width;
@@ -590,7 +597,7 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 	  // rect.size.width--;
 	  // rect.size.height--;
 	  [view lockFocus];
-	  [[NSColor purpleColor] set];
+	  [GormConnectionLineColor() set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  [_targetImage compositeToPoint: imageRect.origin
@@ -607,6 +614,8 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 {
   if (_isTesting == NO || [self isInTool])
     {
+      [self stopConnecting];
+
       // top level objects
       NS_DURING
 	{
