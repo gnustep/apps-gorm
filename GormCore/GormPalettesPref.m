@@ -1,4 +1,4 @@
-#/* GormPalettesPref.m
+/* GormPalettesPref.m
  *
  * Copyright (C) 2004 Free Software Foundation, Inc.
  *

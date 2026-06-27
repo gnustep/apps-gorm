@@ -230,7 +230,7 @@ NSString *formatVersion(NSInteger version)
 /**
  * Current profile for the current model file.
  */
-- (NSDictionary *) currentProfile;
+- (NSDictionary *) currentProfile
 {
   return currentProfile;
 }
@@ -238,7 +238,7 @@ NSString *formatVersion(NSInteger version)
 /**
  * Version information for the model file.
  */
-- (NSDictionary *) versionProfiles;
+- (NSDictionary *) versionProfiles
 {
   return versionProfiles;
 }
@@ -361,4 +361,3 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 }
 
 @end
-

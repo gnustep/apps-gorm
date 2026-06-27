@@ -145,7 +145,7 @@ static NSColor *darkGreyBlueColor = nil;
   return self;
 }
 
-- (void) collapseItem: (id)item collapseChildren: (BOOL)collapseChildren;
+- (void) collapseItem: (id)item collapseChildren: (BOOL)collapseChildren
 {
   if (!_isEditing)
     {
@@ -824,4 +824,3 @@ static NSColor *darkGreyBlueColor = nil;
   _selectedRow = rowIndex;
 }
 @end /* implementation of GormOutlineView */
-

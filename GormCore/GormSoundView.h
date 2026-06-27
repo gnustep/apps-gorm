@@ -1,6 +1,6 @@
 /** <title>GormSoundView</title>
 
-   <abstract>Visualizes a sound.<abstract>
+   <abstract>Visualizes a sound.</abstract>
 
    Copyright (C) 2004 Free Software Foundation, Inc.
    Author:  Gregory John Casamento <greg.casamento@gmail.com>

@@ -26,11 +26,13 @@
 #import <Foundation/Foundation.h>
 
 #ifndef GNUSTEP
-//! Project version number for InterfaceBuilder.
+/** <ignore> autogsdoc does not parse FOUNDATION_EXPORT declarations. */
+/* Project version number for InterfaceBuilder. */
 FOUNDATION_EXPORT double InterfaceBuilderVersionNumber;
 
-//! Project version string for InterfaceBuilder.
+/* Project version string for InterfaceBuilder. */
 FOUNDATION_EXPORT const unsigned char InterfaceBuilderVersionString[];
+/** end of text ignored by autogsdoc </ignore> */
 #endif
 
 #ifndef INCLUDED_INTERFACEBUILDER_H

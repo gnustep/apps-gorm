@@ -198,7 +198,7 @@ static NSMapTable *_resourceManagers = NULL;
   [super dealloc];
 }
 
-- (BOOL) isReadOnly;
+- (BOOL) isReadOnly
 {
   return NO;
 }
@@ -226,7 +226,7 @@ static NSMapTable *_resourceManagers = NULL;
   return [NSArray arrayWithObjects: IBObjectPboardType, nil];
 }
 
-- (NSArray *) resourcesForObjects: (NSArray *)objs;
+- (NSArray *) resourcesForObjects: (NSArray *)objs
 {
   return nil;
 }

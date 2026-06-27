@@ -37,10 +37,12 @@
 /*
  * Notification for editing and inspecting the objects etc.
  */
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBAttributesChangedNotification;
 IB_EXTERN NSString *IBInspectorDidModifyObjectNotification;
 IB_EXTERN NSString *IBSelectionChangedNotification;
 IB_EXTERN NSString *IBClassNameChangedNotification;
+/** end of text ignored by autogsdoc </ignore> */
 
 /**
  * The IBSelectionOwners protocol defines the methods that a selection owner

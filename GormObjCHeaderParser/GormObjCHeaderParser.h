@@ -25,11 +25,13 @@
 #import <Foundation/Foundation.h>
 
 #ifndef GNUSTEP
-//! Project version number for GormObjCHeaderParser.
+/** <ignore> autogsdoc does not parse FOUNDATION_EXPORT declarations. */
+/* Project version number for GormObjCHeaderParser. */
 FOUNDATION_EXPORT double GormObjCHeaderParserVersionNumber;
 
-//! Project version string for GormObjCHeaderParser.
+/* Project version string for GormObjCHeaderParser. */
 FOUNDATION_EXPORT const unsigned char GormObjCHeaderParserVersionString[];
+/** end of text ignored by autogsdoc </ignore> */
 #endif
 
 #ifndef INCLUDED_GORMOBJCHEADERPARSER_H
@@ -45,4 +47,3 @@ FOUNDATION_EXPORT const unsigned char GormObjCHeaderParserVersionString[];
 #include <GormObjCHeaderParser/ParserFunctions.h>
 
 #endif
-

@@ -41,6 +41,7 @@
  * window into another window in Gorm (or, in the case of IBWindowPboardType
  * onto the desktop).
  */
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString	*IBCellPboardType;
 IB_EXTERN NSString	*IBMenuPboardType;
 IB_EXTERN NSString	*IBMenuCellPboardType;
@@ -48,15 +49,18 @@ IB_EXTERN NSString	*IBObjectPboardType;
 IB_EXTERN NSString	*IBViewPboardType;
 IB_EXTERN NSString	*IBWindowPboardType;
 IB_EXTERN NSString	*IBFormatterPboardType;
+/** end of text ignored by autogsdoc </ignore> */
 
 /*
  * Pasteboard types used for DnD from images or sounds tab
  * to views or inspector's textfield onto the desktop).
  * NOTE: These are specific to Gorm... 
  */
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString	*GormImagePboardType;
 IB_EXTERN NSString	*GormSoundPboardType;
 IB_EXTERN NSString      *GormLinkPboardType;
+/** end of text ignored by autogsdoc </ignore> */
 GS_EXPORT_CLASS
 @interface IBPalette : NSObject
 {

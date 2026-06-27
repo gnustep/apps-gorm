@@ -10,23 +10,30 @@
 
 include ../Version
 
+PYTHON ?= python3
+
 # Things to do before compiling
 before-all:: version.texi 
 	autogsdoc -MakeFrames YES \
+		  -DocumentInstanceVariables NO \
 		  -Project InterfaceBuilder \
 		  -DocumentationDirectory InterfaceBuilder \
 		  -Declared InterfaceBuilder \
 		  ../InterfaceBuilder/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
+		  -DocumentInstanceVariables NO \
 		  -Project GormCore \
 		  -DocumentationDirectory GormCore \
 		  -Declared GormCore \
 		  ../GormCore/*.h 2> /dev/null
 	autogsdoc -MakeFrames YES \
+		  -DocumentInstanceVariables NO \
 		  -Project GormObjCHeaderParser \
 		  -DocumentationDirectory GormObjCHeaderParser \
 		  -Declared GormObjCHeaderParser \
 		  ../GormObjCHeaderParser/*.h 2> /dev/null
+	$(PYTHON) ../Scripts/fix_autogsdoc_html.py \
+		  InterfaceBuilder GormCore GormObjCHeaderParser
 
 # Things to do after compiling
 # after-all::

@@ -50,7 +50,7 @@ NSString *cutFileLabelText(NSString *filename, id label, NSInteger length);
 NSSize defaultCellSize();
 
 // color from string
-NSColor *colorFromDict(NSDictionary *colorString);
+NSColor *colorFromDict(NSDictionary *dict);
 
 // color to string
 NSDictionary *colorToDict(NSColor *color);

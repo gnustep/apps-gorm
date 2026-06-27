@@ -29,10 +29,12 @@
 #include <InterfaceBuilder/IBEditors.h>
 #include <InterfaceBuilder/IBSystem.h>
 
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBWillBeginTestingInterfaceNotification;
 IB_EXTERN NSString *IBDidBeginTestingInterfaceNotification;
 IB_EXTERN NSString *IBWillEndTestingInterfaceNotification;
 IB_EXTERN NSString *IBDidEndTestingInterfaceNotification;
+/** end of text ignored by autogsdoc </ignore> */
 
 /**
  * IB defines methods that the Interface Builder environment provides to

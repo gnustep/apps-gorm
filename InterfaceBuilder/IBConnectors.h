@@ -34,10 +34,12 @@
 // forward declarations
 @class NSString;
 
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBWillAddConnectorNotification;
 IB_EXTERN NSString *IBDidAddConnectorNotification;
 IB_EXTERN NSString *IBWillRemoveConnectorNotification;
 IB_EXTERN NSString *IBDidRemoveConnectorNotification;
+/** end of text ignored by autogsdoc </ignore> */
 
 /*
  * Connector objects are used to record connections between nib objects.

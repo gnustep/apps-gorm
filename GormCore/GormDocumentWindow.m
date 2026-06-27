@@ -41,7 +41,7 @@
   _document = document;
 }
 
-- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
   NSPasteboard *pb = [sender draggingPasteboard];
   NSUInteger mask = [sender draggingSourceOperationMask];
@@ -75,28 +75,28 @@
   return oper;
 }
 
-- (void)draggingExited:(id <NSDraggingInfo>)sender;
+- (void)draggingExited:(id <NSDraggingInfo>)sender
 {
   dragMgr = nil;
 }
 
-- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
   return !(dragMgr == nil);	
 }
 
-- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
   [dragMgr addResourcesFromPasteboard:[sender draggingPasteboard]];
   return !(dragMgr == nil);	
 }
 
-- (void)concludeDragOperation:(id <NSDraggingInfo>)sender;
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
   dragMgr = nil;
 }
 
-- (void)draggingEnded: (id <NSDraggingInfo>)sender;
+- (void)draggingEnded: (id <NSDraggingInfo>)sender
 {
   dragMgr = nil;
 }
@@ -107,4 +107,3 @@
 }
 
 @end
-

@@ -25,11 +25,13 @@
 #import <Foundation/Foundation.h>
 
 #ifndef GNUSTEP
-//! Project version number for GormPrefs.
+/** <ignore> autogsdoc does not parse FOUNDATION_EXPORT declarations. */
+/* Project version number for GormPrefs. */
 FOUNDATION_EXPORT double GormPrefsVersionNumber;
 
-//! Project version string for GormPrefs.
+/* Project version string for GormPrefs. */
 FOUNDATION_EXPORT const unsigned char GormPrefsVersionString[];
+/** end of text ignored by autogsdoc </ignore> */
 #endif
 
 #ifndef INCLUDED_GORMPREFS_H

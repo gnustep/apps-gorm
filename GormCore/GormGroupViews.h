@@ -38,25 +38,27 @@
 
 /**
  * Determines whether views should be arranged vertically based on their positions.
- * @param subviews Array of GormViewEditor objects to analyze
- * @return YES if views should be arranged vertically, NO for horizontal
+ * The <var>subviews</var> argument is an array of GormViewEditor objects to
+ * analyze. Returns YES if views should be arranged vertically, NO for
+ * horizontal.
  */
 - (BOOL) shouldBeVertical: (NSArray *)subviews;
 
 /**
  * Sorts views by their position according to the specified orientation.
- * @param subviews Array of GormViewEditor objects to sort
- * @param isVertical YES to sort by horizontal position, NO to sort by vertical position
- * @return Sorted array of views
+ * The <var>subviews</var> argument is an array of GormViewEditor objects to
+ * sort. The <var>isVertical</var> argument is YES to sort by horizontal
+ * position, NO to sort by vertical position. Returns the sorted array of
+ * views.
  */
 - (NSArray *) sortByPosition: (NSArray *)subviews 
                   isVertical: (BOOL *)isVertical;
 
 /**
  * Adjusts view frames relative to a union rectangle and content origin.
- * @param views Array of NSView objects to adjust
- * @param unionRect The bounding rectangle to use as reference
- * @return Array of adjusted views
+ * The <var>views</var> argument is an array of NSView objects to adjust.
+ * The <var>unionRect</var> argument is the bounding rectangle to use as the
+ * reference. Returns an array of adjusted views.
  */
 - (NSArray *) buildFramesForViews: (NSArray *)views
                     withUnionRect: (NSRect)unionRect;

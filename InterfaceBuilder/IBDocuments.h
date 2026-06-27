@@ -31,10 +31,12 @@
 #include <InterfaceBuilder/IBConnectors.h>
 #include <InterfaceBuilder/IBSystem.h>
 
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBDidOpenDocumentNotification;
 IB_EXTERN NSString *IBWillSaveDocumentNotification;
 IB_EXTERN NSString *IBDidSaveDocumentNotification;
 IB_EXTERN NSString *IBWillCloseDocumentNotification;
+/** end of text ignored by autogsdoc </ignore> */
 
 /**
  * IBDocuments defines IBDocuments class or protocol.

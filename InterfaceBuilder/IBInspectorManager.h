@@ -34,8 +34,10 @@
 /**
  * Notifications to be sent prior to the action described.
  */ 
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBWillInspectObjectNotification;
 IB_EXTERN NSString *IBWillInspectWithModeNotification;
+/** end of text ignored by autogsdoc </ignore> */
 GS_EXPORT_CLASS
 @interface IBInspectorManager : NSObject
 {

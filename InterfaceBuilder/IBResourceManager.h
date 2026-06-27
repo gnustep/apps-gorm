@@ -37,7 +37,9 @@
  * Notification sent when a resource manager class is added to /removed from 
  * the registry.
  */
+/** <ignore> autogsdoc does not parse IB_EXTERN declarations. */
 IB_EXTERN NSString *IBResourceManagerRegistryDidChangeNotification;
+/** end of text ignored by autogsdoc </ignore> */
 
 /** 
  * Enumerated type to allow specification of where the resource

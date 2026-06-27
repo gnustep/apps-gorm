@@ -826,7 +826,7 @@
   return outlets;
 }
 
-- (NSArray *) allOutletsForClassNamed: (NSString *)className;
+- (NSArray *) allOutletsForClassNamed: (NSString *)className
 {
   NSMutableDictionary	*info = [_classInformation objectForKey: className];
 
