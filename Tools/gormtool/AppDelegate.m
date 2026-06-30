@@ -500,9 +500,24 @@
 	  if (outputFile != nil)
 	    {	  
 	      BOOL saved = NO;
-	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
+	      BOOL isDirectory = YES;
+	      NSURL *file = nil;
 	      NSError *error = nil;
+
+	      if ([type isEqualToString: @"GSNibFileType"]
+		  && [[_doc fileType] isEqualToString: @"GSNibArchiveFileType"])
+		{
+		  type = [_doc fileType];
+		}
+
+	      if ([type isEqualToString: @"GSNibArchiveFileType"]
+		  || [type isEqualToString: @"GSXibFileType"])
+		{
+		  isDirectory = NO;
+		}
+
+	      file = [NSURL fileURLWithPath: outputFile isDirectory: isDirectory];
 	      
 	      saved = [_doc saveToURL: file
 			       ofType: type

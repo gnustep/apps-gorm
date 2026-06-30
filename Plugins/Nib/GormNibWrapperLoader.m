@@ -406,3 +406,13 @@
   return obj;
 }
 @end
+
+@interface GormNibArchiveWrapperLoader : GormNibWrapperLoader
+@end
+
+@implementation GormNibArchiveWrapperLoader
++ (NSString *) fileType
+{
+  return @"GSNibArchiveFileType";
+}
+@end

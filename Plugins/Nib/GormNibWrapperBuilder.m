@@ -331,17 +331,64 @@
   return openItems;
 }
 
-- (NSMutableDictionary *)buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
+- (NSData *)_archiveDataWithDocument: (GormDocument *)doc
 {
   NSKeyedArchiver       *archiver = nil;
   NSMutableData         *archiverData = nil;
-  NSString              *nibPath = @"keyedobjects.nib";
-  NSString              *classesPath = @"classes.nib";
-  NSString              *infoPath = @"info.nib";
   GormPalettesManager   *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
   NSDictionary          *substituteClasses = [palettesManager substituteClasses];
   NSEnumerator          *en = [substituteClasses keyEnumerator];
   NSString              *subClassName = nil;
+
+  document = doc;
+
+  // instantiate the container.
+  DESTROY(_container);
+  _container = [[NSIBObjectData alloc] initWithDocument: document];
+
+  /*
+   * Set up archiving...
+   */
+  archiverData = [NSMutableData dataWithCapacity: 10240];
+  archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData: archiverData];
+  [archiver setDelegate: self];
+
+  /*
+   * Special gorm classes to their archive equivalents.
+   */
+  [archiver setClassName: @"NSCustomObject"
+	forClass: [GormObjectProxy class]];
+  [archiver setClassName: @"NSCustomView"
+	forClass: [GormCustomView class]];
+  [archiver setClassName: @"NSCustomObject"
+	forClass: [GormFilesOwner class]];
+
+  while((subClassName = [en nextObject]) != nil)
+    {
+      NSString *realClassName = [substituteClasses objectForKey: subClassName];
+      Class subClass = NSClassFromString(subClassName);
+      [archiver setClassName: realClassName
+		forClass: subClass];
+    }
+
+  /*
+   * Initialize templates
+   */
+  [self _replaceObjectsWithTemplates: archiver];
+  [archiver setOutputFormat: NSPropertyListXMLFormat_v1_0]; // force XML output for now....
+  [archiver encodeObject: _container forKey: @"IB.objectdata"];
+  [archiver finishEncoding];
+  RELEASE(archiver); // We're done with the archiver here..
+
+  return archiverData;
+}
+
+- (NSMutableDictionary *)buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
+{
+  NSData                *archiverData = nil;
+  NSString              *nibPath = @"keyedobjects.nib";
+  NSString              *classesPath = @"classes.nib";
+  NSString              *infoPath = @"info.nib";
   NSFileWrapper         *fileWrapper = nil;
   NSMutableDictionary   *fileWrappers = [super buildFileWrapperDictionaryWithDocument: doc];
 
@@ -350,43 +397,7 @@
       GormClassManager *classManager = [document classManager];
       GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
 
-      // instantiate the container.
-      _container = [[NSIBObjectData alloc] initWithDocument: document];      
-
-      /*
-       * Set up archiving...
-       */
-      archiverData = [NSMutableData dataWithCapacity: 10240];
-      archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData: archiverData];
-      [archiver setDelegate: self];
-
-      /* 
-       * Special gorm classes to their archive equivalents. 
-       */
-      [archiver setClassName: @"NSCustomObject"
-		forClass: [GormObjectProxy class]];
-      [archiver setClassName: @"NSCustomView"
-		forClass: [GormCustomView class]];
-      [archiver setClassName: @"NSCustomObject"
-		forClass: [GormFilesOwner class]];
-      
-      
-      while((subClassName = [en nextObject]) != nil)
-	{
-	  NSString *realClassName = [substituteClasses objectForKey: subClassName];
-	  Class subClass = NSClassFromString(subClassName);
-	  [archiver setClassName: realClassName
-		    forClass: subClass];
-	}
-      
-      /*
-       * Initialize templates 
-       */
-      [self _replaceObjectsWithTemplates: archiver];
-      [archiver setOutputFormat: NSPropertyListXMLFormat_v1_0]; // force XML output for now....
-      [archiver encodeObject: _container forKey: @"IB.objectdata"];
-      [archiver finishEncoding];
-      RELEASE(archiver); // We're done with the archiver here..
+      archiverData = [self _archiveDataWithDocument: doc];
       
       /* 
        * Add the gorm, info and classes files to the package.
@@ -404,5 +415,23 @@
     }
 
   return fileWrappers;
+}
+@end
+
+@interface GormNibArchiveWrapperBuilder : GormNibWrapperBuilder
+@end
+
+@implementation GormNibArchiveWrapperBuilder
++ (NSString *) fileType
+{
+  return @"GSNibArchiveFileType";
+}
+
+- (NSFileWrapper *) buildFileWrapperWithDocument: (GormDocument *)doc
+{
+  NSData *data = [self _archiveDataWithDocument: doc];
+  NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
+
+  return fileWrapper;
 }
 @end

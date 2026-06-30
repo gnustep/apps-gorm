@@ -3505,6 +3505,24 @@ static void _real_close(GormDocument *self,
   return @"GormDocument";
 }
 
+- (BOOL) readFromFile: (NSString *)fileName ofType: (NSString *)type
+{
+  if ([type isEqualToString: @"GSNibFileType"])
+    {
+      BOOL isDirectory = NO;
+
+      if ([[NSFileManager defaultManager] fileExistsAtPath: fileName
+                                               isDirectory: &isDirectory]
+          && isDirectory == NO)
+        {
+          type = @"GSNibArchiveFileType";
+          [self setFileType: type];
+        }
+    }
+
+  return [super readFromFile: fileName ofType: type];
+}
+
 /**
  * Call the builder and create the file wrapper to save the appropriate format.
  */
