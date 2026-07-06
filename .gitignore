@@ -10,3 +10,4 @@ derived_src
 *~
 GormVersion.h
 .DS_Store
+GormInfo.plist
