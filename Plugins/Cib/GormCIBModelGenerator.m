@@ -623,37 +623,12 @@
   return dict;
 }
 
-- (NSArray *) _resourceDictionaries
-{
-  NSMutableArray *resources = [NSMutableArray array];
-  NSArray *objects = [[_gormDocument sounds] arrayByAddingObjectsFromArray: [_gormDocument images]];
-  NSEnumerator *en = [objects objectEnumerator];
-  id resource = nil;
-
-  while ((resource = [en nextObject]) != nil)
-    {
-      NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-
-      [self _setObject: [resource fileName] forKey: @"fileName" inDictionary: dict];
-      [self _setObject: [resource path] forKey: @"path" inDictionary: dict];
-      if ([resource respondsToSelector: @selector(isSystemResource)])
-	{
-	  [dict setObject: [NSNumber numberWithBool: [resource isSystemResource]]
-	       forKey: @"systemResource"];
-	}
-      [resources addObject: dict];
-    }
-
-  return resources;
-}
-
 - (NSData *) data
 {
   NSMutableDictionary *root = [NSMutableDictionary dictionary];
   NSMutableArray *topLevelIDs = [NSMutableArray array];
   NSEnumerator *en = [[_gormDocument topLevelObjects] objectEnumerator];
   id obj = nil;
-  NSArray *resources = nil;
   NSDictionary *classes = nil;
   NSString *errorString = nil;
   NSData *data = nil;
@@ -675,12 +650,6 @@
   [root setObject: @"Cappuccino" forKey: @"targetRuntime"];
   [root setObject: topLevelIDs forKey: @"topLevelObjectIDs"];
   [root setObject: _objects forKey: @"objects"];
-
-  resources = [self _resourceDictionaries];
-  if ([resources count] > 0)
-    {
-      [root setObject: resources forKey: @"resources"];
-    }
 
   classes = [[_gormDocument classManager] customClassMap];
   if ([classes count] > 0)
