@@ -1,3 +1,25 @@
+2026-07-06 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* GNUmakefile.postamble
+	* GormCore/GormDocument.m
+	* GormCore/GormPlugin.m
+	* GormCore/GormPluginManager.m: Fix handling of plugins.
+	* GormCore/GormWrapperBuilder.m
+	* Plugins/Cib/GNUmakefile
+	* Plugins/Cib/GNUmakefile.preamble
+	* Plugins/Cib/GormCIBModelGenerator.h
+	* Plugins/Cib/GormCIBModelGenerator.m: Generate the CIB file.
+	* Plugins/Cib/GormCibPlugin.m
+	* Plugins/Cib/GormCibWrapperBuilder.h
+	* Plugins/Cib/GormCibWrapperBuilder.m
+	* Plugins/Cib/GormCibWrapperLoader.h
+	* Plugins/Cib/GormCibWrapperLoader.m: Stub, currently it warns CIB
+	is readonly
+	* Plugins/GNUmakefile
+	* Tools/gormtool/AppDelegate.m
+	* Tools/gormtool/GormToolPrivate.m: Add code to process CIB files
+	from gormtool.
+
 2025-12-12 Gregory John Casamento <greg.casamento@gmail.com>
 
 * Applications/Gorm/Palettes/6Formatters/GormByteCountFormatterInspector.m:
