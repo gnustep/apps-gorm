@@ -295,8 +295,24 @@
 - (void) process
 {
   NSProcessInfo *pi = [NSProcessInfo processInfo];
+  GormPluginManager *pluginManager = nil;
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
+  pluginManager = [self pluginManager];
+  if (NSClassFromString(@"GormCibPlugin") == Nil)
+    {
+      NSFileManager *fileManager = [NSFileManager defaultManager];
+      NSString *pluginPath = [[[[fileManager currentDirectoryPath]
+				stringByAppendingPathComponent:
+				  @"GormCore/GormCore.framework/Resources"]
+				stringByAppendingPathComponent: @"Cib.plugin"]
+				stringByStandardizingPath];
+
+      if ([fileManager fileExistsAtPath: pluginPath])
+	{
+	  [pluginManager loadPlugin: pluginPath];
+	}
+    }
 
   _isTesting = NO;
   
@@ -500,14 +516,32 @@
 	  if (outputFile != nil)
 	    {	  
 	      BOOL saved = NO;
-	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: YES];
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
+	      BOOL isDirectory = ([type isEqualToString: @"GSGormFileType"]
+				  || [type isEqualToString: @"GSNibFileType"]);
+	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: isDirectory];
 	      NSError *error = nil;
-	      
-	      saved = [_doc saveToURL: file
-			       ofType: type
-			    forSaveOperation: NSSaveOperation
-				error: &error];
+
+	      if (isDirectory == NO)
+		{
+		  NSFileWrapper *wrapper = [_doc fileWrapperRepresentationOfType: type];
+		  NSData *contents = nil;
+
+		  if ([wrapper isRegularFile])
+		    {
+		      contents = [wrapper regularFileContents];
+		    }
+
+		  saved = (contents != nil
+			   && [contents writeToFile: outputFile atomically: YES]);
+		}
+	      else
+		{
+		  saved = [_doc saveToURL: file
+				   ofType: type
+				forSaveOperation: NSSaveOperation
+				    error: &error];
+		}
 	      if ( !saved )
 		{
 		  NSLog(@"Document %@ of type %@ was not saved", file, type);

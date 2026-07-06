@@ -65,9 +65,33 @@
   pluginsDict = [[NSMutableDictionary alloc] init];
   plugins = [[NSMutableArray alloc] init];
   pluginNames = [[NSMutableArray alloc] init];
+  bundles = [[NSMutableArray alloc] init];
  
   array = [bundle pathsForResourcesOfType: @"plugin"
 			      inDirectory: nil];
+  if ([array count] == 0)
+    {
+      NSFileManager *fileManager = [NSFileManager defaultManager];
+      NSString *resourcePath = [[[NSFileManager defaultManager] currentDirectoryPath]
+				 stringByAppendingPathComponent:
+				   @"GormCore/GormCore.framework/Resources"];
+      NSArray *resourceNames = [fileManager directoryContentsAtPath: resourcePath];
+      NSMutableArray *pluginPaths = [NSMutableArray array];
+      NSEnumerator *resourceEnumerator = [resourceNames objectEnumerator];
+      NSString *resourceName = nil;
+
+      while (resourceEnumerator != nil
+	     && (resourceName = [resourceEnumerator nextObject]) != nil)
+	{
+	  if ([[resourceName pathExtension] isEqualToString: @"plugin"])
+	    {
+	      [pluginPaths addObject:
+			     [resourcePath stringByAppendingPathComponent:
+					     resourceName]];
+	    }
+	}
+      array = pluginPaths;
+    }
   if ([array count] > 0)
     {
       unsigned	index;

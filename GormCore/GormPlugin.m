@@ -88,10 +88,11 @@ static Ivar types_ivar(void)
 							 name, @"NSName",
 						       hrName, @"NSHumanReadableName",
 						       extensions, @"NSUnixExtensions",
+						       @"Editor", @"NSRole",
+						       @"GormDocument", @"NSDocumentClass",
 						       nil];
       [types addObject: dict];
       [controller setTypes: types];
     }
 }
 @end
-

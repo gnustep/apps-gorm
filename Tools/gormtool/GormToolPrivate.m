@@ -42,6 +42,19 @@ static NSMutableArray *__types = nil;
 - (NSString *) typeFromFileExtension: (NSString *)fileExtension
 {
   int i, count = [__types count];
+  NSString *normalizedExtension = [fileExtension lowercaseString];
+  NSDictionary *fallbackTypes = [NSDictionary dictionaryWithObjectsAndKeys:
+    @"GSGormFileType", @"gorm",
+    @"GSNibFileType", @"nib",
+    @"GSXibFileType", @"xib",
+    @"GSCibFileType", @"cib",
+    nil];
+  NSString *fallbackType = nil;
+
+  if (fileExtension == nil)
+    {
+      return nil;
+    }
 
   // Check for a document type with the supplied extension
   for (i = 0; i < count; i++)
@@ -52,7 +65,8 @@ static NSMutableArray *__types = nil;
       NSDebugLog(@"typeInfo = %@", typeInfo);
       NSDebugLog(@"fileExtension = %@", fileExtension);
       
-      if ([array containsObject: fileExtension])
+      if ([array containsObject: fileExtension]
+	  || [array containsObject: normalizedExtension])
 	{
 	  NSString *type = [typeInfo objectForKey: @"NSName"];
 	  NSDebugLog(@"type = %@", type);
@@ -61,6 +75,11 @@ static NSMutableArray *__types = nil;
     }
 
   NSDebugLog(@"FAILED");
+  fallbackType = [fallbackTypes objectForKey: normalizedExtension];
+  if (fallbackType != nil)
+    {
+      return fallbackType;
+    }
   return nil;
 }
 

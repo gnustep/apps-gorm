@@ -3542,7 +3542,10 @@ static void _real_close(GormDocument *self,
 
   // build the archive...
   [self deactivateEditors];
-  result = [builder buildFileWrapperWithDocument: self];
+  if (builder != nil)
+    {
+      result = [builder buildFileWrapperWithDocument: self];
+    }
   [self reactivateEditors];
   if(result)
     {

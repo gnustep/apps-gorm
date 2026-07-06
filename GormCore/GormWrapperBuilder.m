@@ -166,8 +166,12 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
 - (id<GormWrapperBuilder>) wrapperBuilderForType: (NSString *) type
 {
   Class cls = [_wrapperBuilderMap objectForKey: type];
-  id<GormWrapperBuilder> obj = AUTORELEASE([[cls alloc] init]);
+  id<GormWrapperBuilder> obj = nil;
+
+  if (cls != Nil)
+    {
+      obj = AUTORELEASE([[cls alloc] init]);
+    }
   return obj;
 }
 @end
-

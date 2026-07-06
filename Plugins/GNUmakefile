@@ -31,7 +31,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 SUBPROJECTS = \
 	Gorm \
 	Nib \
-	Xib
+	Xib \
+	Cib
 
 -include GNUmakefile.preamble
 
@@ -40,4 +41,3 @@ SUBPROJECTS = \
 include $(GNUSTEP_MAKEFILES)/aggregate.make
 
 -include GNUmakefile.postamble
-
