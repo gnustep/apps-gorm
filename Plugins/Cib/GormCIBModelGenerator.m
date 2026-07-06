@@ -121,15 +121,18 @@
     {
       name = [name substringFromIndex: 6];
     }
-  else if ([name hasPrefix: @"CPGormNS"])
+
+  if ([name hasPrefix: @"CPGormNS"])
     {
       name = [name substringFromIndex: 8];
     }
-  else if ([name hasPrefix: @"CPNS"])
+
+  if ([name hasPrefix: @"CPNS"])
     {
       name = [name substringFromIndex: 4];
     }
-  else if ([name hasPrefix: @"NS"])
+
+  if ([name hasPrefix: @"NS"])
     {
       name = [name substringFromIndex: 2];
     }
