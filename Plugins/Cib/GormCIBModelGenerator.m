@@ -15,6 +15,7 @@
 - (NSString *) _cappuccinoIdentifierForName: (NSString *)name;
 - (NSString *) _identifierForObject: (id)obj;
 - (NSDictionary *) _archiveObject: (id)obj;
+- (NSDictionary *) _childArchiveEntriesForObject: (id)obj;
 @end
 
 @implementation GormCIBModelGenerator
@@ -270,7 +271,7 @@
 
 - (void) _setObject: (id)value forKey: (NSString *)key inDictionary: (NSMutableDictionary *)dict
 {
-  if (value != nil)
+  if (value != nil && key != nil)
     {
       [dict setObject: value forKey: key];
     }
@@ -289,6 +290,7 @@
 - (NSDictionary *) _colorDictionary: (NSColor *)color
 {
   NSColor *rgbColor = nil;
+  NSArray *components = nil;
 
   NS_DURING
     {
@@ -305,18 +307,23 @@
       return nil;
     }
 
+  components = [NSArray arrayWithObjects:
+    [NSNumber numberWithDouble: [rgbColor redComponent]],
+    [NSNumber numberWithDouble: [rgbColor greenComponent]],
+    [NSNumber numberWithDouble: [rgbColor blueComponent]],
+    [NSNumber numberWithDouble: [rgbColor alphaComponent]],
+    nil];
+
   return [NSDictionary dictionaryWithObjectsAndKeys:
     @"CPColor", @"class",
-    [NSNumber numberWithDouble: [rgbColor redComponent]], @"red",
-    [NSNumber numberWithDouble: [rgbColor greenComponent]], @"green",
-    [NSNumber numberWithDouble: [rgbColor blueComponent]], @"blue",
-    [NSNumber numberWithDouble: [rgbColor alphaComponent]], @"alpha",
+    components, @"CPColorComponentsKey",
     nil];
 }
 
-- (NSArray *) _childObjectIDsForObject: (id)obj
+- (NSDictionary *) _childArchiveEntriesForObject: (id)obj
 {
-  NSMutableArray *children = [NSMutableArray array];
+  NSMutableDictionary *entries = [NSMutableDictionary dictionary];
+  NSMutableArray *children = nil;
   NSEnumerator *en = nil;
   id child = nil;
 
@@ -325,26 +332,75 @@
       child = [obj contentView];
       if (child != nil)
 	{
+	  [entries setObject: [self _identifierForObject: child]
+		      forKey: @"_CPCibWindowTemplateWindowViewKey"];
+	  [self _archiveObject: child];
+	}
+    }
+  else if ([obj isKindOfClass: [NSTabView class]])
+    {
+      children = [NSMutableArray array];
+      en = [[obj tabViewItems] objectEnumerator];
+      while ((child = [en nextObject]) != nil)
+	{
 	  [children addObject: [self _identifierForObject: child]];
 	  [self _archiveObject: child];
+	}
+      if ([children count] > 0)
+	{
+	  [entries setObject: children forKey: @"CPTabViewItemsKey"];
+	}
+    }
+  else if ([obj isKindOfClass: [NSScrollView class]])
+    {
+      child = [obj documentView];
+      if (child != nil)
+	{
+	  [entries setObject: [self _identifierForObject: child]
+		      forKey: @"CPScrollViewContentView"];
+	  [self _archiveObject: child];
+	}
+    }
+  else if ([obj isKindOfClass: [NSTableView class]])
+    {
+      children = [NSMutableArray array];
+      en = [[obj tableColumns] objectEnumerator];
+      while ((child = [en nextObject]) != nil)
+	{
+	  [children addObject: [self _identifierForObject: child]];
+	  [self _archiveObject: child];
+	}
+      if ([children count] > 0)
+	{
+	  [entries setObject: children forKey: @"CPTableViewTableColumnsKey"];
 	}
     }
   else if ([obj isKindOfClass: [NSView class]])
     {
+      children = [NSMutableArray array];
       en = [[obj subviews] objectEnumerator];
       while ((child = [en nextObject]) != nil)
 	{
 	  [children addObject: [self _identifierForObject: child]];
 	  [self _archiveObject: child];
 	}
+      if ([children count] > 0)
+	{
+	  [entries setObject: children forKey: @"CPViewSubviewsKey"];
+	}
     }
   else if ([obj isKindOfClass: [NSMenu class]])
     {
+      children = [NSMutableArray array];
       en = [[obj itemArray] objectEnumerator];
       while ((child = [en nextObject]) != nil)
 	{
 	  [children addObject: [self _identifierForObject: child]];
 	  [self _archiveObject: child];
+	}
+      if ([children count] > 0)
+	{
+	  [entries setObject: children forKey: @"CPMenuItemsKey"];
 	}
     }
   else if ([obj isKindOfClass: [NSMenuItem class]])
@@ -352,16 +408,8 @@
       child = [obj submenu];
       if (child != nil)
 	{
-	  [children addObject: [self _identifierForObject: child]];
-	  [self _archiveObject: child];
-	}
-    }
-  else if ([obj isKindOfClass: [NSTabView class]])
-    {
-      en = [[obj tabViewItems] objectEnumerator];
-      while ((child = [en nextObject]) != nil)
-	{
-	  [children addObject: [self _identifierForObject: child]];
+	  [entries setObject: [self _identifierForObject: child]
+		      forKey: @"CPMenuItemSubmenuKey"];
 	  [self _archiveObject: child];
 	}
     }
@@ -370,30 +418,13 @@
       child = [obj view];
       if (child != nil)
 	{
-	  [children addObject: [self _identifierForObject: child]];
-	  [self _archiveObject: child];
-	}
-    }
-  else if ([obj isKindOfClass: [NSScrollView class]])
-    {
-      child = [obj documentView];
-      if (child != nil)
-	{
-	  [children addObject: [self _identifierForObject: child]];
-	  [self _archiveObject: child];
-	}
-    }
-  else if ([obj isKindOfClass: [NSTableView class]])
-    {
-      en = [[obj tableColumns] objectEnumerator];
-      while ((child = [en nextObject]) != nil)
-	{
-	  [children addObject: [self _identifierForObject: child]];
+	  [entries setObject: [self _identifierForObject: child]
+		      forKey: @"CPTabViewItemViewKey"];
 	  [self _archiveObject: child];
 	}
     }
 
-  return children;
+  return entries;
 }
 
 - (NSDictionary *) _archiveObject: (id)obj
@@ -401,7 +432,7 @@
   NSMutableDictionary *dict = nil;
   NSString *identifier = nil;
   NSString *name = nil;
-  NSArray *children = nil;
+  NSDictionary *children = nil;
 
   if (obj == nil)
     {
@@ -425,108 +456,167 @@
 
   if ([obj respondsToSelector: @selector(frame)])
     {
-      [dict setObject: [self _rectDictionary: [obj frame]] forKey: @"frame"];
+      [dict setObject: [self _rectDictionary: [obj frame]] forKey: @"CPViewFrameKey"];
     }
   if ([obj respondsToSelector: @selector(bounds)])
     {
-      [dict setObject: [self _rectDictionary: [obj bounds]] forKey: @"bounds"];
+      [dict setObject: [self _rectDictionary: [obj bounds]] forKey: @"CPViewBoundsKey"];
     }
   if ([obj respondsToSelector: @selector(title)]
       && [obj isKindOfClass: [NSWindow class]] == NO)
     {
-      [self _setObject: [obj title] forKey: @"title" inDictionary: dict];
+      NSString *titleKey = @"CPButtonTitleKey";
+
+      if ([obj isKindOfClass: [NSMenu class]])
+	{
+	  titleKey = @"CPMenuTitleKey";
+	}
+      else if ([obj isKindOfClass: [NSMenuItem class]])
+	{
+	  titleKey = @"CPMenuItemTitleKey";
+	}
+      else if ([obj isKindOfClass: [NSBox class]])
+	{
+	  titleKey = @"CPBoxTitleKey";
+	}
+
+      [self _setObject: [obj title] forKey: titleKey inDictionary: dict];
     }
   if ([obj respondsToSelector: @selector(stringValue)])
     {
-      [self _setObject: [obj stringValue] forKey: @"stringValue" inDictionary: dict];
+      [self _setObject: [obj stringValue] forKey: @"CPControlValueKey" inDictionary: dict];
     }
   if ([obj respondsToSelector: @selector(isEnabled)])
     {
-      [dict setObject: [NSNumber numberWithBool: [obj isEnabled]] forKey: @"enabled"];
+      NSString *enabledKey = ([obj isKindOfClass: [NSMenuItem class]])
+	? @"CPMenuItemIsEnabledKey"
+	: @"CPControlIsEnabledKey";
+
+      [dict setObject: [NSNumber numberWithBool: [obj isEnabled]] forKey: enabledKey];
     }
   if ([obj respondsToSelector: @selector(isHidden)])
     {
-      [dict setObject: [NSNumber numberWithBool: [obj isHidden]] forKey: @"hidden"];
+      NSString *hiddenKey = ([obj isKindOfClass: [NSMenuItem class]])
+	? @"CPMenuItemIsHiddenKey"
+	: @"CPViewIsHiddenKey";
+
+      [dict setObject: [NSNumber numberWithBool: [obj isHidden]] forKey: hiddenKey];
     }
   if ([obj respondsToSelector: @selector(tag)])
     {
-      [dict setObject: [NSNumber numberWithInteger: [obj tag]] forKey: @"tag"];
+      NSString *tagKey = ([obj isKindOfClass: [NSMenuItem class]])
+	? @"CPMenuItemTagKey"
+	: @"CPViewTagKey";
+
+      [dict setObject: [NSNumber numberWithInteger: [obj tag]] forKey: tagKey];
     }
   if ([obj respondsToSelector: @selector(autoresizingMask)])
     {
       [dict setObject: [NSNumber numberWithUnsignedInteger: [obj autoresizingMask]]
-	       forKey: @"autoresizingMask"];
+	       forKey: @"CPViewAutoresizingMask"];
     }
   if ([obj respondsToSelector: @selector(backgroundColor)])
     {
       [self _setObject: [self _colorDictionary: [obj backgroundColor]]
-		forKey: @"backgroundColor"
+		forKey: ([obj isKindOfClass: [NSTextField class]]
+			 ? @"CPTextFieldBackgroundColorKey"
+			 : @"CPViewBackgroundColor")
 	  inDictionary: dict];
     }
   if ([obj respondsToSelector: @selector(textColor)])
     {
-      [self _setObject: [self _colorDictionary: [obj textColor]]
-		forKey: @"textColor"
-	  inDictionary: dict];
+      /*
+       * Cappuccino stores text color as a theme attribute for these controls,
+       * not as a keyed coding field.
+       */
     }
-  if ([obj respondsToSelector: @selector(font)] && [obj font] != nil)
+  if ([obj isKindOfClass: [NSTabView class]]
+      && [obj respondsToSelector: @selector(font)]
+      && [obj font] != nil)
     {
       NSFont *font = [obj font];
       NSDictionary *fontDict = [NSDictionary dictionaryWithObjectsAndKeys:
 	@"CPFont", @"class",
-	[font fontName], @"name",
-	[NSNumber numberWithDouble: [font pointSize]], @"size",
+	[font fontName], @"CPFontNameKey",
+	[NSNumber numberWithDouble: [font pointSize]], @"CPFontSizeKey",
 	nil];
-      [dict setObject: fontDict forKey: @"font"];
+      [dict setObject: fontDict forKey: @"CPTabViewFontKey"];
     }
   if ([obj respondsToSelector: @selector(image)] && [obj image] != nil)
     {
       NSImage *image = [obj image];
-      [self _setObject: [image name] forKey: @"imageName" inDictionary: dict];
+      NSString *imageKey = nil;
+
+      if ([obj isKindOfClass: [NSButton class]])
+	{
+	  imageKey = @"CPButtonImageKey";
+	}
+      else if ([obj isKindOfClass: [NSMenuItem class]])
+	{
+	  imageKey = @"CPMenuItemImageKey";
+	}
+      else if ([obj isKindOfClass: [NSImageView class]])
+	{
+	  imageKey = @"CPImageViewImageKey";
+	}
+
+      [self _setObject: [image name] forKey: imageKey inDictionary: dict];
     }
   if ([obj isKindOfClass: [NSWindow class]])
     {
-      [dict setObject: [self _rectDictionary: [obj frame]] forKey: @"frame"];
+      [dict setObject: [self _rectDictionary: [obj frame]]
+	       forKey: @"_CPCibWindowTemplateWindowRectKey"];
       [dict setObject: [NSNumber numberWithUnsignedInteger: [obj styleMask]]
-	   forKey: @"styleMask"];
+	   forKey: @"_CPCibWindowTempatStyleMaskKey"];
       [dict setObject: [NSNumber numberWithBool: [_gormDocument objectIsDeferred: obj]]
 	   forKey: @"deferred"];
       [dict setObject: [NSNumber numberWithBool: [_gormDocument objectIsVisibleAtLaunch: obj]]
 	   forKey: @"visibleAtLaunch"];
+      [self _setObject: [obj title]
+		forKey: @"_CPCibWindowTemplateWindowTitleKey"
+	  inDictionary: dict];
     }
   if ([obj isKindOfClass: [NSButton class]])
     {
       [dict setObject: [NSNumber numberWithInteger: [[obj cell] highlightsBy]]
-	   forKey: @"highlightsBy"];
+	   forKey: @"CPButtonHighlightsByKey"];
       [dict setObject: [NSNumber numberWithInteger: [[obj cell] showsStateBy]]
-	   forKey: @"showsStateBy"];
+	   forKey: @"CPButtonShowsStateByKey"];
     }
   if ([obj isKindOfClass: [NSMenuItem class]])
     {
-      [self _setObject: [obj keyEquivalent] forKey: @"keyEquivalent" inDictionary: dict];
+      [self _setObject: [obj keyEquivalent]
+		forKey: @"CPMenuItemKeyEquivalentKey"
+	  inDictionary: dict];
       [dict setObject: [NSNumber numberWithUnsignedInteger: [obj keyEquivalentModifierMask]]
-	   forKey: @"keyEquivalentModifierMask"];
+	   forKey: @"CPMenuItemKeyEquivalentModifierMaskKey"];
       if ([obj submenu] != nil)
 	{
-	  [dict setObject: [self _identifierForObject: [obj submenu]] forKey: @"submenu"];
+	  [dict setObject: [self _identifierForObject: [obj submenu]]
+		   forKey: @"CPMenuItemSubmenuKey"];
 	}
     }
   if ([obj isKindOfClass: [NSTableColumn class]])
     {
-      [self _setObject: [obj identifier] forKey: @"identifier" inDictionary: dict];
-      [dict setObject: [NSNumber numberWithDouble: [obj width]] forKey: @"width"];
-      [dict setObject: [NSNumber numberWithDouble: [obj minWidth]] forKey: @"minWidth"];
-      [dict setObject: [NSNumber numberWithDouble: [obj maxWidth]] forKey: @"maxWidth"];
+      [self _setObject: [obj identifier]
+		forKey: @"CPTableColumnIdentifierKey"
+	  inDictionary: dict];
+      [dict setObject: [NSNumber numberWithDouble: [obj width]]
+	       forKey: @"CPTableColumnWidthKey"];
+      [dict setObject: [NSNumber numberWithDouble: [obj minWidth]]
+	       forKey: @"CPTableColumnMinWidthKey"];
+      [dict setObject: [NSNumber numberWithDouble: [obj maxWidth]]
+	       forKey: @"CPTableColumnMaxWidthKey"];
     }
   if ([obj isKindOfClass: [NSTabViewItem class]])
     {
-      [self _setObject: [obj label] forKey: @"label" inDictionary: dict];
+      [self _setObject: [obj label] forKey: @"CPTabViewItemLabelKey" inDictionary: dict];
     }
 
-  children = [self _childObjectIDsForObject: obj];
+  children = [self _childArchiveEntriesForObject: obj];
   if ([children count] > 0)
     {
-      [dict setObject: children forKey: @"children"];
+      [dict addEntriesFromDictionary: children];
     }
 
   [_objects addObject: dict];
