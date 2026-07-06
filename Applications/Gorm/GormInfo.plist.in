@@ -46,6 +46,14 @@
         NSIcon = "GormNib.tiff";
       },
       {
+	NSName = "GSCibFileType";
+	NSHumanReadableName = "Cappuccino Cib";
+	NSRole = Viewer;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "cib" );
+        NSIcon = "GormNib.tiff";
+      },
+      {
         NSUnixExtensions = ( "palette" );
         NSIcon = "GormPalette.tiff";
       }
