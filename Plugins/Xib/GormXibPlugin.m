@@ -27,15 +27,21 @@
 
 #include "GormXibWrapperLoader.h"
 
+@interface GormXibWrapperBuilder : GormWrapperBuilder
+@end
+
 @interface GormXibPlugin : GormPlugin
 @end
 
 @implementation GormXibPlugin
 - (void) didLoad
 {
+  [GormWrapperLoaderFactory registerWrapperLoaderClass:
+			      [GormXibWrapperLoader class]];
+  [GormWrapperBuilderFactory registerWrapperBuilderClass:
+			       [GormXibWrapperBuilder class]];
   [self registerDocumentTypeName: [GormXibWrapperLoader fileType]
 	humanReadableName: @"Cocoa Xib"
 	forExtensions: [NSArray arrayWithObjects: @"xib",nil]];
 }
 @end
-

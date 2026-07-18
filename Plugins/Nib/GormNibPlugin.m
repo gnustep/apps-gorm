@@ -27,15 +27,21 @@
 
 #include "GormNibWrapperLoader.h"
 
+@interface GormNibWrapperBuilder : GormWrapperBuilder
+@end
+
 @interface GormNibPlugin : GormPlugin
 @end
 
 @implementation GormNibPlugin
 - (void) didLoad
 {
+  [GormWrapperLoaderFactory registerWrapperLoaderClass:
+			      [GormNibWrapperLoader class]];
+  [GormWrapperBuilderFactory registerWrapperBuilderClass:
+			       [GormNibWrapperBuilder class]];
   [self registerDocumentTypeName: [GormNibWrapperLoader fileType]
 	humanReadableName: @"Cocoa Nib"
 	forExtensions: [NSArray arrayWithObjects: @"nib",nil]];
 }
 @end
-

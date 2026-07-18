@@ -192,8 +192,12 @@ static GormWrapperLoaderFactory *_sharedWrapperLoaderFactory = nil;
 - (id<GormWrapperLoader>) wrapperLoaderForType: (NSString *) type
 {
   Class cls = [_wrapperLoaderMap objectForKey: type];
-  id<GormWrapperLoader> obj = AUTORELEASE([[cls alloc] init]);
+  id<GormWrapperLoader> obj = nil;
+
+  if (cls != Nil)
+    {
+      obj = AUTORELEASE([[cls alloc] init]);
+    }
   return obj;
 }
 @end
-

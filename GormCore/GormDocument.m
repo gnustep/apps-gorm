@@ -3515,6 +3515,12 @@ static void _real_close(GormDocument *self,
   NSFileWrapper *result = nil;
   id delegate = [NSApp delegate];
 
+  if (builder == nil)
+    {
+      NSLog(@"No wrapper builder registered for document type %@", type);
+      return nil;
+    }
+
   /*
    * Warn the user, if we are about to upgrade the package.
    */
@@ -3542,10 +3548,7 @@ static void _real_close(GormDocument *self,
 
   // build the archive...
   [self deactivateEditors];
-  if (builder != nil)
-    {
-      result = [builder buildFileWrapperWithDocument: self];
-    }
+  result = [builder buildFileWrapperWithDocument: self];
   [self reactivateEditors];
   if(result)
     {
@@ -3565,7 +3568,15 @@ static void _real_close(GormDocument *self,
 {
   id<GormWrapperLoader> loader = [[GormWrapperLoaderFactory sharedWrapperLoaderFactory]
 				   wrapperLoaderForType: type];
-  BOOL result = [loader loadFileWrapper: wrapper withDocument: self];
+  BOOL result = NO;
+
+  if (loader == nil)
+    {
+      NSLog(@"No wrapper loader registered for document type %@", type);
+      return NO;
+    }
+
+  result = [loader loadFileWrapper: wrapper withDocument: self];
 
   if(result)
     {

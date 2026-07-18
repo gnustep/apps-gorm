@@ -27,15 +27,21 @@
 
 #include "GormGormWrapperLoader.h"
 
+@interface GormGormWrapperBuilder : GormWrapperBuilder
+@end
+
 @interface GormGormPlugin : GormPlugin
 @end
 
 @implementation GormGormPlugin
 - (void) didLoad
 {
+  [GormWrapperLoaderFactory registerWrapperLoaderClass:
+			      [GormGormWrapperLoader class]];
+  [GormWrapperBuilderFactory registerWrapperBuilderClass:
+			       [GormGormWrapperBuilder class]];
   [self registerDocumentTypeName: [GormGormWrapperLoader fileType]
 	humanReadableName: @"GNUstep Gorm"
 	forExtensions: [NSArray arrayWithObjects: @"gorm",nil]];
 }
 @end
-
