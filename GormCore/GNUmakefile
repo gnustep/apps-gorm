@@ -47,6 +47,7 @@ GormCore_HEADER_FILES = \
 	GormClassInspector.h \
 	GormClassManager.h \
 	GormClassPanelController.h \
+	GormCodeExporter.h \
 	GormConnectionInspector.h \
 	GormControlEditor.h \
 	GormCustomClassInspector.h \
@@ -129,6 +130,7 @@ GormCore_OBJC_FILES = \
 	GormClassInspector.m \
 	GormClassManager.m \
 	GormClassPanelController.m \
+	GormCodeExporter.m \
 	GormConnectionInspector.m \
 	GormControlEditor.m \
 	GormCustomClassInspector.m \

@@ -825,8 +825,6 @@ static NSImage  *fileImage = nil;
 	  id tv = [anObject documentView];
 
 	  [self attachObject: tv toParent: anObject];
-	  
-          [self attachObjects: [tv tableColumns] toParent: tv];
 	}
       else // if ([[anObject documentView] isKindOfClass: [NSTextView class]])
 	{
@@ -866,6 +864,18 @@ static NSImage  *fileImage = nil;
         }
     }
   /*
+   * Add columns to document hierarchy before the generic NSView handling
+   * catches NSTableView.
+   */
+  else if ([anObject isKindOfClass: [NSTableView class]]) // this should include outline view
+    {
+      NSTableView *tblView = (NSTableView *)anObject;
+      NSArray *cols = [tblView tableColumns];
+
+      [self attachObjects: cols toParent: tblView];
+      [self attachObjects: [tblView subviews] toParent: tblView];
+    }
+  /*
    * If it's a simple NSView, add it and all of it's subviews.
    */
   else if ([anObject isKindOfClass: [NSView class]])
@@ -874,16 +884,6 @@ static NSImage  *fileImage = nil;
 
       // Add all subviews from the window, if any.
       [self attachObjects: [view subviews] toParent: view];
-    }
-  /*
-   * Add columns to document hierarchy...
-   */
-  else if ([anObject isKindOfClass: [NSTableView class]]) // this should include outline view
-    {
-      NSTableView *tblView = (NSTableView *)anObject;
-      NSArray *cols = [tblView tableColumns];
-
-      [self attachObjects: cols toParent: tblView];
     }
   else if ([anObject isKindOfClass: [NSSplitView class]])
     {

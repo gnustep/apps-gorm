@@ -43,6 +43,7 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #import <GormCore/GormClassInspector.h>
 #import <GormCore/GormClassManager.h>
 #import <GormCore/GormClassPanelController.h>
+#import <GormCore/GormCodeExporter.h>
 #import <GormCore/GormConnectionInspector.h>
 #import <GormCore/GormControlEditor.h>
 #import <GormCore/GormCustomClassInspector.h>

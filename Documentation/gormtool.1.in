@@ -34,7 +34,8 @@ Open the input archive from \fIpath\fR.
 .TP
 .B --write \fIpath\fR
 Write the processed archive to \fIpath\fR. The output type is inferred from
-the file extension.
+the file extension. Use a .gormcode extension to export generated Objective-C
+source and header files.
 .TP
 .B --output-path \fIdirectory\fR
 Directory used when exporting class source files with \fB--export-class\fR.
@@ -105,6 +106,9 @@ Legacy interface archives accepted by Gorm document handling.
 .TP
 .I *.xib
 XML interface archives accepted by Gorm document handling.
+.TP
+.I *.gormcode
+Directory wrapper containing generated Objective-C source and header files.
 .SH EXAMPLES
 Export strings from a document:
 .PP

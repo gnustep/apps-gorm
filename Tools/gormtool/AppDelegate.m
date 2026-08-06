@@ -518,7 +518,8 @@
 	      BOOL saved = NO;
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
 	      BOOL isDirectory = ([type isEqualToString: @"GSGormFileType"]
-				  || [type isEqualToString: @"GSNibFileType"]);
+				  || [type isEqualToString: @"GSNibFileType"]
+				  || [type isEqualToString: @"GSCodeFileType"]);
 	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: isDirectory];
 	      NSError *error = nil;
 

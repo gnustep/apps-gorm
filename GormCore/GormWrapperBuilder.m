@@ -30,6 +30,7 @@
 
 #include <GormCore/GormWrapperBuilder.h>
 #include <GormCore/GormDocument.h>
+#include <GormCore/GormCodeExporter.h>
 #include <GormCore/GormPrivate.h>
 #include <GormCore/GormSound.h>
 #include <GormCore/GormImage.h>
@@ -119,12 +120,53 @@ static GormWrapperBuilderFactory *_sharedWrapperBuilderFactory = nil;
 }
 @end
 
+@interface GormCodeWrapperBuilder : GormWrapperBuilder
+@end
+
+@implementation GormCodeWrapperBuilder
++ (NSString *) fileType
+{
+  return @"GSCodeFileType";
+}
+
+- (NSMutableDictionary *) buildFileWrapperDictionaryWithDocument: (GormDocument *)doc
+{
+  NSMutableDictionary *fileWrappers = [super buildFileWrapperDictionaryWithDocument: doc];
+  GormCodeExporter *exporter = [GormCodeExporter exporterWithDocument: doc];
+  NSData *sourceData = nil;
+  NSData *headerData = nil;
+  NSFileWrapper *fileWrapper = nil;
+
+  if (fileWrappers == nil)
+    {
+      return nil;
+    }
+
+  sourceData = [[exporter codeRepresentationWithHeaderName: @"GeneratedGorm.h"]
+    dataUsingEncoding: NSUTF8StringEncoding];
+  headerData = [[exporter headerRepresentationWithName: @"GeneratedGorm"]
+    dataUsingEncoding: NSUTF8StringEncoding];
+
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: sourceData];
+  [fileWrappers setObject: fileWrapper forKey: @"GeneratedGorm.m"];
+  RELEASE(fileWrapper);
+
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: headerData];
+  [fileWrappers setObject: fileWrapper forKey: @"GeneratedGorm.h"];
+  RELEASE(fileWrapper);
+
+  return fileWrappers;
+}
+@end
+
 @implementation GormWrapperBuilderFactory 
 + (void) initialize
 {
   NSArray *classes = GSObjCAllSubclassesOfClass([GormWrapperBuilder class]);
   NSEnumerator *en = [classes objectEnumerator];
   Class cls = nil;
+
+  [self registerWrapperBuilderClass: [GormCodeWrapperBuilder class]];
   
   while((cls = [en nextObject]) != nil)
     {

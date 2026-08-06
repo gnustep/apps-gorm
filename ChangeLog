@@ -1,3 +1,26 @@
+2026-08-06 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Applications/Gorm/GormInfo.plist.in
+	* Documentation/gormtool.1.in
+	* GormCore/GNUmakefile
+	* GormCore/GormCodeExporter.h
+	* GormCore/GormCodeExporter.m
+	* GormCore/GormCore.h
+	* GormCore/GormWrapperBuilder.m
+	* GormCore/GormScrollViewEditor.m
+	* Tools/gormtool/AppDelegate.m
+	* Tools/gormtool/GormToolPrivate.m: Add .gormcode wrapper export
+	support for generated Objective-C source and header files.  Expose
+	GormCodeExporter through GormCore, generate load helper and header
+	declarations, register the code wrapper builder, teach gormtool to
+	treat .gormcode outputs as directories, and document the new extension.
+	* GormCore/GormDocument.m: Attach NSTableView columns before generic
+	NSView child handling while preserving table subviews, so table columns
+	remain in the document hierarchy without breaking table editing.
+	* GormCore/GormScrollViewEditor.m: Parent embedded NSTableView editors
+	under their enclosing scroll view editor so header clicks select and
+	inspect table columns correctly.
+
 2026-07-06 Gregory John Casamento <greg.casamento@gmail.com>
 
 	* GNUmakefile.postamble

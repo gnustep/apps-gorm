@@ -30,7 +30,8 @@
 
 @interface GormCodeExporter (Private)
 - (void) _appendPreambleToString: (NSMutableString *)source
-                customClassNames: (NSArray *)customClassNames;
+                customClassNames: (NSArray *)customClassNames
+                       headerName: (NSString *)headerName;
 - (void) _appendObject: (id)object
               toString: (NSMutableString *)source
               emitted: (NSMutableSet *)emitted
@@ -42,6 +43,7 @@
                            varNames: (NSMutableDictionary *)varNames;
 - (void) _appendResultToString: (NSMutableString *)source
                       varNames: (NSMutableDictionary *)varNames;
+- (void) _appendLoadHelperToString: (NSMutableString *)source;
 - (void) _queueChildrenOfObject: (id)object
                          queued: (NSMutableArray *)queued;
 - (NSString *) _variableNameForObject: (id)object
@@ -54,10 +56,12 @@
 - (NSString *) _identifierFromName: (NSString *)name fallback: (NSString *)fallback;
 - (NSSet *) _reservedVariableNames;
 - (NSString *) _escapedString: (NSString *)string;
+- (NSString *) _headerGuardForName: (NSString *)name;
 - (NSString *) _rectString: (NSRect)rect;
 - (NSString *) _pointString: (NSPoint)point;
 - (NSString *) _sizeString: (NSSize)size;
 - (NSString *) _keyForObject: (id)object;
+- (BOOL) _objectIsOwner: (id)object;
 @end
 
 @implementation GormCodeExporter
@@ -85,6 +89,11 @@
 
 - (NSString *) codeRepresentation
 {
+  return [self codeRepresentationWithHeaderName: nil];
+}
+
+- (NSString *) codeRepresentationWithHeaderName: (NSString *)headerName
+{
   NSMutableString *source = [NSMutableString string];
   NSMutableArray *queued = [NSMutableArray array];
   NSMutableSet *emitted = [NSMutableSet set];
@@ -97,7 +106,9 @@
   id<IBConnectors> connection = nil;
 
   customClassNames = [self _customClassNamesForCodeRepresentation];
-  [self _appendPreambleToString: source customClassNames: customClassNames];
+  [self _appendPreambleToString: source
+               customClassNames: customClassNames
+                      headerName: headerName];
 
   while ((object = [topEnum nextObject]) != nil)
     {
@@ -136,23 +147,68 @@
   [self _appendConnectionsToString: source varNames: varNames];
   [self _appendResultToString: source varNames: varNames];
   [source appendString: @"}\n"];
+  [self _appendLoadHelperToString: source];
 
   return source;
 }
 
 - (BOOL) exportCodeToFile: (NSString *)filename
 {
-  return [[self codeRepresentation] writeToFile: filename atomically: YES];
+  NSString *headerName = [[[filename lastPathComponent]
+    stringByDeletingPathExtension] stringByAppendingPathExtension: @"h"];
+
+  return [[self codeRepresentationWithHeaderName: headerName]
+    writeToFile: filename atomically: YES];
+}
+
+- (BOOL) exportCodeToFile: (NSString *)sourceFilename
+             headerToFile: (NSString *)headerFilename
+{
+  NSString *headerName = [headerFilename lastPathComponent];
+  BOOL sourceSaved = [[self codeRepresentationWithHeaderName: headerName]
+    writeToFile: sourceFilename atomically: YES];
+  BOOL headerSaved = [[self headerRepresentationWithName:
+    [[headerName stringByDeletingPathExtension] lastPathComponent]]
+    writeToFile: headerFilename atomically: YES];
+
+  return (sourceSaved && headerSaved);
+}
+
+- (NSString *) headerRepresentationWithName: (NSString *)name
+{
+  NSMutableString *header = [NSMutableString string];
+  NSString *guard = [self _headerGuardForName: name];
+
+  [header appendFormat:
+    @"#ifndef %@\n"
+    @"#define %@\n\n"
+    @"#import <Foundation/Foundation.h>\n\n"
+    @"@class NSDictionary;\n\n"
+    @"NSDictionary *GormCreateObjects(id owner);\n"
+    @"NSDictionary *GormLoadGeneratedObjects(id owner);\n\n"
+    @"#endif\n",
+    guard, guard];
+
+  return header;
 }
 
 - (void) _appendPreambleToString: (NSMutableString *)source
                 customClassNames: (NSArray *)customClassNames
+                       headerName: (NSString *)headerName
 {
   NSEnumerator *classEnum = nil;
   NSString *className = nil;
 
+  if (headerName != nil && [headerName length] > 0)
+    {
+      [source appendFormat: @"#import \"%@\"\n",
+        [self _escapedString: headerName]];
+    }
+  else
+    {
+      [source appendString: @"#import <Foundation/Foundation.h>\n"];
+    }
   [source appendString:
-    @"#import <Foundation/Foundation.h>\n"
     @"#import <AppKit/AppKit.h>\n"
     @"#import <InterfaceBuilder/InterfaceBuilder.h>\n"];
 
@@ -170,7 +226,7 @@
     @" * .gorm archive. Unsupported object-specific archive state is marked\n"
     @" * with comments near the relevant object.\n"
     @" */\n"
-    @"NSDictionary *GormCreateObjects(void)\n"
+    @"NSDictionary *GormCreateObjects(id owner)\n"
     @"{\n"
     @"  NSMutableDictionary *objects = [NSMutableDictionary dictionary];\n"
     @"  NSMutableArray *topLevelObjects = [NSMutableArray array];\n"
@@ -200,7 +256,13 @@
   varName = [self _variableNameForObject: object varNames: varNames];
   className = [self _classNameForObject: object];
 
-  if ([object isKindOfClass: [NSWindow class]])
+  if ([self _objectIsOwner: object] == YES)
+    {
+      [source appendFormat:
+        @"  id %@ = (owner != nil) ? owner : [[[NSApplication alloc] init] autorelease];\n",
+        varName];
+    }
+  else if ([object isKindOfClass: [NSWindow class]])
     {
       NSWindow *window = (NSWindow *)object;
       [source appendFormat:
@@ -494,6 +556,25 @@
     @"  [objects setObject: deferredWindows forKey: @\"GormDeferredWindows\"];\n"
     @"  [objects setObject: connections forKey: @\"GormConnections\"];\n"
     @"  return objects;\n"];
+}
+
+- (void) _appendLoadHelperToString: (NSMutableString *)source
+{
+  [source appendString:
+    @"\n"
+    @"NSDictionary *GormLoadGeneratedObjects(id owner)\n"
+    @"{\n"
+    @"  NSMutableDictionary *objects = [[GormCreateObjects(owner) mutableCopy] autorelease];\n"
+    @"  NSArray *visibleWindows = [objects objectForKey: @\"GormVisibleWindows\"];\n"
+    @"  NSEnumerator *windowEnumerator = nil;\n"
+    @"  NSWindow *window = nil;\n\n"
+    @"  windowEnumerator = [visibleWindows objectEnumerator];\n"
+    @"  while ((window = [windowEnumerator nextObject]) != nil)\n"
+    @"    {\n"
+    @"      [window makeKeyAndOrderFront: owner];\n"
+    @"    }\n\n"
+    @"  return objects;\n"
+    @"}\n"];
 }
 
 - (void) _queueChildrenOfObject: (id)object
@@ -821,6 +902,32 @@
   return escaped;
 }
 
+- (NSString *) _headerGuardForName: (NSString *)name
+{
+  NSMutableString *guard = [NSMutableString stringWithString: @"INCLUDED_"];
+  NSString *source = (name != nil && [name length] > 0) ? name : @"GormGenerated";
+  unsigned i = 0;
+
+  for (i = 0; i < [source length]; i++)
+    {
+      unichar ch = [source characterAtIndex: i];
+      BOOL valid = ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+        || (ch >= '0' && ch <= '9'));
+
+      if (valid == YES)
+        {
+          [guard appendFormat: @"%C", ch];
+        }
+      else
+        {
+          [guard appendString: @"_"];
+        }
+    }
+
+  [guard appendString: @"_h"];
+  return guard;
+}
+
 - (NSString *) _rectString: (NSRect)rect
 {
   return [NSString stringWithFormat:
@@ -843,6 +950,13 @@
 - (NSString *) _keyForObject: (id)object
 {
   return [NSString stringWithFormat: @"%p", object];
+}
+
+- (BOOL) _objectIsOwner: (id)object
+{
+  NSString *name = [_document nameForObject: object];
+
+  return [name isEqualToString: @"NSOwner"];
 }
 
 @end

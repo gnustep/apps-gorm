@@ -48,6 +48,7 @@ static NSMutableArray *__types = nil;
     @"GSNibFileType", @"nib",
     @"GSXibFileType", @"xib",
     @"GSCibFileType", @"cib",
+    @"GSCodeFileType", @"gormcode",
     nil];
   NSString *fallbackType = nil;
 

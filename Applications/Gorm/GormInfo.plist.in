@@ -54,6 +54,14 @@
         NSIcon = "GormNib.tiff";
       },
       {
+	NSName = "GSCodeFileType";
+	NSHumanReadableName = "Objective-C Code";
+	NSRole = Editor;
+	NSDocumentClass = GormDocument;
+        NSUnixExtensions = ( "gormcode" );
+        NSIcon = "GormFile.tiff";
+      },
+      {
         NSUnixExtensions = ( "palette" );
         NSIcon = "GormPalette.tiff";
       }

@@ -43,15 +43,29 @@
 }
 @end
 
+@interface GormDocument (GormScrollViewEditorPrivate)
+- (id<IBEditors>) editorForObject: (id)anObject
+                         inEditor: (id<IBEditors>)anEditor
+                           create: (BOOL)flag;
+@end
+
 #define _EO ((NSScrollView *)_editedObject)
 
 @interface GormScrollViewEditor : GormViewWithSubviewsEditor
 {
   GormInternalViewEditor *documentViewEditor;
 }
+- (id<IBEditors>) _editorForTableView: (NSTableView *)tableView;
 @end
 
 @implementation GormScrollViewEditor
+
+- (id<IBEditors>) _editorForTableView: (NSTableView *)tableView
+{
+  return [(GormDocument *)document editorForObject: tableView
+                                         inEditor: self
+                                           create: YES];
+}
 
 - (void) setOpened: (BOOL) flag
 {
@@ -138,7 +152,7 @@
   // If click landed directly on a table view, select it and forward the event
   if ([clickedView isKindOfClass: [NSTableView class]])
     {
-      id<IBEditors> ed = [document editorForObject: clickedView create: YES];
+      id<IBEditors> ed = [self _editorForTableView: (NSTableView *)clickedView];
       id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
       if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
         {
@@ -160,7 +174,7 @@
       if (col != -1 && col != NSNotFound)
         {
           NSTableColumn *column = [[tv tableColumns] objectAtIndex: col];
-          id<IBEditors> ed = [document editorForObject: tv create: YES];
+          id<IBEditors> ed = [self _editorForTableView: tv];
           id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
           if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
             {
@@ -170,7 +184,7 @@
         }
       else
         {
-          id<IBEditors> ed = [document editorForObject: tv create: YES];
+          id<IBEditors> ed = [self _editorForTableView: tv];
           id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
           if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
             {
