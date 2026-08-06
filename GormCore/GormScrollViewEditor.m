@@ -56,6 +56,9 @@
   GormInternalViewEditor *documentViewEditor;
 }
 - (id<IBEditors>) _editorForTableView: (NSTableView *)tableView;
+- (NSTableView *) _tableViewDocumentView;
+- (void) _openTableViewEditor: (id<IBEditors>)editor
+                    withEvent: (NSEvent *)event;
 @end
 
 @implementation GormScrollViewEditor
@@ -65,6 +68,36 @@
   return [(GormDocument *)document editorForObject: tableView
                                          inEditor: self
                                            create: YES];
+}
+
+- (NSTableView *) _tableViewDocumentView
+{
+  id documentView = [_EO documentView];
+
+  if ([documentView isKindOfClass: [NSTableView class]])
+    {
+      return (NSTableView *)documentView;
+    }
+  if ([documentView respondsToSelector: @selector(editedObject)]
+      && [[documentView editedObject] isKindOfClass: [NSTableView class]])
+    {
+      return (NSTableView *)[documentView editedObject];
+    }
+
+  return nil;
+}
+
+- (void) _openTableViewEditor: (id<IBEditors>)editor
+                    withEvent: (NSEvent *)event
+{
+  if ([(id)editor respondsToSelector: @selector(setOpened:)])
+    {
+      [(id)editor setOpened: YES];
+    }
+  if ([(id)editor respondsToSelector: @selector(mouseDown:)])
+    {
+      [(id)editor mouseDown: event];
+    }
 }
 
 - (void) setOpened: (BOOL) flag
@@ -147,53 +180,44 @@
       // return;
     }
 
-  NSView *clickedView = [_EO hitTest: [theEvent locationInWindow]];
+  NSTableView *tableView = [self _tableViewDocumentView];
+  NSTableHeaderView *headerView = [tableView headerView];
+
+  if (headerView != nil)
+    {
+      NSPoint pointInHeader = [headerView convertPoint: [theEvent locationInWindow]
+                                              fromView: nil];
+
+      if (NSMouseInRect(pointInHeader,
+                        [headerView bounds],
+                        [headerView isFlipped]))
+        {
+          [self _openTableViewEditor: [self _editorForTableView: tableView]
+                           withEvent: theEvent];
+          return;
+        }
+    }
+
+  NSPoint pointInScrollView = [_EO convertPoint: [theEvent locationInWindow]
+				       fromView: nil];
+  NSView *clickedView = [_EO hitTest: pointInScrollView];
 
   // If click landed directly on a table view, select it and forward the event
   if ([clickedView isKindOfClass: [NSTableView class]])
     {
-      id<IBEditors> ed = [self _editorForTableView: (NSTableView *)clickedView];
-      id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
-      if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
-        {
-          [edSel selectObjects: [NSArray arrayWithObject: clickedView]];
-          [document setSelectionFromEditor: ed];
-        }
-      [clickedView mouseDown: theEvent];
-      opened = NO;
+      [self _openTableViewEditor: [self _editorForTableView: (NSTableView *)clickedView]
+                       withEvent: theEvent];
       return;
     }
 
-  // If click is on a table header, select the column (if any) and forward
+  // If hit testing reaches a table header, route through the table editor so
+  // column selection stays owned by the editor rather than AppKit's header.
   if ([clickedView isKindOfClass: [NSTableHeaderView class]])
     {
       NSTableHeaderView *hv = (NSTableHeaderView *)clickedView;
       NSTableView *tv = [hv tableView];
-      NSPoint ptInHeader = [hv convertPoint:[theEvent locationInWindow] fromView:nil];
-      NSInteger col = [hv columnAtPoint: ptInHeader];
-      if (col != -1 && col != NSNotFound)
-        {
-          NSTableColumn *column = [[tv tableColumns] objectAtIndex: col];
-          id<IBEditors> ed = [self _editorForTableView: tv];
-          id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
-          if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
-            {
-              [edSel selectObjects: [NSArray arrayWithObject: column]];
-              [document setSelectionFromEditor: ed];
-            }
-        }
-      else
-        {
-          id<IBEditors> ed = [self _editorForTableView: tv];
-          id<IBSelectionOwners> edSel = (id<IBSelectionOwners>)ed;
-          if (edSel && [edSel respondsToSelector: @selector(selectObjects:)])
-            {
-              [edSel selectObjects: [NSArray arrayWithObject: tv]];
-              [document setSelectionFromEditor: ed];
-            }
-        }
-      [clickedView mouseDown: theEvent];
-      opened = NO;
+      [self _openTableViewEditor: [self _editorForTableView: tv]
+                       withEvent: theEvent];
       return;
     }
 

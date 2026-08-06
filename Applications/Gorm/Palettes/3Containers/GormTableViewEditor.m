@@ -260,20 +260,21 @@ static NSText *_textObject;
       if (columnIndex != NSNotFound && columnIndex != -1)
         {
           NSTableColumn *col = [[tableView tableColumns] objectAtIndex: columnIndex];
+          [tableView selectColumn: columnIndex byExtendingSelection: NO];
           [self selectObjects: [NSArray arrayWithObject: col]];
         }
       else
         {
+          if ([tableView selectedColumn] != -1)
+            {
+              [tableView deselectColumn: [tableView selectedColumn]];
+            }
           [self selectObjects: [NSArray arrayWithObject: tableView]];
         }
 
       if ([theEvent clickCount] == 2)
         {
           [self editHeader: hitView withEvent: theEvent];
-        }
-      else
-        {
-          [hitView mouseDown: theEvent];
         }
     }
   else if ([hitView isKindOfClass: [NSScroller class]])
