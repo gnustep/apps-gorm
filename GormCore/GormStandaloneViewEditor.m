@@ -166,11 +166,15 @@ static NSImage *horizontalImage;
 	while ((temp != nil) && (theParent != self) && (temp != self))
 	  {
 	    temp = [temp superview];
-	    while (![temp isKindOfClass: [GormViewEditor class]])
+	    while ((temp != nil)
+		   && ![temp isKindOfClass: [GormViewEditor class]])
 	      {
 		temp = [temp superview];
 	      }
-	    theParent = [(GormViewEditor *)temp parent];
+	    if (temp != nil)
+	      {
+		theParent = [(GormViewEditor *)temp parent];
+	      }
 	  }
 	if (temp != nil)
 	  {
