@@ -327,8 +327,8 @@
     {
       [items addObject: identifier];
       [toolbar setAllowedItemIdentifiers: items];
-      RELEASE(items);
     }
+  RELEASE(items);
   
   [_allowedItems reloadData];
   [self touch: self];
@@ -375,8 +375,8 @@
     {
       [items addObject: identifier];
       [toolbar setDefaultItemIdentifiers: items];
-      RELEASE(items);
     }
+  RELEASE(items);
   
   [_defaultItems reloadData];
   [self touch: self];

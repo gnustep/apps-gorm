@@ -98,20 +98,21 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) removeAction: (id)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSMutableArray *list = [defaults objectForKey: @"UserPlugins"];
+  NSMutableArray *list = [[defaults objectForKey: @"UserPlugins"] mutableCopy];
   int row = [table selectedRow];
 
-  if(row >= 0)
+  if(row >= 0 && row < [list count])
     {
       NSString *stringValue = [list objectAtIndex: row];
       
       if(stringValue != nil)
 	{
-	  [list removeObject: stringValue];
+	  [list removeObjectAtIndex: row];
 	  [defaults setObject: list forKey: @"UserPlugins"];
 	  [table reloadData];
 	}
     }
+  RELEASE(list);
 }
 
 - (BOOL)    tableView: (NSTableView *)tableView

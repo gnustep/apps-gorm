@@ -23,6 +23,8 @@
  */
 
 #import <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSCharacterSet.h>
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSLocale.h>
@@ -35,8 +37,43 @@
 
 - (void) selectPreferredLanguage
 {
-  NSString *language = [[NSLocale preferredLanguages] objectAtIndex: 0];
-  NSInteger i = [[ldict allKeys] indexOfObject: language];
+  if ([sourceLanguage numberOfItems] == 0)
+    {
+      return;
+    }
+
+  NSArray *languages = [NSLocale preferredLanguages];
+  NSString *language = [languages count] > 0 ? [languages objectAtIndex: 0] : nil;
+  NSString *languageCode = language;
+  NSInteger i = NSNotFound;
+
+  if ([ldict objectForKey: languageCode] == nil)
+    {
+      NSCharacterSet *separators = [NSCharacterSet characterSetWithCharactersInString: @"-_"];
+      NSRange separator = [language rangeOfCharacterFromSet: separators];
+      if (separator.location != NSNotFound)
+        {
+          languageCode = [language substringToIndex: separator.location];
+        }
+    }
+
+  for (i = 0; i < [sourceLanguage numberOfItems]; i++)
+    {
+      if ([[[sourceLanguage itemAtIndex: i] representedObject]
+            isEqual: languageCode])
+        {
+          break;
+        }
+    }
+
+  if (i == [sourceLanguage numberOfItems])
+    {
+      i = NSNotFound;
+    }
+  if (i == NSNotFound)
+    {
+      i = 0;
+    }
 
   NSDebugLog(@"language = %@", language);
 
@@ -76,6 +113,8 @@
 	      
 	      [targetLanguage addItemWithTitle: itemTitle];
 	      [sourceLanguage addItemWithTitle: itemTitle];
+	      [[targetLanguage lastItem] setRepresentedObject: k];
+	      [[sourceLanguage lastItem] setRepresentedObject: k];
 	    }
 
 	  // Select preferred language in pop up...
@@ -97,13 +136,19 @@
 - (IBAction) updateTargetLanguage: (id)sender
 {
   NSInteger i = [targetLanguage indexOfSelectedItem];
-  targetLanguageIdentifier = [[ldict allKeys] objectAtIndex: i];
+  if (i >= 0)
+    {
+      targetLanguageIdentifier = [[targetLanguage selectedItem] representedObject];
+    }
 }
 
 - (IBAction) updateSourceLanguage: (id)sender
 {
   NSInteger i = [sourceLanguage indexOfSelectedItem];
-  sourceLanguageIdentifier = [[ldict allKeys] objectAtIndex: i];
+  if (i >= 0)
+    {
+      sourceLanguageIdentifier = [[sourceLanguage selectedItem] representedObject];
+    }
 }
 
 - (NSString *) sourceLanguageIdentifier

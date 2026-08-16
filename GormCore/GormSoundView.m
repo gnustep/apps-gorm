@@ -45,6 +45,21 @@
 
 @implementation GormSoundView
 
+static unsigned short
+readLittleEndian16(const unsigned char *bytes)
+{
+  return (unsigned short)(bytes[0] | ((unsigned short)bytes[1] << 8));
+}
+
+static unsigned int
+readLittleEndian32(const unsigned char *bytes)
+{
+  return (unsigned int)(bytes[0]
+                        | ((unsigned int)bytes[1] << 8)
+                        | ((unsigned int)bytes[2] << 16)
+                        | ((unsigned int)bytes[3] << 24));
+}
+
 - (void)setSamples:(short *)newSamples
        sampleCount:(NSUInteger)count
         sampleRate:(float)rate
@@ -89,7 +104,7 @@
       return NO;
     }
 
-  int offset = 12;
+  NSUInteger offset = 12;
   int fmtFound = 0;
   int dataFound = 0;
   unsigned short bitsPerSample = 0;
@@ -102,7 +117,13 @@
     {
       char chunkId[5] = {0};
       memcpy(chunkId, ptr + offset, 4);
-      unsigned int chunkSize = *(unsigned int *)(ptr + offset + 4);
+      unsigned int chunkSize = readLittleEndian32(ptr + offset + 4);
+      NSUInteger payloadOffset = offset + 8;
+
+      if ((NSUInteger)chunkSize > length - payloadOffset)
+        {
+          return NO;
+        }
 
       if (memcmp(chunkId, "fmt ", 4) == 0)
         {
@@ -111,20 +132,24 @@
               return NO;
             }
 
-          numChannels = *(unsigned short *)(ptr + offset + 10);
-          sampleRateRead = *(unsigned int *)(ptr + offset + 12);
-          bitsPerSample = *(unsigned short *)(ptr + offset + 22);
+          numChannels = readLittleEndian16(ptr + payloadOffset + 2);
+          sampleRateRead = readLittleEndian32(ptr + payloadOffset + 4);
+          bitsPerSample = readLittleEndian16(ptr + payloadOffset + 14);
           fmtFound = 1;
         }
       else if (memcmp(chunkId, "data", 4) == 0)
         {
           dataSize = chunkSize;
-          pcmStart = (short *)(ptr + offset + 8);
+          pcmStart = (short *)(ptr + payloadOffset);
           dataFound = 1;
           break;
         }
 
-      offset += 8 + chunkSize;
+      offset = payloadOffset + chunkSize;
+      if ((chunkSize & 1) != 0 && offset < length)
+        {
+          offset++;
+        }
     }
 
   if (!fmtFound
@@ -188,6 +213,8 @@
     {
       free(_samples);
     }
+
+  DESTROY(_sound);
 
   [super dealloc];
 }
