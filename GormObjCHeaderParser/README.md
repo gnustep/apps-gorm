@@ -153,17 +153,18 @@ use by other apps-gorm modules or external consumers.
 
 ## Testing
 
-The `Tests/` directory currently contains test harness make logic but no parser
-test source files are present in this module directory at this time.
-
-You can still run the make target entry point:
+The `Tests/parser` suite covers scanner helpers, parser look-ahead functions,
+methods and action classification, ivars and grouped declarations, classes and
+categories, file preprocessing, and multi-interface header parsing.  Run it
+after building the library:
 
 ```sh
 cd Tests
 make check
 ```
 
-If parser tests are added, this is the intended execution path.
+The suite uses the standard GNUstep `gnustep-tests` harness and links against
+the library from the module's build directory.
 
 ## Limitations and Behavior Notes
 

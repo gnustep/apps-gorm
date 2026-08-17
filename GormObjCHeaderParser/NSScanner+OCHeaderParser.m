@@ -37,7 +37,11 @@
 
   if(buffer != NULL)
     {
-      if(*buffer != NULL)
+      if (*buffer == nil)
+	{
+	  *buffer = buffer2;
+	}
+      else if (buffer2 != nil)
 	{
 	  *buffer = [*buffer stringByAppendingString: buffer2];
 	}
@@ -52,7 +56,11 @@
   [self scanCharactersFromSet: set intoString: &buffer2]; 
   if(buffer != NULL)
     {
-      if(*buffer != NULL)
+      if (*buffer == nil)
+	{
+	  *buffer = buffer2;
+	}
+      else if (buffer2 != nil)
 	{
 	  *buffer = [*buffer stringByAppendingString: buffer2];
 	}
