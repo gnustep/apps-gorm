@@ -74,9 +74,9 @@
 - (void) dealloc
 {
   DESTROY(_gormDocument);
-  _objectId = nil;
-  _sourceString = nil;
-  _targetString = nil;
+  DESTROY(_objectId);
+  DESTROY(_sourceString);
+  DESTROY(_targetString);
   DESTROY(_translationDictionary);
   
   [super dealloc];
@@ -310,7 +310,7 @@ didStartElement: (NSString *)elementName
   if ([elementName isEqualToString: @"trans-unit"])
     {
       NSString *objId = [attrs objectForKey: @"id"];
-      _objectId = objId;
+      ASSIGN(_objectId, objId);
     }
   else if ([elementName isEqualToString: @"source"])
     {
@@ -319,6 +319,7 @@ didStartElement: (NSString *)elementName
   else if ([elementName isEqualToString: @"target"])
     {
       _target = YES;
+      ASSIGN(_targetString, [NSMutableString string]);
     }
 }
 
@@ -334,7 +335,7 @@ foundCharacters: (NSString *)string
 
       if (_target)
 	{
-	  [_translationDictionary setObject: string forKey: _objectId];
+	  [(NSMutableString *)_targetString appendString: string];
 	  
 	  NSDebugLog(@"Found target string %@, current id = %@", string, _objectId);
 	}
@@ -349,7 +350,7 @@ foundCharacters: (NSString *)string
   NSDebugLog(@"end element %@", elementName);
   if ([elementName isEqualToString: @"trans-unit"])
     {
-      _objectId = nil;
+      DESTROY(_objectId);
     }
   else if ([elementName isEqualToString: @"source"])
     {
@@ -357,7 +358,12 @@ foundCharacters: (NSString *)string
     }
   else if ([elementName isEqualToString: @"target"])
     {
+      if (_objectId != nil && _targetString != nil)
+	{
+	  [_translationDictionary setObject: _targetString forKey: _objectId];
+	}
       _target = NO;
+      DESTROY(_targetString);
     }
 }
 
@@ -372,14 +378,27 @@ foundCharacters: (NSString *)string
 - (BOOL) importXLIFFDocumentWithName: (NSString *)filename
 {
   NSData *xmlData = [NSData dataWithContentsOfFile: filename];
-  NSXMLParser *xmlParser =
-    [[NSXMLParser alloc] initWithData: xmlData];
+  NSXMLParser *xmlParser = nil;
   BOOL result = NO;
+  BOOL parsed = NO;
+
+  if (xmlData == nil)
+    {
+      return NO;
+    }
+
+  [_translationDictionary removeAllObjects];
+  DESTROY(_objectId);
+  DESTROY(_targetString);
+  _source = NO;
+  _target = NO;
+
+  xmlParser = [[NSXMLParser alloc] initWithData: xmlData];
   
   [xmlParser setDelegate: self];
-  [xmlParser parse];
+  parsed = [xmlParser parse];
 
-  if ([_translationDictionary count] > 0)
+  if (parsed && [_translationDictionary count] > 0)
     {
       NSEnumerator *en = [_translationDictionary keyEnumerator];
       NSString *oid = nil;
@@ -413,9 +432,14 @@ foundCharacters: (NSString *)string
 
       result = YES;
     }
-  else
+  else if (parsed)
     {
       NSLog(@"Document contains no target translation elements");
+    }
+  else
+    {
+      NSLog(@"Could not parse XLIFF document %@: %@",
+	    filename, [xmlParser parserError]);
     }
 
   

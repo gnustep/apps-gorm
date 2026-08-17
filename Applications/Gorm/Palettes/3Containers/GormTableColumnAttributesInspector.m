@@ -155,6 +155,12 @@
       id cell = nil;
       int i = [cellTable selectedRow];
       NSArray *list = [classManager allSubclassesOf: @"NSCell"];
+
+      if (i < 0 || i >= [list count])
+	{
+	  return;
+	}
+
       NSString *className = [list objectAtIndex: i];
       BOOL isCustom = [classManager isCustomClass: className];
       Class cls = nil;

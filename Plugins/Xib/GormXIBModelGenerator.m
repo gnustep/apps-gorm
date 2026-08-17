@@ -699,7 +699,7 @@ static NSUInteger _count = INT_MAX;
 }
 
 - (NSArray *) _propertiesFromMethods: (NSArray *)methods
-			   forObject: (id)obj
+				   forObject: (id)obj
 {
   NSEnumerator *en = [methods objectEnumerator];
   NSString *name = nil;
@@ -707,41 +707,31 @@ static NSUInteger _count = INT_MAX;
 
   while ((name = [en nextObject]) != nil)
     {
-      if ([name isEqualToString: @"set"] == NO) // this is the [NSFont set] method... skip...
+      if ([name hasPrefix: @"set"] && [name length] > 3)
 	{
-	  NSString *substring = [name substringToIndex: 3];
-	  if ([substring isEqualToString: @"set"])
-	    {
-	      NSString *os = [[name substringFromIndex: 3]
-			       stringByReplacingOccurrencesOfString: @":"
-							 withString: @""];
-	      NSString *s = [os lowercaseFirstCharacter];
-	      NSString *iss = [NSString stringWithFormat: @"is%@", os];
+	  NSString *os = [[name substringFromIndex: 3]
+			   stringByReplacingOccurrencesOfString: @":"
+						     withString: @""];
+	  NSString *s = [os lowercaseFirstCharacter];
+	  NSString *iss = [NSString stringWithFormat: @"is%@", os];
 
-	      if ([methods containsObject: s])
+	  if ([methods containsObject: s])
+	    {
+	      SEL sel = NSSelectorFromString(s);
+	      if (sel != NULL && [obj respondsToSelector: sel])
 		{
-		  SEL sel = NSSelectorFromString(s);
-		  if (sel != NULL)
-		    {
-		      NSDebugLog(@"selector = %@",s);
-		      if ([obj respondsToSelector: sel]) // if it has a normal getting, fine...
-			{
-			  [result addObject: s];
-			}
-		    }
+		  NSDebugLog(@"selector = %@", s);
+		  [result addObject: s];
 		}
-	      else if ([methods containsObject: iss])
+	    }
+	  else if ([methods containsObject: iss])
+	    {
+	      SEL sel = NSSelectorFromString(iss);
+	      NSDebugLog(@"***** retrying with getter name: %@", iss);
+	      if (sel != NULL && [obj respondsToSelector: sel])
 		{
-		  NSDebugLog(@"***** retrying with getter name: %@", iss);
-		  SEL sel = NSSelectorFromString(iss);
-		  if (sel != nil)
-		    {
-		      if ([obj respondsToSelector: sel])
-			{
-			  NSDebugLog(@"Added... %@", iss);
-			  [result addObject: iss];
-			}
-		    }
+		  NSDebugLog(@"Added... %@", iss);
+		  [result addObject: iss];
 		}
 	    }
 	}

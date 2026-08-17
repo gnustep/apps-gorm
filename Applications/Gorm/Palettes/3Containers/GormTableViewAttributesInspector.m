@@ -138,13 +138,12 @@
 	    }
 	  else if(numCols > newNumCols)
 	    {
-	      int colsToDelete = numCols - newNumCols;
-	      int i = 0;
-	      NSArray *columns = [object tableColumns];
-	      // remove columns...
-	      for(i = 0; i < colsToDelete; i++)
+	      // Always remove the final column.  The tableColumns array may
+	      // change after each removal, so advancing an index skips columns.
+	      while ([object numberOfColumns] > newNumCols)
 		{
-		  NSTableColumn *tc = [columns objectAtIndex: (i + newNumCols)];
+		  NSArray *columns = [object tableColumns];
+		  NSTableColumn *tc = [columns lastObject];
 		  [object removeTableColumn: tc];
 		}
 	    }
