@@ -76,9 +76,14 @@ objectValueForTableColumn: (NSTableColumn *)tc
   if (result == NSOKButton)
     {
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      NSMutableArray *list = [defaults objectForKey: @"HeaderList"];
+      NSMutableArray *list = [[defaults objectForKey: @"HeaderList"] mutableCopy];
+      if (list == nil)
+	{
+	  list = [[NSMutableArray alloc] init];
+	}
       [list addObjectsFromArray: [openPanel filenames]];
       [defaults setObject: list forKey: @"HeaderList"];
+      RELEASE(list);
       [table reloadData];
     }
 }
@@ -87,19 +92,21 @@ objectValueForTableColumn: (NSTableColumn *)tc
 - (void) removeAction: (id)sender
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSMutableArray *list = [defaults objectForKey: @"HeaderList"];
+  NSMutableArray *list = [[defaults objectForKey: @"HeaderList"] mutableCopy];
   int row = [table selectedRow];
 
-  if(row >= 0)
+  if(row >= 0 && row < [list count])
     {
       NSString *stringValue = [list objectAtIndex: row];
       
       if(stringValue != nil)
 	{
-	  [list removeObject: stringValue];
+	  [list removeObjectAtIndex: row];
+	  [defaults setObject: list forKey: @"HeaderList"];
 	  [table reloadData];
 	}
     }
+  RELEASE(list);
 }
 
 

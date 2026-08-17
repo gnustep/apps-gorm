@@ -56,7 +56,7 @@
 {
   NSImage *normalImage = [anObject normalImage];
   NSImage *displayImage = [anObject image];
-  NSString *imageName = [normalImage name];
+  NSString *imageName = [anObject name];
   NSSize size = [normalImage size];
 
   [super setObject: anObject];
@@ -64,13 +64,13 @@
   [imageView setImageFrameStyle: NSImageFrameGrayBezel];
   [imageView setImageScaling: NSScaleNone];
   
-  // Set the display image (small version)
-  if (displayImage != nil)
-    {
-      [imageView setImage: displayImage];
-    }
+  // Prefer the thumbnail, but fall back to the full-size image.  Set the
+  // image unconditionally so that a failed image does not leave stale
+  // content from the previously inspected resource.
+  [imageView setImage: (displayImage != nil) ? displayImage : normalImage];
   
-  // Set the name from the normal (full-size) image
+  // Use the resource name.  NSImage names are globally registered, so
+  // -setName: may fail when two resources have the same name.
   if (imageName != nil)
     {
       [name setStringValue: imageName];

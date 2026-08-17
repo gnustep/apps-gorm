@@ -308,7 +308,16 @@
                   id xibFirstResponder = nil;
 
                   rootObjects = [u decodeObjectForKey: @"IBDocument.RootObjects"];
-		  xibFirstResponder = [rootObjects objectAtIndex: 1];
+		  if ([rootObjects isKindOfClass: [NSArray class]] == NO
+		      || [rootObjects count] < 2)
+		    {
+		      NSLog(@"XIB contains fewer than two root objects");
+		      rootObjects = nil;
+		    }
+
+		  if (rootObjects != nil)
+		    {
+		      xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
 		  _customClasses = [u customClasses];
 		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
@@ -516,6 +525,7 @@
 		  [doc updateChangeCount: NSChangeCleared];
 		  
 		  result = YES;
+		    }
 		}
 	    }
 
