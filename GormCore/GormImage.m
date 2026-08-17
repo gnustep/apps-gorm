@@ -86,11 +86,10 @@
 {
   if ((self = [super initWithData: aData withFileName: aName inWrapper: flag]) != nil)
     {
-      // FIXME: Why not make one a copy of the other?
       image = [[NSImage alloc] initWithData: aData];
-      smallImage = [[NSImage alloc] initWithData: aData];
+      smallImage = [image copy];
 
-      if (smallImage == nil)
+      if (image == nil || smallImage == nil)
 	{
 	  RELEASE(self);
 	  return nil;
@@ -111,10 +110,10 @@
 {
   if ((self = [super initWithName: aName path: aPath inWrapper: flag]) != nil)
     {
-      image = [[NSImage alloc] initByReferencingFile: aPath];
-      smallImage = [[NSImage alloc] initWithContentsOfFile: aPath];
+      image = [[NSImage alloc] initWithContentsOfFile: aPath];
+      smallImage = [image copy];
       
-      if (smallImage == nil)
+      if (image == nil || smallImage == nil)
 	{
 	  RELEASE(self);
 	  return nil;
