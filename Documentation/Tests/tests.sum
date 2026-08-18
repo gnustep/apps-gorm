@@ -1,0 +1,26 @@
+Passed test:     (2026-08-17 19:13:49.086 EDT)   resources.m:17 ... Documentation has a GNUmakefile
+Passed test:     (2026-08-17 19:13:49.086 EDT)   resources.m:17 ... Gorm.md exists
+Passed test:     (2026-08-17 19:13:49.086 EDT)   resources.m:17 ... readme.texi exists
+Passed test:     (2026-08-17 19:13:49.086 EDT)   resources.m:17 ... Controller has a GNUmakefile
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: main.m
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: MyController.h
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: MyController.m
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: WinController.h
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: WinController.m
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:17 ... Controller source exists: Controller.gorm
+Passed test:     (2026-08-17 19:13:49.087 EDT)   resources.m:51 ... ../../Examples/Controller/MainMenu.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:52 ... ../../Examples/Controller/MainMenu.gorm data.classes can be parsed
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:54 ... ../../Examples/Controller/MainMenu.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:51 ... ../../Examples/Controller/Controller.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:52 ... ../../Examples/Controller/Controller.gorm data.classes can be parsed
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:54 ... ../../Examples/Controller/Controller.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:17 ... SimpleApp has a GNUmakefile
+Passed test:     (2026-08-17 19:13:49.088 EDT)   resources.m:17 ... SimpleApp source exists: main.m
+Passed test:     (2026-08-17 19:13:49.089 EDT)   resources.m:17 ... SimpleApp source exists: MyController.h
+Passed test:     (2026-08-17 19:13:49.089 EDT)   resources.m:17 ... SimpleApp source exists: MyController.m
+Passed test:     (2026-08-17 19:13:49.089 EDT)   resources.m:51 ... ../../Examples/SimpleApp/MainMenu.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-17 19:13:49.089 EDT)   resources.m:52 ... ../../Examples/SimpleApp/MainMenu.gorm data.classes can be parsed
+Passed test:     (2026-08-17 19:13:49.089 EDT)   resources.m:54 ... ../../Examples/SimpleApp/MainMenu.gorm objects.gorm can be loaded as data
+Completed file:  resources.m
+
+     23 Passed tests

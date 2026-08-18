@@ -1,0 +1,14 @@
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:32 ... IBInspectorMode stores its identifier
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:34 ... IBInspectorMode stores its edited object
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:36 ... IBInspectorMode stores its localized label
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:38 ... IBInspectorMode stores its inspector class name
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:39 ... IBInspectorMode stores its ordering
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:51 ... IBInspectorMode mutators replace every stored value
+Passed test:     (2026-08-17 19:17:54.102 EDT)   basic.m:55 ... IBPlugin returns one shared instance per class
+Passed test:     (2026-08-17 19:17:54.103 EDT)   basic.m:57 ... IBPlugin default label is its class name
+Passed test:     (2026-08-17 19:17:54.103 EDT)   basic.m:61 ... IBPlugin default optional extension points return nil
+Passed test:     (2026-08-17 19:17:54.103 EDT)   basic.m:65 ... NSObject nibInstantiate default returns the receiver
+Passed test:     (2026-08-17 19:17:54.103 EDT)   basic.m:75 ... connector notification constants are exported
+Completed file:  basic.m
+
+     11 Passed tests

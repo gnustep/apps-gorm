@@ -1,0 +1,7 @@
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:27 ... ArgPair starts empty
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:32 ... ArgPair stores its argument and value
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:38 ... ArgPair copies its stored argument and value
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:44 ... ArgPair copies are independent after mutation
+Completed file:  basic.m
+
+      4 Passed tests

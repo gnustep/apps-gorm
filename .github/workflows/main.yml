@@ -37,7 +37,7 @@ env:
     libtiff-dev
     libpng-dev
     libicns-dev
-    
+
   # packages for GCC Objective-C runtime
   APT_PACKAGES_gcc: >-
     libobjc-10-dev
@@ -118,7 +118,7 @@ jobs:
       - name: Run tests
         run: |
           . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-          make check
+          make -C Tests check
 
       - name: Upload logs
         uses: actions/upload-artifact@v4

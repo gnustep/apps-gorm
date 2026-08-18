@@ -64,7 +64,8 @@ SUBPROJECTS = \
 	GormCore \
 	Plugins \
 	Applications \
-	Tools
+	Tools \
+	Tests
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local

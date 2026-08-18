@@ -1,0 +1,12 @@
+Passed test:     (2026-08-17 19:13:46.100 EDT)   basic.m:41 ... IBAction methods are parsed as actions
+Passed test:     (2026-08-17 19:13:46.100 EDT)   basic.m:49 ... multi-argument instance methods are not treated as actions
+Passed test:     (2026-08-17 19:13:46.100 EDT)   basic.m:56 ... class methods record their selector and class-method flag
+Passed test:     (2026-08-17 19:13:46.100 EDT)   basic.m:61 ... IBOutlet ivars are parsed as outlets
+Passed test:     (2026-08-17 19:13:46.100 EDT)   basic.m:66 ... plain ivars are parsed without outlet metadata
+Passed test:     (2026-08-17 19:13:46.101 EDT)   basic.m:81 ... classes expose parsed names, superclass, outlets, and actions
+Passed test:     (2026-08-17 19:13:46.101 EDT)   basic.m:95 ... test header can be written
+Passed test:     (2026-08-17 19:13:46.102 EDT)   basic.m:99 ... headers with comments and preprocessor lines parse into classes
+Passed test:     (2026-08-17 19:13:46.102 EDT)   basic.m:104 ... parsed classes preserve their names
+Completed file:  basic.m
+
+      9 Passed tests
