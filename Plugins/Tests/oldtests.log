@@ -1,0 +1,26 @@
+
+Building in plugins
+Making all for test_tool basic...
+ Compiling file basic.m ...
+ Linking test_tool basic ...
+Testing basic.m...
+Running plugins/basic.m...
+Start set:       basic.m:29 ... Gorm plugins
+Passed test:     (2026-08-17 19:13:47.261 EDT)   basic.m:33 ... the native Gorm plugin declares the Gorm file type
+Passed test:     (2026-08-17 19:13:47.261 EDT)   basic.m:36 ... the nib plugin declares the nib file type
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:39 ... the xib plugin declares the xib file type
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:42 ... the cib plugin declares the cib file type
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:51 ... Gorm has a GNUmakefile
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:55 ... Gorm has its plugin class source
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:51 ... Nib has a GNUmakefile
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:55 ... Nib has its plugin class source
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:51 ... Xib has a GNUmakefile
+Passed test:     (2026-08-17 19:13:47.262 EDT)   basic.m:55 ... Xib has its plugin class source
+Passed test:     (2026-08-17 19:13:47.263 EDT)   basic.m:51 ... Cib has a GNUmakefile
+Passed test:     (2026-08-17 19:13:47.263 EDT)   basic.m:55 ... Cib has its plugin class source
+End set:         basic.m:58 ... Gorm plugins
+
+real	0m0.055s
+user	0m0.047s
+sys	0m0.008s
+Completed file:  basic.m
