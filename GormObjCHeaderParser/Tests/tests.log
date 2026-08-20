@@ -6,21 +6,21 @@ Making all for test_tool basic...
 Testing basic.m...
 Running parser/basic.m...
 Start set:       basic.m:35 ... GormObjCHeaderParser
-Passed test:     (2026-08-17 19:17:54.696 EDT)   basic.m:41 ... IBAction methods are parsed as actions
-Passed test:     (2026-08-17 19:17:54.696 EDT)   basic.m:49 ... multi-argument instance methods are not treated as actions
-Passed test:     (2026-08-17 19:17:54.696 EDT)   basic.m:56 ... class methods record their selector and class-method flag
-Passed test:     (2026-08-17 19:17:54.697 EDT)   basic.m:61 ... IBOutlet ivars are parsed as outlets
-Passed test:     (2026-08-17 19:17:54.697 EDT)   basic.m:66 ... plain ivars are parsed without outlet metadata
-2026-08-17 19:17:54.697 basic[349213:349213] Scanner initialised with nil string
-Passed test:     (2026-08-17 19:17:54.697 EDT)   basic.m:81 ... classes expose parsed names, superclass, outlets, and actions
-Passed test:     (2026-08-17 19:17:54.697 EDT)   basic.m:95 ... test header can be written
-2026-08-17 19:17:54.698 basic[349213:349213] Scanner initialised with nil string
-2026-08-17 19:17:54.698 basic[349213:349213] Scanner initialised with nil string
-Passed test:     (2026-08-17 19:17:54.698 EDT)   basic.m:99 ... headers with comments and preprocessor lines parse into classes
-Passed test:     (2026-08-17 19:17:54.698 EDT)   basic.m:104 ... parsed classes preserve their names
+Passed test:     (2026-08-19 17:01:18.094 EDT)   basic.m:41 ... IBAction methods are parsed as actions
+Passed test:     (2026-08-19 17:01:18.095 EDT)   basic.m:49 ... multi-argument instance methods are not treated as actions
+Passed test:     (2026-08-19 17:01:18.095 EDT)   basic.m:56 ... class methods record their selector and class-method flag
+Passed test:     (2026-08-19 17:01:18.095 EDT)   basic.m:61 ... IBOutlet ivars are parsed as outlets
+Passed test:     (2026-08-19 17:01:18.095 EDT)   basic.m:66 ... plain ivars are parsed without outlet metadata
+2026-08-19 17:01:18.095 basic[410574:410574] Scanner initialised with nil string
+Passed test:     (2026-08-19 17:01:18.095 EDT)   basic.m:81 ... classes expose parsed names, superclass, outlets, and actions
+Passed test:     (2026-08-19 17:01:18.096 EDT)   basic.m:95 ... test header can be written
+2026-08-19 17:01:18.096 basic[410574:410574] Scanner initialised with nil string
+2026-08-19 17:01:18.096 basic[410574:410574] Scanner initialised with nil string
+Passed test:     (2026-08-19 17:01:18.096 EDT)   basic.m:99 ... headers with comments and preprocessor lines parse into classes
+Passed test:     (2026-08-19 17:01:18.096 EDT)   basic.m:104 ... parsed classes preserve their names
 End set:         basic.m:108 ... GormObjCHeaderParser
 
-real	0m0.098s
-user	0m0.086s
-sys	0m0.012s
+real	0m0.097s
+user	0m0.075s
+sys	0m0.022s
 Completed file:  basic.m

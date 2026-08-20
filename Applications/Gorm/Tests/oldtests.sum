@@ -1,24 +1,24 @@
-Passed test:     (2026-08-17 19:13:47.711 EDT)   resources.m:17 ... application resource exists: GormInfo.plist.in
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: Resources/Defaults.plist
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: Resources/language-codes.plist
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: English.lproj/Gorm.gorm
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: English.lproj/GormLanguageViewController.gorm
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: English.lproj/Gorm.rtfd
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: Images/Gorm.tiff
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: Images/GormPalette.tiff
-Passed test:     (2026-08-17 19:13:47.712 EDT)   resources.m:17 ... application resource exists: Images/GormTesting.tiff
-Passed test:     (2026-08-17 19:13:47.713 EDT)   resources.m:91 ... Defaults.plist can be parsed as a dictionary
-Passed test:     (2026-08-17 19:13:47.713 EDT)   resources.m:94 ... language-codes.plist can be parsed as a dictionary
-Passed test:     (2026-08-17 19:13:47.713 EDT)   resources.m:17 ... gorm bundle exists: Gorm.gorm
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:49 ... Gorm.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:51 ... Gorm.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:53 ... Gorm.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:55 ... Gorm.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:17 ... gorm bundle exists: GormLanguageViewController.gorm
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:49 ... GormLanguageViewController.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:51 ... GormLanguageViewController.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:13:47.714 EDT)   resources.m:53 ... GormLanguageViewController.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:13:47.715 EDT)   resources.m:55 ... GormLanguageViewController.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-17 19:17:56.299 EDT)   resources.m:17 ... application resource exists: GormInfo.plist.in
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: Resources/Defaults.plist
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: Resources/language-codes.plist
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: English.lproj/Gorm.gorm
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: English.lproj/GormLanguageViewController.gorm
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: English.lproj/Gorm.rtfd
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: Images/Gorm.tiff
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: Images/GormPalette.tiff
+Passed test:     (2026-08-17 19:17:56.300 EDT)   resources.m:17 ... application resource exists: Images/GormTesting.tiff
+Passed test:     (2026-08-17 19:17:56.301 EDT)   resources.m:91 ... Defaults.plist can be parsed as a dictionary
+Passed test:     (2026-08-17 19:17:56.301 EDT)   resources.m:94 ... language-codes.plist can be parsed as a dictionary
+Passed test:     (2026-08-17 19:17:56.301 EDT)   resources.m:17 ... gorm bundle exists: Gorm.gorm
+Passed test:     (2026-08-17 19:17:56.301 EDT)   resources.m:49 ... Gorm.gorm data.info can be loaded as data
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:51 ... Gorm.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:53 ... Gorm.gorm data.classes can be parsed
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:55 ... Gorm.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:17 ... gorm bundle exists: GormLanguageViewController.gorm
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:49 ... GormLanguageViewController.gorm data.info can be loaded as data
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:51 ... GormLanguageViewController.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:53 ... GormLanguageViewController.gorm data.classes can be parsed
+Passed test:     (2026-08-17 19:17:56.302 EDT)   resources.m:55 ... GormLanguageViewController.gorm objects.gorm can be loaded as data
 Completed file:  resources.m
 
      21 Passed tests

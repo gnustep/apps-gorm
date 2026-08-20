@@ -1,208 +1,208 @@
-Passed test:     (2026-08-17 19:17:56.753 EDT)   resources.m:17 ... 0Menus has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.753 EDT)   resources.m:17 ... 0Menus has palette.table
-Passed test:     (2026-08-17 19:17:56.753 EDT)   resources.m:17 ... 0Menus resource exists: MenusPalette.tiff
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuDrag.tiff
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuAttributesInspector.gorm
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:40 ... ../../0Menus/GormMenuAttributesInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:41 ... ../../0Menus/GormMenuAttributesInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:42 ... ../../0Menus/GormMenuAttributesInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:44 ... ../../0Menus/GormMenuAttributesInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuItemAttributesInspector.gorm
-Passed test:     (2026-08-17 19:17:56.754 EDT)   resources.m:40 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:41 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:42 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:44 ... ../../0Menus/GormMenuItemAttributesInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows has palette.table
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows resource exists: WindowsPalette.tiff
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows resource exists: WindowDrag.tiff
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows resource exists: Drawer.tiff
-Passed test:     (2026-08-17 19:17:56.755 EDT)   resources.m:17 ... 1Windows resource exists: DrawerSmall.tiff
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:17 ... 1Windows resource exists: GormNSWindowInspector.gorm
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:40 ... ../../1Windows/GormNSWindowInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:41 ... ../../1Windows/GormNSWindowInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:42 ... ../../1Windows/GormNSWindowInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:44 ... ../../1Windows/GormNSWindowInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:17 ... 1Windows resource exists: GormDrawerAttributesInspector.gorm
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:40 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.756 EDT)   resources.m:41 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:42 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:44 ... ../../1Windows/GormDrawerAttributesInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:17 ... 2Controls has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:17 ... 2Controls has palette.table
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:17 ... 2Controls resource exists: ControlsPalette.tiff
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:17 ... 2Controls resource exists: ControlsPalette.gorm
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:40 ... ../../2Controls/ControlsPalette.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.757 EDT)   resources.m:41 ... ../../2Controls/ControlsPalette.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:42 ... ../../2Controls/ControlsPalette.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:44 ... ../../2Controls/ControlsPalette.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:17 ... 2Controls resource exists: GormNSButtonInspector.gorm
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:40 ... ../../2Controls/GormNSButtonInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:41 ... ../../2Controls/GormNSButtonInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:42 ... ../../2Controls/GormNSButtonInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:44 ... ../../2Controls/GormNSButtonInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:17 ... 2Controls resource exists: GormNSCellInspector.gorm
-Passed test:     (2026-08-17 19:17:56.758 EDT)   resources.m:40 ... ../../2Controls/GormNSCellInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:41 ... ../../2Controls/GormNSCellInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:42 ... ../../2Controls/GormNSCellInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:44 ... ../../2Controls/GormNSCellInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:17 ... 2Controls resource exists: GormNSColorWellInspector.gorm
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:40 ... ../../2Controls/GormNSColorWellInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:41 ... ../../2Controls/GormNSColorWellInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:42 ... ../../2Controls/GormNSColorWellInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:44 ... ../../2Controls/GormNSColorWellInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.759 EDT)   resources.m:17 ... 2Controls resource exists: GormNSFormInspector.gorm
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:40 ... ../../2Controls/GormNSFormInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:41 ... ../../2Controls/GormNSFormInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:42 ... ../../2Controls/GormNSFormInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:44 ... ../../2Controls/GormNSFormInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:17 ... 2Controls resource exists: GormNSMatrixInspector.gorm
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:40 ... ../../2Controls/GormNSMatrixInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:41 ... ../../2Controls/GormNSMatrixInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.760 EDT)   resources.m:42 ... ../../2Controls/GormNSMatrixInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:44 ... ../../2Controls/GormNSMatrixInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:17 ... 2Controls resource exists: GormNSPopUpButtonInspector.gorm
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:40 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:41 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:42 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:44 ... ../../2Controls/GormNSPopUpButtonInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:17 ... 2Controls resource exists: GormNSSliderInspector.gorm
-Passed test:     (2026-08-17 19:17:56.761 EDT)   resources.m:40 ... ../../2Controls/GormNSSliderInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:41 ... ../../2Controls/GormNSSliderInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:42 ... ../../2Controls/GormNSSliderInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:44 ... ../../2Controls/GormNSSliderInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:17 ... 2Controls resource exists: GormNSStepperInspector.gorm
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:40 ... ../../2Controls/GormNSStepperInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:41 ... ../../2Controls/GormNSStepperInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:42 ... ../../2Controls/GormNSStepperInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.762 EDT)   resources.m:44 ... ../../2Controls/GormNSStepperInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:17 ... 2Controls resource exists: GormNSTextFieldInspector.gorm
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:40 ... ../../2Controls/GormNSTextFieldInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:41 ... ../../2Controls/GormNSTextFieldInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:42 ... ../../2Controls/GormNSTextFieldInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:44 ... ../../2Controls/GormNSTextFieldInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:17 ... 3Containers has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:17 ... 3Containers has palette.table
-Passed test:     (2026-08-17 19:17:56.763 EDT)   resources.m:17 ... 3Containers resource exists: ContainersPalette.tiff
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:17 ... 3Containers resource exists: GormNSBrowserInspector.gorm
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:40 ... ../../3Containers/GormNSBrowserInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:41 ... ../../3Containers/GormNSBrowserInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:42 ... ../../3Containers/GormNSBrowserInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:44 ... ../../3Containers/GormNSBrowserInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableColumnInspector.gorm
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:40 ... ../../3Containers/GormNSTableColumnInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.764 EDT)   resources.m:41 ... ../../3Containers/GormNSTableColumnInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:42 ... ../../3Containers/GormNSTableColumnInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:44 ... ../../3Containers/GormNSTableColumnInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableColumnSizeInspector.gorm
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:40 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:41 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:42 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:44 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.765 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableViewInspector.gorm
-Passed test:     (2026-08-17 19:17:56.766 EDT)   resources.m:40 ... ../../3Containers/GormNSTableViewInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.766 EDT)   resources.m:41 ... ../../3Containers/GormNSTableViewInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.766 EDT)   resources.m:42 ... ../../3Containers/GormNSTableViewInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.766 EDT)   resources.m:44 ... ../../3Containers/GormNSTableViewInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.766 EDT)   resources.m:17 ... 3Containers resource exists: GormTabViewInspector.gorm
-Passed test:     (2026-08-17 19:17:56.767 EDT)   resources.m:40 ... ../../3Containers/GormTabViewInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.767 EDT)   resources.m:41 ... ../../3Containers/GormTabViewInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.767 EDT)   resources.m:42 ... ../../3Containers/GormTabViewInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.767 EDT)   resources.m:44 ... ../../3Containers/GormTabViewInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.768 EDT)   resources.m:17 ... 4Data has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.768 EDT)   resources.m:17 ... 4Data has palette.table
-Passed test:     (2026-08-17 19:17:56.768 EDT)   resources.m:17 ... 4Data resource exists: DataPalette.tiff
-Passed test:     (2026-08-17 19:17:56.768 EDT)   resources.m:17 ... 4Data resource exists: GormNSDateFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.769 EDT)   resources.m:40 ... ../../4Data/GormNSDateFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.769 EDT)   resources.m:41 ... ../../4Data/GormNSDateFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.769 EDT)   resources.m:42 ... ../../4Data/GormNSDateFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.769 EDT)   resources.m:44 ... ../../4Data/GormNSDateFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.770 EDT)   resources.m:17 ... 4Data resource exists: GormNSComboBoxInspector.gorm
-Passed test:     (2026-08-17 19:17:56.770 EDT)   resources.m:40 ... ../../4Data/GormNSComboBoxInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.770 EDT)   resources.m:41 ... ../../4Data/GormNSComboBoxInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.770 EDT)   resources.m:42 ... ../../4Data/GormNSComboBoxInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.771 EDT)   resources.m:44 ... ../../4Data/GormNSComboBoxInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.771 EDT)   resources.m:17 ... 4Data resource exists: GormNSImageViewInspector.gorm
-Passed test:     (2026-08-17 19:17:56.771 EDT)   resources.m:40 ... ../../4Data/GormNSImageViewInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.771 EDT)   resources.m:41 ... ../../4Data/GormNSImageViewInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:42 ... ../../4Data/GormNSImageViewInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:44 ... ../../4Data/GormNSImageViewInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:17 ... 4Data resource exists: GormNSNumberFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:40 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:41 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:42 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.772 EDT)   resources.m:44 ... ../../4Data/GormNSNumberFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:17 ... 4Data resource exists: GormNSTextViewInspector.gorm
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:40 ... ../../4Data/GormNSTextViewInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:41 ... ../../4Data/GormNSTextViewInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:42 ... ../../4Data/GormNSTextViewInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:44 ... ../../4Data/GormNSTextViewInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:17 ... 5Toolbar has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:17 ... 5Toolbar has palette.table
-Passed test:     (2026-08-17 19:17:56.773 EDT)   resources.m:17 ... 5Toolbar resource exists: ToolbarPalette.tiff
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:17 ... 5Toolbar resource exists: ToolbarPalette.gorm
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:40 ... ../../5Toolbar/ToolbarPalette.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:41 ... ../../5Toolbar/ToolbarPalette.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:42 ... ../../5Toolbar/ToolbarPalette.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:44 ... ../../5Toolbar/ToolbarPalette.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:17 ... 5Toolbar resource exists: GormToolbarAttributesInspector.gorm
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:40 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.774 EDT)   resources.m:41 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:42 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:44 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:17 ... 6Formatters has a GNUmakefile
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:17 ... 6Formatters has palette.table
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/FormatterPalette.tiff
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/FormatterPalette.gorm
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:40 ... ../../6Formatters/Resources/FormatterPalette.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.775 EDT)   resources.m:41 ... ../../6Formatters/Resources/FormatterPalette.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:42 ... ../../6Formatters/Resources/FormatterPalette.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:44 ... ../../6Formatters/Resources/FormatterPalette.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormByteCountFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormDateComponentsFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.776 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormDateIntervalFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.777 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormEnergyFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormISO8601DateFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.778 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormLengthFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormMassFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.779 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormMeasurementFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm objects.gorm can be loaded as data
-Passed test:     (2026-08-17 19:17:56.780 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormPersonNameComponentsFormatterInspector.gorm
-Passed test:     (2026-08-17 19:17:56.781 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.info can be loaded as data
-Passed test:     (2026-08-17 19:17:56.781 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.info is a GNUstep archive
-Passed test:     (2026-08-17 19:17:56.781 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.classes can be parsed
-Passed test:     (2026-08-17 19:17:56.781 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.234 EDT)   resources.m:17 ... 0Menus has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.234 EDT)   resources.m:17 ... 0Menus has palette.table
+Passed test:     (2026-08-19 17:01:20.234 EDT)   resources.m:17 ... 0Menus resource exists: MenusPalette.tiff
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuDrag.tiff
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuAttributesInspector.gorm
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:40 ... ../../0Menus/GormMenuAttributesInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:41 ... ../../0Menus/GormMenuAttributesInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:42 ... ../../0Menus/GormMenuAttributesInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:44 ... ../../0Menus/GormMenuAttributesInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.235 EDT)   resources.m:17 ... 0Menus resource exists: GormMenuItemAttributesInspector.gorm
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:40 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:41 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:42 ... ../../0Menus/GormMenuItemAttributesInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:44 ... ../../0Menus/GormMenuItemAttributesInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:17 ... 1Windows has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:17 ... 1Windows has palette.table
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:17 ... 1Windows resource exists: WindowsPalette.tiff
+Passed test:     (2026-08-19 17:01:20.236 EDT)   resources.m:17 ... 1Windows resource exists: WindowDrag.tiff
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:17 ... 1Windows resource exists: Drawer.tiff
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:17 ... 1Windows resource exists: DrawerSmall.tiff
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:17 ... 1Windows resource exists: GormNSWindowInspector.gorm
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:40 ... ../../1Windows/GormNSWindowInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:41 ... ../../1Windows/GormNSWindowInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:42 ... ../../1Windows/GormNSWindowInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:44 ... ../../1Windows/GormNSWindowInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.237 EDT)   resources.m:17 ... 1Windows resource exists: GormDrawerAttributesInspector.gorm
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:40 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:41 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:42 ... ../../1Windows/GormDrawerAttributesInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:44 ... ../../1Windows/GormDrawerAttributesInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:17 ... 2Controls has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:17 ... 2Controls has palette.table
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:17 ... 2Controls resource exists: ControlsPalette.tiff
+Passed test:     (2026-08-19 17:01:20.238 EDT)   resources.m:17 ... 2Controls resource exists: ControlsPalette.gorm
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:40 ... ../../2Controls/ControlsPalette.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:41 ... ../../2Controls/ControlsPalette.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:42 ... ../../2Controls/ControlsPalette.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:44 ... ../../2Controls/ControlsPalette.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:17 ... 2Controls resource exists: GormNSButtonInspector.gorm
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:40 ... ../../2Controls/GormNSButtonInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.239 EDT)   resources.m:41 ... ../../2Controls/GormNSButtonInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:42 ... ../../2Controls/GormNSButtonInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:44 ... ../../2Controls/GormNSButtonInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:17 ... 2Controls resource exists: GormNSCellInspector.gorm
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:40 ... ../../2Controls/GormNSCellInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:41 ... ../../2Controls/GormNSCellInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:42 ... ../../2Controls/GormNSCellInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:44 ... ../../2Controls/GormNSCellInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.240 EDT)   resources.m:17 ... 2Controls resource exists: GormNSColorWellInspector.gorm
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:40 ... ../../2Controls/GormNSColorWellInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:41 ... ../../2Controls/GormNSColorWellInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:42 ... ../../2Controls/GormNSColorWellInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:44 ... ../../2Controls/GormNSColorWellInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:17 ... 2Controls resource exists: GormNSFormInspector.gorm
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:40 ... ../../2Controls/GormNSFormInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.241 EDT)   resources.m:41 ... ../../2Controls/GormNSFormInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:42 ... ../../2Controls/GormNSFormInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:44 ... ../../2Controls/GormNSFormInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:17 ... 2Controls resource exists: GormNSMatrixInspector.gorm
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:40 ... ../../2Controls/GormNSMatrixInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:41 ... ../../2Controls/GormNSMatrixInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:42 ... ../../2Controls/GormNSMatrixInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:44 ... ../../2Controls/GormNSMatrixInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.242 EDT)   resources.m:17 ... 2Controls resource exists: GormNSPopUpButtonInspector.gorm
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:40 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:41 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:42 ... ../../2Controls/GormNSPopUpButtonInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:44 ... ../../2Controls/GormNSPopUpButtonInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:17 ... 2Controls resource exists: GormNSSliderInspector.gorm
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:40 ... ../../2Controls/GormNSSliderInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.243 EDT)   resources.m:41 ... ../../2Controls/GormNSSliderInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.244 EDT)   resources.m:42 ... ../../2Controls/GormNSSliderInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.244 EDT)   resources.m:44 ... ../../2Controls/GormNSSliderInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.244 EDT)   resources.m:17 ... 2Controls resource exists: GormNSStepperInspector.gorm
+Passed test:     (2026-08-19 17:01:20.244 EDT)   resources.m:40 ... ../../2Controls/GormNSStepperInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.245 EDT)   resources.m:41 ... ../../2Controls/GormNSStepperInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.245 EDT)   resources.m:42 ... ../../2Controls/GormNSStepperInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.245 EDT)   resources.m:44 ... ../../2Controls/GormNSStepperInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.245 EDT)   resources.m:17 ... 2Controls resource exists: GormNSTextFieldInspector.gorm
+Passed test:     (2026-08-19 17:01:20.245 EDT)   resources.m:40 ... ../../2Controls/GormNSTextFieldInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:41 ... ../../2Controls/GormNSTextFieldInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:42 ... ../../2Controls/GormNSTextFieldInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:44 ... ../../2Controls/GormNSTextFieldInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:17 ... 3Containers has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:17 ... 3Containers has palette.table
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:17 ... 3Containers resource exists: ContainersPalette.tiff
+Passed test:     (2026-08-19 17:01:20.246 EDT)   resources.m:17 ... 3Containers resource exists: GormNSBrowserInspector.gorm
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:40 ... ../../3Containers/GormNSBrowserInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:41 ... ../../3Containers/GormNSBrowserInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:42 ... ../../3Containers/GormNSBrowserInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:44 ... ../../3Containers/GormNSBrowserInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableColumnInspector.gorm
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:40 ... ../../3Containers/GormNSTableColumnInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:41 ... ../../3Containers/GormNSTableColumnInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.247 EDT)   resources.m:42 ... ../../3Containers/GormNSTableColumnInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:44 ... ../../3Containers/GormNSTableColumnInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableColumnSizeInspector.gorm
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:40 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:41 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:42 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:44 ... ../../3Containers/GormNSTableColumnSizeInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.248 EDT)   resources.m:17 ... 3Containers resource exists: GormNSTableViewInspector.gorm
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:40 ... ../../3Containers/GormNSTableViewInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:41 ... ../../3Containers/GormNSTableViewInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:42 ... ../../3Containers/GormNSTableViewInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:44 ... ../../3Containers/GormNSTableViewInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:17 ... 3Containers resource exists: GormTabViewInspector.gorm
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:40 ... ../../3Containers/GormTabViewInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:41 ... ../../3Containers/GormTabViewInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.249 EDT)   resources.m:42 ... ../../3Containers/GormTabViewInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:44 ... ../../3Containers/GormTabViewInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:17 ... 4Data has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:17 ... 4Data has palette.table
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:17 ... 4Data resource exists: DataPalette.tiff
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:17 ... 4Data resource exists: GormNSDateFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:40 ... ../../4Data/GormNSDateFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.250 EDT)   resources.m:41 ... ../../4Data/GormNSDateFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:42 ... ../../4Data/GormNSDateFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:44 ... ../../4Data/GormNSDateFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:17 ... 4Data resource exists: GormNSComboBoxInspector.gorm
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:40 ... ../../4Data/GormNSComboBoxInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:41 ... ../../4Data/GormNSComboBoxInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:42 ... ../../4Data/GormNSComboBoxInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:44 ... ../../4Data/GormNSComboBoxInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.251 EDT)   resources.m:17 ... 4Data resource exists: GormNSImageViewInspector.gorm
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:40 ... ../../4Data/GormNSImageViewInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:41 ... ../../4Data/GormNSImageViewInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:42 ... ../../4Data/GormNSImageViewInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:44 ... ../../4Data/GormNSImageViewInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:17 ... 4Data resource exists: GormNSNumberFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:40 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.252 EDT)   resources.m:41 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:42 ... ../../4Data/GormNSNumberFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:44 ... ../../4Data/GormNSNumberFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:17 ... 4Data resource exists: GormNSTextViewInspector.gorm
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:40 ... ../../4Data/GormNSTextViewInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:41 ... ../../4Data/GormNSTextViewInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:42 ... ../../4Data/GormNSTextViewInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:44 ... ../../4Data/GormNSTextViewInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.253 EDT)   resources.m:17 ... 5Toolbar has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:17 ... 5Toolbar has palette.table
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:17 ... 5Toolbar resource exists: ToolbarPalette.tiff
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:17 ... 5Toolbar resource exists: ToolbarPalette.gorm
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:40 ... ../../5Toolbar/ToolbarPalette.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:41 ... ../../5Toolbar/ToolbarPalette.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:42 ... ../../5Toolbar/ToolbarPalette.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.254 EDT)   resources.m:44 ... ../../5Toolbar/ToolbarPalette.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:17 ... 5Toolbar resource exists: GormToolbarAttributesInspector.gorm
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:40 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:41 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:42 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:44 ... ../../5Toolbar/GormToolbarAttributesInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:17 ... 6Formatters has a GNUmakefile
+Passed test:     (2026-08-19 17:01:20.255 EDT)   resources.m:17 ... 6Formatters has palette.table
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/FormatterPalette.tiff
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/FormatterPalette.gorm
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:40 ... ../../6Formatters/Resources/FormatterPalette.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:41 ... ../../6Formatters/Resources/FormatterPalette.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:42 ... ../../6Formatters/Resources/FormatterPalette.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:44 ... ../../6Formatters/Resources/FormatterPalette.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.256 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormByteCountFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormByteCountFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormDateComponentsFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.257 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormDateComponentsFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormDateIntervalFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormDateIntervalFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.258 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormEnergyFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormEnergyFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormISO8601DateFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.259 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormISO8601DateFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormLengthFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormLengthFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.260 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormMassFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormMassFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormMeasurementFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.261 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormMeasurementFormatterInspector.gorm objects.gorm can be loaded as data
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:17 ... 6Formatters resource exists: Resources/GormPersonNameComponentsFormatterInspector.gorm
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:40 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.info can be loaded as data
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:41 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.info is a GNUstep archive
+Passed test:     (2026-08-19 17:01:20.262 EDT)   resources.m:42 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm data.classes can be parsed
+Passed test:     (2026-08-19 17:01:20.263 EDT)   resources.m:44 ... ../../6Formatters/Resources/GormPersonNameComponentsFormatterInspector.gorm objects.gorm can be loaded as data
 Completed file:  resources.m
 
     205 Passed tests

@@ -6,13 +6,13 @@ Making all for test_tool basic...
 Testing basic.m...
 Running gormtool/basic.m...
 Start set:       basic.m:23 ... gormtool
-Passed test:     (2026-08-17 19:13:48.634 EDT)   basic.m:27 ... ArgPair starts empty
-Passed test:     (2026-08-17 19:13:48.634 EDT)   basic.m:32 ... ArgPair stores its argument and value
-Passed test:     (2026-08-17 19:13:48.634 EDT)   basic.m:38 ... ArgPair copies its stored argument and value
-Passed test:     (2026-08-17 19:13:48.634 EDT)   basic.m:44 ... ArgPair copies are independent after mutation
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:27 ... ArgPair starts empty
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:32 ... ArgPair stores its argument and value
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:38 ... ArgPair copies its stored argument and value
+Passed test:     (2026-08-17 19:17:57.228 EDT)   basic.m:44 ... ArgPair copies are independent after mutation
 End set:         basic.m:46 ... gormtool
 
 real	0m0.053s
-user	0m0.031s
-sys	0m0.022s
+user	0m0.038s
+sys	0m0.016s
 Completed file:  basic.m

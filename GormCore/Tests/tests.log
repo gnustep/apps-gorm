@@ -6,23 +6,23 @@ Making all for test_tool basic...
 Testing basic.m...
 Running gormcore/basic.m...
 Start set:       basic.m:36 ... GormCore framework
-Passed test:     (2026-08-17 19:17:55.390 EDT)   basic.m:39 ... empty strings can be capitalized
-Passed test:     (2026-08-17 19:17:55.390 EDT)   basic.m:42 ... the first string character can be capitalized
-Passed test:     (2026-08-17 19:17:55.391 EDT)   basic.m:45 ... the first string character can be lowercased
-Passed test:     (2026-08-17 19:17:55.391 EDT)   basic.m:47 ... lowercase words are capitalized when split
-Passed test:     (2026-08-17 19:17:55.391 EDT)   basic.m:50 ... identifierString removes illegal and leading numeric characters
-Passed test:     (2026-08-17 19:17:55.392 EDT)   basic.m:52 ... identifierString falls back for empty identifiers
-Passed test:     (2026-08-17 19:17:55.392 EDT)   basic.m:54 ... formatAction leaves a valid action selector unchanged
-Passed test:     (2026-08-17 19:17:55.393 EDT)   basic.m:56 ... formatAction appends a missing action colon
-Passed test:     (2026-08-17 19:17:55.393 EDT)   basic.m:58 ... formatOutlet removes an outlet colon
-Passed test:     (2026-08-17 19:17:55.395 EDT)   basic.m:70 ... colors round-trip through dictionaries
-Passed test:     (2026-08-17 19:17:55.395 EDT)   basic.m:72 ... nil colors and dictionaries are accepted
-Passed test:     (2026-08-17 19:17:55.396 EDT)   basic.m:76 ... findAllSubmenus includes non-menu selections
-Passed test:     (2026-08-17 19:17:55.399 EDT)   basic.m:88 ... allSubviews returns descendants without the root view
-Passed test:     (2026-08-17 19:17:55.399 EDT)   basic.m:97 ... GormResource can represent data stored in a wrapper
+Passed test:     (2026-08-19 17:01:18.785 EDT)   basic.m:39 ... empty strings can be capitalized
+Passed test:     (2026-08-19 17:01:18.786 EDT)   basic.m:42 ... the first string character can be capitalized
+Passed test:     (2026-08-19 17:01:18.786 EDT)   basic.m:45 ... the first string character can be lowercased
+Passed test:     (2026-08-19 17:01:18.786 EDT)   basic.m:47 ... lowercase words are capitalized when split
+Passed test:     (2026-08-19 17:01:18.786 EDT)   basic.m:50 ... identifierString removes illegal and leading numeric characters
+Passed test:     (2026-08-19 17:01:18.787 EDT)   basic.m:52 ... identifierString falls back for empty identifiers
+Passed test:     (2026-08-19 17:01:18.787 EDT)   basic.m:54 ... formatAction leaves a valid action selector unchanged
+Passed test:     (2026-08-19 17:01:18.788 EDT)   basic.m:56 ... formatAction appends a missing action colon
+Passed test:     (2026-08-19 17:01:18.788 EDT)   basic.m:58 ... formatOutlet removes an outlet colon
+Passed test:     (2026-08-19 17:01:18.790 EDT)   basic.m:70 ... colors round-trip through dictionaries
+Passed test:     (2026-08-19 17:01:18.790 EDT)   basic.m:72 ... nil colors and dictionaries are accepted
+Passed test:     (2026-08-19 17:01:18.792 EDT)   basic.m:76 ... findAllSubmenus includes non-menu selections
+Passed test:     (2026-08-19 17:01:18.799 EDT)   basic.m:88 ... allSubviews returns descendants without the root view
+Passed test:     (2026-08-19 17:01:18.799 EDT)   basic.m:97 ... GormResource can represent data stored in a wrapper
 End set:         basic.m:99 ... GormCore framework
 
-real	0m0.110s
-user	0m0.102s
+real	0m0.114s
+user	0m0.101s
 sys	0m0.008s
 Completed file:  basic.m
