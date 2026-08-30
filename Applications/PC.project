@@ -1,0 +1,33 @@
+{
+    COMPILEROPTIONS = "";
+    CPPOPTIONS = "";
+    LINKEROPTIONS = "";
+    CREATION_DATE = "2026-08-19 00:00:00 -0400";
+    DOCU_FILES = ();
+    LANGUAGE = English;
+    USER_LANGUAGES = (English);
+    MAKEFILEDIR = "$(GNUSTEP_MAKEFILES)";
+    INSTALLDIR = "$(HOME)/GNUstep";
+    OBJC_COMPILEROPTIONS = "";
+    PROJECT_AUTHORS = ();
+    PROJECT_CREATOR = "";
+    PROJECT_DESCRIPTION = "Applications supplied by Gorm";
+    PROJECT_GROUP = "GNUstep";
+    PROJECT_SUMMARY = "Gorm applications";
+    PROJECT_RELEASE = "1.5.0";
+    PROJECT_COPYRIGHT = "Copyright (C) 1999-2026 Free Software Foundation, Inc.";
+    PROJECT_COPYRIGHT_DESC = "Released under GPL v2+";
+    PROJECT_MAINTAINER = "";
+    PROJECT_NAME = Applications;
+    PROJECT_TYPE = Aggregate;
+    PROJECT_URL = "https://github.com/gnustep/apps-gorm";
+    SEARCH_HEADER_DIRS = ();
+    SEARCH_LIB_DIRS = ();
+    SUBPROJECTS = (
+	Gorm
+    );
+    SUPPORTING_FILES = (
+	GNUmakefile
+    );
+    NON_PROJECT_FILES = ();
+}

@@ -1,0 +1,45 @@
+{
+    COMPILEROPTIONS = "";
+    CPPOPTIONS = "";
+    LINKEROPTIONS = "";
+    CREATION_DATE = "2026-08-19 00:00:00 -0400";
+    DOCU_FILES = ();
+    LANGUAGE = English;
+    USER_LANGUAGES = (English);
+    MAKEFILEDIR = "$(GNUSTEP_MAKEFILES)";
+    INSTALLDIR = "$(HOME)/GNUstep";
+    OBJC_COMPILEROPTIONS = "";
+    PROJECT_AUTHORS = (
+	"Gregory John Casamento",
+	"Richard Frith-Macdonald"
+    );
+    PROJECT_CREATOR = "";
+    PROJECT_DESCRIPTION = "GNUstep Object Relationship Modeller";
+    PROJECT_GROUP = "GNUstep";
+    PROJECT_SUMMARY = "GNUstep Object Relationship Modeller";
+    PROJECT_RELEASE = "1.5.0";
+    PROJECT_COPYRIGHT = "Copyright (C) 1999-2026 Free Software Foundation, Inc.";
+    PROJECT_COPYRIGHT_DESC = "Released under GPL v2+";
+    PROJECT_MAINTAINER = "";
+    PROJECT_NAME = gorm;
+    PROJECT_TYPE = Aggregate;
+    PROJECT_URL = "https://github.com/gnustep/apps-gorm";
+    SEARCH_HEADER_DIRS = ();
+    SEARCH_LIB_DIRS = ();
+    SUBPROJECTS = (
+	InterfaceBuilder,
+	GormObjCHeaderParser,
+	GormCore,
+	Plugins,
+	Applications,
+	Tools,
+	Tests
+    );
+    SUPPORTING_FILES = (
+	GNUmakefile,
+	"GNUmakefile.preamble",
+	"GNUmakefile.postamble",
+	Version
+    );
+    NON_PROJECT_FILES = ();
+}

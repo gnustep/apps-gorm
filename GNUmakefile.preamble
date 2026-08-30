@@ -15,11 +15,11 @@ ADDITIONAL_CFLAGS +=
 ADDITIONAL_LDFLAGS +=  
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += -I../../InterfaceBuilder -I../../GormObjCHeaderParser -I../../GormCore -I../.. -I. 
+ADDITIONAL_INCLUDE_DIRS += 
 
 # Additional library directories the linker should search
-ADDITIONAL_LIB_DIRS += -L../../InterfaceBuilder/$(GNUSTEP_OBJ_DIR) -L../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR) -L../../GormCore/GormCore.framework 
+ADDITIONAL_LIB_DIRS += 
 
 # Additional GUI libraries to link
-ADDITIONAL_GUI_LIBS += -lGormCore -lGormObjCHeaderParser -lInterfaceBuilder 
+ADDITIONAL_GUI_LIBS += 
 
