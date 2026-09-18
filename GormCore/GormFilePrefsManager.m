@@ -88,7 +88,9 @@ NSString *formatVersion(NSInteger version)
 
 + (int) currentVersion
 {
-  return appVersion(GORM_MAJOR_VERSION, GORM_MINOR_VERSION, GORM_SUBMINOR_VERSION); 
+  return appVersion(GORM_MAJOR_VERSION,
+		    GORM_MINOR_VERSION,
+		    GORM_SUBMINOR_VERSION);
 }
 
 - (void) awakeFromNib
@@ -105,14 +107,12 @@ NSString *formatVersion(NSInteger version)
 {
   NSEnumerator *en = [currentProfile keyEnumerator];
   id className = nil;
-  
-  NSDebugLog(@"set the class versions to the profile selected... %@",targetVersionName);
+
   while((className = [en nextObject]) != nil)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [currentProfile objectForKey: className];
       NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
       [cls setVersion: v];
     }
 }
@@ -122,27 +122,21 @@ NSString *formatVersion(NSInteger version)
   NSDictionary *latestVersion = [versionProfiles objectForKey: @"Latest Version"];
   NSEnumerator *en = [latestVersion keyEnumerator];
   id className = nil;
-  
-  // The "Latest Version" key must always exist.
-  NSDebugLog(@"restore the class versions to the latest version...");
+
   while((className = [en nextObject]) != nil)
     {
       Class cls = NSClassFromString(className);
       NSDictionary *info = [latestVersion objectForKey: className];
       NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
       [cls setVersion: v];
     }
 }
 
-// class profile
 - (void) loadProfile: (NSString *)profileName
 {
-  NSDebugLog(@"Loading profile %@",profileName);
-  currentProfile = [versionProfiles objectForKey: targetVersionName];
+  currentProfile = [versionProfiles objectForKey: profileName];
 }
 
-// actions...
 - (void) showIncompatibilities: (id)sender
 {
   [itable reloadData];
@@ -209,22 +203,11 @@ NSString *formatVersion(NSInteger version)
 				      errorDescription: NULL];
 }
 
-- (int) versionOfClass: (NSString *)className 
+- (int) versionOfClass: (NSString *)className
 {
-  NSInteger result = -1; 
-
   NSDictionary *clsProfile = [currentProfile objectForKey: className];
-  if(clsProfile != nil)
-    {
-      NSString *versionString = [clsProfile objectForKey: @"version"];
-      if(versionString != nil)
-	{
-	  result = [versionString intValue];
-	}
-    }
-
-  return result;
-		      
+  NSString *versionString = [clsProfile objectForKey: @"version"];
+  return versionString != nil ? [versionString intValue] : -1;
 }
 
 /**
