@@ -70,7 +70,9 @@ NSString *formatVersion(NSInteger version)
 
 + (int) currentVersion
 {
-  return appVersion(GORM_MAJOR_VERSION, GORM_MINOR_VERSION, GORM_SUBMINOR_VERSION); 
+  return appVersion(GORM_MAJOR_VERSION,
+		    GORM_MINOR_VERSION,
+		    GORM_SUBMINOR_VERSION);
 }
 
 - (void) awakeFromNib

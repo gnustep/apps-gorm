@@ -31,6 +31,17 @@
 
 @class GormNSWindow;
 
+/* The OPENSTEP nib reader is part of libs-gui, but its header is private.
+ * Weak references keep keyed nib importing available with an older libs-gui. */
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#define GORM_OPTIONAL_OPENSTEP __attribute__((weak))
+#else
+#define GORM_OPTIONAL_OPENSTEP
+#endif
+extern BOOL GSOpenStepNibIsTypedStream(NSData *data) GORM_OPTIONAL_OPENSTEP;
+extern NSData *GSOpenStepNibKeyedData(NSData *data) GORM_OPTIONAL_OPENSTEP;
+extern void GSOpenStepNibFinishDecoding(NSKeyedUnarchiver *coder) GORM_OPTIONAL_OPENSTEP;
+
 @implementation GormNibWrapperLoader
 + (NSString *) fileType
 {
@@ -71,13 +82,14 @@
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
       NSString                  *subClassName = nil;
       NSDictionary              *fileWrappers = nil;
+      BOOL                       openStepNib = NO;
 
       if ([super loadFileWrapper: wrapper withDocument: doc])
 	{
 	  GormClassManager *classManager = [document classManager];
 	  id               docFilesOwner;
 	  NSMapTable       *objects;
-	  NSArray          *objs;
+	  NSMutableArray   *objs;
 	  NSEnumerator     *en;
 	  id               o;
 	  NSMapTable       *classesTable;
@@ -91,37 +103,44 @@
 	      key = nil;
 	      fileWrappers = [wrapper fileWrappers];
 
-	      en = [fileWrappers keyEnumerator];
-	      while((key = [en nextObject]) != nil)
+	      /* Use the same payload preference as libs-gui.  Do not fall back
+	       * when a preferred payload exists but cannot be decoded. */
+	      for (key in [NSArray arrayWithObjects: @"keyedobjects.nib",
+		  @"objects.nib", @"data.nib", nil])
 		{
 		  NSFileWrapper *fw = [fileWrappers objectForKey: key];
-		  if([fw isRegularFile])
+		  if (fw != nil)
 		    {
-		      NSData *fileData = [fw regularFileContents];
-		      if([key isEqual: @"keyedobjects.nib"])
-			{
-			  data = fileData;
-			}
-		      else if([key isEqual: @"classes.nib"])
-			{
-			  classes = fileData;
-			  
-			  // load the custom classes...
-			  if (![classManager loadNibFormatCustomClassesWithData: classes]) 
-			    {
-			      NSRunAlertPanel(_(@"Problem Loading"), 
-					      _(@"Could not open the associated classes file.\n"
-						@"You won't be able to edit connections on custom classes"), 
-					      _(@"OK"), nil, nil);
-			    }
-			}
+		      if ([fw isRegularFile])
+			data = [fw regularFileContents];
+		      break;
 		    }
+		}
+	      classes = [[fileWrappers objectForKey: @"classes.nib"] regularFileContents];
+	      if (classes != nil &&
+		  ![classManager loadNibFormatCustomClassesWithData: classes])
+		{
+		  NSRunAlertPanel(_(@"Problem Loading"),
+			_(@"Could not open the associated classes file.\n"
+			  @"You won't be able to edit connections on custom classes"),
+			_(@"OK"), nil, nil);
 		}
 	    }
 	  else
 	    {
 	      data = [wrapper regularFileContents];
 	      classes = nil; // (NSData *)0xdeadbeef;
+	    }
+
+	  if (GSOpenStepNibIsTypedStream != NULL)
+	    openStepNib = GSOpenStepNibIsTypedStream(data);
+	  if (openStepNib)
+	    {
+	      if (GSOpenStepNibKeyedData == NULL ||
+		  GSOpenStepNibFinishDecoding == NULL)
+		[NSException raise: NSInvalidUnarchiveOperationException
+		            format: @"This version of libs-gui cannot import OPENSTEP nibs"];
+	      data = GSOpenStepNibKeyedData(data);
 	    }
 
 	  // check the data...
@@ -166,6 +185,8 @@
 	      // decode
 	      //
 	      _container = [u decodeObjectForKey: @"IB.objectdata"];
+	      if (openStepNib && _container != nil)
+		GSOpenStepNibFinishDecoding(u);
 	      if (_container == nil || [_container isKindOfClass: [NSIBObjectData class]] == NO)
 		{
 		  result = NO;
@@ -175,15 +196,24 @@
 		  _nibFilesOwner = [_container objectForName: @"File's Owner"];
 		  
 		  docFilesOwner = [document filesOwner];
-		  objects = [_container names];
-		  objs = NSAllMapTableKeys(objects);
+		  objects = [_container objects];
+		  objs = [NSMutableArray arrayWithArray:
+		    NSAllMapTableKeys([_container names])];
+		  /* OPENSTEP nibs may name only File's Owner.  Include the
+		   * ownership map without losing named-only keyed nib objects. */
+		  for (o in NSAllMapTableKeys(objects))
+		    {
+		      if ([objs indexOfObjectIdenticalTo: o] == NSNotFound)
+			[objs addObject: o];
+		    }
 		  en = [objs objectEnumerator];
 		  o = nil;
 		  
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if([_nibFilesOwner isKindOfClass: [NSCustomObject class]])
+		  if([_nibFilesOwner isKindOfClass: [NSCustomObject class]] ||
+		     [_nibFilesOwner isKindOfClass: [GormObjectProxy class]])
 		    {
 		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
@@ -208,7 +238,8 @@
                       // If it's NSApplication (most likely the File's Owner)
                       // skip it...
                       //
-                      if ([o isKindOfClass: [NSCustomObject class]])
+                      if ([o isKindOfClass: [NSCustomObject class]] ||
+                          [o isKindOfClass: [GormObjectProxy class]])
                         {
                           if ([[o className] isEqualToString: @"NSApplication"])
                             {
@@ -356,6 +387,7 @@
     }
   NS_HANDLER
     {
+      [NSClassSwapper setIsInInterfaceBuilder: NO];
       NSRunAlertPanel(_(@"Problem Loading"), 
 		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
 		      _(@"OK"), nil, nil);
