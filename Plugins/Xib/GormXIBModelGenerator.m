@@ -27,6 +27,7 @@
 */
 
 #import <Foundation/NSArray.h>
+#import <Foundation/NSCharacterSet.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSSet.h>
@@ -408,8 +409,10 @@ static NSDictionary *_valueMapping = nil;
 			      @"NSColor", @"GSCalibratedRGBColor",
 			      @"NSColor", @"GSPatternColor",
 			      @"NSView", @"GSTableCornerView",
-			      @"NSWindow", @"NSPanel",
+				@"NSWindow", @"NSPanel",
 			      @"NSWindow", @"GormNSPanel",
+			      @"NSMenuItem", @"NSMenuSeparator",
+			      @"NSMenuItem", @"GSMenuSeparator",
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
@@ -1653,6 +1656,8 @@ static NSDictionary *_valueMapping = nil;
     {
       NSXMLElement *parentNode = pNode;
       NSString *className = NSStringFromClass([obj class]);
+      BOOL isSeparatorItem = ([obj isKindOfClass: [NSMenuItem class]]
+			      && [(NSMenuItem *)obj isSeparatorItem]);
 
       if ([_skipClass containsObject: className])
 	{
@@ -1707,6 +1712,15 @@ static NSDictionary *_valueMapping = nil;
 	      attr = [NSXMLNode attributeWithName: @"customClass" stringValue: className];
 	      [elem addAttribute: attr];
 	    }
+	}
+
+      if (isSeparatorItem)
+	{
+	  attr = [NSXMLNode attributeWithName: @"isSeparatorItem"
+				 stringValue: @"YES"];
+	  [elem addAttribute: attr];
+	  [parentNode addChild: elem];
+	  return;
 	}
 
       // Add all of the connections for a given object...
@@ -2216,6 +2230,24 @@ static NSDictionary *_valueMapping = nil;
   [self _buildXIBDocumentWithParentNode: objects];
 
   NSData *data = [xibDocument XMLDataWithOptions: NSXMLNodePrettyPrint | NSXMLDocumentTidyXML | NSXMLNodeCompactEmptyElement ];
+
+  // NSXMLDocument does not remove XML 1.0 control characters from attribute
+  // values.  Legacy nibs can contain bytes such as ESC in display strings,
+  // which produces a document that no XML parser (including ibtool) accepts.
+  NSMutableString *xml = AUTORELEASE([[NSMutableString alloc]
+				       initWithData: data
+				       encoding: NSUTF8StringEncoding]);
+  NSMutableCharacterSet *invalidCharacters =
+    AUTORELEASE([[NSCharacterSet controlCharacterSet] mutableCopy]);
+  NSRange range;
+
+  [invalidCharacters removeCharactersInString: @"\t\n\r"];
+  while ((range = [xml rangeOfCharacterFromSet: invalidCharacters]).location
+	 != NSNotFound)
+    {
+      [xml deleteCharactersInRange: range];
+    }
+  data = [xml dataUsingEncoding: NSUTF8StringEncoding];
 
   return data;
 }
