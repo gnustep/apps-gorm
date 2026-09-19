@@ -165,6 +165,28 @@ static NSImage	*soundsImage = nil;
 static NSImage	*classesImage = nil;
 static NSImage  *fileImage = nil;
 
+/*
+ * NSSavePanel selects the proposed filename before displaying the panel.
+ * GNUstep's field editor copies its previous selection while doing that.  If
+ * Gorm owns the X selection, gpbs requests the selection data back from Gorm
+ * while Gorm is synchronously waiting for gpbs, deadlocking both processes.
+ * Relinquish the transient selection before entering the modal save panel.
+ */
+- (void) runModalSavePanelForSaveOperation: (NSSaveOperationType)saveOperation
+                                  delegate: (id)delegate
+                           didSaveSelector: (SEL)didSaveSelector
+                               contextInfo: (void *)contextInfo
+{
+  [[NSPasteboard pasteboardWithName: NSGeneralPboard]
+    declareTypes: [NSArray array]
+    owner: nil];
+
+  [super runModalSavePanelForSaveOperation: saveOperation
+                                  delegate: delegate
+                           didSaveSelector: didSaveSelector
+                               contextInfo: contextInfo];
+}
+
 /**
  * Initialize the class.
  */ 

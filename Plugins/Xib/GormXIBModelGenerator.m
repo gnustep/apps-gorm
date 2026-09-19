@@ -1636,9 +1636,11 @@ static NSDictionary *_valueMapping = nil;
 			    forKey: (NSString *)keyName
 			withParent: (NSXMLElement *)pNode
 {
+  BOOL needsColorFallback = NO;
+
   // Some legacy archives contain placeholder NSColor instances with no color
-  // space.  Emitting an empty <color> node makes Interface Builder abort with
-  // "Unknown color space".  Omit colors that cannot be represented by XIB.
+  // space or a GNUstep-only color space.  Remember those so they can be
+  // represented by a safe non-nil XIB color below.
   if ([obj isKindOfClass: [NSColor class]])
     {
       NSString *colorSpaceName = [obj colorSpaceName];
@@ -1646,7 +1648,7 @@ static NSDictionary *_valueMapping = nil;
       if (colorSpaceName == nil
 	  || [_valueMapping objectForKey: colorSpaceName] == nil)
 	{
-	  return;
+	  needsColorFallback = YES;
 	}
     }
 
@@ -1733,12 +1735,28 @@ static NSDictionary *_valueMapping = nil;
       [self _addAllNonProperties: elem fromObject: obj];
 
       // Concrete NSColor implementations vary between GNUstep backends and
-      // releases.  If none of their properties produced a color space, the
-      // element is not decodable by Interface Builder and must be omitted.
+      // releases.  Interface Builder requires every color, particularly a
+      // color-well value, to decode to a non-nil NSColor.
       if ([obj isKindOfClass: [NSColor class]]
-	  && [elem attributeForName: @"colorSpace"] == nil)
+	  && (needsColorFallback
+	      || [elem attributeForName: @"colorSpace"] == nil))
 	{
-	  return;
+	  NSArray *componentNames = [NSArray arrayWithObjects:
+	    @"colorSpace", @"whiteComponent", @"redComponent",
+	    @"greenComponent", @"blueComponent", @"cyanComponent",
+	    @"magentaComponent", @"yellowComponent", @"blackComponent",
+	    @"alphaComponent", @"name", @"catalog", nil];
+	  NSEnumerator *componentEnumerator = [componentNames objectEnumerator];
+	  NSString *componentName = nil;
+
+	  while ((componentName = [componentEnumerator nextObject]) != nil)
+	    {
+	      [elem removeAttributeForName: componentName];
+	    }
+	  [elem addAttribute: [NSXMLNode attributeWithName: @"whiteComponent"
+					       stringValue: @"0.0"]];
+	  [elem addAttribute: [NSXMLNode attributeWithName: @"colorSpace"
+					       stringValue: @"calibratedWhite"]];
 	}
 
       // Move this to its grandfather node... XIB files seem to expect this in the scroll view...
