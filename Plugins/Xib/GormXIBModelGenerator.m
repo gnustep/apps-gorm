@@ -29,6 +29,7 @@
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
+#import <Foundation/NSSet.h>
 #import <Foundation/NSXMLDocument.h>
 #import <Foundation/NSXMLNode.h>
 #import <Foundation/NSXMLElement.h>
@@ -44,6 +45,7 @@
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSOutlineView.h>
 #import <AppKit/NSBrowser.h>
+#import <AppKit/NSColor.h>
 #import <AppKit/NSToolbar.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
@@ -69,8 +71,6 @@ static NSDictionary *_nonProperties = nil;
 static NSArray *_excludedKeys = nil;
 static NSDictionary *_mappedClassNames = nil;
 static NSDictionary *_valueMapping = nil;
-
-static NSUInteger _count = INT_MAX;
 
 @interface NSButtonCell (_Private_)
 
@@ -178,7 +178,6 @@ static NSUInteger _count = INT_MAX;
 - (NSString *) lowercaseFirstCharacter;
 - (NSString *) splitString;
 - (NSString *) hexString;
-+ (NSString *) randomHex;
 
 @end
 
@@ -225,13 +224,6 @@ static NSUInteger _count = INT_MAX;
   return result;
 }
 
-+ (NSString *) randomHex
-{
-  srand((unsigned int)_count--);
-  uint32_t r = (uint32_t)rand();
-  return [NSString stringWithFormat: @"%08X", r]; // uppercase so we know it was generated...
-}
-
 @end
 
 @interface GormXIBModelGenerator (Private)
@@ -242,6 +234,9 @@ static NSUInteger _count = INT_MAX;
 - (void) _collectObjectsFromObject: (id)obj
 			    ForKey: (NSString *)keyName
 			withParent: (NSXMLElement  *)node;
+
+- (NSString *) _createUniqueIdentifier;
+- (BOOL) _isSingletonObject: (id)obj;
 
 @end
 
@@ -434,6 +429,7 @@ static NSUInteger _count = INT_MAX;
 			 @"menuItem",
 			 @"showsResizeIndicator",
 			 @"titleFont",
+			 @"titleCell",
 			 @"target",
 			 @"action",
 			 @"textContainer",
@@ -485,7 +481,9 @@ static NSUInteger _count = INT_MAX;
       ASSIGN(_gormDocument, doc);
       _mappingDictionary = [[NSMutableDictionary alloc] init];
       _allIdentifiers = [[NSMutableArray alloc] init];
+      _emittedIdentifiers = [[NSMutableSet alloc] init];
       _objectToIdentifier = RETAIN([NSMapTable weakToWeakObjectsMapTable]);
+      _nextIdentifier = 1;
     }
   return self;
 }
@@ -495,6 +493,7 @@ static NSUInteger _count = INT_MAX;
   DESTROY(_gormDocument);
   DESTROY(_mappingDictionary);
   DESTROY(_allIdentifiers);
+  DESTROY(_emittedIdentifiers);
   DESTROY(_objectToIdentifier);
 
   [super dealloc];
@@ -596,17 +595,15 @@ static NSUInteger _count = INT_MAX;
 	  result = [stackedResult hexString];
 	  result = [result splitString];
 
-	  // Collision...
-	  id o = [_mappingDictionary objectForKey: result];
-	  if (o != nil)
-	    {
-	      result = [[NSString randomHex] splitString];
-	    }
-
-	  // If the id already exists, but isn't mapped...
+	  // Object names are not necessarily unique.  Fall back to an ID from
+	  // the same allocator used by connections and synthetic XIB objects.
 	  if ([_allIdentifiers containsObject: result])
 	    {
-	      result = [[NSString randomHex] splitString];
+	      result = [self _createUniqueIdentifier];
+	    }
+	  else
+	    {
+	      [_allIdentifiers addObject: result];
 	    }
 
 	  if (originalName != nil)
@@ -616,9 +613,6 @@ static NSUInteger _count = INT_MAX;
 				     forKey: result];
 	    }
 
-	  // Record the id...
-	  [_allIdentifiers addObject: result];
-
 	  // Record the mapping of obj -> identifier...
 	  [_objectToIdentifier setObject: result
 				  forKey: obj];
@@ -626,6 +620,40 @@ static NSUInteger _count = INT_MAX;
     }
 
   return result;
+}
+
+- (NSString *) _createUniqueIdentifier
+{
+  NSString *result = nil;
+
+  do
+    {
+      NSString *value = [NSString stringWithFormat: @"%08lX",
+				       (unsigned long)_nextIdentifier++];
+      result = [value splitString];
+    }
+  while ([_allIdentifiers containsObject: result]);
+
+  [_allIdentifiers addObject: result];
+  return result;
+}
+
+- (BOOL) _isSingletonObject: (id)obj
+{
+  NSEnumerator *en = [_singletonObjects objectEnumerator];
+  NSString *className = nil;
+
+  while ((className = [en nextObject]) != nil)
+    {
+      Class singletonClass = NSClassFromString(className);
+
+      if (singletonClass != Nil && [obj isKindOfClass: singletonClass])
+	{
+	  return YES;
+	}
+    }
+
+  return NO;
 }
 
 - (NSString *) _userLabelForObject: (id)obj
@@ -1275,7 +1303,7 @@ static NSUInteger _count = INT_MAX;
 		    {
 		      NSString *className = NSStringFromClass([o class]);
 
-		      if ([_singletonObjects containsObject: className] == NO
+		      if ([self _isSingletonObject: o] == NO
 			  || [_externallyReferencedClasses containsObject: className])
 			{
 			  NSString *ident = [self _createIdentifierForObject: o];
@@ -1501,7 +1529,7 @@ static NSUInteger _count = INT_MAX;
 	      [actionElem addAttribute: attr];
 
 	      attr = [NSXMLNode attributeWithName: @"id"
-				      stringValue: [[NSString randomHex] splitString]];
+			      stringValue: [self _createUniqueIdentifier]];
 	      [actionElem addAttribute: attr];
 
 	      [conns addChild: actionElem];
@@ -1540,7 +1568,7 @@ static NSUInteger _count = INT_MAX;
 	      [outletElem addAttribute: attr];
 
 	      attr = [NSXMLNode attributeWithName: @"id"
-				      stringValue: [[NSString randomHex] splitString]];
+			      stringValue: [self _createUniqueIdentifier]];
 	      [outletElem addAttribute: attr];
 
 	      [conns addChild: outletElem];
@@ -1589,7 +1617,7 @@ static NSUInteger _count = INT_MAX;
 
 	      // id...
 	      attr = [NSXMLNode attributeWithName: @"id"
-				      stringValue: [[NSString randomHex] splitString]];
+			      stringValue: [self _createUniqueIdentifier]];
 	      [elem addAttribute: attr];
 
 	      [conns addChild: elem];
@@ -1605,6 +1633,20 @@ static NSUInteger _count = INT_MAX;
 			    forKey: (NSString *)keyName
 			withParent: (NSXMLElement *)pNode
 {
+  // Some legacy archives contain placeholder NSColor instances with no color
+  // space.  Emitting an empty <color> node makes Interface Builder abort with
+  // "Unknown color space".  Omit colors that cannot be represented by XIB.
+  if ([obj isKindOfClass: [NSColor class]])
+    {
+      NSString *colorSpaceName = [obj colorSpaceName];
+
+      if (colorSpaceName == nil
+	  || [_valueMapping objectForKey: colorSpaceName] == nil)
+	{
+	  return;
+	}
+    }
+
   NSString *ident = [self _createIdentifierForObject: obj];
 
   if (ident != nil)
@@ -1617,13 +1659,25 @@ static NSUInteger _count = INT_MAX;
 	  return;
 	}
 
+      // Non-singleton objects are definitions in the XIB object graph.  The
+      // recursive traversal can encounter one through more than one property,
+      // but its ID must be emitted only once.
+      if ([self _isSingletonObject: obj] == NO)
+	{
+	  if ([_emittedIdentifiers containsObject: ident])
+	    {
+	      return;
+	    }
+	  [_emittedIdentifiers addObject: ident];
+	}
+
       NSString *elementName = [self _convertName: className];
       // NSLog(@"elementName = %@", elementName);
       NSXMLElement *elem = [NSXMLNode elementWithName: elementName];
       NSXMLNode *attr = nil;
 
       // If the object is a singleton, then there is no need for the id to be presented.
-      if ([_singletonObjects containsObject: className] == NO)
+      if ([self _isSingletonObject: obj] == NO)
 	{
 	  attr = [NSXMLNode attributeWithName: @"id" stringValue: ident];
 	  [elem addAttribute: attr];
@@ -1663,6 +1717,15 @@ static NSUInteger _count = INT_MAX;
 
       // Add some items that are not actually properties, but should be reflected in the XML...
       [self _addAllNonProperties: elem fromObject: obj];
+
+      // Concrete NSColor implementations vary between GNUstep backends and
+      // releases.  If none of their properties produced a color space, the
+      // element is not decodable by Interface Builder and must be omitted.
+      if ([obj isKindOfClass: [NSColor class]]
+	  && [elem attributeForName: @"colorSpace"] == nil)
+	{
+	  return;
+	}
 
       // Move this to its grandfather node... XIB files seem to expect this in the scroll view...
       if ([obj isKindOfClass: [NSScrollView class]])
@@ -1706,7 +1769,7 @@ static NSUInteger _count = INT_MAX;
 
 	      NSXMLElement *mainMenuElem = [NSXMLNode elementWithName: @"menu"];
 
-	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [self _createUniqueIdentifier]];
 	      [mainMenuElem addAttribute: attr];
 
 	      attr = [NSXMLNode attributeWithName: @"systemMenu" stringValue: @"main"];
@@ -1720,7 +1783,7 @@ static NSUInteger _count = INT_MAX;
 
 	      NSXMLElement *mainMenuItem = [NSXMLNode elementWithName: @"menuItem"];
 	      [mainItemsElem addChild: mainMenuItem];
-	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
+	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [self _createUniqueIdentifier]];
 	      [mainMenuItem addAttribute: attr];
 	      attr = [NSXMLNode attributeWithName: @"title" stringValue: [obj title]];
 
@@ -1771,7 +1834,7 @@ static NSUInteger _count = INT_MAX;
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"menu"];
 	  [menuElem addAttribute: attr];
 
-	  attr = [NSXMLNode attributeWithName: @"id" stringValue: [[NSString randomHex] splitString]];
+	  attr = [NSXMLNode attributeWithName: @"id" stringValue: [self _createUniqueIdentifier]];
 	  [menuElem addAttribute: attr];
 
 	  attr = [NSXMLNode attributeWithName: @"key" stringValue: @"cell"];
@@ -1815,7 +1878,7 @@ static NSUInteger _count = INT_MAX;
 	      if (toolbar != nil)
 		{
 		  NSXMLNode *idAttr = [NSXMLNode attributeWithName: @"id"
-						       stringValue: [[NSString randomHex] splitString]];
+				       stringValue: [self _createUniqueIdentifier]];
 		  NSXMLElement *toolbarElem = [NSXMLNode elementWithName: @"toolbar"];
 		  NSXMLNode *keyAttr = [NSXMLNode attributeWithName: @"key" stringValue: @"toolbar"];
 
@@ -1908,7 +1971,7 @@ static NSUInteger _count = INT_MAX;
 
 			  while ((identifier = [en nextObject]) != nil)
 			    {
-			      NSString *theId = [[NSString randomHex] splitString];
+			      NSString *theId = [self _createUniqueIdentifier];
 			      NSXMLElement *itemElem = [NSXMLNode elementWithName: @"toolbarItem"];
 			      NSXMLNode *identElem = [NSXMLNode attributeWithName: @"implicitItemIdentifier" stringValue: identifier];
 			      NSXMLNode *attr = [NSXMLNode attributeWithName: @"id"
@@ -2086,6 +2149,13 @@ static NSUInteger _count = INT_MAX;
   NSString *plugInId = @"com.apple.InterfaceBuilder.CocoaPlugin";
   NSString *typeId = @"com.apple.InterfaceBuilder3.Cocoa.XIB";
   NSString *toolVersion = @"21507";
+
+  // data may be requested more than once from a generator.  Track definitions
+  // per output document, including the three placeholders emitted below.
+  [_emittedIdentifiers removeAllObjects];
+  [_emittedIdentifiers addObject: @"-3"];
+  [_emittedIdentifiers addObject: @"-2"];
+  [_emittedIdentifiers addObject: @"-1"];
 
   // Build root element...
   NSXMLElement *rootElement = [NSXMLNode elementWithName: @"document"];

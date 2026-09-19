@@ -35,6 +35,7 @@
 @class NSString;
 @class NSData;
 @class NSMutableArray;
+@class NSMutableSet;
 @class NSMapTable;
 
 /**
@@ -46,7 +47,9 @@ GS_EXPORT_CLASS
   GormDocument *_gormDocument;
   NSMutableDictionary *_mappingDictionary;
   NSMutableArray *_allIdentifiers;
+  NSMutableSet *_emittedIdentifiers;
   NSMapTable *_objectToIdentifier;
+  NSUInteger _nextIdentifier;
 }
 
 /**
