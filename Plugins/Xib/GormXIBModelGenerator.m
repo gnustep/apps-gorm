@@ -89,8 +89,6 @@ static NSDictionary *_valueMapping = nil;
   BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
   NSString *imageName = [[self image] name];
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
   if ([imageName isEqualToString: @"GSSwitch"])
     {
       type = NSSwitchButton;
@@ -99,38 +97,42 @@ static NSDictionary *_valueMapping = nil;
     {
       type = NSRadioButton;
     }
-  else if ((highlightsBy | NSChangeBackgroundCellMask)
-	   && (showsStateBy | NSNoCellMask)
+  else if ((highlightsBy == NSChangeBackgroundCellMask)
+	   && (showsStateBy == NSNoCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSMomentaryLightButton;
     }
-  else if ((highlightsBy | (NSPushInCellMask | NSChangeGrayCellMask))
-	   && (showsStateBy | NSNoCellMask)
+  else if ((highlightsBy == (NSPushInCellMask | NSChangeGrayCellMask))
+	   && (showsStateBy == NSNoCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSMomentaryPushInButton;
     }
-  else if ((highlightsBy | NSContentsCellMask)
-	   && (showsStateBy | NSNoCellMask)
+  else if ((highlightsBy == NSContentsCellMask)
+	   && (showsStateBy == NSNoCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSMomentaryChangeButton;
     }
-  else if ((highlightsBy | (NSPushInCellMask | NSChangeGrayCellMask))
-	   && (showsStateBy | NSChangeBackgroundCellMask)
+  else if ((highlightsBy == (NSPushInCellMask | NSChangeGrayCellMask))
+	   && (showsStateBy == NSChangeBackgroundCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSPushOnPushOffButton;
     }
-  else if ((highlightsBy | (NSPushInCellMask | NSContentsCellMask))
-	   && (showsStateBy | NSContentsCellMask)
+  else if ((highlightsBy == NSChangeBackgroundCellMask)
+	   && (showsStateBy == NSChangeBackgroundCellMask)
 	   && (imageDimsWhenDisabled == YES))
     {
       type = NSOnOffButton;
     }
-#pragma GCC diagnostic pop
-
+  else if ((highlightsBy == (NSPushInCellMask | NSContentsCellMask))
+	   && (showsStateBy == NSContentsCellMask)
+	   && (imageDimsWhenDisabled == YES))
+    {
+      type = NSToggleButton;
+    }
   return type;
 }
 
@@ -591,7 +593,7 @@ static NSDictionary *_valueMapping = nil;
 	    }
 
 	  // Encoding
-	  NSString *originalName = [result copy];
+	  NSString *originalName = AUTORELEASE([result copy]);
 	  NSString *stackedResult = [NSString stringWithFormat: @"%@%@%@%@", result,
 					      result, result, result];  // kludge...
 	  //
@@ -2168,11 +2170,20 @@ static NSDictionary *_valueMapping = nil;
   id o = nil;
 
   [_gormDocument deactivateEditors];
-  while ((o = [en nextObject]) != nil)
+  NS_DURING
     {
-      [self _collectObjectsFromObject: o
-			   withParent: parentNode];
+      while ((o = [en nextObject]) != nil)
+	{
+	  [self _collectObjectsFromObject: o
+				   withParent: parentNode];
+	}
     }
+  NS_HANDLER
+    {
+      [_gormDocument reactivateEditors];
+      [localException raise];
+    }
+  NS_ENDHANDLER;
   [_gormDocument reactivateEditors];
 }
 
