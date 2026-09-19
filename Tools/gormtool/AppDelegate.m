@@ -275,12 +275,6 @@
 	      parse_val = YES;
 	    }
 
-	  if ([obj isEqualToString: @"--test"])
-	    {
-	      [pair setArgument: obj];
-	      parse_val = NO;
-	    }
-
 	  // If there is no parameter for the argument, set it anyway...
 	  if (parse_val == NO)
 	    {
@@ -555,13 +549,6 @@
 	    }
 	}
 
-      opt = [args objectForKey: @"--test"];
-      if (opt != nil)
-	{
-	  NSLog(@"Control-C to end");
-	  _isTesting = YES;
-	  [self testInterface: self];
-	}
     }
   
   [NSClassSwapper setIsInInterfaceBuilder: NO];
@@ -570,21 +557,6 @@
 - (void) exceptionWhileLoadingModel: (NSString *)errorMessage
 {
   NSLog(@"Exception: %@", errorMessage);
-}
-
-- (void) applicationDidFinishLaunching: (NSNotification *)n
-{
-  NSDebugLog(@"processInfo: %@", [NSProcessInfo processInfo]);
-  [self process];
-
-  if (_isTesting == NO)
-    {
-      [NSApp terminate: nil];
-    }
-}
-
-- (void) applicationWillTerminate: (NSNotification *)n
-{
 }
 
 @end

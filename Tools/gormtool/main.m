@@ -36,22 +36,24 @@
 int main(int argc, char **argv)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-  
-  NSApplication *app = [NSApplication sharedApplication];
-  AppDelegate *delegate = [[AppDelegate alloc] init];
   extern char **environ;
 
-  // Don't show icon...
-  [[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"GSSuppressAppIcon"];
-
-  // Initialize process...
   [NSProcessInfo initializeWithArguments: (char **)argv
 				   count: argc
 			     environment: environ];
 
-  // Run...
+  /* NSApplication is required to decode AppKit objects, but gormtool must not
+   * present an application icon or enter the GUI event loop. */
+  [[NSUserDefaults standardUserDefaults] setBool: YES
+					  forKey: @"GSSuppressAppIcon"];
+  NSApplication *app = [NSApplication sharedApplication];
+  AppDelegate *delegate = [[AppDelegate alloc] init];
+
   [app setDelegate: delegate];
-  [app run];
+  [delegate process];
+
+  [app setDelegate: nil];
+  RELEASE(delegate);
 
   RELEASE(pool);
   

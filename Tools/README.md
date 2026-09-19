@@ -1,8 +1,9 @@
 # gormtool
 
 `gormtool` is a command-line front end for selected Gorm document operations.
-It runs as a headless AppKit application, loads a `.gorm` document, performs one
-or more actions, optionally writes the modified document back out, and then exits.
+It loads a `.gorm` document without starting the AppKit event loop or displaying
+an interface, performs one or more actions, optionally writes the modified
+document back out, and then exits.
 
 The implementation lives in `Tools/gormtool/` and the option list below matches
 the currently parsed and executed arguments in that code.
@@ -30,7 +31,6 @@ gormtool --read inputfile [options]
  not strictly in the order they appear on the command line.
 - `--write` is intentionally processed near the end, after import/export and
  inspection actions.
-- `--test` is processed last and keeps the application running until you stop it.
 
 ## Options
 
@@ -142,16 +142,6 @@ These flags print internal document data structures to standard output.
 - In the current implementation, `--errors`, `--warnings`, and `--notices`
   all print the same profile dictionary from `GormFilePrefsManager`.
 - They are not currently filtered into separate categories by `gormtool`.
-
-### Interactive Test Mode
-
-- `--test`
- Enter test mode after processing all other options.
-
- Behavior:
-
-- The tool logs `Control-C to end`.
-- The application remains running instead of terminating immediately.
 
 ## Examples
 

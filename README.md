@@ -131,7 +131,6 @@ Common options:
 - --export-class CLASSNAME: export class interface/implementation files
 - --output-path DIR: output directory for exported class files
 - --objects, --connections, --classes: print document internals
-- --test: keep process running in interactive test mode
 
 Examples:
 
