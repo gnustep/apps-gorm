@@ -48,6 +48,7 @@
 #import <AppKit/NSBrowser.h>
 #import <AppKit/NSColor.h>
 #import <AppKit/NSToolbar.h>
+#import <AppKit/NSToolbarItem.h>
 
 #import <GNUstepBase/GSObjCRuntime.h>
 #import <GNUstepGUI/GSNibLoading.h>
@@ -61,7 +62,6 @@
 
 #import "GormXIBModelGenerator.h"
 
-static NSArray *_allowedSizeKeys = nil;
 static NSArray *_externallyReferencedClasses = nil;
 static NSDictionary *_signatures = nil;
 static NSArray *_skipClass = nil;
@@ -250,12 +250,6 @@ static NSDictionary *_valueMapping = nil;
 {
   if (self == [GormXIBModelGenerator class])
     {
-      _allowedSizeKeys =
-	[[NSArray alloc] initWithObjects:
-			   @"cellSize",
-			 @"intercellSpacing",
-			 nil];
-
       _externallyReferencedClasses =
 	[[NSArray alloc] initWithObjects:
 			   @"NSTableHeaderView",
@@ -277,15 +271,15 @@ static NSDictionary *_valueMapping = nil;
       _signatures =
 	[[NSDictionary alloc] initWithObjectsAndKeys:
 				@"char",        @"c",
-			      @"NSUInteger",    @"i", // this might be wrong.. maybe it should be NSInteger or just int
+				      @"int",           @"i",
 			      @"short",         @"s",
 			      @"long",          @"l",
 			      @"long long",     @"q",
 			      @"BOOL",          @"C", // unsigned char
-			      @"NSUInteger",    @"I",
+				      @"unsigned int",  @"I",
 			      @"unsigned short",@"S",
 			      @"unsigned long", @"L",
-			      @"long long",     @"Q",
+				      @"unsigned long long", @"Q",
 			      @"float",         @"f",
 			      @"CGFloat",       @"d",
 			      @"bool",          @"B",
@@ -301,8 +295,6 @@ static NSDictionary *_valueMapping = nil;
       _skipClass =
 	[[NSArray alloc] initWithObjects:
 			   @"NSBrowserCell",
-			 @"NSDateFormatter",
-			 @"NSNumberFormatter",
 			 nil];
 
       _skipCollectionForKey =
@@ -392,7 +384,7 @@ static NSDictionary *_valueMapping = nil;
 				    @"greenComponent",
 				    @"alphaComponent",
 				    @"colorSpaceName", nil],
-			      @"GSCalibratedRBGColor",
+			      @"GSCalibratedRGBColor",
 			   [NSArray arrayWithObjects:
 				      @"patternImage",
 				    @"colorSpaceName", nil],
@@ -418,22 +410,16 @@ static NSDictionary *_valueMapping = nil;
 			      nil];
       _excludedKeys =
 	[[NSArray alloc] initWithObjects:
-			   @"font",
-			 @"alphaValue",
 			 @"servicesProvider",
 			 @"servicesMenu",
 			 @"nextResponder",
 			 @"supermenu",
 			 @"attributedStringValue",
-			 @"stringValue",
-			 @"objectValue",
 			 @"menuView", @"menu",
 			 @"attributedAlternateTitle",
 			 @"attributedTitle",
 			 @"miniwindowImage",
 			 @"menuItem",
-			 @"showsResizeIndicator",
-			 @"titleFont",
 			 @"titleCell",
 			 @"target",
 			 @"action",
@@ -444,7 +430,6 @@ static NSDictionary *_valueMapping = nil;
 			 @"typingAttributes",
 			 @"defaultParagraphStyle",
 			 @"tableView",
-			 @"sortDescriptors",
 			 @"previousText",
 			 @"nextText",
 			 @"needsDisplay",
@@ -452,12 +437,7 @@ static NSDictionary *_valueMapping = nil;
 			 @"postsBoundsChangedNotifications",
 			 @"menuRepresentation",
 			 @"submenu",
-			 @"initialFirstResponder",
 			 @"cornerView",
-			 @"doubleValue",
-			 @"intValue",
-			 @"previousKeyView",
-			 @"nextKeyView",
 			 @"prototype",
 			 @"keyCell",
 			 @"isLenient",
@@ -516,14 +496,14 @@ static NSDictionary *_valueMapping = nil;
       // NSLog(@"%@ => %@", name, className);
     }
 
-  NSString *result = [className stringByReplacingOccurrencesOfString: @"NS"
-							  withString: @""];
+  NSString *result = className;
 
-  // Try removing other prefixes...
-  result = [result stringByReplacingOccurrencesOfString: @"GS"
-					     withString: @""];
-  result = [result stringByReplacingOccurrencesOfString: @"Gorm"
-					     withString: @""];
+  // XIB element names omit a framework prefix, but occurrences within a
+  // custom class name are significant and must not be removed.
+  if ([result hasPrefix: @"Gorm"])
+    result = [result substringFromIndex: 4];
+  else if ([result hasPrefix: @"NS"] || [result hasPrefix: @"GS"])
+    result = [result substringFromIndex: 2];
 
   // Lowercase the first letter of the class to make the element name
   result = [result lowercaseFirstCharacter];
@@ -817,6 +797,18 @@ static NSDictionary *_valueMapping = nil;
   [elem addChild: rectElem];
 }
 
+- (void) _addPoint: (NSPoint)point toElement: (NSXMLElement *)elem withName: (NSString *)name
+{
+  NSXMLElement *pointElem = [NSXMLNode elementWithName: @"point"];
+
+  [pointElem addAttribute: [NSXMLNode attributeWithName: @"key" stringValue: name]];
+  [pointElem addAttribute: [NSXMLNode attributeWithName: @"x"
+					 stringValue: [NSString stringWithFormat: @"%.1f", point.x]]];
+  [pointElem addAttribute: [NSXMLNode attributeWithName: @"y"
+					 stringValue: [NSString stringWithFormat: @"%.1f", point.y]]];
+  [elem addChild: pointElem];
+}
+
 - (void) _addKeyEquivalent: (NSString *)ke toElement: (NSXMLElement *)elem
 {
   if ([ke isEqualToString: @""] == NO)
@@ -843,22 +835,22 @@ static NSDictionary *_valueMapping = nil;
   NSDebugLog(@"keyEquivalentModifierMask = %ld, element = %@", mask, elem);
   if ([elem attributeForName: @"keyEquivalent"] != nil)
     {
-      if (mask | NSCommandKeyMask)
+      if (mask & NSCommandKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"command" stringValue: @"YES"];
 	  [elem addAttribute: attr];
 	}
-      if (mask | NSShiftKeyMask)
+      if (mask & NSShiftKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"shift" stringValue: @"YES"];
 	  [elem addAttribute: attr];
 	}
-      if (mask | NSControlKeyMask)
+      if (mask & NSControlKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"control" stringValue: @"YES"];
 	  [elem addAttribute: attr];
 	}
-      if (mask | NSAlternateKeyMask)
+      if (mask & NSAlternateKeyMask)
 	{
 	  attr = [NSXMLNode attributeWithName: @"option" stringValue: @"YES"];
 	  [elem addAttribute: attr];
@@ -877,22 +869,22 @@ static NSDictionary *_valueMapping = nil;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
-  if (mask | NSWindowStyleMaskTitled)
+  if (mask & NSWindowStyleMaskTitled)
     {
       attr = [NSXMLNode attributeWithName: @"titled" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
     }
-  if (mask | NSWindowStyleMaskClosable)
+  if (mask & NSWindowStyleMaskClosable)
     {
       attr = [NSXMLNode attributeWithName: @"closable" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
     }
-  if (mask | NSWindowStyleMaskMiniaturizable)
+  if (mask & NSWindowStyleMaskMiniaturizable)
     {
       attr = [NSXMLNode attributeWithName: @"miniaturizable" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
     }
-  if (mask | NSWindowStyleMaskResizable)
+  if (mask & NSWindowStyleMaskResizable)
     {
       attr = [NSXMLNode attributeWithName: @"resizable" stringValue: @"YES"];
       [styleMaskElem addAttribute: attr];
@@ -1020,33 +1012,38 @@ static NSDictionary *_valueMapping = nil;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtautological-bitwise-compare"
-      if (m | NSViewWidthSizable)
+      if (m & NSViewWidthSizable)
 	{
 	  attr = [NSXMLNode attributeWithName: @"widthSizable" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
-      if (m | NSViewHeightSizable)
+      if (m & NSViewHeightSizable)
 	{
 	  attr = [NSXMLNode attributeWithName: @"heightSizable" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
-      if (m | NSViewMaxXMargin)
+      if (m & NSViewMaxXMargin)
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMaxX" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
-      if (m | NSViewMaxYMargin)
+      if (m & NSViewMaxYMargin)
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMaxY" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
-      if (m | NSViewMinXMargin)
+      if (m & NSViewMinXMargin)
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMinX" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
-      if (m | NSViewMinYMargin)
+      if (m & NSViewMinYMargin)
 	{
 	  attr = [NSXMLNode attributeWithName: @"flexibleMinY" stringValue: @"YES"];
+	  [autoresizingMaskElem addAttribute: attr];
 	}
 #pragma GCC diagnostic pop
 
-      [autoresizingMaskElem addAttribute: attr];
       attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizeMask"];
       [autoresizingMaskElem addAttribute: attr];
 
@@ -1146,13 +1143,8 @@ static NSDictionary *_valueMapping = nil;
 
 - (void) _addCellsFromMatrix: (NSMatrix *)matrix toElement: (NSXMLElement *)elem
 {
-  NSRect rect = [matrix frame];
-  NSSize cellSize = [matrix cellSize];
-  NSSize inter = [matrix intercellSpacing];
-  CGFloat iw = (inter.width < 0.0) ? 0.0:inter.width;
-  CGFloat ih = (inter.height < 0.0) ? 0.0:inter.height;
-  NSUInteger itemsPerCol = (rect.size.width + iw) / cellSize.width;
-  NSUInteger itemsPerRow = (rect.size.height + ih) / cellSize.height;
+  NSUInteger itemsPerCol = [matrix numberOfColumns];
+  NSUInteger itemsPerRow = [matrix numberOfRows];
   NSUInteger c = 0;
   NSUInteger r = 0;
   NSArray *cells = [matrix cells];
@@ -1162,8 +1154,7 @@ static NSDictionary *_valueMapping = nil;
   NSString *cellClass = nil;
 
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
-  NSLog(@"INFO: col = %ld x row = %ld", itemsPerCol, itemsPerRow);
-  NSLog(@"WARNING: NSMatrix is not fully supported by Xcode, this might cause it to crash or may not be reloadable by this application");
+  NSDebugLog(@"Matrix: col = %ld x row = %ld", itemsPerCol, itemsPerRow);
 
   if (count > 0)
     {
@@ -1176,7 +1167,7 @@ static NSDictionary *_valueMapping = nil;
 	    {
 	      id cell = nil;
 
-	      i = (c * itemsPerCol) + r;
+	      i = (r * itemsPerCol) + c;
 
 	      // If we go past the end of the array...
 	      if (i >= count)
@@ -1285,11 +1276,17 @@ static NSDictionary *_valueMapping = nil;
 		      name = newName;
 		    }
 
-		  if ([o isKindOfClass: [NSString class]])
+		  if ([o isKindOfClass: [NSString class]]
+		      || [o isKindOfClass: [NSNumber class]])
 		    {
-		      if ([_valueMapping objectForKey: o] != nil)
+		      if ([o isKindOfClass: [NSString class]]
+			  && [_valueMapping objectForKey: o] != nil)
 			{
 			  o = [_valueMapping objectForKey: o];
+			}
+		      else if ([o isKindOfClass: [NSNumber class]])
+			{
+			  o = [o stringValue];
 			}
 
 		      if ([name isEqualToString: @"keyEquivalent"])
@@ -1303,6 +1300,17 @@ static NSDictionary *_valueMapping = nil;
 							     stringValue: o];
 			  [elem addAttribute: attr];
 			}
+		    }
+		  else if ([o isKindOfClass: [NSArray class]])
+		    {
+		      NSXMLElement *collection = [NSXMLNode elementWithName: name];
+		      NSEnumerator *objectEnumerator = [o objectEnumerator];
+		      id member = nil;
+
+		      while ((member = [objectEnumerator nextObject]) != nil)
+			[self _collectObjectsFromObject: member withParent: collection];
+		      if ([collection childCount] > 0)
+			[elem addChild: collection];
 		    }
 		  else
 		    {
@@ -1345,21 +1353,27 @@ static NSDictionary *_valueMapping = nil;
     }
   else if ([type isEqualToString: @"NSSize"])
     {
-      if ([_allowedSizeKeys containsObject: name])
+
+	SEL sel = NSSelectorFromString(name);
+	if (sel != NULL)
 	{
-	  SEL sel = NSSelectorFromString(name);
-	  if (sel != NULL)
+	  IMP imp = [obj methodForSelector: sel];
+
+	  if (imp != NULL)
 	    {
-	      IMP imp = [obj methodForSelector: sel];
-
-	      if (imp != NULL)
-		{
-		  NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
-		  [self _addSize: s toElement: elem withName: name];
-
-		}
+	      NSSize s = ((NSSize (*)(id, SEL))imp)(obj, sel);
+	      [self _addSize: s toElement: elem withName: name];
 	    }
 	}
+    }
+  else if ([type isEqualToString: @"NSPoint"])
+    {
+      SEL sel = NSSelectorFromString(name);
+      IMP imp = (sel != NULL) ? [obj methodForSelector: sel] : NULL;
+
+      if (imp != NULL)
+	[self _addPoint: ((NSPoint (*)(id, SEL))imp)(obj, sel)
+		 toElement: elem withName: name];
     }
   else if ([type isEqualToString: @"CGFloat"])
     {
@@ -1379,14 +1393,25 @@ static NSDictionary *_valueMapping = nil;
 	    }
 	}
     }
-  else if ([type isEqualToString: @"BOOL"])
+  else if ([type isEqualToString: @"float"])
+    {
+      SEL sel = NSSelectorFromString(name);
+      IMP imp = (sel != NULL) ? [obj methodForSelector: sel] : NULL;
+
+      if (imp != NULL)
+	{
+	  float f = ((float (*)(id, SEL))imp)(obj, sel);
+	  [self _addFloat: (CGFloat)f withName: name toElement: elem];
+	}
+    }
+  else if ([type isEqualToString: @"BOOL"] || [type isEqualToString: @"bool"])
     {
       NSString *keyName = name;
 
-      if ([[name substringToIndex: 2] isEqualToString: @"is"])
+      if ([name length] > 2 && [name hasPrefix: @"is"])
 	{
 	  keyName = [name substringFromIndex: 2];
-	  keyName = [keyName lowercaseString];
+	  keyName = [keyName lowercaseFirstCharacter];
 	}
 
       SEL sel = NSSelectorFromString(name);
@@ -1443,6 +1468,55 @@ static NSDictionary *_valueMapping = nil;
       NSTitlePosition p = [obj titlePosition];
       [self _addTitlePosition: p
 		    toElement: elem];
+    }
+  else if ([type isEqualToString: @"char"]
+	   || [type isEqualToString: @"int"]
+	   || [type isEqualToString: @"short"]
+	   || [type isEqualToString: @"long"]
+	   || [type isEqualToString: @"long long"])
+    {
+      SEL sel = NSSelectorFromString(name);
+      IMP imp = (sel != NULL) ? [obj methodForSelector: sel] : NULL;
+
+      if (imp != NULL)
+	{
+	  long long value;
+	  if ([type isEqualToString: @"char"])
+	    value = ((char (*)(id, SEL))imp)(obj, sel);
+	  else if ([type isEqualToString: @"short"])
+	    value = ((short (*)(id, SEL))imp)(obj, sel);
+	  else if ([type isEqualToString: @"int"])
+	    value = ((int (*)(id, SEL))imp)(obj, sel);
+	  else if ([type isEqualToString: @"long"])
+	    value = ((long (*)(id, SEL))imp)(obj, sel);
+	  else
+	    value = ((long long (*)(id, SEL))imp)(obj, sel);
+	  [elem addAttribute: [NSXMLNode attributeWithName: name
+					 stringValue: [NSString stringWithFormat: @"%lld", value]]];
+	}
+    }
+  else if ([type isEqualToString: @"unsigned int"]
+	   || [type isEqualToString: @"unsigned short"]
+	   || [type isEqualToString: @"unsigned long"]
+	   || [type isEqualToString: @"unsigned long long"])
+    {
+      SEL sel = NSSelectorFromString(name);
+      IMP imp = (sel != NULL) ? [obj methodForSelector: sel] : NULL;
+
+      if (imp != NULL)
+	{
+	  unsigned long long value;
+	  if ([type isEqualToString: @"unsigned short"])
+	    value = ((unsigned short (*)(id, SEL))imp)(obj, sel);
+	  else if ([type isEqualToString: @"unsigned int"])
+	    value = ((unsigned int (*)(id, SEL))imp)(obj, sel);
+	  else if ([type isEqualToString: @"unsigned long"])
+	    value = ((unsigned long (*)(id, SEL))imp)(obj, sel);
+	  else
+	    value = ((unsigned long long (*)(id, SEL))imp)(obj, sel);
+	  [elem addAttribute: [NSXMLNode attributeWithName: name
+					 stringValue: [NSString stringWithFormat: @"%llu", value]]];
+	}
     }
 }
 
@@ -2014,6 +2088,25 @@ static NSDictionary *_valueMapping = nil;
 			      [referencesDictionary setObject: theId forKey: identifier];
 			      [itemElem addAttribute: attr];
 			      [itemElem addAttribute: identElem];
+
+			      // GNUstep toolbars retain identifiers rather than the
+			      // delegate-created item definitions.  Ask the delegate for
+			      // the definition when one is available so custom labels,
+			      // images, views, sizing, and connections survive export.
+			      id delegate = [toolbar delegate];
+			      SEL itemSelector = @selector(toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:);
+			      if (delegate != nil && [delegate respondsToSelector: itemSelector])
+				{
+				  NSToolbarItem *toolbarItem =
+				    [delegate toolbar: toolbar
+				      itemForItemIdentifier: identifier
+				      willBeInsertedIntoToolbar: NO];
+				  if (toolbarItem != nil)
+				    {
+				      [self _addAllConnections: itemElem fromObject: toolbarItem];
+				      [self _addAllProperties: itemElem fromObject: toolbarItem];
+				    }
+				}
 			      [allowedElem addChild: itemElem];
 			    }
 
@@ -2143,15 +2236,11 @@ static NSDictionary *_valueMapping = nil;
 	  [self _addHoldingPrioritiesForSplitView: obj toElement: elem];
 	}
 
-      /* Cheap way to not encoding fake table columns to prevent crash on the mac when reading the XIB.
-	 Not ideal, but it should work for now. */
-      /*
-	if ([obj respondsToSelector: @selector(tableColumns)])
+      if ([obj respondsToSelector: @selector(tableColumns)])
 	{
-	[self _addTableColumns: [obj tableColumns]
-	toElement: elem];
+	  [self _addTableColumns: [obj tableColumns]
+			 toElement: elem];
 	}
-      */
     }
 }
 
