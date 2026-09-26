@@ -293,6 +293,20 @@
   
   [NSClassSwapper setIsInInterfaceBuilder: YES];
   pluginManager = [self pluginManager];
+  if (NSClassFromString(@"GormNixPlugin") == Nil)
+    {
+      NSFileManager *fileManager = [NSFileManager defaultManager];
+      NSString *pluginPath = [[[[fileManager currentDirectoryPath]
+				stringByAppendingPathComponent:
+				  @"GormCore/GormCore.framework/Resources"]
+				stringByAppendingPathComponent: @"Nix.plugin"]
+				stringByStandardizingPath];
+
+      if ([fileManager fileExistsAtPath: pluginPath])
+	{
+	  [pluginManager loadPlugin: pluginPath];
+	}
+    }
   if (NSClassFromString(@"GormCibPlugin") == Nil)
     {
       NSFileManager *fileManager = [NSFileManager defaultManager];

@@ -31,6 +31,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 SUBPROJECTS = \
 	Gorm \
 	Nib \
+	Nix \
 	Xib \
 	Cib
 

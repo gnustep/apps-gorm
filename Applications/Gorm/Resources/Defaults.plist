@@ -11,6 +11,7 @@
     BuiltinPlugins = (
 	Gorm.plugin,
 	Nib.plugin,
+	Nix.plugin,
 	GModel.plugin
     );
     CellSizeWidth = 72;
