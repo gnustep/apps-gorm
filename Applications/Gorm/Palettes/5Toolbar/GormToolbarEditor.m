@@ -218,6 +218,25 @@ GormDrawStippleForRect(NSRect aRect)
   return [NSArray arrayWithObject: toolbar];
 }
 
+- (void) deleteSelection
+{
+  NSToolbar *selectedToolbar = RETAIN(toolbar);
+  NSWindow *window = RETAIN([toolbarView window]);
+
+  /*
+   * Detaching closes this editor, whose deactivate method must put the
+   * toolbar view back into the window before the toolbar itself is removed.
+   */
+  [document detachObject: selectedToolbar];
+
+  if ([window toolbar] == selectedToolbar)
+    {
+      [window setToolbar: nil];
+    }
+  RELEASE(window);
+  RELEASE(selectedToolbar);
+}
+
 - (void) makeSelectionVisible: (BOOL)flag
 {
   [self setNeedsDisplay: YES];
