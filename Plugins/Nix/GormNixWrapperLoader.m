@@ -118,6 +118,13 @@ GormNixRestoreViewAlpha(NSView *view)
        * palette mapping and writes the runtime AppKit class name. */
       [loadingSubstitutions setObject: object forKey: object];
     }
+  /* NSWindow's keyed representation is NSWindowTemplate.  Substitute the
+   * Gorm template just as the nib and XIB plugins do so nibInstantiate
+   * creates GormNSWindow/GormNSPanel instances.  Besides editor behavior,
+   * this makes viewer resources such as GormWindow.tiff resolve from the
+   * GormCore bundle rather than AppKit's bundle. */
+  [loadingSubstitutions setObject: @"GormWindowTemplate"
+                           forKey: @"NSWindowTemplate"];
   context = [NSDictionary dictionaryWithObjectsAndKeys:
     [doc filesOwner], NSNibOwner,
     topLevel, NSNibTopLevelObjects,

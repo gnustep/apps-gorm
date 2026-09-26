@@ -43,8 +43,19 @@
 @implementation GormWindowTemplate
 - (id) nibInstantiate
 {
-  id object = [super nibInstantiate];
-  BOOL flag = [object isReleasedWhenClosed];
+  NSString *originalWindowClass = [_windowClass retain];
+  id object;
+  BOOL flag;
+
+  /* NSWindowTemplate normally consults -baseWindowClass only while the
+   * process-wide NSClassSwapper Interface Builder flag is set.  NIX loading
+   * uses explicit class substitutions instead, so force the design-time
+   * class name for the duration of superclass instantiation. */
+  ASSIGN(_windowClass, NSStringFromClass([self baseWindowClass]));
+  object = [super nibInstantiate];
+  ASSIGN(_windowClass, originalWindowClass);
+  [originalWindowClass release];
+  flag = [object isReleasedWhenClosed];
 
   [object setReleasedWhenClosed: NO];
   [object _setReleasedWhenClosed: flag];
@@ -62,4 +73,3 @@
   return [GormNSWindow class];
 }
 @end
-
