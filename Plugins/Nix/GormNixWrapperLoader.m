@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import <GNUstepGUI/GSModelLoaderFactory.h>
 #import <GNUstepGUI/GSNibLoading.h>
-#import <GNUstepGUI/GSNixSerialization.h>
 #import <GormCore/GormCore.h>
 
+#import "GSNixLoader.h"
+#import "GSNixSerialization.h"
+#import "GormNixClassMappings.h"
 #import "GormNixWrapperLoader.h"
 
 extern NSString * const GSNixClassSubstitutions;
@@ -87,7 +88,7 @@ GormNixRestoreViewAlpha(NSView *view)
              withDocument: (GormDocument *)doc
 {
   NSData *data;
-  GSModelLoader *loader;
+  GSNixLoader *loader;
   NSMutableArray *topLevel = [NSMutableArray array];
   NSDictionary *context;
   NSMutableDictionary *objects = [NSMutableDictionary dictionary];
@@ -104,10 +105,16 @@ GormNixRestoreViewAlpha(NSView *view)
     return NO;
 
   data = [wrapper regularFileContents];
-  loader = [GSModelLoaderFactory modelLoaderForData: data];
-  if (loader == nil || ![[[loader class] type] isEqualToString: @"nix"])
+  if (![GSNixLoader canReadData: data])
     return NO;
+  loader = [[[GSNixLoader alloc] init] autorelease];
 
+  {
+    NSMutableDictionary *archiveMappings = [NSMutableDictionary
+      dictionaryWithDictionary: GormNixDefaultClassMappings()];
+    [archiveMappings addEntriesFromDictionary: substituteClasses];
+    substituteClasses = archiveMappings;
+  }
   enumerator = [substituteClasses keyEnumerator];
   while ((object = [enumerator nextObject]) != nil)
     {

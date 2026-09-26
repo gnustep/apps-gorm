@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
-#import <GNUstepGUI/GSNixSerialization.h>
+#import "GSNixSerialization.h"
+#import "GormNixClassMappings.h"
 #import <GormCore/GormCore.h>
 
 /* Added by the NIX serialization API.  This declaration also permits staged
@@ -38,8 +39,12 @@
   NSData *data;
   GormPalettesManager *palettesManager =
     [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
-  NSDictionary *substituteClasses = [palettesManager substituteClasses];
+  NSMutableDictionary *substituteClasses = [NSMutableDictionary dictionaryWithDictionary:
+    GormNixDefaultClassMappings()];
   GormClassManager *classManager = [doc classManager];
+
+  [substituteClasses addEntriesFromDictionary:
+    [palettesManager substituteClasses]];
 
   while ((connector = [enumerator nextObject]) != nil)
     {

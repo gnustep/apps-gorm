@@ -3,6 +3,10 @@
 
 #import "GormNixWrapperLoader.h"
 
+@interface NSMatrix (GSNixCompatibilityInstall)
++ (void) gormInstallNixCodingCompatibility;
+@end
+
 @interface GormNixWrapperBuilder : GormWrapperBuilder
 @end
 
@@ -12,6 +16,7 @@
 @implementation GormNixPlugin
 - (void) didLoad
 {
+  [NSMatrix gormInstallNixCodingCompatibility];
   [GormWrapperLoaderFactory registerWrapperLoaderClass:
                               [GormNixWrapperLoader class]];
   [GormWrapperBuilderFactory registerWrapperBuilderClass:

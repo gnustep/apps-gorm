@@ -7,7 +7,16 @@ Nix_PRINCIPAL_CLASS = GormNixPlugin
 
 Nix_OBJC_FILES = GormNixPlugin.m \
 	GormNixWrapperLoader.m \
-	GormNixWrapperBuilder.m
+	GormNixWrapperBuilder.m \
+	GSNixLoader.m \
+	GSNixSerialization.m \
+	GSNixMatrixCompatibility.m \
+	GormNixClassMappings.m
+
+Nix_HEADER_FILES = GSNixLoader.h \
+	GSNixSerialization.h \
+	GormNixClassMappings.h \
+	GormNixWrapperLoader.h
 
 Nix_STANDARD_INSTALL = no
 
