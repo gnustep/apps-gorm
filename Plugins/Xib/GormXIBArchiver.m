@@ -317,6 +317,10 @@ static NSDictionary *_valueMapping = nil;
       _singletonObjects =
 	[[NSArray alloc] initWithObjects:
 			   @"GSNamedColor",
+			 /* Inline value in a table column, not an independently
+			  * integrated IB object. Giving it an ID makes Xcode seek
+			  * a nonexistent NSTableHeaderCell integrator on re-save. */
+			 @"NSTableHeaderCell",
 			 @"NSFont",
 			 @"NSColor",
 			 @"NSImage",
@@ -1292,6 +1296,25 @@ static NSDictionary *_valueMapping = nil;
       return;
     }
 
+  /* XIB recreates the browser's cells and columns. NSBrowserCell is not
+   * exported, so references to its cell/prototype would also dangle. */
+  if ([obj isKindOfClass: [NSBrowser class]]
+      && ([name isEqualToString: @"cell"]
+          || [name isEqualToString: @"cellPrototype"]))
+    return;
+
+  /* Ruler getters lazily create views; do not create invisible runtime
+   * objects while exporting an ordinary scroll view. */
+  if ([obj isKindOfClass: [NSScrollView class]]
+      && ([name isEqualToString: @"horizontalRulerView"]
+          || [name isEqualToString: @"verticalRulerView"])
+      && ![obj rulersVisible])
+    return;
+  if ([name isEqualToString: @"cell"]
+      && ([obj isKindOfClass: [NSTableView class]]
+          || [obj isKindOfClass: [NSScroller class]]))
+    return; // These controls do not store an inherited NSControl cell in XIB.
+
   /* Legacy GNUstep view archives do not initialize alphaValue, leaving
    * otherwise visible palette controls at zero. Cocoa honors that value and
    * makes the exported controls invisible. Match the NIX compatibility repair
@@ -1370,6 +1393,74 @@ static NSDictionary *_valueMapping = nil;
         @"light dark raised lowered", @"backgroundStyle",
         @"retained nonretained buffered", @"backingType", nil];
     tokens = [enums objectForKey: name];
+    if ([obj isKindOfClass: [NSImageView class]]
+        || [obj isKindOfClass: [NSImageCell class]])
+      {
+        if ([name isEqualToString: @"imageAlignment"])
+          tokens = @"center top topLeft topRight left bottom bottomLeft bottomRight right";
+        else if ([name isEqualToString: @"imageFrameStyle"])
+          tokens = @"none photo grayBezel groove button";
+      }
+    if ([name isEqualToString: @"selectionGranularity"]
+        && [obj isKindOfClass: [NSTextView class]])
+      tokens = @" word paragraph"; // Character selection is the omitted default.
+    if ([obj isKindOfClass: [NSTableView class]])
+      {
+        if ([name isEqualToString: @"columnAutoresizingStyle"])
+          tokens = @"none uniform sequential reverseSequential lastColumnOnly firstColumnOnly";
+        else if ([name isEqualToString: @"rowSizeStyle"])
+          tokens = @"custom small medium large";
+        else if ([name isEqualToString: @"selectionHighlightStyle"])
+          {
+            NSInteger style = [obj selectionHighlightStyle];
+            NSString *token = style == NSTableViewSelectionHighlightStyleNone ? @"none"
+              : style == NSTableViewSelectionHighlightStyleRegular ? @"regular"
+              : style == NSTableViewSelectionHighlightStyleSourceList ? @"sourceList" : nil;
+            if (token == nil)
+              [NSException raise: NSInvalidArgumentException
+                          format: @"Unsupported selection highlight style: %ld", (long)style];
+            [elem removeAttributeForName: name];
+            [elem addAttribute: [NSXMLNode attributeWithName: name stringValue: token]];
+            return;
+          }
+      }
+    if ([obj isKindOfClass: [NSScrollView class]])
+      {
+        if ([name isEqualToString: @"horizontalScrollElasticity"]
+            || [name isEqualToString: @"verticalScrollElasticity"])
+          tokens = @" none allowed"; // Omit automatic (the XIB default).
+        else if ([name isEqualToString: @"scrollerKnobStyle"])
+          tokens = @" dark light";
+      }
+    if ([obj isKindOfClass: [NSScroller class]])
+      {
+        if ([name isEqualToString: @"knobStyle"])
+          tokens = @" dark light";
+        else if ([name isEqualToString: @"arrowsPosition"])
+          tokens = @"default default none"; // Cocoa has no min-end variant.
+      }
+    if ([name isEqualToString: @"scrollerStyle"]
+        && ([obj isKindOfClass: [NSScrollView class]]
+            || [obj isKindOfClass: [NSScroller class]]))
+      tokens = @"legacy overlay";
+    if ([name isEqualToString: @"orientation"]
+        && [obj isKindOfClass: [NSRulerView class]])
+      tokens = @"horizontal vertical";
+    if ([name isEqualToString: @"columnResizingType"]
+        && [obj isKindOfClass: [NSBrowser class]])
+      tokens = @" auto user"; // No resizing is the omitted schema default.
+    if ([obj isKindOfClass: [NSSlider class]]
+        || [obj isKindOfClass: [NSSliderCell class]])
+      {
+        if ([name isEqualToString: @"sliderType"])
+          tokens = @"linear circular";
+        else if ([name isEqualToString: @"tickMarkPosition"])
+          tokens = @"below above";
+      }
+    /* "style" has different enum domains on different AppKit classes. */
+    if ([name isEqualToString: @"style"]
+        && [obj isKindOfClass: [NSProgressIndicator class]])
+      tokens = @"bar spinning";
     if (tokens != nil || [name isEqualToString: @"state"]
         || [name isEqualToString: @"baseWritingDirection"]
         || [name isEqualToString: @"titleBaseWritingDirection"])
@@ -1742,6 +1833,22 @@ static NSDictionary *_valueMapping = nil;
 
 - (void) _addAllProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
+  /* Combo-box view and cell have different XIB contracts. Forwarding
+   * accessors on NSComboBox are not attributes of the view element. */
+  if ([obj isKindOfClass: [NSComboBox class]])
+    {
+      [self _addPropertiesFromArray: [@"cell alphaValue isHidden autoresizingMask toolTip"
+        componentsSeparatedByString: @" "] toElement: elem fromObject: obj];
+      [elem removeAttributeForName: @"cell"]; // The keyed child supplies it.
+      return;
+    }
+  if ([obj isKindOfClass: [NSComboBoxCell class]])
+    {
+      [self _addPropertiesFromArray:
+        [@"font textColor backgroundColor alignment controlSize controlTint focusRingType isEnabled isEditable isSelectable isScrollable drawsBackground lineBreakMode stringValue tag refusesFirstResponder sendsActionOnEndEditing completes usesDataSource numberOfVisibleItems hasVerticalScroller"
+          componentsSeparatedByString: @" "] toElement: elem fromObject: obj];
+      return;
+    }
   NSArray *methods = GSObjCMethodNames(obj, YES);
   NSArray *props = [self _propertiesFromMethods: methods forObject: obj];
 
@@ -1751,6 +1858,25 @@ static NSDictionary *_valueMapping = nil;
 
 - (void) _addAllNonProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
+  if ([obj isKindOfClass: [NSComboBoxCell class]])
+    {
+      /* objectValues has no setter, so reflective property discovery misses
+       * it. Items are inline strings, not separate IB objects with IDs. */
+      if (![obj usesDataSource])
+        {
+          NSXMLElement *values = [NSXMLNode elementWithName: @"objectValues"];
+          for (id value in [obj objectValues])
+            {
+              if (![value isKindOfClass: [NSString class]])
+                [NSException raise: NSInvalidArgumentException
+                            format: @"XIB combo-box items must be strings, got %@",
+                                    NSStringFromClass([value class])];
+              [values addChild: [NSXMLNode elementWithName: @"string" stringValue: value]];
+            }
+          [elem addChild: values];
+        }
+      return;
+    }
   /* cells has no setter and is not a discoverable property. Dispatch by
    * inheritance: NSForm (and custom matrix subclasses) needs the same grid
    * and geometry as NSMatrix. The exact-name table below misses subclasses. */
@@ -2020,13 +2146,32 @@ static NSDictionary *_valueMapping = nil;
 	}
 
       // Add all of the connections for a given object...
-      [self _addAllConnections: elem fromObject: obj];
+      if (![obj isKindOfClass: [NSTableHeaderCell class]])
+        [self _addAllConnections: elem fromObject: obj];
 
       // Add all properties, then add the element to the parent...
       [self _addAllProperties: elem fromObject: obj];
 
       // Add some items that are not actually properties, but should be reflected in the XML...
       [self _addAllNonProperties: elem fromObject: obj];
+
+      /* Tick-position values are aliased: below/left = 0, above/right = 1.
+       * Use the owning slider's geometry: a cell's isVertical can still be
+       * -1 until it has been drawn. Do not draw or mutate it during export. */
+      if ([obj isKindOfClass: [NSSlider class]])
+        {
+          NSRect bounds = [obj bounds];
+          BOOL vertical = bounds.size.height > bounds.size.width;
+          NSString *position = [obj tickMarkPosition] == NSTickMarkBelow
+            ? (vertical ? @"left" : @"below")
+            : (vertical ? @"right" : @"above");
+          for (NSXMLElement *sliderCell in [elem elementsForName: @"sliderCell"])
+            {
+              [sliderCell removeAttributeForName: @"tickMarkPosition"];
+              [sliderCell addAttribute: [NSXMLNode
+                attributeWithName: @"tickMarkPosition" stringValue: position]];
+            }
+        }
 
       /* XIB encodes both NSCell border flags in a single borderStyle token.
        * Emit this after reflective properties so getter order cannot replace
@@ -2447,7 +2592,10 @@ static NSDictionary *_valueMapping = nil;
 	    }
 	  else
 	    {
-	      if ([obj isKindOfClass: [NSTabView class]] == NO)
+	      /* Browser columns/scrollers are runtime implementation details,
+               * not document subviews. Cocoa creates its own on loading. */
+	      if ([obj isKindOfClass: [NSTabView class]] == NO
+                  && [obj isKindOfClass: [NSBrowser class]] == NO)
 		{
 		  NSArray *subviews = [obj subviews];
 

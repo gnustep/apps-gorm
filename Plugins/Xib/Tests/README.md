@@ -17,6 +17,12 @@ of editor objects reachable through the key-view chain.
 
 This checks XML output locally; it does not substitute for opening it in Xcode.
 
+Coverage also includes progress indicators, sliders, browser runtime-subview
+exclusion, and an outline view inside a scroll view with both scrollers. The
+outline regression checks column/selection enum mappings, scroll elasticity,
+scroller styles, document-view nesting, and exclusion of unused rulers and
+inherited control cells.
+
 The loader crash fixture omits both the matrix prototype and cellClass, as
 Xcode can do when saving explicit cells. With the current plugin installed:
 
