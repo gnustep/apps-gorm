@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" targetRuntime="MacOSX.Cocoa">
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+    <form id="form" mode="track">
+      <rect key="frame" x="0" y="0" width="180" height="46"/>
+      <size key="cellSize" width="180" height="22"/>
+      <size key="intercellSpacing" width="0" height="2"/>
+      <cells>
+        <column>
+          <formCell id="name" title="Name:" stringValue="Alice" editable="YES" borderStyle="bezel"/>
+          <formCell id="city" title="City:" stringValue="Boston" editable="YES" borderStyle="bezel"/>
+        </column>
+      </cells>
+    </form>
+  </objects>
+</document>

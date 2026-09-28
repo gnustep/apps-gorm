@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" targetRuntime="MacOSX.Cocoa">
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+    <matrix id="matrix" mode="radio">
+      <rect key="frame" x="0" y="0" width="100" height="42"/>
+      <size key="cellSize" width="100" height="20"/>
+      <size key="intercellSpacing" width="0" height="2"/>
+      <cells>
+        <column>
+          <buttonCell id="first" type="radio" title="First" state="on"/>
+          <buttonCell id="second" type="radio" title="Second" tag="1"/>
+        </column>
+      </cells>
+    </matrix>
+  </objects>
+</document>
