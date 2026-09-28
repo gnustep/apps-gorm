@@ -89,11 +89,15 @@ static NSDictionary *_valueMapping = nil;
   BOOL imageDimsWhenDisabled = [self imageDimsWhenDisabled];
   NSString *imageName = [[self image] name];
 
-  if ([imageName isEqualToString: @"GSSwitch"])
+  if ([imageName isEqualToString: @"GSSwitch"]
+      || [imageName isEqualToString: @"NSSwitch"]
+      || ([self image] != nil && [self image] == [NSImage imageNamed: @"NSSwitch"]))
     {
       type = NSSwitchButton;
     }
-  else if ([imageName isEqualToString: @"GSRadio"])
+  else if ([imageName isEqualToString: @"GSRadio"]
+           || [imageName isEqualToString: @"NSRadioButton"]
+           || ([self image] != nil && [self image] == [NSImage imageNamed: @"NSRadioButton"]))
     {
       type = NSRadioButton;
     }
@@ -945,12 +949,14 @@ static NSDictionary *_valueMapping = nil;
 {
   NSXMLNode *attr = nil;
 
+  [elem removeAttributeForName: @"type"];
   attr = [NSXMLNode attributeWithName: @"type" stringValue: buttonTypeString];
   [elem addAttribute: attr];
 
   if ([buttonTypeString isEqualToString: @"check"]
       || [buttonTypeString isEqualToString: @"radio"])
     {
+      [elem removeAttributeForName: @"imagePosition"];
       attr = [NSXMLNode attributeWithName: @"imagePosition" stringValue: @"left"];
       [elem addAttribute: attr];
     }
@@ -1197,6 +1203,11 @@ static NSDictionary *_valueMapping = nil;
   NSXMLElement *cellsElem = [NSXMLNode elementWithName: @"cells"];
   NSString *cellClass = nil;
 
+  /* Matrix geometry is independent of its outer view frame. These accessors
+   * can have ABI-specific struct encodings, so do not rely on reflection. */
+  [self _addSize: [matrix cellSize] toElement: elem withName: @"cellSize"];
+  [self _addSize: [matrix intercellSpacing] toElement: elem withName: @"intercellSpacing"];
+
   NSDebugLog(@"cells = %@\nelem = %@", [matrix cells], elem);
   NSDebugLog(@"Matrix: col = %ld x row = %ld", itemsPerCol, itemsPerRow);
 
@@ -1299,6 +1310,10 @@ static NSDictionary *_valueMapping = nil;
    * column. The inherited cell is an implementation detail, not a child. */
   if ([name isEqualToString: @"cell"] && [obj isKindOfClass: [NSMatrix class]])
     return;
+  if ([obj isKindOfClass: [NSMatrix class]]
+      && ([name isEqualToString: @"cellSize"]
+          || [name isEqualToString: @"intercellSpacing"]))
+    return; // Written once with the matrix's cells.
 
   /* NSCell.type is a content-kind enum, whereas XIB buttonCell.type is a
    * button-behavior enum. Never let reflective property discovery overwrite
@@ -1313,6 +1328,15 @@ static NSDictionary *_valueMapping = nil;
   if ([name isEqualToString: @"alignment"])
     {
       [self _addAlignment: [obj alignment] toElement: elem];
+      return;
+    }
+  if ([name isEqualToString: @"titleAlignment"]
+      && [obj isKindOfClass: [NSFormCell class]])
+    {
+      NSXMLElement *title = [NSXMLNode elementWithName: @"title"];
+      [self _addAlignment: [obj titleAlignment] toElement: title];
+      [elem addAttribute: [NSXMLNode attributeWithName: name
+        stringValue: [[title attributeForName: @"alignment"] stringValue]]];
       return;
     }
   if ([name isEqualToString: @"bezelStyle"])
@@ -1347,7 +1371,8 @@ static NSDictionary *_valueMapping = nil;
         @"retained nonretained buffered", @"backingType", nil];
     tokens = [enums objectForKey: name];
     if (tokens != nil || [name isEqualToString: @"state"]
-        || [name isEqualToString: @"baseWritingDirection"])
+        || [name isEqualToString: @"baseWritingDirection"]
+        || [name isEqualToString: @"titleBaseWritingDirection"])
       {
         NSInteger value = [[obj valueForKey: name] integerValue];
         NSString *token = nil;
@@ -1357,7 +1382,8 @@ static NSDictionary *_valueMapping = nil;
             else if (value == NSMixedState) token = @"mixed";
             else if (value == NSOffState) token = @"";
           }
-        else if ([name isEqualToString: @"baseWritingDirection"])
+        else if ([name isEqualToString: @"baseWritingDirection"]
+                 || [name isEqualToString: @"titleBaseWritingDirection"])
           {
             if (value == -1) token = @"";
             else if (value == 0) token = @"leftToRight";
@@ -1725,6 +1751,14 @@ static NSDictionary *_valueMapping = nil;
 
 - (void) _addAllNonProperties: (NSXMLElement *)elem fromObject: (id)obj
 {
+  /* cells has no setter and is not a discoverable property. Dispatch by
+   * inheritance: NSForm (and custom matrix subclasses) needs the same grid
+   * and geometry as NSMatrix. The exact-name table below misses subclasses. */
+  if ([obj isKindOfClass: [NSMatrix class]])
+    {
+      [self _addCellsFromMatrix: obj toElement: elem];
+      return;
+    }
   NSString *className = NSStringFromClass([obj class]);
   if (className != nil)
     {
@@ -1993,6 +2027,44 @@ static NSDictionary *_valueMapping = nil;
 
       // Add some items that are not actually properties, but should be reflected in the XML...
       [self _addAllNonProperties: elem fromObject: obj];
+
+      /* XIB encodes both NSCell border flags in a single borderStyle token.
+       * Emit this after reflective properties so getter order cannot replace
+       * borderAndBezel with border, or omit a bezeled text field's border. */
+      if ([obj isKindOfClass: [NSCell class]])
+        {
+          BOOL bordered = [obj isBordered];
+          BOOL bezeled = [obj isBezeled];
+          [elem removeAttributeForName: @"borderStyle"];
+          if (bordered || bezeled)
+            [elem addAttribute: [NSXMLNode attributeWithName: @"borderStyle"
+              stringValue: bordered ? (bezeled ? @"borderAndBezel" : @"border") : @"bezel"]];
+        }
+
+      if ([obj isKindOfClass: [NSButtonCell class]])
+        {
+          NSButtonCell *cell = obj;
+          NSString *buttonType = [cell buttonTypeString];
+          [self _addButtonType: buttonType toElement: elem];
+          NSUInteger highlights = [cell highlightsBy];
+          NSUInteger shows = [cell showsStateBy];
+          NSXMLElement *behavior = [NSXMLNode elementWithName: @"behavior"];
+          [behavior addAttribute: [NSXMLNode attributeWithName: @"key"
+                                                 stringValue: @"behavior"]];
+          NSDictionary *flags = [NSDictionary dictionaryWithObjectsAndKeys:
+            [NSNumber numberWithBool: (highlights & NSPushInCellMask) != 0], @"pushIn",
+            [NSNumber numberWithBool: (shows & NSContentsCellMask) != 0], @"changeContents",
+            [NSNumber numberWithBool: (shows & NSChangeBackgroundCellMask) != 0], @"changeBackground",
+            [NSNumber numberWithBool: (shows & NSChangeGrayCellMask) != 0], @"changeGray",
+            [NSNumber numberWithBool: (highlights & NSContentsCellMask) != 0], @"lightByContents",
+            [NSNumber numberWithBool: (highlights & NSChangeBackgroundCellMask) != 0], @"lightByBackground",
+            [NSNumber numberWithBool: (highlights & NSChangeGrayCellMask) != 0], @"lightByGray",
+            [NSNumber numberWithBool: ![cell imageDimsWhenDisabled]], @"doesNotDimImage", nil];
+          for (NSString *key in [[flags allKeys] sortedArrayUsingSelector: @selector(compare:)])
+            if ([[flags objectForKey: key] boolValue])
+              [behavior addAttribute: [NSXMLNode attributeWithName: key stringValue: @"YES"]];
+          [elem addChild: behavior];
+        }
 
       // Concrete NSColor implementations vary between GNUstep backends and
       // releases.  Interface Builder requires every color, particularly a

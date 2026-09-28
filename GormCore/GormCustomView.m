@@ -52,6 +52,18 @@
 
 @implementation GormCustomView 
 
++ (void) initialize
+{
+  if (self == [GormCustomView class])
+    {
+      /* NSArchiver's class-name substitution does not initialize the target
+       * class.  Its version must be initialized before we archive our native
+       * GSCustomView payload (including the autoresizing mask).
+       */
+      [GSCustomView class];
+    }
+}
+
 - (id)initWithFrame:(NSRect)frameRect
 {
   self = [super initWithFrame: frameRect];
@@ -320,4 +332,3 @@
   // nothing to do.  This is a class for testing custom views only. GJC
 }
 @end
-

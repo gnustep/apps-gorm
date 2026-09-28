@@ -264,6 +264,40 @@
 	      // handling class replacement so that standard objects understood
 	      // by the gui library are converted to their Gorm internal equivalents.
 	      //
+              /* Xcode may omit both matrix.prototype and cellClass when all
+               * cells are explicit. GNUstep's NSMatrix decoder nevertheless
+               * allocates temporary cells before replacing them with NSCells,
+               * and calls a NULL constructor without either initialization
+               * path. Supply a default only in the decoder's input; preserve
+               * the original file and any explicit prototype/class. */
+              NSXMLDocument *xml = AUTORELEASE([[NSXMLDocument alloc]
+                initWithData: data options: 0 error: NULL]);
+              if ([[[xml rootElement] name] isEqualToString: @"document"])
+                {
+                  NSArray *matrices = [xml nodesForXPath:
+                    @"//*[self::matrix or self::form][not(@cellClass) and not(*[@key='prototype'])]"
+                    error: NULL];
+                  for (NSXMLElement *matrix in matrices)
+                    [matrix addAttribute: [NSXMLNode attributeWithName: @"cellClass"
+                                                          stringValue:
+                      [[matrix name] isEqualToString: @"form"] ? @"NSFormCell" : @"NSActionCell"]];
+                  /* An empty form still has one (empty) column. The GNUstep
+                   * decoder indexes column zero when decoding NSForm cells. */
+                  NSArray *emptyForms = [xml nodesForXPath:
+                    @"//form[not(cells/column)]" error: NULL];
+                  for (NSXMLElement *form in emptyForms)
+                    {
+                      NSXMLElement *cells = [[form elementsForName: @"cells"] firstObject];
+                      if (cells == nil)
+                        {
+                          cells = [NSXMLNode elementWithName: @"cells"];
+                          [form addChild: cells];
+                        }
+                      [cells addChild: [NSXMLNode elementWithName: @"column"]];
+                    }
+                  if ([matrices count] != 0 || [emptyForms count] != 0)
+                    data = [xml XMLData];
+                }
 	      u = [GSXibKeyedUnarchiver unarchiverForReadingWithData: data];
 	      [u setDelegate: self];
 	      
@@ -557,6 +591,20 @@
 
 - (id) unarchiver: (NSKeyedUnarchiver *)unarchiver didDecodeObject: (id)obj
 {
+  /* Some GSXib5KeyedUnarchiver versions use the normal system image for both
+   * states. Repair only that duplicate; retain explicitly supplied alternates
+   * and all other decoded cell properties. */
+  if ([obj isKindOfClass: [NSButtonCell class]])
+    {
+      NSImage *image = [obj image];
+      if (image != nil && image == [obj alternateImage])
+        {
+          if (image == [NSImage imageNamed: @"NSRadioButton"])
+            [obj setAlternateImage: [NSImage imageNamed: @"NSHighlightedRadioButton"]];
+          else if (image == [NSImage imageNamed: @"NSSwitch"])
+            [obj setAlternateImage: [NSImage imageNamed: @"NSHighlightedSwitch"]];
+        }
+    }
   if ([obj isKindOfClass: [NSWindowTemplate class]])
     {
       GormClassManager *classManager = [document classManager];

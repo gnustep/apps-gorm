@@ -103,6 +103,15 @@ int main(void)
   [button setButtonType: NSMomentaryPushInButton];
   [button setFont: [NSFont systemFontOfSize: 13]];
   [view addSubview: button];
+  NSTextField *textField = [[NSTextField alloc] initWithFrame: NSMakeRect(0, 150, 100, 24)];
+  [textField setBezeled: YES];
+  [view addSubview: textField];
+  NSForm *form = [[NSForm alloc] initWithFrame: NSMakeRect(150, 150, 180, 46)];
+  [[form addEntry: @"Name:"] setStringValue: @"Alice"];
+  [[form addEntry: @"City:"] setStringValue: @"Boston"];
+  [form setCellSize: NSMakeSize(180, 22)];
+  [form setIntercellSpacing: NSMakeSize(0, 2)];
+  [view addSubview: form];
   [button setAlphaValue: 0.0]; // Legacy unkeyed palette archive default.
   [popup setAlphaValue: 0.5]; // Preserve a meaningful opacity setting.
   NSMatrix *matrix = [[NSMatrix alloc] initWithFrame: NSMakeRect(120, 100, 100, 48)
@@ -114,6 +123,8 @@ int main(void)
       [radioCell setFont: [NSFont systemFontOfSize: 12]];
     }
   [view addSubview: matrix];
+  [matrix setCellSize: NSMakeSize(88, 19)];
+  [matrix setIntercellSpacing: NSMakeSize(3, 2)];
   [view setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
   NSView *editor = [[NSView alloc] initWithFrame: NSZeroRect];
   [editor setToolTip: @"EDITOR_MUST_NOT_BE_ARCHIVED"];
@@ -132,6 +143,24 @@ int main(void)
       || [[xml nodesForXPath: @"//button[@alphaValue='1.0']" error: NULL] count] != 1
       || [[xml nodesForXPath: @"//popUpButton[@alphaValue='0.5']" error: NULL] count] != 1
       || [[xml nodesForXPath: @"//matrix/cells/column/buttonCell[@type='radio']"
+                       error: NULL] count] != 2
+      || [[xml nodesForXPath: @"//matrix/cells/column/buttonCell[@imagePosition='left']"
+                       error: NULL] count] != 2
+      || [[xml nodesForXPath: @"//textFieldCell[@borderStyle='bezel' or @borderStyle='borderAndBezel']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//form/cells/column/formCell"
+                       error: NULL] count] != 2
+      || [[xml nodesForXPath: @"//form/cells/column/formCell[@title='Name:' and @stringValue='Alice']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//form/cells/column/formCell[@title='City:' and @stringValue='Boston']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//form/size[@key='cellSize' and @width='180' and @height='22']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//matrix/size[@key='cellSize' and @width='88' and @height='19']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//matrix/size[@key='intercellSpacing' and @width='3' and @height='2']"
+                       error: NULL] count] != 1
+      || [[xml nodesForXPath: @"//matrix/cells/column/buttonCell/behavior[@key='behavior' and @changeContents='YES' and @lightByContents='YES']"
                        error: NULL] count] != 2
       || [[xml nodesForXPath: @"//matrix/*[@key='cell'] | //matrix/@cell"
                        error: NULL] count] != 0
@@ -153,9 +182,18 @@ int main(void)
   [document release];
   [editor release];
   [button release];
+  [textField release];
+  [form release];
   [matrix release];
   [view release];
   NSLog(@"XIB enum regression checks passed");
+  id loader = [[NSClassFromString(@"GormXibWrapperLoader") alloc] init];
+  [cell setButtonType: NSRadioButton];
+  [cell setAlternateImage: [cell image]];
+  [loader unarchiver: nil didDecodeObject: cell];
+  if ([cell alternateImage] == nil || [cell alternateImage] == [cell image])
+    [NSException raise: @"TestFailure" format: @"Radio state images are not distinct"];
+  [loader release];
   [box release];
   [popup release];
   [cell release];
