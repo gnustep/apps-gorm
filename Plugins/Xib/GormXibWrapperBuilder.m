@@ -27,7 +27,7 @@
 
 #import <GormCore/GormCore.h>
 
-#import "GormXIBModelGenerator.h"
+#import "GormXIBArchiver.h"
 
 @interface GormXibWrapperBuilder : GormWrapperBuilder
 @end
@@ -41,9 +41,23 @@
 
 - (NSFileWrapper *) buildFileWrapperWithDocument: (GormDocument *)doc
 {
-  GormXIBModelGenerator *generator = [GormXIBModelGenerator xibWithGormDocument: doc];
-  NSData *data = [generator data];
-  NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
+  NSString *error = nil;
+  GormPalettesManager *palettesManager =
+    [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
+  NSData *data = [GormXIBArchiver dataWithGormDocument: doc
+                                      classNameMappings:
+                                        [palettesManager substituteClasses]
+                                      errorDescription: &error];
+  NSFileWrapper *fileWrapper;
+
+  if (data == nil)
+    {
+      NSLog(@"Could not archive XIB data: %@", error);
+      [error release];
+      return nil;
+    }
+
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
 
   return fileWrapper;
 }

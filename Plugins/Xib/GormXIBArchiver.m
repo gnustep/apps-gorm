@@ -1,4 +1,4 @@
-/** <title>GormXIBKeyedArchiver</title>
+/** <title>GormXIBArchiver</title>
 
     <abstract>Interface of GormXIBKeyedArchiver</abstract>
 
@@ -60,7 +60,7 @@
 #import <GormCore/GormPrivate.h>
 #import <GormCore/NSToolbarPrivate.h>
 
-#import "GormXIBModelGenerator.h"
+#import "GormXIBArchiver.h"
 
 static NSArray *_externallyReferencedClasses = nil;
 static NSDictionary *_signatures = nil;
@@ -229,7 +229,7 @@ static NSDictionary *_valueMapping = nil;
 
 @end
 
-@interface GormXIBModelGenerator (Private)
+@interface GormXIBArchiver (Private)
 
 - (void) _collectObjectsFromObject: (id)obj
 			withParent: (NSXMLElement  *)node;
@@ -244,11 +244,11 @@ static NSDictionary *_valueMapping = nil;
 @end
 
 
-@implementation GormXIBModelGenerator
+@implementation GormXIBArchiver
 
 + (void) initialize
 {
-  if (self == [GormXIBModelGenerator class])
+  if (self == [GormXIBArchiver class])
     {
       _externallyReferencedClasses =
 	[[NSArray alloc] initWithObjects:
@@ -402,9 +402,17 @@ static NSDictionary *_valueMapping = nil;
 			      @"NSColor", @"GSDeviceRGBColor",
 			      @"NSColor", @"GSCalibratedRGBColor",
 			      @"NSColor", @"GSPatternColor",
-			      @"NSView", @"GSTableCornerView",
-				@"NSWindow", @"NSPanel",
+				@"NSView", @"GSTableCornerView",
+			      @"NSMenu", @"GormNSMenu",
+			      @"NSMenuView", @"GormNSMenuView",
+			      @"NSWindow", @"GormNSWindow",
 			      @"NSWindow", @"GormNSPanel",
+			      @"NSPopUpButton", @"GormNSPopUpButton",
+			      @"NSPopUpButtonCell", @"GormNSPopUpButtonCell",
+			      @"NSBrowser", @"GormNSBrowser",
+			      @"NSTableView", @"GormNSTableView",
+			      @"NSOutlineView", @"GormNSOutlineView",
+			      @"NSWindow", @"NSPanel",
 			      @"NSMenuItem", @"NSMenuSeparator",
 			      @"NSMenuItem", @"GSMenuSeparator",
 			      nil];
@@ -413,6 +421,12 @@ static NSDictionary *_valueMapping = nil;
 			 @"servicesProvider",
 			 @"servicesMenu",
 			 @"nextResponder",
+                         @"nextKeyView", @"previousKeyView", @"controlView",
+                         @"interfaceStyle", @"userInterfaceLayoutDirection",
+                         @"layerContentsRedrawPolicy", @"layerContentsPlacement",
+                         @"collectionBehavior", @"autoPositionMask",
+                         @"entryType", @"nextState", @"gradientType",
+                         @"showsStateBy", @"highlightsBy",
 			 @"supermenu",
 			 @"attributedStringValue",
 			 @"menuView", @"menu",
@@ -448,22 +462,46 @@ static NSDictionary *_valueMapping = nil;
 }
 
 /**
- * Returns an autoreleast GormXIBDocument object;
+ * Archives a Gorm document, following the same error-reporting contract as
+ * the NIX serialization API used by the NIX plugin.
  */
-+ (instancetype) xibWithGormDocument: (GormDocument *)doc
++ (NSData *) dataWithGormDocument: (GormDocument *)doc
+                classNameMappings: (NSDictionary *)classNameMappings
+                 errorDescription: (NSString **)errorDescription
 {
-  return AUTORELEASE([[self alloc] initWithGormDocument: doc]);
+  NSData *data = nil;
+
+  if (errorDescription != NULL)
+    *errorDescription = nil;
+  NS_DURING
+    {
+      GormXIBArchiver *archiver = AUTORELEASE([[self alloc]
+        initForWritingWithGormDocument: doc
+                     classNameMappings: classNameMappings]);
+      data = [archiver archivedData];
+    }
+  NS_HANDLER
+    {
+      if (errorDescription != NULL)
+        *errorDescription = [[localException reason] copy];
+      data = nil;
+    }
+  NS_ENDHANDLER
+
+  return data;
 }
 
 /**
  * Initialize with GormDocument object to parse the XML from or into.
  */
-- (instancetype) initWithGormDocument: (GormDocument *)doc
+- (instancetype) initForWritingWithGormDocument: (GormDocument *)doc
+                               classNameMappings: (NSDictionary *)classNameMappings
 {
   self = [super init];
   if (self != nil)
     {
       ASSIGN(_gormDocument, doc);
+      _classNameMappings = [classNameMappings copy];
       _mappingDictionary = [[NSMutableDictionary alloc] init];
       _allIdentifiers = [[NSMutableArray alloc] init];
       _emittedIdentifiers = [[NSMutableSet alloc] init];
@@ -480,6 +518,7 @@ static NSDictionary *_valueMapping = nil;
   DESTROY(_allIdentifiers);
   DESTROY(_emittedIdentifiers);
   DESTROY(_objectToIdentifier);
+  DESTROY(_classNameMappings);
 
   [super dealloc];
 }
@@ -490,7 +529,11 @@ static NSDictionary *_valueMapping = nil;
 
   // NSLog(@"Name = %@", name);
 
-  if ([_mappedClassNames objectForKey: name])
+  if ([_classNameMappings objectForKey: name] != nil)
+    {
+      className = [_classNameMappings objectForKey: name];
+    }
+  else if ([_mappedClassNames objectForKey: name] != nil)
     {
       className = [_mappedClassNames objectForKey: name];
       // NSLog(@"%@ => %@", name, className);
@@ -498,11 +541,12 @@ static NSDictionary *_valueMapping = nil;
 
   NSString *result = className;
 
-  // XIB element names omit a framework prefix, but occurrences within a
-  // custom class name are significant and must not be removed.
+  // XIB element names omit design-tool and framework prefixes. Explicit
+  // archive mappings above normally remove the design class in one step;
+  // retain sequential normalization for objects from third-party palettes.
   if ([result hasPrefix: @"Gorm"])
     result = [result substringFromIndex: 4];
-  else if ([result hasPrefix: @"NS"] || [result hasPrefix: @"GS"])
+  if ([result hasPrefix: @"NS"] || [result hasPrefix: @"GS"])
     result = [result substringFromIndex: 2];
 
   // Lowercase the first letter of the class to make the element name
@@ -1044,7 +1088,7 @@ static NSDictionary *_valueMapping = nil;
 	}
 #pragma GCC diagnostic pop
 
-      attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizeMask"];
+      attr = [NSXMLNode attributeWithName: @"key" stringValue: @"autoresizingMask"];
       [autoresizingMaskElem addAttribute: attr];
 
       [elem addChild: autoresizingMaskElem];
@@ -1236,6 +1280,117 @@ static NSDictionary *_valueMapping = nil;
     {
       return;
     }
+
+  /* Legacy GNUstep view archives do not initialize alphaValue, leaving
+   * otherwise visible palette controls at zero. Cocoa honors that value and
+   * makes the exported controls invisible. Match the NIX compatibility repair
+   * without mutating the document. Preserve meaningful nonzero opacity and
+   * leave window alpha (which has a separate archive contract) alone. */
+  if ([name isEqualToString: @"alphaValue"]
+      && [obj isKindOfClass: [NSView class]])
+    {
+      CGFloat alpha = [obj alphaValue];
+      [self _addFloat: alpha <= 0.0 ? 1.0 : alpha
+            withName: name toElement: elem];
+      return;
+    }
+
+  /* NSMatrix inherits NSControl.cell, but XIB persists its cells by row and
+   * column. The inherited cell is an implementation detail, not a child. */
+  if ([name isEqualToString: @"cell"] && [obj isKindOfClass: [NSMatrix class]])
+    return;
+
+  /* NSCell.type is a content-kind enum, whereas XIB buttonCell.type is a
+   * button-behavior enum. Never let reflective property discovery overwrite
+   * the latter with NSTextCellType (1). */
+  if ([name isEqualToString: @"type"] && [obj isKindOfClass: [NSCell class]])
+    {
+      if ([obj isKindOfClass: [NSButtonCell class]])
+        [self _addButtonType: [obj buttonTypeString] toElement: elem];
+      return;
+    }
+
+  if ([name isEqualToString: @"alignment"])
+    {
+      [self _addAlignment: [obj alignment] toElement: elem];
+      return;
+    }
+  if ([name isEqualToString: @"bezelStyle"])
+    {
+      [self _addBezelStyleForObject:
+        [obj respondsToSelector: @selector(cell)] ? [obj cell] : obj
+                         toElement: elem];
+      return;
+    }
+
+  /* XIB uses symbolic tokens, not the integer values used by AppKit's
+   * accessors. Empty tokens denote the schema default, which is omitted.
+   * Keep this before the generic integer/NSNumber paths. KVC boxes the
+   * actual return type, including signed NSMixedState, without an IMP cast. */
+  {
+    static NSDictionary *enums = nil;
+    NSString *tokens;
+    if (enums == nil)
+      enums = [[NSDictionary alloc] initWithObjectsAndKeys:
+        @"regular small mini", @"controlSize",
+        @"default blue graphite clear", @"controlTint",
+        @"default none exterior", @"focusRingType",
+        @"wordWrapping charWrapping clipping truncatingHead truncatingTail truncatingMiddle", @"lineBreakMode",
+        @"proportionallyDown axesIndependently none proportionallyUpOrDown", @"imageScaling",
+        @"none only left right bottom top overlaps", @"imagePosition",
+        @"noArrow arrowAtCenter arrowAtBottom", @"arrowPosition",
+        @"minX minY maxX maxY", @"preferredEdge",
+        @"primary secondary separator oldStyle custom", @"boxType",
+        @"none line bezel groove", @"borderType",
+        @"radio highlight list track", @"mode",
+        @"light dark raised lowered", @"backgroundStyle",
+        @"retained nonretained buffered", @"backingType", nil];
+    tokens = [enums objectForKey: name];
+    if (tokens != nil || [name isEqualToString: @"state"]
+        || [name isEqualToString: @"baseWritingDirection"])
+      {
+        NSInteger value = [[obj valueForKey: name] integerValue];
+        NSString *token = nil;
+        if ([name isEqualToString: @"state"])
+          {
+            if (value == NSOnState) token = @"on";
+            else if (value == NSMixedState) token = @"mixed";
+            else if (value == NSOffState) token = @"";
+          }
+        else if ([name isEqualToString: @"baseWritingDirection"])
+          {
+            if (value == -1) token = @"";
+            else if (value == 0) token = @"leftToRight";
+            else if (value == 1) token = @"rightToLeft";
+          }
+        else if ([name isEqualToString: @"controlTint"])
+          {
+            /* NSControlTint is sparse: default=0, blue=1, graphite=6, clear=7. */
+            if (value == 0) token = @"default";
+            else if (value == 1) token = @"blue";
+            else if (value == 6) token = @"graphite";
+            else if (value == 7) token = @"clear";
+          }
+        else
+          {
+            NSArray *values = [tokens componentsSeparatedByString: @" "];
+            if (value >= 0 && (NSUInteger)value < [values count])
+              token = [values objectAtIndex: value];
+          }
+        if (token == nil)
+          [NSException raise: NSInvalidArgumentException
+                      format: @"Unsupported XIB enum %@.%@ = %ld",
+                              objClassName, name, (long)value];
+        [elem removeAttributeForName: name];
+        if ([token length] != 0
+            && !([name isEqualToString: @"backingType"] && value == NSBackingStoreBuffered)
+            && !([name isEqualToString: @"imageScaling"]
+                 && [obj isKindOfClass: [NSButtonCell class]]
+                 && value == NSImageScaleNone))
+          [elem addAttribute: [NSXMLNode attributeWithName: name stringValue: token]];
+        return;
+      }
+  }
 
   if ([name isEqualToString: @"cells"]
       && [obj isKindOfClass: [NSMatrix class]])
@@ -1714,6 +1869,35 @@ static NSDictionary *_valueMapping = nil;
 {
   BOOL needsColorFallback = NO;
 
+  /* Font identity and size are read-only properties and cannot be discovered
+   * by pairing setters with getters. An empty font element is not a complete
+   * XIB font description. */
+  if ([obj isKindOfClass: [NSFont class]])
+    {
+      NSFont *font = obj;
+      NSXMLElement *element = [NSXMLNode elementWithName: @"font"];
+      if (keyName != nil)
+        [element addAttribute: [NSXMLNode attributeWithName: @"key"
+                                              stringValue: keyName]];
+      if ([font isEqual: [NSFont systemFontOfSize: [font pointSize]]])
+        [element addAttribute: [NSXMLNode attributeWithName: @"metaFont"
+                                              stringValue: @"system"]];
+      else if ([font isEqual: [NSFont boldSystemFontOfSize: [font pointSize]]])
+        [element addAttribute: [NSXMLNode attributeWithName: @"metaFont"
+                                              stringValue: @"systemBold"]];
+      else
+        {
+          [element addAttribute: [NSXMLNode attributeWithName: @"name"
+                                                stringValue: [font fontName]]];
+          [element addAttribute: [NSXMLNode attributeWithName: @"family"
+                                                stringValue: [font familyName]]];
+        }
+      [element addAttribute: [NSXMLNode attributeWithName: @"size"
+        stringValue: [NSString stringWithFormat: @"%.17g", (double)[font pointSize]]]];
+      [pNode addChild: element];
+      return;
+    }
+
   // Some legacy archives contain placeholder NSColor instances with no color
   // space or a GNUstep-only color space.  Remember those so they can be
   // represented by a safe non-nil XIB color below.
@@ -1894,6 +2078,7 @@ static NSDictionary *_valueMapping = nil;
 	      attr = [NSXMLNode attributeWithName: @"id" stringValue: [self _createUniqueIdentifier]];
 	      [mainMenuItem addAttribute: attr];
 	      attr = [NSXMLNode attributeWithName: @"title" stringValue: [obj title]];
+	      [mainMenuItem addAttribute: attr];
 
 	      [mainMenuItem addChild: elem]; // Now add the node, since we have inserted the proper system menu
 
@@ -1972,7 +2157,7 @@ static NSDictionary *_valueMapping = nil;
       else if ([obj isKindOfClass: [NSWindow class]])
 	{
 	  NSRect s = [[NSScreen mainScreen] frame];
-	  NSRect c = [[obj contentView] frame];
+	  NSRect c = [obj contentRectForFrameRect: [obj frame]];
 	  NSUInteger m = [obj styleMask];
 
 	  [self _addWindowStyleMask: m toElement: elem];
@@ -2276,13 +2461,13 @@ static NSDictionary *_valueMapping = nil;
   [_gormDocument reactivateEditors];
 }
 
-- (NSData *) data
+- (NSData *) archivedData
 {
   NSString *plugInId = @"com.apple.InterfaceBuilder.CocoaPlugin";
   NSString *typeId = @"com.apple.InterfaceBuilder3.Cocoa.XIB";
   NSString *toolVersion = @"21507";
 
-  // data may be requested more than once from a generator.  Track definitions
+  // Data may be requested more than once from an archiver. Track definitions
   // per output document, including the three placeholders emitted below.
   [_emittedIdentifiers removeAllObjects];
   [_emittedIdentifiers addObject: @"-3"];
@@ -2368,22 +2553,6 @@ static NSDictionary *_valueMapping = nil;
   data = [xml dataUsingEncoding: NSUTF8StringEncoding];
 
   return data;
-}
-
-- (BOOL) exportXIBDocumentWithName: (NSString *)name
-{
-  BOOL result = NO;
-
-  if (name != nil)
-    {
-      NSData *data = [self data];
-      NSString *xmlString = [[NSString alloc] initWithBytes: [data bytes] length: [data length] encoding: NSUTF8StringEncoding];
-
-      AUTORELEASE(xmlString);
-      result = [xmlString writeToFile: name atomically: YES];
-    }
-
-  return result;
 }
 
 @end

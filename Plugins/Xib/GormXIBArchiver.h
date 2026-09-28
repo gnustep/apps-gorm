@@ -1,4 +1,4 @@
-/** <title>GormXIBKeyedArchiver</title>
+/** <title>GormXIBArchiver</title>
 
    <abstract>Interface of GormXIBKeyedArchiver</abstract>
 
@@ -25,8 +25,8 @@
    Boston, MA 02110-1301, USA.
 */ 
 
-#ifndef GormXIBModelGenerator_H_INCLUDE
-#define GormXIBModelGenerator_H_INCLUDE
+#ifndef GormXIBArchiver_H_INCLUDE
+#define GormXIBArchiver_H_INCLUDE
 
 #import <Foundation/NSObject.h>
 
@@ -39,41 +39,39 @@
 @class NSMapTable;
 
 /**
- * GormXIBModelGenerator provides GormXIBModelGenerator class or protocol.
+ * Archives a Gorm document in Interface Builder's XIB representation.
  */
 GS_EXPORT_CLASS
-@interface GormXIBModelGenerator : NSObject
+@interface GormXIBArchiver : NSObject
 {
   GormDocument *_gormDocument;
   NSMutableDictionary *_mappingDictionary;
   NSMutableArray *_allIdentifiers;
   NSMutableSet *_emittedIdentifiers;
   NSMapTable *_objectToIdentifier;
+  NSDictionary *_classNameMappings;
   NSUInteger _nextIdentifier;
 }
 
 /**
- * Returns an autoreleased GormXIBModelGenerator object;
+ * Archives a document and returns its XIB data.  On failure nil is returned.
+ * If errorDescription is non-NULL, the caller owns the returned string.
  */
-+ (instancetype) xibWithGormDocument: (GormDocument *)doc;
++ (NSData *) dataWithGormDocument: (GormDocument *)doc
+                classNameMappings: (NSDictionary *)classNameMappings
+                 errorDescription: (NSString **)errorDescription;
 
 /**
- * Initialize with GormDocument object to parse the XML from or into.
+ * Initialize an archiver for the supplied Gorm document.
  */
-- (instancetype) initWithGormDocument: (GormDocument *)doc;
+- (instancetype) initForWritingWithGormDocument: (GormDocument *)doc
+                               classNameMappings: (NSDictionary *)classNameMappings;
 
 /**
- * The data for the XIB document that has been created
+ * Finish the archive and return its XIB representation.
  */
-- (NSData *) data;
-
-/**
- * Exports XIB file.  This method starts the process and calls
- * another method that recurses through the objects in the model and 
- * maps any properties as appropriate when exporting.
- */
-- (BOOL) exportXIBDocumentWithName: (NSString *)name;
+- (NSData *) archivedData;
 
 @end
 
-#endif //  GormXIBModelGenerator_H_INCLUDE
+#endif // GormXIBArchiver_H_INCLUDE
