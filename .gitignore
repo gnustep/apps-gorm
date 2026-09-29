@@ -13,3 +13,4 @@ GormVersion.h
 GormInfo.plist
 *.log
 *.sum
+__pycache__

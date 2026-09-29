@@ -25,6 +25,7 @@ check::
 	  gnustep-tests --debug gormtool;\
 	fi; \
 	)
+	python3 conversions.py
 
 clean::
 	-gnustep-tests --clean
