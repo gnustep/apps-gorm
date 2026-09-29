@@ -3,6 +3,7 @@
  */
 #import "GormWidgetLibrary.h"
 #import "GormPrivate.h"
+#import "GormCustomView.h"
 #import <math.h>
 
 /* Keep the original prototype and its pasteboard type. In particular, a
@@ -33,6 +34,8 @@
 
 static NSString *LibraryDescription(id object)
 {
+  if ([object isKindOfClass: [GormCustomView class]])
+    return _(@"Add a placeholder for a custom view class.");
   if ([object isKindOfClass: [NSPopUpButton class]])
     return _(@"Choose an item from a pop-up list of options.");
   if ([object isKindOfClass: [NSButton class]])
@@ -83,7 +86,10 @@ static NSString *LibraryDescription(id object)
   if ((self = [super initWithFrame: frame]))
     {
       entry = RETAIN(anEntry);
-      preview = [NSUnarchiver unarchiveObjectWithData: entry->previewData];
+      NSUnarchiver *unarchiver = [[NSUnarchiver alloc]
+        initForReadingWithData: entry->previewData];
+      [unarchiver decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
+      preview = [unarchiver decodeObject];
       NSSize size = [preview frame].size;
       CGFloat scale = MIN(1.0, MIN(126.0 / MAX(size.width, 1), 76.0 / MAX(size.height, 1)));
       [preview setFrame: NSMakeRect(10 + (126 - size.width * scale) / 2,
@@ -92,6 +98,7 @@ static NSString *LibraryDescription(id object)
       [preview setBoundsSize: size];
       [preview setAutoresizingMask: NSViewNotSizable];
       [self addSubview: preview];
+      RELEASE(unarchiver);
       [self setAutoresizingMask: NSViewWidthSizable];
       [self setToolTip: [NSString stringWithFormat: @"%@ — %@\n%@",
         entry->title, entry->category, entry->detail]];
@@ -320,7 +327,15 @@ static NSString *LibraryDescription(id object)
       entry->category = [[[palette originalWindow] title] copy];
       /* Independent examples keep controls visible without moving the palette
        * prototypes, and preserve custom palette views and their appearance. */
-      entry->previewData = RETAIN([NSArchiver archivedDataWithRootObject: view]);
+      NSMutableData *data = [NSMutableData data];
+      NSArchiver *archiver = [[NSArchiver alloc] initForWritingWithMutableData: data];
+      /* GormCustomView writes the native GSCustomView payload. Match the
+       * document copy/paste mapping so its versioned decoder can read it,
+       * including placeholders nested inside container previews. */
+      [archiver encodeClassName: @"GormCustomView" intoClassName: @"GSCustomView"];
+      [archiver encodeRootObject: view];
+      entry->previewData = [data copy];
+      RELEASE(archiver);
       [entries addObject: entry];
       RELEASE(entry);
     }

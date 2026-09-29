@@ -5,6 +5,7 @@
 #import <AppKit/AppKit.h>
 #import <InterfaceBuilder/InterfaceBuilder.h>
 #import <GormCore/GormDocument.h>
+#import <GormCore/GormCustomView.h>
 #import <GormCore/GormWidgetLibrary.h>
 
 /* A small custom palette exercises both ordinary views and associated objects. */
@@ -25,6 +26,11 @@
   [[originalWindow contentView] addSubview: proxy];
   [self associateObject: AUTORELEASE([NSNumberFormatter new])
                   type: IBFormatterPboardType with: proxy];
+  GormCustomView *custom = AUTORELEASE([[GormCustomView alloc]
+    initWithFrame: NSMakeRect(120, 20, 80, 60)]);
+  [custom setClassName: @"LibraryCanvas"];
+  [custom setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+  [[originalWindow contentView] addSubview: custom];
   return self;
 }
 - (void) dealloc
@@ -55,7 +61,7 @@ int main(void)
   NSScrollView *scroll = [library valueForKey: @"scrollView"];
   NSSearchField *search = [library valueForKey: @"searchField"];
   NSArray *rows = [[scroll documentView] subviews];
-  PASS([entries count] == 2 && [rows count] == 2,
+  PASS([entries count] == 3 && [rows count] == 3,
        "every palette prototype gets a library entry")
   PASS([[entries objectAtIndex: 0] valueForKey: @"object"] == prototype,
        "ordinary widgets retain the palette prototype for insertion")
@@ -68,6 +74,14 @@ int main(void)
   PASS([prototype superview] == [[palette originalWindow] contentView]
        && NSEqualRects([prototype frame], originalFrame),
        "opening the library leaves the original palette intact")
+
+  NSView *customPreview = [[[rows objectAtIndex: 2] subviews] firstObject];
+  PASS([customPreview isKindOfClass: [GormCustomView class]]
+       && NSWidth([customPreview frame]) > 0 && NSHeight([customPreview frame]) > 0,
+       "custom views have a visible, nonzero-sized library preview")
+  PASS([customPreview isKindOfClass: [GormCustomView class]]
+       && [[(GormCustomView *)customPreview className] isEqual: @"LibraryCanvas"],
+       "custom view previews preserve the placeholder class name")
 
   [search setStringValue: @"EXAMPLE BUTTON"];
   [search sendAction: [search action] to: [search target]];
@@ -83,7 +97,7 @@ int main(void)
        "an unmatched query displays an empty-state message")
   [search setStringValue: @"Test Controls"];
   [search sendAction: [search action] to: [search target]];
-  PASS([[[scroll documentView] subviews] count] == 2,
+  PASS([[[scroll documentView] subviews] count] == 3,
        "search matches palette categories")
 
   GormDocument *document = [GormDocument new];
@@ -102,6 +116,20 @@ int main(void)
   copies = [NSUnarchiver unarchiveObjectWithData: [pb dataForType: IBFormatterPboardType]];
   PASS([[copies objectAtIndex: 0] isKindOfClass: [NSNumberFormatter class]],
        "formatter drops copy the formatter rather than its preview button")
+  entry = [entries objectAtIndex: 2];
+  PASS([document copyObject: [entry valueForKey: @"object"]
+                      type: [entry valueForKey: @"type"] toPasteboard: pb],
+       "custom view library entries can be copied for dragging")
+  NSUnarchiver *decoder = AUTORELEASE([[NSUnarchiver alloc]
+    initForReadingWithData: [pb dataForType: IBViewPboardType]]);
+  [decoder decodeClassName: @"GSCustomView" asClassName: @"GormCustomView"];
+  copies = [decoder decodeObject];
+  GormCustomView *customCopy = [copies firstObject];
+  PASS([customCopy isKindOfClass: [GormCustomView class]]
+       && [[customCopy className] isEqual: @"LibraryCanvas"]
+       && NSEqualRects([customCopy frame], [[prototypes objectAtIndex: 2] frame])
+       && [customCopy autoresizingMask] == (NSViewWidthSizable | NSViewHeightSizable),
+       "custom view drops preserve class name, original size, and resizing behavior")
   [pb releaseGlobally];
   RELEASE(document);
 
@@ -111,7 +139,7 @@ int main(void)
   [[NSNotificationCenter defaultCenter] postNotificationName: IBWillEndTestingInterfaceNotification object: nil];
   PASS([panel isVisible], "the library reappears after testing")
   [library addPalette: palette];
-  PASS([[[scroll documentView] subviews] count] == 4,
+  PASS([[[scroll documentView] subviews] count] == 6,
        "loading another palette refreshes an open library")
   [panel close];
   PASS([library panel] == panel, "closing the library preserves its panel for reopening")
