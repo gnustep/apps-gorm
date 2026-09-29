@@ -78,6 +78,7 @@ GormCore_HEADER_FILES = \
 	GormOpenGLView.h \
 	GormOutlineView.h \
 	GormPalettesManager.h \
+	GormWidgetLibrary.h \
 	GormPlacementInfo.h \
 	GormPlugin.h \
 	GormPluginManager.h \
@@ -160,6 +161,7 @@ GormCore_OBJC_FILES = \
 	GormOpenGLView.m \
 	GormOutlineView.m \
 	GormPalettesManager.m \
+	GormWidgetLibrary.m \
 	GormPlugin.m \
 	GormPluginManager.m \
 	GormResource.m \

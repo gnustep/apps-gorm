@@ -74,6 +74,7 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #import <GormCore/GormOpenGLView.h>
 #import <GormCore/GormOutlineView.h>
 #import <GormCore/GormPalettesManager.h>
+#import <GormCore/GormWidgetLibrary.h>
 #import <GormCore/GormPlacementInfo.h>
 #import <GormCore/GormPlugin.h>
 #import <GormCore/GormPluginManager.h>

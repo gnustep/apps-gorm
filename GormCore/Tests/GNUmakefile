@@ -20,9 +20,9 @@ all::
 check::
 	(\
 	ADDITIONAL_INCLUDE_DIRS="-I$(TOP_DIR)/.. -I$(TOP_DIR)";\
-	ADDITIONAL_LIB_DIRS="-L$(TOP_DIR)/$(GNUSTEP_OBJ_DIR) -L$(TOP_DIR)/../InterfaceBuilder/$(GNUSTEP_OBJ_DIR) -L$(TOP_DIR)/../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)";\
+	ADDITIONAL_LIB_DIRS="-L$(TOP_DIR)/GormCore.framework/Versions/0 -L$(TOP_DIR)/../InterfaceBuilder/$(GNUSTEP_OBJ_DIR) -L$(TOP_DIR)/../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)";\
 	ADDITIONAL_OBJC_LIBS="-lGormCore -lInterfaceBuilder -lGormObjCHeaderParser -lgnustep-gui";\
-	LD_LIBRARY_PATH="$(TOP_DIR)/$(GNUSTEP_OBJ_DIR):$(TOP_DIR)/../InterfaceBuilder/$(GNUSTEP_OBJ_DIR):$(TOP_DIR)/../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR):${LD_LIBRARY_PATH}";\
+	LD_LIBRARY_PATH="$(TOP_DIR)/GormCore.framework/Versions/0:$(TOP_DIR)/../InterfaceBuilder/$(GNUSTEP_OBJ_DIR):$(TOP_DIR)/../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR):${LD_LIBRARY_PATH}";\
 	export ADDITIONAL_INCLUDE_DIRS;\
 	export ADDITIONAL_LIB_DIRS;\
 	export ADDITIONAL_OBJC_LIBS;\

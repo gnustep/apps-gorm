@@ -29,11 +29,12 @@
 #include <Foundation/Foundation.h>
 
 @class NSMutableArray, NSMutableDictionary, NSDictionary, NSArray, NSBundle;
-@class NSPanel, NSMatrix, NSView;
+@class NSPanel, NSMatrix, NSView, GormWidgetLibrary;
 GS_EXPORT_CLASS
 @interface GormPalettesManager : NSObject
 {
   NSPanel		*panel;
+  GormWidgetLibrary    *widgetLibrary;
   NSMatrix		*selectionView;
   NSView		*dragView;
   NSMutableArray	*bundles;
@@ -50,6 +51,8 @@ GS_EXPORT_CLASS
 - (BOOL) loadPalette: (NSString*)path;
 - (id) openPalette: (id) sender;
 - (NSPanel*) panel;
+- (NSPanel*) libraryPanel;
+- (BOOL) isLibraryVisible;
 - (void) setCurrentPalette: (id)anObject;
 
 // methods for importing stuff from palettes

@@ -319,6 +319,12 @@ Contains the inspector and the palette menus
 Shows the inspector
 @item Palette @*
 Shows the palette
+@item Widget Library @*
+Shows a searchable library alongside the existing palettes.  Each entry has an
+example widget, a description, and its palette name.  Drag either the example
+or its description into a document to insert a copy.  Search matches widget
+names, descriptions, and palette names.  Objects from additional palettes
+appear in the library when those palettes are loaded.
 @item Load Palette @*
 Opens a file panel and allows the user to load a palette into Gorm.
 @end itemize
@@ -423,6 +429,10 @@ Controls whether the inspector shows when Gorm is started.
 
 @item ShowPalettes @*
 Controls whether the palettes window shows when Gorm is started.
+
+@item ShowWidgetLibrary @*
+Controls whether the Widget Library shows when Gorm is started.  Gorm remembers
+whether the library was visible when the application last quit.
 
 @item BackupFile @*
 Determines if the old .gorm is moved to .gorm~ when the modified version is saved.

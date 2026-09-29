@@ -6,7 +6,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 GNUSTEP_OBJ_DIR=./obj
 
-TEST_TOOL_NAME =  basic
+TEST_TOOL_NAME =  basic widgetLibrary
 
 ADDITIONAL_CPPFLAGS += -I$(GNUSTEP_MAKEFILES)/TestFramework
 
@@ -27,6 +27,7 @@ endif
 
 
 basic_OBJC_FILES=basic.m
+widgetLibrary_OBJC_FILES=widgetLibrary.m
 
 -include GNUmakefile.preamble
 -include make-check.mak

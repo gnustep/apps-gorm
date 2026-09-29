@@ -30,6 +30,7 @@
 
 #include "GormPrivate.h"
 #include "GormFunctions.h"
+#include "GormWidgetLibrary.h"
 
 #define BUILTIN_PALETTES @"BuiltinPalettes"
 #define USER_PALETTES    @"UserPalettes"
@@ -255,6 +256,7 @@ static NSImage	*dragImage = nil;
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  RELEASE(widgetLibrary);
   RELEASE(panel);
   RELEASE(bundles);
   RELEASE(palettes);
@@ -347,6 +349,8 @@ static NSImage	*dragImage = nil;
   [panel setFrameUsingName: @"Palettes"];
   [panel setFrameAutosaveName: @"Palettes"];
   current = -1;
+
+  widgetLibrary = [[GormWidgetLibrary alloc] init];
 
   // Load the palettes...
   array = [[NSBundle mainBundle] pathsForResourcesOfType: @"palette"
@@ -525,6 +529,7 @@ static NSImage	*dragImage = nil;
     }
 
   [palette finishInstantiate];
+  [widgetLibrary addPalette: palette];
   window = [palette originalWindow];
   [window setExcludedFromWindowsMenu: YES];
 
@@ -609,6 +614,16 @@ static NSImage	*dragImage = nil;
     }
 
   return nil;
+}
+
+- (BOOL) isLibraryVisible
+{
+  return [widgetLibrary isVisible];
+}
+
+- (NSPanel*) libraryPanel
+{
+  return [widgetLibrary panel];
 }
 
 - (NSPanel*) panel

@@ -39,6 +39,26 @@
 
 @end
 
+/* Locate the palette command in localized menus without depending on titles. */
+static BOOL AddWidgetLibraryMenuItem(NSMenu *menu, id target)
+{
+  NSInteger i;
+  for (i = 0; i < [menu numberOfItems]; i++)
+    {
+      id item = [menu itemAtIndex: i];
+      if (sel_isEqual([item action], @selector(palettes:)))
+        {
+          id libraryItem = [menu insertItemWithTitle: _(@"Widget Library...")
+            action: @selector(widgetLibrary:) keyEquivalent: @"" atIndex: i + 1];
+          [libraryItem setTarget: target];
+          return YES;
+        }
+      if ([item hasSubmenu] && AddWidgetLibraryMenuItem([item submenu], target))
+        return YES;
+    }
+  return NO;
+}
+
 @implementation GormAppDelegate
 
 // App delegate...
@@ -65,6 +85,10 @@
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
+  AddWidgetLibraryMenuItem([NSApp mainMenu], self);
+  if ([defaults boolForKey: @"ShowWidgetLibrary"])
+    [[[self palettesManager] libraryPanel] orderFront: self];
+
   if ( [defaults boolForKey: @"ShowInspectors"] )
     {
       [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
@@ -77,6 +101,9 @@
 
 - (void) applicationWillTerminate: (NSNotification *)n
 {
+  [[NSUserDefaults standardUserDefaults]
+    setBool: [[self palettesManager] isLibraryVisible]
+    forKey: @"ShowWidgetLibrary"];
   [[NSUserDefaults standardUserDefaults]
     setBool: [[[self inspectorsManager] panel] isVisible]
     forKey: @"ShowInspectors"];
@@ -570,6 +597,11 @@
 - (IBAction) inspector: (id) sender
 {
   [[[self inspectorsManager] panel] makeKeyAndOrderFront: self];
+}
+
+- (IBAction) widgetLibrary: (id) sender
+{
+  [[[self palettesManager] libraryPanel] makeKeyAndOrderFront: self];
 }
 
 - (IBAction) palettes: (id) sender

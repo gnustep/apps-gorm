@@ -94,6 +94,7 @@ GS_EXPORT_CLASS
  * Loads a palette bundle from the specified file system path. The palette bundle contains UI components and resources that can be used in interface design.
  */
 - (IBAction) loadPalette: (id) sender;
+- (IBAction) widgetLibrary: (id) sender;
 
 // sound & images
 /**
