@@ -204,6 +204,8 @@ static NSString *LibraryDescription(id object)
   if ((self = [super init]))
     {
       entries = [[NSMutableArray alloc] init];
+      [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(savePanelFrame:)
+        name: NSApplicationWillTerminateNotification object: NSApp];
       [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(testing:)
         name: IBWillBeginTestingInterfaceNotification object: nil];
       [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(testing:)
@@ -218,6 +220,11 @@ static NSString *LibraryDescription(id object)
   RELEASE(panel);
   RELEASE(entries);
   [super dealloc];
+}
+- (void) savePanelFrame: (NSNotification *)notification
+{
+  if (panel != nil)
+    [panel saveFrameUsingName: @"WidgetLibrary"];
 }
 - (void) testing: (NSNotification *)notification
 {
@@ -306,6 +313,14 @@ static NSString *LibraryDescription(id object)
       RELEASE(scrollView);
       [panel setFrameUsingName: @"WidgetLibrary"];
       [panel setFrameAutosaveName: @"WidgetLibrary"];
+      /* Also save programmatic moves and the final frame on close/quit. */
+      NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+      [nc addObserver: self selector: @selector(savePanelFrame:)
+                 name: NSWindowDidMoveNotification object: panel];
+      [nc addObserver: self selector: @selector(savePanelFrame:)
+                 name: NSWindowDidResizeNotification object: panel];
+      [nc addObserver: self selector: @selector(savePanelFrame:)
+                 name: NSWindowWillCloseNotification object: panel];
       [self reload: self];
     }
   return panel;
@@ -320,6 +335,8 @@ static NSString *LibraryDescription(id object)
       entry->object = RETAIN([IBPalette objectForView: view]);
       entry->type = RETAIN([IBPalette typeForView: view]);
       NSString *name = NSStringFromClass([entry->object class]);
+      if ([name hasPrefix: @"Gorm"])
+        name = [name substringFromIndex: 4];
       if ([entry->object respondsToSelector: @selector(title)] && [[entry->object title] length])
         name = [NSString stringWithFormat: @"%@ (%@)", [entry->object title], name];
       entry->title = [name copy];

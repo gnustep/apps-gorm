@@ -75,6 +75,10 @@ int main(void)
        && NSEqualRects([prototype frame], originalFrame),
        "opening the library leaves the original palette intact")
 
+  PASS([[[entries objectAtIndex: 2] valueForKey: @"title"] isEqual: @"CustomView"],
+       "library names omit the Gorm prefix on stand-in classes")
+  PASS([[[entries objectAtIndex: 0] valueForKey: @"title"] isEqual: @"Example Button (NSButton)"],
+       "ordinary widget names retain their original class names")
   NSView *customPreview = [[[rows objectAtIndex: 2] subviews] firstObject];
   PASS([customPreview isKindOfClass: [GormCustomView class]]
        && NSWidth([customPreview frame]) > 0 && NSHeight([customPreview frame]) > 0,
@@ -141,8 +145,18 @@ int main(void)
   [library addPalette: palette];
   PASS([[[scroll documentView] subviews] count] == 6,
        "loading another palette refreshes an open library")
+  NSRect savedFrame = NSMakeRect(210, 180, 530, 460);
+  [panel setFrame: savedFrame display: NO];
+  PASS([[[NSUserDefaults standardUserDefaults] stringForKey: @"NSWindow Frame WidgetLibrary"]
+         isEqual: [panel stringWithSavedFrame]],
+       "moving and resizing the library saves its frame")
   [panel close];
   PASS([library panel] == panel, "closing the library preserves its panel for reopening")
+  RELEASE(library);
+  library = [GormWidgetLibrary new];
+  PASS(NSEqualRects([[library panel] frame], savedFrame),
+       "a new library restores the saved panel position and size")
+  [[library panel] close];
   RELEASE(library);
   RELEASE(palette);
   END_SET("Widget library")
