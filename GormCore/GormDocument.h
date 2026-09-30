@@ -100,7 +100,6 @@ GS_EXPORT_CLASS
   BOOL                  isOlderArchive;
   id                    filePrefsView;
   GormFilePrefsManager  *filePrefsManager;
-  NSWindow              *filePrefsWindow;
   NSMutableArray        *resourceManagers;
   NSData                *infoData;   /* data.info contents */
   NSMutableArray        *images;     /* temporary storage for images. */             

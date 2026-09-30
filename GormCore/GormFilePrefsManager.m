@@ -1,9 +1,6 @@
 /** <title>GormFilePrefsManager</title>
 
-  <abstract>Sets the information about the .gorm file's version.  
-  This allows a file to be saved as an older version of the .gorm 
-  format so that older releases can still use .gorm files created 
-  by people who have the latest GNUstep and Gorm version.</abstract>
+  <abstract>Stores per-document file information.</abstract>
 
    Copyright (C) 2003 Free Software Foundation, Inc.
 
@@ -65,24 +62,9 @@ NSString *formatVersion(NSInteger version)
 
 @implementation GormFilePrefsManager
 
-// initializers...
-- (id) init
-{
-  if((self = [super init]) != nil)
-    {
-      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
-      NSString *path = [bundle pathForResource: @"VersionProfiles" ofType: @"plist"];
-      versionProfiles = RETAIN([[NSString stringWithContentsOfFile: path] propertyList]);
-    }
-  return self;
-}
-
 - (void) dealloc
 {
-  NSDebugLog(@"Deallocating...");
-  [iwindow performClose: self];
-  RELEASE(iwindow);
-  RELEASE(versionProfiles);
+  RELEASE(archiveTypeName);
   [super dealloc];
 }
 
@@ -95,66 +77,7 @@ NSString *formatVersion(NSInteger version)
 {
   version = [GormFilePrefsManager currentVersion];
   [gormAppVersion setStringValue: formatVersion(version)];
-  ASSIGN(targetVersionName, [[targetVersion selectedItem] title]);
   ASSIGN(archiveTypeName, [[archiveType selectedItem] title]);
-  [self selectTargetVersion: targetVersion];
-}
-
-// set class versions
-- (void) setClassVersions
-{
-  NSEnumerator *en = [currentProfile keyEnumerator];
-  id className = nil;
-  
-  NSDebugLog(@"set the class versions to the profile selected... %@",targetVersionName);
-  while((className = [en nextObject]) != nil)
-    {
-      Class cls = NSClassFromString(className);
-      NSDictionary *info = [currentProfile objectForKey: className];
-      NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
-      [cls setVersion: v];
-    }
-}
-
-- (void) restoreClassVersions
-{
-  NSDictionary *latestVersion = [versionProfiles objectForKey: @"Latest Version"];
-  NSEnumerator *en = [latestVersion keyEnumerator];
-  id className = nil;
-  
-  // The "Latest Version" key must always exist.
-  NSDebugLog(@"restore the class versions to the latest version...");
-  while((className = [en nextObject]) != nil)
-    {
-      Class cls = NSClassFromString(className);
-      NSDictionary *info = [latestVersion objectForKey: className];
-      NSInteger v = [[info objectForKey: @"version"] intValue];
-      NSDebugLog(@"Setting version %ld for class %@",(long)v,className);
-      [cls setVersion: v];
-    }
-}
-
-// class profile
-- (void) loadProfile: (NSString *)profileName
-{
-  NSDebugLog(@"Loading profile %@",profileName);
-  currentProfile = [versionProfiles objectForKey: targetVersionName];
-}
-
-// actions...
-- (void) showIncompatibilities: (id)sender
-{
-  [itable reloadData];
-  [iwindow orderFront: self];
-  [iwindow center];
-}
-
-- (void) selectTargetVersion: (id)sender
-{
-  ASSIGN(targetVersionName, [[sender selectedItem] title]);
-  [self loadProfile: targetVersionName];
-  [itable reloadData];
 }
 
 - (void) selectArchiveType: (id)sender
@@ -209,40 +132,6 @@ NSString *formatVersion(NSInteger version)
 				      errorDescription: NULL];
 }
 
-- (int) versionOfClass: (NSString *)className 
-{
-  NSInteger result = -1; 
-
-  NSDictionary *clsProfile = [currentProfile objectForKey: className];
-  if(clsProfile != nil)
-    {
-      NSString *versionString = [clsProfile objectForKey: @"version"];
-      if(versionString != nil)
-	{
-	  result = [versionString intValue];
-	}
-    }
-
-  return result;
-		      
-}
-
-/**
- * Current profile for the current model file.
- */
-- (NSDictionary *) currentProfile
-{
-  return currentProfile;
-}
-
-/**
- * Version information for the model file.
- */
-- (NSDictionary *) versionProfiles
-{
-  return versionProfiles;
-}
-
 - (BOOL) loadFromFile: (NSString *)path
 {
   return [self loadFromData: [NSData dataWithContentsOfFile: path]];
@@ -258,11 +147,8 @@ NSString *formatVersion(NSInteger version)
 	[NSUnarchiver unarchiveObjectWithData: data];
       [gormAppVersion setStringValue: formatVersion([object version])];
       version = [object version];
-      [targetVersion selectItemWithTitle: [object targetVersionName]];
-      ASSIGN(targetVersionName,[object targetVersionName]);
       [archiveType selectItemWithTitle: [object archiveTypeName]];
       ASSIGN(archiveTypeName, [object archiveTypeName]);
-      [self selectTargetVersion: targetVersion];
       result = YES;
     }
   NS_HANDLER
@@ -279,7 +165,8 @@ NSString *formatVersion(NSInteger version)
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   [coder encodeValueOfObjCType: @encode(int) at: &version];
-  [coder encodeObject: targetVersionName];
+  // Keep the positional data.info layout, but never persist an old save target.
+  [coder encodeObject: @"Latest Version"];
   [coder encodeObject: archiveTypeName];
 }
 
@@ -288,8 +175,9 @@ NSString *formatVersion(NSInteger version)
   if((self = [super init]) != nil)
     {
       [coder decodeValueOfObjCType: @encode(int) at: &version];
-      targetVersionName = [coder decodeObject];
-      archiveTypeName = [coder decodeObject];
+      // Discard the obsolete target version from existing documents.
+      [coder decodeObject];
+      archiveTypeName = RETAIN([coder decodeObject]);
     }
 
   return self;
@@ -301,19 +189,9 @@ NSString *formatVersion(NSInteger version)
   return version;
 }
 
-- (NSString *)targetVersionName
-{
-  return targetVersionName;
-}
-
 - (NSString *)archiveTypeName
 {
   return archiveTypeName;
-}
-
-- (BOOL) isLatest
-{
-  return ([targetVersionName isEqual: @"Latest Version"]);
 }
 
 - (void) setFileTypeName: (NSString *)ft
@@ -324,40 +202,6 @@ NSString *formatVersion(NSInteger version)
 - (NSString *) fileTypeName
 {
   return [fileType stringValue];
-}
-
-// Data Source
-- (NSInteger) numberOfRowsInTableView: (NSTableView *)aTableView
-{
-  return [currentProfile count];
-}
-
-- (id) tableView: (NSTableView *)aTableView 
-objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	     row: (NSInteger)rowIndex
-{
-  id obj = nil;
-
-  if([[aTableColumn identifier] isEqual: @"item"])
-    {
-      obj = [NSString stringWithFormat: @"#%ld",(long int)rowIndex+1];
-    }
-  else if([[aTableColumn identifier] isEqual: @"description"])
-    {
-      NSArray *keys = [currentProfile allKeys];
-      NSString *key = [keys objectAtIndex: rowIndex];
-      NSDictionary *info = [currentProfile objectForKey: key];
-      obj = [info objectForKey: @"comment"];
-    }
-
-  return obj;
-}
-
-- (void) tableView: (NSTableView *)aTableView 
-    setObjectValue: (id)anObject 
-    forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (NSInteger)rowIndex
-{
 }
 
 @end

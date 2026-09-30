@@ -76,15 +76,6 @@ Print custom class metadata.
 .TP
 .B --objects
 Print top-level objects.
-.TP
-.B --errors
-Print the current file preferences profile.
-.TP
-.B --warnings
-Print the current file preferences profile.
-.TP
-.B --notices
-Print the current file preferences profile.
 .SS Interactive Mode
 .TP
 .B --test

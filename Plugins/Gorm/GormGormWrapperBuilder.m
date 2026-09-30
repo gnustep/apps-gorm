@@ -73,11 +73,6 @@
   NSMapInsert(objToName, (void*)[filesOwner className], (void*)@"NSOwner");
   [nameTable setObject: [filesOwner className] forKey: @"NSOwner"];
 
-  /*
-   * Set the appropriate profile so that we save the right versions of 
-   * the classes for older GNUstep releases.
-   */
-  [filePrefsManager setClassVersions];
 }
 
 /**
@@ -88,11 +83,6 @@
   NSEnumerator		*enumerator;
   id<IBConnectors>	con;
   id			obj;
-
-  /*
-   * Restore class versions.
-   */
-  [filePrefsManager restoreClassVersions];
 
   /*
    * Restore removed objects.
@@ -162,7 +152,6 @@
 {
   NSEnumerator *en = [[document nameTable] keyEnumerator];
   GormClassManager *classManager = [document classManager];
-  GormFilePrefsManager *filePrefsManager = [document filePrefsManager];
   id key = nil;
 
   // loop through all custom objects and windows
@@ -178,8 +167,7 @@
 					withClassName: customClass 
 					withSuperClassName: superClass];
 	}
-      else if([object isKindOfClass: [NSWindow class]] 
-	      && [filePrefsManager versionOfClass: @"GSWindowTemplate"] > 0)
+      else if([object isKindOfClass: [NSWindow class]])
 	{
 	  template = [GSTemplateFactory templateForObject: object
 					withClassName: [object className]

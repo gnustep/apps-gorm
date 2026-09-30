@@ -19,8 +19,8 @@
 #   Foundation, Inc., 31 Milk St # 960789 Boston, MA 02196 USA
 #
 
-# Include version information from the root Version file only for GormVersion.h generation
-# Do not use it for framework versioning to avoid version conflicts
+# Read the root Version file in the header-generation recipe so that its
+# release version does not affect framework versioning.
 
 # Set simple framework version to avoid version mismatch issues
 GormCore_VERSION = 0
@@ -30,11 +30,12 @@ GormCore_DEPLOY_WITH_CURRENT_VERSION = yes
 # Generate GormVersion.h from GormVersion.h.in before building
 before-all:: GormVersion.h
 
-GormVersion.h: GormVersion.h.in ../Version
+GormVersion.h: GormVersion.h.in ../Version GNUmakefile.postamble
 	@echo "Generating GormVersion.h from Version file..."
-	@sed -e 's/@MAJOR_VERSION@/1/g' \
-	     -e 's/@MINOR_VERSION@/5/g' \
-	     -e 's/@SUBMINOR_VERSION@/0/g' \
+	@. ../Version; \
+	 sed -e "s/@MAJOR_VERSION@/$$MAJOR_VERSION/g" \
+	     -e "s/@MINOR_VERSION@/$$MINOR_VERSION/g" \
+	     -e "s/@SUBMINOR_VERSION@/$$SUBMINOR_VERSION/g" \
 	     GormVersion.h.in > GormVersion.h
 
 # Clean up generated file

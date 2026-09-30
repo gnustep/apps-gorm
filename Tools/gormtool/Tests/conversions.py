@@ -32,7 +32,7 @@ class Conversions(unittest.TestCase):
         cls.environment = os.environ.copy()
         # Load this checkout's framework (and its bundled plugins), not an
         # older installed GormCore. Preserve the caller's AppKit library path.
-        libraries = [ROOT / "GormCore/GormCore.framework",
+        libraries = [ROOT / "GormCore/GormCore.framework/Versions/Current",
                      ROOT / "InterfaceBuilder/obj",
                      ROOT / "GormObjCHeaderParser/obj"]
         cls.environment["LD_LIBRARY_PATH"] = os.pathsep.join(

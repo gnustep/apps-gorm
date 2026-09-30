@@ -128,21 +128,6 @@ These flags print internal document data structures to standard output.
 - `--objects`
  Print the document's top-level objects.
 
-- `--errors`
- Print the current file preferences profile.
-
-- `--warnings`
- Print the current file preferences profile.
-
-- `--notices`
- Print the current file preferences profile.
-
- Important:
-
-- In the current implementation, `--errors`, `--warnings`, and `--notices`
-  all print the same profile dictionary from `GormFilePrefsManager`.
-- They are not currently filtered into separate categories by `gormtool`.
-
 ## Examples
 
 ### Export a strings file

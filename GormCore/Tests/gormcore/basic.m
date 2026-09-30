@@ -16,6 +16,41 @@
 #import <GormCore/GormCore.h>
 #import <GormCore/NSString+methods.h>
 
+/* The historical data.info layout, including its obsolete save target. */
+@interface ArchivedFilePreferences : NSObject <NSCoding>
+{
+@public
+  int version;
+  NSString *target;
+  NSString *archiveType;
+}
+@end
+
+@implementation ArchivedFilePreferences
+- (void) encodeWithCoder: (NSCoder *)coder
+{
+  [coder encodeValueOfObjCType: @encode(int) at: &version];
+  [coder encodeObject: target];
+  [coder encodeObject: archiveType];
+}
+- (id) initWithCoder: (NSCoder *)coder
+{
+  if ((self = [super init]) != nil)
+    {
+      [coder decodeValueOfObjCType: @encode(int) at: &version];
+      target = RETAIN([coder decodeObject]);
+      archiveType = RETAIN([coder decodeObject]);
+    }
+  return self;
+}
+- (void) dealloc
+{
+  RELEASE(target);
+  RELEASE(archiveType);
+  [super dealloc];
+}
+@end
+
 static BOOL floatsAreClose(CGFloat a, CGFloat b)
 {
   return fabs(a - b) < 0.001;
@@ -95,6 +130,40 @@ int main(void)
   PASS(resource != nil && [[resource fileName] isEqual: @"data.resource"] &&
        [[resource data] length] == 4 && [resource isInWrapper],
        "GormResource can represent data stored in a wrapper")
+
+  {
+    ArchivedFilePreferences *old = [ArchivedFilePreferences new];
+    NSMutableData *data = [NSMutableData data];
+    NSArchiver *writer = [[NSArchiver alloc] initForWritingWithMutableData: data];
+    GormFilePrefsManager *prefs = [GormFilePrefsManager new];
+    NSUnarchiver *reader;
+    ArchivedFilePreferences *saved;
+
+    old->version = 0x7fffff; // Metadata decoding is separate from document version warnings.
+    old->target = [@"GNUstep gui-0.9.3" copy];
+    old->archiveType = [@"Binary" copy];
+    [writer encodeClassName: @"ArchivedFilePreferences"
+               intoClassName: @"GormFilePrefsManager"];
+    [writer encodeRootObject: old];
+    PASS([prefs loadFromData: data],
+         "metadata with an old save target and newer producer loads")
+    PASS([[prefs archiveTypeName] isEqual: @"Binary"],
+         "discarding a save target preserves the following archive metadata")
+
+    reader = [[NSUnarchiver alloc] initForReadingWithData: [prefs data]];
+    [reader decodeClassName: @"GormFilePrefsManager"
+               asClassName: @"ArchivedFilePreferences"];
+    saved = [reader decodeObject];
+    PASS([saved->target isEqual: @"Latest Version"] &&
+         saved->version == [GormFilePrefsManager currentVersion],
+         "saving replaces obsolete target metadata with the current version")
+    PASS([saved->archiveType isEqual: @"Binary"],
+         "file metadata survives loading and resaving")
+    RELEASE(reader);
+    RELEASE(prefs);
+    RELEASE(writer);
+    RELEASE(old);
+  }
 
   END_SET("GormCore framework")
 

@@ -233,7 +233,6 @@ GormCore_RESOURCE_FILES = \
 	Images/outlineView.tiff \
 	Images/iconView.tiff \
 	Images/editor.tiff \
-	Resources/VersionProfiles.plist \
 	Resources/ClassInformation.plist 
 
 GormCore_LANGUAGES = English

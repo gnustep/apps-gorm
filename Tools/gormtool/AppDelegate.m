@@ -233,24 +233,6 @@
 	      parse_val = NO;
 	    }
 
-	  if ([obj isEqualToString: @"--errors"])
-	    {
-	      [pair setArgument: obj];
-	      parse_val = NO;
-	    }
-
-	  if ([obj isEqualToString: @"--warnings"])
-	    {
-	      [pair setArgument: obj];
-	      parse_val = NO;
-	    }
-
-	  if ([obj isEqualToString: @"--notices"])
-	    {
-	      [pair setArgument: obj];
-	      parse_val = NO;
-	    }
-
 	  if ([obj isEqualToString: @"--source-language"])
 	    {
 	      [pair setArgument: obj];
@@ -443,30 +425,6 @@
 	{
 	  NSSet *objects = [_doc topLevelObjects];
 	  puts([[NSString stringWithFormat: @"%@", objects] cStringUsingEncoding: NSUTF8StringEncoding]);
-	}
-
-      opt = [args objectForKey: @"--errors"];
-      if (opt != nil)
-	{
-	  GormFilePrefsManager *mgr = [_doc filePrefsManager];
-	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
-	}
-
-      opt = [args objectForKey: @"--warnings"];
-      if (opt != nil)
-	{
-	  GormFilePrefsManager *mgr = [_doc filePrefsManager];
-	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
-	}
-
-      opt = [args objectForKey: @"--notices"];
-      if (opt != nil)
-	{
-	  GormFilePrefsManager *mgr = [_doc filePrefsManager]; 
-	  NSDictionary *p = [NSDictionary dictionaryWithDictionary: [mgr currentProfile]];
-	  puts([[NSString stringWithFormat: @"%@", p] cStringUsingEncoding: NSUTF8StringEncoding]);
 	}
 
       opt = [args objectForKey: @"--source-language"];

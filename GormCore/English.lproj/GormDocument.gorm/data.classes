@@ -29,8 +29,7 @@
 	Outlets = (
 	    selectionBox,
 	    filePrefsView,
-	    filePrefsManager,
-	    filePrefsWindow
+	    filePrefsManager
 	);
 	Super = NSDocument;
     };
@@ -43,17 +42,11 @@
     };
     GormFilePrefsManager = {
 	Actions = (
-	    "showIncompatibilities:",
-	    "selectTargetVersion:",
 	    "selectArchiveType:"
 	);
 	Outlets = (
-	    showIncompatibilities,
-	    targetVersion,
 	    gormAppVersion,
 	    archiveType,
-	    iwindow,
-	    itable,
 	    fileType
 	);
 	Super = NSObject;

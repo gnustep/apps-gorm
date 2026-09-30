@@ -1336,7 +1336,6 @@ static NSImage  *fileImage = nil;
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   ASSIGN(lastEditor, (id)nil);
-  // [filePrefsWindow close];
 
   // Get rid of the selection box.
   // [selectionBox removeFromSuperviewWithoutNeedingDisplay];
@@ -1356,7 +1355,6 @@ static NSImage  *fileImage = nil;
   RELEASE(soundsScrollView);
   RELEASE(imagesScrollView);
   
-  // RELEASE(filePrefsWindow); // FIXME: Causes NIB to crash...
   RELEASE(resourceManagers);
 
   RELEASE(nameTable);
@@ -3546,7 +3544,7 @@ static void _real_close(GormDocument *self,
   /*
    * Warn the user, if we are about to upgrade the package.
    */
-  if(isOlderArchive && [filePrefsManager isLatest])
+  if(isOlderArchive)
     {
       BOOL result = [delegate shouldUpgradeOlderArchive];
 
