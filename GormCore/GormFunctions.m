@@ -202,7 +202,7 @@ NSColor *GormConnectionLineColor(NSUserDefaults *defaults)
     }
   if (color == nil)
     {
-      color = [NSColor colorWithCalibratedWhite: 0.45 alpha: 1.0];
+      color = [NSColor redColor];
     }
   return color;
 }

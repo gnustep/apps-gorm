@@ -142,7 +142,7 @@ extensions can contribute additional file handling support.
 
 The Connectors preferences pane sets the connection line color and integer
 thickness in screen points. These use the `ConnectorColor` (RGBA dictionary)
-and `ConnectorWidth` user defaults. Reset restores opaque gray (white 0.45)
+and `ConnectorWidth` user defaults. Reset restores red
 and a width of 2. Missing or nonpositive widths also use 2. The selected color
 is shared by the line and its source/destination outlines; outline width stays
 at 1 point.

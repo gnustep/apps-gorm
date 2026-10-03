@@ -91,8 +91,8 @@ int main(void)
   PASS(GormConnectionLineWidth(defaults) == 2.0,
        "missing connector width uses the reset width")
   PASS([GormConnectionLineColor(defaults) isEqual:
-          [NSColor colorWithCalibratedWhite: 0.45 alpha: 1.0]],
-       "missing connector color uses opaque gray")
+          [NSColor redColor]],
+       "missing connector color uses red")
 
   [values setObject: [NSNumber numberWithInt: -3] forKey: @"ConnectorWidth"];
   [defaults removeVolatileDomainForName: @"GormConnectorTests"];
