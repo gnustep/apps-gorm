@@ -73,6 +73,18 @@ install_gnustep_gui() {
     echo "::endgroup::"
 }
 
+install_gnustep_back() {
+    echo "::group::GNUstep Backend"
+    cd $DEPS_PATH
+    . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
+    git clone -q https://github.com/gnustep/libs-back.git
+    cd libs-back
+    ./configure
+    make
+    make install
+    echo "::endgroup::"
+}
+
 install_gnustep_base() {
     echo "::group::GNUstep Base"
     cd $DEPS_PATH
@@ -96,3 +108,4 @@ fi
 install_gnustep_make
 install_gnustep_base
 install_gnustep_gui
+install_gnustep_back

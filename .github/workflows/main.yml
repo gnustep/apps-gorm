@@ -37,6 +37,13 @@ env:
     libtiff-dev
     libpng-dev
     libicns-dev
+    libx11-dev
+    libxt-dev
+    libxmu-dev
+    libxft-dev
+    libxrender-dev
+    libxrandr-dev
+    xvfb
 
   # packages for GCC Objective-C runtime
   APT_PACKAGES_gcc: >-
@@ -118,7 +125,7 @@ jobs:
       - name: Run tests
         run: |
           . $INSTALL_PATH/share/GNUstep/Makefiles/GNUstep.sh
-          make -C Tests check
+          xvfb-run -a make -C Tests check
 
       - name: Upload logs
         uses: actions/upload-artifact@v4
