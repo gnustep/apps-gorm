@@ -82,18 +82,37 @@ class Conversions(unittest.TestCase):
         if target_format == "cib":
             with destination.open("rb") as archive:
                 document = plistlib.load(archive)
-            self.assertEqual(document["format"], "CIB")
-            self.assertEqual(document["targetRuntime"], "Cappuccino")
-            windows = [obj for obj in document["objects"]
-                       if obj["class"] == "CPWindow"]
-            buttons = [obj for obj in document["objects"]
-                       if obj["class"] == "CPButton"]
+            self.assertEqual(document["$archiver"], "CPKeyedArchiver")
+            self.assertEqual(document["$version"], "100000")
+            objects = document["$objects"]
+            self.assertEqual(objects[0], "$null")
+
+            def deref(reference):
+                return objects[reference["CP$UID"]]
+
+            def classname(obj):
+                return deref(obj["$class"])["$classname"]
+
+            def array(reference):
+                return [deref(ref) for ref in deref(reference)["CP.objects"]]
+
+            root = deref(document["$top"]["CPCibObjectDataKey"])
+            self.assertEqual(classname(root), "_CPCibObjectData")
+            graph = array(root["_CPCibObjectDataObjectsKeysKey"])
+            parents = array(root["_CPCibObjectDataObjectsValuesKey"])
+            windows = [obj for obj in graph if classname(obj) == "_CPCibWindowTemplate"]
+            buttons = [obj for obj in graph if classname(obj) == "CPButton"]
             self.assertEqual(len(windows), 1)
             self.assertEqual(len(buttons), 1)
-            self.assertIn(windows[0]["id"], document["topLevelObjectIDs"])
+            self.assertIs(parents[graph.index(windows[0])],
+                          deref(root["_CPCibObjectDataFileOwnerKey"]))
             self.assertEqual(windows[0]["_CPCibWindowTemplateWindowTitleKey"],
                              WINDOW_TITLE)
             self.assertEqual(buttons[0]["CPButtonTitleKey"], BUTTON_TITLE)
+            self.assertEqual(buttons[0]["CPViewTagKey"], 42)
+            self.assertIsInstance(buttons[0]["CPViewFrameKey"], str)
+            content = deref(windows[0]["_CPCibWindowTemplateWindowViewKey"])
+            self.assertIn(buttons[0], array(content["CPViewSubviewsKey"]))
             return
         if target_format == "gormcode":
             code = (destination / "GeneratedGorm.m").read_text()

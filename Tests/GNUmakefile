@@ -17,6 +17,7 @@ SUBPROJECTS = \
 	../GormObjCHeaderParser/Tests \
 	../GormCore/Tests \
 	../Plugins/Tests \
+	../Plugins/Cib/Tests \
 	../Applications/Gorm/Tests \
 	../Applications/Gorm/Palettes/Tests \
 	../Tools/gormtool/Tests \

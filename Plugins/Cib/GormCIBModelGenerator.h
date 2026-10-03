@@ -1,6 +1,6 @@
 /* GormCIBModelGenerator.h
  *
- * Builds a Cappuccino-oriented CIB property-list model from a Gorm document.
+ * Builds a Cappuccino keyed CIB archive from a Gorm document.
  */
 
 #ifndef GORM_CIBMODELGENERATOR_H
@@ -22,6 +22,8 @@ GS_EXPORT_CLASS
   NSMutableDictionary *_objectIDs;
   NSMutableSet *_visitedObjects;
   NSMutableArray *_objects;
+  NSMutableArray *_sourceObjects;
+  NSMutableDictionary *_parentIDs;
 }
 
 + (instancetype) cibWithGormDocument: (GormDocument *)doc;

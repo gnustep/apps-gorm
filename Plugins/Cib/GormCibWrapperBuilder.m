@@ -22,7 +22,11 @@
 {
   GormCIBModelGenerator *generator = [GormCIBModelGenerator cibWithGormDocument: doc];
   NSData *data = [generator data];
-  NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
+  NSFileWrapper *fileWrapper;
+
+  if (data == nil || [data length] == 0)
+    return nil;
+  fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents: data];
 
   return fileWrapper;
 }
