@@ -7,6 +7,7 @@
 #include "GormPalettesPref.h"
 #include "GormPluginsPref.h"
 #include "GormGuidelinePref.h"
+#include "GormConnectorPref.h"
 
 @implementation GormPrefController
 
@@ -31,6 +32,10 @@
   _palettesView = [[GormPalettesPref alloc] init];
   _pluginsView = [[GormPluginsPref alloc] init];
   _guidelineView = [[GormGuidelinePref alloc] init];
+
+  _connectorView = [[GormConnectorPref alloc] init];
+  [popup addItemWithTitle: _(@"Connectors")];
+  [[popup lastItem] setTag: 7];
 
   [prefBox setContentView:[_generalView view]];
 
@@ -67,6 +72,9 @@
     case 6:
       [prefBox setContentView: [_pluginsView view]];
       break;
+    case 7:
+      [prefBox setContentView: [_connectorView view]];
+      break;
     default:
       NSLog(@"Error Default (GormPrefController.m) : - (void) popupAction: (id)sender, no match for tag %d",tag);
       break;
@@ -81,6 +89,7 @@
   RELEASE(_colorsView);
   RELEASE(_palettesView);
   RELEASE(_pluginsView);
+  RELEASE(_connectorView);
   RELEASE(panel);
   [super dealloc];
 }

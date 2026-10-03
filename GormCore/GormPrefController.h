@@ -42,6 +42,7 @@ GS_EXPORT_CLASS
   id _palettesView;
   id _pluginsView;
   id _guidelineView;
+  id _connectorView;
 }
 
 /**

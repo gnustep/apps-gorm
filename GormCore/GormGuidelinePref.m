@@ -33,7 +33,7 @@
       [currentSpacing setIntValue: spacing];
       [halfSpacing setIntValue: spacing/2];
 
-      _view =  [[window contentView] retain];
+      _view =  RETAIN([window contentView]);
     }
   return self;
 }

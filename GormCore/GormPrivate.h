@@ -55,6 +55,10 @@ extern NSString *GormResizeCellNotification;
 @class	GormInspectorsManager;
 @class	GormPalettesManager;
 
+/* Shared connector appearance defaults; nil returns the factory values. */
+NSColor *GormConnectionLineColor(NSUserDefaults *defaults);
+CGFloat GormConnectionLineWidth(NSUserDefaults *defaults);
+
 // templates
 /**
  * Adds convenience initializers used by Gorm to create template nib items

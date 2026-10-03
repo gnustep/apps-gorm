@@ -26,6 +26,7 @@
 #include <AppKit/AppKit.h>
 
 #include "GormFunctions.h"
+#include "GormPrivate.h"
 #include "GormViewEditor.h"
 #include "GormClassPanelController.h"
 
@@ -188,6 +189,29 @@ NSColor *colorFromDict(NSDictionary *dict)
 		      alpha: [[dict objectForKey: @"alpha"] floatValue]];
     }
   return nil;
+}
+
+NSColor *GormConnectionLineColor(NSUserDefaults *defaults)
+{
+  id value = [defaults objectForKey: @"ConnectorColor"];
+  NSColor *color = nil;
+
+  if ([value isKindOfClass: [NSDictionary class]])
+    {
+      color = colorFromDict(value);
+    }
+  if (color == nil)
+    {
+      color = [NSColor colorWithCalibratedWhite: 0.45 alpha: 1.0];
+    }
+  return color;
+}
+
+CGFloat GormConnectionLineWidth(NSUserDefaults *defaults)
+{
+  NSInteger width = [defaults integerForKey: @"ConnectorWidth"];
+
+  return width > 0 ? width : 2.0;
 }
 
 NSDictionary *colorToDict(NSColor *color)

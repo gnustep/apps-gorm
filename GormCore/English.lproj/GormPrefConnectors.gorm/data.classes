@@ -1,0 +1,23 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "reset:"
+	);
+	Super = NSObject;
+    };
+    GormConnectorPref = {
+	Actions = (
+	    "ok:",
+	    "reset:"
+	);
+	Outlets = (
+	    thicknessSlider,
+	    window,
+	    "_view",
+	    colorWell,
+	    thicknessValue
+	);
+	Super = NSObject;
+    };
+}

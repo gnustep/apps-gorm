@@ -50,11 +50,17 @@
 
 static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
 
-static NSColor *
-GormConnectionLineColor(void)
+/* Connection segments must survive window exposure and resize redraws. */
+@interface GormConnectionLineView : NSView
+@end
+
+@implementation GormConnectionLineView
+- (void) drawRect: (NSRect)rect
 {
-  return [NSColor colorWithCalibratedWhite: 0.45 alpha: 1.0];
+  [GormConnectionLineColor([NSUserDefaults standardUserDefaults]) set];
+  NSRectFill(rect);
 }
+@end
 
 @implementation GormAbstractDelegate
 
@@ -342,14 +348,12 @@ GormConnectionLineColor(void)
 
 - (void) _drawConnectionLineWindow: (NSWindow *)window
 {
-  NSRect frame = NSMakeRect(0.0, 0.0,
-			    [[window contentView] bounds].size.width,
-			    [[window contentView] bounds].size.height);
-
-  [[window contentView] lockFocus];
-  [GormConnectionLineColor() set];
-  NSRectFill(frame);
-  [[window contentView] unlockFocus];
+  [window setBackgroundColor:
+    GormConnectionLineColor([NSUserDefaults standardUserDefaults])];
+  [[window contentView] setNeedsDisplay: YES];
+  [window displayIfNeeded];
+  /* Drag tracking need not run the normal application window-update pass. */
+  [window flushWindow];
 }
 
 - (NSWindow *) _connectionLineWindowAtIndex: (NSUInteger)index
@@ -363,12 +367,22 @@ GormConnectionLineColor(void)
 
   while ([_connectionLineWindows count] <= index)
     {
+      NSView *view;
+
+      /* Set the segment frame before creating its native window.  Otherwise
+       * the window manager can process stale 1x1 size hints during dragging.
+       */
       window = [[NSWindow alloc] initWithContentRect: NSMakeRect(0.0, 0.0, 1.0, 1.0)
 					  styleMask: NSBorderlessWindowMask
 					    backing: NSBackingStoreBuffered
-					      defer: NO];
+					      defer: YES];
       [window setReleasedWhenClosed: NO];
-      [window setBackgroundColor: [NSColor clearColor]];
+      [window setBackgroundColor:
+        GormConnectionLineColor([NSUserDefaults standardUserDefaults])];
+      view = [[GormConnectionLineView alloc]
+        initWithFrame: NSMakeRect(0.0, 0.0, 1.0, 1.0)];
+      [window setContentView: view];
+      RELEASE(view);
       [window setOpaque: YES];
       [window setIgnoresMouseEvents: YES];
       [window setLevel: NSFloatingWindowLevel];
@@ -385,7 +399,7 @@ GormConnectionLineColor(void)
 {
   NSWindow *window;
   NSRect frame;
-  CGFloat thickness = 4.0;
+  CGFloat thickness = GormConnectionLineWidth([NSUserDefaults standardUserDefaults]);
 
   if (fabs(startPoint.x - endPoint.x) < 1.0
       && fabs(startPoint.y - endPoint.y) < 1.0)
@@ -410,8 +424,8 @@ GormConnectionLineColor(void)
 
   window = [self _connectionLineWindowAtIndex: index];
   [window setFrame: frame display: NO];
-  [self _drawConnectionLineWindow: window];
   [window orderFront: nil];
+  [self _drawConnectionLineWindow: window];
 
   return YES;
 }
@@ -551,7 +565,7 @@ GormConnectionLineColor(void)
 	  //rect.size.width--;
 	  //rect.size.height--;
 	  [view lockFocus];
-	  [GormConnectionLineColor() set];
+	  [GormConnectionLineColor([NSUserDefaults standardUserDefaults]) set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  [_sourceImage compositeToPoint: imageRect.origin
@@ -574,7 +588,7 @@ GormConnectionLineColor(void)
 	  // rect.size.width -= 5;
 	  // rect.size.height -= 5;
 	  [view lockFocus];
-	  [GormConnectionLineColor() set];
+	  [GormConnectionLineColor([NSUserDefaults standardUserDefaults]) set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  imageRect.origin.x += [_targetImage size].width;
@@ -597,7 +611,7 @@ GormConnectionLineColor(void)
 	  // rect.size.width--;
 	  // rect.size.height--;
 	  [view lockFocus];
-	  [GormConnectionLineColor() set];
+	  [GormConnectionLineColor([NSUserDefaults standardUserDefaults]) set];
 	  NSFrameRectWithWidth(rect, 1);
 
 	  [_targetImage compositeToPoint: imageRect.origin

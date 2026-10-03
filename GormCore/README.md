@@ -138,6 +138,15 @@ content, and importing palette-provided classes/resources.
 GormPlugin adds document-type registration behavior on top of IBPlugin so
 extensions can contribute additional file handling support.
 
+### Connector Appearance
+
+The Connectors preferences pane sets the connection line color and integer
+thickness in screen points. These use the `ConnectorColor` (RGBA dictionary)
+and `ConnectorWidth` user defaults. Reset restores opaque gray (white 0.45)
+and a width of 2. Missing or nonpositive widths also use 2. The selected color
+is shared by the line and its source/destination outlines; outline width stays
+at 1 point.
+
 ### Resources
 
 Key classes:

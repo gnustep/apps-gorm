@@ -116,6 +116,7 @@ GormCore_HEADER_FILES = \
 	GormHeadersPref.h \
 	GormPalettesPref.h \
 	GormPluginsPref.h \
+	GormConnectorPref.h \
 	GormPrefController.h \
 	GormPrefs.h \
 	GormShelfPref.h \
@@ -197,6 +198,7 @@ GormCore_OBJC_FILES = \
 	GormHeadersPref.m \
 	GormPalettesPref.m \
 	GormPluginsPref.m \
+	GormConnectorPref.m \
 	GormPrefController.m \
 	GormShelfPref.m \
 	GormViewAttributesInspector.m \
@@ -256,6 +258,7 @@ GormCore_LOCALIZED_RESOURCE_FILES = \
 	GormObjectOutlineView.gorm \
 	GormPalettePanel.gorm \
 	GormPrefColors.gorm \
+	GormPrefConnectors.gorm \
 	GormPreferences.gorm \
 	GormPrefGeneral.gorm \
 	GormPrefGuideline.gorm \

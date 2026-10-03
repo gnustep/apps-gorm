@@ -2187,13 +2187,10 @@
   
   // header file comments...
   [headerFile appendString: @"/* All rights reserved */\n\n"];
-
-  [headerFile appendString: [NSString stringWithFormat: @"#ifndef INCLUDED_%@_H", className]];
-  [headerFile appendString: [NSString stringWithFormat: @"#define INCLUDED_%@_H", className]];
+  [headerFile appendString: [NSString stringWithFormat: @"#ifndef INCLUDED_%@_H\n", className]];
+  [headerFile appendString: [NSString stringWithFormat: @"#define INCLUDED_%@_H\n\n", className]];
   
   [sourceFile appendString: @"/* All rights reserved */\n\n"];
-  [headerFile appendString: [NSString stringWithFormat: @"#ifndef %@_H_INCLUDE\n", className]];
-  [headerFile appendString: [NSString stringWithFormat: @"#define %@_H_INCLUDE\n\n", className]];
   
   // Add appropriate import for superclass
   NSString *superClassName = [self superClassNameForClassNamed: className];
@@ -2252,7 +2249,6 @@
     }
   
   [headerFile appendFormat: @"\n@end\n\n"];
-  [headerFile appendString: [NSString stringWithFormat: @"#endif // %@_H_INCLUDE\n", className]];
   [sourceFile appendFormat: @"@end\n"];
 
   [headerFile appendString: [NSString stringWithFormat: @"#endif // INCLUDED_%@_H", className]];
