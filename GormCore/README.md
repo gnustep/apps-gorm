@@ -147,6 +147,10 @@ and a width of 2. Missing or nonpositive widths also use 2. The selected color
 is shared by the line and its source/destination outlines; outline width stays
 at 1 point.
 
+Connection lines are mouse-transparent overlays. Their mouse transparency
+is applied after the deferred native windows are created so the overlays do
+not consume connection gestures.
+
 ### Resources
 
 Key classes:

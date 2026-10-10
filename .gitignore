@@ -14,3 +14,4 @@ GormInfo.plist
 *.log
 *.sum
 __pycache__
+*.out

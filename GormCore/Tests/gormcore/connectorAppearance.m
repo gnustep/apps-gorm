@@ -6,6 +6,23 @@
 #import <GormCore/GormConnectorPref.h>
 #import <GormCore/GormAbstractDelegate.h>
 #include <math.h>
+#import <GNUstepGUI/GSDisplayServer.h>
+#import <objc/runtime.h>
+
+/* Observe the backend request: NSWindow's flag alone does not establish
+ * mouse transparency when it was set before deferred native creation.
+ */
+static IMP originalIgnoreMouse;
+static int transparentWindow;
+
+static void
+recordIgnoreMouse(id server, SEL selector, BOOL ignore, int window)
+{
+  if (ignore && window != 0)
+    transparentWindow = window;
+  ((void (*)(id, SEL, BOOL, int))originalIgnoreMouse)(server, selector,
+                                                   ignore, window);
+}
 
 @interface GormAbstractDelegate (ConnectorTesting)
 - (BOOL) _setConnectionLineSegmentFrom: (NSPoint)start
@@ -77,6 +94,7 @@ int main(void)
   NSColor *chosen = [NSColor colorWithCalibratedRed: 0.25 green: 0.5
                                              blue: 0.75 alpha: 1.0];
   NSRect frame;
+  Method ignoreMouseMethod;
 
   START_SET("Connector appearance")
   NS_DURING
@@ -128,12 +146,19 @@ int main(void)
        "the archived controls invoke the preferences action")
 
   delegate = [ConnectorTestDelegate new];
+  ignoreMouseMethod = class_getInstanceMethod([GSCurrentServer() class],
+                                              @selector(setIgnoreMouse::));
+  originalIgnoreMouse = method_setImplementation(ignoreMouseMethod,
+                                                  (IMP)recordIgnoreMouse);
   vertical = [delegate _connectionLineWindowAtIndex: 1];
   PASS([vertical windowNumber] == 0,
        "segment windows defer native creation until their frame is set")
   [delegate _setConnectionLineSegmentFrom: NSMakePoint(20, 30)
                                       to: NSMakePoint(80, 30) index: 0];
   segment = [delegate _connectionLineWindowAtIndex: 0];
+  PASS(transparentWindow == [segment windowNumber] && transparentWindow != 0,
+       "mouse transparency reaches the backend after native segment creation")
+  method_setImplementation(ignoreMouseMethod, originalIgnoreMouse);
   frame = [segment frame];
   PASS(NSEqualRects(frame, NSMakeRect(20, 28, 60, 4)),
        "horizontal segments use the saved width and remain centered")
@@ -188,6 +213,38 @@ int main(void)
   }
   PASS([vertical isVisible] && segmentHasColor(vertical, chosen),
        "the vertical segment survives window events during drag tracking")
+  PASS([segment isVisible]
+       && NSWidth([segment frame]) == 200 && NSHeight([segment frame]) >= 4
+       && segmentHasColor(segment, chosen),
+       "the horizontal segment retains its geometry and color during drag tracking")
+
+  {
+    NSUInteger iteration;
+    BOOL painted = YES;
+
+    /* A drag can reuse the first window for either orientation, hide it
+     * while crossing the source, and then grow it again.  Read the pixels
+     * after each update without explicitly repainting the view for the test.
+     */
+    for (iteration = 0; iteration < 40; iteration++)
+      {
+        NSPoint source = NSMakePoint(200, 300);
+        NSPoint destination = NSMakePoint(240 + iteration * 3, 400);
+
+        if (iteration % 3 == 0)
+          destination.x = source.x;
+        if (iteration % 5 == 0)
+          [delegate _hideConnectionLine];
+        [delegate showConnectionFrom: source to: destination];
+        painted = painted && [segment isVisible]
+          && segmentHasColor(segment, chosen);
+        if (destination.x != source.x)
+          painted = painted && [vertical isVisible]
+            && segmentHasColor(vertical, chosen);
+      }
+    PASS(painted,
+         "repeated drag updates paint both segments after hiding and changing orientation")
+  }
 
   /* Exercise the real actions without retaining changes to user defaults. */
   [slider setIntValue: 3];

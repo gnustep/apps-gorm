@@ -384,7 +384,6 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
       [window setContentView: view];
       RELEASE(view);
       [window setOpaque: YES];
-      [window setIgnoresMouseEvents: YES];
       [window setLevel: NSFloatingWindowLevel];
       [_connectionLineWindows addObject: window];
       RELEASE(window);
@@ -425,6 +424,10 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
   window = [self _connectionLineWindowAtIndex: index];
   [window setFrame: frame display: NO];
   [window orderFront: nil];
+  /* Deferred windows have no backend window until ordered in.  Apply this
+   * afterwards so the line cannot intercept clicks or connection drags.
+   */
+  [window setIgnoresMouseEvents: YES];
   [self _drawConnectionLineWindow: window];
 
   return YES;
