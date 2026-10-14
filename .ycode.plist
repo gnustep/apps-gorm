@@ -1,0 +1,7 @@
+{
+    MakeTargets = (all);
+    BuildTarget = all;
+    CleanTarget = clean;
+    TestTarget = check;
+    Executable = "Applications/Gorm/Gorm.app/Gorm";
+}
