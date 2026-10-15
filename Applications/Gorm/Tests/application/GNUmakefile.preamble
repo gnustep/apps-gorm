@@ -1,3 +1,7 @@
 #
 # Use the standard gnustep-tests generated makefile.
 #
+
+ADDITIONAL_INCLUDE_DIRS += -I../../../.. -I../../../../GormCore
+ADDITIONAL_LIB_DIRS += -L../../../../GormCore/GormCore.framework/Versions/0 -L../../../../InterfaceBuilder/obj -L../../../../GormObjCHeaderParser/obj
+ADDITIONAL_OBJC_LIBS += -lGormCore -lInterfaceBuilder -lGormObjCHeaderParser -lgnustep-gui

@@ -17,6 +17,8 @@ all::
 
 check::
 	(\
+	LD_LIBRARY_PATH="$(TOP_DIR)/../../../GormCore/GormCore.framework/Versions/0:$(TOP_DIR)/../../../InterfaceBuilder/$(GNUSTEP_OBJ_DIR):$(TOP_DIR)/../../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR):$${LD_LIBRARY_PATH}";\
+	export LD_LIBRARY_PATH;\
 	if [ "$(DEBUG)" = "" ]; then \
 	  gnustep-tests application;\
 	else \

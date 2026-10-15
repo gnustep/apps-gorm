@@ -96,11 +96,16 @@ static BOOL AddWidgetLibraryMenuItem(NSMenu *menu, id target)
   if ( [defaults boolForKey: @"ShowPalettes"] )
     {
       [[[self palettesManager] panel] makeKeyAndOrderFront: self];
-    }
+    }   
 }
 
-- (void) applicationWillTerminate: (NSNotification *)n
+- (void) savePanelVisibility
 {
+  /* Inactive/hidden panels and interface-test windows do not represent the
+   * user's choice.  Capture visibility before AppKit orders panels out. */
+  if (![NSApp isActive] || [NSApp isHidden] || [self isTestingInterface])
+    return;
+
   [[NSUserDefaults standardUserDefaults]
     setBool: [[self palettesManager] isLibraryVisible]
     forKey: @"ShowWidgetLibrary"];
@@ -110,6 +115,21 @@ static BOOL AddWidgetLibraryMenuItem(NSMenu *menu, id target)
   [[NSUserDefaults standardUserDefaults]
     setBool: [[[self palettesManager] panel] isVisible]
     forKey: @"ShowPalettes"];
+}
+
+- (void) applicationWillResignActive: (NSNotification *)n
+{
+  [self savePanelVisibility];
+}
+
+- (void) applicationWillHide: (NSNotification *)n
+{
+  [self savePanelVisibility];
+}
+
+- (void) applicationWillTerminate: (NSNotification *)n
+{
+  [self savePanelVisibility];
 }
 
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *)sender
