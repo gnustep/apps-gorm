@@ -6,7 +6,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 GNUSTEP_OBJ_DIR=./obj
 
-TEST_TOOL_NAME =  resources
+TEST_TOOL_NAME =  panelVisibility resources
 
 ADDITIONAL_CPPFLAGS += -I$(GNUSTEP_MAKEFILES)/TestFramework
 
@@ -26,6 +26,7 @@ ADDITIONAL_OBJCCFLAGS += -Wdeprecated
 endif
 
 
+panelVisibility_OBJC_FILES=panelVisibility.m
 resources_OBJC_FILES=resources.m
 
 -include GNUmakefile.preamble

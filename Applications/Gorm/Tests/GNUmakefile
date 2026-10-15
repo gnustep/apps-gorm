@@ -12,6 +12,8 @@ endif
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+TOP_DIR := $(CURDIR)
+
 all::
 	@(echo If you want to run the Gorm application testsuite, please type \'make check\')
 

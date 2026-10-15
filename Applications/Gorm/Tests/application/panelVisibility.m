@@ -59,6 +59,27 @@
 }
 @end
 
+static BOOL waitForOrderedPanels(NSPanel *palettes, NSPanel *inspectors,
+                                 NSPanel *library)
+{
+  NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow: 5.0];
+
+  /* AppKit deactivates panels from the backend's ordered window list.
+   * A window manager may publish newly mapped windows asynchronously. */
+  do
+    {
+      NSArray *windows = GSOrderedWindows();
+      if ([windows containsObject: palettes]
+        && [windows containsObject: inspectors]
+        && [windows containsObject: library])
+        return YES;
+      [[NSRunLoop currentRunLoop]
+        runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.01]];
+    }
+  while ([deadline timeIntervalSinceNow] > 0);
+  return NO;
+}
+
 static void checkVisibility(BOOL palettes, BOOL inspectors, BOOL library,
                             const char *label)
 {
@@ -87,14 +108,16 @@ int main(void)
   [library orderFront: nil];
   [palettes orderFront: nil];
   [inspectors orderFront: nil];
+  PASS(waitForOrderedPanels(palettes, inspectors, library),
+    "the backend has registered all panels before deactivation")
   [NSApp deactivate];
-  PASS(![palettes isVisible] && ![inspectors isVisible],
+  PASS(![palettes isVisible] && ![inspectors isVisible] && ![library isVisible],
     "deactivation temporarily orders panels out")
   [delegate applicationWillTerminate: nil];
   checkVisibility(YES, YES, YES, "inactive quit preserves open panels");
 
   [NSApp activateIgnoringOtherApps: YES];
-  PASS([palettes isVisible] && [inspectors isVisible],
+  PASS([palettes isVisible] && [inspectors isVisible] && [library isVisible],
     "activation restores the panels");
   [inspectors orderOut: nil];
   [NSApp hide: nil];

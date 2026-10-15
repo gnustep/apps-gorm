@@ -10,6 +10,10 @@ The runner selects the rebuilt GormCore and supporting libraries. The panel
 visibility test compiles the application delegate sources directly and uses
 real NSApplication hide/deactivate notifications and real NSPanels. Lightweight
 managers avoid loading palettes or opening documents.
+Before deactivating, the test waits (up to five seconds) for the backend's
+ordered window list to contain all three panels. This accommodates window
+managers that register newly mapped windows asynchronously, while failing
+explicitly if registration never completes.
 
 The regression checks that quitting while inactive or hidden preserves panel
 choices, that deliberate closures (including an independent library closure)
