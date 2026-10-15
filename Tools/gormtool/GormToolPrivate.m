@@ -47,7 +47,7 @@ static NSMutableArray *__types = nil;
     @"GSGormFileType", @"gorm",
     @"GSNibFileType", @"nib",
     @"GSXibFileType", @"xib",
-    @"GSNixFileType", @"nix",
+    @"GSGuxFileType", @"gux",
     @"GSCibFileType", @"cib",
     @"GSCodeFileType", @"gormcode",
     nil];

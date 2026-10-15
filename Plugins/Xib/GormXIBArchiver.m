@@ -471,7 +471,7 @@ static NSDictionary *_valueMapping = nil;
 
 /**
  * Archives a Gorm document, following the same error-reporting contract as
- * the NIX serialization API used by the NIX plugin.
+ * the GUX serialization API used by the GUX plugin.
  */
 + (NSData *) dataWithGormDocument: (GormDocument *)doc
                 classNameMappings: (NSDictionary *)classNameMappings
@@ -1317,7 +1317,7 @@ static NSDictionary *_valueMapping = nil;
 
   /* Legacy GNUstep view archives do not initialize alphaValue, leaving
    * otherwise visible palette controls at zero. Cocoa honors that value and
-   * makes the exported controls invisible. Match the NIX compatibility repair
+   * makes the exported controls invisible. Match the GUX compatibility repair
    * without mutating the document. Preserve meaningful nonzero opacity and
    * leave window alpha (which has a separate archive contract) alone. */
   if ([name isEqualToString: @"alphaValue"]

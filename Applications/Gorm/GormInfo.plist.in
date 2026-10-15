@@ -46,11 +46,11 @@
         NSIcon = "GormNib.tiff";
       },
       {
-	NSName = "GSNixFileType";
-	NSHumanReadableName = "GNUstep Native Interface XML";
+	NSName = "GSGuxFileType";
+	NSHumanReadableName = "GNUstep GUX Interface XML";
 	NSRole = Editor;
 	NSDocumentClass = GormDocument;
-        NSUnixExtensions = ( "nix" );
+        NSUnixExtensions = ( "gux" );
         NSIcon = "GormNib.tiff";
       },
       {

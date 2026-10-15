@@ -48,7 +48,7 @@
   BOOL flag;
 
   /* NSWindowTemplate normally consults -baseWindowClass only while the
-   * process-wide NSClassSwapper Interface Builder flag is set.  NIX loading
+   * process-wide NSClassSwapper Interface Builder flag is set.  GUX loading
    * uses explicit class substitutions instead, so force the design-time
    * class name for the duration of superclass instantiation. */
   ASSIGN(_windowClass, NSStringFromClass([self baseWindowClass]));

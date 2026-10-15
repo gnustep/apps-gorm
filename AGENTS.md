@@ -21,8 +21,8 @@ tests cover, why they are sufficient, and which failures they prevent.
 - Documentation/: manuals and command-line documentation.
 
 Keep shared document behavior in GormCore so the app and gormtool benefit.
-Keep format-specific behavior in the relevant plugin. NIX compatibility
-repairs belong in Plugins/Nix, not in general nib archiving.
+Keep format-specific behavior in the relevant plugin. GUX compatibility
+repairs belong in Plugins/Gux, not in general nib archiving.
 
 ## Coding conventions
 
@@ -101,7 +101,7 @@ Use existing Testing.h conventions for Objective-C regression tests.
 See Plugins/Xib/Tests/README.md for additional serialization tests.
 
 For conversion changes, run the gormtool conversion matrix. It covers
-gorm, nib, xib, and nix as inputs and outputs, plus export to cib and
+gorm, nib, xib, and gux as inputs and outputs, plus export to cib and
 gormcode. CIB import and gormcode loading are currently unsupported.
 
 Do not rely on gormtool's exit status alone: it can report a load/save

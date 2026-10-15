@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[3]
 TOOL = ROOT / "Tools/gormtool/obj/gormtool"
 FIXTURE = Path(__file__).resolve().parent / "fixtures/conversion.xib"
-FORMATS = ("gorm", "nib", "xib", "nix")
+FORMATS = ("gorm", "nib", "xib", "gux")
 # CIB's loader is an explicit stub; generated Objective-C has no loader.
 OUTPUT_FORMATS = FORMATS + ("cib", "gormcode")
 BUNDLE_CONTENTS = {"gorm": "objects.gorm", "nib": "keyedobjects.nib"}
@@ -79,6 +79,13 @@ class Conversions(unittest.TestCase):
         destination = self.directory / (
             "{}-to-{}.{}".format(source_format, target_format, target_format))
         self.convert(self.inputs[source_format], destination)
+        if target_format == "gux":
+            with destination.open("rb") as archive:
+                document = plistlib.load(archive)
+            self.assertEqual(document["format"], "GUX")
+            self.assertEqual(document["version"], 1)
+            self.assertTrue(document["objects"])
+            self.assertTrue(document["topLevelObjects"])
         if target_format == "cib":
             with destination.open("rb") as archive:
                 document = plistlib.load(archive)

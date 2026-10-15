@@ -15,10 +15,11 @@ xvfb-run -a make -C Tools/gormtool/Tests check
 
 `conversions.py` runs the built gormtool using the checkout's libraries and
 plugins. It creates inputs from a small XIB fixture in a temporary directory,
-then tests all 16 ordered pairs of `gorm`, `nib`, `xib`, and `nix`
+then tests all 16 ordered pairs of `gorm`, `nib`, `xib`, and `gux`
 (including same-format saves). Every output must contain a nonempty archive
 and reopen in a separate process with its window, nested button, titles, and
-button tag preserved. The four input formats also export to `cib` and
+button tag preserved. GUX outputs must also contain the `GUX` format marker,
+version 1, and nonempty object and top-level object arrays. The four input formats also export to `cib` and
 `gormcode`, for 24 conversion cases total. CIB keyed archives are parsed and
 checked for their envelope, UID references, root graph, ownership, window
 template, button, titles, numeric tag and geometry encoding; generated Objective-C
