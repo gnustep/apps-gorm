@@ -140,6 +140,19 @@ GormGuxRestoreViewAlpha(NSView *view)
   if (![loader loadModelData: data externalNameTable: context withZone: NULL])
     return NO;
 
+  {
+    NSDictionary *archive = [NSPropertyListSerialization propertyListFromData: data
+      mutabilityOption: NSPropertyListImmutable format: NULL errorDescription: NULL];
+    NSString *ownerClass = [archive objectForKey: @"GormFilesOwnerClass"];
+    if ([ownerClass isKindOfClass: [NSString class]] && [ownerClass length] > 0)
+      {
+        [[doc filesOwner] setClassName: ownerClass];
+        if (![classManager isKnownClass: ownerClass])
+          [classManager addClassNamed: ownerClass withSuperClassNamed: @"NSObject"
+                         withActions: nil withOutlets: nil];
+      }
+  }
+
   enumerator = [topLevel objectEnumerator];
   while ((object = [enumerator nextObject]) != nil)
     {

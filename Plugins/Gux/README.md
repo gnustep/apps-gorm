@@ -10,5 +10,11 @@ and Gorm connection metadata. Gorm replacement-class mappings are applied in
 both directions: editor classes are instantiated while loading when their
 palettes are available, and AppKit runtime class names are written when saving.
 
+The optional `GormFilesOwnerClass` document field preserves the design class
+of the external owner endpoint. Older files without it retain the default
+owner class. Custom-object proxies use `NSCustomObject` as their `$codingClass`
+while retaining the intended runtime class and design superclass. Window
+template replacement preserves object identifiers and connection metadata.
+
 Compatibility repairs for GUX files produced by earlier implementations are
 kept here so they do not alter normal keyed or unkeyed nib archiving.

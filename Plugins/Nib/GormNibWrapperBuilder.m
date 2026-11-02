@@ -247,6 +247,12 @@
       id customClass = [classManager customClassForName: key];
       id object = [document objectForName: key];
       id template = nil;
+      /* Proxies already encode NSClassName as NSCustomObject.  A class
+       * swapper would encode that key again in the same object scope. */
+      if ([object isKindOfClass: [GormObjectProxy class]])
+        {
+          continue;
+        }
       if(customClass != nil)
 	{
 	  NSString *superClass = [classManager nonCustomSuperClassOf: customClass];

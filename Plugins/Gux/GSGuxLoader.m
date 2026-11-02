@@ -573,6 +573,7 @@
       NSString *declaredClass = [definition objectForKey: @"$class"];
       NSString *designSuperclass = [definition objectForKey: @"$superclass"];
       if (designSuperclass != nil
+          || [object isKindOfClass: [NSWindowTemplate class]]
           || [NSStringFromClass([initialized class])
                isEqualToString: declaredClass])
         {
@@ -580,6 +581,8 @@
           [GSGuxSerialization setIntendedClassName: declaredClass
                              designSuperclassName: designSuperclass
                                         forObject: initialized];
+          [GSGuxSerialization setPreservedConnections:
+            [definition objectForKey: @"connections"] forObject: initialized];
         }
       [_objects setObject: initialized forKey: identifier];
     }

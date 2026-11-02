@@ -14,6 +14,9 @@ The test loads the workspace XIB plugin, exercises real AppKit enum accessors,
 and serializes a view containing a button, popup, and box. It checks symbolic
 enum values, preservation of numeric tags, button-type collisions, and exclusion
 of editor objects reachable through the key-view chain.
+Fractional sizes and points are checked without rounding; the aggregate
+OPENSTEP conversion tests also check fractional view frames, custom owners,
+and connection identity after a fresh-process XIB round trip.
 
 This checks XML output locally; it does not substitute for opening it in Xcode.
 

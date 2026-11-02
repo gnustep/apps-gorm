@@ -160,6 +160,13 @@
       id customClass = [classManager customClassForName: key];
       id object = [document objectForName: key];
       id template = nil;
+      /* A proxy already encodes the GSNibItem class name, frame and mask.
+       * Wrapping that payload in a superclass template makes the reader
+       * decode GSNibItem fields using the unrelated superclass's layout. */
+      if ([object isKindOfClass: [GormObjectProxy class]])
+        {
+          continue;
+        }
       if(customClass != nil)
 	{
 	  NSString *superClass = [classManager nonCustomSuperClassOf: customClass];

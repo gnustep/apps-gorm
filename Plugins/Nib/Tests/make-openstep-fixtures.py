@@ -93,7 +93,8 @@ class Writer:
 
 
 def document(views=False, bad_version=False, window_min_size=False):
-    owner = Obj([("NSCustomObject", 41)], [("@@", [string("NSObject"), None])])
+    # Match import.m so imports and round trips exercise a custom owner class.
+    owner = Obj([("NSCustomObject", 41)], [("@@", [string("OpenStepTestOwner"), None])])
     custom = Obj([("NSCustomObject", 41)],
                  [("@@", [string("OpenStepTestObject"), None])])
     objects = [(custom, owner)]
@@ -111,7 +112,7 @@ def document(views=False, bad_version=False, window_min_size=False):
         view = Obj([("NSView", 41), ("NSResponder", 0)])
         button.groups = [("@", [view]), ("i", [0]),
                          ("@@@@ffffffff", [array([]), None, None, None,
-                          12.5, 18.25, 90, 24, 0, 0, 90, 24]),
+                          12.5, 18.25, 90.5, 24.75, 0, 0, 90.5, 24.75]),
                          ("@", [view]), ("@", [None]), ("@", [None]),
                          ("@", [None]), ("icc@", [23, 0, 0, cell])]
         cell.groups[4] = ("@", [button])  # cyclic control-view reference

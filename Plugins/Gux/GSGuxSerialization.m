@@ -698,6 +698,10 @@ GSGuxIsBuiltInTransientKey(NSString *key, Class objectClass)
       identifier, @"$id", className, @"$class", nil];
     if (superclassName != nil)
       [definition setObject: superclassName forKey: @"$superclass"];
+    /* A custom-object proxy carries NSCustomObject's keyed fields, not
+     * the eventual runtime class's coding implementation. */
+    if ([mappedClassName isEqualToString: @"NSCustomObject"])
+      [definition setObject: mappedClassName forKey: @"$codingClass"];
     }
     [_definitionsByIdentifier setObject: definition forKey: identifier];
     properties = [NSMutableDictionary dictionaryWithDictionary:
@@ -1021,6 +1025,25 @@ GSGuxIsBuiltInTransientKey(NSString *key, Class objectClass)
                          connections: (NSArray *)connections
                     errorDescription: (NSString **)errorDescription
 {
+  return [self dataWithTopLevelObjects: topLevelObjects
+                        keyValuePairs: keyValuePairs
+                         excludedKeys: excludedKeys
+                          identifiers: identifiers
+                    classNameMappings: classNameMappings
+                          connections: connections
+                     documentMetadata: nil
+                     errorDescription: errorDescription];
+}
+
++ (NSData *) dataWithTopLevelObjects: (NSArray *)topLevelObjects
+                       keyValuePairs: (NSDictionary *)keyValuePairs
+                        excludedKeys: (NSDictionary *)excludedKeys
+                         identifiers: (NSMapTable *)identifiers
+                  classNameMappings: (NSDictionary *)classNameMappings
+                         connections: (NSArray *)connections
+                    documentMetadata: (NSDictionary *)metadata
+                    errorDescription: (NSString **)errorDescription
+{
   NSData *data = nil;
 
   if (errorDescription != NULL)
@@ -1032,9 +1055,11 @@ GSGuxIsBuiltInTransientKey(NSString *key, Class objectClass)
                 excludedKeys: excludedKeys
            classNameMappings: classNameMappings
                  identifiers: identifiers] autorelease];
-      NSDictionary *document = [encoder
-        documentWithTopLevelObjects: topLevelObjects
-                        connections: connections != nil ? connections : [NSArray array]];
+      NSMutableDictionary *document = [NSMutableDictionary dictionaryWithDictionary:
+        [encoder documentWithTopLevelObjects: topLevelObjects
+          connections: connections != nil ? connections : [NSArray array]]];
+      if (metadata != nil)
+        [document addEntriesFromDictionary: metadata];
       data = [[[[GSGuxXMLWriter alloc] init] autorelease]
         dataWithPropertyList: document];
     }

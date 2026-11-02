@@ -432,6 +432,18 @@
     }
   else if([obj isKindOfClass: [NSCustomObject class]])
     {
+      GormClassManager *classManager = [document classManager];
+      NSString *className = [obj className];
+      /* Standalone nibs need not have a classes.nib companion.  Keep
+       * unknown custom objects editable and give exporters a runtime
+       * superclass, without replacing any supplied class metadata. */
+      if ([className length] > 0 && ![classManager isKnownClass: className])
+        {
+          [classManager addClassNamed: className
+                 withSuperClassNamed: @"NSObject"
+                         withActions: nil
+                         withOutlets: nil];
+        }
       GormObjectProxy *o = [[GormObjectProxy alloc] initWithClassName: [obj className]];
       obj = o; // replace the object if it's an NSCustomObject...
     }

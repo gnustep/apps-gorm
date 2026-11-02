@@ -54,14 +54,28 @@ int main(int argc, char **argv)
         if ([obj isKindOfClass: [NSButton class]]) button = obj;
       PASS([[window title] isEqual: @"OPENSTEP fixture"], "window title survives")
       PASS([[button title] isEqual: @"Run"], "nested button survives")
-      PASS(NSEqualRects([button frame], NSMakeRect(12.5,18.25,90,24)), "fractional geometry survives")
+      PASS(NSEqualRects([button frame], NSMakeRect(12.5,18.25,90.5,24.75)), "fractional geometry survives")
       PASS([[[doc filesOwner] className] isEqual: @"OpenStepTestOwner"], "owner custom class survives")
+      GormClassManager *classManager = [doc classManager];
+      PASS([classManager isCustomClass: @"OpenStepTestOwner"]
+        && [[classManager nonCustomSuperClassOf: @"OpenStepTestOwner"] isEqual: @"NSObject"],
+        "owner without companion metadata has an exportable superclass")
+      PASS([classManager isCustomClass: @"OpenStepTestObject"]
+        && [[classManager nonCustomSuperClassOf: @"OpenStepTestObject"] isEqual: @"NSObject"],
+        "custom object without companion metadata has an exportable superclass")
       NSMutableDictionary *links = [NSMutableDictionary dictionary];
       for (id link in [doc connections])
         if ([link isKindOfClass: [NSNibConnector class]] && [link label] != nil)
           [links setObject: link forKey: [link label]];
+      id customObject = [[links objectForKey: @"object"] destination];
+      PASS([doc containsObject: customObject]
+        && [[customObject className] isEqual: @"OpenStepTestObject"],
+        "custom object outlet retains its document object and class")
       PASS([[links objectForKey: @"button"] destination] == button
         && [[links objectForKey: @"alias"] destination] == button, "shared outlet identity survives")
+      PASS([[links objectForKey: @"button"] source] == [doc filesOwner]
+        && [[links objectForKey: @"object"] source] == [doc filesOwner],
+        "outlets originate from the document owner")
       PASS([[links objectForKey: @"window"] destination] == window, "window outlet uses instantiated window")
       PASS([[links objectForKey: @"run:"] source] == [button cell]
         || [[links objectForKey: @"run:"] source] == button, "action source survives")

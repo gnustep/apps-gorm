@@ -36,6 +36,14 @@ def main():
         command += ['-lGormCore', '-lInterfaceBuilder', '-lGormObjCHeaderParser'] + config('--gui-libs')
         subprocess.run(command, cwd=tmp, check=True)
 
+        proxy = tmp / 'proxy'
+        proxy_command = command[:command.index(str(HERE / 'import.m'))]
+        proxy_command += [str(HERE / 'proxy.m'),
+                          str(HERE.parents[1] / 'Gorm/GormGormWrapperBuilder.m')]
+        proxy_command += ['-o', str(proxy)] + ['-L' + str(p) for p in libraries]
+        proxy_command += ['-lGormCore', '-lInterfaceBuilder', '-lGormObjCHeaderParser'] + config('--gui-libs')
+        subprocess.run(proxy_command, cwd=tmp, check=True)
+
         translator = tmp / 'translate'
         decoder = tmp / 'typedstream'
         common = config('--variable=CC') + config('--objc-flags')
@@ -48,7 +56,7 @@ def main():
             str(HERE.parent / 'GormOpenStepTypedStream.m'), '-o', str(decoder)]
             + config('--base-libs'), cwd=tmp, check=True)
         if '--build-only' in sys.argv:
-            print('All three regression executables compiled (not run)')
+            print('All four regression executables compiled (not run)')
             return
 
         def run(args):
@@ -56,10 +64,14 @@ def main():
                                     capture_output=True, text=True, timeout=30)
             output = result.stdout + result.stderr
             errors = ('Failed test',) if 'reject' in args else (
-                'Failed test', 'Load failed', 'Failed to load', 'Failed to save')
+                'Failed test', 'Load failed', 'Failed to load', 'Failed to save',
+                'export failed', 'was not saved')
             if result.returncode or any(text in output for text in errors):
                 raise AssertionError(f'{args}: exit {result.returncode}\n{output}')
             return output
+
+        for mode in ('write', 'editor', 'runtime'):
+            print(run([proxy, mode, tmp / 'proxy.gorm']), end='')
 
         for version in (3, 4):
             for order in ('<', '>'):
@@ -82,7 +94,7 @@ def main():
                     elif extension == 'gormcode':
                         payload = destination / 'GeneratedGorm.m'
                         assert (destination / 'GeneratedGorm.h').stat().st_size > 0, output
-                    assert payload.stat().st_size > 0, output
+                    assert payload.is_file() and payload.stat().st_size > 0, output
                     if extension in ('gorm', 'nib', 'xib', 'gux'):
                         reopened = tmp / f'reopened-{source.stem}-{extension}.nib'
                         output = run([ROOT / 'Tools/gormtool/obj/gormtool', '--read', destination, '--write', reopened])

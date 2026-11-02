@@ -100,6 +100,8 @@ it does not require OPENSTEP support in GNUstep GUI.
 Nib directories select keyedobjects.nib, objects.nib, then data.nib, in that
 order. A corrupt preferred payload fails without falling back.
 Saving as nib writes a keyed archive, not an OPENSTEP typed stream.
+Custom-object classes missing from the nib's class metadata are preserved
+with an NSObject superclass so the document can be edited and exported.
 .TP
 .I *.xib
 XML interface archives accepted by Gorm document handling.

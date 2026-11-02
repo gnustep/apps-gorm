@@ -6,6 +6,8 @@
 #import "../GormXIBArchiver.h"
 
 @interface GormXIBArchiver (EnumTests)
+- (void) _addSize: (NSSize)size toElement: (NSXMLElement *)element withName: (NSString *)name;
+- (void) _addPoint: (NSPoint)point toElement: (NSXMLElement *)element withName: (NSString *)name;
 - (void) _addProperty: (NSString *)name withType: (NSString *)type
            toElement: (NSXMLElement *)element fromObject: (id)object;
 @end
@@ -60,6 +62,16 @@ int main(void)
   if (![bundle load]) return 1;
   id archiver = [[NSClassFromString(@"GormXIBArchiver") alloc]
     initForWritingWithGormDocument: nil classNameMappings: nil];
+  NSXMLElement *geometry = [NSXMLElement elementWithName: @"geometry"];
+  [archiver _addSize: NSMakeSize(90.5, 24.75) toElement: geometry withName: @"size"];
+  [archiver _addPoint: NSMakePoint(-12.125, 18.25) toElement: geometry withName: @"point"];
+  NSXMLElement *size = [[geometry elementsForName: @"size"] objectAtIndex: 0];
+  NSXMLElement *point = [[geometry elementsForName: @"point"] objectAtIndex: 0];
+  if ([[[size attributeForName: @"width"] stringValue] doubleValue] != 90.5
+      || [[[size attributeForName: @"height"] stringValue] doubleValue] != 24.75
+      || [[[point attributeForName: @"x"] stringValue] doubleValue] != -12.125
+      || [[[point attributeForName: @"y"] stringValue] doubleValue] != 18.25)
+    [NSException raise: @"TestFailure" format: @"Fractional XIB geometry was rounded"];
   NSButtonCell *cell = [[NSButtonCell alloc] initTextCell: @"Button"];
   [cell setControlSize: NSRegularControlSize];
   check(archiver, cell, @"controlSize", @"regular");

@@ -11,10 +11,10 @@ xvfb-run -a python3 Tools/gormtool/Tests/conversions.py
 The aggregate `make -C Tests check` includes this suite. Python 3, GNUstep's
 Testing.h, and a working AppKit backend are required. The runner uses the
 checkout's rebuilt GormCore, InterfaceBuilder, parser, and bundled plugins.
-`python3 Plugins/Nib/Tests/check.py --build-only` compiles the three native
+`python3 Plugins/Nib/Tests/check.py --build-only` compiles the four native
 regression executables without running them; this is not a test pass.
-Use `--reader-only` to run translation, truncation, unsupported-version, and
-mutation checks without creating AppKit windows.
+Use `--reader-only` to run proxy archive, translation, truncation,
+unsupported-version, and mutation checks without creating AppKit windows.
 
 The original fixture generator and decoder mutation test moved from libs-gui.
 Fixtures and executables are generated in a temporary directory; no historical
@@ -26,6 +26,10 @@ Coverage:
 * Streamer versions 3 and 4, both byte orders, window/button graphs, unnamed
   objects, owner custom class, fractional geometry, shared outlet identity,
   window-template replacement, action endpoints, and periodic button timing.
+  Fractional origins and dimensions and owner outlet sources are checked
+  after each supported round trip. This catches XIB rounding and placeholder
+  ordering errors, duplicate proxy coding in NIB, and lost GUX owner classes,
+  custom-object proxies, window identifiers, or connection metadata.
 * Direct calls to the rebuilt plugin, plus OPENSTEP input conversion to gorm,
   nib, xib, gux, cib, and gormcode. Supported archive outputs reopen in separate
   gormtool processes and are inspected again through the importer. CIB and
@@ -33,6 +37,16 @@ Coverage:
 * Bundle payload precedence (keyedobjects.nib, objects.nib, data.nib), including
   corrupt, empty, and directory-valued preferred payloads. Editor state must
   be restored on success and failure.
+* Custom owners and objects without a classes.nib companion are registered
+  with an NSObject superclass. The importer checks their class metadata and
+  connected object identity; the fresh-process conversion checks guard against
+  treating an unlinked custom class as the runtime superclass during export.
+* A display-independent test exercises the Gorm builder's template selection
+  for custom-object proxies. Separate processes write the archive, reopen it
+  as editor proxies, and instantiate runtime objects. It checks custom class
+  names, shared identity, and trailing archive fields. This prevents wrapping
+  a GSNibItem payload in an incompatible superclass template: the previous
+  builder reproduces `expected object and got struct` in this test.
 * Translation of scroll-view and window minimum-size layouts; every truncation
   of the tested graphs; useful rejection of unsupported class versions; decoder
   mutation, random input, excessive type nesting, and oversized array lengths.
@@ -48,23 +62,28 @@ precision and is outside the scope of this move.
 Validation in this workspace
 ----------------------------
 
-The root build and compilation of all three regression executables succeeded
-with the configured Clang/GNUstep runtime. The `--reader-only` tests passed for
-both versions and byte orders, all tested truncations, scroll and minimum-size
-layouts, unsupported versions, and decoder mutations/random inputs.
+With the configured Clang/GNUstep runtime and a working Xvfb display:
 
-The sandbox cannot write the usual user defaults directory. An independent
-Foundation/AppKit probe exposed recursion in NSUserDefaults/NSLog (confirmed
-with AddressSanitizer). Validation used a temporary GNUSTEP_CONFIG_FILE copied
-from the system configuration, with GNUSTEP_USER_DEFAULTS_DIR pointing to a
-writable directory under /tmp, and file permissions 0600. No installed files
-or user settings were changed.
+```
+make
+xvfb-run -a make check
+```
 
-With that configuration, the GUI import suite and the existing 24-case CLI
-matrix still cannot run: AppKit reports NSWindowServerCommunicationException,
-and independent `xdpyinfo` also fails to connect to the Xvfb display. These are
-failed/blocked checks, not passes. Manual UI and GCC coverage remain unverified.
-Rerun the full commands above with a working display before acceptance.
+Both commands passed. The aggregate run includes all four OPENSTEP version /
+byte-order combinations, fresh-process archive reopening, the proxy editor
+and runtime checks, CIB structural checks, application and palette checks, and
+all 24 CLI conversion cases. The standalone XIB enum/geometry regression also
+passed with the checkout's plugin and libraries (see Plugins/Xib/Tests/README.md).
+
+These checks reproduce the failing conversion paths and inspect custom classes,
+connection endpoints and identity, and fractional geometry after reopening.
+They prevent silent graph loss as well as the proxy encoding exceptions.
+The CIB test includes a cell-based action and verifies that its exported source
+is the owning control.
+
+The optional Cappuccino runtime check was skipped because CIB_OBJJ is not
+configured. Manual Gorm UI, Xcode, and GCC coverage remain unverified. Earlier
+sandbox display/defaults restrictions no longer blocked this Xvfb run.
 
 This is an AI-assisted contribution. POLICY_AI.md requires independent human
-review before acceptance; the coverage described above still needs to pass.
+review before acceptance.
