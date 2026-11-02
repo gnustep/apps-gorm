@@ -28,6 +28,7 @@
 #include <GormCore/GormCore.h>
 
 #include "GormNibWrapperLoader.h"
+#include "GormOpenStepNibReader.h"
 
 @class GormNSWindow;
 
@@ -60,12 +61,14 @@
 - (BOOL) loadFileWrapper: (NSFileWrapper *)wrapper withDocument: (GormDocument *) doc
 {
   BOOL result = NO;
+  BOOL wasInInterfaceBuilder = [NSClassSwapper isInInterfaceBuilder];
+  NSKeyedUnarchiver *u = nil;
 
   NS_DURING
     {
       NSData		        *data = nil;
       NSData                    *classes = nil;
-      NSKeyedUnarchiver		*u = nil;
+      BOOL typedStream = NO;
       NSString                  *key = nil;
       GormPalettesManager       *palettesManager = [(id<GormAppDelegate>)[NSApp delegate] palettesManager];
       NSDictionary              *substituteClasses = [palettesManager substituteClasses];
@@ -88,35 +91,36 @@
 
 	  if([wrapper isDirectory])
 	    {
-	      key = nil;
-	      fileWrappers = [wrapper fileWrappers];
-
-	      en = [fileWrappers keyEnumerator];
-	      while((key = [en nextObject]) != nil)
-		{
-		  NSFileWrapper *fw = [fileWrappers objectForKey: key];
-		  if([fw isRegularFile])
-		    {
-		      NSData *fileData = [fw regularFileContents];
-		      if([key isEqual: @"keyedobjects.nib"])
-			{
-			  data = fileData;
-			}
-		      else if([key isEqual: @"classes.nib"])
-			{
-			  classes = fileData;
-			  
-			  // load the custom classes...
-			  if (![classManager loadNibFormatCustomClassesWithData: classes]) 
-			    {
-			      NSRunAlertPanel(_(@"Problem Loading"), 
-					      _(@"Could not open the associated classes file.\n"
-						@"You won't be able to edit connections on custom classes"), 
-					      _(@"OK"), nil, nil);
-			    }
-			}
-		    }
-		}
+              NSArray *payloads = [NSArray arrayWithObjects:
+                @"keyedobjects.nib", @"objects.nib", @"data.nib", nil];
+              fileWrappers = [wrapper fileWrappers];
+              en = [payloads objectEnumerator];
+              while ((key = [en nextObject]) != nil)
+                {
+                  NSFileWrapper *fw = [fileWrappers objectForKey: key];
+                  if (fw != nil)
+                    {
+                      /* A corrupt preferred payload must not select an
+                       * older interface from the same bundle. */
+                      if ([fw isRegularFile]) data = [fw regularFileContents];
+                      break;
+                    }
+                }
+              if ([[fileWrappers objectForKey: @"classes.nib"] isRegularFile])
+                {
+                  classes = [[fileWrappers objectForKey: @"classes.nib"]
+                    regularFileContents];
+                  if (![classManager loadNibFormatCustomClassesWithData: classes])
+                    {
+                      if ([(id<GormAppDelegate>)[NSApp delegate] isInTool])
+                        NSLog(@"Could not load the associated nib classes file.");
+                      else
+                        NSRunAlertPanel(_(@"Problem Loading"),
+                          _(@"Could not open the associated classes file.\n"
+                            @"You won't be able to edit connections on custom classes"),
+                          _(@"OK"), nil, nil);
+                    }
+                }
 	    }
 	  else
 	    {
@@ -125,7 +129,7 @@
 	    }
 
 	  // check the data...
-	  if (data == nil)// || classes == nil)
+	  if ([data length] == 0)
 	    {
 	      result = NO;
 	    }
@@ -136,6 +140,10 @@
 	       * handling class replacement so that standard objects understood
 	       * by the gui library are converted to their Gorm internal equivalents.
 	       */
+
+              typedStream = GormOpenStepNibIsTypedStream(data);
+              if (typedStream)
+                data = GormOpenStepNibKeyedData(data);
 
 	      u = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
 	      [u setDelegate: self];
@@ -172,18 +180,24 @@
 		}
 	      else
 		{
+                  if (typedStream)
+                    GormOpenStepNibFinishDecoding(u);
 		  _nibFilesOwner = [_container objectForName: @"File's Owner"];
 		  
 		  docFilesOwner = [document filesOwner];
 		  objects = [_container names];
-		  objs = NSAllMapTableKeys(objects);
+		  /* Historical nibs may name only File's Owner.  The ownership
+                   * map, not the names map, defines the complete graph. */
+                  objs = [[NSSet setWithArray: [NSAllMapTableKeys(objects)
+                    arrayByAddingObjectsFromArray:
+                      NSAllMapTableKeys([_container objects])]] allObjects];
 		  en = [objs objectEnumerator];
 		  o = nil;
 		  
 		  //
 		  // set the current class on the File's owner...
 		  //
-		  if([_nibFilesOwner isKindOfClass: [NSCustomObject class]])
+		  if ([_nibFilesOwner respondsToSelector: @selector(className)])
 		    {
 		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
 		    }
@@ -208,7 +222,8 @@
                       // If it's NSApplication (most likely the File's Owner)
                       // skip it...
                       //
-                      if ([o isKindOfClass: [NSCustomObject class]])
+                      if ([o isKindOfClass: [NSCustomObject class]]
+                          || [o isKindOfClass: [GormObjectProxy class]])
                         {
                           if ([[o className] isEqualToString: @"NSApplication"])
                             {
@@ -258,6 +273,18 @@
 			}
 		    }
 		  
+                  /* Preserve explicit names after all parents are attached. */
+                  en = [NSAllMapTableKeys([_container names]) objectEnumerator];
+                  while ((o = [en nextObject]) != nil)
+                    {
+                      id obj = [o isKindOfClass: [NSWindowTemplate class]]
+                        ? [o realObject] : o;
+                      NSString *name = NSMapGet([_container names], o);
+                      if (o != _nibFilesOwner && obj != nil
+                          && [document nameForObject: obj] != nil)
+                        [document setName: name forObject: obj];
+                    }
+
 		  //
 		  // Add custom classes...
 		  //
@@ -342,8 +369,6 @@
 		      [document addConnector: o];
 		    }
 		  
-		  // turn on custom classes.
-		  [NSClassSwapper setIsInInterfaceBuilder: NO]; 
 		  
 		  // clear the changes, since we just loaded the document.
 		  [document updateChangeCount: NSChangeCleared];
@@ -351,17 +376,25 @@
 		  result = YES;
 		}
 	    }
-	  [NSClassSwapper setIsInInterfaceBuilder: NO];      
+	  [u finishDecoding];
 	}
     }
   NS_HANDLER
     {
-      NSRunAlertPanel(_(@"Problem Loading"), 
-		      [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]], 
-		      _(@"OK"), nil, nil);
+      [NSClassSwapper setIsInInterfaceBuilder: wasInInterfaceBuilder];
+      if ([(id<GormAppDelegate>)[NSApp delegate] isInTool])
+        NSLog(@"Failed to load nib: %@", [localException reason]);
+      else
+        NSRunAlertPanel(_(@"Problem Loading"), @"%@", _(@"OK"), nil, nil,
+                       [localException reason]);
       result = NO; 
     }
   NS_ENDHANDLER;
+
+  [NSClassSwapper setIsInInterfaceBuilder: wasInInterfaceBuilder];
+  [u release];
+  _container = nil;
+  _nibFilesOwner = nil;
 
   // return the result.
   return result;
