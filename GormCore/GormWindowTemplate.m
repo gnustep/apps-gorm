@@ -65,7 +65,8 @@
 
 - (Class) baseWindowClass
 {
-  if([_windowClass isEqualToString:@"NSPanel"])
+  if ([_windowClass isEqualToString: @"NSPanel"]
+      || [_windowClass isEqualToString: @"GormNSPanel"])
     {
       return [GormNSPanel class];
     }

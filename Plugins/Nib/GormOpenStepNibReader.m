@@ -148,6 +148,31 @@ static void
 ValidateClass(const ts_class *c, const ts_object *o, unsigned depth)
 {
   static const struct { const char *name; int version; const char *parent; } layouts[] = {
+    {"NSIBObjectData", 223, "NSObject"},
+    {"NSMenu", 204, "NSObject"},
+    {"NSMenuItem", 321, "NSObject"},
+    {"NSNibConnector", 207, "NSObject"},
+    {"NSNibOutletConnector", 207, "NSNibConnector"},
+    {"NSNibControlConnector", 207, "NSNibConnector"},
+    {"NSIBHelpConnector", 17, "NSObject"},
+    {"NSImageView", 26, "NSControl"},
+    {"NSImageCell", 41, "NSCell"},
+    {"NSCell", 62, "NSObject"},
+    {"NSButtonCell", 62, "NSActionCell"},
+    {"NSButtonImageSource", 3, "NSObject"},
+    {"NSMatrix", 62, "NSControl"},
+    {"NSScroller", 209, "NSControl"},
+    {"NSSliderCell", 226, "NSActionCell"},
+    {"NSPopUpButton", 204, "NSButton"},
+    {"NSPopUpButtonCell", 210, "NSMenuItemCell"},
+    {"NSIBConnector", 207, "NSObject"},
+    {"NSIBOutletConnector", 207, "NSIBConnector"},
+    {"NSIBControlConnector", 207, "NSIBConnector"},
+    {"NSMenuItem", 204, "NSObject"}, {"NSButtonCell", 60, "NSActionCell"}, {"NSButtonImageSource", 1, "NSObject"}, {"NSSliderCell", 42, "NSActionCell"},
+    {"NSMenuItemCell", 210, "NSButtonCell"}, {"NSNibConnector", 17, "NSObject"},
+    {"NSNumberFormatter", 4, "NSFormatter"}, {"NSFormatter", 0, "NSObject"},
+    {"NSAttributedString", 0, "NSObject"}, {"NSDictionary", 0, "NSObject"},
+    {"NSDecimalNumberPlaceholder", 0, "NSObject"},
     {"NSObject", 0, NULL}, {"NSString", 1, "NSObject"},
     {"NSArray", 0, "NSObject"}, {"NSMutableArray", 0, "NSArray"},
     {"NSSet", 0, "NSObject"}, {"NSMutableSet", 0, "NSSet"},
@@ -413,20 +438,23 @@ static NSDictionary *UID(NSUInteger n)
 #define OBJ(n, k) [self object: v + (n) key: k into: d]
 #define INT(n, key) [d setObject: Number(Integer(v + (n))) forKey: key]
   if (IS("NSObject", 0)) return;
-  if (IS("NSIBObjectData", 24))
+  if ((IS("NSIBObjectData", 24) || IS("NSIBObjectData", 223)))
     { [self container: o into: d]; *i = o->ngroups; }
   else if (IS("NSArray", 0) || IS("NSSet", 0))
     { [d setObject: [self elements: o] forKey: @"NS.objects"]; *i = o->ngroups; }
   else if (IS("NSMutableArray", 0) || IS("NSMutableSet", 0)
            || IS("NSButton", 0) || IS("NSIBOutletConnector", 0)
-           || IS("NSIBControlConnector", 0)) return;
+           || IS("NSIBControlConnector", 0) || IS("NSIBControlConnector", 207)
+           || IS("NSIBOutletConnector", 207) || IS("NSNibOutletConnector", 207)
+           || IS("NSNibControlConnector", 207) || IS("NSFormatter", 0)
+           || IS("NSPopUpButton", 204)) return;
   else if (IS("NSCustomObject", 41) || IS("NSCustomResource", 41))
     {
       GET("@@"); OBJ(0, @"NSClassName");
       if (!strcmp(name, "NSCustomResource")) OBJ(1, @"NSResourceName");
       else OBJ(1, @"NSExtension");
     }
-  else if (IS("NSIBConnector", 17))
+  else if ((IS("NSIBConnector", 17) || IS("NSIBConnector", 207) || IS("NSNibConnector", 207) || IS("NSNibConnector", 17) || IS("NSIBHelpConnector", 17)))
     { GET("@@@"); OBJ(0, @"NSSource"); OBJ(1, @"NSDestination"); OBJ(2, @"NSLabel"); }
   else if (IS("NSResponder", 0))
     {
@@ -444,8 +472,9 @@ static NSDictionary *UID(NSUInteger n)
                            ((flags == 0 || (flags & 0x800000UL)) ? 0x100 : 0))
             forKey: @"NSvFlags"];
       GET("@@@@ffffffff"); OBJ(0, @"NSSubviews");
-      if (Object(v + 1) || Object(v + 2) || Object(v + 3))
-        Bad(o, @"unsupported view transform or auxiliary state");
+      if (Object(v + 1) || Object(v + 2))
+        Bad(o, @"unsupported view transform");
+      /* The fourth object is the set of registered cursor rectangles. */
       [self rect: v + 4 key: @"NSFrame" into: d];
       [self rect: v + 8 key: @"NSBounds" into: d];
       GET("@"); /* superview: established by NSSubviews */
@@ -484,7 +513,7 @@ static NSDictionary *UID(NSUInteger n)
           [d setObject: Number((long long)Real(v + 3)) forKey: @"verticalPageScroll"];
           flags = Integer(v + 4);
         }
-      if (((unsigned long long)flags & 0x80000000ULL) == 0 && vertical)
+      if (c->version == 42 && ((unsigned long long)flags & 0x80000000ULL) == 0 && vertical)
         Bad(o, @"unexpected vertical scroller");
       [d setObject: Number((vertical ? 16 : 0) | (horizontal ? 32 : 0))
             forKey: @"NSsFlags"];
@@ -497,7 +526,7 @@ static NSDictionary *UID(NSUInteger n)
       [d setObject: Number((Integer(v + 4) ? 4 : 0) |
                            (Integer(v + 2) ? 0 : 2)) forKey: @"NScvFlags"];
     }
-  else if (IS("NSScroller", 17) || IS("NSScroller", 211))
+  else if (IS("NSScroller", 17) || IS("NSScroller", 211) || IS("NSScroller", 209))
     {
       GET("@"); OBJ(0, @"NSTarget");
       GET("ff:");
@@ -573,11 +602,70 @@ static NSDictionary *UID(NSUInteger n)
           strcmp(resource->groups[0].encoding.text, "@@"))
         Bad(o, @"unsupported cursor resource");
       name = StringObject(Object(resource->groups[0].vals + 1));
-      if (![name isEqual: @"NSIBeamCursor"])
+      if (![name isEqual: @"NSIBeamCursor"] && ![name isEqual: @"NSArrowCursor"])
         Bad(o, @"unsupported cursor image");
-      [d setObject: Number(1) forKey: @"NSCursorType"];
+      [d setObject: Number([name isEqual: @"NSIBeamCursor"] ? 1 : 0) forKey: @"NSCursorType"];
       GET("c"); if (Integer(v)) Bad(o, @"unsupported cursor flag");
       GET("c"); if (Integer(v)) Bad(o, @"unsupported cursor flag");
+    }
+  else if (IS("NSMenuItemCell", 210))
+    { GET("@@"); OBJ(0, @"NSMenuItem"); }
+  else if (IS("NSNumberFormatter", 4))
+    {
+      GET("@@@@@@@");
+      OBJ(0, @"NS.positiveformat"); OBJ(1, @"NS.negativeformat");
+      OBJ(2, @"NS.positiveattrs"); OBJ(3, @"NS.negativeattrs");
+      OBJ(4, @"NS.zero"); OBJ(5, @"NS.nil"); OBJ(6, @"NS.nan");
+      GET("@@@@@ccc");
+      OBJ(0, @"NS.min"); OBJ(1, @"NS.max"); OBJ(2, @"NS.rounding");
+      OBJ(3, @"NS.decimal"); OBJ(4, @"NS.thousand");
+      INT(5, @"NS.hasthousands"); INT(6, @"NS.allowsfloats"); INT(7, @"NS.localized");
+    }
+  else if (IS("NSAttributedString", 0))
+    {
+      GET("@"); OBJ(0, @"NSString");
+      if (*i < o->ngroups)
+        {
+          GET("iI");
+          if (Integer(v) != 1) Bad(o, @"unsupported attributed string runs");
+          GET("@"); OBJ(0, @"NSAttributes");
+        }
+    }
+  else if (IS("NSDictionary", 0))
+    {
+      GET("i");
+      if (Integer(v) != 0) Bad(o, @"unsupported nonempty dictionary");
+      [d setObject: [NSArray array] forKey: @"NS.keys"];
+      [d setObject: [NSArray array] forKey: @"NS.objects"];
+    }
+  else if (IS("NSMenu", 204))
+    {
+      GET("i@@@"); OBJ(1, @"NSTitle"); OBJ(2, @"NSMenuItems");
+    }
+  else if (IS("NSMenuItem", 204) || IS("NSMenuItem", 321))
+    {
+      GET("@"); /* containing menu, rebuilt when inserted */
+      GET("i@@IIi@@@@:i@");
+      INT(11, @"NSTag"); OBJ(1, @"NSTitle"); OBJ(2, @"NSKeyEquiv");
+      [d setObject: Number((Integer(v) & 0x40000000UL) != 0) forKey: @"NSIsSeparator"];
+      INT(3, @"NSKeyEquivModMask"); INT(5, @"NSState");
+      OBJ(6, @"NSImage"); OBJ(7, @"NSOnImage"); OBJ(8, @"NSOffImage");
+      OBJ(9, @"NSMixedImage");
+      [d setObject: [self literal: Text(v + 10)] forKey: @"NSAction"];
+      OBJ(12, @"NSTarget");
+      GET("@"); /* popup cell owner */
+      if (c->version == 321) { GET("@"); OBJ(0, @"NSSubmenu"); }
+    }
+  else if (IS("NSImageView", 26))
+    { GET("c"); }
+  else if (IS("NSImageCell", 41))
+    { GET("iii"); INT(0, @"NSImageAlignment"); INT(1, @"NSImageScaling"); INT(2, @"NSImageFrameStyle"); }
+  else if (IS("NSButtonImageSource", 1) || IS("NSButtonImageSource", 3))
+    { GET("@"); OBJ(0, @"NSName"); }
+  else if (IS("NSPopUpButtonCell", 210))
+    {
+      GET("i@i"); OBJ(1, @"NSMenu"); INT(2, @"NSSelectedIndex");
+      [d setObject: Number((Integer(v) & 0x80000000UL) != 0) forKey: @"NSPullDown"];
     }
   else if (IS("NSMenuTemplate", 41))
     {
@@ -652,9 +740,9 @@ static NSDictionary *UID(NSUInteger n)
     }
   else if (IS("NSSlider", 0))
     return;
-  else if (IS("NSSliderCell", 41))
+  else if (IS("NSSliderCell", 41) || IS("NSSliderCell", 42) || IS("NSSliderCell", 226))
     {
-      GET("dddfd@@");
+      GET(c->version == 226 ? "ddddiii" : (c->version == 42 ? "dddfd@@iii" : "dddfd@@"));
       [d setObject: [NSNumber numberWithDouble: Real(v)] forKey: @"NSMaxValue"];
       [d setObject: [NSNumber numberWithDouble: Real(v + 1)] forKey: @"NSMinValue"];
       [d setObject: [NSNumber numberWithDouble: Real(v + 2)] forKey: @"NSValue"];
@@ -663,7 +751,7 @@ static NSDictionary *UID(NSUInteger n)
   else if (IS("NSTextField", 25))
     { GET("@"); OBJ(0, @"NSDelegate"); GET(":");
       if (Text(v)) Bad(o, @"unsupported text-field validation selector"); }
-  else if (IS("NSCell", 60))
+  else if ((IS("NSCell", 60) || IS("NSCell", 62)))
     {
       GET("ii");
       /* Bits 16..9 in the first historical word are opaque (commonly all
@@ -674,7 +762,8 @@ static NSDictionary *UID(NSUInteger n)
       GET("@@@@"); OBJ(0, @"NSContents"); OBJ(1, @"NSSupport");
       if (!strcmp(o->cls->name.text, "NSMenuItem"))
         OBJ(0, @"NSTitle");
-      if (Object(v + 2) || Object(v + 3)) Bad(o, @"unsupported cell auxiliary state");
+      OBJ(2, @"NSFormatter");
+      if (Object(v + 3)) Bad(o, @"unsupported cell auxiliary state");
     }
   else if (IS("NSActionCell", 17))
     {
@@ -685,9 +774,9 @@ static NSDictionary *UID(NSUInteger n)
       else if (strcmp(o->cls->name.text, "NSMenuItem")) OBJ(0, @"NSTarget");
       GET("@"); /* control view is assigned when the control adopts the cell */
     }
-  else if (IS("NSButtonCell", 57))
+  else if ((IS("NSButtonCell", 57) || IS("NSButtonCell", 60) || IS("NSButtonCell", 62)))
     {
-      GET("ssIi@@@@@");
+      GET(c->version == 57 ? "ssIi@@@@@" : "ssii@@@@@");
       if (Integer(v) < 0 || Integer(v + 1) < 0)
         Bad(o, @"negative periodic interval");
       INT(3, @"NSButtonFlags");
@@ -716,7 +805,7 @@ static NSDictionary *UID(NSUInteger n)
       INT(4, @"NSBorderType"); INT(5, @"NSTitlePosition");
       GET("@"); if (Object(v)) Bad(o, @"unsupported box auxiliary object");
     }
-  else if (IS("NSMatrix", 60))
+  else if ((IS("NSMatrix", 60) || IS("NSMatrix", 62)))
     {
       long long rows, cols;
       NSArray *cells;
@@ -840,6 +929,30 @@ static NSDictionary *UID(NSUInteger n)
   if (_depth >= 128) Bad(o, @"object nesting limit exceeded");
   ValidateClass(o->cls, o, 0);
   name = [NSString stringWithUTF8String: o->cls->name.text];
+  if ([name isEqual: @"NSDecimalNumberPlaceholder"])
+    {
+      NSUInteger n = 0, j;
+      const ts_group *g;
+      int exponent, length, negative;
+      long double mantissa = 0;
+      g = Group(o, &n, "i"); exponent = Integer(g->vals);
+      g = Group(o, &n, "S"); length = Integer(g->vals);
+      if (length > 8 || length < 0) Bad(o, @"invalid decimal length");
+      g = Group(o, &n, "C"); negative = Integer(g->vals);
+      Group(o, &n, "C");
+      g = Group(o, &n, "I");
+      if (Integer(g->vals) != 8) Bad(o, @"invalid decimal mantissa size");
+      g = Group(o, &n, "[8S]");
+      for (j = length; j > 0; j--)
+        mantissa = mantissa * 65536 + Integer(&g->vals->u.list.v[j - 1]);
+      if (n != o->ngroups) Bad(o, @"trailing decimal state");
+      if (length == 0 && negative) ref = UID(0); /* unbounded NaN */
+      else
+        ref = [self literal: [NSNumber numberWithDouble:
+          (double)((negative ? -mantissa : mantissa) * powl(10, exponent))]];
+      [_references setObject: ref forKey: key];
+      return ref;
+    }
   if ([name isEqual: @"NSString"])
     {
       ref = [self literal: StringObject(o)];
@@ -849,6 +962,7 @@ static NSDictionary *UID(NSUInteger n)
   d = [NSMutableDictionary dictionary];
   ref = [self literal: d];
   [_references setObject: ref forKey: key]; /* before following references */
+  if ([name isEqual: @"NSButtonImageSource"]) name = @"NSImage";
   if ([name isEqual: @"NSCStringText"]) name = @"NSTextView";
   if ([name isEqual: @"NSTextTemplate"]) name = @"NSTextView";
   if ([name isEqual: @"NSMenuTemplate"]) name = @"NSMenu";

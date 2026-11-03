@@ -318,7 +318,7 @@ int GormOpenStepTSTypeCount(const char *s)
       while ([self peek] != TS_END)
         {
           ts_group *groups;
-          if (object->ngroups == 1024) [self decodeError:"too many object groups"];
+          if (object->ngroups == 65536) [self decodeError:"too many object groups"];
           if (object->ngroups == capacity)
             {
               capacity = capacity ? capacity * 2 : 4;
