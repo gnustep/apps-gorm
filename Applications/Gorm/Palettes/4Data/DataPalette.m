@@ -159,10 +159,29 @@ int defaultDateFormatIndex = 3;
  * The Data Palette (Scroll Text View, formatters, Combo box,...)
  *
  * -----------------------------------------------------------*/
-@interface DataPalette: IBPalette <IBViewResourceDraggingDelegates>
+@interface DataPalette: IBPalette <IBViewResourceDraggingDelegates, IBPaletteDescriptions>
 @end
 
 @implementation DataPalette
+
+- (NSString *) descriptionForObject: (id)object
+{
+  /* Describe the content supplied by this palette inside its scroll view. */
+  if ([object isKindOfClass: [NSScrollView class]]
+      && [object documentView] != nil)
+    object = [object documentView];
+  if ([object isKindOfClass: [NSComboBox class]])
+    return _(@"Enter text or choose a value from a drop-down list.");
+  if ([object isKindOfClass: [NSImageView class]])
+    return _(@"Display an image in the interface.");
+  if ([object isKindOfClass: [NSTextView class]])
+    return _(@"Display and edit multiple lines of text.");
+  if ([object isKindOfClass: [NSScrollView class]])
+    return _(@"Present scrollable content inside a view.");
+  if ([object isKindOfClass: [NSFormatter class]])
+    return _(@"Format and validate a control's displayed value.");
+  return nil;
+}
 
 + (void) initialize
 {

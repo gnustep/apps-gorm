@@ -27,8 +27,9 @@
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
 #include "GormNSPopUpButton.h"
+#include <GormCore/GormCustomView.h>
 
-@interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates>
+@interface ControlsPalette: IBPalette <IBViewResourceDraggingDelegates, IBPaletteDescriptions>
 {
   IBOutlet NSPopUpButton *_prototypePopUp;
 }
@@ -36,6 +37,39 @@
 
 
 @implementation ControlsPalette 
+
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [GormCustomView class]])
+    return _(@"Add a placeholder for a custom view class.");
+  if ([object isKindOfClass: [NSPopUpButton class]])
+    return _(@"Choose an item from a pop-up list of options.");
+  if ([object isKindOfClass: [NSButton class]])
+    return _(@"Trigger an action or select an option with a button.");
+  if ([object isKindOfClass: [NSSecureTextField class]])
+    return _(@"Enter a password with its characters concealed.");
+  if ([object isKindOfClass: [NSTextField class]])
+    return [object isEditable] ? _(@"Enter or edit a single line of text.")
+      : _(@"Display a label or other read-only text.");
+  if ([object isKindOfClass: [NSSlider class]])
+    return _(@"Choose a value by dragging a slider.");
+  if ([object isKindOfClass: [NSStepper class]])
+    return _(@"Increase or decrease a numeric value.");
+  if ([object isKindOfClass: [NSColorWell class]])
+    return _(@"Display and choose a color.");
+  if ([object isKindOfClass: [NSProgressIndicator class]])
+    return _(@"Show the progress of an operation.");
+  if ([object isKindOfClass: [NSBox class]])
+    return _(@"Group related controls in a bordered container.");
+  if ([object isKindOfClass: [NSSplitView class]])
+    return _(@"Arrange panes separated by a draggable divider.");
+  if ([object isKindOfClass: [NSForm class]])
+    return _(@"Present labeled text fields for entering values.");
+  if ([object isKindOfClass: [NSMatrix class]])
+    return _(@"Arrange a group of cells in rows and columns.");
+  return nil;
+}
+
 - (id) init
 {
   if((self = [super init]) != nil)

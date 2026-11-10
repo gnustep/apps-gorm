@@ -29,6 +29,13 @@
 
 @implementation FormatterPalette
 
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [NSFormatter class]])
+    return _(@"Format and validate a control's displayed value.");
+  return nil;
+}
+
 - (void) finishInstantiate
 {
   NSByteCountFormatter *byteCountFormatter = [[NSByteCountFormatter alloc] init];

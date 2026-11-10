@@ -28,7 +28,7 @@
 
 #import <InterfaceBuilder/IBPalette.h>
 GS_EXPORT_CLASS
-@interface FormatterPalette : IBPalette
+@interface FormatterPalette : IBPalette <IBPaletteDescriptions>
 {
   IBOutlet id _byteCount;
   IBOutlet id _dateComponents;

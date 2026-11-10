@@ -59,12 +59,23 @@
 }
 @end
 
-@interface MenusPalette: IBPalette
+@interface MenusPalette: IBPalette <IBPaletteDescriptions>
 {
 }
 @end
 
 @implementation MenusPalette
+
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [GormMenuMaker class]])
+    return _(@"Add a menu of commands to the document.");
+  if ([object isKindOfClass: [NSMenu class]])
+    return _(@"Add a menu of commands to the document.");
+  if ([object isKindOfClass: [NSMenuItem class]])
+    return _(@"Add a command or submenu to an existing menu.");
+  return nil;
+}
 
 - (void) finishInstantiate
 {

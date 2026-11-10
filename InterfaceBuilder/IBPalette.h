@@ -61,6 +61,19 @@ IB_EXTERN NSString	*GormImagePboardType;
 IB_EXTERN NSString	*GormSoundPboardType;
 IB_EXTERN NSString      *GormLinkPboardType;
 /** end of text ignored by autogsdoc </ignore> */
+/**
+ * Optional protocol for palettes providing Widget Library descriptions.
+ * GNUstep extension.
+ * The object is the insertion prototype returned by +[IBPalette objectForView:],
+ * not necessarily its preview view. Return a localized description, or nil
+ * (or an empty string) to use the library's generic description. Descriptions
+ * are requested when the palette is added to the library and copied by it.
+ * Existing palettes need not adopt this protocol.
+ */
+@protocol IBPaletteDescriptions <NSObject>
+- (NSString *) descriptionForObject: (id)object;
+@end
+
 GS_EXPORT_CLASS
 @interface IBPalette : NSObject
 {

@@ -40,6 +40,28 @@
 }
 @end
 
+@interface LibraryDescriptionPalette : LibraryTestPalette <IBPaletteDescriptions>
+@end
+@implementation LibraryDescriptionPalette
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [NSNumberFormatter class]])
+    return @"Validate a palette-specific number.";
+  if ([object isKindOfClass: [NSButton class]])
+    return [NSString stringWithFormat: @"Activate %@.", [object title]];
+  return nil;
+}
+@end
+
+@interface LibraryEmptyDescriptionPalette : LibraryTestPalette <IBPaletteDescriptions>
+@end
+@implementation LibraryEmptyDescriptionPalette
+- (NSString *) descriptionForObject: (id)object
+{
+  return @"";
+}
+@end
+
 int main(void)
 {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -50,7 +72,7 @@ int main(void)
     SKIP("A graphical GNUstep backend is required (run under Xvfb)")
   NS_ENDHANDLER
 
-  LibraryTestPalette *palette = [LibraryTestPalette new];
+  LibraryTestPalette *palette = [LibraryDescriptionPalette new];
   GormWidgetLibrary *library = [GormWidgetLibrary new];
   NSArray *prototypes = [[[palette originalWindow] contentView] subviews];
   NSView *prototype = [prototypes objectAtIndex: 0];
@@ -68,6 +90,18 @@ int main(void)
   PASS([[[entries objectAtIndex: 1] valueForKey: @"object"] isKindOfClass: [NSNumberFormatter class]]
     && [[[entries objectAtIndex: 1] valueForKey: @"type"] isEqual: IBFormatterPboardType],
        "associated objects preserve their actual object and drag type")
+  PASS([[[entries objectAtIndex: 0] valueForKey: @"detail"]
+         isEqual: @"Activate Example Button."],
+       "descriptions come from the owning palette and prototype configuration")
+  PASS([[[entries objectAtIndex: 1] valueForKey: @"detail"]
+         isEqual: @"Validate a palette-specific number."],
+       "description providers receive the associated object, not its preview")
+  PASS([[[entries objectAtIndex: 2] valueForKey: @"detail"]
+         isEqual: _(@"Drag this palette object into your document.")],
+       "nil descriptions fall back to the generic instruction")
+  PASS([[[rows objectAtIndex: 1] toolTip]
+         rangeOfString: @"Validate a palette-specific number."].location != NSNotFound,
+       "tooltips include the palette-provided description")
   NSView *preview = [[[rows objectAtIndex: 0] subviews] objectAtIndex: 0];
   PASS(preview != prototype && [preview isKindOfClass: [NSButton class]],
        "the example is a separate, real widget")
@@ -93,8 +127,11 @@ int main(void)
        "search matches titles case-insensitively")
   [search setStringValue: @"validate"];
   [search sendAction: [search action] to: [search target]];
-  PASS([[[scroll documentView] subviews] count] == 1,
-       "search also matches descriptions")
+  rows = [[scroll documentView] subviews];
+  PASS([rows count] == 1
+       && [[[rows objectAtIndex: 0] toolTip]
+         rangeOfString: @"Validate a palette-specific number."].location != NSNotFound,
+       "search finds the entry with the palette-provided description")
   [search setStringValue: @"no such widget"];
   [search sendAction: [search action] to: [search target]];
   PASS([[[[scroll documentView] subviews] objectAtIndex: 0] isKindOfClass: [NSTextField class]],
@@ -159,6 +196,22 @@ int main(void)
   [[library panel] close];
   RELEASE(library);
   RELEASE(palette);
+
+  library = [GormWidgetLibrary new];
+  palette = [LibraryTestPalette new];
+  [library addPalette: palette];
+  entries = [library valueForKey: @"entries"];
+  PASS([[[entries objectAtIndex: 0] valueForKey: @"detail"]
+         isEqual: _(@"Drag this palette object into your document.")],
+       "legacy palettes without the protocol remain supported")
+  RELEASE(palette);
+  palette = [LibraryEmptyDescriptionPalette new];
+  [library addPalette: palette];
+  PASS([[[entries objectAtIndex: 3] valueForKey: @"detail"]
+         isEqual: _(@"Drag this palette object into your document.")],
+       "empty descriptions use the generic instruction")
+  RELEASE(palette);
+  RELEASE(library);
   END_SET("Widget library")
   [pool drain];
   return 0;

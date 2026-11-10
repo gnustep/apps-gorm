@@ -95,6 +95,19 @@
 @end
 
 @implementation WindowsPalette
+
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [GormWindowMaker class]])
+    return _(@"Add a top-level window to the document.");
+  if ([object isKindOfClass: [GormPanelMaker class]])
+    return _(@"Add a panel to the document.");
+  if ([object isKindOfClass: [NSDrawer class]])
+    return _(@"Add a drawer to a window.");
+  if ([object isKindOfClass: [NSWindow class]])
+    return _(@"Add a top-level window to the document.");
+  return nil;
+}
 - (void) finishInstantiate
 {
   NSView	*contents;

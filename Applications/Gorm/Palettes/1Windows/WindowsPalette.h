@@ -24,5 +24,5 @@
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 GS_EXPORT_CLASS
-@interface WindowsPalette: IBPalette
+@interface WindowsPalette: IBPalette <IBPaletteDescriptions>
 @end

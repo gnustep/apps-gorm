@@ -32,45 +32,6 @@
 }
 @end
 
-static NSString *LibraryDescription(id object)
-{
-  if ([object isKindOfClass: [GormCustomView class]])
-    return _(@"Add a placeholder for a custom view class.");
-  if ([object isKindOfClass: [NSPopUpButton class]])
-    return _(@"Choose an item from a pop-up list of options.");
-  if ([object isKindOfClass: [NSButton class]])
-    {
-      return _(@"Trigger an action or select an option with a button.");
-    }
-  if ([object isKindOfClass: [NSComboBox class]])
-    return _(@"Enter text or choose a value from a drop-down list.");
-  if ([object isKindOfClass: [NSSecureTextField class]])
-    return _(@"Enter a password with its characters concealed.");
-  if ([object isKindOfClass: [NSTextField class]])
-    return [object isEditable] ? _(@"Enter or edit a single line of text.")
-      : _(@"Display a label or other read-only text.");
-  if ([object isKindOfClass: [NSSlider class]]) return _(@"Choose a value by dragging a slider.");
-  if ([object isKindOfClass: [NSStepper class]]) return _(@"Increase or decrease a numeric value.");
-  if ([object isKindOfClass: [NSColorWell class]]) return _(@"Display and choose a color.");
-  if ([object isKindOfClass: [NSProgressIndicator class]]) return _(@"Show the progress of an operation.");
-  if ([object isKindOfClass: [NSImageView class]]) return _(@"Display an image in the interface.");
-  if ([object isKindOfClass: [NSBox class]]) return _(@"Group related controls in a bordered container.");
-  if ([object isKindOfClass: [NSTabView class]]) return _(@"Organize views into selectable tabs.");
-  if ([object isKindOfClass: [NSSplitView class]]) return _(@"Arrange panes separated by a draggable divider.");
-  if ([object isKindOfClass: [NSScrollView class]]) return _(@"Present scrollable content inside a view.");
-  if ([object isKindOfClass: [NSOutlineView class]]) return _(@"Display expandable rows of hierarchical data.");
-  if ([object isKindOfClass: [NSTableView class]]) return _(@"Display data in rows and columns.");
-  if ([object isKindOfClass: [NSTextView class]]) return _(@"Display and edit multiple lines of text.");
-  if ([object isKindOfClass: [NSForm class]]) return _(@"Present labeled text fields for entering values.");
-  if ([object isKindOfClass: [NSMatrix class]]) return _(@"Arrange a group of cells in rows and columns.");
-  if ([object isKindOfClass: [NSBrowser class]]) return _(@"Browse a hierarchy using columns.");
-  if ([object isKindOfClass: [NSWindow class]]) return _(@"Add a top-level window to the document.");
-  if ([object isKindOfClass: [NSMenu class]]) return _(@"Add a menu of commands to the document.");
-  if ([object isKindOfClass: [NSMenuItem class]]) return _(@"Add a command or submenu to an existing menu.");
-  if ([object isKindOfClass: [NSFormatter class]]) return _(@"Format and validate a control's displayed value.");
-  return _(@"Drag this palette object into your document.");
-}
-
 @interface GormLibraryRow : NSView
 {
   GormLibraryEntry *entry;
@@ -340,7 +301,13 @@ static NSString *LibraryDescription(id object)
       if ([entry->object respondsToSelector: @selector(title)] && [[entry->object title] length])
         name = [NSString stringWithFormat: @"%@ (%@)", [entry->object title], name];
       entry->title = [name copy];
-      entry->detail = [LibraryDescription(entry->object) copy];
+      NSString *description = nil;
+      if ([palette respondsToSelector: @selector(descriptionForObject:)])
+        description = [(id<IBPaletteDescriptions>)palette
+          descriptionForObject: entry->object];
+      if ([description length] == 0)
+        description = _(@"Drag this palette object into your document.");
+      entry->detail = [description copy];
       entry->category = [[[palette originalWindow] title] copy];
       /* Independent examples keep controls visible without moving the palette
        * prototypes, and preserve custom palette views and their appearance. */

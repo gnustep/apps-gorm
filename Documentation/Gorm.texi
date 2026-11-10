@@ -776,6 +776,20 @@ After the palette is built you're ready to load it into Gorm.  Go to the prefere
 
 Now, you should see the palette in the set of palettes in the palette window.  Simply scroll over to it and select it's icon.   When you do this, you should see the view that you set up using the custom view displayed as an actual instance.  Note that we used one of the techniques listed above, it is possible to use any of the three for any object you add to your palette.     You can now drag the view from the palette to a new window. 
 
+@subsection Widget Library Descriptions
+
+Palettes can adopt the @code{IBPaletteDescriptions} protocol declared in
+@file{InterfaceBuilder/IBPalette.h} and implement
+@code{- (NSString *) descriptionForObject: (id)object}.  Return a localized
+explanation of the supplied prototype.  The argument is the object returned by
+@code{+[IBPalette objectForView:]}, so associated objects such as formatters
+are passed instead of their preview views.  Palettes can distinguish individual
+prototypes or their configuration, including editable fields and labels.
+Descriptions are requested and copied when a palette is added to the Widget
+Library, where they appear in rows and tooltips and can be searched.
+Palettes without this method, or returning nil or an empty string, use the
+generic drag instruction.
+
 @subsection Non Graphical Objects In A Palette
 You may recall the creation of a method called ``-(void) finishInstantiate'' in the previous section.  This section will make full use of that method.  Re-open the palette you created before, but this time add an image view to the window.   Then add to the image view, the icon you want to represent the non-graphical object.   Here you'll need to add an ivar to the MyPalette class in both Gorm and in your source code called, imageView.  Once you've done this make the connection between the image view and it's ivar.
 

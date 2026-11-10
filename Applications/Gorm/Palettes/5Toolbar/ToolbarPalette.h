@@ -28,7 +28,7 @@
 
 #import <InterfaceBuilder/IBPalette.h>
 GS_EXPORT_CLASS
-@interface ToolbarPalette : IBPalette
+@interface ToolbarPalette : IBPalette <IBPaletteDescriptions>
 {
   IBOutlet id toolbarButton;
 }

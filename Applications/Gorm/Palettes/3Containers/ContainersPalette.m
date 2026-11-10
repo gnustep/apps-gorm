@@ -37,12 +37,31 @@
  * Containers Palette Display
 */
 
-@interface ContainersPalette: IBPalette
+@interface ContainersPalette: IBPalette <IBPaletteDescriptions>
 {
 }
 @end
 
 @implementation ContainersPalette
+
+- (NSString *) descriptionForObject: (id)object
+{
+  /* Describe the content supplied by this palette inside its scroll view. */
+  if ([object isKindOfClass: [NSScrollView class]]
+      && [object documentView] != nil)
+    object = [object documentView];
+  if ([object isKindOfClass: [NSTabView class]])
+    return _(@"Organize views into selectable tabs.");
+  if ([object isKindOfClass: [NSOutlineView class]])
+    return _(@"Display expandable rows of hierarchical data.");
+  if ([object isKindOfClass: [NSTableView class]])
+    return _(@"Display data in rows and columns.");
+  if ([object isKindOfClass: [NSScrollView class]])
+    return _(@"Present scrollable content inside a view.");
+  if ([object isKindOfClass: [NSBrowser class]])
+    return _(@"Browse a hierarchy using columns.");
+  return nil;
+}
 
 - (void) finishInstantiate
 {

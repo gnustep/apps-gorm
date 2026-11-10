@@ -35,6 +35,13 @@
 
 @implementation ToolbarPalette
 
+- (NSString *) descriptionForObject: (id)object
+{
+  if ([object isKindOfClass: [NSToolbar class]])
+    return _(@"Add a toolbar of commands to a window.");
+  return nil;
+}
+
 - (void) finishInstantiate
 {
   NSToolbar *tb = [[NSToolbar alloc] initWithIdentifier: @"gnustep.toolbar"];
