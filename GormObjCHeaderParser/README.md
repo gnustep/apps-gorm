@@ -182,6 +182,7 @@ keeps parsing fast and dependency-light.
 
 ## License
 
-License headers in this module are mixed by file (historical GNUstep code plus
-newer additions). Refer to individual source file headers for authoritative
-terms, and to repository-level license files for project-wide context.
+GormObjCHeaderParser is distributed under the GNU Lesser General Public License,
+version 2.1 or (at your option) any later version (LGPL-2.1-or-later).
+This applies to the module's source code, build files, tests, and resources.
+See [COPYING.LIB](COPYING.LIB) for the license text.

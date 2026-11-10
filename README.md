@@ -201,8 +201,15 @@ You can also send feedback and patches to:
 
 ## License
 
-Gorm is part of GNUstep and distributed under the GNU General Public License.
-See COPYING for details.
+The Gorm application is distributed under the GNU General Public License,
+version 3 or (at your option) any later version. See [COPYING](COPYING).
+
+InterfaceBuilder, GormCore, GormObjCHeaderParser, and the format plugins are
+distributed under the GNU Lesser General Public License, version 2.1 or
+(at your option) any later version. See the license texts in
+[InterfaceBuilder](InterfaceBuilder/COPYING.LIB), [GormCore](GormCore/COPYING.LIB),
+[GormObjCHeaderParser](GormObjCHeaderParser/COPYING.LIB), and
+[Plugins](Plugins/COPYING.LIB).
 
 ## Acknowledgements
 

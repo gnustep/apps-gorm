@@ -345,10 +345,7 @@ Useful files when exploring or extending behavior:
 
 ## License
 
-GormCore is part of apps-gorm. Source files in this module carry their own
-license headers, and the project provides license texts at repository scope.
-
-See:
-
-- COPYING at repository root
-- file-level headers in this directory for specific terms
+GormCore is distributed under the GNU Lesser General Public License,
+version 2.1 or (at your option) any later version (LGPL-2.1-or-later).
+This applies to the module's source code, build files, tests, and resources.
+See [COPYING.LIB](COPYING.LIB) for the license text.

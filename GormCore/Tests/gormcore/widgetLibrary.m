@@ -1,5 +1,5 @@
 /* Copyright (C) 2026 Free Software Foundation, Inc.
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 #import "Testing.h"
 #import <AppKit/AppKit.h>

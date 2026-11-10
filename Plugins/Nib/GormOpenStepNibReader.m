@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2026 Free Software Foundation, Inc.
  * This file is part of GNUstep GUI, licensed under the GNU Lesser General
- * Public License, version 2 or later.  See COPYING.LIB.
+ * Public License, version 2.1 or later.  See COPYING.LIB.
  *
  * Historical layout references are documented in README.openstep.
  * A typed stream is NOT a GNUstep NSArchiver archive.  Translate the measured

@@ -9,6 +9,7 @@ all::
 
 check::
 	python3 -m py_compile ../*.py
+	python3 test_component_licenses.py
 
 clean::
 	rm -rf __pycache__ ../__pycache__
