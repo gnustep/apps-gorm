@@ -31,6 +31,24 @@
 
 - (NSString *) descriptionForObject: (id)object
 {
+  if ([object isKindOfClass: [NSByteCountFormatter class]])
+    return _(@"Display byte counts as file or memory sizes, using units such as KB and MB.");
+  if ([object isKindOfClass: [NSDateComponentsFormatter class]])
+    return _(@"Display durations using time components such as hours, minutes, and seconds.");
+  if ([object isKindOfClass: [NSDateIntervalFormatter class]])
+    return _(@"Display a date or time range with a start and an end.");
+  if ([object isKindOfClass: [NSEnergyFormatter class]])
+    return _(@"Display energy values using units such as joules and calories.");
+  if ([object isKindOfClass: [NSISO8601DateFormatter class]])
+    return _(@"Display dates and times in the ISO 8601 standard format.");
+  if ([object isKindOfClass: [NSLengthFormatter class]])
+    return _(@"Display lengths using units such as meters and feet.");
+  if ([object isKindOfClass: [NSMassFormatter class]])
+    return _(@"Display masses using units such as kilograms and pounds.");
+  if ([object isKindOfClass: [NSMeasurementFormatter class]])
+    return _(@"Display measurements with localized unit names and number formatting.");
+  if ([object isKindOfClass: [NSPersonNameComponentsFormatter class]])
+    return _(@"Display personal names from components such as given and family names.");
   if ([object isKindOfClass: [NSFormatter class]])
     return _(@"Format and validate a control's displayed value.");
   return nil;
