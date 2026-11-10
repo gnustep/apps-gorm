@@ -102,6 +102,8 @@
     identifiers: nil
     classNameMappings: substituteClasses
     connections: connections
+    documentMetadata: [NSDictionary dictionaryWithObjectsAndKeys:
+      [[doc filesOwner] className], @"GormFilesOwnerClass", nil]
     errorDescription: &error];
   if (data == nil)
     {

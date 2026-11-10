@@ -20,7 +20,7 @@
 
    You should have received a copy of the GNU Library General Public
    License along with this library; see the file COPYING.LIB.
-   If not, write to the Free Software Foundation,
+   If not, write  the Free Software Foundation,
    31 Milk St # 960789 Boston, MA 02196 USA
 */
 

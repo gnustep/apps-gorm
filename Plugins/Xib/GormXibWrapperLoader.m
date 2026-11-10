@@ -83,6 +83,11 @@
 				    withID: (NSString *)theId
 {
   id result = obj;
+
+  if (obj == _nibFilesOwner)
+    {
+      return [document filesOwner];
+    }
   
   if ([obj isKindOfClass: [NSCustomObject class]])
     {
@@ -351,18 +356,34 @@
 
 		  if (rootObjects != nil)
 		    {
-		      xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  docFilesOwner = [doc filesOwner];
 		  _customClasses = [u customClasses];
-		  _nibFilesOwner = [rootObjects objectAtIndex: 0];
 		  _decoded = [u decoded];
+                  /* Modern XIB placeholders have stable IDs; their order
+                   * need not match the legacy root-object array. */
+                  _nibFilesOwner = [_decoded objectForKey: @"-2"];
+                  if (_nibFilesOwner == nil)
+                    _nibFilesOwner = [rootObjects objectAtIndex: 0];
+                  xibFirstResponder = [_decoded objectForKey: @"-1"];
+                  if (xibFirstResponder == nil)
+                    xibFirstResponder = [rootObjects objectAtIndex: 1];
 		  
 		  //
 		  // set the current class on the File's owner...
 		  //
 		  if ([_nibFilesOwner isKindOfClass: [NSCustomObject class]])
 		    {
-		      [docFilesOwner setClassName: [_nibFilesOwner className]];	  
+                      NSString *ownerClass = [_nibFilesOwner className];
+                      [docFilesOwner setClassName: ownerClass];
+                      [_nibFilesOwner setRealObject: docFilesOwner];
+                      if ([ownerClass length] > 0
+                          && ![classManager isKnownClass: ownerClass])
+                        {
+                          [classManager addClassNamed: ownerClass
+                                 withSuperClassNamed: @"NSObject"
+                                         withActions: nil
+                                         withOutlets: nil];
+                        }
 		    }
 		  
 		  //
@@ -377,7 +398,8 @@
 		      
 		      // skip the file's owner, it is handled above...
 		      if ((obj == _nibFilesOwner)
-			  || (obj == xibFirstResponder))
+			  || (obj == xibFirstResponder)
+                          || (obj == [_decoded objectForKey: @"-3"]))
                         {
                           continue;
                         }

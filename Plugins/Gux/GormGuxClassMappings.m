@@ -14,6 +14,7 @@ NSDictionary *GormGuxDefaultClassMappings(void)
       @"NSBrowser", @"GormNSBrowser",
       @"NSTableView", @"GormNSTableView",
       @"NSOutlineView", @"GormNSOutlineView",
+      @"NSCustomObject", @"GormObjectProxy",
       nil];
   return mappings;
 }

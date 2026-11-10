@@ -42,6 +42,7 @@
 @end
 
 @implementation GormLibraryRow
+
 - (id) initWithEntry: (GormLibraryEntry *)anEntry frame: (NSRect)frame
 {
   if ((self = [super initWithFrame: frame]))
@@ -66,18 +67,22 @@
     }
   return self;
 }
+
 - (void) dealloc
 {
   RELEASE(entry);
   RELEASE(dragPasteboard);
   [super dealloc];
 }
+
 /* The examples are illustrative, so the entire row starts a copy drag. */
 - (NSView *) hitTest: (NSPoint)point
 {
   return [super hitTest: point] != nil ? self : nil;
 }
+
 - (BOOL) acceptsFirstMouse: (NSEvent *)event { return YES; }
+
 - (void) drawRect: (NSRect)dirty
 {
   NSRect bounds = [self bounds];
@@ -98,6 +103,7 @@
   [[NSColor gridColor] set];
   NSRectFill(NSMakeRect(0, 0, bounds.size.width, 1));
 }
+
 - (void) mouseDown: (NSEvent *)event
 {
   GormDocument *document = (id)[(id<IB>)[NSApp delegate] activeDocument];
@@ -135,10 +141,12 @@
       RELEASE(image);
     }
 }
+
 - (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL)local
 {
   return local ? NSDragOperationCopy : NSDragOperationNone;
 }
+
 - (void) draggedImage: (NSImage *)image endedAt: (NSPoint)point deposited: (BOOL)deposited
 {
   if (!deposited && ([entry->type isEqual: IBWindowPboardType]
@@ -151,15 +159,18 @@
       [document pasteType: entry->type fromPasteboard: dragPasteboard parent: nil];
     }
 }
+
 @end
 
 @interface GormLibraryList : NSView
 @end
+
 @implementation GormLibraryList
 - (BOOL) isFlipped { return YES; }
 @end
 
 @implementation GormWidgetLibrary
+
 - (id) init
 {
   if ((self = [super init]))
@@ -174,6 +185,7 @@
     }
   return self;
 }
+
 - (void) dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -182,11 +194,13 @@
   RELEASE(entries);
   [super dealloc];
 }
+
 - (void) savePanelFrame: (NSNotification *)notification
 {
   if (panel != nil)
     [panel saveFrameUsingName: @"WidgetLibrary"];
 }
+
 - (void) testing: (NSNotification *)notification
 {
   if ([[notification name] isEqual: IBWillBeginTestingInterfaceNotification])
@@ -200,6 +214,7 @@
       [panel orderFront: self];
     }
 }
+
 - (void) reload: (id)sender
 {
   if (panel == nil) return;
@@ -236,10 +251,12 @@
   RELEASE(list);
   [[scrollView documentView] scrollPoint: NSZeroPoint];
 }
+
 - (BOOL) isVisible
 {
   return [panel isVisible];
 }
+
 - (NSPanel *) panel
 {
   if (panel == nil)
@@ -286,6 +303,7 @@
     }
   return panel;
 }
+
 - (void) addPalette: (IBPalette *)palette
 {
   NSEnumerator *enumerator = [[[[palette originalWindow] contentView] subviews] objectEnumerator];
@@ -325,4 +343,5 @@
     }
   [self reload: self];
 }
+
 @end

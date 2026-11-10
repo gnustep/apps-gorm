@@ -820,12 +820,39 @@
       else
         [NSException raise: NSInvalidArgumentException
                     format: @"CIB export does not support connector %@", NSStringFromClass([obj class])];
-      [self _archiveObject: [obj source]];
+      id source = [obj source];
+      /* Cappuccino controls have no separate cell.  Historical nibs can
+       * attach an action to the cell of a single-cell AppKit control. */
+      if ([obj isKindOfClass: [NSNibControlConnector class]]
+          && [source isKindOfClass: [NSCell class]])
+        {
+          id control = [source controlView];
+          /* A newly created cell may not yet have a controlView.  The
+           * archived view graph still identifies its owning control. */
+          if (control == nil)
+            {
+              NSEnumerator *controls = [_sourceObjects objectEnumerator];
+              id candidate;
+              while ((candidate = [controls nextObject]) != nil)
+                if ([candidate isKindOfClass: [NSControl class]]
+                    && ![candidate isKindOfClass: [NSMatrix class]]
+                    && [candidate cell] == source)
+                  {
+                    control = candidate;
+                    break;
+                  }
+            }
+          if ([control isKindOfClass: [NSControl class]]
+              && ![control isKindOfClass: [NSMatrix class]]
+              && [control cell] == source)
+            source = control;
+        }
+      [self _archiveObject: source];
       [self _archiveObject: [obj destination]];
       [connections addObject: [self _encodeRecord:
         [NSDictionary dictionaryWithObjectsAndKeys:
           className, @"class",
-          [self _identifierForObject: [obj source]], @"_CPCibConnectorSourceKey",
+          [self _identifierForObject: source], @"_CPCibConnectorSourceKey",
           [self _identifierForObject: [obj destination]], @"_CPCibConnectorDestinationKey",
           [obj label], @"_CPCibConnectorLabelKey", nil]]];
     }

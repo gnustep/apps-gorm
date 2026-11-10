@@ -18,6 +18,7 @@ SUBPROJECTS = \
 	../GormCore/Tests \
 	../Plugins/Tests \
 	../Plugins/Cib/Tests \
+	../Plugins/Nib/Tests \
 	../Applications/Gorm/Tests \
 	../Applications/Gorm/Palettes/Tests \
 	../Tools/gormtool/Tests \

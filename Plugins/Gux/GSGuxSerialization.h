@@ -97,6 +97,16 @@ extern NSString * const GSGuxClassSubstitutions;
                          connections: (NSArray *)connections
                     errorDescription: (NSString **)errorDescription;
 
+/** Full form including optional design-document metadata. */
++ (NSData *) dataWithTopLevelObjects: (NSArray *)topLevelObjects
+                       keyValuePairs: (NSDictionary *)keyValuePairs
+                        excludedKeys: (NSDictionary *)excludedKeys
+                         identifiers: (NSMapTable *)identifiers
+                  classNameMappings: (NSDictionary *)classNameMappings
+                         connections: (NSArray *)connections
+                    documentMetadata: (NSDictionary *)metadata
+                    errorDescription: (NSString **)errorDescription;
+
 /**
  * Compatibility convenience method. Each name in a class's propertyKeys
  * array is used as both the GUX property name and the KVC key.

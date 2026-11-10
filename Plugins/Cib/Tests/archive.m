@@ -105,7 +105,8 @@ int main(int argc, char **argv)
   CibDocument *doc = [CibDocument new];
   addConnection(doc, [NSNibOutletConnector class], doc->owner, doc->first, @"firstButton");
   addConnection(doc, [NSNibOutletConnector class], doc->owner, doc->second, @"secondButton");
-  addConnection(doc, [NSNibControlConnector class], doc->first, doc->owner, @"clicked:");
+  /* OPENSTEP nibs can connect the action through the control's cell. */
+  addConnection(doc, [NSNibControlConnector class], [doc->first cell], doc->owner, @"clicked:");
   addConnection(doc, [NSNibControlConnector class], doc->second, doc->responder, @"performClose:");
   addConnection(doc, [NSNibConnector class], doc->first, [doc->window contentView], @"parent");
   /* Editor connections must never enter the runtime object graph. */

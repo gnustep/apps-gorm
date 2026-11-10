@@ -1,0 +1,25 @@
+Binary OPENSTEP nib support
+===========================
+
+GormOpenStepTypedStream.m is an Objective-C 1.0 compatible typed stream reader
+moved from GNUstep GUI into Gorm's Nib plugin.  It keeps its parsed graph in private C structures
+declared in GormOpenStepTypedStream.h.  No NIBMAKER parser source is included.
+The historical class layouts used by GormOpenStepNibReader.m were researched
+with NIBMAKER-FOR-OPENSTEP's format documentation and examples (commit
+bcc7c1a09e0be874f1df259e809517a89b765986).  Thank you to u/These_Magician_3789 on Reddit for his work on the original idea.
+
+The reader accepts streamer versions 3 and 4, both typedstream byte orders,
+and checks bounds, references, nesting, array counts, and total allocations.
+GormOpenStepNibReader.m converts supported historical objects to an in-memory
+binary keyed archive for GormNibWrapperLoader.  Unknown classes and
+unsupported layouts fail before application objects are instantiated.
+
+The supported class versions and explicit semantic limitations are encoded
+in GormOpenStepNibReader.m.  Tests/README.md describes
+the regression tests and fixture generation.
+
+The reader is private to this plugin. It is shared by the Gorm application
+and gormtool; NSNib runtime loading is not extended. Existing copyright and
+LGPL notices are retained, with COPYING.LIB alongside the moved sources.
+Gorm-prefixed symbols permit use with older GUI libraries containing the
+original reader without Objective-C class or C symbol collisions.

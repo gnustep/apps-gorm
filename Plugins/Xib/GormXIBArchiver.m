@@ -822,13 +822,13 @@ static NSDictionary *_valueMapping = nil;
 
   attr = [NSXMLNode attributeWithName: @"key" stringValue: name];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"x" stringValue: [NSString stringWithFormat: @"%.1f",r.origin.x]];
+  attr = [NSXMLNode attributeWithName: @"x" stringValue: [NSString stringWithFormat: @"%.17g", (double)r.origin.x]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%.1f",r.origin.y]];
+  attr = [NSXMLNode attributeWithName: @"y" stringValue: [NSString stringWithFormat: @"%.17g", (double)r.origin.y]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)r.size.width]];
+  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%.17g", (double)r.size.width]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)r.size.height]];
+  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%.17g", (double)r.size.height]];
   [rectElem addAttribute: attr];
 
   [elem addChild: rectElem];
@@ -841,9 +841,9 @@ static NSDictionary *_valueMapping = nil;
 
   attr = [NSXMLNode attributeWithName: @"key" stringValue: name];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)size.width]];
+  attr = [NSXMLNode attributeWithName: @"width" stringValue: [NSString stringWithFormat: @"%.17g", (double)size.width]];
   [rectElem addAttribute: attr];
-  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%ld", (NSUInteger)size.height]];
+  attr = [NSXMLNode attributeWithName: @"height" stringValue: [NSString stringWithFormat: @"%.17g", (double)size.height]];
   [rectElem addAttribute: attr];
 
   [elem addChild: rectElem];
@@ -855,9 +855,9 @@ static NSDictionary *_valueMapping = nil;
 
   [pointElem addAttribute: [NSXMLNode attributeWithName: @"key" stringValue: name]];
   [pointElem addAttribute: [NSXMLNode attributeWithName: @"x"
-					 stringValue: [NSString stringWithFormat: @"%.1f", point.x]]];
+					 stringValue: [NSString stringWithFormat: @"%.17g", (double)point.x]]];
   [pointElem addAttribute: [NSXMLNode attributeWithName: @"y"
-					 stringValue: [NSString stringWithFormat: @"%.1f", point.y]]];
+					 stringValue: [NSString stringWithFormat: @"%.17g", (double)point.y]]];
   [elem addChild: pointElem];
 }
 
