@@ -171,13 +171,17 @@ int defaultDateFormatIndex = 3;
       && [object documentView] != nil)
     object = [object documentView];
   if ([object isKindOfClass: [NSComboBox class]])
-    return _(@"Enter text or choose a value from a drop-down list.");
+    return _(@"Enter a text value directly or choose from a drop-down list of suggested values in the same control.");
   if ([object isKindOfClass: [NSImageView class]])
-    return _(@"Display an image in the interface.");
+    return _(@"Display an image with configurable alignment, scaling, and framing inside a view.");
   if ([object isKindOfClass: [NSTextView class]])
-    return _(@"Display and edit multiple lines of text.");
+    return _(@"Display and edit a scrollable text document with multiple lines, selection, and copy and paste.");
   if ([object isKindOfClass: [NSScrollView class]])
-    return _(@"Present scrollable content inside a view.");
+    return _(@"Show content larger than its visible area, using scroll bars to move through the document view.");
+  if ([object isKindOfClass: [NSNumberFormatter class]])
+    return _(@"Format numeric values as text and parse numeric input, with configurable separators and positive and negative formats.");
+  if ([object isKindOfClass: [NSDateFormatter class]])
+    return _(@"Format dates and times as text and parse date input using a configurable date format.");
   if ([object isKindOfClass: [NSFormatter class]])
     return _(@"Format and validate a control's displayed value.");
   return nil;

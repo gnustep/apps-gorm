@@ -41,32 +41,51 @@
 - (NSString *) descriptionForObject: (id)object
 {
   if ([object isKindOfClass: [GormCustomView class]])
-    return _(@"Add a placeholder for a custom view class.");
+    return _(@"Reserve an area for a custom NSView subclass; assign its class to use your own drawing and interaction code.");
   if ([object isKindOfClass: [NSPopUpButton class]])
-    return _(@"Choose an item from a pop-up list of options.");
+    return [object pullsDown]
+      ? _(@"Open a pull-down menu of commands from a button whose title stays visible after a choice.")
+      : _(@"Choose one option from a pop-up menu; the button displays the currently selected item.");
   if ([object isKindOfClass: [NSButton class]])
-    return _(@"Trigger an action or select an option with a button.");
+    {
+      NSString *imageName = [[object image] name];
+
+      /* Switch and radio prototypes use the standard GNUstep images. */
+      if ([imageName isEqual: @"GSSwitch"])
+        return _(@"Turn an independent option on or off with a checkbox; its check mark shows the current state.");
+      if ([imageName isEqual: @"GSRadio"])
+        return _(@"Select an option with a radio button; use a radio matrix to make a group mutually exclusive.");
+      if ([[object cell] showsStateBy] != NSNoCellMask)
+        return _(@"Toggle a persistent on or off state with a button that shows whether it is selected.");
+      return _(@"Perform a command when clicked; connect the button's action to the object that handles the command.");
+    }
   if ([object isKindOfClass: [NSSecureTextField class]])
-    return _(@"Enter a password with its characters concealed.");
+    return _(@"Enter a password or other sensitive text in a field that conceals the typed characters.");
   if ([object isKindOfClass: [NSTextField class]])
-    return [object isEditable] ? _(@"Enter or edit a single line of text.")
-      : _(@"Display a label or other read-only text.");
+    return [object isEditable] ? _(@"Enter and edit a single text value; connect an action to respond when the user commits a change.")
+      : _(@"Display a read-only label, instruction, or value alongside other controls.");
   if ([object isKindOfClass: [NSSlider class]])
-    return _(@"Choose a value by dragging a slider.");
+    return _(@"Choose a numeric value within a minimum and maximum by dragging the slider knob.");
   if ([object isKindOfClass: [NSStepper class]])
-    return _(@"Increase or decrease a numeric value.");
+    return _(@"Adjust a numeric value in fixed increments with up and down arrows, within a configurable range.");
   if ([object isKindOfClass: [NSColorWell class]])
-    return _(@"Display and choose a color.");
+    return _(@"Show the current color and let the user change it through the color panel.");
   if ([object isKindOfClass: [NSProgressIndicator class]])
-    return _(@"Show the progress of an operation.");
+    return _(@"Show how much of an operation is complete, or animate to indicate activity when its duration is unknown.");
+  if ([object isKindOfClass: [NSBox class]]
+      && [object boxType] == NSBoxSeparator)
+    return _(@"Separate neighboring controls or sections with a horizontal or vertical divider line.");
   if ([object isKindOfClass: [NSBox class]])
-    return _(@"Group related controls in a bordered container.");
+    return _(@"Group related controls inside a titled box with a configurable border and content area.");
   if ([object isKindOfClass: [NSSplitView class]])
-    return _(@"Arrange panes separated by a draggable divider.");
+    return _(@"Divide an area into adjacent panes whose sizes the user can adjust by dragging the divider.");
   if ([object isKindOfClass: [NSForm class]])
-    return _(@"Present labeled text fields for entering values.");
+    return _(@"Collect related values in a column of text fields, each with its own aligned label.");
+  if ([object isKindOfClass: [NSMatrix class]]
+      && [object mode] == NSRadioModeMatrix)
+    return _(@"Present a group of mutually exclusive choices in rows or columns; selecting one cell deselects the others.");
   if ([object isKindOfClass: [NSMatrix class]])
-    return _(@"Arrange a group of cells in rows and columns.");
+    return _(@"Arrange cells in rows and columns to display values or offer a coordinated set of selectable controls.");
   return nil;
 }
 

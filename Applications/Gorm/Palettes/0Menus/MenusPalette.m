@@ -69,11 +69,41 @@
 - (NSString *) descriptionForObject: (id)object
 {
   if ([object isKindOfClass: [GormMenuMaker class]])
-    return _(@"Add a menu of commands to the document.");
+    return _(@"Create the application's main menu with Hide and Quit commands, ready for additional items and submenus.");
   if ([object isKindOfClass: [NSMenu class]])
-    return _(@"Add a menu of commands to the document.");
+    return _(@"Group commands in a menu whose items can invoke actions, display keyboard shortcuts, or open submenus.");
   if ([object isKindOfClass: [NSMenuItem class]])
-    return _(@"Add a command or submenu to an existing menu.");
+    {
+      if ([object isSeparatorItem])
+        return _(@"Insert a nonselectable separator line to divide related groups of commands in a menu.");
+      if ([object action] == @selector(orderFrontColorPanel:))
+        return _(@"Add a Colors command that opens the color panel for choosing text or control colors.");
+      if ([object hasSubmenu])
+        {
+          /* These titles identify the templates created in finishInstantiate. */
+          NSString *title = [object title];
+          if ([title isEqual: @"Info"])
+            return _(@"Add an Info submenu with commands for application information, preferences, and help.");
+          if ([title isEqual: @"Font"])
+            return _(@"Add font selection and styling commands, including underline, superscript, and copying and pasting fonts.");
+          if ([title isEqual: @"Document"])
+            return _(@"Add document commands for creating, opening, saving, and reverting files, including an Open Recent submenu.");
+          if ([title isEqual: @"Text"])
+            return _(@"Add text alignment and ruler commands for laying out paragraphs in a text view.");
+          if ([title isEqual: @"Edit"])
+            return _(@"Add standard editing commands for undo, redo, cut, copy, paste, and selecting all content.");
+          if ([title isEqual: @"Find"])
+            return _(@"Add commands to open the Find panel, find the next or previous match, and search for selected text.");
+          if ([title isEqual: @"Format"])
+            return _(@"Add Font and Text submenus together with Page Layout for formatting text and printed pages.");
+          if ([title isEqual: @"Windows"])
+            return _(@"Add window management commands to arrange windows, minimize the current window, or close it.");
+          if ([title isEqual: @"Services"])
+            return _(@"Add a Services submenu to expose services supplied by other applications for the current selection.");
+          return _(@"Add a submenu container to organize related commands beneath a single parent menu item.");
+        }
+      return _(@"Add an individual menu command; set its title, keyboard shortcut, target, and action in the inspectors.");
+    }
   return nil;
 }
 

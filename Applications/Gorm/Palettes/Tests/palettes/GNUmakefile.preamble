@@ -3,5 +3,7 @@
 #
 
 ADDITIONAL_INCLUDE_DIRS += -I../../../../..
-ADDITIONAL_LIB_DIRS += -L../../../../../InterfaceBuilder/obj
-ADDITIONAL_OBJC_LIBS += -lInterfaceBuilder -lgnustep-gui
+ADDITIONAL_LIB_DIRS += -L../../../../../InterfaceBuilder/obj \
+  -L../../../../../GormCore/GormCore.framework/Versions/0 \
+  -L../../../../../GormObjCHeaderParser/obj
+ADDITIONAL_OBJC_LIBS += -lGormCore -lInterfaceBuilder -lGormObjCHeaderParser -lgnustep-gui

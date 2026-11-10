@@ -51,15 +51,15 @@
       && [object documentView] != nil)
     object = [object documentView];
   if ([object isKindOfClass: [NSTabView class]])
-    return _(@"Organize views into selectable tabs.");
+    return _(@"Group related views on separate tab pages; selecting a tab reveals its associated controls.");
   if ([object isKindOfClass: [NSOutlineView class]])
-    return _(@"Display expandable rows of hierarchical data.");
+    return _(@"Display hierarchical data in columns, with disclosure controls to expand or collapse child rows.");
   if ([object isKindOfClass: [NSTableView class]])
-    return _(@"Display data in rows and columns.");
+    return _(@"Display records in a scrollable table with column headings, row selection, and configurable cell editing.");
   if ([object isKindOfClass: [NSScrollView class]])
-    return _(@"Present scrollable content inside a view.");
+    return _(@"Show content larger than its visible area, using scroll bars to move through the document view.");
   if ([object isKindOfClass: [NSBrowser class]])
-    return _(@"Browse a hierarchy using columns.");
+    return _(@"Navigate hierarchical data in successive columns; selecting a parent reveals its children in the next column.");
   return nil;
 }
 

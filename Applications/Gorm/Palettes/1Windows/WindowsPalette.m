@@ -99,13 +99,14 @@
 - (NSString *) descriptionForObject: (id)object
 {
   if ([object isKindOfClass: [GormWindowMaker class]])
-    return _(@"Add a top-level window to the document.");
-  if ([object isKindOfClass: [GormPanelMaker class]])
-    return _(@"Add a panel to the document.");
+    return _(@"Create a top-level window to hold the main content and controls of a document or application.");
+  if ([object isKindOfClass: [GormPanelMaker class]]
+      || [object isKindOfClass: [NSPanel class]])
+    return _(@"Create an auxiliary panel for tools, settings, or dialogs that support the application's main windows.");
   if ([object isKindOfClass: [NSDrawer class]])
-    return _(@"Add a drawer to a window.");
+    return _(@"Attach a sliding container to a parent window for supplementary controls that can be shown or hidden.");
   if ([object isKindOfClass: [NSWindow class]])
-    return _(@"Add a top-level window to the document.");
+    return _(@"Create a top-level window to hold the main content and controls of a document or application.");
   return nil;
 }
 - (void) finishInstantiate

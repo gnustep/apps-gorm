@@ -785,6 +785,9 @@ explanation of the supplied prototype.  The argument is the object returned by
 @code{+[IBPalette objectForView:]}, so associated objects such as formatters
 are passed instead of their preview views.  Palettes can distinguish individual
 prototypes or their configuration, including editable fields and labels.
+Describe what each object does and how the user interacts with it.  Built-in
+palettes provide separate descriptions for menu templates, formatter types,
+and control variants such as command buttons, checkboxes, and radio groups.
 Descriptions are requested and copied when a palette is added to the Widget
 Library, where they appear in rows and tooltips and can be searched.
 Palettes without this method, or returning nil or an empty string, use the

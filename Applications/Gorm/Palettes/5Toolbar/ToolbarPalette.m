@@ -38,7 +38,7 @@
 - (NSString *) descriptionForObject: (id)object
 {
   if ([object isKindOfClass: [NSToolbar class]])
-    return _(@"Add a toolbar of commands to a window.");
+    return _(@"Attach a customizable row of command items to a window, with icons, labels, and saved user arrangements.");
   return nil;
 }
 

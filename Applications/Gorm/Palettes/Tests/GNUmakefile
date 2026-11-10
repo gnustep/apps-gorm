@@ -17,6 +17,8 @@ all::
 
 check::
 	(\
+	LD_LIBRARY_PATH="$(CURDIR)/../../../../GormCore/GormCore.framework/Versions/0:$(CURDIR)/../../../../InterfaceBuilder/$(GNUSTEP_OBJ_DIR):$(CURDIR)/../../../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR):$${LD_LIBRARY_PATH}";\
+	export LD_LIBRARY_PATH;\
 	if [ "$(DEBUG)" = "" ]; then \
 	  gnustep-tests palettes;\
 	else \
