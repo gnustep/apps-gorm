@@ -284,6 +284,34 @@
                           && [document nameForObject: obj] != nil)
                         [document setName: name forObject: obj];
                     }
+                  
+                  /*
+                   * Legacy OpenStep/Rhapsody nibs named the application main
+                   * menu "MainMenu" (or "_NSMainMenu").  The GNUstep gorm
+                   * runtime loader (GSNibContainer -awakeWithContext:) auto-
+                   * wires the main menu by looking up the name table for the
+                   * key "NSMenu", so a converted gorm that keeps the legacy
+                   * name would leave the menu orphaned: no menu bar appears
+                   * and the menu key-equivalents (File > Open, ...) are
+                   * dead.  Modern gorm documents already name the main menu
+                   * "NSMenu" (see -attachObject: in GormDocument), so rename
+                   * the legacy main menu to the name the runtime expects.
+                   * The object is already attached and named by the loop
+                   * above; renaming it here updates the name table, and
+                   * because connections reference it by object identity,
+                   * every written connection and the name table follow to
+                   * "NSMenu".  -setName:forObject: bails out if the name is
+                   * already taken, so a nib that genuinely has both a
+                   * "MainMenu" and an "NSMenu" object is left untouched.
+                   */
+                  {
+                    id mainMenu = [document objectForName: @"MainMenu"];
+                    if (mainMenu == nil)
+                      mainMenu = [document objectForName: @"_NSMainMenu"];
+                    if ([mainMenu isKindOfClass: [NSMenu class]]
+                        && [document objectForName: @"NSMenu"] == nil)
+                      [document setName: @"NSMenu" forObject: mainMenu];
+                  }
 
 		  //
 		  // Add custom classes...
