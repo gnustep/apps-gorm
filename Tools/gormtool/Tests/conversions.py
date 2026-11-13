@@ -73,6 +73,32 @@ class Conversions(unittest.TestCase):
                 raise AssertionError("Missing or empty {}\n{}".format(
                     payload, diagnostic))
 
+    def check_failed_operation(self, source, destination, diagnostic):
+        result = subprocess.run(
+            [str(TOOL), "--read", str(source), "--write", str(destination)],
+            cwd=ROOT, env=self.environment, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, text=True, errors="replace", timeout=30)
+        self.assertGreaterEqual(result.returncode, 0, result.stdout)
+        self.assertIn(diagnostic, result.stdout)
+        self.assertFalse(destination.exists(), result.stdout)
+
+    def test_missing_input(self):
+        self.check_failed_operation(self.directory / "missing.xib",
+                                    self.directory / "missing-output.xib",
+                                    "Unable to load document")
+
+    def test_corrupt_input(self):
+        source = self.directory / "corrupt.gorm"
+        source.mkdir()
+        (source / "objects.gorm").write_bytes(b"not an archive")
+        self.check_failed_operation(source, self.directory / "corrupt-output.xib",
+                                    "Unable to load document")
+
+    def test_unwritable_output(self):
+        self.check_failed_operation(FIXTURE,
+                                    self.directory / "absent" / "output.xib",
+                                    "was not saved")
+
     def check_conversion(self, source_format, target_format):
         self.assertNotIn(source_format, self.input_errors,
                          self.input_errors.get(source_format))

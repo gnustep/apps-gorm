@@ -25,7 +25,10 @@ checked for their envelope, UID references, root graph, ownership, window
 template, button, titles, numeric tag and geometry encoding; generated Objective-C
 headers/sources and titles are checked. CIB import is explicitly unimplemented
 and `gormcode` has no loader, so these export-only formats are not input rows.
-Each CLI invocation has a 30-second timeout.
+Each CLI invocation has a 30-second timeout. Three additional failure cases
+cover missing input, corrupt native input, and an unwritable output path. They
+check diagnostics and absence of output rather than relying on exit status;
+the timeout also detects accidental modal dialogs in the command-line path.
 
 To run only the conversion matrix:
 

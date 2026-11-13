@@ -50,6 +50,8 @@ FOUNDATION_EXPORT const unsigned char GormCoreVersionString[];
 #import <GormCore/GormCustomView.h>
 #import <GormCore/GormDefines.h>
 #import <GormCore/GormDocument.h>
+#import <GormCore/GormDocumentPolicy.h>
+#import <GormCore/GormDocumentIO.h>
 #import <GormCore/GormDocumentController.h>
 #import <GormCore/GormDocumentWindow.h>
 #import <GormCore/GormFilePrefsManager.h>

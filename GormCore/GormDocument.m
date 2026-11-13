@@ -236,14 +236,30 @@ static NSImage  *fileImage = nil;
 /**
  * Initialize the new GormDocument object.
  */
-- (id) init 
+- (id) init
+{
+  return [self initWithDocumentPolicy: nil];
+}
+
+- (id<GormDocumentPolicy>) documentPolicy
+{
+  return documentPolicy != nil ? documentPolicy : (id<GormDocumentPolicy>)[NSApp delegate];
+}
+
+- (void) setDocumentPolicy: (id<GormDocumentPolicy>)policy
+{
+  documentPolicy = policy;
+}
+
+- (id) initWithDocumentPolicy: (id<GormDocumentPolicy>)policy
 {
   self = [super init];
   if (self != nil)
     {
       NSNotificationCenter	*nc = [NSNotificationCenter defaultCenter];
       NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      id delegate = [NSApp delegate];
+      documentPolicy = policy;
+      id<GormDocumentPolicy> delegate = [self documentPolicy];
       
       // initialize...
       openEditors = [[NSMutableArray alloc] init];
@@ -530,7 +546,7 @@ static NSImage  *fileImage = nil;
 	{
 	  NSInteger version = [filePrefsManager version];
 	  NSInteger currentVersion = [GormFilePrefsManager currentVersion];
-	  id delegate = [NSApp delegate];
+	  id<GormDocumentPolicy> delegate = [self documentPolicy];
 	  
 	  if(version > currentVersion)
 	    {
@@ -2879,7 +2895,7 @@ static void _real_close(GormDocument *self,
   id<IBConnectors> c = nil;
   BOOL removed = YES;
   BOOL prompted = NO;
-  id delegate = [NSApp delegate];
+  id<GormDocumentPolicy> delegate = [self documentPolicy];
   
   // find connectors to be removed.
   while ((c = [en nextObject]) != nil)
@@ -2951,7 +2967,7 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = nil; 
   id<IBConnectors> c = nil;
-  id delegate = [NSApp delegate];
+  id<GormDocumentPolicy> delegate = [self documentPolicy];
   BOOL removed = [delegate shouldBreakConnectionsForClassNamed: className];
   
   // remove all.
@@ -3048,7 +3064,7 @@ static void _real_close(GormDocument *self,
 {
   NSEnumerator *en = [connections objectEnumerator];
   id<IBConnectors> c = nil;
-  id delegate = [NSApp delegate];
+  id<GormDocumentPolicy> delegate = [self documentPolicy];
   BOOL renamed = [delegate shouldRenameConnectionsForClassNamed: className
 						    toClassName: newName];
 
@@ -3533,7 +3549,8 @@ static void _real_close(GormDocument *self,
   id<GormWrapperBuilder> builder = [[GormWrapperBuilderFactory sharedWrapperBuilderFactory]
 				     wrapperBuilderForType: type];
   NSFileWrapper *result = nil;
-  id delegate = [NSApp delegate];
+  BOOL wasOlderArchive = isOlderArchive;
+  id<GormDocumentPolicy> delegate = [self documentPolicy];
 
   if (builder == nil)
     {
@@ -3567,8 +3584,22 @@ static void _real_close(GormDocument *self,
     object: self];
 
   // build the archive...
-  [self deactivateEditors];
-  result = [builder buildFileWrapperWithDocument: self];
+  NS_DURING
+    {
+      [self deactivateEditors];
+      result = [builder buildFileWrapperWithDocument: self];
+    }
+  NS_HANDLER
+    {
+      isOlderArchive = wasOlderArchive;
+      [self reactivateEditors];
+      [localException raise];
+    }
+  NS_ENDHANDLER;
+  if (result == nil)
+    {
+      isOlderArchive = wasOlderArchive;
+    }
   [self reactivateEditors];
   if(result)
     {
@@ -4360,10 +4391,11 @@ willBeInsertedIntoToolbar: (BOOL)flag
 {
 }
 
-- (void) outlineView: (NSOutlineView *)ov
+- (BOOL) outlineView: (NSOutlineView *)ov
 	  writeItems: (NSArray *)items
 	toPasteboard: (NSPasteboard *)pb
 {
+  return NO;
 }
 
 - (NSDragOperation) outlineView: (NSOutlineView *)ov

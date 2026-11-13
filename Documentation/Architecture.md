@@ -31,6 +31,40 @@ palettes are separate subprojects. Both the
 `GormAbstractDelegate`. This is a real reuse boundary: shared operations do
 not need to be implemented independently in each front end.
 
+## Document services and host policy
+
+[GormDocumentPolicy](../GormCore/GormDocumentPolicy.h) separates archive and
+class-editing decisions and diagnostics from editor UI services. Pass a policy
+with `initWithDocumentPolicy:` or `setDocumentPolicy:`. It is a non-owning
+reference: the host must keep it alive for the document's lifetime or clear it
+before releasing it. Policy objects are host configuration and are not archived.
+The initializer supplies the policy before configured headers are preloaded.
+
+`GormAppDelegate` inherits this narrower protocol. Existing GUI callers use
+`init` and continue to resolve decisions through the application delegate;
+setting a nil policy restores that behavior. An explicit policy takes precedence
+for document decisions, class reparsing, and native loader diagnostics even
+when another host is the application delegate.
+
+[GormDocumentIO](../GormCore/GormDocumentIO.h) provides shared file reads and
+writes with explicit document types and `NSError` results. It does not register
+documents with a controller or create editor windows. The caller initializes
+AppKit, loads plugins, configures class substitution, supplies a suitable policy,
+and manages document registration and lifetime. Reads return autoreleased
+`GormDocument` instances. Lower-level plugins retain their own host dependencies.
+
+[gormtool](../Tools/gormtool/AppDelegate.m) uses these services and passes its
+noninteractive policy explicitly. It no longer replaces an `NSDocument` method
+process-wide to suppress read dialogs. GUI open/save APIs remain available and
+use the same underlying document and wrapper implementations. Failed wrapper
+construction restores editor activation and the pending archive-upgrade flag,
+so a caller can retry after a nil result or builder exception.
+
+This is a service boundary within GormCore, not a new binary framework split.
+Rebuild dependent code, including subclasses, after changes to the public
+`GormDocument` instance layout. Editor classes, resources, and archive class
+names retain their existing locations.
+
 ## Coupling across the boundary
 
 ### Editor UI lives in the framework
@@ -87,17 +121,19 @@ windows, views, or controls.
   preserving existing API and error behavior for current callers.
 - Preserve public InterfaceBuilder and GormCore contracts, manual memory
   management, and compatibility with supported GNUstep compilers and runtimes.
+  Use Objective-C 1.x syntax, including `NS_DURING`/`NS_HANDLER` for exception
+  handling; do not introduce `@try`, `@catch`, or `@finally`.
   Do not move existing UI classes merely to make directory names look cleaner.
 
 ## Possible incremental improvements
 
-These are future directions, not services or layering guarantees that exist
-today. Start with a concrete shared workflow and its regression coverage.
+Build on the document service boundary one workflow at a time, with regression
+coverage. Remaining improvements include:
 
 1. Isolate its document and persistence operations from selection, windows,
    alerts, and connection presentation.
-2. Introduce narrow service contracts or explicit parameters at that boundary,
-   retaining adapters for existing delegate-based callers.
+2. Extend explicit service dependencies beyond document policy to palette
+   access and editor coordination, retaining adapters for existing callers.
 3. Have Gorm and gormtool supply the required services and presentation policy.
 4. Consider a separate editor UI layer only after the dependencies are clear.
    Preserve class names, resource lookup, plugin loading, and archive behavior

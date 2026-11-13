@@ -49,6 +49,8 @@ Use the umbrella header in most integrations:
 The following headers are the most common integration touchpoints:
 
 - GormDocument.h for document graph, connections, resources, and persistence
+- GormDocumentPolicy.h for explicit host decisions and diagnostics
+- GormDocumentIO.h for shared file reads/writes with error results
 - GormDocumentController.h for document creation/opening workflows
 - GormClassManager.h for class/action/outlet metadata
 - GormPlugin.h, GormPluginManager.h, and GormPalettesManager.h for extension

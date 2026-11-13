@@ -27,36 +27,6 @@
 #import "GormToolPrivate.h"
 #import "AppDelegate.h"
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wobjc-protocol-method-implementation"
-// Smash this method in NSDocument to prevent it from popping up an NSRunAlertPanel
-@interface NSDocument (__ReplaceLoadPrivate__)
-
-- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType;
-
-@end
-  
-@implementation NSDocument (__ReplaceLoadPrivate__)
-
-- (id) initWithContentsOfFile: (NSString *)fileName ofType: (NSString *)fileType
-{
-  self = [self init];
-  if (self != nil)
-    {
-      [self setFileType: fileType];
-      [self setFileName: fileName];
-      if (![self readFromFile: fileName ofType: fileType])
-	{
-	  NSLog(@"Load failed, could not load file");
-	  DESTROY(self);
-	}
-    }
-  return self;
-}
-
-@end
-#pragma GCC diagnostic pop
-
 // AppDelegate...
 @implementation AppDelegate
 
@@ -333,7 +303,20 @@
 	{
 	  if (file != nil)
 	    {
-	      _doc = [dc openDocumentWithContentsOfFile: file display: NO];
+	      NSError *error = nil;
+              NSString *type = [dc typeFromFileExtension: [file pathExtension]];
+              _doc = [GormDocumentIO readDocumentFromFile: file
+                                                  ofType: type
+                                                  policy: self
+                                                   error: &error];
+              if (_doc != nil)
+                {
+                  [dc addDocument: _doc];
+                }
+              else if (error != nil)
+                {
+                  NSLog(@"Error = %@", error);
+                }
 	      if (_doc == nil)
 		{
 		  NSLog(@"Unable to load document %@", file);
@@ -483,35 +466,14 @@
 	    {	  
 	      BOOL saved = NO;
 	      NSString *type = [dc typeFromFileExtension: [outputFile pathExtension]];
-	      BOOL isDirectory = ([type isEqualToString: @"GSGormFileType"]
-				  || [type isEqualToString: @"GSNibFileType"]
-				  || [type isEqualToString: @"GSCodeFileType"]);
-	      NSURL *file = [NSURL fileURLWithPath: outputFile isDirectory: isDirectory];
 	      NSError *error = nil;
-
-	      if (isDirectory == NO)
-		{
-		  NSFileWrapper *wrapper = [_doc fileWrapperRepresentationOfType: type];
-		  NSData *contents = nil;
-
-		  if ([wrapper isRegularFile])
-		    {
-		      contents = [wrapper regularFileContents];
-		    }
-
-		  saved = (contents != nil
-			   && [contents writeToFile: outputFile atomically: YES]);
-		}
-	      else
-		{
-		  saved = [_doc saveToURL: file
-				   ofType: type
-				forSaveOperation: NSSaveOperation
-				    error: &error];
-		}
+              saved = [GormDocumentIO writeDocument: _doc
+                                            toFile: outputFile
+                                            ofType: type
+                                             error: &error];
 	      if ( !saved )
 		{
-		  NSLog(@"Document %@ of type %@ was not saved", file, type);
+		  NSLog(@"Document %@ of type %@ was not saved", outputFile, type);
 		}
 	      
 	      if (error != nil)

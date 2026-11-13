@@ -28,6 +28,7 @@
 
 #include <Foundation/Foundation.h>
 #include <AppKit/AppKit.h>
+#include <GormCore/GormDocumentPolicy.h>
 
 #include <InterfaceBuilder/InterfaceBuilder.h>
 
@@ -116,7 +117,22 @@ GS_EXPORT_CLASS
 
   // Controllers...
   GormObjectViewController *objectViewController;
+
+  id<GormDocumentPolicy> documentPolicy; // Non-owning host reference.
 }
+
+/**
+ * Initialize with a policy available during header preloading as well as later
+ * operations. The policy is not retained and must outlive the document.
+ * A nil policy preserves legacy application-delegate lookup.
+ */
+- (id) initWithDocumentPolicy: (id<GormDocumentPolicy>)policy;
+
+/** Return the explicit policy, or the application delegate for legacy hosts. */
+- (id<GormDocumentPolicy>) documentPolicy;
+
+/** Set a non-retained policy; nil restores application-delegate lookup. */
+- (void) setDocumentPolicy: (id<GormDocumentPolicy>)policy;
 
 /* Handle notifications */
 

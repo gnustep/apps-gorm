@@ -646,7 +646,7 @@
     }
   NS_HANDLER
     {
-      id delegate = [NSApp delegate];
+      id<GormDocumentPolicy> delegate = [doc documentPolicy];
       NSString *errorMessage = [NSString stringWithFormat: @"Failed to load file.  Exception: %@",[localException reason]];
 
       [delegate exceptionWhileLoadingModel: errorMessage];

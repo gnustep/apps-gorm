@@ -2335,7 +2335,9 @@
 		{
 		  if([self isKnownClass: className])
 		    {
-		      id<GormAppDelegate> delegate = (id<GormAppDelegate>)[NSApp delegate];		      
+		      id<GormDocumentPolicy> delegate = _document != nil
+                        ? [_document documentPolicy]
+                        : (id<GormDocumentPolicy>)[NSApp delegate];
 		      BOOL result = [delegate shouldBreakConnectionsReparsingClass: className];
 		      
 		      if (result == YES)
