@@ -18,7 +18,7 @@ Gorm is the GNUstep graphical interface builder.
 - Class management for custom classes, outlets, and actions
 - Resource editing and management (for example images and sounds)
 - Plugin/palette architecture for extensibility
-- Import/export support through the headless gormtool utility (strings, XLIFF, class metadata, archive conversion workflows)
+- Import/export support through the command-line gormtool utility (strings, XLIFF, class metadata, archive conversion workflows)
 
 ## Repository Layout
 
@@ -100,10 +100,12 @@ Gorm primarily works with interface archive documents and associated resources.
 - .nib: legacy Interface Builder archive format support
 - .xib: XML-based Interface Builder archive support
 
-## gormtool (Headless CLI)
+## gormtool (CLI)
 
 gormtool is a command-line front end for selected Gorm document operations.
 It loads a document, performs operations, optionally writes output, then exits.
+It still initializes AppKit; archive conversion requires a working GNUstep GUI
+backend and, with X11, a display (which can be provided by Xvfb).
 
 Basic forms:
 
@@ -160,6 +162,7 @@ gormtool --read MyDocument.gorm --write MyDocument.xib
 
 Primary sources in this repository:
 
+- [Application and framework architecture](Documentation/Architecture.md): component boundaries, host coupling, and development guidance
 - Documentation/Gorm.texi: main manual source
 - Documentation/gorm.1.in: man page source
 - Documentation/install.texi: install requirements and build notes

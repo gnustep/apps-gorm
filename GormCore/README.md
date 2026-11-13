@@ -7,9 +7,14 @@ editor and inspector infrastructure, class metadata management, plugin/palette
 support, and archive/resource handling used to create and maintain .gorm
 documents.
 
-Both the Gorm application and the headless gormtool utility rely on this
+Both the Gorm application and the command-line gormtool utility rely on this
 framework. If you are extending or embedding Gorm functionality, this is the
 primary library you integrate with.
+
+GormCore includes editor UI and relies on application-delegate services;
+gormtool still initializes AppKit and requires a working GUI backend for
+conversion. See [Application and framework architecture](../Documentation/Architecture.md)
+for current boundaries, host dependencies, and guidance for future development.
 
 ## Design Goals
 
