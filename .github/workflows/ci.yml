@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CC: clang
+      CXX: clang++
+      LDFLAGS: -fuse-ld=lld
+      GNUSTEP_PREFIX: ${{ github.workspace }}/../gnustep
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential clang lld cmake ninja-build git ca-certificates \
+            pkg-config robin-map-dev libffi-dev libgnutls28-dev \
+            libxml2-dev libxslt1-dev libicu-dev libcurl4-gnutls-dev \
+            libcairo2-dev libjpeg-dev libtiff-dev libpng-dev libicns-dev \
+            libxt-dev libxmu-dev libxft-dev libxrandr-dev libxfixes-dev \
+            libxcursor-dev \
+            python3 xvfb xauth fonts-dejavu-core
+
+      - name: Build GNUstep dependencies
+        run: bash .github/scripts/build-gnustep.sh
+
+      - name: Build and install
+        run: |
+          . "$GNUSTEP_PREFIX/share/GNUstep/Makefiles/GNUstep.sh"
+          make
+          make install
+
+      - name: Run tests
+        run: |
+          . "$GNUSTEP_PREFIX/share/GNUstep/Makefiles/GNUstep.sh"
+          xvfb-run -a make -C Tests check

@@ -15,6 +15,7 @@
 #import <GormObjCHeaderParser/OCHeaderParser.h>
 #import <GormObjCHeaderParser/OCIVar.h>
 #import <GormObjCHeaderParser/OCMethod.h>
+#include <unistd.h>
 
 static NSString *firstMethodName(OCClass *cls)
 {

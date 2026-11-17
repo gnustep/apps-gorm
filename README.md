@@ -64,6 +64,29 @@ Notes:
 - GormCore (the framework/library) must be installed for Gorm.app to run correctly.
 - The root post-build step copies plugins into GormCore framework resources.
 
+## Continuous Integration
+
+[GitHub Actions](.github/workflows/ci.yml) builds with Clang and libobjc2 on
+Ubuntu 24.04 for pushes, pull requests, and manual runs. The
+[dependency script](.github/scripts/build-gnustep.sh) pins and builds GNUstep
+into an isolated prefix; Ubuntu's packaged GCC runtime lacks associated-object
+APIs currently used by GUX. After sourcing that prefix's GNUstep.sh, CI installs
+the freshly built libraries and runs the aggregate test suite under Xvfb:
+
+```sh
+make
+make install
+xvfb-run -a make -C Tests check
+```
+
+The existing tests cover the document model, plugins, application components,
+maintenance scripts, and the gormtool conversion matrix. Conversion checks
+validate diagnostics and nonempty archives and reopen supported outputs in
+separate processes, guarding against broken saves that return a successful
+exit status. This is a baseline Linux build and regression check; it does not
+cover other compilers/runtimes, interactive UI workflows, or the optional
+Cappuccino runtime tests. Release publishing and deployment are not configured.
+
 ## Running Gorm
 
 Typical launch methods:
