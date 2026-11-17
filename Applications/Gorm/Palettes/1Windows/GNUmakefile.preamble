@@ -22,5 +22,5 @@ ifeq ($(GNUSTEP_TARGET_OS),linux-gnu)
 ADDITIONAL_LIB_DIRS += \
         -L../../../../GormCore/GormCore.framework/Versions/0
 
-$(PALETTE_NAME)_LIBRARIES_DEPEND_UPON += -Wl,--no-as-needed -lGormCore -Wl,--as-needed
+$(PALETTE_NAME)_BUNDLE_LIBS += -lGormCore
 endif
