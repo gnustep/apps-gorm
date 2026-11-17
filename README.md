@@ -1,7 +1,5 @@
 # apps-gorm
 
-[![CI](https://github.com/gnustep/apps-gorm/actions/workflows/main.yml/badge.svg)](https://github.com/gnustep/apps-gorm/actions/workflows/main.yml?query=branch%3Amaster)
-
 ## What Is Gorm?
 
 Gorm is the GNUstep graphical interface builder.
