@@ -26,7 +26,10 @@ int main(int argc, char **argv)
   PASS([pluginPath rangeOfString: @"GormCore/GormCore.framework"].location != NSNotFound,
     "importer comes from checkout framework")
   GormNibWrapperLoader *loader = [loaderClass new];
-  BOOL expected = argc < 3 || strcmp(argv[2], "roundtrip") == 0;
+  /* "unicode <want-title>":  the window title must decode to the bytes the
+   * archive's system version says they are (see the reader's Text()). */
+  BOOL unicode = argc > 2 && strcmp(argv[2], "unicode") == 0;
+  BOOL expected = argc < 3 || strcmp(argv[2], "roundtrip") == 0 || unicode;
   [NSClassSwapper setIsInInterfaceBuilder: YES];
   BOOL loaded = [loader loadFileWrapper: wrapper withDocument: doc];
   PASS(loaded == expected, "import succeeds only for valid preferred payloads")
@@ -52,7 +55,14 @@ int main(int argc, char **argv)
       PASS(window != nil, "unnamed top-level window is imported")
       for (id obj in [[window contentView] subviews])
         if ([obj isKindOfClass: [NSButton class]]) button = obj;
-      PASS([[window title] isEqual: @"OPENSTEP fixture"], "window title survives")
+      if (unicode)
+        {
+          NSString *wantTitle = [NSString stringWithUTF8String: argv[3]];
+          PASS([[window title] isEqual: wantTitle],
+            "window title decodes per the archive's system version")
+        }
+      else
+        PASS([[window title] isEqual: @"OPENSTEP fixture"], "window title survives")
       PASS([[button title] isEqual: @"Run"], "nested button survives")
       PASS(NSEqualRects([button frame], NSMakeRect(12.5,18.25,90.5,24.75)), "fractional geometry survives")
       PASS([[[doc filesOwner] className] isEqual: @"OpenStepTestOwner"], "owner custom class survives")

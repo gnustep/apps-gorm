@@ -109,12 +109,20 @@ IsMenuMatrix(const ts_object *o)
   return NO;
 }
 
+/* The archive's system version is the writer toolchain's NXSYSTEMVERSION
+ * from the Objective-C runtime's typedstream.h:  1000 for Rhapsody and all
+ * versions of Mac OS X,  930 or below for NeXTSTEP/OpenStep.  Rhapsody and
+ * later write string bytes as UTF-8;  earlier systems wrote single-byte
+ * NEXTSTEP text.  Do not guess the encoding from byte validity alone - a
+ * NEXTSTEP byte can spell a valid UTF-8 sequence - but for archives stamped
+ * by a Rhapsody or later writer, prefer UTF-8, per string, falling back to
+ * NEXTSTEP for a string that is not valid UTF-8. */
 static NSString *
-Text(const ts_value *v)
+Text(const ts_value *v, int64_t systemVersion)
 {
   const char *s;
   size_t n;
-  NSString *result;
+  NSString *result = nil;
   if (v->kind == TS_V_NIL) return nil;
   if (v->kind == TS_V_STRING) { s = v->u.str.p; n = v->u.str.n; }
   else if (v->kind == TS_V_SELECTOR || v->kind == TS_V_SHARED
@@ -122,21 +130,24 @@ Text(const ts_value *v)
     { s = v->u.shared.text; n = v->u.shared.len; }
   else { Bad(NULL, @"expected string bytes"); return nil; }
   if (s == NULL) return nil;
-  /* These archives predate UTF-8.  Do not guess UTF-8 from byte validity. */
-  result = AUTORELEASE([[NSString alloc] initWithBytes: s length: n
-                                            encoding: NSNEXTSTEPStringEncoding]);
-  if (result == nil) Bad(NULL, @"invalid NEXTSTEP string");
+  if (systemVersion >= 1000)
+    result = AUTORELEASE([[NSString alloc] initWithBytes: s length: n
+                                              encoding: NSUTF8StringEncoding]);
+  if (result == nil || systemVersion < 1000)
+    result = AUTORELEASE([[NSString alloc] initWithBytes: s length: n
+                                              encoding: NSNEXTSTEPStringEncoding]);
+  if (result == nil) Bad(NULL, @"invalid string bytes");
   return result;
 }
 
 static NSString *
-StringObject(const ts_object *o)
+StringObject(const ts_object *o, int64_t systemVersion)
 {
   if (o == NULL) return nil;
   if (strcmp(o->cls->name.text, "NSString") || o->cls->version != 1
       || o->ngroups != 1 || strcmp(o->groups[0].encoding.text, "+"))
     Bad(o, @"expected NSString version 1");
-  return Text(&o->groups[0].vals[0]);
+  return Text(&o->groups[0].vals[0], systemVersion);
 }
 
 static NSNumber *Number(long long n)
@@ -240,6 +251,7 @@ static NSDictionary *UID(NSUInteger n)
   NSMutableArray *_rtf;
   const ts_object *_owner;
   unsigned _depth;
+  int64_t _systemVersion;
 }
 - (NSDictionary *) reference: (const ts_object *)o;
 - (NSData *) translate: (const ts_archive *)archive;
@@ -257,6 +269,7 @@ static NSDictionary *UID(NSUInteger n)
       _visible = [NSMutableArray new];
       _periodic = [NSMutableArray new];
       _rtf = [NSMutableArray new];
+      _systemVersion = 0;
     }
   return self;
 }
@@ -532,7 +545,9 @@ static NSDictionary *UID(NSUInteger n)
       GET("ff:");
       [d setObject: [NSNumber numberWithDouble: Real(v)] forKey: @"NSCurValue"];
       [d setObject: [NSNumber numberWithDouble: Real(v + 1) * 100.0] forKey: @"NSPercent"];
-      if (Text(v + 2)) [d setObject: [self literal: Text(v + 2)] forKey: @"NSAction"];
+      if (Text(v + 2, self->_systemVersion))
+        [d setObject: [self literal: Text(v + 2, self->_systemVersion)]
+           forKey: @"NSAction"];
       GET("c");
       GET("c");
     }
@@ -544,7 +559,9 @@ static NSDictionary *UID(NSUInteger n)
       [d setObject: [NSNumber numberWithDouble: Real(v + 3)] forKey: @"NSRowHeight"];
       [d setObject: [NSNumber numberWithDouble: Real(v + 4)] forKey: @"NSIntercellSpacingWidth"];
       OBJ(5, @"NSGridColor"); OBJ(6, @"NSBackgroundColor");
-      if (Text(v + 8)) [d setObject: [self literal: Text(v + 8)] forKey: @"NSDoubleAction"];
+      if (Text(v + 8, self->_systemVersion))
+        [d setObject: [self literal: Text(v + 8, self->_systemVersion)]
+           forKey: @"NSDoubleAction"];
       GET("@"); if (Object(v)) Bad(o, @"unsupported table auxiliary field");
       GET("@"); if (Object(v)) Bad(o, @"unsupported table auxiliary field");
       GET("@"); if (Object(v)) Bad(o, @"unsupported table auxiliary field");
@@ -601,7 +618,8 @@ static NSDictionary *UID(NSUInteger n)
           resource->ngroups != 1 ||
           strcmp(resource->groups[0].encoding.text, "@@"))
         Bad(o, @"unsupported cursor resource");
-      name = StringObject(Object(resource->groups[0].vals + 1));
+      name = StringObject(Object(resource->groups[0].vals + 1),
+                          self->_systemVersion);
       if (![name isEqual: @"NSIBeamCursor"] && ![name isEqual: @"NSArrowCursor"])
         Bad(o, @"unsupported cursor image");
       [d setObject: Number([name isEqual: @"NSIBeamCursor"] ? 1 : 0) forKey: @"NSCursorType"];
@@ -651,7 +669,8 @@ static NSDictionary *UID(NSUInteger n)
       INT(3, @"NSKeyEquivModMask"); INT(5, @"NSState");
       OBJ(6, @"NSImage"); OBJ(7, @"NSOnImage"); OBJ(8, @"NSOffImage");
       OBJ(9, @"NSMixedImage");
-      [d setObject: [self literal: Text(v + 10)] forKey: @"NSAction"];
+      [d setObject: [self literal: Text(v + 10, self->_systemVersion)]
+         forKey: @"NSAction"];
       OBJ(12, @"NSTarget");
       GET("@"); /* popup cell owner */
       if (c->version == 321) { GET("@"); OBJ(0, @"NSSubmenu"); }
@@ -691,7 +710,9 @@ static NSDictionary *UID(NSUInteger n)
     return;
   else if (IS("NSPopUpButton", 24))
     {
-      GET(":"); if (Text(v)) Bad(o, @"unsupported popup selector");
+      GET(":");
+      if (Text(v, self->_systemVersion))
+        Bad(o, @"unsupported popup selector");
       GET("@"); if (Object(v)) OBJ(0, @"NSMenu");
       GET("c"); if (Integer(v)) Bad(o, @"unsupported popup flag");
     }
@@ -719,7 +740,9 @@ static NSDictionary *UID(NSUInteger n)
       GET("@"); OBJ(0, @"NSPreviousKeyView");
       GET("icc@"); INT(0, @"NSTag"); OBJ(3, @"NSCell");
       GET("@"); OBJ(0, @"NSDelegate");
-      GET(":"); if (Text(v)) Bad(o, @"unsupported swapped text selector");
+      GET(":");
+      if (Text(v, self->_systemVersion))
+        Bad(o, @"unsupported swapped text selector");
     }
   else if (IS("NSViewTemplate", 46))
     { GET("@"); /* archived view class name */ }
@@ -750,7 +773,8 @@ static NSDictionary *UID(NSUInteger n)
     }
   else if (IS("NSTextField", 25))
     { GET("@"); OBJ(0, @"NSDelegate"); GET(":");
-      if (Text(v)) Bad(o, @"unsupported text-field validation selector"); }
+      if (Text(v, self->_systemVersion))
+        Bad(o, @"unsupported text-field validation selector"); }
   else if ((IS("NSCell", 60) || IS("NSCell", 62)))
     {
       GET("ii");
@@ -768,7 +792,8 @@ static NSDictionary *UID(NSUInteger n)
   else if (IS("NSActionCell", 17))
     {
       GET("i:"); INT(0, @"NSTag");
-      [d setObject: [self literal: Text(v + 1)] forKey: @"NSAction"];
+      [d setObject: [self literal: Text(v + 1, self->_systemVersion)]
+         forKey: @"NSAction"];
       GET("@");
       if (IsPopUpButtonCell(o)) OBJ(0, @"NSMenu");
       else if (strcmp(o->cls->name.text, "NSMenuItem")) OBJ(0, @"NSTarget");
@@ -865,7 +890,7 @@ static NSDictionary *UID(NSUInteger n)
     {
       size_t n, length;
       const unsigned char *bytes;
-      NSString *fontName;
+      NSString *fontName = nil;
       GET("i"); length = (size_t)Integer(v);
       if (*i >= o->ngroups) Bad(o, @"missing font bytes");
       g = &o->groups[(*i)++]; v = g->vals;
@@ -878,8 +903,13 @@ static NSDictionary *UID(NSUInteger n)
       }
       bytes = (const unsigned char *)v->u.str.p;
       for (n = 8; n < length && bytes[n]; n++) { }
-      fontName = AUTORELEASE([[NSString alloc] initWithBytes: bytes + 8 length: n - 8
-                                                  encoding: NSNEXTSTEPStringEncoding]);
+      if (self->_systemVersion >= 1000)
+        fontName = AUTORELEASE([[NSString alloc]
+            initWithBytes: bytes + 8 length: n - 8
+              encoding: NSUTF8StringEncoding]);
+      if (fontName == nil || self->_systemVersion < 1000)
+        fontName = AUTORELEASE([[NSString alloc] initWithBytes: bytes + 8 length: n - 8
+                                                      encoding: NSNEXTSTEPStringEncoding]);
       if (![fontName length]) Bad(o, @"empty font name");
       [d setObject: [self literal: fontName] forKey: @"NSName"];
       GET("f"); [d setObject: [NSNumber numberWithDouble: Real(v)] forKey: @"NSSize"];
@@ -955,7 +985,7 @@ static NSDictionary *UID(NSUInteger n)
     }
   if ([name isEqual: @"NSString"])
     {
-      ref = [self literal: StringObject(o)];
+      ref = [self literal: StringObject(o, self->_systemVersion)];
       [_references setObject: ref forKey: key];
       return ref;
     }
@@ -1003,6 +1033,9 @@ static NSDictionary *UID(NSUInteger n)
   NSDictionary *top, *plist;
   NSData *data;
   NSString *error = nil;
+  /* The writer toolchain's NXSYSTEMVERSION:  1000 for Rhapsody and Mac OS
+   * X,  930 or below for NeXTSTEP/OpenStep.  Decides the string encoding. */
+  self->_systemVersion = archive->system_version;
   if (archive->nroot != 1 || strcmp(archive->root[0].encoding.text, "@"))
     Bad(NULL, @"expected a single root object");
   root = Object(archive->root[0].vals);

@@ -102,6 +102,35 @@ def main():
                         # Periodic timing has integer precision in ordinary keyed nibs.
                         # Inspect the other graph invariants after a fresh-process reopen.
                         print(run([exe, reopened, 'roundtrip']), end='')
+        # The reader's string-encoding decision:  Rhapsody and Mac OS X
+        # (system version 1000 or above) wrote strings as UTF-8, so prefer
+        # UTF-8 per string and fall back to NEXTSTEP for one that is not
+        # valid UTF-8;  NeXTSTEP/OpenStep (930 or below) wrote single-byte
+        # NEXTSTEP text, and a NEXTSTEP byte can spell a valid UTF-8
+        # sequence, so never guess UTF-8 there.  The big-endian version 4
+        # header matches every real file of the 1998 corpus.
+        # Expected values follow GNUstep's NEXTSTEP character set, in which
+        # for example 0xE2 is U+00ED (i-acute) and 0xE9 is U+00D8 (O-stroke).
+        # (Loop-local names:  the legacy bundle section below reuses the
+        # matrix's writer and source, so do not clobber them here.)
+        for system_version, title, want_title in (
+            (1000, b"0.0\xe2\x80\x941.0", "0.0\u20141.0"),   # UTF-8 em dash
+            (1000, b"\xdd", "\u00e9"),                       # invalid UTF-8
+            ( 930, b"0.0\xe2\x80\x941.0", "0.0\u00ed\u00a0\u00d41.0"),
+        ):
+            uwriter = fixtures.Writer(">", 4, system_version)
+            uwriter.group("@", [fixtures.document(views=True, title=title)])
+            usource = tmp / f"unicode-v4-{system_version}-{title.hex()[:4]}.nib"
+            usource.write_bytes(uwriter.data)
+            print(run([translator, usource]), end='')
+            print(run([exe, usource, "unicode", want_title]), end='')
+            udestination = tmp / f"unicode-{system_version}-{title.hex()[:4]}.gorm"
+            output = run([ROOT / 'Tools/gormtool/obj/gormtool', '--read', usource, '--write', udestination])
+            assert (udestination / 'objects.gorm').stat().st_size > 0, output
+            ureopened = tmp / f"unicode-reopened-{system_version}-{title.hex()[:4]}.nib"
+            output = run([ROOT / 'Tools/gormtool/obj/gormtool', '--read', udestination, '--write', ureopened])
+            assert (ureopened / 'keyedobjects.nib').stat().st_size > 0, output
+            print(run([exe, ureopened, "unicode", want_title]), end='')
         for name, graph in [('objects', fixtures.document()),
                             ('scroll', fixtures.scroll_document()),
                             ('min-size', fixtures.document(views=True, window_min_size=True)),
