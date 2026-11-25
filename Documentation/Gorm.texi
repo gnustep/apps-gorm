@@ -373,8 +373,13 @@ Quits the application.
 @section The Fallback Object Inspector
 
 When an object has no specialized attributes inspector, Gorm uses
-@code{GormObjectInspector}. Select an attribute setter in the browser to see
-its type and current value, edit the value field, then press OK to apply it.
+@code{GormObjectInspector}. A scrollable table shows Property, Type, and Value
+columns together. Select a row, edit the value field below the table, then
+press OK to apply it. Column widths can be adjusted; hover over a cell to see
+its full text and setter name. Applying an edit refreshes the table, including
+other properties affected by that edit. A getter that fails is marked in its
+own row, while other properties remain available.
+
 Inherited setters are included. Getters named like @code{isEnabled} are
 recognized as well as getters named like @code{enabled}.
 

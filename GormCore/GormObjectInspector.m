@@ -166,6 +166,11 @@ GormInspectorFormat(GormInspectorValue v, char type)
     }
 }
 
+@interface GormObjectInspector (Private)
+- (NSString *) _selectedSetter;
+- (void) _refreshValues;
+@end
+
 @implementation GormObjectInspector
 
 - (id) init
@@ -184,6 +189,48 @@ GormInspectorFormat(GormInspectorValue v, char type)
       sets = [[NSMutableArray alloc] init];
       gets = [[NSMutableDictionary alloc] init];
       types = [[NSMutableDictionary alloc] init];
+      NSScrollView *scroll;
+      NSArray *identifiers;
+      NSArray *titles;
+      NSUInteger i;
+
+      displayValues = [[NSMutableDictionary alloc] init];
+      readErrors = [[NSMutableDictionary alloc] init];
+      stringValues = [[NSMutableSet alloc] init];
+      /* Keep the archived outlets intact. Replace only the browser's visible
+       * presentation, so existing inspector resources need no binary rewrite.
+       */
+      scroll = [[NSScrollView alloc] initWithFrame: [browser frame]];
+      [scroll setAutoresizingMask: [browser autoresizingMask]];
+      [scroll setHasVerticalScroller: YES];
+      [scroll setHasHorizontalScroller: YES];
+      [scroll setBorderType: NSBezelBorder];
+      propertyTable = [[NSTableView alloc] initWithFrame: [scroll bounds]];
+      [propertyTable setAllowsMultipleSelection: NO];
+      [propertyTable setAllowsEmptySelection: YES];
+      [propertyTable setColumnAutoresizingStyle: NSTableViewLastColumnOnlyAutoresizingStyle];
+      [propertyTable setIntercellSpacing: NSMakeSize(1, 1)];
+      identifiers = [NSArray arrayWithObjects: @"property", @"type", @"value", nil];
+      titles = [NSArray arrayWithObjects: _(@"Property"), _(@"Type"), _(@"Value"), nil];
+      for (i = 0; i < [identifiers count]; i++)
+        {
+          NSTableColumn *column = [[NSTableColumn alloc]
+            initWithIdentifier: [identifiers objectAtIndex: i]];
+          [[column headerCell] setStringValue: [titles objectAtIndex: i]];
+          [column setEditable: NO];
+          [column setMinWidth: 45];
+          [column setWidth: ([scroll contentSize].width - 6)
+            * (i == 0 ? 0.40 : (i == 1 ? 0.25 : 0.35))];
+          [propertyTable addTableColumn: column];
+          RELEASE(column);
+        }
+      [propertyTable setDataSource: self];
+      [propertyTable setDelegate: self];
+      [scroll setDocumentView: propertyTable];
+      [browser setHidden: YES];
+      [[browser superview] addSubview: scroll];
+      RELEASE(scroll);
+      [value setToolTip: _(@"Select a property, edit its value, then press OK.")];
       [okButton setEnabled: NO];
       revertButton = nil;
     }
@@ -195,9 +242,16 @@ GormInspectorFormat(GormInspectorValue v, char type)
   RELEASE(gets);
   RELEASE(sets);
   RELEASE(types);
+  [propertyTable setDelegate: nil];
+  [propertyTable setDataSource: nil];
+  RELEASE(propertyTable);
+  RELEASE(displayValues);
+  RELEASE(readErrors);
+  RELEASE(stringValues);
   [super dealloc];
 }
 
+/* The archived browser connects its delegate while loading the resource. */
 - (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
 {
   return [sets count];
@@ -224,15 +278,120 @@ GormInspectorFormat(GormInspectorValue v, char type)
   [aCell setLeaf: YES];
 }
 
+- (NSString *) _selectedSetter
+{
+  NSInteger row = [propertyTable selectedRow];
+  if (row < 0 || (NSUInteger)row >= [sets count])
+    return nil;
+  return [sets objectAtIndex: row];
+}
+
+- (NSInteger) numberOfRowsInTableView: (NSTableView *)table
+{
+  return [sets count];
+}
+
+- (id) tableView: (NSTableView *)table
+ objectValueForTableColumn: (NSTableColumn *)column row: (NSInteger)row
+{
+  NSString *name;
+  NSString *identifier = [column identifier];
+
+  if (row < 0 || (NSUInteger)row >= [sets count])
+    return @"";
+  name = [sets objectAtIndex: row];
+  if ([identifier isEqual: @"property"])
+    {
+      NSString *stem = [name substringWithRange: NSMakeRange(3, [name length] - 4)];
+      /* Preserve initialisms such as URL, rather than displaying uRL. */
+      if ([stem length] > 1
+          && [[NSCharacterSet uppercaseLetterCharacterSet]
+               characterIsMember: [stem characterAtIndex: 1]])
+        return stem;
+      return [[[stem substringToIndex: 1] lowercaseString]
+        stringByAppendingString: [stem substringFromIndex: 1]];
+    }
+  if ([identifier isEqual: @"type"])
+    return GormInspectorTypeName([[types objectForKey: name] UTF8String]);
+  if ([readErrors objectForKey: name] != nil)
+    return _(@"Unable to read value");
+  if ([gets objectForKey: name] == nil)
+    return _(@"Value unknown");
+  return [displayValues objectForKey: name];
+}
+
+- (NSString *) tableView: (NSTableView *)table toolTipForCell: (NSCell *)cell
+                   rect: (NSRectPointer)rect tableColumn: (NSTableColumn *)column
+                    row: (NSInteger)row mouseLocation: (NSPoint)point
+{
+  NSString *name;
+  if (row < 0 || (NSUInteger)row >= [sets count])
+    return nil;
+  name = [sets objectAtIndex: row];
+  if ([readErrors objectForKey: name] != nil)
+    return [NSString stringWithFormat: @"%@: %@", name,
+      [readErrors objectForKey: name]];
+  return [NSString stringWithFormat: @"%@: %@", name,
+    [self tableView: table objectValueForTableColumn: column row: row]];
+}
+
+- (void) tableViewSelectionDidChange: (NSNotification *)notification
+{
+  [self update: self];
+}
+
+/* Read once per refresh, not while drawing cells. A failing getter must not
+ * prevent other properties from being displayed or edited.
+ */
+- (void) _refreshValues
+{
+  NSEnumerator *enumerator = [sets objectEnumerator];
+  NSString *name;
+
+  [displayValues removeAllObjects];
+  [readErrors removeAllObjects];
+  [stringValues removeAllObjects];
+  while ((name = [enumerator nextObject]) != nil)
+    {
+      NSString *getter = [gets objectForKey: name];
+      NSString *encoding = [types objectForKey: name];
+      if (getter == nil)
+        continue;
+      @try
+        {
+          GormInspectorValue v;
+          SEL selector = NSSelectorFromString(getter);
+          NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:
+            [object methodSignatureForSelector: selector]];
+          memset(&v, 0, sizeof(v));
+          [invocation setSelector: selector];
+          [invocation invokeWithTarget: object];
+          [invocation getReturnValue: &v];
+          if ([encoding hasPrefix: @"@"]
+              && [v.object isKindOfClass: [NSString class]])
+            [stringValues addObject: name];
+          [displayValues setObject: GormInspectorFormat(v, [encoding characterAtIndex: 0])
+                            forKey: name];
+        }
+      @catch (NSException *exception)
+        {
+          [readErrors setObject: [exception reason] != nil
+            ? [exception reason] : _(@"Unable to read value") forKey: name];
+          NSDebugLog(@"Inspector getter %@ failed: %@", getter, exception);
+        }
+    }
+  [propertyTable reloadData];
+}
+
 - (void) ok: (id)sender
 {
-  NSString *name = [[browser selectedCell] stringValue];
+  NSString *name = [self _selectedSetter];
   NSString *encoding = [types objectForKey: name];
   GormInspectorValue v;
   NSInvocation *invocation;
   id createdObject = nil;
 
-  if (encoding == nil || object == nil)
+  if (encoding == nil || object == nil || [readErrors objectForKey: name] != nil)
     return;
   memset(&v, 0, sizeof(v));
   @try
@@ -275,6 +434,7 @@ GormInspectorFormat(GormInspectorValue v, char type)
       [invocation setArgument: &v atIndex: 2];
       [invocation invokeWithTarget: object];
       [super ok: sender];
+      [self _refreshValues];
       [self update: self];
     }
   @catch (NSException *exception)
@@ -295,9 +455,11 @@ GormInspectorFormat(GormInspectorValue v, char type)
 
   if (anObject == object)
     {
+      [self _refreshValues];
       [self update: self];
       return;
     }
+  [propertyTable deselectAll: self];
   ASSIGN(object, anObject);
   [sets removeAllObjects];
   [gets removeAllObjects];
@@ -353,56 +515,41 @@ GormInspectorFormat(GormInspectorValue v, char type)
       free(methods);
     }
   [sets sortUsingSelector: @selector(compare:)];
-  [browser loadColumnZero];
+  [self _refreshValues];
   [self update: self];
 }
 
 - (void) update: (id)sender
 {
-  NSString *name = [[browser selectedCell] stringValue];
+  NSString *name = [self _selectedSetter];
   NSString *encoding = [types objectForKey: name];
   NSString *getter = [gets objectForKey: name];
+  NSString *error = [readErrors objectForKey: name];
+  BOOL editable = encoding != nil && error == nil;
 
-  isString = NO;
-  [value setToolTip: nil];
+  isString = name != nil && [stringValues containsObject: name];
+  [value setToolTip: error];
   [value setStringValue: @""];
-  [value setEditable: encoding != nil];
-  [okButton setEnabled: encoding != nil];
+  [value setEditable: editable];
+  [okButton setEnabled: editable];
   if (encoding == nil)
-    [label setTitle: _(@"No Type")];
+    [label setTitle: _(@"Select a property")];
+  else if (error != nil)
+    [label setTitle: _(@"Unable to read value")];
   else if (getter == nil)
     [label setTitle: [NSString stringWithFormat: _(@"%@ - value unknown"),
       GormInspectorTypeName([encoding UTF8String])]];
   else
     {
-      @try
-        {
-          GormInspectorValue v;
-          SEL selector = NSSelectorFromString(getter);
-          NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:
-            [object methodSignatureForSelector: selector]];
-          memset(&v, 0, sizeof(v));
-          [invocation setSelector: selector];
-          [invocation invokeWithTarget: object];
-          [invocation getReturnValue: &v];
-          isString = [encoding hasPrefix: @"@"]
-            && [v.object isKindOfClass: [NSString class]];
-          [label setTitle: GormInspectorTypeName([encoding UTF8String])];
-          [value setStringValue: GormInspectorFormat(v, [encoding characterAtIndex: 0])];
-        }
-      @catch (NSException *exception)
-        {
-          [label setTitle: _(@"Unable to read value")];
-          [value setToolTip: [exception reason]];
-          [okButton setEnabled: NO];
-          NSDebugLog(@"Inspector getter %@ failed: %@", getter, exception);
-        }
+      [label setTitle: GormInspectorTypeName([encoding UTF8String])];
+      [value setStringValue: [displayValues objectForKey: name]];
     }
 }
 
 - (void) revert: (id)sender
 {
   [super revert: sender];
+  [self _refreshValues];
   [self update: sender];
 }
 

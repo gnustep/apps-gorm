@@ -22,8 +22,10 @@
   double precise;
   NSString *text;
   int writes;
+  int reads;
 }
 - (int) writes;
+- (int) reads;
 @end
 
 @implementation InspectorFixture
@@ -45,7 +47,8 @@ ACCESSORS(BOOL, isEnabled, setEnabled, enabled)
 ACCESSORS(float, real, setReal, real)
 ACCESSORS(double, precise, setPrecise, precise)
 #undef ACCESSORS
-- (NSString *) text { return text; }
+- (NSString *) text { reads++; return text; }
+- (int) reads { return reads; }
 - (void) setText: (NSString *)v { ASSIGNCOPY(text, v); writes++; }
 - (id) absent { return nil; }
 - (void) setAbsent: (id)v { }
@@ -81,13 +84,16 @@ ACCESSORS(double, precise, setPrecise, precise)
 - (NSArray *) setters;
 - (NSDictionary *) getters;
 - (int) touches;
+- (id) tableValue: (NSString *)column setter: (NSString *)setter;
+- (NSTableView *) table;
 @end
 @implementation TestObjectInspector
 - (BOOL) select: (NSString *)setter
 {
   NSUInteger row = [sets indexOfObject: setter];
   if (row == NSNotFound) return NO;
-  [browser selectRow: row inColumn: 0];
+  [propertyTable selectRowIndexes: [NSIndexSet indexSetWithIndex: row]
+             byExtendingSelection: NO];
   [self update: self];
   return YES;
 }
@@ -101,6 +107,13 @@ ACCESSORS(double, precise, setPrecise, precise)
 - (NSArray *) setters { return sets; }
 - (NSDictionary *) getters { return gets; }
 - (int) touches { return touches; }
+- (NSTableView *) table { return propertyTable; }
+- (id) tableValue: (NSString *)column setter: (NSString *)setter
+{
+  return [(id)[propertyTable dataSource] tableView: propertyTable
+    objectValueForTableColumn: [propertyTable tableColumnWithIdentifier: column]
+    row: [sets indexOfObject: setter]];
+}
 - (void) touch: (id)sender { touches++; }
 @end
 
@@ -108,7 +121,7 @@ static void
 roundTrip(TestObjectInspector *inspector, NSString *setter, NSString *text)
 {
   int before = [inspector touches];
-  PASS([inspector select: setter], "supported setter appears in browser");
+  PASS([inspector select: setter], "supported setter appears in table");
   [inspector enter: text];
   PASS_EQUAL([inspector displayed], text, "scalar value displays without truncation");
   PASS([inspector touches] == before + 1, "successful edit touches document once");
@@ -138,6 +151,33 @@ int main(void)
              "Boolean getter naming is recognized");
   PASS([[inspector getters] objectForKey: @"setMismatched:"] == nil,
        "incompatible getter is never invoked");
+
+  PASS([[inspector table] numberOfRows] == 20
+       && [[[inspector table] tableColumns] count] == 3,
+       "table presents property, type and value columns for every setter");
+  PASS_EQUAL([inspector tableValue: @"property" setter: @"setText:"], @"text",
+             "table displays property names instead of setter selectors");
+  PASS_EQUAL([inspector tableValue: @"type" setter: @"setPrecise:"], @"Double",
+             "table displays the property's type");
+  PASS_EQUAL([inspector tableValue: @"value" setter: @"setText:"], @"original",
+             "unselected rows show current values");
+  PASS_EQUAL([inspector tableValue: @"value" setter: @"setBroken:"],
+             @"Unable to read value", "getter errors are isolated to their row");
+  PASS_EQUAL([inspector tableValue: @"value" setter: @"setWriteOnly:"],
+             @"Value unknown", "write-only rows are explicitly marked");
+  PASS([fixture reads] == 1,
+       "drawing table cells uses cached values instead of repeatedly invoking getters");
+  {
+    CGFloat total = 0;
+    NSEnumerator *columns = [[[inspector table] tableColumns] objectEnumerator];
+    NSTableColumn *column;
+    while ((column = [columns nextObject]) != nil)
+      total += [column width];
+    PASS(total <= [[[inspector table] enclosingScrollView] contentSize].width,
+         "all three columns fit within the inspector at its default width");
+  }
+  PASS([fixture writes] == 1 && [inspector touches] == 0,
+       "populating the table does not call setters or mark the document edited");
 
   roundTrip(inspector, @"setSmall:", @"-128");
   roundTrip(inspector, @"setByte:", @"255");
@@ -194,6 +234,8 @@ int main(void)
   [inspector select: @"setWriteOnly:"];
   [inspector enter: @"42"];
   PASS([fixture integer] == 42, "write-only attributes remain editable");
+  PASS_EQUAL([inspector tableValue: @"value" setter: @"setInteger:"], @"42",
+             "applying a setter refreshes other dependent rows");
   [inspector select: @"setBroken:"];
   PASS(![[inspector okButton] isEnabled], "throwing getter disables apply");
   [inspector select: @"setRejected:"];
@@ -205,6 +247,12 @@ int main(void)
   PASS([inspector object] == nil && [[inspector setters] count] == 0
        && ![[inspector okButton] isEnabled], "clearing selection releases stale inspected object");
   PASS_EQUAL([inspector displayed], @"", "clearing selection clears old value");
+  PASS([[inspector table] numberOfRows] == 0,
+       "clearing selection removes all table rows");
+  [inspector setObject: fixture];
+  PASS([[inspector table] selectedRow] == -1 && ![[inspector okButton] isEnabled],
+       "a newly inspected object never inherits a stale property selection");
+  [inspector setObject: nil];
   [fixture release];
   [inspector release];
   [pool drain];

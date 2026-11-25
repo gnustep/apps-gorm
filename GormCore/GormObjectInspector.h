@@ -41,7 +41,8 @@ static NSString	*typeDouble = @"Double";
 /**
  * GormObjectInspector discovers inherited single-argument setters when no
  * specialized inspector is available. It displays compatible getters,
- * including is-prefixed getters, and edits scalar and object values.
+ * including is-prefixed getters, in a property/type/value table and edits
+ * scalar and object values.
  * Numeric edits are range checked before invoking the setter; unsupported
  * argument types are omitted. Getter and setter exceptions are reported in
  * the inspector without escaping into the application event loop.
@@ -56,6 +57,10 @@ GS_EXPORT_CLASS
   NSButton		*label;
   NSTextField		*value;
   BOOL			isString;
+  NSTableView          *propertyTable;
+  NSMutableDictionary *displayValues;
+  NSMutableDictionary *readErrors;
+  NSMutableSet        *stringValues;
 }
 
 /**

@@ -36,7 +36,7 @@ and builders; they do not establish support for unavailable runtimes or replace
 manual verification of interactive workflows.
 
 `objectInspector.m` loads the actual fallback inspector resource and exercises
-its browser, value field, and apply/revert actions with an inherited fixture.
+its property table, value field, and apply/revert actions with an inherited fixture.
 It covers every supported scalar encoding, full-width integer limits, double
 precision, is-prefixed getters, mismatched signatures, write-only setters,
 string whitespace, nil values, getter/setter exceptions, and selection clearing.
@@ -47,3 +47,9 @@ selection state, and exceptions escaping into the event loop. The test prints
 the loaded framework resource path so an installed copy cannot silently mask
 the intended build. This is control-level coverage, not a substitute for an
 interactive inspection workflow in the Gorm application.
+
+Table coverage checks all three columns, values in unselected rows, isolated
+getter errors, explicit unknown values, dependent-row refresh after edits,
+and clearing rows and selection when switching objects. Together with the
+existing scalar edit tests, this verifies that the new presentation preserves
+the edit path and does not mutate the document just by displaying values.
