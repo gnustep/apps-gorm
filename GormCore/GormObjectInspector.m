@@ -23,14 +23,148 @@
  */
 
 #include "GormObjectInspector.h"
+#include <errno.h>
+#include <limits.h>
+#include <float.h>
+#include <math.h>
 
-//
-// Disable the warning here since we are deliberately violating this rule
-// so that we can make the generic calls that this inspector needs to
-// make.
-//
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-non-prototype"
+/* NSInvocation preserves the actual argument and return ABI, including
+ * NSInteger on 64-bit runtimes.  Do not call arbitrary IMPs as returning id.
+ */
+typedef union
+{
+  signed char c; unsigned char C;
+  short s; unsigned short S;
+  int i; unsigned int I;
+  long l; unsigned long L;
+  long long q; unsigned long long Q;
+  _Bool B;
+  float f; double d;
+  id object;
+} GormInspectorValue;
+
+static const char *
+GormInspectorType(const char *type)
+{
+  while (*type && strchr("rnNoORV", *type) != NULL)
+    type++;
+  return type;
+}
+
+static NSString *
+GormInspectorTypeName(const char *type)
+{
+  switch (*GormInspectorType(type))
+    {
+      case '@': return typeId;
+      case 'c': return typeCharOrBool;
+      case 'C': return typeUChar;
+      case 's': return @"Short integer";
+      case 'S': return @"Unsigned short integer";
+      case 'i': return typeInt;
+      case 'I': return typeUInt;
+      case 'l': return @"Long integer";
+      case 'L': return @"Unsigned long integer";
+      case 'q': return @"Long long integer";
+      case 'Q': return @"Unsigned long long integer";
+      case 'B': return @"Boolean (0 or 1)";
+      case 'f': return typeFloat;
+      case 'd': return typeDouble;
+      default: return nil;
+    }
+}
+
+static BOOL
+GormInspectorParse(NSString *text, char type, GormInspectorValue *result)
+{
+  NSString *trimmed = [text stringByTrimmingCharactersInSet:
+    [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  const char *start = [trimmed UTF8String];
+  char *end;
+  long long signedValue;
+  unsigned long long unsignedValue;
+  double realValue;
+
+  if (start == NULL || *start == 0
+      || strlen(start) != [trimmed lengthOfBytesUsingEncoding: NSUTF8StringEncoding])
+    return NO;
+  errno = 0;
+  if (type == 'f' || type == 'd')
+    {
+      realValue = strtod(start, &end);
+      if (errno == ERANGE || end == start || *end != 0 || !isfinite(realValue))
+        return NO;
+      if (type == 'f')
+        {
+          if (fabs(realValue) > FLT_MAX
+              || (realValue != 0 && (float)realValue == 0))
+            return NO;
+          result->f = realValue;
+        }
+      else
+        result->d = realValue;
+      return YES;
+    }
+  if (strchr("CSILQB", type) != NULL)
+    {
+      if (*start == '-')
+        return NO;
+      unsignedValue = strtoull(start, &end, 10);
+      if (errno == ERANGE || end == start || *end != 0)
+        return NO;
+#define UNSIGNED_CASE(code, field, maximum) \
+      case code: if (unsignedValue > maximum) return NO; \
+        result->field = unsignedValue; return YES
+      switch (type)
+        {
+          UNSIGNED_CASE('C', C, UCHAR_MAX);
+          UNSIGNED_CASE('S', S, USHRT_MAX);
+          UNSIGNED_CASE('I', I, UINT_MAX);
+          UNSIGNED_CASE('L', L, ULONG_MAX);
+          UNSIGNED_CASE('Q', Q, ULLONG_MAX);
+          UNSIGNED_CASE('B', B, 1);
+        }
+#undef UNSIGNED_CASE
+    }
+  signedValue = strtoll(start, &end, 10);
+  if (errno == ERANGE || end == start || *end != 0)
+    return NO;
+#define SIGNED_CASE(code, field, minimum, maximum) \
+  case code: if (signedValue < minimum || signedValue > maximum) return NO; \
+    result->field = signedValue; return YES
+  switch (type)
+    {
+      SIGNED_CASE('c', c, SCHAR_MIN, SCHAR_MAX);
+      SIGNED_CASE('s', s, SHRT_MIN, SHRT_MAX);
+      SIGNED_CASE('i', i, INT_MIN, INT_MAX);
+      SIGNED_CASE('l', l, LONG_MIN, LONG_MAX);
+      SIGNED_CASE('q', q, LLONG_MIN, LLONG_MAX);
+    }
+#undef SIGNED_CASE
+  return NO;
+}
+
+static NSString *
+GormInspectorFormat(GormInspectorValue v, char type)
+{
+  switch (type)
+    {
+      case 'c': return [NSString stringWithFormat: @"%d", v.c];
+      case 'C': return [NSString stringWithFormat: @"%u", (unsigned)v.C];
+      case 's': return [NSString stringWithFormat: @"%d", v.s];
+      case 'S': return [NSString stringWithFormat: @"%u", (unsigned)v.S];
+      case 'i': return [NSString stringWithFormat: @"%d", v.i];
+      case 'I': return [NSString stringWithFormat: @"%u", v.I];
+      case 'l': return [NSString stringWithFormat: @"%ld", v.l];
+      case 'L': return [NSString stringWithFormat: @"%lu", v.L];
+      case 'q': return [NSString stringWithFormat: @"%lld", v.q];
+      case 'Q': return [NSString stringWithFormat: @"%llu", v.Q];
+      case 'B': return v.B ? @"1" : @"0";
+      case 'f': return [NSString stringWithFormat: @"%.9g", v.f];
+      case 'd': return [NSString stringWithFormat: @"%.17g", v.d];
+      default: return v.object == nil ? @"" : [v.object description];
+    }
+}
 
 @implementation GormObjectInspector
 
@@ -39,59 +173,21 @@
   self = [super init];
   if (self != nil)
     {
-      NSBundle *bundle = [NSBundle bundleForClass: [self class]];
-      
-      if([bundle loadNibNamed: @"GormObjectInspector" owner: self topLevelObjects: NULL] == NO)
-	{
-	  NSLog(@"Couldn't load GormObjectInsector");
-	  return nil;
-	}
-
+      NSBundle *bundle = [NSBundle bundleForClass: [GormObjectInspector class]];
+      if ([bundle loadNibNamed: @"GormObjectInspector" owner: self
+              topLevelObjects: NULL] == NO)
+        {
+          NSDebugLog(@"Couldn't load GormObjectInspector");
+          RELEASE(self);
+          return nil;
+        }
       sets = [[NSMutableArray alloc] init];
       gets = [[NSMutableDictionary alloc] init];
       types = [[NSMutableDictionary alloc] init];
-
       [okButton setEnabled: NO];
-      
       revertButton = nil;
     }
   return self;
-}
-
-- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
-{
-  return [sets count];
-}
-
-- (BOOL) browser: (NSBrowser*)sender
-selectCellWithString: (NSString*)title
-	inColumn: (NSInteger)col
-{
-  [self update: self];
-  return YES;
-}
-
-- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)col
-{
-  return @"Attribute setters";
-}
-
-- (void) browser: (NSBrowser*)sender
- willDisplayCell: (id)aCell
-	   atRow: (NSInteger)row
-	  column: (NSInteger)col
-{
-  if (row >= 0 && row < [sets count])
-    {
-      [aCell setStringValue: [sets objectAtIndex: row]];
-      [aCell setEnabled: YES];
-    }
-  else
-    {
-      [aCell setStringValue: @""];
-      [aCell setEnabled: NO];
-    }
-  [aCell setLeaf: YES];
 }
 
 - (void) dealloc
@@ -102,327 +198,212 @@ selectCellWithString: (NSString*)title
   [super dealloc];
 }
 
+- (NSInteger) browser: (NSBrowser*)sender numberOfRowsInColumn: (NSInteger)column
+{
+  return [sets count];
+}
+
+- (BOOL) browser: (NSBrowser*)sender selectCellWithString: (NSString*)title
+       inColumn: (NSInteger)col
+{
+  [self update: self];
+  return YES;
+}
+
+- (NSString*) browser: (NSBrowser*)sender titleOfColumn: (NSInteger)col
+{
+  return _(@"Attribute setters");
+}
+
+- (void) browser: (NSBrowser*)sender willDisplayCell: (id)aCell
+          atRow: (NSInteger)row column: (NSInteger)col
+{
+  BOOL valid = row >= 0 && (NSUInteger)row < [sets count];
+  [aCell setStringValue: valid ? [sets objectAtIndex: row] : @""];
+  [aCell setEnabled: valid];
+  [aCell setLeaf: YES];
+}
+
 - (void) ok: (id)sender
 {
-  NSString	*name = [[browser selectedCell] stringValue];
-  NSUInteger	pos;
+  NSString *name = [[browser selectedCell] stringValue];
+  NSString *encoding = [types objectForKey: name];
+  GormInspectorValue v;
+  NSInvocation *invocation;
+  id createdObject = nil;
 
-  if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)
+  if (encoding == nil || object == nil)
+    return;
+  memset(&v, 0, sizeof(v));
+  @try
     {
-      [label setTitle: _(@"No Type")];
-      [value setStringValue: @""];
-      [okButton setEnabled: NO];
-    }
-  else
-    {
-      SEL	set = NSSelectorFromString(name);
-      NSString	*type = [types objectForKey: name];
-      
+      char type = [encoding characterAtIndex: 0];
+      if (type == '@')
+        {
+          v.object = [value stringValue];
+          if (!isString)
+            {
+              NSString *text = [v.object stringByTrimmingSpaces];
+              int choice = NSRunAlertPanel(_(@"Settings"),
+                _(@"Set object using '%@' as"), _(@"Object name"),
+                _(@"String"), _(@"Class name"), text);
+              if (choice == NSAlertAlternateReturn)
+                v.object = text;
+              else if (choice == NSAlertOtherReturn)
+                {
+                  createdObject = [[NSClassFromString(text) alloc] init];
+                  v.object = createdObject;
+                }
+              else
+                v.object = [[(id<IB>)[NSApp delegate] activeDocument]
+                  objectForName: text];
+              if (v.object == nil)
+                {
+                  [label setTitle: _(@"Object or class not found")];
+                  return;
+                }
+            }
+        }
+      else if (!GormInspectorParse([value stringValue], type, &v))
+        {
+          [label setTitle: _(@"Invalid or out-of-range value")];
+          return;
+        }
+      invocation = [NSInvocation invocationWithMethodSignature:
+        [object methodSignatureForSelector: NSSelectorFromString(name)]];
+      [invocation setSelector: NSSelectorFromString(name)];
+      [invocation setArgument: &v atIndex: 2];
+      [invocation invokeWithTarget: object];
       [super ok: sender];
-      if (type == typeCharOrBool)
-	{
-	  char	v = [value intValue];
-	  void	(*imp)(id,SEL,char);
-
-	  imp = (void (*)(id,SEL,char))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else if (type == typeUChar)
-	{
-	  unsigned char	v = [value intValue];
-	  void		(*imp)(id,SEL,unsigned char);
-
-	  imp = (void (*)(id,SEL,unsigned char))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else if (type == typeInt)
-	{
-	  int	v = [value intValue];
-	  void	(*imp)(id,SEL,int);
-
-	  imp = (void (*)(id,SEL,int))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else if (type == typeUInt)
-	{
-	  unsigned int	v = [value intValue];
-	  void		(*imp)(id,SEL,unsigned int);
-
-	  imp = (void (*)(id,SEL,unsigned int))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else if (type == typeFloat)
-	{
-	  float	v = [value floatValue];
-	  void	(*imp)(id,SEL,float);
-
-	  imp = (void (*)(id,SEL,float))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else if (type == typeDouble)
-	{
-	  float	v = [value doubleValue];
-	  void	(*imp)(id,SEL,double);
-
-	  imp = (void (*)(id,SEL,double))[object methodForSelector: set];
-	  (*imp)(object, set, v);
-	}
-      else
-	{
-	  id	v = [value stringValue];
-	  IMP	imp = [object methodForSelector: set];
-
-	  if (isString == YES)
-	    {
-	      (*imp)(object, set, v);
-	    }
-	  else
-	    {
-	      int	result;
-
-	      v = [v stringByTrimmingSpaces];
-	      result = NSRunAlertPanel(_(@"Settings"),
-		[NSString stringWithFormat: _(@"Set object using '%@' as"), v],
-				       _(@"Object name"),_( @"String"), _(@"Class name"));
-	      if (result == NSAlertAlternateReturn)
-		{
-		  (*imp)(object, set, v);
-		}
-	      else if (result == NSAlertOtherReturn)
-		{
-		  Class	c = NSClassFromString(v);
-
-		  if (c != 0)
-		    {
-		      (*imp)(object, set, [[c alloc] init]);
-		    }
-		}
-	      else
-		{
-		  id	o = [[(id<IB>)[NSApp delegate] activeDocument] objectForName: v];
-
-		  if (o != nil)
-		    {
-		      (*imp)(object, set, o);
-		    }
-		}
-	    }
-	}
       [self update: self];
+    }
+  @catch (NSException *exception)
+    {
+      [label setTitle: _(@"Unable to set value")];
+      [value setToolTip: [exception reason]];
+      NSDebugLog(@"Inspector setter %@ failed: %@", name, exception);
+    }
+  @finally
+    {
+      RELEASE(createdObject);
     }
 }
 
 - (void) setObject: (id)anObject
 {
-  if (anObject != nil && anObject != object)
+  Class c;
+
+  if (anObject == object)
     {
-      Class	c = [anObject class];
-
-      ASSIGN(object, anObject);
-      [sets removeAllObjects];
-      [gets removeAllObjects];
-      [types removeAllObjects];
-
-      while (c != nil && c != [NSObject class])
-	{
-	      unsigned int		count;
-	      Method			*methods = class_copyMethodList(c, &count);
-	      int			i;
-
-	      for (i = 0; i < count; i++)
-		{
-		  SEL		sSel = method_getName(methods[i]);
-		  NSString	*set = NSStringFromSelector(sSel);
-
-		  /*
-		   * We are interested in methods that set values - they have
-		   * a 'set' prefic and a colon as the last character.
-		   * we ignore duplicates from superclasses.
-		   */
-		  if ([set hasPrefix: @"set"] == YES
-		    && [set rangeOfString: @":"].location == [set length] - 1
-		    && [sets containsObject: set] == NO)
-		    {
-		      char		tmp[[set cStringLength]+1];
-		      const char	*tInfo = method_getTypeEncoding(methods[i]);
-		      NSString		*type = nil;
-		      NSString		*get;
-		      SEL		gSel;
-
-		      /*
-		       * see if we can find an appropriate method to get the
-		       * current value for an attribute we want to set.
-		       */
-		      [set getCString: tmp];
-		      tmp[3] = tolower(tmp[3]);
-		      tmp[strlen(tmp)-1] = '\0';
-		      get = [NSString stringWithCString: &tmp[3]];
-		      gSel = NSSelectorFromString(get);
-		      if (gSel == 0 || [object respondsToSelector: gSel] == NO)
-			{
-			  get = nil;
-			}
-
-		      /*
-		       * Skip the return type and the receiver and
-		       * selector specifications to the first (only) arg.
-		       */
-		      tInfo = objc_skip_typespec(tInfo);
-		      if (*tInfo == '+')
-			{
-			  tInfo++;
-			}
-		      while (isdigit(*tInfo))
-			{
-			  tInfo++;
-			}
-		      tInfo = objc_skip_argspec(tInfo);
-		      tInfo = objc_skip_argspec(tInfo);
-
-		      /*
-		       * Now find arguments whose types we can reasonably
-		       * deal with.
-		       */
-		      switch (*tInfo)
-			{
-			  case _C_ID:
-			    type = typeId;
-			    break;
-			  case _C_CHR:
-			    type = typeCharOrBool;
-			    break;
-			  case _C_UCHR:
-			    type = typeUChar;
-			    break;
-			  case _C_INT:
-			    type = typeInt;
-			    break;
-			  case _C_UINT:
-			    type = typeUInt;
-			    break;
-			  case _C_FLT:
-			    type = typeFloat;
-			    break;
-			  case _C_DBL:
-			    type = typeDouble;
-			    break;
-			  default:
-			    type = nil;
-			    break;
-			}
-		      if (type != nil)
-			{
-			  [sets addObject: set];
-			  if (get != nil)
-			    {
-			      [gets setObject: get forKey: set];
-			    }
-			  [types setObject: type forKey: set];
-			}
-		    }
-		}
-	  free(methods);
-	  c = [c superclass]; 
-	}
-      [sets sortUsingSelector: @selector(compare:)];
-      [browser loadColumnZero];
       [self update: self];
+      return;
     }
+  ASSIGN(object, anObject);
+  [sets removeAllObjects];
+  [gets removeAllObjects];
+  [types removeAllObjects];
+  for (c = [object class]; c != Nil && c != [NSObject class]; c = [c superclass])
+    {
+      unsigned int count, i;
+      Method *methods = class_copyMethodList(c, &count);
+      for (i = 0; i < count; i++)
+        {
+          NSString *name = NSStringFromSelector(method_getName(methods[i]));
+          NSMethodSignature *signature;
+          const char *type;
+          NSString *stem, *getter;
+          NSArray *candidates;
+          NSUInteger j;
+
+          if ([name length] <= 4 || ![name hasPrefix: @"set"]
+              || [name rangeOfString: @":"].location != [name length] - 1
+              || [sets containsObject: name])
+            continue;
+          signature = [object methodSignatureForSelector: NSSelectorFromString(name)];
+          if ([signature numberOfArguments] != 3
+              || strcmp(GormInspectorType([signature methodReturnType]), @encode(void)))
+            continue;
+          type = GormInspectorType([signature getArgumentTypeAtIndex: 2]);
+          /* Blocks, pointers, structures and other unsupported types stay out. */
+          if (GormInspectorTypeName(type) == nil || strcmp(type, "@?") == 0)
+            continue;
+          [sets addObject: name];
+          [types setObject: [NSString stringWithUTF8String: type] forKey: name];
+          stem = [name substringWithRange: NSMakeRange(3, [name length] - 4)];
+          getter = [[[stem substringToIndex: 1] lowercaseString]
+            stringByAppendingString: [stem substringFromIndex: 1]];
+          candidates = [NSArray arrayWithObjects: getter,
+            [@"is" stringByAppendingString: stem], stem, nil];
+          for (j = 0; j < [candidates count]; j++)
+            {
+              NSString *candidate = [candidates objectAtIndex: j];
+              SEL selector = NSSelectorFromString(candidate);
+              NSMethodSignature *readSignature;
+              if (![object respondsToSelector: selector])
+                continue;
+              readSignature = [object methodSignatureForSelector: selector];
+              if ([readSignature numberOfArguments] == 2
+                  && strcmp(GormInspectorType([readSignature methodReturnType]), type) == 0)
+                {
+                  [gets setObject: candidate forKey: name];
+                  break;
+                }
+            }
+        }
+      free(methods);
+    }
+  [sets sortUsingSelector: @selector(compare:)];
+  [browser loadColumnZero];
+  [self update: self];
 }
 
 - (void) update: (id)sender
 {
-  NSString	*name = [[browser selectedCell] stringValue];
-  NSUInteger	pos;
+  NSString *name = [[browser selectedCell] stringValue];
+  NSString *encoding = [types objectForKey: name];
+  NSString *getter = [gets objectForKey: name];
 
   isString = NO;
-  if (name == nil || (pos = [sets indexOfObject: name]) == NSNotFound)
-    {
-      [label setTitle: _(@"No Type")];
-      [value setStringValue: @""];
-      [okButton setEnabled: NO];
-    }
-  else if ([gets objectForKey: name] != nil)
-    {
-      SEL	get = NSSelectorFromString([gets objectForKey: name]);
-      NSString	*type = [types objectForKey: name];
-
-      [label setTitle: type];
-      if (type == typeCharOrBool)
-	{
-	  char	v;
-	  char	(*imp)(id, SEL);
-
-	  imp = (char (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
-	}
-      else if (type == typeUChar)
-	{
-	  unsigned char	v;
-	  unsigned char	(*imp)(id, SEL);
-
-	  imp = (unsigned char (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
-	}
-      else if (type == typeInt)
-	{
-	  int	v;
-	  int	(*imp)(id, SEL);
-
-	  imp = (int (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%d", v]];
-	}
-      else if (type == typeUInt)
-	{
-	  unsigned	v;
-	  unsigned	(*imp)(id, SEL);
-
-	  imp = (unsigned (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%u", v]];
-	}
-      else if (type == typeFloat)
-	{
-	  float	v;
-	  float	(*imp)(id, SEL);
-
-	  imp = (float (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%f", v]];
-	}
-      else if (type == typeDouble)
-	{
-	  double	v;
-	  double	(*imp)(id, SEL);
-
-	  imp = (double (*)(id, SEL))[object methodForSelector: get];
-	  v = (*imp)(object, get);
-	  [value setStringValue: [NSString stringWithFormat: @"%g", v]];
-	}
-      else
-	{
-	  id	v;
-	  IMP	imp = [object methodForSelector: get];
-
-	  v = (*imp)(object, get);
-	  if (v != nil && [v isKindOfClass: [NSString class]] == YES)
-	    {
-	      isString = YES;	/* Existing value is a string. */
-	    }
-	  [value setStringValue: [v description]];
-	}
-      [okButton setEnabled: YES];
-    }
+  [value setToolTip: nil];
+  [value setStringValue: @""];
+  [value setEditable: encoding != nil];
+  [okButton setEnabled: encoding != nil];
+  if (encoding == nil)
+    [label setTitle: _(@"No Type")];
+  else if (getter == nil)
+    [label setTitle: [NSString stringWithFormat: _(@"%@ - value unknown"),
+      GormInspectorTypeName([encoding UTF8String])]];
   else
     {
-      [label setTitle: [NSString stringWithFormat: _(@"%@ - value unknown"),
-	[types objectForKey: name]]];
-      [value setStringValue: @""];
-      [okButton setEnabled: YES];
+      @try
+        {
+          GormInspectorValue v;
+          SEL selector = NSSelectorFromString(getter);
+          NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:
+            [object methodSignatureForSelector: selector]];
+          memset(&v, 0, sizeof(v));
+          [invocation setSelector: selector];
+          [invocation invokeWithTarget: object];
+          [invocation getReturnValue: &v];
+          isString = [encoding hasPrefix: @"@"]
+            && [v.object isKindOfClass: [NSString class]];
+          [label setTitle: GormInspectorTypeName([encoding UTF8String])];
+          [value setStringValue: GormInspectorFormat(v, [encoding characterAtIndex: 0])];
+        }
+      @catch (NSException *exception)
+        {
+          [label setTitle: _(@"Unable to read value")];
+          [value setToolTip: [exception reason]];
+          [okButton setEnabled: NO];
+          NSDebugLog(@"Inspector getter %@ failed: %@", getter, exception);
+        }
     }
+}
+
+- (void) revert: (id)sender
+{
+  [super revert: sender];
+  [self update: sender];
 }
 
 - (BOOL) wantsButtons
@@ -430,5 +411,3 @@ selectCellWithString: (NSString*)title
   return YES;
 }
 @end
-
-#pragma clang diagnostic pop

@@ -39,14 +39,12 @@ static NSString	*typeDouble = @"Double";
 #pragma GCC diagnostic pop
 
 /**
- * GormObjectInspector displays key-value properties for the selected object
- * and lets users edit primitive values. It switches its UI depending on the
- * detected property types.
- *
- * The purpose of this inspector is to act as a stand-in when an inspector
- * is not available for a given object.  This is so that it's obvious when
- * an inspector needs to be implemented.  It works well for setting primitive
- * types, but does not for objects.
+ * GormObjectInspector discovers inherited single-argument setters when no
+ * specialized inspector is available. It displays compatible getters,
+ * including is-prefixed getters, and edits scalar and object values.
+ * Numeric edits are range checked before invoking the setter; unsupported
+ * argument types are omitted. Getter and setter exceptions are reported in
+ * the inspector without escaping into the application event loop.
  */
 GS_EXPORT_CLASS
 @interface GormObjectInspector : IBInspector

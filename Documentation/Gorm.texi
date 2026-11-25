@@ -370,6 +370,30 @@ Quits the application.
 
 @end itemize
 
+@section The Fallback Object Inspector
+
+When an object has no specialized attributes inspector, Gorm uses
+@code{GormObjectInspector}. Select an attribute setter in the browser to see
+its type and current value, edit the value field, then press OK to apply it.
+Inherited setters are included. Getters named like @code{isEnabled} are
+recognized as well as getters named like @code{enabled}.
+
+The inspector supports signed and unsigned integers (including
+@code{NSInteger} and 64-bit integers), Boolean values, floats, doubles, and
+objects. Enter integers in decimal and Boolean values as 0 or 1. Floating
+point values may use scientific notation. Invalid numbers, values outside
+the argument type's range, and nonfinite floating point values are rejected
+without calling the setter. The type label reports errors; an exception's
+reason is available in the value field's tooltip.
+
+Existing strings can be edited directly, including their whitespace. For
+other object values, applying an edit asks whether the text names an object
+in the active document, is a literal string, or names a class to instantiate.
+A nil object value is displayed as an empty field. A setter without a
+compatible getter is marked ``value unknown'' and can still be edited.
+Pointers, structures, and methods with multiple arguments are not offered.
+Use the specialized inspectors for geometry and other structured values.
+
 @node Implementation, Concept Index, Usage, Top
 @chapter Implementation
 

@@ -34,3 +34,16 @@ custom-class, geometry, and connection-identity regressions. Together these
 checks cover the service migration and its compatibility with existing loaders
 and builders; they do not establish support for unavailable runtimes or replace
 manual verification of interactive workflows.
+
+`objectInspector.m` loads the actual fallback inspector resource and exercises
+its browser, value field, and apply/revert actions with an inherited fixture.
+It covers every supported scalar encoding, full-width integer limits, double
+precision, is-prefixed getters, mismatched signatures, write-only setters,
+string whitespace, nil values, getter/setter exceptions, and selection clearing.
+Invalid edits must call neither the setter nor the document touch hook; valid
+edits must touch once and remain possible after an error. These checks guard
+against ABI mismatches, truncation, silent invalid-input conversion, stale
+selection state, and exceptions escaping into the event loop. The test prints
+the loaded framework resource path so an installed copy cannot silently mask
+the intended build. This is control-level coverage, not a substitute for an
+interactive inspection workflow in the Gorm application.
