@@ -23,6 +23,10 @@ standalone fixtures in `OpenStepFixtures` for manual inspection.
 
 Coverage:
 
+* String decoding per the archive's system version:  UTF-8 preferred (with a
+  per-string NEXTSTEP fallback) in Rhapsody and later archives stamped 1000
+  or above, NEXTSTEP only in earlier ones, so a NEXTSTEP byte that spells a
+  valid UTF-8 sequence is never misread.
 * Streamer versions 3 and 4, both byte orders, window/button graphs, unnamed
   objects, owner custom class, fractional geometry, shared outlet identity,
   window-template replacement, action endpoints, and periodic button timing.

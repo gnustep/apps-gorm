@@ -16,7 +16,9 @@ class Obj:
 
 
 def string(s):
-    return Obj([("NSString", 1)], [("+", [s.encode("ascii")])])
+    if not isinstance(s, bytes):
+        s = s.encode("ascii")
+    return Obj([("NSString", 1)], [("+", [s])])
 
 
 def array(items):
@@ -25,13 +27,15 @@ def array(items):
 
 
 class Writer:
-    def __init__(self, endian, version):
+    def __init__(self, endian, version, system_version=1000):
         self.order = endian
         self.data = bytearray([version, 11])
         self.data += b"streamtyped" if endian == "<" else b"typedstream"
         self.slots = 0
         self.objects = {}
-        self.integer(1000)
+        # The writer toolchain's NXSYSTEMVERSION:  1000 for Rhapsody and
+        # Mac OS X,  930 or below for NeXTSTEP/OpenStep.
+        self.integer(system_version)
 
     def integer(self, n):
         if -110 <= n <= 127:
@@ -92,7 +96,8 @@ class Writer:
                 raise ValueError(typ)
 
 
-def document(views=False, bad_version=False, window_min_size=False):
+def document(views=False, bad_version=False, window_min_size=False,
+             title="OPENSTEP fixture"):
     # Match import.m so imports and round trips exercise a custom owner class.
     owner = Obj([("NSCustomObject", 41)], [("@@", [string("OpenStepTestOwner"), None])])
     custom = Obj([("NSCustomObject", 41)],
@@ -121,7 +126,7 @@ def document(views=False, bad_version=False, window_min_size=False):
                         0, 0, 240, 100, 0, 0, 240, 100]),
                        ("@", [None]), ("@", [None]), ("@", [None]), ("@", [None])]
         window_groups = [("iiffffi@@@@@c", [3, 2, 100, 100, 240, 100, 0x40000000,
-                          string("OPENSTEP fixture"), string("NSWindow"),
+                          string(title), string("NSWindow"),
                           string("View"), view, None, 1]),
                          ("ffff", [0, 0, 1024, 768]),
                          ("c", [1 if window_min_size else 0])]
