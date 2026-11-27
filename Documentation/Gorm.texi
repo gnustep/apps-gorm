@@ -196,6 +196,14 @@ meant to be a complete tutorial on GNUstep programming.
 @node Usage, Implementation, Overview, Top
 @chapter Usage
 
+A view can also be a top-level object without a window. Drag a view from
+its palette into the document's objects view, then open it for editing.
+The objects view identifies it with Gorm's View icon. Its temporary editing
+window uses the normal window background and lets you select, move, resize, paste, and
+delete child views as in a window's content view. Opening this editing
+window preserves the view's frame; the editing window is not saved as
+part of the document.
+
 Here is a description of the menu structure and what each menu does -
 
 @itemize @bullet

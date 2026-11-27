@@ -4009,8 +4009,20 @@ static void _real_close(GormDocument *self,
   enumerator = [savedEditors objectEnumerator];
   while ((con = [enumerator nextObject]) != nil)
     {
-      if ([[con source] isKindOfClass: [NSView class]] == NO)
-	[(id<IBEditors>)[con destination] activate];
+      if ([con isKindOfClass: [GormObjectToEditor class]] &&
+          ([[con source] isKindOfClass: [NSView class]] == NO ||
+           [self isTopLevelObject: [con source]]))
+        [(id<IBEditors>)[con destination] activate];
+    }
+  /* Display only after child editors have rejoined their view hierarchies.
+   * Drawing retained selections earlier would use detached editor frames. */
+  enumerator = [savedEditors objectEnumerator];
+  while ((con = [enumerator nextObject]) != nil)
+    {
+      if ([con isKindOfClass: [GormObjectToEditor class]] &&
+          [[con source] isKindOfClass: [NSView class]] &&
+          [self isTopLevelObject: [con source]])
+        [(id<IBEditors>)[con destination] orderFront];
     }
   [savedEditors removeAllObjects];
 }

@@ -53,3 +53,23 @@ getter errors, explicit unknown values, dependent-row refresh after edits,
 and clearing rows and selection when switching objects. Together with the
 existing scalar edit tests, this verifies that the new presentation preserves
 the edit path and does not mutate the document just by displaying values.
+
+`standaloneViews.m` opens a nonzero-origin top-level view with a button through
+real document editors. It checks child-editor activation, mouse selection,
+movement, resizing, copy/paste, deletion, and repeated deactivation/reactivation,
+including host-window visibility and preservation of frame and autoresizing.
+These checks catch ignored clicks, missing child editors, accidental geometry
+changes, and a detached or hidden editing surface after saving. The test prints
+the loaded framework path to identify the checkout under test.
+
+A separate process decodes the deactivated graph and its action connector,
+checking class, geometry, control title, and target identity. This catches editor
+wrappers or temporary windows leaking into the archive and graph damage during
+editor teardown. This is an unkeyed graph test, not a substitute for the format
+conversion matrix or interactive checks of nested containers and palette drops.
+
+Standalone appearance checks compare the host background with an ordinary
+window and verify that plain views, custom view subclasses, and their editors
+load the existing View icon from GormCore. These prevent a hard-coded background
+and missing or unknown-object icons, including when a subclass belongs to a
+separate bundle. Background equality is checked again after reactivation.

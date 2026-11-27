@@ -178,7 +178,7 @@ static BOOL currently_displaying = NO;
       // if the view window is not nil, it's a standalone view...
       if(viewWindow != nil)
 	{
-	  if([viewWindow view] != _editedObject)
+	  if ([_editedObject superview] == nil)
 	    {
 	      [viewWindow setView: _editedObject];
 	    }
@@ -193,17 +193,11 @@ static BOOL currently_displaying = NO;
 		 with: self];
       [self setAutoresizingMask: NSViewMaxXMargin | NSViewMinYMargin];
 
-      // we want autoresizing for standalone views...
-      if(viewWindow == nil)
-	{
-	  [self setAutoresizesSubviews: NO];
-	  [_editedObject setPostsFrameChangedNotifications: YES];
-	}
-      else
-	{
-	  [self setAutoresizesSubviews: YES];
-	}
-      
+      /* Frame notifications synchronize the wrapper and the edited view.
+       * Autoresizing here would resize the view a second time. */
+      [self setAutoresizesSubviews: NO];
+      [_editedObject setPostsFrameChangedNotifications: YES];
+
       [self addSubview: _editedObject];
       [self setToolTip: [NSString stringWithFormat: @"%@,%@",
 				  name, 

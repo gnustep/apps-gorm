@@ -54,78 +54,32 @@
 - (void) initialResize
 {
   NSWindow *window = [_view window];
-  NSRect windowFrame = [window frame];
-  
-  // if the view is uninitialized, 
-  // it's new... give it size.
-  if(NSIsEmptyRect([_view frame]))
-    {    
-      NSArray *subs = [_view subviews];
-      NSRect newFrame;
+  NSRect frame = [_view frame];
 
-      if([subs count] > 0)
-	{
-	  newFrame = minimalContainerFrame(subs);
-	  newFrame.size.height += 70;
-	  newFrame.size.width += 40;
-	  [window setFrame: newFrame display: YES];
-	  [_view setPostsFrameChangedNotifications: YES];
-	}
-      else
-	{
-	  newFrame = windowFrame;
-	  
-	  newFrame.origin.x = 10;
-	  newFrame.origin.y = 20;
-	  newFrame.size.height -= 70;
-	  newFrame.size.width -= 20;
-	}
-
-      [_view setPostsFrameChangedNotifications: NO];
-      [_view setFrame: newFrame];
-      [_view setPostsFrameChangedNotifications: YES];
-    }
-  else // otherwise take size from it.
+  if (NSIsEmptyRect(frame))
     {
-      NSRect newFrame = [_view frame];
-
-      newFrame.origin.x = windowFrame.origin.x+10;
-      newFrame.origin.y = windowFrame.origin.y+20;
-      newFrame.size.height += 100;
-      newFrame.size.width += 20;
-
-      [_view setPostsFrameChangedNotifications: NO];
-      [_view setFrame: newFrame];
-      [_view setPostsFrameChangedNotifications: YES];
-      [window setFrame: newFrame display: YES];
+      frame.size = NSMakeSize(360, 230);
+      if ([[_view subviews] count] > 0)
+        frame.size = minimalContainerFrame([_view subviews]).size;
+      [_view setFrame: frame];
     }
 
+  /* The window is only an editing surface. Opening it must not change
+   * the document view's origin, size, or autoresizing mask. */
+  [[window contentView] setAutoresizesSubviews: NO];
+  [window setContentSize: NSMakeSize(frame.size.width + 20,
+                                    frame.size.height + 40)];
+  [[window contentView] setBoundsOrigin:
+    NSMakePoint(frame.origin.x - 10, frame.origin.y - 20)];
   [window center];
 }
 
 - (void) windowDidResize: (NSNotification *)notification
 {
-  NSWindow *window = [_view window];
-  NSRect windowFrame = [window frame];
-  NSRect newFrame = windowFrame;
-  NSRect viewFrame = [_view frame];
-
-  newFrame.origin.x = 10;
-  newFrame.origin.y = 20;
-  newFrame.size.height -= 70;
-  newFrame.size.width -= 20;
-
-  if(NSIsEmptyRect(viewFrame))
-    {
-      [_view setPostsFrameChangedNotifications: NO];
-      [_view setFrame: newFrame];
-      [_view setPostsFrameChangedNotifications: YES];
-    }
-  else
-    {
-      [_view setFrame: newFrame];
-      [_view setNeedsDisplay: YES];
-    }
+  NSWindow *window = [notification object];
+  NSSize size = [[window contentView] bounds].size;
+  [_view setFrameSize: NSMakeSize(MAX(1, size.width - 20),
+                                 MAX(1, size.height - 40))];
 }
 
 @end
@@ -141,11 +95,9 @@
       NSString *objectName = [[(id<IB>)[NSApp delegate] activeDocument] nameForObject: view];
       NSString *title = [NSString stringWithFormat: @"Standalone View Window: (%@, %@)",
 				  className, objectName];
-      NSColor *color = [NSColor lightGrayColor];
 
       [self setTitle: title];
       [self setFrame: NSMakeRect(0,0,400,300) display: YES];
-      [self setBackgroundColor: color];
       [self setReleasedWhenClosed: NO];
       [self setView: view];
     }
@@ -162,7 +114,9 @@
   _view = view;
 
   [[self contentView] addSubview: _view];
-  RELEASE([self delegate]);
+  id oldDelegate = [self delegate];
+  [self setDelegate: nil];
+  RELEASE(oldDelegate);
   [self setDelegate: [[GormViewWindowDelegate alloc] initWithView: _view]];
 }
 
@@ -171,34 +125,10 @@
   return _view;
 }
 
-- (void) activateEditorForView
-{
-  id editor = [[(id<IB>)[NSApp delegate] activeDocument] editorForObject: _view create: YES];
-  // NSArray *subviews = [_view subviews];
-  // NSEnumerator *en = [subviews objectEnumerator];
-  // id sub = nil;
-
-  // activate the parent and all subview editors...
-  [(id<IBEditors>)editor activate];
-  /*
-  while((sub = [en nextObject]) != nil)
-    {
-      editor = [[(id<IB>)[NSApp delegate] activeDocument] editorForObject: sub create: YES];
-      [editor activate];
-    }
-  */
-}
-
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   [NSException raise: NSInternalInconsistencyException
 	       format: @"Cannot encode a GormViewWindow"];
-}
-
-- (void) orderFront: (id)sender
-{
-  [super orderFront: sender];
-  [self activateEditorForView];
 }
 
 - (void) dealloc
