@@ -73,3 +73,8 @@ window and verify that plain views, custom view subclasses, and their editors
 load the existing View icon from GormCore. These prevent a hard-coded background
 and missing or unknown-object icons, including when a subclass belongs to a
 separate bundle. Background equality is checked again after reactivation.
+
+The stylized View icon is also checked for a 48-point/48-pixel footprint,
+transparent corner padding, and an opaque center. Together with the resource
+loading checks, these catch incorrect export density, missing alpha, blank
+exports, and an icon that fails to load in the document viewer.

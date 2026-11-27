@@ -75,6 +75,16 @@ int main(int argc, char **argv)
   NSBundle *framework = [NSBundle bundleForClass: [GormStandaloneViewEditor class]];
   NSImage *viewIcon = [[NSImage alloc] initWithContentsOfFile:
     [framework pathForImageResource: @"GormView"]];
+  NSBitmapImageRep *iconBitmap = [NSBitmapImageRep imageRepWithData:
+    [viewIcon TIFFRepresentation]];
+  PASS(NSEqualSizes([viewIcon size], NSMakeSize(48, 48)) &&
+       [iconBitmap pixelsWide] == 48 && [iconBitmap pixelsHigh] == 48,
+       "the stylized view icon retains the document viewer's 48-point size")
+  PASS([iconBitmap hasAlpha] &&
+       [[iconBitmap colorAtX: 0 y: 0] alphaComponent] == 0.0 &&
+       [[iconBitmap colorAtX: 47 y: 47] alphaComponent] == 0.0 &&
+       [[iconBitmap colorAtX: 24 y: 24] alphaComponent] > 0.9,
+       "the view icon has transparent padding and a visible canvas")
   NSView *plainView = [[NSView alloc] initWithFrame: NSZeroRect];
   PASS([viewIcon isValid] && [[root imageForViewer] isValid] &&
        [[[root imageForViewer] TIFFRepresentation] isEqual: [viewIcon TIFFRepresentation]],
