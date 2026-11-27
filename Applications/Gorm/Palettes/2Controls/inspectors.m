@@ -38,7 +38,7 @@
 
 - (NSString*) inspectorClassName
 {
-  return @"GormObjectInspector";
+  return @"GormButtonAttributesInspector";
 }
 @end
 
