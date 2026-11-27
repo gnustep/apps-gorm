@@ -14,12 +14,20 @@ concurrency:
 
 jobs:
   build-and-test:
+    name: Build and test (${{ matrix.cc }})
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cc: clang
+            cxx: clang++
+          - cc: gcc
+            cxx: g++
     timeout-minutes: 45
     env:
-      CC: clang
-      CXX: clang++
-      LDFLAGS: -fuse-ld=lld
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
       GNUSTEP_PREFIX: ${{ github.workspace }}/../gnustep
     steps:
       - uses: actions/checkout@v6
@@ -30,7 +38,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y \
-            build-essential clang lld cmake ninja-build git ca-certificates \
+            build-essential gobjc libobjc-13-dev clang lld cmake ninja-build git ca-certificates \
             pkg-config robin-map-dev libffi-dev libgnutls28-dev \
             libxml2-dev libxslt1-dev libicu-dev libcurl4-gnutls-dev \
             libcairo2-dev libjpeg-dev libtiff-dev libpng-dev libicns-dev \
@@ -44,10 +52,10 @@ jobs:
       - name: Build and install
         run: |
           . "$GNUSTEP_PREFIX/share/GNUstep/Makefiles/GNUstep.sh"
-          make
-          make install
+          make CC="$CC" ADDITIONAL_CFLAGS=-std=c99 ADDITIONAL_OBJCFLAGS=-std=c99
+          make install CC="$CC"
 
       - name: Run tests
         run: |
           . "$GNUSTEP_PREFIX/share/GNUstep/Makefiles/GNUstep.sh"
-          xvfb-run -a make -C Tests check
+          xvfb-run -a make -C Tests check CC="$CC" ADDITIONAL_OBJCFLAGS=-std=c99
