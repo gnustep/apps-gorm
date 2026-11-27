@@ -43,7 +43,7 @@
   if (image == nil && [delegate isInTool] == NO)
     {
       NSBundle	*bundle = [NSBundle bundleForClass: [GormStandaloneViewEditor class]];
-      NSString *path = [bundle pathForImageResource: @"GormView"]; 
+      NSString *path = [bundle pathForImageResource: @"GormView"];
       image = [[NSImage alloc] initWithContentsOfFile: path];
     }
 
