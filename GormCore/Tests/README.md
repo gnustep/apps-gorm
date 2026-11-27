@@ -78,3 +78,10 @@ The stylized View icon is also checked for a 48-point/48-pixel footprint,
 transparent corner padding, and an opaque center. Together with the resource
 loading checks, these catch incorrect export density, missing alpha, blank
 exports, and an icon that fails to load in the document viewer.
+
+`connectorAppearance.m` also counts native window-order requests while a
+connection stays stationary or moves. Visible segments must retain their
+stacking while their geometry updates; hidden segments must still be ordered
+in when shown again. This guards against the 20 ms connection timer repeatedly
+restacking the desktop and making DockWM icons flash. Existing geometry,
+color, and event-tracking checks cover continued segment rendering.

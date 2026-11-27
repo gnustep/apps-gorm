@@ -24,6 +24,20 @@ recordIgnoreMouse(id server, SEL selector, BOOL ignore, int window)
                                                    ignore, window);
 }
 
+/* Count native stacking requests for the segment, including repeated raises. */
+static IMP originalOrderWindow;
+static int observedWindow;
+static NSUInteger segmentOrders;
+
+static void
+recordOrderWindow(id server, SEL selector, int op, int other, int window)
+{
+  if (window == observedWindow)
+    segmentOrders++;
+  ((void (*)(id, SEL, int, int, int))originalOrderWindow)(server, selector,
+                                                       op, other, window);
+}
+
 @interface GormAbstractDelegate (ConnectorTesting)
 - (BOOL) _setConnectionLineSegmentFrom: (NSPoint)start
                                   to: (NSPoint)end
@@ -176,6 +190,33 @@ int main(void)
   [segment flushWindow];
   PASS([segment isVisible] && segmentHasColor(segment, chosen),
        "resizing and redrawing a segment preserves its visible color")
+  {
+    Method orderMethod = class_getInstanceMethod([GSCurrentServer() class],
+                                                 @selector(orderwindow:::));
+    NSUInteger i;
+
+    observedWindow = [segment windowNumber];
+    segmentOrders = 0;
+    originalOrderWindow = method_setImplementation(orderMethod,
+                                                    (IMP)recordOrderWindow);
+    for (i = 0; i < 25; i++)
+      [delegate _setConnectionLineSegmentFrom: NSMakePoint(80, 90)
+                                          to: NSMakePoint(80, 30) index: 0];
+    PASS(segmentOrders == 0,
+         "stationary connection updates do not restack desktop windows")
+    [delegate _setConnectionLineSegmentFrom: NSMakePoint(100, 100)
+                                        to: NSMakePoint(100, 40) index: 0];
+    PASS(segmentOrders == 0 && [segment isVisible]
+         && NSEqualRects([segment frame], NSMakeRect(98, 40, 4, 60)),
+         "moving a visible connection updates geometry without raising it")
+    [delegate _hideConnectionLine];
+    segmentOrders = 0;
+    [delegate _setConnectionLineSegmentFrom: NSMakePoint(80, 90)
+                                        to: NSMakePoint(80, 30) index: 0];
+    PASS(segmentOrders > 0 && [segment isVisible],
+         "a hidden connection is still ordered in when shown again")
+    method_setImplementation(orderMethod, originalOrderWindow);
+  }
   [delegate _hideConnectionLine];
   PASS(![segment isVisible], "hiding connections orders the segment out")
   [delegate _setConnectionLineSegmentFrom: NSMakePoint(80, 90)

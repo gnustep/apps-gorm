@@ -422,8 +422,18 @@ static NSString *GormDrawConnectionLineDefault = @"DrawConnectionLine";
     }
 
   window = [self _connectionLineWindowAtIndex: index];
-  [window setFrame: frame display: NO];
-  [window orderFront: nil];
+  if (NSEqualRects([window frame], frame) == NO)
+    {
+      [window setFrame: frame display: NO];
+    }
+  /* The tracking timer runs every 20 ms.  Raising already visible segments
+   * makes the window manager restack other applications continuously, which
+   * can repeatedly cover DockWM's unmanaged icon windows.
+   */
+  if ([window isVisible] == NO)
+    {
+      [window orderFront: nil];
+    }
   /* Deferred windows have no backend window until ordered in.  Apply this
    * afterwards so the line cannot intercept clicks or connection drags.
    */

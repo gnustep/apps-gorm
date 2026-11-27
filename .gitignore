@@ -24,3 +24,5 @@ __pycache__
 /InterfaceBuilder/Tests/interfacebuilder/GNUmakefile
 /Plugins/Tests/plugins/GNUmakefile
 /Tools/gormtool/Tests/gormtool/GNUmakefile
+*.err
+*.tmp
