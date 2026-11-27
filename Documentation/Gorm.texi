@@ -607,6 +607,11 @@ Repeat this operation with the text field.  It's the control with ``Text'' in it
 @subsection Making Connections
 @cindex Connections
 
+In a standalone view's editing window, hold Control before pressing the mouse
+button and drag from the view or one of its controls to the destination.
+The same gesture works without first selecting the source. Release the mouse,
+then choose the outlet or action in the Connections inspector and press Connect.
+
 The type of application we are creating is known as a ``NSApplication delegate'' this means that the MyController object will be set as the delegate of NSApplication.
 
 To make this connection click on NSOwner and hold down the Control button, keep it pressed as you drag from the NSOwner object to the MyController object.  The inspectors window should change to the Connections inspector and should show two outlets ``delegate'' and ``menu''.   Select the ``delegate'', at this point you should see a green S and a purple T on the NSOwner and MyController objects respectively, and press the ``Connect'' button in the inspector.   In the ``Connections'' section of the inspector you should see an entry which looks similar to ``delegate (MyController)'' this indicates that the connection has been made.

@@ -758,10 +758,9 @@ static NSImage  *fileImage = nil;
 	  [topLevelObjects addObject: anObject];
 	}
     }
-  /*
-   * Check if it's a font manager.
-   */
-  else if([anObject isKindOfClass: [NSFontManager class]])
+  /* Register type-specific children for top-level objects as well.
+   * A standalone view must not bypass the descendant registration below. */
+  if([anObject isKindOfClass: [NSFontManager class]])
     {
       // If someone tries to attach a font manager, we must attach
       // the proxy instead.

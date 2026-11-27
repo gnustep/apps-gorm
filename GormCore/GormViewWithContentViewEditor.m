@@ -94,6 +94,14 @@ static NSImage *horizontalImage;
 
 - (void) mouseDown: (NSEvent *) theEvent
 {
+  /* A connection gesture must precede knob and marquee selection handling,
+   * including when the canvas has no parent view editor. */
+  if ([theEvent modifierFlags] & NSControlKeyMask)
+    {
+      [super mouseDown: theEvent];
+      return;
+    }
+
   BOOL onKnob = NO;
 
   if ([parent respondsToSelector: @selector(selection)] &&

@@ -1213,7 +1213,8 @@ static BOOL currently_displaying = NO;
 {
   NSPasteboard	*pb;
   NSString	*name = [document nameForObject: anObject];
-  NSPoint	dragPoint = [theEvent locationInWindow];
+  NSPoint	dragPoint = [self convertPoint: [theEvent locationInWindow]
+                                      fromView: nil];
   id            delegate = [NSApp delegate];
   
   if(name != nil)
@@ -1297,7 +1298,13 @@ static BOOL currently_displaying = NO;
 	}
 
       if (view != nil)
-	[(id)view selectObjects: [NSArray arrayWithObject: self]];
+        [(id)view selectObjects: [NSArray arrayWithObject: self]];
+      else if ([self respondsToSelector: @selector(selectObjects:)])
+        {
+          /* A standalone canvas owns its own selection. Clear any selected
+           * children before starting a connection from the canvas itself. */
+          [(id)self selectObjects: [NSArray array]];
+        }
       
       // now we can start the connection process
       [self startConnectingObject: _editedObject

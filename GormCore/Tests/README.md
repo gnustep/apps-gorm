@@ -85,3 +85,13 @@ stacking while their geometry updates; hidden segments must still be ordered
 in when shown again. This guards against the 20 ms connection timer repeatedly
 restacking the desktop and making DockWM icons flash. Existing geometry,
 color, and event-tracking checks cover continued segment rendering.
+
+`connectionDragging.m` attaches a standalone root with nested views and a
+control, then sends first-attempt Control-clicks through window hit testing.
+It intercepts only AppKit's native drag boundary, checking the real selection,
+connection source, pasteboard name, and local drag-image coordinates. Repeated
+attempts and post-save editor reactivation are covered too. The initial graph
+checks guard against unnamed descendants that cannot start a connection; the
+input checks guard against Control-drags being consumed as marquee selection
+or positioned using window coordinates. Native drag/drop and the Connections
+inspector still require interactive verification.
