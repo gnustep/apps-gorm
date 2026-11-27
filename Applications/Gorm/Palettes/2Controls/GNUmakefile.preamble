@@ -20,7 +20,8 @@ endif
 
 ifeq ($(GNUSTEP_TARGET_OS),linux-gnu)
 ADDITIONAL_LIB_DIRS += \
-        -L../../../../GormCore/GormCore.framework/Versions/0
+        -L../../../../GormCore/GormCore.framework/Versions/0 \
+        -L../../../../GormObjCHeaderParser/$(GNUSTEP_OBJ_DIR)
 
-$(PALETTE_NAME)_LIBRARIES_DEPEND_UPON += -lGormCore
+PALETTE_LIBS += -lGormCore -lGormObjCHeaderParser
 endif
